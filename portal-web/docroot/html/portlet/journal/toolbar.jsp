@@ -62,25 +62,39 @@
 	</c:choose>
 
 	<%
-	taglibURL = "javascript:" + renderResponse.getNamespace() + "deleteArticles();";
+	String taglibOnClick = "Liferay.fire('" + renderResponse.getNamespace() + "editArticle', {action: '" + Constants.DELETE + "'});";
 	%>
 
 	<liferay-ui:icon
 		cssClass="delete-articles-button"
 		image="delete"
 		message="delete"
-		url="<%= taglibURL %>"
+		onClick="<%= taglibOnClick %>"
+		url="javascript:;"
 	/>
 
 	<%
-	taglibURL = "javascript:" + renderResponse.getNamespace() + "expireArticles();";
+	taglibOnClick = "Liferay.fire('" + renderResponse.getNamespace() + "editArticle', {action: '" + Constants.EXPIRE + "'});";
 	%>
 
 	<liferay-ui:icon
 		cssClass="expire-articles-button"
 		image="time"
 		message="expire"
-		url="<%= taglibURL %>"
+		onClick="<%= taglibOnClick %>"
+		url="javascript:;"
+	/>
+
+	<%
+	taglibOnClick = "Liferay.fire('" + renderResponse.getNamespace() + "editArticle', {action: '" + Constants.MOVE + "'});";
+	%>
+
+	<liferay-ui:icon
+		cssClass="move-articles-button"
+		image="submit"
+		message="move"
+		onClick="<%= taglibOnClick %>"
+		url="javascript:;"
 	/>
 </liferay-ui:icon-menu>
 
@@ -175,32 +189,40 @@
 		);
 	}
 
-	var A = AUI();
+	Liferay.provide(
+		window,
+		'<portlet:namespace />toggleActionsButton',
+		function() {
 
-	var buttons = A.all('.delete-articles-button, .expire-articles-button');
+			var A = AUI();
 
-	if (buttons.size()) {
-		var journalContainer = A.one('#<portlet:namespace />journalContainer');
+			var buttons = A.all('.delete-articles-button, .expire-articles-button');
 
-		var resultsGrid = journalContainer.one('.results-grid');
+			if (buttons.size()) {
+				var journalContainer = A.one('#<portlet:namespace />journalContainer');
 
-		if (resultsGrid) {
-			resultsGrid.delegate(
-				'click',
-				function(event) {
+				var resultsGrid = journalContainer.one('.results-grid');
+
+				if (resultsGrid) {
+					resultsGrid.delegate(
+						'click',
+						function(event) {
+							if (resultsGrid.one(':checked') == null) {
+								buttons.hide();
+							}
+							else {
+								buttons.show();
+							}
+						},
+						':checkbox'
+					);
+
 					if (resultsGrid.one(':checked') == null) {
 						buttons.hide();
 					}
-					else {
-						buttons.show();
-					}
-				},
-				':checkbox'
-			);
-
-			if (resultsGrid.one(':checked') == null) {
-				buttons.hide();
+				}
 			}
-		}
-	}
+		},
+		[]
+	);
 </aui:script>
