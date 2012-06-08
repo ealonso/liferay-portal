@@ -1587,7 +1587,7 @@ AUI.add(
 						var instance = this;
 
 						var data = ioRequest.get(STR_DATA);
-						var reponseData = ioRequest.get('responseData');
+						var responseData = ioRequest.get('responseData');
 
 						var eventType = instance._eventDataRetrieveSuccess;
 
@@ -1599,7 +1599,7 @@ AUI.add(
 							eventType,
 							{
 								data: data,
-								responseData: reponseData
+								responseData: responseData
 							}
 						);
 					},
@@ -1821,6 +1821,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-paginator', 'dd-constrain', 'dd-delegate', 'dd-drag', 'dd-drop', 'dd-proxy', 'event-simulate', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-portlet-base', 'querystring-parse-simple']
+		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'dd-constrain', 'dd-delegate', 'dd-drag', 'dd-drop', 'dd-proxy', 'event-simulate', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-portlet-base', 'querystring-parse-simple', 'liferay-util-list-fields']
 	}
 );

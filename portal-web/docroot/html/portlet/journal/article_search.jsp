@@ -17,16 +17,33 @@
 <%@ include file="/html/portlet/journal/init.jsp" %>
 
 <%
-ArticleSearch searchContainer = (ArticleSearch)request.getAttribute("liferay-ui:search:searchContainer");
+JournalFolder folder = (JournalFolder)liferayPortletRequest.getAttribute("view.jsp-folder");
+
+long folderId = GetterUtil.getLong((String)liferayPortletRequest.getAttribute("view.jsp-folderId"));
+
+PortletURL portletURL = liferayPortletResponse.createRenderURL();
+
+portletURL.setParameter("struts_action", "/journal/view");
+
+ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portletURL);
 
 ArticleDisplayTerms displayTerms = (ArticleDisplayTerms)searchContainer.getDisplayTerms();
+
+boolean advancedSearch = ParamUtil.getBoolean(liferayPortletRequest, displayTerms.ADVANCED_SEARCH, false);
 %>
 
-<liferay-ui:search-toggle
-	buttonLabel="search"
-	displayTerms="<%= displayTerms %>"
-	id="toggle_id_journal_article_search"
->
+<div class='taglib-search-toggle taglib-search-toggle-advanced <%= advancedSearch ? "" : "aui-helper-hidden" %>' id="<portlet:namespace />advancedSearch">
+	<aui:input name="<%= displayTerms.ADVANCED_SEARCH %>" type="hidden" value="<%= true %>" />
+
+	<liferay-util:buffer var="andOperator">
+		<aui:select cssClass="inline-control" inlineField="<%= true %>" label="" name="<%= displayTerms.AND_OPERATOR %>">
+			<aui:option label="all" selected="<%= displayTerms.isAndOperator() %>" value="1" />
+			<aui:option label="any" selected="<%= !displayTerms.isAndOperator() %>" value="0" />
+		</aui:select>
+	</liferay-util:buffer>
+
+	<liferay-ui:message arguments="<%= andOperator %>" key="match-x-of-the-following-fields" />
+
 	<aui:fieldset>
 		<aui:input label="id" name="<%= displayTerms.ARTICLE_ID %>" size="20" value="<%= displayTerms.getArticleId() %>" />
 
@@ -114,7 +131,61 @@ ArticleDisplayTerms displayTerms = (ArticleDisplayTerms)searchContainer.getDispl
 			</aui:select>
 		</c:if>
 	</aui:fieldset>
-</liferay-ui:search-toggle>
+
+	<aui:button type="submit" value="search" />
+</div>
+
+<%
+String keywords = ParamUtil.getString(liferayPortletRequest, "keywords");
+%>
+
+<c:if test="<%= (Validator.isNotNull(keywords) || advancedSearch) %>">
+	<div id="<portlet:namespace />searchInfo">
+		<div class="search-info">
+
+			<%
+			String message = LanguageUtil.get(pageContext, "advanced-search");
+
+			if (advancedSearch) {
+				if (folder != null) {
+					message = LanguageUtil.format(pageContext, "searched-for-x-in-x", new Object[] {HtmlUtil.escape(keywords), folder.getName()});
+				}
+				else {
+					message = LanguageUtil.format(pageContext, "searched-for-x-everywhere", HtmlUtil.escape(keywords));
+				}
+			}
+			%>
+
+			<span class="keywords">
+				<%= message %>
+				<c:if test="<%= folderId != JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID %>">
+
+					<%
+					String taglibOnClick = liferayPortletResponse.getNamespace() + "changeSearchFolder()";
+					%>
+
+					<span class="change-search-folder">
+						(<aui:a href="javascript:;" label="search-everywhere" onClick="<%= taglibOnClick %>" title="search-everywhere" />)
+					</span>
+				</c:if>
+			</span>
+
+
+			<liferay-portlet:renderURL varImpl="closeSearchURL">
+				<portlet:param name="struts_action" value="/journal/view" />
+				<portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" />
+			</liferay-portlet:renderURL>
+
+			<liferay-ui:icon cssClass="close-search" id="closeSearch" image="../aui/closethick" url="<%= closeSearchURL.toString() %>" />
+		</div>
+
+		<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
+			<aui:script>
+				Liferay.Util.focusFormField(document.<portlet:namespace />fm1.<portlet:namespace />keywords);
+			</aui:script>
+		</c:if>
+	</div>
+</c:if>
 
 <aui:script>
 	<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>">

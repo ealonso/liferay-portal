@@ -941,6 +941,10 @@ public interface PropsKeys {
 
 	public static final String JOURNAL_CONTENT_SEARCH_SHOW_LISTED = "journal.content.search.show.listed";
 
+	public static final String JOURNAL_DEFAULT_DISPLAY_VIEW = "journal.default.display.view";
+
+	public static final String JOURNAL_DISPLAY_VIEWS = "journal.display.views";
+
 	public static final String JOURNAL_EMAIL_ARTICLE_ADDED_BODY = "journal.email.article.added.body";
 
 	public static final String JOURNAL_EMAIL_ARTICLE_ADDED_ENABLED = "journal.email.article.added.enabled";
@@ -1664,6 +1668,8 @@ public interface PropsKeys {
 	public static final String PERMISSIONS_CUSTOM_ATTRIBUTE_WRITE_CHECK_BY_DEFAULT = "permissions.custom.attribute.write.check.by.default";
 
 	public static final String PERMISSIONS_INLINE_SQL_CHECK_ENABLED = "permissions.inline.sql.check.enabled";
+
+	public static final String PERMISSIONS_INLINE_SQL_RESOURCE_BLOCK_QUERY_THRESHHOLD = "permissions.inline.sql.resource.block.query.threshhold";
 
 	public static final String PERMISSIONS_LIST_FILTER = "permissions.list.filter";
 
