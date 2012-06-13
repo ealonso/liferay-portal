@@ -3,6 +3,7 @@ AUI.add(
 	function(A) {
 		var AObject = A.Object;
 		var History = Liferay.HistoryManager;
+		var FoldersNavigation = Liferay.FoldersNavigation;
 		var Lang = A.Lang;
 		var QueryString = A.QueryString;
 
@@ -219,6 +220,43 @@ AUI.add(
 							}
 						).render();
 
+						var folderContainer = instance.byId(STR_FOLDER_CONTAINER);
+
+						instance._listView = new Liferay.ListView(
+							{
+								boundingBox: formatSelectorNS(instance.NS, '#listViewContainer'),
+								cssClass: 'folder-display-style lfr-list-view-content',
+								itemSelector: '.folder a.browse-folder, .folder a.expand-folder',
+								contentBox: folderContainer,
+								srcNode: folderContainer
+							}
+						).render();
+
+						instance._displayViews = config.displayViews;
+
+debugger;
+
+						var foldersNavigation = new FoldersNavigation(
+							{
+								'actions' : config.actions,
+								'allRowIds' : config.allRowIds,
+								'displayStyle' : config.displayStyle,
+								'displayStyleToolbarId' : DISPLAY_STYLE_TOOLBAR,
+								'displayViews' : instance._displayViews,
+								'editEntryUrl' : config._editEntryUrl,
+								'folderIdHashRegEx' : config.folderIdHashRegEx,
+								'form' : config.form,
+								'listView' : instance._listView,
+								'moveConstant': config.moveConstant,
+								'moveEntryRenderUrl': config.moveEntryRenderUrl,
+								'namespace': instance.NS,
+								'portletContainerId': 'journalContainer',
+								'portletGroup' : 'journal',
+								'rowIds' : config.rowIds
+							}
+						);
+
+						instance._foldersNavigation = foldersNavigation;
 						folderPaginator.on('changeRequest', instance._onFolderPaginatorChangeRequest, instance);
 
 						journalContainer.delegate(
@@ -232,24 +270,12 @@ AUI.add(
 							Liferay.on(instance._dataRetrieveFailure, instance._onDataRetrieveFailure, instance),
 							Liferay.on(instance._eventDataRequest, instance._onDataRequest, instance),
 							Liferay.on(instance._eventDataRetrieveSuccess, instance._onDataRetrieveSuccess, instance),
-							Liferay.on(instance._eventEditArticle, instance._editArticle, instance),
+							Liferay.on(instance._eventEditArticle, instance._foldersNavigation._editArticle, instance._foldersNavigation),
 							Liferay.on(instance._eventPageLoaded, instance._onPageLoaded, instance),
 							Liferay.on(instance._eventChangeSearchFolder, instance._onChangeSearchFolder, instance)
 						];
 
-						var folderContainer = instance.byId(STR_FOLDER_CONTAINER);
-
-						instance._listView = new Liferay.ListView(
-							{
-								boundingBox: formatSelectorNS(instance.NS, '#listViewContainer'),
-								cssClass: 'folder-display-style lfr-list-view-content',
-								itemSelector: '.folder a.browse-folder, .folder a.expand-folder',
-								contentBox: folderContainer,
-								srcNode: folderContainer
-							}
-						).render();
-
-						instance._listView.after('transitionComplete', instance._initDropTargets, instance);
+						instance._listView.after('transitionComplete', A.bind(instance._foldersNavigation._initDropTargets, instance._foldersNavigation), instance);
 
 						instance._listView.after('itemChange', instance._afterListViewItemChange, instance);
 
@@ -267,8 +293,6 @@ AUI.add(
 
 						instance._config = config;
 
-						instance._displayViews = config.displayViews;
-
 						instance._folderContainer = folderContainer;
 
 						instance._entryPaginator = entryPaginator;
@@ -279,8 +303,6 @@ AUI.add(
 						instance._initHover();
 
 						if (themeDisplay.isSignedIn()) {
-							instance._initDragDrop();
-
 							instance._initSelectAllCheckbox();
 
 							instance._initToggleSelect();
@@ -303,7 +325,6 @@ AUI.add(
 						instance._entryPaginator.destroy();
 						instance._folderPaginator.destroy();
 						instance._listView.destroy();
-						instance._ddHandler.destroy();
 
 						A.Array.invoke(instance._eventHandles, 'detach');
 
@@ -488,22 +509,6 @@ AUI.add(
 						);
 					},
 
-					_editArticle: function(event) {
-						var instance = this;
-
-						var config = instance._config;
-
-						var action = event.action;
-
-						var url = config.editEntryUrl;
-
-						if (action == config.actions.MOVE) {
-							url = config.moveEntryRenderUrl;
-						}
-
-						instance._processArticleAction(action, url);
-					},
-
 					_getDefaultHistoryState: function() {
 						var instance = this;
 
@@ -544,62 +549,6 @@ AUI.add(
 						return params;
 					},
 
-					_getDisplayStyle: function(style) {
-						var instance = this;
-
-						var displayStyle = History.get(instance._displayStyle) || instance._config.displayStyle;
-
-						if (style) {
-							displayStyle = (displayStyle == style);
-						}
-
-						return displayStyle;
-					},
-
-					_getMoveText: function(selectedItemsCount, targetAvailable) {
-						var moveText = STR_BLANK;
-
-						if (targetAvailable) {
-							moveText = Liferay.Language.get('x-item-is-ready-to-be-moved-to-x');
-
-							if (selectedItemsCount > 1) {
-								moveText = Liferay.Language.get('x-items-are-ready-to-be-moved-to-x');
-							}
-						}
-						else {
-							moveText = Liferay.Language.get('x-item-is-ready-to-be-moved');
-
-							if (selectedItemsCount > 1) {
-								moveText = Liferay.Language.get('x-items-are-ready-to-be-moved');
-							}
-						}
-
-						return moveText;
-					},
-
-					_getResultsStartEnd: function(paginator, page, rowsPerPage) {
-						var instance = this;
-
-						if (!Lang.isValue(page)) {
-							page = 0;
-
-							var curPage = paginator.get('page') - 1;
-
-							if (curPage > 0) {
-								page = curPage;
-							}
-						}
-
-						if (!Lang.isValue(rowsPerPage)) {
-							rowsPerPage = paginator.get(ROWS_PER_PAGE);
-						}
-
-						var start = page * rowsPerPage;
-						var end = start + rowsPerPage;
-
-						return [start, end];
-					},
-
 					_getSelectedFolder: function() {
 						var instance = this;
 
@@ -614,91 +563,6 @@ AUI.add(
 						return {
 							id: selectedFolderId
 						};
-					},
-
-					_initDragDrop: function() {
-						var instance = this;
-
-						var ddHandler = new A.DD.Delegate(
-							{
-								container: instance._journalContainer,
-								nodes: ARTICLE_DRAGGABLE,
-								on: {
-									'drag:drophit': A.bind(instance._onDragDropHit, instance),
-									'drag:enter': A.bind(instance._onDragEnter, instance),
-									'drag:exit': A.bind(instance._onDragExit, instance),
-									'drag:start': A.bind(instance._onDragStart, instance)
-								}
-							}
-						);
-
-						var dd = ddHandler.dd;
-
-						dd.set('offsetNode', false);
-
-						dd.removeInvalid('a');
-
-						dd.set('groups', [JOURNAL_GROUP]);
-
-						dd.plug(
-							[
-								{
-									cfg: {
-										moveOnEnd: false
-									},
-									fn: A.Plugin.DDProxy
-								},
-								{
-									cfg: {
-										constrain2node: instance._journalContainer
-									},
-									fn: A.Plugin.DDConstrained
-								}
-							]
-						);
-
-						if (TOUCH) {
-							instance._dragTask = A.debounce(
-								function(entryLink) {
-									if (entryLink) {
-										entryLink.simulate('click');
-									}
-								},
-								A.DD.DDM.get('clickTimeThresh')
-							);
-
-							dd.after(
-								'afterMouseDown',
-								function(event) {
-									instance._dragTask(event.target.get('node').one('.article-link'));
-								},
-								instance
-							);
-						}
-
-						instance._initDropTargets();
-
-						instance._ddHandler = ddHandler;
-					},
-
-					_initDropTargets: function() {
-						var instance = this;
-
-						if (themeDisplay.isSignedIn()) {
-							var items = instance._journalContainer.all('[data-folder="true"]');
-
-							items.each(
-								function(item, index, collection) {
-									item.plug(
-										A.Plugin.Drop,
-										{
-											groups: [JOURNAL_GROUP],
-											padding: '-1px'
-										}
-									);
-								}
-							);
-						}
 					},
 
 					_initHover: function() {
@@ -722,18 +586,6 @@ AUI.add(
 							'.article-selector',
 							instance
 						);
-					},
-
-					_moveEntries: function(folderId) {
-						var instance = this;
-
-						var config = instance._config;
-
-						var form = config.form.node;
-
-						form.get(instance.ns('newFolderId')).val(folderId);
-
-						instance._processArticleAction(config.moveConstant, config.moveEntryRenderUrl);
 					},
 
 					_onChangeSearchFolder: function(event) {
@@ -767,11 +619,11 @@ AUI.add(
 						var content = A.Node.create(responseData);
 
 						if (content) {
-							instance._setBreadcrumb(content);
-							instance._setButtons(content);
+							instance._foldersNavigation._setBreadcrumb(content);
+							instance._foldersNavigation._setButtons(content);
 							instance._setEntries(content);
-							instance._setFolders(content);
-							instance._setParentFolderTitle(content);
+							instance._foldersNavigation._setFolders(content);
+							instance._foldersNavigation._setParentFolderTitle(content);
 							instance._syncDisplayStyleToolbar(content);
 							instance._setSearchResults(content);
 						}
@@ -787,7 +639,7 @@ AUI.add(
 
 							var entriesSelector = CSS_ARTICLE_DISPLAY_STYLE_SELECTED + ' :checkbox';
 
-							if (instance._getDisplayStyle(DISPLAY_STYLE_LIST)) {
+							if (instance._foldersNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
 								entriesSelector = 'td > :checkbox:checked';
 							}
 
@@ -867,7 +719,7 @@ AUI.add(
 					_onArticleSelectorChange: function(event) {
 						var instance = this;
 
-						instance._toggleSelected(event.currentTarget, true);
+						instance._foldersNavigation._toggleSelected(event.currentTarget, true);
 
 						WIN[instance.ns(STR_TOGGLE_ACTIONS_BUTTON)]();
 
@@ -881,122 +733,10 @@ AUI.add(
 						);
 					},
 
-					_onDragDropHit: function(event) {
-						var instance = this;
-
-						var proxyNode = event.target.get(STR_DRAG_NODE);
-
-						proxyNode.removeClass(CSS_ACTIVE_AREA_PROXY);
-
-						proxyNode.empty();
-
-						var dropTarget = event.drop.get('node');
-
-						var folderId = dropTarget.attr(DATA_FOLDER_ID);
-
-						var folderContainer = dropTarget.ancestor('.article-display-style');
-
-						var selectedItems = instance._ddHandler.dd.get(STR_DATA).selectedItems;
-
-						if (selectedItems.indexOf(folderContainer) == -1) {
-							instance._moveEntries(folderId);
-						}
-					},
-
-					_onDragEnter: function(event) {
-						var instance = this;
-
-						var dragNode = event.drag.get('node');
-						var dropTarget = event.drop.get('node');
-
-						dropTarget = dropTarget.ancestor(CSS_ARTICLE_DISPLAY_STYLE) || dropTarget;
-
-						if (!dragNode.compareTo(dropTarget)) {
-							dropTarget.addClass(CSS_ACTIVE_AREA);
-
-							var proxyNode = event.target.get(STR_DRAG_NODE);
-
-							var dd = instance._ddHandler.dd;
-
-							var selectedItemsCount = dd.get(STR_DATA).selectedItemsCount;
-
-							var moveText = instance._getMoveText(selectedItemsCount, true);
-
-							var itemTitle = Lang.trim(dropTarget.attr('data-title'));
-
-							proxyNode.html(Lang.sub(moveText, [selectedItemsCount, itemTitle]));
-						}
-					},
-
-					_onDragExit: function(event) {
-						var instance = this;
-
-						var dropTarget = event.drop.get('node');
-
-						dropTarget = dropTarget.ancestor(CSS_ARTICLE_DISPLAY_STYLE) || dropTarget;
-
-						dropTarget.removeClass(CSS_ACTIVE_AREA);
-
-						var proxyNode = event.target.get(STR_DRAG_NODE);
-
-						var selectedItemsCount = instance._ddHandler.dd.get(STR_DATA).selectedItemsCount;
-
-						var moveText = instance._getMoveText(selectedItemsCount);
-
-						proxyNode.html(Lang.sub(moveText, [selectedItemsCount]));
-					},
-
-					_onDragStart: function(event) {
-						var instance = this;
-
-						if (instance._dragTask) {
-							instance._dragTask.cancel();
-						}
-
-						var target = event.target;
-
-						var node = target.get('node');
-
-						if (!node.hasClass(CSS_SELECTED)) {
-							instance._unselectAllEntries();
-
-							instance._toggleSelected(node);
-						}
-
-						var proxyNode = target.get(STR_DRAG_NODE);
-
-						proxyNode.setStyles(
-							{
-								height: STR_BLANK,
-								width: STR_BLANK
-							}
-						);
-
-						var selectedItems = instance._entriesContainer.all(CSS_ARTICLE_DISPLAY_STYLE_SELECTED);
-
-						var selectedItemsCount = selectedItems.size();
-
-						var moveText = instance._getMoveText(selectedItemsCount);
-
-						proxyNode.html(Lang.sub(moveText, [selectedItemsCount]));
-
-						proxyNode.addClass(CSS_ACTIVE_AREA_PROXY);
-
-						var dd = instance._ddHandler.dd;
-
-						dd.set(
-							STR_DATA,
-							{
-								selectedItemsCount: selectedItemsCount,
-								selectedItems: selectedItems
-							}
-						);
-					},
-
 					_onEntryPaginatorChangeRequest: function(event) {
 						var instance = this;
 
-						var startEndParams = instance._getResultsStartEnd(instance._entryPaginator);
+						var startEndParams = instance._foldersNavigation._getResultsStartEnd(instance._entryPaginator);
 
 						var requestParams = instance._lastDataRequest || instance._getDefaultParams();
 
@@ -1026,7 +766,7 @@ AUI.add(
 					_onFolderPaginatorChangeRequest: function(event) {
 						var instance = this;
 
-						var startEndParams = instance._getResultsStartEnd(instance._folderPaginator);
+						var startEndParams = instance._foldersNavigation._getResultsStartEnd(instance._folderPaginator);
 
 						var requestParams = instance._lastDataRequest || {};
 
@@ -1111,40 +851,6 @@ AUI.add(
 						);
 					},
 
-					_processArticleAction: function(action, url) {
-
-						var instance = this;
-
-						var config = instance._config;
-
-						var form = config.form.node;
-
-						var redirectUrl = location.href;
-
-						if (action === config.actions.DELETE && !History.HTML5 && location.hash) {
-							redirectUrl = instance._updateFolderIdRedirectUrl(redirectUrl);
-						}
-
-
-						form.attr('method', config.form.method);
-
-						form.get(instance.ns('cmd')).val(action);
-						form.get(instance.ns('redirect')).val(redirectUrl);
-
-						var allRowIds = config.allRowIds;
-						var rowIds = config.rowIds;
-
-						var allRowsIdCheckbox = instance.ns(allRowIds + 'Checkbox');
-
-						var journalFolderIds = Liferay.Util.listCheckedExcept(form, allRowsIdCheckbox, instance.ns(rowIds + 'JournalFolderCheckbox'));
-						var journalArticleIds = Liferay.Util.listCheckedExcept(form, allRowsIdCheckbox, instance.ns(rowIds + 'JournalArticleCheckbox'));
-
-						form.get(instance.ns('folderIds')).val(journalFolderIds);
-						form.get(instance.ns('articleIds')).val(journalArticleIds);
-
-						submitForm(form, url);
-					},
-
 					_restoreState: function() {
 						var instance = this;
 
@@ -1209,34 +915,6 @@ AUI.add(
 						);
 					},
 
-					_setBreadcrumb: function(content) {
-						var instance = this;
-
-						var breadcrumb = instance.one('#breadcrumb', content);
-
-						if (breadcrumb) {
-							var breadcrumbContainer;
-
-							var journalBreadcrumb = breadcrumb.one('.portlet-breadcrumb ul');
-
-							if (journalBreadcrumb) {
-								breadcrumbContainer = instance.byId('breadcrumbContainer');
-
-								breadcrumbContainer.setContent(journalBreadcrumb);
-							}
-
-							var portalBreadcrumb = breadcrumb.one('.portal-breadcrumb ul');
-
-							if (portalBreadcrumb) {
-								breadcrumbContainer = A.one('#breadcrumbs ul');
-
-								if (breadcrumbContainer) {
-									breadcrumbContainer.setContent(portalBreadcrumb.html());
-								}
-							}
-						}
-					},
-
 					_setButtons: function(content) {
 						var instance = this;
 
@@ -1287,23 +965,9 @@ AUI.add(
 
 							entriesContainer.setContent(entries);
 
-							instance._initDropTargets();
+							instance._foldersNavigation._initDropTargets();
 
 							instance._updateSelectedEntriesStatus();
-						}
-					},
-
-					_setFolders: function(content) {
-						var instance = this;
-
-						var folders = instance.one('#folderContainer', content);
-
-						if (folders) {
-							var listViewDataContainer = A.one('.lfr-list-view-data-container');
-
-							listViewDataContainer.plug(A.Plugin.ParseContent);
-
-							instance._listView.set(STR_DATA, folders.html());
 						}
 					},
 
@@ -1314,18 +978,6 @@ AUI.add(
 
 						if (A.instanceOf(paginator, A.Paginator)) {
 							paginator.setState(paginatorData.state);
-						}
-					},
-
-					_setParentFolderTitle: function(content) {
-						var instance = this;
-
-						var parentFolderTitle = instance.one('#parentFolderTitle', content);
-
-						if (parentFolderTitle) {
-							var parentFolderTitleContainer = instance.byId('parentFolderTitleContainer');
-
-							parentFolderTitleContainer.setContent(parentFolderTitle);
 						}
 					},
 
@@ -1420,7 +1072,7 @@ AUI.add(
 						if (length > 1) {
 							var displayStyleToolbar = instance._displayStyleToolbarNode.getData(DISPLAY_STYLE_TOOLBAR);
 
-							var displayStyle = instance._getDisplayStyle();
+							var displayStyle = instance._foldersNavigation._getDisplayStyle(instance._displayStyle);
 
 							for (var i = 0; i < length; i++) {
 								displayStyleToolbar.item(i).StateInteraction.set(STR_ACTIVE, displayStyle === displayViews[i]);
@@ -1440,7 +1092,7 @@ AUI.add(
 
 						WIN[instance.ns(STR_TOGGLE_ACTIONS_BUTTON)]();
 
-						if (!instance._getDisplayStyle(DISPLAY_STYLE_LIST)) {
+						if (!instance._foldersNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
 							var articleDisplayStyle = A.all(CSS_ARTICLE_DISPLAY_STYLE_SELECTABLE);
 
 							articleDisplayStyle.toggleClass(CSS_SELECTED, instance._selectAllCheckbox.attr(ATTR_CHECKED));
@@ -1450,7 +1102,7 @@ AUI.add(
 					_toggleHovered: function(event) {
 						var instance = this;
 
-						if (!instance._getDisplayStyle(DISPLAY_STYLE_LIST)) {
+						if (!instance._foldersNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
 							var articleDisplayStyle = event.target.ancestor(CSS_ARTICLE_DISPLAY_STYLE);
 
 							if (articleDisplayStyle) {
@@ -1462,7 +1114,7 @@ AUI.add(
 					_toggleSelected: function(node, preventUpdate) {
 						var instance = this;
 
-						if (instance._getDisplayStyle(DISPLAY_STYLE_LIST)) {
+						if (instance._foldersNavigation._getDisplayStyle(instance._displayStyle, DISPLAY_STYLE_LIST)) {
 							if (!preventUpdate) {
 								var input = node.one('input') || node;
 
@@ -1492,27 +1144,6 @@ AUI.add(
 						instance._toggleEntriesSelection();
 					},
 
-					_updateFolderIdRedirectUrl: function(redirectUrl) {
-						var instance = this;
-
-						var config = instance._config;
-
-						var currentFolderMatch = config.folderIdHashRegEx.exec(redirectUrl);
-
-						if (currentFolderMatch) {
-							var currentFolderId = currentFolderMatch[1];
-
-							redirectUrl = redirectUrl.replace(
-								config.folderIdRegEx,
-								function(match, folderId) {
-									return match.replace(folderId, currentFolderId);
-								}
-							);
-						}
-
-						return redirectUrl;
-					},
-
 					_updateSelectedEntriesStatus: function() {
 						var instance = this;
 
@@ -1527,7 +1158,7 @@ AUI.add(
 									var entry = entriesContainer.one('input[value="' + item + '"]');
 
 									if (entry) {
-										instance._toggleSelected(entry);
+										instance._foldersNavigation._toggleSelected(entry);
 									}
 								}
 							);
@@ -1541,8 +1172,8 @@ AUI.add(
 
 						var requestParams = event.requestParams;
 
-						var entryStartEndParams = instance._getResultsStartEnd(instance._entryPaginator);
-						var folderStartEndParams = instance._getResultsStartEnd(instance._folderPaginator);
+						var entryStartEndParams = instance._foldersNavigation._getResultsStartEnd(instance._entryPaginator);
+						var folderStartEndParams = instance._foldersNavigation._getResultsStartEnd(instance._folderPaginator);
 
 						var customParams = {};
 
@@ -1570,6 +1201,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'dd-constrain', 'dd-delegate', 'dd-drag', 'dd-drop', 'dd-proxy', 'event-simulate', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-portlet-base', 'liferay-util-list-fields', 'querystring-parse-simple']
+		requires: ['aui-loading-mask', 'aui-paginator', 'aui-parse-content', 'event-simulate', 'liferay-folders-navigation', 'liferay-history-manager', 'liferay-list-view', 'liferay-message', 'liferay-portlet-base', 'liferay-util-list-fields', 'querystring-parse-simple']
 	}
 );

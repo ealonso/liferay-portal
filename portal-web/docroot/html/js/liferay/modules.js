@@ -49,6 +49,7 @@
 			'dockbar': ['aui-node', 'event-touch'],
 			'dockbar-underlay': ['aui-button-item', 'aui-io-plugin', 'aui-overlay-manager'],
 			'dynamic-select': ['aui-base'],
+			'folders_navigation': ['aui-base'],
 			'form': ['aui-base', 'aui-form-validator'],
 			'form-navigator': ['aui-base'],
 			'form-placeholders': ['liferay-form', 'plugin'],

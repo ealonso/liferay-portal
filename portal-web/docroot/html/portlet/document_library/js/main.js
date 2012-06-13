@@ -823,6 +823,7 @@ AUI.add(
 
 						form.get(instance.ns('newFolderId')).val(folderId);
 
+debugger;
 						instance._processFileEntryAction(config.moveConstant, config.moveEntryRenderUrl);
 					},
 
