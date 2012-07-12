@@ -28,7 +28,7 @@ else {
 	groupTypeSettings = new UnicodeProperties();
 }
 
-int trashEnabledInt = PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENABLED);
+int trashEnabledCompany = PrefsPropsUtil.getInteger(company.getCompanyId(), PropsKeys.TRASH_ENABLED);
 
 int trashEnabled = PropertiesParamUtil.getInteger(groupTypeSettings, request, "trashEnabled", TrashUtil.TRASH_DEFAULT_VALUE);
 
@@ -37,11 +37,9 @@ int trashEntriesMaxAge = PropertiesParamUtil.getInteger(groupTypeSettings, reque
 
 <aui:fieldset>
 	<aui:select label="enable-recycle-bin" name="trashEnabled">
-		<aui:option selected="<%= trashEnabled == TrashUtil.TRASH_DEFAULT_VALUE %>" value="<%= TrashUtil.TRASH_DEFAULT_VALUE %>">
-			<liferay-ui:message key='<%= (trashEnabledInt == TrashUtil.TRASH_ENABLED_BY_DEFAULT) ? "default-value-enabled" : "default-value-disabled" %>' />
-		</aui:option>
-		<aui:option label="enabled" selected="<%= trashEnabled == TrashUtil.TRASH_ENABLED_BY_DEFAULT %>" value="<%= TrashUtil.TRASH_ENABLED_BY_DEFAULT %>" />
-		<aui:option label="disabled" selected="<%= trashEnabled == TrashUtil.TRASH_DISABLED_BY_DEFAULT %>" value="<%= TrashUtil.TRASH_DISABLED_BY_DEFAULT %>" />
+		<aui:option label='<%= (trashEnabledCompany == TrashUtil.TRASH_ENABLED_BY_DEFAULT) ? "default-value-enabled" : "default-value-disabled" %>' selected="<%= trashEnabled == TrashUtil.TRASH_DEFAULT_VALUE %>" value="<%= TrashUtil.TRASH_DEFAULT_VALUE %>" />
+		<aui:option label="enabled" selected="<%= trashEnabled == TrashUtil.TRASH_ENABLED %>" value="<%= TrashUtil.TRASH_ENABLED %>" />
+		<aui:option label="disabled" selected="<%= trashEnabled == TrashUtil.TRASH_DISABLED %>" value="<%= TrashUtil.TRASH_DISABLED %>" />
 	</aui:select>
 
 	<aui:input label="number-of-days-that-files-will-be-kept-in-the-recycle-bin" name="trashEntriesMaxAge" type="text" value="<%= trashEntriesMaxAge %>">

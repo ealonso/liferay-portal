@@ -141,15 +141,15 @@ portletURL.setParameter("tabs1", tabs1);
 		</liferay-ui:search-container-row>
 
 		<%
-		String emptyTrashButton = StringPool.BLANK;
+		String emptyTrashLink = StringPool.BLANK;
 
 		if (total > 0) {
-			emptyTrashButton = "<a href='javascript:;' onClick='" +  renderResponse.getNamespace() + "emptyTrash();' >" + LanguageUtil.get(pageContext, "empty-the-recycle-bin") + "</a>";
+			emptyTrashLink = "<a href='javascript:;' onClick='" +  renderResponse.getNamespace() + "emptyTrash();' >" + LanguageUtil.get(pageContext, "empty-the-recycle-bin") + "</a>";
 		}
 		%>
 
 		<div class="lfr-message-info">
-			<liferay-ui:message arguments="<%= new String[]{String.valueOf(TrashUtil.getMaxAge(group)), emptyTrashButton} %>" key="messages-that-have-been-in-recycle-bin-more-than-x-days-will-be-automatically-deleted-x" />
+			<liferay-ui:message arguments="<%= new String[]{String.valueOf(TrashUtil.getMaxAge(group)), emptyTrashLink} %>" key="entries-that-have-been-in-recycle-bin-more-than-x-days-will-be-automatically-deleted-x" />
 		</div>
 
 		<c:if test="<%= total > 0 %>">

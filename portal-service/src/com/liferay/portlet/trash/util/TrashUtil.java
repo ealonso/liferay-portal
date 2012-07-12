@@ -39,7 +39,9 @@ public class TrashUtil {
 
 	public static final int TRASH_DISABLED_BY_DEFAULT = 1;
 
-	public static final int TRASH_ENABLED_BY_DEFAULT = 2;
+	public static final int TRASH_ENABLED = 2;
+
+	public static final int TRASH_ENABLED_BY_DEFAULT = 3;
 
 	public static OrderByComparator getEntryOrderByComparator(
 		String orderByCol, String orderByType) {
@@ -66,7 +68,7 @@ public class TrashUtil {
 	}
 
 	public static int getMaxAge(Group group) throws SystemException {
-		int trashEntriesMaxAge = PrefsPropsUtil.getInteger(
+		int trashEntriesMaxAgePortal = PrefsPropsUtil.getInteger(
 			group.getCompanyId(), PropsKeys.TRASH_ENTRIES_MAX_AGE,
 			GetterUtil.getInteger(
 				PropsUtil.get(PropsKeys.TRASH_ENTRIES_MAX_AGE)));
@@ -76,7 +78,7 @@ public class TrashUtil {
 
 		return GetterUtil.getInteger(
 			typeSettingsProperties.getProperty("trashEntriesMaxAge"),
-			trashEntriesMaxAge);
+			trashEntriesMaxAgePortal);
 	}
 
 	public static boolean isTrashEnabled(long groupId)
@@ -102,7 +104,7 @@ public class TrashUtil {
 			trashEnabledSite = trashEnabledPortal;
 		}
 
-		if (trashEnabledSite == TRASH_ENABLED_BY_DEFAULT) {
+		if (trashEnabledSite == TRASH_ENABLED) {
 			return true;
 		}
 		else {
