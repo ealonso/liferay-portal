@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portlet.trash.model.TrashEntry;
 
@@ -38,6 +40,17 @@ public class TrashUtil {
 	public static final int TRASH_ENABLED = 3;
 
 	public static final int TRASH_ENABLED_BY_DEFAULT = 2;
+
+	public static String appendTrashNamespace(String title) {
+		StringBundler sb = new StringBundler(3);
+
+		sb.append(title);
+		sb.append(StringPool.SLASH);
+		sb.append(System.currentTimeMillis());
+
+		return sb.toString();
+
+	}
 
 	public static List<TrashEntry> getEntries(Hits hits)
 		throws PortalException, SystemException {
@@ -73,6 +86,16 @@ public class TrashUtil {
 		PortalRuntimePermission.checkSetBeanProperty(getClass());
 
 		_trash = trash;
+	}
+
+	public static String stripTrashNamespace(String title) {
+		int index = title.indexOf(StringPool.SLASH);
+
+		if (index >= 0) {
+			title = title.substring(0, index);
+		}
+
+		return title;
 	}
 
 	private static Trash _trash;
