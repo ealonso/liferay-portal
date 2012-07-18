@@ -70,6 +70,7 @@ import com.liferay.portlet.messageboards.workflow.MBMessageWorkflowHandler;
 import com.liferay.portlet.trash.util.TrashIndexer;
 import com.liferay.portlet.usersadmin.util.ContactIndexer;
 import com.liferay.portlet.usersadmin.util.UserIndexer;
+import com.liferay.portlet.wiki.util.WikiIndexer;
 import com.liferay.util.PwdGenerator;
 
 import java.util.Calendar;
@@ -288,6 +289,7 @@ public class ServiceTestUtil {
 		IndexerRegistryUtil.register(new DLIndexer());
 		IndexerRegistryUtil.register(new MBIndexer());
 		IndexerRegistryUtil.register(new TrashIndexer());
+		IndexerRegistryUtil.register(new WikiIndexer());
 
 		// Upgrade
 
