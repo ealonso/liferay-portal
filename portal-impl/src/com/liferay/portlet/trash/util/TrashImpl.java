@@ -53,6 +53,24 @@ import java.util.List;
  */
 public class TrashImpl implements Trash {
 
+	public void deleteEntriesAttachments(
+			long companyId, long repositoryId, Date date,
+			String[] attachmentFileNames)
+		throws PortalException, SystemException {
+
+		for (String attachmentFileName : attachmentFileNames) {
+			String trashTime = DLAppUtil.getTrashTime(
+				attachmentFileName, TrashUtil.TRASH_TIME_SEPARATOR);
+
+			long timestamp = GetterUtil.getLong(trashTime);
+
+			if (timestamp < date.getTime()) {
+				DLStoreUtil.deleteDirectory(
+					companyId, repositoryId, attachmentFileName);
+			}
+		}
+	}
+
 	public List<TrashEntry> getEntries(Hits hits) {
 		List<TrashEntry> entries = new ArrayList<TrashEntry>();
 

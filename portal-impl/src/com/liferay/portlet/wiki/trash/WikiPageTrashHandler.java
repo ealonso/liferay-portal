@@ -40,6 +40,49 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	public static final String CLASS_NAME = WikiPage.class.getName();
 
 	/**
+	 * Deletes trash attachments from all the wiki pages from a group that were
+	 * deleted after a given date
+	 *
+	 * @param  groupId the primary key of the group
+	 * @param  date the date from which attachments will be deleted
+	 * @throws PortalException if an entry with the primary key could not be
+	 *         found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void deleteTrashAttachments(long groupId, Date date)
+		throws PortalException, SystemException {
+
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
+		long repositoryId = CompanyConstants.SYSTEM;
+
+		String[] fileNames = null;
+
+		try {
+			fileNames = DLStoreUtil.getFileNames(
+				group.getCompanyId(), repositoryId, "wiki");
+		}
+		catch (NoSuchDirectoryException nsde) {
+			return;
+		}
+
+		for (String fileName : fileNames) {
+			String fileTitle = StringUtil.extractLast(
+				fileName, StringPool.FORWARD_SLASH);
+
+			if (fileTitle.startsWith(TrashUtil.TRASH_ATTACHMENTS_DIR)) {
+				String[] attachmentFileNames = DLStoreUtil.getFileNames(
+					group.getCompanyId(), repositoryId,
+					WikiPageConstants.BASE_ATTACHMENTS_DIR + fileTitle);
+
+				TrashUtil.deleteEntriesAttachments(
+					group.getCompanyId(), repositoryId, date,
+					attachmentFileNames);
+			}
+		}
+	}
+
+	/**
 	 * Deletes all wiki page with the matching primary keys.
 	 *
 	 * @param  classPKs the primary keys of the wiki pages to be deleted
