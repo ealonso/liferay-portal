@@ -14,8 +14,11 @@
 
 package com.liferay.portlet.wiki.asset;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -41,7 +44,10 @@ import javax.portlet.WindowState;
  * @author Julio Camarero
  * @author Sergio González
  */
-public class WikiPageAssetRenderer extends BaseAssetRenderer {
+public class WikiPageAssetRenderer
+	extends BaseAssetRenderer implements TrashRenderer {
+
+	public static final String TYPE = "wiki-page";
 
 	public WikiPageAssetRenderer(WikiPage page) {
 		_page = page;
@@ -76,6 +82,10 @@ public class WikiPageAssetRenderer extends BaseAssetRenderer {
 		return _page.getGroupId();
 	}
 
+	public String getPortletId() {
+		return PortletKeys.WIKI;
+	}
+
 	public String getSummary(Locale locale) {
 		String content = _page.getContent();
 
@@ -91,6 +101,10 @@ public class WikiPageAssetRenderer extends BaseAssetRenderer {
 
 	public String getTitle(Locale locale) {
 		return _page.getTitle();
+	}
+
+	public String getType() {
+		return TYPE;
 	}
 
 	@Override
@@ -165,6 +179,13 @@ public class WikiPageAssetRenderer extends BaseAssetRenderer {
 
 	public String getUuid() {
 		return _page.getUuid();
+	}
+
+	public boolean hasDeletePermission(PermissionChecker permissionChecker)
+		throws PortalException, SystemException {
+
+		return WikiPagePermission.contains(
+			permissionChecker, _page, ActionKeys.DELETE);
 	}
 
 	@Override
