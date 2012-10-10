@@ -53,6 +53,10 @@ public interface PortletFileRepository {
 	public void deletePortletFileEntries(long groupId, long folderId)
 		throws PortalException, SystemException;
 
+	public void deletePortletFileEntries(
+			long groupId, long folderId, int status)
+		throws PortalException, SystemException;
+
 	public void deletePortletFileEntry(long fileEntryId)
 		throws PortalException, SystemException;
 
@@ -84,14 +88,18 @@ public interface PortletFileRepository {
 			long groupId, long folderId, int status)
 		throws SystemException;
 
+	public DLFileEntry getPortletFileEntry(
+			long groupId, long folderId, String fileName)
+		throws PortalException, SystemException;
+
 	public long getPortletRepository(
 			long groupId, String portletId, ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
-	public void movePortletFileEntryFromTrash(long userId, long fileEntryId)
+	public void restorePortletFileEntryFromTrash(long userId, long fileEntryId)
 		throws PortalException, SystemException;
 
-	public void movePortletFileEntryFromTrash(
+	public void restorePortletFileEntryFromTrash(
 			long groupId, long userId, long folderId, String fileName)
 		throws PortalException, SystemException;
 

@@ -39,9 +39,12 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
+import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.wiki.model.WikiNode;
 import com.liferay.portlet.wiki.model.WikiPage;
 import com.liferay.portlet.wiki.model.WikiPageConstants;
+import com.liferay.portlet.wiki.service.WikiPageLocalServiceUtil;
 import com.liferay.portlet.wiki.service.base.WikiPageServiceBaseImpl;
 import com.liferay.portlet.wiki.service.permission.WikiNodePermission;
 import com.liferay.portlet.wiki.service.permission.WikiPagePermission;
@@ -213,6 +216,15 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 		wikiPageLocalService.deletePageAttachments(nodeId, title);
 	}
 
+	public void deleteTrashPageAttachments(long nodeId, String title)
+		throws PortalException, SystemException {
+
+		WikiPagePermission.check(
+			getPermissionChecker(), nodeId, title, ActionKeys.DELETE);
+
+		wikiPageLocalService.deleteTrashPageAttachments(nodeId, title);
+	}
+
 	public void deleteTempPageAttachment(
 			long nodeId, String fileName, String tempFolderName)
 		throws PortalException, SystemException {
@@ -358,26 +370,22 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 			getUserId(), nodeId, title, newTitle, serviceContext);
 	}
 
-	public void movePageAttachmentFromTrash(
-			long nodeId, String title, String deletedFileName)
-		throws PortalException, SystemException {
-
-		WikiNodePermission.check(
-			getPermissionChecker(), nodeId, ActionKeys.ADD_ATTACHMENT);
-
-		wikiPageLocalService.movePageAttachmentFromTrash(
-			nodeId, title, deletedFileName);
-	}
-
-	public String movePageAttachmentToTrash(
+	public long movePageAttachmentToTrash(
 			long nodeId, String title, String fileName)
 		throws PortalException, SystemException {
 
 		WikiPagePermission.check(
 			getPermissionChecker(), nodeId, title, ActionKeys.DELETE);
 
-		return wikiPageLocalService.movePageAttachmentToTrash(
-			nodeId, title, fileName);
+		WikiPage wikiPage = WikiPageLocalServiceUtil.getPage(nodeId, title);
+
+		DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
+			wikiPage.getGroupId(), wikiPage.getAttachmentsFolderId(), fileName);
+
+		wikiPageLocalService.movePageAttachmentToTrash(
+			getUserId(), dlFileEntry.getFileEntryId());
+
+		return dlFileEntry.getFileEntryId();
 	}
 
 	public void movePageToTrash(long nodeId, String title)
@@ -397,6 +405,22 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		wikiPageLocalService.movePageToTrash(
 			getUserId(), nodeId, title, version);
+	}
+
+	public void restorePageAttachmentFromTrash(
+			long nodeId, String title, String fileName)
+		throws PortalException, SystemException {
+
+		WikiNodePermission.check(
+			getPermissionChecker(), nodeId, ActionKeys.ADD_ATTACHMENT);
+
+		WikiPage wikiPage = WikiPageLocalServiceUtil.getPage(nodeId, title);
+
+		DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getFileEntry(
+			wikiPage.getGroupId(), wikiPage.getAttachmentsFolderId(), fileName);
+
+		wikiPageLocalService.restorePageAttachmentFromTrash(
+			getUserId(), dlFileEntry.getFileEntryId());
 	}
 
 	public void restorePageFromTrash(long resourcePrimKey)
