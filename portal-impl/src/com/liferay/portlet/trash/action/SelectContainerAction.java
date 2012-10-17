@@ -45,14 +45,13 @@ public class SelectContainerAction extends PortletAction {
 		try {
 			String className = ParamUtil.getString(
 				renderRequest, "entryClassName");
+			long containerModelId = ParamUtil.getLong(
+				renderRequest, "containerModelId");
 
 			TrashHandler trashHandler =
 				TrashHandlerRegistryUtil.getTrashHandler(className);
 
 			ContainerModel containerModel = null;
-
-			long containerModelId = ParamUtil.getLong(
-				renderRequest, "containerModelId");
 
 			if (containerModelId > 0) {
 				containerModel = trashHandler.getContainerModel(

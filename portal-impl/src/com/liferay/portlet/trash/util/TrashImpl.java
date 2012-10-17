@@ -71,17 +71,11 @@ public class TrashImpl implements Trash {
 
 	public void addContainerBreadcrumbEntries(
 			HttpServletRequest request, TrashHandler trashHandler,
-			PortletURL containerURL)
+			ContainerModel containerModel, PortletURL containerURL)
 		throws PortalException, SystemException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
-
-		Locale locale = themeDisplay.getLocale();
-
-		ContainerModel containerModel =
-			(ContainerModel)request.getAttribute(
-				WebKeys.TRASH_DESTINATION_CONTAINER_MODEL);
 
 		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
 
@@ -99,7 +93,7 @@ public class TrashImpl implements Trash {
 		}
 
 		String rootContainerModelName = LanguageUtil.get(
-			locale, trashHandler.getRootContainerModelName());
+			themeDisplay.getLocale(), trashHandler.getRootContainerModelName());
 
 		if (!containerModels.isEmpty()) {
 			containerURL.setParameter("containerModelId", "0");

@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -52,11 +53,11 @@ public class TrashUtil {
 
 	public static void addContainerBreadcrumbEntries(
 			HttpServletRequest request, TrashHandler trashHandler,
-			PortletURL containerURL)
+			ContainerModel containerModel, PortletURL containerURL)
 		throws PortalException, SystemException {
 
 		getTrash().addContainerBreadcrumbEntries(
-			request, trashHandler, containerURL);
+			request, trashHandler, containerModel, containerURL);
 	}
 
 	public static String appendTrashNamespace(String title) {
