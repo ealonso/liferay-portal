@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.trash.model.TrashEntry;
@@ -37,7 +38,7 @@ public interface Trash {
 
 	public void addContainerBreadcrumbEntries(
 			HttpServletRequest request, TrashHandler trashHandler,
-			PortletURL containerURL)
+			ContainerModel containerModel, PortletURL containerURL)
 		throws PortalException, SystemException;
 
 	public String appendTrashNamespace(String title);

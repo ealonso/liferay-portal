@@ -312,6 +312,14 @@ public interface TrashHandler {
 	public String getSubcontainerModelName();
 
 	/**
+	 * Returns the name of the sub-container model in plural (e.g. for a folder
+	 * the sub-container model name in plural may be "subfolders").
+	 *
+	 * @return the name of the sub-container model in plural
+	 */
+	public String getSubcontainerModelNames();
+	
+	/**
 	 * Returns the trash renderer associated to the model entity with the
 	 * primary key.
 	 *

@@ -35,13 +35,12 @@ containerURL.setParameter("struts_action", "/trash/select_container");
 containerURL.setParameter("trashEntryId", String.valueOf(trashEntryId));
 containerURL.setParameter("entryClassName", className);
 
-TrashUtil.addContainerBreadcrumbEntries(request, trashHandler, containerURL);
+TrashUtil.addContainerBreadcrumbEntries(request, trashHandler, containerModel, containerURL);
 
 String containerModelName = LanguageUtil.get(pageContext, trashHandler.getContainerModelName());
-String subContainerModelNamePlural = LanguageUtil.get(pageContext, trashHandler.getSubContainerModelName() + "s");
 
-String header = LanguageUtil.format(pageContext, "select-destination-x", containerModelName);
-String headerName2 = LanguageUtil.format(pageContext, "num-of-x", subContainerModelNamePlural);
+String header = LanguageUtil.format(pageContext, "select-x", containerModelName);
+String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.getSubcontainerModelNames(), true);
 %>
 
 <aui:form method="post" name="fm">
