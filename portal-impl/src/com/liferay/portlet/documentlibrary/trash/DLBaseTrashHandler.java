@@ -89,6 +89,11 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 		return "subfolder";
 	}
 
+	@Override
+	public String getSubcontainerModelNames() {
+		return "subfolders";
+	}
+
 	protected DLFileEntry getDLFileEntry(long classPK)
 		throws PortalException, SystemException {
 
