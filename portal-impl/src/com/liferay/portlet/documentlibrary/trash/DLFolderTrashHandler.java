@@ -192,7 +192,7 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 
 		dlFolder.setName(name);
 
-		DLFolderLocalServiceUtil.updateDLFolder(dlFolder, false);
+		DLFolderLocalServiceUtil.updateDLFolder(dlFolder);
 	}
 
 	@Override

@@ -202,7 +202,7 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 		dlFileVersion.setTitle(name);
 
-		DLFileVersionLocalServiceUtil.updateDLFileVersion(dlFileVersion, false);
+		DLFileVersionLocalServiceUtil.updateDLFileVersion(dlFileVersion);
 	}
 
 	@Override

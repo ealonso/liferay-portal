@@ -18,10 +18,11 @@
 
 <%
 long containerModelId = 0;
-long trashEntryId = ParamUtil.getLong(request, "trashEntryId");
-String className = ParamUtil.getString(request, "entryClassName");
+String className = ParamUtil.getString(request, "className");
+long classPK = ParamUtil.getLong(request, "classPK");
 
 TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 
 ContainerModel containerModel = (ContainerModel)request.getAttribute(WebKeys.TRASH_DESTINATION_CONTAINER_MODEL);
 
@@ -32,8 +33,8 @@ if (containerModel != null) {
 PortletURL containerURL = renderResponse.createRenderURL();
 
 containerURL.setParameter("struts_action", "/trash/select_container");
-containerURL.setParameter("trashEntryId", String.valueOf(trashEntryId));
-containerURL.setParameter("entryClassName", className);
+containerURL.setParameter("className", className);
+containerURL.setParameter("classPK", String.valueOf(classPK));
 
 TrashUtil.addContainerBreadcrumbEntries(request, trashHandler, containerModel, containerURL);
 
@@ -42,6 +43,10 @@ String containerModelName = LanguageUtil.get(pageContext, trashHandler.getContai
 String header = LanguageUtil.format(pageContext, "select-x", containerModelName);
 String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.getSubcontainerModelNames(), true);
 %>
+
+<div class="portlet-msg-alert">
+	<liferay-ui:message arguments="<%= new String[] {containerModelName, trashRenderer.getTitle(locale)} %>" key="the-original-x-does-not-exist-anymore.-choose-a-different-x-to-restore-x" />
+</div>
 
 <aui:form method="post" name="fm">
 	<liferay-ui:header
@@ -61,8 +66,8 @@ String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.g
 		<liferay-ui:search-container-results>
 
 			<%
-			pageContext.setAttribute("results", trashHandler.getContainerModels(trashEntryId, containerModelId, searchContainer.getStart(), searchContainer.getEnd()));
-			pageContext.setAttribute("total", trashHandler.getContainerModelsCount(trashEntryId, containerModelId));
+			pageContext.setAttribute("results", trashHandler.getContainerModels(className, classPK, containerModelId, searchContainer.getStart(), searchContainer.getEnd()));
+			pageContext.setAttribute("total", trashHandler.getContainerModelsCount(className, classPK, containerModelId));
 			%>
 
 		</liferay-ui:search-container-results>
@@ -99,40 +104,34 @@ String headerName2 = LanguageUtil.format(pageContext, "num-of-x", trashHandler.g
 
 			<liferay-ui:search-container-column-text
 				name="<%= headerName2 %>"
-				value="<%= String.valueOf(trashHandler.getContainerModelsCount(trashEntryId, curContainerModel.getContainerModelId())) %>"
+				value="<%= String.valueOf(trashHandler.getContainerModelsCount(className, classPK, curContainerModel.getContainerModelId())) %>"
 			/>
 
-			<c:choose>
-				<c:when test="<%= containerURL != null %>">
+			<%
+			StringBuilder sb = new StringBuilder();
 
-					<%
-					StringBuilder sb = new StringBuilder();
+			sb.append("opener.");
+			sb.append(renderResponse.getNamespace());
+			sb.append("selectContainer(");
+			sb.append(className);
+			sb.append(", ");
+			sb.append(classPK);
+			sb.append(", ");
+			sb.append(curContainerModel.getContainerModelId());
+			sb.append("); window.close();");
+			%>
 
-					sb.append("opener.");
-					sb.append(renderResponse.getNamespace());
-					sb.append("selectContainer(");
-					sb.append(trashEntryId);
-					sb.append(", ");
-					sb.append(curContainerModel.getContainerModelId());
-					sb.append("); window.close();");
-					%>
-
-					<liferay-ui:search-container-column-button
-						align="right"
-						href="<%= sb.toString() %>"
-						name="choose"
-					/>
-				</c:when>
-				<c:otherwise>
-					<liferay-ui:search-container-column-text> </liferay-ui:search-container-column-text>
-				</c:otherwise>
-			</c:choose>
+			<liferay-ui:search-container-column-button
+				align="right"
+				href="<%= sb.toString() %>"
+				name="choose"
+			/>
 		</liferay-ui:search-container-row>
 
 		<aui:button-row>
 
 			<%
-			String taglibSelectOnClick = "opener." + renderResponse.getNamespace() + "selectContainer("+ trashEntryId + ", " + containerModelId + "); window.close();";
+			String taglibSelectOnClick = "opener." + renderResponse.getNamespace() + "selectContainer("+ className + ", " + classPK + ", " + containerModelId + "); window.close();";
 
 			String taglibSelectName = LanguageUtil.format(pageContext, "choose-this-x", containerModelName);
 			%>

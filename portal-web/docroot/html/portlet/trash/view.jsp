@@ -278,7 +278,8 @@ portletURL.setParameter("tabs1", tabs1);
 <aui:form action="<%= moveEntryURL.toString() %>" method="post" name="fm1">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
-	<aui:input name="trashEntryId" type="hidden" value="" />
+	<aui:input name="className" type="hidden" value="" />
+	<aui:input name="classPK" type="hidden" value="" />
 	<aui:input name="containerModelId" type="hidden" value="" />
 </aui:form>
 
@@ -293,8 +294,9 @@ portletURL.setParameter("tabs1", tabs1);
 </aui:script>
 
 <aui:script>
-	function <portlet:namespace />selectContainer(trashEntryId, containerModelId) {
-		document.<portlet:namespace />fm1.<portlet:namespace />trashEntryId.value = trashEntryId;
+	function <portlet:namespace />selectContainer(className, classPK, containerModelId) {
+		document.<portlet:namespace />fm1.<portlet:namespace />className.value = className;
+		document.<portlet:namespace />fm1.<portlet:namespace />classPK.value = classPK;
 		document.<portlet:namespace />fm1.<portlet:namespace />containerModelId.value = containerModelId;
 
 		submitForm(document.<portlet:namespace />fm1);

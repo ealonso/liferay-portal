@@ -52,10 +52,11 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 
 	@Override
 	public List<ContainerModel> getContainerModels(
-			long trashEntryId, long parentContainerModelId, int start, int end)
+			String className, long classPK, long parentContainerModelId,
+			int start, int end)
 		throws PortalException, SystemException {
 
-		Repository repository = getRepository(trashEntryId);
+		Repository repository = getRepository(className, classPK);
 
 		List<Folder> folders = repository.getFolders(
 			parentContainerModelId, false, start, end, null);
@@ -71,10 +72,10 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 
 	@Override
 	public int getContainerModelsCount(
-			long trashEntryId, long parentContainerModelId)
+		String className, long classPK, long parentContainerModelId)
 		throws PortalException, SystemException {
 
-		Repository repository = getRepository(trashEntryId);
+		Repository repository = getRepository(className, classPK);
 
 		return repository.getFoldersCount(parentContainerModelId, false);
 	}
@@ -121,25 +122,21 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 		return (DLFolder)folder.getModel();
 	}
 
-	protected Repository getRepository(long trashEntryId)
+	protected Repository getRepository(String className, long classPK)
 		throws PortalException, SystemException {
 
-		TrashEntry trashEntry = getTrashEntry(trashEntryId);
-
-		String className = trashEntry.getClassName();
-
 		if (className.equals(DLFolder.class.getName())) {
-			return getRepository(trashEntry.getClassPK(), 0);
+			return getRepository(classPK, 0);
 		}
 
-		return getRepository(0, trashEntry.getClassPK());
+		return getRepository(0, classPK);
 	}
 
-	protected Repository getRepository(long folderId, long fileEntryid)
+	protected Repository getRepository(long folderId, long fileEntryId)
 		throws PortalException, SystemException {
 
 		Repository repository = RepositoryServiceUtil.getRepositoryImpl(
-			folderId, fileEntryid, 0);
+			folderId, fileEntryId, 0);
 
 		if (!(repository instanceof LiferayRepository)) {
 			throw new InvalidRepositoryException(

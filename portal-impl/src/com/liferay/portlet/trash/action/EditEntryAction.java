@@ -207,17 +207,14 @@ public class EditEntryAction extends PortletAction {
 
 		long containerModelId = ParamUtil.getLong(
 			actionRequest, "containerModelId");
-		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
-
-		TrashEntry entry = TrashEntryLocalServiceUtil.getTrashEntry(
-			trashEntryId);
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			entry.getClassName(), actionRequest);
+			className, actionRequest);
 
-		TrashEntryServiceUtil.moveEntry(
-			themeDisplay.getScopeGroupId(), trashEntryId, containerModelId,
-			serviceContext);
+		TrashEntry entry = TrashEntryServiceUtil.moveEntry(
+			className, classPK, containerModelId, serviceContext);
 
 		return new TrashEntry[] {entry};
 	}

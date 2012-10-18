@@ -22,8 +22,8 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(entry.getCl
 	<c:when test="<%= !trashHandler.isRestorable(entry.getClassPK()) %>">
 		<portlet:renderURL var="moveURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/trash/select_container" />
-			<portlet:param name="trashEntryId" value="<%= String.valueOf(entry.getEntryId()) %>" />
-			<portlet:param name="entryClassName" value="<%= entry.getClassName() %>" />
+			<portlet:param name="className" value="<%= entry.getClassName() %>" />
+			<portlet:param name="classPK" value="<%= String.valueOf(entry.getClassPK()) %>" />
 		</portlet:renderURL>
 
 		<%

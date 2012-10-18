@@ -168,7 +168,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	}
 
 	/**
-	 * Restores the trash entry with the primary key by moving it to a new
+	 * Restores the trash entry by moving it to a new
 	 * location identified by destination container model ID.
 	 *
 	 * <p>
@@ -188,8 +188,8 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	 * </li>
 	 * </ul>
 	 *
-	 * @param  groupId the primary key of the group
-	 * @param  entryId the primary key of the trash entry
+	 * @param  className the class name of the entry
+	 * @param  classPK the primary key of the entry
 	 * @param  destinationContainerModelId the primary key of the new location
 	 * @param  serviceContext the service context (optionally <code>null</code>)
 	 * @throws PortalException if the user didn't have permission to add the
@@ -197,27 +197,27 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	 *         general
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void moveEntry(
-			long groupId, long entryId, long destinationContainerModelId,
-			ServiceContext serviceContext)
+	public TrashEntry moveEntry(
+			String className, long classPK,
+			long destinationContainerModelId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		TrashEntry entry = trashEntryLocalService.getTrashEntry(entryId);
+		TrashEntry entry = trashEntryLocalService.getEntry(className, classPK);
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			entry.getClassName());
+			className);
 
 		if (!trashHandler.hasTrashPermission(
-				permissionChecker, groupId, destinationContainerModelId,
-				TrashActionKeys.MOVE)) {
+				permissionChecker, serviceContext.getScopeGroupId(),
+				destinationContainerModelId, TrashActionKeys.MOVE)) {
 
 			throw new PrincipalException("trash.move.error");
 		}
 
 		if (!trashHandler.hasTrashPermission(
-				permissionChecker, 0, entry.getClassPK(),
+				permissionChecker, 0, classPK,
 				TrashActionKeys.RESTORE)) {
 
 			throw new PrincipalException("trash.restore.error");
@@ -227,7 +227,9 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			entry, destinationContainerModelId, StringPool.BLANK);
 
 		trashHandler.moveTrashEntry(
-			entry.getClassPK(), destinationContainerModelId, serviceContext);
+			classPK, destinationContainerModelId, serviceContext);
+
+		return entry;
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(

@@ -227,7 +227,8 @@ public interface TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<ContainerModel> getContainerModels(
-			long classPK, long containerModelId, int start, int end)
+			String className, long classPK, long containerModelId, int start,
+			int end)
 		throws PortalException, SystemException;
 
 	/**
@@ -249,7 +250,8 @@ public interface TrashHandler {
 	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int getContainerModelsCount(long classPK, long containerModelId)
+	public int getContainerModelsCount(
+			String className, long classPK, long containerModelId)
 		throws PortalException, SystemException;
 
 	/**
@@ -405,7 +407,7 @@ public interface TrashHandler {
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public TrashEntry moveTrashEntry(
+	public void moveTrashEntry(
 			long classPK, long containerModelId, ServiceContext serviceContext)
 		throws PortalException, SystemException;
 

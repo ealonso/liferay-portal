@@ -148,7 +148,8 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<ContainerModel> getContainerModels(
-			long classPK, long containerModelId, int start, int end)
+			String className, long classPK, long containerModelId, int start,
+			int end)
 		throws PortalException, SystemException {
 
 		return null;
@@ -172,7 +173,8 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int getContainerModelsCount(long classPK, long containerModelId)
+	public int getContainerModelsCount(
+			String className, long classPK, long containerModelId)
 		throws PortalException, SystemException {
 
 		return 0;
@@ -293,7 +295,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return true;
 	}
 
-	public TrashEntry moveTrashEntry(
+	public void moveTrashEntry(
 			long classPK, long containerModelId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 
@@ -331,12 +333,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	protected AssetRendererFactory getAssetRendererFactory() {
 		return AssetRendererFactoryRegistryUtil.
 			getAssetRendererFactoryByClassName(getClassName());
-	}
-
-	protected TrashEntry getTrashEntry(long trashEntryId)
-		throws PortalException, SystemException {
-
-		return TrashEntryLocalServiceUtil.getEntry(trashEntryId);
 	}
 
 	protected abstract boolean hasPermission(
