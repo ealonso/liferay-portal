@@ -159,8 +159,9 @@ public class TrashEntryServiceHttp {
 		}
 	}
 
-	public static void moveEntry(HttpPrincipal httpPrincipal, long groupId,
-		long entryId, long destinationContainerModelId,
+	public static com.liferay.portlet.trash.model.TrashEntry moveEntry(
+		HttpPrincipal httpPrincipal, java.lang.String className, long classPK,
+		long destinationContainerModelId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
@@ -168,11 +169,14 @@ public class TrashEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(TrashEntryServiceUtil.class.getName(),
 					"moveEntry", _moveEntryParameterTypes3);
 
-			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					entryId, destinationContainerModelId, serviceContext);
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					className, classPK, destinationContainerModelId,
+					serviceContext);
+
+			Object returnObj = null;
 
 			try {
-				TunnelUtil.invoke(httpPrincipal, methodHandler);
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception e) {
 				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
@@ -185,6 +189,8 @@ public class TrashEntryServiceHttp {
 
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
+
+			return (com.liferay.portlet.trash.model.TrashEntry)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
@@ -205,7 +211,7 @@ public class TrashEntryServiceHttp {
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
 	private static final Class<?>[] _moveEntryParameterTypes3 = new Class[] {
-			long.class, long.class, long.class,
+			java.lang.String.class, long.class, long.class,
 			com.liferay.portal.service.ServiceContext.class
 		};
 }

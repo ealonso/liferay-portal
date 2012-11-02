@@ -107,7 +107,7 @@ public class TrashEntryServiceUtil {
 	}
 
 	/**
-	* Restores the trash entry with the primary key by moving it to a new
+	* Restores the trash entry by moving it to a new
 	* location identified by destination container model ID.
 	*
 	* <p>
@@ -127,8 +127,8 @@ public class TrashEntryServiceUtil {
 	* </li>
 	* </ul>
 	*
-	* @param groupId the primary key of the group
-	* @param entryId the primary key of the trash entry
+	* @param className the class name of the entry
+	* @param classPK the primary key of the entry
 	* @param destinationContainerModelId the primary key of the new location
 	* @param serviceContext the service context (optionally <code>null</code>)
 	* @throws PortalException if the user didn't have permission to add the
@@ -136,13 +136,14 @@ public class TrashEntryServiceUtil {
 	general
 	* @throws SystemException if a system exception occurred
 	*/
-	public static void moveEntry(long groupId, long entryId,
+	public static com.liferay.portlet.trash.model.TrashEntry moveEntry(
+		java.lang.String className, long classPK,
 		long destinationContainerModelId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		getService()
-			.moveEntry(groupId, entryId, destinationContainerModelId,
+		return getService()
+				   .moveEntry(className, classPK, destinationContainerModelId,
 			serviceContext);
 	}
 

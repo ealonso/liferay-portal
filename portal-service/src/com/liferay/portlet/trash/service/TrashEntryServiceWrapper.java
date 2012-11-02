@@ -101,7 +101,7 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	}
 
 	/**
-	* Restores the trash entry with the primary key by moving it to a new
+	* Restores the trash entry by moving it to a new
 	* location identified by destination container model ID.
 	*
 	* <p>
@@ -121,8 +121,8 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	* </li>
 	* </ul>
 	*
-	* @param groupId the primary key of the group
-	* @param entryId the primary key of the trash entry
+	* @param className the class name of the entry
+	* @param classPK the primary key of the entry
 	* @param destinationContainerModelId the primary key of the new location
 	* @param serviceContext the service context (optionally <code>null</code>)
 	* @throws PortalException if the user didn't have permission to add the
@@ -130,12 +130,13 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	general
 	* @throws SystemException if a system exception occurred
 	*/
-	public void moveEntry(long groupId, long entryId,
+	public com.liferay.portlet.trash.model.TrashEntry moveEntry(
+		java.lang.String className, long classPK,
 		long destinationContainerModelId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		_trashEntryService.moveEntry(groupId, entryId,
+		return _trashEntryService.moveEntry(className, classPK,
 			destinationContainerModelId, serviceContext);
 	}
 

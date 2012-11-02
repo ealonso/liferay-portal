@@ -109,7 +109,7 @@ public interface TrashEntryService extends BaseService {
 			com.liferay.portal.security.auth.PrincipalException;
 
 	/**
-	* Restores the trash entry with the primary key by moving it to a new
+	* Restores the trash entry by moving it to a new
 	* location identified by destination container model ID.
 	*
 	* <p>
@@ -129,8 +129,8 @@ public interface TrashEntryService extends BaseService {
 	* </li>
 	* </ul>
 	*
-	* @param groupId the primary key of the group
-	* @param entryId the primary key of the trash entry
+	* @param className the class name of the entry
+	* @param classPK the primary key of the entry
 	* @param destinationContainerModelId the primary key of the new location
 	* @param serviceContext the service context (optionally <code>null</code>)
 	* @throws PortalException if the user didn't have permission to add the
@@ -138,7 +138,8 @@ public interface TrashEntryService extends BaseService {
 	general
 	* @throws SystemException if a system exception occurred
 	*/
-	public void moveEntry(long groupId, long entryId,
+	public com.liferay.portlet.trash.model.TrashEntry moveEntry(
+		java.lang.String className, long classPK,
 		long destinationContainerModelId,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
