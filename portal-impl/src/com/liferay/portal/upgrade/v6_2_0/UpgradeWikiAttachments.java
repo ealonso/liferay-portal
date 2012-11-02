@@ -26,6 +26,7 @@ import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.NoSuchDirectoryException;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.store.DLStoreUtil;
 
@@ -248,7 +249,7 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 
 			sb.append("insert into Repository (uuid_, repositoryId, groupId, ");
 			sb.append("companyId, userId, userName, createDate, ");
-			sb.append("modifiedDate, classNameId, name, description,");
+			sb.append("modifiedDate, classNameId, name, description, ");
 			sb.append("portletId, typeSettings, dlFolderId) values (?, ?, ?, ");
 			sb.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
@@ -297,9 +298,8 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-				"select folderId from DLFolder " +
-					"where repositoryId = ? and parentFolderId = ? and " +
-						"name = ?");
+				"select folderId from DLFolder  where repositoryId = ? and " +
+					"parentFolderId = ? and name = ?");
 
 			ps.setLong(1, repositoryId);
 			ps.setLong(2, parentFolderId);
@@ -336,8 +336,8 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-				"select repositoryId from Repository" +
-					" where groupId = ? and name = ? and portletId = ?");
+				"select repositoryId from Repository where groupId = ? and " +
+					"name = ? and portletId = ?");
 
 			ps.setLong(1, groupId);
 			ps.setString(2, name);
@@ -369,8 +369,8 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 			con = DataAccess.getUpgradeOptimizedConnection();
 
 			ps = con.prepareStatement(
-				"select nodeId, companyId, groupId, userId, userName " +
-					"from WikiPage where resourcePrimKey = ? and head = ?");
+				"select nodeId, companyId, groupId, userId, userName from " +
+					"WikiPage where resourcePrimKey = ? and head = ?");
 
 			ps.setLong(1, resourcePrimKey);
 			ps.setBoolean(2, true);
@@ -427,10 +427,9 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 					repositoryId, nodeFolderId, String.valueOf(resourcePrimKey),
 					false);
 
-				int i = 1;
-
 				for (String attachment : attachments) {
-					String name = String.valueOf(i);
+					String name = String.valueOf(
+						increment(DLFileEntry.class.getName()));
 
 					String title = FileUtil.getShortFileName(attachment);
 
@@ -463,8 +462,6 @@ public class UpgradeWikiAttachments extends UpgradeProcess {
 					}
 					catch (Exception e) {
 					}
-
-					i++;
 				}
 
 				try {
