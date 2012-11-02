@@ -222,6 +222,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return StringPool.BLANK;
 	}
 
+	public String getSubcontainerModelNames() {
+		return StringPool.BLANK;
+	}
+
 	public TrashRenderer getTrashRenderer(long classPK)
 		throws PortalException, SystemException {
 
