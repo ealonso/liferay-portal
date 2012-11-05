@@ -28,6 +28,7 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -147,7 +148,8 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<ContainerModel> getContainerModels(
-			long classPK, long containerModelId, int start, int end)
+			String className, long classPK, long containerModelId, int start,
+			int end)
 		throws PortalException, SystemException {
 
 		return null;
@@ -171,7 +173,8 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int getContainerModelsCount(long classPK, long containerModelId)
+	public int getContainerModelsCount(
+			String className, long classPK, long containerModelId)
 		throws PortalException, SystemException {
 
 		return 0;
@@ -219,6 +222,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	public String getSubcontainerModelName() {
+		return StringPool.BLANK;
+	}
+
+	public String getSubcontainerModelNames() {
 		return StringPool.BLANK;
 	}
 
@@ -288,7 +295,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return true;
 	}
 
-	public TrashEntry moveTrashEntry(
+	public void moveTrashEntry(
 			long classPK, long containerModelId, ServiceContext serviceContext)
 		throws PortalException, SystemException {
 

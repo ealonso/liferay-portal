@@ -227,7 +227,8 @@ public interface TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public List<ContainerModel> getContainerModels(
-			long classPK, long containerModelId, int start, int end)
+			String className, long classPK, long containerModelId, int start,
+			int end)
 		throws PortalException, SystemException;
 
 	/**
@@ -249,7 +250,8 @@ public interface TrashHandler {
 	 *         be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int getContainerModelsCount(long classPK, long containerModelId)
+	public int getContainerModelsCount(
+			String className, long classPK, long containerModelId)
 		throws PortalException, SystemException;
 
 	/**
@@ -311,6 +313,14 @@ public interface TrashHandler {
 	 */
 	public String getSubcontainerModelName();
 
+	/**
+	 * Returns the name of the sub-container model in plural (e.g. for a folder
+	 * the sub-container model name in plural may be "subfolders").
+	 *
+	 * @return the name of the sub-container model in plural
+	 */
+	public String getSubcontainerModelNames();
+	
 	/**
 	 * Returns the trash renderer associated to the model entity with the
 	 * primary key.
@@ -397,7 +407,7 @@ public interface TrashHandler {
 	 *         found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public TrashEntry moveTrashEntry(
+	public void moveTrashEntry(
 			long classPK, long containerModelId, ServiceContext serviceContext)
 		throws PortalException, SystemException;
 
