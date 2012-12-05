@@ -185,7 +185,7 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	 * @throws PortalException
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<ContainerModel> getParentContainerModels(long classPK)
+	public List<ContainerModel> getParentContainerModels(long containerModelId)
 		throws PortalException, SystemException {
 
 		return Collections.emptyList();
