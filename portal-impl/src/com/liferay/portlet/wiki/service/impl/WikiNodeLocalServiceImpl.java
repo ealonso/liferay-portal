@@ -428,10 +428,7 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 		List<WikiPage> pages = wikiPagePersistence.findByNodeId(
 			node.getNodeId());
 
-		for (WikiPage page : pages) {
-			wikiPageLocalService.updateStatus(
-				userId, page, status, status, serviceContext);
-		}
+		updateStatuses(user, pages, status);
 
 		// Trash
 
@@ -513,6 +510,13 @@ public class WikiNodeLocalServiceImpl extends WikiNodeLocalServiceBaseImpl {
 		}
 
 		return wikiImporter;
+	}
+
+	protected void updateStatuses(
+			User user, List<WikiPage> wikiPages, int status)
+		throws PortalException, SystemException {
+
+		// Copy from DLAppLocalServiceImpl
 	}
 
 	protected void validate(long nodeId, long groupId, String name)
