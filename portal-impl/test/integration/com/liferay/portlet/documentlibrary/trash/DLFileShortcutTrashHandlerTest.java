@@ -163,12 +163,12 @@ public class DLFileShortcutTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected boolean isInTrashFolder(ClassedModel classedModel)
+	protected boolean isInTrashContainer(ClassedModel classedModel)
 		throws Exception {
 
 		DLFileShortcut dLFileShortcut = (DLFileShortcut)classedModel;
 
-		return dLFileShortcut.isInTrashFolder();
+		return dLFileShortcut.isInTrashContainer();
 	}
 
 	@Override

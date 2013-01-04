@@ -169,7 +169,7 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 		try {
 			DLFolder dlFolder = getDLFolder(classPK);
 
-			if (dlFolder.isInTrash() || dlFolder.isInTrashFolder()) {
+			if (dlFolder.isInTrash() || dlFolder.isInTrashContainer()) {
 				return true;
 			}
 
@@ -181,13 +181,22 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 	}
 
 	@Override
+	public boolean isInTrashContainer(long classPK)
+		throws PortalException, SystemException {
+
+		DLFolder dlFolder = getDLFolder(classPK);
+
+		return dlFolder.isInTrashContainer();
+	}
+
+	@Override
 	public boolean isRestorable(long classPK)
 		throws PortalException, SystemException {
 
 		try {
 			DLFolder dlFolder = getDLFolder(classPK);
 
-			return !dlFolder.isInTrashFolder();
+			return !dlFolder.isInTrashContainer();
 		}
 		catch (InvalidRepositoryException ire) {
 			return false;

@@ -131124,6 +131124,28 @@ This method is a mapper for special Recycle Bin operations that are not real per
 			</throws>
 		</method>
 		<method>
+			<name>isInTrashContainer</name>
+			<comment><![CDATA[Returns <code>true</code> if the model entity with the primary key is in a container that is in the Recycle Bin.]]></comment>
+			<param>
+				<name>classPK</name>
+				<type>long</type>
+				<comment><![CDATA[the primary key of the model entity]]></comment>
+			</param>
+			<return>
+				<comment><![CDATA[<code>true</code> if the model entity with the primary key is in a container that is in the Recycle Bin; <code>false</code> otherwise]]></comment>
+			</return>
+			<throws>
+				<name>PortalException</name>
+				<type>com.liferay.portal.kernel.exception.PortalException</type>
+				<comment><![CDATA[if a model entity with the primary key could not be found in the portal]]></comment>
+			</throws>
+			<throws>
+				<name>SystemException</name>
+				<type>com.liferay.portal.kernel.exception.SystemException</type>
+				<comment><![CDATA[if a system exception occurred]]></comment>
+			</throws>
+		</method>
+		<method>
 			<name>isMovable</name>
 			<comment><![CDATA[Returns <code>true</code> if the entity can be moved from one container model (such as a folder) to another.]]></comment>
 			<return>

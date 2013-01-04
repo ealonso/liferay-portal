@@ -1913,6 +1913,8 @@ public interface PropsKeys {
 
 	public static final String RSS_CONNECTION_TIMEOUT = "rss.connection.timeout";
 
+	public static final String RSS_FEED_DISPLAY_STYLE_DEFAULT = "rss.feed.display.style.default";
+
 	public static final String RSS_FEED_TYPE_DEFAULT = "rss.feed.type.default";
 
 	public static final String RSS_FEED_TYPES = "rss.feed.types";
@@ -2151,11 +2153,15 @@ public interface PropsKeys {
 
 	public static final String SPRING_CONFIGS = "spring.configs";
 
+	public static final String SPRING_HIBERNATE_CONFIGURATION_PROXY_FACTORY_PRELOAD_CLASSLOADER_CLASSES = "spring.hibernate.configuration.proxy.factory.preload.classloader.classes";
+
 	public static final String SPRING_HIBERNATE_DATA_SOURCE = "spring.hibernate.data.source";
 
 	public static final String SPRING_HIBERNATE_SESSION_DELEGATED = "spring.hibernate.session.delegated";
 
 	public static final String SPRING_HIBERNATE_SESSION_FACTORY = "spring.hibernate.session.factory";
+
+	public static final String SPRING_HIBERNATE_SESSION_FACTORY_PRELOAD_CLASSLOADER_CLASSES = "spring.hibernate.session.factory.preload.classloader.classes";
 
 	public static final String SPRITE_FILE_NAME = "sprite.file.name";
 

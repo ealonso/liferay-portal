@@ -153,12 +153,12 @@ public class MBThreadTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
-	protected boolean isInTrashFolder(ClassedModel classedModel)
+	protected boolean isInTrashContainer(ClassedModel classedModel)
 		throws Exception {
 
 		MBThread thread = (MBThread)classedModel;
 
-		return thread.isInTrashCategory();
+		return thread.isInTrashContainer();
 	}
 
 	@Override

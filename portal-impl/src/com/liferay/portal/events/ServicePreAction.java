@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.image.ImageToolUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.log.Log;
@@ -313,8 +314,15 @@ public class ServicePreAction extends Action {
 		int companyLogoHeight = 0;
 		int companyLogoWidth = 0;
 
-		Image companyLogoImage = ImageLocalServiceUtil.getCompanyLogo(
-			company.getLogoId());
+		Image companyLogoImage = null;
+
+		if (company.getLogoId() > 0) {
+			companyLogoImage = ImageLocalServiceUtil.getCompanyLogo(
+				company.getLogoId());
+		}
+		else {
+			companyLogoImage = ImageToolUtil.getDefaultCompanyLogo();
+		}
 
 		if (companyLogoImage != null) {
 			companyLogoHeight = companyLogoImage.getHeight();

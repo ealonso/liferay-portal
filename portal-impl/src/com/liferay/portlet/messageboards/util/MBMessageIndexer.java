@@ -255,8 +255,8 @@ public class MBMessageIndexer extends BaseIndexer {
 
 			MBThread thread = message.getThread();
 
-			if (thread.isInTrashCategory()) {
-				MBCategory category = thread.getTrashCategory();
+			if (thread.isInTrashContainer()) {
+				MBCategory category = thread.getTrashContainer();
 
 				className = MBCategory.class.getName();
 				classPK = category.getCategoryId();

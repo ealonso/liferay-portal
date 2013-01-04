@@ -1423,6 +1423,8 @@ public class PropsValues {
 
 	public static final int RSS_CONNECTION_TIMEOUT = GetterUtil.getInteger(PropsUtil.get(PropsKeys.RSS_CONNECTION_TIMEOUT));
 
+	public static String RSS_FEED_DISPLAY_STYLE_DEFAULT = PropsUtil.get(PropsKeys.RSS_FEED_DISPLAY_STYLE_DEFAULT);
+
 	public static String RSS_FEED_TYPE_DEFAULT = PropsUtil.get(PropsKeys.RSS_FEED_TYPE_DEFAULT);
 
 	public static String[] RSS_FEED_TYPES = PropsUtil.getArray(PropsKeys.RSS_FEED_TYPES);
@@ -1573,7 +1575,11 @@ public class PropsValues {
 
 	public static final String[] SPRING_CONFIGS = PropsUtil.getArray(PropsKeys.SPRING_CONFIGS);
 
+	public static final String[] SPRING_HIBERNATE_CONFIGURATION_PROXY_FACTORY_PRELOAD_CLASSLOADER_CLASSES = PropsUtil.getArray(PropsKeys.SPRING_HIBERNATE_CONFIGURATION_PROXY_FACTORY_PRELOAD_CLASSLOADER_CLASSES);
+
 	public static boolean SPRING_HIBERNATE_SESSION_DELEGATED = GetterUtil.getBoolean(PropsUtil.get(PropsKeys.SPRING_HIBERNATE_SESSION_DELEGATED));
+
+	public static final String[] SPRING_HIBERNATE_SESSION_FACTORY_PRELOAD_CLASSLOADER_CLASSES = PropsUtil.getArray(PropsKeys.SPRING_HIBERNATE_SESSION_FACTORY_PRELOAD_CLASSLOADER_CLASSES);
 
 	public static final String SPRITE_FILE_NAME = PropsUtil.get(PropsKeys.SPRITE_FILE_NAME);
 

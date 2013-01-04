@@ -79,7 +79,7 @@ public class MBCategoryImpl extends MBCategoryBaseImpl {
 		return MBCategoryLocalServiceUtil.getCategory(getParentCategoryId());
 	}
 
-	public MBCategory getTrashCategory() {
+	public MBCategory getTrashContainer() {
 		MBCategory category = null;
 
 		try {
@@ -105,8 +105,8 @@ public class MBCategoryImpl extends MBCategoryBaseImpl {
 		return null;
 	}
 
-	public boolean isInTrashCategory() {
-		if (getTrashCategory() != null) {
+	public boolean isInTrashContainer() {
+		if (getTrashContainer() != null) {
 			return true;
 		}
 		else {
