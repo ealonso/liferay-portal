@@ -453,15 +453,14 @@ public class DLImpl implements DL {
 					messages = new ArrayList<MBMessage>();
 				}
 
-				if (message != null) {
-					messages.add(message);
-				}
+				messages.add(message);
 
 				entries.put(fileEntryId, messages);
 			}
 			catch (Exception e) {
 				if (_log.isWarnEnabled()) {
-					_log.warn("Documents and Media search index is stale and " +
+					_log.warn(
+						"Documents and Media search index is stale and " +
 							"contains file entry {" + entryClassPK + "}");
 				}
 			}

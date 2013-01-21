@@ -37,10 +37,9 @@ String shortTitle = StringUtil.shorten(title, 60);
 
 <div class="app-view-search-entry-taglib entry-display-style <%= showCheckbox ? "selectable" : StringPool.BLANK %> <%= displayStyle %>" data-title="<%= HtmlUtil.escapeAttribute(shortTitle) %>">
 	<a class="entry-link" href="<%= url %>" title="<%= HtmlUtil.escapeAttribute(title + " - " + description) %>">
-
 		<c:if test="<%= Validator.isNotNull(thumbnailSrc) %>">
 			<div class="entry-thumbnail">
-				<img alt="" border="no" src="<%= thumbnailSrc %>" />
+				<img alt="" class="entry-thumbnail-image" src="<%= thumbnailSrc %>" />
 
 				<c:if test="<%= locked %>">
 					<img alt="<liferay-ui:message key="locked" />" class="locked-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/large/overlay_lock.png" />

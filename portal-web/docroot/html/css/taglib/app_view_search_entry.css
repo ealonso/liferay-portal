@@ -68,6 +68,11 @@
 		overflow: hidden;
 		text-align: left;
 		text-decoration: none;
+
+		.entry-thumbnail-image {
+			border-width: 0;
+			text-decoration: none;
+		}
 	}
 
 	.entry-selector {
