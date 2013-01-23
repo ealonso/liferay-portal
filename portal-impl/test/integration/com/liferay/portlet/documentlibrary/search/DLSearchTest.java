@@ -37,11 +37,11 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
-
-import java.io.File;
-
+import com.liferay.portlet.documentlibrary.util.DLSearcher;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
+
+import java.io.File;
 
 /**
  * @author Eudaldo Alonso
@@ -53,7 +53,7 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class DLFileEntrySearchTest extends BaseSearchTestCase {
+public class DLSearchTest extends BaseSearchTestCase {
 
 	@Override
 	public void testSearchAttachments() throws Exception {
@@ -61,7 +61,7 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
-	public void testSearchFolders() throws Exception {
+	public void testSearchComments() throws Exception {
 		Assert.assertTrue("This test does not apply", true);
 	}
 
@@ -117,7 +117,7 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 	@Override
 	protected Class<?> getBaseModelClass() {
-		return DLFileEntry.class;
+		return DLSearcher.class;
 	}
 
 	@Override

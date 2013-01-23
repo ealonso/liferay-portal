@@ -982,7 +982,7 @@
 		<priority value="WARN" />
 	</category>
 
-	<category name="com.liferay.portlet.documentlibrary.util.DLIndexer">
+	<category name="com.liferay.portlet.documentlibrary.util.DLSearcher">
 		<priority value="ERROR" />
 	</category>
 

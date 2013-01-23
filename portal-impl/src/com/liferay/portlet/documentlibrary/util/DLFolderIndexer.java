@@ -24,19 +24,15 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.search.BaseIndexer;
-import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.documentlibrary.asset.DLFileEntryAssetRendererFactory;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
@@ -57,23 +53,12 @@ import javax.portlet.WindowStateException;
 /**
  * @author Alexander Chow
  */
-public class DLFolderIndexer extends BaseIndexer {
+public class DLFolderIndexer extends DLSearcher {
 
 	public static final String[] CLASS_NAMES = {DLFolder.class.getName()};
 
-	public static final String PORTLET_ID = PortletKeys.DOCUMENT_LIBRARY;
-
-	public DLFolderIndexer() {
-		setFilterSearch(true);
-		setPermissionAware(true);
-	}
-
 	public String[] getClassNames() {
 		return CLASS_NAMES;
-	}
-
-	public String getPortletId() {
-		return PORTLET_ID;
 	}
 
 	@Override
@@ -86,20 +71,6 @@ public class DLFolderIndexer extends BaseIndexer {
 
 		return DLFolderPermission.contains(
 			permissionChecker, dlFolder, ActionKeys.VIEW);
-	}
-
-	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
-		throws Exception {
-
-		int status = GetterUtil.getInteger(
-			searchContext.getAttribute(Field.STATUS),
-			WorkflowConstants.STATUS_APPROVED);
-
-		if (status != WorkflowConstants.STATUS_ANY) {
-			contextQuery.addRequiredTerm(Field.STATUS, status);
-		}
 	}
 
 	@Override
@@ -217,11 +188,6 @@ public class DLFolderIndexer extends BaseIndexer {
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexFolders(companyId);
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	protected void reindexFolders(final long companyId)

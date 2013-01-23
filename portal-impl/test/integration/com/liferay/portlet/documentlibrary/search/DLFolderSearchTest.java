@@ -37,11 +37,11 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.File;
-
-import org.junit.Assert;
-import org.junit.runner.RunWith;
 
 /**
  * @author Eudaldo Alonso
@@ -53,7 +53,7 @@ import org.junit.runner.RunWith;
 	})
 @RunWith(LiferayIntegrationJUnitTestRunner.class)
 @Sync
-public class DLFileEntrySearchTest extends BaseSearchTestCase {
+public class DLFolderSearchTest extends BaseSearchTestCase {
 
 	@Override
 	public void testSearchAttachments() throws Exception {
@@ -66,58 +66,29 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
+	public void testSearchComments() throws Exception {
+		Assert.assertTrue("This test does not apply", true);
+	}
+
+	@Override
 	protected BaseModel<?> addBaseModelWithWorkflow(
 			BaseModel<?> parentBaseModel, boolean approved,
 			ServiceContext serviceContext)
 		throws Exception {
 
-		DLFolder dlFolder = (DLFolder)parentBaseModel;
+		DLFolder parentDLFolder = (DLFolder)parentBaseModel;
 
-		String title = getSearchKeywords();
+		DLFolder dlFolder = DLFolderLocalServiceUtil.addFolder(
+			TestPropsValues.getUserId(), parentDLFolder.getGroupId(),
+			parentDLFolder.getGroupId(), false, parentDLFolder.getFolderId(),
+			getSearchKeywords(), getSearchKeywords(), false, serviceContext);
 
-		title += ServiceTestUtil.randomString(
-			_FILE_ENTRY_TITLE_MAX_LENGTH - title.length());
-
-		String content = "Content: Enterprise. Open Source.";
-
-		File file = FileUtil.createTempFile(content.getBytes());
-
-		serviceContext = (ServiceContext)serviceContext.clone();
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-
-		if (approved) {
-			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
-		}
-
-		FileEntry fileEntry = DLAppServiceUtil.addFileEntry(
-			dlFolder.getRepositoryId(), dlFolder.getFolderId(),
-			ServiceTestUtil.randomString() + ".txt", ContentTypes.TEXT_PLAIN,
-			title, StringPool.BLANK, StringPool.BLANK, file, serviceContext);
-
-		LiferayFileEntry liferayFileEntry = (LiferayFileEntry)fileEntry;
-
-		return liferayFileEntry.getDLFileEntry();
-	}
-
-	@Override
-	protected void addFolder(
-			ClassedModel classedModel, ServiceContext serviceContext)
-		throws Exception {
-
-		DLFileEntry dlFileEntry = (DLFileEntry)baseModel;
-
-		DLFolderLocalServiceUtil.addFolder(
-			TestPropsValues.getUserId(), dlFileEntry.getGroupId(),
-			dlFileEntry.getGroupId(), false,
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			ServiceTestUtil.randomString(_FOLDER_NAME_MAX_LENGTH),
-			StringPool.BLANK, false, serviceContext);
+		return dlFolder;
 	}
 
 	@Override
 	protected Class<?> getBaseModelClass() {
-		return DLFileEntry.class;
+		return DLFolder.class;
 	}
 
 	@Override
@@ -136,8 +107,6 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 	protected String getSearchKeywords() {
 		return "Title";
 	}
-
-	private static final int _FILE_ENTRY_TITLE_MAX_LENGTH = 255;
 
 	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 

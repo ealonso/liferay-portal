@@ -142,24 +142,7 @@ public class MBMessageIndexer extends BaseIndexer {
 		contextQuery.addRequiredTerm("discussion", discussion);
 
 		if (discussion) {
-			String relatedEntryClassName = (String)searchContext.getAttribute(
-				"relatedEntryClassName");
-
-			if (Validator.isNotNull(relatedEntryClassName)) {
-				Indexer indexer = IndexerRegistryUtil.getIndexer(
-					relatedEntryClassName);
-
-				if ((indexer != null) &&
-						!(indexer instanceof MBMessageIndexer)) {
-
-					indexer.postProcessContextQuery(
-						contextQuery, searchContext);
-
-					contextQuery.addRequiredTerm(
-						Field.CLASS_NAME_ID,
-						PortalUtil.getClassNameId(relatedEntryClassName));
-				}
-			}
+			addRelatedClassNames(contextQuery, searchContext);
 		}
 
 		long threadId = GetterUtil.getLong(

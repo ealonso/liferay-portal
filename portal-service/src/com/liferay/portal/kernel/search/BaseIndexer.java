@@ -193,11 +193,13 @@ public abstract class BaseIndexer implements Indexer {
 		try {
 			searchContext.setSearchEngineId(getSearchEngineId());
 
-			String[] entryClassNames = {getClassName(searchContext)};
+			String[] entryClassNames = getClassNames();
 
 			if (searchContext.isIncludeAttachments()) {
 				entryClassNames = ArrayUtil.append(
 					entryClassNames, DLFileEntry.class.getName());
+
+				searchContext.setAttribute("attachment", true);
 			}
 
 			if (searchContext.isIncludeDiscussions()) {
@@ -207,20 +209,13 @@ public abstract class BaseIndexer implements Indexer {
 				searchContext.setAttribute("discussion", true);
 			}
 
-			if (searchContext.isIncludeFolders() &&
-					Validator.isNotNull(getFolderClassName())) {
-
-				entryClassNames = ArrayUtil.append(
-					entryClassNames, getFolderClassName());
-			}
-
 			searchContext.setEntryClassNames(entryClassNames);
 
 			if (searchContext.isIncludeAttachments() ||
 				searchContext.isIncludeDiscussions()) {
 
 				searchContext.setAttribute(
-					"relatedEntryClassName", getClassName(searchContext));
+					"relatedEntryClassNames", getClassNames());
 			}
 
 			BooleanQuery contextQuery = BooleanQueryFactoryUtil.create(
@@ -282,6 +277,34 @@ public abstract class BaseIndexer implements Indexer {
 		}
 
 		return _searchEngineId;
+	}
+
+	protected void addRelatedClassNames (
+			BooleanQuery contextQuery, SearchContext searchContext)
+		throws Exception{
+
+		String[] relatedEntryClassNames =
+			(String[])searchContext.getAttribute("relatedEntryClassNames");
+
+		if ((relatedEntryClassNames != null) &&
+			(relatedEntryClassNames.length > 0)) {
+
+			for (String relatedEntryClassName : relatedEntryClassNames) {
+				Indexer indexer = IndexerRegistryUtil.getIndexer(
+					relatedEntryClassName);
+
+				if ((indexer != null) &&
+					(!indexer.getClass().isAssignableFrom(getClass()))) {
+
+					indexer.postProcessContextQuery(
+						contextQuery, searchContext);
+
+					contextQuery.addRequiredTerm(
+						Field.CLASS_NAME_ID,
+						PortalUtil.getClassNameId(relatedEntryClassName));
+				}
+			}
+		}
 	}
 
 	public String getSortField(String orderByCol) {
@@ -1253,12 +1276,6 @@ public abstract class BaseIndexer implements Indexer {
 
 	protected String getClassName(SearchContext searchContext) {
 		String[] classNames = getClassNames();
-
-		if (classNames.length != 1) {
-			throw new UnsupportedOperationException(
-				"Search method needs to be manually implemented for " +
-					"indexers with more than one class name");
-		}
 
 		return classNames[0];
 	}

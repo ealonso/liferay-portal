@@ -182,7 +182,6 @@ else if ((searchType == DLSearchConstants.SINGLE) && !ajaxRequest) {
 				searchContext.setEnd(entryEnd);
 				searchContext.setFolderIds(folderIdsArray);
 				searchContext.setIncludeDiscussions(true);
-				searchContext.setIncludeFolders(true);
 				searchContext.setKeywords(keywords);
 				searchContext.setStart(entryStart);
 

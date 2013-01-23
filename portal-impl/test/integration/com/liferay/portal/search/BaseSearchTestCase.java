@@ -225,8 +225,6 @@ public abstract class BaseSearchTestCase {
 
 		SearchContext searchContext = ServiceTestUtil.getSearchContext();
 
-		searchContext.setIncludeFolders(true);
-
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
