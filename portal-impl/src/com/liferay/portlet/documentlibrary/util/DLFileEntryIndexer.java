@@ -24,10 +24,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.search.BaseIndexer;
-import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
@@ -50,7 +47,6 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.service.persistence.GroupActionableDynamicQuery;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
@@ -64,7 +60,6 @@ import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryMetadataLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderServiceUtil;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFileEntryActionableDynamicQuery;
 import com.liferay.portlet.documentlibrary.service.persistence.DLFolderActionableDynamicQuery;
@@ -98,16 +93,9 @@ import javax.portlet.WindowStateException;
  * @author Raymond Augé
  * @author Alexander Chow
  */
-public class DLFileEntryIndexer extends BaseIndexer {
+public class DLFileEntryIndexer extends DLSearcher {
 
 	public static final String[] CLASS_NAMES = {DLFileEntry.class.getName()};
-
-	public static final String PORTLET_ID = PortletKeys.DOCUMENT_LIBRARY;
-
-	public DLFileEntryIndexer() {
-		setFilterSearch(true);
-		setPermissionAware(true);
-	}
 
 	@Override
 	public void addRelatedEntryFields(Document document, Object obj)
@@ -126,10 +114,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 		return CLASS_NAMES;
 	}
 
-	public String getPortletId() {
-		return PORTLET_ID;
-	}
-
 	@Override
 	public boolean hasPermission(
 			PermissionChecker permissionChecker, String entryClassName,
@@ -138,60 +122,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 		return DLFileEntryPermission.contains(
 			permissionChecker, entryClassPK, ActionKeys.VIEW);
-	}
-
-	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
-		throws Exception {
-
-		int status = GetterUtil.getInteger(
-			searchContext.getAttribute(Field.STATUS),
-			WorkflowConstants.STATUS_APPROVED);
-
-		if (status != WorkflowConstants.STATUS_ANY) {
-			contextQuery.addRequiredTerm(Field.STATUS, status);
-		}
-
-		String relatedEntryClassName = (String)searchContext.getAttribute(
-			"relatedEntryClassName");
-
-		if (Validator.isNotNull(relatedEntryClassName)) {
-			contextQuery.addRequiredTerm(
-				Field.CLASS_NAME_ID,
-				PortalUtil.getClassNameId(relatedEntryClassName));
-
-			Indexer indexer = IndexerRegistryUtil.getIndexer(
-				relatedEntryClassName);
-
-			if (indexer != null) {
-				indexer.postProcessContextQuery(contextQuery, searchContext);
-			}
-		}
-
-		long[] folderIds = searchContext.getFolderIds();
-
-		if ((folderIds != null) && (folderIds.length > 0)) {
-			if (folderIds[0] == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-				return;
-			}
-
-			BooleanQuery folderIdsQuery = BooleanQueryFactoryUtil.create(
-				searchContext);
-
-			for (long folderId : folderIds) {
-				try {
-					DLFolderServiceUtil.getFolder(folderId);
-				}
-				catch (Exception e) {
-					continue;
-				}
-
-				folderIdsQuery.addTerm(Field.FOLDER_ID, folderId);
-			}
-
-			contextQuery.add(folderIdsQuery, BooleanClauseOccur.MUST);
-		}
 	}
 
 	@Override
@@ -507,11 +437,6 @@ public class DLFileEntryIndexer extends BaseIndexer {
 
 			reindexFileEntries(companyId, groupId, dataRepositoryId);
 		}
-	}
-
-	@Override
-	protected String getPortletId(SearchContext searchContext) {
-		return PORTLET_ID;
 	}
 
 	protected void reindexFileEntries(
