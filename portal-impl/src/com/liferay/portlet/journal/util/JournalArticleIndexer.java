@@ -115,6 +115,19 @@ public class JournalArticleIndexer extends BaseIndexer {
 			contextQuery.addRequiredTerm(Field.TYPE, articleType);
 		}
 
+		long[] classTypeIds = searchContext.getClassTypeIds();
+
+		if (Validator.isNotNull(classTypeIds)) {
+			BooleanQuery classTypeIdsQuery = BooleanQueryFactoryUtil.create(
+				searchContext);
+
+			for (long classTypeId : classTypeIds) {
+				classTypeIdsQuery.addTerm(Field.CLASS_TYPE_ID, classTypeId);
+			}
+
+			contextQuery.add(classTypeIdsQuery, BooleanClauseOccur.MUST);
+		}
+
 		String ddmStructureKey = (String)searchContext.getAttribute(
 			"ddmStructureKey");
 
@@ -225,6 +238,8 @@ public class JournalArticleIndexer extends BaseIndexer {
 		if (ddmStructure == null) {
 			return;
 		}
+
+		document.addKeyword(Field.CLASS_TYPE_ID, ddmStructure.getStructureId());
 
 		Fields fields = null;
 
