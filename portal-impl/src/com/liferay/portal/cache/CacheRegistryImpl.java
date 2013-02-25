@@ -55,7 +55,9 @@ public class CacheRegistryImpl implements CacheRegistry {
 			cacheRegistryItem.invalidate();
 		}
 		else {
-			_log.error("No cache registry found with name " + name);
+			if (_log.isDebugEnabled()) {
+				_log.error("No cache registry found with name " + name);
+			}
 		}
 	}
 
