@@ -117,7 +117,7 @@ public class JournalArticleIndexer extends BaseIndexer {
 
 		long[] classTypeIds = searchContext.getClassTypeIds();
 
-		if (Validator.isNotNull(classTypeIds)) {
+		if ((classTypeIds != null) && (classTypeIds.length > 0)) {
 			BooleanQuery classTypeIdsQuery = BooleanQueryFactoryUtil.create(
 				searchContext);
 
