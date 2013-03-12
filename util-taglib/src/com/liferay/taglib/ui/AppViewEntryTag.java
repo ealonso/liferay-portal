@@ -199,7 +199,7 @@ public class AppViewEntryTag extends IncludeTag {
 	private long _assetCategoryClassPK;
 	private String _assetTagClassName;
 	private long _assetTagClassPK;
-	private String _cssClass;
+	private String _cssClass = "";
 	private Map<String, Object> _data;
 	private String _description;
 	private String _displayStyle;
