@@ -247,14 +247,6 @@ if (Validator.isNotNull(content)) {
 										<c:if test="<%= Validator.isNotNull(structureId) %>">
 											<span class="default-link">(<a href="javascript:;" id="<portlet:namespace />loadDefaultStructure"><liferay-ui:message key="use-default" /></a>)</span>
 										</c:if>
-
-										<span class="structure-controls">
-											<span class="structure-buttons">
-												<aui:button cssClass="save-structure-button aui-helper-hidden" name="saveStructureButton" value="save" />
-
-												<aui:button cssClass="edit-structure-button aui-helper-hidden" name="editStructureButton" value="stop-editing" />
-											</span>
-										</span>
 									</c:if>
 								</div>
 							</aui:fieldset>
