@@ -82,54 +82,9 @@ AUI.add(
 			instance._initializePageLoadFieldInstances();
 			instance._attachDelegatedEvents();
 			instance._attachEvents();
-			instance._updateOriginalStructureXSD();
 		};
 
 		Journal.prototype = {
-			addStructure: function(groupId, structureId, autoStructureId, name, description, xsd, callback) {
-				var instance = this;
-
-				var parentStructureId = '';
-
-				var addGroupPermissions = true;
-				var addGuestPermissions = true;
-
-				var defaultLocale = instance.getDefaultLocale();
-
-				var nameMap = {};
-
-				nameMap[defaultLocale] = name;
-
-				var descriptionMap = {};
-
-				descriptionMap[defaultLocale] = (Lang.isString(description) && description) ? description : null;
-
-				Liferay.Service(
-					'/journalstructure/add-structure',
-					{
-						groupId: groupId,
-						structureId: structureId,
-						autoStructureId: autoStructureId,
-						parentStructureId: parentStructureId,
-						nameMap: JSON.stringify(nameMap),
-						descriptionMap: JSON.stringify(descriptionMap),
-						xsd: xsd,
-						serviceContext: JSON.stringify(
-							{
-								addGroupPermissions: addGroupPermissions,
-								addGuestPermissions: addGuestPermissions,
-								scopeGroupId: groupId
-							}
-						)
-					},
-					function(message) {
-						if (Lang.isFunction(callback)) {
-							callback(message);
-						}
-					}
-				);
-			},
-
 			buildHTMLEditor: function(fieldInstance) {
 				var instance = this;
 
@@ -191,19 +146,12 @@ AUI.add(
 				var articleContent = instance.getArticleContentXML();
 				var xmlInput = instance.getByName(auxForm, 'xml', true);
 
-				if (instance.structureChange()) {
-					if (confirm(Liferay.Language.get('you-should-save-the-structure-first'))) {
-						instance.openSaveStructureDialog();
-					}
-				}
-				else {
-					auxForm.attr('action', downloadAction);
-					auxForm.attr('target', '_self');
+				auxForm.attr('action', downloadAction);
+				auxForm.attr('target', '_self');
 
-					xmlInput.val(articleContent);
+				xmlInput.val(articleContent);
 
-					submitForm(auxForm, null, false);
-				}
+				submitForm(auxForm, null, false);
 			},
 
 			getArticleContentXML: function() {
@@ -380,208 +328,10 @@ AUI.add(
 				return A.all(selector);
 			},
 
-			getSaveDialog: function(openCallback) {
-				var instance = this;
-
-				if (!instance._saveDialog) {
-					var saveStructureTemplateDialog = instance.getById('saveStructureTemplateDialog');
-					var htmlTemplate = saveStructureTemplateDialog.html();
-					var title = Liferay.Language.get('editing-structure-details');
-
-					var form = instance.getPrincipalForm();
-
-					var groupId = instance.getByName(form, 'groupId');
-					var structureIdInput = instance.getByName(form, 'structureId');
-					var structureNameInput = instance.getByName(form, 'structureName');
-					var structureDescriptionInput = instance.getByName(form, 'structureDescription');
-					var storedStructureXSD = instance.getByName(form, 'structureXSD');
-
-					var saveCallback = function() {
-						var dialogFields = instance._saveDialog.fields;
-
-						instance.showMessage(
-							dialogFields.messageElement,
-							'info',
-							Liferay.Language.get('waiting-for-an-answer')
-						);
-
-						var form = instance.getPrincipalForm();
-
-						var structureIdInput = instance.getByName(form, 'structureId');
-						var structureId = structureIdInput.val();
-
-						if (!structureId) {
-							var autoGenerateId = dialogFields.saveStructureAutogenerateIdCheckbox.get('checked');
-
-							instance.addStructure(
-								groupId.val(),
-								dialogFields.dialogStructureId.val(),
-								autoGenerateId,
-								dialogFields.dialogStructureName.val(),
-								dialogFields.dialogDescription.val(),
-								dialogFields.contentXSD,
-								serviceCallback
-							);
-						}
-						else {
-							instance.updateStructure(
-								dialogFields.dialogStructureGroupId.val(),
-								dialogFields.dialogStructureId.val(),
-								instance.getParentStructureId(),
-								dialogFields.dialogStructureName.val(),
-								dialogFields.dialogDescription.val(),
-								dialogFields.contentXSD,
-								serviceCallback
-							);
-						}
-					};
-
-					instance._saveDialog = new A.Dialog(
-						{
-							align: Liferay.Util.Window.ALIGN_CENTER,
-							bodyContent: htmlTemplate,
-							buttons: [
-								{
-									handler: saveCallback,
-									label: Liferay.Language.get('save')
-								},
-								{
-									handler: function() {
-										this.close();
-									},
-									label: Liferay.Language.get('cancel')
-								}
-							],
-							modal: true,
-							title: title,
-							width: 550
-						}
-					).render();
-
-					instance._saveDialog.fields = {
-						autoGenerateIdMessage: Liferay.Language.get('autogenerate-id'),
-						contentXSD: '',
-						dialogDescription: instance.getById('saveStructureStructureDescription'),
-						dialogStructureGroupId: instance.getById('saveStructureStructureGroupId'),
-						dialogStructureId: instance.getById('saveStructureStructureId'),
-						dialogStructureName: instance.getById('saveStructureStructureName'),
-						idInput: instance.getById('saveStructureStructureId'),
-						loadDefaultStructure: instance.getById('loadDefaultStructure'),
-						messageElement: instance.getById('saveStructureMessage'),
-						saveStructureAutogenerateId: instance.getById('saveStructureAutogenerateId'),
-						saveStructureAutogenerateIdCheckbox: instance.getById('saveStructureAutogenerateIdCheckbox'),
-						showStructureIdContainer: instance.getById('showStructureIdContainer'),
-						structureIdContainer: instance.getById('structureIdContainer'),
-						structureNameLabel: instance.getById('structureNameLabel')
-					};
-
-					var dialogFields = instance._saveDialog.fields;
-
-					var serviceCallback = function(message) {
-						var exception = message.exception;
-
-						if (!exception) {
-							structureDescriptionInput.val(dialogFields.dialogDescription.val());
-							structureIdInput.val(message.structureId);
-							structureNameInput.val(dialogFields.dialogStructureName.val());
-							storedStructureXSD.val(dialogFields.contentXSD);
-
-							dialogFields.dialogStructureGroupId.val(message.structureGroupId);
-							dialogFields.dialogStructureId.val(message.structureId);
-							dialogFields.structureNameLabel.html(Liferay.Util.escapeHTML(dialogFields.dialogStructureName.val()));
-							dialogFields.saveStructureAutogenerateIdCheckbox.hide();
-
-							if (dialogFields.loadDefaultStructure) {
-								dialogFields.loadDefaultStructure.show();
-							}
-
-							dialogFields.dialogStructureId.attr('disabled', 'disabled');
-
-							instance.showMessage(
-								dialogFields.messageElement,
-								'success',
-								Liferay.Language.get('your-request-processed-successfully')
-							);
-
-							var structureMessage = instance.getById('structureMessage');
-
-							structureMessage.hide();
-						}
-						else {
-							var errorMessage = instance._translateErrorMessage(exception);
-
-							instance.showMessage(
-								dialogFields.messageElement,
-								'error',
-								errorMessage
-							);
-						}
-					};
-
-					dialogFields.saveStructureAutogenerateIdCheckbox.on(
-						'click',
-						function(event) {
-							var checkbox = event.target;
-							var value = checkbox.get('checked');
-
-							dialogFields.saveStructureAutogenerateId.val(value);
-
-							if (value) {
-								dialogFields.dialogStructureId.attr('disabled', 'disabled').val(dialogFields.autoGenerateIdMessage);
-							}
-							else {
-								dialogFields.dialogStructureId.attr('disabled', '').val('');
-							}
-						}
-					);
-
-					dialogFields.showStructureIdContainer.on(
-						'click',
-						function(event) {
-							dialogFields.structureIdContainer.toggle();
-
-							event.halt();
-						}
-					);
-
-					dialogFields.dialogStructureName.focus();
-				}
-				else {
-					instance._saveDialog.show();
-				}
-
-				if (openCallback) {
-					openCallback.apply(instance, [instance._saveDialog]);
-				}
-			},
-
 			getSourceByNode: function(node) {
 				var instance = this;
 
 				return node.ancestor('li', true);
-			},
-
-			getStructureXSD: function() {
-				var instance = this;
-
-				var buffer = [];
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-				var sourceRoots = A.all(structureTreeId + ' > li.structure-field:not(.repeated-field)').filter(':not(.parent-structure-field)');
-
-				var root = instance._createDynamicNode('root');
-
-				buffer.push(root.openTag);
-
-				A.each(
-					sourceRoots,
-					function(item, index, collection) {
-						instance._appendStructureTypeElementAndMetaData(item, buffer);
-					}
-				);
-
-				buffer.push(root.closeTag);
-
-				return buffer.join('');
 			},
 
 			getTextAreaFields: function() {
@@ -682,39 +432,6 @@ AUI.add(
 				);
 			},
 
-			openSaveStructureDialog: function() {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var structureIdInput = instance.getByName(form, 'structureId');
-				var structureNameInput = instance.getByName(form, 'structureName');
-				var structureDescriptionInput = instance.getByName(form, 'structureDescription');
-
-				var structureId = structureIdInput.val();
-
-				instance.getSaveDialog(
-					function(dialog) {
-						var dialogFields = dialog.fields;
-
-						dialogFields.contentXSD = instance.getStructureXSD();
-
-						dialogFields.dialogStructureName.val(structureNameInput.val());
-						dialogFields.dialogDescription.val(structureDescriptionInput.val());
-						dialogFields.dialogStructureId.attr('disabled', 'disabled').val(dialogFields.autoGenerateIdMessage);
-
-						if (structureId) {
-							dialogFields.saveStructureAutogenerateId.hide();
-							dialogFields.dialogStructureId.val(structureIdInput.val());
-						}
-
-						dialog.show();
-
-						dialog._setAlignCenter(true);
-					}
-				);
-			},
-
 			previewArticle: function() {
 				var instance = this;
 
@@ -723,12 +440,7 @@ AUI.add(
 				var auxForm = instance.getPrincipalForm('fm2');
 				var articleContent = instance.getArticleContentXML();
 
-				if (instance.structureChange()) {
-					if (confirm(Liferay.Language.get('you-should-save-the-structure-first'))) {
-						instance.openSaveStructureDialog();
-					}
-				}
-				else if (instance.hasStructure() && !instance.hasTemplate() && !instance.updateStructureDefaultValues()) {
+				if (instance.hasStructure() && !instance.hasTemplate() && !instance.updateStructureDefaultValues()) {
 					var templateMessage = Liferay.Language.get('please-add-a-template-to-render-this-structure');
 
 					alert(templateMessage);
@@ -774,12 +486,7 @@ AUI.add(
 
 				var form = instance.getPrincipalForm();
 
-				if (instance.structureChange()) {
-					if (confirm(Liferay.Language.get('you-should-save-the-structure-first'))) {
-						instance.openSaveStructureDialog();
-					}
-				}
-				else if (instance.hasStructure() && !instance.hasTemplate() && !instance.updateStructureDefaultValues()) {
+				if (instance.hasStructure() && !instance.hasTemplate() && !instance.updateStructureDefaultValues()) {
 					var templateMessage = Liferay.Language.get('please-add-a-template-to-render-this-structure');
 
 					alert(templateMessage);
@@ -857,18 +564,6 @@ AUI.add(
 				);
 			},
 
-			structureChange: function(attribute) {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var storedStructureXSD = instance.getByName(form, 'structureXSD').val();
-
-				var hasChanged = (storedStructureXSD != instance.getStructureXSD());
-
-				return hasChanged;
-			},
-
 			translateArticle: function() {
 				var instance = this;
 
@@ -901,42 +596,6 @@ AUI.add(
 				);
 
 				fieldInstance.set('variableName', variableName);
-			},
-
-			updateStructure: function(groupId, structureId, parentStructureId, name, description, xsd, callback) {
-				var instance = this;
-
-				var defaultLocale = instance.getDefaultLocale();
-
-				var nameMap = {};
-
-				nameMap[defaultLocale] = name;
-
-				var descriptionMap = {};
-
-				descriptionMap[defaultLocale] = (Lang.isString(description) && description) ? description : null;
-
-				Liferay.Service(
-					'/journalstructure/update-structure',
-					{
-						groupId: groupId,
-						structureId: structureId,
-						parentStructureId: parentStructureId || '',
-						nameMap: JSON.stringify(nameMap),
-						descriptionMap: JSON.stringify(descriptionMap),
-						xsd: xsd,
-						serviceContext: JSON.stringify(
-							{
-								scopeGroupId: groupId
-							}
-						)
-					},
-					function(message) {
-						if (Lang.isFunction(callback)) {
-							callback(message);
-						}
-					}
-				);
 			},
 
 			updateStructureDefaultValues: function() {
@@ -1723,20 +1382,6 @@ AUI.add(
 				fieldInstance.set('localized', checkbox.get('checked'));
 
 				fieldInstance.setInstanceId(fieldInstance.get('instanceId'));
-			},
-
-			_updateOriginalStructureXSD: function() {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var currentXSD = instance.getStructureXSD();
-
-				var structureXSDInput = instance.getByName(form, 'structureXSD');
-
-				if (structureXSDInput) {
-					structureXSDInput.val(currentXSD);
-				}
 			}
 		};
 
