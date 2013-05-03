@@ -567,16 +567,7 @@ if (Validator.isNotNull(content)) {
 		</div>
 	</td>
 
-	<c:choose>
-		<c:when test="<%= Validator.isNull(toLanguageId) %>">
-			<td class="lfr-top">
-				<%@ include file="/html/portlet/journal/edit_article_extra.jspf" %>
-			</td>
-		</c:when>
-		<c:otherwise>
-			<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
-		</c:otherwise>
-	</c:choose>
+	<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
 </tr>
 </table>
 
