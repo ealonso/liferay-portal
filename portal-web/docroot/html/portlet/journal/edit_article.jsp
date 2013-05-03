@@ -61,6 +61,8 @@ DDMStructure ddmStructure = null;
 
 long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
 
+String ddmStructureXSD = StringPool.BLANK;
+
 if (ddmStructureId > 0) {
 	try {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(ddmStructureId);
@@ -75,6 +77,10 @@ else if (Validator.isNotNull(structureId)) {
 	catch (NoSuchStructureException nsse) {
 		ddmStructure = DDMStructureLocalServiceUtil.getStructure(themeDisplay.getCompanyGroupId(), PortalUtil.getClassNameId(JournalArticle.class), structureId);
 	}
+}
+
+if (ddmStructure != null) {
+	ddmStructureXSD = ddmStructure.getXsd();
 }
 
 DDMTemplate ddmTemplate = null;
@@ -178,6 +184,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 	<aui:input id="articleContent" name="content" type="hidden" />
 	<aui:input name="articleURL" type="hidden" value="<%= editArticleRenderURL %>" />
 	<aui:input name="ddmStructureId" type="hidden" />
+	<aui:input name="structureXSD" type="hidden" value="<%= ddmStructureXSD %>" />
 	<aui:input name="ddmTemplateId" type="hidden" />
 	<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
 

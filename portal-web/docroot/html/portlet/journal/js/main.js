@@ -67,8 +67,6 @@ AUI.add(
 
 		var TPL_TOOLTIP_IMAGE = '<img align="top" class="journal-article-instructions-container" src="' + themeDisplay.getPathThemeImages() + '/portlet/help.png" />';
 
-		var fieldsDataSet = new A.DataSet();
-
 		var Journal = function(portletNamespace, articleId) {
 			var instance = this;
 			
@@ -79,7 +77,6 @@ AUI.add(
 			instance.acceptChildren = true;
 
 			instance._initializeTagsSuggestionContent();
-			instance._initializePageLoadFieldInstances();
 			instance._attachDelegatedEvents();
 			instance._attachEvents();
 		};
@@ -120,23 +117,6 @@ AUI.add(
 				return url;
 			},
 
-			canDrop: function(source) {
-				var instance = this;
-
-				var componentType = instance.getComponentType(source);
-
-				var canDrop = true;
-
-				if ((componentType == 'list') || (componentType == 'multi-list')) {
-					canDrop = false;
-				}
-				else if (source.hasClass('repeated-field') || source.hasClass('parent-structure-field')) {
-					canDrop = false;
-				}
-
-				return canDrop;
-			},
-
 			downloadArticleContent: function() {
 				var instance = this;
 
@@ -157,79 +137,89 @@ AUI.add(
 			getArticleContentXML: function() {
 				var instance = this;
 
-				var buffer = [];
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-				var sourceRoots = A.all(structureTreeId + ' > li');
-				var hasStructure = instance.hasStructure();
+				var form = instance.getPrincipalForm();
 
-				var content;
+				var structureXSD = A.XML.parse(instance.getByName(form, 'structureXSD').val());
 
-				if (!hasStructure) {
-					var item = sourceRoots.item(0);
+				var xsd = new A.Node(structureXSD);
 
-					if (item) {
-						var fieldInstance = instance.getFieldInstance(item);
+				var xsdRoot = xsd.one('root');
 
-						content = fieldInstance.getContent(item);
+				var domRoot = A.one('.lfr-ddm-container');
+
+				var buffer = xsdRoot.clone().empty();
+
+				instance.getNodeContentXML(xsdRoot, domRoot, buffer);
+
+				buffer.all('*').each(
+					function(item, index, collection) {
+						item.removeAttribute('id');
 					}
+				);
+
+				buffer.removeAttribute('id');
+
+				return A.XML.format(buffer.getDOM());
+			},
+
+			getFieldContentXML: function(node, item, buffer, mode) {
+				var instance = this;
+
+				var nodeContentBuffer = [];
+
+				var form = instance.getPrincipalForm();
+
+				var fieldName = item.getData('fieldname');
+				var fieldNamespace = item.getData('fieldnamespace');
+
+				var fieldInstance = instance.getByName(form, fieldName + fieldNamespace);
+
+				var nodeTypeContent = instance.getNodeTypeContent();
+				var typeContent = instance._createDynamicNode(nodeTypeContent, null);
+
+				nodeContentBuffer.push(typeContent.openTag);
+
+				var content = fieldInstance.val() || '';
+
+				nodeContentBuffer.push('<![CDATA[' + content + ']]>');
+
+				nodeContentBuffer.push(typeContent.closeTag);
+
+				var nodeContent = item.one('> div.aui-field-wrapper-content');
+
+				if (nodeContent) {
+					var nodexsd = node.clone();
+					node.all('dynamic-element').remove();
+					instance.getNodeContentXML(nodexsd, nodeContent, node, 'prepend');
 				}
-				else {
-					var attributes = null;
-					var availableLocales = [];
-					var stillLocalized = false;
-					var availableLocalesElements = A.all('[name=' + instance.portletNamespace + 'available_locales]');
-					var defaultLocale = instance.getDefaultLocale();
 
-					instance.getFields().each(
-						function(item, index, collection) {
-							var fieldInstance = instance.getFieldInstance(item);
-							var isLocalized = fieldInstance.get('localized');
+				node.append(nodeContentBuffer.join(''));
 
-							if (isLocalized) {
-								stillLocalized = true;
-							}
-						}
-					);
+				if (mode === 'prepend') {
+					buffer.prepend(node);
+				} else {
+					buffer.append(node);
+				}
+			},
 
-					if (stillLocalized) {
-						availableLocalesElements.each(
+			getNodeContentXML: function(xsdNode, domNode, buffer, mode) {
+				var instance = this;
+
+				var elements = xsdNode.all('> dynamic-element');
+
+				elements.each(
+					function(item, index, collection) {
+						var xsd = item.getDOM();
+
+						var fields = domNode.all('> div.aui-field-wrapper[data-fieldname="' + item.attr('name') + '"]');
+
+						fields.each(
 							function(item, index, collection) {
-								var locale = item.val();
-
-								if (locale) {
-									availableLocales.push(locale);
-								}
+								instance.getFieldContentXML(A.Node(xsd).clone(), item, buffer, mode);
 							}
 						);
-
-						attributes = {
-							'available-locales': availableLocales.join(','),
-							'default-locale': defaultLocale
-						};
 					}
-					else {
-						attributes = {
-							'available-locales': defaultLocale,
-							'default-locale': defaultLocale
-						};
-					}
-
-					var root = instance._createDynamicNode('root', attributes);
-
-					buffer.push(root.openTag);
-
-					sourceRoots.each(
-						function(item, index, collection) {
-							instance._appendStructureTypeElementAndMetaData(item, buffer, true);
-						}
-					);
-
-					buffer.push(root.closeTag);
-
-					content = buffer.join('');
-				}
-
-				return content;
+				);
 			},
 
 			getById: function(id, namespace) {
@@ -246,10 +236,6 @@ AUI.add(
 				var inputName = withoutNamespace ? name : instance.portletNamespace + name;
 
 				return A.one(currentForm).one('[name=' + inputName + ']');
-			},
-
-			getComponentType: function(source) {
-				return source.attr('dataType');
 			},
 
 			getDefaultLocale: function() {
@@ -278,14 +264,6 @@ AUI.add(
 				return fieldsDataSet.item(id);
 			},
 
-			getFields: function() {
-				var instance = this;
-
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-
-				return A.all(structureTreeId + ' li');
-			},
-
 			getGroupId: function() {
 				var instance = this;
 
@@ -305,57 +283,10 @@ AUI.add(
 				return groupId;
 			},
 
-			getParentStructureId: function() {
-				var instance = this;
-
-				var parentStructureEl = instance.getById('parentStructureId');
-
-				var parentStructureId;
-
-				if (parentStructureEl) {
-					parentStructureId = parentStructureEl.val();
-				}
-
-				return parentStructureId;
-			},
-
-			getRepeatedSiblings: function(fieldInstance) {
-				var instance = this;
-
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-				var selector = structureTreeId + ' li[dataName=' + fieldInstance.get('variableName') + '].repeated-field';
-
-				return A.all(selector);
-			},
-
 			getSourceByNode: function(node) {
 				var instance = this;
 
 				return node.ancestor('li', true);
-			},
-
-			getTextAreaFields: function() {
-				var instance = this;
-
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-
-				var fields = A.all(structureTreeId + ' li[dataType=text_area] div.journal-article-component-container');
-
-				return fields.filter(
-					function(item, index, collection) {
-						if (item.ancestor('li').attr('datatype') == 'text_area') {
-							return item;
-						}
-					}
-				);
-			},
-
-			getPrincipalFieldElement: function(source) {
-				var instance = this;
-
-				var componentContainer = source.one('div.journal-article-component-container');
-
-				return componentContainer.one('.aui-field-input');
 			},
 
 			getPrincipalForm: function(formName) {
@@ -518,27 +449,23 @@ AUI.add(
 
 					var classNameId = Liferay.Util.toNumber(classNameIdInput.val());
 
-					var canSubmit = classNameId || instance.validateRequiredFields();
+					if (cmd == 'publish') {
+						workflowActionInput.val(Liferay.Workflow.ACTION_PUBLISH);
 
-					if (canSubmit) {
-						if (cmd == 'publish') {
-							workflowActionInput.val(Liferay.Workflow.ACTION_PUBLISH);
-
-							cmd = instance.articleId ? 'update' : 'add';
-						}
-
-						cmdInput.val(cmd);
-
-						if (!instance.articleId) {
-							articleIdInput.val(newArticleIdInput.val());
-						}
-
-						var content = instance.getArticleContentXML();
-
-						contentInput.val(content);
-
-						submitForm(form);
+						cmd = instance.articleId ? 'update' : 'add';
 					}
+
+					cmdInput.val(cmd);
+
+					if (!instance.articleId) {
+						articleIdInput.val(newArticleIdInput.val());
+					}
+
+					var content = instance.getArticleContentXML();
+
+					contentInput.val(content);
+
+					submitForm(form);
 				}
 			},
 
@@ -580,312 +507,6 @@ AUI.add(
 				contentInput.val(content);
 
 				submitForm(form);
-			},
-
-			updateFieldVariableName: function(fieldInstance, variableName) {
-				var instance = this;
-
-				var repeatedSiblings = instance.getRepeatedSiblings(fieldInstance);
-
-				repeatedSiblings.each(
-					function(item, index, collection) {
-						var repeatedFieldInstance = instance.getFieldInstance(item);
-
-						repeatedFieldInstance.set('variableName', variableName);
-					}
-				);
-
-				fieldInstance.set('variableName', variableName);
-			},
-
-			updateStructureDefaultValues: function() {
-				var instance = this;
-
-				var form = instance.getPrincipalForm();
-
-				var classNameId = instance.getByName(form, 'classNameId');
-
-				return (classNameId && classNameId.val() > 0);
-			},
-
-			validateRequiredFields: function() {
-				var instance = this;
-
-				var canSubmit = true;
-				var firstEmptyField = null;
-
-				var structureTreeId = instance._getNamespacedId('#structureTree');
-				var fields = A.all(structureTreeId + ' li');
-				var requiredFields = fields.filter('[dataRequired=true]');
-				var fieldsConatainer = A.all(structureTreeId + ' li .field-container');
-
-				fieldsConatainer.removeClass('required-field');
-
-				A.each(
-					requiredFields,
-					function(item, index, collection) {
-						var fieldInstance = instance.getFieldInstance(item);
-						var content = fieldInstance.getContent(item);
-
-						if (!content) {
-							var fieldConatainer = item.one('.field-container');
-
-							fieldConatainer.addClass('required-field');
-
-							if (canSubmit) {
-								firstEmptyField = instance.getPrincipalFieldElement(item);
-							}
-
-							canSubmit = false;
-						}
-					}
-				);
-
-				if (firstEmptyField) {
-					firstEmptyField.focus();
-				}
-
-				return canSubmit;
-			},
-
-			_appendStructureChildren: function(source, buffer, generateArticleContent) {
-				var instance = this;
-
-				var selector = '> span.folder > ul > li';
-
-				if (!generateArticleContent) {
-					selector += '.structure-field:not(.repeated-field):not(.parent-structure-field)';
-				}
-
-				var children = source.all(selector);
-
-				A.each(
-					children,
-					function(item, index, collection) {
-						instance._appendStructureTypeElementAndMetaData(item, buffer, generateArticleContent);
-					}
-				);
-			},
-
-			_appendStructureTypeElementAndMetaData: function(source, buffer, generateArticleContent) {
-				var instance = this;
-
-				var fieldInstance = instance.getFieldInstance(source);
-
-				if (fieldInstance) {
-					var typeElement;
-					var type = fieldInstance.get('fieldType');
-					var indexType = fieldInstance.get('indexType');
-
-					if (generateArticleContent) {
-						var instanceId = fieldInstance.get('instanceId');
-
-						if (!instanceId) {
-							instanceId = generateInstanceId();
-							fieldInstance.set('instanceId', instanceId);
-						}
-
-						typeElement = instance._createDynamicNode(
-							'dynamic-element',
-							{
-								'instance-id': instanceId,
-								name: Liferay.Util.escapeHTML(fieldInstance.get('variableName')),
-								type: Liferay.Util.escapeHTML(type),
-								'index-type': indexType
-							}
-						);
-					}
-					else {
-						typeElement = instance._createDynamicNode(
-							'dynamic-element',
-							{
-								name: Liferay.Util.escapeHTML(fieldInstance.get('variableName')),
-								type: Liferay.Util.escapeHTML(type),
-								'index-type': indexType,
-								repeatable: fieldInstance.get('repeatable')
-							}
-						);
-					}
-
-					var dynamicContentAttrs = null;
-
-					if (fieldInstance.get('localized')) {
-						var localizedValue = fieldInstance.get('localizedValue');
-
-						if (localizedValue !== 'false') {
-							dynamicContentAttrs = {
-								'language-id': localizedValue
-							};
-						}
-					}
-
-					var nodeTypeContent = instance.getNodeTypeContent();
-					var typeContent = instance._createDynamicNode(nodeTypeContent, dynamicContentAttrs);
-					var metadata = instance._createDynamicNode('meta-data');
-
-					var entryInstructions = instance._createDynamicNode(
-						'entry',
-						{
-							name: 'instructions'
-						}
-					);
-
-					var entryRequired = instance._createDynamicNode(
-						'entry',
-						{
-							name: 'required'
-						}
-					);
-
-					var displayAsTooltip = instance._createDynamicNode(
-						'entry',
-						{
-							name: 'displayAsTooltip'
-						}
-					);
-
-					var label = instance._createDynamicNode(
-						'entry',
-						{
-							name: 'label'
-						}
-					);
-
-					var predefinedValue = instance._createDynamicNode(
-						'entry',
-						{
-							name: 'predefinedValue'
-						}
-					);
-
-					buffer.push(typeElement.openTag);
-
-					if (!generateArticleContent) {
-						instance._appendStructureFieldOptionsBuffer(source, buffer);
-					}
-
-					instance._appendStructureChildren(source, buffer, generateArticleContent);
-
-					if (!generateArticleContent) {
-						buffer.push(metadata.openTag);
-
-						var displayAsTooltipVal = instance.normalizeValue(
-							fieldInstance.get('displayAsTooltip')
-						);
-
-						buffer.push(
-							displayAsTooltip.openTag,
-							'<![CDATA[' + displayAsTooltipVal + ']]>',
-							displayAsTooltip.closeTag
-						);
-
-						var requiredVal = instance.normalizeValue(
-							fieldInstance.get('required')
-						);
-
-						buffer.push(
-							entryRequired.openTag,
-							'<![CDATA[' + requiredVal + ']]>',
-							entryRequired.closeTag
-						);
-
-						var instructionsVal = instance.normalizeValue(
-							fieldInstance.get('instructions')
-						);
-
-						buffer.push(
-							entryInstructions.openTag,
-							'<![CDATA[' + instructionsVal + ']]>',
-							entryInstructions.closeTag
-						);
-
-						var fieldLabelVal = instance.normalizeValue(
-							fieldInstance.get('fieldLabel')
-						);
-
-						buffer.push(
-							label.openTag,
-							'<![CDATA[' + fieldLabelVal + ']]>',
-							label.closeTag
-						);
-
-						var predefinedValueVal = instance.normalizeValue(
-							fieldInstance.get('predefinedValue')
-						);
-
-						buffer.push(
-							predefinedValue.openTag,
-							'<![CDATA[' + predefinedValueVal + ']]>',
-							predefinedValue.closeTag,
-							metadata.closeTag
-						);
-					}
-					else if (generateArticleContent) {
-						buffer.push(typeContent.openTag);
-
-						var appendOptions = (type == 'list') || (type == 'multi-list');
-
-						if (appendOptions) {
-							instance._appendStructureFieldOptionsBuffer(source, buffer, generateArticleContent);
-						}
-						else {
-							var content = fieldInstance.getContent(source) || '';
-
-							buffer.push('<![CDATA[' + content + ']]>');
-						}
-
-						buffer.push(typeContent.closeTag);
-					}
-
-					buffer.push(typeElement.closeTag);
-				}
-			},
-
-			_appendStructureFieldOptionsBuffer: function(source, buffer, generateArticleContent) {
-				var instance = this;
-
-				var fieldInstance = instance.getFieldInstance(source);
-				var type = fieldInstance.get('fieldType');
-				var optionsList = source.all('> .folder > .field-container > .journal-article-component-container > .journal-list-subfield option');
-
-				if (optionsList) {
-					A.each(
-						optionsList,
-						function(item, index, collection) {
-							var optionKey = item.text();
-							var optionValue = item.val();
-
-							if (!generateArticleContent) {
-								var typeElementOption = instance._createDynamicNode(
-									'dynamic-element',
-									{
-										name: Liferay.Util.escapeHTML(optionKey),
-										type: Liferay.Util.escapeHTML(optionValue),
-										'repeatable': fieldInstance.get('repeatable')
-									}
-								);
-
-								buffer.push(typeElementOption.openTag + typeElementOption.closeTag);
-							}
-							else {
-								if (item.get('selected')) {
-									var multiList = (type == 'multi-list');
-									var option = instance._createDynamicNode('option');
-
-									if (multiList) {
-										buffer.push(option.openTag);
-									}
-
-									buffer.push('<![CDATA[' + Liferay.Util.escapeCDATA(optionValue) + ']]>');
-
-									if (multiList) {
-										buffer.push(option.closeTag);
-									}
-								}
-							}
-						}
-					);
-				}
 			},
 
 			_attachDelegatedEvents: function() {
@@ -987,11 +608,6 @@ AUI.add(
 					},
 					'img.journal-article-instructions-container'
 				);
-
-				var variableNameSelector = '[name="' + instance.portletNamespace + 'variableName"]';
-
-				container.delegate('keypress', A.bind('_onKeypressVariableName', instance), variableNameSelector);
-				container.delegate('keyup', A.bind('_onKeyupVariableName', instance), variableNameSelector);
 
 				instance._attachDelegatedEvents = Lang.emptyFn;
 			},
@@ -1099,46 +715,6 @@ AUI.add(
 				return fieldContainer.html();
 			},
 
-			_fieldInstanceFactory: function(options) {
-				var instance = this;
-
-				var type;
-
-				if (Lang.isString(options)) {
-					type = options;
-					options = null;
-				}
-				else {
-					type = options.fieldType;
-				}
-
-				options = options || {};
-
-				var model = {
-					'boolean': Journal.FieldModel.Boolean,
-					'document_library': Journal.FieldModel.DocumentLibrary,
-					'image': Journal.FieldModel.Image,
-					'link_to_layout': Journal.FieldModel.LinkToPage,
-					'list': Journal.FieldModel.List,
-					'multi-list': Journal.FieldModel.MultiList,
-					'selection_break': Journal.FieldModel.SelectionBreak,
-					'text': Journal.FieldModel.Text,
-					'text_area': Journal.FieldModel.TextArea,
-					'text_box': Journal.FieldModel.TextBox
-				};
-
-				options = A.merge(model[type], options);
-
-				var fieldInstance = new Journal.StructureField(
-					options,
-					instance.portletNamespace
-				).render();
-
-				fieldInstance.get('fieldLabel');
-
-				return fieldInstance;
-			},
-
 			_getNamespacedId: function(id, namespace, prefix) {
 				var instance = this;
 
@@ -1153,84 +729,6 @@ AUI.add(
 				id = id.replace(/^#/, '');
 
 				return prefix + namespace + id;
-			},
-
-			_hasFirstLevelFields: function() {
-				var instance = this;
-
-				var firstLevelFields = A.all(instance._getNamespacedId('#structureTree') + '> li');
-
-				return (firstLevelFields && firstLevelFields.size() > 1);
-			},
-
-			_hasParentField: function(source) {
-				var instance = this;
-
-				var fieldInstance = instance.getFieldInstance(source);
-
-				var id = source.get('id');
-
-				var node = A.one('#' + id);
-
-				return node && node.ancestor().hasClass('folder-droppable');
-			},
-
-			_initializePageLoadFieldInstances: function() {
-				var instance = this;
-
-				var fields = instance.getFields();
-
-				fields.each(
-					function(item, index, collection) {
-						var fieldInstance = instance.getFieldInstance(item);
-
-						if (!fieldInstance) {
-							var componentName = item.attr('dataName');
-							var componentType = item.attr('dataType');
-							var displayAsTooltip = item.attr('dataDisplayAsTooltip');
-							var fieldLabel = item.attr('dataLabel');
-							var indexType = item.attr('dataIndexType');
-							var instanceId = item.attr('dataInstanceId');
-							var instructions = item.attr('dataInstructions');
-							var localized = item.one('.journal-article-localized');
-							var parentValue = item.attr('dataParentStructureId');
-							var predefinedValue = item.attr('dataPredefinedValue');
-							var repeatable = item.attr('dataRepeatable');
-							var required = item.attr('dataRequired');
-
-							var localizedValue;
-
-							if (localized) {
-								localizedValue = localized.val();
-							}
-
-							var isLocalized = (String(localizedValue) != 'false');
-
-							fieldInstance = instance._fieldInstanceFactory(
-								{
-									displayAsTooltip: displayAsTooltip,
-									fieldLabel: fieldLabel,
-									instanceId: instanceId,
-									instructions: instructions,
-									localized: isLocalized,
-									localizedValue: localizedValue,
-									parentStructureId: parentValue,
-									predefinedValue: predefinedValue,
-									repeatable: repeatable,
-									required: required,
-									source: item,
-									fieldType: componentType,
-									indexType: indexType,
-									variableName: componentName
-								}
-							);
-						}
-
-						var id = item.get('id');
-
-						fieldsDataSet.add(id, fieldInstance);
-					}
-				);
 			},
 
 			_initializeTagsSuggestionContent: function() {
@@ -1274,33 +772,6 @@ AUI.add(
 						}
 					}
 				);
-			},
-
-			_onKeyupVariableName: function(event) {
-				var instance = this;
-
-				var variableNameInput = event.currentTarget;
-				var source = instance.getSourceByNode(variableNameInput);
-				var fieldInstance = instance.getFieldInstance(source);
-
-				if (fieldInstance) {
-					var variableNameValue = variableNameInput.val();
-
-					instance.updateFieldVariableName(fieldInstance, variableNameValue);
-				}
-			},
-
-			_onKeypressVariableName: function(event) {
-				var instance = this;
-
-				if (!event.isKeyInSet('BACKSPACE', 'DELETE', 'LEFT', 'RIGHT')) {
-					var regex = /^[\w_-]$/;
-					var typed = String.fromCharCode(event.keyCode);
-
-					if (!regex.test(typed)) {
-						event.halt();
-					}
-				}
 			},
 
 			_stripComponentType: function(type) {
@@ -1387,774 +858,10 @@ AUI.add(
 
 		A.augment(Journal, A.EventTarget);
 
-		var StructureField = A.Component.create(
-			{
-				ATTRS: {
-					content: {
-						validator: Lang.isString,
-						value: ''
-					},
-
-					displayAsTooltip: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('displayAsTooltip', D.Boolean.parse(v));
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('displayAsTooltip', true);
-						}
-					},
-
-					fieldLabel: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setFieldLabel(v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('fieldLabel', '');
-						}
-					},
-
-					fieldType: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('fieldType', v);
-						},
-						validator: Lang.isString,
-						value: ''
-					},
-
-					localized: {
-						valueFn: function() {
-							var instance = this;
-
-							var localizedValue = instance.getLocalizedValue();
-
-							return (String(localizedValue) == 'true');
-						}
-					},
-
-					localizedValue: {
-						getter: function() {
-							var instance = this;
-
-							return instance.getLocalizedValue();
-						}
-					},
-
-					indexType: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('IndexType', v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('IndexType', '');
-						}
-					},
-
-					innerHTML: {
-						validator: Lang.isString,
-						value: TPL_STRUCTURE_FIELD_INPUT
-					},
-
-					instructions: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setInstructions(v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('instructions', '');
-						}
-					},
-
-					instanceId: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setInstanceId(v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							var randomInstanceId = generateInstanceId();
-
-							return instance.getAttribute('instanceId', randomInstanceId);
-						}
-					},
-
-					optionsEditable: {
-						validator: Lang.isBoolean,
-						value: true
-					},
-
-					parentStructureId: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('parentStructureId', v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('parentStructureId', '');
-						}
-					},
-
-					predefinedValue: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('predefinedValue', v);
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('predefinedValue', '');
-						}
-					},
-
-					repeatable: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setRepeatable(D.Boolean.parse(v));
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('repeatable', false);
-						}
-					},
-
-					repeated: {
-						getter: function() {
-							var instance = this;
-
-							return instance.get('source').hasClass('repeated-field');
-						}
-					},
-
-					required: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setAttribute('required', D.Boolean.parse(v));
-						},
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('required', false);
-						}
-					},
-
-					source: {
-						value: null
-					},
-
-					variableName: {
-						setter: function(v) {
-							var instance = this;
-
-							return instance.setVariableName(v);
-						},
-						validator: Lang.isString,
-						valueFn: function() {
-							var instance = this;
-
-							return instance.getAttribute('name');
-						}
-					}
-				},
-
-				EXTENDS: A.Widget,
-
-				NAME: 'structurefield',
-
-				constructor: function(config, portletNamespace) {
-					var instance = this;
-
-					instance._lazyAddAttrs = false;
-
-					instance.portletNamespace = portletNamespace;
-
-					StructureField.superclass.constructor.apply(this, arguments);
-				},
-
-				UI_ATTRS: ['optionsEditable'],
-
-				prototype: {
-					cloneableAttrs: [
-						'displayAsTooltip',
-						'fieldLabel',
-						'fieldType',
-						'indexType',
-						'innerHTML',
-						'instructions',
-						'localized',
-						'localizedValue',
-						'predefinedValue',
-						'repeatable',
-						'required',
-						'variableName'
-					],
-
-					initializer: function() {
-						var instance = this;
-
-						var propagateAttr = instance.propagateAttr;
-
-						A.each(
-							instance.cloneableAttrs,
-							function(item, index, collection) {
-								instance.after(item + 'Change', propagateAttr);
-							}
-						);
-					},
-
-					destructor: function() {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						var children = source.all('.structure-field');
-
-						children.each(
-							function(item, index, collection) {
-								var fieldInstance = instance.getFieldInstance(item);
-
-								if (fieldInstance) {
-									fieldInstance.destroy();
-								}
-							}
-						);
-
-						var fieldType = instance.get('fieldType');
-
-						if (fieldType == 'text_area') {
-							var textarea = source.one('textarea');
-
-							if (textarea) {
-								var editorName = textarea.attr('name');
-								var editorReference = window[editorName];
-
-								if (editorReference && Lang.isFunction(editorReference.destroy)) {
-									editorReference.destroy();
-								}
-							}
-						}
-					},
-
-					canDrop: function() {
-						var instance = this;
-
-						return Journal.prototype.canDrop.apply(instance, arguments);
-					},
-
-					clone: function() {
-						var instance = this;
-
-						var options = {};
-						var portletNamespace = instance.portletNamespace;
-
-						A.each(
-							instance.cloneableAttrs,
-							function(item, index, collection) {
-								options[item] = instance.get(item);
-							}
-						);
-
-						options.source = null;
-
-						return new StructureField(options, portletNamespace);
-					},
-
-					createInstructionsContainer: function(value) {
-						return A.Node.create(TPL_INSTRUCTIONS_CONTAINER).html(Liferay.Util.escapeHTML(value));
-					},
-
-					createTooltipImage: function() {
-						return A.Node.create(TPL_TOOLTIP_IMAGE);
-					},
-
-					getAttribute: function(key, defaultValue) {
-						var instance = this;
-
-						var value;
-						var source = instance.get('source');
-
-						if (source) {
-							value = source.attr('data' + key);
-						}
-
-						if (Lang.isUndefined(value) && !Lang.isUndefined(defaultValue)) {
-							value = defaultValue;
-						}
-
-						return value;
-					},
-
-					getByName: function() {
-						var instance = this;
-
-						return Journal.prototype.getByName.apply(instance, arguments);
-					},
-
-					getComponentType: function() {
-						var instance = this;
-
-						return Journal.prototype.getComponentType.apply(instance, arguments);
-					},
-
-					getContent: function(source) {
-						var instance = this;
-
-						var content;
-						var type = instance.get('fieldType');
-						var componentContainer = source.one('div.journal-article-component-container');
-
-						var principalElement = componentContainer.one('.aui-field-input');
-
-						if (type == 'boolean') {
-							content = principalElement.attr('checked');
-						}
-						else if (type == 'text_area') {
-							var editorName = source.one('textarea').attr('name');
-							var editorReference = window[editorName];
-
-							if (editorReference && Lang.isFunction(editorReference.getHTML)) {
-								content = editorReference.getHTML();
-							}
-						}
-						else if (type == 'multi-list') {
-							var output = [];
-							var options = principalElement.all('option');
-
-							options.each(
-								function(item, index, collection) {
-									if (item.get('selected')) {
-										var value = item.val();
-
-										output.push(value);
-									}
-								}
-							);
-
-							content = output.join(',');
-						}
-						else if (type == 'image') {
-							var imageDelete = instance.getByName(componentContainer, 'journalImageDelete');
-
-							if (imageDelete && (imageDelete.val() == 'delete')) {
-								content = 'delete';
-							}
-							else {
-								var imageInput = componentContainer.one('.journal-image-field input');
-
-								var imageInputValue = imageInput.val() || false;
-
-								if (imageInputValue) {
-									content = imageInputValue;
-								}
-								else {
-									var imageContent = componentContainer.one('.journal-image-preview input.journal-image-preview-content');
-
-									if (imageContent) {
-										content = imageContent.val();
-									}
-								}
-							}
-						}
-						else {
-							if (principalElement) {
-								content = principalElement.val();
-							}
-						}
-
-						if ((type == 'list') || (type == 'multi-list') || (type == 'text') || (type == 'text_box')) {
-							content = Liferay.Util.escapeCDATA(content);
-						}
-
-						instance.set('content', content);
-
-						return content;
-					},
-
-					getFieldContainer: function() {
-						var instance = this;
-
-						if (!instance.fieldContainer) {
-							var htmlTemplate = [];
-							var fieldLabel = Liferay.Language.get('field');
-							var localizedLabelLanguage = Liferay.Language.get('localizable');
-							var requiredFieldLanguage = Liferay.Language.get('this-field-is-required');
-							var variableNameLanguage = Liferay.Language.get('variable-name');
-
-							var optionsEditable = instance.get('optionsEditable');
-
-							var editButtonTemplate = instance.getById('editButtonTemplate');
-							var editButtonTemplateHTML = '';
-
-							if (editButtonTemplate) {
-								editButtonTemplateHTML = editButtonTemplate.html();
-							}
-
-							var articleButtonsRowCSSClass = '';
-
-							if (!optionsEditable) {
-								articleButtonsRowCSSClass = 'aui-helper-hidden';
-							}
-
-							var repeatableButtonTemplate = instance.getById('repeatableButtonTemplate');
-							var repeatableButtonTemplateHTML = '';
-
-							if (repeatableButtonTemplate) {
-								repeatableButtonTemplateHTML = repeatableButtonTemplate.html();
-							}
-
-							var fieldType = instance.get('fieldType');
-							var required = instance.get('required');
-							var variableName = instance.get('variableName') + getUID();
-							var randomInstanceId = generateInstanceId();
-
-							htmlTemplate = Lang.sub(
-								TPL_FIELD_CONTAINER,
-								{
-									articleButtonsRowCSSClass: articleButtonsRowCSSClass,
-									cssClass: 'journal-structure-' + fieldType.replace(/_/g, '-'),
-									editButtonTemplateHTML: editButtonTemplateHTML,
-									fieldLabel: fieldLabel,
-									localizedLabelLanguage: localizedLabelLanguage,
-									instanceId: randomInstanceId,
-									portletNamespace: instance.portletNamespace,
-									repeatableButtonTemplateHTML: repeatableButtonTemplateHTML,
-									requiredFieldLanguage: requiredFieldLanguage,
-									variableName: variableName,
-									variableNameLanguage: variableNameLanguage
-								}
-							);
-
-							instance.fieldContainer = A.Node.create(htmlTemplate);
-
-							var source = instance.fieldContainer.one('li');
-
-							source.setAttribute('dataName', variableName);
-							source.setAttribute('dataRequired', required);
-							source.setAttribute('dataType', fieldType);
-							source.setAttribute('dataInstanceId', randomInstanceId);
-
-							if (!instance.canDrop(source)) {
-								instance.fieldContainer.one('.folder-droppable').remove();
-							}
-						}
-
-						return instance.fieldContainer;
-					},
-
-					getFieldElementContainer: function() {
-						var instance = this;
-
-						if (!instance.fieldElementContainer) {
-							instance.fieldElementContainer = instance.getFieldContainer().one('div.journal-article-component-container');
-						}
-
-						return instance.fieldElementContainer;
-					},
-
-					getFieldInstance: function() {
-						var instance = this;
-
-						return Journal.prototype.getFieldInstance.apply(instance, arguments);
-					},
-
-					getFieldLabelElement: function() {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						if (!source) {
-							source = instance.getFieldContainer().one('li');
-						}
-
-						return source.one('> .folder > .field-container .journal-article-field-label');
-					},
-
-					getLocalizedValue: function() {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						var input;
-
-						if (source) {
-							input = source.one('.journal-article-localized');
-						}
-
-						return input ? input.val() : 'false';
-					},
-
-					getRepeatedSiblings: function() {
-						var instance = this;
-
-						return Journal.prototype.getRepeatedSiblings.apply(instance, [instance]);
-					},
-
-					propagateAttr: function(event) {
-						var instance = this;
-
-						var siblings = instance.getRepeatedSiblings();
-
-						if (siblings) {
-							siblings.each(
-								function(item, index, collection) {
-									var fieldInstance = instance.getFieldInstance(item);
-
-									if (fieldInstance) {
-										fieldInstance.set(event.attrName, event.newVal);
-									}
-								}
-							);
-						}
-					},
-
-					setFieldLabel: function(value) {
-						var instance = this;
-
-						var fieldLabel = instance.getFieldLabelElement();
-
-						if (!value) {
-							value = instance.get('variableName');
-						}
-
-						if (fieldLabel) {
-							fieldLabel.one('span').html(Liferay.Util.escapeHTML(value));
-
-							instance.setAttribute('fieldLabel', value);
-						}
-
-						return value;
-					},
-
-					setInstanceId: function(value) {
-						var instance = this;
-
-						instance.setAttribute('instanceId', value);
-
-						var type = instance.get('fieldType');
-						var source = instance.get('source');
-
-						if ((type == 'image') && source) {
-							var isLocalized = instance.get('localized');
-							var inputFileName = instance.portletNamespace + 'structure_image_' + value + '_' + instance.get('variableName');
-							var inputFile = source.one('.journal-article-component-container [type=file]');
-
-							if (isLocalized) {
-								inputFileName += '_' + instance.get('localizedValue');
-							}
-
-							inputFile.attr('name', inputFileName);
-						}
-
-						return value;
-					},
-
-					setInstructions: function(value) {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						if (source) {
-							var fieldInstance = instance.getFieldInstance(source);
-
-							instance.setAttribute('instructions', value);
-
-							if (fieldInstance) {
-								var fieldContainer = source.one('> .folder > .field-container');
-								var label = fieldInstance.getFieldLabelElement();
-								var tooltipIcon = label.one('.journal-article-instructions-container');
-								var journalInstructionsMessage = fieldContainer.one('.journal-article-instructions-message');
-								var displayAsTooltip = fieldInstance.get('displayAsTooltip');
-
-								if (tooltipIcon) {
-									tooltipIcon.remove();
-								}
-
-								if (journalInstructionsMessage) {
-									journalInstructionsMessage.remove();
-								}
-
-								if (value) {
-									if (!displayAsTooltip) {
-										var instructionsMessage = fieldInstance.createInstructionsContainer(value);
-										var requiredMessage = fieldContainer.one('.journal-article-required-message');
-
-										requiredMessage.placeAfter(instructionsMessage);
-									}
-									else {
-										if (label) {
-											label.append(fieldInstance.createTooltipImage());
-										}
-									}
-								}
-							}
-						}
-
-						return value;
-					},
-
-					setRepeatable: function(value) {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						instance.setAttribute('repeatable', value);
-
-						if (source) {
-							var fieldInstance = instance.getFieldInstance(source);
-							var fieldContainer = source.one('> .folder > .field-container');
-							var repeatableFieldImage = fieldContainer.one('.repeatable-field-image');
-							var repeatableAddIcon = source.one('.journal-article-buttons .repeatable-button');
-
-							if (repeatableFieldImage) {
-								repeatableFieldImage.remove();
-							}
-
-							if (value) {
-								var repeatableFieldImageModel = A.Node.create(
-									A.one('#repeatable-field-image-model').html()
-								);
-
-								fieldContainer.append(repeatableFieldImageModel);
-
-								if (repeatableAddIcon) {
-									repeatableAddIcon.show();
-								}
-							}
-							else {
-								if (repeatableAddIcon) {
-									repeatableAddIcon.hide();
-								}
-							}
-						}
-
-						return value;
-					},
-
-					setVariableName: function(value) {
-						var instance = this;
-
-						var fieldLabel = instance.getFieldLabelElement();
-
-						if (fieldLabel) {
-							var input = fieldLabel.get('parentNode').one('.journal-article-component-container .aui-field-input');
-
-							if (input) {
-								input.attr('id', value);
-
-								fieldLabel.setAttribute('for', value);
-							}
-
-							instance.setAttribute('name', value);
-						}
-
-						return value;
-					},
-
-					setAttribute: function(key, value) {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						if (Lang.isArray(value)) {
-							value = value[0];
-						}
-
-						if (source) {
-							source.setAttribute('data' + key, value);
-						}
-
-						return value;
-					},
-
-					_uiSetOptionsEditable: function(val) {
-						var instance = this;
-
-						var source = instance.get('source');
-
-						if (source) {
-							var journalArticleButtons = source.one('.journal-article-buttons');
-
-							if (journalArticleButtons) {
-								if (val) {
-									journalArticleButtons.show();
-								}
-								else {
-									journalArticleButtons.hide();
-								}
-							}
-						}
-					},
-
-					_getNamespacedId: Journal.prototype._getNamespacedId,
-
-					getById: Journal.prototype.getById
-				}
-			}
-		);
-
-		Journal.StructureField = StructureField;
-
-		Journal.FieldModel = {};
-
-		var fieldModel = Journal.FieldModel;
-
-		var registerFieldModel = function(namespace, type, variableName, optionsEditable) {
-			var instance = this;
-
-			var typeEl = A.one('#journalFieldModelContainer div[dataType="' + type + '"]');
-
-			var innerHTML;
-
-			if (typeEl) {
-				innerHTML = typeEl.html();
-			}
-
-			fieldModel[namespace] = {
-				fieldLabel: variableName,
-				fieldType: type,
-				innerHTML: innerHTML,
-				optionsEditable: optionsEditable,
-				variableName: variableName
-			};
-		};
-
-		registerFieldModel('Text', 'text', 'TextField', true);
-		registerFieldModel('TextArea', 'text_area', 'TextAreaField', true);
-		registerFieldModel('TextBox', 'text_box', 'TextBoxField', true);
-		registerFieldModel('Image', 'image', 'ImageField', true);
-		registerFieldModel('DocumentLibrary', 'document_library', 'DocumentLibraryField', true);
-		registerFieldModel('Boolean', 'boolean', 'BooleanField', true);
-		registerFieldModel('List', 'list', 'ListField', true);
-		registerFieldModel('MultiList', 'multi-list', 'MultiListField', true);
-		registerFieldModel('LinkToPage', 'link_to_layout', 'LinkToPageField', true);
-		registerFieldModel('SelectionBreak', 'selection_break', 'SelectionBreakField', false);
-
 		Liferay.Portlet.Journal = Journal;
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-data-set', 'aui-datatype', 'aui-dialog', 'aui-dialog-iframe', 'aui-io-request', 'aui-nested-list', 'aui-overlay-context-panel', 'json']
+		requires: ['aui-base', 'aui-data-schema', 'aui-data-set', 'aui-datatype', 'aui-dialog', 'aui-dialog-iframe', 'aui-io-request', 'aui-nested-list', 'aui-overlay-context-panel', 'json']
 	}
 );

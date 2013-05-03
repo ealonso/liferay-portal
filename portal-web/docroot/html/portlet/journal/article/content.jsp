@@ -230,6 +230,7 @@ if (Validator.isNotNull(content)) {
 									<aui:input name="structureId" type="hidden" value="<%= structureId %>" />
 									<aui:input name="structureName" type="hidden" value="<%= ddmStructureName %>" />
 									<aui:input name="structureDescription" type="hidden" value="<%= ddmStructureDescription %>" />
+									<aui:input name="structureXSD" type="hidden" value="<%= ddmStructureXSD %>" />
 
 									<span class="structure-name-label" id="<portlet:namespace />structureNameLabel">
 										<%= HtmlUtil.escape(ddmStructureName) %>
