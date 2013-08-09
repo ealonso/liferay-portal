@@ -723,7 +723,9 @@ public class MBCategoryModelImpl extends BaseModelImpl<MBCategory>
 
 			while (containerModel != null) {
 				if (containerModel instanceof TrashedModel) {
-					return ((TrashedModel)containerModel).getTrashEntry();
+					TrashedModel trashedModel = (TrashedModel)containerModel;
+
+					return trashedModel.getTrashEntry();
 				}
 
 				trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName());
