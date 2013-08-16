@@ -489,13 +489,11 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Children
 
-		List<WikiPage> childrenPages = wikiPagePersistence.findByN_P(
-			page.getNodeId(), page.getTitle());
+		List<WikiPage> childrenPages = wikiPagePersistence.findByN_H_P(
+			page.getNodeId(), true, page.getTitle());
 
 		for (WikiPage childrenPage : childrenPages) {
-			if (!childrenPage.isApproved() ||
-				(!childrenPage.isInTrash() && page.isInTrash())) {
-
+			if (!childrenPage.isInTrash() && page.isInTrash()) {
 				childrenPage.setParentTitle(StringPool.BLANK);
 
 				wikiPagePersistence.update(childrenPage);
@@ -1027,7 +1025,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		throws SystemException {
 
 		if (status == WorkflowConstants.STATUS_ANY) {
-			return wikiPagePersistence.countByN_H(nodeId, head);
+			return wikiPagePersistence.countByN_H_NotS(
+				nodeId, head, WorkflowConstants.STATUS_IN_TRASH);
 		}
 		else {
 			return wikiPagePersistence.countByN_H_S(nodeId, head, status);
@@ -1301,14 +1300,73 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public WikiPage fetchLatestPage(
+			long resourcePrimKey, long nodeId, int status,
+			boolean preferApproved)
+		throws SystemException {
+
+		WikiPage page = null;
+
+		OrderByComparator orderByComparator = new PageVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			if (preferApproved) {
+				page = wikiPagePersistence.fetchByR_N_S_First(
+					resourcePrimKey, nodeId, WorkflowConstants.STATUS_APPROVED,
+					orderByComparator);
+			}
+
+			if (page == null) {
+				page = wikiPagePersistence.fetchByR_N_First(
+					resourcePrimKey, nodeId, orderByComparator);
+			}
+		}
+		else {
+			page = wikiPagePersistence.fetchByR_N_S_First(
+				resourcePrimKey, nodeId, status, orderByComparator);
+		}
+
+		return page;
+	}
+
+	@Override
+	public WikiPage fetchLatestPage(
+			long nodeId, String title, int status, boolean preferApproved)
+		throws SystemException {
+
+		WikiPage page = null;
+
+		OrderByComparator orderByComparator = new PageVersionComparator();
+
+		if (status == WorkflowConstants.STATUS_ANY) {
+			if (preferApproved) {
+				page = wikiPagePersistence.fetchByN_T_S_First(
+					nodeId, title, WorkflowConstants.STATUS_APPROVED,
+					orderByComparator);
+			}
+
+			if (page == null) {
+				page = wikiPagePersistence.fetchByN_T_First(
+					nodeId, title, orderByComparator);
+			}
+		}
+		else {
+			page = wikiPagePersistence.fetchByN_T_S_First(
+				nodeId, title, status, orderByComparator);
+		}
+
+		return page;
+	}
+
+	@Override
 	public WikiPage movePageToTrash(long userId, long nodeId, String title)
 		throws PortalException, SystemException {
 
-		List<WikiPage> wikiPages = wikiPagePersistence.findByN_T_H(
-			nodeId, title, true, 0, 1);
+		WikiPage wikiPage = fetchLatestPage(
+			nodeId, title, WorkflowConstants.STATUS_ANY, true);
 
-		if (!wikiPages.isEmpty()) {
-			return movePageToTrash(userId, wikiPages.get(0));
+		if (wikiPage != null) {
+			return movePageToTrash(userId, wikiPage);
 		}
 
 		return null;
@@ -1374,8 +1432,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Children
 
-		List<WikiPage> children = wikiPagePersistence.findByN_P(
-			page.getNodeId(), oldTitle);
+		List<WikiPage> children = wikiPagePersistence.findByN_H_P(
+			page.getNodeId(), true, oldTitle);
 
 		for (WikiPage curPage : children) {
 			curPage.setParentTitle(trashTitle);
@@ -1486,8 +1544,8 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		// Children
 
-		List<WikiPage> children = wikiPagePersistence.findByN_P(
-			page.getNodeId(), title);
+		List<WikiPage> children = wikiPagePersistence.findByN_H_P(
+			page.getNodeId(), true, title);
 
 		for (WikiPage curPage : children) {
 			curPage.setParentTitle(originalTitle);

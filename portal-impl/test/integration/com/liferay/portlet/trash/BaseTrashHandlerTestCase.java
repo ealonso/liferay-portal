@@ -265,6 +265,13 @@ public abstract class BaseTrashHandlerTestCase {
 			BaseModel<?> parentBaseModel)
 		throws Exception;
 
+	protected int getNotInTrashBaseModelsCount(
+			BaseModel<?> parentBaseModel, boolean approved)
+		throws Exception {
+
+		return getNotInTrashBaseModelsCount(parentBaseModel);
+	}
+
 	protected BaseModel<?> getParentBaseModel(
 			Group group, ServiceContext serviceContext)
 		throws Exception {
@@ -423,7 +430,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
-			getNotInTrashBaseModelsCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel, approved));
 
 		if (isIndexableBaseModel()) {
 			if (approved) {
@@ -461,7 +468,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		Assert.assertEquals(
 			initialBaseModelsCount,
-			getNotInTrashBaseModelsCount(parentBaseModel));
+			getNotInTrashBaseModelsCount(parentBaseModel, approved));
 		Assert.assertEquals(
 			initialTrashEntriesCount + 1,
 			getTrashEntriesCount(group.getGroupId()));
@@ -504,7 +511,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 			Assert.assertEquals(
 				initialBaseModelsCount,
-				getNotInTrashBaseModelsCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel, approved));
 
 			if (isIndexableBaseModel()) {
 				Assert.assertEquals(
@@ -527,7 +534,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 			Assert.assertEquals(
 				initialBaseModelsCount + 1,
-				getNotInTrashBaseModelsCount(parentBaseModel));
+				getNotInTrashBaseModelsCount(parentBaseModel, approved));
 
 			if (isIndexableBaseModel()) {
 				if (approved) {
