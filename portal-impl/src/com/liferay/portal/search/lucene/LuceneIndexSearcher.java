@@ -184,8 +184,18 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 				for (int i = 0; i < sorts.length; i++) {
 					Sort sort = sorts[i];
 
-					sortFields[i] = new SortField(
-						sort.getFieldName(), sort.getType(), sort.isReverse());
+					if ((sort.getType() == Sort.STRING_TYPE) &&
+						(searchContext.getLocale() != null)) {
+
+						sortFields[i] = new SortField(
+							sort.getFieldName(), searchContext.getLocale(),
+							sort.isReverse());
+					}
+					else {
+						sortFields[i] = new SortField(
+							sort.getFieldName(), sort.getType(),
+							sort.isReverse());
+					}
 				}
 			}
 
@@ -515,20 +525,18 @@ public class LuceneIndexSearcher extends BaseIndexSearcher {
 			TermCollectingFormatter termCollectingFormatter =
 				new TermCollectingFormatter();
 
-			if ((values != null) && (values.length > 0)) {
+			if (ArrayUtil.isNotEmpty(values)) {
 				snippet = LuceneHelperUtil.getSnippet(
 					luceneQuery, snippetField, StringUtil.merge(values),
 					termCollectingFormatter);
 			}
 
-			if ((values == null) || (values.length == 0) ||
-				Validator.isNull(snippet)) {
-
+			if (ArrayUtil.isEmpty(values) || Validator.isNull(snippet)) {
 				snippetField = field;
 
 				values = doc.getValues(snippetField);
 
-				if (Validator.isNull(values)) {
+				if (ArrayUtil.isEmpty(values)) {
 					return StringPool.BLANK;
 				}
 
