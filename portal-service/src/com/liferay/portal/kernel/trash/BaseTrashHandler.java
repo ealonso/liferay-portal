@@ -171,14 +171,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
-	@SuppressWarnings("unused")
-	public ContainerModel getTrashContainer(long classPK)
-		throws PortalException, SystemException {
-
-		return null;
-	}
-
-	@Override
 	public String getTrashContainerModelName() {
 		return StringPool.BLANK;
 	}
