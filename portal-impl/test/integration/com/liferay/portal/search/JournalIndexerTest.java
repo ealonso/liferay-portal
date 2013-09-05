@@ -339,6 +339,54 @@ public class JournalIndexerTest {
 
 	@Test
 	@Transactional
+	public void testRemoveArticleLocale() throws Exception {
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(LocaleUtil.US, "Title");
+		titleMap.put(LocaleUtil.GERMANY, "Titel");
+		titleMap.put(LocaleUtil.SPAIN, "Titulo");
+
+		Map<Locale, String> contentMap = new HashMap<Locale, String>();
+
+		contentMap.put(LocaleUtil.US, "Liferay Architectural Approach");
+		contentMap.put(LocaleUtil.GERMANY, "Liferay Architektur Ansatz");
+		contentMap.put(LocaleUtil.SPAIN, "Liferay Arquitectura Aproximacion");
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), titleMap, titleMap, contentMap, true);
+
+		User user = UserTestUtil.addUser(group.getGroupId(), LocaleUtil.SPAIN);
+
+		searchContext.setKeywords("Arquitectura");
+		searchContext.setLocale(LocaleUtil.SPAIN);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		JournalArticleLocalServiceUtil.removeArticleLocale(
+			group.getGroupId(), article.getArticleId(), article.getVersion(),
+			LocaleUtil.toLanguageId(LocaleUtil.SPAIN));
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		searchContext.setKeywords("Architectural");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+	}
+
+	@Test
+	@Transactional
 	public void testUpdateArticleAndApprove() throws Exception {
 		updateArticle(true);
 	}
@@ -347,6 +395,71 @@ public class JournalIndexerTest {
 	@Transactional
 	public void testUpdateArticleAndDraft() throws Exception {
 		updateArticle(false);
+	}
+
+	@Test
+	@Transactional
+	public void testUpdateArticleTranslation() throws Exception {
+		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
+			group.getGroupId());
+
+		SearchContext searchContext = ServiceTestUtil.getSearchContext(
+			group.getGroupId());
+
+		int initialBaseModelsSearchCount = searchCount(
+			group.getGroupId(), searchContext);
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+
+		titleMap.put(LocaleUtil.US, "Title");
+		titleMap.put(LocaleUtil.GERMANY, "Titel");
+		titleMap.put(LocaleUtil.SPAIN, "Titulo");
+
+		Map<Locale, String> contentMap = new HashMap<Locale, String>();
+
+		contentMap.put(LocaleUtil.US, "Liferay Architectural Approach");
+		contentMap.put(LocaleUtil.GERMANY, "Liferay Architektur Ansatz");
+		contentMap.put(LocaleUtil.SPAIN, "Liferay Arquitectura Aproximacion");
+
+		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
+			group.getGroupId(), titleMap, titleMap, contentMap, true);
+
+		User user = UserTestUtil.addUser(group.getGroupId(), LocaleUtil.SPAIN);
+
+		searchContext.setKeywords("Arquitectura");
+		searchContext.setLocale(LocaleUtil.SPAIN);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
+
+		contentMap.put(LocaleUtil.SPAIN, "Apple manzana tablet");
+
+		String content = JournalTestUtil.createLocalizedContent(
+			contentMap, LocaleUtil.getDefault());
+
+		article = JournalArticleLocalServiceUtil.updateArticleTranslation(
+			group.getGroupId(), article.getArticleId(), article.getVersion(),
+			LocaleUtil.SPAIN, article.getTitle(LocaleUtil.SPAIN),
+			article.getDescription(LocaleUtil.SPAIN), content, null,
+			serviceContext);
+
+		searchContext.setKeywords("Apple");
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount,
+			searchCount(group.getGroupId(), searchContext));
+
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+
+		JournalArticleLocalServiceUtil.updateArticle(
+			user.getUserId(), article.getGroupId(), article.getFolderId(),
+			article.getArticleId(), article.getVersion(), article.getContent(),
+			serviceContext);
+
+		Assert.assertEquals(
+			initialBaseModelsSearchCount + 1,
+			searchCount(group.getGroupId(), searchContext));
 	}
 
 	@Test
@@ -832,121 +945,6 @@ public class JournalIndexerTest {
 
 		Assert.assertEquals(
 			initialBaseModelsSearchCount,
-			searchCount(group.getGroupId(), searchContext));
-	}
-
-	@Test
-	@Transactional
-	public void testUpdateArticleTranslation() throws Exception {
-		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
-			group.getGroupId());
-
-		SearchContext searchContext = ServiceTestUtil.getSearchContext(
-			group.getGroupId());
-
-		int initialBaseModelsSearchCount = searchCount(
-			group.getGroupId(), searchContext);
-
-		Map<Locale, String> titleMap = new HashMap<Locale, String>();
-
-		titleMap.put(LocaleUtil.US, "Title");
-		titleMap.put(LocaleUtil.GERMANY, "Titel");
-		titleMap.put(LocaleUtil.SPAIN, "Titulo");
-
-		Map<Locale, String> contentMap = new HashMap<Locale, String>();
-
-		contentMap.put(LocaleUtil.US, "Liferay Architectural Approach");
-		contentMap.put(LocaleUtil.GERMANY, "Liferay Architektur Ansatz");
-		contentMap.put(LocaleUtil.SPAIN, "Liferay Arquitectura Aproximacion");
-
-		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
-			group.getGroupId(), titleMap, titleMap, contentMap, true);
-
-		User user = UserTestUtil.addUser(group.getGroupId(), LocaleUtil.SPAIN);
-
-		searchContext.setKeywords("Arquitectura");
-		searchContext.setLocale(LocaleUtil.SPAIN);
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
-			searchCount(group.getGroupId(), searchContext));
-
-		contentMap.put(LocaleUtil.SPAIN, "Apple manzana tablet");
-
-		String content = JournalTestUtil.createLocalizedContent(
-			contentMap, LocaleUtil.getDefault());
-
-		article = JournalArticleLocalServiceUtil.updateArticleTranslation(
-			group.getGroupId(), article.getArticleId(),
-			article.getVersion(), LocaleUtil.SPAIN,
-			article.getTitle(LocaleUtil.SPAIN),
-			article.getDescription(LocaleUtil.SPAIN), content, null,
-			serviceContext);
-
-		searchContext.setKeywords("Apple");
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount,
-			searchCount(group.getGroupId(), searchContext));
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
-
-		JournalArticleLocalServiceUtil.updateArticle(
-			user.getUserId(), article.getGroupId(), article.getFolderId(),
-			article.getArticleId(), article.getVersion(),
-			article.getContent(), serviceContext);
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
-			searchCount(group.getGroupId(), searchContext));
-	}
-
-	@Test
-	@Transactional
-	public void testRemoveArticleLocale() throws Exception {
-		SearchContext searchContext = ServiceTestUtil.getSearchContext(
-			group.getGroupId());
-
-		int initialBaseModelsSearchCount = searchCount(
-			group.getGroupId(), searchContext);
-
-		Map<Locale, String> titleMap = new HashMap<Locale, String>();
-
-		titleMap.put(LocaleUtil.US, "Title");
-		titleMap.put(LocaleUtil.GERMANY, "Titel");
-		titleMap.put(LocaleUtil.SPAIN, "Titulo");
-
-		Map<Locale, String> contentMap = new HashMap<Locale, String>();
-
-		contentMap.put(LocaleUtil.US, "Liferay Architectural Approach");
-		contentMap.put(LocaleUtil.GERMANY, "Liferay Architektur Ansatz");
-		contentMap.put(LocaleUtil.SPAIN, "Liferay Arquitectura Aproximacion");
-
-		JournalArticle article = JournalTestUtil.addArticleWithWorkflow(
-			group.getGroupId(), titleMap, titleMap, contentMap, true);
-
-		User user = UserTestUtil.addUser(group.getGroupId(), LocaleUtil.SPAIN);
-
-		searchContext.setKeywords("Arquitectura");
-		searchContext.setLocale(LocaleUtil.SPAIN);
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
-			searchCount(group.getGroupId(), searchContext));
-
-		JournalArticleLocalServiceUtil.removeArticleLocale(
-			group.getGroupId(), article.getArticleId(),
-			article.getVersion(),
-			LocaleUtil.toLanguageId(LocaleUtil.SPAIN));
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount,
-			searchCount(group.getGroupId(), searchContext));
-
-		searchContext.setKeywords("Architectural");
-
-		Assert.assertEquals(
-			initialBaseModelsSearchCount + 1,
 			searchCount(group.getGroupId(), searchContext));
 	}
 
