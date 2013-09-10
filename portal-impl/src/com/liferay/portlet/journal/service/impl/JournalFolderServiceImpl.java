@@ -238,7 +238,7 @@ public class JournalFolderServiceImpl extends JournalFolderServiceBaseImpl {
 			groupId, folderId);
 
 		for (JournalFolder folder : folders) {
-			if (folder.isInTrash() || folder.isInTrashContainer()) {
+			if (folder.isInTrash()) {
 				continue;
 			}
 
