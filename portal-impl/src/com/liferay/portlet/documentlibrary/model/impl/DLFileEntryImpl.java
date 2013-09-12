@@ -264,6 +264,18 @@ public class DLFileEntryImpl extends DLFileEntryBaseImpl {
 	}
 
 	@Override
+	public int getStatus() {
+		try {
+			DLFileVersion dlFileVersion = getFileVersion();
+
+			return dlFileVersion.getStatus();
+		}
+		catch (Exception e) {
+			return -1;
+		}
+	}
+
+	@Override
 	public DLFolder getTrashContainer()
 		throws PortalException, SystemException {
 
