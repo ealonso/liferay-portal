@@ -60,8 +60,6 @@ import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -595,8 +593,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 	protected void reindexArticles(long companyId)
 		throws PortalException, SystemException {
 
-		final Collection<Document> documents = new ArrayList<Document>();
-
 		ActionableDynamicQuery actionableDynamicQuery =
 			new JournalArticleActionableDynamicQuery() {
 
@@ -612,9 +608,12 @@ public class JournalArticleIndexer extends BaseIndexer {
 			protected void performAction(Object object) throws PortalException {
 				JournalArticle article = (JournalArticle)object;
 
-				Document document = getDocument(article);
-
-				documents.add(document);
+				try {
+					updateArticles(article);
+				}
+				catch (Exception e) {
+					throw new PortalException(e);
+				}
 			}
 
 		};
@@ -622,9 +621,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 		actionableDynamicQuery.setCompanyId(companyId);
 
 		actionableDynamicQuery.performActions();
-
-		SearchEngineUtil.updateDocuments(
-			getSearchEngineId(), companyId, documents);
 	}
 
 	protected void updateArticles(JournalArticle article) throws Exception {
