@@ -46,6 +46,10 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 	public ContainerModel getContainerModel(long containerModelId)
 		throws PortalException, SystemException {
 
+		if (containerModelId == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			return null;
+		}
+
 		return getDLFolder(containerModelId);
 	}
 
@@ -245,10 +249,6 @@ public abstract class DLBaseTrashHandler extends BaseTrashHandler {
 
 	protected DLFolder getDLFolder(long classPK)
 		throws PortalException, SystemException {
-
-		if (classPK == DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			return null;
-		}
 
 		Repository repository = RepositoryServiceUtil.getRepositoryImpl(
 			classPK, 0, 0);

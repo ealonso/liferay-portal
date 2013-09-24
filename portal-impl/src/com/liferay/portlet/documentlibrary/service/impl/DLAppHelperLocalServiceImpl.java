@@ -814,7 +814,8 @@ public class DLAppHelperLocalServiceImpl
 				// File versions
 
 				List<DLFileVersion> dlFileVersions =
-					dlFileEntry.getFileVersions(
+					dlFileVersionLocalService.getFileVersions(
+						dlFileEntry.getFileEntryId(),
 						WorkflowConstants.STATUS_IN_TRASH);
 
 				for (DLFileVersion dlFileVersion : dlFileVersions) {
@@ -849,7 +850,7 @@ public class DLAppHelperLocalServiceImpl
 				// Asset
 
 				DLFileVersion latestDlFileVersion =
-					dlFileEntry.getLatestFileVersion(true);
+					dlFileEntry.getLatestFileVersion(false);
 
 				if (latestDlFileVersion.isApproved()) {
 					assetEntryLocalService.updateVisible(
