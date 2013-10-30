@@ -90,6 +90,18 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 	}
 
 	@Override
+	protected BaseModel<?> expireBaseModel(
+			BaseModel<?> baseModel, ServiceContext serviceContext)
+		throws Exception {
+
+		JournalArticle article = (JournalArticle)baseModel;
+
+		return JournalArticleLocalServiceUtil.expireArticle(
+			article.getUserId(), article.getGroupId(), article.getArticleId(),
+			article.getVersion(), StringPool.BLANK, serviceContext);
+	}
+
+	@Override
 	protected Long getAssetClassPK(ClassedModel classedModel) {
 		JournalArticle article = (JournalArticle)classedModel;
 
@@ -120,6 +132,16 @@ public class JournalArticleTrashHandlerTest extends BaseTrashHandlerTestCase {
 		JournalArticle article = (JournalArticle)classedModel;
 
 		return article.getArticleId();
+	}
+
+	@Override
+	protected List<? extends WorkflowedModel> getChildrenWorkflowedModels(
+		BaseModel<?> parentBaseModel) throws Exception {
+
+		JournalFolder folder = (JournalFolder)parentBaseModel;
+
+		return JournalArticleLocalServiceUtil.getArticles(
+			folder.getGroupId(), folder.getFolderId());
 	}
 
 	@Override
