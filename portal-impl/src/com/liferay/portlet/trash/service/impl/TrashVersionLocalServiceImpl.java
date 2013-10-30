@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.trash.service.impl;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -53,16 +54,30 @@ public class TrashVersionLocalServiceImpl
 	}
 
 	@Override
+	public TrashVersion deleteTrashVersion(String className, long classPK)
+		throws PortalException, SystemException {
+
+		long classNameId = PortalUtil.getClassNameId(className);
+
+		TrashVersion trashVersion = trashVersionPersistence.fetchByC_C(
+			classNameId, classPK);
+
+		if (trashVersion != null) {
+			return deleteTrashVersion(trashVersion);
+		}
+
+		return null;
+	}
+
+	@Override
 	public TrashVersion fetchVersion(
 			long entryId, String className, long classPK)
 		throws SystemException {
 
 		long classNameId = PortalUtil.getClassNameId(className);
 
-		TrashVersion version = trashVersionPersistence.fetchByE_C_C(
+		return trashVersionPersistence.fetchByE_C_C(
 			entryId, classNameId, classPK);
-
-		return version;
 	}
 
 	@Override
@@ -81,23 +96,6 @@ public class TrashVersionLocalServiceImpl
 		long classNameId = PortalUtil.getClassNameId(className);
 
 		return trashVersionPersistence.findByE_C(entryId, classNameId);
-	}
-
-	/**
-	 * Returns all the trash versions associated with the trash entry.
-	 *
-	 * @param  className the class name of the trash entity
-	 * @param  classPK the primary key of the trash entity
-	 * @return all the trash versions associated with the trash entry
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public List<TrashVersion> getVersions(String className, long classPK)
-		throws SystemException {
-
-		long classNameId = PortalUtil.getClassNameId(className);
-
-		return trashVersionPersistence.findByC_C(classNameId, classPK);
 	}
 
 }
