@@ -51,6 +51,10 @@ import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -186,7 +190,13 @@ public abstract class BaseTrashHandlerTestCase {
 	@Test
 	@Transactional
 	public void testTrashVersionParentBaseModel() throws Exception {
-		trashVersionParentBaseModel();
+		trashVersionParentBaseModel(false);
+	}
+
+	@Test
+	@Transactional
+	public void testTrashVersionParentBaseModelAndRestore() throws Exception {
+		trashVersionParentBaseModel(true);
 	}
 
 	protected BaseModel<?> addBaseModel(
@@ -230,6 +240,13 @@ public abstract class BaseTrashHandlerTestCase {
 		throws Exception {
 	}
 
+	protected BaseModel<?> expireBaseModel(
+			BaseModel<?> baseModel, ServiceContext serviceContext)
+		throws Exception {
+
+		return baseModel;
+	}
+
 	protected AssetEntry fetchAssetEntry(Class<?> clazz, long classPK)
 		throws Exception {
 
@@ -261,6 +278,12 @@ public abstract class BaseTrashHandlerTestCase {
 
 	protected String getBaseModelName(ClassedModel classedModel) {
 		return StringPool.BLANK;
+	}
+
+	protected List<? extends WorkflowedModel> getChildrenWorkflowedModels(
+		BaseModel<?> parentBaseModel) throws Exception {
+
+		return Collections.EMPTY_LIST;
 	}
 
 	protected long getDeletionSystemEventCount(
@@ -418,6 +441,10 @@ public abstract class BaseTrashHandlerTestCase {
 		throws Exception;
 
 	protected void moveParentBaseModelToTrash(long primaryKey)
+		throws Exception {
+	}
+
+	protected void restoreParentBaseModelFromTrash(long primaryKey)
 		throws Exception {
 	}
 
@@ -1081,7 +1108,7 @@ public abstract class BaseTrashHandlerTestCase {
 		}
 	}
 
-	protected void trashVersionParentBaseModel() throws Exception {
+	protected void trashVersionParentBaseModel(boolean moveBaseModel) throws Exception {
 		ServiceContext serviceContext = ServiceTestUtil.getServiceContext(
 			group.getGroupId());
 
@@ -1101,10 +1128,33 @@ public abstract class BaseTrashHandlerTestCase {
 				getSearchKeywords(), serviceContext);
 		}
 
+		List<Integer> originalStatus = new ArrayList<Integer>();
+
 		baseModel = addBaseModel(parentBaseModel, true, serviceContext);
+
+		baseModel = expireBaseModel(baseModel, serviceContext);
+
+		WorkflowedModel workflowedModel = getWorkflowedModel(baseModel);
+
+		originalStatus.add(workflowedModel.getStatus());
+
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
 
 		baseModel = updateBaseModel(
 			(Long)baseModel.getPrimaryKeyObj(), serviceContext);
+
+		workflowedModel = getWorkflowedModel(baseModel);
+
+		originalStatus.add(workflowedModel.getStatus());
+
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
+
+		baseModel = updateBaseModel(
+			(Long)baseModel.getPrimaryKeyObj(), serviceContext);
+
+		workflowedModel = getWorkflowedModel(baseModel);
+
+		originalStatus.add(workflowedModel.getStatus());
 
 		Assert.assertEquals(
 			initialBaseModelsCount + 1,
@@ -1137,7 +1187,7 @@ public abstract class BaseTrashHandlerTestCase {
 			Assert.assertFalse(isAssetEntryVisible(baseModel));
 		}
 
-		if (isBaseModelMoveableFromTrash()) {
+		if (moveBaseModel && isBaseModelMoveableFromTrash()) {
 			BaseModel<?> newParentBaseModel = moveBaseModelFromTrash(
 				baseModel, group, serviceContext);
 
@@ -1153,6 +1203,21 @@ public abstract class BaseTrashHandlerTestCase {
 
 			if (isAssetableModel()) {
 				Assert.assertTrue(isAssetEntryVisible(baseModel));
+			}
+		}
+		else {
+			restoreParentBaseModelFromTrash(
+				(Long)parentBaseModel.getPrimaryKeyObj());
+
+			List<? extends WorkflowedModel> children =
+				getChildrenWorkflowedModels(parentBaseModel);
+
+			for (int i = 1; i <= children.size(); i++) {
+				WorkflowedModel child = children.get(i - 1);
+
+				Assert.assertEquals(
+					originalStatus.get(children.size() - i).intValue(),
+					child.getStatus());
 			}
 		}
 	}
