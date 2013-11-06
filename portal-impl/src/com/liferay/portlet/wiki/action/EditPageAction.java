@@ -93,7 +93,7 @@ public class EditPageAction extends PortletAction {
 				deletePage(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restorePage(actionRequest);
+				restorePageFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.REVERT)) {
 				revertPage(actionRequest);
@@ -345,7 +345,9 @@ public class EditPageAction extends PortletAction {
 		return _CHECK_METHOD_ON_PROCESS_ACTION;
 	}
 
-	protected void restorePage(ActionRequest actionRequest) throws Exception {
+	protected void restorePageFromTrash(ActionRequest actionRequest)
+		throws Exception {
+
 		long nodeId = ParamUtil.getLong(actionRequest, "nodeId");
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
