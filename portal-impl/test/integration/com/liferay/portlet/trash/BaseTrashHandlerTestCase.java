@@ -940,7 +940,7 @@ public abstract class BaseTrashHandlerTestCase {
 		}
 		else {
 			Assert.assertEquals(
-				initialBaseModelsCount,
+				initialBaseModelsCount + 1,
 				getNotInTrashBaseModelsCount(parentBaseModel));
 			Assert.assertEquals(
 				initialTrashEntriesCount + 1,
