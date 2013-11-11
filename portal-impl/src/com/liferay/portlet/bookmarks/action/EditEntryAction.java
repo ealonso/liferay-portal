@@ -39,8 +39,11 @@ import com.liferay.portlet.bookmarks.EntryURLException;
 import com.liferay.portlet.bookmarks.NoSuchEntryException;
 import com.liferay.portlet.bookmarks.NoSuchFolderException;
 import com.liferay.portlet.bookmarks.model.BookmarksEntry;
+import com.liferay.portlet.bookmarks.model.BookmarksFolder;
 import com.liferay.portlet.bookmarks.service.BookmarksEntryServiceUtil;
-import com.liferay.portlet.bookmarks.service.BookmarksFolderServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +87,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntry(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntryFromTrash(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 			else if (cmd.equals(Constants.SUBSCRIBE)) {
 				subscribeEntry(actionRequest);
@@ -229,21 +232,29 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntryFromTrash(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			BookmarksFolderServiceUtil.restoreFolderFromTrash(restoreFolderId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				BookmarksFolder.class.getName(), restoreFolderId);
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 
 		long[] restoreEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreEntryIds"), 0L);
 
 		for (long restoreEntryId : restoreEntryIds) {
-			BookmarksEntryServiceUtil.restoreEntryFromTrash(restoreEntryId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				BookmarksEntry.class.getName(), restoreEntryId);
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 	}
 

@@ -46,6 +46,9 @@ import com.liferay.portlet.documentlibrary.model.DLFileShortcut;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
+import com.liferay.portlet.trash.model.TrashEntry;
+import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.portlet.trash.service.TrashEntryServiceUtil;
 import com.liferay.portlet.trash.util.TrashUtil;
 
 import java.util.HashMap;
@@ -101,7 +104,7 @@ public class EditEntryAction extends PortletAction {
 				deleteEntries(actionRequest, true);
 			}
 			else if (cmd.equals(Constants.RESTORE)) {
-				restoreEntries(actionRequest);
+				restoreEntriesFromTrash(actionRequest);
 			}
 
 			WindowState windowState = actionRequest.getWindowState();
@@ -411,29 +414,41 @@ public class EditEntryAction extends PortletAction {
 		}
 	}
 
-	protected void restoreEntries(ActionRequest actionRequest)
+	protected void restoreEntriesFromTrash(ActionRequest actionRequest)
 		throws PortalException, SystemException {
 
 		long[] restoreFolderIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFolderIds"), 0L);
 
 		for (long restoreFolderId : restoreFolderIds) {
-			DLAppServiceUtil.restoreFolderFromTrash(restoreFolderId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				DLFolder.class.getName(), Long.valueOf(restoreFolderId));
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 
 		long[] restoreFileEntryIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFileEntryIds"), 0L);
 
 		for (long restoreFileEntryId : restoreFileEntryIds) {
-			DLAppServiceUtil.restoreFileEntryFromTrash(restoreFileEntryId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				DLFileEntry.class.getName(), Long.valueOf(restoreFileEntryId));
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 
 		long[] restoreFileShortcutIds = StringUtil.split(
 			ParamUtil.getString(actionRequest, "restoreFileShortcutIds"), 0L);
 
 		for (long restoreFileShortcutId : restoreFileShortcutIds) {
-			DLAppServiceUtil.restoreFileShortcutFromTrash(
-				restoreFileShortcutId);
+			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getEntry(
+				DLFileShortcut.class.getName(),
+				Long.valueOf(restoreFileShortcutId));
+
+			TrashEntryServiceUtil.restoreEntry(
+				trashEntry.getEntryId(), 0L, null);
 		}
 	}
 
