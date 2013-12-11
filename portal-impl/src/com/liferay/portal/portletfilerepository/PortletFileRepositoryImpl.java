@@ -124,7 +124,9 @@ public class PortletFileRepositoryImpl implements PortletFileRepository {
 		boolean dlAppHelperEnabled = DLAppHelperThreadLocal.isEnabled();
 
 		try {
-			DLAppHelperThreadLocal.setEnabled(false);
+			if (portletId == PortletKeys.DOCUMENT_LIBRARY) {
+				DLAppHelperThreadLocal.setEnabled(false);
+			}
 
 			return DLAppLocalServiceUtil.addFileEntry(
 				userId, repository.getRepositoryId(), folderId, fileName,
