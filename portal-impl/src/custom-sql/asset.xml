@@ -116,14 +116,17 @@
 				)
 		]]>
 	</sql>
-	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryFinder.findByAndTagIds">
+	<sql id="com.liferay.portlet.asset.service.persistence.AssetEntryFinder.findByAndTagName">
 		<![CDATA[
 			SELECT
 				DISTINCT AssetEntries_AssetTags.entryId
 			FROM
 				AssetEntries_AssetTags
+			INNER JOIN
+				AssetTag ON
+					(AssetEntries_AssetTags.tagId = AssetTag.tagId)
 			WHERE
-				([$TAG_ID$])
+				([$TAG_NAME$])
 		]]>
 	</sql>
 	<sql id="com.liferay.portlet.asset.service.persistence.AssetTagFinder.countByG_N">

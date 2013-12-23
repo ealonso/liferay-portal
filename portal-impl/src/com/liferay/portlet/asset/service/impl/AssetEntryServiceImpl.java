@@ -219,15 +219,13 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 		filteredEntryQuery.setAllCategoryIds(
 			AssetUtil.filterCategoryIds(
 				getPermissionChecker(), entryQuery.getAllCategoryIds()));
-		filteredEntryQuery.setAllTagIdsArray(
-			AssetUtil.filterTagIdsArray(
-				getPermissionChecker(), entryQuery.getAllTagIdsArray()));
+		filteredEntryQuery.setAllTagNames(
+			 entryQuery.getAllTagNames());
 		filteredEntryQuery.setAnyCategoryIds(
 			AssetUtil.filterCategoryIds(
 				getPermissionChecker(), entryQuery.getAnyCategoryIds()));
-		filteredEntryQuery.setAnyTagIds(
-			AssetUtil.filterTagIds(
-				getPermissionChecker(), entryQuery.getAnyTagIds()));
+		filteredEntryQuery.setAnyTagNames(
+			 entryQuery.getAnyTagNames());
 
 		return filteredEntryQuery;
 	}
@@ -350,32 +348,12 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 			return true;
 		}
 
-		if (originalEntryQuery.getAllTagIds().length >
-				filteredEntryQuery.getAllTagIds().length) {
-
-			// No results will be available if the user must have access to all
-			// tag ids, but the user has access to fewer tag ids in the filtered
-			// entry query than what was specified in the original entry query
-
-			return true;
-		}
-
 		if ((originalEntryQuery.getAnyCategoryIds().length > 0) &&
 			(filteredEntryQuery.getAnyCategoryIds().length == 0)) {
 
 			// No results will be available if the original entry query
 			// specified at least one category id, but the filtered entry query
 			// shows that the user does not have access to any category ids
-
-			return true;
-		}
-
-		if ((originalEntryQuery.getAnyTagIds().length > 0) &&
-			(filteredEntryQuery.getAnyTagIds().length == 0)) {
-
-			// No results will be available if the original entry query
-			// specified at least one tag id, but the filtered entry query shows
-			// that the user does not have access to any tag ids
 
 			return true;
 		}

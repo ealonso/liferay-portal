@@ -664,35 +664,19 @@ public class AssetPublisherImpl implements AssetPublisher {
 
 		assetEntryQuery.setAllCategoryIds(allAssetCategoryIds);
 
-		for (String assetTagName : allAssetTagNames) {
-			long[] allAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				scopeGroupIds, assetTagName);
-
-			assetEntryQuery.addAllTagIdsArray(allAssetTagIds);
-		}
+		assetEntryQuery.setAllTagNames(allAssetTagNames);
 
 		assetEntryQuery.setAnyCategoryIds(anyAssetCategoryIds);
 
-		long[] anyAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
-			scopeGroupIds, anyAssetTagNames);
-
-		assetEntryQuery.setAnyTagIds(anyAssetTagIds);
+		assetEntryQuery.setAnyTagNames(anyAssetTagNames);
 
 		assetEntryQuery.setNotAllCategoryIds(notAllAssetCategoryIds);
 
-		for (String assetTagName : notAllAssetTagNames) {
-			long[] notAllAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
-				scopeGroupIds, assetTagName);
-
-			assetEntryQuery.addNotAllTagIdsArray(notAllAssetTagIds);
-		}
+		assetEntryQuery.setNotAllTagNames(notAllAssetTagNames);
 
 		assetEntryQuery.setNotAnyCategoryIds(notAnyAssetCategoryIds);
 
-		long[] notAnyAssetTagIds = AssetTagLocalServiceUtil.getTagIds(
-			scopeGroupIds, notAnyAssetTagNames);
-
-		assetEntryQuery.setNotAnyTagIds(notAnyAssetTagIds);
+		assetEntryQuery.setNotAnyTagNames(notAnyAssetTagNames);
 
 		return assetEntryQuery;
 	}

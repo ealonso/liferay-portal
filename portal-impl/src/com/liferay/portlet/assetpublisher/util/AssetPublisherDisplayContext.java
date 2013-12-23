@@ -179,9 +179,7 @@ public class AssetPublisherDisplayContext {
 			themeDisplay.getUser(), _portletPreferences, assetEntryQuery);
 
 		assetEntryQuery.setAllCategoryIds(getAllAssetCategoryIds());
-		assetEntryQuery.setAllTagIds(
-			AssetTagLocalServiceUtil.getTagIds(
-				themeDisplay.getScopeGroupId(), getAllAssetTagNames()));
+		assetEntryQuery.setAllTagNames(getAllAssetTagNames());
 		assetEntryQuery.setClassTypeIds(classTypeIds);
 		assetEntryQuery.setEnablePermissions(isEnablePermissions());
 		assetEntryQuery.setExcludeZeroViewCount(isExcludeZeroViewCount());

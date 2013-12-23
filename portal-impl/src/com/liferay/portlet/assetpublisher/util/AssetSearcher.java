@@ -144,24 +144,20 @@ public class AssetSearcher extends BaseIndexer {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
+		String[] allTagNames = _assetEntryQuery.getAllTagNames();
 
-		long[] allTagIds = AssetUtil.filterTagIds(
-			permissionChecker, _assetEntryQuery.getAllTagIds());
-
-		if (allTagIds.length == 0) {
+		if (allTagNames.length == 0) {
 			return;
 		}
 
-		BooleanQuery tagIdsQuery = BooleanQueryFactoryUtil.create(
+		BooleanQuery tagNamesQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
-		for (long tagId : allTagIds) {
-			tagIdsQuery.addRequiredTerm(Field.ASSET_TAG_IDS, tagId);
+		for (String tagName : allTagNames) {
+			tagNamesQuery.addRequiredTerm(Field.ASSET_TAG_NAMES, tagName);
 		}
 
-		contextQuery.add(tagIdsQuery, BooleanClauseOccur.MUST);
+		contextQuery.add(tagNamesQuery, BooleanClauseOccur.MUST);
 	}
 
 	protected void addSearchAnyCategories(
@@ -212,24 +208,20 @@ public class AssetSearcher extends BaseIndexer {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		PermissionChecker permissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
+		String[] anyTagNames = _assetEntryQuery.getAnyTagNames();
 
-		long[] anyTagIds = AssetUtil.filterTagIds(
-			permissionChecker, _assetEntryQuery.getAnyTagIds());
-
-		if (anyTagIds.length == 0) {
+		if (anyTagNames.length == 0) {
 			return;
 		}
 
-		BooleanQuery tagIdsQuery = BooleanQueryFactoryUtil.create(
+		BooleanQuery tagNamesQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
-		for (long tagId : anyTagIds) {
-			tagIdsQuery.addTerm(Field.ASSET_TAG_IDS, tagId);
+		for (String tagName : anyTagNames) {
+			tagNamesQuery.addTerm(Field.ASSET_TAG_NAMES, tagName);
 		}
 
-		contextQuery.add(tagIdsQuery, BooleanClauseOccur.MUST);
+		contextQuery.add(tagNamesQuery, BooleanClauseOccur.MUST);
 	}
 
 	@Override
@@ -336,20 +328,20 @@ public class AssetSearcher extends BaseIndexer {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		long[] notAllTagIds = _assetEntryQuery.getNotAllTagIds();
+		String[] notAllTagNames = _assetEntryQuery.getNotAllTagNames();
 
-		if (notAllTagIds.length == 0) {
+		if (notAllTagNames.length == 0) {
 			return;
 		}
 
-		BooleanQuery tagIdsQuery = BooleanQueryFactoryUtil.create(
+		BooleanQuery tagNamesQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
-		for (long tagId : notAllTagIds) {
-			tagIdsQuery.addRequiredTerm(Field.ASSET_TAG_IDS, tagId);
+		for (String tagName : notAllTagNames) {
+			tagNamesQuery.addRequiredTerm(Field.ASSET_TAG_NAMES, tagName);
 		}
 
-		contextQuery.add(tagIdsQuery, BooleanClauseOccur.MUST_NOT);
+		contextQuery.add(tagNamesQuery, BooleanClauseOccur.MUST_NOT);
 	}
 
 	protected void addSearchNotAnyCategories(
@@ -397,20 +389,20 @@ public class AssetSearcher extends BaseIndexer {
 			BooleanQuery contextQuery, SearchContext searchContext)
 		throws Exception {
 
-		long[] notAnyTagIds = _assetEntryQuery.getNotAnyTagIds();
+		String[] notAnyTagNames = _assetEntryQuery.getNotAnyTagNames();
 
-		if (notAnyTagIds.length == 0) {
+		if (notAnyTagNames.length == 0) {
 			return;
 		}
 
-		BooleanQuery tagIdsQuery = BooleanQueryFactoryUtil.create(
+		BooleanQuery tagNamesQuery = BooleanQueryFactoryUtil.create(
 			searchContext);
 
-		for (long tagId : _assetEntryQuery.getNotAnyTagIds()) {
-			tagIdsQuery.addTerm(Field.ASSET_TAG_IDS, tagId);
+		for (String tagName : _assetEntryQuery.getNotAnyTagNames()) {
+			tagNamesQuery.addTerm(Field.ASSET_TAG_NAMES, tagName);
 		}
 
-		contextQuery.add(tagIdsQuery, BooleanClauseOccur.MUST_NOT);
+		contextQuery.add(tagNamesQuery, BooleanClauseOccur.MUST_NOT);
 	}
 
 	@Override
