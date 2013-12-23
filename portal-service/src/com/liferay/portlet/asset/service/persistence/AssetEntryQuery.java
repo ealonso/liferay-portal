@@ -89,9 +89,8 @@ public class AssetEntryQuery {
 
 	public AssetEntryQuery(AssetEntryQuery assetEntryQuery) {
 		setAllCategoryIds(assetEntryQuery.getAllCategoryIds());
-		setAllTagIdsArray(assetEntryQuery.getAllTagIdsArray());
 		setAnyCategoryIds(assetEntryQuery.getAnyCategoryIds());
-		setAnyTagIds(assetEntryQuery.getAnyTagIds());
+		setAnyTagNames(assetEntryQuery.getAnyTagNames());
 		setAttributes(assetEntryQuery.getAttributes());
 		setClassNameIds(assetEntryQuery.getClassNameIds());
 		setClassTypeIds(assetEntryQuery.getClassTypeIds());
@@ -105,9 +104,8 @@ public class AssetEntryQuery {
 		setLayout(assetEntryQuery.getLayout());
 		setLinkedAssetEntryId(assetEntryQuery.getLinkedAssetEntryId());
 		setNotAllCategoryIds(assetEntryQuery.getNotAllCategoryIds());
-		setNotAllTagIdsArray(assetEntryQuery.getNotAllTagIdsArray());
 		setNotAnyCategoryIds(assetEntryQuery.getNotAnyCategoryIds());
-		setNotAnyTagIds(assetEntryQuery.getNotAnyTagIds());
+		setNotAnyTagNames(assetEntryQuery.getNotAnyTagNames());
 		setOrderByCol1(assetEntryQuery.getOrderByCol1());
 		setOrderByCol2(assetEntryQuery.getOrderByCol2());
 		setOrderByType1(assetEntryQuery.getOrderByType1());
@@ -150,10 +148,7 @@ public class AssetEntryQuery {
 		String tagName = ParamUtil.getString(portletRequest, "tag");
 
 		if (Validator.isNotNull(tagName)) {
-			_allTagIds = AssetTagLocalServiceUtil.getTagIds(
-				themeDisplay.getSiteGroupId(), new String[] {tagName});
-
-			_allTagIdsArray = new long[][] {_allTagIds};
+			_allTagNames[0] = tagName;
 		}
 	}
 
@@ -164,53 +159,20 @@ public class AssetEntryQuery {
 			new long[] {PortalUtil.getClassNameId(className)}, searchContainer);
 	}
 
-	public void addAllTagIdsArray(long[] allTagsIds) {
-		if (allTagsIds.length == 0) {
-			return;
-		}
-
-		_allTagIdsArray = ArrayUtil.append(_allTagIdsArray, allTagsIds);
-
-		_allTagIds = _flattenTagIds(_allTagIdsArray);
-	}
-
-	public void addNotAllTagIdsArray(long[] notAllTagsIds) {
-		if (notAllTagsIds.length == 0) {
-			return;
-		}
-
-		_notAllTagIdsArray = ArrayUtil.append(
-			_notAllTagIdsArray, notAllTagsIds);
-
-		_notAllTagIds = _flattenTagIds(_notAllTagIdsArray);
-	}
-
 	public long[] getAllCategoryIds() {
 		return _allCategoryIds;
 	}
 
-	public long[] getAllLeftAndRightCategoryIds() {
-		return _getLeftAndRightCategoryIds(_allCategoryIds);
-	}
-
-	public long[] getAllTagIds() {
-		return _allTagIds;
-	}
-
-	public long[][] getAllTagIdsArray() {
-		return _allTagIdsArray;
+	public String[] getAllTagNames() {
+		return _allTagNames;
 	}
 
 	public long[] getAnyCategoryIds() {
 		return _anyCategoryIds;
 	}
 
-	public long[] getAnyLeftAndRightCategoryIds() {
-		return _getLeftAndRightCategoryIds(_anyCategoryIds);
-	}
-
-	public long[] getAnyTagIds() {
-		return _anyTagIds;
+	public String[] getAnyTagNames() {
+		return _anyTagNames;
 	}
 
 	public Serializable getAttribute(String name) {
@@ -261,16 +223,12 @@ public class AssetEntryQuery {
 		return _notAllCategoryIds;
 	}
 
-	public long[] getNotAllLeftAndRightCategoryIds() {
-		return _getLeftAndRightCategoryIds(_notAllCategoryIds);
+	public String[] getNotAllTagNames() {
+		return _notAllTagNames;
 	}
 
-	public long[] getNotAllTagIds() {
-		return _notAllTagIds;
-	}
-
-	public long[][] getNotAllTagIdsArray() {
-		return _notAllTagIdsArray;
+	public long[][] getNotAllTagNamesArray() {
+		return _notAllTagNamesArray;
 	}
 
 	public long[] getNotAnyCategoryIds() {
@@ -281,8 +239,8 @@ public class AssetEntryQuery {
 		return _getLeftAndRightCategoryIds(_notAnyCategoryIds);
 	}
 
-	public long[] getNotAnyTagIds() {
-		return _notAnyTagIds;
+	public String[] getNotAnyTagNames() {
+		return _notAnyTagNames;
 	}
 
 	public String getOrderByCol1() {
@@ -335,18 +293,8 @@ public class AssetEntryQuery {
 		_toString = null;
 	}
 
-	public void setAllTagIds(long[] allTagIds) {
-		_allTagIds = allTagIds;
-
-		_allTagIdsArray = _expandTagIds(allTagIds);
-
-		_toString = null;
-	}
-
-	public void setAllTagIdsArray(long[][] allTagIdsArray) {
-		_allTagIdsArray = allTagIdsArray;
-
-		_allTagIds = _flattenTagIds(allTagIdsArray);
+	public void setAllTagNames(String[] allTagNames) {
+		_allTagNames = allTagNames;
 
 		_toString = null;
 	}
@@ -357,8 +305,8 @@ public class AssetEntryQuery {
 		_toString = null;
 	}
 
-	public void setAnyTagIds(long[] anyTagIds) {
-		_anyTagIds = anyTagIds;
+	public void setAnyTagNames(String[] anyTagNames) {
+		_anyTagNames = anyTagNames;
 
 		_toString = null;
 	}
@@ -450,18 +398,8 @@ public class AssetEntryQuery {
 		_toString = null;
 	}
 
-	public void setNotAllTagIds(long[] notAllTagIds) {
-		_notAllTagIds = notAllTagIds;
-
-		_notAllTagIdsArray = _expandTagIds(notAllTagIds);
-
-		_toString = null;
-	}
-
-	public void setNotAllTagIdsArray(long[][] notAllTagIdsArray) {
-		_notAllTagIdsArray = notAllTagIdsArray;
-
-		_notAllTagIds = _flattenTagIds(notAllTagIdsArray);
+	public void setNotAllTagNames(String[] notAllTagNames) {
+		_notAllTagNames = notAllTagNames;
 
 		_toString = null;
 	}
@@ -472,8 +410,8 @@ public class AssetEntryQuery {
 		_toString = null;
 	}
 
-	public void setNotAnyTagIds(long[] notAnyTagIds) {
-		_notAnyTagIds = notAnyTagIds;
+	public void setNotAnyTagNames(String[] notAnyTagNames) {
+		_notAnyTagNames = notAnyTagNames;
 
 		_toString = null;
 	}
@@ -540,12 +478,12 @@ public class AssetEntryQuery {
 
 		sb.append("{allCategoryIds=");
 		sb.append(StringUtil.merge(_allCategoryIds));
-		sb.append(", allTagIds=");
-		sb.append(StringUtil.merge(_allTagIds));
+		sb.append(", allTagNames=");
+		sb.append(StringUtil.merge(_allTagNames));
 		sb.append(", anyCategoryIds=");
 		sb.append(StringUtil.merge(_anyCategoryIds));
-		sb.append(", anyTagIds=");
-		sb.append(StringUtil.merge(_anyTagIds));
+		sb.append(", anyTagNames=");
+		sb.append(StringUtil.merge(_anyTagNames));
 		sb.append(", classNameIds=");
 		sb.append(StringUtil.merge(_classNameIds));
 		sb.append(", classTypeIds=");
@@ -572,12 +510,12 @@ public class AssetEntryQuery {
 		sb.append(_linkedAssetEntryId);
 		sb.append(", notAllCategoryIds=");
 		sb.append(StringUtil.merge(_notAllCategoryIds));
-		sb.append(", notAllTagIds=");
-		sb.append(StringUtil.merge(_notAllTagIds));
+		sb.append(", notAllTagNames=");
+		sb.append(StringUtil.merge(_notAllTagNames));
 		sb.append(", notAnyCategoryIds=");
 		sb.append(StringUtil.merge(_notAnyCategoryIds));
-		sb.append(", notAnyTagIds=");
-		sb.append(StringUtil.merge(_notAnyTagIds));
+		sb.append(", notAnyTagNames=");
+		sb.append(StringUtil.merge(_notAnyTagNames));
 		sb.append(", orderByCol1=");
 		sb.append(_orderByCol1);
 		sb.append(", orderByCol2=");
@@ -603,7 +541,7 @@ public class AssetEntryQuery {
 		return _toString;
 	}
 
-	private long[][] _expandTagIds(long[] tagIds) {
+	private long[][] _expandTagNames(long[] tagIds) {
 		long[][] tagIdsArray = new long[tagIds.length][1];
 
 		for (int i = 0; i < tagIds.length; i++) {
@@ -611,23 +549,6 @@ public class AssetEntryQuery {
 		}
 
 		return tagIdsArray;
-	}
-
-	private long[] _flattenTagIds(long[][] tagIdsArray) {
-		List<Long> tagIdsList = new ArrayList<Long>();
-
-		for (int i = 0; i < tagIdsArray.length; i++) {
-			long[] tagIds = tagIdsArray[i];
-
-			for (int j = 0; j < tagIds.length; j++) {
-				long tagId = tagIds[j];
-
-				tagIdsList.add(tagId);
-			}
-		}
-
-		return ArrayUtil.toArray(
-			tagIdsList.toArray(new Long[tagIdsList.size()]));
 	}
 
 	private long[] _getLeftAndRightCategoryIds(long[] categoryIds) {
@@ -657,10 +578,9 @@ public class AssetEntryQuery {
 	private static Log _log = LogFactoryUtil.getLog(AssetEntryQuery.class);
 
 	private long[] _allCategoryIds = new long[0];
-	private long[] _allTagIds = new long[0];
-	private long[][] _allTagIdsArray = new long[0][];
+	private String[] _allTagNames = new String[0];
 	private long[] _anyCategoryIds = new long[0];
-	private long[] _anyTagIds = new long[0];
+	private String[] _anyTagNames = new String[0];
 	private Map<String, Serializable> _attributes =
 		new HashMap<String, Serializable>();
 	private long[] _classNameIds = new long[0];
@@ -675,10 +595,10 @@ public class AssetEntryQuery {
 	private Layout _layout;
 	private long _linkedAssetEntryId = 0;
 	private long[] _notAllCategoryIds = new long[0];
-	private long[] _notAllTagIds = new long[0];
-	private long[][] _notAllTagIdsArray = new long[0][];
+	private String[] _notAllTagNames = new String[0];
+	private long[][] _notAllTagNamesArray = new long[0][];
 	private long[] _notAnyCategoryIds = new long[0];
-	private long[] _notAnyTagIds = new long[0];
+	private String[] _notAnyTagNames = new String[0];
 	private String _orderByCol1;
 	private String _orderByCol2;
 	private String _orderByType1;
