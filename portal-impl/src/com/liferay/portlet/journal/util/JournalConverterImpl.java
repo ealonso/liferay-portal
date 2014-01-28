@@ -414,11 +414,9 @@ public class JournalConverterImpl implements JournalConverter {
 			Element dynamicContentElement)
 		throws Exception {
 
-		List<Attribute> attributes = dynamicContentElement.attributes();
-
 		Map<String, String> fieldAttributes = new HashMap<String, String>();
 
-		for (Attribute attribute : attributes) {
+		for (Attribute attribute : dynamicContentElement.attributes()) {
 			fieldAttributes.put(attribute.getName(), attribute.getValue());
 		}
 
@@ -542,9 +540,10 @@ public class JournalConverterImpl implements JournalConverter {
 			dynamicContentElement.addAttribute(
 				"language-id", LocaleUtil.toLanguageId(locale));
 
-			for (Map.Entry<String, String> entry :
-					ddmField.getAttributes(locale).entrySet()) {
+			Map<String, String> fieldAttributes = ddmField.getAttributes(
+				locale);
 
+			for (Map.Entry<String, String> entry : fieldAttributes.entrySet()) {
 				dynamicContentElement.addAttribute(
 					entry.getKey(), entry.getValue());
 			}
