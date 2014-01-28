@@ -179,8 +179,9 @@ public interface LiferaySelenium extends Selenium {
 
 	public void sendLogger(String id, String status);
 
-	public void sendLogger(
-		String id, String status, Map<String, String> context);
+	public void sendTestCaseCommandLogger(String command);
+
+	public void sendTestCaseHeaderLogger(String command);
 
 	public void setDefaultTimeout();
 
