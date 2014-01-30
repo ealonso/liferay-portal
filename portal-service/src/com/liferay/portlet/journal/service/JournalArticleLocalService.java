@@ -3089,6 +3089,38 @@ public interface JournalArticleLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Updates the workflow status of the web content article. When called through the
+	* {@link JournalArticleLocalService} interface it also reindex the article.
+	*
+	* @param userId the primary key of the user updating the web content
+	article's status
+	* @param article the web content article
+	* @param status the web content article's workflow status. For more
+	information see {@link WorkflowConstants} for constants starting
+	with the "STATUS_" prefix.
+	* @param articleURL the web content article's accessible URL
+	* @param workflowContext the web content article's configured workflow
+	context
+	* @param serviceContext the service context to be applied. Can set the
+	modification date, status date, and portlet preferences. With
+	respect to social activities, by setting the service context's
+	command to {@link
+	com.liferay.portal.kernel.util.Constants#UPDATE}, the invocation
+	is considered a web content update activity; otherwise it is
+	considered a web content add activity.
+	* @return the updated web content article
+	* @throws PortalException if a portal exception occurred
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.portlet.journal.model.JournalArticle updateStatusAndReindex(
+		long userId, com.liferay.portlet.journal.model.JournalArticle article,
+		int status, java.lang.String articleURL,
+		java.util.Map<java.lang.String, java.io.Serializable> workflowContext,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Updates the web content articles matching the group, class name ID, and
 	* DDM template key, replacing the DDM template key with a new one.
 	*

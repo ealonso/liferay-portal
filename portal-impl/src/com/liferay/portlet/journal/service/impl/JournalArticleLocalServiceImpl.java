@@ -5232,9 +5232,116 @@ public class JournalArticleLocalServiceImpl
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
-	@Indexable(type = IndexableType.REINDEX)
+	public JournalArticle updateStatus(
+		long userId, JournalArticle article, int status, String articleURL,
+		Map<String, Serializable> workflowContext,
+		ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		return journalArticleLocalService.updateStatusAndReindex(
+			userId, article, status, articleURL, workflowContext,
+			serviceContext);
+	}
+
+	/**
+	 * Updates the workflow status of the web content article matching the class
+	 * PK.
+	 *
+	 * @param  userId the primary key of the user updating the web content
+	 *         article's status
+	 * @param  classPK the primary key of the DDM structure, if the web content
+	 *         article is related to a DDM structure, the primary key of the
+	 *         class associated with the article, or <code>0</code> otherwise
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  workflowContext the web content article's configured workflow
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date, portlet preferences, and can set whether to
+	 *         add the default command update for the web content article.
+	 * @return the updated web content article
+	 * @throws PortalException if a matching web content article could not be
+	 *         found or if a portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
 	@Override
 	public JournalArticle updateStatus(
+			long userId, long classPK, int status,
+			Map<String, Serializable> workflowContext,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		JournalArticle article = getArticle(classPK);
+
+		return updateStatus(
+			userId, article, status, null, workflowContext, serviceContext);
+	}
+
+	/**
+	 * Updates the workflow status of the web content article matching the
+	 * group, article ID, and version.
+	 *
+	 * @param  userId the primary key of the user updating the web content
+	 *         article's status
+	 * @param  groupId the primary key of the web content article's group
+	 * @param  articleId the primary key of the web content article
+	 * @param  version the web content article's version
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  articleURL the web content article's accessible URL
+	 * @param  workflowContext the web content article's configured workflow
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date, portlet preferences, and can set whether to
+	 *         add the default command update for the web content article.
+	 * @return the updated web content article
+	 * @throws PortalException if a matching web content article could not be
+	 *         found or if a portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Override
+	public JournalArticle updateStatus(
+			long userId, long groupId, String articleId, double version,
+			int status, String articleURL,
+			Map<String, Serializable> workflowContext,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		JournalArticle article = journalArticlePersistence.findByG_A_V(
+			groupId, articleId, version);
+
+		return updateStatus(
+			userId, article, status, articleURL, workflowContext,
+			serviceContext);
+	}
+
+	/**
+	 * Updates the workflow status of the web content article. When called through the
+	 * {@link JournalArticleLocalService} interface it also reindex the article.
+	 *
+	 * @param  userId the primary key of the user updating the web content
+	 *         article's status
+	 * @param  article the web content article
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  articleURL the web content article's accessible URL
+	 * @param  workflowContext the web content article's configured workflow
+	 *         context
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date, status date, and portlet preferences. With
+	 *         respect to social activities, by setting the service context's
+	 *         command to {@link
+	 *         com.liferay.portal.kernel.util.Constants#UPDATE}, the invocation
+	 *         is considered a web content update activity; otherwise it is
+	 *         considered a web content add activity.
+	 * @return the updated web content article
+	 * @throws PortalException if a portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public JournalArticle updateStatusAndReindex(
 			long userId, JournalArticle article, int status, String articleURL,
 			Map<String, Serializable> workflowContext,
 			ServiceContext serviceContext)
@@ -5446,78 +5553,6 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return article;
-	}
-
-	/**
-	 * Updates the workflow status of the web content article matching the class
-	 * PK.
-	 *
-	 * @param  userId the primary key of the user updating the web content
-	 *         article's status
-	 * @param  classPK the primary key of the DDM structure, if the web content
-	 *         article is related to a DDM structure, the primary key of the
-	 *         class associated with the article, or <code>0</code> otherwise
-	 * @param  status the web content article's workflow status. For more
-	 *         information see {@link WorkflowConstants} for constants starting
-	 *         with the "STATUS_" prefix.
-	 * @param  workflowContext the web content article's configured workflow
-	 * @param  serviceContext the service context to be applied. Can set the
-	 *         modification date, portlet preferences, and can set whether to
-	 *         add the default command update for the web content article.
-	 * @return the updated web content article
-	 * @throws PortalException if a matching web content article could not be
-	 *         found or if a portal exception occurred
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public JournalArticle updateStatus(
-			long userId, long classPK, int status,
-			Map<String, Serializable> workflowContext,
-			ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		JournalArticle article = getArticle(classPK);
-
-		return journalArticleLocalService.updateStatus(
-			userId, article, status, null, workflowContext, serviceContext);
-	}
-
-	/**
-	 * Updates the workflow status of the web content article matching the
-	 * group, article ID, and version.
-	 *
-	 * @param  userId the primary key of the user updating the web content
-	 *         article's status
-	 * @param  groupId the primary key of the web content article's group
-	 * @param  articleId the primary key of the web content article
-	 * @param  version the web content article's version
-	 * @param  status the web content article's workflow status. For more
-	 *         information see {@link WorkflowConstants} for constants starting
-	 *         with the "STATUS_" prefix.
-	 * @param  articleURL the web content article's accessible URL
-	 * @param  workflowContext the web content article's configured workflow
-	 * @param  serviceContext the service context to be applied. Can set the
-	 *         modification date, portlet preferences, and can set whether to
-	 *         add the default command update for the web content article.
-	 * @return the updated web content article
-	 * @throws PortalException if a matching web content article could not be
-	 *         found or if a portal exception occurred
-	 * @throws SystemException if a system exception occurred
-	 */
-	@Override
-	public JournalArticle updateStatus(
-			long userId, long groupId, String articleId, double version,
-			int status, String articleURL,
-			Map<String, Serializable> workflowContext,
-			ServiceContext serviceContext)
-		throws PortalException, SystemException {
-
-		JournalArticle article = journalArticlePersistence.findByG_A_V(
-			groupId, articleId, version);
-
-		return journalArticleLocalService.updateStatus(
-			userId, article, status, articleURL, workflowContext,
-			serviceContext);
 	}
 
 	/**
