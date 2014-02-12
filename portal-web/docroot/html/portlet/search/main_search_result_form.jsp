@@ -119,6 +119,9 @@ viewURL = _checkViewURL(themeDisplay, viewURL, currentURL, inheritRedirect);
 String[] queryTerms = (String[])request.getAttribute("search.jsp-queryTerms");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
+
+String escapeSafeHighlight1 = "[@HIGHLIGHT1@]";
+String escapeSafeHighlight2 = "[@HIGHLIGHT2@]";
 %>
 
 <span class="asset-entry">
@@ -132,7 +135,18 @@ PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL"
 				<img alt="" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
 			</c:if>
 
-			<%= StringUtil.highlight(HtmlUtil.escape(entryTitle), queryTerms) %>
+			<%
+			String entryTitleHighlighted = entryTitle;
+
+			entryTitleHighlighted = StringUtil.highlight(entryTitleHighlighted, queryTerms, escapeSafeHighlight1, escapeSafeHighlight2);
+
+			entryTitleHighlighted = HtmlUtil.escape(entryTitleHighlighted);
+
+			entryTitleHighlighted = StringUtil.replace(entryTitleHighlighted, new String[] {escapeSafeHighlight1, escapeSafeHighlight2}, new String[] {StringUtil.DEFAULT_HIGHLIGHT_1, StringUtil.DEFAULT_HIGHLIGHT_2});
+			%>
+
+			<%= entryTitleHighlighted %>
+
 		</a>
 
 		<c:if test="<%= Validator.isNotNull(downloadURL) %>">
@@ -149,7 +163,17 @@ PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL"
 		<div class="asset-entry-content">
 			<c:if test="<%= Validator.isNotNull(entrySummary) %>">
 				<span class="asset-entry-summary">
-					<%= StringUtil.highlight(HtmlUtil.escape(entrySummary), queryTerms) %>
+
+					<%
+					entrySummary = StringUtil.highlight(entrySummary, queryTerms, escapeSafeHighlight1, escapeSafeHighlight2);
+
+					entrySummary = HtmlUtil.escape(entrySummary);
+
+					entrySummary = StringUtil.replace(entrySummary, new String[] {escapeSafeHighlight1, escapeSafeHighlight2}, new String[] {StringUtil.DEFAULT_HIGHLIGHT_1, StringUtil.DEFAULT_HIGHLIGHT_2});
+					%>
+
+					<%= entrySummary %>
+
 				</span>
 			</c:if>
 
