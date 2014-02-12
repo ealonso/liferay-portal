@@ -105,9 +105,11 @@
 
 					// Title
 
-					String title = HtmlUtil.escape(summary.getTitle());
+					String title = StringUtil.highlight(summary.getTitle(), queryTerms, escapeSafeHighlight1, escapeSafeHighlight2);
 
-					title = StringUtil.highlight(title, queryTerms);
+					title = HtmlUtil.escape(title);
+
+					title = StringUtil.replace(title, new String[] {escapeSafeHighlight1, escapeSafeHighlight2}, new String[] {StringUtil.DEFAULT_HIGHLIGHT_1, StringUtil.DEFAULT_HIGHLIGHT_2});
 
 					row.addText(title);
 
