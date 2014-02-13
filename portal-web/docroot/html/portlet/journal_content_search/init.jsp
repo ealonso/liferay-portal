@@ -36,9 +36,6 @@ if (!showListed) {
 }
 
 String type = PrefsParamUtil.getString(portletPreferences, request, "type", StringPool.BLANK);
-
-String escapeSafeHighlight1 = "[@HIGHLIGHT1@]";
-String escapeSafeHighlight2 = "[@HIGHLIGHT2@]";
 %>
 
 <%@ include file="/html/portlet/journal_content_search/init-ext.jsp" %>

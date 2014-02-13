@@ -95,7 +95,9 @@
 
 					Summary summary = indexer.getSummary(doc, locale, StringPool.BLANK, summaryURL);
 
-					ResultRow row = new ResultRow(new Object[] {queryTerms, doc, summary}, i, i);
+					summary.setQueryTerms(queryTerms);
+
+					ResultRow row = new ResultRow(new Object[] {doc, summary}, i, i);
 
 					// Position
 
@@ -105,13 +107,7 @@
 
 					// Title
 
-					String title = StringUtil.highlight(summary.getTitle(), queryTerms, escapeSafeHighlight1, escapeSafeHighlight2);
-
-					title = HtmlUtil.escape(title);
-
-					title = StringUtil.replace(title, new String[] {escapeSafeHighlight1, escapeSafeHighlight2}, new String[] {StringUtil.DEFAULT_HIGHLIGHT_1, StringUtil.DEFAULT_HIGHLIGHT_2});
-
-					row.addText(title);
+					row.addText(summary.getTitle(true, true));
 
 					// Content
 
