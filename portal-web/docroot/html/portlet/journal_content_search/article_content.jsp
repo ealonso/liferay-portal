@@ -22,7 +22,8 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 Object[] objArray = (Object[])row.getObject();
 
 Document doc = (Document)objArray[0];
-Summary summary = (Summary)objArray[1];
+boolean highlightEnabled = (Boolean)objArray[1];
+Summary summary = (Summary)objArray[2];
 
 long articleGroupId = GetterUtil.getLong(doc.get(Field.GROUP_ID));
 String articleId = doc.get("articleId");
@@ -30,7 +31,7 @@ String articleId = doc.get("articleId");
 List hitLayoutIds = JournalContentSearchLocalServiceUtil.getLayoutIds(layout.getGroupId(), layout.isPrivateLayout(), articleId);
 %>
 
-<%= summary.getContent(true, true) %><br />
+<%= summary.getContent(true, highlightEnabled) %><br />
 
 <c:choose>
 	<c:when test="<%= !hitLayoutIds.isEmpty() %>">

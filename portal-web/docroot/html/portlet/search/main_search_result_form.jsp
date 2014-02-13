@@ -118,6 +118,8 @@ if (summary != null) {
 	viewURL = _checkViewURL(themeDisplay, viewURL, currentURL, inheritRedirect);
 
 	PortletURL portletURL = (PortletURL)request.getAttribute("search.jsp-portletURL");
+
+	boolean highlightEnabled = (Boolean)request.getAttribute("search.jsp-highlightEnabled");
 	%>
 
 	<span class="asset-entry">
@@ -131,7 +133,7 @@ if (summary != null) {
 					<img alt="" src="<%= assetRenderer.getIconPath(renderRequest) %>" />
 				</c:if>
 
-				<%= summary.getTitle(true, true) %>
+				<%= summary.getTitle(true, highlightEnabled) %>
 
 			</a>
 
@@ -150,7 +152,7 @@ if (summary != null) {
 				<c:if test="<%= Validator.isNotNull(summary.getContent()) %>">
 					<span class="asset-entry-summary">
 
-						<%= summary.getContent(true, true) %>
+						<%= summary.getContent(true, highlightEnabled) %>
 
 					</span>
 				</c:if>
