@@ -2141,6 +2141,28 @@
 		['liferay-util-window']
 	);
 
+	Liferay.provide(
+		Util,
+		'addQuickAccess',
+		function(data, callback) {
+			var NAV_ITEM_TPL = '<li><a href="{link}">{label}</a></li>';
+
+			var nav = A.one('#nav-access li');
+
+			var access = nav.appendChild(A.Lang.sub(NAV_ITEM_TPL, data));
+
+			if (callback) {
+				access.on(
+					'click',
+					function() {
+						callback();
+					}
+				);
+			}
+		},
+		['node-base']
+	);
+
 	Liferay.after(
 		'closeWindow',
 		function(event) {

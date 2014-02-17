@@ -309,3 +309,14 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 
 	</c:otherwise>
 </c:choose>
+
+<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
+	<aui:script>
+		Liferay.Util.addQuickAccess(
+			{
+				link: '#<portlet:namespace /><%= entry.getEntryId() %>',
+				label: '<%= HtmlUtil.escape(entry.getTitle()) %>'
+			}
+		);
+	</aui:script>
+</c:if>
