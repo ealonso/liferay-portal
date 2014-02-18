@@ -309,3 +309,12 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view_entry_content.jsp
 
 	</c:otherwise>
 </c:choose>
+
+<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
+
+	<%
+	String href = "#" + renderResponse.getNamespace() + entry.getEntryId();
+	%>
+
+	<liferay-ui:quick-access-entry label="<%= entry.getTitle() %>" url="<%= href %>" />
+</c:if>
