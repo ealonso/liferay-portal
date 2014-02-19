@@ -172,6 +172,14 @@ public class AssetVocabularyServiceUtil {
 		return getService().getGroupVocabularies(groupId, name, start, end, obc);
 	}
 
+	public static java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> getGroupVocabulariesByTitle(
+		long groupId, java.lang.String title, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getGroupVocabulariesByTitle(groupId, title, start, end);
+	}
+
 	public static int getGroupVocabulariesCount(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getGroupVocabulariesCount(groupId);
@@ -201,6 +209,16 @@ public class AssetVocabularyServiceUtil {
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .getGroupVocabulariesDisplay(groupId, name, start, end, obc);
+	}
+
+	public static com.liferay.portlet.asset.model.AssetVocabularyDisplay getGroupVocabulariesDisplayByTitle(
+		long groupId, java.lang.String title, int start, int end,
+		boolean addDefaultVocabulary)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getGroupVocabulariesDisplayByTitle(groupId, title, start,
+			end, addDefaultVocabulary);
 	}
 
 	/**

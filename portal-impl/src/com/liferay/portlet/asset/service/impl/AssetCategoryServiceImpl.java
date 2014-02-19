@@ -19,11 +19,22 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.FacetedSearcher;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
@@ -55,6 +66,7 @@ import java.util.Map;
  */
 public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetCategory addCategory(
 			long parentCategoryId, Map<Locale, String> titleMap,
@@ -71,6 +83,7 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			vocabularyId, categoryProperties, serviceContext);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetCategory addCategory(
 			String title, long vocabularyId, ServiceContext serviceContext)
@@ -97,6 +110,7 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		deleteCategories(categoryIds, null);
 	}
 
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public List<AssetCategory> deleteCategories(
 			long[] categoryIds, ServiceContext serviceContext)
@@ -134,6 +148,7 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		return failedCategories;
 	}
 
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public void deleteCategory(long categoryId)
 		throws PortalException, SystemException {
@@ -260,6 +275,38 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 	}
 
 	@Override
+	public JSONObject getJSONVocabularyCategoriesByTitle(
+			long groupId, String title, long vocabularyId, int start, int end)
+		throws PortalException, SystemException {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		int page = 0;
+
+		if ((end > 0) && (start > 0)) {
+			page = end / (end - start);
+		}
+
+		jsonObject.put("page", page);
+
+		List<AssetCategory> categories = null;
+
+		if (Validator.isNotNull(title)) {
+			categories = getVocabularyCategoriesByTitle(
+				groupId, title, vocabularyId, start, end);
+		}
+		else {
+			categories = getVocabularyCategories(
+				vocabularyId, start, end, null);
+		}
+
+		jsonObject.put("categories", toJSONArray(categories));
+		jsonObject.put("total", categories.size());
+
+		return jsonObject;
+	}
+
+	@Override
 	public List<AssetCategory> getVocabularyCategories(
 			long vocabularyId, int start, int end, OrderByComparator obc)
 		throws PortalException, SystemException {
@@ -294,6 +341,31 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 			return assetCategoryPersistence.filterFindByG_LikeN_V(
 				groupId, name, vocabularyId, start, end, obc);
 		}
+	}
+
+	@Override
+	public List<AssetCategory> getVocabularyCategoriesByTitle(
+			long groupId, String title, long vocabularyId, int start, int end)
+		throws PortalException, SystemException {
+
+		Hits hits = getHits(
+			groupId, title, new long[] {vocabularyId}, start, end);
+
+		Document[] documents = hits.getDocs();
+
+		List<AssetCategory> assetCategories = new ArrayList<AssetCategory>(
+			documents.length);
+
+		for (Document document : documents) {
+			long categoryId = GetterUtil.getLong(
+				document.get(Field.CATEGORY_ID));
+
+			AssetCategory assetCategory = getCategory(categoryId);
+
+			assetCategories.add(assetCategory);
+		}
+
+		return assetCategories;
 	}
 
 	@Override
@@ -469,6 +541,35 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 	}
 
 	@Override
+	public JSONArray searchTitle(
+			long[] groupIds, String title, long[] vocabularyIds, int start,
+			int end)
+		throws PortalException, SystemException {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		for (long groupId : groupIds) {
+			Hits hits = getHits(groupId, title, vocabularyIds, start, end);
+
+			Document[] documents = hits.getDocs();
+
+			for (Document document : documents) {
+				long categoryId = GetterUtil.getLong(
+					document.get(Field.CATEGORY_ID));
+
+				AssetCategory assetCategory = getCategory(categoryId);
+
+				JSONObject categoryJSONObject = toJSONObject(assetCategory);
+
+				jsonArray.put(categoryJSONObject);
+			}
+		}
+
+		return jsonArray;
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public AssetCategory updateCategory(
 			long categoryId, long parentCategoryId,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
@@ -507,49 +608,92 @@ public class AssetCategoryServiceImpl extends AssetCategoryServiceBaseImpl {
 		return categories;
 	}
 
+	protected Hits getHits(
+			long groupId, String title, long[] vocabularyIds, int start,
+			int end)
+		throws SystemException {
+
+		try {
+			SearchContext searchContext = new SearchContext();
+
+			searchContext.setAndSearch(false);
+			searchContext.setAttribute(Field.TITLE, title);
+			searchContext.setAttribute("vocabularyIds", vocabularyIds);
+			searchContext.setCompanyId(CompanyThreadLocal.getCompanyId());
+			searchContext.setEnd(end);
+			searchContext.setEntryClassNames(
+				new String[] {AssetCategory.class.getName()});
+			searchContext.setGroupIds(new long[] {groupId});
+
+			QueryConfig queryConfig = new QueryConfig();
+
+			queryConfig.setHighlightEnabled(false);
+			queryConfig.setScoreEnabled(false);
+
+			searchContext.setQueryConfig(queryConfig);
+
+			searchContext.setStart(start);
+
+			Indexer indexer = FacetedSearcher.getInstance();
+
+			return indexer.search(searchContext);
+		}
+			catch (Exception e) {
+				throw new SystemException(e);
+		}
+	}
+
 	protected JSONArray toJSONArray(List<AssetCategory> categories)
 		throws PortalException, SystemException {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (AssetCategory category : categories) {
-			String categoryJSON = JSONFactoryUtil.looseSerialize(category);
-
-			JSONObject categoryJSONObject = JSONFactoryUtil.createJSONObject(
-				categoryJSON);
-
-			List<String> names = new ArrayList<String>();
-
-			AssetCategory curCategory = category;
-
-			while (curCategory.getParentCategoryId() > 0) {
-				AssetCategory parentCategory = getCategory(
-					curCategory.getParentCategoryId());
-
-				names.add(parentCategory.getName());
-				names.add(
-					StringPool.SPACE + StringPool.GREATER_THAN +
-						StringPool.SPACE);
-
-				curCategory = parentCategory;
-			}
-
-			Collections.reverse(names);
-
-			AssetVocabulary vocabulary = assetVocabularyService.getVocabulary(
-				category.getVocabularyId());
-
-			StringBundler sb = new StringBundler(1 + names.size());
-
-			sb.append(vocabulary.getName());
-			sb.append(names.toArray(new String[names.size()]));
-
-			categoryJSONObject.put("path", sb.toString());
+			JSONObject categoryJSONObject = toJSONObject(category);
 
 			jsonArray.put(categoryJSONObject);
 		}
 
 		return jsonArray;
+	}
+
+	protected JSONObject toJSONObject(AssetCategory category)
+		throws PortalException, SystemException {
+
+		String categoryJSON = JSONFactoryUtil.looseSerialize(category);
+
+		JSONObject categoryJSONObject = JSONFactoryUtil.createJSONObject(
+			categoryJSON);
+
+		List<String> names = new ArrayList<String>();
+
+		AssetCategory curCategory = category;
+
+		while (curCategory.getParentCategoryId() > 0) {
+			AssetCategory parentCategory = getCategory(
+				curCategory.getParentCategoryId());
+
+			names.add(parentCategory.getName());
+			names.add(
+				StringPool.SPACE + StringPool.GREATER_THAN +
+					StringPool.SPACE);
+
+			curCategory = parentCategory;
+		}
+
+		Collections.reverse(names);
+
+		AssetVocabulary vocabulary = assetVocabularyService.getVocabulary(
+			category.getVocabularyId());
+
+		StringBundler sb = new StringBundler(1 + names.size());
+
+		sb.append(vocabulary.getTitleCurrentValue());
+		sb.append(names.toArray(new String[names.size()]));
+
+		categoryJSONObject.put("path", sb.toString());
+
+		return categoryJSONObject;
 	}
 
 }

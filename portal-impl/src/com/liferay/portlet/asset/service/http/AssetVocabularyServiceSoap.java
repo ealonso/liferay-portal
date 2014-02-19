@@ -302,6 +302,23 @@ public class AssetVocabularyServiceSoap {
 		}
 	}
 
+	public static com.liferay.portlet.asset.model.AssetVocabularySoap[] getGroupVocabulariesByTitle(
+		long groupId, java.lang.String title, int start, int end)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> returnValue =
+				AssetVocabularyServiceUtil.getGroupVocabulariesByTitle(groupId,
+					title, start, end);
+
+			return com.liferay.portlet.asset.model.AssetVocabularySoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static int getGroupVocabulariesCount(long groupId)
 		throws RemoteException {
 		try {
@@ -356,6 +373,22 @@ public class AssetVocabularyServiceSoap {
 		try {
 			com.liferay.portlet.asset.model.AssetVocabularyDisplay returnValue = AssetVocabularyServiceUtil.getGroupVocabulariesDisplay(groupId,
 					name, start, end, obc);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portlet.asset.model.AssetVocabularyDisplay getGroupVocabulariesDisplayByTitle(
+		long groupId, java.lang.String title, int start, int end,
+		boolean addDefaultVocabulary) throws RemoteException {
+		try {
+			com.liferay.portlet.asset.model.AssetVocabularyDisplay returnValue = AssetVocabularyServiceUtil.getGroupVocabulariesDisplayByTitle(groupId,
+					title, start, end, addDefaultVocabulary);
 
 			return returnValue;
 		}

@@ -179,6 +179,16 @@ public class AssetCategoryServiceUtil {
 			start, end, obc);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONObject getJSONVocabularyCategoriesByTitle(
+		long groupId, java.lang.String title, long vocabularyId, int start,
+		int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getJSONVocabularyCategoriesByTitle(groupId, title,
+			vocabularyId, start, end);
+	}
+
 	public static java.util.List<com.liferay.portlet.asset.model.AssetCategory> getVocabularyCategories(
 		long vocabularyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -205,6 +215,16 @@ public class AssetCategoryServiceUtil {
 		return getService()
 				   .getVocabularyCategories(groupId, name, vocabularyId, start,
 			end, obc);
+	}
+
+	public static java.util.List<com.liferay.portlet.asset.model.AssetCategory> getVocabularyCategoriesByTitle(
+		long groupId, java.lang.String title, long vocabularyId, int start,
+		int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .getVocabularyCategoriesByTitle(groupId, title,
+			vocabularyId, start, end);
 	}
 
 	public static int getVocabularyCategoriesCount(long groupId,
@@ -302,6 +322,15 @@ public class AssetCategoryServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().search(groupIds, name, vocabularyIds, start, end);
+	}
+
+	public static com.liferay.portal.kernel.json.JSONArray searchTitle(
+		long[] groupIds, java.lang.String title, long[] vocabularyIds,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .searchTitle(groupIds, title, vocabularyIds, start, end);
 	}
 
 	public static com.liferay.portlet.asset.model.AssetCategory updateCategory(

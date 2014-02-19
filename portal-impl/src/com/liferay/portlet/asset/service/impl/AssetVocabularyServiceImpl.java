@@ -19,10 +19,21 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.FacetedSearcher;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
@@ -66,6 +77,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			serviceContext);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetVocabulary addVocabulary(
 			String title, Map<Locale, String> titleMap,
@@ -82,6 +94,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			serviceContext);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetVocabulary addVocabulary(
 			String title, ServiceContext serviceContext)
@@ -107,6 +120,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 		deleteVocabularies(vocabularyIds, null);
 	}
 
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public List<AssetVocabulary> deleteVocabularies(
 			long[] vocabularyIds, ServiceContext serviceContext)
@@ -146,6 +160,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 		return failedVocabularies;
 	}
 
+	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public void deleteVocabulary(long vocabularyId)
 		throws PortalException, SystemException {
@@ -219,6 +234,30 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 	}
 
 	@Override
+	public List<AssetVocabulary> getGroupVocabulariesByTitle(
+			long groupId, String title, int start, int end)
+		throws PortalException, SystemException {
+
+		Hits hits = getHits(groupId, title, start, end);
+
+		Document[] documents = hits.getDocs();
+
+		List<AssetVocabulary> assetVocabularies =
+			new ArrayList<AssetVocabulary>(documents.length);
+
+		for (Document document : documents) {
+			long vocabularyId = GetterUtil.getLong(
+				document.get("vocabularyId"));
+
+			AssetVocabulary assetVocabulary = getVocabulary(vocabularyId);
+
+			assetVocabularies.add(assetVocabulary);
+		}
+
+		return assetVocabularies;
+	}
+
+	@Override
 	public int getGroupVocabulariesCount(long groupId) throws SystemException {
 		return assetVocabularyPersistence.filterCountByGroupId(groupId);
 	}
@@ -272,6 +311,42 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		return getGroupVocabulariesDisplay(
 			groupId, name, start, end, false, obc);
+	}
+
+	@Override
+	public AssetVocabularyDisplay getGroupVocabulariesDisplayByTitle(
+			long groupId, String title, int start, int end,
+			boolean addDefaultVocabulary)
+		throws PortalException, SystemException {
+
+		List<AssetVocabulary> vocabularies = null;
+
+		if (Validator.isNotNull(title)) {
+			vocabularies = getGroupVocabulariesByTitle(
+				groupId, title, start, end);
+		}
+		else {
+			vocabularies = getGroupVocabularies(groupId, start, end, null);
+		}
+
+		int total = vocabularies.size();
+
+		if (addDefaultVocabulary && (total == 0)) {
+			total = assetVocabularyPersistence.countByGroupId(groupId);
+
+			if (total == 0) {
+				vocabularies = new ArrayList<AssetVocabulary>(1);
+
+				AssetVocabulary defaultVocabulary =
+					assetVocabularyLocalService.addDefaultVocabulary(groupId);
+
+				vocabularies.add(defaultVocabulary);
+
+				total = 1;
+			}
+		}
+
+		return new AssetVocabularyDisplay(vocabularies, total, start, end);
 	}
 
 	/**
@@ -351,6 +426,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			serviceContext);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetVocabulary updateVocabulary(
 			long vocabularyId, String title, Map<Locale, String> titleMap,
@@ -388,5 +464,37 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		return vocabularies;
 	}
+
+	protected Hits getHits(long groupId, String title, int start, int end)
+		throws SystemException {
+
+		try {
+			SearchContext searchContext = new SearchContext();
+
+			searchContext.setAndSearch(false);
+			searchContext.setAttribute(Field.TITLE, title);
+			searchContext.setCompanyId(CompanyThreadLocal.getCompanyId());
+			searchContext.setEnd(end);
+			searchContext.setEntryClassNames(
+				new String[] {AssetVocabulary.class.getName()});
+			searchContext.setGroupIds(new long[] {groupId});
+
+			QueryConfig queryConfig = new QueryConfig();
+
+			queryConfig.setHighlightEnabled(false);
+			queryConfig.setScoreEnabled(false);
+
+			searchContext.setQueryConfig(queryConfig);
+
+			searchContext.setStart(start);
+
+			Indexer indexer = FacetedSearcher.getInstance();
+
+			return indexer.search(searchContext);
+		}
+			catch (Exception e) {
+				throw new SystemException(e);
+		}
+}
 
 }
