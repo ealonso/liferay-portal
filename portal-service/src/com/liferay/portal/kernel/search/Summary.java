@@ -50,6 +50,16 @@ public class Summary {
 		return _content;
 	}
 
+	/**
+	 * Returns the content that is optionally escaped and/or highlighted.
+	 * If both <code>escape</code> and <code>highlight</code> are set to
+	 * <code>true</code>, ensures that the operations are executed in the
+	 * correct order.
+	 *
+	 * @param escape whether to escape the content
+	 * @param highlight whether to highlight the content
+	 * @return the content
+	 */
 	public String getContent(boolean escape, boolean highlight) {
 		return _escapeAndHighlight(_content, escape, highlight);
 	}
@@ -74,6 +84,16 @@ public class Summary {
 		return _title;
 	}
 
+	/**
+	 * Returns the title that is optionally escaped and/or highlighted.
+	 * If both <code>escape</code> and <code>highlight</code> are set to
+	 * <code>true</code>, ensures that the operations are executed in the
+	 * correct order
+	 *
+	 * @param escape whether to escape the title
+	 * @param highlight whether to highlight the title
+	 * @return the title
+	 */
 	public String getTitle(boolean escape, boolean highlight) {
 		return _escapeAndHighlight(_title, escape, highlight);
 	}
