@@ -299,6 +299,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>escape</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>fileEntryTuples</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

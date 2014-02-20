@@ -62,6 +62,10 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		_description = HtmlUtil.unescape(description);
 	}
 
+	public void setEscape(boolean escape) {
+		_escape = escape;
+	}
+
 	public void setFileEntryTuples(List<Tuple> fileEntryTuples) {
 		_fileEntryTuples = fileEntryTuples;
 	}
@@ -122,6 +126,7 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		_containerSrc = null;
 		_containerType = null;
 		_cssClass = null;
+		_escape = true;
 		_description = null;
 		_fileEntryTuples = null;
 		_highlightEnabled = false;
@@ -165,6 +170,8 @@ public class AppViewSearchEntryTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:app-view-search-entry:description", _description);
 		request.setAttribute(
+			"liferay-ui:app-view-search-entry:escape", _escape);
+		request.setAttribute(
 			"liferay-ui:app-view-search-entry:fileEntryTuples",
 			_fileEntryTuples);
 		request.setAttribute(
@@ -204,6 +211,7 @@ public class AppViewSearchEntryTag extends IncludeTag {
 	private String _containerType;
 	private String _cssClass;
 	private String _description;
+	private boolean _escape = true;
 	private List<Tuple> _fileEntryTuples;
 	private boolean _highlightEnabled;
 	private boolean _locked;

@@ -24,6 +24,7 @@ String containerSrc = (String)request.getAttribute("liferay-ui:app-view-search-e
 String containerType = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-search-entry:containerType"), LanguageUtil.get(locale, "folder"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:app-view-search-entry:cssClass"));
 String description = (String)request.getAttribute("liferay-ui:app-view-search-entry:description");
+boolean escape = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:escape"));
 List<Tuple> fileEntryTuples = (List<Tuple>)request.getAttribute("liferay-ui:app-view-search-entry:fileEntryTuples");
 boolean highlightEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:highlightEnabled"), PropsValues.INDEX_SEARCH_HIGHLIGHT_ENABLED);
 boolean locked = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:locked"));
