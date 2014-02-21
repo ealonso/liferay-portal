@@ -24,6 +24,7 @@ String containerSrc = (String)request.getAttribute("liferay-ui:app-view-search-e
 String containerType = GetterUtil.getString(request.getAttribute("liferay-ui:app-view-search-entry:containerType"), LanguageUtil.get(locale, "folder"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:app-view-search-entry:cssClass"));
 String description = (String)request.getAttribute("liferay-ui:app-view-search-entry:description");
+boolean escape = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:escape"));
 List<Tuple> fileEntryTuples = (List<Tuple>)request.getAttribute("liferay-ui:app-view-search-entry:fileEntryTuples");
 boolean highlightEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:highlightEnabled"));
 boolean locked = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:locked"));
@@ -37,6 +38,11 @@ String thumbnailSrc = (String)request.getAttribute("liferay-ui:app-view-search-e
 String title = (String)request.getAttribute("liferay-ui:app-view-search-entry:title");
 String url = (String)request.getAttribute("liferay-ui:app-view-search-entry:url");
 List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-search-entry:versions");
+
+Summary summary = new Summary(title, description, null);
+
+summary.setHighlight(highlightEnabled);
+summary.setQueryTerms(queryTerms);
 %>
 
 <div class="app-view-entry app-view-search-entry-taglib entry-display-style <%= showCheckbox ? "selectable" : StringPool.BLANK %> <%= cssClass %>" data-title="<%= HtmlUtil.escapeAttribute(StringUtil.shorten(title, 60)) %>">
@@ -53,14 +59,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 
 		<div class="entry-metadata">
 			<span class="entry-title">
-				<c:choose>
-					<c:when test="<%= highlightEnabled %>">
-						<%= StringUtil.highlight(HtmlUtil.escape(title), queryTerms) %>
-					</c:when>
-					<c:otherwise>
-						<%= HtmlUtil.escape(title) %>
-					</c:otherwise>
-				</c:choose>
+				<%= summary.getHighlightedContent() %>
 
 				<c:if test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
 					<aui:workflow-status showIcon="<%= false %>" showLabel="<%= false %>" status="<%= status %>" />
@@ -112,14 +111,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 			</c:if>
 
 			<span class="entry-description">
-				<c:choose>
-					<c:when test="<%= highlightEnabled %>">
-						<%= StringUtil.highlight(HtmlUtil.escape(description), queryTerms) %>
-					</c:when>
-					<c:otherwise>
-						<%= HtmlUtil.escape(description) %>
-					</c:otherwise>
-				</c:choose>
+				<%= summary.getHighlightedContent() %>
 			</span>
 		</div>
 	</a>
@@ -129,7 +121,11 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 		<%
 		for (Tuple fileEntryTuple : fileEntryTuples) {
 			FileEntry fileEntry = (FileEntry)fileEntryTuple.getObject(0);
-			Summary summary = (Summary)fileEntryTuple.getObject(1);
+			summary = (Summary)fileEntryTuple.getObject(1);
+
+			if (Validator.isNull(summary.getContent())) {
+				summary.setContent(fileEntry.getTitle());
+			}
 		%>
 
 			<div class="entry-attachment">
@@ -147,19 +143,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 						</span>
 
 						<span class="body">
-
-							<%
-							String body = (Validator.isNotNull(summary.getContent()) ? summary.getContent() : fileEntry.getTitle());
-							%>
-
-							<c:choose>
-								<c:when test="<%= highlightEnabled %>">
-									<%= StringUtil.highlight(body, queryTerms) %>
-								</c:when>
-								<c:otherwise>
-									<%= body %>
-								</c:otherwise>
-							</c:choose>
+							<%= summary.getHighlightedContent() %>
 						</span>
 				</aui:a>
 			</div>
@@ -175,6 +159,8 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 		<%
 		for (MBMessage mbMessage : mbMessages) {
 			User userDisplay = UserLocalServiceUtil.getUser(mbMessage.getUserId());
+
+			summary = new Summary(null, mbMessage.getSubject(), null);
 		%>
 
 			<div class="entry-discussion">
@@ -192,12 +178,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 					</span>
 
 					<span class="body">
-						<c:when test="<%= highlightEnabled %>">
-							<%= StringUtil.highlight(mbMessage.getSubject(), queryTerms) %>
-						</c:when>
-						<c:otherwise>
-							<%= mbMessage.getSubject() %>
-						</c:otherwise>
+						<%= summary.getHighlightedContent() %>
 					</span>
 				</aui:a>
 			</div>
