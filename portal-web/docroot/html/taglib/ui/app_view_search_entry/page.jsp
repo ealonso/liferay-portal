@@ -26,7 +26,7 @@ String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:
 String description = (String)request.getAttribute("liferay-ui:app-view-search-entry:description");
 boolean escape = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:escape"));
 List<Tuple> fileEntryTuples = (List<Tuple>)request.getAttribute("liferay-ui:app-view-search-entry:fileEntryTuples");
-boolean highlightEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:highlightEnabled"), PropsValues.INDEX_SEARCH_HIGHLIGHT_ENABLED);
+boolean highlightEnabled = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:highlightEnabled"));
 boolean locked = GetterUtil.getBoolean(request.getAttribute("liferay-ui:app-view-search-entry:locked"));
 List<MBMessage> mbMessages = (List<MBMessage>)request.getAttribute("liferay-ui:app-view-search-entry:mbMessages");
 String[] queryTerms = (String[])request.getAttribute("liferay-ui:app-view-search-entry:queryTerms");
@@ -41,6 +41,7 @@ List<String> versions = (List<String>)request.getAttribute("liferay-ui:app-view-
 
 Summary summary = new Summary(title, description, null);
 
+summary.setHighlight(highlightEnabled);
 summary.setQueryTerms(queryTerms);
 %>
 
@@ -58,7 +59,7 @@ summary.setQueryTerms(queryTerms);
 
 		<div class="entry-metadata">
 			<span class="entry-title">
-				<%= summary.getTitle(escape, highlightEnabled) %>
+				<%= summary.getHighlightedContent() %>
 
 				<c:if test="<%= (status != WorkflowConstants.STATUS_ANY) && (status != WorkflowConstants.STATUS_APPROVED) %>">
 					<aui:workflow-status showIcon="<%= false %>" showLabel="<%= false %>" status="<%= status %>" />
@@ -110,7 +111,7 @@ summary.setQueryTerms(queryTerms);
 			</c:if>
 
 			<span class="entry-description">
-				<%= summary.getContent(escape, highlightEnabled) %>
+				<%= summary.getHighlightedContent() %>
 			</span>
 		</div>
 	</a>
@@ -142,7 +143,7 @@ summary.setQueryTerms(queryTerms);
 						</span>
 
 						<span class="body">
-							<%= summary.getContent(escape, highlightEnabled) %>
+							<%= summary.getHighlightedContent() %>
 						</span>
 				</aui:a>
 			</div>
@@ -177,7 +178,7 @@ summary.setQueryTerms(queryTerms);
 					</span>
 
 					<span class="body">
-						<%= summary.getContent(escape, highlightEnabled) %>
+						<%= summary.getHighlightedContent() %>
 					</span>
 				</aui:a>
 			</div>

@@ -51,18 +51,23 @@ public class Summary {
 	}
 
 	/**
-	 * Returns the summary content with matched query terms highlighted and/or
-	 * escaped. If both <code>escape</code> and <code>highlight</code> are set
-	 * to <code>true</code>, the matched query terms are highlighted and escaped
-	 * in the correct order.
+	 * Returns the content with matched query terms escaped and highlighted, ensuring that the
+	 * operations are executed in the correct order.
 	 *
-	 * @param  escape whether to escape the matched query terms
-	 * @param  highlight whether to highlight the matched query terms
-	 * @return the summary content with matched query terms highlighted and/or
-	 *         escaped
+	 * @return the content with matched query terms escaped and highlighted
 	 */
-	public String getContent(boolean escape, boolean highlight) {
-		return _escapeAndHighlight(_content, escape, highlight);
+	public String getHighlightedContent() {
+		return _escapeAndHighlight(_content);
+	}
+
+	/**
+	 * Returns the title with matched query terms escaped and highlighted, ensuring that the
+	 * operations are executed in the correct order.
+	 *
+	 * @return the title with matched query terms escaped and highlighted
+	 */
+	public String getHighlightedTitle() {
+		return _escapeAndHighlight(_title);
 	}
 
 	public Locale getLocale() {
@@ -83,21 +88,6 @@ public class Summary {
 
 	public String getTitle() {
 		return _title;
-	}
-
-	/**
-	 * Returns the summary title with matched query terms highlighted and/or
-	 * escaped. If both <code>escape</code> and <code>highlight</code> are set
-	 * to <code>true</code>, the matched query terms are highlighted and escaped
-	 * in the correct order.
-	 *
-	 * @param  escape whether to escape the matched query terms
-	 * @param  highlight whether to highlight the matched query terms
-	 * @return the summary title with matched query terms highlighted and/or
-	 *         escaped
-	 */
-	public String getTitle(boolean escape, boolean highlight) {
-		return _escapeAndHighlight(_title, escape, highlight);
 	}
 
 	public boolean isHighlight() {
@@ -144,35 +134,28 @@ public class Summary {
 		_title = title;
 	}
 
-	private String _escapeAndHighlight(
-		String s, boolean escape, boolean highlight) {
-
-		if (Validator.isNull(s) || ArrayUtil.isEmpty(_queryTerms)) {
-			return s;
+	private String _escapeAndHighlight(String text) {
+		if (Validator.isNull(text) || ArrayUtil.isEmpty(_queryTerms)) {
+			return text;
 		}
 
-		String result = s;
-
-		if (highlight) {
-			result = SearchUtil.highlight(
-				result, _queryTerms, ESCAPE_SAFE_HIGHLIGHT_1,
+		if (_highlight) {
+			text = SearchUtil.highlight(
+				text, _queryTerms, ESCAPE_SAFE_HIGHLIGHT_1,
 				ESCAPE_SAFE_HIGHLIGHT_2);
-		}
 
-		if (escape) {
-			result = HtmlUtil.escape(result);
-		}
+			text = HtmlUtil.escape(text);
 
-		if (highlight) {
-			result = StringUtil.replace(
-				result, new String[] {
-					ESCAPE_SAFE_HIGHLIGHT_1, ESCAPE_SAFE_HIGHLIGHT_2},
+			text = StringUtil.replace(
+				text,
+				new String[] {ESCAPE_SAFE_HIGHLIGHT_1, ESCAPE_SAFE_HIGHLIGHT_2},
 				new String[] {
 					SearchUtil.DEFAULT_HIGHLIGHT_1,
-					SearchUtil.DEFAULT_HIGHLIGHT_2});
+					SearchUtil.DEFAULT_HIGHLIGHT_2
+				});
 		}
 
-		return result;
+		return text;
 	}
 
 	private static final String ESCAPE_SAFE_HIGHLIGHT_1 = "[@HIGHLIGHT1@]";
