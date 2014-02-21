@@ -51,8 +51,8 @@ public class Summary {
 	}
 
 	/**
-	 * Returns the content with matched query terms escaped and highlighted, ensuring that the
-	 * operations are executed in the correct order.
+	 * Returns the content with matched query terms escaped and highlighted,
+	 * ensuring that the operations are executed in the correct order.
 	 *
 	 * @return the content with matched query terms escaped and highlighted
 	 */
@@ -61,8 +61,8 @@ public class Summary {
 	}
 
 	/**
-	 * Returns the title with matched query terms escaped and highlighted, ensuring that the
-	 * operations are executed in the correct order.
+	 * Returns the title with matched query terms escaped and highlighted,
+	 * ensuring that the operations are executed in the correct order.
 	 *
 	 * @return the title with matched query terms escaped and highlighted
 	 */
