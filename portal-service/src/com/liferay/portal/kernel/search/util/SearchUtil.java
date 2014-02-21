@@ -24,10 +24,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Utility class for Search related String operations.
+ * Provides search utility methods and constants, such as those related to
+ * string highlighting in search results.
  *
  * @author Tibor Lipusz
- *
  */
 public class SearchUtil {
 
