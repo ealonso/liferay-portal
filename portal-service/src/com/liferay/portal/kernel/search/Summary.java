@@ -51,14 +51,15 @@ public class Summary {
 	}
 
 	/**
-	 * Returns the content that is optionally escaped and/or highlighted.
-	 * If both <code>escape</code> and <code>highlight</code> are set to
-	 * <code>true</code>, ensures that the operations are executed in the
-	 * correct order.
+	 * Returns the summary content with matched query terms highlighted and/or
+	 * escaped. If both <code>escape</code> and <code>highlight</code> are set
+	 * to <code>true</code>, the matched query terms are highlighted and escaped
+	 * in the correct order.
 	 *
-	 * @param escape whether to escape the content
-	 * @param highlight whether to highlight the content
-	 * @return the content
+	 * @param  escape whether to escape the matched query terms
+	 * @param  highlight whether to highlight the matched query terms
+	 * @return the summary content with matched query terms highlighted and/or
+	 *         escaped
 	 */
 	public String getContent(boolean escape, boolean highlight) {
 		return _escapeAndHighlight(_content, escape, highlight);
@@ -85,14 +86,15 @@ public class Summary {
 	}
 
 	/**
-	 * Returns the title that is optionally escaped and/or highlighted.
-	 * If both <code>escape</code> and <code>highlight</code> are set to
-	 * <code>true</code>, ensures that the operations are executed in the
-	 * correct order
+	 * Returns the summary title with matched query terms highlighted and/or
+	 * escaped. If both <code>escape</code> and <code>highlight</code> are set
+	 * to <code>true</code>, the matched query terms are highlighted and escaped
+	 * in the correct order.
 	 *
-	 * @param escape whether to escape the title
-	 * @param highlight whether to highlight the title
-	 * @return the title
+	 * @param  escape whether to escape the matched query terms
+	 * @param  highlight whether to highlight the matched query terms
+	 * @return the summary title with matched query terms highlighted and/or
+	 *         escaped
 	 */
 	public String getTitle(boolean escape, boolean highlight) {
 		return _escapeAndHighlight(_title, escape, highlight);
