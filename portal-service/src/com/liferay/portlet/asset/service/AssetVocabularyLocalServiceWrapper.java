@@ -443,6 +443,13 @@ public class AssetVocabularyLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portlet.asset.model.AssetVocabulary fetchVocabulary(
+		long vocabularyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabularyLocalService.fetchVocabulary(vocabularyId);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> getCompanyVocabularies(
 		long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -514,6 +521,15 @@ public class AssetVocabularyLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetVocabularyLocalService.getVocabulary(vocabularyId);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.search.BaseModelSearchResult<com.liferay.portlet.asset.model.AssetVocabulary> searchAssetVocabularies(
+		long groupId, java.lang.String title, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetVocabularyLocalService.searchAssetVocabularies(groupId,
+			title, start, end);
 	}
 
 	/**
