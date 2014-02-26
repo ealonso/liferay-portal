@@ -187,6 +187,16 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONObject getJSONVocabularyCategoriesByTitle(
+		long groupId, java.lang.String title, long vocabularyId, int start,
+		int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryService.getJSONVocabularyCategoriesByTitle(groupId,
+			title, vocabularyId, start, end);
+	}
+
+	@Override
 	public java.util.List<com.liferay.portlet.asset.model.AssetCategory> getVocabularyCategories(
 		long vocabularyId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator obc)
@@ -318,6 +328,16 @@ public class AssetCategoryServiceWrapper implements AssetCategoryService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _assetCategoryService.search(groupIds, name, vocabularyIds,
 			start, end);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.json.JSONArray searchTitle(
+		long[] groupIds, java.lang.String title, long[] vocabularyIds,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _assetCategoryService.searchTitle(groupIds, title,
+			vocabularyIds, start, end);
 	}
 
 	@Override
