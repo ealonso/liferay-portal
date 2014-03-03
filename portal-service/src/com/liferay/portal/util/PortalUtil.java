@@ -1491,6 +1491,12 @@ public class PortalUtil {
 		return getPortal().getSiteAndCompanyGroupIds(themeDisplay);
 	}
 
+	public static long[] getSiteAndParentGroupIds(long groupId)
+		throws PortalException, SystemException {
+
+		return getPortal().getSiteAndParentGroupIds(groupId);
+	}
+
 	public static Locale getSiteDefaultLocale(long groupId)
 		throws PortalException, SystemException {
 

@@ -5002,6 +5002,39 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
+	public long[] getSiteAndParentGroupIds(long groupId)
+		throws PortalException, SystemException {
+
+		List<Group> groups = new ArrayList<Group>();
+
+		Group scopeGroup = GroupLocalServiceUtil.getGroup(groupId);
+
+		groups.add(scopeGroup);
+
+		if (scopeGroup.isLayout()) {
+			scopeGroup = scopeGroup.getParentGroup();
+		}
+
+		groups.addAll(scopeGroup.getAncestors());
+
+		if (!scopeGroup.isCompany()) {
+			groups.add(
+				GroupLocalServiceUtil.getCompanyGroup(
+					scopeGroup.getCompanyId()));
+		}
+
+		long[] groupIds = new long[groups.size()];
+
+		for (int i = 0; i < groups.size(); i++) {
+			Group group = groups.get(i);
+
+			groupIds[i] = group.getGroupId();
+		}
+
+		return groupIds;
+	}
+
+	@Override
 	public Locale getSiteDefaultLocale(long groupId)
 		throws PortalException, SystemException {
 
