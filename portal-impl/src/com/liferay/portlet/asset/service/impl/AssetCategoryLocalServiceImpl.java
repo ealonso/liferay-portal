@@ -18,15 +18,12 @@ import com.liferay.portal.kernel.cache.ThreadLocalCachable;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.search.BaseModelSearcher;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackRegistryUtil;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -48,7 +45,7 @@ import com.liferay.portlet.asset.model.AssetCategoryConstants;
 import com.liferay.portlet.asset.model.AssetCategoryProperty;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.base.AssetCategoryLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.AssetCategoryUtil;
+import com.liferay.portlet.asset.util.AssetCategorySearcher;
 
 import java.io.Serializable;
 
@@ -741,28 +738,14 @@ public class AssetCategoryLocalServiceImpl
 	}
 
 	protected BaseModelSearchResult<AssetCategory> searchCategories(
-			SearchContext searchContext)
-		throws PortalException, SystemException {
+		SearchContext searchContext)
+	throws PortalException, SystemException {
 
-		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetCategory.class);
+	BaseModelSearcher<AssetCategory> assetCategorySearcher =
+		AssetCategorySearcher.getInstance();
 
-		for (int i = 0; i < 10; i++) {
-			Hits hits = indexer.search(
-				searchContext, AssetCategoryUtil.SELECTED_FIELD_NAMES);
-
-			List<AssetCategory> categories = AssetCategoryUtil.getCategories(
-				hits);
-
-			if (categories != null) {
-				return new BaseModelSearchResult<AssetCategory>(
-					categories, hits.getLength());
-			}
-		}
-
-		throw new SearchException(
-			"Unable to fix the search index after 10 attempts");
-	}
+	return assetCategorySearcher.searchModel(searchContext);
+}
 
 	protected void updateChildrenVocabularyId(
 			AssetCategory category, long vocabularyId)

@@ -416,6 +416,12 @@ public class AssetVocabularyLocalServiceUtil {
 		getService().deleteVocabulary(vocabularyId);
 	}
 
+	public static com.liferay.portlet.asset.model.AssetVocabulary fetchVocabulary(
+		long vocabularyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().fetchVocabulary(vocabularyId);
+	}
+
 	public static java.util.List<com.liferay.portlet.asset.model.AssetVocabulary> getCompanyVocabularies(
 		long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -488,11 +494,10 @@ public class AssetVocabularyLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.search.BaseModelSearchResult<com.liferay.portlet.asset.model.AssetVocabulary> searchVocabularies(
-		long companyId, long groupId, java.lang.String title, int start, int end)
+		long groupId, java.lang.String title, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .searchVocabularies(companyId, groupId, title, start, end);
+		return getService().searchVocabularies(groupId, title, start, end);
 	}
 
 	/**
