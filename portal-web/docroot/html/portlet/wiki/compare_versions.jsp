@@ -19,7 +19,13 @@
 <%
 String backURL = ParamUtil.getString(request, "backURL");
 
-String type = ParamUtil.getString(request, "type");
+String diffHtmlResults = (String)request.getAttribute(WebKeys.DIFF_HTML_RESULTS);
+long nodeId = (Long)request.getAttribute(WebKeys.WIKI_NODE_ID);
+String title = (String)request.getAttribute(WebKeys.TITLE);
+double sourceVersion = (Double)request.getAttribute(WebKeys.SOURCE_VERSION);
+double targetVersion = (Double)request.getAttribute(WebKeys.TARGET_VERSION);
+
+Object[] returnValue = WikiUtil.getWikiPageVersionsInfo(nodeId, title, sourceVersion, targetVersion, pageContext);
 %>
 
 <liferay-util:include page="/html/portlet/wiki/top_links.jsp" />
@@ -35,32 +41,18 @@ String type = ParamUtil.getString(request, "type");
 	title="compare-versions"
 />
 
-<liferay-util:include page="/html/portlet/wiki/history_navigation.jsp">
-	<liferay-util:param name="mode" value="<%= type %>" />
-</liferay-util:include>
+<liferay-portlet:renderURL varImpl="iteratorURL">
+	<portlet:param name="struts_action" value="/wiki/compare_versions" />
+	<portlet:param name="nodeId" value="<%= String.valueOf(nodeId) %>" />
+	<portlet:param name="title" value="<%= title %>" />
+</liferay-portlet:renderURL>
 
-<c:choose>
-	<c:when test='<%= type.equals("html") %>'>
-
-		<%
-		String diffHtmlResults = (String)request.getAttribute(WebKeys.DIFF_HTML_RESULTS);
-		%>
-
-		<liferay-ui:diff-html diffHtmlResults="<%= diffHtmlResults %>" />
-	</c:when>
-	<c:otherwise>
-
-		<%
-		String title = (String)request.getAttribute(WebKeys.TITLE);
-		double sourceVersion = (Double)request.getAttribute(WebKeys.SOURCE_VERSION);
-		double targetVersion = (Double)request.getAttribute(WebKeys.TARGET_VERSION);
-		List[] diffResults = (List[])request.getAttribute(WebKeys.DIFF_RESULTS);
-		%>
-
-		<liferay-ui:diff
-			diffResults="<%= diffResults %>"
-			sourceName="<%= title + StringPool.SPACE + sourceVersion %>"
-			targetName="<%= title + StringPool.SPACE + targetVersion %>"
-		/>
-	</c:otherwise>
-</c:choose>
+<liferay-ui:version-comparator
+	diffHtmlResults="<%= diffHtmlResults %>"
+	iteratorURL="<%= iteratorURL %>"
+	nextVersion="<%= (Double)returnValue[2] %>"
+	previousVersion="<%= (Double)returnValue[1] %>"
+	sourceVersion="<%= sourceVersion %>"
+	targetVersion="<%= targetVersion %>"
+	versionsInfo="<%= (List<Tuple>)returnValue[0] %>"
+/>
