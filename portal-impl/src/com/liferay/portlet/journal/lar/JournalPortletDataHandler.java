@@ -14,6 +14,7 @@
 
 package com.liferay.portlet.journal.lar;
 
+import com.liferay.portal.events.AddDefaultJournalStructuresAction;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -114,6 +115,24 @@ public class JournalPortletDataHandler extends BasePortletDataHandler {
 				JournalFeed.class.getName()));
 		setPublishToLiveByDefault(
 			PropsValues.JOURNAL_PUBLISH_TO_LIVE_BY_DEFAULT);
+	}
+
+	@Override
+	protected PortletPreferences doAddDefaultData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences)
+		throws Exception {
+
+		if (portletDataContext.getGroupId() ==
+			portletDataContext.getCompanyGroupId()) {
+
+			new AddDefaultJournalStructuresAction().run(
+				new String[] {
+					String.valueOf(portletDataContext.getCompanyId()),
+					String.valueOf(portletDataContext.getCompanyGroupId())});
+		}
+
+		return portletPreferences;
 	}
 
 	@Override
