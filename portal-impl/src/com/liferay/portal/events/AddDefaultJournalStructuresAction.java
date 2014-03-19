@@ -32,29 +32,27 @@ public class AddDefaultJournalStructuresAction
 	@Override
 	public void run(String[] ids) throws ActionException {
 		try {
-			doRun(GetterUtil.getLong(ids[0]));
+			doRun(GetterUtil.getLong(ids[0]), GetterUtil.getLong(ids[1]));
 		}
 		catch (Exception e) {
 			throw new ActionException(e);
 		}
 	}
 
-	protected void doRun(long companyId) throws Exception {
+	protected void doRun(long companyId, long companyGroupId) throws Exception {
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setAddGuestPermissions(true);
 		serviceContext.setAddGroupPermissions(true);
 
-		Group group = GroupLocalServiceUtil.getCompanyGroup(companyId);
-
-		serviceContext.setScopeGroupId(group.getGroupId());
+		serviceContext.setScopeGroupId(companyGroupId);
 
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
 
 		serviceContext.setUserId(defaultUserId);
 
 		addDDMStructures(
-			defaultUserId, group.getGroupId(),
+			defaultUserId, companyGroupId,
 			PortalUtil.getClassNameId(JournalArticle.class),
 			"basic-web-content-structure.xml", serviceContext);
 	}
