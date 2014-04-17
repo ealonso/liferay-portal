@@ -171,7 +171,11 @@ String toggleControlsState = GetterUtil.getString(SessionClicks.get(request, "li
 	</c:if>
 
 	<%
-	boolean userSetupComplete = user.isSetupComplete();
+	boolean userSetupComplete = false;
+
+	if (user.isSetupComplete() || themeDisplay.isImpersonated()) {
+		userSetupComplete = true;
+	}
 
 	boolean portalMessageUseAnimation = GetterUtil.getBoolean(PortalMessages.get(request, PortalMessages.KEY_ANIMATION), true);
 	%>

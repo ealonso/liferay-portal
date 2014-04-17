@@ -112,12 +112,10 @@ if (layout != null) {
 		</aui:script>
 	</c:if>
 
-	<aui:script use="liferay-navigation">
+	<aui:script use="event-move,liferay-navigation">
 		Liferay.once(
 			'initNavigation',
 			function() {
-				var TOUCH = A.UA.touch;
-
 				new Liferay.Navigation(
 					{
 						hasAddLayoutPermission: <%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) %>,
@@ -133,10 +131,10 @@ if (layout != null) {
 								<c:if test="<%= (i > 0) %>">,</c:if>
 
 								{
-									deletable: !TOUCH && <%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.DELETE) %>,
+									deletable: !A.UA.touch && <%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.DELETE) %>,
 									id: <%= curLayout.getLayoutId() %>,
 									sortable: <%= GroupPermissionUtil.contains(permissionChecker, scopeGroup, ActionKeys.MANAGE_LAYOUTS) && SitesUtil.isLayoutSortable(curLayout) %>,
-									updateable: !TOUCH && <%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.UPDATE) %>
+									updateable: <%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.UPDATE) %>
 								}
 
 							<%
@@ -159,7 +157,7 @@ if (layout != null) {
 
 		if (navBlock) {
 			navBlock.once(
-				'mousemove',
+				['gesturemovestart', 'mousemove'],
 				function() {
 					Liferay.fire('initNavigation');
 				}

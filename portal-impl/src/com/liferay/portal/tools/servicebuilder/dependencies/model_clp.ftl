@@ -33,7 +33,9 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.TrashedModel;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.impl.BaseModelImpl;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.trash.model.TrashEntry;
 import com.liferay.portlet.trash.service.TrashEntryLocalServiceUtil;
@@ -342,12 +344,18 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 		<#if column.userUuid>
 			@Override
 			public String get${column.methodUserUuidName}() throws SystemException {
-				return PortalUtil.getUserValue(get${column.methodName}(), "uuid", _${column.userUuidName});
+				try {
+					User user = UserLocalServiceUtil.getUserById(get${column.methodName}());
+
+					return user.getUuid();
+				}
+				catch (PortalException pe) {
+					return StringPool.BLANK;
+				}
 			}
 
 			@Override
 			public void set${column.methodUserUuidName}(String ${column.userUuidName}) {
-				_${column.userUuidName} = ${column.userUuidName};
 			}
 		</#if>
 	</#list>
@@ -993,10 +1001,6 @@ public class ${entity.name}Clp extends BaseModelImpl<${entity.name}> implements 
 
 		<#if (column.name == "resourcePrimKey") && entity.isResourcedModel()>
 			private boolean _resourceMain;
-		</#if>
-
-		<#if column.userUuid>
-			private String _${column.userUuidName};
 		</#if>
 	</#list>
 

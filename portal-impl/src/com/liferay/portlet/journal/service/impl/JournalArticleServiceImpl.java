@@ -17,6 +17,7 @@ package com.liferay.portlet.journal.service.impl;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -82,9 +83,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  layoutUuid the unique string identifying the web content
 	 *         article's display page
 	 * @param  displayDateMonth the month the web content article is set to
@@ -198,9 +197,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  layoutUuid the unique string identifying the web content
 	 *         article's display page
 	 * @param  displayDateMonth the month the web content article is set to
@@ -575,12 +572,14 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the web content matching the group, article ID, and version.
+	 * Returns the web content from the web content article matching the group,
+	 * article ID, and version.
 	 *
 	 * @param  groupId the primary key of the web content article's group
 	 * @param  articleId the primary key of the web content article
 	 * @param  version the web content article's version
 	 * @param  languageId the primary key of the language translation to get
+	 * @param  portletRequestModel the portlet request model
 	 * @param  themeDisplay the theme display
 	 * @return the matching web content
 	 * @throws PortalException if the user did not have permission to view the
@@ -588,6 +587,40 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         template could not be found, or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
+	public String getArticleContent(
+			long groupId, String articleId, double version, String languageId,
+			PortletRequestModel portletRequestModel, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		JournalArticlePermission.check(
+			getPermissionChecker(), groupId, articleId, version,
+			ActionKeys.VIEW);
+
+		return journalArticleLocalService.getArticleContent(
+			groupId, articleId, version, null, null, languageId,
+			portletRequestModel, themeDisplay);
+	}
+
+	/**
+	 * Returns the web content from the web content article matching the group,
+	 * article ID, and version.
+	 *
+	 * @param      groupId the primary key of the web content article's group
+	 * @param      articleId the primary key of the web content article
+	 * @param      version the web content article's version
+	 * @param      languageId the primary key of the language translation to get
+	 * @param      themeDisplay the theme display
+	 * @return     the matching web content
+	 * @throws     PortalException if the user did not have permission to view
+	 *             the web content article, if a matching web content article or
+	 *             DDM template could not be found, or if a portal exception
+	 *             occurred
+	 * @throws     SystemException if a system exception occurred
+	 * @deprecated As of 7.0.0, replaced by {@link #getArticleContent(long,
+	 *             String, double, String, PortletRequestModel, ThemeDisplay)}
+	 */
+	@Deprecated
 	@Override
 	public String getArticleContent(
 			long groupId, String articleId, double version, String languageId,
@@ -603,11 +636,13 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	}
 
 	/**
-	 * Returns the latest web content matching the group and article ID.
+	 * Returns the latest web content from the web content article matching the
+	 * group and article ID.
 	 *
 	 * @param  groupId the primary key of the web content article's group
 	 * @param  articleId the primary key of the web content article
 	 * @param  languageId the primary key of the language translation to get
+	 * @param  portletRequestModel the portlet request model
 	 * @param  themeDisplay the theme display
 	 * @return the matching web content
 	 * @throws PortalException if the user did not have permission to view the
@@ -615,6 +650,38 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         template could not be found, or if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
 	 */
+	@Override
+	public String getArticleContent(
+			long groupId, String articleId, String languageId,
+			PortletRequestModel portletRequestModel, ThemeDisplay themeDisplay)
+		throws PortalException, SystemException {
+
+		JournalArticlePermission.check(
+			getPermissionChecker(), groupId, articleId, ActionKeys.VIEW);
+
+		return journalArticleLocalService.getArticleContent(
+			groupId, articleId, null, null, languageId, portletRequestModel,
+			themeDisplay);
+	}
+
+	/**
+	 * Returns the latest web content from the web content article matching the
+	 * group and article ID.
+	 *
+	 * @param      groupId the primary key of the web content article's group
+	 * @param      articleId the primary key of the web content article
+	 * @param      languageId the primary key of the language translation to get
+	 * @param      themeDisplay the theme display
+	 * @return     the matching web content
+	 * @throws     PortalException if the user did not have permission to view
+	 *             the web content article, if a matching web content article or
+	 *             DDM template could not be found, or if a portal exception
+	 *             occurred
+	 * @throws     SystemException if a system exception occurred
+	 * @deprecated As of 7.0.0, replaced by {@link #getArticleContent(long,
+	 *             String, String, PortletRequestModel, ThemeDisplay)}
+	 */
+	@Deprecated
 	@Override
 	public String getArticleContent(
 			long groupId, String articleId, String languageId,
@@ -1419,9 +1486,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  displayDateGT the date after which a matching web content
 	 *         article's display date must be after (optionally
 	 *         <code>null</code>)
@@ -1497,9 +1562,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  displayDateGT the date after which a matching web content
 	 *         article's display date must be after (optionally
 	 *         <code>null</code>)
@@ -1656,9 +1719,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  displayDateGT the date after which a matching web content
 	 *         article's display date must be after (optionally
 	 *         <code>null</code>)
@@ -1717,9 +1778,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  displayDateGT the date after which a matching web content
 	 *         article's display date must be after (optionally
 	 *         <code>null</code>)
@@ -1912,9 +1971,7 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	 *         structure, if the article is related to a DDM structure, or
 	 *         <code>null</code> otherwise
 	 * @param  ddmTemplateKey the primary key of the web content article's DDM
-	 *         template (optionally <code>null</code>). If the article is
-	 *         related to a DDM structure, the template's structure must match
-	 *         it.
+	 *         template
 	 * @param  layoutUuid the unique string identifying the web content
 	 *         article's display page
 	 * @param  displayDateMonth the month the web content article is set to

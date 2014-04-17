@@ -14,10 +14,6 @@
 		}
 	}
 
-	.add-page-editor-input {
-		width: 150px;
-	}
-
 	.delete-tab {
 		color: #444;
 		cursor: pointer;
@@ -42,8 +38,87 @@
 		}
 	}
 
-	.lfr-nav-updateable.selected a:hover span {
-		cursor: text;
+	.lfr-nav-sortable > a > span {
+		padding-left: 28px;
+	}
+
+	.drag-handle {
+		background-color: #555;
+
+		@include border-radius(50%);
+
+		color: #FFF;
+		cursor: pointer;
+		font-size: 16px;
+		left: 3px;
+		line-height: 1em;
+		margin: 8px;
+		padding: 4px;
+		position: absolute;
+		text-align: center;
+		top: 2px;
+		width: 1em;
+	}
+
+	@include respond-to(desktop) {
+		.lfr-nav-sortable > a > span {
+			padding-left: 0;
+		}
+
+		.drag-handle {
+			display: none;
+		}
+	}
+
+	.lfr-nav-updateable {
+		.add-page-editor {
+			.add-page-editor-input {
+				width: 150px;
+			}
+
+			.btn {
+				width: auto;
+			}
+
+			@include respond-to(phone, tablet) {
+				margin: 0 5px;
+
+				.input-append {
+					margin: 6px 0 7px;
+					width: 100%;
+				}
+
+				.add-page-editor-input, .btn {
+					height: 32px;
+				}
+
+				.add-page-editor-input {
+					@include box-sizing(border-box);
+
+					width: 70%;
+					z-index: 1;
+				}
+
+				.btn {
+					display: inline-block;
+					width: 30%;
+				}
+			}
+		}
+
+		&.selected a:hover span {
+			cursor: text;
+		}
+	}
+}
+
+.controls-hidden .modify-pages {
+	.lfr-nav-sortable > a > span {
+		padding-left: 0;
+	}
+
+	.drag-handle {
+		display: none;
 	}
 }
 

@@ -169,7 +169,8 @@ public class CMISRepository extends BaseCmisRepository {
 					properties, contentStream, VersioningState.NONE);
 
 				document.checkIn(
-					true, Collections.EMPTY_MAP, null, StringPool.BLANK);
+					true, Collections.<String, Object>emptyMap(), null,
+					StringPool.BLANK);
 			}
 			else {
 				document = cmisFolder.createDocument(

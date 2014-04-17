@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.transaction.TransactionAttribute;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -132,6 +133,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 	public void checkEntries() throws PortalException, SystemException {
 		ActionableDynamicQuery actionableDynamicQuery =
 			new GroupActionableDynamicQuery() {
+
+			@Override
+			protected TransactionAttribute getTransactionAttribute() {
+				return REQUIRES_NEW_TRANSACTION_ATTRIBUTE;
+			}
 
 			@Override
 			protected void performAction(Object object)

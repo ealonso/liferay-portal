@@ -221,15 +221,6 @@ public class ServiceComponentLocalServiceImpl
 		}
 	}
 
-	public static interface PACL {
-
-		public void doUpgradeDB(
-				DoUpgradeDBPrivilegedExceptionAction
-					doUpgradeDBPrivilegedExceptionAction)
-			throws Exception;
-
-	}
-
 	public class DoUpgradeDBPrivilegedExceptionAction
 		implements PrivilegedExceptionAction<Void> {
 
@@ -270,6 +261,15 @@ public class ServiceComponentLocalServiceImpl
 		private ServiceComponent _previousServiceComponent;
 		private String _sequencesSQL;
 		private String _tablesSQL;
+
+	}
+
+	public interface PACL {
+
+		public void doUpgradeDB(
+				DoUpgradeDBPrivilegedExceptionAction
+					doUpgradeDBPrivilegedExceptionAction)
+			throws Exception;
 
 	}
 

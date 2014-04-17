@@ -1125,6 +1125,11 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 					"instead of LocaleUtil.getDefault(): " + fileName);
 		}
 
+		// LPS-46017
+
+		newContent = StringUtil.replace(
+			newContent, " static interface ", " interface ");
+
 		String oldContent = newContent;
 
 		while (true) {
@@ -1291,6 +1296,8 @@ public class JavaSourceProcessor extends BaseSourceProcessor {
 			}
 
 			checkStringBundler(trimmedLine, fileName, lineCount);
+
+			checkEmptyCollection(trimmedLine, fileName, lineCount);
 
 			if (trimmedLine.startsWith("* @deprecated") &&
 				mainReleaseVersion.equals(MAIN_RELEASE_LATEST_VERSION)) {
