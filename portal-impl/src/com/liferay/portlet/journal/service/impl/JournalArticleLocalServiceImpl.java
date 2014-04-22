@@ -3675,6 +3675,34 @@ public class JournalArticleLocalServiceImpl
 		return article;
 	}
 
+	/**
+	 * Returns an ordered range of all the web content articles matching the
+	 * parameters without using the indexer. It is preferable to use the indexed
+	 * version {@link #search(long, long, long, int, int, int)} instead of this
+	 * method wherever possible for performance reasons.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param  groupId the primary key of the group (optionally <code>0</code>)
+	 * @param  folderIds the primary keys of the web content article folders
+	 *         (optionally {@link java.util.Collections#EMPTY_LIST})
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  start the lower bound of the range of web content articles to
+	 *         return
+	 * @param  end the upper bound of the range of web content articles to
+	 *         return (not inclusive)
+	 * @return the matching web content articles
+	 * @throws SystemException if a portal exception occurred
+	 */
 	@Override
 	public List<JournalArticle> search(
 			long groupId, List<Long> folderIds, int status, int start, int end)
@@ -3687,6 +3715,34 @@ public class JournalArticleLocalServiceImpl
 			groupId, folderIds, queryDefinition);
 	}
 
+	/**
+	 * Returns an ordered range of all the web content articles in a single
+	 * folder matching the parameters without using the indexer. It is
+	 * preferable to use the indexed version {@link #search(long, long, long,
+	 * int, int, int)} instead of this method wherever possible for performance
+	 * reasons.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param  groupId the primary key of the group (optionally <code>0</code>)
+	 * @param  folderId the primary key of the web content article folder
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  start the lower bound of the range of web content articles to
+	 *         return
+	 * @param  end the upper bound of the range of web content articles to
+	 *         return (not inclusive)
+	 * @return the matching web content articles
+	 * @throws SystemException if a portal exception occurred
+	 */
 	@Override
 	public List<JournalArticle> search(
 			long groupId, long folderId, int status, int start, int end)
@@ -4113,6 +4169,36 @@ public class JournalArticleLocalServiceImpl
 		}
 	}
 
+	/**
+	 * Returns an ordered range of all the web content articles matching the
+	 * parameters using the indexer. It is preferable to use this method instead
+	 * of the non-indexed version whenever possible for performance reasons.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param  groupId the primary key of the group (optionally <code>0</code>)
+	 * @param  userId the primary key of the user searching for web content
+	 *         articles
+	 * @param  creatorUserId the primary key of the web content article's
+	 *         creator
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @param  start the lower bound of the range of web content articles to
+	 *         return
+	 * @param  end the upper bound of the range of web content articles to
+	 *         return (not inclusive)
+	 * @return the matching web content articles
+	 * @throws PortalException if a portal exception occurred
+	 * @throws SystemException if a system exception occurred
+	 */
 	@Override
 	public Hits search(
 			long groupId, long userId, long creatorUserId, int status,
@@ -4128,6 +4214,19 @@ public class JournalArticleLocalServiceImpl
 		return indexer.search(searchContext);
 	}
 
+	/**
+	 * Returns the number of web content articles matching the group, folders,
+	 * and status.
+	 *
+	 * @param  groupId the primary key of the group (optionally <code>0</code>)
+	 * @param  folderIds the primary keys of the web content article folders
+	 *         (optionally {@link java.util.Collections#EMPTY_LIST})
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @return the number of matching web content articles
+	 * @throws SystemException if a system exception occurred
+	 */
 	@Override
 	public int searchCount(long groupId, List<Long> folderIds, int status)
 		throws SystemException {
@@ -4138,6 +4237,18 @@ public class JournalArticleLocalServiceImpl
 			groupId, folderIds, queryDefinition);
 	}
 
+	/**
+	 * Returns the number of web content articles matching the group, folder,
+	 * and status.
+	 *
+	 * @param  groupId the primary key of the group (optionally <code>0</code>)
+	 * @param  folderId the primary key of the web content article folder
+	 * @param  status the web content article's workflow status. For more
+	 *         information see {@link WorkflowConstants} for constants starting
+	 *         with the "STATUS_" prefix.
+	 * @return the number of matching web content articles
+	 * @throws SystemException if a system exception occurred
+	 */
 	@Override
 	public int searchCount(long groupId, long folderId, int status)
 		throws SystemException {
@@ -5202,8 +5313,6 @@ public class JournalArticleLocalServiceImpl
 	 *         information see {@link WorkflowConstants} for constants starting
 	 *         with the "STATUS_" prefix.
 	 * @param  articleURL the web content article's accessible URL
-	 * @param  workflowContext the web content article's configured workflow
-	 *         context
 	 * @param  serviceContext the service context to be applied. Can set the
 	 *         modification date, status date, and portlet preferences. With
 	 *         respect to social activities, by setting the service context's
@@ -5211,6 +5320,8 @@ public class JournalArticleLocalServiceImpl
 	 *         com.liferay.portal.kernel.util.Constants#UPDATE}, the invocation
 	 *         is considered a web content update activity; otherwise it is
 	 *         considered a web content add activity.
+	 * @param  workflowContext the web content article's configured workflow
+	 *         context
 	 * @return the updated web content article
 	 * @throws PortalException if a portal exception occurred
 	 * @throws SystemException if a system exception occurred
