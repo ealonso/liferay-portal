@@ -53,11 +53,13 @@ import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.NoSuchFileEntryException;
 import com.liferay.portlet.documentlibrary.NoSuchFileException;
 
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 
 import java.io.File;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.MimeResponse;
@@ -337,6 +339,12 @@ public class UploadImageAction extends PortletAction {
 
 				if ((width + x) > renderedImage.getWidth()) {
 					width = renderedImage.getWidth() - x;
+				}
+
+				if (renderedImage.getHeight() == height &&
+					renderedImage.getWidth() == width) {
+
+					return tempFileEntry;
 				}
 
 				renderedImage = ImageToolUtil.crop(
