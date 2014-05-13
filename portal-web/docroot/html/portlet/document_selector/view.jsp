@@ -33,8 +33,6 @@ if ((folder != null) && (folder.getGroupId() != groupId)) {
 	folderId = 0;
 }
 
-long searchFolderIds = ParamUtil.getLong(request, "searchFolderIds");
-
 long[] folderIdsArray = null;
 
 if (folderId > 0) {
@@ -43,13 +41,9 @@ if (folderId > 0) {
 	folder = DLAppServiceUtil.getFolder(folderId);
 }
 else {
-	long defaultFolderId = DLFolderConstants.getFolderId(groupId, DLFolderConstants.getDataRepositoryId(groupId, searchFolderIds));
+	long defaultFolderId = DLFolderConstants.getFolderId(groupId, DLFolderConstants.getDataRepositoryId(groupId, folderId));
 
-	List<Long> folderIds = DLAppServiceUtil.getSubfolderIds(groupId, searchFolderIds);
-
-	folderIds.add(0, defaultFolderId);
-
-	folderIdsArray = StringUtil.split(StringUtil.merge(folderIds), 0L);
+	folderIdsArray = new long[] {defaultFolderId};
 }
 
 long repositoryId = groupId;
