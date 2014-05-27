@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Eudaldo Alonso
  */

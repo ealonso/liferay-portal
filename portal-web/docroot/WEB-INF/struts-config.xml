@@ -583,6 +583,8 @@
 
 		<!-- Document Selector -->
 
+		<action path="/document_selector/select_pages" type="com.liferay.portlet.layoutsadmin.action.EditLayoutsAction" />
+
 		<action path="/document_selector/view" type="com.liferay.portlet.documentselector.action.ViewAction">
 			<forward name="portlet.document_selector.error" path="portlet.documentselector.error" />
 			<forward name="portlet.document_selector.view" path="portlet.document_selector.view" />

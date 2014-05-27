@@ -16,10 +16,17 @@ package com.liferay.portlet.documentselector.action;
 
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.NoSuchFolderException;
+import com.liferay.portlet.documentselector.DocumentSelector;
+import com.liferay.portlet.documentselector.impl.AudioDocumentSelector;
+import com.liferay.portlet.documentselector.impl.BaseDocumentSelector;
+import com.liferay.portlet.documentselector.impl.ImageDocumentSelector;
+import com.liferay.portlet.documentselector.impl.VideoDocumentSelector;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.RenderRequest;
@@ -27,11 +34,6 @@ import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.liferay.portlet.documentselector.DocumentSelector;
-import com.liferay.portlet.documentselector.impl.AudioDocumentSelector;
-import com.liferay.portlet.documentselector.impl.BaseDocumentSelector;
-import com.liferay.portlet.documentselector.impl.ImageDocumentSelector;
-import com.liferay.portlet.documentselector.impl.VideoDocumentSelector;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -55,22 +57,25 @@ public class ViewAction extends PortletAction {
 			HttpServletRequest originalServletRequest =
 				PortalUtil.getOriginalServletRequest(request);
 
-			String type = ParamUtil.getString(
-				originalServletRequest, "Type");
+			String type = ParamUtil.getString(originalServletRequest, "Type");
 
 			DocumentSelector documentSelector = null;
 
-			if (type.equalsIgnoreCase("image")) {
+			if (StringUtil.equalsIgnoreCase(type, "image")) {
 				documentSelector = new ImageDocumentSelector();
 			}
-			else if (type.equalsIgnoreCase("audio")) {
+			else if (StringUtil.equalsIgnoreCase(type, "audio")) {
 				documentSelector = new AudioDocumentSelector();
 			}
-			else if (type.equalsIgnoreCase("video")) {
+			else if (StringUtil.equalsIgnoreCase(type, "video")) {
 				documentSelector = new VideoDocumentSelector();
 			}
 			else {
 				documentSelector = new BaseDocumentSelector();
+			}
+
+			if (Validator.isNotNull(type)) {
+				request.setAttribute("defaultTypes", "documents");
 			}
 
 			request.setAttribute("DOCUMENT_SELECTOR", documentSelector);
