@@ -17,11 +17,7 @@
 <%@ include file="/html/portlet/document_selector/init.jsp" %>
 
 <%
-long groupId = ParamUtil.getLong(request, FileEntryDisplayTerms.SELECTED_GROUP_ID);
-
-if (groupId == 0) {
-	groupId = ParamUtil.getLong(request, "groupId");
-}
+long groupId = ParamUtil.getLong(request, "groupId");
 
 Folder folder = (Folder)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
 
@@ -33,17 +29,8 @@ if ((folder != null) && (folder.getGroupId() != groupId)) {
 	folderId = 0;
 }
 
-long[] folderIdsArray = null;
-
 if (folderId > 0) {
-	folderIdsArray = new long[] {folderId};
-
 	folder = DLAppServiceUtil.getFolder(folderId);
-}
-else {
-	long defaultFolderId = DLFolderConstants.getFolderId(groupId, DLFolderConstants.getDataRepositoryId(groupId, folderId));
-
-	folderIdsArray = new long[] {defaultFolderId};
 }
 
 long repositoryId = groupId;
@@ -310,13 +297,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 	>
 
 		<%
-		String type = ParamUtil.getString(request, "type");
-
 		String[] mimeTypes = null;
-
-		if (type.equals("image")) {
-			mimeTypes = PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES);
-		}
 
 		SearchContext searchContext = SearchContextFactory.getInstance(request);
 
@@ -324,7 +305,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 		searchContext.setAttribute("mimeTypes", mimeTypes);
 		searchContext.setAttribute("paginationType", "regular");
 		searchContext.setEnd(entryEnd);
-		searchContext.setFolderIds(folderIdsArray);
+		searchContext.setFolderIds(new long[]{folderId});
 		searchContext.setGroupIds(new long[] {groupId});
 		searchContext.setIncludeFolders(false);
 		searchContext.setKeywords(keywords);
