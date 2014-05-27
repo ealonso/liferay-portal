@@ -583,7 +583,10 @@
 
 		<!-- Document Selector -->
 
-		<action path="/document_selector/view" forward="portlet.document_selector.view" />
+		<action path="/document_selector/view" type="com.liferay.portlet.documentselector.action.ViewAction">
+			<forward name="portlet.document_selector.error" path="portlet.documentselector.error" />
+			<forward name="portlet.document_selector.view" path="portlet.document_selector.view" />
+		</action>
 
 		<!-- Dynamic Data List Display -->
 

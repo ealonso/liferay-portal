@@ -21,6 +21,8 @@ long groupId = ParamUtil.getLong(request, "groupId");
 
 Folder folder = (Folder)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FOLDER);
 
+DocumentSelector documentSelector = (DocumentSelector)request.getAttribute("DOCUMENT_SELECTOR");
+
 long folderId = BeanParamUtil.getLong(folder, request, "folderId", DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 if ((folder != null) && (folder.getGroupId() != groupId)) {
@@ -208,8 +210,8 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 			iteratorURL="<%= portletURL %>"
 		>
 			<liferay-ui:search-container-results
-				results="<%= DLAppServiceUtil.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-				total="<%= DLAppServiceUtil.getFoldersCount(groupId, folderId) %>"
+				results="<%= documentSelector.getFolders(repositoryId, folderId, searchContainer.getStart(), searchContainer.getEnd()) %>"
+				total="<%= documentSelector.getFoldersCount(groupId, folderId) %>"
 			/>
 
 			<liferay-ui:search-container-row
@@ -312,8 +314,6 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 		searchContext.setScopeStrict(false);
 		searchContext.setStart(entryStart);
 
-		Hits hits = DLAppServiceUtil.search(repositoryId, searchContext);
-
 		Map<String, String> params = new HashMap<String, String>();
 
 		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(request);
@@ -326,7 +326,7 @@ boolean showGroupsSelector = ParamUtil.getBoolean(request, "showGroupsSelector")
 		%>
 
 		<liferay-ui:search-container-results
-			results="<%= DLUtil.getFileEntries(hits) %>"
+			results="<%= documentSelector.getFileEntries(repositoryId, searchContext) %>"
 		/>
 
 		<liferay-ui:search-container-row
