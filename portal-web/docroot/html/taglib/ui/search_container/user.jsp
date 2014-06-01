@@ -17,21 +17,21 @@
 <%@ include file="/html/taglib/ui/search_container/init.jsp" %>
 
 <%
-long userId = GetterUtil.getLong(request.getAttribute("liferay-ui:search-container-column-user:userId"));
 Date date = GetterUtil.getDate(request.getAttribute("liferay-ui:search-container-column-user:date"), DateFormatFactoryUtil.getDate(locale), null);
+long userId = GetterUtil.getLong(request.getAttribute("liferay-ui:search-container-column-user:userId"));
 
-User curUser = UserLocalServiceUtil.fetchUser(userId);
+User user2 = UserLocalServiceUtil.fetchUser(userId);
 %>
 
-<c:if test="<%= curUser != null %>">
+<c:if test="<%= user2 != null %>">
 	<div class="user-info">
 		<div class="user-avatar">
-			<img alt="<%= HtmlUtil.escapeAttribute(curUser.getFullName()) %>" class="avatar img-circle" src="<%= HtmlUtil.escape(curUser.getPortraitURL(themeDisplay)) %>" />
+			<img alt="<%= HtmlUtil.escapeAttribute(user2.getFullName()) %>" class="avatar img-circle" src="<%= HtmlUtil.escape(user2.getPortraitURL(themeDisplay)) %>" />
 		</div>
 
 		<div class="user-details">
 			<div class="row <%= (date == null) ? "line" : StringPool.BLANK %>">
-				<span class="span12 user-name"><%= HtmlUtil.escapeAttribute(curUser.getFullName()) %></span>
+				<span class="span12 user-name"><%= HtmlUtil.escapeAttribute(user2.getFullName()) %></span>
 			</div>
 
 			<c:if test="<%= date != null %>">
