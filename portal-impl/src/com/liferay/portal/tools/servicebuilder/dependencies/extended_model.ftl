@@ -3,11 +3,7 @@ package ${packagePath}.model;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.util.Accessor;
-
-<#if entity.isLocalizedModel()>
-	import com.liferay.portal.kernel.util.LocaleThreadLocal;
-</#if>
-
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.model.NestedSetsTreeNodeModel;
 import com.liferay.portal.model.PermissionedModel;
 import com.liferay.portal.model.PersistedModel;
