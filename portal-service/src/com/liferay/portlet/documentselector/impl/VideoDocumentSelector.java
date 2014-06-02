@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,13 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/init.jsp" %>
+package com.liferay.portlet.documentselector.impl;
 
-<%@ page import="com.liferay.portlet.documentlibrary.model.DLFileEntryType" %><%@
-page import="com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil" %><%@
-page import="com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission" %><%@
-page import="com.liferay.portlet.documentselector.DocumentSelector" %><%@
-page import="com.liferay.portlet.journal.search.FileEntryDisplayTerms" %><%@
-page import="com.liferay.portlet.journal.search.FileEntrySearch" %>
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portlet.documentlibrary.util.VideoProcessorUtil;
+
+import java.util.Set;
+
+/**
+ * @author Eudaldo Alonso
+ */
+public class VideoDocumentSelector extends BaseDocumentSelector {
+
+	@Override
+	protected String[] getFileEntryMimeTypes() {
+		Set<String> videoMimeTypes = VideoProcessorUtil.getVideoMimeTypes();
+
+		if (videoMimeTypes == null) {
+			return null;
+		}
+
+		return ArrayUtil.toStringArray(videoMimeTypes.toArray());
+	}
+
+}
