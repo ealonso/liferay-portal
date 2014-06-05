@@ -19,7 +19,7 @@
 <liferay-ui:search-container-column-text
 	href="<%= rowURL %>"
 	name="flag"
-	value='<%= MBThreadLocalServiceUtil.hasAnswerMessage(thread.getThreadId()) ? LanguageUtil.get(pageContext, "resolved") : LanguageUtil.get(pageContext, "waiting-for-an-answer") %>'
+	value='<%= MBThreadLocalServiceUtil.hasAnswerMessage(thread.getThreadId()) ? LanguageUtil.get(pageContext, "resolved") : thread.isQuestion() ? LanguageUtil.get(pageContext, "waiting-for-an-answer") : StringPool.BLANK %>'
 />
 
 <liferay-ui:search-container-column-text
