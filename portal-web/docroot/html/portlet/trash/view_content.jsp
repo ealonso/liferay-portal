@@ -120,27 +120,60 @@
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<c:if test="<%= trashHandler.isMovable() %>">
-								<aui:button icon="icon-undo" name="moveEntryButton" value="restore" />
+							<c:choose>
+								<c:when test="<%= trashHandler.isMovable() %>">
+									<aui:button icon="icon-undo" name="moveEntryButton" value="restore" />
 
-								<aui:script use="aui-base">
-									<portlet:renderURL var="moveURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-										<portlet:param name="struts_action" value="/trash/view_container_model" />
-										<portlet:param name="redirect" value="<%= redirect %>" />
-										<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
-										<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
-										<portlet:param name="containerModelClassName" value="<%= trashHandler.getContainerModelClassName() %>" />
-									</portlet:renderURL>
+									<aui:script use="aui-base">
+										<portlet:renderURL var="moveURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+											<portlet:param name="struts_action" value="/trash/view_container_model" />
+											<portlet:param name="redirect" value="<%= redirect %>" />
+											<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
+											<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
+											<portlet:param name="containerModelClassName" value="<%= trashHandler.getContainerModelClassName() %>" />
+										</portlet:renderURL>
 
-									A.one('#<portlet:namespace />moveEntryButton').on(
-										'click',
-										function(event) {
-											<portlet:namespace />restoreDialog('<%= moveURL %>');
-										}
-									);
-								</aui:script>
-							</c:if>
+										A.one('#<portlet:namespace />moveEntryButton').on(
+											'click',
+											function(event) {
+												<portlet:namespace />restoreDialog('<%= moveURL %>');
+											}
+										);
+									</aui:script>
+								</c:when>
+								<c:when test="<%= trashHandler.isChildable() && trashHandler.isRestorable(trashRenderer.getClassPK()) %>">
+									<aui:button icon="icon-undo" name="changeParentEntryButton" value="restore" />
 
+									<aui:script use="aui-base">
+
+										<%
+										BaseModel parentBaseModel = trashHandler.getParentBaseModel(trashRenderer.getClassPK());
+										%>
+
+										<portlet:renderURL var="restoreURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+											<portlet:param name="struts_action" value="/trash/view_base_model" />
+											<portlet:param name="redirect" value="<%= redirect %>" />
+											<portlet:param name="className" value="<%= trashRenderer.getClassName() %>" />
+											<portlet:param name="classPK" value="<%= String.valueOf(trashRenderer.getClassPK()) %>" />
+											<portlet:param name="baseModelClassName" value="<%= parentBaseModel.getModelClassName() %>" />
+										</portlet:renderURL>
+
+										<%
+										Map<String, Object> data = new HashMap<String, Object>();
+
+										data.put("uri", restoreURL);
+										%>
+
+										A.one('#<portlet:namespace />changeParentEntryButton').on(
+											'click',
+											function(event) {
+												<portlet:namespace />restoreChildDialog('<%= restoreURL %>');
+											}
+										);
+									</aui:script>
+
+								</c:when>
+							</c:choose>
 							<c:if test="<%= trashHandler.isDeletable() %>">
 								<aui:button icon="icon-remove" name="removeEntryButton" value="delete" />
 

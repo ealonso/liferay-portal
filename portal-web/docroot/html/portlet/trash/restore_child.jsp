@@ -67,33 +67,35 @@
 
 <liferay-ui:restore-entry />
 
-<portlet:actionURL var="selectContainerURL">
+<portlet:actionURL var="selectParentURL">
 	<portlet:param name="struts_action" value="/trash/edit_entry" />
 </portlet:actionURL>
 
-<aui:form action="<%= selectContainerURL.toString() %>" method="post" name="selectContainerForm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
+<aui:form action="<%= selectParentURL.toString() %>" method="post" name="selectParentForm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.CHANGE_PARENT %>" />
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="className" type="hidden" value="" />
 	<aui:input name="classPK" type="hidden" value="" />
-	<aui:input name="containerModelId" type="hidden" value="" />
+	<aui:input name="parentBaseModelId" type="hidden" value="" />
 </aui:form>
 
 <aui:script use="aui-dialog-iframe-deprecated,liferay-util-window">
 	A.getBody().delegate(
 		'click',
 		function(event) {
+			debugger;
 			var link = event.currentTarget.one('a');
 
-			<portlet:namespace />restoreDialog(link.attr('data-uri'));
+			<portlet:namespace />restoreChildDialog(link.attr('data-uri'));
 		},
 		'.trash-restore-link'
 	);
 
 	Liferay.provide(
 		window,
-		'<portlet:namespace />restoreDialog',
+		'<portlet:namespace />restoreChildDialog',
 		function(uri) {
+			debugger;
 			Liferay.Util.selectEntity(
 				{
 					dialog: {
@@ -102,17 +104,18 @@
 						modal: true,
 						width: 1024
 					},
-					eventName: '<portlet:namespace />selectFolder',
-					id: '<portlet:namespace />selectFolder',
+					eventName: '<portlet:namespace />selectParent',
+					id: '<portlet:namespace />selectParent',
 					title: '<liferay-ui:message key="warning" />',
 					uri: uri
 				},
 				function(event) {
-					document.<portlet:namespace />selectContainerForm.<portlet:namespace />className.value = event.classname;
-					document.<portlet:namespace />selectContainerForm.<portlet:namespace />classPK.value = event.classpk;
-					document.<portlet:namespace />selectContainerForm.<portlet:namespace />containerModelId.value = event.containermodelid;
+					debugger;
+					document.<portlet:namespace />selectParentForm.<portlet:namespace />className.value = event.classname;
+					document.<portlet:namespace />selectParentForm.<portlet:namespace />classPK.value = event.classpk;
+					document.<portlet:namespace />selectParentForm.<portlet:namespace />parentBaseModelId.value = event.parentbasemodelid;
 
-					submitForm(document.<portlet:namespace />selectContainerForm);
+					submitForm(document.<portlet:namespace />selectParentForm);
 				}
 			);
 		},
