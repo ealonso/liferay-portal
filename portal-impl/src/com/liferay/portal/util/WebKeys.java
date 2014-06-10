@@ -443,6 +443,8 @@ public class WebKeys implements com.liferay.portal.kernel.util.WebKeys {
 
 	public static final String TRANSLATOR_TRANSLATION = "TRANSLATOR_TRANSLATION";
 
+	public static final String TRASH_BASE_MODEL = "TRASH_BASE_MODEL";
+
 	public static final String TRASH_CONTAINER_MODEL = "TRASH_CONTAINER_MODEL";
 
 	public static final String TRASH_ENTRY = "TRASH_ENTRY";

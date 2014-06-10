@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.model.ContainerModel;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.util.WebKeys;
@@ -32,9 +32,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 /**
- * @author Zsolt Berentey
+ * @author Roberto Díaz
  */
-public class ContainerModelAction extends PortletAction {
+public class BaseModelAction extends PortletAction {
 
 	@Override
 	public ActionForward render(
@@ -44,24 +44,16 @@ public class ContainerModelAction extends PortletAction {
 		throws Exception {
 
 		try {
-			String containerModelClassName = ParamUtil.getString(
-				renderRequest, "containerModelClassName");
-			long containerModelId = ParamUtil.getLong(
-				renderRequest, "containerModelId");
+			String baseModelClassName = ParamUtil.getString(
+				renderRequest, "baseModelClassName");
+			long classPK = ParamUtil.getLong(renderRequest, "classPK");
 
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					containerModelClassName);
+				TrashHandlerRegistryUtil.getTrashHandler(baseModelClassName);
 
-			ContainerModel containerModel = null;
+			BaseModel baseModel = trashHandler.getParentBaseModel(classPK);
 
-			if (containerModelId > 0) {
-				containerModel = trashHandler.getContainerModel(
-					containerModelId);
-			}
-
-			renderRequest.setAttribute(
-				WebKeys.TRASH_CONTAINER_MODEL, containerModel);
+			renderRequest.setAttribute(WebKeys.TRASH_BASE_MODEL, baseModel);
 		}
 		catch (Exception e) {
 			if (e instanceof PrincipalException) {
@@ -75,7 +67,7 @@ public class ContainerModelAction extends PortletAction {
 		}
 
 		return actionMapping.findForward(
-			getForward(renderRequest, "portlet.trash.view_container_model"));
+			getForward(renderRequest, "portlet.trash.view_base_model"));
 	}
 
 }
