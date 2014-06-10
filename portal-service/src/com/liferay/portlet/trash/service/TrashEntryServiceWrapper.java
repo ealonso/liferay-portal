@@ -213,6 +213,16 @@ public class TrashEntryServiceWrapper implements TrashEntryService,
 	}
 
 	@Override
+	public void changeParent(java.lang.String className, long classPK,
+		long parentBaseModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_trashEntryService.changeParent(className, classPK, parentBaseModelId,
+			serviceContext);
+	}
+
+	@Override
 	public com.liferay.portlet.trash.model.TrashEntry restoreEntry(long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
