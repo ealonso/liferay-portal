@@ -359,7 +359,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 		String actionId = trashActionId;
 
-		if (trashActionId.equals(ActionKeys.DELETE)) {
+		if (trashActionId.equals(TrashActionKeys.CHANGE_PARENT)) {
+			actionId = ActionKeys.UPDATE;
+		}
+		else if (trashActionId.equals(ActionKeys.DELETE)) {
 			actionId = ActionKeys.DELETE;
 		}
 		else if (trashActionId.equals(TrashActionKeys.OVERWRITE)) {

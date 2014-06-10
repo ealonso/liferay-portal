@@ -52,6 +52,31 @@ import java.util.List;
  */
 public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
+	public void changeParent(
+			String className, long classPK, long parentBaseModelId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		PermissionChecker permissionChecker = getPermissionChecker();
+
+		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+			className);
+
+		if (trashHandler.isInTrash(classPK) &&
+			!trashHandler.hasTrashPermission(
+				permissionChecker, 0, classPK, TrashActionKeys.CHANGE_PARENT)) {
+
+			throw new TrashPermissionException(
+				TrashPermissionException.CHANGE_PARENT);
+		}
+
+		trashHandler.checkRestorableEntry(
+			classPK, parentBaseModelId, StringPool.BLANK);
+
+		trashHandler.changeParent(
+			getUserId(), classPK, parentBaseModelId, serviceContext);
+	}
+
 	/**
 	 * Deletes the trash entries with the matching group ID considering
 	 * permissions.
