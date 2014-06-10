@@ -17,6 +17,7 @@
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
 <liferay-util:include page="/html/portlet/trash/restore_path.jsp" />
+<liferay-util:include page="/html/portlet/trash/restore_child.jsp" />
 
 <div class="asset-content">
 
@@ -302,6 +303,71 @@
 					<div class="alert alert-info">
 						<liferay-ui:message arguments="<%= new String[] {ResourceActionsUtil.getModelResource(locale, className)} %>" key="this-x-does-not-contain-an-entry" translateArguments="<%= false %>" />
 					</div>
+				</c:if>
+			</liferay-ui:panel-container>
+		</c:when>
+		<c:when test="<%= trashHandler.isChildable() %>">
+
+			<%
+			int childrenCount = trashHandler.getChildrenCount(classPK);
+			List<TrashRenderer> children = trashHandler.getChildren(classPK);
+
+			PortletURL iteratorURL = renderResponse.createRenderURL();
+
+			iteratorURL.setParameter("struts_action", "/trash/view_content");
+			iteratorURL.setParameter("redirect", redirect);
+			iteratorURL.setParameter("className", className);
+			iteratorURL.setParameter("classPK", String.valueOf(classPK));
+			%>
+
+			<liferay-ui:panel-container extended="<%= false %>" id="childrenDisplayInfoPanelContainer" persistState="<%= true %>">
+				<c:if test="<%= childrenCount > 0 %>">
+					<liferay-ui:panel collapsible="<%= true %>" cssClass="view-folders" extended="<%= false %>" id="containerModelsListingPanel" persistState="<%= true %>" title="<%= trashHandler.getBaseModelName() %>">
+						<liferay-ui:search-container
+							curParam="cur1"
+							deltaConfigurable="<%= false %>"
+							iteratorURL="<%= iteratorURL %>"
+							total="<%= childrenCount %>"
+						>
+							<liferay-ui:search-container-results
+								results="<%= children %>"
+							/>
+
+							<liferay-ui:search-container-row
+								className="com.liferay.portal.kernel.trash.TrashRenderer"
+								modelVar="curTrashRenderer"
+							>
+
+								<%
+								PortletURL rowURL = renderResponse.createRenderURL();
+
+								rowURL.setParameter("struts_action", "/trash/view_content");
+								rowURL.setParameter("redirect", currentURL);
+								rowURL.setParameter("className", (curTrashRenderer.getClassName()));
+								rowURL.setParameter("classPK", String.valueOf(curTrashRenderer.getClassPK()));
+								%>
+
+								<liferay-ui:search-container-column-text
+									name="name"
+								>
+									<liferay-ui:icon
+										iconCssClass="<%= curTrashRenderer.getIconCssClass() %>"
+										label="<%= true %>"
+										message="<%= HtmlUtil.escape(curTrashRenderer.getTitle(locale)) %>"
+										method="get"
+										url="<%= rowURL.toString() %>"
+									/>
+								</liferay-ui:search-container-column-text>
+
+								<liferay-ui:search-container-column-jsp
+									align="right"
+									path="/html/portlet/trash/view_content_action.jsp"
+								/>
+							</liferay-ui:search-container-row>
+
+							<liferay-ui:search-iterator />
+						</liferay-ui:search-container>
+					</liferay-ui:panel>
 				</c:if>
 			</liferay-ui:panel-container>
 		</c:when>
