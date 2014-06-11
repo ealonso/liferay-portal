@@ -443,6 +443,16 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 	}
 
 	@Override
+	public void changeParentAndRestoreFromTrash(long userId, long nodeId,
+		java.lang.String title, java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_wikiPageLocalService.changeParentAndRestoreFromTrash(userId, nodeId,
+			title, newParentTitle, serviceContext);
+	}
+
+	@Override
 	public void copyPageAttachments(long userId, long templateNodeId,
 		java.lang.String templateTitle, long nodeId, java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -893,6 +903,14 @@ public class WikiPageLocalServiceWrapper implements WikiPageLocalService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _wikiPageLocalService.getTempPageAttachmentNames(groupId,
 			userId, tempFolderName);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getTrashedChildren(
+		long nodeId, boolean head, java.lang.String parentTitle)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _wikiPageLocalService.getTrashedChildren(nodeId, head,
+			parentTitle);
 	}
 
 	@Override

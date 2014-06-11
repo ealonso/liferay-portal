@@ -213,6 +213,15 @@ public class TrashEntryServiceUtil {
 			serviceContext);
 	}
 
+	public static void changeParent(java.lang.String className, long classPK,
+		long parentBaseModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.changeParent(className, classPK, parentBaseModelId, serviceContext);
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntry restoreEntry(
 		long entryId)
 		throws com.liferay.portal.kernel.exception.PortalException,

@@ -444,6 +444,70 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public void changeParentAndRestoreFromTrash(
+			long userId, long nodeId, String title, String newParentTitle,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		WikiPage page = getPage(nodeId, title);
+
+		TrashEntry trashEntry = null;
+
+		WikiPage trashEntryPage = page.getParentPage();
+
+		while (trashEntry == null) {
+			trashEntry = trashEntryLocalService.fetchEntry(
+				WikiPage.class.getName(), trashEntryPage.getResourcePrimKey());
+
+			if (trashEntry == null) {
+				trashEntryPage = trashEntryPage.getParentPage();
+
+				if (trashEntryPage == null) {
+					throw new NoSuchPageException();
+				}
+			}
+		}
+
+		String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+		String trashtitle = page.getTitle();
+
+		page.setTitle(originalTitle);
+		page.setStatus(WorkflowConstants.STATUS_APPROVED);
+
+		wikiPagePersistence.update(page);
+
+		changeParent(
+			userId, nodeId, originalTitle, newParentTitle, serviceContext);
+
+		// Index
+
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			WikiPage.class);
+
+		indexer.reindex(page);
+
+		//TrashVersion
+
+		TrashVersion trashVersion = trashVersionLocalService.fetchVersion(
+			trashEntry.getEntryId(), WikiPage.class.getName(),
+			page.getPageId());
+
+		if (trashVersion != null) {
+			trashVersionLocalService.deleteTrashVersion(trashVersion);
+		}
+
+		// Child pages
+
+		restoreDependentChildPagesFromTrash(
+			page, originalTitle, trashtitle, trashEntry.getEntryId());
+
+		// RedirectPages pages
+
+		restoreDependentRedirectPagesFromTrash(
+			page, originalTitle, trashtitle, trashEntry.getEntryId());
+	}
+
+	@Override
 	public void copyPageAttachments(
 			long userId, long templateNodeId, String templateTitle, long nodeId,
 			String title)
@@ -1403,6 +1467,15 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public List<WikiPage> getTrashedChildren(
+			long nodeId, boolean head, String parentTitle)
+		throws SystemException {
+
+		return wikiPagePersistence.findByN_H_P_S(
+			nodeId, head, parentTitle, WorkflowConstants.STATUS_IN_TRASH);
+	}
+
+	@Override
 	public boolean hasDraftPage(long nodeId, String title)
 		throws SystemException {
 
@@ -1735,6 +1808,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		if (trashVersion != null) {
 			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
+
+			WikiPageResource wikiPageResource =
+				wikiPageResourceLocalService.getWikiPageResource(
+					page.getResourcePrimKey());
+
+			wikiPageResource.setTitle(originalTitle);
+
+			wikiPageResourcePersistence.update(wikiPageResource);
 
 			page.setTitle(originalTitle);
 

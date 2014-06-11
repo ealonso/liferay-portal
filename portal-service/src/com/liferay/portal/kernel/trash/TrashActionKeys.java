@@ -21,6 +21,8 @@ package com.liferay.portal.kernel.trash;
  */
 public class TrashActionKeys {
 
+	public static final String CHANGE_PARENT = "CHANGE_PARENT";
+
 	public static final String MOVE = "MOVE";
 
 	public static final String OVERWRITE = "OVERWRITE";

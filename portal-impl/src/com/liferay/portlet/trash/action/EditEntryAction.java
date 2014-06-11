@@ -72,7 +72,10 @@ public class EditEntryAction extends PortletAction {
 		try {
 			List<ObjectValuePair<String, Long>> entryOVPs = null;
 
-			if (cmd.equals(Constants.CHECK)) {
+			if (cmd.equals(Constants.CHANGE_PARENT)) {
+				entryOVPs = changeParent(actionRequest);
+			}
+			else if (cmd.equals(Constants.CHECK)) {
 				JSONObject jsonObject = ActionUtil.checkEntry(actionRequest);
 
 				writeJSON(actionRequest, actionResponse, jsonObject);
@@ -98,7 +101,8 @@ public class EditEntryAction extends PortletAction {
 				entryOVPs = restoreOverride(actionRequest);
 			}
 
-			if (cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
+			if (cmd.equals(cmd.equals(Constants.CHANGE_PARENT)) ||
+				cmd.equals(Constants.RENAME) || cmd.equals(Constants.RESTORE) ||
 				cmd.equals(Constants.OVERRIDE) || cmd.equals(Constants.MOVE)) {
 
 				addRestoreData(actionRequest, entryOVPs);
@@ -208,6 +212,24 @@ public class EditEntryAction extends PortletAction {
 				SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA, data);
 
 		hideDefaultSuccessMessage(actionRequest);
+	}
+
+	protected List<ObjectValuePair<String, Long>> changeParent(
+			ActionRequest actionRequest)
+		throws Exception {
+
+		String className = ParamUtil.getString(actionRequest, "className");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+		long parentBaseModelId = ParamUtil.getLong(
+			actionRequest, "parentBaseModelId");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			className, actionRequest);
+
+		TrashEntryServiceUtil.changeParent(
+			className, classPK, parentBaseModelId, serviceContext);
+
+		return getEntryOVPs(className, classPK);
 	}
 
 	protected void deleteEntries(ActionRequest actionRequest) throws Exception {

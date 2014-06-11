@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.SystemEvent;
 import com.liferay.portal.model.TrashedModel;
@@ -95,6 +96,11 @@ public interface TrashHandler {
 			String referrerClassName)
 		throws PortalException, SystemException;
 
+	public void changeParent(
+			long userId, long classPK, long parentBaseModelId,
+			ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #checkRestorableEntry(long,
 	 *             long, String)}
@@ -164,6 +170,22 @@ public interface TrashHandler {
 	 * @throws SystemException if a system exception occurred
 	 */
 	public void deleteTrashEntry(long classPK)
+		throws PortalException, SystemException;
+
+	public String getBaseModelContainerTitle(long classPK)
+		throws PortalException;
+
+	public String getBaseModelName();
+
+	public List<BaseModel> getBaseModels(long classPK, int start, int end)
+		throws PortalException;
+
+	public int getBaseModelsCount(long classPK) throws PortalException;
+
+	public abstract List<TrashRenderer> getChildren(long classPK)
+		throws PortalException, SystemException;
+
+	public abstract int getChildrenCount(long classPK)
 		throws PortalException, SystemException;
 
 	/**
@@ -270,6 +292,9 @@ public interface TrashHandler {
 	 *         trash entry listed in a search result
 	 */
 	public String getDeleteMessage();
+
+	public abstract BaseModel getParentBaseModel(long classPK)
+		throws PortalException, SystemException;
 
 	/**
 	 * Returns the parent container model of the model entity with the primary
@@ -499,6 +524,9 @@ public interface TrashHandler {
 	public TrashRenderer getTrashRenderer(long classPK)
 		throws PortalException, SystemException;
 
+	TrashRenderer getBaseModelTrashRenderer(long classPK)
+		throws PortalException;
+
 	/**
 	 * Returns <code>true</code> if the user has the required permission to
 	 * perform the trash action on the model entity with the primary key.
@@ -523,6 +551,14 @@ public interface TrashHandler {
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
 		throws PortalException, SystemException;
+
+	/**
+	 * Returns <code>true</code> if the entity can have children.
+	 *
+	 * @return <code>true</code> if the entity can have children;
+	 *         <code>false</code> otherwise
+	 */
+	public boolean isChildable();
 
 	/**
 	 * Returns <code>true</code> if the entity is a container model.

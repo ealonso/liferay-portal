@@ -346,6 +346,12 @@ public interface WikiPageLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public void changeParentAndRestoreFromTrash(long userId, long nodeId,
+		java.lang.String title, java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public void copyPageAttachments(long userId, long templateNodeId,
 		java.lang.String templateTitle, long nodeId, java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -654,6 +660,11 @@ public interface WikiPageLocalService extends BaseLocalService,
 		long userId, java.lang.String tempFolderName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portlet.wiki.model.WikiPage> getTrashedChildren(
+		long nodeId, boolean head, java.lang.String parentTitle)
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasDraftPage(long nodeId, java.lang.String title)

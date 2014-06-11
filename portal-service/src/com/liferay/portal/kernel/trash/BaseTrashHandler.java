@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.SystemEvent;
 import com.liferay.portal.model.SystemEventConstants;
@@ -67,6 +68,15 @@ public abstract class BaseTrashHandler implements TrashHandler {
 			extraDataJSONObject.toString());
 	}
 
+	@Override
+	public void changeParent(
+			long userId, long classPK, long parentBaseModelId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return;
+	}
+
 	/**
 	 * @deprecated As of 7.0.0, replaced by {@link #checkRestorableEntry(long,
 	 *             long, String)}
@@ -108,6 +118,51 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	}
 
 	@Override
+	public String getBaseModelContainerTitle(long classPK)
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
+
+	@Override
+	public String getBaseModelName() {
+		return StringPool.BLANK;
+	}
+
+	@Override
+	public List<BaseModel> getBaseModels(long classPK, int start, int end)
+		throws PortalException {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	public int getBaseModelsCount(long classPK) throws PortalException {
+		return 0;
+	}
+
+	@Override
+	public TrashRenderer getBaseModelTrashRenderer(long classPK)
+		throws PortalException {
+
+		return getTrashRenderer(classPK);
+	}
+
+	@Override
+	public List<TrashRenderer> getChildren(long classPK)
+		throws PortalException, SystemException {
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	public int getChildrenCount(long classPK)
+		throws PortalException, SystemException {
+
+		return 0;
+	}
+
+	@Override
 	@SuppressWarnings("unused")
 	public ContainerModel getContainerModel(long containerModelId)
 		throws PortalException, SystemException {
@@ -145,6 +200,13 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	@Override
 	public String getDeleteMessage() {
 		return "deleted-in-x";
+	}
+
+	@Override
+	public BaseModel getParentBaseModel(long classPK)
+		throws PortalException, SystemException {
+
+		return null;
 	}
 
 	@Override
@@ -297,7 +359,10 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 		String actionId = trashActionId;
 
-		if (trashActionId.equals(ActionKeys.DELETE)) {
+		if (trashActionId.equals(TrashActionKeys.CHANGE_PARENT)) {
+			actionId = ActionKeys.UPDATE;
+		}
+		else if (trashActionId.equals(ActionKeys.DELETE)) {
 			actionId = ActionKeys.DELETE;
 		}
 		else if (trashActionId.equals(TrashActionKeys.OVERWRITE)) {
@@ -314,6 +379,11 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		}
 
 		return hasPermission(permissionChecker, classPK, actionId);
+	}
+
+	@Override
+	public boolean isChildable() {
+		return false;
 	}
 
 	@Override

@@ -261,6 +261,21 @@ public class TrashEntryServiceSoap {
 		}
 	}
 
+	public static void changeParent(java.lang.String className, long classPK,
+		long parentBaseModelId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			TrashEntryServiceUtil.changeParent(className, classPK,
+				parentBaseModelId, serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.portlet.trash.model.TrashEntrySoap restoreEntry(
 		long entryId) throws RemoteException {
 		try {

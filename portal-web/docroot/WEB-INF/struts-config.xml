@@ -1988,6 +1988,11 @@
 
 		<action path="/trash/view" forward="portlet.trash.view" />
 
+		<action path="/trash/view_base_model" type="com.liferay.portlet.trash.action.BaseModelAction">
+			<forward name="portlet.trash.error" path="portlet.trash.error" />
+			<forward name="portlet.trash.view_base_model" path="portlet.trash.view_base_model" />
+		</action>
+
 		<action path="/trash/view_container_model" type="com.liferay.portlet.trash.action.ContainerModelAction">
 			<forward name="portlet.trash.error" path="portlet.trash.error" />
 			<forward name="portlet.trash.view_container_model" path="portlet.trash.view_container_model" />

@@ -740,6 +740,7 @@ create index IX_E0E6D12C on WikiNode (uuid_, companyId);
 create unique index IX_7609B2AE on WikiNode (uuid_, groupId);
 
 create index IX_A2001730 on WikiPage (format);
+create index IX_E00957BF on WikiPage (groupId, head, status);
 create index IX_BA72B89A on WikiPage (groupId, nodeId, head, parentTitle, status);
 create index IX_E0092FF0 on WikiPage (groupId, nodeId, head, status);
 create index IX_941E429C on WikiPage (groupId, nodeId, status);

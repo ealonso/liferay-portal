@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.exception.PortalException;
  */
 public class TrashPermissionException extends PortalException {
 
+	public static final int CHANGE_PARENT = 7;
+
 	public static final int DELETE = 1;
 
 	public static final int EMPTY_TRASH = 2;
