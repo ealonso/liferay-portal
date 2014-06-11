@@ -16,6 +16,8 @@
 
 <%@ include file="/html/portlet/trash/init.jsp" %>
 
+<%@ include file="/html/portlet/trash/restore_success_message.jspf" %>
+
 <liferay-util:include page="/html/portlet/trash/restore_path.jsp" />
 <liferay-util:include page="/html/portlet/trash/restore_child.jsp" />
 
