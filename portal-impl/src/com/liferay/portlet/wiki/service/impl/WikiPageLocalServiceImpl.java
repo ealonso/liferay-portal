@@ -1809,6 +1809,14 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		if (trashVersion != null) {
 			String originalTitle = TrashUtil.getOriginalTitle(page.getTitle());
 
+			WikiPageResource wikiPageResource =
+				wikiPageResourceLocalService.getWikiPageResource(
+					page.getResourcePrimKey());
+
+			wikiPageResource.setTitle(originalTitle);
+
+			wikiPageResourcePersistence.update(wikiPageResource);
+
 			page.setTitle(originalTitle);
 
 			wikiPagePersistence.update(page);
