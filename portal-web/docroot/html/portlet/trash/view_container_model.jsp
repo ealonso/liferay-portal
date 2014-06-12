@@ -119,10 +119,12 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 				</c:choose>
 			</liferay-ui:search-container-column-text>
 
-			<liferay-ui:search-container-column-text
-				name='<%= LanguageUtil.format(request, "num-of-x", trashHandler.getContainerModelName()) %>'
-				value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
-			/>
+			<c:if test="<%= !trashHandler.isBaseModel() %>">
+				<liferay-ui:search-container-column-text
+					name='<%= LanguageUtil.format(pageContext, "num-of-x", trashHandler.getContainerModelName()) %>'
+					value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
+					/>
+			</c:if>
 
 			<liferay-ui:search-container-column-text>
 
