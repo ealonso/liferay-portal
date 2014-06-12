@@ -187,6 +187,56 @@ public class WikiPageResourceWrapper implements WikiPageResource,
 		_wikiPageResource.setTitle(title);
 	}
 
+	/**
+	* Returns the container model ID of this wiki page resource.
+	*
+	* @return the container model ID of this wiki page resource
+	*/
+	@Override
+	public long getContainerModelId() {
+		return _wikiPageResource.getContainerModelId();
+	}
+
+	/**
+	* Sets the container model ID of this wiki page resource.
+	*
+	* @param containerModelId the container model ID of this wiki page resource
+	*/
+	@Override
+	public void setContainerModelId(long containerModelId) {
+		_wikiPageResource.setContainerModelId(containerModelId);
+	}
+
+	/**
+	* Returns the container name of this wiki page resource.
+	*
+	* @return the container name of this wiki page resource
+	*/
+	@Override
+	public java.lang.String getContainerModelName() {
+		return _wikiPageResource.getContainerModelName();
+	}
+
+	/**
+	* Returns the parent container model ID of this wiki page resource.
+	*
+	* @return the parent container model ID of this wiki page resource
+	*/
+	@Override
+	public long getParentContainerModelId() {
+		return _wikiPageResource.getParentContainerModelId();
+	}
+
+	/**
+	* Sets the parent container model ID of this wiki page resource.
+	*
+	* @param parentContainerModelId the parent container model ID of this wiki page resource
+	*/
+	@Override
+	public void setParentContainerModelId(long parentContainerModelId) {
+		_wikiPageResource.setParentContainerModelId(parentContainerModelId);
+	}
+
 	@Override
 	public boolean isNew() {
 		return _wikiPageResource.isNew();

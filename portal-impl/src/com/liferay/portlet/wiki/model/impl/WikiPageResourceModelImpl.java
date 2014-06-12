@@ -240,6 +240,30 @@ public class WikiPageResourceModelImpl extends BaseModelImpl<WikiPageResource>
 		return GetterUtil.getString(_originalTitle);
 	}
 
+	@Override
+	public long getContainerModelId() {
+		return getResourcePrimKey();
+	}
+
+	@Override
+	public void setContainerModelId(long containerModelId) {
+		_resourcePrimKey = containerModelId;
+	}
+
+	@Override
+	public String getContainerModelName() {
+		return String.valueOf(getContainerModelId());
+	}
+
+	@Override
+	public long getParentContainerModelId() {
+		return 0;
+	}
+
+	@Override
+	public void setParentContainerModelId(long parentContainerModelId) {
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
