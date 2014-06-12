@@ -240,7 +240,6 @@
 									/>
 								</c:if>
 
-
 								<liferay-ui:search-container-column-jsp
 									align="right"
 									cssClass="entry-action"
