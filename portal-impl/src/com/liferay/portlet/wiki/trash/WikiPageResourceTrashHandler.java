@@ -14,18 +14,18 @@
 
 package com.liferay.portlet.wiki.trash;
 
-import com.liferay.portlet.wiki.model.WikiPage;
+import com.liferay.portlet.wiki.model.WikiPageResource;
 
 /**
  * Implements trash handling for the wiki page entity.
  *
  * @author Eudaldo Alonso
  */
-public class WikiPageTrashHandler extends BaseWikiPageTrashHandler {
+public class WikiPageResourceTrashHandler extends BaseWikiPageTrashHandler {
 
 	@Override
 	public String getClassName() {
-		return WikiPage.class.getName();
+		return WikiPageResource.class.getName();
 	}
 
 }
