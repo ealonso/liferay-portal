@@ -137,7 +137,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return getContainerModelName();
 	}
 
-
 	@Override
 	@SuppressWarnings("unused")
 	public List<ContainerModel> getContainerModels(
