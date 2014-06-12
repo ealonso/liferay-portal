@@ -31,6 +31,7 @@ import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -170,6 +171,38 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public List<ContainerModel> getContainerModels(
+			long classPK, long containerModelId, int start, int end)
+		throws PortalException {
+
+		List<ContainerModel> containerModels = new ArrayList<ContainerModel>();
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+		List<WikiPage> pages = WikiPageLocalServiceUtil.getPages(
+			page.getNodeId(), true, start, end);
+
+		for (WikiPage curPage : pages) {
+			WikiPageResource pageResource =
+				WikiPageResourceLocalServiceUtil.getWikiPageResource(
+					curPage.getResourcePrimKey());
+
+			containerModels.add(pageResource);
+		}
+
+		return containerModels;
+	}
+
+	@Override
+	public int getContainerModelsCount(long classPK, long containerModelId)
+		throws PortalException {
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+
+		return WikiPageLocalServiceUtil.getPagesCount(page.getNodeId(), true);
+	}
+
+	@Override
 	public ContainerModel getParentContainerModel(long classPK)
 		throws PortalException {
 
@@ -245,8 +278,14 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public String getTrashContainedModelName() {
+		return "Child Pages";
+	}
+
+	@Override
 	public String getTrashContainerModelName(long classPK)
 		throws PortalException {
+
 		try {
 			WikiPageLocalServiceUtil.getPage(classPK);
 
@@ -328,6 +367,16 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public boolean isBaseModel() {
+		return true;
+	}
+
+	@Override
+	public boolean isContainerModel() {
+		return true;
+	}
+
+	@Override
 	public boolean isInTrash(long classPK) throws PortalException {
 		WikiPage page = WikiPageLocalServiceUtil.getLatestPage(
 			classPK, WorkflowConstants.STATUS_ANY, false);
@@ -344,23 +393,23 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
-	public String getTrashContainedModelName() {
-		return "Child Pages";
-	}
-
-	@Override
-	public boolean isBaseModel() {
-		return true;
-	}
-
-	@Override
-	public boolean isContainerModel() {
-		return true;
-	}
-
-	@Override
 	public boolean isMovable() {
 		return true;
+	}
+
+	@Override
+	public void moveTrashEntry(
+			long userId, long classPK, long containerModelId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		WikiPage page = WikiPageLocalServiceUtil.getPage(classPK);
+		WikiPage parentPage = WikiPageLocalServiceUtil.getPage(
+			containerModelId);
+
+		WikiPageLocalServiceUtil.changeParentAndRestoreFromTrash(
+			userId, page.getNodeId(), page.getTitle(), parentPage.getTitle(),
+			serviceContext);
 	}
 
 	@Override
