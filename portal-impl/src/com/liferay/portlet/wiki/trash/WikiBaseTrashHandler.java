@@ -62,7 +62,7 @@ import javax.portlet.PortletURL;
  *
  * @author Eudaldo Alonso
  */
-public abstract class BaseWikiPageTrashHandler extends BaseTrashHandler {
+public abstract class WikiBaseTrashHandler extends BaseTrashHandler {
 
 	@Override
 	public SystemEvent addDeletionSystemEvent(

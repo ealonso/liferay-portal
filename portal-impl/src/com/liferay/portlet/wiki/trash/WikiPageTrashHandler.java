@@ -21,7 +21,7 @@ import com.liferay.portlet.wiki.model.WikiPage;
  *
  * @author Eudaldo Alonso
  */
-public class WikiPageTrashHandler extends BaseWikiPageTrashHandler {
+public class WikiPageTrashHandler extends WikiBaseTrashHandler {
 
 	@Override
 	public String getClassName() {
