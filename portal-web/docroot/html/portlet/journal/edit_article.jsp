@@ -365,7 +365,7 @@ request.setAttribute("edit_article.jsp-toLanguageId", toLanguageId);
 			},
 
 			<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
-				focusFieldId: '<%= (article != null || PropsValues.JOURNAL_ARTICLE_FORCE_AUTOGENERATE_ID) ? "#title" : "#newArticleId" %>',
+				//focusFieldId: '<%= (article != null || PropsValues.JOURNAL_ARTICLE_FORCE_AUTOGENERATE_ID) ? "#title" : "#newArticleId" %>',
 			</c:if>
 
 			namespace: '<portlet:namespace />'
