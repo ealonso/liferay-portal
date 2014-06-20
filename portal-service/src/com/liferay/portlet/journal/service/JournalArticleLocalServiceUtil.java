@@ -835,6 +835,11 @@ public class JournalArticleLocalServiceUtil {
 	}
 
 	public static com.liferay.portlet.journal.model.JournalArticle fetchLatestArticle(
+		long resourcePrimKey, int[] statuses) {
+		return getService().fetchLatestArticle(resourcePrimKey, statuses);
+	}
+
+	public static com.liferay.portlet.journal.model.JournalArticle fetchLatestArticle(
 		long groupId, java.lang.String articleId, int status) {
 		return getService().fetchLatestArticle(groupId, articleId, status);
 	}
