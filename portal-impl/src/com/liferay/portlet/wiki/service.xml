@@ -303,7 +303,7 @@
 
 		<!-- PK fields -->
 
-		<column name="resourcePrimKey" type="long" primary="true" />
+		<column name="resourcePrimKey" type="long" primary="true" container-model="true" />
 
 		<!-- Other fields -->
 

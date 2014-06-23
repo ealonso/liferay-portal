@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -39,7 +40,8 @@ import java.io.Serializable;
  * @generated
  */
 @ProviderType
-public interface WikiPageResourceModel extends BaseModel<WikiPageResource> {
+public interface WikiPageResourceModel extends BaseModel<WikiPageResource>,
+	ContainerModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -117,6 +119,46 @@ public interface WikiPageResourceModel extends BaseModel<WikiPageResource> {
 	 * @param title the title of this wiki page resource
 	 */
 	public void setTitle(String title);
+
+	/**
+	 * Returns the container model ID of this wiki page resource.
+	 *
+	 * @return the container model ID of this wiki page resource
+	 */
+	@Override
+	public long getContainerModelId();
+
+	/**
+	 * Sets the container model ID of this wiki page resource.
+	 *
+	 * @param containerModelId the container model ID of this wiki page resource
+	 */
+	@Override
+	public void setContainerModelId(long containerModelId);
+
+	/**
+	 * Returns the container name of this wiki page resource.
+	 *
+	 * @return the container name of this wiki page resource
+	 */
+	@Override
+	public String getContainerModelName();
+
+	/**
+	 * Returns the parent container model ID of this wiki page resource.
+	 *
+	 * @return the parent container model ID of this wiki page resource
+	 */
+	@Override
+	public long getParentContainerModelId();
+
+	/**
+	 * Sets the parent container model ID of this wiki page resource.
+	 *
+	 * @param parentContainerModelId the parent container model ID of this wiki page resource
+	 */
+	@Override
+	public void setParentContainerModelId(long parentContainerModelId);
 
 	@Override
 	public boolean isNew();

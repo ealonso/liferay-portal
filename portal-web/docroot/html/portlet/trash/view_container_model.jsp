@@ -24,24 +24,6 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 
 TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
-
-ContainerModel containerModel = (ContainerModel)request.getAttribute(WebKeys.TRASH_CONTAINER_MODEL);
-
-long containerModelId = 0;
-
-if (containerModel != null) {
-	containerModelId = containerModel.getContainerModelId();
-}
-
-PortletURL containerURL = renderResponse.createRenderURL();
-
-containerURL.setParameter("struts_action", "/trash/view_container_model");
-containerURL.setParameter("redirect", currentURL);
-containerURL.setParameter("className", className);
-containerURL.setParameter("classPK", String.valueOf(classPK));
-containerURL.setParameter("containerModelClassName", trashHandler.getContainerModelClassName());
-
-TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerModelClassName(), containerModelId, containerURL);
 %>
 
 <div class="alert alert-block">
@@ -51,58 +33,105 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 <aui:form method="post" name="selectFolderFm">
 	<liferay-ui:header
 		showBackURL="<%= containerModel != null %>"
-		title='<%= LanguageUtil.format(request, "select-x", trashHandler.getContainerModelName()) %>'
+		title='<%= LanguageUtil.format(pageContext, "select-x", trashHandler.getContainerModelName(classPK)) %>'
 	/>
 
-	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
-
-	<aui:button-row>
-
-		<%
-		Map<String, Object> data = new HashMap<String, Object>();
-
-		data.put("classname", className);
-		data.put("classpk", classPK);
-		data.put("containermodelid", containerModelId);
-		%>
-
-		<aui:button cssClass="selector-button" data="<%= data %>" value='<%= LanguageUtil.format(request, "choose-this-x", trashHandler.getContainerModelName()) %>' />
-	</aui:button-row>
-
-	<br />
-
-	<%
-	containerURL.setParameter("containerModelId", String.valueOf(containerModelId));
-	%>
-
-	<liferay-ui:search-container
-		searchContainer="<%= new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, containerURL, null, null) %>"
-		total="<%= trashHandler.getContainerModelsCount(classPK, containerModelId) %>"
-	>
-		<liferay-ui:search-container-results
-			results="<%= trashHandler.getContainerModels(classPK, containerModelId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-		/>
-
-		<liferay-ui:search-container-row
-			className="com.liferay.portal.model.ContainerModel"
-			keyProperty="containerModelId"
-			modelVar="curContainerModel"
-		>
+	<c:choose>
+		<c:when test="<%= trashHandler.isBaseModel() %>">
 
 			<%
-			containerURL.setParameter("containerModelId", String.valueOf(curContainerModel.getContainerModelId()));
+			BaseModel baseModel = (BaseModel)request.getAttribute(WebKeys.TRASH_BASE_MODEL);
+
+			long baseModelId = 0;
+
+			if (baseModel != null) {
+				baseModelId = (Long)baseModel.getPrimaryKeyObj();
+			}
+
+			PortletURL baseModelURL = renderResponse.createRenderURL();
+
+			baseModelURL.setParameter("struts_action", "/trash/view_base_model");
+			baseModelURL.setParameter("redirect", currentURL);
+			baseModelURL.setParameter("className", className);
+			baseModelURL.setParameter("classPK", String.valueOf(classPK));
+			baseModelURL.setParameter("baseModelClassName", baseModel.getModelClassName());
 			%>
 
-			<liferay-ui:search-container-column-text
-				name="<%= LanguageUtil.get(request, trashHandler.getContainerModelName()) %>"
-			>
-				<c:choose>
-					<c:when test="<%= curContainerModel.getContainerModelId() > 0 %>">
+			<aui:button-row>
+
+				<%
+					Map<String, Object> data = new HashMap<String, Object>();
+
+					data.put("classname", className);
+					data.put("classpk", classPK);
+					data.put("parentBaseModelId", 0);
+				%>
+
+				<aui:button cssClass="selector-button" data="<%= data %>" value='<%= LanguageUtil.format(pageContext, "choose-this-x", trashHandler.getContainerModelName(classPK)) %>' />
+			</aui:button-row>
+
+			<br />
+
+			<%
+				baseModelURL.setParameter("baseModelId", String.valueOf(baseModelId));
+			%>
+
+			<liferay-ui:search-container
+				searchContainer="<%= new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, baseModelURL, null, null) %>"
+				total="<%= trashHandler.getBaseModelsCount((Long)baseModel.getPrimaryKeyObj()) %>"
+				>
+				<liferay-ui:search-container-results
+					results="<%= trashHandler.getBaseModels((Long)baseModel.getPrimaryKeyObj(), searchContainer.getStart(), searchContainer.getEnd()) %>"
+					/>
+
+				<liferay-ui:search-container-row
+					className="com.liferay.portal.model.BaseModel"
+					keyProperty="primaryKeyObj"
+					modelVar="curBaseModel"
+					>
+
+					<%
+						baseModelURL.setParameter("baseModelId", String.valueOf(curBaseModel.getPrimaryKeyObj()));
+					%>
+
+					<liferay-ui:search-container-column-text
+						name="<%= LanguageUtil.get(pageContext, trashHandler.getBaseModelName()) %>"
+						>
+						<c:choose>
+							<c:when test="<%= (Long)curBaseModel.getPrimaryKeyObj() > 0 %>">
+
+								<%
+									TrashHandler baseModelTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(((BaseModel)curBaseModel).getModelClassName());
+
+									TrashRenderer baseModelTrashRenderer = baseModelTrashHandler.getBaseModelTrashRenderer((Long)curBaseModel.getPrimaryKeyObj());
+								%>
+
+								<liferay-ui:icon
+									iconCssClass="<%= baseModelTrashRenderer.getIconCssClass() %>"
+									label="<%= true %>"
+									message="<%= baseModelTrashRenderer.getTitle(locale) %>"
+									method="get"
+									url="<%= baseModelURL.toString() %>"
+									/>
+							</c:when>
+							<c:otherwise>
+								<%= trashHandler.getBaseModelName() %>
+							</c:otherwise>
+						</c:choose>
+					</liferay-ui:search-container-column-text>
+					<liferay-ui:search-container-column-text
+						name="<%= LanguageUtil.get(pageContext, trashHandler.getContainerModelName()) %>"
+						value="<%= trashHandler.getBaseModelContainerTitle((Long)curBaseModel.getPrimaryKeyObj()) %>"
+						/>
+
+					<liferay-ui:search-container-column-text>
 
 						<%
-						TrashHandler containerTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(((BaseModel)curContainerModel).getModelClassName());
+							Map<String, Object> data = new HashMap<String, Object>();
 
-						TrashRenderer containerTrashRenderer = containerTrashHandler.getTrashRenderer(curContainerModel.getContainerModelId());
+							data.put("classname", className);
+							data.put("classpk", classPK);
+							data.put("parentBaseModelId", (Long)curBaseModel.getPrimaryKeyObj());
 						%>
 
 						<liferay-ui:icon
@@ -119,10 +148,12 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 				</c:choose>
 			</liferay-ui:search-container-column-text>
 
-			<liferay-ui:search-container-column-text
-				name='<%= LanguageUtil.format(request, "num-of-x", trashHandler.getContainerModelName()) %>'
-				value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
-			/>
+			<c:if test="<%= !trashHandler.isBaseModel() %>">
+				<liferay-ui:search-container-column-text
+					name='<%= LanguageUtil.format(pageContext, "num-of-x", trashHandler.getContainerModelName()) %>'
+					value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
+					/>
+			</c:if>
 
 			<liferay-ui:search-container-column-text>
 
