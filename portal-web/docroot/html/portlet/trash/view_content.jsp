@@ -51,7 +51,7 @@
 	PortletURL containerModelURL = renderResponse.createRenderURL();
 
 	containerModelURL.setParameter("redirect", redirect);
-	containerModelURL.setParameter("className", trashHandler.getContainerModelClassName());
+	containerModelURL.setParameter("className", trashHandler.getContainerModelClassName(classPK));
 
 	TrashUtil.addBaseModelBreadcrumbEntries(request, className, classPK, containerModelURL);
 	%>
