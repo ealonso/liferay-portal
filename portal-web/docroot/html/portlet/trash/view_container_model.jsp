@@ -21,6 +21,8 @@ String className = ParamUtil.getString(request, "className");
 long classPK = ParamUtil.getLong(request, "classPK");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectContainer");
 
+String redirect = ParamUtil.getString(request, "redirect");
+
 TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 
 TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
@@ -64,6 +66,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 		data.put("classname", className);
 		data.put("classpk", classPK);
 		data.put("containermodelid", 0);
+		data.put("redirect", redirect);
 		%>
 
 		<aui:button cssClass="selector-button" data="<%= data %>" value='<%= trashHandler.isBaseModel() ? LanguageUtil.get(request, "set-as-orphan") : LanguageUtil.format(request, "choose-this-x", trashHandler.getContainerModelName(classPK)) %>' />
@@ -134,6 +137,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 				data.put("classname", className);
 				data.put("classpk", classPK);
 				data.put("containermodelid", curContainerModel.getContainerModelId());
+				data.put("redirect", redirect);
 				%>
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
