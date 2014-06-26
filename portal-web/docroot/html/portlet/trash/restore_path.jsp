@@ -73,7 +73,7 @@
 
 <aui:form action="<%= selectContainerURL.toString() %>" method="post" name="selectContainerForm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.MOVE %>" />
-	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+	<aui:input name="redirect" type="hidden" value="" />
 	<aui:input name="className" type="hidden" value="" />
 	<aui:input name="classPK" type="hidden" value="" />
 	<aui:input name="containerModelId" type="hidden" value="" />
@@ -102,8 +102,8 @@
 						modal: true,
 						width: 1024
 					},
-					eventName: '<portlet:namespace />selectFolder',
-					id: '<portlet:namespace />selectFolder',
+					eventName: '<portlet:namespace />selectContainer',
+					id: '<portlet:namespace />selectContainer',
 					title: '<liferay-ui:message key="warning" />',
 					uri: uri
 				},
@@ -111,6 +111,7 @@
 					document.<portlet:namespace />selectContainerForm.<portlet:namespace />className.value = event.classname;
 					document.<portlet:namespace />selectContainerForm.<portlet:namespace />classPK.value = event.classpk;
 					document.<portlet:namespace />selectContainerForm.<portlet:namespace />containerModelId.value = event.containermodelid;
+					document.<portlet:namespace />selectContainerForm.<portlet:namespace />redirect.value = event.redirect;
 
 					submitForm(document.<portlet:namespace />selectContainerForm);
 				}

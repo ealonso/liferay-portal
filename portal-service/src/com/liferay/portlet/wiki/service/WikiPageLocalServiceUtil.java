@@ -407,6 +407,15 @@ public class WikiPageLocalServiceUtil {
 			.changeParent(userId, nodeId, title, newParentTitle, serviceContext);
 	}
 
+	public static void changeParentAndRestoreFromTrash(long userId,
+		long nodeId, java.lang.String title, java.lang.String newParentTitle,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.changeParentAndRestoreFromTrash(userId, nodeId, title,
+			newParentTitle, serviceContext);
+	}
+
 	public static void copyPageAttachments(long userId, long templateNodeId,
 		java.lang.String templateTitle, long nodeId, java.lang.String title)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -748,6 +757,11 @@ public class WikiPageLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .getTempPageAttachmentNames(groupId, userId, tempFolderName);
+	}
+
+	public static java.util.List<com.liferay.portlet.wiki.model.WikiPage> getTrashedChildren(
+		long nodeId, boolean head, java.lang.String parentTitle) {
+		return getService().getTrashedChildren(nodeId, head, parentTitle);
 	}
 
 	public static boolean hasDraftPage(long nodeId, java.lang.String title) {

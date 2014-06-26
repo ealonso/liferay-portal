@@ -184,12 +184,17 @@ public interface TrashHandler {
 	 */
 	public String getContainerModelClassName();
 
+	public String getContainerModelClassName(long classPK)
+		throws PortalException;
+
 	/**
 	 * Returns the name of the container model (e.g. folder name).
 	 *
 	 * @return the name of the container model
 	 */
 	public String getContainerModelName();
+
+	public String getContainerModelName(long classPK) throws PortalException;
 
 	/**
 	 * Returns a range of all the container models that are children of the
@@ -419,6 +424,9 @@ public interface TrashHandler {
 	 */
 	public String getTrashContainerModelName();
 
+	public String getTrashContainerModelName(long classPK)
+		throws PortalException;
+
 	/**
 	 * Returns the number of container models that are children of the parent
 	 * container model identified by the primary key.
@@ -503,6 +511,8 @@ public interface TrashHandler {
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
 		throws PortalException;
+
+	public boolean isBaseModel();
 
 	/**
 	 * Returns <code>true</code> if the entity is a container model.
@@ -611,9 +621,6 @@ public interface TrashHandler {
 
 	/**
 	 * Restores the model entity that is related to the model entity with the
-	 * class name and class PK. For example, {@link
-	 * com.liferay.portlet.wiki.trash.WikiPageTrashHandler#restoreRelatedTrashEntry(
-	 * String, long)} restores the attachment related to the wiki page with the
 	 * class name and class PK.
 	 *
 	 * @param  className the class name of the model entity with a related model

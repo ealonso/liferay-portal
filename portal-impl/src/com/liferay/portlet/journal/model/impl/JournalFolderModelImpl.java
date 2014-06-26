@@ -727,7 +727,8 @@ public class JournalFolderModelImpl extends BaseModelImpl<JournalFolder>
 
 		TrashHandler trashHandler = getTrashHandler();
 
-		if (!Validator.isNull(trashHandler.getContainerModelClassName())) {
+		if (!Validator.isNull(trashHandler.getContainerModelClassName(
+						getPrimaryKey()))) {
 			ContainerModel containerModel = null;
 
 			try {
@@ -744,7 +745,8 @@ public class JournalFolderModelImpl extends BaseModelImpl<JournalFolder>
 					return trashedModel.getTrashEntry();
 				}
 
-				trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName());
+				trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName(
+							containerModel.getContainerModelId()));
 
 				if (trashHandler == null) {
 					return null;
@@ -781,12 +783,13 @@ public class JournalFolderModelImpl extends BaseModelImpl<JournalFolder>
 	public boolean isInTrashContainer() {
 		TrashHandler trashHandler = getTrashHandler();
 
-		if ((trashHandler == null) ||
-				Validator.isNull(trashHandler.getContainerModelClassName())) {
-			return false;
-		}
-
 		try {
+			if ((trashHandler == null) ||
+					Validator.isNull(trashHandler.getContainerModelClassName(
+							getPrimaryKey()))) {
+				return false;
+			}
+
 			ContainerModel containerModel = trashHandler.getParentContainerModel(this);
 
 			if (containerModel == null) {

@@ -19,7 +19,9 @@
 <%
 String className = ParamUtil.getString(request, "className");
 long classPK = ParamUtil.getLong(request, "classPK");
-String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectFolder");
+String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectContainer");
+
+String redirect = ParamUtil.getString(request, "redirect");
 
 TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
 
@@ -45,13 +47,13 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 %>
 
 <div class="alert alert-block">
-	<liferay-ui:message arguments="<%= new Object[] {trashHandler.getContainerModelName(), HtmlUtil.escape(trashRenderer.getTitle(locale))} %>" key="the-original-x-does-not-exist-anymore" translateArguments="<%= false %>" />
+	<liferay-ui:message arguments="<%= new Object[] {trashHandler.getContainerModelName(classPK), HtmlUtil.escape(trashRenderer.getTitle(locale))} %>" key="the-original-x-does-not-exist-anymore" translateArguments="<%= false %>" />
 </div>
 
 <aui:form method="post" name="selectFolderFm">
 	<liferay-ui:header
 		showBackURL="<%= containerModel != null %>"
-		title='<%= LanguageUtil.format(request, "select-x", trashHandler.getContainerModelName()) %>'
+		title='<%= LanguageUtil.format(request, "select-x", trashHandler.getContainerModelName(classPK)) %>'
 	/>
 
 	<liferay-ui:breadcrumb showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
@@ -63,10 +65,11 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 
 		data.put("classname", className);
 		data.put("classpk", classPK);
-		data.put("containermodelid", containerModelId);
+		data.put("containermodelid", 0);
+		data.put("redirect", redirect);
 		%>
 
-		<aui:button cssClass="selector-button" data="<%= data %>" value='<%= LanguageUtil.format(request, "choose-this-x", trashHandler.getContainerModelName()) %>' />
+		<aui:button cssClass="selector-button" data="<%= data %>" value='<%= trashHandler.isBaseModel() ? LanguageUtil.get(request, "set-as-orphan") : LanguageUtil.format(request, "choose-this-x", trashHandler.getContainerModelName(classPK)) %>' />
 	</aui:button-row>
 
 	<br />
@@ -94,7 +97,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 			%>
 
 			<liferay-ui:search-container-column-text
-				name="<%= LanguageUtil.get(request, trashHandler.getContainerModelName()) %>"
+				name="<%= LanguageUtil.get(request, trashHandler.getContainerModelName(classPK)) %>"
 			>
 				<c:choose>
 					<c:when test="<%= curContainerModel.getContainerModelId() > 0 %>">
@@ -108,21 +111,23 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 						<liferay-ui:icon
 							iconCssClass="<%= containerTrashRenderer.getIconCssClass() %>"
 							label="<%= true %>"
-							message="<%= curContainerModel.getContainerModelName() %>"
+							message="<%= trashHandler.getContainerModelName(classPK) %>"
 							method="get"
 							url="<%= containerURL.toString() %>"
 						/>
 					</c:when>
 					<c:otherwise>
-						<%= curContainerModel.getContainerModelName() %>
+						<%= trashHandler.getContainerModelName(classPK) %>
 					</c:otherwise>
 				</c:choose>
 			</liferay-ui:search-container-column-text>
 
-			<liferay-ui:search-container-column-text
-				name='<%= LanguageUtil.format(request, "num-of-x", trashHandler.getContainerModelName()) %>'
-				value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
-			/>
+			<c:if test="<%= !trashHandler.isBaseModel() %>">
+				<liferay-ui:search-container-column-text
+					name='<%= LanguageUtil.format(request, "num-of-x", trashHandler.getContainerModelName(classPK)) %>'
+					value="<%= String.valueOf(trashHandler.getContainerModelsCount(classPK, curContainerModel.getContainerModelId())) %>"
+				/>
+			</c:if>
 
 			<liferay-ui:search-container-column-text>
 
@@ -132,6 +137,7 @@ TrashUtil.addContainerModelBreadcrumbEntries(request, trashHandler.getContainerM
 				data.put("classname", className);
 				data.put("classpk", classPK);
 				data.put("containermodelid", curContainerModel.getContainerModelId());
+				data.put("redirect", redirect);
 				%>
 
 				<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
