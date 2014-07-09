@@ -569,6 +569,10 @@ public class AssetUtil {
 				AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
 					className, classPK);
 
+				if (!assetEntry.isVisible()) {
+					continue;
+				}
+
 				assetEntries.add(assetEntry);
 			}
 			catch (Exception e) {
