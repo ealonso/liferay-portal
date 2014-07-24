@@ -29,6 +29,7 @@ import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
@@ -329,6 +330,14 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		_selGroup = (Group)_request.getAttribute(WebKeys.GROUP);
+
+		if (_selGroup != null) {
+			return _selGroup;
+		}
+
+		long groupId = ParamUtil.getLong(_request, "groupId");
+
+		_selGroup = GroupLocalServiceUtil.fetchGroup(groupId);
 
 		return _selGroup;
 	}
