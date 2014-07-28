@@ -33,7 +33,7 @@ TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashRender
 %>
 
 <liferay-ui:icon-menu icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>">
-	<c:if test="<%= trashHandler.isMovable() %>">
+	<c:if test="<%= trashHandler.isRestorable(trashRenderer.getClassPK()) && trashHandler.isMovable() %>">
 		<portlet:renderURL var="moveURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<portlet:param name="struts_action" value="/trash/view_container_model" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
