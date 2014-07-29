@@ -141,7 +141,7 @@
 							</c:if>
 						</c:when>
 						<c:otherwise>
-							<c:if test="<%= trashHandler.isMovable() %>">
+							<c:if test="<%= trashHandler.isRestorable(trashRenderer.getClassPK()) && trashHandler.isMovable() %>">
 								<aui:button icon="icon-undo" name="moveEntryButton" value="restore" />
 
 								<aui:script use="aui-base">

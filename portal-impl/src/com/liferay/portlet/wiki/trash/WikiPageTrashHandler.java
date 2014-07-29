@@ -444,6 +444,20 @@ public class WikiPageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public boolean isRestorable(long classPK) throws PortalException {
+		WikiPage page = WikiPageLocalServiceUtil.getLatestPage(
+			classPK, WorkflowConstants.STATUS_ANY, false);
+
+		WikiNode node = page.getNode();
+
+		if (node.isInTrash()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public void moveEntry(
 			long userId, long classPK, long containerModelId,
 			ServiceContext serviceContext)
