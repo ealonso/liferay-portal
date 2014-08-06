@@ -331,13 +331,12 @@ public class BookmarksEntryPersistenceTest {
 	}
 
 	@Test
-	public void testCountByC_T() {
+	public void testCountByG_NotS() {
 		try {
-			_persistence.countByC_T(RandomTestUtil.nextLong(), StringPool.BLANK);
+			_persistence.countByG_NotS(RandomTestUtil.nextLong(),
+				RandomTestUtil.nextInt());
 
-			_persistence.countByC_T(0L, StringPool.NULL);
-
-			_persistence.countByC_T(0L, (String)null);
+			_persistence.countByG_NotS(0L, 0);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
@@ -345,12 +344,13 @@ public class BookmarksEntryPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_NotS() {
+	public void testCountByC_T() {
 		try {
-			_persistence.countByG_NotS(RandomTestUtil.nextLong(),
-				RandomTestUtil.nextInt());
+			_persistence.countByC_T(RandomTestUtil.nextLong(), StringPool.BLANK);
 
-			_persistence.countByG_NotS(0L, 0);
+			_persistence.countByC_T(0L, StringPool.NULL);
+
+			_persistence.countByC_T(0L, (String)null);
 		}
 		catch (Exception e) {
 			Assert.fail(e.getMessage());
