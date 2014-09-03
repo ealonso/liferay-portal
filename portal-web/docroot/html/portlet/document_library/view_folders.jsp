@@ -391,6 +391,10 @@ else {
 	</div>
 </div>
 
+<div class="document-entries-pagination">
+	<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" />
+</div>
+
 <%!
 private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.document_library.view_folders_jsp");
 %>

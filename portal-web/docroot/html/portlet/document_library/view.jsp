@@ -160,7 +160,6 @@ request.setAttribute("view.jsp-repositoryId", String.valueOf(repositoryId));
 					<%@ include file="/html/portlet/document_library/file_entries_template.jspf" %>
 				</div>
 
-				<div class="document-entries-pagination"></div>
 			</aui:form>
 		</aui:col>
 	</aui:row>

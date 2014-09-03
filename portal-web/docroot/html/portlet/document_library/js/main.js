@@ -49,7 +49,6 @@ AUI.add(
 
 						instance._documentLibraryContainer = documentLibraryContainer;
 
-						instance._eventDataProcessed = instance.ns('dataProcessed');
 						instance._eventDataRequest = instance.ns('dataRequest');
 						instance._eventOpenDocument = instance.ns('openDocument');
 						instance._entriesContainer = instance.byId('entriesContainer');
@@ -129,7 +128,7 @@ AUI.add(
 
 						var eventHandles = [
 							Liferay.on(instance._eventOpenDocument, instance._openDocument, instance),
-							History.after('stateChange', instance._afterStateChange, instance),
+							//History.after('stateChange', instance._afterStateChange, instance),
 						];
 
 						instance._config = config;
@@ -166,45 +165,10 @@ AUI.add(
 						instance._documentLibraryContainer.purge(true);
 					},
 
-					_afterStateChange: function(event) {
+					getFolderId: function() {
 						var instance = this;
 
-						var namespace = instance.NS;
-
-						var requestParams = {};
-
-						var state = History.get();
-
-						AObject.each(
-							state,
-							function(item, index) {
-								if (index.indexOf(namespace) === 0) {
-									requestParams[index] = item;
-								}
-							}
-						);
-
-						instance._tuneStateChangeParams(requestParams);
-
-						if (AObject.isEmpty(requestParams)) {
-							requestParams = instance._getDefaultHistoryState();
-						}
-
-						Liferay.fire(
-							instance._eventDataRequest,
-							{
-								requestParams: requestParams,
-								src: SRC_HISTORY
-							}
-						);
-					},
-
-					_getDefaultHistoryState: function() {
-						var instance = this;
-
-						var initialState = History.get();
-
-						return initialState;
+						return instance._folderId;
 					},
 
 					_openDocument: function(event) {
@@ -262,34 +226,6 @@ AUI.add(
 						instance.one('#deleteAction').toggle(!trashEnabled);
 
 						instance.one('#moveToTrashAction').toggle(trashEnabled);
-					},
-
-					_tuneStateChangeParams: function(requestParams) {
-						var instance = this;
-
-						var entriesContainer = instance._entriesContainer;
-
-						var namespacedShowRepositoryTabs = instance.ns(STR_SHOW_REPOSITORY_TABS);
-
-						if (AObject.owns(requestParams, namespacedShowRepositoryTabs) &&
-							!requestParams[namespacedShowRepositoryTabs] &&
-							!entriesContainer.one('ul.nav-tabs')) {
-
-							requestParams[namespacedShowRepositoryTabs] = true;
-
-							requestParams[instance.ns(SEARCH_TYPE)] = SEARCH_TYPE_SINGLE;
-						}
-
-						var namespacedShowSearchInfo = instance.ns(STR_SHOW_SEARCH_INFO);
-
-						if (AObject.owns(requestParams, namespacedShowSearchInfo) &&
-							!requestParams[namespacedShowSearchInfo] &&
-							!entriesContainer.one('.search-info')) {
-
-							requestParams[namespacedShowSearchInfo] = true;
-
-							requestParams[instance.ns(SEARCH_TYPE)] = SEARCH_TYPE_SINGLE;
-						}
 					}
 				}
 			}
@@ -301,6 +237,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-loading-mask-deprecated', 'document-library-upload', 'event-simulate', 'liferay-app-view-folders', 'liferay-app-view-move', 'liferay-app-view-select', 'liferay-history-manager', 'liferay-message', 'liferay-portlet-base']
+		requires: ['document-library-upload', 'liferay-app-view-folders', 'liferay-app-view-move', 'liferay-message', 'liferay-portlet-base']
 	}
 );

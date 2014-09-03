@@ -427,6 +427,10 @@ request.setAttribute("view.jsp-folderId", String.valueOf(folderId));
 <span id="<portlet:namespace />displayStyleButtons">
 </span>
 
+<div class="document-entries-pagination">
+	<liferay-ui:search-paginator searchContainer="<%= searchContainer %>" />
+</div>
+
 <%!
 private static Log _log = LogFactoryUtil.getLog("portal-web.docroot.html.portlet.document_library.search_resources_jsp");
 %>
