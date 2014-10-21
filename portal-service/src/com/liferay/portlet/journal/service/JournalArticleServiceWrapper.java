@@ -1464,10 +1464,10 @@ public class JournalArticleServiceWrapper implements JournalArticleService,
 	}
 
 	/**
-	* Returns a range of all the web content articles matching the group, creator,
-	* creator, and workflow status using the indexer. It is preferable to use this
-	* method instead of the non-indexed version whenever possible for performance
-	* reasons.
+	* Returns a range of all the web content articles matching the group,
+	* creator, creator, and workflow status using the indexer. It is preferable
+	* to use this method instead of the non-indexed version whenever possible
+	* for performance reasons.
 	*
 	* <p>
 	* Useful when paginating results. Returns a maximum of <code>end -
