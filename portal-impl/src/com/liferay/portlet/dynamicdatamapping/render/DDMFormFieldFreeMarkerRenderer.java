@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.JSPSupportServlet;
+import com.liferay.portal.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
@@ -30,7 +31,13 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortletKeys;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
 import com.liferay.portlet.dynamicdatamapping.model.DDMFormField;
 import com.liferay.portlet.dynamicdatamapping.model.DDMFormFieldOptions;
@@ -495,6 +502,29 @@ public class DDMFormFieldFreeMarkerRenderer implements DDMFormFieldRenderer {
 		DDMFormField parentDDMFormField, boolean showEmptyFieldLabel,
 		Locale locale) {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		Group scopeGroup = themeDisplay.getScopeGroup();
+		Group liveGroup = scopeGroup.getLiveGroup();
+
+		UnicodeProperties liveGroupTypeSettings =
+			liveGroup.getTypeSettingsProperties();
+
+		String portletId = portletDisplay.getRootPortletId();
+		String stagedPortletId = StagingUtil.getStagedPortletId(portletId);
+
+		boolean currentPortletStaged = GetterUtil.getBoolean(
+			liveGroupTypeSettings.getProperty(stagedPortletId));
+		boolean documentLibraryStaged = GetterUtil.getBoolean(
+			liveGroupTypeSettings.getProperty(PortletKeys.DOCUMENT_LIBRARY));
+		boolean disableUpload = true;
+
+		if (currentPortletStaged && documentLibraryStaged) {
+			disableUpload = false;
+		}
+
 		Map<String, Object> freeMarkerContext = new HashMap<String, Object>();
 
 		Map<String, Object> fieldContext = getFieldContext(
@@ -509,6 +539,7 @@ public class DDMFormFieldFreeMarkerRenderer implements DDMFormFieldRenderer {
 				parentDDMFormField, locale);
 		}
 
+		freeMarkerContext.put("disableUpload", disableUpload);
 		freeMarkerContext.put("fieldStructure", fieldContext);
 		freeMarkerContext.put("namespace", namespace);
 		freeMarkerContext.put("parentFieldStructure", parentFieldContext);

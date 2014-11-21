@@ -34,7 +34,9 @@
 	<@aui.input name=namespacedFieldName type="hidden" value=fieldRawValue />
 
 	<@aui["button-row"]>
-		<@aui.button cssClass="upload-button" id="${namespacedFieldName}UploadButton" value="upload" />
+		<#if (disableUpload != true)>
+			<@aui.button cssClass="upload-button" id="${namespacedFieldName}UploadButton" value="upload" />
+		</#if>
 
 		<@aui.button cssClass="select-button" id="${namespacedFieldName}SelectButton" value="choose-from-document-library" />
 
