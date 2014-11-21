@@ -19,7 +19,6 @@
 <%
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
-boolean privateLayout = layoutsAdminDisplayContext.isPrivateLayout();
 long parentPlid = LayoutConstants.DEFAULT_PLID;
 long parentLayoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
 
@@ -27,7 +26,6 @@ if (layout.isTypeControlPanel()) {
 	if (layoutsAdminDisplayContext.getSelPlid() != 0) {
 		selLayout = LayoutLocalServiceUtil.getLayout(layoutsAdminDisplayContext.getSelPlid());
 
-		privateLayout = selLayout.isPrivateLayout();
 		parentPlid = selLayout.getPlid();
 		parentLayoutId = selLayout.getLayoutId();
 	}
@@ -35,13 +33,23 @@ if (layout.isTypeControlPanel()) {
 else {
 	selLayout = layout;
 
-	privateLayout = selLayout.isPrivateLayout();
 	parentPlid = layout.getParentPlid();
 	parentLayoutId = layout.getParentLayoutId();
 }
 
 String[] types = LayoutTypeControllerTracker.getTypes();
 %>
+
+<c:if test="<%= !portletName.equals(PortletKeys.DOCKBAR) %>">
+	<portlet:renderURL var="backURL">
+		<portlet:param name="struts_action" value="/layouts_admin/edit_layout_set" />
+	</portlet:renderURL>
+
+	<liferay-ui:header
+		backURL="<%= backURL %>"
+		title="add-new-layout"
+	/>
+</c:if>
 
 <portlet:actionURL var="editLayoutActionURL" windowState="<%= themeDisplay.isStateExclusive() ? LiferayWindowState.EXCLUSIVE.toString() : WindowState.NORMAL.toString() %>">
 	<portlet:param name="struts_action" value='<%= portletName.equals(PortletKeys.DOCKBAR) ? "/layouts_admin/add_layout" : "/layouts_admin/edit_layouts" %>' />
@@ -55,7 +63,6 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 	<aui:input id="addLayoutCMD" name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.ADD %>" />
 	<aui:input id="addLayoutRedirect" name="redirect" type="hidden" value="<%= portletName.equals(PortletKeys.DOCKBAR) ? editLayoutRenderURL : currentURL %>" />
 	<aui:input id="addLayoutGroupId" name="groupId" type="hidden" value="<%= layoutsAdminDisplayContext.getGroupId() %>" />
-	<aui:input id="addLayoutPrivateLayout" name="privateLayout" type="hidden" value="<%= privateLayout %>" />
 	<aui:input id="addLayoutParentPlid" name="parentPlid" type="hidden" value="<%= parentPlid %>" />
 	<aui:input id="addLayoutParentLayoutId" name="parentLayoutId" type="hidden" value="<%= parentLayoutId %>" />
 	<aui:input id="addLayoutType" name="type" type="hidden" value="portlet" />
@@ -156,7 +163,7 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 					<%
 					liferayPortletRequest.setAttribute(WebKeys.LAYOUT_DESCRIPTIONS, layoutsAdminDisplayContext.getLayoutDescriptions());
 
-					int layoutsCount = LayoutLocalServiceUtil.getLayoutsCount(layoutsAdminDisplayContext.getGroup(), privateLayout);
+					int layoutsCount = LayoutLocalServiceUtil.getLayoutsCount(layoutsAdminDisplayContext.getGroup(), false);
 
 					for (String type : types) {
 						if (type.equals("portlet")) {
