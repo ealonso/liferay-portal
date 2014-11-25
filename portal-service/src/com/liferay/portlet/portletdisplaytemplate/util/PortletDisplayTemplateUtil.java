@@ -16,6 +16,7 @@ package com.liferay.portlet.portletdisplaytemplate.util;
 
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.template.TemplateHandler;
+import com.liferay.portal.kernel.template.TemplateTaglibSupportProvider;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 
@@ -168,6 +169,18 @@ public class PortletDisplayTemplateUtil {
 
 		return getPortletDisplayTemplate().renderDDMTemplate(
 			request, response, ddmTemplateId, entries, contextObjects);
+	}
+
+	public static String renderDDMTemplate(
+			HttpServletRequest request, HttpServletResponse response,
+			long ddmTemplateId, List<?> entries,
+			Map<String, Object> contextObjects,
+			TemplateTaglibSupportProvider templateTaglibSupportProvider)
+		throws Exception {
+
+		return getPortletDisplayTemplate().renderDDMTemplate(
+			request, response, ddmTemplateId, entries, contextObjects,
+			templateTaglibSupportProvider);
 	}
 
 	public void setPortletDisplayTemplate(

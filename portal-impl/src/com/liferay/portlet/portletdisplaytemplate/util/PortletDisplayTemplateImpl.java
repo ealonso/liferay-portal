@@ -20,10 +20,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portletdisplaytemplate.BasePortletDisplayTemplateHandler;
 import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.servlet.JSPSupportServlet;
-import com.liferay.portal.kernel.template.TemplateConstants;
-import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
-import com.liferay.portal.kernel.template.TemplateVariableGroup;
+import com.liferay.portal.kernel.template.*;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -291,9 +288,21 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 
 	@Override
 	public String renderDDMTemplate(
+		HttpServletRequest request, HttpServletResponse response,
+		long ddmTemplateId, List<?> entries,
+		Map<String, Object> contextObjects)
+		throws Exception {
+
+		return renderDDMTemplate(
+			request, response, ddmTemplateId, entries, contextObjects, null);
+	}
+
+	@Override
+	public String renderDDMTemplate(
 			HttpServletRequest request, HttpServletResponse response,
 			long ddmTemplateId, List<?> entries,
-			Map<String, Object> contextObjects)
+			Map<String, Object> contextObjects,
+			TemplateTaglibSupportProvider templateTaglibSupportProvider)
 		throws Exception {
 
 		contextObjects.put(
@@ -380,11 +389,17 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 
 		// Taglibs
 
-		if (language.equals(TemplateConstants.LANG_TYPE_FTL)) {
-			_addTaglibSupportFTL(contextObjects, request, response);
+		if (templateTaglibSupportProvider != null) {
+			templateTaglibSupportProvider.addTaglibSupport(
+				contextObjects, request, response);
 		}
-		else if (language.equals(TemplateConstants.LANG_TYPE_VM)) {
-			_addTaglibSupportVM(contextObjects, request, response);
+		else {
+			if (language.equals(TemplateConstants.LANG_TYPE_FTL)) {
+				_addTaglibSupportFTL(contextObjects, request, response);
+			}
+			else if (language.equals(TemplateConstants.LANG_TYPE_VM)) {
+				_addTaglibSupportVM(contextObjects, request, response);
+			}
 		}
 
 		contextObjects.putAll(_getPortletPreferences(renderRequest));

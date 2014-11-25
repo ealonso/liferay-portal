@@ -14,13 +14,25 @@
 
 package com.liferay.portal.kernel.template;
 
+import com.liferay.portal.kernel.servlet.JSPSupportServlet;
+import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.servlet.GenericServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author Raymond Augé
  */
 public interface TemplateTaglibSupportProvider {
+
+	public void addTaglibSupport(
+			Map<String, Object> contextObjects, HttpServletRequest request,
+			HttpServletResponse response)
+		throws Exception;
 
 	public void addTaglibSupport(
 			Template template, String servletContextName,

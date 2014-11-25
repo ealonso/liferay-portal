@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateTaglibSupportProvider;
 import com.liferay.portal.util.PortalUtil;
 
+import com.liferay.portlet.portletdisplaytemplate.util.PortletDisplayTemplateConstants;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 
@@ -34,13 +35,54 @@ import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
+import java.util.Map;
 
 /**
  * @author Raymond Augé
  */
 public class FreeMarkerTemplateTaglibSupportProvider
 	implements TemplateTaglibSupportProvider {
+
+	@Override
+	public void addTaglibSupport(
+			Map<String, Object> contextObjects, HttpServletRequest request,
+			HttpServletResponse response)
+		throws Exception {
+
+		// FreeMarker servlet application
+
+		GenericServlet genericServlet = new JSPSupportServlet(
+			request.getServletContext());
+
+		ServletContextHashModel servletContextHashModel =
+			new ServletContextHashModel(
+				genericServlet, ObjectWrapper.DEFAULT_WRAPPER);
+
+		contextObjects.put(
+			PortletDisplayTemplateConstants.FREEMARKER_SERVLET_APPLICATION,
+			servletContextHashModel);
+
+		// FreeMarker servlet request
+
+		HttpRequestHashModel requestHashModel = new HttpRequestHashModel(
+			request, response, ObjectWrapper.DEFAULT_WRAPPER);
+
+		contextObjects.put(
+			PortletDisplayTemplateConstants.FREEMARKER_SERVLET_REQUEST,
+			requestHashModel);
+
+		// Taglib Liferay hash
+
+		TemplateHashModel taglibLiferayHash =
+			FreeMarkerTaglibFactoryUtil.createTaglibFactory(
+				request.getServletContext());
+
+		contextObjects.put(
+			PortletDisplayTemplateConstants.TAGLIB_LIFERAY_HASH,
+			taglibLiferayHash);
+	}
 
 	@Override
 	public void addTaglibSupport(

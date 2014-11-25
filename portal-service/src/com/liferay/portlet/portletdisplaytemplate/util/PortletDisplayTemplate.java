@@ -15,6 +15,7 @@
 package com.liferay.portlet.portletdisplaytemplate.util;
 
 import com.liferay.portal.kernel.template.TemplateHandler;
+import com.liferay.portal.kernel.template.TemplateTaglibSupportProvider;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 
@@ -54,6 +55,13 @@ public interface PortletDisplayTemplate {
 			HttpServletRequest request, HttpServletResponse response,
 			long ddmTemplateId, List<?> entries,
 			Map<String, Object> contextObjects)
+		throws Exception;
+
+	public String renderDDMTemplate(
+			HttpServletRequest request, HttpServletResponse response,
+			long ddmTemplateId, List<?> entries,
+			Map<String, Object> contextObjects,
+			TemplateTaglibSupportProvider templateTaglibSupportProvider)
 		throws Exception;
 
 }

@@ -24,7 +24,7 @@ List<RSSFeed> rssFeeds = rssDisplayContext.getRSSFeeds();
 
 <c:choose>
 	<c:when test="<%= portletDisplayDDMTemplateId > 0 %>">
-		<%= PortletDisplayTemplateUtil.renderDDMTemplate(request, response, portletDisplayDDMTemplateId, rssFeeds) %>
+		<%= PortletDisplayTemplateUtil.renderDDMTemplate(request, response, portletDisplayDDMTemplateId, rssFeeds, new java.util.HashMap<String, Object>(), new com.liferay.util.freemarker.FreeMarkerTemplateTaglibSupportProvider()) %>
 	</c:when>
 	<c:otherwise>
 
