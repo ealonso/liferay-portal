@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/document_selector/init.jsp" %>
+<%@ include file="/html/portlet/document_selector/init.jspdocument_selector/init.jsp" %>
 
 <%
 String[] tabs1Names = DocumentSelectorUtil.getTabs1Names(request);
