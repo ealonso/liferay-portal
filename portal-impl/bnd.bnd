@@ -30,6 +30,7 @@ Export-Package:\
 	com.liferay.portal.verify,\
 	com.liferay.portal.xml,\
 	com.liferay.portlet.dynamicdatamapping.service.permission,\
+	com.liferay.portlet.documentlibrary.action,\
 	com.liferay.portlet.journal.asset,\
 	com.liferay.portlet.journal.ddm,\
 	com.liferay.portlet.journal.lar,\
