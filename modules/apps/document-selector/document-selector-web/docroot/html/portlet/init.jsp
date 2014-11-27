@@ -27,7 +27,10 @@
 <portlet:defineObjects />
 <liferay-theme:defineObjects/>
 
-<%@ page import="com.liferay.portlet.PortletURLUtil" %><%@
+<%@ page import="com.liferay.portlet.PortletURLUtil" %>
+
+<%@ page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringUtil" %>
 
 <%@ page import="javax.portlet.PortletURL" %><%@
 page import="javax.portlet.WindowState" %>

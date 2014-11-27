@@ -1,3 +1,5 @@
+<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
+<%@ page import="com.liferay.portal.util.PortalUtil" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -14,12 +16,23 @@
  */
 --%>
 
-<%@ include file="/html/portlet/document_selector/init.jspdocument_selector/init.jsp" %>
+<%@ include file="/html/portlet/document_selector/init.jsp" %>
 
 <%
 long groupId = ParamUtil.getLong(request, "groupId");
-String ckEditorFuncNum = DocumentSelectorUtil.getCKEditorFuncNum(request);
-String eventName = ParamUtil.getString(request, "eventName");
+String ckEditorFuncNum;// = DocumentSelectorUtil.getCKEditorFuncNum(request);
+
+    ckEditorFuncNum = ParamUtil.getString(
+            request, "ckEditorFuncNum");
+
+    HttpServletRequest originalRequest =
+            PortalUtil.getOriginalServletRequest(request);
+
+    ckEditorFuncNum = ParamUtil.getString(
+            originalRequest, "CKEditorFuncNum", ckEditorFuncNum);
+
+
+    String eventName = ParamUtil.getString(request, "eventName");
 
 String attachmentURLPrefix = ParamUtil.getString(request, "attachmentURLPrefix");
 
