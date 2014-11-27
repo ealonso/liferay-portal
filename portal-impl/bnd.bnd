@@ -30,10 +30,15 @@ Export-Package:\
 	com.liferay.portal.verify,\
 	com.liferay.portal.xml,\
 	com.liferay.portlet.dynamicdatamapping.service.permission,\
+	com.liferay.portlet.documentlibrary,\
+	com.liferay.portlet.documentlibrary.action,\
+	com.liferay.portlet.documentlibrary.service.permission,\
 	com.liferay.portlet.journal.asset,\
 	com.liferay.portlet.journal.ddm,\
 	com.liferay.portlet.journal.lar,\
+	com.liferay.portlet.journal.search,\
 	com.liferay.portlet.journal.service.permission,\
+	com.liferay.portlet.layoutsadmin.context,\
 	com.liferay.util.log4j,\
 	\
 	javax.sql,org.hibernate,\

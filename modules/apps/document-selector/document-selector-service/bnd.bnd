@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Document Selector Service
+Bundle-SymbolicName: com.liferay.document.selector.service
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.documentselector.util
+Include-Resource: classes
