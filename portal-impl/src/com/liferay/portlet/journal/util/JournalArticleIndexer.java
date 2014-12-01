@@ -408,7 +408,14 @@ public class JournalArticleIndexer extends BaseIndexer {
 		document.addKeyword("ddmStructureKey", article.getDDMStructureKey());
 		document.addKeyword("ddmTemplateKey", article.getDDMTemplateKey());
 		document.addDate("displayDate", article.getDisplayDate());
-		document.addKeyword("head", isHead(article));
+
+		boolean head = true;
+
+		if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
+			head = isHead(article);
+		}
+
+		document.addKeyword("head", head);
 
 		addDDMStructureAttributes(document, article);
 
@@ -545,7 +552,11 @@ public class JournalArticleIndexer extends BaseIndexer {
 				ddmStructureKeys);
 
 		for (JournalArticle article : articles) {
-			doReindex(article, false);
+			if (PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS ||
+				isHead(article)) {
+
+				doReindex(article, false);
+			}
 		}
 	}
 
@@ -662,10 +673,6 @@ public class JournalArticleIndexer extends BaseIndexer {
 	}
 
 	protected boolean isHead(JournalArticle article) {
-		if (!PropsValues.JOURNAL_ARTICLE_INDEX_ALL_VERSIONS) {
-			return true;
-		}
-
 		JournalArticle latestArticle =
 			JournalArticleLocalServiceUtil.fetchLatestArticle(
 				article.getResourcePrimKey(),
