@@ -544,8 +544,8 @@ public class JournalArticleIndexer extends BaseIndexer {
 		}
 
 		List<JournalArticle> articles =
-			JournalArticleLocalServiceUtil.getArticlesByDDMStructureKey(
-				ddmStructureKeys);
+			JournalArticleLocalServiceUtil.
+				getIndexableArticlesByDDMStructureKey(ddmStructureKeys);
 
 		for (JournalArticle article : articles) {
 			doReindex(article, false);
