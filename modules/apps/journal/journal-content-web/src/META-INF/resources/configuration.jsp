@@ -19,77 +19,14 @@
 <%
 JournalArticle article = journalContentDisplayContext.getArticle();
 
+PortletRequestModel portletRequestModel = new PortletRequestModel(renderRequest, renderResponse);
+
+JournalArticleDisplay articleDisplay = JournalArticleLocalServiceUtil.getArticleDisplay(article, null, null, LanguageUtil.getLanguageId(locale), 1, portletRequestModel, themeDisplay);
+
 String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 %>
 
 <liferay-ui:error exception="<%= NoSuchArticleException.class %>" message="the-web-content-could-not-be-found" />
-
-<div class="alert alert-info">
-	<span class="displaying-help-message-holder <%= article == null ? StringPool.BLANK : "hide" %>">
-		<liferay-ui:message key="please-select-a-web-content-from-the-list-below" />
-	</span>
-
-	<span class="displaying-article-id-holder <%= article == null ? "hide" : StringPool.BLANK %>">
-		<liferay-ui:message key="displaying-content" />: <span class="displaying-article-id"><%= article != null ? article.getTitle(locale) : StringPool.BLANK %></span>
-	</span>
-</div>
-
-<c:if test="<%= article != null %>">
-
-	<%
-	List<DDMTemplate> ddmTemplates = journalContentDisplayContext.getDDMTemplates();
-	%>
-
-	<c:if test="<%= !ddmTemplates.isEmpty() %>">
-		<aui:fieldset>
-			<liferay-ui:message key="override-default-template" />
-
-			<liferay-ui:table-iterator
-				list="<%= ddmTemplates %>"
-				listType="com.liferay.portlet.dynamicdatamapping.model.DDMTemplate"
-				rowLength="3"
-				rowPadding="30"
-			>
-
-				<%
-				boolean templateChecked = false;
-
-				if (ddmTemplateKey.equals(tableIteratorObj.getTemplateKey())) {
-					templateChecked = true;
-				}
-
-				if ((tableIteratorPos.intValue() == 0) && Validator.isNull(ddmTemplateKey)) {
-					templateChecked = true;
-				}
-				%>
-
-				<liferay-portlet:renderURL portletName="<%= PortletKeys.DYNAMIC_DATA_MAPPING %>" var="editTemplateURL">
-					<portlet:param name="struts_action" value="/dynamic_data_mapping/edit_template" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="refererPortletName" value="<%= PortletProviderUtil.getPortletId(JournalArticle.class.getName(), PortletProvider.Action.EDIT) %>" />
-					<portlet:param name="groupId" value="<%= String.valueOf(tableIteratorObj.getGroupId()) %>" />
-					<portlet:param name="templateId" value="<%= String.valueOf(tableIteratorObj.getTemplateId()) %>" />
-				</liferay-portlet:renderURL>
-
-				<liferay-util:buffer var="linkContent">
-					<aui:a href="<%= editTemplateURL %>" id="tableIteratorObjName"><%= HtmlUtil.escape(tableIteratorObj.getName(locale)) %></aui:a>
-				</liferay-util:buffer>
-
-				<aui:input checked="<%= templateChecked %>" label="<%= linkContent %>" name="overideTemplateId" onChange='<%= "if (this.checked) {document." + renderResponse.getNamespace() + "fm." + renderResponse.getNamespace() + "ddmTemplateKey.value = this.value;}" %>' type="radio" value="<%= tableIteratorObj.getTemplateKey() %>" />
-
-				<c:if test="<%= tableIteratorObj.isSmallImage() %>">
-					<br />
-
-					<img alt="" hspace="0" src="<%= HtmlUtil.escapeAttribute(tableIteratorObj.getTemplateImageURL(themeDisplay)) %>" vspace="0" />
-				</c:if>
-			</liferay-ui:table-iterator>
-
-			<br />
-		</aui:fieldset>
-	</c:if>
-</c:if>
-
-<aui:button name="webContentSelector" value="select-web-content" />
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
 
@@ -99,47 +36,174 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= configurationRenderURL %>" />
 	<aui:input name="preferences--assetEntryId--" type="hidden" value="<%= journalContentDisplayContext.getAssetEntryId() %>" />
-	<aui:input name="preferences--ddmTemplateKey--" type="hidden" value="<%= ddmTemplateKey %>" />
 	<aui:input name="preferences--extensions--" type="hidden" value="<%= journalContentDisplayContext.getExtensions() %>" />
+	<aui:input name="preferences--showAvailableLocales--" type="hidden" value="<%= journalContentDisplayContext.isShowAvailableLocales() %>" />
+	<aui:input name="preferences--enablePrint--" type="hidden" value="<%= journalContentDisplayContext.isEnablePrint() %>" />
+	<aui:input name="preferences--enableViewCountIncrement--" type="hidden" value="<%= journalContentDisplayContext.isEnableViewCountIncrement() %>" />
 
-	<aui:fieldset>
-		<aui:input name="portletId" type="resource" value="<%= journalContentDisplayContext.getPortletResource() %>" />
-	</aui:fieldset>
+	<div class="content-display">
+		<div class="article">
+			<label class="title"><liferay-ui:message key="displaying-content" />:</label>
+			<span class="change-content"><%= (article != null) ? article.getTitle(locale) : StringPool.BLANK %> <aui:button name="webContentSelector" value="change" /></span>
+		</div>
 
-	<aui:fieldset>
-		<aui:field-wrapper>
-			<aui:input name="preferences--showAvailableLocales--" type="checkbox" value="<%= journalContentDisplayContext.isShowAvailableLocales() %>" />
-		</aui:field-wrapper>
+		<%
+		List<DDMTemplate> ddmTemplates = journalContentDisplayContext.getDDMTemplates();
+		%>
 
-		<aui:field-wrapper helpMessage='<%= !journalContentDisplayContext.isOpenOfficeServerEnabled() ? "enabling-openoffice-integration-provides-document-conversion-functionality" : StringPool.BLANK %>' label="enable-conversion-to">
-			<liferay-ui:input-move-boxes
-				leftBoxName="currentExtensions"
-				leftList="<%= journalContentDisplayContext.getCurrentExtensions() %>"
-				leftReorder="true"
-				leftTitle="current"
-				rightBoxName="availableExtensions"
-				rightList="<%= journalContentDisplayContext.getAvailableExtensions() %>"
-				rightTitle="available"
-			/>
-		</aui:field-wrapper>
+		<label class="title"><liferay-ui:message key="template" />:</label>
 
-		<aui:input name="preferences--enablePrint--" type="checkbox" value="<%= journalContentDisplayContext.isEnablePrint() %>" />
+		<div class="template">
+			<c:choose>
+				<c:when test="<%= ddmTemplates.size() > 1 %>">
+					<aui:select label="" name="preferences--ddmTemplateKey--">
 
-		<aui:input name="preferences--enableRelatedAssets--" type="checkbox" value="<%= journalContentDisplayContext.isEnableRelatedAssets() %>" />
+						<%
+						for (DDMTemplate ddmTemplate : ddmTemplates) {
+						%>
 
-		<aui:input name="preferences--enableRatings--" type="checkbox" value="<%= journalContentDisplayContext.isEnableRatings() %>" />
+							<aui:option label="<%= ddmTemplate.getName(locale) %>" selected="<%= ddmTemplateKey.equals(ddmTemplate.getTemplateKey()) %>" value="<%= ddmTemplate.getTemplateKey() %>" />
 
-		<c:if test="<%= journalContentDisplayContext.isCommentsEnabled() %>">
-			<aui:input name="preferences--enableComments--" type="checkbox" value="<%= journalContentDisplayContext.isEnableComments() %>" />
+						<%
+						}
+						%>
 
-			<aui:input name="preferences--enableCommentRatings--" type="checkbox" value="<%= journalContentDisplayContext.isEnableCommentRatings() %>" />
-		</c:if>
+					</aui:select>
+				</c:when>
+				<c:otherwise>
 
-		<aui:input name="preferences--enableViewCountIncrement--" type="checkbox" value="<%= journalContentDisplayContext.isEnableViewCountIncrement() %>" />
-	</aui:fieldset>
+					<%
+					DDMTemplate ddmTemplate = article.getDDMTemplate();
+					%>
+
+					<span><%= ddmTemplate.getName(locale) %></span>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</div>
+
+	<div class="panel">
+		<div class="tools">
+			<label><liferay-ui:message key="conversion-and-user-tools" /> <i class="icon-cog" id="<portlet:namespace />conversionAndUserToolsButton"></i></label>
+			<div class="tools-container" id="<portlet:namespace />toolsContainer">
+				<div class="available-locales <%= journalContentDisplayContext.isShowAvailableLocales() ? StringPool.BLANK : "hide" %>">
+					<liferay-ui:language displayStyle="<%= 0 %>" languageId="<%= LanguageUtil.getLanguageId(request) %>" languageIds="<%= articleDisplay.getAvailableLocales() %>" />
+				</div>
+				<div class="enable-print <%= journalContentDisplayContext.isEnablePrint() ? StringPool.BLANK : "hide" %>">
+					<liferay-ui:icon
+						iconCssClass="icon-print"
+						label="<%= true %>"
+						message='<%= LanguageUtil.format(request, "print-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(articleDisplay.getTitle())}, false) %>'
+					/>
+				</div>
+				<div class="export-actions <%= (journalContentDisplayContext.getExtensions().length > 0) ? StringPool.BLANK : "hide" %>">
+					<liferay-ui:icon-list>
+
+						<%
+						for (String extension : journalContentDisplayContext.getExtensions()) {
+						%>
+
+							<liferay-ui:icon
+								iconCssClass="<%= DLUtil.getFileIconCssClass(extension) %>"
+								label="<%= true %>"
+								message='<%= LanguageUtil.format(request, "x-convert-x-to-x", new Object[] {"hide-accessible", HtmlUtil.escape(articleDisplay.getTitle()), StringUtil.toUpperCase(HtmlUtil.escape(extension))}) %>'
+							/>
+
+						<%
+						}
+						%>
+
+					</liferay-ui:icon-list>
+				</div>
+
+				<%
+				String cssClass = StringPool.BLANK;
+
+				if (journalContentDisplayContext.isShowAvailableLocales() || journalContentDisplayContext.isEnablePrint() || (journalContentDisplayContext.getExtensions().length > 0)) {
+					cssClass = "hide";
+				}
+				%>
+
+				<span class="message <%= cssClass %>"><liferay-ui:message key="this-is-not-active-click-in-the-cog-and-choose-your-options" /></span>
+			</div>
+		</div>
+		<div class="article">
+			<div class="image">
+
+				<%
+				String imageURL = article.getArticleImageURL(themeDisplay);
+
+				if (Validator.isNull(imageURL)) {
+					imageURL = themeDisplay.getPathThemeImages() + "/file_system/large/article.png";
+				}
+				%>
+
+				<img alt="<%= article.getTitle(locale) %>" src="<%= imageURL %>">
+			</div>
+			<div class="details">
+				<div class="title">
+					<%= article.getTitle(locale) %>
+				</div>
+				<div class="content">
+
+					<%
+					String content = article.getDescription(locale);
+
+					if (Validator.isNull(content)) {
+						content = articleDisplay.getContent();
+					}
+					%>
+
+					<%= HtmlUtil.escape(StringUtil.shorten(content, 320)) %>
+				</div>
+				<div class="author">
+					<liferay-ui:message key="created-by" /> <strong><%= article.getUserName() %></strong> <liferay-ui:message key="<%= Time.getRelativeTimeDescription(article.getCreateDate(), locale, timeZone) %>" />
+				</div>
+			</div>
+		</div>
+		<div class="metadata">
+			<label><liferay-ui:message key="content-metadata" /> <i class="icon-cog"></i></label>
+			<div class="metadata-container">
+				<span class="message"><liferay-ui:message key="this-is-not-active-click-in-the-cog-and-choose-your-options" /></span>
+			</div>
+		</div>
+	</div>
+
+	<div class="hide">
+		<div class="configuration-container" id="<portlet:namespace />conversionAndUserToolsContainer">
+			<div class="conversions">
+				<label class="title"><liferay-ui:message key="conversions" /></label>
+
+				<%
+				String[] extensions = journalContentDisplayContext.getExtensions();
+
+				for (String conversion : journalContentDisplayContext.getConversions()) {
+				%>
+
+					<aui:input checked="<%= ArrayUtil.contains(extensions, conversion) %>" inlineField="<%= true %>" name="<%= conversion %>" type="checkbox" wrapperCssClass="conversion" />
+
+				<%
+				}
+				%>
+
+			</div>
+
+			<div class="user-tools">
+				<label class="title"><liferay-ui:message key="user-tools" /></label>
+
+				<aui:input name="showAvailableLocales" type="checkbox" value="<%= journalContentDisplayContext.isShowAvailableLocales() %>" />
+
+				<aui:input name="enablePrint" type="checkbox" value="<%= journalContentDisplayContext.isEnablePrint() %>" />
+
+				<aui:input name="enableViewCountIncrement" type="checkbox" value="<%= journalContentDisplayContext.isEnableViewCountIncrement() %>" />
+			</div>
+		</div>
+	</div>
 
 	<aui:button-row>
 		<aui:button name="saveButton" type="submit" />
+
+		<aui:button type="cancel" />
 	</aui:button-row>
 </aui:form>
 
@@ -191,14 +255,57 @@ String ddmTemplateKey = journalContentDisplayContext.getDDMTemplateKey();
 		}
 	);
 
-	$('#<portlet:namespace />saveButton').on(
+	$('#<portlet:namespace />conversionAndUserToolsButton').on(
 		'click',
 		function(event) {
-			event.preventDefault();
+			var conversionAndUserToolsDialog = Liferay.Util.Window.getWindow(
+				{
+					dialog: {
+						bodyContent: $('#<portlet:namespace />conversionAndUserToolsContainer'),
+						centered: true,
+						modal: true,
+						toolbars: {
+							footer: [
+								{
+									label: '<liferay-ui:message key="ok" />',
+									on: {
+										click: function(event) {
+											event.domEvent.preventDefault();
 
-			form.fm('extensions').val(Liferay.Util.listSelect(form.fm('currentExtensions')));
+											var toolsContainer = $('#<portlet:namespace />toolsContainer');
 
-			submitForm(form);
+											var showAvailableLocales = $('#<portlet:namespace />showAvailableLocales');
+
+											document.<portlet:namespace />fm.<portlet:namespace />preferences--showAvailableLocales--.value = showAvailableLocales;
+
+											var enablePrint = $('#<portlet:namespace />enablePrint');
+
+											var enableViewCountIncrement = $('#<portlet:namespace />showAvailableLocales');
+
+											conversionAndUserToolsDialog.hide();
+										}
+									},
+									primary: true
+								},
+								{
+									label: '<liferay-ui:message key="cancel" />',
+									on: {
+										click: function(event) {
+											event.domEvent.preventDefault();
+
+											conversionAndUserToolsDialog.hide();
+										}
+									}
+								}
+							]
+						},
+						width: 400
+					},
+					title: '<liferay-ui:message key="conversion-and-user-tools" />'
+				}
+			);
+
+			conversionAndUserToolsDialog.show();
 		}
 	);
 </aui:script>

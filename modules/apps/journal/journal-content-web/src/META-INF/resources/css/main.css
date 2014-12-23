@@ -1,3 +1,117 @@
+.configuration-container .conversions {
+	margin-bottom: 20px;
+}
+
+.configuration-container .conversions .title, .configuration-container .user-tools .title {
+	border-bottom: 1px solid #EBEBEB;
+	display: block;
+	font-weight: 500;
+	margin-bottom: 10px;
+}
+
+.configuration-container .conversion {
+	margin-right: 10px;
+}
+
+.configuration-container .form-group {
+	margin-bottom: 0;
+}
+
+.content-display {
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.content-display .article {
+	float: left;
+	margin-right: 100px;
+}
+
+.content-display .article .title, .content-display .template .title {
+	display: block;
+	font-weight: 500;
+}
+
+.content-display .template .form-group {
+	margin-bottom: 0;
+}
+
+.content-display .template .form-control {
+	width: auto;
+}
+
+.content-display .article .change-content .btn {
+	background-color: #868895;
+	border-width: 0;
+	color: #FFF;
+	font-size: 12px;
+	margin-left: 10px;
+}
+
+.panel {
+	background-color: #EBEBEB;
+	padding: 20px;
+}
+
+.panel .article {
+	@include border-radius(5px);
+
+	background-color: #FFF;
+	clear: both;
+	margin-bottom: 15px;
+	overflow: hidden;
+	padding: 15px;
+}
+
+.panel .article .details {
+	margin-top: 30px;
+}
+
+.panel .article .image {
+	float: left;
+	margin-right: 50px;
+}
+
+.panel .article .details .title {
+	color: #42C3FC;
+	font-size: 14px;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+
+.panel .article .details .content {
+	margin-bottom: 15px;
+}
+
+.panel .tools {
+	float: right;
+	margin-bottom: 15px;
+}
+
+.panel .metadata {
+	clear: both;
+}
+
+.panel .tools .tools-container .message, .panel .metadata .metadata-container .message {
+	@include border-radius(5px);
+
+	background-color: #F3F3F3;
+	border: 1px dashed #D6D6D8;
+	color: #D6D6D8;
+	font-style: italic;
+	padding: 10px 20px 10px 10px;
+}
+
+.panel .tools label, .panel .metadata label {
+	display: block;
+	margin-bottom: 10px;
+}
+
+.panel .icon-cog {
+	color: #42C3FC;
+	cursor: pointer;
+}
+
 .portlet-journal-content {
 	.journal-content-article {
 		clear: right;
