@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE routes PUBLIC "-//Liferay//DTD Friendly URL Routes 7.0.0//EN" "http://www.liferay.com/dtd/liferay-friendly-url-routes_7_0_0.dtd">
+
+<routes>
+	<route>
+		<pattern>/category/{categoryId:\d+}/update</pattern>
+		<implicit-parameter name="mvcPath">/html/portlet/asset_category_admin/edit_category.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_lifecycle">0</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/vocabulary/{vocabularyId:\d+}/update</pattern>
+		<implicit-parameter name="mvcPath">/html/portlet/asset_category_admin/edit_vocabulary.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_lifecycle">0</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/vocabulary/{vocabularyId:\d+}/view</pattern>
+		<implicit-parameter name="mvcPath">/html/portlet/asset_category_admin/view_categories.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_lifecycle">0</implicit-parameter>
+	</route>
+</routes>

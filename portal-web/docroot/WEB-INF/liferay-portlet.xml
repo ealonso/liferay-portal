@@ -1123,6 +1123,9 @@
 		<icon>/html/icons/asset_category_admin.png</icon>
 		<indexer-class>com.liferay.portlet.asset.util.AssetCategoryIndexer</indexer-class>
 		<indexer-class>com.liferay.portlet.asset.util.AssetVocabularyIndexer</indexer-class>
+		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
+		<friendly-url-mapping>category_admin</friendly-url-mapping>
+		<friendly-url-routes>com/liferay/portlet/assetcategoryadmin/asset-category-admin-friendly-url-routes.xml</friendly-url-routes>
 		<portlet-data-handler-class>com.liferay.portlet.asset.lar.AssetCategoryPortletDataHandler</portlet-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.asset.lar.AssetCategoryStagedModelDataHandler</staged-model-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.asset.lar.AssetVocabularyStagedModelDataHandler</staged-model-data-handler-class>
