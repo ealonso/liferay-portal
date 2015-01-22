@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.template.freemarker;
+package com.liferay.portal.freemarker;
 
 import com.liferay.portal.util.ClassLoaderUtil;
 

@@ -99,7 +99,7 @@ public class LiferayResourceManager extends ResourceManagerImpl {
 							resourceName, resourceType, encoding));
 				}
 				catch (PrivilegedActionException pae) {
-					throw pae.getException();
+					throw (IOException)pae.getException();
 				}
 			}
 		}

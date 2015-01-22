@@ -12,12 +12,10 @@
  * details.
  */
 
-package com.liferay.portal.template.freemarker;
+package com.liferay.portal.freemarker;
 
-import aQute.bnd.annotation.metatype.Configurable;
-
-import com.liferay.portal.template.freemarker.configuration.FreemarkerEngineConfiguration;
 import com.liferay.portal.util.ClassLoaderUtil;
+import com.liferay.portal.util.PropsValues;
 
 import freemarker.core.Environment;
 import freemarker.core.TemplateClassResolver;
@@ -26,20 +24,9 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.utility.ObjectConstructor;
 
-import java.util.Map;
-
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Modified;
-
 /**
  * @author Raymond Augé
  */
-@Component(
-	configurationPid = "com.liferay.portal.template.freemarker",
-	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true
-)
 public class LiferayTemplateClassResolver implements TemplateClassResolver {
 
 	@Override
@@ -55,7 +42,7 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 		}
 
 		for (String restrictedClassName :
-				_freemarkerEngineConfiguration.restrictedClasses()) {
+				PropsValues.FREEMARKER_ENGINE_RESTRICTED_CLASSES) {
 
 			if (className.equals(restrictedClassName)) {
 				throw new TemplateException(
@@ -66,12 +53,13 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 		}
 
 		for (String restrictedPackageName :
-				_freemarkerEngineConfiguration.restrictedPackages()) {
+				PropsValues.FREEMARKER_ENGINE_RESTRICTED_PACKAGES) {
 
 			if (className.startsWith(restrictedPackageName)) {
 				throw new TemplateException(
 					"Instantiating " + className + " is not allowed in the " +
-						"template for security reasons", environment);
+						"template for security reasons",
+					environment);
 			}
 		}
 
@@ -83,15 +71,5 @@ public class LiferayTemplateClassResolver implements TemplateClassResolver {
 			throw new TemplateException(e, environment);
 		}
 	}
-
-	@Activate
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_freemarkerEngineConfiguration = Configurable.createConfigurable(
-			FreemarkerEngineConfiguration.class, properties);
-	}
-
-	private volatile FreemarkerEngineConfiguration
-		_freemarkerEngineConfiguration;
 
 }

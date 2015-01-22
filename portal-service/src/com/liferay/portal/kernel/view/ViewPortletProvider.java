@@ -12,26 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.template.freemarker;
-
-import com.liferay.portal.kernel.templateparser.TemplateNode;
-
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+package com.liferay.portal.kernel.view;
 
 /**
- * @author Mika Koivisto
+ * @author Eudaldo Alonso
  */
-public class LiferayObjectWrapper extends DefaultObjectWrapper {
+public interface ViewPortletProvider {
 
-	@Override
-	public TemplateModel wrap(Object object) throws TemplateModelException {
-		if (object instanceof TemplateNode) {
-			return new LiferayTemplateModel((TemplateNode)object, this);
-		}
-
-		return super.wrap(object);
-	}
+	public String getPortletId();
 
 }
