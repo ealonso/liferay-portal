@@ -107,6 +107,10 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
+	public void testLocalizedSortByTitle() throws Exception {
+	}
+
+	@Test
 	public void testParentBaseModelUserPermissions() throws Exception {
 		testUserPermissions(true, false);
 	}
