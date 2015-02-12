@@ -14,10 +14,19 @@
 
 package com.liferay.portlet.blogs.search;
 
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.search.test.BaseSearchTestCase;
 import com.liferay.portal.service.ServiceContext;
@@ -27,6 +36,7 @@ import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.portlet.blogs.util.test.BlogsTestUtil;
 
+import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -49,6 +59,94 @@ public class BlogsEntrySearchTest extends BaseSearchTestCase {
 	@Override
 	@Test
 	public void testLocalizedSearch() throws Exception {
+	}
+
+	@Override
+	@Test
+	public void testLocalizedSortByTitle() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(group.getGroupId());
+
+		BaseModel<?> parentBaseModel = getParentBaseModel(
+			group, serviceContext);
+
+		BaseModel<BlogsEntry> basemodel1 = (BlogsEntry)addBaseModelWithWorkflow(
+			parentBaseModel, true, "bblog", serviceContext);
+		BaseModel<BlogsEntry> basemodel2 = (BlogsEntry)addBaseModelWithWorkflow(
+			parentBaseModel, true, "ablog", serviceContext);
+		BaseModel<BlogsEntry> basemodel3 = (BlogsEntry)addBaseModelWithWorkflow(
+			parentBaseModel, true, "cblog", serviceContext);
+
+		// Test sort on default locale ("en_US")
+
+		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
+			group.getGroupId());
+
+		searchContext.setAttribute(Field.TITLE, "*blog");
+		searchContext.setKeywords("*blog");
+		searchContext.setLocale(LocaleUtil.getDefault());
+
+		String sortField = "localized_title_" + LocaleUtil.toLanguageId(
+			LocaleUtil.getDefault()) + "_sortable";
+
+		Sort sort = new Sort(sortField, Sort.STRING_TYPE, true);
+
+		searchContext.setSorts(sort);
+
+		Hits results = searchBaseModels(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
+		Assert.assertEquals(3, results.getLength());
+
+		BlogsEntry entry1 = (BlogsEntry)basemodel1;
+		BlogsEntry entry2 = (BlogsEntry)basemodel2;
+		BlogsEntry entry3 = (BlogsEntry)basemodel3;
+
+		Document document1 = results.doc(0);
+		Document document2 = results.doc(1);
+		Document document3 = results.doc(2);
+
+		Assert.assertEquals(
+			GetterUtil.getLong(document1.get(Field.ENTRY_CLASS_PK)),
+			entry3.getPrimaryKey());
+		Assert.assertEquals(
+			GetterUtil.getLong(document2.get(Field.ENTRY_CLASS_PK)),
+			entry1.getPrimaryKey());
+		Assert.assertEquals(
+			GetterUtil.getLong(document3.get(Field.ENTRY_CLASS_PK)),
+			entry2.getPrimaryKey());
+
+		// Test sort on a non-default locale.
+
+		// Since the title is not localizable for blog entries currently, the
+		// order should be the same regardless of the search locale.
+
+		searchContext.setLocale(LocaleUtil.FRENCH);
+
+		sortField = "localized_title_fr_FR_sortable";
+
+		sort.setFieldName(sortField);
+
+		searchContext.setSorts(sort);
+
+		results = searchBaseModels(
+			getBaseModelClass(), group.getGroupId(), searchContext);
+
+		Assert.assertEquals(3, results.getLength());
+
+		document1 = results.doc(0);
+		document2 = results.doc(1);
+		document3 = results.doc(2);
+
+		Assert.assertEquals(
+			GetterUtil.getLong(document1.get(Field.ENTRY_CLASS_PK)),
+			entry3.getPrimaryKey());
+		Assert.assertEquals(
+			GetterUtil.getLong(document2.get(Field.ENTRY_CLASS_PK)),
+			entry1.getPrimaryKey());
+		Assert.assertEquals(
+			GetterUtil.getLong(document3.get(Field.ENTRY_CLASS_PK)),
+			entry2.getPrimaryKey());
 	}
 
 	@Ignore()

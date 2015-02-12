@@ -107,6 +107,10 @@ public abstract class BaseSearchTestCase {
 	}
 
 	@Test
+	public void testLocalizedSortByTitle() throws Exception {
+	}
+
+	@Test
 	public void testParentBaseModelUserPermissions() throws Exception {
 		testUserPermissions(true, false);
 	}
@@ -383,7 +387,7 @@ public abstract class BaseSearchTestCase {
 				getBaseModelClass(), group.getGroupId(), searchContext));
 	}
 
-	protected int searchBaseModelsCount(
+	protected Hits searchBaseModels(
 			Class<?> clazz, long groupId, SearchContext searchContext)
 		throws Exception {
 
@@ -391,7 +395,14 @@ public abstract class BaseSearchTestCase {
 
 		searchContext.setGroupIds(new long[] {groupId});
 
-		Hits results = indexer.search(searchContext);
+		return indexer.search(searchContext);
+	}
+
+	protected int searchBaseModelsCount(
+			Class<?> clazz, long groupId, SearchContext searchContext)
+		throws Exception {
+
+		Hits results = searchBaseModels(clazz, groupId, searchContext);
 
 		return results.getLength();
 	}
