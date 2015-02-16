@@ -3346,7 +3346,7 @@ public class JournalArticleLocalServiceImpl
 	 *         found
 	 */
 	@Indexable(type = IndexableType.REINDEX)
-
+	@Override
 	public JournalArticle moveArticle(
 			long groupId, String articleId, long newFolderId,
 			ServiceContext serviceContext)
