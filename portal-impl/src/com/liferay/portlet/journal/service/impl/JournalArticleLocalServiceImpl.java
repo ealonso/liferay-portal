@@ -3430,7 +3430,8 @@ public class JournalArticleLocalServiceImpl
 			}
 		}
 
-		return moveArticle(groupId, article.getArticleId(), newFolderId);
+		return moveArticle(
+			groupId, article.getArticleId(), newFolderId, serviceContext);
 	}
 
 	/**
