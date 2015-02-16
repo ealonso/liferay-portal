@@ -1257,6 +1257,47 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 	}
 
 	/**
+	 * Moves all versions of the the web content article matching the group and
+	 * article ID to the folder.
+	 *
+	 * @param  groupId the primary key of the web content article's group
+	 * @param  articleId the primary key of the web content article
+	 * @param  newFolderId the primary key of the web content article's new
+	 *         folder
+	 * @param  serviceContext the service context to be applied. Can set the
+	 *         modification date, status date, and portlet preferences. With
+	 *         respect to social activities, by setting the service context's
+	 *         command to {@link
+	 *         com.liferay.portal.kernel.util.Constants#UPDATE}, the invocation
+	 *         is considered a web content update activity; otherwise it is
+	 *         considered a web content add activity.
+	 * @throws PortalException if the user did not have permission to update any
+	 *         one of the versions of the web content article or if any one of
+	 *         the versions of the web content article could not be moved to the
+	 *         folder
+	 */
+
+	public void moveArticle(long groupId, String articleId, long newFolderId,
+							ServiceContext serviceContext)
+			throws PortalException {
+
+		JournalFolderPermission.check(
+				getPermissionChecker(), groupId, newFolderId,
+				ActionKeys.ADD_ARTICLE);
+
+		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
+				groupId, articleId);
+
+		for (JournalArticle article : articles) {
+			JournalArticlePermission.check(
+					getPermissionChecker(), article, ActionKeys.UPDATE);
+
+			journalArticleLocalService.moveArticle(
+					groupId, articleId, newFolderId, serviceContext);
+		}
+	}
+
+	/**
 	 * Moves the web content article from the Recycle Bin to the folder.
 	 *
 	 * @param  groupId the primary key of the web content article's group
