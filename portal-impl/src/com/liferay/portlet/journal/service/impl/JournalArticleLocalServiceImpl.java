@@ -3298,42 +3298,6 @@ public class JournalArticleLocalServiceImpl
 	 * @param  articleId the primary key of the web content article
 	 * @param  newFolderId the primary key of the web content article's new
 	 *         folder
-	 * @return the updated web content article, which was moved to a new folder
-	 * @throws PortalException if a matching web content article could not be
-	 *         found
-	 */
-	@Indexable(type = IndexableType.REINDEX)
-	@Override
-	public JournalArticle moveArticle(
-			long groupId, String articleId, long newFolderId)
-		throws PortalException {
-
-		JournalArticle latestArticle = getLatestArticle(groupId, articleId);
-
-		validateDDMStructureId(
-			groupId, newFolderId, latestArticle.getDDMStructureKey());
-
-		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
-			groupId, articleId);
-
-		for (JournalArticle article : articles) {
-			article.setFolderId(newFolderId);
-			article.setTreePath(article.buildTreePath());
-
-			journalArticlePersistence.update(article);
-		}
-
-		return getArticle(groupId, articleId);
-	}
-
-	/**
-	 * Moves the web content article matching the group and article ID to a new
-	 * folder.
-	 *
-	 * @param  groupId the primary key of the web content article's group
-	 * @param  articleId the primary key of the web content article
-	 * @param  newFolderId the primary key of the web content article's new
-	 *         folder
 	 * @param  serviceContext the service context to be applied. Can set the
 	 *         modification date, status date, and portlet preferences. With
 	 *         respect to social activities, by setting the service context's
