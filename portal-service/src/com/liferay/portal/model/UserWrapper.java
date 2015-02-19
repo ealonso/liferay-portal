@@ -367,11 +367,6 @@ public class UserWrapper implements User, ModelWrapper<User> {
 		return _user.compareTo(user);
 	}
 
-	@Override
-	public com.liferay.portal.model.Contact fetchContact() {
-		return _user.fetchContact();
-	}
-
 	/**
 	* Returns the user's addresses.
 	*

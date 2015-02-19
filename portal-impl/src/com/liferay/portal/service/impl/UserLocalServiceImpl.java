@@ -24,8 +24,10 @@ import com.liferay.portal.GroupFriendlyURLException;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.NoSuchImageException;
 import com.liferay.portal.NoSuchOrganizationException;
+import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.NoSuchTicketException;
 import com.liferay.portal.NoSuchUserException;
+import com.liferay.portal.NoSuchUserGroupException;
 import com.liferay.portal.PasswordExpiredException;
 import com.liferay.portal.RequiredUserException;
 import com.liferay.portal.SendPasswordException;
@@ -353,13 +355,15 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			StringPool.NEW_LINE, PropsValues.ADMIN_DEFAULT_ROLE_NAMES);
 
 		for (String defaultRoleName : defaultRoleNames) {
-			Role role = rolePersistence.fetchByC_N(
-				user.getCompanyId(), defaultRoleName);
+			try {
+				Role role = rolePersistence.findByC_N(
+					user.getCompanyId(), defaultRoleName);
 
-			if ((role != null) &&
-				!userPersistence.containsRole(userId, role.getRoleId())) {
-
-				roleIdSet.add(role.getRoleId());
+				if (!userPersistence.containsRole(userId, role.getRoleId())) {
+					roleIdSet.add(role.getRoleId());
+				}
+			}
+			catch (NoSuchRoleException nsre) {
 			}
 		}
 
@@ -430,14 +434,17 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			StringPool.NEW_LINE, PropsValues.ADMIN_DEFAULT_USER_GROUP_NAMES);
 
 		for (String defaultUserGroupName : defaultUserGroupNames) {
-			UserGroup userGroup = userGroupPersistence.fetchByC_N(
-				user.getCompanyId(), defaultUserGroupName);
+			try {
+				UserGroup userGroup = userGroupPersistence.findByC_N(
+					user.getCompanyId(), defaultUserGroupName);
 
-			if ((userGroup != null) &&
-				!userPersistence.containsUserGroup(
-					userId, userGroup.getUserGroupId())) {
+				if (!userPersistence.containsUserGroup(
+						userId, userGroup.getUserGroupId())) {
 
-				userGroupIdSet.add(userGroup.getUserGroupId());
+					userGroupIdSet.add(userGroup.getUserGroupId());
+				}
+			}
+			catch (NoSuchUserGroupException nsuge) {
 			}
 		}
 
@@ -1850,8 +1857,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		}
 		catch (NoSuchImageException nsie) {
 			if (_log.isWarnEnabled()) {
-				_log.warn(
-					"Unable to delete image " + user.getPortraitId(), nsie);
+				_log.warn("Unable to delete image " + user.getPortraitId());
 			}
 		}
 
