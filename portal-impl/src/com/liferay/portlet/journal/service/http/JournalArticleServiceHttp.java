@@ -1231,14 +1231,15 @@ public class JournalArticleServiceHttp {
 	}
 
 	public static void moveArticle(HttpPrincipal httpPrincipal, long groupId,
-		java.lang.String articleId, long newFolderId)
+		java.lang.String articleId, long newFolderId,
+		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(JournalArticleServiceUtil.class,
 					"moveArticle", _moveArticleParameterTypes36);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					articleId, newFolderId);
+					articleId, newFolderId, serviceContext);
 
 			try {
 				TunnelUtil.invoke(httpPrincipal, methodHandler);
@@ -2197,7 +2198,8 @@ public class JournalArticleServiceHttp {
 			long.class, java.lang.String.class, long.class
 		};
 	private static final Class<?>[] _moveArticleParameterTypes36 = new Class[] {
-			long.class, java.lang.String.class, long.class
+			long.class, java.lang.String.class, long.class,
+			com.liferay.portal.service.ServiceContext.class
 		};
 	private static final Class<?>[] _moveArticleFromTrashParameterTypes37 = new Class[] {
 			long.class, long.class, long.class,
