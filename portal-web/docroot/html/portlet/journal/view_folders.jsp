@@ -52,7 +52,7 @@ else if (folderId != JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
 PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/journal/view");
+portletURL.setParameter("mvcPath", "/html/portlet/journal/view.jsp");
 portletURL.setParameter("folderId", String.valueOf(folderId));
 
 SearchContainer searchContainer = new SearchContainer(liferayPortletRequest, null, null, "cur2", SearchContainer.DEFAULT_DELTA, portletURL, null, null);
@@ -96,7 +96,7 @@ else {
 					%>
 
 					<portlet:renderURL var="viewArticlesHomeURL">
-						<portlet:param name="struts_action" value="/journal/view" />
+						<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 						<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 					</portlet:renderURL>
 
@@ -117,7 +117,7 @@ else {
 					</aui:nav-item>
 
 					<portlet:renderURL var="viewRecentArticlesURL">
-						<portlet:param name="struts_action" value="/journal/view" />
+						<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 						<portlet:param name="navigation" value="recent" />
 						<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 					</portlet:renderURL>
@@ -133,7 +133,7 @@ else {
 
 					<c:if test="<%= themeDisplay.isSignedIn() %>">
 						<portlet:renderURL var="viewMyArticlesURL">
-							<portlet:param name="struts_action" value="/journal/view" />
+							<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 							<portlet:param name="navigation" value="mine" />
 							<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 						</portlet:renderURL>
@@ -150,7 +150,7 @@ else {
 
 					<c:if test="<%= DDMStructureLocalServiceUtil.getStructuresCount(groupIds, PortalUtil.getClassNameId(JournalArticle.class)) > 0 %>">
 						<portlet:renderURL var="filterDDMStructureArticlesURL">
-							<portlet:param name="struts_action" value="/journal/view" />
+							<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 							<portlet:param name="browseBy" value="structure" />
 							<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 						</portlet:renderURL>
@@ -167,7 +167,7 @@ else {
 				</c:when>
 				<c:when test='<%= browseBy.equals("structure") %>'>
 					<portlet:renderURL var="viewURL">
-						<portlet:param name="struts_action" value="/journal/view" />
+						<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 						<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 					</portlet:renderURL>
 
@@ -189,7 +189,7 @@ else {
 						%>
 
 							<portlet:renderURL var="viewDDMStructureArticlesURL">
-								<portlet:param name="struts_action" value="/journal/view" />
+								<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 								<portlet:param name="browseBy" value="structure" />
 								<portlet:param name="folderId" value="<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>" />
 								<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
@@ -212,7 +212,7 @@ else {
 				</c:when>
 				<c:otherwise>
 					<portlet:renderURL var="viewURL">
-						<portlet:param name="struts_action" value="/journal/view" />
+						<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 						<portlet:param name="folderId" value="<%= String.valueOf(parentFolderId) %>" />
 					</portlet:renderURL>
 
@@ -238,7 +238,7 @@ else {
 					%>
 
 						<portlet:renderURL var="viewURL">
-							<portlet:param name="struts_action" value="/journal/view" />
+							<portlet:param name="mvcPath" value="/html/portlet/journal/view.jsp" />
 							<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
 						</portlet:renderURL>
 

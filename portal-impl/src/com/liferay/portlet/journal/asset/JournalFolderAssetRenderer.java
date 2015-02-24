@@ -165,7 +165,8 @@ public class JournalFolderAssetRenderer
 			getControlPanelPlid(liferayPortletRequest), PortletKeys.JOURNAL,
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter("struts_action", "/journal/edit_folder");
+		portletURL.setParameter(
+			"mvcPath", "/html/portlet/journal/edit_folder.jsp");
 		portletURL.setParameter(
 			"folderId", String.valueOf(_folder.getFolderId()));
 

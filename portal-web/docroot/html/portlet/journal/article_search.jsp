@@ -21,7 +21,7 @@ long folderId = GetterUtil.getLong((String)liferayPortletRequest.getAttribute("v
 
 PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/journal/view");
+portletURL.setParameter("mvcPath", "/html/portlet/journal/view.jsp");
 portletURL.setParameter("folderId", String.valueOf(folderId));
 
 ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portletURL);
