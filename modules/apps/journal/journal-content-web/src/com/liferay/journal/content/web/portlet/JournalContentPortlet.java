@@ -41,6 +41,8 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -156,6 +158,16 @@ public class JournalContentPortlet extends MVCPortlet {
 		throws Exception {
 
 		ExportArticleUtil.sendFile(actionRequest, actionResponse);
+	}
+
+	@Override
+	public void serveResource(
+			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
+		throws IOException, PortletException {
+
+		ExportArticleUtil.sendFile(resourceRequest, resourceResponse);
+
+		super.serveResource(resourceRequest, resourceResponse);
 	}
 
 	@Activate
