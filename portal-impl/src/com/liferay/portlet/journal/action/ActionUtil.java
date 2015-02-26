@@ -703,21 +703,4 @@ public class ActionUtil {
 		return languageId;
 	}
 
-	public static JournalArticle getPreviewArticle
-			(PortletRequest portletRequest)
-		throws Exception {
-
-		long groupId = ParamUtil.getLong(portletRequest, "groupId");
-		String articleId = ParamUtil.getString(portletRequest, "articleId");
-		double version = ParamUtil.getDouble(
-			portletRequest, "version", JournalArticleConstants.VERSION_DEFAULT);
-
-		JournalArticle article = JournalArticleServiceUtil.getArticle(
-			groupId, articleId, version);
-
-		JournalUtil.addRecentArticle(portletRequest, article);
-
-		return article;
-	}
-
 }
