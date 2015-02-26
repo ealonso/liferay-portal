@@ -327,7 +327,9 @@ public class ActionUtil {
 		return getFeed(request);
 	}
 
-	public static void getFolder(HttpServletRequest request) throws Exception {
+	public static JournalFolder getFolder(HttpServletRequest request)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -346,19 +348,21 @@ public class ActionUtil {
 				themeDisplay.getScopeGroupId(), ActionKeys.VIEW);
 		}
 
-		request.setAttribute(WebKeys.JOURNAL_FOLDER, folder);
+		return folder;
 	}
 
-	public static void getFolder(PortletRequest portletRequest)
+	public static JournalFolder getFolder(PortletRequest portletRequest)
 		throws Exception {
 
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			portletRequest);
 
-		getFolder(request);
+		return getFolder(request);
 	}
 
-	public static void getFolders(HttpServletRequest request) throws Exception {
+	public static List<JournalFolder> getFolders(HttpServletRequest request)
+		throws Exception {
+
 		long[] folderIds = StringUtil.split(
 			ParamUtil.getString(request, "folderIds"), 0L);
 
@@ -375,16 +379,16 @@ public class ActionUtil {
 			}
 		}
 
-		request.setAttribute(WebKeys.JOURNAL_FOLDERS, folders);
+		return folders;
 	}
 
-	public static void getFolders(PortletRequest portletRequest)
+	public static List<JournalFolder> getFolders(PortletRequest portletRequest)
 		throws Exception {
 
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(
 			portletRequest);
 
-		getFolders(request);
+		return getFolders(request);
 	}
 
 	public static void getStructure(HttpServletRequest request)
