@@ -34,8 +34,6 @@ import com.liferay.util.log4j.Log4JUtil;
 
 import java.io.IOException;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
@@ -151,13 +149,6 @@ public class JournalContentPortlet extends MVCPortlet {
 		}
 
 		super.doView(renderRequest, renderResponse);
-	}
-
-	public void exportArticle(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ExportArticleUtil.sendFile(actionRequest, actionResponse);
 	}
 
 	@Override
