@@ -18,6 +18,10 @@
 
 <%
 JournalFolder folder = (JournalFolder)request.getAttribute(WebKeys.JOURNAL_FOLDER);
+
+if (folder == null) {
+	folder = ActionUtil.getFolder(request);
+}
 %>
 
 <c:if test="<%= folder != null %>">
