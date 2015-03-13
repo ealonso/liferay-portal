@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/html/portlet/dockbar/init.jsp" %>
 
 <%
 AssetEntry assetEntry = (AssetEntry)request.getAttribute("add_panel.jsp-assetEntry");
