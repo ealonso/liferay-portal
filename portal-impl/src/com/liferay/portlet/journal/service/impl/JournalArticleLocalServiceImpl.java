@@ -3343,6 +3343,12 @@ public class JournalArticleLocalServiceImpl
 			groupId, articleId);
 
 		for (JournalArticle article : articles) {
+			if (serviceContext != null) {
+				notifySubscribers(
+					serviceContext.getUserId(), article, article.getUrlTitle(),
+					Constants.REMOVE, serviceContext);
+			}
+
 			article.setFolderId(newFolderId);
 			article.setTreePath(article.buildTreePath());
 
@@ -3351,7 +3357,7 @@ public class JournalArticleLocalServiceImpl
 			if (serviceContext != null) {
 				notifySubscribers(
 					serviceContext.getUserId(), article, article.getUrlTitle(),
-					serviceContext);
+					Constants.MOVE, serviceContext);
 			}
 		}
 
@@ -5758,11 +5764,16 @@ public class JournalArticleLocalServiceImpl
 			}
 
 			// Subscriptions
+			String action = Constants.UPDATE;
+
+			if(article.getVersion() == 1.0) {
+				action = Constants.ADD;
+			}
 
 			notifySubscribers(
 				user.getUserId(), article,
 				(String)workflowContext.get(WorkflowConstants.CONTEXT_URL),
-				serviceContext);
+				action, serviceContext);
 		}
 
 		return article;
@@ -6906,7 +6917,7 @@ public class JournalArticleLocalServiceImpl
 
 	protected void notifySubscribers(
 			long userId, JournalArticle article, String articleURL,
-			ServiceContext serviceContext)
+			String action, ServiceContext serviceContext)
 		throws PortalException {
 
 		if (!article.isApproved() || Validator.isNull(articleURL)) {
@@ -6953,10 +6964,29 @@ public class JournalArticleLocalServiceImpl
 		Map<Locale, String> localizedBodyMap = null;
 
 		if (article.getVersion() == 1.0) {
-			localizedSubjectMap = JournalUtil.getEmailArticleAddedSubjectMap(
-				preferences);
-			localizedBodyMap = JournalUtil.getEmailArticleAddedBodyMap(
-				preferences);
+			switch (action){
+				case Constants.MOVE:
+					localizedSubjectMap =
+						JournalUtil.getEmailArticleMovedInFolderSubjectMap(
+								preferences);
+					localizedBodyMap =
+						JournalUtil.getEmailArticleMovedInFolderBodyMap(
+								preferences);
+					break;
+				case Constants.REMOVE:
+					localizedSubjectMap =
+						JournalUtil.getEmailArticleMovedOutOfFolderSubjectMap(
+								preferences);
+					localizedBodyMap =
+						JournalUtil.getEmailArticleMovedOutOfFolderBodyMap(
+								preferences);
+					break;
+				default:
+					localizedSubjectMap = JournalUtil.getEmailArticleAddedSubjectMap(
+						preferences);
+					localizedBodyMap = JournalUtil.getEmailArticleAddedBodyMap(
+						preferences);
+			}
 		}
 		else {
 			localizedSubjectMap = JournalUtil.getEmailArticleUpdatedSubjectMap(
@@ -7035,6 +7065,9 @@ public class JournalArticleLocalServiceImpl
 		subscriptionSender.setServiceContext(serviceContext);
 
 		JournalFolder folder = article.getFolder();
+
+		subscriptionSender.setContextAttribute(
+			"[$FOLDER_NAME$]", folder.getName(), false);
 
 		subscriptionSender.addPersistedSubscribers(
 			JournalFolder.class.getName(), article.getGroupId());
