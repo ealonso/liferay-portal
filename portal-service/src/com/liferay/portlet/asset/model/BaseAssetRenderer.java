@@ -136,7 +136,7 @@ public abstract class BaseAssetRenderer implements AssetRenderer {
 			PortletRequest portletRequest, PortletResponse PortletResponse)
 		throws Exception {
 
-		return "/display/preview.jsp";
+		return "/html/portlet/dockbar/display/preview.jsp";
 	}
 
 	@Override
