@@ -1230,3 +1230,66 @@ template. Here's an example of using the tag:
 This change simplifies using asset previews.
 
 ---------------------------------------
+
+### Replaced the Language Portlet's Display Styles with ADTs
+- **Date:** 2015-Mar-30
+- **JIRA Ticket:** LPS-53577
+
+#### What changed?
+
+The custom display styles of the language tag added using JSPs no longer work.
+They have been replaced by Application Display Templates (ADT).
+
+#### Who is affected?
+
+This affects developers that use the following properties:
+
+    language.display.style.default=icon
+
+    language.display.style.options=icon,long-text
+
+#### How should I update my code?
+
+To style the Language portlet, you should use ADTs instead of using custom
+styles in your JSPs. ADTs can be created from the UI of the portal by navigating
+to *Site Settings* &rarr; *Application Display Templates*. ADTs can also be
+created programatically.
+
+#### Why was this change made?
+
+ADTs allow you to change an application's look and feel without changing its JSP
+code.
+
+---------------------------------------
+
+### The taglibs portlet:icon-* have been removed
+- **Date:** 2015-Mar-31
+- **JIRA Ticket:** LPS-54620
+
+#### What changed?
+
+The following taglibs haven been removed: portlet:icon-close, 
+portlet:icon-configuration, portlet:icon-edit, portlet:icon-edit-defaults,
+portlet:icon-edit-guest, portlet:icon-export-import, portlet:icon-help,
+portlet:icon-maximize, portlet:icon-minimize, portlet:icon-portlet-css,
+portlet:icon-print, portlet:icon-refresh, portlet:icon-staging      
+
+#### Who is affected?
+
+This affects developers who have written code that uses these taglibs.
+
+#### How should I update my code?
+
+The taglib liferay-ui:icon can replace the call to the previous taglibs. 
+All the previous taglibs have been converted into Java classes that implement
+the methods that the icon taglib needs.
+
+See the modules portlet-configuration-icon-* in the portal-extensions folder.
+
+#### Why was this change made?
+
+These taglibs were used to generate the configuration icon of portlets and this
+functionaly will be managed from now with OSGI modules instead of taglibs since
+those provide more flexibility and can be included from any app.
+
+---------------------------------------
