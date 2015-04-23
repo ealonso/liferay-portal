@@ -44,6 +44,7 @@ if (vocabularyId > 0) {
 </portlet:actionURL>
 
 <aui:form action="<%= editVocabularyURL %>" name="fm">
+	<aui:input name="mvcPath" type="hidden" value="/edit_vocabulary.jsp" />
 	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
 
 	<liferay-ui:error exception="<%= DuplicateVocabularyException.class %>" message="please-enter-a-unique-name" />

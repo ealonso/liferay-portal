@@ -94,6 +94,7 @@ else {
 
 <aui:form action="<%= editCategoryURL %>" name="fm">
 	<aui:input name="categoryId" type="hidden" value="<%= categoryId %>" />
+	<aui:input name="mvcPath" type="hidden" value="/edit_category.jsp" />
 	<aui:input name="parentCategoryId" type="hidden" value="<%= parentCategoryId %>" />
 	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
 
