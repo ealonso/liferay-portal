@@ -88,13 +88,12 @@ else {
 	title='<%= (category != null) ? category.getTitle(locale) : "add-new-category" %>'
 />
 
-<portlet:actionURL name="editCategory" var="editCategoryURL">
-	<portlet:param name="mvcPath" value="/edit_category.jsp" />
-</portlet:actionURL>
+<portlet:actionURL name="editCategory" var="editCategoryURL" />
 
 <aui:form action="<%= editCategoryURL %>" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="categoryId" type="hidden" value="<%= categoryId %>" />
+	<aui:input name="mvcPath" type="hidden" value="/edit_category.jsp" />
 	<aui:input name="parentCategoryId" type="hidden" value="<%= parentCategoryId %>" />
 	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
 
