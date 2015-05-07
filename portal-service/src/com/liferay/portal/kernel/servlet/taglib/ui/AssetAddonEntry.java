@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Julio Camarero
  */
-public interface AssetAddOnEntry {
+public interface AssetAddonEntry {
 
 	public String getIcon();
 
