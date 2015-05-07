@@ -14,20 +14,20 @@
  */
 --%>
 
-<%@ include file="/html/taglib/ui/asset_add_on_entry_selector/init.jsp" %>
+<%@ include file="/html/taglib/ui/asset_addon_entry_selector/init.jsp" %>
 
-<div class="lfr-asset-add-on-entry-selector" id="<%= namespace + id %>assetAddOnEntrySelector">
-	<aui:input name="<%= hiddenInput %>" type="hidden" value='<%= ListUtil.toString(selectedEntries, "key") %>' />
+<div class="lfr-asset-addon-entry-selector" id="<%= namespace + id %>assetAddonEntrySelector">
+	<aui:input name="<%= hiddenInput %>" type="hidden" value='<%= ListUtil.toString(selectedAssetAddonEntries, "key") %>' />
 
 	<ul class="list-inline list-unstyled selected-entries">
 
 		<%
-		for (AssetAddOnEntry entry : selectedEntries) {
+		for (AssetAddonEntry assetAddonEntry : selectedAssetAddonEntries) {
 		%>
 
-			<li class="list-entry" data-key="<%= entry.getKey() %>">
+			<li class="list-entry" data-key="<%= assetAddonEntry.getKey() %>">
 				<span class="label label-circle label-entry">
-					<%= entry.getLabel(locale) %>
+					<%= assetAddonEntry.getLabel(locale) %>
 
 					<button class="remove-button" type="button">
 						<i class="icon-remove"></i>
@@ -44,18 +44,18 @@
 	<aui:button cssClass="select-button" name='<%= id + "selectButton" %>' value="select" />
 </div>
 
-<aui:script use="liferay-asset-add-on-entry-selector">
+<aui:script use="liferay-asset-addon-entry-selector">
 	var entries = [];
 
 	<%
-	for (AssetAddOnEntry entry : entries) {
+	for (AssetAddonEntry assetAddonEntry : assetAddonEntries) {
 	%>
 
 		entries.push(
 			{
-				icon: '<%= entry.getIcon() %>',
-				key: '<%= entry.getKey() %>',
-				label: '<%= entry.getLabel(locale) %>'
+				icon: '<%= assetAddonEntry.getIcon() %>',
+				key: '<%= assetAddonEntry.getKey() %>',
+				label: '<%= assetAddonEntry.getLabel(locale) %>'
 			}
 		);
 
@@ -63,24 +63,24 @@
 	}
 	%>
 
-	var selectedEntries = [];
+	var selectedAssetAddonEntries = [];
 
 	<%
-	for (AssetAddOnEntry entry : selectedEntries) {
+	for (AssetAddonEntry assetAddonEntry : selectedAssetAddonEntries) {
 	%>
 
-		selectedEntries.push('<%= entry.getKey() %>');
+		selectedAssetAddonEntries.push('<%= assetAddonEntry.getKey() %>');
 
 	<%
 	}
 	%>
 
-	var entrySelector = new Liferay.AssetAddOnEntrySelector(
+	var assetAddonEntrySelector = new Liferay.AssetAddonEntrySelector(
 		{
 			dialogTitle: '<liferay-ui:message key="<%= title %>" />',
 			entries: entries,
-			rootNode: '#<%= namespace + id %>assetAddOnEntrySelector',
-			selectedEntries: selectedEntries
+			rootNode: '#<%= namespace + id %>assetAddonEntrySelector',
+			selectedAssetAddonEntries: selectedAssetAddonEntries
 		}
 	);
 </aui:script>

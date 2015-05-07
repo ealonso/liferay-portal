@@ -14,7 +14,7 @@
 
 package com.liferay.taglib.ui;
 
-import com.liferay.portal.kernel.servlet.taglib.ui.AssetAddOnEntry;
+import com.liferay.portal.kernel.servlet.taglib.ui.AssetAddonEntry;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PortalUtil;
@@ -29,8 +29,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AssetAddonEntrySelectorTag extends IncludeTag {
 
-	public void setEntries(List<AssetAddOnEntry> entries) {
-		_entries = entries;
+	public void setAssetAddonEntriesEntries(
+		List<AssetAddonEntry> assetAddonEntries) {
+
+		_assetAddonEntries = assetAddonEntries;
 	}
 
 	public void setHiddenInput(String hiddenInput) {
@@ -41,8 +43,10 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 		_id = id;
 	}
 
-	public void setSelectedEntries(List<AssetAddOnEntry> selectedEntries) {
-		_selectedEntries = selectedEntries;
+	public void setSelectedAssetAddonEntries(
+		List<AssetAddonEntry> selectedAssetAddonEntries) {
+
+		_selectedAssetAddonEntries = selectedAssetAddonEntries;
 	}
 
 	public void setTitle(String title) {
@@ -51,10 +55,10 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
-		_entries = null;
+		_assetAddonEntries = null;
 		_hiddenInput = null;
 		_id = null;
-		_selectedEntries = null;
+		_selectedAssetAddonEntries = null;
 		_title = null;
 	}
 
@@ -70,29 +74,30 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 		if (Validator.isNull(id)) {
 			id = PortalUtil.generateRandomKey(
 				request,
-				"taglib_ui_asset_add_on_entry_selector_page")
+				"taglib_ui_asset_addon_entry_selector_page")
 					+ StringPool.UNDERLINE;
 		}
 
 		request.setAttribute(
-			"liferay-ui:asset-add-on-entry-selector:entries", _entries);
+			"liferay-ui:asset-addon-entry-selector:assetAddonEntries",
+			_assetAddonEntries);
 		request.setAttribute(
-			"liferay-ui:asset-add-on-entry-selector:hiddenInput", _hiddenInput);
-		request.setAttribute("liferay-ui:asset-add-on-entry-selector:id", id);
+			"liferay-ui:asset-addon-entry-selector:hiddenInput", _hiddenInput);
+		request.setAttribute("liferay-ui:asset-addon-entry-selector:id", id);
 		request.setAttribute(
-			"liferay-ui:asset-add-on-entry-selector:selectedEntries",
-			_selectedEntries);
+			"liferay-ui:asset-addon-entry-selector:selectedAssetAddonEntries",
+			_selectedAssetAddonEntries);
 		request.setAttribute(
-			"liferay-ui:asset-add-on-entry-selector:title", _title);
+			"liferay-ui:asset-addon-entry-selector:title", _title);
 	}
 
 	private static final String _PAGE =
-		"/html/taglib/ui/entry_selector/page.jsp";
+		"/html/taglib/ui/asset_addon_entry_selector/page.jsp";
 
-	private List<AssetAddOnEntry> _entries;
+	private List<AssetAddonEntry> _assetAddonEntries;
 	private String _hiddenInput;
 	private String _id;
-	private List<AssetAddOnEntry> _selectedEntries;
+	private List<AssetAddonEntry> _selectedAssetAddonEntries;
 	private String _title = "select-entries";
 
 }

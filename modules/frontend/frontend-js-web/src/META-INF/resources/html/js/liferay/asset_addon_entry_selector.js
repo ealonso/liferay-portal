@@ -1,5 +1,5 @@
 AUI.add(
-	'liferay-asset-add-on-entry-selector',
+	'liferay-asset-addon-entry-selector',
 	function(A) {
 		var AArray = A.Array;
 
@@ -49,7 +49,7 @@ AUI.add(
 				'</span>' +
 			'</li>';
 
-		var AssetAddOnEntrySelector = A.Component.create(
+		var AssetAddonEntrySelector = A.Component.create(
 			{
 				ATTRS: {
 					dialogTitle: {
@@ -271,7 +271,7 @@ AUI.add(
 			}
 		);
 
-		Liferay.AssetAddOnEntrySelector = AssetAddOnEntrySelector;
+		Liferay.AssetAddonEntrySelector = AssetAddonEntrySelector;
 	},
 	'',
 	{
