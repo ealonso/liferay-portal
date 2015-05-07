@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Julio Camarero
  */
-public abstract class BaseAssetAddonEntry implements AssetAddOnEntry {
+public abstract class BaseAssetAddonEntry implements AssetAddonEntry {
 
 	@Override
 	public boolean equals(Object obj) {
@@ -32,13 +32,13 @@ public abstract class BaseAssetAddonEntry implements AssetAddOnEntry {
 			return true;
 		}
 
-		if (!(obj instanceof AssetAddOnEntry)) {
+		if (!(obj instanceof AssetAddonEntry)) {
 			return false;
 		}
 
-		AssetAddOnEntry assetAddOnEntry = (AssetAddOnEntry)obj;
+		AssetAddonEntry assetAddonEntry = (AssetAddonEntry)obj;
 
-		String key = assetAddOnEntry.getKey();
+		String key = assetAddonEntry.getKey();
 
 		if (getKey() == key) {
 			return true;
