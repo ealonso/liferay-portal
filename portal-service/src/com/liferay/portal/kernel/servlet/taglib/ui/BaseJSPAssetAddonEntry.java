@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Julio Camarero
  */
-public abstract class BaseJSPAssetAddOnEntry extends BaseAssetAddonEntry {
+public abstract class BaseJSPAssetAddonEntry extends BaseAssetAddonEntry {
 
 	public abstract String getJSPPath();
 
@@ -57,7 +57,7 @@ public abstract class BaseJSPAssetAddOnEntry extends BaseAssetAddonEntry {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		BaseJSPAssetAddOnEntry.class);
+		BaseJSPAssetAddonEntry.class);
 
 	private ServletContext _servletContext;
 
