@@ -17,6 +17,7 @@ package com.liferay.portlet.configuration.icon.edit.defaults;
 import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -41,7 +42,9 @@ public class EditDefaultsPortletConfigurationIcon
 
 	@Override
 	public String getURL() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.getURLEditDefaults();
 	}
@@ -53,7 +56,9 @@ public class EditDefaultsPortletConfigurationIcon
 
 	@Override
 	public boolean isShow() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.isShowEditDefaultsIcon();
 	}

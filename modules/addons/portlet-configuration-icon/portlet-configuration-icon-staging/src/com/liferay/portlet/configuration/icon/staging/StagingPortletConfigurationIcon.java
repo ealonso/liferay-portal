@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -54,7 +55,9 @@ public class StagingPortletConfigurationIcon
 
 	@Override
 	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		StringBundler sb = new StringBundler(11);
 
@@ -67,7 +70,7 @@ public class StagingPortletConfigurationIcon
 		sb.append("', '");
 		sb.append(portletDisplay.getNamespace());
 		sb.append("', '");
-		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "staging"));
+		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "staging"));
 		sb.append("'); return false;");
 
 		return sb.toString();
@@ -75,7 +78,9 @@ public class StagingPortletConfigurationIcon
 
 	@Override
 	public String getURL() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.getURLStaging();
 	}
@@ -87,7 +92,9 @@ public class StagingPortletConfigurationIcon
 
 	@Override
 	public boolean isShow() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.isShowStagingIcon();
 	}

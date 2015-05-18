@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationI
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.css.web.constants.PortletCSSPortletKeys;
 
@@ -54,20 +55,22 @@ public class PortletCSSPortletConfigurationIcon
 
 	@Override
 	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
 
-		HttpServletRequest request = _themeDisplay.getRequest();
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		HttpServletRequest request = themeDisplay.getRequest();
 
 		PortletURL baseActionURL = PortletURLFactoryUtil.create(
-			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			request, PortletCSSPortletKeys.PORTLET_CSS, themeDisplay.getPlid(),
 			PortletRequest.ACTION_PHASE);
 
 		PortletURL baseRenderURL = PortletURLFactoryUtil.create(
-			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			request, PortletCSSPortletKeys.PORTLET_CSS, themeDisplay.getPlid(),
 			PortletRequest.RENDER_PHASE);
 
 		PortletURL baseResourceURL = PortletURLFactoryUtil.create(
-			request, PortletCSSPortletKeys.PORTLET_CSS, _themeDisplay.getPlid(),
+			request, PortletCSSPortletKeys.PORTLET_CSS, themeDisplay.getPlid(),
 			PortletRequest.RESOURCE_PHASE);
 
 		StringBundler sb = new StringBundler(9);
@@ -87,7 +90,9 @@ public class PortletCSSPortletConfigurationIcon
 
 	@Override
 	public String getURL() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.getURLPortletCss();
 	}
@@ -99,7 +104,9 @@ public class PortletCSSPortletConfigurationIcon
 
 	@Override
 	public boolean isShow() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.isShowPortletCssIcon();
 	}

@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.portlet.configuration.BasePortletConfigurationI
 import com.liferay.portal.kernel.portlet.configuration.PortletConfigurationIcon;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.theme.PortletDisplay;
+import com.liferay.portal.theme.ThemeDisplay;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -53,7 +54,9 @@ public class ConfigurationPortletConfigurationIcon
 
 	@Override
 	public String getOnClick() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		StringBuilder sb = new StringBuilder(11);
 
@@ -66,7 +69,7 @@ public class ConfigurationPortletConfigurationIcon
 		sb.append("', '");
 		sb.append(portletDisplay.getNamespace());
 		sb.append("', '");
-		sb.append(LanguageUtil.get(_themeDisplay.getLocale(), "configuration"));
+		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "configuration"));
 		sb.append("'); return false;");
 
 		return sb.toString();
@@ -74,7 +77,9 @@ public class ConfigurationPortletConfigurationIcon
 
 	@Override
 	public String getURL() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.getURLConfiguration();
 	}
@@ -86,7 +91,9 @@ public class ConfigurationPortletConfigurationIcon
 
 	@Override
 	public boolean isShow() {
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+		ThemeDisplay themeDisplay = _themeDisplayThreadLocal.get();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		return portletDisplay.isShowConfigurationIcon();
 	}
