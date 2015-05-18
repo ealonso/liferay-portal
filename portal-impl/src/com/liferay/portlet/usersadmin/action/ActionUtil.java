@@ -17,19 +17,30 @@ package com.liferay.portlet.usersadmin.action;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.EmailAddress;
+import com.liferay.portal.model.ListType;
 import com.liferay.portal.model.OrgLabor;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.model.Phone;
+import com.liferay.portal.model.User;
 import com.liferay.portal.model.Website;
 import com.liferay.portal.service.AddressServiceUtil;
 import com.liferay.portal.service.EmailAddressServiceUtil;
+import com.liferay.portal.service.ListTypeLocalServiceUtil;
 import com.liferay.portal.service.OrgLaborServiceUtil;
 import com.liferay.portal.service.OrganizationServiceUtil;
 import com.liferay.portal.service.PhoneServiceUtil;
 import com.liferay.portal.service.WebsiteServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.announcements.model.AnnouncementsDelivery;
+import com.liferay.portlet.announcements.model.AnnouncementsEntryConstants;
+import com.liferay.portlet.announcements.model.impl.AnnouncementsDeliveryImpl;
+import com.liferay.portlet.announcements.service.AnnouncementsDeliveryLocalServiceUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +72,48 @@ public class ActionUtil {
 		getAddress(request);
 	}
 
+	public static List<AnnouncementsDelivery> getAnnouncementsDeliveries(
+		ActionRequest actionRequest) {
+
+		List<AnnouncementsDelivery> announcementsDeliveries = new ArrayList<>();
+
+		for (String type : AnnouncementsEntryConstants.TYPES) {
+			boolean email = ParamUtil.getBoolean(
+				actionRequest, "announcementsType" + type + "Email");
+			boolean sms = ParamUtil.getBoolean(
+				actionRequest, "announcementsType" + type + "Sms");
+			boolean website = ParamUtil.getBoolean(
+				actionRequest, "announcementsType" + type + "Website");
+
+			AnnouncementsDelivery announcementsDelivery =
+				new AnnouncementsDeliveryImpl();
+
+			announcementsDelivery.setType(type);
+			announcementsDelivery.setEmail(email);
+			announcementsDelivery.setSms(sms);
+			announcementsDelivery.setWebsite(website);
+
+			announcementsDeliveries.add(announcementsDelivery);
+		}
+
+		return announcementsDeliveries;
+	}
+
+	public static List<AnnouncementsDelivery> getAnnouncementsDeliveries(
+			ActionRequest actionRequest, User user)
+		throws Exception {
+
+		if (actionRequest.getParameter(
+				"announcementsType" + AnnouncementsEntryConstants.TYPES[0] +
+					"Email") == null) {
+
+			return AnnouncementsDeliveryLocalServiceUtil.getUserDeliveries(
+				user.getUserId());
+		}
+
+		return getAnnouncementsDeliveries(actionRequest);
+	}
+
 	public static void getEmailAddress(HttpServletRequest request)
 		throws Exception {
 
@@ -83,6 +136,19 @@ public class ActionUtil {
 			portletRequest);
 
 		getEmailAddress(request);
+	}
+
+	public static long getListTypeId(
+			PortletRequest portletRequest, String parameterName, String type)
+		throws Exception {
+
+		String parameterValue = ParamUtil.getString(
+			portletRequest, parameterName);
+
+		ListType listType = ListTypeLocalServiceUtil.addListType(
+			parameterValue, type);
+
+		return listType.getListTypeId();
 	}
 
 	public static void getOrganization(HttpServletRequest request)
