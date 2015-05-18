@@ -21,6 +21,7 @@ import com.liferay.portal.DuplicateOrganizationException;
 import com.liferay.portal.EmailAddressException;
 import com.liferay.portal.NoSuchCountryException;
 import com.liferay.portal.NoSuchListTypeException;
+import com.liferay.portal.NoSuchOrgLaborException;
 import com.liferay.portal.NoSuchOrganizationException;
 import com.liferay.portal.NoSuchRegionException;
 import com.liferay.portal.OrganizationNameException;
@@ -36,6 +37,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Organization;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.membershippolicy.MembershipPolicyException;
+import com.liferay.portal.service.OrgLaborServiceUtil;
 import com.liferay.portal.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.service.UserGroupServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
@@ -52,6 +54,15 @@ import javax.portlet.RenderResponse;
  * @author Pei-Jung Lan
  */
 public class UsersAdminPortlet extends MVCPortlet {
+
+	public void deleteOrgLabor(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long orgLaborId = ParamUtil.getLong(actionRequest, "orgLaborId");
+
+		OrgLaborServiceUtil.deleteOrgLabor(orgLaborId);
+	}
 
 	public void updateOrganizationUserGroups(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -100,118 +111,8 @@ public class UsersAdminPortlet extends MVCPortlet {
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
-	@Override
-	protected void doDispatch(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws IOException, PortletException {
-
-		if (SessionErrors.contains(
-				renderRequest, NoSuchOrganizationException.class.getName()) ||
-			SessionErrors.contains(
-				renderRequest, PrincipalException.class.getName())) {
-
-			include("/error.jsp", renderRequest, renderResponse);
-		}
-		else {
-			super.doDispatch(renderRequest, renderResponse);
-		}
-	}
-
-	@Override
-	protected boolean isSessionErrorException(Throwable cause) {
-		if (cause instanceof AddressCityException ||
-			cause instanceof AddressStreetException ||
-			cause instanceof AddressZipException ||
-			cause instanceof DuplicateOrganizationException ||
-			cause instanceof EmailAddressException ||
-			cause instanceof MembershipPolicyException ||
-			cause instanceof NoSuchCountryException ||
-			cause instanceof NoSuchListTypeException ||
-			cause instanceof NoSuchRegionException ||
-			cause instanceof OrganizationNameException ||
-			cause instanceof OrganizationParentException ||
-			cause instanceof PhoneNumberException ||
-			cause instanceof RequiredOrganizationException ||
-			cause instanceof WebsiteURLException) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
-
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals(Constants.ADD) || cmd.equals(Constants.UPDATE)) {
-				updateOrgLabor(actionRequest);
-			}
-			else if (cmd.equals(Constants.DELETE)) {
-				deleteOrgLabor(actionRequest);
-			}
-
-			sendRedirect(actionRequest, actionResponse);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchOrgLaborException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.users_admin.error");
-			}
-			else if (e instanceof NoSuchListTypeException) {
-				SessionErrors.add(actionRequest, e.getClass());
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		try {
-			ActionUtil.getOrgLabor(renderRequest);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchOrgLaborException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				return actionMapping.findForward("portlet.users_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-
-		return actionMapping.findForward(
-			getForward(renderRequest, "portlet.users_admin.edit_org_labor"));
-	}
-
-	protected void deleteOrgLabor(ActionRequest actionRequest)
-		throws Exception {
-
-		long orgLaborId = ParamUtil.getLong(actionRequest, "orgLaborId");
-
-		OrgLaborServiceUtil.deleteOrgLabor(orgLaborId);
-	}
-
-	protected void updateOrgLabor(ActionRequest actionRequest)
+	public void updateOrgLabor(
+			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		long orgLaborId = ParamUtil.getLong(actionRequest, "orgLaborId");
@@ -259,6 +160,49 @@ public class UsersAdminPortlet extends MVCPortlet {
 				tueOpen, tueClose, wedOpen, wedClose, thuOpen, thuClose,
 				friOpen, friClose, satOpen, satClose);
 		}
+	}
+
+	@Override
+	protected void doDispatch(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		if (SessionErrors.contains(
+				renderRequest, NoSuchOrganizationException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, NoSuchOrgLaborException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, PrincipalException.class.getName())) {
+
+			include("/error.jsp", renderRequest, renderResponse);
+		}
+		else {
+			super.doDispatch(renderRequest, renderResponse);
+		}
+	}
+
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof AddressCityException ||
+			cause instanceof AddressStreetException ||
+			cause instanceof AddressZipException ||
+			cause instanceof DuplicateOrganizationException ||
+			cause instanceof EmailAddressException ||
+			cause instanceof MembershipPolicyException ||
+			cause instanceof NoSuchCountryException ||
+			cause instanceof NoSuchListTypeException ||
+			cause instanceof NoSuchOrgLaborException ||
+			cause instanceof NoSuchRegionException ||
+			cause instanceof OrganizationNameException ||
+			cause instanceof OrganizationParentException ||
+			cause instanceof PhoneNumberException ||
+			cause instanceof RequiredOrganizationException ||
+			cause instanceof WebsiteURLException) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
