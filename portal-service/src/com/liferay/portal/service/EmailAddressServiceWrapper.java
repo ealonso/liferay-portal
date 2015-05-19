@@ -61,6 +61,20 @@ public class EmailAddressServiceWrapper implements EmailAddressService,
 	}
 
 	/**
+	* Returns the email address with the primary key.
+	*
+	* @param emailAddressId the primary key of the email address
+	* @return the email address with the primary key or null if an email
+	address with the primary key could not be found or if the user
+	did not have permission to view the email address
+	*/
+	@Override
+	public com.liferay.portal.model.EmailAddress fetchEmailAddress(
+		long emailAddressId) {
+		return _emailAddressService.fetchEmailAddress(emailAddressId);
+	}
+
+	/**
 	* Returns the Spring bean ID for this bean.
 	*
 	* @return the Spring bean ID for this bean
