@@ -223,7 +223,7 @@ public class UsersAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateLockout(
+	public void editLockout(
 		ActionRequest actionRequest,
 		ActionResponse actionResponse) throws Exception {
 
@@ -274,7 +274,7 @@ public class UsersAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	public void updateOrganizationUserGroups(
+	public void editOrganizationUserGroups(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -300,7 +300,7 @@ public class UsersAdminPortlet extends MVCPortlet {
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
-	public void updateOrganizationUsers(
+	public void editOrganizationUsers(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -321,7 +321,7 @@ public class UsersAdminPortlet extends MVCPortlet {
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
-	public void updateOrgLabor(
+	public void editOrgLabor(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
