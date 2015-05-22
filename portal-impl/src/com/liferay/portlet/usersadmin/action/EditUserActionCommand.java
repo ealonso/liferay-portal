@@ -83,7 +83,7 @@ import org.apache.struts.Globals;
  * @author Julio Camarero
  * @author Wesley Gong
  */
-public class UpdateUserActionCommand extends BaseActionCommand {
+public class EditUserActionCommand extends BaseActionCommand {
 
 	@Override
 	protected void doProcessCommand(

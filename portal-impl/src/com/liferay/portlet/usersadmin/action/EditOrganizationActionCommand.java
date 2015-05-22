@@ -52,7 +52,7 @@ import javax.portlet.PortletResponse;
  * @author Julio Camarero
  * @author Jorge Ferrer
  */
-public class UpdateOrganizationActionCommand extends BaseActionCommand {
+public class EditOrganizationActionCommand extends BaseActionCommand {
 
 	@Override
 	protected void doProcessCommand(
