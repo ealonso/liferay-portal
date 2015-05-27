@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.portletconfiguration.action;
+package com.liferay.portlet.exportimport.action;
 
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARFileSizeException;
@@ -20,12 +20,14 @@ import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.PortletIdException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.ExportImportHelper;
 import com.liferay.portal.kernel.lar.MissingReferences;
 import com.liferay.portal.kernel.lar.exportimportconfiguration.ExportImportConfigurationConstants;
 import com.liferay.portal.kernel.lar.exportimportconfiguration.ExportImportConfigurationSettingsMapFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortletConfigurationLayoutUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.staging.StagingUtil;
@@ -35,16 +37,23 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ExportImportConfiguration;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ExportImportConfigurationLocalServiceUtil;
 import com.liferay.portal.service.ExportImportServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.dynamicdatamapping.StructureDuplicateStructureKeyException;
-import com.liferay.portlet.exportimport.action.ImportLayoutsAction;
+import com.liferay.portlet.portletconfiguration.action.ActionUtil;
+import com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -55,11 +64,16 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
+import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -71,6 +85,18 @@ import org.apache.struts.action.ActionMapping;
  */
 public class ExportImportAction extends ImportLayoutsAction {
 
+	public static PortletPreferences getLayoutPortletSetup(
+		PortletRequest portletRequest, Portlet portlet) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		return PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+			layout, portlet.getPortletId());
+	}
+
 	@Override
 	public void processAction(
 			ActionMapping actionMapping, ActionForm actionForm,
@@ -81,12 +107,12 @@ public class ExportImportAction extends ImportLayoutsAction {
 		Portlet portlet = null;
 
 		try {
-			portlet = ActionUtil.getPortlet(actionRequest);
+			portlet = getPortlet(actionRequest);
 		}
 		catch (PrincipalException pe) {
 			SessionErrors.add(actionRequest, pe.getClass());
 
-			setForward(actionRequest, "portlet.portlet_configuration.error");
+			setForward(actionRequest, "portlet.export_import.error");
 
 			return;
 		}
@@ -196,25 +222,24 @@ public class ExportImportAction extends ImportLayoutsAction {
 		Portlet portlet = null;
 
 		try {
-			portlet = ActionUtil.getPortlet(renderRequest);
+			portlet = getPortlet(renderRequest);
 		}
 		catch (PrincipalException pe) {
 			SessionErrors.add(renderRequest, pe.getClass());
 
-			return actionMapping.findForward(
-				"portlet.portlet_configuration.error");
+			return actionMapping.findForward("portlet.export_import.error");
 		}
 
-		renderResponse.setTitle(ActionUtil.getTitle(portlet, renderRequest));
+		renderResponse.setTitle(getTitle(portlet, renderRequest));
 
 		renderRequest = ActionUtil.getWrappedRenderRequest(renderRequest, null);
 
 		String cmd = ParamUtil.getString(renderRequest, Constants.CMD);
 
-		String forward = "portlet.portlet_configuration.export_import";
+		String forward = "portlet.export_import.export_import";
 
 		if (cmd.equals(Constants.PUBLISH_TO_LIVE)) {
-			forward = "portlet.portlet_configuration.staging";
+			forward = "portlet.export_import.staging";
 		}
 
 		return actionMapping.findForward(getForward(renderRequest, forward));
@@ -235,22 +260,22 @@ public class ExportImportAction extends ImportLayoutsAction {
 
 		if (cmd.equals(Constants.EXPORT)) {
 			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				"/html/portlet/portlet_configuration/" +
+				"/html/portlet/export_import/" +
 					"export_portlet_processes.jsp");
 		}
 		else if (cmd.equals(Constants.IMPORT)) {
 			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				"/html/portlet/portlet_configuration/" +
+				"/html/portlet/export_import/" +
 					"import_portlet_processes.jsp");
 		}
 		else if (cmd.equals(Constants.PUBLISH)) {
 			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				"/html/portlet/portlet_configuration/" +
+				"/html/portlet/export_import/" +
 					"publish_portlet_processes.jsp");
 		}
 		else {
 			portletRequestDispatcher = portletContext.getRequestDispatcher(
-				"/html/portlet/portlet_configuration/" +
+				"/html/portlet/export_import/" +
 					"import_portlet_resources.jsp");
 		}
 
@@ -258,6 +283,82 @@ public class ExportImportAction extends ImportLayoutsAction {
 			resourceRequest, null);
 
 		portletRequestDispatcher.include(resourceRequest, resourceResponse);
+	}
+
+	protected static Portlet getPortlet(PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		String portletId = ParamUtil.getString(
+			portletRequest, "portletResource");
+
+		Layout layout = PortletConfigurationLayoutUtil.getLayout(themeDisplay);
+
+		if (!PortletPermissionUtil.contains(
+				permissionChecker, themeDisplay.getScopeGroupId(), layout,
+				portletId, ActionKeys.CONFIGURATION)) {
+
+			throw new PrincipalException();
+		}
+
+		return PortletLocalServiceUtil.getPortletById(
+			themeDisplay.getCompanyId(), portletId);
+	}
+
+	protected static PortletPreferences getPortletSetup(
+			HttpServletRequest request,
+			PortletPreferences portletConfigPortletSetup,
+			PortletPreferences portletSetup)
+		throws PortalException {
+
+		String portletResource = ParamUtil.getString(
+			request, "portletResource");
+
+		if (Validator.isNull(portletResource)) {
+			return portletConfigPortletSetup;
+		}
+
+		if (portletSetup != null) {
+			return portletSetup;
+		}
+
+		return PortletPreferencesFactoryUtil.getPortletSetup(
+			request, portletResource);
+	}
+
+	protected static String getTitle(
+			Portlet portlet, RenderRequest renderRequest)
+		throws Exception {
+
+		ServletContext servletContext =
+			(ServletContext)renderRequest.getAttribute(WebKeys.CTX);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			renderRequest);
+
+		PortletPreferences portletSetup = getLayoutPortletSetup(
+			renderRequest, portlet);
+
+		portletSetup = getPortletSetup(
+			request, renderRequest.getPreferences(), portletSetup);
+
+		String title = PortletConfigurationUtil.getPortletTitle(
+			portletSetup, themeDisplay.getLanguageId());
+
+		if (Validator.isNull(title)) {
+			title = PortalUtil.getPortletTitle(
+				portlet, servletContext, themeDisplay.getLocale());
+		}
+
+		return title;
 	}
 
 	protected void exportData(
@@ -315,7 +416,7 @@ public class ExportImportAction extends ImportLayoutsAction {
 		long plid = ParamUtil.getLong(actionRequest, "plid");
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 
-		Portlet portlet = ActionUtil.getPortlet(actionRequest);
+		Portlet portlet = getPortlet(actionRequest);
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildImportSettingsMap(
@@ -348,7 +449,7 @@ public class ExportImportAction extends ImportLayoutsAction {
 		long plid = ParamUtil.getLong(actionRequest, "plid");
 		long groupId = ParamUtil.getLong(actionRequest, "groupId");
 
-		Portlet portlet = ActionUtil.getPortlet(actionRequest);
+		Portlet portlet = getPortlet(actionRequest);
 
 		Map<String, Serializable> settingsMap =
 			ExportImportConfigurationSettingsMapFactory.buildImportSettingsMap(
