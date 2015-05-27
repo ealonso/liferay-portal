@@ -37,8 +37,7 @@ import org.apache.struts.action.ActionMapping;
 /**
  * @author Brian Wing Shun Chan
  */
-public class EditUserAction
-	extends com.liferay.portlet.usersadmin.action.EditUserAction {
+public class EditUserAction extends BaseEditUserAction {
 
 	@Override
 	public void processAction(
