@@ -19,10 +19,9 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.taglib.util.IncludeTag;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -66,25 +65,28 @@ public class UserGroupSearchResultsTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-ui:user-group-search-results:results", _results);
 		request.setAttribute(
-			"liferay-ui:user-group-search-results:searchContainer", _searchContainer);
+			"liferay-ui:user-group-search-results:searchContainer",
+			_searchContainer);
 		request.setAttribute(
 			"liferay-ui:user-group-search-results:searchTerms", _searchTerms);
 		request.setAttribute(
-			"liferay-ui:user-group-search-results:searchWithIndex", _searchWithIndex);
+			"liferay-ui:user-group-search-results:searchWithIndex",
+			_searchWithIndex);
 		request.setAttribute(
 			"liferay-ui:user-group-search-results:total", _total);
 		request.setAttribute(
-			"liferay-ui:user-group-search-results:userGroupParams", _userGroupParams);
+			"liferay-ui:user-group-search-results:userGroupParams",
+			_userGroupParams);
 	}
 
 	private static final String _PAGE =
 		"/html/taglib/ui/user_group_search_results/page.jsp";
 
-	private boolean _searchWithIndex;
-	private int _total;
-	private LinkedHashMap<String, Object> _userGroupParams;
 	private List<UserGroup> _results;
 	private SearchContainer _searchContainer;
 	private DisplayTerms _searchTerms;
+	private boolean _searchWithIndex;
+	private int _total;
+	private LinkedHashMap<String, Object> _userGroupParams;
 
 }
