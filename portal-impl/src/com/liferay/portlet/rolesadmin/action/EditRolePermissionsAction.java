@@ -150,63 +150,6 @@ public class EditRolePermissionsAction extends PortletAction {
 		portletRequestDispatcher.include(resourceRequest, resourceResponse);
 	}
 
-	protected void deletePermission(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long roleId = ParamUtil.getLong(actionRequest, "roleId");
-		String name = ParamUtil.getString(actionRequest, "name");
-		int scope = ParamUtil.getInteger(actionRequest, "scope");
-		String primKey = ParamUtil.getString(actionRequest, "primKey");
-		String actionId = ParamUtil.getString(actionRequest, "actionId");
-
-		Role role = RoleLocalServiceUtil.getRole(roleId);
-
-		String roleName = role.getName();
-
-		if (roleName.equals(RoleConstants.ADMINISTRATOR) ||
-			roleName.equals(RoleConstants.ORGANIZATION_ADMINISTRATOR) ||
-			roleName.equals(RoleConstants.ORGANIZATION_OWNER) ||
-			roleName.equals(RoleConstants.OWNER) ||
-			roleName.equals(RoleConstants.SITE_ADMINISTRATOR) ||
-			roleName.equals(RoleConstants.SITE_OWNER)) {
-
-			throw new RolePermissionsException(roleName);
-		}
-
-		if (ResourceBlockLocalServiceUtil.isSupported(name)) {
-			if (scope == ResourceConstants.SCOPE_GROUP) {
-				ResourceBlockServiceUtil.removeGroupScopePermission(
-					themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(),
-					GetterUtil.getLong(primKey), name, roleId, actionId);
-			}
-			else {
-				ResourceBlockServiceUtil.removeCompanyScopePermission(
-					themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(),
-					name, roleId, actionId);
-			}
-		}
-		else {
-			ResourcePermissionServiceUtil.removeResourcePermission(
-				themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(),
-				name, scope, primKey, roleId, actionId);
-		}
-
-		// Send redirect
-
-		SessionMessages.add(actionRequest, "permissionDeleted");
-
-		String redirect = PortalUtil.escapeRedirect(
-			ParamUtil.getString(actionRequest, "redirect"));
-
-		if (Validator.isNotNull(redirect)) {
-			actionResponse.sendRedirect(redirect);
-		}
-	}
-
 	protected void updateAction(
 			Role role, long groupId, String selResource, String actionId,
 			boolean selected, int scope, String[] groupIds)

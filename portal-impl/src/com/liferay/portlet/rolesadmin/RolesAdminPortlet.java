@@ -19,6 +19,7 @@ import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.RequiredRoleException;
 import com.liferay.portal.RoleAssignmentException;
 import com.liferay.portal.RoleNameException;
+import com.liferay.portal.RolePermissionsException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.LocalizationUtil;
@@ -148,7 +149,9 @@ public class RolesAdminPortlet extends MVCPortlet {
 			SessionErrors.contains(
 				renderRequest, NoSuchRoleException.class.getName()) ||
 			SessionErrors.contains(
-				renderRequest, RoleAssignmentException.class.getName())) {
+				renderRequest, RoleAssignmentException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, RolePermissionsException.class.getName())) {
 
 			include(
 				"/html/portlet/roles_admin/error.jsp", renderRequest,
@@ -174,7 +177,8 @@ public class RolesAdminPortlet extends MVCPortlet {
 			cause instanceof PrincipalException ||
 			cause instanceof RequiredRoleException ||
 			cause instanceof RoleAssignmentException ||
-			cause instanceof RoleNameException) {
+			cause instanceof RoleNameException ||
+			cause instanceof RolePermissionsException) {
 
 			return true;
 		}
