@@ -21,9 +21,9 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
-Organization organization = (Organization)request.getAttribute(WebKeys.ORGANIZATION);
+long organizationId = ParamUtil.getLong(request, "organizationId");
 
-long organizationId = BeanParamUtil.getLong(organization, request, "organizationId");
+Organization organization = OrganizationServiceUtil.fetchOrganization(organizationId);
 
 long parentOrganizationId = ParamUtil.getLong(request, "parentOrganizationSearchContainerPrimaryKeys", (organization != null) ? organization.getParentOrganizationId() : OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID);
 String type = BeanParamUtil.getString(organization, request, "type");
@@ -68,17 +68,16 @@ else {
 	title="<%= headerTitle %>"
 />
 
-<portlet:actionURL var="editOrganizationActionURL">
-	<portlet:param name="struts_action" value="/users_admin/edit_organization" />
+<portlet:actionURL name="editOrganization" var="editOrganizationActionURL">
+	<portlet:param name="mvcPath" value="/html/portlet/users_admin/edit_organization.jsp" />
 </portlet:actionURL>
 
 <portlet:renderURL var="editOrganizationRenderURL">
-	<portlet:param name="struts_action" value="/users_admin/edit_organization" />
+	<portlet:param name="mvcPath" value="/html/portlet/users_admin/edit_organization.jsp" />
 	<portlet:param name="backURL" value="<%= backURL %>" />
 </portlet:renderURL>
 
 <aui:form action="<%= editOrganizationActionURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (organization == null) ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= editOrganizationRenderURL %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="organizationId" type="hidden" value="<%= organizationId %>" />

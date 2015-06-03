@@ -17,6 +17,7 @@ package com.liferay.portlet.usersadmin.action;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.portlet.DynamicActionRequest;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseActionCommand;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -35,7 +36,6 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.struts.ActionConstants;
-import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -52,27 +52,29 @@ import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletRequestDispatcher;
+import javax.portlet.PortletResponse;
+import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionMapping;
-
 /**
  * @author Brian Wing Shun Chan
  * @author Mika Koivisto
  */
-public class ExportUsersAction extends PortletAction {
+public class ExportUsersActionCommand extends BaseActionCommand {
 
 	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	protected void doProcessCommand(
+			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws Exception {
+
+		ActionResponse actionResponse = (ActionResponse)portletResponse;
+		ActionRequest actionRequest = (ActionRequest)portletRequest;
 
 		try {
 			String keywords = ParamUtil.getString(actionRequest, "keywords");
@@ -99,12 +101,20 @@ public class ExportUsersAction extends PortletAction {
 			ServletResponseUtil.sendFile(
 				request, response, fileName, bytes, ContentTypes.TEXT_CSV_UTF8);
 
-			setForward(actionRequest, ActionConstants.COMMON_NULL);
+			actionRequest.setAttribute(
+				WebKeys.REDIRECT, ActionConstants.COMMON_NULL);
 		}
 		catch (Exception e) {
 			SessionErrors.add(actionRequest, e.getClass());
 
-			setForward(actionRequest, "portlet.users_admin.error");
+			PortletSession portletSession = portletRequest.getPortletSession();
+
+			PortletContext portletContext = portletSession.getPortletContext();
+
+			PortletRequestDispatcher portletRequestDispatcher =
+				portletContext.getRequestDispatcher("/error.jsp");
+
+			portletRequestDispatcher.include(portletRequest, portletResponse);
 		}
 	}
 

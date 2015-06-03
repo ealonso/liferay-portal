@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.usersadmin.action;
+package com.liferay.portlet.myaccount.action;
 
 import com.liferay.portal.AddressCityException;
 import com.liferay.portal.AddressStreetException;
@@ -119,7 +119,7 @@ import org.apache.struts.action.ActionMapping;
  * @author Julio Camarero
  * @author Wesley Gong
  */
-public class EditUserAction extends PortletAction {
+public class BaseEditUserAction extends PortletAction {
 
 	@Override
 	public void processAction(
