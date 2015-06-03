@@ -653,6 +653,37 @@ public class RoleServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.model.Role fetchRole(
+		HttpPrincipal httpPrincipal, long roleId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			MethodKey methodKey = new MethodKey(RoleServiceUtil.class,
+					"fetchRole", _fetchRoleParameterTypes20);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, roleId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.portal.model.Role)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(RoleServiceHttp.class);
 	private static final Class<?>[] _addRoleParameterTypes0 = new Class[] {
 			java.lang.String.class, long.class, java.lang.String.class,
@@ -719,5 +750,8 @@ public class RoleServiceHttp {
 			long.class, java.lang.String.class, java.util.Map.class,
 			java.util.Map.class, java.lang.String.class,
 			com.liferay.portal.service.ServiceContext.class
+		};
+	private static final Class<?>[] _fetchRoleParameterTypes20 = new Class[] {
+			long.class
 		};
 }
