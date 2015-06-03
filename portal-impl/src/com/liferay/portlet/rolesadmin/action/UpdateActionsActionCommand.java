@@ -14,24 +14,22 @@
 
 package com.liferay.portlet.rolesadmin.action;
 
-import com.liferay.portal.NoSuchRoleException;
 import com.liferay.portal.RolePermissionsException;
-import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseActionCommand;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.ResourceActionsUtil;
 import com.liferay.portal.security.permission.comparator.ActionComparator;
@@ -40,171 +38,34 @@ import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
 import com.liferay.portal.service.ResourceBlockServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.struts.PortletAction;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletCategoryKeys;
 import com.liferay.portal.util.PortletKeys;
-import com.liferay.portal.util.WebKeys;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
-import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 
 /**
  * @author Brian Wing Shun Chan
  * @author Jorge Ferrer
  * @author Connor McKay
  */
-public class EditRolePermissionsAction extends PortletAction {
+public class UpdateActionsActionCommand extends BaseActionCommand {
 
 	@Override
-	public void processAction(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
+	protected void doProcessCommand(
+			PortletRequest portletRequest, PortletResponse portletResponse)
 		throws Exception {
 
-		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
-
-		try {
-			if (cmd.equals("actions")) {
-				updateActions(actionRequest, actionResponse);
-			}
-			else if (cmd.equals("delete_permission")) {
-				deletePermission(actionRequest, actionResponse);
-			}
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchRoleException ||
-				e instanceof PrincipalException ||
-				e instanceof RolePermissionsException) {
-
-				SessionErrors.add(actionRequest, e.getClass());
-
-				setForward(actionRequest, "portlet.roles_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-	}
-
-	@Override
-	public ActionForward render(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, RenderRequest renderRequest,
-			RenderResponse renderResponse)
-		throws Exception {
-
-		try {
-			ActionUtil.getRole(renderRequest);
-		}
-		catch (Exception e) {
-			if (e instanceof NoSuchRoleException ||
-				e instanceof PrincipalException) {
-
-				SessionErrors.add(renderRequest, e.getClass());
-
-				return actionMapping.findForward("portlet.roles_admin.error");
-			}
-			else {
-				throw e;
-			}
-		}
-
-		return actionMapping.findForward(
-			getForward(
-				renderRequest, "portlet.roles_admin.edit_role_permissions"));
-	}
-
-	@Override
-	public void serveResource(
-			ActionMapping actionMapping, ActionForm actionForm,
-			PortletConfig portletConfig, ResourceRequest resourceRequest,
-			ResourceResponse resourceResponse)
-		throws Exception {
-
-		PortletContext portletContext = portletConfig.getPortletContext();
-
-		PortletRequestDispatcher portletRequestDispatcher =
-			portletContext.getRequestDispatcher(
-				"/html/portlet/roles_admin/view_resources.jsp");
-
-		ActionUtil.getRole(resourceRequest);
-
-		portletRequestDispatcher.include(resourceRequest, resourceResponse);
-	}
-
-	protected void updateAction(
-			Role role, long groupId, String selResource, String actionId,
-			boolean selected, int scope, String[] groupIds)
-		throws Exception {
-
-		long companyId = role.getCompanyId();
-		long roleId = role.getRoleId();
-
-		if (selected) {
-			if (scope == ResourceConstants.SCOPE_COMPANY) {
-				ResourcePermissionServiceUtil.addResourcePermission(
-					groupId, companyId, selResource, scope,
-					String.valueOf(role.getCompanyId()), roleId, actionId);
-			}
-			else if (scope == ResourceConstants.SCOPE_GROUP_TEMPLATE) {
-				ResourcePermissionServiceUtil.addResourcePermission(
-					groupId, companyId, selResource,
-					ResourceConstants.SCOPE_GROUP_TEMPLATE,
-					String.valueOf(GroupConstants.DEFAULT_PARENT_GROUP_ID),
-					roleId, actionId);
-			}
-			else if (scope == ResourceConstants.SCOPE_GROUP) {
-				ResourcePermissionServiceUtil.removeResourcePermissions(
-					groupId, companyId, selResource,
-					ResourceConstants.SCOPE_GROUP, roleId, actionId);
-
-				for (String curGroupId : groupIds) {
-					ResourcePermissionServiceUtil.addResourcePermission(
-						groupId, companyId, selResource,
-						ResourceConstants.SCOPE_GROUP, curGroupId, roleId,
-						actionId);
-				}
-			}
-		}
-		else {
-
-			// Remove company, group template, and group permissions
-
-			ResourcePermissionServiceUtil.removeResourcePermissions(
-				groupId, companyId, selResource,
-				ResourceConstants.SCOPE_COMPANY, roleId, actionId);
-
-			ResourcePermissionServiceUtil.removeResourcePermissions(
-				groupId, companyId, selResource,
-				ResourceConstants.SCOPE_GROUP_TEMPLATE, roleId, actionId);
-
-			ResourcePermissionServiceUtil.removeResourcePermissions(
-				groupId, companyId, selResource, ResourceConstants.SCOPE_GROUP,
-				roleId, actionId);
-		}
-	}
-
-	protected void updateActions(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
+		ActionRequest actionRequest = (ActionRequest)portletRequest;
+		ActionResponse actionResponse = (ActionResponse)portletResponse;
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -333,6 +194,58 @@ public class EditRolePermissionsAction extends PortletAction {
 
 		if (Validator.isNotNull(redirect)) {
 			actionResponse.sendRedirect(redirect);
+		}
+	}
+
+	protected void updateAction(
+			Role role, long groupId, String selResource, String actionId,
+			boolean selected, int scope, String[] groupIds)
+		throws Exception {
+
+		long companyId = role.getCompanyId();
+		long roleId = role.getRoleId();
+
+		if (selected) {
+			if (scope == ResourceConstants.SCOPE_COMPANY) {
+				ResourcePermissionServiceUtil.addResourcePermission(
+					groupId, companyId, selResource, scope,
+					String.valueOf(role.getCompanyId()), roleId, actionId);
+			}
+			else if (scope == ResourceConstants.SCOPE_GROUP_TEMPLATE) {
+				ResourcePermissionServiceUtil.addResourcePermission(
+					groupId, companyId, selResource,
+					ResourceConstants.SCOPE_GROUP_TEMPLATE,
+					String.valueOf(GroupConstants.DEFAULT_PARENT_GROUP_ID),
+					roleId, actionId);
+			}
+			else if (scope == ResourceConstants.SCOPE_GROUP) {
+				ResourcePermissionServiceUtil.removeResourcePermissions(
+					groupId, companyId, selResource,
+					ResourceConstants.SCOPE_GROUP, roleId, actionId);
+
+				for (String curGroupId : groupIds) {
+					ResourcePermissionServiceUtil.addResourcePermission(
+						groupId, companyId, selResource,
+						ResourceConstants.SCOPE_GROUP, curGroupId, roleId,
+						actionId);
+				}
+			}
+		}
+		else {
+
+			// Remove company, group template, and group permissions
+
+			ResourcePermissionServiceUtil.removeResourcePermissions(
+				groupId, companyId, selResource,
+				ResourceConstants.SCOPE_COMPANY, roleId, actionId);
+
+			ResourcePermissionServiceUtil.removeResourcePermissions(
+				groupId, companyId, selResource,
+				ResourceConstants.SCOPE_GROUP_TEMPLATE, roleId, actionId);
+
+			ResourcePermissionServiceUtil.removeResourcePermissions(
+				groupId, companyId, selResource, ResourceConstants.SCOPE_GROUP,
+				roleId, actionId);
 		}
 	}
 
