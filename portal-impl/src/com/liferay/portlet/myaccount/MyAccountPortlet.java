@@ -14,11 +14,11 @@
 
 package com.liferay.portlet.myaccount;
 
-import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portlet.usersadmin.UsersAdminPortlet;
 
 /**
  * @author Pei-Jung Lan
  */
-public class MyAccountPortlet extends MVCPortlet {
+public class MyAccountPortlet extends UsersAdminPortlet {
 
 }
