@@ -834,13 +834,6 @@
 
 		<action path="/monitoring/view" forward="portlet.monitoring.view" />
 
-		<!-- My Account -->
-
-		<action path="/my_account/view" type="com.liferay.portlet.myaccount.action.ViewAction">
-			<forward name="portlet.my_account.edit_user" path="portlet.users_admin.edit_user" />
-			<forward name="portlet.my_account.view" path="portlet.my_account.view" />
-		</action>
-
 		<!-- My Pages -->
 
 		<action path="/my_pages/edit_layout_set" type="com.liferay.portlet.layoutsadmin.action.EditLayoutSetAction">
