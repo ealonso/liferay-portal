@@ -99,13 +99,13 @@ if (name.equals(RoleConstants.GUEST) || name.equals(RoleConstants.OWNER) || name
 	</c:if>
 
 	<c:if test="<%= !unassignableRole && (role.getType() == RoleConstants.TYPE_REGULAR) && RolePermissionUtil.contains(permissionChecker, role.getRoleId(), ActionKeys.VIEW) %>">
-		<portlet:renderURL var="viewUsersURL">
-			<portlet:param name="mvcPath" value="/html/portlet/roles_admin/view_users.jsp" />
+		<liferay-portlet:renderURL portletName="<%= PortletKeys.USERS_ADMIN %>" var="viewUsersURL">
+			<portlet:param name="struts_action" value="/users_admin/view" />
 			<portlet:param name="viewUsersRedirect" value="<%= currentURL %>" />
 			<portlet:param name="roleId" value="<%= String.valueOf(role.getRoleId()) %>" />
 			<portlet:param name="usersListView" value="<%= UserConstants.LIST_VIEW_FLAT_USERS %>" />
 			<portlet:param name="saveUsersListView" value="<%= Boolean.FALSE.toString() %>" />
-		</portlet:renderURL>
+		</liferay-portlet:renderURL>
 
 		<liferay-ui:icon iconCssClass="icon-search" message="view-users" method="get" url="<%= viewUsersURL %>" />
 	</c:if>
