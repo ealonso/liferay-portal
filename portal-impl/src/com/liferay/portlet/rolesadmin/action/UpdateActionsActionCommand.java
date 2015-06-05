@@ -43,14 +43,14 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletCategoryKeys;
 import com.liferay.portal.util.PortletKeys;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Brian Wing Shun Chan

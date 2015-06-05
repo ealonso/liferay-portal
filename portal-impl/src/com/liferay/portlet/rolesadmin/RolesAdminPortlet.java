@@ -38,14 +38,14 @@ import com.liferay.portal.service.UserServiceUtil;
 
 import java.io.IOException;
 
+import java.util.Locale;
+import java.util.Map;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Brian Wing Shun Chan
@@ -53,43 +53,6 @@ import java.util.Map;
  */
 
 public class RolesAdminPortlet extends MVCPortlet {
-
-	public void editRoleAssignments(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long roleId = ParamUtil.getLong(actionRequest, "roleId");
-		Role role = RoleLocalServiceUtil.getRole(roleId);
-
-		if (role.getName().equals(RoleConstants.OWNER)) {
-			throw new RoleAssignmentException(role.getName());
-		}
-
-		long[] addUserIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "addUserIds"), 0L);
-		long[] removeUserIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "removeUserIds"), 0L);
-
-		if (!ArrayUtil.isEmpty(addUserIds) ||
-			!ArrayUtil.isEmpty(removeUserIds)) {
-
-			UserServiceUtil.addRoleUsers(roleId, addUserIds);
-			UserServiceUtil.unsetRoleUsers(roleId, removeUserIds);
-		}
-
-		long[] addGroupIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "addGroupIds"), 0L);
-		long[] removeGroupIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "removeGroupIds"), 0L);
-
-		if (!ArrayUtil.isEmpty(addGroupIds) ||
-			!ArrayUtil.isEmpty(removeGroupIds)) {
-
-			GroupServiceUtil.addRoleGroups(roleId, addGroupIds);
-			GroupServiceUtil.unsetRoleGroups(roleId, removeGroupIds);
-		}
-
-	}
 
 	public void deleteRole(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -135,6 +98,42 @@ public class RolesAdminPortlet extends MVCPortlet {
 		}
 	}
 
+	public void editRoleAssignments(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long roleId = ParamUtil.getLong(actionRequest, "roleId");
+		Role role = RoleLocalServiceUtil.getRole(roleId);
+
+		if (role.getName().equals(RoleConstants.OWNER)) {
+			throw new RoleAssignmentException(role.getName());
+		}
+
+		long[] addUserIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "addUserIds"), 0L);
+		long[] removeUserIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "removeUserIds"), 0L);
+
+		if (!ArrayUtil.isEmpty(addUserIds) ||
+			!ArrayUtil.isEmpty(removeUserIds)) {
+
+			UserServiceUtil.addRoleUsers(roleId, addUserIds);
+			UserServiceUtil.unsetRoleUsers(roleId, removeUserIds);
+		}
+
+		long[] addGroupIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "addGroupIds"), 0L);
+		long[] removeGroupIds = StringUtil.split(
+			ParamUtil.getString(actionRequest, "removeGroupIds"), 0L);
+
+		if (!ArrayUtil.isEmpty(addGroupIds) ||
+			!ArrayUtil.isEmpty(removeGroupIds)) {
+
+			GroupServiceUtil.addRoleGroups(roleId, addGroupIds);
+			GroupServiceUtil.unsetRoleGroups(roleId, removeGroupIds);
+		}
+	}
+
 	@Override
 	protected void doDispatch(
 			RenderRequest renderRequest, RenderResponse renderResponse)
@@ -143,15 +142,15 @@ public class RolesAdminPortlet extends MVCPortlet {
 		long roleId = ParamUtil.getLong(renderRequest, "roleId");
 
 		if (SessionErrors.contains(
-					renderRequest,
-					RequiredRoleException.class.getName()) && roleId < 1) {
+				renderRequest, RequiredRoleException.class.getName()) &&
+			(roleId < 1)) {
 
 			include(
 				"/html/portlet/roles_admin/view.jsp", renderRequest,
 				renderResponse);
 		}
 		else if (SessionErrors.contains(
-				renderRequest, DuplicateRoleException.class.getName()) ||
+					renderRequest, DuplicateRoleException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, RequiredRoleException.class.getName()) ||
 			SessionErrors.contains(
@@ -162,7 +161,7 @@ public class RolesAdminPortlet extends MVCPortlet {
 				renderResponse);
 		}
 		else if (SessionErrors.contains(
-			renderRequest, PrincipalException.class.getName()) ||
+					renderRequest, PrincipalException.class.getName()) ||
 			SessionErrors.contains(
 				renderRequest, NoSuchRoleException.class.getName()) ||
 			SessionErrors.contains(
