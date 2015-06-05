@@ -61,7 +61,6 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 <portlet:actionURL name="editRoleAssignments" var="editRoleAssignmentsURL" />
 
 <aui:form action="<%= editRoleAssignmentsURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="tabs3" type="hidden" value="<%= tabs3 %>" />
@@ -97,7 +96,6 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('role_groups');
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
@@ -110,7 +108,6 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('role_users');
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
