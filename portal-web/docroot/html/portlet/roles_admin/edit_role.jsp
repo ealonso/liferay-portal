@@ -47,7 +47,6 @@ String subtype = BeanParamUtil.getString(role, request, "subtype");
 </portlet:actionURL>
 
 <aui:form action="<%= editRoleURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (role == null) ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="roleId" type="hidden" value="<%= roleId %>" />
 
