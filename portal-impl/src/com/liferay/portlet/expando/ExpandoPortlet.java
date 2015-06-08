@@ -95,6 +95,65 @@ public class ExpandoPortlet extends MVCPortlet {
 		ExpandoColumnServiceUtil.deleteColumn(columnId);
 	}
 
+	public void updateExpando(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String modelResource = ParamUtil.getString(
+			actionRequest, "modelResource");
+		long resourcePrimKey = ParamUtil.getLong(
+			actionRequest, "resourcePrimKey");
+
+		String name = ParamUtil.getString(actionRequest, "name");
+		int type = ParamUtil.getInteger(actionRequest, "type");
+
+		Serializable defaultValue = getValue(
+			actionRequest, "defaultValue", type);
+
+		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(
+			themeDisplay.getCompanyId(), modelResource, resourcePrimKey);
+
+		expandoBridge.setAttributeDefault(name, defaultValue);
+
+		updateProperties(actionRequest, expandoBridge, name);
+	}
+
+	@Override
+	protected void doDispatch(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		if (SessionErrors.contains(
+				renderRequest, ColumnNameException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, ColumnTypeException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, DuplicateColumnNameException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, ValueDataException.class.getName())) {
+
+			include(
+				"/html/portlet/expando/edit_expando.jsp", renderRequest,
+				renderResponse);
+		}
+
+		if (SessionErrors.contains(
+				renderRequest, NoSuchColumnException.class.getName()) ||
+			SessionErrors.contains(
+				renderRequest, PrincipalException.class.getName())) {
+
+			include(
+				"/html/portlet/expando/error.jsp", renderRequest,
+				renderResponse);
+		}
+		else {
+			super.doDispatch(renderRequest, renderResponse);
+		}
+	}
+
 	protected Serializable getValue(
 			PortletRequest portletRequest, String name, int type)
 		throws PortalException {
@@ -228,7 +287,7 @@ public class ExpandoPortlet extends MVCPortlet {
 			value = StringUtil.split(paramValue, delimiter);
 		}
 		else if (type == ExpandoColumnConstants.STRING_LOCALIZED) {
-			value = (Serializable) LocalizationUtil.getLocalizationMap(
+			value = (Serializable)LocalizationUtil.getLocalizationMap(
 				portletRequest, name);
 		}
 		else {
@@ -238,30 +297,19 @@ public class ExpandoPortlet extends MVCPortlet {
 		return value;
 	}
 
-	public void updateExpando(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof ColumnNameException ||
+			cause instanceof ColumnTypeException ||
+			cause instanceof DuplicateColumnNameException ||
+			cause instanceof NoSuchColumnException ||
+			cause instanceof PrincipalException ||
+			cause instanceof ValueDataException) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+			return true;
+		}
 
-		String modelResource = ParamUtil.getString(
-			actionRequest, "modelResource");
-		long resourcePrimKey = ParamUtil.getLong(
-			actionRequest, "resourcePrimKey");
-
-		String name = ParamUtil.getString(actionRequest, "name");
-		int type = ParamUtil.getInteger(actionRequest, "type");
-
-		Serializable defaultValue = getValue(
-			actionRequest, "defaultValue", type);
-
-		ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(
-			themeDisplay.getCompanyId(), modelResource, resourcePrimKey);
-
-		expandoBridge.setAttributeDefault(name, defaultValue);
-
-		updateProperties(actionRequest, expandoBridge, name);
+		return false;
 	}
 
 	protected void updateProperties(
@@ -294,53 +342,6 @@ public class ExpandoPortlet extends MVCPortlet {
 		}
 
 		expandoBridge.setAttributeProperties(name, properties);
-	}
-
-	@Override
-	protected void doDispatch(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws IOException, PortletException {
-
-		if (SessionErrors.contains(
-			renderRequest, ColumnNameException.class.getName()) ||
-			SessionErrors.contains(
-				renderRequest, ColumnTypeException.class.getName()) ||
-			SessionErrors.contains(
-				renderRequest, DuplicateColumnNameException.class.getName()) ||
-			SessionErrors.contains(
-				renderRequest, ValueDataException.class.getName())) {
-
-			include(
-				"/html/portlet/expando/edit_expando.jsp", renderRequest,
-				renderResponse);
-		}
-		if (SessionErrors.contains(
-				renderRequest, NoSuchColumnException.class.getName()) ||
-			SessionErrors.contains(
-				renderRequest, PrincipalException.class.getName())) {
-
-			include(
-				"/html/portlet/expando/error.jsp", renderRequest,
-				renderResponse);
-		}
-		else {
-			super.doDispatch(renderRequest, renderResponse);
-		}
-	}
-
-	@Override
-	protected boolean isSessionErrorException(Throwable cause) {
-		if (cause instanceof ColumnNameException ||
-			cause instanceof ColumnTypeException ||
-			cause instanceof DuplicateColumnNameException ||
-			cause instanceof NoSuchColumnException ||
-			cause instanceof PrincipalException ||
-			cause instanceof ValueDataException) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 }

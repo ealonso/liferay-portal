@@ -27,12 +27,10 @@ int type = 0;
 
 long columnId = ParamUtil.getLong(request, "columnId");
 
-
 if (columnId > 0) {
 	column = ExpandoColumnServiceUtil.fetchExpandoColumn(columnId);
 	type = column.getType();
 }
-
 
 ExpandoBridge expandoBridge = ExpandoBridgeFactoryUtil.getExpandoBridge(company.getCompanyId(), modelResource);
 
@@ -70,7 +68,7 @@ portletURL.setParameter("modelResource", modelResource);
 	var="editExpandoURL"
 />
 
-<aui:form action="<%= editExpandoURL %>" method="post" name="fm" >
+<aui:form action="<%= editExpandoURL %>" method="post" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="columnId" type="hidden" value="<%= columnId %>" />
 	<aui:input name="modelResource" type="hidden" value="<%= modelResource %>" />

@@ -78,7 +78,8 @@ public class EditDocumentLibraryExtraSettingsAction extends PortletAction {
 			companyId, DLFileEntryConstants.getClassName(), 0);
 
 		if (preset.startsWith("Preset")) {
-			return ExpandoPresetUtil.addPresetExpando(expandoBridge, preset, name);
+			return ExpandoPresetUtil.addPresetExpando(
+				expandoBridge, preset, name);
 		}
 
 		int type = GetterUtil.getInteger(preset);
