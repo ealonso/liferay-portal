@@ -91,7 +91,7 @@ public class ExpandoPortlet extends MVCPortlet {
 			getForward(renderRequest, "portlet.expando.edit_expando"));
 	}
 
-	protected void addExpando(ActionRequest actionRequest) throws Exception {
+	public void addExpando(ActionRequest actionRequest) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -195,7 +195,7 @@ public class ExpandoPortlet extends MVCPortlet {
 		return type;
 	}
 
-	protected void deleteExpando(ActionRequest actionRequest) throws Exception {
+	public void deleteExpando(ActionRequest actionRequest) throws Exception {
 		long columnId = ParamUtil.getLong(actionRequest, "columnId");
 
 		ExpandoColumnServiceUtil.deleteColumn(columnId);
@@ -344,7 +344,7 @@ public class ExpandoPortlet extends MVCPortlet {
 		return value;
 	}
 
-	protected void updateExpando(ActionRequest actionRequest) throws Exception {
+	public void updateExpando(ActionRequest actionRequest) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
