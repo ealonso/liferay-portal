@@ -521,5 +521,19 @@ public class RoleServiceSoap {
 		}
 	}
 
+	public static com.liferay.portal.model.RoleSoap fetchRole(long roleId)
+		throws RemoteException {
+		try {
+			com.liferay.portal.model.Role returnValue = RoleServiceUtil.fetchRole(roleId);
+
+			return com.liferay.portal.model.RoleSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(RoleServiceSoap.class);
 }

@@ -25,7 +25,9 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
-Role role = ActionUtil.getRole(request);
+long roleId = ParamUtil.getLong(request, "roleId");
+
+Role role = RoleServiceUtil.fetchRole(roleId);
 
 String portletResource = ParamUtil.getString(request, "portletResource");
 
@@ -41,16 +43,15 @@ if (Validator.isNotNull(portletResource)) {
 
 PortletURL editRoleURL = renderResponse.createRenderURL();
 
-editRoleURL.setParameter("struts_action", "/roles_admin/edit_role");
+editRoleURL.setParameter("mvcPath", "/html/portlet/roles_admin/edit_role.jsp");
 editRoleURL.setParameter("redirect", backURL);
-editRoleURL.setParameter(Constants.CMD, Constants.VIEW);
 editRoleURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 // Define permissions
 
 PortletURL definePermissionsURL = renderResponse.createRenderURL();
 
-definePermissionsURL.setParameter("struts_action", "/roles_admin/edit_role_permissions");
+definePermissionsURL.setParameter("mvcPath", "/html/portlet/roles_admin/edit_role_permissions.jsp");
 definePermissionsURL.setParameter("redirect", backURL);
 definePermissionsURL.setParameter(Constants.CMD, Constants.VIEW);
 definePermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
@@ -59,7 +60,7 @@ definePermissionsURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
 PortletURL assignMembersURL = renderResponse.createRenderURL();
 
-assignMembersURL.setParameter("struts_action", "/roles_admin/edit_role_assignments");
+assignMembersURL.setParameter("mvcPath", "/html/portlet/roles_admin/edit_role_assignments.jsp");
 assignMembersURL.setParameter("redirect", backURL);
 assignMembersURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 

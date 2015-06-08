@@ -33,7 +33,9 @@ if (group != null) {
 
 String groupDescriptiveName = group.getDescriptiveName(locale);
 
-Role role = ActionUtil.getRole(request);
+long roleId = ParamUtil.getLong(request, "roleId");
+
+Role role = RoleLocalServiceUtil.fetchRole(roleId);
 
 if (role != null) {
 	String roleName = role.getName();
