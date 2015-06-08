@@ -21,9 +21,9 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
-Role role = ActionUtil.getRole(request);
+long roleId = ParamUtil.getLong(request, "roleId");
 
-long roleId = BeanParamUtil.getLong(role, request, "roleId");
+Role role = RoleServiceUtil.fetchRole(roleId);
 
 int type = ParamUtil.getInteger(request, "type");
 String subtype = BeanParamUtil.getString(role, request, "subtype");
@@ -42,13 +42,11 @@ String subtype = BeanParamUtil.getString(role, request, "subtype");
 	</liferay-util:include>
 </c:if>
 
-<portlet:actionURL var="editRoleActionURL">
-	<portlet:param name="struts_action" value="/roles_admin/edit_role" />
+<portlet:actionURL name="editRole" var="editRoleURL">
 	<portlet:param name="backURL" value="<%= backURL %>" />
 </portlet:actionURL>
 
-<aui:form action="<%= editRoleActionURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (role == null) ? Constants.ADD : Constants.UPDATE %>" />
+<aui:form action="<%= editRoleURL %>" method="post" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="roleId" type="hidden" value="<%= roleId %>" />
 

@@ -25,11 +25,13 @@ int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
 
 String redirect = ParamUtil.getString(request, "redirect");
 
-Role role = ActionUtil.getRole(request);
+long roleId = ParamUtil.getLong(request, "roleId");
+
+Role role = RoleServiceUtil.fetchRole(roleId);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/roles_admin/edit_role_assignments");
+portletURL.setParameter("mvcPath", "/html/portlet/roles_admin/edit_role_assignments.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("tabs2", tabs2);
 portletURL.setParameter("tabs3", tabs3);
@@ -56,16 +58,13 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 	<liferay-util:param name="backURL" value="<%= redirect %>" />
 </liferay-util:include>
 
-<portlet:actionURL var="editAssignmentsURL">
-	<portlet:param name="struts_action" value="/roles_admin/edit_role_assignments" />
-</portlet:actionURL>
+<portlet:actionURL name="editRoleAssignments" var="editRoleAssignmentsURL" />
 
-<aui:form action="<%= editAssignmentsURL %>" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
+<aui:form action="<%= editRoleAssignmentsURL %>" method="post" name="fm">
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="tabs3" type="hidden" value="<%= tabs3 %>" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="roleId" type="hidden" value="<%= role.getRoleId() %>" />
 
@@ -97,7 +96,6 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('role_groups');
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
@@ -110,7 +108,6 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 
 		var form = AUI.$(document.<portlet:namespace />fm);
 
-		form.fm('<%= Constants.CMD %>').val('role_users');
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
@@ -122,7 +119,7 @@ request.setAttribute("edit_role_assignments.jsp-portletURL", portletURL);
 <%
 PortletURL assignMembersURL = renderResponse.createRenderURL();
 
-assignMembersURL.setParameter("struts_action", "/roles_admin/edit_role_assignments");
+assignMembersURL.setParameter("mvcPath", "/html/portlet/roles_admin/edit_role_assignments.jsp");
 assignMembersURL.setParameter("redirect", redirect);
 assignMembersURL.setParameter("roleId", String.valueOf(role.getRoleId()));
 
