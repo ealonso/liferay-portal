@@ -134,7 +134,9 @@ public class PortletKeys {
 
 	public static final String PORTAL_SETTINGS = "130";
 
-	public static final String PORTLET_CONFIGURATION = "86";
+	public static final String PORTLET_CONFIGURATION =
+		"com_liferay_portlet_configuration_web_portlet_" +
+			"PortletConfigurationPortlet";
 
 	public static final String PORTLET_DISPLAY_TEMPLATE =
 		"com_liferay_dynamic_data_mapping_web_portlet_" +
