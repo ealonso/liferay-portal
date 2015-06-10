@@ -59,6 +59,7 @@ import com.liferay.portlet.PortletConfigFactoryUtil;
 import com.liferay.portlet.PortletConfigImpl;
 import com.liferay.portlet.PortletPreferencesFactoryConstants;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portlet.configuration.web.upgrade.PortletConfigurationWebUpgrade;
 import com.liferay.portlet.portletconfiguration.action.ActionUtil;
 import com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil;
 import com.liferay.portlet.portletconfiguration.util.PublicRenderParameterConfiguration;
@@ -92,6 +93,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Carlos Sierra Andrés
@@ -808,6 +810,11 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 		ActionUtil.getPublicRenderParameterConfigurationList(
 			renderRequest, portlet);
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortletConfigurationWebUpgrade(
+		PortletConfigurationWebUpgrade portletConfigurationWebUpgrade) {
 	}
 
 	protected void updateFacebook(
