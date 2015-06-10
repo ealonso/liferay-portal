@@ -111,7 +111,6 @@ page import="com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorConstants"
 page import="com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry" %><%@
 page import="com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntryUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.taglib.ui.MenuItem" %><%@
-page import="com.liferay.portal.kernel.settings.SettingsFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.staging.LayoutStagingUtil" %><%@
 page import="com.liferay.portal.kernel.staging.StagingUtil" %><%@
 page import="com.liferay.portal.kernel.template.StringTemplateResource" %><%@
