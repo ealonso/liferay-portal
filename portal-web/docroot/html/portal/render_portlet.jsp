@@ -418,37 +418,6 @@ if (themeDisplay.isAddSessionIdToURL()) {
 
 portletDisplay.setURLClose(urlClose);
 
-// URL configuration
-
-PortletURLImpl urlConfiguration = new PortletURLImpl(request, PortletKeys.PORTLET_CONFIGURATION, plid, PortletRequest.RENDER_PHASE);
-
-urlConfiguration.setWindowState(LiferayWindowState.POP_UP);
-
-urlConfiguration.setEscapeXml(false);
-
-if (portlet.getConfigurationActionInstance() != null) {
-	urlConfiguration.setParameter("mvcPath", "/html/portlet/portlet_configuration/edit_configuration.jsp");
-
-	String settingsScope = (String)request.getAttribute(WebKeys.SETTINGS_SCOPE);
-
-	if (Validator.isNotNull(settingsScope)) {
-		urlConfiguration.setParameter("settingsScope", settingsScope);
-	}
-}
-else if (PortletPermissionUtil.contains(permissionChecker, layout, portletDisplay.getId(), ActionKeys.PERMISSIONS)) {
-	urlConfiguration.setParameter("mvcPath", "/html/portlet/portlet_configuration/edit_permissions.jsp");
-}
-else {
-	urlConfiguration.setParameter("mvcPath", "/html/portlet/portlet_configuration/edit_sharing.jsp");
-}
-
-urlConfiguration.setParameter("redirect", currentURL);
-urlConfiguration.setParameter("returnToFullPageURL", currentURL);
-urlConfiguration.setParameter("portletResource", portletDisplay.getId());
-urlConfiguration.setParameter("resourcePrimKey", PortletPermissionUtil.getPrimaryKey(plid, portlet.getPortletId()));
-
-portletDisplay.setURLConfiguration(urlConfiguration.toString() + "&" + PortalUtil.getPortletNamespace(PortletKeys.PORTLET_CONFIGURATION));
-
 // URL edit
 
 PortletURLImpl urlEdit = new PortletURLImpl(request, portletDisplay.getId(), plid, PortletRequest.RENDER_PHASE);
@@ -1008,11 +977,6 @@ else {
 				{
 					canEditTitle: <%= showConfigurationIcon && portletDecorate %>,
 					columnPos: <%= columnPos %>,
-
-					<liferay-portlet:actionURL name="editTitle" portletName="<%= PortletKeys.PORTLET_CONFIGURATION %>" var="editTitleURL" />
-
-					editTitleURL: '<%= HtmlUtil.escapeJS(editTitleURL.toString()) %>',
-
 					isStatic: '<%= staticVar %>',
 					namespacedId: 'p_p_id<%= HtmlUtil.escapeJS(renderResponseImpl.getNamespace()) %>',
 					portletId: '<%= HtmlUtil.escapeJS(portletDisplay.getId()) %>',
