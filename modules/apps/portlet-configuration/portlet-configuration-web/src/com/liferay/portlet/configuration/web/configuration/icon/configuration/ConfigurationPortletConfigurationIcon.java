@@ -30,8 +30,8 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLImpl;
+import com.liferay.portlet.configuration.web.constants.PortletConfigurationPortletKeys;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.WindowStateException;
@@ -98,8 +98,8 @@ public class ConfigurationPortletConfigurationIcon
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
 		PortletURLImpl urlConfiguration = new PortletURLImpl(
-			request, PortletKeys.PORTLET_CONFIGURATION, plid,
-			PortletRequest.RENDER_PHASE);
+			request, PortletConfigurationPortletKeys.PORTLET_CONFIGURATION,
+			plid, PortletRequest.RENDER_PHASE);
 
 		try {
 			urlConfiguration.setWindowState(LiferayWindowState.POP_UP);
@@ -158,7 +158,8 @@ public class ConfigurationPortletConfigurationIcon
 			PortletPermissionUtil.getPrimaryKey(plid, portlet.getPortletId()));
 
 		return urlConfiguration.toString() + "&" +
-			PortalUtil.getPortletNamespace(PortletKeys.PORTLET_CONFIGURATION);
+			PortalUtil.getPortletNamespace(
+				PortletConfigurationPortletKeys.PORTLET_CONFIGURATION);
 	}
 
 	@Override
