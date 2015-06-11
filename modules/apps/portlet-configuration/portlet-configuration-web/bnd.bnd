@@ -1,0 +1,8 @@
+Bundle-Name: Liferay Portlet Configuration Web
+Bundle-SymbolicName: com.liferay.portlet.configuration.web
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.portlet.configuration.web.constants
+Include-Resource:\
+	classes,\
+	META-INF/resources=src/META-INF/resources

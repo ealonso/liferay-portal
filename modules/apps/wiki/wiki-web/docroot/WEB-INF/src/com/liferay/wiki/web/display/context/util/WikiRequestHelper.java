@@ -22,7 +22,7 @@ import com.liferay.portal.kernel.settings.ParameterMapSettingsLocator;
 import com.liferay.portal.kernel.settings.PortletInstanceSettingsLocator;
 import com.liferay.portal.kernel.settings.SettingsFactory;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.util.PortletKeys;
+import com.liferay.portlet.configuration.web.constants.PortletConfigurationPortletKeys;
 import com.liferay.wiki.constants.WikiConstants;
 import com.liferay.wiki.constants.WikiWebKeys;
 import com.liferay.wiki.model.WikiPage;
@@ -60,7 +60,10 @@ public class WikiRequestHelper extends BaseStrutsRequestHelper {
 				SettingsFactory settingsFactory =
 					wikiWebComponentProvider.getSettingsFactory();
 
-				if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
+				if (portletId.equals(
+						PortletConfigurationPortletKeys.
+							PORTLET_CONFIGURATION)) {
+
 					_wikiGroupServiceSettings = settingsFactory.getSettings(
 						WikiGroupServiceSettings.class,
 						new ParameterMapSettingsLocator(
@@ -104,7 +107,10 @@ public class WikiRequestHelper extends BaseStrutsRequestHelper {
 				SettingsFactory settingsFactory =
 					wikiWebComponentProvider.getSettingsFactory();
 
-				if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
+				if (portletId.equals(
+						PortletConfigurationPortletKeys.
+							PORTLET_CONFIGURATION)) {
+
 					_wikiPortletInstanceSettings = settingsFactory.getSettings(
 						WikiPortletInstanceSettings.class,
 						new ParameterMapSettingsLocator(

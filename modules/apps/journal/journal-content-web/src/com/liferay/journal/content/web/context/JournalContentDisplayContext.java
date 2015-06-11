@@ -36,12 +36,12 @@ import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryServiceUtil;
+import com.liferay.portlet.configuration.web.constants.PortletConfigurationPortletKeys;
 import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
 import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
 import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
@@ -77,7 +77,9 @@ public class JournalContentDisplayContext {
 
 		String portletId = PortalUtil.getPortletId(request);
 
-		if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
+		if (portletId.equals(
+				PortletConfigurationPortletKeys.PORTLET_CONFIGURATION)) {
+
 			return;
 		}
 

@@ -48,7 +48,7 @@ if (rootFolderId != BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
 
 String portletId = portletDisplay.getId();
 
-if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
+if (portletId.equals(PortletConfigurationPortletKeys.PORTLET_CONFIGURATION)) {
 	portletId = portletResource;
 }
 
