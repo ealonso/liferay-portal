@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.configuration.icon.configuration;
+package com.liferay.portlet.configuration.web.configuration.icon.configuration;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -117,9 +117,7 @@ public class ConfigurationPortletConfigurationIcon
 			themeDisplay.getPermissionChecker();
 
 		if (portlet.getConfigurationActionInstance() != null) {
-			urlConfiguration.setParameter(
-				"mvcPath",
-				"/html/portlet/portlet_configuration/edit_configuration.jsp");
+			urlConfiguration.setParameter("mvcPath", "/edit_configuration.jsp");
 
 			String settingsScope = (String)request.getAttribute(
 				WebKeys.SETTINGS_SCOPE);
@@ -135,14 +133,11 @@ public class ConfigurationPortletConfigurationIcon
 						ActionKeys.PERMISSIONS)) {
 
 					urlConfiguration.setParameter(
-						"mvcPath",
-						"/html/portlet/portlet_configuration/" +
-							"edit_permissions.jsp");
+						"mvcPath", "/edit_permissions.jsp");
 				}
 				else {
 					urlConfiguration.setParameter(
-						"mvcPath",
-						"/html/portlet/portlet_configuration/edit_sharing.jsp");
+						"mvcPath", "/edit_sharing.jsp");
 				}
 			}
 			catch (PortalException pe) {
