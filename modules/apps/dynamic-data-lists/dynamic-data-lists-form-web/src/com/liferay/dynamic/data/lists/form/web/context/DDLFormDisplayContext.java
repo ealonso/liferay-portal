@@ -24,8 +24,8 @@ import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.WebKeys;
+import com.liferay.portlet.configuration.web.constants.PortletConfigurationPortletKeys;
 
 import javax.portlet.PortletPreferences;
 
@@ -45,7 +45,9 @@ public class DDLFormDisplayContext {
 
 		String portletId = PortalUtil.getPortletId(request);
 
-		if (portletId.equals(PortletKeys.PORTLET_CONFIGURATION)) {
+		if (portletId.equals(
+				PortletConfigurationPortletKeys.PORTLET_CONFIGURATION)) {
+
 			return;
 		}
 
