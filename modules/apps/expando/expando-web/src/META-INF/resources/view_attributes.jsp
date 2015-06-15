@@ -14,7 +14,7 @@
  */
 --%>
 
-<%@ include file="/html/portlet/expando/init.jsp" %>
+<%@ include file="/init.jsp" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -24,7 +24,7 @@ String modelResourceName = ResourceActionsUtil.getModelResource(request, modelRe
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("mvcPath", "/html/portlet/expando/view_attributes.jsp");
+portletURL.setParameter("mvcPath", "/view_attributes.jsp");
 portletURL.setParameter("redirect", redirect);
 portletURL.setParameter("modelResource", modelResource);
 %>
@@ -65,7 +65,7 @@ List<String> attributeNames = Collections.list(expandoBridge.getAttributeNames()
 		%>
 
 		<portlet:renderURL var="rowURL">
-			<portlet:param name="mvcPath" value="/html/portlet/expando/edit_expando.jsp" />
+			<portlet:param name="mvcPath" value="/edit_expando.jsp" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="columnId" value="<%= String.valueOf(expandoColumn.getColumnId()) %>" />
 			<portlet:param name="modelResource" value="<%= modelResource %>" />
@@ -81,7 +81,7 @@ List<String> attributeNames = Collections.list(expandoBridge.getAttributeNames()
 			value="<%= modelResource %>"
 		/>
 
-		<%@ include file="/html/portlet/expando/attribute_columns.jspf" %>
+		<%@ include file="/attribute_columns.jspf" %>
 	</liferay-ui:search-container-row>
 
 	<c:if test="<%= PortletPermissionUtil.contains(permissionChecker, ExpandoPortletKeys.EXPANDO, ActionKeys.ADD_EXPANDO) %>">
@@ -97,7 +97,7 @@ List<String> attributeNames = Collections.list(expandoBridge.getAttributeNames()
 
 <aui:script>
 	function <portlet:namespace />addExpando() {
-		submitForm(document.hrefFm, '<portlet:renderURL><portlet:param name="mvcPath" value="/html/portlet/expando/edit_expando.jsp" /><portlet:param name="redirect" value="<%= currentURL %>" /><portlet:param name="modelResource" value="<%= modelResource %>" /></portlet:renderURL>');
+		submitForm(document.hrefFm, '<portlet:renderURL><portlet:param name="mvcPath" value="/edit_expando.jsp" /><portlet:param name="redirect" value="<%= currentURL %>" /><portlet:param name="modelResource" value="<%= modelResource %>" /></portlet:renderURL>');
 	}
 </aui:script>
 
