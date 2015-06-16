@@ -3,7 +3,7 @@
 
 <resource-action-mapping>
 	<portlet-resource>
-		<portlet-name>139</portlet-name>
+		<portlet-name>com_liferay_expando_web_portlet_Expando</portlet-name>
 		<permissions>
 			<supports>
 				<action-key>ACCESS_IN_CONTROL_PANEL</action-key>
@@ -23,7 +23,7 @@
 	<model-resource>
 		<model-name>com.liferay.portlet.expando.model.ExpandoColumn</model-name>
 		<portlet-ref>
-			<portlet-name>139</portlet-name>
+			<portlet-name>com_liferay_expando_web_portlet_Expando</portlet-name>
 		</portlet-ref>
 		<weight>1</weight>
 		<permissions>
