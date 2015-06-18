@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,11 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/portlet/expando/init.jsp" %>
+package com.liferay.expando.web.constants;
 
-<liferay-ui:error-header />
+/**
+ * @author Drew Brokke
+ */
+public class ExpandoPortletKeys {
 
-<liferay-ui:error exception="<%= NoSuchColumnException.class %>" message="the-custom-field-could-not-be-found" />
-<liferay-ui:error exception="<%= PrincipalException.class %>" message="you-do-not-have-the-required-permissions" />
+	public static final String EXPANDO =
+		"com_liferay_expando_web_portlet_ExpandoPortlet";
+
+}
