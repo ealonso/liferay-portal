@@ -120,6 +120,7 @@ import com.liferay.portlet.usersadmin.util.UsersAdmin;
 import com.liferay.portlet.usersadmin.util.UsersAdminUtil;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -136,6 +137,7 @@ import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -322,6 +324,38 @@ public class UsersAdminPortlet extends MVCPortlet {
 		for (long deleteUserId : deleteUserIds) {
 			UserServiceUtil.deleteUser(deleteUserId);
 		}
+	}
+
+	public void exportUsers(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		String keywords = ParamUtil.getString(actionRequest, "keywords");
+
+		if (Validator.isNotNull(keywords)) {
+			DynamicActionRequest dynamicActionRequest =
+				new DynamicActionRequest(actionRequest);
+
+			dynamicActionRequest.setParameter("keywords", StringPool.BLANK);
+
+			actionRequest = dynamicActionRequest;
+		}
+
+		String csv = getUsersCSV(actionRequest, actionResponse);
+
+		String fileName = "users.csv";
+		byte[] bytes = csv.getBytes();
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			actionRequest);
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+			actionResponse);
+
+		ServletResponseUtil.sendFile(
+			request, response, fileName, bytes, ContentTypes.TEXT_CSV_UTF8);
+
+		actionRequest.setAttribute(
+			WebKeys.REDIRECT, ActionConstants.COMMON_NULL);
 	}
 
 	public void restoreUsers(
@@ -854,75 +888,6 @@ public class UsersAdminPortlet extends MVCPortlet {
 		return listType.getListTypeId();
 	}
 
-	@Override
-	protected boolean isSessionErrorException(Throwable cause) {
-		if (cause instanceof AddressCityException ||
-			cause instanceof AddressStreetException ||
-			cause instanceof AddressZipException ||
-			cause instanceof CompanyMaxUsersException ||
-			cause instanceof ContactBirthdayException ||
-			cause instanceof ContactNameException ||
-			cause instanceof DuplicateOrganizationException ||
-			cause instanceof EmailAddressException ||
-			cause instanceof GroupFriendlyURLException ||
-			cause instanceof MembershipPolicyException ||
-			cause instanceof NoSuchCountryException ||
-			cause instanceof NoSuchListTypeException ||
-			cause instanceof NoSuchOrganizationException ||
-			cause instanceof NoSuchOrgLaborException ||
-			cause instanceof NoSuchRegionException ||
-			cause instanceof OrganizationNameException ||
-			cause instanceof OrganizationParentException ||
-			cause instanceof PhoneNumberException ||
-			cause instanceof RequiredOrganizationException ||
-			cause instanceof RequiredUserException ||
-			cause instanceof UserEmailAddressException ||
-			cause instanceof UserFieldException ||
-			cause instanceof UserIdException ||
-			cause instanceof UserPasswordException ||
-			cause instanceof UserReminderQueryException ||
-			cause instanceof UserScreenNameException ||
-			cause instanceof UserSmsException ||
-			cause instanceof WebsiteURLException) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public void exportUsers(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		String keywords = ParamUtil.getString(actionRequest, "keywords");
-
-		if (Validator.isNotNull(keywords)) {
-			DynamicActionRequest dynamicActionRequest =
-				new DynamicActionRequest(actionRequest);
-
-			dynamicActionRequest.setParameter("keywords", StringPool.BLANK);
-
-			actionRequest = dynamicActionRequest;
-		}
-
-		String csv = getUsersCSV(actionRequest, actionResponse);
-
-		String fileName = "users.csv";
-		byte[] bytes = csv.getBytes();
-
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(
-			actionRequest);
-		HttpServletResponse response = PortalUtil.getHttpServletResponse(
-			actionResponse);
-
-		ServletResponseUtil.sendFile(
-			request, response, fileName, bytes, ContentTypes.TEXT_CSV_UTF8);
-		
-		actionRequest.setAttribute(
-			WebKeys.REDIRECT, ActionConstants.COMMON_NULL);
-	}
-
 	protected String getUserCSV(User user) {
 		StringBundler sb = new StringBundler(
 			PropsValues.USERS_EXPORT_CSV_FIELDS.length * 2);
@@ -1076,6 +1041,43 @@ public class UsersAdminPortlet extends MVCPortlet {
 		progressTracker.finish(actionRequest);
 
 		return sb.toString();
+	}
+
+	@Override
+	protected boolean isSessionErrorException(Throwable cause) {
+		if (cause instanceof AddressCityException ||
+			cause instanceof AddressStreetException ||
+			cause instanceof AddressZipException ||
+			cause instanceof CompanyMaxUsersException ||
+			cause instanceof ContactBirthdayException ||
+			cause instanceof ContactNameException ||
+			cause instanceof DuplicateOrganizationException ||
+			cause instanceof EmailAddressException ||
+			cause instanceof GroupFriendlyURLException ||
+			cause instanceof MembershipPolicyException ||
+			cause instanceof NoSuchCountryException ||
+			cause instanceof NoSuchListTypeException ||
+			cause instanceof NoSuchOrganizationException ||
+			cause instanceof NoSuchOrgLaborException ||
+			cause instanceof NoSuchRegionException ||
+			cause instanceof OrganizationNameException ||
+			cause instanceof OrganizationParentException ||
+			cause instanceof PhoneNumberException ||
+			cause instanceof RequiredOrganizationException ||
+			cause instanceof RequiredUserException ||
+			cause instanceof UserEmailAddressException ||
+			cause instanceof UserFieldException ||
+			cause instanceof UserIdException ||
+			cause instanceof UserPasswordException ||
+			cause instanceof UserReminderQueryException ||
+			cause instanceof UserScreenNameException ||
+			cause instanceof UserSmsException ||
+			cause instanceof WebsiteURLException) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
