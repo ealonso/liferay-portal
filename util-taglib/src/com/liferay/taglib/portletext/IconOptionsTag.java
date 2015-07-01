@@ -15,6 +15,7 @@
 package com.liferay.taglib.portletext;
 
 import com.liferay.taglib.ui.IconTag;
+import com.liferay.portal.kernel.util.Validator;
 
 /**
  * @author Brian Wing Shun Chan
@@ -23,10 +24,16 @@ public class IconOptionsTag extends IconTag {
 
 	@Override
 	protected String getPage() {
-		return _PAGE;
+		if (Validator.isNull(_view)) {
+			return "/html/taglib/portlet/icon_options/page.jsp";
+		}
+
+		return "/html/taglib/portlet/icon_options/" + _view + "/page.jsp";
 	}
 
-	private static final String _PAGE =
-		"/html/taglib/portlet/icon_options/page.jsp";
+	public void setView(String view) {
+		_view = view;
+	}
 
+	private String _view;
 }
