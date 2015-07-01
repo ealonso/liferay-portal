@@ -777,6 +777,17 @@ public class VelocityTaglibImpl implements VelocityTaglib {
 	}
 
 	@Override
+	public void portletIconOptions(String view) throws Exception {
+		IconOptionsTag iconOptionsTag = new IconOptionsTag();
+
+		setUp(iconOptionsTag);
+
+		iconOptionsTag.setView(view);
+
+		iconOptionsTag.runTag();
+	}
+
+	@Override
 	public void portletIconPortlet() throws Exception {
 		IconPortletTag iconPortletTag = new IconPortletTag();
 
