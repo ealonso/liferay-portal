@@ -57,30 +57,19 @@ SitesUtil.addPortletBreadcrumbEntries(group, layoutsAdminDisplayContext.getPages
 </liferay-ui:error>
 
 <%
-Group selGroup = layoutsAdminDisplayContext.getSelGroup();
-
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 %>
 
-<c:if test="<%= !selGroup.isLayoutSetPrototype() || showHeader %>">
+<c:if test="<%= showHeader %>">
 
 	<%
 	Group liveGroup = layoutsAdminDisplayContext.getLiveGroup();
 	%>
 
-	<c:if test="<%= showHeader %>">
-		<liferay-ui:header
-			escapeXml="<%= false %>"
-			localizeTitle="<%= false %>"
-			title="<%= HtmlUtil.escape(liveGroup.getDescriptiveName(locale)) %>"
-		/>
-	</c:if>
-
-	<liferay-ui:tabs
-		names="<%= layoutsAdminDisplayContext.getTabs1Names() %>"
-		param="tabs1"
-		url="<%= String.valueOf(layoutsAdminDisplayContext.getRedirectURL()) %>"
-		value="<%= layoutsAdminDisplayContext.getTabs1() %>"
+	<liferay-ui:header
+		escapeXml="<%= false %>"
+		localizeTitle="<%= false %>"
+		title="<%= HtmlUtil.escape(liveGroup.getDescriptiveName(locale)) %>"
 	/>
 </c:if>
 
