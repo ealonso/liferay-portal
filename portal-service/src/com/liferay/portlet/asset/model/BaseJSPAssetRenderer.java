@@ -12,10 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.kernel.servlet.taglib.ui;
+package com.liferay.portlet.asset.model;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
@@ -28,27 +30,40 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Julio Camarero
  */
-public abstract class BaseJSPAssetAddonEntry extends BaseAssetAddonEntry {
+public abstract class BaseJSPAssetRenderer
+	extends BaseAssetRenderer implements AssetRenderer {
 
-	public abstract String getJspPath();
+	public abstract String getJspPath(
+		HttpServletRequest request, String template);
 
 	@Override
-	public void include(
-			HttpServletRequest request, HttpServletResponse response)
-		throws IOException {
+	public boolean include(
+			HttpServletRequest request, HttpServletResponse response,
+			String template)
+		throws Exception {
+
+		ServletContext servletContext = getServletContext(request);
+
+		String jspPath = getJspPath(request, template);
+
+		if (Validator.isNull(jspPath)) {
+			return false;
+		}
 
 		RequestDispatcher requestDispatcher =
-			_servletContext.getRequestDispatcher(getJspPath());
+			servletContext.getRequestDispatcher(jspPath);
 
 		try {
 			requestDispatcher.include(request, response);
+
+			return true;
 		}
 		catch (ServletException se) {
 			if (_log.isErrorEnabled()) {
 				_log.error("Unable to include JSP", se);
 			}
 
-			throw new IOException("Unable to include " + getJspPath(), se);
+			throw new IOException("Unable to include " + jspPath, se);
 		}
 	}
 
@@ -56,8 +71,16 @@ public abstract class BaseJSPAssetAddonEntry extends BaseAssetAddonEntry {
 		_servletContext = servletContext;
 	}
 
+	protected ServletContext getServletContext(HttpServletRequest request) {
+		if (_servletContext != null) {
+			return _servletContext;
+		}
+
+		return (ServletContext)request.getAttribute(WebKeys.CTX);
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
-		BaseJSPAssetAddonEntry.class);
+		BaseJSPAssetRenderer.class);
 
 	private ServletContext _servletContext;
 
