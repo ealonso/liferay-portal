@@ -2024,7 +2024,9 @@ public class PortalUtil {
 		return getPortal().getValidUserId(companyId, userId);
 	}
 
-	public static String getVirtualHostname(LayoutSet layoutSet) {
+	public static String getVirtualHostname(LayoutSet layoutSet)
+		throws PortalException {
+
 		return getPortal().getVirtualHostname(layoutSet);
 	}
 
@@ -2197,7 +2199,9 @@ public class PortalUtil {
 		return getPortal().isLayoutDescendant(layout, layoutId);
 	}
 
-	public static boolean isLayoutSitemapable(Layout layout) {
+	public static boolean isLayoutSitemapable(Layout layout)
+		throws PortalException {
+
 		return getPortal().isLayoutSitemapable(layout);
 	}
 

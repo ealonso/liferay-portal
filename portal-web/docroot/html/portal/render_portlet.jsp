@@ -246,7 +246,7 @@ if (portlet.hasPortletMode(responseContentType, LiferayPortletMode.EDIT_DEFAULTS
 }
 
 if (portlet.hasPortletMode(responseContentType, LiferayPortletMode.EDIT_GUEST)) {
-	if (showEditIcon && !layout.isPrivateLayout() && themeDisplay.isShowAddContentIcon()) {
+	if (showEditIcon && LayoutSetPermissionUtil.contains(permissionChecker, layout, ActionKeys.VIEW) && themeDisplay.isShowAddContentIcon()) {
 		showEditGuestIcon = true;
 	}
 }

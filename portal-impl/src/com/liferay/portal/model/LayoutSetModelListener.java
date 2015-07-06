@@ -14,6 +14,8 @@
 
 package com.liferay.portal.model;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 
 /**
@@ -37,8 +39,12 @@ public class LayoutSetModelListener extends BaseModelListener<LayoutSet> {
 			return;
 		}
 
-		if (!layoutSet.isPrivateLayout()) {
-			CacheUtil.clearCache(layoutSet.getCompanyId());
+		try {
+			if (LayoutSetPermissionUtil.isViewableByGuest(layoutSet)) {
+				CacheUtil.clearCache(layoutSet.getCompanyId());
+			}
+		}
+		catch (PortalException e) {
 		}
 	}
 

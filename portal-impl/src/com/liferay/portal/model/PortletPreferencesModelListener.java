@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.persistence.LayoutRevisionUtil;
 import com.liferay.portal.service.persistence.LayoutUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
@@ -56,7 +57,9 @@ public class PortletPreferencesModelListener
 			Layout layout = LayoutUtil.fetchByPrimaryKey(
 				portletPreferences.getPlid());
 
-			if ((layout != null) && !layout.isPrivateLayout()) {
+			if ((layout != null) &&
+				LayoutSetPermissionUtil.isViewableByGuest(layout)) {
+
 				companyId = layout.getCompanyId();
 			}
 			else {
@@ -65,7 +68,8 @@ public class PortletPreferencesModelListener
 						portletPreferences.getPlid());
 
 				if ((layoutRevision != null) &&
-					!layoutRevision.isPrivateLayout()) {
+					LayoutSetPermissionUtil.isViewableByGuest(
+						layoutRevision.getLayoutSet())) {
 
 					companyId = layoutRevision.getCompanyId();
 				}

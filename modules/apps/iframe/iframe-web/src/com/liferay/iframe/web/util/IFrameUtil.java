@@ -25,6 +25,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PropsValues;
@@ -92,7 +93,9 @@ public class IFrameUtil {
 			return true;
 		}
 
-		if (layout.isPrivateLayout() && layout.getGroup().isUser()) {
+		if (!LayoutSetPermissionUtil.isViewableByGuest(layout) &&
+			layout.getGroup().isUser()) {
+
 			return true;
 		}
 

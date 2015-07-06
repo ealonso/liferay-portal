@@ -1232,7 +1232,8 @@ public interface Portal {
 	public long getValidUserId(long companyId, long userId)
 		throws PortalException;
 
-	public String getVirtualHostname(LayoutSet layoutSet);
+	public String getVirtualHostname(LayoutSet layoutSet)
+		throws PortalException;
 
 	/**
 	 * @deprecated As of 7.0.0, with no direct replacement
@@ -1324,7 +1325,7 @@ public interface Portal {
 	public boolean isLayoutDescendant(Layout layout, long layoutId)
 		throws PortalException;
 
-	public boolean isLayoutSitemapable(Layout layout);
+	public boolean isLayoutSitemapable(Layout layout) throws PortalException;
 
 	public boolean isLoginRedirectRequired(HttpServletRequest request);
 

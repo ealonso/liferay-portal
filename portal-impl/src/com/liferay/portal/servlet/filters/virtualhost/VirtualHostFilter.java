@@ -31,6 +31,7 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.impl.LayoutImpl;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.servlet.I18nServlet;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.Portal;
@@ -282,7 +283,7 @@ public class VirtualHostFilter extends BasePortalFilter {
 				}
 
 				if (group.isGuest() && friendlyURL.equals(StringPool.SLASH) &&
-					!layoutSet.isPrivateLayout()) {
+					LayoutSetPermissionUtil.isViewableByGuest(layoutSet)) {
 
 					String homeURL = PortalUtil.getRelativeHomeURL(request);
 

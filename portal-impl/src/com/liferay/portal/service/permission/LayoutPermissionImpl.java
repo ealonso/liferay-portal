@@ -334,10 +334,6 @@ public class LayoutPermissionImpl
 			boolean addGroupPermission = true;
 			boolean addGuestPermission = true;
 
-			if (layout.isPrivateLayout()) {
-				addGuestPermission = false;
-			}
-
 			ResourceLocalServiceUtil.addResources(
 				layout.getCompanyId(), layout.getGroupId(), 0,
 				Layout.class.getName(), layout.getPlid(), false,
@@ -454,18 +450,18 @@ public class LayoutPermissionImpl
 				return false;
 			}
 
-			if (layout.isPrivateLayout()) {
-				if (GroupPermissionUtil.contains(
-						permissionChecker, group, ActionKeys.MANAGE_LAYOUTS) ||
-					UserPermissionUtil.contains(
-						permissionChecker, groupUserId,
-						groupUser.getOrganizationIds(), ActionKeys.UPDATE)) {
+			if (LayoutSetPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.VIEW) ||
+				GroupPermissionUtil.contains(
+					permissionChecker, group, ActionKeys.MANAGE_LAYOUTS) ||
+				UserPermissionUtil.contains(
+					permissionChecker, groupUserId,
+					groupUser.getOrganizationIds(), ActionKeys.UPDATE)) {
 
-					return true;
-				}
-
-				return false;
+				return true;
 			}
+
+			return false;
 		}
 
 		// If the current group is staging, only users with editorial rights can
@@ -485,7 +481,9 @@ public class LayoutPermissionImpl
 		// or by users who can update the site
 
 		if (group.isSite()) {
-			if (GroupPermissionUtil.contains(
+			if (LayoutSetPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.VIEW) ||
+				GroupPermissionUtil.contains(
 					permissionChecker, group, ActionKeys.MANAGE_LAYOUTS) ||
 				GroupPermissionUtil.contains(
 					permissionChecker, group, ActionKeys.UPDATE)) {
@@ -493,7 +491,8 @@ public class LayoutPermissionImpl
 				return true;
 			}
 
-			if (layout.isPrivateLayout() &&
+			if (!LayoutSetPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.VIEW) &&
 				!permissionChecker.isGroupMember(group.getGroupId())) {
 
 				return false;

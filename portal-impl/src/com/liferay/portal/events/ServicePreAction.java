@@ -85,6 +85,7 @@ import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -1637,7 +1638,9 @@ public class ServicePreAction extends Action {
 				group = layout.getGroup();
 			}
 
-			if ((layout != null) && layout.isPrivateLayout()) {
+			if ((layout != null) &&
+				LayoutSetPermissionUtil.isViewableByGuest(layout)) {
+
 				layouts = LayoutLocalServiceUtil.getLayouts(
 					group.getGroupId(), false,
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
@@ -1923,7 +1926,10 @@ public class ServicePreAction extends Action {
 			List<Layout> layouts, long doAsGroupId, String controlPanelCategory)
 		throws PortalException {
 
-		if ((layout == null) || layout.isPrivateLayout()) {
+		if ((layout == null) ||
+			LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.VIEW)) {
+
 			return layouts;
 		}
 

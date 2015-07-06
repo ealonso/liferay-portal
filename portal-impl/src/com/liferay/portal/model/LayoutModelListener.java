@@ -18,6 +18,7 @@ import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.LayoutRevisionLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.servlet.filters.cache.CacheUtil;
 import com.liferay.portlet.exportimport.staging.LayoutStagingUtil;
 
@@ -71,8 +72,12 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			return;
 		}
 
-		if (!layout.isPrivateLayout()) {
-			CacheUtil.clearCache(layout.getCompanyId());
+		try {
+			if (LayoutSetPermissionUtil.isViewableByGuest(layout)) {
+				CacheUtil.clearCache(layout.getCompanyId());
+			}
+		}
+		catch (PortalException e) {
 		}
 	}
 

@@ -132,6 +132,7 @@ import com.liferay.portal.service.BaseServiceImpl;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.base.UserLocalServiceBaseImpl;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.persistence.UserGroupRolePK;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
@@ -3602,7 +3603,9 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			if (layout != null) {
 				Group group = layout.getGroup();
 
-				if (!layout.isPrivateLayout() && !group.isUser()) {
+				if (LayoutSetPermissionUtil.isViewableByGuest(layout) &&
+					!group.isUser()) {
+
 					verifyEmailAddressURL +=
 						"&p_l_id=" + serviceContext.getPlid();
 				}

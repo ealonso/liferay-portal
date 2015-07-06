@@ -47,6 +47,7 @@ import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -419,7 +420,11 @@ public class PortletPreferencesFactoryImpl
 			boolean hasUpdateLayoutPermission = LayoutPermissionUtil.contains(
 				permissionChecker, layout, ActionKeys.UPDATE);
 
-			if (!layout.isPrivateLayout() && hasUpdateLayoutPermission) {
+			boolean hasViewLayoutSetPermission =
+				LayoutSetPermissionUtil.contains(
+					permissionChecker, layout, ActionKeys.VIEW);
+
+			if (hasViewLayoutSetPermission && hasUpdateLayoutPermission) {
 			}
 			else {
 

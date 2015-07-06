@@ -165,6 +165,7 @@ import com.liferay.portal.service.VirtualHostLocalServiceUtil;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPrototypePermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil;
 import com.liferay.portal.service.permission.OrganizationPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
@@ -5818,7 +5819,9 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public String getVirtualHostname(LayoutSet layoutSet) {
+	public String getVirtualHostname(LayoutSet layoutSet)
+		throws PortalException {
+
 		String virtualHostname = layoutSet.getVirtualHostname();
 
 		if (Validator.isNull(virtualHostname)) {
@@ -6384,8 +6387,8 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public boolean isLayoutSitemapable(Layout layout) {
-		if (layout.isPrivateLayout()) {
+	public boolean isLayoutSitemapable(Layout layout) throws PortalException {
+		if (!LayoutSetPermissionUtil.isViewableByGuest(layout)) {
 			return false;
 		}
 
@@ -7400,7 +7403,8 @@ public class PortalImpl implements Portal {
 		if (portletActions) {
 			Group layoutGroup = layout.getGroup();
 
-			if (layout.isPrivateLayout() && !layoutGroup.isLayoutPrototype() &&
+			if (!LayoutSetPermissionUtil.isViewableByGuest(layout) &&
+				!layoutGroup.isLayoutPrototype() &&
 				!layoutGroup.isLayoutSetPrototype()) {
 
 				addGuestPermissions = false;

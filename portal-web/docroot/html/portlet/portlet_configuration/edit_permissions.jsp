@@ -1,3 +1,5 @@
+<%@ page
+		import="com.liferay.portal.service.permission.LayoutSetPermissionUtil" %>
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -240,7 +242,7 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 			if (name.equals(RoleConstants.GUEST) && modelResource.equals(Layout.class.getName())) {
 				Layout resourceLayout = LayoutLocalServiceUtil.getLayout(GetterUtil.getLong(resourcePrimKey));
 
-				if (resourceLayout.isPrivateLayout()) {
+				if (!LayoutSetPermissionUtil.contains(permissionChecker, resourceLayout, ActionKeys.VIEW)) {
 					Group resourceLayoutGroup = resourceLayout.getGroup();
 
 					if (!resourceLayoutGroup.isLayoutSetPrototype()) {
@@ -257,7 +259,7 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 
 					Layout resourceLayout = LayoutLocalServiceUtil.getLayout(resourcePlid);
 
-					if (resourceLayout.isPrivateLayout()) {
+					if (!LayoutSetPermissionUtil.contains(permissionChecker, resourceLayout, ActionKeys.VIEW)) {
 						Group resourceLayoutGroup = resourceLayout.getGroup();
 
 						if (!resourceLayoutGroup.isLayoutPrototype() && !resourceLayoutGroup.isLayoutSetPrototype()) {

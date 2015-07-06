@@ -33,6 +33,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.TeamLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 
 import java.util.ArrayList;
@@ -171,7 +172,7 @@ public class PermissionImporter {
 			Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 			if (!group.isLayoutPrototype() && !group.isLayoutSetPrototype() &&
-				layout.isPrivateLayout()) {
+				!LayoutSetPermissionUtil.isViewableByGuest(layout)) {
 
 				String roleName = role.getName();
 

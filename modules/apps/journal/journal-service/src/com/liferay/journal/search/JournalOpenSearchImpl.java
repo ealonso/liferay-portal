@@ -33,6 +33,7 @@ import com.liferay.portal.service.GroupLocalService;
 import com.liferay.portal.service.LayoutLocalService;
 import com.liferay.portal.service.LayoutSetLocalService;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
@@ -83,23 +84,22 @@ public class JournalOpenSearchImpl extends HitsOpenSearchImpl {
 				articleId);
 
 		for (JournalContentSearch contentSearch : contentSearches) {
-			if (LayoutPermissionUtil.contains(
+			Layout hitLayout = _layoutLocalService.getLayout(
+				contentSearch.getGroupId(), contentSearch.isPrivateLayout(),
+				contentSearch.getLayoutId());
+
+			if (LayoutSetPermissionUtil.contains(
+					permissionChecker, hitLayout, ActionKeys.VIEW) &&
+				LayoutPermissionUtil.contains(
 					permissionChecker, contentSearch.getGroupId(),
 					contentSearch.isPrivateLayout(),
 					contentSearch.getLayoutId(), ActionKeys.VIEW)) {
 
-				if (contentSearch.isPrivateLayout()) {
-					if (!_groupLocalService.hasUserGroup(
-							themeDisplay.getUserId(),
-							contentSearch.getGroupId())) {
+				if (!_groupLocalService.hasUserGroup(
+						themeDisplay.getUserId(), contentSearch.getGroupId())) {
 
-						continue;
-					}
+					continue;
 				}
-
-				Layout hitLayout = _layoutLocalService.getLayout(
-					contentSearch.getGroupId(), contentSearch.isPrivateLayout(),
-					contentSearch.getLayoutId());
 
 				return PortalUtil.getLayoutURL(hitLayout, themeDisplay);
 			}

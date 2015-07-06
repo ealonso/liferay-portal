@@ -84,6 +84,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.impl.LayoutLocalServiceVirtualLayoutsAdvice;
 import com.liferay.portal.service.permission.GroupPermissionUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.service.persistence.LayoutSetUtil;
@@ -385,7 +386,7 @@ public class SitesImpl implements Sites {
 				String roleName = role.getName();
 
 				if (roleName.equals(RoleConstants.ADMINISTRATOR) ||
-					(targetLayout.isPrivateLayout() &&
+					(!LayoutSetPermissionUtil.isViewableByGuest(targetLayout) &&
 					 roleName.equals(RoleConstants.GUEST))) {
 
 					continue;
@@ -549,7 +550,9 @@ public class SitesImpl implements Sites {
 				layoutType.getConfigurationActionDelete(), request, response);
 		}
 
-		if (group.isGuest() && !layout.isPrivateLayout() &&
+		if (group.isGuest() &&
+			LayoutPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.VIEW) &&
 			layout.isRootLayout() &&
 			(LayoutLocalServiceUtil.getLayoutsCount(
 				group, false, LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) == 1)) {

@@ -35,6 +35,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -297,9 +298,10 @@ public abstract class BaseFindActionHelper implements FindActionHelper {
 
 		if ((groupId == layout.getGroupId()) ||
 			(group.getParentGroupId() == layout.getGroupId()) ||
-			(layout.isPrivateLayout() &&
-			 !SitesUtil.isUserGroupLayoutSetViewable(
-				 permissionChecker, layout.getGroup()))) {
+			LayoutSetPermissionUtil.contains(
+				permissionChecker, layout, ActionKeys.VIEW) ||
+			SitesUtil.isUserGroupLayoutSetViewable(
+				permissionChecker, layout.getGroup())) {
 
 			return layout;
 		}

@@ -34,6 +34,7 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ThemeLocalServiceUtil;
 import com.liferay.portal.service.VirtualHostLocalServiceUtil;
+import com.liferay.portal.service.permission.LayoutSetPermissionUtil;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
 
@@ -78,22 +79,27 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 
 		_companyFallbackVirtualHostname = StringPool.BLANK;
 
-		if (Validator.isNotNull(
-				PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME) &&
-			!isPrivateLayout()) {
+		try {
+			if (Validator.isNotNull(
+					PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME) &&
+				LayoutSetPermissionUtil.isViewableByGuest(this)) {
 
-			Group group = GroupLocalServiceUtil.fetchGroup(
-				getCompanyId(), PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
+				Group group = GroupLocalServiceUtil.fetchGroup(
+					getCompanyId(),
+					PropsValues.VIRTUAL_HOSTS_DEFAULT_SITE_NAME);
 
-			if ((group != null) && (getGroupId() == group.getGroupId())) {
-				Company company = CompanyLocalServiceUtil.fetchCompany(
-					getCompanyId());
+				if ((group != null) && (getGroupId() == group.getGroupId())) {
+					Company company = CompanyLocalServiceUtil.fetchCompany(
+						getCompanyId());
 
-				if (company != null) {
-					_companyFallbackVirtualHostname =
-						company.getVirtualHostname();
+					if (company != null) {
+						_companyFallbackVirtualHostname =
+							company.getVirtualHostname();
+					}
 				}
 			}
+		}
+		catch (PortalException e) {
 		}
 
 		return _companyFallbackVirtualHostname;
