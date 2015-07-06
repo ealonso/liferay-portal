@@ -47,11 +47,8 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Julio Camarero
@@ -134,6 +131,11 @@ public class WikiPageAssetRenderer
 	@Override
 	public String getPortletId() {
 		return WikiPortletKeys.WIKI;
+	}
+
+	@Override
+	public int getStatus() {
+		return _page.getStatus();
 	}
 
 	@Override
@@ -321,14 +323,6 @@ public class WikiPageAssetRenderer
 	@Override
 	public boolean isPrintable() {
 		return true;
-	}
-
-	@Override
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.wiki.web)", unbind = "-"
-	)
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
 	}
 
 	@Override

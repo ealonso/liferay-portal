@@ -127,7 +127,7 @@
 
 		<delete dir="${themes.dir}/_unstyled/images/aui" />
 
-		<for param="dir">
+		<for param="alloy.subdir">
 			<path>
 				<dirset
 					dir="${alloy.dir}"
@@ -135,15 +135,18 @@
 				/>
 			</path>
 			<sequential>
-				<basename property="dir.name" file="@{dir}" />
+				<basename property="alloy.subdir.name" file="@{alloy.subdir}" />
+
 				<if>
-					<available file="${alloy.dir}/${dir.name}/assets/skins/sam" />
+					<available file="${alloy.dir}/${alloy.subdir.name}/assets/skins/sam" />
 					<then>
 						<copy todir="${themes.dir}/_unstyled/images/aui" preservelastmodified="true">
-							<fileset dir="{alloy.dir}/${dir.name}/assets/skins/sam" includes="**/*.png,**/*.jpg,**/*.gif" />
+							<fileset dir="${alloy.dir}/${alloy.subdir.name}/assets/skins/sam" includes="**/*.png,**/*.jpg,**/*.gif" />
 						</copy>
 					</then>
 				</if>
+
+				<var name="alloy.subdir.name" unset="true" />
 			</sequential>
 		</for>
 
