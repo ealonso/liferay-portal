@@ -643,6 +643,11 @@
 			<bean class="com.liferay.portal.service.permission.LayoutSetBranchPermissionImpl" />
 		</property>
 	</bean>
+	<bean id="com.liferay.portal.service.permission.LayoutSetPermissionUtil" class="com.liferay.portal.service.permission.LayoutSetPermissionUtil">
+		<property name="layoutSetPermission">
+			<bean class="com.liferay.portal.service.permission.LayoutSetPermissionImpl" />
+		</property>
+	</bean>
 	<bean id="com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil" class="com.liferay.portal.service.permission.LayoutSetPrototypePermissionUtil">
 		<property name="layoutSetPrototypePermission">
 			<bean class="com.liferay.portal.service.permission.LayoutSetPrototypePermissionImpl" />
