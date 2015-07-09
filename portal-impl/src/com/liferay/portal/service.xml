@@ -1072,6 +1072,7 @@
 		<reference package-path="com.liferay.portal" entity="Layout" />
 		<reference package-path="com.liferay.portal" entity="LayoutSetBranch" />
 		<reference package-path="com.liferay.portal" entity="PluginSetting" />
+		<reference package-path="com.liferay.portal" entity="Resource" />
 		<reference package-path="com.liferay.portal" entity="VirtualHost" />
 	</entity>
 	<entity name="LayoutSetBranch" local-service="true" remote-service="true">

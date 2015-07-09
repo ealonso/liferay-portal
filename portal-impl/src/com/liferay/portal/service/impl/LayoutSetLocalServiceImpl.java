@@ -74,6 +74,12 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 
 		layoutSetPersistence.update(layoutSet);
 
+		// Resources
+
+		resourceLocalService.addResources(
+			layoutSet.getCompanyId(), groupId, 0, LayoutSet.class.getName(),
+			layoutSet.getLayoutSetId(), false, true, true);
+
 		return layoutSet;
 	}
 
