@@ -109,7 +109,7 @@ public class LayoutSetPermissionImpl
 			layoutSet.getCompanyId(), RoleConstants.GUEST);
 
 		return ResourcePermissionLocalServiceUtil.hasResourcePermission(
-			layoutSet.getCompanyId(), Layout.class.getName(),
+			layoutSet.getCompanyId(), LayoutSet.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL,
 			String.valueOf(layoutSet.getLayoutSetId()), role.getRoleId(),
 			ActionKeys.VIEW);
