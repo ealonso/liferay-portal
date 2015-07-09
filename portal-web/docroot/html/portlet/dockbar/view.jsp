@@ -40,7 +40,7 @@ boolean portalMessageUseAnimation = GetterUtil.getBoolean(PortalMessages.get(req
 %>
 
 <c:choose>
-	<c:when test="<%= !group.isControlPanel() && !group.isUserPersonalPanel() && userSetupComplete %>">
+	<c:when test="<%= !layout.isTypeControlPanel() && !group.isControlPanel() && !group.isUserPersonalPanel() && userSetupComplete %>">
 		<aui:nav-bar cssClass="dockbar navbar-static-top" data-namespace="<%= renderResponse.getNamespace() %>" id="dockbar">
 			<aui:nav ariaLabel='<%= LanguageUtil.get(request, "layout-controls") %>' collapsible="<%= false %>" cssClass='<%= portalMessageUseAnimation ? "nav-add-controls navbar-nav" : "nav-add-controls nav-add-controls-notice navbar-nav" %>' icon="pencil" id="navAddControls">
 				<aui:nav-item cssClass="dockbar-item" dropdown="<%= true %>" iconCssClass="icon-pencil" toggleTouch="<%= false %>">
