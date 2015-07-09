@@ -21,9 +21,17 @@ import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.impl.VirtualLayout;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalService;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.ControlPanelEntry;
 import com.liferay.portlet.PortletURLFactoryUtil;
 
@@ -62,13 +70,24 @@ public abstract class BaseControlPanelEntryPanelApp implements PanelApp {
 		throws PortalException {
 
 		try {
-			LiferayPortletURL portletURL = PortletURLFactoryUtil.create(
-				request, getPortletId(), urlBuilder.getPlid(),
-				PortletRequest.RENDER_PHASE);
+			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
-			if (urlBuilder.getGroupId() > 0 ) {
-				portletURL.setDoAsGroupId(urlBuilder.getGroupId());
-			}
+			Group controlPanelGroup = GroupLocalServiceUtil.getGroup(
+				themeDisplay.getCompanyId(), GroupConstants.CONTROL_PANEL);
+
+			Layout controlPanelLayout = LayoutLocalServiceUtil.fetchFirstLayout(
+				controlPanelGroup.getGroupId(), true,
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+			VirtualLayout manage = new VirtualLayout(
+				controlPanelLayout, themeDisplay.getScopeGroup());
+
+			request.setAttribute(WebKeys.LAYOUT, manage);
+
+			LiferayPortletURL portletURL = PortletURLFactoryUtil.create(
+				request, getPortletId(), manage.getPlid(),
+				PortletRequest.RENDER_PHASE);
 
 			portletURL.setWindowState(WindowState.MAXIMIZED);
 
