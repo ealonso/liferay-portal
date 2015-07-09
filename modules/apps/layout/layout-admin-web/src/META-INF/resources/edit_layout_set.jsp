@@ -51,6 +51,7 @@ else {
 		<c:if test="<%= pagesCount > 0 %>">
 			<aui:nav-item href="<%= group.getDisplayURL(themeDisplay, privateLayout) %>" iconCssClass="icon-file" label="view-pages" target="_blank" />
 		</c:if>
+
 		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ADD_LAYOUT) %>">
 			<portlet:renderURL var="addPagesURL">
 				<portlet:param name="mvcPath" value="/add_layout.jsp" />
@@ -59,6 +60,18 @@ else {
 			</portlet:renderURL>
 
 			<aui:nav-item href="<%= addPagesURL %>" iconCssClass="icon-plus" label="add-page" />
+		</c:if>
+
+		<c:if test="<%= LayoutSetPermissionUtil.contains(permissionChecker, selLayoutSet, ActionKeys.PERMISSIONS) %>">
+			<liferay-security:permissionsURL
+				modelResource="<%= LayoutSet.class.getName() %>"
+				modelResourceDescription="<%= liveGroup.getLayoutRootNodeName(privateLayout, locale) %>"
+				resourcePrimKey="<%= String.valueOf(selLayoutSet.getLayoutSetId()) %>"
+				var="permissionsURL"
+				windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+			/>
+
+			<aui:nav-item href="<%= permissionsURL %>" iconCssClass="icon-lock" label="permissions" useDialog="<%= true %>" />
 		</c:if>
 	</aui:nav>
 </aui:nav-bar>
