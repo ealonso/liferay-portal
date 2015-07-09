@@ -152,17 +152,33 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 
 				<%
 				String selectedLayoutIds = ParamUtil.getString(request, "selectedLayoutIds");
+
+				Group liveGroup = layoutsAdminDisplayContext.getLiveGroup();
 				%>
 
-				<liferay-ui:layouts-tree
-					groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
-					portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
-					privateLayout="<%= layoutsAdminDisplayContext.isPrivateLayout() %>"
-					rootNodeName="<%= layoutsAdminDisplayContext.getRootNodeName() %>"
-					selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
-					selectedLayoutIds="<%= selectedLayoutIds %>"
-					treeId="layoutsTree"
-				/>
+				<c:if test="<%= group.hasPublicLayouts() %>">
+					<liferay-ui:layouts-tree
+						groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
+						portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
+						privateLayout="<%= false %>"
+						rootNodeName="<%= liveGroup.getLayoutRootNodeName(false, locale) %>"
+						selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
+						selectedLayoutIds="<%= selectedLayoutIds %>"
+						treeId="publicLayoutsTree"
+					/>
+				</c:if>
+
+				<c:if test="<%= group.hasPrivateLayouts() || PropsValues.LAYOUT_PRIVATE_LAYOUTS_ENABLED %>">
+					<liferay-ui:layouts-tree
+						groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
+						portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
+						privateLayout="<%= true %>"
+						rootNodeName="<%= liveGroup.getLayoutRootNodeName(true, locale) %>"
+						selPlid="<%= layoutsAdminDisplayContext.getSelPlid() %>"
+						selectedLayoutIds="<%= selectedLayoutIds %>"
+						treeId="privateLayoutsTree"
+					/>
+				</c:if>
 			</div>
 		</c:if>
 
