@@ -21,8 +21,6 @@ PanelApp panelApp = (PanelApp)request.getAttribute("application-list-ui:panel-ap
 
 PanelCategoryRegistry panelCategoryRegistry = (PanelCategoryRegistry)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
 
-String ppid = themeDisplay.getPpid();
-
 PanelAppURLBuilder panelAppURLBuilder = new PanelAppURLBuilder(panelApp, panelCategoryRegistry);
 
 PortletURL portletURL = panelAppURLBuilder.getPortletURL(request);
@@ -41,8 +39,6 @@ PortletURL portletURL = panelAppURLBuilder.getPortletURL(request);
 	>
 
 		<%
-		portletURL.setWindowState(WindowState.MAXIMIZED);
-
 		Portlet portlet = PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(), panelApp.getPortletId());
 		%>
 
