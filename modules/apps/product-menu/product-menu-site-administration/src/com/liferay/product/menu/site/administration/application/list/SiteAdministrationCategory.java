@@ -55,11 +55,11 @@ public class SiteAdministrationCategory extends BaseJSPPanelCategory {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Group userPersonalPanelGroup = _groupLocalService.getGroup(
+		Group controlPanelGroup = _groupLocalService.getGroup(
 			themeDisplay.getCompanyId(), GroupConstants.CONTROL_PANEL);
 
 		long plid = _layoutLocalService.getDefaultPlid(
-			userPersonalPanelGroup.getGroupId(), true);
+			controlPanelGroup.getGroupId(), true);
 
 		urlBuilder.setPlid(plid);
 		urlBuilder.setGroupId(themeDisplay.getScopeGroupId());
