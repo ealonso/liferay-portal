@@ -897,6 +897,24 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
+	public boolean isShowPrivateLayouts() {
+		if (hasPrivateLayouts() || PropsValues.LAYOUT_PRIVATE_LAYOUTS_ENABLED) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isShowPublicLayouts() {
+		if (hasPublicLayouts() || !isShowPrivateLayouts()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean isShowSite(
 			PermissionChecker permissionChecker, boolean privateSite)
 		throws PortalException {
