@@ -76,6 +76,15 @@ if (modelResource.equals(Layout.class.getName())) {
 	groupId = group.getGroupId();
 }
 
+LayoutSet selLayoutSet = null;
+
+if (modelResource.equals(LayoutSet.class.getName())) {
+	selLayoutSet = LayoutSetLocalServiceUtil.getLayoutSet(GetterUtil.getLong(resourcePrimKey));
+
+	group = selLayoutSet.getGroup();
+	groupId = group.getGroupId();
+}
+
 Resource resource = null;
 
 try {
@@ -322,7 +331,7 @@ definePermissionsURL.setWindowState(LiferayWindowState.POP_UP);
 
 				// LPS-32515
 
-				if ((selLayout != null) && group.isGuest() && SitesUtil.isFirstLayout(selLayout.getGroupId(), selLayout.isPrivateLayout(), selLayout.getLayoutId())) {
+				if (group.isGuest() && ((selLayoutSet != null) || ((selLayout != null) && SitesUtil.isFirstLayout(selLayout.getGroupId(), selLayout.isPrivateLayout(), selLayout.getLayoutId())))) {
 					guestUnsupportedActions = new ArrayList<String>(guestUnsupportedActions);
 
 					guestUnsupportedActions.add(ActionKeys.VIEW);
