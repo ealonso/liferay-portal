@@ -17,31 +17,39 @@
 <%@ include file="/html/portlet/export_import/init.jsp" %>
 
 <%
-String tabs1 = ParamUtil.getString(request, "tabs1", "public-pages");
-
 GroupDisplayContextHelper groupDisplayContextHelper = new GroupDisplayContextHelper(request);
 
 Group liveGroup = groupDisplayContextHelper.getLiveGroup();
 
 boolean privateLayout = false;
 
-if (tabs1.equals("private-pages")) {
+if (liveGroup.isShowPrivateLayouts() && liveGroup.isShowPublicLayouts()) {
+	String tabs1 = ParamUtil.getString(request, "tabs1", "public-pages");
+
+	if (tabs1.equals("private-pages")) {
+		privateLayout = true;
+	}
+%>
+
+	<liferay-portlet:renderURL varImpl="portletURL">
+		<portlet:param name="struts_action" value="/export_import/view" />
+	</liferay-portlet:renderURL>
+
+	<liferay-ui:tabs
+		names="public-pages,private-pages"
+		param="tabs1"
+		portletURL="<%= portletURL %>"
+		type="pills"
+	/>
+
+<%
+}
+else if (liveGroup.isShowPrivateLayouts()) {
 	privateLayout = true;
 }
 
 String rootNodeName = liveGroup.getLayoutRootNodeName(privateLayout, themeDisplay.getLocale());
 %>
-
-<liferay-portlet:renderURL varImpl="portletURL">
-	<portlet:param name="struts_action" value="/export_import/view" />
-</liferay-portlet:renderURL>
-
-<liferay-ui:tabs
-	names="public-pages,private-pages"
-	param="tabs1"
-	portletURL="<%= portletURL %>"
-	type="pills"
-/>
 
 <aui:nav-bar>
 	<aui:nav cssClass="navbar-nav">
