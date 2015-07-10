@@ -24,6 +24,7 @@ page import="com.liferay.portal.kernel.portlet.ConfigurationAction" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletModeFactory" %><%@
 page import="com.liferay.portal.kernel.settings.ArchivedSettings" %><%@
 page import="com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil" %><%@
+page import="com.liferay.portal.service.permission.LayoutSetPermissionUtil" %><%@
 page import="com.liferay.portal.service.permission.TeamPermissionUtil" %><%@
 page import="com.liferay.portal.util.ResourcePermissionUtil" %><%@
 page import="com.liferay.portlet.PortletQNameUtil" %><%@
