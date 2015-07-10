@@ -174,6 +174,10 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public boolean isRoot();
 
+	public boolean isShowPrivateLayouts();
+
+	public boolean isShowPublicLayouts();
+
 	public boolean isShowSite(
 		com.liferay.portal.security.permission.PermissionChecker permissionChecker,
 		boolean privateSite)

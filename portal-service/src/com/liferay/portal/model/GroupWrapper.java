@@ -989,6 +989,16 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	}
 
 	@Override
+	public boolean isShowPrivateLayouts() {
+		return _group.isShowPrivateLayouts();
+	}
+
+	@Override
+	public boolean isShowPublicLayouts() {
+		return _group.isShowPublicLayouts();
+	}
+
+	@Override
 	public boolean isShowSite(
 		com.liferay.portal.security.permission.PermissionChecker permissionChecker,
 		boolean privateSite)
