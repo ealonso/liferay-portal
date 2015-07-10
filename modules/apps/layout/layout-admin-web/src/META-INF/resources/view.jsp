@@ -156,7 +156,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 				Group liveGroup = layoutsAdminDisplayContext.getLiveGroup();
 				%>
 
-				<c:if test="<%= group.hasPublicLayouts() %>">
+				<c:if test="<%= group.isShowPublicLayouts() %>">
 					<liferay-ui:layouts-tree
 						groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
 						portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
@@ -168,7 +168,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader");
 					/>
 				</c:if>
 
-				<c:if test="<%= group.hasPrivateLayouts() || PropsValues.LAYOUT_PRIVATE_LAYOUTS_ENABLED %>">
+				<c:if test="<%= group.isShowPrivateLayouts() %>">
 					<liferay-ui:layouts-tree
 						groupId="<%= layoutsAdminDisplayContext.getGroupId() %>"
 						portletURL="<%= layoutsAdminDisplayContext.getEditLayoutURL() %>"
