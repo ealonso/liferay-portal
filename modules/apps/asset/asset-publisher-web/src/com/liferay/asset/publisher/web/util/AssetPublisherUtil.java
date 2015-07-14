@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PrimitiveLongList;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -318,6 +319,31 @@ public class AssetPublisherUtil {
 			});
 
 		actionableDynamicQuery.performActions();
+	}
+
+	public static String filterAssetTagNames(
+		long groupId, String assetTagNames) {
+
+		String[] names = StringUtil.split(assetTagNames);
+
+		long[] tagIds = AssetTagLocalServiceUtil.getTagIds(groupId, names);
+
+		StringBundler sb = new StringBundler();
+
+		for (long tagId : tagIds) {
+			AssetTag assetTag = AssetTagLocalServiceUtil.fetchAssetTag(tagId);
+
+			if (assetTag != null) {
+				sb.append(assetTag.getName());
+				sb.append(StringPool.COMMA);
+			}
+		}
+
+		if (sb.index() > 0) {
+			sb.setIndex(sb.index() - 1);
+		}
+
+		return sb.toString();
 	}
 
 	public static long[] getAssetCategoryIds(
