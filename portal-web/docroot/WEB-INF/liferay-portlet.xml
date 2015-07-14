@@ -7,8 +7,6 @@
 		<icon>/html/icons/my_account.png</icon>
 		<struts-path>my_account</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>my</control-panel-entry-category>
-		<control-panel-entry-weight>1.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -371,8 +369,6 @@
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>software_catalog</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/portlet/softwarecatalog/software-catalog-friendly-url-routes.xml</friendly-url-routes>
-		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
-		<control-panel-entry-weight>11.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<scopeable>true</scopeable>
@@ -523,8 +519,6 @@
 		<icon>/html/icons/user_groups_admin.png</icon>
 		<portlet-data-handler-class>com.liferay.portlet.usergroupsadmin.lar.UserGroupsAdminPortletDataHandler</portlet-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.usergroupsadmin.lar.UserGroupStagedModelDataHandler</staged-model-data-handler-class>
-		<control-panel-entry-category>users</control-panel-entry-category>
-		<control-panel-entry-weight>2.0</control-panel-entry-weight>
 		<custom-attributes-display>com.liferay.portlet.usergroupsadmin.UserGroupCustomAttributesDisplay</custom-attributes-display>
 		<use-default-template>true</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -538,8 +532,6 @@
 		<icon>/html/icons/roles_admin.png</icon>
 		<portlet-data-handler-class>com.liferay.portlet.rolesadmin.lar.RolesAdminPortletDataHandler</portlet-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.rolesadmin.lar.RoleStagedModelDataHandler</staged-model-data-handler-class>
-		<control-panel-entry-category>users</control-panel-entry-category>
-		<control-panel-entry-weight>3.0</control-panel-entry-weight>
 		<custom-attributes-display>com.liferay.portlet.rolesadmin.RoleCustomAttributesDisplay</custom-attributes-display>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>true</use-default-template>
@@ -555,8 +547,6 @@
 		<icon>/html/icons/portal_settings.png</icon>
 		<struts-path>portal_settings</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>configuration</control-panel-entry-category>
-		<control-panel-entry-weight>1.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -572,8 +562,6 @@
 		<icon>/html/icons/monitoring.png</icon>
 		<struts-path>monitoring</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>users</control-panel-entry-category>
-		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -587,8 +575,6 @@
 		<icon>/html/icons/plugins_admin.png</icon>
 		<struts-path>plugins_admin</struts-path>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
-		<control-panel-entry-category>apps</control-panel-entry-category>
-		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
@@ -686,8 +672,6 @@
 		<configuration-action-class>com.liferay.portlet.blogsadmin.action.ConfigurationActionImpl</configuration-action-class>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
 		<portlet-data-handler-class>com.liferay.portlet.blogs.lar.BlogsPortletDataHandler</portlet-data-handler-class>
-		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
-		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>true</use-default-template>
@@ -706,8 +690,6 @@
 		<configuration-action-class>com.liferay.portlet.messageboards.action.ConfigurationActionImpl</configuration-action-class>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
 		<portlet-data-handler-class>com.liferay.portlet.messageboards.lar.MBPortletDataHandler</portlet-data-handler-class>
-		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
-		<control-panel-entry-weight>6.0</control-panel-entry-weight>
 		<permission-propagator>com.liferay.portlet.messageboards.security.permission.MBPermissionPropagatorImpl</permission-propagator>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
@@ -757,8 +739,6 @@
 		<staged-model-data-handler-class>com.liferay.portlet.mobiledevicerules.lar.MDRRuleGroupInstanceStagedModelDataHandler</staged-model-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.mobiledevicerules.lar.MDRRuleGroupStagedModelDataHandler</staged-model-data-handler-class>
 		<staged-model-data-handler-class>com.liferay.portlet.mobiledevicerules.lar.MDRRuleStagedModelDataHandler</staged-model-data-handler-class>
-		<control-panel-entry-category>site_administration.configuration</control-panel-entry-category>
-		<control-panel-entry-weight>5.0</control-panel-entry-weight>
 		<use-default-template>false</use-default-template>
 		<private-request-attributes>false</private-request-attributes>
 		<private-session-attributes>false</private-session-attributes>
@@ -875,8 +855,6 @@
 		<configuration-action-class>com.liferay.portlet.shopping.action.ConfigurationActionImpl</configuration-action-class>
 		<portlet-url-class>com.liferay.portal.struts.StrutsActionPortletURL</portlet-url-class>
 		<portlet-data-handler-class>com.liferay.portlet.shopping.lar.ShoppingPortletDataHandler</portlet-data-handler-class>
-		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
-		<control-panel-entry-weight>6.0</control-panel-entry-weight>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>false</use-default-template>
@@ -904,8 +882,6 @@
 		<portlet-data-handler-class>com.liferay.portlet.documentlibrary.lar.DLPortletDataHandler</portlet-data-handler-class>
 		<webdav-storage-token>document_library</webdav-storage-token>
 		<webdav-storage-class>com.liferay.portlet.documentlibrary.webdav.DLWebDAVStorageImpl</webdav-storage-class>
-		<control-panel-entry-category>site_administration.content</control-panel-entry-category>
-		<control-panel-entry-weight>3.0</control-panel-entry-weight>
 		<preferences-unique-per-layout>false</preferences-unique-per-layout>
 		<preferences-owned-by-group>true</preferences-owned-by-group>
 		<use-default-template>true</use-default-template>
