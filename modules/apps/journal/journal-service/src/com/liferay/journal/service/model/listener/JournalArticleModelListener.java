@@ -32,6 +32,11 @@ public class JournalArticleModelListener
 	extends BaseModelListener<JournalArticle> {
 
 	@Override
+	public void onAfterCreate(JournalArticle article) {
+			clearCache(article);
+		}
+
+	@Override
 	public void onAfterRemove(JournalArticle article) {
 		clearCache(article);
 	}
