@@ -21,6 +21,7 @@ Export-Package:\
 	com.liferay.portal.security.lang,\
 	com.liferay.portal.service.http,\
 	com.liferay.portal.servlet.filters.authverifier,\
+	com.liferay.portal.servlet.filters.cache,\
 	com.liferay.portal.service.permission,\
 	com.liferay.portal.spring.aop,\
 	com.liferay.portal.spring.bean,\
