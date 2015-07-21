@@ -14,6 +14,8 @@
 
 package com.liferay.taglib.aui.base;
 
+import com.liferay.portal.kernel.util.Validator;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
@@ -103,6 +105,12 @@ public abstract class BaseIconTag extends com.liferay.taglib.util.IncludeTag {
 		setScopedAttribute("url", url);
 	}
 
+	public void setView(java.lang.String view) {
+		_view = view;
+
+		setScopedAttribute("view", view);
+	}
+
 	@Override
 	protected void cleanUp() {
 		super.cleanUp();
@@ -114,11 +122,16 @@ public abstract class BaseIconTag extends com.liferay.taglib.util.IncludeTag {
 		_label = null;
 		_target = null;
 		_url = null;
+		_view = null;
 	}
 
 	@Override
 	protected String getPage() {
-		return _PAGE;
+		if (Validator.isNotNull(_view)) {
+			return "/html/taglib/aui/icon/" + _view + "/page.jsp";
+		}
+
+		return "/html/taglib/aui/icon/page.jsp";
 	}
 
 	@Override
@@ -130,6 +143,7 @@ public abstract class BaseIconTag extends com.liferay.taglib.util.IncludeTag {
 		setNamespacedAttribute(request, "label", _label);
 		setNamespacedAttribute(request, "target", _target);
 		setNamespacedAttribute(request, "url", _url);
+		setNamespacedAttribute(request, "view", _view);
 	}
 
 	protected static final String _ATTRIBUTE_NAMESPACE = "aui:icon:";
@@ -144,5 +158,6 @@ public abstract class BaseIconTag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _label = null;
 	private java.lang.String _target = null;
 	private java.lang.String _url = null;
+	private java.lang.String _view = null;
 
 }
