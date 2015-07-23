@@ -17,6 +17,8 @@ package com.liferay.portal.portlet.tracker.internal;
 import com.liferay.portal.kernel.configuration.Configuration;
 import com.liferay.portal.kernel.configuration.ConfigurationFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.language.UTF8Control;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -26,6 +28,7 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -52,6 +55,7 @@ import com.liferay.portal.util.WebAppPool;
 import com.liferay.portal.util.WebKeys;
 import com.liferay.portlet.PortletBagFactory;
 import com.liferay.portlet.PortletInstanceFactory;
+import com.liferay.portlet.PortletResourceBundles;
 import com.liferay.registry.util.StringPlus;
 import com.liferay.util.log4j.Log4JUtil;
 
@@ -65,8 +69,10 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -272,6 +278,11 @@ public class PortletTracker
 
 		collectJxPortletFeatures(serviceReference, portletModel);
 		collectLiferayFeatures(serviceReference, portletModel);
+
+		readResourceBundles(
+			portletModel.getResourceBundle(),
+			bundlePortletApp.getServletContextName(),
+			bundleWiring.getClassLoader());
 
 		PortletBagFactory portletBagFactory = new BundlePortletBagFactory(
 			portlet);
@@ -1151,6 +1162,24 @@ public class PortletTracker
 			catch (Exception e) {
 				_log.error(e, e);
 			}
+		}
+	}
+
+	protected void readResourceBundles(
+		String languageBundleName, String servletContextName,
+		ClassLoader classLoader) {
+
+		if (Validator.isBlank(languageBundleName)) {
+			return;
+		}
+
+		for (Locale locale : LanguageUtil.getAvailableLocales()) {
+			ResourceBundle resourceBundle = ResourceBundle.getBundle(
+				languageBundleName, locale, classLoader, UTF8Control.INSTANCE);
+
+			PortletResourceBundles.put(
+				servletContextName, LocaleUtil.toLanguageId(locale),
+				resourceBundle);
 		}
 	}
 
