@@ -98,5 +98,12 @@
 		}
 	);
 
-	Liferay.Portlet.refresh('#p_p_id_<%= HtmlUtil.escapeJS(breadcrumbDisplayContext.getPortletResource()) %>_', data);
+	Liferay.once(
+		'portletReady',
+		function(event) {
+			if (event.portletId ===  '<%= HtmlUtil.escapeJS(breadcrumbDisplayContext.getPortletResource()) %>') {
+				Liferay.Portlet.refresh('#p_p_id_<%= HtmlUtil.escapeJS(breadcrumbDisplayContext.getPortletResource()) %>_', data);
+			}
+		}
+	);
 </aui:script>
