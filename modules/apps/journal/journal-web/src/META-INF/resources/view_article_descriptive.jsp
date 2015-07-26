@@ -41,7 +41,7 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 %>
 
 <liferay-ui:app-view-entry
-	actionJsp="/article_action.jsp"
+	actionJsp="/lexicon/article_action.jsp"
 	actionJspServletContext="<%= application %>"
 	assetCategoryClassName="<%= JournalArticle.class.getName() %>"
 	assetCategoryClassPK="<%= article.getResourcePrimKey() %>"
@@ -69,4 +69,5 @@ String articleImageURL = article.getArticleImageURL(themeDisplay);
 	title="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
 	url="<%= tempRowURL.toString() %>"
 	version="<%= String.valueOf(article.getVersion()) %>"
+	view="lexicon"
 />
