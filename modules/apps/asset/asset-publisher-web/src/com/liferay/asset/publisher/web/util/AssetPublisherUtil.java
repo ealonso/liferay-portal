@@ -965,9 +965,22 @@ public class AssetPublisherUtil {
 			String layoutUuid = scopeId.substring(
 				SCOPE_ID_LAYOUT_UUID_PREFIX.length());
 
+			int openParenthesesIndex = layoutUuid.lastIndexOf(
+				StringPool.OPEN_PARENTHESIS);
+
+			boolean scopeIdPrivateLayout = privateLayout;
+
+			if (openParenthesesIndex != -1) {
+				scopeIdPrivateLayout = layoutUuid.endsWith(
+					StringUtil.appendParentheticalSuffix(
+						"", Boolean.toString(true)));
+
+				layoutUuid = layoutUuid.substring(0, openParenthesesIndex - 1);
+			}
+
 			Layout scopeIdLayout =
 				LayoutLocalServiceUtil.getLayoutByUuidAndGroupId(
-					layoutUuid, siteGroupId, privateLayout);
+					layoutUuid, siteGroupId, scopeIdPrivateLayout);
 
 			Group scopeIdGroup = null;
 
@@ -1066,7 +1079,9 @@ public class AssetPublisherUtil {
 			Layout layout = LayoutLocalServiceUtil.getLayout(
 				group.getClassPK());
 
-			key = SCOPE_ID_LAYOUT_UUID_PREFIX + layout.getUuid();
+			key = StringUtil.appendParentheticalSuffix(
+				SCOPE_ID_LAYOUT_UUID_PREFIX + layout.getUuid(),
+				Boolean.toString(layout.isPrivateLayout()));
 		}
 		else if (group.isLayoutPrototype() ||
 				 (group.getGroupId() == scopeGroupId)) {
