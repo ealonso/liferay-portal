@@ -14,6 +14,7 @@
 
 package com.liferay.taglib.aui.base;
 
+import com.liferay.portal.kernel.util.Validator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
@@ -123,6 +124,10 @@ public abstract class BaseWorkflowStatusTag extends com.liferay.taglib.util.Incl
 		setScopedAttribute("version", version);
 	}
 
+	public void setView(String view) {
+		_view = view;
+	}
+
 	@Override
 	protected void cleanUp() {
 		super.cleanUp();
@@ -140,7 +145,11 @@ public abstract class BaseWorkflowStatusTag extends com.liferay.taglib.util.Incl
 
 	@Override
 	protected String getPage() {
-		return _PAGE;
+		if (Validator.isNotNull(_view)) {
+			return "/html/taglib/aui/workflow_status/" + _view + "/page.jsp";
+		}
+
+		return "/html/taglib/aui/workflow_status/page.jsp";
 	}
 
 	@Override
@@ -158,9 +167,6 @@ public abstract class BaseWorkflowStatusTag extends com.liferay.taglib.util.Incl
 
 	protected static final String _ATTRIBUTE_NAMESPACE = "aui:workflow-status:";
 
-	private static final String _PAGE =
-		"/html/taglib/aui/workflow_status/page.jsp";
-
 	private java.lang.Object _bean = null;
 	private java.lang.String _helpMessage = null;
 	private java.lang.String _id = null;
@@ -170,5 +176,6 @@ public abstract class BaseWorkflowStatusTag extends com.liferay.taglib.util.Incl
 	private java.lang.Integer _status = null;
 	private java.lang.String _statusMessage = null;
 	private java.lang.String _version = null;
+	private String _view = null;
 
 }

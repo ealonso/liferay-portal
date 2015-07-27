@@ -263,6 +263,11 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	<tag>
 		<description>Creates a navigation list item component for navigating app view entries.</description>
@@ -2059,6 +2064,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>scroll</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
 			<description>Whether to add the <![CDATA[<code>select</code>]]> CSS class to the icon menu. If set to <![CDATA[<code>true</code>]]>, the selected icon is added to the icon menu's trigger when the icon is selected. The default value is <![CDATA[<code>false</code>]]>.</description>
 			<name>select</name>
 			<required>false</required>
@@ -3263,6 +3274,152 @@
 		</attribute>
 		<attribute>
 			<name>treeId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Class to apply to the main item</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Class to apply to the main item</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Extra data to add to the main item</description>
+			<name>extraData</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>State of the element</description>
+			<name>state</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element-item</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Class to apply to the main item</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Type of item</description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element-item-checkbox</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemCheckboxTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Class to apply to the main item</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Id of the input</description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Name of the input</description>
+			<name>name</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Title of the input</description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Value of the input</description>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>Creates a component for displaying entry items such as images, documents, folders, etc. in a concise but informative manner. Items are displayed in a similar fashion to entries in the file system of most operating systems.</description>
+		<name>list-group-element-item-icon</name>
+		<tag-class>com.liferay.taglib.ui.ListGroupElementItemIconTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Class to apply to the main item</description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Id of the input</description>
+			<name>iconCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Name of the input</description>
+			<name>isImage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>Title of the input</description>
+			<name>icon</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>view</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

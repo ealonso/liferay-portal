@@ -13,14 +13,20 @@
  * details.
  */
 --%>
-<%@ include file="/html/taglib/init.jsp" %>
 
-<%
-boolean scroll = GetterUtil.getBoolean(request.getAttribute("iferay-ui:icon-menu:scroll"));
-%>
+<%@ include file="/html/taglib/aui/icon/lexicon/init.jsp" %>
 
-		</ul>
-	<c:if test="<%= scroll %>">
-		</div>
-	</c:if>
-</div>
+<c:choose>
+	<c:when test="<%= Validator.isNotNull(url) %>">
+		<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="<%= url %>" id="<%= id %>" target="<%= target %>">
+			<span class="<%= image %>">
+				<liferay-ui:message key="<%= label %>" />
+			</span>
+		</aui:a>
+	</c:when>
+	<c:otherwise>
+		<span class="<%= cssClass %> <%= image %>" <%= AUIUtil.buildData(data) %> id="<%= id %>">
+			<liferay-ui:message key="<%= label %>" />
+		</span>
+	</c:otherwise>
+</c:choose>

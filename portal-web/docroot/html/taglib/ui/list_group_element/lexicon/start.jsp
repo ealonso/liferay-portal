@@ -13,14 +13,13 @@
  * details.
  */
 --%>
+
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-boolean scroll = GetterUtil.getBoolean(request.getAttribute("iferay-ui:icon-menu:scroll"));
+String cssClass = (String)request.getAttribute("liferay-ui:list-group-element:cssClass");
+String extraData = (String)request.getAttribute("liferay-ui:list-group-element:extraData");
+String state = (String)request.getAttribute("liferay-ui:list-group-element:state");
 %>
 
-		</ul>
-	<c:if test="<%= scroll %>">
-		</div>
-	</c:if>
-</div>
+<li class="<%= cssClass %> list-group-item list-group-item-<%= state %>" <%= extraData %> >
