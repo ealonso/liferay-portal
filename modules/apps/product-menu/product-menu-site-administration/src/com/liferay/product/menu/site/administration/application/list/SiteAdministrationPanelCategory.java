@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = PanelCategory.class
 )
-public class SiteAdministrationCategory extends BaseJSPPanelCategory {
+public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 
 	@Override
 	public String getIconCssClass() {
@@ -46,7 +46,7 @@ public class SiteAdministrationCategory extends BaseJSPPanelCategory {
 
 	@Override
 	public String getJspPath() {
-		return "/META-INF/resources/site_administration.jsp";
+		return "/META-INF/resources/sites/site_administration.jsp";
 	}
 
 	@Override
