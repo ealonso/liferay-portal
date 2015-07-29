@@ -25,7 +25,7 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 %>
 
 <liferay-ui:app-view-entry
-	actionJsp="/folder_action.jsp"
+	actionJsp="/lexicon/folder_action.jsp"
 	actionJspServletContext="<%= application %>"
 	author="<%= folder.getUserName() %>"
 	createDate="<%= folder.getCreateDate() %>"
@@ -40,4 +40,5 @@ PortletURL tempRowURL = (PortletURL)request.getAttribute("view_entries.jsp-tempR
 	thumbnailStyle="max-height: 128px; max-width: 128px;"
 	title="<%= HtmlUtil.escape(folder.getName()) %>"
 	url="<%= tempRowURL.toString() %>"
+	view="lexicon"
 />
