@@ -71,6 +71,9 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 	public java.lang.String getDisplayURL(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay);
 
+	public javax.portlet.PortletURL getAdministrationURL(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay);
+
 	public java.lang.String getDisplayURL(
 		com.liferay.portal.theme.ThemeDisplay themeDisplay,
 		boolean privateLayout);
@@ -190,8 +193,6 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 	public boolean isUser();
 
 	public boolean isUserGroup();
-
-	public boolean isUserPersonalPanel();
 
 	public boolean isUserPersonalSite();
 

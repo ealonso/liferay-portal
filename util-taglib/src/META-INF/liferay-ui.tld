@@ -101,7 +101,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling this component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -276,7 +275,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling this component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -393,7 +391,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling this component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1719,7 +1716,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the header component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1770,7 +1766,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -1920,7 +1915,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2001,7 +1995,6 @@
 		<tag-class>com.liferay.taglib.ui.IconMenuTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2172,7 +2165,6 @@
 		<tag-class>com.liferay.taglib.ui.InputCheckBoxTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2229,7 +2221,6 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2370,7 +2361,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2689,7 +2679,6 @@
 		<tag-class>com.liferay.taglib.ui.InputMoveBoxesTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2790,7 +2779,6 @@
 		<tag-class>com.liferay.taglib.ui.InputRepeatTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2802,7 +2790,6 @@
 		<tag-class>com.liferay.taglib.ui.InputResourceTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2850,7 +2837,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2900,7 +2886,6 @@
 		<tag-class>com.liferay.taglib.ui.InputSelectTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2938,7 +2923,6 @@
 		<tag-class>com.liferay.taglib.ui.InputTextAreaTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -2982,7 +2966,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the time input.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3060,7 +3043,6 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3469,7 +3451,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>displayStyleDefinition</name>
+			<name>ddmTemplateGroupId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>ddmTemplateKey</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -3501,6 +3488,16 @@
 		<attribute>
 			<name>rootLayoutType</name>
 			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>organization-search-container-results</name>
+		<tag-class>com.liferay.taglib.ui.OrganizationSearchContainerResultsTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>organizationParams</name>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
@@ -3611,7 +3608,6 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3686,7 +3682,6 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the component.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -3979,6 +3974,11 @@
 		<tei-class>com.liferay.taglib.ui.SearchContainerTei</tei-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>A variable for the search container's pagination. Different pagination variables ensure independent pagination when multiple search containers are on a JSP.</description>
 			<name>curParam</name>
 			<required>false</required>
@@ -4154,7 +4154,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4209,6 +4208,108 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>search-container-column-icon</name>
+		<tag-class>com.liferay.taglib.ui.SearchContainerColumnIconTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>align</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>href</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>icon</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>index</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>toggleRowChecker</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>valign</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>search-container-column-image</name>
+		<tag-class>com.liferay.taglib.ui.SearchContainerColumnImageTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>align</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>colspan</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>int</type>
+		</attribute>
+		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>href</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>src</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>index</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>toggleRowChecker</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>valign</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<description>Creates a column in a search container with the contents of a JSP file.</description>
 		<name>search-container-column-jsp</name>
 		<tag-class>com.liferay.taglib.ui.SearchContainerColumnJSPTag</tag-class>
@@ -4227,7 +4328,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4273,7 +4373,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4362,7 +4461,6 @@
 			<type>int</type>
 		</attribute>
 		<attribute>
-			<description>A CSS class for styling the column.</description>
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -4543,6 +4641,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description>The returned model instances as HTML escaped.</description>
 			<name>escapedModel</name>
 			<required>false</required>
@@ -4585,6 +4688,11 @@
 		</attribute>
 		<attribute>
 			<name>stringKey</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>state</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -4637,6 +4745,11 @@
 		<name>search-iterator</name>
 		<tag-class>com.liferay.taglib.ui.SearchIteratorTag</tag-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<name>displayStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 		<attribute>
 			<description>Whether to add a <![CDATA[<code>liferay-ui:search-paginator</code>]]> to the search container. The default value is <![CDATA[<code>true</code>]]>.</description>
 			<name>paginate</name>
@@ -5436,6 +5549,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
+			<name>userIconCssClass</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
 			<name>userId</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -5467,6 +5585,26 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>user-name-fields</name>
+		<tag-class>com.liferay.taglib.ui.UserNameFieldsTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>bean</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>contact</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>user</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>user-group-search-form</name>
 		<tag-class>com.liferay.taglib.ui.UserGroupSearchFormTag</tag-class>
 		<body-content>JSP</body-content>
@@ -5485,6 +5623,16 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<name>userParams</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>user-search-container-results</name>
+		<tag-class>com.liferay.taglib.ui.UserSearchContainerResultsTag</tag-class>
+		<body-content>JSP</body-content>
 		<attribute>
 			<name>userParams</name>
 			<required>true</required>

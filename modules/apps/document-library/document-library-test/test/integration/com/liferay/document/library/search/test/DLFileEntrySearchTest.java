@@ -15,9 +15,16 @@
 package com.liferay.document.library.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
+import com.liferay.dynamic.data.mapping.model.DDMForm;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.search.TestOrderHelper;
+import com.liferay.dynamic.data.mapping.util.DDMBeanCopyUtil;
+import com.liferay.dynamic.data.mapping.util.DDMIndexerUtil;
+import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
@@ -45,41 +52,25 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.test.log.CaptureAppender;
-import com.liferay.portal.test.log.Log4JLoggerTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryMetadata;
 import com.liferay.portlet.documentlibrary.model.DLFileEntryType;
-import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryTypeLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.store.BaseStore;
 import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
-import com.liferay.portlet.dynamicdatamapping.model.DDMForm;
-import com.liferay.portlet.dynamicdatamapping.model.DDMFormLayout;
-import com.liferay.portlet.dynamicdatamapping.model.DDMStructure;
-import com.liferay.portlet.dynamicdatamapping.model.DDMTemplate;
-import com.liferay.portlet.dynamicdatamapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.model.LocalizedValue;
+import com.liferay.portlet.dynamicdatamapping.storage.DDMFormFieldValue;
 import com.liferay.portlet.dynamicdatamapping.storage.DDMFormValues;
-import com.liferay.portlet.dynamicdatamapping.util.DDMIndexerUtil;
-import com.liferay.portlet.dynamicdatamapping.util.DDMUtil;
 
 import java.io.File;
 import java.io.InputStream;
 
-import java.util.List;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
-
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Ignore;
@@ -279,14 +270,12 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 		String content = "Content: Enterprise. Open Source. For Life.";
 
-		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(
-			_ddmStructure.getDDMForm(),
-			DDMFormValuesTestUtil.createAvailableLocales(LocaleUtil.US),
-			LocaleUtil.US);
+		DDMFormValues ddmFormValues = createDDMFormValues(
+			DDMBeanCopyUtil.copyDDMForm(_ddmStructure.getDDMForm()));
 
 		for (String keyword : keywords) {
 			ddmFormValues.addDDMFormFieldValue(
-				DDMFormValuesTestUtil.createLocalizedDDMFormFieldValue(
+				createLocalizedDDMFormFieldValue(
 					"name", StringUtil.trim(keyword)));
 		}
 
@@ -341,6 +330,33 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 			folderId, keywords + ".txt", keywords, approved, serviceContext);
 
 		return (DLFileEntry)fileEntry.getModel();
+	}
+
+	protected DDMFormValues createDDMFormValues(
+		com.liferay.portlet.dynamicdatamapping.model.DDMForm ddmForm) {
+
+		DDMFormValues ddmFormValues = new DDMFormValues(ddmForm);
+
+		ddmFormValues.addAvailableLocale(LocaleUtil.US);
+		ddmFormValues.setDefaultLocale(LocaleUtil.US);
+
+		return ddmFormValues;
+	}
+
+	protected DDMFormFieldValue createLocalizedDDMFormFieldValue(
+		String name, String value) {
+
+		DDMFormFieldValue ddmFormFieldValue = new DDMFormFieldValue();
+
+		ddmFormFieldValue.setName(name);
+
+		LocalizedValue localizedValue = new LocalizedValue(LocaleUtil.US);
+
+		localizedValue.addString(LocaleUtil.US, value);
+
+		ddmFormFieldValue.setValue(localizedValue);
+
+		return ddmFormFieldValue;
 	}
 
 	@Override
@@ -479,43 +495,12 @@ public class DLFileEntrySearchTest extends BaseSearchTestCase {
 
 		DLFileEntry dlFileEntry = (DLFileEntry)baseModel;
 
-		try (CaptureAppender captureAppender =
-				Log4JLoggerTestUtil.configureLog4JLogger(
-					BaseStore.class.getName(), Level.WARN)) {
+		FileEntry fileEntry = DLAppServiceUtil.updateFileEntry(
+			dlFileEntry.getFileEntryId(), null, dlFileEntry.getMimeType(),
+			keywords, StringPool.BLANK, StringPool.BLANK, true, (byte[])null,
+			serviceContext);
 
-			DLFileVersion dlFileVersion =
-				DLFileVersionLocalServiceUtil.fetchLatestFileVersion(
-					dlFileEntry.getFileEntryId(), !dlFileEntry.isCheckedOut());
-
-			FileEntry fileEntry = DLAppServiceUtil.updateFileEntry(
-				dlFileEntry.getFileEntryId(), null, dlFileEntry.getMimeType(),
-				keywords, StringPool.BLANK, StringPool.BLANK, true,
-				(byte[])null, serviceContext);
-
-			List<LoggingEvent> loggingEvents =
-				captureAppender.getLoggingEvents();
-
-			if (dlFileVersion.isApproved()) {
-				Assert.assertEquals(1, loggingEvents.size());
-
-				LoggingEvent loggingEvent = loggingEvents.get(0);
-
-				String message = (String)loggingEvent.getMessage();
-
-				Assert.assertTrue(
-					message.startsWith(
-						"Unable to delete file {companyId=" +
-							fileEntry.getCompanyId()));
-				Assert.assertTrue(
-					message.endsWith(
-						"versionLabel=PWC} because it does not exist"));
-			}
-			else {
-				Assert.assertTrue(loggingEvents.isEmpty());
-			}
-
-			return (DLFileEntry)fileEntry.getModel();
-		}
+		return (DLFileEntry)fileEntry.getModel();
 	}
 
 	@Override
