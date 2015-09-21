@@ -868,8 +868,6 @@ public class ServicePreAction extends Action {
 
 		// Icons
 
-		themeDisplay.setShowAddContentIcon(false);
-
 		boolean showControlPanelIcon = false;
 
 		if (signedIn &&
@@ -987,31 +985,11 @@ public class ServicePreAction extends Action {
 				themeDisplay.setFreeformLayout(freeformLayout);
 
 				if (hasUpdateLayoutPermission) {
-					themeDisplay.setShowAddContentIconPermission(true);
-
-					if (!LiferayWindowState.isMaximized(request)) {
-						themeDisplay.setShowAddContentIcon(true);
-					}
-
 					themeDisplay.setShowLayoutTemplatesIcon(true);
 
 					if (!group.isUser()) {
 						themeDisplay.setShowPageCustomizationIcon(true);
 					}
-
-					themeDisplay.setURLAddContent(
-						"Liferay.Dockbar.loadAddPanel();");
-				}
-
-				if (hasCustomizeLayoutPermission && customizedView) {
-					themeDisplay.setShowAddContentIconPermission(true);
-
-					if (!LiferayWindowState.isMaximized(request)) {
-						themeDisplay.setShowAddContentIcon(true);
-					}
-
-					themeDisplay.setURLAddContent(
-						"Liferay.Dockbar.loadAddPanel();");
 				}
 			}
 
@@ -1068,7 +1046,6 @@ public class ServicePreAction extends Action {
 			}
 
 			if (group.hasStagingGroup() && !group.isStagingGroup()) {
-				themeDisplay.setShowAddContentIcon(false);
 				themeDisplay.setShowLayoutTemplatesIcon(false);
 				themeDisplay.setURLPublishToLive(null);
 			}
@@ -1120,7 +1097,6 @@ public class ServicePreAction extends Action {
 				companyId, PropsKeys.TERMS_OF_USE_REQUIRED) &&
 			 !user.isAgreedToTermsOfUse())) {
 
-			themeDisplay.setShowAddContentIcon(false);
 			themeDisplay.setShowMyAccountIcon(false);
 			themeDisplay.setShowPageSettingsIcon(false);
 		}
