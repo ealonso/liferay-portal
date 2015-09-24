@@ -193,11 +193,14 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 									%>
 
 										<span class="asset-subtypefields hide" id="<portlet:namespace /><%= classType.getClassTypeId() %>_<%= className %>Options">
-											<liferay-portlet:renderURL portletName="<%= AssetPublisherPortletKeys.ASSET_PUBLISHER %>" var="selectStructureFieldURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+											<liferay-portlet:renderURL portletName="<%= assetPublisherDisplayContext.getPortletResource() %>" var="selectStructureFieldURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 												<portlet:param name="mvcPath" value="/select_structure_field.jsp" />
 												<portlet:param name="portletResource" value="<%= assetPublisherDisplayContext.getPortletResource() %>" />
 												<portlet:param name="className" value="<%= assetRendererFactory.getClassName() %>" />
 												<portlet:param name="classTypeId" value="<%= String.valueOf(classType.getClassTypeId()) %>" />
+												<portlet:param name="ddmStructureDisplayFieldValue" value="[$DDM_STRUCTURE_DISPLAY_FIELD_VALUE$]" />
+												<portlet:param name="ddmStructureFieldName" value="[$DDM_STRUCTURE_FIELD_NAMES$]" />
+												<portlet:param name="ddmStructureFieldValue" value="[$DDM_STRUCTURE_FIELD_VALUE$]" />
 												<portlet:param name="eventName" value='<%= renderResponse.getNamespace() + "selectDDMStructureField" %>' />
 											</liferay-portlet:renderURL>
 
@@ -738,6 +741,11 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		function(event) {
 			var currentTarget = $(event.currentTarget);
 			var btn = $('.btn', currentTarget);
+			var uri = btn.data('href');
+
+			uri = uri.replace(escape('[$DDM_STRUCTURE_DISPLAY_FIELD_VALUE$]'), $('#<portlet:namespace />ddmStructureDisplayFieldValue').val());
+			uri = uri.replace(escape('[$DDM_STRUCTURE_FIELD_NAMES$]'), $('#<portlet:namespace />ddmStructureFieldName').val());
+			uri = uri.replace(escape('[$DDM_STRUCTURE_FIELD_VALUE$]'), $('#<portlet:namespace />ddmStructureFieldValue').val());
 
 			Liferay.Util.selectEntity(
 				{
@@ -749,7 +757,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 					eventName: '<portlet:namespace />selectDDMStructureField',
 					id: '<portlet:namespace />selectDDMStructure' + currentTarget.attr('id'),
 					title: '<liferay-ui:message arguments="structure-field" key="select-x" />',
-					uri: btn.data('href')
+					uri: uri
 				},
 				function(event) {
 					setDDMFields(event.className, event.name, event.value, event.displayValue, event.label + ': ' + event.displayValue);
