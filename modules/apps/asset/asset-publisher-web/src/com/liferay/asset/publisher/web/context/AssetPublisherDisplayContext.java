@@ -1343,13 +1343,30 @@ public class AssetPublisherDisplayContext {
 		_ddmStructureFieldName = StringPool.BLANK;
 		_ddmStructureFieldValue = null;
 
-		long[] classNameIds = getClassNameIds();
-		long[] classTypeIds = getClassTypeIds();
+		long classNameId = 0L;
 
-		if (!isSubtypeFieldsFilterEnabled() || (classNameIds.length != 1) ||
-			(classTypeIds.length != 1)) {
+		String className = ParamUtil.getString(_request, "className");
+		long classTypeId = ParamUtil.getLong(_request, "classTypeId");
 
-			return;
+		if (Validator.isNull(className) || (classTypeId <= 0)) {
+			long[] classNameIds = getClassNameIds();
+			long[] classTypeIds = getClassTypeIds();
+
+			if (!isSubtypeFieldsFilterEnabled() || (classNameIds.length != 1) ||
+				(classTypeIds.length != 1)) {
+
+				return;
+			}
+
+			classNameId = classNameIds[0];
+			classTypeId = classTypeIds[0];
+		}
+		else {
+			AssetRendererFactory<?> assetRendererFactory =
+				AssetRendererFactoryRegistryUtil.
+					getAssetRendererFactoryByClassName(className);
+
+			classNameId = assetRendererFactory.getClassNameId();
 		}
 
 		_ddmStructureDisplayFieldValue = ParamUtil.getString(
@@ -1370,13 +1387,13 @@ public class AssetPublisherDisplayContext {
 
 			AssetRendererFactory<?> assetRendererFactory =
 				AssetRendererFactoryRegistryUtil.
-					getAssetRendererFactoryByClassNameId(classNameIds[0]);
+					getAssetRendererFactoryByClassNameId(classNameId);
 
 			ClassTypeReader classTypeReader =
 				assetRendererFactory.getClassTypeReader();
 
 			ClassType classType = classTypeReader.getClassType(
-				classTypeIds[0], themeDisplay.getLocale());
+				classTypeId, themeDisplay.getLocale());
 
 			ClassTypeField classTypeField = classType.getClassTypeField(
 				_ddmStructureFieldName);
