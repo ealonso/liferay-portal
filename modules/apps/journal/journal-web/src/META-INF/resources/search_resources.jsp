@@ -164,7 +164,6 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 
 				params.put("expandoAttributes", searchTerms.getKeywords());
 
-				searchContext.setAttribute("head", Boolean.FALSE.toString());
 				searchContext.setAttribute("params", params);
 				searchContext.setEnd(searchContainer.getEnd());
 				searchContext.setFolderIds(searchTerms.getFolderIds());
