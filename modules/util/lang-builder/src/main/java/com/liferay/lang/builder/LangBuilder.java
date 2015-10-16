@@ -100,6 +100,9 @@ public class LangBuilder {
 		_langFileName = langFileName;
 		_translate = translate;
 
+		System.out.println("translateClientId: " + translateClientId);
+		System.out.println("translateClientSecret: " + translateClientSecret);
+
 		Translate.setClientId(translateClientId);
 		Translate.setClientSecret(translateClientSecret);
 

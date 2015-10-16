@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.staging.processes.web.portlet.constants;
+package com.liferay.staging.processes.web.constants;
 
 /**
  * @author Levente Hudák

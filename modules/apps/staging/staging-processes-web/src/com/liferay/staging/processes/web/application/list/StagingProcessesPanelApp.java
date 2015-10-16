@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.staging.processes.web.portlet.constants.StagingProcessesPortletKeys;
+import com.liferay.staging.processes.web.constants.StagingProcessesPortletKeys;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -48,6 +48,10 @@ public class StagingProcessesPanelApp extends BaseControlPanelEntryPanelApp {
 	public boolean hasAccessPermission(
 			PermissionChecker permissionChecker, Group group)
 		throws PortalException {
+
+		if (group.hasLocalOrRemoteStagingGroup()) {
+			return false;
+		}
 
 		if (group.isLayoutPrototype() || group.isLayoutSetPrototype()) {
 			return false;
