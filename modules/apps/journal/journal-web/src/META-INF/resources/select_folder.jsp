@@ -26,7 +26,12 @@ String folderName = LanguageUtil.get(request, "home");
 if (folder != null) {
 	folderName = folder.getName();
 
-	JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, journalDisplayContext.getPortletURL());
+	PortletURL portletURL = journalDisplayContext.getPortletURL();
+
+	portletURL.setParameter(ActionRequest.ACTION_NAME, "selectFolder");
+	portletURL.setParameter("folderId", "0");
+
+	JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 }
 %>
 
@@ -40,6 +45,7 @@ if (folder != null) {
 	<%
 	PortletURL portletURL = renderResponse.createRenderURL();
 
+	portletURL.setParameter(ActionRequest.ACTION_NAME, "selectFolder");
 	portletURL.setParameter("mvcPath", "/select_folder.jsp");
 	portletURL.setParameter("folderId", String.valueOf(journalDisplayContext.getFolderId()));
 	%>
@@ -86,6 +92,7 @@ if (folder != null) {
 			rowVar="row"
 		>
 			<liferay-portlet:renderURL varImpl="rowURL">
+				<portlet:param name="<%= ActionRequest.ACTION_NAME %>" value="selectFolder" />
 				<portlet:param name="mvcPath" value="/select_folder.jsp" />
 				<portlet:param name="folderId" value="<%= String.valueOf(curFolder.getFolderId()) %>" />
 			</liferay-portlet:renderURL>
