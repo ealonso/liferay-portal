@@ -80,6 +80,12 @@ public abstract class BaseStagedModelDataHandler<T extends StagedModel>
 			PortletDataContext portletDataContext, T stagedModel)
 		throws PortletDataException {
 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		validateExport(portletDataContext, stagedModel);
 
 		String path = ExportImportPathUtil.getModelPath(stagedModel);
