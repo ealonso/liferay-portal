@@ -30,6 +30,12 @@
 	<c:otherwise>
 
 		<%
+		String colorCssClass = "user-icon-default";
+
+		if (userDisplay != null) {
+			colorCssClass = "user-icon-color-" + (Math.abs(userDisplay.getUserId()) % 10);
+		}
+
 		if (Validator.isNull(userName)) {
 			if (userDisplay != null) {
 				userName = userDisplay.getFullName();
@@ -48,7 +54,7 @@
 		}
 		%>
 
-		<div class="<%= userIconCssClass %> user-icon user-icon-default">
+		<div class="<%= colorCssClass %> <%= userIconCssClass %> user-icon">
 			<span><%= sb.toString() %></span>
 		</div>
 	</c:otherwise>
