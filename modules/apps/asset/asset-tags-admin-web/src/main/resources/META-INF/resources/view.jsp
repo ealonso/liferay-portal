@@ -74,7 +74,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 	<aui:input name="deleteTagIds" type="hidden" />
 
 	<liferay-ui:search-container
-		emptyResultsMessage="there-are-no-tags"
+		emptyResultsMessage="there-are-no-tags.-you-can-add-a-tag-by-clicking-the-plus-button-on-the-right-bottom-corner"
 		id="assetTags"
 		rowChecker="<%= new EmptyOnClickRowChecker(renderResponse) %>"
 	>
@@ -134,7 +134,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 			/>
 
 			<liferay-ui:search-container-column-jsp
-				cssClass="checkbox-cell entry-action"
+				cssClass="list-group-item-field"
 				path="/tag_action.jsp"
 			/>
 		</liferay-ui:search-container-row>

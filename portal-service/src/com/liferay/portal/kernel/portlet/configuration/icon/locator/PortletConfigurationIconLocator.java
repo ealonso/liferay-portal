@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,15 +11,11 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/card/init.jsp" %>
+package com.liferay.portal.kernel.portlet.configuration.icon.locator;
 
-<%
-boolean backgroundImage = GetterUtil.getBoolean(request.getAttribute("liferay-frontend:card:backgroundImage"));
-String footer = (String)request.getAttribute("liferay-frontend:card:footer");
-String header = (String)request.getAttribute("liferay-frontend:card:header");
-String stickerBottom = GetterUtil.getString(request.getAttribute("liferay-frontend:card:stickerBottom"));
-String subtitle = (String)request.getAttribute("liferay-frontend:card:subtitle");
-String title = (String)request.getAttribute("liferay-frontend:card:title");
-%>
+/**
+ * @author Eudaldo Alonso
+ */
+public interface PortletConfigurationIconLocator {
+}
