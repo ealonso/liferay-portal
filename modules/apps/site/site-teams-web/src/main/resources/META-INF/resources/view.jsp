@@ -164,7 +164,7 @@ teamSearchContainer.setTotal(totalVar);
 					/>
 
 					<liferay-ui:search-container-column-jsp
-						cssClass="checkbox-cell entry-action"
+						cssClass="list-group-item-field"
 						path="/team_action.jsp"
 					/>
 				</c:when>
