@@ -46,7 +46,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 	</aui:nav>
 </aui:nav-bar>
 
-<c:if test="<%= totalVar > 0 %>">
+<c:if test="<%= (totalVar > 0) || !navigation.equals("all") %>">
 	<liferay-frontend:management-bar
 		checkBoxContainerId="layoutSetPrototypeSearchContainer"
 		includeCheckBox="<%= true %>"
