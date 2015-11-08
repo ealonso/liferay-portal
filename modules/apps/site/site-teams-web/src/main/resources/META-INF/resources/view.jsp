@@ -101,6 +101,7 @@ teamSearchContainer.setTotal(totalVar);
 
 	<liferay-ui:search-container
 		id="teams"
+		emptyResultsMessage="there-are-no-site-teams.-you-can-add-a-site-team-by-clicking-the-plus-button-on-the-right-bottom-corner"
 		rowChecker="<%= new EmptyOnClickRowChecker(renderResponse) %>"
 		searchContainer="<%= teamSearchContainer %>"
 		total="<%= totalVar %>"
