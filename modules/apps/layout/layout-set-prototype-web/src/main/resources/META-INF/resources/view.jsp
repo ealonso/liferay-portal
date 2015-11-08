@@ -29,7 +29,7 @@ Boolean active = null;
 if (navigation.equals("active")) {
 	active = true;
 }
-else if (navigation.equals("deactive")) {
+else if (navigation.equals("inactive")) {
 	active = false;
 }
 
@@ -53,7 +53,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 	>
 		<liferay-frontend:management-bar-filters>
 			<liferay-frontend:management-bar-navigation
-				navigationKeys='<%= new String[] {"all", "active", "deactive"} %>'
+				navigationKeys='<%= new String[] {"all", "active", "inactive"} %>'
 				portletURL="<%= renderResponse.createRenderURL() %>"
 			/>
 
