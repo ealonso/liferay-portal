@@ -74,6 +74,20 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(team.getName());
 %>
 
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item cssClass="active" label="members" />
+	</aui:nav>
+
+	<aui:nav-bar-search>
+		<aui:form action="<%= portletURL.toString() %>" method="get" name="searchFm">
+			<liferay-portlet:renderURLParams varImpl="portletURL" />
+
+			<liferay-ui:input-search markupView="lexicon" />
+		</aui:form>
+	</aui:nav-bar-search>
+</aui:nav-bar>
+
 <div class="container-fluid-1280">
 	<liferay-ui:tabs
 		names="users,user-groups"
