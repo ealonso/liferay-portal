@@ -12,51 +12,43 @@
  * details.
  */
 
-package com.liferay.taglib.ui;
+package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
  */
-public class UserPortraitTag extends IncludeTag {
+public class UserVerticalCardTag extends CardTag {
 
-	public void setCssClass(String cssClass) {
-		_cssClass = cssClass;
+	public void setSubtitle(String subtitle) {
+		_subtitle = HtmlUtil.unescape(subtitle);
 	}
 
-	public void setImageCssClass(String imageCssClass) {
-		_imageCssClass = imageCssClass;
+	public void setTitle(String title) {
+		_title = HtmlUtil.unescape(title);
 	}
 
 	public void setUserId(long userId) {
 		_userId = userId;
 	}
 
-	public void setUserName(String userName) {
-		_userName = userName;
-	}
-
 	@Override
 	protected void cleanUp() {
-		_cssClass = StringPool.BLANK;
-		_imageCssClass = StringPool.BLANK;
+		_subtitle = null;
+		_title = null;
 		_userId = 0;
-		_userName = StringPool.BLANK;
 	}
 
 	protected String getColorCssClass() {
@@ -74,7 +66,7 @@ public class UserPortraitTag extends IncludeTag {
 
 	@Override
 	protected String getPage() {
-		return _PAGE;
+		return "/card/user_vertical_card/page.jsp";
 	}
 
 	protected User getUser() {
@@ -82,15 +74,13 @@ public class UserPortraitTag extends IncludeTag {
 	}
 
 	protected String getUserInitials(User user) {
-		String userName = _userName;
+		String userName = StringPool.BLANK;
 
-		if (Validator.isNull(userName)) {
-			if (user != null) {
-				userName = user.getFullName();
-			}
-			else {
-				userName = LanguageUtil.get(request, "user");
-			}
+		if (user != null) {
+			userName = user.getFullName();
+		}
+		else {
+			userName = LanguageUtil.get(request, "user");
 		}
 
 		String[] userNames = StringUtil.split(userName, StringPool.SPACE);
@@ -112,11 +102,10 @@ public class UserPortraitTag extends IncludeTag {
 
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
+		super.setAttributes(request);
+
 		request.setAttribute(
-			"liferay-ui:user-portrait:colorCssClass", getColorCssClass());
-		request.setAttribute("liferay-ui:user-portrait:cssClass", _cssClass);
-		request.setAttribute(
-			"liferay-ui:user-portrait:imageCssClass", _imageCssClass);
+			"liferay-frontend:card:colorCssClass", getColorCssClass());
 
 		User user = getUser();
 
@@ -126,29 +115,21 @@ public class UserPortraitTag extends IncludeTag {
 
 			try {
 				request.setAttribute(
-					"liferay-ui:user-portrait:portraitURL",
+					"liferay-frontend:card:portraitURL",
 					user.getPortraitURL(themeDisplay));
 			}
 			catch (PortalException pe) {
-				_log.error(pe);
 			}
 		}
 
-		request.setAttribute("liferay-ui:user-portrait:user", user);
+		request.setAttribute("liferay-frontend:card:subtitle", _subtitle);
+		request.setAttribute("liferay-frontend:card:title", _title);
 		request.setAttribute(
-			"liferay-ui:user-portrait:userInitials", getUserInitials(user));
-		request.setAttribute("liferay-ui:user-portrait:userName", _userName);
+			"liferay-frontend:card:userInitials", getUserInitials(user));
 	}
 
-	private static final String _PAGE =
-		"/html/taglib/ui/user_portrait/page.jsp";
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		UserPortraitTag.class);
-
-	private String _cssClass;
-	private String _imageCssClass;
+	private String _subtitle;
+	private String _title;
 	private long _userId;
-	private String _userName;
 
 }

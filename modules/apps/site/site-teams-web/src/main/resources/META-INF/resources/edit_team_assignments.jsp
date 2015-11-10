@@ -17,6 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+
+String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
+
 String tabs1 = ParamUtil.getString(request, "tabs1", "users");
 String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 
@@ -52,6 +57,9 @@ portletURL.setParameter("mvcPath", "/edit_team_assignments.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("tabs2", tabs2);
 portletURL.setParameter("teamId", String.valueOf(team.getTeamId()));
+portletURL.setParameter("displayStyle", displayStyle);
+
+request.setAttribute("edit_team_assignments.jsp-displayStyle", displayStyle);
 
 request.setAttribute("edit_team_assignments.jsp-tabs1", tabs1);
 request.setAttribute("edit_team_assignments.jsp-tabs2", tabs2);
@@ -74,13 +82,67 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(team.getName());
 %>
 
-<div class="container-fluid-1280">
-	<liferay-ui:tabs
-		names="users,user-groups"
-		param="tabs1"
-		portletURL="<%= portletURL %>"
-	/>
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
 
+		<%
+		PortletURL usersURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		usersURL.setParameter("tabs1", "users");
+		%>
+
+		<aui:nav-item href="<%= usersURL.toString() %>" label="users" selected='<%= tabs1.equals("users") %>' />
+
+		<%
+		PortletURL userGroupsURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		userGroupsURL.setParameter("tabs1", "user-groups");
+		%>
+
+		<aui:nav-item href="<%= userGroupsURL.toString() %>" label="user-groups" selected='<%= tabs1.equals("user-groups") %>' />
+	</aui:nav>
+
+	<aui:nav-bar-search>
+		<aui:form action="<%= portletURL.toString() %>" method="get" name="searchFm">
+			<liferay-portlet:renderURLParams varImpl="portletURL" />
+
+			<liferay-ui:input-search markupView="lexicon" />
+		</aui:form>
+	</aui:nav-bar-search>
+</aui:nav-bar>
+
+<liferay-frontend:management-bar
+	checkBoxContainerId="editTeamAssignmentsSearchContainer"
+	includeCheckBox="<%= true %>"
+>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= portletURL %>"
+		/>
+
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"first-name"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
+
+	<liferay-frontend:management-bar-action-buttons>
+		<liferay-frontend:management-bar-button href="javascript:;" iconCssClass="icon-trash" id="deleteTeamAssignments" />
+	</liferay-frontend:management-bar-action-buttons>
+</liferay-frontend:management-bar>
+
+<div class="container-fluid-1280">
 	<c:choose>
 		<c:when test='<%= tabs1.equals("users") %>'>
 			<liferay-util:include page="/edit_team_assignments_users.jsp" servletContext="<%= application %>" />
