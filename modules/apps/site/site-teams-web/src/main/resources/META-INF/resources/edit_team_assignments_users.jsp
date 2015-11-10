@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String displayStyle = (String)request.getAttribute("edit_team_assignments.jsp-displayStyle");
+
 String tabs1 = (String)request.getAttribute("edit_team_assignments.jsp-tabs1");
 
 Team team = (Team)request.getAttribute("edit_team_assignments.jsp-team");
@@ -80,18 +82,74 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 			modelVar="user2"
 			rowIdProperty="screenName"
 		>
-			<liferay-ui:search-container-column-text
-				name="name"
-				property="fullName"
-			/>
+			<c:choose>
+				<c:when test='<%= displayStyle.equals("icon") %>'>
 
-			<liferay-ui:search-container-column-text
-				name="screen-name"
-				property="screenName"
-			/>
+					<%
+					row.setCssClass("col-md-2 col-sm-4 col-xs-6");
+					%>
+
+					<liferay-ui:search-container-column-text>
+						<liferay-frontend:vertical-card
+							actionJsp="/edit_team_assignments_users_action.jsp"
+							actionJspServletContext="<%= application %>"
+							cssClass="entry-display-style"
+							resultRow="<%= row %>"
+							title="<%= user2.getFullName() %>"
+						>
+							<liferay-frontend:vertical-card-footer>
+								<%= user2.getScreenName() %>
+							</liferay-frontend:vertical-card-footer>
+						</liferay-frontend:vertical-card>
+					</liferay-ui:search-container-column-text>
+				</c:when>
+				<c:when test='<%= displayStyle.equals("descriptive") %>'>
+					<liferay-ui:search-container-column-text>
+						<liferay-ui:user-portrait
+							userId="<%= user2.getUserId() %>"
+						/>
+					</liferay-ui:search-container-column-text>
+
+					<liferay-ui:search-container-column-text
+						colspan="<%= 2 %>"
+					>
+						<h5><%= user2.getFullName() %></h5>
+
+						<h6 class="text-default">
+							<span><%= user2.getScreenName() %></span>
+						</h6>
+					</liferay-ui:search-container-column-text>
+
+					<liferay-ui:search-container-column-jsp
+						path="/edit_team_assignments_users_action.jsp"
+					/>
+				</c:when>
+				<c:otherwise>
+					<liferay-ui:search-container-column-text>
+						<liferay-ui:user-portrait
+							userId="<%= user2.getUserId() %>"
+						/>
+					</liferay-ui:search-container-column-text>
+
+					<liferay-ui:search-container-column-text
+						name="name"
+						property="fullName"
+					/>
+
+					<liferay-ui:search-container-column-text
+						name="screen-name"
+						property="screenName"
+					/>
+
+					<liferay-ui:search-container-column-jsp
+						cssClass="list-group-item-field"
+						path="/edit_team_assignments_users_action.jsp"
+					/>
+				</c:otherwise>
+			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 

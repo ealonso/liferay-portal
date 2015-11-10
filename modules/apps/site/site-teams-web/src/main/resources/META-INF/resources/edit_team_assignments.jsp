@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
+
 String tabs1 = ParamUtil.getString(request, "tabs1", "users");
 String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 
@@ -52,6 +54,9 @@ portletURL.setParameter("mvcPath", "/edit_team_assignments.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("tabs2", tabs2);
 portletURL.setParameter("teamId", String.valueOf(team.getTeamId()));
+portletURL.setParameter("displayStyle", displayStyle);
+
+request.setAttribute("edit_team_assignments.jsp-displayStyle", displayStyle);
 
 request.setAttribute("edit_team_assignments.jsp-tabs1", tabs1);
 request.setAttribute("edit_team_assignments.jsp-tabs2", tabs2);
@@ -106,6 +111,14 @@ renderResponse.setTitle(team.getName());
 			portletURL="<%= portletURL %>"
 		/>
 	</liferay-frontend:management-bar-filters>
+
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
 </liferay-frontend:management-bar>
 
 <div class="container-fluid-1280">
