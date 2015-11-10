@@ -76,7 +76,18 @@ renderResponse.setTitle(team.getName());
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
 	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item cssClass="active" label="members" />
+
+		<%
+		portletURL.setParameter("tabs1", "users");
+		%>
+
+		<aui:nav-item href="<%= portletURL.toString() %>" label="users" selected='<%= tabs1.equals("users") %>' />
+
+		<%
+		portletURL.setParameter("tabs1", "user-groups");
+		%>
+
+		<aui:nav-item href="<%= portletURL.toString() %>" label="user-groups" selected='<%= tabs1.equals("user-groups") %>' />
 	</aui:nav>
 
 	<aui:nav-bar-search>
@@ -89,12 +100,6 @@ renderResponse.setTitle(team.getName());
 </aui:nav-bar>
 
 <div class="container-fluid-1280">
-	<liferay-ui:tabs
-		names="users,user-groups"
-		param="tabs1"
-		portletURL="<%= portletURL %>"
-	/>
-
 	<c:choose>
 		<c:when test='<%= tabs1.equals("users") %>'>
 			<liferay-util:include page="/edit_team_assignments_users.jsp" servletContext="<%= application %>" />
