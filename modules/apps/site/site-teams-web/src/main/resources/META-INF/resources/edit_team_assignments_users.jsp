@@ -55,7 +55,7 @@ String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + por
 	<aui:input name="removeUserIds" type="hidden" />
 
 	<liferay-ui:search-container
-		emptyResultsMessage="there-are-no-members.-you-can-add-a-member-by-clicking-the-plus-button-on-the-right-bottom-corner"
+		emptyResultsMessage="there-are-no-members.-you-can-add-a-member-by-clicking-the-plus-button-on-the-top-of-this-box"
 		rowChecker="<%= new UserTeamChecker(renderResponse, team) %>"
 		searchContainer="<%= new UserSearch(renderRequest, portletURL) %>"
 		var="userSearchContainer"
