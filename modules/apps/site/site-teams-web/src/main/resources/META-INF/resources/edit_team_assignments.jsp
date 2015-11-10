@@ -17,6 +17,9 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+
 String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
 
 String tabs1 = ParamUtil.getString(request, "tabs1", "users");
@@ -113,6 +116,13 @@ renderResponse.setTitle(team.getName());
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
 			portletURL="<%= portletURL %>"
+		/>
+
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"first-name"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 
