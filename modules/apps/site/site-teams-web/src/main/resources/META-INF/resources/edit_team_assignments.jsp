@@ -83,16 +83,20 @@ renderResponse.setTitle(team.getName());
 	<aui:nav cssClass="navbar-nav">
 
 		<%
-		portletURL.setParameter("tabs1", "users");
+		PortletURL usersURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		usersURL.setParameter("tabs1", "users");
 		%>
 
-		<aui:nav-item href="<%= portletURL.toString() %>" label="users" selected='<%= tabs1.equals("users") %>' />
+		<aui:nav-item href="<%= usersURL.toString() %>" label="users" selected='<%= tabs1.equals("users") %>' />
 
 		<%
-		portletURL.setParameter("tabs1", "user-groups");
+		PortletURL userGroupsURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		userGroupsURL.setParameter("tabs1", "user-groups");
 		%>
 
-		<aui:nav-item href="<%= portletURL.toString() %>" label="user-groups" selected='<%= tabs1.equals("user-groups") %>' />
+		<aui:nav-item href="<%= userGroupsURL.toString() %>" label="user-groups" selected='<%= tabs1.equals("user-groups") %>' />
 	</aui:nav>
 
 	<aui:nav-bar-search>
