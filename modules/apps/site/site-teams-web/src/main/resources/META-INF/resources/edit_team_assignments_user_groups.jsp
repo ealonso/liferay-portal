@@ -35,7 +35,9 @@ portletURL.setParameter("cur", String.valueOf(cur));
 String taglibOnClick = renderResponse.getNamespace() + "updateTeamUserGroups('" + portletURL.toString() + StringPool.AMPERSAND + renderResponse.getNamespace() + "cur=" + cur + "');";
 %>
 
-<aui:button cssClass="btn-lg btn-primary" onClick="<%= taglibOnClick %>" value="add-team-member" />
+<aui:button-row cssClass="text-center">
+	<aui:button cssClass="btn-lg btn-primary" onClick="<%= taglibOnClick %>" value="add-team-members" />
+</aui:button-row>
 
 <liferay-ui:tabs
 	names="current,available"
