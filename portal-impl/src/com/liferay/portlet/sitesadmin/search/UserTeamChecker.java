@@ -49,6 +49,21 @@ public class UserTeamChecker extends EmptyOnClickRowChecker {
 		}
 	}
 
+	@Override
+	public boolean isDisabled(Object obj) {
+		User user = (User)obj;
+
+		try {
+			return UserLocalServiceUtil.hasTeamUser(
+				_team.getTeamId(), user.getUserId());
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			return false;
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserTeamChecker.class);
 
