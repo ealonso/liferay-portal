@@ -90,17 +90,15 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 					%>
 
 					<liferay-ui:search-container-column-text>
-						<liferay-frontend:vertical-card
+						<liferay-frontend:user-vertical-card
 							actionJsp="/edit_team_assignments_users_action.jsp"
 							actionJspServletContext="<%= application %>"
 							cssClass="entry-display-style"
 							resultRow="<%= row %>"
+							subtitle="<%= user2.getScreenName() %>"
 							title="<%= user2.getFullName() %>"
-						>
-							<liferay-frontend:vertical-card-footer>
-								<%= user2.getScreenName() %>
-							</liferay-frontend:vertical-card-footer>
-						</liferay-frontend:vertical-card>
+							userId="<%= user2.getUserId() %>"
+						/>
 					</liferay-ui:search-container-column-text>
 				</c:when>
 				<c:when test='<%= displayStyle.equals("descriptive") %>'>
