@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+long teamId = ParamUtil.getLong(request, "teamId");
+
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
 User user2 = (User)row.getObject();
@@ -24,6 +26,7 @@ User user2 = (User)row.getObject();
 
 <portlet:actionURL name="editTeamUsers" var="deleteURL">
 	<portlet:param name="redirect" value="<%= currentURL %>" />
+	<portlet:param name="teamId" value="<%= String.valueOf(teamId) %>" />
 	<portlet:param name="removeUserIds" value="<%= String.valueOf(user2.getUserId()) %>" />
 </portlet:actionURL>
 
