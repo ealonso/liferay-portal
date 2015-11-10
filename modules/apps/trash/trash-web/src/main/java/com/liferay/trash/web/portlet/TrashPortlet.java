@@ -105,6 +105,8 @@ public class TrashPortlet extends MVCPortlet {
 
 		if (Validator.isNotNull(className) && (classPK > 0)) {
 			_trashEntryService.deleteEntry(className, classPK);
+
+			return;
 		}
 
 		sendRedirect(actionRequest, actionResponse);
