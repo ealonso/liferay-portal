@@ -23,6 +23,8 @@ String tabs1 = (String)request.getAttribute("edit_team_assignments.jsp-tabs1");
 
 Team team = (Team)request.getAttribute("edit_team_assignments.jsp-team");
 
+RowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
+
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.jsp-portletURL");
 %>
 
@@ -42,6 +44,8 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 
 	<liferay-ui:search-container
 		emptyResultsMessage="there-are-no-members.-you-can-add-a-member-by-clicking-the-button-on-the-top-of-this-box"
+		id="editTeamAssignments"
+		rowChecker="<%= rowChecker %>"
 		searchContainer="<%= new UserSearch(renderRequest, portletURL) %>"
 		var="userSearchContainer"
 	>
@@ -95,6 +99,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 							actionJspServletContext="<%= application %>"
 							cssClass="entry-display-style"
 							resultRow="<%= row %>"
+							rowChecker="<%= rowChecker %>"
 							subtitle="<%= user2.getScreenName() %>"
 							title="<%= user2.getFullName() %>"
 							userId="<%= user2.getUserId() %>"
@@ -152,6 +157,10 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 </aui:form>
 
 <aui:script>
+	var Util = Liferay.Util;
+
+	var form = $(document.<portlet:namespace />fm);
+
 	<portlet:renderURL var="selectUserURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="mvcPath" value="/select_user.jsp" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
@@ -163,7 +172,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 		function(event) {
 			event.preventDefault();
 
-			Liferay.Util.selectEntity(
+			Util.selectEntity(
 				{
 					dialog: {
 						constrain: true,
@@ -176,15 +185,22 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 					uri: '<%= selectUserURL %>'
 				},
 				function(event) {
-					var Util = Liferay.Util;
-
-					var form = AUI.$(document.<portlet:namespace />fm);
-
 					form.fm('addUserIds').val(event.userIds);
 
 					submitForm(form);
 				}
 			);
+		}
+	);
+
+	$('#<portlet:namespace />deleteTeamAssignments').on(
+		'click',
+		function() {
+			if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
+				form.fm('removeUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+
+				submitForm(form);
+			}
 		}
 	);
 </aui:script>
