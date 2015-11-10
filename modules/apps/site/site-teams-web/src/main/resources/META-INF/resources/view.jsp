@@ -112,6 +112,7 @@ teamSearchContainer.setTotal(totalVar);
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.model.Team"
+			cssClass="selectable"
 			escapedModel="<%= true %>"
 			keyProperty="teamId"
 			modelVar="team"
