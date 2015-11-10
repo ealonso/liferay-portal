@@ -99,6 +99,15 @@ renderResponse.setTitle(team.getName());
 	</aui:nav-bar-search>
 </aui:nav-bar>
 
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= portletURL %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
+
 <div class="container-fluid-1280">
 	<c:choose>
 		<c:when test='<%= tabs1.equals("users") %>'>
