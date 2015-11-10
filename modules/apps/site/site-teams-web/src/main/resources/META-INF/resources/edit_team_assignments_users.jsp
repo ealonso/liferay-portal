@@ -129,7 +129,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 
 		<aui:button onClick="<%= taglibOnClick %>" value="update-associations" />
 
-		<liferay-ui:search-iterator />
+		<liferay-ui:search-iterator markupView="lexicon" />
 	</aui:form>
 </liferay-ui:search-container>
 
