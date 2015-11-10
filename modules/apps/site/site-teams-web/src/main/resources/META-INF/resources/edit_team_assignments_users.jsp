@@ -18,39 +18,21 @@
 
 <%
 String tabs1 = (String)request.getAttribute("edit_team_assignments.jsp-tabs1");
-String tabs2 = (String)request.getAttribute("edit_team_assignments.jsp-tabs2");
-
-int cur = (Integer)request.getAttribute("edit_team_assignments.jsp-cur");
-
-String redirect = (String)request.getAttribute("edit_team_assignments.jsp-redirect");
-
-Group group = (Group)request.getAttribute("edit_team_assignments.jsp-group");
 
 Team team = (Team)request.getAttribute("edit_team_assignments.jsp-team");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.jsp-portletURL");
-
-portletURL.setParameter("cur", String.valueOf(cur));
-
-String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + portletURL.toString() + "');";
 %>
 
 <aui:button-row cssClass="text-center">
-	<aui:button cssClass="btn-lg btn-primary" onClick="<%= taglibOnClick %>" value="add-team-members" />
+	<aui:button cssClass="btn-lg btn-primary" id="addTeamMembers" value="add-team-members" />
 </aui:button-row>
-
-<liferay-ui:tabs
-	names="current,available"
-	param="tabs2"
-	portletURL="<%= portletURL %>"
-/>
 
 <portlet:actionURL name="editTeamUsers" var="editTeamUsersURL" />
 
 <aui:form action="<%= editTeamUsersURL %>" method="post" name="fm">
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
-	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="teamId" type="hidden" value="<%= String.valueOf(team.getTeamId()) %>" />
 	<aui:input name="addUserIds" type="hidden" />
@@ -58,14 +40,12 @@ String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + por
 
 	<liferay-ui:search-container
 		emptyResultsMessage="there-are-no-members.-you-can-add-a-member-by-clicking-the-button-on-the-top-of-this-box"
-		rowChecker="<%= new UserTeamChecker(renderResponse, team) %>"
 		searchContainer="<%= new UserSearch(renderRequest, portletURL) %>"
 		var="userSearchContainer"
 	>
 		<portlet:renderURL var="searchURL">
 			<portlet:param name="mvcPath" value="/edit_team_assignments.jsp" />
 			<portlet:param name="tabs1" value="<%= tabs1 %>" />
-			<portlet:param name="tabs2" value="<%= tabs2 %>" />
 			<portlet:param name="teamId" value="<%= String.valueOf(team.getTeamId()) %>" />
 		</portlet:renderURL>
 
@@ -75,11 +55,7 @@ String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + por
 		LinkedHashMap<String, Object> userParams = new LinkedHashMap<String, Object>();
 
 		userParams.put("inherit", Boolean.TRUE);
-		userParams.put("usersGroups", group.getGroupId());
-
-		if (tabs2.equals("current")) {
-			userParams.put("usersTeams", team.getTeamId());
-		}
+		userParams.put("usersTeams", team.getTeamId());
 		%>
 
 		<liferay-ui:search-container-results>
@@ -98,6 +74,7 @@ String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + por
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.model.User"
+			cssClass="selectable"
 			escapedModel="<%= true %>"
 			keyProperty="userId"
 			modelVar="user2"
@@ -119,15 +96,39 @@ String taglibOnClick = renderResponse.getNamespace() + "updateTeamUsers('" + por
 </aui:form>
 
 <aui:script>
-	function <portlet:namespace />updateTeamUsers(assignmentsRedirect) {
-		var Util = Liferay.Util;
+	<portlet:renderURL var="selectUserURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<portlet:param name="mvcPath" value="/select_user.jsp" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+		<portlet:param name="teamId" value="<%= String.valueOf(team.getTeamId()) %>" />
+	</portlet:renderURL>
 
-		var form = AUI.$(document.<portlet:namespace />fm);
+	$('#<portlet:namespace />addTeamMembers').on(
+		'click',
+		function(event) {
+			event.preventDefault();
 
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
+			Liferay.Util.selectEntity(
+				{
+					dialog: {
+						constrain: true,
+						destroyOnHide: true,
+						modal: true
+					},
+					eventName: '<portlet:namespace />selectUser',
+					id: '<portlet:namespace />selectUser',
+					title: '<liferay-ui:message arguments="<%= team.getName() %>" key="add-new-user-to-x" />',
+					uri: '<%= selectUserURL %>'
+				},
+				function(event) {
+					var Util = Liferay.Util;
 
-		submitForm(form);
-	}
+					var form = AUI.$(document.<portlet:namespace />fm);
+
+					form.fm('addUserIds').val(event.userIds);
+
+					submitForm(form);
+				}
+			);
+		}
+	);
 </aui:script>
