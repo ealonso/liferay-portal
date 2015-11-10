@@ -38,6 +38,7 @@ PortletURL portletURL = (PortletURL)request.getAttribute("edit_team_assignments.
 />
 
 <liferay-ui:search-container
+	emptyResultsMessage="there-are-no-members.-you-can-add-a-member-by-clicking-the-plus-button-on-the-right-bottom-corner"
 	rowChecker="<%= new UserTeamChecker(renderResponse, team) %>"
 	searchContainer="<%= new UserSearch(renderRequest, portletURL) %>"
 	var="userSearchContainer"
