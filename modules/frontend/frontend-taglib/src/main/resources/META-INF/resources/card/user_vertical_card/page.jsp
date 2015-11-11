@@ -16,7 +16,7 @@
 
 <%@ include file="/card/user_vertical_card/init.jsp" %>
 
-<div class="<%= Validator.isNotNull(cssClass) ? cssClass : StringPool.BLANK %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
+<div class="taglib-vertical-card <%= Validator.isNotNull(cssClass) ? cssClass : StringPool.BLANK %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
 	<div class="<%= showCheckbox ? "checkbox checkbox-default toggle-card-dm" : StringPool.BLANK %>">
 		<c:choose>
 			<c:when test="<%= (rowChecker != null) && (resultRow != null) %>">
@@ -38,7 +38,7 @@
 				</c:when>
 				<c:otherwise>
 					<div class="aspect-ratio aspect-ratio-bg-center aspect-ratio-bg-cover <%= colorCssClass %>">
-						<span class="sr-only"><%= userInitials %></span>
+						<span class="initials"><%= userInitials %></span>
 					</div>
 				</c:otherwise>
 			</c:choose>
