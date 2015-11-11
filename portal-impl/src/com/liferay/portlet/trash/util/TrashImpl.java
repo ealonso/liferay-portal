@@ -260,17 +260,9 @@ public class TrashImpl implements Trash {
 					entry = new TrashEntryImpl();
 
 					entry.setUserName(userName);
+					entry.setClassName(entryClassName);
+					entry.setClassPK(classPK);
 					entry.setCreateDate(removedDate);
-
-					TrashHandler trashHandler =
-						TrashHandlerRegistryUtil.getTrashHandler(
-							entry.getClassName());
-
-					TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
-						entry.getClassPK());
-
-					entry.setClassName(trashRenderer.getClassName());
-					entry.setClassPK(trashRenderer.getClassPK());
 
 					String rootEntryClassName = GetterUtil.getString(
 						document.get(Field.ROOT_ENTRY_CLASS_NAME));
