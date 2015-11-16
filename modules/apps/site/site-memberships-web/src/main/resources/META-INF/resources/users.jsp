@@ -62,7 +62,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= PortletURLUtil.clone( viewUsersURL, renderResponse) %>"
+			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
