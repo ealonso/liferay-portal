@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs1 = ParamUtil.getString(request, "tabs1", "summary");
+String tabs1 = ParamUtil.getString(request, "tabs1", "users");
 String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 
 int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
@@ -67,6 +67,41 @@ request.setAttribute("edit_site_assignments.jsp-selUser", selUser);
 
 request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 %>
+
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+
+		<%
+		PortletURL usersURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		usersURL.setParameter("tabs1", "users");
+		%>
+
+		<aui:nav-item href="<%= usersURL.toString() %>" label="users" selected='<%= tabs1.equals("users") %>' />
+
+		<%
+		PortletURL organizationsURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		organizationsURL.setParameter("tabs1", "organizations");
+		%>
+
+		<aui:nav-item href="<%= organizationsURL.toString() %>" label="organizations" selected='<%= tabs1.equals("organizations") %>' />
+
+		<%
+		PortletURL userGroupsURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+		userGroupsURL.setParameter("tabs1", "user-groups");
+		%>
+
+		<aui:nav-item href="<%= userGroupsURL.toString() %>" label="user-groups" selected='<%= tabs1.equals("user-groups") %>' />
+	</aui:nav>
+
+	<aui:nav-bar-search>
+		<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+			<liferay-ui:input-search markupView="lexicon" />
+		</aui:form>
+	</aui:nav-bar-search>
+</aui:nav-bar>
 
 <c:choose>
 	<c:when test="<%= (selUser == null) && (userGroupId == 0) %>">
