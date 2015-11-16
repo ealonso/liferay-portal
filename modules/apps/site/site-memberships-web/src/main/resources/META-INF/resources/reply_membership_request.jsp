@@ -48,8 +48,6 @@ MembershipRequest membershipRequest = MembershipRequestLocalServiceUtil.getMembe
 	<c:if test="<%= !layout.isTypeControlPanel() %>">
 		<liferay-ui:header
 			backURL="<%= redirect %>"
-			escapeXml="<%= false %>"
-			localizeTitle="<%= false %>"
 			title='<%= LanguageUtil.format(request, "reply-membership-request-for-x", HtmlUtil.escape(group.getDescriptiveName(locale)), false) %>'
 		/>
 	</c:if>
@@ -71,22 +69,28 @@ MembershipRequest membershipRequest = MembershipRequestLocalServiceUtil.getMembe
 		</aui:field-wrapper>
 	</c:if>
 
-	<aui:fieldset>
-		<aui:input name="userName" type="resource" value="<%= PortalUtil.getUserName(membershipRequest.getUserId(), StringPool.BLANK) %>" />
+	<aui:fieldset-group>
+		<aui:fieldset>
+			<liferay-ui:user-portrait
+				userId="<%= membershipRequest.getUserId() %>"
+			/>
 
-		<aui:input name="userComments" readonly="<%= true %>" type="textarea" value="<%= membershipRequest.getComments() %>" />
+			<aui:input name="userName" type="resource" value="<%= PortalUtil.getUserName(membershipRequest.getUserId(), StringPool.BLANK) %>" />
 
-		<aui:select autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" label="status" name="statusId">
-			<aui:option label="approve" value="<%= MembershipRequestConstants.STATUS_APPROVED %>" />
-			<aui:option label="deny" value="<%= MembershipRequestConstants.STATUS_DENIED %>" />
-		</aui:select>
+			<aui:input name="userComments" readonly="<%= true %>" type="textarea" value="<%= membershipRequest.getComments() %>" />
 
-		<aui:input name="replyComments" />
-	</aui:fieldset>
+			<aui:select autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" label="status" name="statusId">
+				<aui:option label="approve" value="<%= MembershipRequestConstants.STATUS_APPROVED %>" />
+				<aui:option label="deny" value="<%= MembershipRequestConstants.STATUS_DENIED %>" />
+			</aui:select>
+
+			<aui:input name="replyComments" />
+		</aui:fieldset>
+	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button type="submit" />
+		<aui:button cssClass="btn-lg" type="submit" />
 
-		<aui:button href="<%= redirect %>" type="cancel" />
+		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
