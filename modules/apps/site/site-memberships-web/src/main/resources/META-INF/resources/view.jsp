@@ -156,100 +156,31 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 	</c:if>
 </div>
 
-<aui:form action="<%= portletURL.toString() %>" name="fm">
-	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
-	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
-	<aui:input name="assignmentsRedirect" type="hidden" />
-	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
-
-	<c:choose>
-		<c:when test='<%= tabs1.equals("users") %>'>
-			<c:choose>
-				<c:when test="<%= selUser == null %>">
-					<liferay-util:include page="/users.jsp" servletContext="<%= application %>" />
-				</c:when>
-				<c:otherwise>
-					<liferay-util:include page="/users_roles.jsp" servletContext="<%= application %>" />
-				</c:otherwise>
-			</c:choose>
-		</c:when>
-		<c:when test='<%= tabs1.equals("organizations") %>'>
-			<liferay-util:include page="/organizations.jsp" servletContext="<%= application %>" />
-		</c:when>
-		<c:when test='<%= tabs1.equals("user-groups") %>'>
-			<c:choose>
-				<c:when test="<%= userGroupId == 0 %>">
-					<liferay-util:include page="/user_groups.jsp" servletContext="<%= application %>" />
-				</c:when>
-				<c:otherwise>
-					<liferay-util:include page="/user_groups_roles.jsp" servletContext="<%= application %>" />
-				</c:otherwise>
-			</c:choose>
-		</c:when>
-	</c:choose>
-</aui:form>
-
-<aui:script>
-	function <portlet:namespace />updateGroupOrganizations(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addOrganizationIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeOrganizationIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-		submitForm(form, '<portlet:actionURL name="editGroupOrganizations" />');
-	}
-
-	function <portlet:namespace />updateGroupUserGroups(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addUserGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeUserGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-		submitForm(form, '<portlet:actionURL name="editGroupUserGroups" />');
-	}
-
-	function <portlet:namespace />updateGroupUsers(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-		submitForm(form, '<portlet:actionURL name="editGroupUsers" />');
-	}
-
-	function <portlet:namespace />updateUserGroupGroupRole(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addRoleIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeRoleIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-		submitForm(form, '<portlet:actionURL name="editUserGroupGroupRole" />');
-	}
-
-	function <portlet:namespace />updateUserGroupRole(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('assignmentsRedirect').val(assignmentsRedirect);
-		form.fm('addRoleIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-		form.fm('removeRoleIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-		submitForm(form, '<portlet:actionURL name="editUserGroupRole" />');
-	}
-</aui:script>
+<c:choose>
+	<c:when test='<%= tabs1.equals("users") %>'>
+		<c:choose>
+			<c:when test="<%= selUser == null %>">
+				<liferay-util:include page="/users.jsp" servletContext="<%= application %>" />
+			</c:when>
+			<c:otherwise>
+				<liferay-util:include page="/users_roles.jsp" servletContext="<%= application %>" />
+			</c:otherwise>
+		</c:choose>
+	</c:when>
+	<c:when test='<%= tabs1.equals("organizations") %>'>
+		<liferay-util:include page="/organizations.jsp" servletContext="<%= application %>" />
+	</c:when>
+	<c:when test='<%= tabs1.equals("user-groups") %>'>
+		<c:choose>
+			<c:when test="<%= userGroupId == 0 %>">
+				<liferay-util:include page="/user_groups.jsp" servletContext="<%= application %>" />
+			</c:when>
+			<c:otherwise>
+				<liferay-util:include page="/user_groups_roles.jsp" servletContext="<%= application %>" />
+			</c:otherwise>
+		</c:choose>
+	</c:when>
+</c:choose>
 
 <%
 PortalUtil.addPortletBreadcrumbEntry(request, group.getDescriptiveName(locale), null);
