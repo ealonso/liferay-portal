@@ -50,6 +50,15 @@ SearchContainer searchContainer = new OrganizationSearch(renderRequest, viewOrga
 searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 %>
 
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
+
 <aui:input name="tabs1" type="hidden" value="organizations" />
 <aui:input name="addOrganizationIds" type="hidden" />
 <aui:input name="removeOrganizationIds" type="hidden" />
