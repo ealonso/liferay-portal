@@ -26,35 +26,6 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 <aui:nav-bar>
 	<aui:nav cssClass="navbar-nav">
-		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_MEMBERS) %>">
-			<aui:nav-item dropdown="<%= true %>" iconCssClass="icon-plus" label="add-members" selected='<%= toolbarItem.equals("add-members") %>'>
-				<liferay-portlet:renderURL varImpl="assignMembersURL">
-					<liferay-portlet:param name="mvcPath" value="/view.jsp" />
-				</liferay-portlet:renderURL>
-
-				<%
-				assignMembersURL.setParameter("tabs1", "users");
-				assignMembersURL.setParameter("tabs2", "available");
-				%>
-
-				<aui:nav-item href="<%= assignMembersURL.toString() %>" iconCssClass="icon-user" label="user" />
-
-				<%
-				assignMembersURL.setParameter("tabs1", "organizations");
-				assignMembersURL.setParameter("tabs2", "available");
-				%>
-
-				<aui:nav-item href="<%= assignMembersURL.toString() %>" iconCssClass="icon-globe" label="organization" />
-
-				<%
-				assignMembersURL.setParameter("tabs1", "user-groups");
-				assignMembersURL.setParameter("tabs2", "available");
-				%>
-
-				<aui:nav-item href="<%= assignMembersURL.toString() %>" iconCssClass="icon-globe" label="user-group" />
-			</aui:nav-item>
-		</c:if>
-
 		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group, ActionKeys.ASSIGN_USER_ROLES) %>">
 			<aui:nav-item dropdown="<%= true %>" iconCssClass="icon-plus" label="add-site-roles-to" selected='<%= toolbarItem.equals("assign-user-roles") %>'>
 
