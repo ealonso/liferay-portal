@@ -23,6 +23,7 @@ int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
 
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String orderByCol = ParamUtil.getString(request, "orderByCol", "name");
 String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
@@ -66,10 +67,18 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 			orderColumns='<%= new String[] {"name"} %>'
 			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
+
+		<liferay-frontend:management-bar-buttons>
+			<liferay-frontend:management-bar-display-buttons
+				displayViews='<%= new String[] {"list"} %>'
+				portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+				selectedDisplayStyle="<%= displayStyle %>"
+			/>
+		</liferay-frontend:management-bar-buttons>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
 
-<aui:form action="<%= portletURL.toString() %>" name="fm">
+<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="tabs1" type="hidden" value="organizations" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
@@ -161,8 +170,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 
 			<c:if test='<%= tabs2.equals("current") %>'>
 				<liferay-ui:search-container-column-jsp
-					align="right"
-					cssClass="entry-action"
+					cssClass="list-group-item-field"
 					path="/organization_action.jsp"
 				/>
 			</c:if>
@@ -207,7 +215,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 			<%= formButton %>
 		</c:if>
 
-		<liferay-ui:search-iterator />
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 
 		<%= formButton %>
 	</liferay-ui:search-container>
