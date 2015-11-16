@@ -48,13 +48,5 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 				<aui:nav-item href="<%= assignUserGroupRolesURL.toString() %>" iconCssClass="icon-globe" label="user-groups" useDialog="<%= true %>" />
 			</aui:nav-item>
 		</c:if>
-
-		<c:if test="<%= group.getType() == GroupConstants.TYPE_SITE_RESTRICTED %>">
-			<portlet:renderURL var="viewMembershipRequestsURL">
-				<portlet:param name="mvcPath" value="/view_membership_requests.jsp" />
-			</portlet:renderURL>
-
-			<aui:nav-item href="<%= viewMembershipRequestsURL %>" label="view-membership-requests" selected='<%= toolbarItem.equals("view-membership-requests") %>' />
-		</c:if>
 	</aui:nav>
 </aui:nav-bar>
