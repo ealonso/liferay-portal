@@ -17,7 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
 String tabs2 = (String)request.getAttribute("edit_site_assignments.jsp-tabs2");
 
 int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
@@ -36,7 +35,7 @@ viewUserGroupsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
 UserGroupGroupChecker userGroupGroupChecker = null;
 
-if (!tabs1.equals("summary") && !tabs2.equals("current")) {
+if (!tabs2.equals("current")) {
 	userGroupGroupChecker = new UserGroupGroupChecker(renderResponse, group);
 }
 
@@ -65,7 +64,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 
 	LinkedHashMap<String, Object> userGroupParams = new LinkedHashMap<String, Object>();
 
-	if (tabs1.equals("summary") || tabs2.equals("current")) {
+	if (tabs2.equals("current")) {
 		userGroupParams.put("userGroupsGroups", Long.valueOf(group.getGroupId()));
 	}
 	%>
@@ -107,7 +106,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 			property="description"
 		/>
 
-		<c:if test='<%= tabs1.equals("summary") || tabs2.equals("current") %>'>
+		<c:if test='<%= tabs2.equals("current") %>'>
 
 			<%
 			List<UserGroupGroupRole> userGroupGroupRoles = UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(userGroup.getUserGroupId(), group.getGroupId());
@@ -164,28 +163,11 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		</c:if>
 	</liferay-util:buffer>
 
-	<c:choose>
-		<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
-			<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(request, (total > 1) ? "x-user-groups" : "x-user-group", total, false) %>'>
-				<span class="form-search">
-					<liferay-ui:input-search name='<%= DisplayTerms.KEYWORDS + "_user_groups" %>' />
-				</span>
+	<c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP && (results.size() > PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP_DELTA) %>">
+		<%= formButton %>
+	</c:if>
 
-				<liferay-ui:search-iterator paginate="<%= false %>" />
+	<liferay-ui:search-iterator />
 
-				<c:if test="<%= total > userGroupSearch.getDelta() %>">
-					<a href="<%= viewUserGroupsURL %>"><liferay-ui:message key="view-more" /> &raquo;</a>
-				</c:if>
-			</liferay-ui:panel>
-		</c:when>
-		<c:when test='<%= !tabs1.equals("summary") %>'>
-			<c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP && (results.size() > PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP_DELTA) %>">
-				<%= formButton %>
-			</c:if>
-
-			<liferay-ui:search-iterator />
-
-			<%= formButton %>
-		</c:when>
-	</c:choose>
+	<%= formButton %>
 </liferay-ui:search-container>

@@ -17,7 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs1 = (String)request.getAttribute("edit_site_assignments.jsp-tabs1");
 String tabs2 = (String)request.getAttribute("edit_site_assignments.jsp-tabs2");
 
 int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
@@ -36,7 +35,7 @@ viewOrganizationsURL.setParameter("groupId", String.valueOf(group.getGroupId()))
 
 OrganizationGroupChecker organizationGroupChecker = null;
 
-if (!tabs1.equals("summary") && !tabs2.equals("current")) {
+if (!tabs2.equals("current")) {
 	organizationGroupChecker = new OrganizationGroupChecker(renderResponse, group);
 }
 
@@ -68,7 +67,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 
 	LinkedHashMap<String, Object> organizationParams = new LinkedHashMap<String, Object>();
 
-	if (tabs1.equals("summary") || tabs2.equals("current")) {
+	if (tabs2.equals("current")) {
 		organizationParams.put("groupOrganization", Long.valueOf(group.getGroupId()));
 		organizationParams.put("organizationsGroups", Long.valueOf(group.getGroupId()));
 	}
@@ -137,7 +136,7 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 			value="<%= UsersAdmin.ORGANIZATION_COUNTRY_NAME_ACCESSOR.get(organization) %>"
 		/>
 
-		<c:if test='<%= tabs1.equals("summary") || tabs2.equals("current") %>'>
+		<c:if test='<%= tabs2.equals("current") %>'>
 			<liferay-ui:search-container-column-jsp
 				align="right"
 				cssClass="entry-action"
@@ -184,28 +183,11 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 		</c:if>
 	</liferay-util:buffer>
 
-	<c:choose>
-		<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
-			<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(request, (total > 1) ? "x-organizations" : "x-organization", total, false) %>'>
-				<span class="form-search">
-					<liferay-ui:input-search name='<%= DisplayTerms.KEYWORDS + "_organizations" %>' />
-				</span>
+	<c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP && (results.size() > PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP_DELTA) %>">
+		<%= formButton %>
+	</c:if>
 
-				<liferay-ui:search-iterator paginate="<%= false %>" />
+	<liferay-ui:search-iterator />
 
-				<c:if test="<%= total > searchContainer.getDelta() %>">
-					<a href="<%= viewOrganizationsURL %>"><liferay-ui:message key="view-more" /> &raquo;</a>
-				</c:if>
-			</liferay-ui:panel>
-		</c:when>
-		<c:when test='<%= !tabs1.equals("summary") %>'>
-			<c:if test="<%= PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP && (results.size() > PropsValues.SEARCH_CONTAINER_SHOW_PAGINATION_TOP_DELTA) %>">
-				<%= formButton %>
-			</c:if>
-
-			<liferay-ui:search-iterator />
-
-			<%= formButton %>
-		</c:when>
-	</c:choose>
+	<%= formButton %>
 </liferay-ui:search-container>
