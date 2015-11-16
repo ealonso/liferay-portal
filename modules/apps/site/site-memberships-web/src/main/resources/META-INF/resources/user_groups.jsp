@@ -23,6 +23,9 @@ int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
 
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
+String orderByCol = ParamUtil.getString(request, "orderByCol", "name");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
 PortletURL viewUserGroupsURL = renderResponse.createRenderURL();
@@ -55,6 +58,13 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
 			portletURL="<%= PortletURLUtil.clone(viewUserGroupsURL, renderResponse) %>"
+		/>
+
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"name", "description"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>

@@ -31,6 +31,9 @@ if (Validator.isNull(redirect)) {
 
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
+String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
+String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
 PortletURL viewUsersURL = renderResponse.createRenderURL();
@@ -63,6 +66,13 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
 			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
+		/>
+
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"first-name", "screen-name"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
