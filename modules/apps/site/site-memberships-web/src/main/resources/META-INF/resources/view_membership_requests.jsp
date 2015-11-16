@@ -156,6 +156,6 @@ portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" markupView="lexicon" />
+		<liferay-ui:search-iterator markupView="lexicon" searchContainer="<%= searchContainer %>" />
 	</liferay-ui:search-container>
 </div>
