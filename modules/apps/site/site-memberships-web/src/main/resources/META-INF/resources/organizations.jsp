@@ -78,6 +78,8 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	</liferay-frontend:management-bar-filters>
 </liferay-frontend:management-bar>
 
+<liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
+
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="tabs1" type="hidden" value="organizations" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
