@@ -103,25 +103,14 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 	</aui:nav-bar-search>
 </aui:nav-bar>
 
-<c:choose>
-	<c:when test="<%= (selUser == null) && (userGroupId == 0) %>">
-		<c:choose>
-			<c:when test='<%= tabs2.equals("available") %>'>
-				<liferay-ui:header
-					backURL="<%= redirect %>"
-					escapeXml="<%= false %>"
-					localizeTitle="<%= false %>"
-					title='<%= LanguageUtil.get(request, "add-members") + ": " + LanguageUtil.get(request, tabs1) %>'
-				/>
-			</c:when>
-			<c:otherwise>
-				<liferay-util:include page="/toolbar.jsp" servletContext="<%= application %>">
-					<liferay-util:param name="toolbarItem" value='<%= tabs2.equals("available") ? "add-role" : null %>' />
-				</liferay-util:include>
-			</c:otherwise>
-		</c:choose>
-	</c:when>
-</c:choose>
+<c:if test='<%= (selUser == null) && (userGroupId == 0) && tabs2.equals("available") %>'>
+	<liferay-ui:header
+		backURL="<%= redirect %>"
+		escapeXml="<%= false %>"
+		localizeTitle="<%= false %>"
+		title='<%= LanguageUtil.get(request, "add-members") + ": " + LanguageUtil.get(request, tabs1) %>'
+	/>
+</c:if>
 
 <div class="site-membership-type">
 	<liferay-ui:icon
