@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
+Group group = siteMembershipsDisplayContext.getGroup();
 %>
 
 <c:if test="<%= group.getType() == GroupConstants.TYPE_SITE_RESTRICTED %>">

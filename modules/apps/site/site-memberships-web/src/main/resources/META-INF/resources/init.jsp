@@ -72,7 +72,6 @@ page import="com.liferay.portal.service.permission.GroupPermissionUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portal.util.PropsValues" %><%@
 page import="com.liferay.portlet.PortletURLUtil" %><%@
-page import="com.liferay.portlet.exportimport.staging.StagingUtil" %><%@
 page import="com.liferay.portlet.rolesadmin.search.RoleSearch" %><%@
 page import="com.liferay.portlet.rolesadmin.search.RoleSearchTerms" %><%@
 page import="com.liferay.portlet.rolesadmin.util.RolesAdminUtil" %><%@
@@ -89,7 +88,8 @@ page import="com.liferay.portlet.usersadmin.search.OrganizationSearchTerms" %><%
 page import="com.liferay.portlet.usersadmin.search.UserSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearchTerms" %><%@
 page import="com.liferay.portlet.usersadmin.util.UsersAdmin" %><%@
-page import="com.liferay.portlet.usersadmin.util.UsersAdminUtil" %>
+page import="com.liferay.portlet.usersadmin.util.UsersAdminUtil" %><%@
+page import="com.liferay.site.memberships.web.context.SiteMembershipsDisplayContext" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.LinkedHashMap" %><%@
@@ -108,6 +108,8 @@ WindowState windowState = liferayPortletRequest.getWindowState();
 PortletURL currentURLObj = PortletURLUtil.getCurrent(liferayPortletRequest, liferayPortletResponse);
 
 String currentURL = currentURLObj.toString();
+
+SiteMembershipsDisplayContext siteMembershipsDisplayContext = new SiteMembershipsDisplayContext(request, liferayPortletResponse);
 %>
 
 <%@ include file="/init-ext.jsp" %>

@@ -17,25 +17,12 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs2 = (String)request.getAttribute("edit_site_assignments.jsp-tabs2");
-
-int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
-
-String redirect = ParamUtil.getString(request, "redirect");
-
-if (Validator.isNull(redirect)) {
-	PortletURL portletURL = renderResponse.createRenderURL();
-
-	redirect = portletURL.toString();
-}
-
-Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
+String tabs2 = siteMembershipsDisplayContext.getTabs2();
+Group group = siteMembershipsDisplayContext.getGroup();
 
 String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
 String orderByType = ParamUtil.getString(request, "orderByType", "asc");
-
-PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
 PortletURL viewUsersURL = renderResponse.createRenderURL();
 
@@ -43,12 +30,12 @@ viewUsersURL.setParameter("mvcPath", "/view.jsp");
 viewUsersURL.setParameter("tabs1", "users");
 viewUsersURL.setParameter("tabs2", tabs2);
 viewUsersURL.setParameter("redirect", currentURL);
-viewUsersURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+viewUsersURL.setParameter("groupId", String.valueOf(siteMembershipsDisplayContext.getGroupId()));
 
 SiteMembershipChecker siteMembershipChecker = null;
 
 if (!tabs2.equals("current")) {
-	siteMembershipChecker = new SiteMembershipChecker(renderResponse, group);
+	siteMembershipChecker = new SiteMembershipChecker(renderResponse, siteMembershipsDisplayContext.getGroup());
 }
 
 String emptyResultsMessage = UserSearch.EMPTY_RESULTS_MESSAGE;
@@ -66,21 +53,21 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
+			portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 		/>
 
 		<liferay-frontend:management-bar-sort
 			orderByCol="<%= orderByCol %>"
 			orderByType="<%= orderByType %>"
 			orderColumns='<%= new String[] {"first-name", "screen-name"} %>'
-			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-display-buttons
 			displayViews='<%= new String[] {"list"} %>'
-			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 			selectedDisplayStyle="<%= displayStyle %>"
 		/>
 	</liferay-frontend:management-bar-buttons>
@@ -88,11 +75,11 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 
 <liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
 
-<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" name="fm">
+<aui:form action="<%= siteMembershipsDisplayContext.getPortletURL() %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="tabs1" type="hidden" value="users" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
-	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
+	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(siteMembershipsDisplayContext.getGroupId()) %>" />
 	<aui:input name="addUserIds" type="hidden" />
 	<aui:input name="removeUserIds" type="hidden" />
 
@@ -235,10 +222,12 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 					<c:otherwise>
 
 						<%
-						portletURL.setParameter("tabs2", "current");
-						portletURL.setParameter("cur", String.valueOf(cur));
+						PortletURL portletURL = siteMembershipsDisplayContext.getPortletURL();
 
-						String taglibOnClick = renderResponse.getNamespace() + "updateGroupUsers('" + redirect + "');";
+						portletURL.setParameter("tabs2", "current");
+						portletURL.setParameter("cur", String.valueOf(siteMembershipsDisplayContext.getCur()));
+
+						String taglibOnClick = renderResponse.getNamespace() + "updateGroupUsers('" + portletURL.toString() + "');";
 						%>
 
 						<aui:button-row>

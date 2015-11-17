@@ -17,17 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs2 = (String)request.getAttribute("edit_site_assignments.jsp-tabs2");
-
-int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
-
-Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
+String tabs2 = siteMembershipsDisplayContext.getTabs2();
 
 String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String orderByCol = ParamUtil.getString(request, "orderByCol", "name");
 String orderByType = ParamUtil.getString(request, "orderByType", "asc");
-
-PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
 PortletURL viewUserGroupsURL = renderResponse.createRenderURL();
 
@@ -35,12 +29,12 @@ viewUserGroupsURL.setParameter("mvcPath", "/view.jsp");
 viewUserGroupsURL.setParameter("tabs1", "user-groups");
 viewUserGroupsURL.setParameter("tabs2", tabs2);
 viewUserGroupsURL.setParameter("redirect", currentURL);
-viewUserGroupsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+viewUserGroupsURL.setParameter("groupId", String.valueOf(siteMembershipsDisplayContext.getGroupId()));
 
 UserGroupGroupChecker userGroupGroupChecker = null;
 
 if (!tabs2.equals("current")) {
-	userGroupGroupChecker = new UserGroupGroupChecker(renderResponse, group);
+	userGroupGroupChecker = new UserGroupGroupChecker(renderResponse, siteMembershipsDisplayContext.getGroup());
 }
 
 String emptyResultsMessage = UserGroupSearch.EMPTY_RESULTS_MESSAGE;
@@ -58,20 +52,20 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewUserGroupsURL, renderResponse) %>"
+			portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 		/>
 
 		<liferay-frontend:management-bar-sort
 			orderByCol="<%= orderByCol %>"
 			orderByType="<%= orderByType %>"
 			orderColumns='<%= new String[] {"name", "description"} %>'
-			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 		/>
 
 		<liferay-frontend:management-bar-buttons>
 			<liferay-frontend:management-bar-display-buttons
 				displayViews='<%= new String[] {"list"} %>'
-				portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+				portletURL="<%= siteMembershipsDisplayContext.getPortletURL() %>"
 				selectedDisplayStyle="<%= displayStyle %>"
 			/>
 		</liferay-frontend:management-bar-buttons>
@@ -80,11 +74,11 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 
 <liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
 
-<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" name="fm">
+<aui:form action="<%= siteMembershipsDisplayContext.getPortletURL() %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="tabs1" type="hidden" value="user-groups" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
-	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
+	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(siteMembershipsDisplayContext.getGroupId()) %>" />
 	<aui:input name="addUserGroupIds" type="hidden" />
 	<aui:input name="removeUserGroupIds" type="hidden" />
 
@@ -99,7 +93,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		LinkedHashMap<String, Object> userGroupParams = new LinkedHashMap<String, Object>();
 
 		if (tabs2.equals("current")) {
-			userGroupParams.put("userGroupsGroups", Long.valueOf(group.getGroupId()));
+			userGroupParams.put("userGroupsGroups", Long.valueOf(siteMembershipsDisplayContext.getGroupId()));
 		}
 		%>
 
@@ -125,7 +119,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		>
 			<liferay-ui:search-container-row-parameter
 				name="group"
-				value="<%= group %>"
+				value="<%= siteMembershipsDisplayContext.getGroup() %>"
 			/>
 
 			<liferay-ui:search-container-column-text
@@ -143,7 +137,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 			<c:if test='<%= tabs2.equals("current") %>'>
 
 				<%
-				List<UserGroupGroupRole> userGroupGroupRoles = UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(userGroup.getUserGroupId(), group.getGroupId());
+				List<UserGroupGroupRole> userGroupGroupRoles = UserGroupGroupRoleLocalServiceUtil.getUserGroupGroupRoles(userGroup.getUserGroupId(), siteMembershipsDisplayContext.getGroupId());
 				%>
 
 				<liferay-ui:search-container-column-text
@@ -159,7 +153,7 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 		</liferay-ui:search-container-row>
 
 		<liferay-util:buffer var="formButton">
-			<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+			<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, siteMembershipsDisplayContext.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
 				<c:choose>
 					<c:when test='<%= tabs2.equals("current") %>'>
 
@@ -179,8 +173,10 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 					<c:otherwise>
 
 						<%
+						PortletURL portletURL = siteMembershipsDisplayContext.getPortletURL();
+
 						portletURL.setParameter("tabs2", "current");
-						portletURL.setParameter("cur", String.valueOf(cur));
+						portletURL.setParameter("cur", String.valueOf(siteMembershipsDisplayContext.getCur()));
 
 						String taglibOnClick = renderResponse.getNamespace() + "updateGroupUserGroups('" + portletURL.toString() + "');";
 						%>
