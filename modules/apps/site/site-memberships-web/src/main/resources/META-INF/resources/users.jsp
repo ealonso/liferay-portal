@@ -80,8 +80,11 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(siteMembershipsDisplayContext.getGroupId()) %>" />
+	<aui:input name="p_u_i_d" type="hidden" />
 	<aui:input name="addUserIds" type="hidden" />
 	<aui:input name="removeUserIds" type="hidden" />
+	<aui:input name="addRoleIds" type="hidden" />
+	<aui:input name="removeRoleIds" type="hidden" />
 
 	<liferay-ui:membership-policy-error />
 
@@ -248,12 +251,47 @@ searchContainer.setEmptyResultsMessage(emptyResultsMessage);
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script>
+<aui:script use="liferay-item-selector-dialog">
+	var Util = Liferay.Util;
+
+	var form = $(document.<portlet:namespace />fm);
+
+	<c:if test='<%= tabs2.equals("current") %>'>
+		form.on(
+			'click',
+			'.assign-site-roles a',
+			function(event) {
+				event.preventDefault();
+
+				var currentTarget = $(event.currentTarget);
+
+				var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+					{
+						eventName: '<portlet:namespace />selectUsersRoles',
+						on: {
+							selectedItemChange: function(event) {
+								var selectedItem = event.newVal;
+
+								if (selectedItem) {
+									form.fm('addRoleIds').val(selectedItem.addRoleIds);
+									form.fm('removeRoleIds').val(selectedItem.removeRoleIds);
+									form.fm('p_u_i_d').val(selectedItem.selUserId);
+
+									submitForm(form, '<portlet:actionURL name="editUserGroupRole" />');
+								}
+							}
+						},
+						title: '<liferay-ui:message key="assign-site-roles" />',
+						url: currentTarget.data('href')
+					}
+				);
+
+				itemSelectorDialog.open();
+			}
+		);
+	</c:if>
+
 	function <portlet:namespace />updateGroupUsers(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));

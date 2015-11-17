@@ -66,27 +66,13 @@ String tabs1 = siteMembershipsDisplayContext.getTabs1();
 
 <c:choose>
 	<c:when test='<%= tabs1.equals("users") %>'>
-		<c:choose>
-			<c:when test="<%= siteMembershipsDisplayContext.getSelUser() == null %>">
-				<liferay-util:include page="/users.jsp" servletContext="<%= application %>" />
-			</c:when>
-			<c:otherwise>
-				<liferay-util:include page="/users_roles.jsp" servletContext="<%= application %>" />
-			</c:otherwise>
-		</c:choose>
+		<liferay-util:include page="/users.jsp" servletContext="<%= application %>" />
 	</c:when>
 	<c:when test='<%= tabs1.equals("organizations") %>'>
 		<liferay-util:include page="/organizations.jsp" servletContext="<%= application %>" />
 	</c:when>
 	<c:when test='<%= tabs1.equals("user-groups") %>'>
-		<c:choose>
-			<c:when test="<%= siteMembershipsDisplayContext.getUserGroupId() == 0 %>">
-				<liferay-util:include page="/user_groups.jsp" servletContext="<%= application %>" />
-			</c:when>
-			<c:otherwise>
-				<liferay-util:include page="/user_groups_roles.jsp" servletContext="<%= application %>" />
-			</c:otherwise>
-		</c:choose>
+		<liferay-util:include page="/user_groups.jsp" servletContext="<%= application %>" />
 	</c:when>
 </c:choose>
 

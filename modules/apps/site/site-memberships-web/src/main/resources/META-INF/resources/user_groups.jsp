@@ -79,8 +79,11 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(siteMembershipsDisplayContext.getGroupId()) %>" />
+	<aui:input name="userGroupId" type="hidden" />
 	<aui:input name="addUserGroupIds" type="hidden" />
 	<aui:input name="removeUserGroupIds" type="hidden" />
+	<aui:input name="addRoleIds" type="hidden" />
+	<aui:input name="removeRoleIds" type="hidden" />
 
 	<liferay-ui:search-container
 		rowChecker="<%= userGroupGroupChecker %>"
@@ -199,12 +202,47 @@ userGroupSearch.setEmptyResultsMessage(emptyResultsMessage);
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script>
+<aui:script use="liferay-item-selector-dialog">
+	var Util = Liferay.Util;
+
+	var form = $(document.<portlet:namespace />fm);
+
+	<c:if test='<%= tabs2.equals("current") %>'>
+		form.on(
+			'click',
+			'.assign-site-roles a',
+			function(event) {
+				event.preventDefault();
+
+				var currentTarget = $(event.currentTarget);
+
+				var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+					{
+						eventName: '<portlet:namespace />selectUserGroupsRoles',
+						on: {
+							selectedItemChange: function(event) {
+								var selectedItem = event.newVal;
+
+								if (selectedItem) {
+									form.fm('addRoleIds').val(selectedItem.addRoleIds);
+									form.fm('removeRoleIds').val(selectedItem.removeRoleIds);
+									form.fm('userGroupId').val(selectedItem.userGroupId);
+
+									submitForm(form, '<portlet:actionURL name="editUserGroupGroupRole" />');
+								}
+							}
+						},
+						title: '<liferay-ui:message key="assign-site-roles" />',
+						url: currentTarget.data('href')
+					}
+				);
+
+				itemSelectorDialog.open();
+			}
+		);
+	</c:if>
+
 	function <portlet:namespace />updateGroupUserGroups(assignmentsRedirect) {
-		var Util = Liferay.Util;
-
-		var form = AUI.$(document.<portlet:namespace />fm);
-
 		form.fm('assignmentsRedirect').val(assignmentsRedirect);
 		form.fm('addUserGroupIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
 		form.fm('removeUserGroupIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));

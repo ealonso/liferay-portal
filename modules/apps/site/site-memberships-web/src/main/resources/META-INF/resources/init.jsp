@@ -92,8 +92,10 @@ page import="com.liferay.portlet.usersadmin.util.UsersAdminUtil" %><%@
 page import="com.liferay.site.memberships.web.context.SiteMembershipsDisplayContext" %>
 
 <%@ page import="java.util.ArrayList" %><%@
+page import="java.util.HashMap" %><%@
 page import="java.util.LinkedHashMap" %><%@
-page import="java.util.List" %>
+page import="java.util.List" %><%@
+page import="java.util.Map" %>
 
 <%@ page import="javax.portlet.PortletURL" %><%@
 page import="javax.portlet.WindowState" %>
