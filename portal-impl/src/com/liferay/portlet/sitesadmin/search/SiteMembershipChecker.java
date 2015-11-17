@@ -67,18 +67,8 @@ public class SiteMembershipChecker extends RowChecker {
 		User user = (User)obj;
 
 		try {
-			PermissionChecker permissionChecker =
-				PermissionThreadLocal.getPermissionChecker();
-
 			if (isChecked(user)) {
-				if (SiteMembershipPolicyUtil.isMembershipProtected(
-						permissionChecker, user.getUserId(),
-						_group.getGroupId()) ||
-					SiteMembershipPolicyUtil.isMembershipRequired(
-						user.getUserId(), _group.getGroupId())) {
-
-					return true;
-				}
+				return true;
 			}
 			else {
 				if (!SiteMembershipPolicyUtil.isMembershipAllowed(
