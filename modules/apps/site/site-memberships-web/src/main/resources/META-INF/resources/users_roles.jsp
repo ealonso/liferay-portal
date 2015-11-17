@@ -36,7 +36,7 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(LanguageUtil.get(request, "edit-site-roles-for-user") + ": " + HtmlUtil.escape(selUser.getFullName()));
 %>
 
-<aui:form action="<%= portletURL.toString() %>" name="fm">
+<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="tabs1" type="hidden" value="<%= tabs1 %>" />
 	<aui:input name="tabs2" type="hidden" value="<%= tabs2 %>" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
@@ -47,11 +47,27 @@ renderResponse.setTitle(LanguageUtil.get(request, "edit-site-roles-for-user") + 
 
 	<liferay-ui:membership-policy-error />
 
+	<%
+	PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
+
+	updateRoleAssignmentsURL.setParameter("tabs1", tabs1);
+	updateRoleAssignmentsURL.setParameter("tabs2", tabs2);
+	updateRoleAssignmentsURL.setParameter("cur", String.valueOf(cur));
+	updateRoleAssignmentsURL.setParameter("redirect", redirect);
+	updateRoleAssignmentsURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
+	updateRoleAssignmentsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
+
+	String taglibOnClick = renderResponse.getNamespace() + "updateUserGroupRole('" + updateRoleAssignmentsURL.toString() + "');";
+	%>
+
+	<aui:button-row cssClass="text-center">
+		<aui:button cssClass="btn-lg btn-primary" onClick="<%= taglibOnClick %>" value="update-associations" />
+	</aui:button-row>
+
 	<liferay-ui:search-container
 		rowChecker="<%= new UserGroupRoleRoleChecker(renderResponse, selUser, group) %>"
 		searchContainer="<%= new RoleSearch(renderRequest, portletURL) %>"
 	>
-		<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" cssClass="col-xs-12 form-search" placeholder="keywords" />
 
 		<liferay-ui:search-container-results>
 
@@ -72,25 +88,6 @@ renderResponse.setTitle(LanguageUtil.get(request, "edit-site-roles-for-user") + 
 			%>
 
 		</liferay-ui:search-container-results>
-
-		<%
-		PortletURL updateRoleAssignmentsURL = renderResponse.createRenderURL();
-
-		updateRoleAssignmentsURL.setParameter("tabs1", tabs1);
-		updateRoleAssignmentsURL.setParameter("tabs2", tabs2);
-		updateRoleAssignmentsURL.setParameter("cur", String.valueOf(cur));
-		updateRoleAssignmentsURL.setParameter("redirect", redirect);
-		updateRoleAssignmentsURL.setParameter("p_u_i_d", String.valueOf(selUser.getUserId()));
-		updateRoleAssignmentsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
-		%>
-
-		<div class="separator"><!-- --></div>
-
-		<%
-		String taglibOnClick = renderResponse.getNamespace() + "updateUserGroupRole('" + updateRoleAssignmentsURL.toString() + "');";
-		%>
-
-		<aui:button onClick="<%= taglibOnClick %>" value="update-associations" />
 
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.model.Role"
@@ -118,7 +115,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "edit-site-roles-for-user") + 
 			/>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator/>
+		<liferay-ui:search-iterator markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
