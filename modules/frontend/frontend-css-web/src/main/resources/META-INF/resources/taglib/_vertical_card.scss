@@ -1,0 +1,13 @@
+@import "bourbon";
+
+.taglib-vertical-card {
+	.initials {
+		color: #FFF;
+		font-size: 52px;
+		left: 50%;
+		position: absolute;
+		top: 50%;
+
+		@include transform(translate(-50%, -50%));
+	}
+}

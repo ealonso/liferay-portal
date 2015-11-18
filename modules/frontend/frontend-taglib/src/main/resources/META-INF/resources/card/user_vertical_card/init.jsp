@@ -14,10 +14,12 @@
  */
 --%>
 
-<%
-String panelId = StringPool.BLANK;
+<%@ include file="/card/init.jsp" %>
 
-if (Validator.isNotNull(label) && collapsed) {
-	panelId = namespace + PortalUtil.getUniqueElementId(request, StringPool.BLANK, AUIUtil.normalizeId(label));
-}
+<%
+String colorCssClass = (String)request.getAttribute("liferay-frontend:card:colorCssClass");
+String subtitle = (String)request.getAttribute("liferay-frontend:card:subtitle");
+String title = (String)request.getAttribute("liferay-frontend:card:title");
+String portraitURL = (String)request.getAttribute("liferay-frontend:card:portraitURL");
+String userInitials = (String)request.getAttribute("liferay-frontend:card:userInitials");
 %>
