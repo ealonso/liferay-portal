@@ -37,7 +37,7 @@ Group group = GroupLocalServiceUtil.getGroup(groupId);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("mcvPath", "/view_membership_requests.jsp");
+portletURL.setParameter("mvcPath", "/view_membership_requests.jsp");
 portletURL.setParameter("tabs1", tabs1);
 portletURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 %>
