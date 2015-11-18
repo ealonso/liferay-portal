@@ -14,12 +14,7 @@
  */
 --%>
 
-<%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
-<%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
-
-<%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %>
-
-<liferay-theme:defineObjects />
+<%@ include file="/init.jsp" %>
 
 <div class="product-menu-tab-icon user-tab">
 	<div class="icon-monospaced">
