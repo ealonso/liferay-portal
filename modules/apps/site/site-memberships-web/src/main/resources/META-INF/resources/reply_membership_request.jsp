@@ -41,7 +41,7 @@ MembershipRequest membershipRequest = MembershipRequestLocalServiceUtil.getMembe
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 </portlet:actionURL>
 
-<aui:form action="<%= replyMembershipRequestURL %>" method="post" name="fm">
+<aui:form action="<%= replyMembershipRequestURL %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="membershipRequestId" type="hidden" value="<%= membershipRequest.getMembershipRequestId() %>" />
 
