@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String tabs1 = ParamUtil.getString(request, "tabs1", "summary");
+String tabs1 = ParamUtil.getString(request, "tabs1", "users");
 String tabs2 = ParamUtil.getString(request, "tabs2", "current");
 
 int cur = ParamUtil.getInteger(request, SearchContainer.DEFAULT_CUR_PARAM);
@@ -78,17 +78,9 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 		/>
 	</c:if>
 
-	<c:if test='<%= tabs1.equals("summary") || tabs2.equals("current") %>'>
+	<c:if test='<%= tabs2.equals("current") %>'>
 		<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
 			<aui:nav cssClass="navbar-nav">
-
-				<%
-				PortletURL summaryURL = PortletURLUtil.clone(portletURL, renderResponse);
-
-				summaryURL.setParameter("tabs1", "summary");
-				%>
-
-				<aui:nav-item href="<%= summaryURL.toString() %>" label="summary" selected='<%= tabs1.equals("summary") %>' />
 
 				<%
 				PortletURL usersURL = PortletURLUtil.clone(portletURL, renderResponse);
@@ -125,17 +117,6 @@ request.setAttribute("edit_site_assignments.jsp-portletURL", portletURL);
 </c:if>
 
 <c:choose>
-	<c:when test='<%= tabs1.equals("summary") %>'>
-		<aui:input name="keywords" type="hidden" value="" />
-
-		<liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
-
-		<liferay-util:include page="/users.jsp" servletContext="<%= application %>" />
-
-		<liferay-util:include page="/organizations.jsp" servletContext="<%= application %>" />
-
-		<liferay-util:include page="/user_groups.jsp" servletContext="<%= application %>" />
-	</c:when>
 	<c:when test='<%= tabs1.equals("users") %>'>
 		<c:choose>
 			<c:when test='<%= (selUser == null) && tabs2.equals("current") %>'>
