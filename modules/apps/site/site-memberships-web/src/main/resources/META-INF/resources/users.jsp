@@ -89,31 +89,18 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 			<%@ include file="/user_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<c:choose>
-			<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(request, (total > 1) ? "x-users" : "x-user", total, false) %>'>
-					<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
-
-					<c:if test="<%= total > searchContainer.getDelta() %>">
-						<a href="<%= HtmlUtil.escapeAttribute(viewUsersURL.toString()) %>"><liferay-ui:message key="view-more" /> &raquo;</a>
-					</c:if>
-				</liferay-ui:panel>
-			</c:when>
-			<c:when test='<%= !tabs1.equals("summary") %>'>
-				<liferay-ui:search-iterator markupView="lexicon" />
-
-				<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
-
-					<%
-					viewUsersURL.setParameter("tabs2", "available");
-					viewUsersURL.setParameter("redirect", currentURL);
-					%>
-
-					<liferay-frontend:add-menu>
-						<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-users") %>' url="<%= viewUsersURL.toString() %>" />
-					</liferay-frontend:add-menu>
-				</c:if>
-			</c:when>
-		</c:choose>
+		<liferay-ui:search-iterator markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
+
+<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+
+	<%
+	viewUsersURL.setParameter("tabs2", "available");
+	viewUsersURL.setParameter("redirect", currentURL);
+	%>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-users") %>' url="<%= viewUsersURL.toString() %>" />
+	</liferay-frontend:add-menu>
+</c:if>

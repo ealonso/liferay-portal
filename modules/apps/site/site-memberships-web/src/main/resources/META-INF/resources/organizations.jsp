@@ -88,30 +88,17 @@ searchContainer.setEmptyResultsMessage("no-organization-was-found-that-is-a-memb
 			<%@ include file="/organization_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<c:choose>
-			<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(request, (total > 1) ? "x-organizations" : "x-organization", total, false) %>'>
-					<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
-
-					<c:if test="<%= total > searchContainer.getDelta() %>">
-						<a href="<%= viewOrganizationsURL %>"><liferay-ui:message key="view-more" /> &raquo;</a>
-					</c:if>
-				</liferay-ui:panel>
-			</c:when>
-			<c:when test='<%= !tabs1.equals("summary") %>'>
-				<liferay-ui:search-iterator markupView="lexicon" />
-
-				<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
-
-					<%
-					viewOrganizationsURL.setParameter("tabs2", "available");
-					%>
-
-					<liferay-frontend:add-menu>
-						<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-organizations") %>' url="<%= viewOrganizationsURL.toString() %>" />
-					</liferay-frontend:add-menu>
-				</c:if>
-			</c:when>
-		</c:choose>
+		<liferay-ui:search-iterator markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
+
+<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+
+	<%
+	viewOrganizationsURL.setParameter("tabs2", "available");
+	%>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-organizations") %>' url="<%= viewOrganizationsURL.toString() %>" />
+	</liferay-frontend:add-menu>
+</c:if>

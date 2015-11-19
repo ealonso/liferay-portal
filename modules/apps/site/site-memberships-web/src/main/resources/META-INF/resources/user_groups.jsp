@@ -84,30 +84,17 @@ userGroupSearch.setEmptyResultsMessage("no-user-group-was-found-that-is-a-member
 			<%@ include file="/user_group_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<c:choose>
-			<c:when test='<%= tabs1.equals("summary") && (total > 0) %>'>
-				<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" persistState="<%= true %>" title='<%= LanguageUtil.format(request, (total > 1) ? "x-user-groups" : "x-user-group", total, false) %>'>
-					<liferay-ui:search-iterator markupView="lexicon" paginate="<%= false %>" />
-
-					<c:if test="<%= total > userGroupSearch.getDelta() %>">
-						<a href="<%= viewUserGroupsURL %>"><liferay-ui:message key="view-more" /> &raquo;</a>
-					</c:if>
-				</liferay-ui:panel>
-			</c:when>
-			<c:when test='<%= !tabs1.equals("summary") %>'>
-				<liferay-ui:search-iterator markupView="lexicon" />
-
-				<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
-
-					<%
-					viewUserGroupsURL.setParameter("tabs2", "available");
-					%>
-
-					<liferay-frontend:add-menu>
-						<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-user-groups") %>' url="<%= viewUserGroupsURL.toString() %>" />
-					</liferay-frontend:add-menu>
-				</c:if>
-			</c:when>
-		</c:choose>
+		<liferay-ui:search-iterator markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
+
+<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+
+	<%
+	viewUserGroupsURL.setParameter("tabs2", "available");
+	%>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-user-groups") %>' url="<%= viewUserGroupsURL.toString() %>" />
+	</liferay-frontend:add-menu>
+</c:if>
