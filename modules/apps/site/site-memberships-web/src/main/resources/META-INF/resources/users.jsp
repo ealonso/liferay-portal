@@ -19,6 +19,7 @@
 <%
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
+String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
 String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
 String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
@@ -38,6 +39,14 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 %>
 
 <liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
+
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"all"} %>'
@@ -108,7 +117,7 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 			<%@ include file="/user_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
