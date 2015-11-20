@@ -17,11 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
+int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
+
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
-String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
-String orderByCol = ParamUtil.getString(request, "orderByCol", "first-name");
-String orderByType = ParamUtil.getString(request, "orderByType", "asc");
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
@@ -29,44 +29,18 @@ PortletURL viewUsersURL = renderResponse.createRenderURL();
 
 viewUsersURL.setParameter("mvcPath", "/view.jsp");
 viewUsersURL.setParameter("tabs1", "users");
-viewUsersURL.setParameter("tabs2", "current");
+viewUsersURL.setParameter("tabs2", "available");
 viewUsersURL.setParameter("redirect", currentURL);
 viewUsersURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
-SearchContainer searchContainer = new UserSearch(renderRequest, PortletURLUtil.clone(viewUsersURL, renderResponse));
+SiteMembershipChecker siteMembershipChecker = new SiteMembershipChecker(renderResponse, group);
 
-searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-member-of-this-site");
+SearchContainer searchContainer = new UserSearch(renderRequest, viewUsersURL);
 %>
-
-<liferay-frontend:management-bar>
-	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
-			selectedDisplayStyle="<%= displayStyle %>"
-		/>
-	</liferay-frontend:management-bar-buttons>
-
-	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation
-			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
-		/>
-
-		<liferay-frontend:management-bar-sort
-			orderByCol="<%= orderByCol %>"
-			orderByType="<%= orderByType %>"
-			orderColumns='<%= new String[] {"first-name", "screen-name"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewUsersURL, renderResponse) %>"
-		/>
-	</liferay-frontend:management-bar-filters>
-</liferay-frontend:management-bar>
-
-<liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
 
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="tabs1" type="hidden" value="users" />
-	<aui:input name="tabs2" type="hidden" value="current" />
+	<aui:input name="tabs2" type="hidden" value="available" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
 	<aui:input name="addUserIds" type="hidden" />
@@ -75,6 +49,7 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 	<liferay-ui:membership-policy-error />
 
 	<liferay-ui:search-container
+		rowChecker="<%= siteMembershipChecker %>"
 		searchContainer="<%= searchContainer %>"
 		var="userSearchContainer"
 	>
@@ -84,8 +59,10 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 
 		LinkedHashMap<String, Object> userParams = new LinkedHashMap<String, Object>();
 
-		userParams.put("inherit", Boolean.TRUE);
-		userParams.put("usersGroups", Long.valueOf(group.getGroupId()));
+		if (group.isLimitedToParentSiteMembers()) {
+			userParams.put("inherit", Boolean.TRUE);
+			userParams.put("usersGroups", Long.valueOf(group.getParentGroupId()));
+		}
 		%>
 
 		<liferay-ui:search-container-results>
@@ -111,24 +88,40 @@ searchContainer.setEmptyResultsMessage("no-user-was-found-that-is-a-direct-membe
 		>
 
 			<%
-			boolean selectUsers = false;
+			boolean selectUsers = true;
 			%>
 
 			<%@ include file="/user_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+
+		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+
+			<%
+			portletURL.setParameter("tabs2", "current");
+			portletURL.setParameter("cur", String.valueOf(cur));
+
+			String taglibOnClick = renderResponse.getNamespace() + "updateGroupUsers('" + portletURL.toString() + "');";
+			%>
+
+			<aui:button-row>
+				<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
+			</aui:button-row>
+		</c:if>
 	</liferay-ui:search-container>
 </aui:form>
 
-<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+<aui:script>
+	function <portlet:namespace />updateGroupUsers(assignmentsRedirect) {
+		var Util = Liferay.Util;
 
-	<%
-	viewUsersURL.setParameter("tabs2", "available");
-	viewUsersURL.setParameter("redirect", currentURL);
-	%>
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-users") %>' url="<%= viewUsersURL.toString() %>" />
-	</liferay-frontend:add-menu>
-</c:if>
+		form.fm('assignmentsRedirect').val(assignmentsRedirect);
+		form.fm('addUserIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+		form.fm('removeUserIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
+
+		submitForm(form, '<portlet:actionURL name="editGroupUsers" />');
+	}
+</aui:script>

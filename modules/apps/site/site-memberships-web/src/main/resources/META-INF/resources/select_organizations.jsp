@@ -17,11 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
+int cur = (Integer)request.getAttribute("edit_site_assignments.jsp-cur");
+
 Group group = (Group)request.getAttribute("edit_site_assignments.jsp-group");
 
 String displayStyle = ParamUtil.getString(request, "displayStyle", "icon");
-String orderByCol = ParamUtil.getString(request, "orderByCol", "name");
-String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
 PortletURL portletURL = (PortletURL)request.getAttribute("edit_site_assignments.jsp-portletURL");
 
@@ -29,50 +29,25 @@ PortletURL viewOrganizationsURL = renderResponse.createRenderURL();
 
 viewOrganizationsURL.setParameter("mvcPath", "/view.jsp");
 viewOrganizationsURL.setParameter("tabs1", "organizations");
-viewOrganizationsURL.setParameter("tabs2", "current");
+viewOrganizationsURL.setParameter("tabs2", "available");
 viewOrganizationsURL.setParameter("redirect", currentURL);
 viewOrganizationsURL.setParameter("groupId", String.valueOf(group.getGroupId()));
 
-SearchContainer searchContainer = new OrganizationSearch(renderRequest, PortletURLUtil.clone(viewOrganizationsURL, renderResponse));
+OrganizationGroupChecker organizationGroupChecker = new OrganizationGroupChecker(renderResponse, group);
 
-searchContainer.setEmptyResultsMessage("no-organization-was-found-that-is-a-member-of-this-site");
+SearchContainer searchContainer = new OrganizationSearch(renderRequest, viewOrganizationsURL);
 %>
-
-<liferay-frontend:management-bar>
-	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-			selectedDisplayStyle="<%= displayStyle %>"
-		/>
-	</liferay-frontend:management-bar-buttons>
-
-	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation
-			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-		/>
-
-		<liferay-frontend:management-bar-sort
-			orderByCol="<%= orderByCol %>"
-			orderByType="<%= orderByType %>"
-			orderColumns='<%= new String[] {"name", "type"} %>'
-			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-		/>
-	</liferay-frontend:management-bar-filters>
-</liferay-frontend:management-bar>
-
-<liferay-util:include page="/info_message.jsp" servletContext="<%= application %>" />
 
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="tabs1" type="hidden" value="organizations" />
-	<aui:input name="tabs2" type="hidden" value="current" />
+	<aui:input name="tabs2" type="hidden" value="available" />
 	<aui:input name="assignmentsRedirect" type="hidden" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(group.getGroupId()) %>" />
 	<aui:input name="addOrganizationIds" type="hidden" />
 	<aui:input name="removeOrganizationIds" type="hidden" />
 
 	<liferay-ui:search-container
+		rowChecker="<%= organizationGroupChecker %>"
 		searchContainer="<%= searchContainer %>"
 		var="organizationSearchContainer"
 	>
@@ -83,9 +58,6 @@ searchContainer.setEmptyResultsMessage("no-organization-was-found-that-is-a-memb
 		long parentOrganizationId = OrganizationConstants.ANY_PARENT_ORGANIZATION_ID;
 
 		LinkedHashMap<String, Object> organizationParams = new LinkedHashMap<String, Object>();
-
-		organizationParams.put("groupOrganization", Long.valueOf(group.getGroupId()));
-		organizationParams.put("organizationsGroups", Long.valueOf(group.getGroupId()));
 		%>
 
 		<liferay-ui:search-container-results>
@@ -110,23 +82,40 @@ searchContainer.setEmptyResultsMessage("no-organization-was-found-that-is-a-memb
 		>
 
 			<%
-			boolean selectOrganizations = false;
+			boolean selectOrganizations = true;
 			%>
 
 			<%@ include file="/organization_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+
+		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+
+			<%
+			portletURL.setParameter("tabs2", "current");
+			portletURL.setParameter("cur", String.valueOf(cur));
+
+			String taglibOnClick = renderResponse.getNamespace() + "updateGroupOrganizations('" + portletURL.toString() + "');";
+			%>
+
+			<aui:button-row>
+				<aui:button onClick="<%= taglibOnClick %>" primary="<%= true %>" value="save" />
+			</aui:button-row>
+		</c:if>
 	</liferay-ui:search-container>
 </aui:form>
 
-<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ASSIGN_MEMBERS) %>">
+<aui:script>
+	function <portlet:namespace />updateGroupOrganizations(assignmentsRedirect) {
+		var Util = Liferay.Util;
 
-	<%
-	viewOrganizationsURL.setParameter("tabs2", "available");
-	%>
+		var form = AUI.$(document.<portlet:namespace />fm);
 
-	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "assign-organizations") %>' url="<%= viewOrganizationsURL.toString() %>" />
-	</liferay-frontend:add-menu>
-</c:if>
+		form.fm('assignmentsRedirect').val(assignmentsRedirect);
+		form.fm('addOrganizationIds').val(Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
+		form.fm('removeOrganizationIds').val(Util.listUncheckedExcept(form, '<portlet:namespace />allRowIds'));
+
+		submitForm(form, '<portlet:actionURL name="editGroupOrganizations" />');
+	}
+</aui:script>
