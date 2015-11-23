@@ -14,9 +14,15 @@
 
 package com.liferay.search.web.display.context;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.settings.PortletInstanceSettingsLocator;
+import com.liferay.portal.kernel.settings.PortletPreferencesSettings;
+import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -26,6 +32,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.search.facet.SearchFacet;
 import com.liferay.search.facet.util.SearchFacetTracker;
+import com.liferay.search.web.constants.SearchPortletKeys;
 
 import java.util.List;
 
@@ -42,7 +49,38 @@ public class SearchDisplayContext {
 		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		_request = request;
-		_portletPreferences = portletPreferences;
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		try {
+			String portletId = ParamUtil.getString(request, "portletResource");
+
+			if (Validator.isBlank(portletId)) {
+				portletId = (String)request.getAttribute(WebKeys.PORTLET_ID);
+			}
+
+			if (Validator.isBlank(portletId)) {
+				portletId = SearchPortletKeys.SEARCH;
+			}
+
+			PortletPreferencesSettings portletPreferencesSettings =
+				(PortletPreferencesSettings)SettingsFactoryUtil.getSettings(
+					new PortletInstanceSettingsLocator(
+						themeDisplay.getLayout(), portletId));
+
+			if (portletPreferencesSettings != null) {
+				_portletPreferences =
+					portletPreferencesSettings.getPortletPreferences();
+			}
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		if (_portletPreferences == null) {
+			_portletPreferences = portletPreferences;
+		}
 	}
 
 	public String checkViewURL(String viewURL, String currentURL) {
@@ -302,6 +340,9 @@ public class SearchDisplayContext {
 
 		return _viewInContext;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SearchDisplayContext.class);
 
 	private Integer _collatedSpellCheckResultDisplayThreshold;
 	private Boolean _collatedSpellCheckResultEnabled;
