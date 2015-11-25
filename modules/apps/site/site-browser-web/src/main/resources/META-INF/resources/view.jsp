@@ -50,6 +50,7 @@ boolean includeCompany = ParamUtil.getBoolean(request, "includeCompany");
 boolean includeCurrentGroup = ParamUtil.getBoolean(request, "includeCurrentGroup", true);
 boolean includeUserPersonalSite = ParamUtil.getBoolean(request, "includeUserPersonalSite");
 boolean manualMembership = ParamUtil.getBoolean(request, "manualMembership");
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectSite");
 String target = ParamUtil.getString(request, "target");
 
@@ -105,6 +106,23 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 		</c:if>
 	</aui:nav-bar>
 </c:if>
+
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-filters>
+			<liferay-frontend:management-bar-navigation
+				navigationKeys='<%= new String[] {"all"} %>'
+				portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+			/>
+		</liferay-frontend:management-bar-filters>
+
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
+</liferay-frontend:management-bar>
 
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="selectGroupFm">
 	<liferay-ui:search-container
@@ -286,7 +304,7 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
