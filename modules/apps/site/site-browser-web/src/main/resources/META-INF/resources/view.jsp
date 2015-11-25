@@ -71,11 +71,13 @@ portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPer
 portletURL.setParameter("manualMembership", String.valueOf(manualMembership));
 portletURL.setParameter("eventName", eventName);
 portletURL.setParameter("target", target);
+
+GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(portletURL, liferayPortletResponse));
 %>
 
 <c:if test='<%= !type.equals("parent-sites") || (types.length > 1) %>'>
 	<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-		<aui:nav cssClass="navbar-nav">
+		<aui:nav cssClass="navbar-nav" searchContainer="<%= groupSearch %>">
 			<aui:nav-item cssClass='<%= (types.length > 1) ? StringPool.BLANK : "active" %>' label="sites" />
 
 			<c:if test="<%= types.length > 1 %>">
@@ -96,7 +98,7 @@ portletURL.setParameter("target", target);
 
 		<c:if test='<%= !type.equals("parent-sites") %>'>
 			<aui:nav-bar-search>
-				<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+				<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="searchFm">
 					<liferay-ui:input-search markupView="lexicon" />
 				</aui:form>
 			</aui:nav-bar-search>
@@ -106,11 +108,11 @@ portletURL.setParameter("target", target);
 
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="selectGroupFm">
 	<liferay-ui:search-container
-		searchContainer="<%= new GroupSearch(renderRequest, portletURL) %>"
+		searchContainer="<%= groupSearch %>"
 	>
 
 		<%
-		GroupSearchTerms searchTerms = (GroupSearchTerms)searchContainer.getSearchTerms();
+		GroupSearchTerms searchTerms = (GroupSearchTerms)groupSearch.getSearchTerms();
 
 		LinkedHashMap<String, Object> groupParams = new LinkedHashMap<String, Object>();
 		%>
@@ -142,7 +144,7 @@ portletURL.setParameter("target", target);
 			int additionalSites = 0;
 
 			if (includeCompany) {
-				if (searchContainer.getStart() == 0) {
+				if (groupSearch.getStart() == 0) {
 					results.add(company.getGroup());
 				}
 
@@ -165,7 +167,7 @@ portletURL.setParameter("target", target);
 			}
 
 			if (includeUserPersonalSite) {
-				if (searchContainer.getStart() == 0) {
+				if (groupSearch.getStart() == 0) {
 					Group userPersonalSite = GroupLocalServiceUtil.getGroup(company.getCompanyId(), GroupConstants.USER_PERSONAL_SITE);
 
 					results.add(userPersonalSite);
@@ -188,15 +190,15 @@ portletURL.setParameter("target", target);
 
 			total += additionalSites;
 
-			searchContainer.setTotal(total);
+				groupSearch.setTotal(total);
 
-			int start = searchContainer.getStart();
+			int start = groupSearch.getStart();
 
-			if (searchContainer.getStart() > additionalSites) {
-				start = searchContainer.getStart() - additionalSites;
+			if (groupSearch.getStart() > additionalSites) {
+				start = groupSearch.getStart() - additionalSites;
 			}
 
-			int end = searchContainer.getEnd() - additionalSites;
+			int end = groupSearch.getEnd() - additionalSites;
 
 			List<Group> groups = null;
 
@@ -218,18 +220,18 @@ portletURL.setParameter("target", target);
 
 				total += additionalSites;
 
-				searchContainer.setTotal(total);
+				groupSearch.setTotal(total);
 			}
 			else if (searchTerms.isAdvancedSearch()) {
-				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getName(), searchTerms.getDescription(), groupParams, searchTerms.isAndOperator(), start, end, searchContainer.getOrderByComparator());
+				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getName(), searchTerms.getDescription(), groupParams, searchTerms.isAndOperator(), start, end, groupSearch.getOrderByComparator());
 			}
 			else {
-				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getKeywords(), groupParams, start, end, searchContainer.getOrderByComparator());
+				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getKeywords(), groupParams, start, end, groupSearch.getOrderByComparator());
 			}
 
 			results.addAll(groups);
 
-			searchContainer.setResults(results);
+				groupSearch.setResults(results);
 			%>
 
 		</liferay-ui:search-container-results>
