@@ -263,44 +263,34 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 		>
 			<liferay-ui:search-container-column-text
 				name="name"
-				value="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
-			/>
+			>
+				<c:choose>
+					<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
+
+						<%
+							Map<String, Object> data = new HashMap<String, Object>();
+
+							data.put("groupdescriptivename", group.getDescriptiveName(locale));
+							data.put("groupid", group.getGroupId());
+							data.put("grouptarget", target);
+							data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
+							data.put("url", group.getDisplayURL(themeDisplay));
+						%>
+
+						<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+							<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+						</aui:a>
+					</c:when>
+					<c:otherwise>
+						<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+					</c:otherwise>
+				</c:choose>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="type"
 				value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
 			/>
-
-			<liferay-ui:search-container-column-text
-				cssClass="checkbox-cell"
-			>
-				<c:if test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
-
-					<%
-					Map<String, Object> data = new HashMap<String, Object>();
-
-					data.put("groupdescriptivename", group.getDescriptiveName(locale));
-					data.put("groupid", group.getGroupId());
-					data.put("grouptarget", target);
-					data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
-					data.put("url", group.getDisplayURL(themeDisplay));
-
-					boolean disabled = false;
-
-					if (selUser != null) {
-						for (long curGroupId : selUser.getGroupIds()) {
-							if (curGroupId == group.getGroupId()) {
-								disabled = true;
-
-								break;
-							}
-						}
-					}
-					%>
-
-					<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= ArrayUtil.contains(selectedGroupIds, group.getGroupId()) || disabled %>" value="choose" />
-				</c:if>
-			</liferay-ui:search-container-column-text>
 
 		</liferay-ui:search-container-row>
 
