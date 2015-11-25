@@ -14,6 +14,14 @@
 
 package com.liferay.site.browser.web.display.context;
 
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portlet.sites.util.SitesUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.portlet.PortletRequest;
 
 /**
@@ -23,6 +31,48 @@ public class SiteBrowserDisplayContext {
 
 	public SiteBrowserDisplayContext(PortletRequest request) {
 		_request = request;
+	}
+
+	public List<Group> filterGroups(List<Group> groups, String filter)
+		throws Exception {
+
+		List<Group> filteredGroups = new ArrayList();
+
+		for (Group group : groups) {
+			if (filter.equals("contentSharingWithChildrenEnabled") &&
+				SitesUtil.isContentSharingWithChildrenEnabled(group)) {
+
+				filteredGroups.add(group);
+			}
+		}
+
+		return filteredGroups;
+	}
+
+	public List<Group> filterLayoutGroups(
+			List<Group> groups, Boolean privateLayout)
+		throws Exception {
+
+		List<Group> filteredGroups = new ArrayList();
+
+		if (privateLayout == null) {
+			return groups;
+		}
+
+		for (Group group : groups) {
+			if (!group.isLayout()) {
+				continue;
+			}
+
+			Layout layout = LayoutLocalServiceUtil.getLayout(
+				group.getClassPK());
+
+			if (layout.isPrivateLayout() == privateLayout) {
+				filteredGroups.add(group);
+			}
+		}
+
+		return filteredGroups;
 	}
 
 	private final PortletRequest _request;

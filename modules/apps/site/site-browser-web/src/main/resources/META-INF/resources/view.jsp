@@ -223,7 +223,7 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 			if (type.equals("layoutScopes")) {
 				groups = GroupLocalServiceUtil.getGroups(company.getCompanyId(), Layout.class.getName(), groupId, start, end);
 
-				groups = _filterLayoutGroups(groups, privateLayout);
+				groups = siteBrowserDisplayContext.filterLayoutGroups(groups, privateLayout);
 			}
 			else if (type.equals("parent-sites")) {
 				Group group = GroupLocalServiceUtil.getGroup(groupId);
@@ -231,7 +231,7 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 				groups = group.getAncestors();
 
 				if (Validator.isNotNull(filter)) {
-					groups = _filterGroups(groups, filter);
+					groups = siteBrowserDisplayContext.filterGroups(groups, filter);
 				}
 
 				total = groups.size();
@@ -297,42 +297,6 @@ GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(po
 		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
-
-<%!
-private List<Group> _filterLayoutGroups(List<Group> groups, Boolean privateLayout) throws Exception {
-	List<Group> filteredGroups = new ArrayList();
-
-	if (privateLayout == null) {
-		return groups;
-	}
-
-	for (Group group : groups) {
-		if (!group.isLayout()) {
-			continue;
-		}
-
-		Layout layout = LayoutLocalServiceUtil.getLayout(group.getClassPK());
-
-		if (layout.isPrivateLayout() == privateLayout) {
-			filteredGroups.add(group);
-		}
-	}
-
-	return filteredGroups;
-}
-
-private List<Group> _filterGroups(List<Group> groups, String filter) throws Exception {
-	List<Group> filteredGroups = new ArrayList();
-
-	for (Group group : groups) {
-		if (filter.equals("contentSharingWithChildrenEnabled") && SitesUtil.isContentSharingWithChildrenEnabled(group)) {
-			filteredGroups.add(group);
-		}
-	}
-
-	return filteredGroups;
-}
-%>
 
 <aui:script use="aui-base">
 	var Util = Liferay.Util;

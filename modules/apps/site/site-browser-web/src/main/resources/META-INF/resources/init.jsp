@@ -37,12 +37,11 @@ page import="com.liferay.portal.model.Layout" %><%@
 page import="com.liferay.portal.model.User" %><%@
 page import="com.liferay.portal.security.membershippolicy.SiteMembershipPolicyUtil" %><%@
 page import="com.liferay.portal.service.GroupLocalServiceUtil" %><%@
-page import="com.liferay.portal.service.LayoutLocalServiceUtil" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.portlet.PortletURLUtil" %><%@
-page import="com.liferay.portlet.sites.util.SitesUtil" %><%@
 page import="com.liferay.portlet.usersadmin.search.GroupSearch" %><%@
-page import="com.liferay.portlet.usersadmin.search.GroupSearchTerms" %>
+page import="com.liferay.portlet.usersadmin.search.GroupSearchTerms" %><%@
+page import="com.liferay.site.browser.web.display.context.SiteBrowserDisplayContext" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.HashMap" %><%@
@@ -56,14 +55,14 @@ page import="java.util.Map" %>
 
 <liferay-theme:defineObjects />
 
-<%@ page import="com.liferay.portlet.usersadmin.search.GroupDisplayTerms" %>
-
 <%
 boolean filterManageableGroups = true;
 
 if (permissionChecker.isCompanyAdmin()) {
 	filterManageableGroups = false;
 }
+
+SiteBrowserDisplayContext siteBrowserDisplayContext = new SiteBrowserDisplayContext(renderRequest);
 %>
 
 <%@ include file="/init-ext.jsp" %>
