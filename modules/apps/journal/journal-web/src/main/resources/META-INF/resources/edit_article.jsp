@@ -181,27 +181,10 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 					<liferay-util:include page="/article_toolbar.jsp" servletContext="<%= application %>" />
 				</c:if>
 
-				<liferay-util:buffer var="htmlTop">
-					<c:if test="<%= article != null %>">
-						<div class="article-info">
-							<div class="float-container">
-								<c:if test="<%= article.isSmallImage() %>">
-									<img alt="" class="article-image" src="<%= HtmlUtil.escape(article.getArticleImageURL(themeDisplay)) %>" width="150" />
-								</c:if>
-
-								<c:if test="<%= !article.isNew() %>">
-									<span class="article-name"><%= HtmlUtil.escape(article.getTitle(locale)) %></span>
-								</c:if>
-							</div>
-						</div>
-					</c:if>
-				</liferay-util:buffer>
-
 				<liferay-ui:form-navigator
 					categorySections="<%= categorySections %>"
 					formModelBean="<%= article %>"
 					formName="fm1"
-					htmlTop="<%= htmlTop %>"
 					id="journal.article.form"
 					jspPath="/article/"
 					showButtons="<%= false %>"
