@@ -50,6 +50,7 @@ boolean includeCompany = ParamUtil.getBoolean(request, "includeCompany");
 boolean includeCurrentGroup = ParamUtil.getBoolean(request, "includeCurrentGroup", true);
 boolean includeUserPersonalSite = ParamUtil.getBoolean(request, "includeUserPersonalSite");
 boolean manualMembership = ParamUtil.getBoolean(request, "manualMembership");
+String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectSite");
 String target = ParamUtil.getString(request, "target");
 
@@ -71,11 +72,13 @@ portletURL.setParameter("includeUserPersonalSite", String.valueOf(includeUserPer
 portletURL.setParameter("manualMembership", String.valueOf(manualMembership));
 portletURL.setParameter("eventName", eventName);
 portletURL.setParameter("target", target);
+
+GroupSearch groupSearch = new GroupSearch(renderRequest, PortletURLUtil.clone(portletURL, liferayPortletResponse));
 %>
 
 <c:if test='<%= !type.equals("parent-sites") || (types.length > 1) %>'>
 	<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-		<aui:nav cssClass="navbar-nav">
+		<aui:nav cssClass="navbar-nav" searchContainer="<%= groupSearch %>">
 			<aui:nav-item cssClass='<%= (types.length > 1) ? StringPool.BLANK : "active" %>' label="sites" />
 
 			<c:if test="<%= types.length > 1 %>">
@@ -96,7 +99,7 @@ portletURL.setParameter("target", target);
 
 		<c:if test='<%= !type.equals("parent-sites") %>'>
 			<aui:nav-bar-search>
-				<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+				<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="searchFm">
 					<liferay-ui:input-search markupView="lexicon" />
 				</aui:form>
 			</aui:nav-bar-search>
@@ -104,13 +107,30 @@ portletURL.setParameter("target", target);
 	</aui:nav-bar>
 </c:if>
 
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-filters>
+			<liferay-frontend:management-bar-navigation
+				navigationKeys='<%= new String[] {"all"} %>'
+				portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+			/>
+		</liferay-frontend:management-bar-filters>
+
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, liferayPortletResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
+</liferay-frontend:management-bar>
+
 <aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="selectGroupFm">
 	<liferay-ui:search-container
-		searchContainer="<%= new GroupSearch(renderRequest, portletURL) %>"
+		searchContainer="<%= groupSearch %>"
 	>
 
 		<%
-		GroupSearchTerms searchTerms = (GroupSearchTerms)searchContainer.getSearchTerms();
+		GroupSearchTerms searchTerms = (GroupSearchTerms)groupSearch.getSearchTerms();
 
 		LinkedHashMap<String, Object> groupParams = new LinkedHashMap<String, Object>();
 		%>
@@ -142,7 +162,7 @@ portletURL.setParameter("target", target);
 			int additionalSites = 0;
 
 			if (includeCompany) {
-				if (searchContainer.getStart() == 0) {
+				if (groupSearch.getStart() == 0) {
 					results.add(company.getGroup());
 				}
 
@@ -165,7 +185,7 @@ portletURL.setParameter("target", target);
 			}
 
 			if (includeUserPersonalSite) {
-				if (searchContainer.getStart() == 0) {
+				if (groupSearch.getStart() == 0) {
 					Group userPersonalSite = GroupLocalServiceUtil.getGroup(company.getCompanyId(), GroupConstants.USER_PERSONAL_SITE);
 
 					results.add(userPersonalSite);
@@ -188,15 +208,15 @@ portletURL.setParameter("target", target);
 
 			total += additionalSites;
 
-			searchContainer.setTotal(total);
+				groupSearch.setTotal(total);
 
-			int start = searchContainer.getStart();
+			int start = groupSearch.getStart();
 
-			if (searchContainer.getStart() > additionalSites) {
-				start = searchContainer.getStart() - additionalSites;
+			if (groupSearch.getStart() > additionalSites) {
+				start = groupSearch.getStart() - additionalSites;
 			}
 
-			int end = searchContainer.getEnd() - additionalSites;
+			int end = groupSearch.getEnd() - additionalSites;
 
 			List<Group> groups = null;
 
@@ -218,18 +238,18 @@ portletURL.setParameter("target", target);
 
 				total += additionalSites;
 
-				searchContainer.setTotal(total);
+				groupSearch.setTotal(total);
 			}
 			else if (searchTerms.isAdvancedSearch()) {
-				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getName(), searchTerms.getDescription(), groupParams, searchTerms.isAndOperator(), start, end, searchContainer.getOrderByComparator());
+				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getName(), searchTerms.getDescription(), groupParams, searchTerms.isAndOperator(), start, end, groupSearch.getOrderByComparator());
 			}
 			else {
-				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getKeywords(), groupParams, start, end, searchContainer.getOrderByComparator());
+				groups = GroupLocalServiceUtil.search(company.getCompanyId(), null, searchTerms.getKeywords(), groupParams, start, end, groupSearch.getOrderByComparator());
 			}
 
 			results.addAll(groups);
 
-			searchContainer.setResults(results);
+				groupSearch.setResults(results);
 			%>
 
 		</liferay-ui:search-container-results>
@@ -243,48 +263,38 @@ portletURL.setParameter("target", target);
 		>
 			<liferay-ui:search-container-column-text
 				name="name"
-				value="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
-			/>
+			>
+				<c:choose>
+					<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
+
+						<%
+							Map<String, Object> data = new HashMap<String, Object>();
+
+							data.put("groupdescriptivename", group.getDescriptiveName(locale));
+							data.put("groupid", group.getGroupId());
+							data.put("grouptarget", target);
+							data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
+							data.put("url", group.getDisplayURL(themeDisplay));
+						%>
+
+						<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+							<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+						</aui:a>
+					</c:when>
+					<c:otherwise>
+						<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+					</c:otherwise>
+				</c:choose>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="type"
 				value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
 			/>
 
-			<liferay-ui:search-container-column-text
-				cssClass="checkbox-cell"
-			>
-				<c:if test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
-
-					<%
-					Map<String, Object> data = new HashMap<String, Object>();
-
-					data.put("groupdescriptivename", group.getDescriptiveName(locale));
-					data.put("groupid", group.getGroupId());
-					data.put("grouptarget", target);
-					data.put("grouptype", LanguageUtil.get(request, group.getTypeLabel()));
-					data.put("url", group.getDisplayURL(themeDisplay));
-
-					boolean disabled = false;
-
-					if (selUser != null) {
-						for (long curGroupId : selUser.getGroupIds()) {
-							if (curGroupId == group.getGroupId()) {
-								disabled = true;
-
-								break;
-							}
-						}
-					}
-					%>
-
-					<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= ArrayUtil.contains(selectedGroupIds, group.getGroupId()) || disabled %>" value="choose" />
-				</c:if>
-			</liferay-ui:search-container-column-text>
-
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
 
