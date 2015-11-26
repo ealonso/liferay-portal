@@ -187,6 +187,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 					formName="fm1"
 					id="journal.article.form"
 					jspPath="/article/"
+					markupView="lexicon"
 					showButtons="<%= false %>"
 				/>
 
