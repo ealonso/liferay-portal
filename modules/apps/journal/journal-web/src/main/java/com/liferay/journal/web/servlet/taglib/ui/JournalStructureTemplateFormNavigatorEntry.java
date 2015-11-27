@@ -15,25 +15,24 @@
 package com.liferay.journal.web.servlet.taglib.ui;
 
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
-
-import javax.servlet.ServletContext;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"service.ranking:Integer=90"},
+	property = {"service.ranking:Integer=80"},
 	service = FormNavigatorEntry.class
 )
-public class JournalContentFormNavigatorEntry
+public class JournalStructureTemplateFormNavigatorEntry
 	extends BaseJournalFormNavigatorEntry {
 
 	@Override
 	public String getKey() {
-		return "content";
+		return "structure-and-template";
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class JournalContentFormNavigatorEntry
 
 	@Override
 	protected String getJspPath() {
-		return "/article/content.jsp";
+		return "/article/structure_template.jsp";
 	}
 
 }
