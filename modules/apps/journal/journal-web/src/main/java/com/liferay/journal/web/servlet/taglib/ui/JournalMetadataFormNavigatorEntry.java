@@ -14,6 +14,8 @@
 
 package com.liferay.journal.web.servlet.taglib.ui;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 
 import javax.servlet.ServletContext;
@@ -25,15 +27,15 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	property = {"service.ranking:Integer=10"},
+	property = {"service.ranking:Integer=60"},
 	service = FormNavigatorEntry.class
 )
-public class JournalCustomFieldsFormNavigatorEntry
+public class JournalMetadataFormNavigatorEntry
 	extends BaseJournalFormNavigatorEntry {
 
 	@Override
 	public String getKey() {
-		return "custom-fields";
+		return "metadata";
 	}
 
 	@Override
@@ -46,7 +48,10 @@ public class JournalCustomFieldsFormNavigatorEntry
 
 	@Override
 	protected String getJspPath() {
-		return "/article/custom_fields.jsp";
+		return "/article/metadata.jsp";
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalMetadataFormNavigatorEntry.class);
 
 }

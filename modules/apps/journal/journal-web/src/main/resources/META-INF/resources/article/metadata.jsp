@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+JournalArticle article = journalDisplayContext.getArticle();
+
 String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaultLanguageId");
 
 DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
@@ -26,7 +28,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 <liferay-ui:error-marker key="errorSection" value="categorization" />
 
-<aui:model-context bean="<%= journalDisplayContext.getArticle() %>" model="<%= JournalArticle.class %>" />
+<aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
 
 <liferay-ui:asset-categories-error />
 
@@ -37,8 +39,6 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 	<%
 	long classPK = 0;
 	double priority = 0;
-
-	JournalArticle article = journalDisplayContext.getArticle();
 
 	if (article != null) {
 		classPK = article.getResourcePrimKey();
@@ -70,6 +70,15 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<aui:validator name="min">[0]</aui:validator>
 	</aui:input>
+</aui:fieldset>
+
+<aui:fieldset>
+	<liferay-ui:custom-attribute-list
+		className="<%= JournalArticle.class.getName() %>"
+		classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
+		editable="<%= true %>"
+		label="<%= true %>"
+	/>
 </aui:fieldset>
 
 <aui:script>
