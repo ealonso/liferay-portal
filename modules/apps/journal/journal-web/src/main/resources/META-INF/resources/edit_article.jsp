@@ -103,14 +103,6 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<liferay-util:include page="/article_header.jsp" servletContext="<%= application %>" />
 </c:if>
 
-<aui:form enctype="multipart/form-data" method="post" name="fm2">
-	<input name="groupId" type="hidden" value="" />
-	<input name="articleId" type="hidden" value="" />
-	<input name="version" type="hidden" value="" />
-	<input name="title" type="hidden" value="" />
-	<input name="xml" type="hidden" value="" />
-</aui:form>
-
 <liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
 <liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
 
