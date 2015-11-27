@@ -177,8 +177,6 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			<div class="journal-article-wrapper-content">
 				<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
 					<aui:workflow-status id="<%= String.valueOf(article.getArticleId()) %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
-
-					<liferay-util:include page="/article_toolbar.jsp" servletContext="<%= application %>" />
 				</c:if>
 
 				<liferay-ui:form-navigator
@@ -266,17 +264,6 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	</aui:form>
 </div>
 
-<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="mvcPath" value="/preview_article_content.jsp" />
-
-	<c:if test="<%= article != null %>">
-		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-		<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getDDMTemplateKey() %>" />
-	</c:if>
-</liferay-portlet:renderURL>
-
 <portlet:renderURL var="editArticleURL">
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="mvcPath" value="/edit_article.jsp" />
@@ -291,37 +278,10 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			article: {
 				editUrl: '<%= editArticleURL %>',
 				id: '<%= (article != null) ? HtmlUtil.escape(articleId) : StringPool.BLANK %>',
-
-				<c:if test="<%= (article != null) && !article.isNew() %>">
-					<liferay-security:permissionsURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-						modelResource="<%= JournalArticle.class.getName() %>"
-						modelResourceDescription="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
-						resourceGroupId="<%= String.valueOf(article.getGroupId()) %>"
-						resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
-						var="permissionsURL"
-					/>
-
-					permissionsUrl: '<%= permissionsURL %>',
-					previewUrl: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>',
-				</c:if>
-
 				title: '<%= (article != null) ? HtmlUtil.escapeJS(article.getTitle(locale)) : StringPool.BLANK %>'
 			},
 			namespace: '<portlet:namespace />',
-			'strings.addTemplate': '<liferay-ui:message key="please-add-a-template-to-render-this-structure" />',
-			'strings.saveAsDraftBeforePreview': '<liferay-ui:message key="in-order-to-preview-your-changes,-the-web-content-is-saved-as-a-draft" />'
+			'strings.addTemplate': '<liferay-ui:message key="please-add-a-template-to-render-this-structure" />'
 		}
 	);
 </aui:script>
-
-<c:if test='<%= (article != null) && SessionMessages.contains(renderRequest, "previewRequested") %>'>
-	<aui:script use="liferay-journal-preview">
-		Liferay.fire(
-			'previewArticle',
-			{
-				title: '<%= HtmlUtil.escapeJS(article.getTitle(locale)) %>',
-				uri: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>'
-			}
-		);
-	</aui:script>
-</c:if>
