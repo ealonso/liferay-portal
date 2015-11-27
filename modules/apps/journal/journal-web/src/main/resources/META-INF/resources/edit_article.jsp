@@ -141,6 +141,50 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<input name="xml" type="hidden" value="" />
 </aui:form>
 
+<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
+<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
+
+<liferay-ui:error exception="<%= FileSizeException.class %>">
+
+	<%
+	long fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE);
+
+	if (fileMaxSize == 0) {
+		fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
+	}
+	%>
+
+	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+</liferay-ui:error>
+
+<liferay-ui:error exception="<%= LiferayFileItemException.class %>">
+	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(LiferayFileItem.THRESHOLD_SIZE, locale) %>" key="please-enter-valid-content-with-valid-content-size-no-larger-than-x" translateArguments="<%= false %>" />
+</liferay-ui:error>
+
+<%
+DDMFormValues ddmFormValues = journalDisplayContext.getDDMFormValues(ddmStructure);
+
+Locale[] availableLocales = new Locale[] {LocaleUtil.fromLanguageId(defaultLanguageId)};
+
+if (ddmFormValues != null) {
+	Set<Locale> availableLocalesSet = ddmFormValues.getAvailableLocales();
+
+	availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
+}
+%>
+
+<aui:translation-manager
+	availableLocales="<%= availableLocales %>"
+	defaultLanguageId="<%= defaultLanguageId %>"
+	id="translationManager"
+/>
+
+<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+	<div class="text-center">
+		<aui:workflow-status helpMessage="<%= StringPool.BLANK %>" id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
+	</div>
+</c:if>
+
 <portlet:actionURL var="editArticleActionURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
 	<portlet:param name="mvcPath" value="/edit_article.jsp" />
 </portlet:actionURL>
@@ -169,51 +213,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<aui:input name="ddmTemplateId" type="hidden" />
 	<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
 
-	<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
-	<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
-
-	<liferay-ui:error exception="<%= FileSizeException.class %>">
-
-		<%
-		long fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE);
-
-		if (fileMaxSize == 0) {
-			fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
-		}
-		%>
-
-		<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
-	</liferay-ui:error>
-
-	<liferay-ui:error exception="<%= LiferayFileItemException.class %>">
-		<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(LiferayFileItem.THRESHOLD_SIZE, locale) %>" key="please-enter-valid-content-with-valid-content-size-no-larger-than-x" translateArguments="<%= false %>" />
-	</liferay-ui:error>
-
 	<aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
-
-	<%
-	DDMFormValues ddmFormValues = journalDisplayContext.getDDMFormValues(ddmStructure);
-
-	Locale[] availableLocales = new Locale[] {LocaleUtil.fromLanguageId(defaultLanguageId)};
-
-	if (ddmFormValues != null) {
-		Set<Locale> availableLocalesSet = ddmFormValues.getAvailableLocales();
-
-		availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
-	}
-	%>
-
-	<aui:translation-manager
-		availableLocales="<%= availableLocales %>"
-		defaultLanguageId="<%= defaultLanguageId %>"
-		id="translationManager"
-	/>
-
-	<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
-		<div class="text-center">
-			<aui:workflow-status helpMessage="<%= StringPool.BLANK %>" id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
-		</div>
-	</c:if>
 
 	<liferay-ui:form-navigator
 		formModelBean="<%= article %>"
