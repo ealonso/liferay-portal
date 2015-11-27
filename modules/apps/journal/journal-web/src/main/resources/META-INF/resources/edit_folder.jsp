@@ -98,7 +98,7 @@ renderResponse.setTitle(title);
 			</aui:fieldset>
 
 			<liferay-ui:custom-attributes-available className="<%= JournalFolder.class.getName() %>">
-				<aui:fieldset collapsible="<%= true %>" collapsed="<%= true %>" label="custom-fields">
+				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="custom-fields">
 					<liferay-ui:custom-attribute-list
 						className="<%= JournalFolder.class.getName() %>"
 						classPK="<%= (folder != null) ? folder.getFolderId() : 0 %>"
@@ -110,7 +110,7 @@ renderResponse.setTitle(title);
 		</c:if>
 
 		<c:if test="<%= !rootFolder && (folder != null) %>">
-			<aui:fieldset collapsible="<%= true %>" collapsed="<%= true %>" label="parent-folder">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="parent-folder">
 
 				<%
 				String parentFolderName = LanguageUtil.get(request, "home");
@@ -188,7 +188,7 @@ renderResponse.setTitle(title);
 			}
 			%>
 
-			<aui:fieldset collapsible="<%= true %>" collapsed="<%= true %>" helpMessage='<%= rootFolder ? "" : "structure-restrictions-help" %>' label='<%= rootFolder ? "" : (workflowEnabled ? "structure-restrictions-and-workflow" : "structure-restrictions") %>'>
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" helpMessage='<%= rootFolder ? "" : "structure-restrictions-help" %>' label='<%= rootFolder ? "" : (workflowEnabled ? "structure-restrictions-and-workflow" : "structure-restrictions") %>'>
 				<c:if test="<%= !rootFolder %>">
 
 					<%
@@ -318,7 +318,7 @@ renderResponse.setTitle(title);
 		</c:if>
 
 		<c:if test="<%= !rootFolder && (folder == null) %>">
-			<aui:fieldset collapsible="<%= true %>" collapsed="<%= true %>" label="permissions">
+			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="permissions">
 				<liferay-ui:input-permissions
 					modelName="<%= JournalFolder.class.getName() %>"
 				/>
