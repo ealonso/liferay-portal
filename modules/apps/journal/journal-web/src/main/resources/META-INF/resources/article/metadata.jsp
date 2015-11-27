@@ -69,12 +69,14 @@ if (article != null) {
 	<aui:validator name="min">[0]</aui:validator>
 </aui:input>
 
-<liferay-ui:custom-attribute-list
-	className="<%= JournalArticle.class.getName() %>"
-	classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
-	editable="<%= true %>"
-	label="<%= true %>"
-/>
+<liferay-ui:custom-attributes-available className="<%= JournalArticle.class.getName() %>">
+	<liferay-ui:custom-attribute-list
+		className="<%= JournalArticle.class.getName() %>"
+		classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
+		editable="<%= true %>"
+		label="<%= true %>"
+	/>
+</liferay-ui:custom-attributes-available>
 
 <aui:script>
 	function <portlet:namespace />getSuggestionsContent() {
