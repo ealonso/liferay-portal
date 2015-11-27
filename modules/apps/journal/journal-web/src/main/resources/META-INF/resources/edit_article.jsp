@@ -194,6 +194,25 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 		<div class="journal-article-wrapper" id="<portlet:namespace />journalArticleWrapper">
 			<div class="journal-article-wrapper-content">
+
+				<%
+				DDMFormValues ddmFormValues = journalDisplayContext.getDDMFormValues(ddmStructure);
+
+				Locale[] availableLocales = new Locale[] {LocaleUtil.fromLanguageId(defaultLanguageId)};
+
+				if (ddmFormValues != null) {
+					Set<Locale> availableLocalesSet = ddmFormValues.getAvailableLocales();
+
+					availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
+				}
+				%>
+
+				<aui:translation-manager
+					availableLocales="<%= availableLocales %>"
+					defaultLanguageId="<%= defaultLanguageId %>"
+					id="translationManager"
+				/>
+
 				<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
 					<div class="text-center">
 						<aui:workflow-status helpMessage="<%= StringPool.BLANK %>" id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
