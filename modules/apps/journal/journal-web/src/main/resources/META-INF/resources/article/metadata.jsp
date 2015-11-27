@@ -73,12 +73,14 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 </aui:fieldset>
 
 <aui:fieldset>
-	<liferay-ui:custom-attribute-list
-		className="<%= JournalArticle.class.getName() %>"
-		classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
-		editable="<%= true %>"
-		label="<%= true %>"
-	/>
+	<liferay-ui:custom-attributes-available className="<%= JournalArticle.class.getName() %>">
+		<liferay-ui:custom-attribute-list
+			className="<%= JournalArticle.class.getName() %>"
+			classPK="<%= (article != null) ? article.getPrimaryKey() : 0 %>"
+			editable="<%= true %>"
+			label="<%= true %>"
+		/>
+	</liferay-ui:custom-attributes-available>
 </aui:fieldset>
 
 <aui:script>
