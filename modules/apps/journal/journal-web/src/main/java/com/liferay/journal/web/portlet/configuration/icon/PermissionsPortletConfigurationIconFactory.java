@@ -28,7 +28,10 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
+	property = {
+		"javax.portlet.name=" + JournalPortletKeys.JOURNAL,
+		"path=/edit_article.jsp"
+	},
 	service = PortletConfigurationIconFactory.class
 )
 public class PermissionsPortletConfigurationIconFactory
