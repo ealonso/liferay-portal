@@ -143,7 +143,7 @@ if (ddmFormValues != null) {
 
 <c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
 	<div class="text-center">
-		<aui:workflow-status id="<%= String.valueOf(article.getArticleId()) %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
+		<aui:workflow-status helpMessage="<%= StringPool.BLANK %>" id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
 	</div>
 </c:if>
 
