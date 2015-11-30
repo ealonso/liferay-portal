@@ -89,7 +89,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 		requestedLocale="<%= LocaleUtil.fromLanguageId(defaultLanguageId) %>"
 	/>
 
-	<aui:input label="searchable" name="indexable" />
+	<aui:input label="searchable" name="indexable" type="toggle-switch" value="<%= article.isIndexable() %>" />
 </aui:fieldset>
 
 <liferay-portlet:renderURL portletName="<%= PortletProviderUtil.getPortletId(DDMStructure.class.getName(), PortletProvider.Action.EDIT) %>" var="editStructureURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
