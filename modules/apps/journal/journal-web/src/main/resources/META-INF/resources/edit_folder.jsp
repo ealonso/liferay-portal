@@ -177,15 +177,6 @@ renderResponse.setTitle(title);
 
 			<%
 			List<DDMStructure> ddmStructures = JournalFolderLocalServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), folderId, JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW);
-
-			String headerNames = null;
-
-			if (workflowEnabled) {
-				headerNames = "name,workflow,null";
-			}
-			else {
-				headerNames = "name,null";
-			}
 			%>
 
 			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" helpMessage='<%= rootFolder ? "" : "structure-restrictions-help" %>' label='<%= rootFolder ? "" : (workflowEnabled ? "structure-restrictions-and-workflow" : "structure-restrictions") %>'>
@@ -207,7 +198,6 @@ renderResponse.setTitle(title);
 
 					<div class='<%= (folder.getRestrictionType() == JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW) ? StringPool.BLANK : "hide" %>' id="<portlet:namespace />restrictionTypeDefinedDiv">
 						<liferay-ui:search-container
-							headerNames="<%= headerNames %>"
 							total="<%= ddmStructures.size() %>"
 						>
 							<liferay-ui:search-container-results
