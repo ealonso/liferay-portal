@@ -89,17 +89,6 @@ if (article != null) {
 
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
-String[] mainSections = journalWebConfiguration.journalArticleFormAdd();
-
-if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
-	mainSections = journalWebConfiguration.journalArticleFormDefaultValues();
-}
-else if ((article != null) && (article.getId() > 0)) {
-	mainSections = journalWebConfiguration.journalArticleFormUpdate();
-}
-
-String[][] categorySections = {mainSections};
-
 request.setAttribute("edit_article.jsp-redirect", redirect);
 
 request.setAttribute("edit_article.jsp-structure", ddmStructure);
@@ -110,192 +99,193 @@ request.setAttribute("edit_article.jsp-defaultLanguageId", defaultLanguageId);
 request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 %>
 
-<div class="article-form <%= ((article != null) && !article.isNew()) ? "article-form-edit" : "article-form-add" %> container-fluid-1280">
-	<c:if test="<%= showHeader %>">
-		<liferay-util:include page="/article_header.jsp" servletContext="<%= application %>" />
-	</c:if>
+<c:if test="<%= showHeader %>">
 
-	<aui:form enctype="multipart/form-data" method="post" name="fm2">
-		<input name="groupId" type="hidden" value="" />
-		<input name="articleId" type="hidden" value="" />
-		<input name="version" type="hidden" value="" />
-		<input name="title" type="hidden" value="" />
-		<input name="xml" type="hidden" value="" />
-	</aui:form>
+	<%
+	portletDisplay.setShowBackIcon(true);
 
-	<portlet:actionURL var="editArticleActionURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
-		<portlet:param name="mvcPath" value="/edit_article.jsp" />
-	</portlet:actionURL>
+	if ((classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) && (article != null)) {
+		PortletURL backURL = liferayPortletResponse.createRenderURL();
 
-	<portlet:renderURL var="editArticleRenderURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
-		<portlet:param name="mvcPath" value="/edit_article.jsp" />
-	</portlet:renderURL>
+		backURL.setParameter("groupId", String.valueOf(article.getGroupId()));
+		backURL.setParameter("folderId", String.valueOf(article.getFolderId()));
 
-	<aui:form action="<%= editArticleActionURL %>" cssClass="lfr-dynamic-form" enctype="multipart/form-data" method="post" name="fm1" onSubmit="event.preventDefault();">
-		<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
-		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-		<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
-		<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
-		<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
-		<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
-		<aui:input name="privateLayout" type="hidden" value="<%= layout.isPrivateLayout() %>" />
-		<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
-		<aui:input name="classNameId" type="hidden" value="<%= classNameId %>" />
-		<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
-		<aui:input name="articleId" type="hidden" value="<%= articleId %>" />
-		<aui:input name="articleIds" type="hidden" value="<%= articleId + JournalPortlet.VERSION_SEPARATOR + version %>" />
-		<aui:input name="version" type="hidden" value="<%= ((article == null) || article.isNew()) ? version : article.getVersion() %>" />
-		<aui:input name="articleURL" type="hidden" value="<%= editArticleRenderURL %>" />
-		<aui:input name="changeStructure" type="hidden" />
-		<aui:input name="ddmStructureId" type="hidden" />
-		<aui:input name="ddmTemplateId" type="hidden" />
-		<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
+		portletDisplay.setURLBack(backURL.toString());
+	}
+	else {
+		portletDisplay.setURLBack(redirect);
+	}
 
-		<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
-		<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
+	String title = StringPool.BLANK;
 
-		<liferay-ui:error exception="<%= FileSizeException.class %>">
+	if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+		title = LanguageUtil.get(request, "structure-default-values");
+	}
+	else if ((article != null) && !article.isNew()) {
+		title = article.getTitle(locale);
+	}
+	else {
+		title = LanguageUtil.get(request, "new-web-content");
+	}
 
-			<%
-			long fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE);
+	renderResponse.setTitle(title);
+	%>
 
-			if (fileMaxSize == 0) {
-				fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
-			}
-			%>
+</c:if>
 
-			<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
-		</liferay-ui:error>
+<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
+<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
 
-		<liferay-ui:error exception="<%= LiferayFileItemException.class %>">
-			<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(LiferayFileItem.THRESHOLD_SIZE, locale) %>" key="please-enter-valid-content-with-valid-content-size-no-larger-than-x" translateArguments="<%= false %>" />
-		</liferay-ui:error>
+<liferay-ui:error exception="<%= FileSizeException.class %>">
 
-		<aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
+	<%
+	long fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.DL_FILE_MAX_SIZE);
 
-		<div class="journal-article-wrapper" id="<portlet:namespace />journalArticleWrapper">
-			<div class="journal-article-wrapper-content">
-				<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
-					<aui:workflow-status id="<%= String.valueOf(article.getArticleId()) %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
+	if (fileMaxSize == 0) {
+		fileMaxSize = PrefsPropsUtil.getLong(PropsKeys.UPLOAD_SERVLET_REQUEST_IMPL_MAX_SIZE);
+	}
+	%>
 
-					<liferay-util:include page="/article_toolbar.jsp" servletContext="<%= application %>" />
-				</c:if>
+	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+</liferay-ui:error>
 
-				<liferay-util:buffer var="htmlTop">
-					<c:if test="<%= article != null %>">
-						<div class="article-info">
-							<div class="float-container">
-								<c:if test="<%= article.isSmallImage() %>">
-									<img alt="" class="article-image" src="<%= HtmlUtil.escape(article.getArticleImageURL(themeDisplay)) %>" width="150" />
-								</c:if>
+<liferay-ui:error exception="<%= LiferayFileItemException.class %>">
+	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(LiferayFileItem.THRESHOLD_SIZE, locale) %>" key="please-enter-valid-content-with-valid-content-size-no-larger-than-x" translateArguments="<%= false %>" />
+</liferay-ui:error>
 
-								<c:if test="<%= !article.isNew() %>">
-									<span class="article-name"><%= HtmlUtil.escape(article.getTitle(locale)) %></span>
-								</c:if>
-							</div>
-						</div>
-					</c:if>
-				</liferay-util:buffer>
+<%
+DDMFormValues ddmFormValues = journalDisplayContext.getDDMFormValues(ddmStructure);
 
-				<liferay-util:buffer var="htmlBottom">
+Locale[] availableLocales = new Locale[] {LocaleUtil.fromLanguageId(defaultLanguageId)};
 
-					<%
-					boolean approved = false;
-					boolean pending = false;
+if (ddmFormValues != null) {
+	Set<Locale> availableLocalesSet = ddmFormValues.getAvailableLocales();
 
-					long inheritedWorkflowDDMStructuresFolderId = JournalFolderLocalServiceUtil.getInheritedWorkflowFolderId(folderId);
+	availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
+}
+%>
 
-					boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
+<aui:translation-manager
+	availableLocales="<%= availableLocales %>"
+	defaultLanguageId="<%= defaultLanguageId %>"
+	id="translationManager"
+/>
 
-					if ((article != null) && (version > 0)) {
-						approved = article.isApproved();
+<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+	<div class="text-center">
+		<aui:workflow-status helpMessage="<%= StringPool.BLANK %>" id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
+	</div>
+</c:if>
 
-						 if (workflowEnabled) {
-							pending = article.isPending();
-						}
-					}
-					%>
+<portlet:actionURL var="editArticleActionURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+	<portlet:param name="mvcPath" value="/edit_article.jsp" />
+</portlet:actionURL>
 
-					<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-						<c:if test="<%= approved %>">
-							<div class="alert alert-info">
-								<liferay-ui:message key="a-new-version-is-created-automatically-if-this-content-is-modified" />
-							</div>
-						</c:if>
+<portlet:renderURL var="editArticleRenderURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
+	<portlet:param name="mvcPath" value="/edit_article.jsp" />
+</portlet:renderURL>
 
-						<c:if test="<%= pending %>">
-							<div class="alert alert-info">
-								<liferay-ui:message key="there-is-a-publication-workflow-in-process" />
-							</div>
-						</c:if>
-					</c:if>
+<aui:form action="<%= editArticleActionURL %>" cssClass="container-fluid-1280" enctype="multipart/form-data" method="post" name="fm1" onSubmit="event.preventDefault();">
+	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
+	<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
+	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
+	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="privateLayout" type="hidden" value="<%= layout.isPrivateLayout() %>" />
+	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
+	<aui:input name="classNameId" type="hidden" value="<%= classNameId %>" />
+	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
+	<aui:input name="articleId" type="hidden" value="<%= articleId %>" />
+	<aui:input name="articleIds" type="hidden" value="<%= articleId + JournalPortlet.VERSION_SEPARATOR + version %>" />
+	<aui:input name="version" type="hidden" value="<%= ((article == null) || article.isNew()) ? version : article.getVersion() %>" />
+	<aui:input name="articleURL" type="hidden" value="<%= editArticleRenderURL %>" />
+	<aui:input name="changeStructure" type="hidden" />
+	<aui:input name="ddmStructureId" type="hidden" />
+	<aui:input name="ddmTemplateId" type="hidden" />
+	<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
 
-					<aui:button-row cssClass="journal-article-button-row">
+	<aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
 
-						<%
-						boolean hasSavePermission = false;
+	<liferay-ui:form-navigator
+		formModelBean="<%= article %>"
+		formName="fm1"
+		id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_JOURNAL %>"
+		markupView="lexicon"
+		showButtons="<%= false %>"
+	/>
 
-						if ((article != null) && !article.isNew()) {
-							hasSavePermission = JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE);
-						}
-						else {
-							hasSavePermission = JournalFolderPermission.contains(permissionChecker, groupId, folderId, ActionKeys.ADD_ARTICLE);
-						}
+	<%
+	boolean approved = false;
+	boolean pending = false;
 
-						String saveButtonLabel = "save";
+	long inheritedWorkflowDDMStructuresFolderId = JournalFolderLocalServiceUtil.getInheritedWorkflowFolderId(folderId);
 
-						if ((article == null) || article.isApproved() || article.isDraft() || article.isExpired()) {
-							saveButtonLabel = "save-as-draft";
-						}
+	boolean workflowEnabled = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
 
-						String publishButtonLabel = "publish";
+	if ((article != null) && (version > 0)) {
+		approved = article.isApproved();
 
-						if (workflowEnabled) {
-							publishButtonLabel = "submit-for-publication";
-						}
+		 if (workflowEnabled) {
+			pending = article.isPending();
+		}
+	}
+	%>
 
-						if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
-							publishButtonLabel = "save";
-						}
-						%>
-
-						<c:if test="<%= hasSavePermission %>">
-							<aui:button data-actionname="<%= Constants.PUBLISH %>" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
-
-							<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-								<aui:button data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
-							</c:if>
-						</c:if>
-
-						<aui:button href="<%= redirect %>" type="cancel" />
-					</aui:button-row>
-				</liferay-util:buffer>
-
-				<liferay-ui:form-navigator
-					categorySections="<%= categorySections %>"
-					formModelBean="<%= article %>"
-					formName="fm1"
-					htmlBottom="<%= htmlBottom %>"
-					htmlTop="<%= htmlTop %>"
-					id="journal.article.form"
-					jspPath="/article/"
-					showButtons="<%= false %>"
-				/>
+	<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+		<c:if test="<%= approved %>">
+			<div class="alert alert-info">
+				<liferay-ui:message key="a-new-version-is-created-automatically-if-this-content-is-modified" />
 			</div>
-		</div>
-	</aui:form>
-</div>
+		</c:if>
 
-<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="mvcPath" value="/preview_article_content.jsp" />
-
-	<c:if test="<%= article != null %>">
-		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-		<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getDDMTemplateKey() %>" />
+		<c:if test="<%= pending %>">
+			<div class="alert alert-info">
+				<liferay-ui:message key="there-is-a-publication-workflow-in-process" />
+			</div>
+		</c:if>
 	</c:if>
-</liferay-portlet:renderURL>
+
+	<aui:button-row>
+
+		<%
+		boolean hasSavePermission = false;
+
+		if ((article != null) && !article.isNew()) {
+			hasSavePermission = JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE);
+		}
+		else {
+			hasSavePermission = JournalFolderPermission.contains(permissionChecker, groupId, folderId, ActionKeys.ADD_ARTICLE);
+		}
+
+		String saveButtonLabel = "save";
+
+		if ((article == null) || article.isApproved() || article.isDraft() || article.isExpired()) {
+			saveButtonLabel = "save-as-draft";
+		}
+
+		String publishButtonLabel = "publish";
+
+		if (workflowEnabled) {
+			publishButtonLabel = "submit-for-publication";
+		}
+
+		if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+			publishButtonLabel = "save";
+		}
+		%>
+
+		<c:if test="<%= hasSavePermission %>">
+			<aui:button cssClass="btn-lg" data-actionname="<%= Constants.PUBLISH %>" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
+
+			<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+				<aui:button cssClass="btn-lg" data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
+			</c:if>
+		</c:if>
+
+		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+	</aui:button-row>
+</aui:form>
 
 <portlet:renderURL var="editArticleURL">
 	<portlet:param name="redirect" value="<%= redirect %>" />
@@ -311,37 +301,10 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			article: {
 				editUrl: '<%= editArticleURL %>',
 				id: '<%= (article != null) ? HtmlUtil.escape(articleId) : StringPool.BLANK %>',
-
-				<c:if test="<%= (article != null) && !article.isNew() %>">
-					<liferay-security:permissionsURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"
-						modelResource="<%= JournalArticle.class.getName() %>"
-						modelResourceDescription="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
-						resourceGroupId="<%= String.valueOf(article.getGroupId()) %>"
-						resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
-						var="permissionsURL"
-					/>
-
-					permissionsUrl: '<%= permissionsURL %>',
-					previewUrl: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>',
-				</c:if>
-
 				title: '<%= (article != null) ? HtmlUtil.escapeJS(article.getTitle(locale)) : StringPool.BLANK %>'
 			},
 			namespace: '<portlet:namespace />',
-			'strings.addTemplate': '<liferay-ui:message key="please-add-a-template-to-render-this-structure" />',
-			'strings.saveAsDraftBeforePreview': '<liferay-ui:message key="in-order-to-preview-your-changes,-the-web-content-is-saved-as-a-draft" />'
+			'strings.addTemplate': '<liferay-ui:message key="please-add-a-template-to-render-this-structure" />'
 		}
 	);
 </aui:script>
-
-<c:if test='<%= (article != null) && SessionMessages.contains(renderRequest, "previewRequested") %>'>
-	<aui:script use="liferay-journal-preview">
-		Liferay.fire(
-			'previewArticle',
-			{
-				title: '<%= HtmlUtil.escapeJS(article.getTitle(locale)) %>',
-				uri: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>'
-			}
-		);
-	</aui:script>
-</c:if>

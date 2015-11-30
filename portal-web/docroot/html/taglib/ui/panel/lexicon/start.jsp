@@ -19,7 +19,7 @@
 <div class="panel panel-default">
 	<div class="panel-heading" id="<%= id %>Header" role="tab">
 		<div class="h4 panel-title">
-			<a aria-controls="<%= id %>Content" aria-expanded="true" class="collapse-icon collapse-icon-middle <%= (panelCount.getValue() > 1) ? "collapsed" : StringPool.BLANK %>" data-toggle="collapse" data-parent="#<%= parentId %>" href="#<%= id %>Content" role="button">
+			<a aria-controls="<%= id %>Content" aria-expanded="true" class="collapse-icon collapse-icon-middle collapsed" data-parent="#<%= parentId %>" data-toggle="collapse" href="#<%= id %>Content" role="button">
 				<c:if test="<%= Validator.isNotNull(iconCssClass) %>">
 					<i class="<%= iconCssClass %>"></i>
 				</c:if>
@@ -33,5 +33,5 @@
 		</div>
 	</div>
 
-	<div aria-labelledby="<%= id %>Header" class="panel-collapse collapse <%= (panelCount.getValue() == 1) ? "in" : StringPool.BLANK %>" id="<%= id %>Content" role="tabpanel">
+	<div aria-labelledby="<%= id %>Header" class="collapse panel-collapse" id="<%= id %>Content" role="tabpanel">
 		<div class="panel-body">

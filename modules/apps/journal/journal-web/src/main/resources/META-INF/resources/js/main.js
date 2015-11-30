@@ -32,8 +32,6 @@ AUI.add(
 						validator: Lang.isObject,
 						value: {
 							addTemplate: Liferay.Language.get('please-add-a-template-to-render-this-structure'),
-							permissions: Liferay.Language.get('permissions'),
-							saveAsDraftBeforePreview: Liferay.Language.get('in-order-to-preview-your-changes,-the-web-content-is-saved-as-a-draft')
 						}
 					}
 				},
@@ -47,8 +45,6 @@ AUI.add(
 				prototype: {
 					initializer: function() {
 						var instance = this;
-
-						instance._createTooltip();
 
 						instance._bindUI();
 					},
@@ -71,22 +67,6 @@ AUI.add(
 							form.on('submit', instance._onFormSubmit, instance)
 						];
 
-						var basicPreviewButton = instance.one('#basicPreviewButton');
-
-						if (basicPreviewButton) {
-							eventHandles.push(basicPreviewButton.on(STR_CLICK, instance._previewArticle, instance));
-
-							Util.toggleDisabled(basicPreviewButton, false);
-						}
-
-						var permissionsButton = instance.one('#articlePermissionsButton');
-
-						if (permissionsButton) {
-							eventHandles.push(permissionsButton.on(STR_CLICK, instance._viewArticlePermissions, instance));
-
-							Util.toggleDisabled(permissionsButton, false);
-						}
-
 						var buttonRow = instance.one('.journal-article-button-row');
 
 						if (buttonRow) {
@@ -94,18 +74,6 @@ AUI.add(
 						}
 
 						instance._eventHandles = eventHandles;
-					},
-
-					_createTooltip: function() {
-						var instance = this;
-
-						instance._tooltip = new A.Tooltip(
-							{
-								trigger: instance.one('#basicPreviewButton'),
-								visible: false,
-								zIndex: Liferay.zIndex.TOOLTIP
-							}
-						).render();
 					},
 
 					_displayTemplateMessage: function() {
@@ -207,44 +175,6 @@ AUI.add(
 						instance._saveArticle(actionName);
 					},
 
-					_previewArticle: function(event) {
-						var instance = this;
-
-						event.preventDefault();
-
-						var strings = instance.get(STR_STRINGS);
-
-						if (!instance._hasUnsavedChanges()) {
-							var article = instance.get(STR_ARTICLE);
-
-							Liferay.fire(
-								'previewArticle',
-								{
-									title: article.title,
-									uri: article.previewUrl
-								}
-							);
-						}
-						else if (confirm(strings.saveAsDraftBeforePreview)) {
-							var hasStructure = instance._hasStructure();
-
-							var hasTemplate = instance._hasTemplate();
-
-							var updateStructureDefaultValues = instance._updateStructureDefaultValues();
-
-							if (hasStructure && !hasTemplate && !updateStructureDefaultValues) {
-								instance._displayTemplateMessage();
-							}
-							else {
-								var form = instance._getPrincipalForm();
-
-								instance.one(SELECTOR_ACTION_NAME, form).val('previewArticle');
-
-								submitForm(form);
-							}
-						}
-					},
-
 					_saveArticle: function(actionName) {
 						var instance = this;
 
@@ -295,27 +225,6 @@ AUI.add(
 						var classNameId = instance._getByName(form, 'classNameId');
 
 						return (classNameId && classNameId.val() > 0);
-					},
-
-					_viewArticlePermissions: function(event) {
-						var instance = this;
-
-						event.preventDefault();
-
-						var article = instance.get(STR_ARTICLE);
-						var strings = instance.get(STR_STRINGS);
-
-						Util.openWindow(
-							{
-								dialog: {
-									cssClass: 'portlet-asset-categories-admin-dialog permissions-change',
-									destroyOnHide: true
-								},
-								id: instance.ns('articlePermissions'),
-								title: strings.permissions,
-								uri: article.permissionsUrl
-							}
-						);
 					}
 				}
 			}

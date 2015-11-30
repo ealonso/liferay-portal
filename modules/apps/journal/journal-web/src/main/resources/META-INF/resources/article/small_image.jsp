@@ -28,8 +28,6 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 <aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
 
-<h3><liferay-ui:message key="small-image" /></h3>
-
 <liferay-ui:error exception="<%= ArticleSmallImageNameException.class %>">
 
 	<%
@@ -51,7 +49,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 <aui:fieldset>
 	<div id="<portlet:namespace />smallImageContainer">
 		<div class="lfr-journal-small-image-header">
-			<aui:input id="useSmallImage" label="use-small-image" name="smallImage" />
+			<aui:input id="useSmallImage" label="use-small-image" name="smallImage" type="toggle-switch" />
 		</div>
 
 		<div class="lfr-journal-small-image-content toggler-content-collapsed">

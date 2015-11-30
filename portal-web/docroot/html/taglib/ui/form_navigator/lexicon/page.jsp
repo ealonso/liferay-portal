@@ -16,10 +16,65 @@
 
 <%@ include file="/html/taglib/ui/form_navigator/init.jsp" %>
 
+<c:if test="<%= true %>">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<c:if test="<%= deprecatedCategorySections.length > 0 %>">
+
+				<%
+				String section = deprecatedCategorySections[0];
+
+				String sectionId = namespace + _getSectionId(section);
+				String sectionJsp = jspPath + _getSectionJsp(section) + ".jsp";
+				%>
+
+				<!-- Begin fragment <%= sectionId %> -->
+
+				<liferay-util:include page="<%= sectionJsp %>" portletId="<%= portletDisplay.getRootPortletId() %>" />
+
+				<!-- End fragment <%= sectionId %> -->
+			</c:if>
+
+			<%
+			List<FormNavigatorEntry<Object>> formNavigatorEntries = FormNavigatorEntryUtil.getFormNavigatorEntries(id, user, formModelBean);
+			%>
+
+			<c:if test="<%= ListUtil.isNotEmpty(formNavigatorEntries) %>">
+
+				<%
+				final FormNavigatorEntry formNavigatorEntry = formNavigatorEntries.get(0);
+
+				String sectionId = namespace + _getSectionId(formNavigatorEntry.getKey());
+				%>
+
+				<!-- Begin fragment <%= sectionId %> -->
+
+				<%
+				PortalIncludeUtil.include(
+					pageContext,
+					new PortalIncludeUtil.HTMLRenderer() {
+
+						public void renderHTML(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+							formNavigatorEntry.include(request, response);
+						}
+
+					});
+				%>
+
+				<!-- End fragment <%= sectionId %> -->
+			</c:if>
+		</div>
+	</div>
+</c:if>
+
+<%
+int index = 1;
+%>
+
 <liferay-ui:panel-container id="tabs" markupView="lexicon">
 
 	<%
-	for (int i = 0; i < deprecatedCategorySections.length; i++) {
+	for (int i = index; i < deprecatedCategorySections.length; i++) {
 		String section = deprecatedCategorySections[i];
 
 		String sectionId = namespace + _getSectionId(section);
@@ -39,7 +94,7 @@
 
 	List<FormNavigatorEntry<Object>> formNavigatorEntries = FormNavigatorEntryUtil.getFormNavigatorEntries(id, user, formModelBean);
 
-	for (int i = 0; i < formNavigatorEntries.size(); i++) {
+	for (int i = index; i < formNavigatorEntries.size(); i++) {
 		final FormNavigatorEntry formNavigatorEntry = formNavigatorEntries.get(i);
 
 		String sectionId = namespace + _getSectionId(formNavigatorEntry.getKey());
