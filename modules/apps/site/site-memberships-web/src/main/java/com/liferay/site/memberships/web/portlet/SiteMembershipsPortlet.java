@@ -115,8 +115,8 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		long[] addUserGroupIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "addUserGroupIds"), 0L);
+		long[] addUserGroupIds = ParamUtil.getLongValues(
+			actionRequest, "rowIds");
 
 		_userGroupService.addGroupUserGroups(
 			themeDisplay.getSiteGroupId(), addUserGroupIds);
@@ -138,8 +138,8 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 
 		long groupId = themeDisplay.getSiteGroupId();
 
-		long[] addUserIds = StringUtil.split(
-			ParamUtil.getString(actionRequest, "addUserIds"), 0L);
+		long[] addUserIds = ParamUtil.getLongValues(
+			actionRequest, "rowIds");
 
 		addUserIds = filterAddUserIds(groupId, addUserIds);
 
