@@ -121,7 +121,6 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelN
 				<c:choose>
 					<c:when test="<%= curContainerModel.getContainerModelId() > 0 %>">
 						<liferay-ui:icon
-							iconCssClass="<%= curContainerTrashRenderer.getIconCssClass() %>"
 							label="<%= true %>"
 							message="<%= curContainerModel.getContainerModelName() %>"
 							method="get"
