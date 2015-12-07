@@ -34,10 +34,10 @@ portletURL.setParameter("mvcPath", "/select_folder.jsp");
 JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 %>
 
-<aui:form method="post" name="selectFolderFm">
+<aui:form cssClass="container-fluid-1280" method="post" name="selectFolderFm">
 	<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showParentGroups="<%= false %>" />
 
-	<aui:button-row>
+	<aui:button-row cssClass="text-center">
 
 		<%
 		Map<String, Object> data = new HashMap<String, Object>();
@@ -66,6 +66,7 @@ JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 
 		<liferay-ui:search-container-row
 			className="com.liferay.journal.model.JournalFolderModel"
+			escapedModel="<%= true %>"
 			keyProperty="folderId"
 			modelVar="curFolder"
 			rowVar="row"
@@ -94,15 +95,9 @@ JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 			%>
 
 			<liferay-ui:search-container-column-text
-				name="folder"
-			>
-				<liferay-ui:icon
-					iconCssClass="<%= assetRenderer.getIconCssClass() %>"
-					label="<%= true %>"
-					message="<%= HtmlUtil.escape(curFolder.getName()) %>"
-					url="<%= (rowURL != null) ? rowURL.toString() : StringPool.BLANK %>"
-				/>
-			</liferay-ui:search-container-column-text>
+				href="<%= rowURL %>"
+				name="name"
+			/>
 
 			<liferay-ui:search-container-column-text
 				name="num-of-folders"

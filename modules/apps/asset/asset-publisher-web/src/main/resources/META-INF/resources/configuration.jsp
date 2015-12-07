@@ -86,13 +86,8 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 				>
 					<liferay-ui:search-container-column-text
 						name="name"
-					>
-						<liferay-ui:icon
-							iconCssClass="<%= group.getIconCssClass() %>"
-							label="<%= true %>"
-							message="<%= group.getScopeDescriptiveName(themeDisplay) %>"
-						/>
-					</liferay-ui:search-container-column-text>
+						value="<%= group.getScopeDescriptiveName(themeDisplay) %>"
+					/>
 
 					<liferay-ui:search-container-column-text
 						name="type"
@@ -109,7 +104,8 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 						</liferay-portlet:actionURL>
 
 						<liferay-ui:icon
-							iconCssClass="icon-remove"
+							icon="times"
+							markupView="lexicon"
 							url="<%= deleteURL %>"
 						/>
 					</liferay-ui:search-container-column-text>
@@ -119,7 +115,7 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 			</liferay-ui:search-container>
 
 			<div class="select-asset-selector">
-				<liferay-ui:icon-menu cssClass="select-existing-selector" direction="right" icon="../aui/plus" message="select" showWhenSingleIcon="<%= true %>">
+				<liferay-ui:icon-menu cssClass="select-existing-selector" direction="right" message="select" showArrow="<%= false %>" showWhenSingleIcon="<%= true %>">
 
 					<%
 					Map<String, Object> data = new HashMap<String, Object>();

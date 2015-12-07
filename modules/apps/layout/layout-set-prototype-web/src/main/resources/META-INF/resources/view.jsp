@@ -73,7 +73,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 		</liferay-frontend:management-bar-buttons>
 
 		<liferay-frontend:management-bar-action-buttons>
-			<liferay-frontend:management-bar-button href="javascript:;" iconCssClass="icon-trash" id="deleteSelectedLayoutSetPrototypes" label="delete" />
+			<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedLayoutSetPrototypes" label="delete" />
 		</liferay-frontend:management-bar-action-buttons>
 	</liferay-frontend:management-bar>
 </c:if>
@@ -141,10 +141,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 				%>
 
 				<c:if test="<%= mergeFailCount > PropsValues.LAYOUT_SET_PROTOTYPE_MERGE_FAIL_THRESHOLD %>">
-					<liferay-ui:icon
-						iconCssClass="icon-warning-sign"
-						message='<%= LanguageUtil.format(request, "the-propagation-of-changes-from-the-x-has-been-disabled-temporarily-after-x-errors", new Object[] {mergeFailCount, LanguageUtil.get(request, "site-template")}, false) %>'
-					/>
+					<liferay-ui:message arguments="<%= new Object[] {mergeFailCount, LanguageUtil.get(request, "site-template")} %>" key="the-propagation-of-changes-from-the-x-has-been-disabled-temporarily-after-x-errors" translate="<%= false %>" />
 				</c:if>
 			</liferay-ui:search-container-column-text>
 

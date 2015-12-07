@@ -20,7 +20,6 @@
 	cssClass="portlet-options"
 	direction="<%= direction %>"
 	extended="<%= false %>"
-	icon="../aui/ellipsis-vertical"
 	markupView="<%= markupView %>"
 	message="options"
 	showArrow="<%= false %>"

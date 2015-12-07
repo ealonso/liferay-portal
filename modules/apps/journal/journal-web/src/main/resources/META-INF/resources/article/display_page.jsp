@@ -59,8 +59,6 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 				}
 			}
 		}
-
-		Group parentGroup = themeDisplay.getSiteGroup();
 		%>
 
 		<liferay-ui:error-marker key="errorSection" value="display-page" />
@@ -83,9 +81,9 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 			</div>
 		</div>
 
-		<div>
+		<aui:button-row>
 			<aui:button name="chooseDisplayPage" value="choose" />
-		</div>
+		</aui:button-row>
 
 		<c:if test="<%= (article != null) && Validator.isNotNull(layoutUuid) %>">
 
