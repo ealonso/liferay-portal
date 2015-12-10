@@ -13,16 +13,3 @@
  * details.
  */
 --%>
-
-<%@ include file="/html/taglib/init.jsp" %>
-
-<%
-String key = (String)request.getAttribute("liferay-ui:error:key");
-String message = (String)request.getAttribute("liferay-ui:error:message");
-%>
-
-<c:if test="<%= (key != null) && Validator.isNull(message) %>">
-	<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-		<div class="alert alert-danger">
-	</c:if>
-</c:if>
