@@ -17,48 +17,76 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+String bodyContent = (String)request.getAttribute("liferay-ui:error:bodyContent");
 String key = (String)request.getAttribute("liferay-ui:error:key");
 String message = (String)request.getAttribute("liferay-ui:error:message");
 boolean translateMessage = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:translateMessage"));
 String rowBreak = (String)request.getAttribute("liferay-ui:error:rowBreak");
+
 %>
 
 <c:choose>
 	<c:when test="<%= (key != null) && Validator.isNull(message) %>">
 		<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-			</div>
+			<c:if test="<%= Validator.isNotNull(bodyContent) %>">
+				<liferay-ui:alert
+					message="<%= bodyContent %>"
+					timeout="0"
+					title='<%= LanguageUtil.get(request, "danger") %>'
+					type="danger"
+				/>
 
-			<%= rowBreak %>
+				<%= rowBreak %>
+			</c:if>
 		</c:if>
 	</c:when>
 	<c:when test='<%= SessionErrors.contains(portletRequest, "warning") %>'>
-		<div class="alert alert-warning">
-			<c:choose>
-				<c:when test="<%= message != null %>">
-					<liferay-ui:message key="<%= message %>" localizeKey="<%= translateMessage %>" />
-				</c:when>
-				<c:otherwise>
-					<liferay-ui:message key='<%= (String)SessionErrors.get(portletRequest, "warning") %>' localizeKey="<%= translateMessage %>" />
-				</c:otherwise>
-			</c:choose>
-		</div>
+		<liferay-util:buffer var="alertMessage">
+			<c:when test="<%= message != null %>">
+				<liferay-ui:message key="<%= message %>" localizeKey="<%= translateMessage %>" />
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:message key='<%= (String)SessionErrors.get(portletRequest, "warning") %>' localizeKey="<%= translateMessage %>" />
+			</c:otherwise>
+		</liferay-util:buffer>
+
+		<liferay-ui:alert
+			message="<%= alertMessage %>"
+			timeout="0"
+			title='<%= LanguageUtil.get(request, "warning") %>'
+			type="warning"
+		/>
 
 		<%= rowBreak %>
 	</c:when>
 	<c:when test="<%= key == null %>">
 		<c:if test="<%= !SessionErrors.isEmpty(portletRequest) %>">
-			<div class="alert alert-danger">
+			<liferay-util:buffer var="alertMessage">
 				<liferay-ui:message key="your-request-failed-to-complete" />
-			</div>
+			</liferay-util:buffer>
+
+			<liferay-ui:alert
+				message="<%= alertMessage %>"
+				timeout="5000"
+				title='<%= LanguageUtil.get(request, "danger") %>'
+				type="danger"
+			/>
 
 			<%= rowBreak %>
 		</c:if>
 	</c:when>
 	<c:otherwise>
 		<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-			<div class="alert alert-danger">
+			<liferay-util:buffer var="alertMessage">
 				<liferay-ui:message key="<%= message %>" localizeKey="<%= translateMessage %>" />
-			</div>
+			</liferay-util:buffer>
+
+			<liferay-ui:alert
+				message="<%= alertMessage %>"
+				timeout="0"
+				title='<%= LanguageUtil.get(request, "danger") %>'
+				type="danger"
+			/>
 
 			<%= rowBreak %>
 		</c:if>

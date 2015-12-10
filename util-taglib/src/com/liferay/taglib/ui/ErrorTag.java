@@ -19,18 +19,21 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.taglib.util.IncludeTag;
 import com.liferay.taglib.util.PortalIncludeUtil;
 
 import javax.portlet.PortletRequest;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.BodyContent;
+import javax.servlet.jsp.tagext.BodyTag;
 import javax.servlet.jsp.tagext.TagSupport;
+
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class ErrorTag extends TagSupport {
+public class ErrorTag extends IncludeTag implements BodyTag {
 
 	@Override
 	public int doEndTag() throws JspException {
@@ -78,6 +81,13 @@ public class ErrorTag extends TagSupport {
 					request.setAttribute(
 						"liferay-ui:error:focusField", _focusField);
 				}
+
+			}
+
+			BodyContent bodyContent = getBodyContent();
+
+			if (bodyContent != null) {
+				request.setAttribute("liferay-ui:error:bodyContent", bodyContent.getString());
 			}
 
 			return EVAL_PAGE;
