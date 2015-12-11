@@ -34,13 +34,13 @@ LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
 
 params.put("includeGlobalScope", Boolean.TRUE);
 
-int mdrRulesCount = MDRRuleGroupLocalServiceUtil.searchByKeywordsCount(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator());
+int mdrRuleGroupsCount = MDRRuleGroupLocalServiceUtil.searchByKeywordsCount(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator());
 
-ruleGroupSearch.setTotal(mdrRulesCount);
+ruleGroupSearch.setTotal(mdrRuleGroupsCount);
 
-List<MDRRuleGroup> mdrRules = MDRRuleGroupLocalServiceUtil.searchByKeywords(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator(), ruleGroupSearch.getStart(), ruleGroupSearch.getEnd());
+List<MDRRuleGroup> mdrRuleGroups = MDRRuleGroupLocalServiceUtil.searchByKeywords(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator(), ruleGroupSearch.getStart(), ruleGroupSearch.getEnd());
 
-ruleGroupSearch.setResults(mdrRules);
+ruleGroupSearch.setResults(mdrRuleGroups);
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
@@ -48,7 +48,7 @@ ruleGroupSearch.setResults(mdrRules);
 		<aui:nav-item label="device-families" selected="<%= true %>" />
 	</aui:nav>
 
-	<c:if test="<%= (mdrRulesCount > 0) || searchTerms.isSearch() %>">
+	<c:if test="<%= (mdrRuleGroupsCount > 0) || searchTerms.isSearch() %>">
 		<aui:nav-bar-search>
 			<aui:form action="<%= portletURL.toString() %>" name="searchFm">
 				<liferay-ui:input-search markupView="lexicon" />
@@ -57,7 +57,7 @@ ruleGroupSearch.setResults(mdrRules);
 	</c:if>
 </aui:nav-bar>
 
-<c:if test="<%= (mdrRulesCount > 0) || searchTerms.isSearch() %>">
+<c:if test="<%= (mdrRuleGroupsCount > 0) || searchTerms.isSearch() %>">
 	<liferay-frontend:management-bar
 		includeCheckBox="<%= true %>"
 		searchContainerId="deviceFamilies"
