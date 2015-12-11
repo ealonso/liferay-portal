@@ -35,30 +35,27 @@ if (MDRRuleGroupPermission.contains(permissionChecker, ruleGroup, ActionKeys.UPD
 
 <liferay-ui:search-container-column-text
 	href="<%= rowHREF %>"
-	name="scope"
-	value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
-/>
-
-<liferay-ui:search-container-column-text
-	href="<%= rowHREF %>"
 	name="name"
-	value="<%= ruleGroup.getName(locale) %>"
-/>
+>
+	<strong><%= ruleGroup.getName(locale) %></strong>
+</liferay-ui:search-container-column-text>
 
 <liferay-ui:search-container-column-text
-	href="<%= rowHREF %>"
 	name="description"
 	value="<%= ruleGroup.getDescription(locale) %>"
 />
 
+<liferay-ui:search-container-column-text
+	name="scope"
+	value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
+/>
+
 <liferay-ui:search-container-column-date
-	href="<%= rowHREF %>"
 	name="modified-date"
 	value="<%= ruleGroup.getModifiedDate() %>"
 />
 
 <liferay-ui:search-container-column-jsp
-	align="right"
-	cssClass="entry-action"
+	cssClass="list-group-item-field"
 	path="/rule_group_actions.jsp"
 />

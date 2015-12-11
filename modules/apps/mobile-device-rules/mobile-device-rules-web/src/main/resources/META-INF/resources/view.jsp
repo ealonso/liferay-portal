@@ -37,7 +37,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 	</aui:nav-bar-search>
 </aui:nav-bar>
 
-<aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
+<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
 	<aui:input name="ruleGroupIds" type="hidden" />
@@ -98,7 +98,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 			<div class="separator"><!-- --></div>
 		</c:if>
 
-		<liferay-ui:search-iterator type="more" />
+		<liferay-ui:search-iterator markupView="lexicon" type="more" />
 	</liferay-ui:search-container>
 </aui:form>
 

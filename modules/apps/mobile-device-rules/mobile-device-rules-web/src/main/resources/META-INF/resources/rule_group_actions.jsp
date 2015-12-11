@@ -26,7 +26,7 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 %>
 
-<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+<liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
 	<c:if test="<%= MDRRuleGroupPermission.contains(permissionChecker, ruleGroup.getRuleGroupId(), ActionKeys.UPDATE) %>">
 		<liferay-portlet:renderURL var="editURL">
 			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
@@ -35,7 +35,6 @@ MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 		</liferay-portlet:renderURL>
 
 		<liferay-ui:icon
-			iconCssClass="icon-edit"
 			message="edit"
 			url="<%= editURL %>"
 		/>
@@ -51,7 +50,6 @@ MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 		/>
 
 		<liferay-ui:icon
-			iconCssClass="icon-lock"
 			message="permissions"
 			method="get"
 			url="<%= permissionsURL %>"
@@ -68,7 +66,6 @@ MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 		</portlet:renderURL>
 
 		<liferay-ui:icon
-			iconCssClass="icon-cog"
 			message="manage-classification-rules"
 			url="<%= editRulesURL.toString() %>"
 		/>
@@ -82,7 +79,6 @@ MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 		</portlet:actionURL>
 
 		<liferay-ui:icon
-			iconCssClass="icon-copy"
 			message="copy"
 			url="<%= copyURL.toString() %>"
 		/>
