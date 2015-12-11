@@ -42,13 +42,12 @@ if (ruleGroup != null) {
 }
 
 Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes();
-%>
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-	localizeTitle="<%= false %>"
-	title="<%= title %>"
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(backURL.toString());
+
+renderResponse.setTitle(title);
+%>
 
 <c:if test="<%= rule == null %>">
 	<div class="alert alert-info">
