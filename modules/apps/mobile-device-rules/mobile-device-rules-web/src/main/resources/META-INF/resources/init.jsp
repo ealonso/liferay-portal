@@ -113,11 +113,7 @@ PortletURL currentURLObj = PortletURLUtil.getCurrent(liferayPortletRequest, life
 
 String currentURL = currentURLObj.toString();
 
-long groupId = ParamUtil.getLong(request, "groupId");
-
-if (groupId == 0) {
-	groupId = themeDisplay.getSiteGroupId();
-}
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 %>
 
 <%@ include file="/init-ext.jsp" %>
