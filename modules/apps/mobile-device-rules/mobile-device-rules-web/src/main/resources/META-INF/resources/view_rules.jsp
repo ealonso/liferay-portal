@@ -40,13 +40,12 @@ portletURL.setParameter("mvcPath", "/view_rules.jsp");
 portletURL.setParameter("ruleGroupId", String.valueOf(ruleGroupId));
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("redirect", redirect);
-%>
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-	localizeTitle="<%= false %>"
-	title='<%= LanguageUtil.format(request, "classification-rules-for-x", ruleGroup.getName(locale), false) %>'
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(backURL);
+
+renderResponse.setTitle(LanguageUtil.format(request, "classification-rules-for-x", ruleGroup.getName(locale), false));
+%>
 
 <aui:nav-bar>
 	<aui:nav cssClass="navbar-nav">
