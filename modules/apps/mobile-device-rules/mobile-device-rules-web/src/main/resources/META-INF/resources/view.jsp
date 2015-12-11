@@ -41,26 +41,6 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 		searchContainer="<%= ruleGroupSearch %>"
 	>
 		<aui:nav-bar>
-			<c:if test="<%= MDRPermission.contains(permissionChecker, groupId, ActionKeys.ADD_RULE_GROUP) %>">
-				<portlet:renderURL var="viewRulesURL">
-					<portlet:param name="mvcRenderCommandName" value="/view.jsp" />
-					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-					<portlet:param name="className" value="<%= className %>" />
-					<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
-				</portlet:renderURL>
-
-				<liferay-portlet:renderURL var="addRuleGroupURL">
-					<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
-					<portlet:param name="redirect" value="<%= viewRulesURL %>" />
-					<portlet:param name="backURL" value="<%= viewRulesURL %>" />
-					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-				</liferay-portlet:renderURL>
-
-				<aui:nav cssClass="navbar-nav" searchContainer="<%= ruleGroupSearch %>">
-					<aui:nav-item href="<%= addRuleGroupURL %>" iconCssClass="icon-plus" label="add-device-family" />
-				</aui:nav>
-			</c:if>
-
 			<aui:nav-bar-search searchContainer="<%= searchContainer %>">
 
 				<%
@@ -105,6 +85,26 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 		<liferay-ui:search-iterator type="more" />
 	</liferay-ui:search-container>
 </aui:form>
+
+<c:if test="<%= MDRPermission.contains(permissionChecker, groupId, ActionKeys.ADD_RULE_GROUP) %>">
+	<portlet:renderURL var="viewRulesURL">
+		<portlet:param name="mvcRenderCommandName" value="/view.jsp" />
+		<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+		<portlet:param name="className" value="<%= className %>" />
+		<portlet:param name="classPK" value="<%= String.valueOf(classPK) %>" />
+	</portlet:renderURL>
+
+	<liferay-portlet:renderURL var="addRuleGroupURL">
+		<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
+		<portlet:param name="redirect" value="<%= viewRulesURL %>" />
+		<portlet:param name="backURL" value="<%= viewRulesURL %>" />
+		<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	</liferay-portlet:renderURL>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-device-family") %>' url="<%= addRuleGroupURL %>" />
+	</liferay-frontend:add-menu>
+</c:if>
 
 <aui:script>
 	Liferay.Util.toggleSearchContainerButton('#<portlet:namespace />delete', '#<portlet:namespace /><%= searchContainerReference.getId() %>SearchContainer', document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
