@@ -103,13 +103,13 @@ renderResponse.setTitle(title);
 					</aui:select>
 				</c:otherwise>
 			</c:choose>
-
-			<div id="<%= renderResponse.getNamespace() %>typeSettings">
-				<c:if test="<%= Validator.isNotNull(editorJSP) %>">
-					<liferay-util:include page="<%= editorJSP %>" servletContext="<%= application %>" />
-				</c:if>
-			</div>
 		</aui:fieldset>
+
+		<div id="<%= renderResponse.getNamespace() %>typeSettings">
+			<c:if test="<%= Validator.isNotNull(editorJSP) %>">
+				<liferay-util:include page="<%= editorJSP %>" servletContext="<%= application %>" />
+			</c:if>
+		</div>
 	</aui:fieldset-group>
 
 	<aui:button-row>
