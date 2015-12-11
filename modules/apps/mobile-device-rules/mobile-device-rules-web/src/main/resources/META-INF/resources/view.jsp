@@ -25,6 +25,22 @@ String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("groupId", String.valueOf(groupId));
+
+RuleGroupSearch ruleGroupSearch = new RuleGroupSearch(liferayPortletRequest, PortletURLUtil.clone(portletURL, renderResponse));
+
+RuleGroupSearchTerms searchTerms = (RuleGroupSearchTerms)ruleGroupSearch.getSearchTerms();
+
+LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
+
+params.put("includeGlobalScope", Boolean.TRUE);
+
+int mdrRuleGroupsCount = MDRRuleGroupLocalServiceUtil.searchByKeywordsCount(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator());
+
+ruleGroupSearch.setTotal(mdrRuleGroupsCount);
+
+List<MDRRuleGroup> mdrRuleGroups = MDRRuleGroupLocalServiceUtil.searchByKeywords(groupId, searchTerms.getKeywords(), params, searchTerms.isAndOperator(), ruleGroupSearch.getStart(), ruleGroupSearch.getEnd());
+
+ruleGroupSearch.setResults(mdrRuleGroups);
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
@@ -32,47 +48,51 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 		<aui:nav-item label="device-families" selected="<%= true %>" />
 	</aui:nav>
 
-	<aui:nav-bar-search>
-		<aui:form action="<%= portletURL.toString() %>" name="searchFm">
-			<liferay-ui:input-search markupView="lexicon" />
-		</aui:form>
-	</aui:nav-bar-search>
+	<c:if test="<%= (mdrRuleGroupsCount > 0) || searchTerms.isSearch() %>">
+		<aui:nav-bar-search>
+			<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+				<liferay-ui:input-search markupView="lexicon" />
+			</aui:form>
+		</aui:nav-bar-search>
+	</c:if>
 </aui:nav-bar>
 
-<liferay-frontend:management-bar
-	includeCheckBox="<%= true %>"
-	searchContainerId="deviceFamilies"
->
+<c:if test="<%= (mdrRuleGroupsCount > 0) || searchTerms.isSearch() %>">
+	<liferay-frontend:management-bar
+		includeCheckBox="<%= true %>"
+		searchContainerId="deviceFamilies"
+	>
 
-	<%
-	PortletURL displayStyleURL = PortletURLUtil.clone(portletURL, renderResponse);
-	%>
+		<%
+		PortletURL displayStyleURL = PortletURLUtil.clone(portletURL, renderResponse);
+		%>
 
-	<liferay-frontend:management-bar-buttons>
-		<liferay-frontend:management-bar-display-buttons
-			displayViews='<%= new String[] {"list"} %>'
-			portletURL="<%= displayStyleURL %>"
-			selectedDisplayStyle="<%= displayStyle %>"
-		/>
-	</liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-buttons>
+			<liferay-frontend:management-bar-display-buttons
+				displayViews='<%= new String[] {"list"} %>'
+				portletURL="<%= displayStyleURL %>"
+				selectedDisplayStyle="<%= displayStyle %>"
+			/>
+		</liferay-frontend:management-bar-buttons>
 
-	<%
-	PortletURL iteratorURL = PortletURLUtil.clone(portletURL, renderResponse);
+		<%
+		PortletURL iteratorURL = PortletURLUtil.clone(portletURL, renderResponse);
 
-	iteratorURL.setParameter("displayStyle", displayStyle);
-	%>
+		iteratorURL.setParameter("displayStyle", displayStyle);
+		%>
 
-	<liferay-frontend:management-bar-filters>
-		<liferay-frontend:management-bar-navigation
-			navigationKeys='<%= new String[] {"all"} %>'
-			portletURL="<%= iteratorURL %>"
-		/>
-	</liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-filters>
+			<liferay-frontend:management-bar-navigation
+				navigationKeys='<%= new String[] {"all"} %>'
+				portletURL="<%= iteratorURL %>"
+			/>
+		</liferay-frontend:management-bar-filters>
 
-	<liferay-frontend:management-bar-action-buttons>
-		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedDeviceFamilies" label="delete" />
-	</liferay-frontend:management-bar-action-buttons>
-</liferay-frontend:management-bar>
+		<liferay-frontend:management-bar-action-buttons>
+			<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedDeviceFamilies" label="delete" />
+		</liferay-frontend:management-bar-action-buttons>
+	</liferay-frontend:management-bar>
+</c:if>
 
 <portlet:actionURL name="/mobile_device_rules/edit_rule_group" var="editRuleGroupURL">
 	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
@@ -80,49 +100,14 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 
 <aui:form action="<%= editRuleGroupURL %>" cssClass="container-fluid-1280" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.DELETE %>" />
-	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="ruleGroupIds" type="hidden" />
-
-	<%
-	RuleGroupSearch ruleGroupSearch = new RuleGroupSearch(liferayPortletRequest, portletURL);
-
-	RowChecker rowChecker = new RuleGroupChecker(renderResponse);
-	%>
 
 	<liferay-ui:search-container
 		id="deviceFamilies"
-		rowChecker="<%= rowChecker %>"
+		rowChecker="<%= new RuleGroupChecker(renderResponse) %>"
 		searchContainer="<%= ruleGroupSearch %>"
 	>
-
-		<%
-		RuleGroupDisplayTerms displayTerms = (RuleGroupDisplayTerms)searchContainer.getDisplayTerms();
-		RuleGroupSearchTerms searchTerms = (RuleGroupSearchTerms)searchContainer.getSearchTerms();
-
-		if (displayTerms.getGroupId() == 0) {
-			displayTerms.setGroupId(groupId);
-			searchTerms.setGroupId(groupId);
-		}
-		%>
-
-		<liferay-ui:search-container-results>
-
-			<%
-			LinkedHashMap<String, Object> params = new LinkedHashMap<String, Object>();
-
-			params.put("includeGlobalScope", Boolean.TRUE);
-
-			total = MDRRuleGroupLocalServiceUtil.searchByKeywordsCount(searchTerms.getGroupId(), searchTerms.getKeywords(), params, searchTerms.isAndOperator());
-
-			searchContainer.setTotal(total);
-
-			results = MDRRuleGroupLocalServiceUtil.searchByKeywords(searchTerms.getGroupId(), searchTerms.getKeywords(), params, searchTerms.isAndOperator(), searchContainer.getStart(), searchContainer.getEnd());
-
-			searchContainer.setResults(results);
-			%>
-
-		</liferay-ui:search-container-results>
-
 		<liferay-ui:search-container-row
 			className="com.liferay.mobile.device.rules.model.MDRRuleGroup"
 			escapedModel="<%= true %>"
