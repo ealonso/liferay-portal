@@ -23,13 +23,12 @@ String backURL = ParamUtil.getString(request, "backURL");
 MDRRuleGroup ruleGroup = (MDRRuleGroup)renderRequest.getAttribute(MDRWebKeys.MOBILE_DEVICE_RULES_RULE_GROUP);
 
 long ruleGroupId = BeanParamUtil.getLong(ruleGroup, request, "ruleGroupId");
-%>
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-	localizeTitle="<%= (ruleGroup == null) %>"
-	title='<%= (ruleGroup == null) ? "new-device-family" : ruleGroup.getName(locale) %>'
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(((ruleGroup == null) ? LanguageUtil.get(request, "new-device-family") : ruleGroup.getName(locale)));
+%>
 
 <c:if test="<%= ruleGroup == null %>">
 	<div class="alert alert-info">
