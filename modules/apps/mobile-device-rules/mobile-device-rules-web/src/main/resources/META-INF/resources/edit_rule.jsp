@@ -122,7 +122,7 @@ Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes
 	var typeSettings = $('#<portlet:namespace />typeSettings');
 
 	var loadTypeFields = function() {
-		<portlet:resourceURL id="/mobile_device_rules/edit_rule_editor" var="editorURL" />
+		<portlet:resourceURL id="/mobile_device_rules/edit_rule" var="editorURL" />
 
 		$.ajax(
 			'<%= editorURL.toString() %>',
