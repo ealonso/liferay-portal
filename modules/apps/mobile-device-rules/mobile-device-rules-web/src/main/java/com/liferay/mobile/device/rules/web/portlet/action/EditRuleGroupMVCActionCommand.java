@@ -78,8 +78,8 @@ public class EditRuleGroupMVCActionCommand extends BaseMVCActionCommand {
 			deleteRuleGroupIds = new long[] {ruleGroupId};
 		}
 		else {
-			deleteRuleGroupIds = StringUtil.split(
-				ParamUtil.getString(actionRequest, "ruleGroupIds"), 0L);
+			deleteRuleGroupIds = ParamUtil.getLongValues(
+				actionRequest, "rowIds");
 		}
 
 		for (long deleteRuleGroupId : deleteRuleGroupIds) {
