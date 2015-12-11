@@ -22,7 +22,6 @@ long classPK = ParamUtil.getLong(request, "classPK");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
-portletURL.setParameter("struts_action", "/mobile_device_rules/view");
 portletURL.setParameter("groupId", String.valueOf(groupId));
 %>
 
