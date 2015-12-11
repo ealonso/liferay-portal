@@ -39,7 +39,10 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 	</aui:nav-bar-search>
 </aui:nav-bar>
 
-<liferay-frontend:management-bar>
+<liferay-frontend:management-bar
+	includeCheckBox="<%= true %>"
+	searchContainerId="deviceFamilies"
+>
 
 	<%
 	PortletURL displayStyleURL = PortletURLUtil.clone(portletURL, renderResponse);
@@ -65,10 +68,18 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 			portletURL="<%= iteratorURL %>"
 		/>
 	</liferay-frontend:management-bar-filters>
+
+	<liferay-frontend:management-bar-action-buttons>
+		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedDeviceFamilies" label="delete" />
+	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
-<aui:form action="<%= portletURL.toString() %>" cssClass="container-fluid-1280" method="post" name="fm">
-	<aui:input name="<%= Constants.CMD %>" type="hidden" />
+<portlet:actionURL name="/mobile_device_rules/edit_rule_group" var="editRuleGroupURL">
+	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
+</portlet:actionURL>
+
+<aui:form action="<%= editRuleGroupURL %>" cssClass="container-fluid-1280" method="post" name="fm">
+	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.DELETE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
 	<aui:input name="ruleGroupIds" type="hidden" />
 
@@ -79,6 +90,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 	%>
 
 	<liferay-ui:search-container
+		id="deviceFamilies"
 		rowChecker="<%= rowChecker %>"
 		searchContainer="<%= ruleGroupSearch %>"
 	>
@@ -120,14 +132,6 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 			<%@ include file="/rule_group_columns.jspf" %>
 		</liferay-ui:search-container-row>
 
-		<c:if test="<%= total > 0 %>">
-			<aui:button-row>
-				<aui:button cssClass="delete-rules-button" disabled="<%= true %>" name="delete" onClick='<%= renderResponse.getNamespace() + "deleteRules();" %>' value="delete" />
-			</aui:button-row>
-
-			<div class="separator"><!-- --></div>
-		</c:if>
-
 		<liferay-ui:search-iterator markupView="lexicon" type="more" />
 	</liferay-ui:search-container>
 </aui:form>
@@ -153,17 +157,12 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 </c:if>
 
 <aui:script>
-	Liferay.Util.toggleSearchContainerButton('#<portlet:namespace />delete', '#<portlet:namespace /><%= searchContainerReference.getId() %>SearchContainer', document.<portlet:namespace />fm, '<portlet:namespace />allRowIds');
-
-	function <portlet:namespace />deleteRules() {
-		if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-this") %>')) {
-			var form = AUI.$(document.<portlet:namespace />fm);
-
-			form.attr('method', 'post');
-			form.fm('<%= Constants.CMD %>').val('<%= Constants.DELETE %>');
-			form.fm('ruleGroupIds').val(Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds'));
-
-			submitForm(form, '<portlet:actionURL name="/mobile_device_rules/edit_rule_group"><portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" /></portlet:actionURL>');
+	$('#<portlet:namespace />deleteSelectedDeviceFamilies').on(
+		'click',
+		function() {
+			if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-this") %>')) {
+				submitForm($(document.<portlet:namespace />fm));
+			}
 		}
-	}
+	);
 </aui:script>
