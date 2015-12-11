@@ -26,6 +26,18 @@ portletURL.setParameter("struts_action", "/mobile_device_rules/view");
 portletURL.setParameter("groupId", String.valueOf(groupId));
 %>
 
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item label="device-families" selected="<%= true %>" />
+	</aui:nav>
+
+	<aui:nav-bar-search>
+		<aui:form action="<%= portletURL.toString() %>" method="get" name="searchFm">
+			<liferay-ui:input-search />
+		</aui:form>
+	</aui:nav-bar-search>
+</aui:nav-bar>
+
 <aui:form action="<%= portletURL.toString() %>" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" />
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
@@ -41,11 +53,6 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 		rowChecker="<%= rowChecker %>"
 		searchContainer="<%= ruleGroupSearch %>"
 	>
-		<aui:nav-bar>
-			<aui:nav-bar-search>
-				<liferay-ui:input-search />
-			</aui:nav-bar-search>
-		</aui:nav-bar>
 
 		<%
 		RuleGroupDisplayTerms displayTerms = (RuleGroupDisplayTerms)searchContainer.getDisplayTerms();
