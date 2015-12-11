@@ -53,36 +53,35 @@ renderResponse.setTitle(LanguageUtil.format(request, "classification-rules-for-x
 	</aui:nav>
 </aui:nav-bar>
 
-<liferay-ui:search-container
-	delta="<%= 5 %>"
-	deltaConfigurable="<%= false %>"
-	emptyResultsMessage="no-classification-rules-are-configured-for-this-device-family"
-	headerNames="name,type"
-	iteratorURL="<%= portletURL %>"
-	total="<%= MDRRuleLocalServiceUtil.getRulesCount(ruleGroupId) %>"
->
-	<liferay-ui:search-container-results
-		results="<%= MDRRuleLocalServiceUtil.getRules(ruleGroupId, searchContainer.getStart(), searchContainer.getEnd()) %>"
-	/>
-
-	<liferay-ui:search-container-row
-		className="com.liferay.mobile.device.rules.model.MDRRule"
-		escapedModel="<%= true %>"
-		keyProperty="ruleId"
-		modelVar="rule"
+<div class="container-fluid-1280">
+	<liferay-ui:search-container
+		emptyResultsMessage="no-classification-rules-are-configured-for-this-device-family"
+		iteratorURL="<%= portletURL %>"
+		total="<%= MDRRuleLocalServiceUtil.getRulesCount(ruleGroupId) %>"
 	>
-		<liferay-portlet:renderURL var="rowURL">
-			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
-			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="backURL" value="<%= currentURL %>" />
-			<portlet:param name="ruleId" value="<%= String.valueOf(rule.getRuleId()) %>" />
-		</liferay-portlet:renderURL>
+		<liferay-ui:search-container-results
+			results="<%= MDRRuleLocalServiceUtil.getRules(ruleGroupId, searchContainer.getStart(), searchContainer.getEnd()) %>"
+		/>
 
-		<%@ include file="/rule_columns.jspf" %>
-	</liferay-ui:search-container-row>
+		<liferay-ui:search-container-row
+			className="com.liferay.mobile.device.rules.model.MDRRule"
+			escapedModel="<%= true %>"
+			keyProperty="ruleId"
+			modelVar="rule"
+		>
+			<liferay-portlet:renderURL var="rowURL">
+				<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="backURL" value="<%= currentURL %>" />
+				<portlet:param name="ruleId" value="<%= String.valueOf(rule.getRuleId()) %>" />
+			</liferay-portlet:renderURL>
 
-	<liferay-ui:search-iterator type="more" />
-</liferay-ui:search-container>
+			<%@ include file="/rule_columns.jspf" %>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator markupView="lexicon" type="more" />
+	</liferay-ui:search-container>
+</div>
 
 <liferay-portlet:renderURL var="addURL">
 	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
