@@ -33,8 +33,8 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 	</aui:nav>
 
 	<aui:nav-bar-search>
-		<aui:form action="<%= portletURL.toString() %>" method="get" name="searchFm">
-			<liferay-ui:input-search />
+		<aui:form action="<%= portletURL.toString() %>" name="searchFm">
+			<liferay-ui:input-search markupView="lexicon" />
 		</aui:form>
 	</aui:nav-bar-search>
 </aui:nav-bar>
