@@ -47,19 +47,11 @@ portletDisplay.setURLBack(backURL);
 renderResponse.setTitle(LanguageUtil.format(request, "classification-rules-for-x", ruleGroup.getName(locale), false));
 %>
 
-<aui:nav-bar>
+<aui:nav-bar markupView="lexicon">
 	<aui:nav cssClass="navbar-nav">
-		<liferay-portlet:renderURL var="addURL">
-			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
-			<portlet:param name="redirect" value="<%= portletURL.toString() %>" />
-			<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroupId) %>" />
-		</liferay-portlet:renderURL>
-
-		<aui:nav-item href="<%= addURL %>" iconCssClass="icon-plus" label="add-classification-rule" />
+		<aui:nav-item label="classification-rules" selected="<%= true %>" />
 	</aui:nav>
 </aui:nav-bar>
-
-<div class="separator"><!-- --></div>
 
 <liferay-ui:search-container
 	delta="<%= 5 %>"
@@ -91,3 +83,13 @@ renderResponse.setTitle(LanguageUtil.format(request, "classification-rules-for-x
 
 	<liferay-ui:search-iterator type="more" />
 </liferay-ui:search-container>
+
+<liferay-portlet:renderURL var="addURL">
+	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
+	<portlet:param name="redirect" value="<%= portletURL.toString() %>" />
+	<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroupId) %>" />
+</liferay-portlet:renderURL>
+
+<liferay-frontend:add-menu>
+	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-classification-rule") %>' url="<%= addURL.toString() %>" />
+</liferay-frontend:add-menu>
