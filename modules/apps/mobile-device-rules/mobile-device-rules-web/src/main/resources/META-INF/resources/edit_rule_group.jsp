@@ -57,29 +57,6 @@ renderResponse.setTitle(((ruleGroup == null) ? LanguageUtil.get(request, "new-de
 
 			<aui:input name="description" />
 		</aui:fieldset>
-
-		<c:if test="<%= ruleGroup != null %>">
-			<aui:fieldset>
-				<c:if test="<%= MDRRuleLocalServiceUtil.getRulesCount(ruleGroupId) == 0 %>">
-					<div class="alert alert-info">
-						<liferay-ui:message key="no-classification-rules-are-configured-for-this-device-family" />
-					</div>
-				</c:if>
-
-				<liferay-portlet:renderURL var="editRulesURL">
-					<portlet:param name="mvcPath" value="/view_rules.jsp" />
-					<portlet:param name="redirect" value="<%= currentURL %>" />
-					<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroupId) %>" />
-				</liferay-portlet:renderURL>
-
-				<liferay-ui:icon
-					iconCssClass="icon-cog"
-					label="<%= true %>"
-					message="manage-classification-rules"
-					url="<%= editRulesURL.toString() %>"
-				/>
-			</aui:fieldset>
-		</c:if>
 	</aui:fieldset-group>
 
 	<aui:button-row>
