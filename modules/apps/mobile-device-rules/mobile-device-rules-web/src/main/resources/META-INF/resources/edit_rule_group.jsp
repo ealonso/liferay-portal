@@ -43,15 +43,15 @@ renderResponse.setTitle(((ruleGroup == null) ? LanguageUtil.get(request, "new-de
 
 	<liferay-ui:error exception="<%= NoSuchRuleGroupException.class %>" message="device-family-does-not-exist" />
 
+	<c:if test="<%= ruleGroup == null %>">
+		<div class="alert alert-info">
+			<liferay-ui:message key="device-family-help" />
+		</div>
+	</c:if>
+
 	<aui:model-context bean="<%= ruleGroup %>" model="<%= MDRRuleGroup.class %>" />
 
 	<aui:fieldset-group markupView="lexicon">
-		<c:if test="<%= ruleGroup == null %>">
-			<div class="alert alert-info">
-				<liferay-ui:message key="device-family-help" />
-			</div>
-		</c:if>
-
 		<aui:fieldset>
 			<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) || windowState.equals(LiferayWindowState.POP_UP) %>" name="name" />
 
