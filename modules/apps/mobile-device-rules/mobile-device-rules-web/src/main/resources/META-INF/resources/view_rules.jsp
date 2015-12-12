@@ -44,7 +44,7 @@ portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("redirect", redirect);
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(backURL.toString());
+portletDisplay.setURLBack(backURL);
 
 renderResponse.setTitle(LanguageUtil.format(request, "classification-rules-for-x", ruleGroup.getName(locale), false));
 
