@@ -13,3 +13,5 @@ Include-Resource:\
 	@../../../../util-bridges/util-bridges.jar!/com/liferay/util/bridges/freemarker/FreeMarkerPortlet.class,\
 	@../../../../util-taglib/util-taglib.jar!/META-INF/*.tld
 Private-Package: com.liferay.configuration.admin.web.*
+Require-Capability:\
+    osgi.extender;osgi.extender="jsp.taglib";uri="http://liferay.com/tld/frontend";version:Version="1.0.0"
