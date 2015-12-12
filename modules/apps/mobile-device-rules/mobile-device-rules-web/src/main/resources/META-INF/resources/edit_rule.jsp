@@ -49,12 +49,6 @@ portletDisplay.setURLBack(backURL.toString());
 renderResponse.setTitle(title);
 %>
 
-<c:if test="<%= rule == null %>">
-	<div class="alert alert-info">
-		<liferay-ui:message key="classification-rule-help" />
-	</div>
-</c:if>
-
 <portlet:actionURL name="/mobile_device_rules/edit_rule" var="editRuleURL">
 	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
 </portlet:actionURL>
@@ -68,6 +62,12 @@ renderResponse.setTitle(title);
 	<liferay-ui:error exception="<%= NoSuchRuleException.class %>" message="rule-does-not-exist" />
 	<liferay-ui:error exception="<%= NoSuchRuleGroupException.class %>" message="device-family-does-not-exist" />
 	<liferay-ui:error exception="<%= UnknownRuleHandlerException.class %>" message="please-select-a-rule-type" />
+
+	<c:if test="<%= rule == null %>">
+		<div class="alert alert-info">
+			<liferay-ui:message key="classification-rule-help" />
+		</div>
+	</c:if>
 
 	<aui:model-context bean="<%= rule %>" model="<%= MDRRule.class %>" />
 
