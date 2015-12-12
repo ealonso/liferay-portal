@@ -44,7 +44,7 @@ if (ruleGroup != null) {
 Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes();
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(backURL.toString());
+portletDisplay.setURLBack(backURL);
 
 renderResponse.setTitle(title);
 %>
