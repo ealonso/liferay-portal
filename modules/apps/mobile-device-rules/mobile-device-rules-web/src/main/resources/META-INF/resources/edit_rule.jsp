@@ -18,7 +18,6 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
-String backURL = ParamUtil.getString(request, "backURL");
 
 MDRRule rule = (MDRRule)renderRequest.getAttribute(MDRWebKeys.MOBILE_DEVICE_RULES_RULE);
 
@@ -44,7 +43,7 @@ if (ruleGroup != null) {
 Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes();
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(backURL);
+portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(title);
 %>
