@@ -58,18 +58,6 @@ MDRRuleGroup ruleGroup = (MDRRuleGroup)row.getObject();
 	</c:if>
 
 	<c:if test="<%= MDRRuleGroupPermission.contains(permissionChecker, ruleGroup.getRuleGroupId(), ActionKeys.VIEW) && MDRPermission.contains(permissionChecker, groupId, ActionKeys.ADD_RULE_GROUP) %>">
-		<portlet:renderURL var="editRulesURL">
-			<portlet:param name="mvcPath" value="/view_rules.jsp" />
-			<portlet:param name="redirect" value="<%= redirect %>" />
-			<portlet:param name="ruleGroupId" value="<%= String.valueOf(ruleGroup.getRuleGroupId()) %>" />
-			<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-		</portlet:renderURL>
-
-		<liferay-ui:icon
-			message="manage-classification-rules"
-			url="<%= editRulesURL.toString() %>"
-		/>
-
 		<portlet:actionURL name="/mobile_device_rules/edit_rule_group" var="copyURL">
 			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule_group" />
 			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.COPY %>" />
