@@ -27,7 +27,6 @@ MDRRule rule = (MDRRule)row.getObject();
 		<liferay-portlet:renderURL var="editURL">
 			<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
-			<portlet:param name="backURL" value="<%= currentURL %>" />
 			<portlet:param name="ruleId" value="<%= String.valueOf(rule.getRuleId()) %>" />
 		</liferay-portlet:renderURL>
 
