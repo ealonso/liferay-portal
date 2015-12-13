@@ -96,15 +96,7 @@ portletURL.setParameter("eventName", eventName);
 
 			<liferay-ui:search-container-column-text
 				name="name"
-				value="<%= ruleGroup.getName(locale) %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				name="description"
-				value="<%= ruleGroup.getDescription(locale) %>"
-			/>
-
-			<liferay-ui:search-container-column-text>
+			>
 
 				<%
 				MDRRuleGroupInstance ruleGroupInstance = MDRRuleGroupInstanceLocalServiceUtil.fetchRuleGroupInstance(className, classPK, ruleGroup.getRuleGroupId());
@@ -119,9 +111,16 @@ portletURL.setParameter("eventName", eventName);
 					data.put("rulegroupname", ruleGroup.getName());
 					%>
 
-					<aui:button cssClass="selector-button" data="<%= data %>" value="choose" />
+					<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+						<%= ruleGroup.getName(locale) %>
+					</aui:a>
 				</c:if>
 			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+				name="description"
+				value="<%= ruleGroup.getDescription(locale) %>"
+			/>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator type="more" />
