@@ -91,19 +91,24 @@ portletURL.setParameter("eventName", eventName);
 				MDRRuleGroupInstance ruleGroupInstance = MDRRuleGroupInstanceLocalServiceUtil.fetchRuleGroupInstance(className, classPK, ruleGroup.getRuleGroupId());
 				%>
 
-				<c:if test="<%= ruleGroupInstance == null %>">
+				<c:choose>
+					<c:when test="<%= ruleGroupInstance == null %>">
 
-					<%
-					Map<String, Object> data = new HashMap<String, Object>();
+						<%
+						Map<String, Object> data = new HashMap<String, Object>();
 
-					data.put("rulegroupid", ruleGroup.getRuleGroupId());
-					data.put("rulegroupname", ruleGroup.getName());
-					%>
+						data.put("rulegroupid", ruleGroup.getRuleGroupId());
+						data.put("rulegroupname", ruleGroup.getName());
+						%>
 
-					<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+						<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+							<%= ruleGroup.getName(locale) %>
+						</aui:a>
+					</c:when>
+					<c:otherwise>
 						<%= ruleGroup.getName(locale) %>
-					</aui:a>
-				</c:if>
+					</c:otherwise>
+				</c:choose>
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
