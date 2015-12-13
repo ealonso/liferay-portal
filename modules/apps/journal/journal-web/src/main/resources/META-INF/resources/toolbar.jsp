@@ -26,16 +26,14 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 >
 	<liferay-frontend:management-bar-buttons>
 		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
-			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" label="info" />
+			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" icon="info-circle" label="info" />
 		</c:if>
 
-		<c:if test="<%= !journalDisplayContext.isSearch() %>">
-			<liferay-frontend:management-bar-display-buttons
-				displayViews="<%= journalDisplayContext.getDisplayViews() %>"
-				portletURL="<%= journalDisplayContext.getPortletURL() %>"
-				selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
-			/>
-		</c:if>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews="<%= journalDisplayContext.getDisplayViews() %>"
+			portletURL="<%= journalDisplayContext.getPortletURL() %>"
+			selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
+		/>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
@@ -55,26 +53,26 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 
 	<liferay-frontend:management-bar-action-buttons>
 		<c:if test="<%= journalDisplayContext.isShowInfoPanel() %>">
-			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" iconCssClass="icon-info-sign" label="info" />
+			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" icon="info-circle" label="info" />
 		</c:if>
 
 		<%
 		String taglibURL = "javascript:" + renderResponse.getNamespace() + "deleteEntries();";
 		%>
 
-		<liferay-frontend:management-bar-button href="<%= taglibURL %>" iconCssClass='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "icon-trash" : "icon-remove" %>' label='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
+		<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "trash" : "times" %>' label='<%= TrashUtil.isTrashEnabled(scopeGroupId) ? "recycle-bin" : "delete" %>' />
 
 		<%
 		taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: 'expireEntries'}); void(0);";
 		%>
 
-		<liferay-frontend:management-bar-button href="<%= taglibURL %>" iconCssClass="icon-time" label="expire" />
+		<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon="time" label="expire" />
 
 		<%
 		taglibURL = "javascript:Liferay.fire('" + renderResponse.getNamespace() + "editEntry', {action: 'moveEntries'}); void(0);";
 		%>
 
-		<liferay-frontend:management-bar-button href="<%= taglibURL %>" iconCssClass="icon-move" label="move" />
+		<liferay-frontend:management-bar-button href="<%= taglibURL %>" icon="change" label="move" />
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
