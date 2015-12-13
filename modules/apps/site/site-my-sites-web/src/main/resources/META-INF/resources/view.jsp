@@ -17,6 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String displayStyle = ParamUtil.getString(request, "displayStyle", "descriptive");
 String tabs1 = ParamUtil.getString(request, "tabs1", "my-sites");
 
 if (!tabs1.equals("my-sites") && !tabs1.equals("available-sites")) {

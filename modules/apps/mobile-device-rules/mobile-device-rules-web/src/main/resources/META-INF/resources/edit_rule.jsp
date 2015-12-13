@@ -42,13 +42,12 @@ if (ruleGroup != null) {
 }
 
 Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes();
-%>
 
-<liferay-ui:header
-	backURL="<%= backURL %>"
-	localizeTitle="<%= false %>"
-	title="<%= title %>"
-/>
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(backURL.toString());
+
+renderResponse.setTitle(title);
+%>
 
 <c:if test="<%= rule == null %>">
 	<div class="alert alert-info">
@@ -60,7 +59,7 @@ Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes
 	<portlet:param name="mvcRenderCommandName" value="/mobile_device_rules/edit_rule" />
 </portlet:actionURL>
 
-<aui:form action="<%= editRuleURL %>" enctype="multipart/form-data" method="post" name="fm">
+<aui:form action="<%= editRuleURL %>" cssClass="container-fluid-1280" enctype="multipart/form-data" method="post" name="fm">
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= (rule == null) ? Constants.ADD : Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="ruleGroupId" type="hidden" value="<%= ruleGroupId %>" />
@@ -72,48 +71,50 @@ Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes
 
 	<aui:model-context bean="<%= rule %>" model="<%= MDRRule.class %>" />
 
-	<aui:fieldset>
-		<aui:input name="name" />
+	<aui:fieldset-group markupView="lexicon">
+		<aui:fieldset>
+			<aui:input name="name" />
 
-		<aui:input name="description" />
+			<aui:input name="description" />
 
-		<c:choose>
-			<c:when test="<%= ruleHandlerTypes.size() == 1 %>">
-
-				<%
-				String ruleHandlerType = ruleHandlerTypes.iterator().next();
-				%>
-
-				<aui:input name="type" type="hidden" value="<%= ruleHandlerType %>" />
-
-			</c:when>
-			<c:otherwise>
-				<aui:select changesContext="<%= true %>" name="type" showEmptyOption="<%= true %>">
+			<c:choose>
+				<c:when test="<%= ruleHandlerTypes.size() == 1 %>">
 
 					<%
-					for (String ruleHandlerType : ruleHandlerTypes) {
+					String ruleHandlerType = ruleHandlerTypes.iterator().next();
 					%>
 
-						<aui:option label="<%= ruleHandlerType %>" selected="<%= type.equals(ruleHandlerType) %>" />
+					<aui:input name="type" type="hidden" value="<%= ruleHandlerType %>" />
 
-					<%
-					}
-					%>
+				</c:when>
+				<c:otherwise>
+					<aui:select changesContext="<%= true %>" name="type" showEmptyOption="<%= true %>">
 
-				</aui:select>
-			</c:otherwise>
-		</c:choose>
+						<%
+						for (String ruleHandlerType : ruleHandlerTypes) {
+						%>
+
+							<aui:option label="<%= ruleHandlerType %>" selected="<%= type.equals(ruleHandlerType) %>" />
+
+						<%
+						}
+						%>
+
+					</aui:select>
+				</c:otherwise>
+			</c:choose>
+		</aui:fieldset>
 
 		<div id="<%= renderResponse.getNamespace() %>typeSettings">
 			<c:if test="<%= Validator.isNotNull(editorJSP) %>">
 				<liferay-util:include page="<%= editorJSP %>" servletContext="<%= application %>" />
 			</c:if>
 		</div>
-	</aui:fieldset>
+	</aui:fieldset-group>
 
 	<aui:button-row>
-		<aui:button type="submit" />
-		<aui:button href="<%= redirect %>" value="cancel" />
+		<aui:button cssClass="btn-lg" type="submit" />
+		<aui:button cssClass="btn-lg" href="<%= redirect %>" value="cancel" />
 	</aui:button-row>
 </aui:form>
 
@@ -122,7 +123,7 @@ Collection<String> ruleHandlerTypes = RuleGroupProcessorUtil.getRuleHandlerTypes
 	var typeSettings = $('#<portlet:namespace />typeSettings');
 
 	var loadTypeFields = function() {
-		<portlet:resourceURL id="/mobile_device_rules/edit_rule_editor" var="editorURL" />
+		<portlet:resourceURL id="/mobile_device_rules/edit_rule" var="editorURL" />
 
 		$.ajax(
 			'<%= editorURL.toString() %>',

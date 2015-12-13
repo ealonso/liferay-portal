@@ -58,7 +58,7 @@ if (rule != null) {
 }
 %>
 
-<aui:fieldset label="operating-system-and-type">
+<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="operating-system-and-type" markupView="lexicon">
 	<aui:select multiple="<%= true %>" name="os">
 		<aui:option label="any-os" selected="<%= operatingSystems.isEmpty() %>" value="" />
 
@@ -83,7 +83,7 @@ if (rule != null) {
 	</aui:select>
 </aui:fieldset>
 
-<aui:fieldset label="physical-screen-size">
+<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="physical-screen-size" markupView="lexicon">
 	<div class="row-fields">
 		<liferay-ui:message key="minimum" />
 
@@ -137,7 +137,7 @@ if (rule != null) {
 	</div>
 </aui:fieldset>
 
-<aui:fieldset label="screen-resolution">
+<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="screen-resolution" markupView="lexicon">
 	<div class="row-fields">
 		<liferay-ui:message key="minimum" />
 

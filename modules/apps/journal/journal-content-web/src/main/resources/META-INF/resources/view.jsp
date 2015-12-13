@@ -144,8 +144,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 				<liferay-ui:icon
 					cssClass="lfr-icon-action"
 					data="<%= data %>"
-					iconCssClass="icon-pencil"
+					icon="pencil"
 					label="<%= true %>"
+					markupView="lexicon"
 					message="edit"
 					method="get"
 					url="<%= latestArticleEditURL.toString() %>"
@@ -180,8 +181,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 				<liferay-ui:icon
 					cssClass="lfr-icon-action"
 					data="<%= data %>"
-					iconCssClass="icon-edit"
+					icon="pencil"
 					label="<%= true %>"
+					markupView="lexicon"
 					message="edit-template"
 					method="get"
 					url="<%= editTemplateURL.toString() %>"
@@ -192,8 +194,9 @@ AssetRendererFactory<JournalArticle> assetRendererFactory = AssetRendererFactory
 			<c:if test="<%= journalContentDisplayContext.isShowSelectArticleIcon() %>">
 				<liferay-ui:icon
 					cssClass="lfr-icon-action"
-					iconCssClass="icon-cog"
+					icon="cog"
 					label="<%= true %>"
+					markupView="lexicon"
 					message="select-web-content"
 					method="get"
 					onClick="<%= portletDisplay.getURLConfigurationJS() %>"
