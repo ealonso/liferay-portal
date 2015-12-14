@@ -74,7 +74,8 @@ ArticleSearch searchContainer = new ArticleSearch(liferayPortletRequest, portlet
 
 	<liferay-ui:icon
 		cssClass="close-search"
-		iconCssClass="icon-remove"
+		icon="times"
+		markupView="lexicon"
 		message="remove"
 		url="<%= closeSearchURL %>"
 	/>
