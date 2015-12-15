@@ -29,16 +29,19 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 			<liferay-frontend:management-bar-button cssClass="infoPanelToggler" href="javascript:;" icon="info-circle" label="info" />
 		</c:if>
 
-		<c:if test="<%= !journalDisplayContext.isSearch() %>">
-			<liferay-frontend:management-bar-display-buttons
-				displayViews="<%= journalDisplayContext.getDisplayViews() %>"
-				portletURL="<%= journalDisplayContext.getPortletURL() %>"
-				selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
-			/>
-		</c:if>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews="<%= journalDisplayContext.getDisplayViews() %>"
+			portletURL="<%= journalDisplayContext.getPortletURL() %>"
+			selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"
+		/>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all", "recent", "mine"} %>'
+			portletURL="<%= journalDisplayContext.getPortletURL() %>"
+		/>
+
 		<liferay-frontend:management-bar-filter
 			label="status"
 			managementBarFilterItems="<%= journalDisplayContext.getManagementBarStatusFilterItems() %>"
