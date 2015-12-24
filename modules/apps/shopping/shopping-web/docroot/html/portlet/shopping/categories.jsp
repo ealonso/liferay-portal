@@ -26,9 +26,16 @@ PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("struts_action", "/shopping/view");
 portletURL.setParameter("tabs1", "cateogires");
 portletURL.setParameter("categoryId", String.valueOf(categoryId));
+
+int categoriesCount = ShoppingCategoryServiceUtil.getCategoriesCount(scopeGroupId, categoryId);
+int itemsCount = ShoppingItemServiceUtil.getItemsCount(scopeGroupId, categoryId);
+
+boolean showSearch = (categoriesCount > 0) || (itemsCount > 0);
 %>
 
-<liferay-util:include page="/html/portlet/shopping/tabs1.jsp" servletContext="<%= application %>" />
+<liferay-util:include page="/html/portlet/shopping/tabs1.jsp" servletContext="<%= application %>">
+	<liferay-util:param name="showSearch" value="<%= String.valueOf(showSearch) %>" />
+</liferay-util:include>
 
 <liferay-portlet:renderURL varImpl="searchURL">
 	<portlet:param name="struts_action" value="/shopping/search" />
@@ -36,7 +43,6 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 <liferay-ui:panel-container extended="<%= true %>" persistState="<%= true %>">
 	<aui:form action="<%= searchURL %>" method="get" name="fm1">
-		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
 		<aui:input name="searchCategoryIds" type="hidden" value="<%= categoryId %>" />
@@ -55,9 +61,7 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 		SearchContainer searchContainer = new SearchContainer(renderRequest, null, null, "cur1", SearchContainer.DEFAULT_DELTA, portletURL, headerNames, null);
 
-		int total = ShoppingCategoryServiceUtil.getCategoriesCount(scopeGroupId, categoryId);
-
-		searchContainer.setTotal(total);
+		searchContainer.setTotal(categoriesCount);
 
 		List results = ShoppingCategoryServiceUtil.getCategories(scopeGroupId, categoryId, searchContainer.getStart(), searchContainer.getEnd());
 
@@ -94,11 +98,11 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 			ShoppingCategoryServiceUtil.getSubcategoryIds(subcategoryIds, scopeGroupId, curCategory.getCategoryId());
 
-			int categoriesCount = subcategoryIds.size() - 1;
-			int itemsCount = ShoppingItemServiceUtil.getCategoriesItemsCount(scopeGroupId, subcategoryIds);
+			int subCategoriesCount = subcategoryIds.size() - 1;
+			int subItemsCount = ShoppingItemServiceUtil.getCategoriesItemsCount(scopeGroupId, subcategoryIds);
 
-			row.addText(String.valueOf(categoriesCount), rowURL);
-			row.addText(String.valueOf(itemsCount), rowURL);
+			row.addText(String.valueOf(subCategoriesCount), rowURL);
+			row.addText(String.valueOf(subItemsCount), rowURL);
 
 			// Action
 
@@ -112,23 +116,12 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 		<liferay-ui:panel-container extended="<%= true %>" id="shoppingCategoriesPanelContainer" persistState="<%= true %>">
 			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="shoppingCategoriesPanel" persistState="<%= true %>" title="categories">
-				<c:if test="<%= !results.isEmpty() %>">
-					<aui:fieldset>
-						<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" id="keywords1" label="search" name="keywords" size="30" type="text" />
-					</aui:fieldset>
-
-					<aui:button-row>
-						<aui:button cssClass="btn-lg" type="submit" value="search-categories" />
-					</aui:button-row>
-				</c:if>
-
 				<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
 			</liferay-ui:panel>
 		</liferay-ui:panel-container>
 	</aui:form>
 
 	<aui:form action="<%= searchURL %>" method="get" name="fm2">
-		<liferay-portlet:renderURLParams varImpl="searchURL" />
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
 		<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
@@ -169,9 +162,7 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 		searchContainer.setOrderByCol(orderByCol);
 		searchContainer.setOrderByType(orderByType);
 
-		int total = ShoppingItemServiceUtil.getItemsCount(scopeGroupId, categoryId);
-
-		searchContainer.setTotal(total);
+		searchContainer.setTotal(itemsCount);
 
 		List results = ShoppingItemServiceUtil.getItems(scopeGroupId, categoryId, searchContainer.getStart(), searchContainer.getEnd(), orderByComparator);
 
@@ -268,16 +259,6 @@ portletURL.setParameter("categoryId", String.valueOf(categoryId));
 
 		<liferay-ui:panel-container extended="<%= true %>" id="shoppingItemsPanelContainer" persistState="<%= true %>">
 			<liferay-ui:panel collapsible="<%= true %>" extended="<%= true %>" id="shoppingItemsPanel" persistState="<%= true %>" title="items">
-				<c:if test="<%= !results.isEmpty() %>">
-					<aui:fieldset>
-						<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" id="keywords2" label="search" name="keywords" size="30" type="text" />
-					</aui:fieldset>
-
-					<aui:button-row>
-						<aui:button cssClass="btn-lg" type="submit" value="search-this-category" />
-					</aui:button-row>
-				</c:if>
-
 				<liferay-ui:search-iterator searchContainer="<%= searchContainer %>" />
 			</liferay-ui:panel>
 		</liferay-ui:panel-container>
