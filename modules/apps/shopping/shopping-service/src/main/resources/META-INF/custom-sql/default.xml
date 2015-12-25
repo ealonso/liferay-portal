@@ -100,7 +100,7 @@
 				ShoppingCategory
 			WHERE
 				(ShoppingCategory.groupId = ?) AND
-				(ShoppingCategory.categoryId = ?)
+				(ShoppingCategory.parentCategoryId = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.shopping.service.persistence.ShoppingCategoryFinder.countI_ByG_C">
@@ -122,7 +122,7 @@
 				ShoppingCategory
 			WHERE
 				(ShoppingCategory.groupId = ?) AND
-				(ShoppingCategory.categoryId = ?)
+				(ShoppingCategory.parentCategoryId = ?)
 		]]>
 	</sql>
 	<sql id="com.liferay.shopping.service.persistence.ShoppingCategoryFinder.findI_ByG_C">
