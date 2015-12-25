@@ -226,7 +226,7 @@ boolean showSearch = (categoriesAndItemsCount > 0);
 			</c:choose>
 		</liferay-ui:search-container-row>
 
-		<liferay-ui:search-iterator markupView="lexicon" />
+		<liferay-ui:search-iterator markupView="lexicon" resultRowSplitter="<%= new ShoppingResultRowSplitter() %>" />
 	</liferay-ui:search-container>
 </div>
 
@@ -251,7 +251,8 @@ boolean showAddItemButton = ShoppingCategoryPermission.contains(permissionChecke
 			<portlet:renderURL var="addItemURL">
 				<portlet:param name="struts_action" value="/shopping/edit_item" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="categoryId" value="<%= String.valueOf(categoryId) %>" />
+				<portlet:param name="categoryId"
+							   value="<%= String.valueOf(categoryId) %>" />
 			</portlet:renderURL>
 
 			<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-item") %>' url="<%= addItemURL.toString() %>" />
