@@ -142,7 +142,6 @@ page import="com.liferay.shopping.service.ShoppingCategoryServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingCouponLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingCouponServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemFieldLocalServiceUtil" %><%@
-page import="com.liferay.shopping.service.ShoppingItemLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemPriceLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingOrderItemLocalServiceUtil" %><%@

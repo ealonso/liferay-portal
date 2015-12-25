@@ -37,12 +37,8 @@ boolean showSearch = (categoriesCount > 0) || (itemsCount > 0);
 	<liferay-util:param name="showSearch" value="<%= String.valueOf(showSearch) %>" />
 </liferay-util:include>
 
-<liferay-portlet:renderURL varImpl="searchURL">
-	<portlet:param name="struts_action" value="/shopping/search" />
-</liferay-portlet:renderURL>
-
 <liferay-ui:panel-container extended="<%= true %>" persistState="<%= true %>">
-	<aui:form action="<%= searchURL %>" method="get" name="fm1">
+	<aui:form action="<%= portletURL %>" method="get" name="fm1">
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
 		<aui:input name="searchCategoryIds" type="hidden" value="<%= categoryId %>" />
@@ -121,7 +117,7 @@ boolean showSearch = (categoriesCount > 0) || (itemsCount > 0);
 		</liferay-ui:panel-container>
 	</aui:form>
 
-	<aui:form action="<%= searchURL %>" method="get" name="fm2">
+	<aui:form action="<%= portletURL %>" method="get" name="fm2">
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="breadcrumbsCategoryId" type="hidden" value="<%= categoryId %>" />
 		<aui:input name="searchCategoryId" type="hidden" value="<%= categoryId %>" />
