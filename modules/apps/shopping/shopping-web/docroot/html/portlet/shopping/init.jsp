@@ -28,6 +28,7 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
+page import="com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker" %><%@
 page import="com.liferay.portal.kernel.dao.search.RowChecker" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
@@ -45,7 +46,6 @@ page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.KeyValuePair" %><%@
-page import="com.liferay.portal.kernel.util.OrderByComparator" %><%@
 page import="com.liferay.portal.kernel.util.OrderedProperties" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PropertiesUtil" %><%@
@@ -64,12 +64,9 @@ page import="com.liferay.portal.model.Region" %><%@
 page import="com.liferay.portal.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.service.*" %><%@
 page import="com.liferay.portal.util.PortalUtil" %><%@
-page import="com.liferay.portal.util.PortletKeys" %><%@
 page import="com.liferay.portal.util.PrefsPropsUtil" %><%@
 page import="com.liferay.portal.util.PropsValues" %><%@
 page import="com.liferay.portal.webserver.WebServerServletTokenUtil" %><%@
-page import="com.liferay.portlet.PortalPreferences" %><%@
-page import="com.liferay.portlet.PortletPreferencesFactoryUtil" %><%@
 page import="com.liferay.portlet.PortletURLUtil" %><%@
 page import="com.liferay.shopping.configuration.ShoppingGroupServiceOverriddenConfiguration" %><%@
 page import="com.liferay.shopping.constants.ShoppingConstants" %><%@
@@ -141,7 +138,6 @@ page import="com.liferay.shopping.service.ShoppingCategoryServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingCouponLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingCouponServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemFieldLocalServiceUtil" %><%@
-page import="com.liferay.shopping.service.ShoppingItemLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemPriceLocalServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingItemServiceUtil" %><%@
 page import="com.liferay.shopping.service.ShoppingOrderItemLocalServiceUtil" %><%@
@@ -151,6 +147,7 @@ page import="com.liferay.shopping.service.permission.ShoppingItemPermission" %><
 page import="com.liferay.shopping.service.permission.ShoppingOrderPermission" %><%@
 page import="com.liferay.shopping.service.permission.ShoppingPermission" %><%@
 page import="com.liferay.shopping.util.ShoppingUtil" %><%@
+page import="com.liferay.shopping.web.dao.search.ShoppingResultRowSplitter" %><%@
 page import="com.liferay.shopping.web.search.CouponDisplayTerms" %><%@
 page import="com.liferay.shopping.web.search.CouponSearch" %><%@
 page import="com.liferay.shopping.web.search.OrderDisplayTerms" %><%@
@@ -185,8 +182,6 @@ WindowState windowState = liferayPortletRequest.getWindowState();
 PortletURL currentURLObj = PortletURLUtil.getCurrent(liferayPortletRequest, liferayPortletResponse);
 
 String currentURL = currentURLObj.toString();
-
-PortalPreferences portalPreferences = PortletPreferencesFactoryUtil.getPortalPreferences(request);
 
 ShoppingGroupServiceOverriddenConfiguration shoppingGroupServiceOverriddenConfiguration = ConfigurationFactoryUtil.getConfiguration(ShoppingGroupServiceOverriddenConfiguration.class, new GroupServiceSettingsLocator(scopeGroupId, ShoppingConstants.SERVICE_NAME));
 

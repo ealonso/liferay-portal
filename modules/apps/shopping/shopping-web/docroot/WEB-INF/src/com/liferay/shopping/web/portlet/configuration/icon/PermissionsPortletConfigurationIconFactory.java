@@ -12,12 +12,12 @@
  * details.
  */
 
-package com.liferay.journal.web.portlet.configuration.icon;
+package com.liferay.shopping.web.portlet.configuration.icon;
 
-import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIconFactory;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIconFactory;
+import com.liferay.portal.util.PortletKeys;
 
 import javax.portlet.PortletRequest;
 
@@ -27,21 +27,20 @@ import org.osgi.service.component.annotations.Component;
  * @author Eudaldo Alonso
  */
 @Component(
-	immediate = true,
-	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
+	immediate = true, property = {"javax.portlet.name=" + PortletKeys.SHOPPING},
 	service = PortletConfigurationIconFactory.class
 )
-public class TemplatesPortletConfigurationIconFactory
+public class PermissionsPortletConfigurationIconFactory
 	extends BasePortletConfigurationIconFactory {
 
 	@Override
 	public PortletConfigurationIcon create(PortletRequest portletRequest) {
-		return new TemplatesPortletConfigurationIcon(portletRequest);
+		return new PermissionsPortletConfigurationIcon(portletRequest);
 	}
 
 	@Override
 	public double getWeight() {
-		return 101;
+		return 101.0;
 	}
 
 }
