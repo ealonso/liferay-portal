@@ -1471,7 +1471,7 @@
 		<var name="fieldFieldLabel" value="Link to Page" />
 		<var name="fieldName" value="LinkToPage" />
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="${ddlRecordFieldData}" />
 		</execute>
 
@@ -2654,7 +2654,9 @@
 		</execute>
 	</command>
 
-	<command name="DeleteList" priority="4">
+	<command name="DeleteList" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
 		<var name="field" value="Text" />
@@ -3967,7 +3969,9 @@
 		</execute>
 	</command>
 
-	<command name="ImportLAR" priority="4">
+	<command name="ImportLAR" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="ddlDataDefinitionName" value="Data Definition" />
 		<var name="ddlListName" value="List Name" />
 		<var name="ddlRecordFieldData" value="Yes" />
@@ -4043,9 +4047,10 @@
 
 		<execute macro="DDLDataDefinition#tearDownCP" />
 
-		<execute macro="Page#gotoContentCP">
-			<var name="ddlDataDefinitionName" value="${ddlDataDefinitionName}" />
-			<var name="portletName" value="Dynamic Data Lists" />
+		<execute macro="Navigator#openURL" />
+
+		<execute macro="ProductMenu#gotoSitesContent">
+			<var name="portlet" value="Dynamic Data Lists" />
 		</execute>
 
 		<execute macro="LAR#importPortlet">

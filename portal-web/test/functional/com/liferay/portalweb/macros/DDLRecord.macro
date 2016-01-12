@@ -52,7 +52,7 @@
 
 		<execute function="Confirm" value1="Are you sure you want to delete this? It will be deleted immediately." />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertTextEquals#assertPartialText" locator1="Message#EMPTY_INFO" value1="No" />
 	</command>
 
@@ -70,7 +70,7 @@
 
 		<execute function="Confirm" value1="Are you sure you want to delete this? It will be deleted immediately." />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="No ${ddlDataDefinitionName} records were found" />
 	</command>
 
@@ -189,7 +189,17 @@
 	<command name="populateFieldDocumentsAndMediaChooseFromDocumentLibrary">
 		<var name="key_fieldName" value="${fieldName}" />
 
-		<execute function="AssertClick" locator1="DDLEditRecord#DOCUMENTS_AND_MEDIA_CHOOSE_FROM_DOCUMENT_LIBRARY_BUTTON" value1="Choose from Document Library" />
+		<if>
+			<isset var="parentFieldName" />
+			<then>
+				<var name="key_parentFieldName" value="${parentFieldName}" />
+
+				<execute function="AssertClick" locator1="DDLEditRecord#DOCUMENTS_AND_MEDIA_CHILD_FIELD_CHOOSE_FROM_DOCUMENT_LIBRARY_BUTTON_" value1="Choose from Document Library" />
+			</then>
+			<else>
+				<execute function="AssertClick" locator1="DDLEditRecord#DOCUMENTS_AND_MEDIA_CHOOSE_FROM_DOCUMENT_LIBRARY_BUTTON" value1="Choose from Document Library" />
+			</else>
+		</if>
 
 		<execute function="SelectFrame" locator1="DocumentsAndMediaSelectDocument#SELECT_DOCUMENT_IFRAME" />
 
@@ -332,7 +342,7 @@
 	<command name="publish">
 		<execute macro="Button#clickPublish" />
 
-		<execute macro="Alert#viewSuccess" />
+		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
 	<command name="publishViaDDLDisplayPG">
@@ -346,25 +356,25 @@
 			</else>
 		</if>
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="save">
 		<execute macro="Button#clickSave" />
 
-		<execute macro="Alert#viewSuccess" />
+		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
 	<command name="saveAsDraftCP">
 		<execute function="AssertClick" locator1="Button#SAVE_AS_DRAFT" value1="Save as Draft" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="submitForPublication">
 		<execute macro="Button#clickSubmitForPublication" />
 
-		<execute macro="Alert#viewSuccess" />
+		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
 	<command name="viewEditPreview">
@@ -670,6 +680,10 @@
 
 	<command name="viewNestedFieldsVisualGroupingViaDDLDisplay">
 		<execute function="SikuliAssertElementPresent" locator1="DDLRecord#NESTED_FIELD_VISUAL_GROUPING_DDL_DISPLAY_PNG" />
+	</command>
+
+	<command name="viewNoRecords">
+		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="No ${ddlDataDefinitionName} records were found" />
 	</command>
 
 	<command name="viewPopulatedField">

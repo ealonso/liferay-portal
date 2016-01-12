@@ -41,7 +41,7 @@
 	</tear-down>
 
 	<command name="AddBlogsEntryNoGuestRole" priority="4">
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
 
@@ -72,6 +72,7 @@
 			<var name="roleType" value="Organization" />
 			<var name="siteName" value="Organization Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -142,6 +143,7 @@
 			<var name="roleType" value="Organization" />
 			<var name="siteName" value="Organization Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -372,6 +374,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -440,6 +443,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -496,7 +500,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Role#removePermissionPG">
@@ -556,7 +559,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Team#definePermissionPG">
@@ -588,7 +590,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Team#removePermissionPG">
@@ -616,7 +617,7 @@
 	</command>
 
 	<command name="DeleteBlogsEntryNoGuestRole" priority="4">
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
 
@@ -652,6 +653,7 @@
 			<var name="roleType" value="Organization" />
 			<var name="siteName" value="Organization Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -747,6 +749,7 @@
 			<var name="roleType" value="Organization" />
 			<var name="siteName" value="Organization Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -1128,6 +1131,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -1221,6 +1225,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -1660,7 +1665,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Role#removePermissionPG">
@@ -1980,6 +1984,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -2045,6 +2050,7 @@
 			<var name="roleType" value="Site" />
 			<var name="siteName" value="Site Name" />
 			<var name="sitePageName" value="Blogs Page" />
+			<var name="siteURL" value="true" />
 			<var name="userEmailAddress" value="userea@liferay.com" />
 			<var name="userFirstName" value="userfn" />
 			<var name="userLastName" value="userln" />
@@ -2069,7 +2075,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Role#definePermissionPG">
@@ -2098,7 +2103,6 @@
 		<execute macro="PermissionsInline#gotoBlogsCP">
 			<var name="pageName" value="Blogs Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Role#removePermissionPG">
@@ -2126,7 +2130,7 @@
 	</command>
 
 	<command name="ViewBlogsPortletNoGuestRole" priority="4">
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Blogs Page" />
 		</execute>
 

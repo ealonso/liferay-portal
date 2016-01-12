@@ -67,6 +67,10 @@ public class DDMDataProviderServlet extends HttpServlet {
 			HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_PATH,
 			"/dynamic-data-mapping-data-provider");
 		properties.put(
+			HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_INIT_PARAM_PREFIX +
+				"auth.verifier.PortalSessionAuthVerifier.urls.includes",
+			"/dynamic-data-mapping-data-provider/*");
+		properties.put(
 			HttpWhiteboardConstants.HTTP_WHITEBOARD_FILTER_NAME,
 			"AuthVerifierFilter");
 		properties.put(
@@ -191,9 +195,8 @@ public class DDMDataProviderServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private volatile DDMDataProviderInstanceService
-		_ddmDataProviderInstanceService;
-	private volatile DDMFormJSONDeserializer _ddmFormJSONDeserializer;
-	private volatile JSONFactory _jsonFactory;
+	private DDMDataProviderInstanceService _ddmDataProviderInstanceService;
+	private DDMFormJSONDeserializer _ddmFormJSONDeserializer;
+	private JSONFactory _jsonFactory;
 
 }

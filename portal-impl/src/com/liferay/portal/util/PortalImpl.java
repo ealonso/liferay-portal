@@ -878,8 +878,8 @@ public class PortalImpl implements Portal {
 				if ((allowedDomains.length > 0) &&
 					!ArrayUtil.contains(allowedDomains, domain)) {
 
-					if (_log.isDebugEnabled()) {
-						_log.debug("Redirect URL " + url + " is not allowed");
+					if (_log.isWarnEnabled()) {
+						_log.warn("Redirect URL " + url + " is not allowed");
 					}
 
 					url = null;
@@ -907,8 +907,8 @@ public class PortalImpl implements Portal {
 					}
 				}
 
-				if (_log.isDebugEnabled()) {
-					_log.debug("Redirect URL " + url + " is not allowed");
+				if (_log.isWarnEnabled()) {
+					_log.warn("Redirect URL " + url + " is not allowed");
 				}
 
 				url = null;
@@ -2957,10 +2957,10 @@ public class PortalImpl implements Portal {
 
 		Company company = CompanyLocalServiceUtil.getCompany(
 			layoutSet.getCompanyId());
+		int portalPort = getPortalServerPort(secureConnection);
 
 		String portalURL = getPortalURL(
-			company.getVirtualHostname(), getPortalServerPort(secureConnection),
-			secureConnection);
+			company.getVirtualHostname(), portalPort, secureConnection);
 
 		String virtualHostname = getVirtualHostname(layoutSet);
 
@@ -2972,7 +2972,7 @@ public class PortalImpl implements Portal {
 			virtualHostname = getCanonicalDomain(virtualHostname, portalDomain);
 
 			virtualHostname = getPortalURL(
-				virtualHostname, Http.HTTP_PORT, secureConnection);
+				virtualHostname, portalPort, secureConnection);
 
 			if (virtualHostname.contains(portalDomain)) {
 				return virtualHostname.concat(getPathContext());

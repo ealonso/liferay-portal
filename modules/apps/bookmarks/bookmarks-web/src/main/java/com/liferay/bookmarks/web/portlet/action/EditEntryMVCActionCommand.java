@@ -62,7 +62,8 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"javax.portlet.name=" + BookmarksPortletKeys.BOOKMARKS,
 		"javax.portlet.name=" + BookmarksPortletKeys.BOOKMARKS_ADMIN,
-		"mvc.command.name=/bookmarks/edit_entry"
+		"mvc.command.name=/bookmarks/edit_entry",
+		"mvc.command.name=/bookmarks/move_entry"
 	},
 	service = MVCActionCommand.class
 )
@@ -137,6 +138,9 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 			else if (cmd.equals(Constants.DELETE)) {
 				deleteEntry(actionRequest, false);
 			}
+			else if (cmd.equals(Constants.MOVE)) {
+				moveEntries(actionRequest);
+			}
 			else if (cmd.equals(Constants.MOVE_TO_TRASH)) {
 				deleteEntry(actionRequest, true);
 			}
@@ -198,6 +202,24 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 			else {
 				throw e;
 			}
+		}
+	}
+
+	protected void moveEntries(ActionRequest actionRequest) throws Exception {
+		long newFolderId = ParamUtil.getLong(actionRequest, "newFolderId");
+
+		long[] folderIds = ParamUtil.getLongValues(
+			actionRequest, "rowIdsBookmarksFolder");
+
+		for (long folderId : folderIds) {
+			_bookmarksFolderService.moveFolder(folderId, newFolderId);
+		}
+
+		long[] entryIds = ParamUtil.getLongValues(
+			actionRequest, "rowIdsBookmarksEntry");
+
+		for (long entryId : entryIds) {
+			_bookmarksEntryService.moveEntry(entryId, newFolderId);
 		}
 	}
 
@@ -285,8 +307,8 @@ public class EditEntryMVCActionCommand extends BaseMVCActionCommand {
 		return entry;
 	}
 
-	private volatile BookmarksEntryService _bookmarksEntryService;
-	private volatile BookmarksFolderService _bookmarksFolderService;
-	private volatile TrashEntryService _trashEntryService;
+	private BookmarksEntryService _bookmarksEntryService;
+	private BookmarksFolderService _bookmarksFolderService;
+	private TrashEntryService _trashEntryService;
 
 }

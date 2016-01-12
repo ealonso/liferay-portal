@@ -54,9 +54,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -90,9 +93,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -103,9 +109,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberCP">
@@ -128,9 +137,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Teams" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Teams" />
 		</execute>
 
 		<execute macro="Team#addCP">
@@ -159,15 +171,19 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
+			<var name="pageName" value="Site Page" />
 			<var name="siteName" value="Site Name" />
-			<var name="sitePageName" value="Site Page" />
+			<var name="siteURL" value="true" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Teams" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Teams" />
 		</execute>
 
 		<execute macro="Team#addCP">
@@ -223,9 +239,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -236,9 +255,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Teams" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Teams" />
 		</execute>
 
 		<execute macro="Team#addCP">
@@ -254,9 +276,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Team#viewMemberCP">
@@ -279,9 +304,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Teams" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Teams" />
 		</execute>
 
 		<execute macro="Team#addCP">
@@ -361,9 +389,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -374,9 +405,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberCP">
@@ -387,9 +421,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Child SiteName" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Child SiteName" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -400,9 +437,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Child SiteName" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Child SiteName" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberCP">
@@ -413,9 +453,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Child SiteName" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Child SiteName" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#removeMemberCP">
@@ -425,9 +468,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#removeMemberCP">
@@ -437,9 +483,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Child SiteName" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Child SiteName" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewLimitMembershipParentSiteCP">
@@ -473,10 +522,10 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
+			<var name="pageName" value="Site Page" />
 			<var name="siteName" value="Organization Name 1" />
-			<var name="sitePageName" value="Site Page" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoControlPanelUsers">
@@ -522,9 +571,12 @@
 			<var name="orgName" value="Organization Name 1" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberOrganizationCP">
@@ -550,9 +602,12 @@
 			<var name="orgType" value="Regular Organization" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -563,36 +618,48 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberOrganizationCP">
 			<var name="orgName" value="Organization Name 2" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberOrganizationCP">
 			<var name="orgName" value="Organization Name 2" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberOrganizationCP">
 			<var name="orgName" value="Organization Name 3" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Organization Name 1" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Organization Name 1" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberOrganizationCP">
@@ -622,9 +689,12 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addMemberCP">
@@ -634,9 +704,12 @@
 			<var name="userScreenName" value="usersn" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#removeMemberCP">
@@ -664,16 +737,22 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#addAllMembersCP" />
 
-		<execute macro="Page#gotoUsersCP">
-			<var name="portletName" value="Site Memberships" />
-			<var name="siteScopeName" value="Site Name" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="Site Name" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesUsers">
+			<var name="portlet" value="Site Memberships" />
 		</execute>
 
 		<execute macro="Site#viewMemberListCP">

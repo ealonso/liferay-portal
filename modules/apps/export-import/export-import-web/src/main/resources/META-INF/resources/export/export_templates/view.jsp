@@ -17,21 +17,40 @@
 <%@ include file="/export/init.jsp" %>
 
 <%
-long groupId = ParamUtil.getLong(request, "groupId");
-long liveGroupId = ParamUtil.getLong(request, "liveGroupId");
-boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
-String rootNodeName = ParamUtil.getString(request, "rootNodeName");
+String redirect = ParamUtil.getString(request, "redirect");
+
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(LanguageUtil.get(request, "export-templates"));
 %>
 
+<liferay-staging:defineObjects />
+
+<%
+if (liveGroup == null) {
+	liveGroup = group;
+	liveGroupId = groupId;
+}
+%>
+
+<liferay-util:include page="/export/export_templates/navigation.jsp" servletContext="<%= application %>" />
+
 <liferay-portlet:renderURL varImpl="portletURL">
-	<portlet:param name="mvcRenderCommandName" value="exportLayouts" />
-	<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
-	<portlet:param name="exportConfigurationButtons" value="saved" />
+	<portlet:param name="mvcRenderCommandName" value="viewExportConfigurations" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
 	<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-	<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 </liferay-portlet:renderURL>
+
+<portlet:actionURL name="editExportConfiguration" var="restoreTrashEntriesURL">
+	<portlet:param name="mvcRenderCommandName" value="viewExportConfigurations" />
+	<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
+</portlet:actionURL>
+
+<liferay-trash:undo
+	portletURL="<%= restoreTrashEntriesURL %>"
+/>
 
 <div class="container-fluid-1280">
 	<aui:form action="<%= portletURL %>">
@@ -43,17 +62,6 @@ String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 			orderByType="asc"
 			searchTerms="<%= new ExportImportConfigurationSearchTerms(renderRequest) %>"
 		>
-			<aui:nav-bar>
-				<aui:nav-bar-search searchContainer="<%= searchContainer %>">
-
-					<%
-					request.setAttribute("liferay-ui:search:searchContainer", searchContainer);
-					%>
-
-					<liferay-util:include page="/export_import_configuration_search.jsp" servletContext="<%= application %>" />
-				</aui:nav-bar-search>
-			</aui:nav-bar>
-
 			<liferay-ui:search-container-results>
 
 				<%
@@ -97,7 +105,6 @@ String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 					<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 					<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
 					<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-					<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
 				</liferay-portlet:renderURL>
 
 				<liferay-ui:search-container-column-text
@@ -116,6 +123,10 @@ String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 					value="<%= exportImportConfiguration.getCreateDate() %>"
 				/>
 
+				<%
+				request.setAttribute("view.jsp-liveGroupId", liveGroupId);
+				%>
+
 				<liferay-ui:search-container-column-jsp
 					cssClass="entry-action"
 					path="/export/export_templates/actions.jsp"
@@ -124,18 +135,17 @@ String rootNodeName = ParamUtil.getString(request, "rootNodeName");
 
 			<liferay-ui:search-iterator markupView="lexicon" />
 		</liferay-ui:search-container>
-
-		<portlet:renderURL var="addExportConfigurationURL">
-			<portlet:param name="mvcRenderCommandName" value="editExportConfiguration" />
-			<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
-			<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-			<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
-			<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-			<portlet:param name="rootNodeName" value="<%= rootNodeName %>" />
-		</portlet:renderURL>
-
-		<liferay-frontend:add-menu>
-			<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "new") %>' url="<%= addExportConfigurationURL %>" />
-		</liferay-frontend:add-menu>
 	</aui:form>
+
+	<portlet:renderURL var="addExportConfigurationURL">
+		<portlet:param name="mvcRenderCommandName" value="editExportConfiguration" />
+		<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.ADD %>" />
+		<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+		<portlet:param name="liveGroupId" value="<%= String.valueOf(liveGroupId) %>" />
+		<portlet:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+	</portlet:renderURL>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "new") %>' url="<%= addExportConfigurationURL %>" />
+	</liferay-frontend:add-menu>
 </div>

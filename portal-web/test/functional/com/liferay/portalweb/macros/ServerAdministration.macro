@@ -8,7 +8,7 @@
 		<execute function="Select" locator1="ServerAdministrationLogLevels#ADD_CATEGORY_PRIORITY_SELECT" value1="${categoryPriority}" />
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="configureExternalServices">
@@ -57,14 +57,14 @@
 		</if>
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="configureFileUploadOverallMaximumFileSize">
 		<execute function="AssertClick" locator1="NavTab#FILE_UPLOADS" value1="File Uploads" />
 		<execute function="Type" locator1="CPServeradministrationFileuploads#FILE_UPLOADS_GENERAL_OVERALL_MAX_FILE_SIZE_FIELD" value1="${maxFileSize}" />
 		<execute function="AssertClick" locator1="CPServeradministrationFileuploads#SAVE_BUTTON" value1="Save" />
-		<execute function="AssertTextEquals" locator1="CPServeradministrationFileuploads#SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="CPServeradministrationFileuploads#SUCCESS_MESSAGE" value1="Your request completed successfully." />
 	</command>
 
 	<command name="configureMailServerSettings">
@@ -82,7 +82,7 @@
 		<execute function="Type" locator1="ServerAdministrationMail#OUTGOING_PASSWORD" value1="${userPassword}" />
 		<execute function="AssertClick" locator1="CPServeradministrationMail#SAVE_BUTTON" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="CPServeradministrationMail#SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="CPServeradministrationMail#SUCCESS_MESSAGE" value1="Your request completed successfully." />
 	</command>
 
 	<command name="executeServerResourcesActions">
@@ -91,7 +91,7 @@
 		<execute function="AssertClick" locator1="NavTab#RESOURCES" value1="Resources" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="ServerAdministrationResources#ACTIONS_TABLE_DESCRIPTION" value1="${actionsDescription}" />
 		<execute function="AssertClick" locator1="ServerAdministrationResources#ACTIONS_TABLE_EXECUTE" value1="Execute" />
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="searchPortalPropertiesCP">
@@ -147,6 +147,6 @@
 		<execute function="Type" locator1="ServerAdministrationMail#OUTGOING_PASSWORD" value1="" />
 		<execute function="AssertClick" locator1="CPServeradministrationMail#SAVE_BUTTON" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="CPServeradministrationMail#SUCCESS_MESSAGE" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="CPServeradministrationMail#SUCCESS_MESSAGE" value1="Your request completed successfully." />
 	</command>
 </definition>

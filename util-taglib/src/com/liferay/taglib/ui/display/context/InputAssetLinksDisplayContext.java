@@ -163,7 +163,7 @@ public class InputAssetLinksDisplayContext {
 
 		_randomNamespace = PortalUtil.generateRandomKey(
 			_request, "taglib_ui_input_asset_links_page") +
-			StringPool.UNDERLINE;
+				StringPool.UNDERLINE;
 
 		return _randomNamespace;
 	}
@@ -391,7 +391,8 @@ public class InputAssetLinksDisplayContext {
 			(HttpServletRequest)_pageContext.getRequest();
 
 		selectorEntryData.put(
-			"title", LanguageUtil.format(
+			"title",
+			LanguageUtil.format(
 				request, "select-x", classType.getName(), false));
 		selectorEntryData.put("type", classType.getName());
 

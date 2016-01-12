@@ -22,7 +22,7 @@
 String cmd = ParamUtil.getString(request, Constants.CMD);
 
 if (Validator.isNull(cmd)) {
-	cmd = Constants.EXPORT;
+	cmd = Constants.ADD;
 }
 
 if (liveGroup == null) {
@@ -90,18 +90,14 @@ portletURL.setParameter("mvcRenderCommandName", "viewExportConfigurations");
 portletURL.setParameter("groupId", String.valueOf(groupId));
 portletURL.setParameter("liveGroupId", String.valueOf(liveGroupId));
 portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
+
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(portletURL.toString());
+
+renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(request, "new-export-template") : exportImportConfiguration.getName());
 %>
 
 <div class="container-fluid-1280">
-	<portlet:actionURL name="editExportConfiguration" var="restoreTrashEntriesURL">
-		<portlet:param name="mvcRenderCommandName" value="viewExportConfigurations" />
-		<portlet:param name="<%= Constants.CMD %>" value="<%= Constants.RESTORE %>" />
-	</portlet:actionURL>
-
-	<liferay-trash:undo
-		portletURL="<%= restoreTrashEntriesURL %>"
-	/>
-
 	<div id="<portlet:namespace />customConfiguration">
 		<portlet:actionURL name="editExportConfiguration" var="updateExportConfigurationURL">
 			<portlet:param name="mvcRenderCommandName" value="viewExportConfigurations" />
@@ -123,32 +119,32 @@ portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
 			<liferay-ui:error exception="<%= LARFileNameException.class %>" message="please-enter-a-file-with-a-valid-file-name" />
 
 			<div class="export-dialog-tree">
-				<c:if test="<%= !cmd.equals(Constants.EXPORT) %>">
-					<liferay-staging:configuration-header exportImportConfiguration="<%= exportImportConfiguration %>" label='<%= cmd.equals(Constants.ADD) ? "new-export-template" : "edit-template" %>' />
-				</c:if>
+				<aui:fieldset-group markupView="lexicon">
+					<liferay-staging:configuration-header exportImportConfiguration="<%= exportImportConfiguration %>" />
 
-				<c:if test="<%= !group.isLayoutPrototype() && !group.isCompany() %>">
-					<aui:fieldset cssClass="options-group" label="pages">
+					<c:if test="<%= !group.isLayoutPrototype() && !group.isCompany() %>">
+						<aui:fieldset collapsible="<%= true %>" cssClass="options-group" label="pages">
 
-						<%
-						request.setAttribute("select_pages.jsp-parameterMap", parameterMap);
-						%>
+							<%
+							request.setAttribute("select_pages.jsp-parameterMap", parameterMap);
+							%>
 
-						<liferay-util:include page="/select_pages.jsp" servletContext="<%= application %>">
-							<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
-							<liferay-util:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
-							<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
-							<liferay-util:param name="treeId" value="<%= treeId %>" />
-							<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
-						</liferay-util:include>
+							<liferay-util:include page="/select_pages.jsp" servletContext="<%= application %>">
+								<liferay-util:param name="<%= Constants.CMD %>" value="<%= Constants.EXPORT %>" />
+								<liferay-util:param name="groupId" value="<%= String.valueOf(liveGroupId) %>" />
+								<liferay-util:param name="privateLayout" value="<%= String.valueOf(privateLayout) %>" />
+								<liferay-util:param name="treeId" value="<%= treeId %>" />
+								<liferay-util:param name="selectedLayoutIds" value="<%= StringUtil.merge(selectedLayoutIds) %>" />
+							</liferay-util:include>
+						</aui:fieldset>
+					</c:if>
+
+					<liferay-staging:content cmd="<%= cmd %>" parameterMap="<%= parameterMap %>" type="<%= Constants.EXPORT %>" />
+
+					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" cssClass="options-group" label="permissions">
+						<%@ include file="/permissions.jspf" %>
 					</aui:fieldset>
-				</c:if>
-
-				<liferay-staging:content cmd="<%= cmd %>" parameterMap="<%= parameterMap %>" type="<%= Constants.EXPORT %>" />
-
-				<aui:fieldset cssClass="options-group" label="permissions">
-					<%@ include file="/permissions.jspf" %>
-				</aui:fieldset>
+				</aui:fieldset-group>
 			</div>
 
 			<aui:button-row>
@@ -207,28 +203,6 @@ portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
 			submitForm(form, form.attr('action'), false);
 		}
 	);
-
-	var clickHandler = function(event) {
-		var dataValue = event.target.ancestor('li').attr('data-value');
-
-		processDataValue(dataValue);
-	};
-
-	var processDataValue = function(dataValue) {
-		var customConfiguration = A.one('#<portlet:namespace />customConfiguration');
-		var savedConfigurations = A.one('#<portlet:namespace />savedConfigurations');
-
-		if (dataValue === 'custom') {
-			savedConfigurations.hide();
-
-			customConfiguration.show();
-		}
-		else if (dataValue === 'saved') {
-			customConfiguration.hide();
-
-			savedConfigurations.show();
-		}
-	};
 </aui:script>
 
 <aui:script>

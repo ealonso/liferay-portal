@@ -58,7 +58,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute macro="Bookmark#viewBookmark">
 			<var name="bookmarkName" value="${bookmarkName}" />
@@ -163,7 +163,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute macro="Bookmark#viewBookmark">
 			<var name="bookmarkName" value="${bookmarkName}" />
@@ -208,7 +208,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute macro="Bookmark#viewBookmark">
 			<var name="bookmarkName" value="${bookmarkName}" />
@@ -259,7 +259,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute macro="Bookmark#viewBookmark">
 			<var name="bookmarkName" value="${editBookmarkName}" />
@@ -282,7 +282,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 
 		<execute macro="Bookmark#viewBookmark">
 			<var name="bookmarkName" value="${bookmarkNameEdit}" />
@@ -327,7 +327,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no bookmarks in this folder." />
 	</command>
 
@@ -366,7 +366,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There are no bookmarks in this folder." />
 
 		<execute macro="Navigator#openURL" />
@@ -510,7 +510,19 @@
 
 		<execute function="AssertClick" locator1="Bookmarks#DESCRIPTIVE_ENTRY_TITLE" value1="${bookmarkName}" />
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="Bookmarks#BOOKMARK_ASSET_URL" value1="${bookmarkURL}" />
+		<var method="selenium#getLocation()" name="currentURL" />
+
+		<if>
+			<equals arg1="${bookmarkURL}/" arg2="${currentURL}" />
+			<then>
+				<var name="currentURL" value="${bookmarkURL}" />
+			</then>
+		</if>
+
+		<execute macro="TestUtils#assertEquals">
+			<var name="actual" value="${currentURL}" />
+			<var name="expected" value="${bookmarkURL}" />
+		</execute>
 	</command>
 
 	<command name="viewBookmarkViaAP">
@@ -528,6 +540,11 @@
 		<execute function="AssertElementPresent#assertElementPresent" locator1="AP#ASSET_ABSTRACT_BOOKMARK_LIFERAY_LOGO" />
 
 		<execute function="Close" locator1="title=Liferay - Enterprise open source portal and collaboration software | Liferay" />
+	</command>
+
+	<command name="viewEntry">
+		<execute function="AssertTextEquals" locator1="BookmarksEntry#NAME" value1="${bookmarkName}" />
+		<execute function="AssertTextEquals" locator1="Bookmarks#BOOKMARK_ASSET_URL" value1="${bookmarkURL}" />
 	</command>
 
 	<command name="viewNoCategoryCP">

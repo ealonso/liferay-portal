@@ -127,7 +127,7 @@ if (portletTitleBasedNavigation) {
 			<aui:fieldset>
 				<c:if test="<%= !validMoveFolders.isEmpty() %>">
 					<div class="move-list-info">
-						<h4><liferay-ui:message arguments="<%= validMoveFolders.size() %>" key="x-folders-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
+						<h4><liferay-ui:message arguments="<%= validMoveFolders.size() %>" key="x-folders-are-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
 					</div>
 
 					<div class="move-list">
@@ -202,7 +202,7 @@ if (portletTitleBasedNavigation) {
 
 				<c:if test="<%= !validMoveFileEntries.isEmpty() %>">
 					<div class="move-list-info">
-						<h4><liferay-ui:message arguments="<%= validMoveFileEntries.size() %>" key="x-files-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
+						<h4><liferay-ui:message arguments="<%= validMoveFileEntries.size() %>" key="x-files-are-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
 					</div>
 
 					<div class="move-list">
@@ -279,7 +279,7 @@ if (portletTitleBasedNavigation) {
 
 				<c:if test="<%= !validShortcutEntries.isEmpty() %>">
 					<div class="move-list-info">
-						<h4><liferay-ui:message arguments="<%= validShortcutEntries.size() %>" key="x-shortcuts-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
+						<h4><liferay-ui:message arguments="<%= validShortcutEntries.size() %>" key="x-shortcuts-are-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
 					</div>
 
 					<div class="move-list">

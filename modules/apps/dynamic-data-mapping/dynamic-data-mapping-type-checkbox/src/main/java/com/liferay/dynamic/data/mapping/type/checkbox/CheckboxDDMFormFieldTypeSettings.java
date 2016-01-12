@@ -52,11 +52,10 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 						@DDMFormLayoutColumn(
 							size = 12,
 							value = {
-								"validation", "showLabel",
 								"visibilityExpression", "predefinedValue",
-								"repeatable", "fieldNamespace", "indexType",
+								"validation", "fieldNamespace", "indexType",
 								"localizable", "readOnly", "dataType", "type",
-								"name"
+								"name", "showLabel", "repeatable"
 							}
 						)
 					}
@@ -81,8 +80,7 @@ public interface CheckboxDDMFormFieldTypeSettings
 
 	@DDMFormField(
 		dataType = "boolean", label = "%show-as-a-switcher",
-		properties = {"showAsSwitcher=true"},
-		type = "checkbox"
+		properties = {"showAsSwitcher=true"}, type = "checkbox"
 	)
 	public boolean showAsSwitcher();
 

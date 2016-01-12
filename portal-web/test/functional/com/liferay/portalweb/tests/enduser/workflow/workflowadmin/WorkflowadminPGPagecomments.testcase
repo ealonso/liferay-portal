@@ -27,7 +27,7 @@
 			<var name="workflowResourceValue" value="Comments" />
 		</execute>
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Page Comments Page" />
 		</execute>
 
@@ -62,7 +62,9 @@
 		</if>
 	</tear-down>
 
-	<command name="ApprovePageCommentPG" priority="4">
+	<command name="ApprovePageCommentPG" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<var name="commentAuthor" value="Test Test (You)" />
 		<var name="commentBody" value="Page Comment Comment" />
 

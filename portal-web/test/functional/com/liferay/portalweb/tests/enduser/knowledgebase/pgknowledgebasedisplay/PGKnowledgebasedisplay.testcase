@@ -17,7 +17,7 @@
 
 		<execute macro="User#firstLoginPG" />
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="${pageName}" />
 		</execute>
 
@@ -27,6 +27,12 @@
 
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="${portletName}" />
+		</execute>
+
+		<execute macro="Portlet#dragAndDropPortletToColumnPG">
+			<var name="columnNumberFrom" value="1" />
+			<var name="columnNumberTo" value="2" />
+			<var name="portletName" value="Knowledge Base Display" />
 		</execute>
 	</set-up>
 

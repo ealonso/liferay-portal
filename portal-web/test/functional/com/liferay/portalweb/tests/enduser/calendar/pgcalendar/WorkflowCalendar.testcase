@@ -14,7 +14,7 @@
 
 		<execute macro="User#firstLoginPG" />
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="Calendar Page" />
 		</execute>
 
@@ -67,7 +67,9 @@
 		</if>
 	</tear-down>
 
-	<command name="ApproveEventWithInvitedUser" priority="4">
+	<command name="ApproveEventWithInvitedUser" priority="5">
+		<property name="portal.acceptance" value="true" />
+
 		<execute macro="Page#gotoPG">
 			<var name="pageName" value="Calendar Page" />
 		</execute>

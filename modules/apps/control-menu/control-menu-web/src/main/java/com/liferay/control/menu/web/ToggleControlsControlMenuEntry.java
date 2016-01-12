@@ -44,7 +44,7 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"control.menu.category.key=" + ControlMenuCategoryKeys.TOOLS,
-		"service.ranking:Integer=500"
+		"service.ranking:Integer=200"
 	},
 	service = ControlMenuEntry.class
 )
@@ -56,11 +56,6 @@ public class ToggleControlsControlMenuEntry
 		Map<String, Object> data = super.getData(request);
 
 		data.put("qa-id", "showControls");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		data.put("title", getLabel(themeDisplay.getLocale()));
 
 		return data;
 	}

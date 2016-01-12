@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"control.menu.category.key=" + ControlMenuCategoryKeys.TOOLS,
-		"service.ranking:Integer=200"
+		"service.ranking:Integer=400"
 	},
 	service = ControlMenuEntry.class
 )
@@ -56,11 +56,6 @@ public class ManageLayoutControlMenuEntry
 
 		data.put("qa-id", "edit");
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		data.put("title", getLabel(themeDisplay.getLocale()));
-
 		return data;
 	}
 
@@ -71,7 +66,7 @@ public class ManageLayoutControlMenuEntry
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "edit");
+		return LanguageUtil.get(locale, "edit-page");
 	}
 
 	@Override

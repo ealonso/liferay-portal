@@ -1039,6 +1039,23 @@
 		</sequential>
 	</macrodef>
 
+	<target name="compile-jsp">
+		<property name="testray.main.component.name" value="Compile JSP" />
+		<property name="testray.testcase.priority" value="5" />
+
+		<run-batch-test>
+			<test-action>
+				<ant dir="portal-web" target="compile-tomcat" />
+
+				<gradle-execute dir="modules" task="compileJSP" />
+			</test-action>
+
+			<test-set-up>
+				<prepare-test-build />
+			</test-set-up>
+		</run-batch-test>
+	</target>
+
 	<target name="functional-bundle-tomcat-mysql">
 		<set-tomcat-version-number liferay.portal.bundle="${test.portal.bundle.version}" />
 
@@ -1131,13 +1148,6 @@
 				<gradle-execute dir="modules" task="test">
 					<arg value="-Dtest.class.group.index=${axis.variable}" />
 				</gradle-execute>
-
-				<if>
-					<equals arg1="${axis.variable}" arg2="0" />
-					<then>
-						<gradle-execute dir="modules" task="compileJSP" />
-					</then>
-				</if>
 			</test-action>
 
 			<test-set-up>

@@ -23,6 +23,7 @@ import java.util.Comparator;
  * @author Hugo Huijser
  */
 public class IncorrectLineBreaks1 {
+
 	public void method1() {
 		String thisIsAStringWithAVeryVeryVeryLongName = "";
 
@@ -42,18 +43,10 @@ public class IncorrectLineBreaks1 {
 				StringPool.Period);
 
 		boolean b = StringUtil.contains(
-			thisIsAStringWithAVeryVeryVeryLongName, StringUtil.trim(
-				thisIsAStringWithAVeryVeryVeryLongName2);
-
-		boolean b2 = StringUtil.contains(
-			test1, "Hello World" + "Hello World Hello" +
-				"Hello World Hello World);
-
-		boolean b3 = StringUtil.contains(
 			StringUtil.replace(
 				"Hello World", "Hello", "World"), "Hello World Hello World");
 
-		boolean b4 = StringUtil.contains(
+		boolean b1 = StringUtil.contains(
 			"Hello World Hello World Hello World " +
 				"Hello World Hello World Hello World", "Hello");
 
@@ -137,6 +130,6 @@ public class IncorrectLineBreaks1 {
 		new String[] {
 			"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
 			"Nine", "Ten"
-		}; 
+		};
 
 }

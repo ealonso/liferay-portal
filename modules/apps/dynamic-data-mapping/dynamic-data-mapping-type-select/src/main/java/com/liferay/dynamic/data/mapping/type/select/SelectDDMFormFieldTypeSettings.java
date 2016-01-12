@@ -37,8 +37,8 @@ import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 						@DDMFormLayoutColumn(
 							size = 12,
 							value = {
-								"label", "tip", "required", "options",
-								"dataSourceType", "ddmDataProviderInstanceId"
+								"label", "tip", "required", "dataSourceType",
+								"options", "ddmDataProviderInstanceId"
 							}
 						)
 					}
@@ -53,11 +53,10 @@ import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 						@DDMFormLayoutColumn(
 							size = 12,
 							value = {
-								"validation", "showLabel", "repeatable",
-								"multiple", "predefinedValue",
-								"visibilityExpression", "fieldNamespace",
-								"indexType", "localizable", "readOnly",
-								"dataType", "type", "name"
+								"predefinedValue", "visibilityExpression",
+								"validation", "fieldNamespace", "indexType",
+								"localizable", "readOnly", "dataType", "type",
+								"name", "showLabel", "repeatable", "multiple"
 							}
 						)
 					}
@@ -78,8 +77,7 @@ public interface SelectDDMFormFieldTypeSettings
 	public String dataSourceType();
 
 	@DDMFormField(
-		properties = {"showLabel=false"},
-		type = "select",
+		label = "%choose-a-data-provider", type = "select",
 		visibilityExpression = "dataSourceType.equals(\"data-provider\")"
 	)
 	public long ddmDataProviderInstanceId();
@@ -89,8 +87,7 @@ public interface SelectDDMFormFieldTypeSettings
 
 	@DDMFormField(
 		dataType = "ddm-options", label = "%options",
-		properties = {"showLabel=false"},
-		required = true, type = "options",
+		properties = {"showLabel=false"}, required = true, type = "options",
 		visibilityExpression = "dataSourceType.equals(\"manual\")"
 	)
 	public DDMFormFieldOptions options();

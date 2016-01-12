@@ -14,7 +14,7 @@
 
 <body class="${css_class}">
 
-<@liferay.quick_access content_id="#main-content" />
+<@liferay_ui["quick-access"] contentId="#main-content" />
 
 ${theme.include(body_top_include)}
 
@@ -32,15 +32,15 @@ ${theme.include(body_top_include)}
 
 				${portletDisplay.setTitle(the_title)}
 
-				${theme.wrapPortlet("portlet.ftl", content_include)}
+				<@liferay_theme["wrap-portlet"] page="portlet.ftl">
+					${theme.include(content_include)}
+				</@>
 			</#if>
 
 			<div class="clear"></div>
 		</div>
 	</div>
 </div>
-
-<@liferay.control_menu />
 
 ${theme.include(body_bottom_include)}
 

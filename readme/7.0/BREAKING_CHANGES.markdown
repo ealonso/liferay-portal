@@ -3221,3 +3221,151 @@ the tag namespace from `liferay-ui:asset-categories-navigation` to
 
 This change was made as a part of the ongoing strategy to modularize Liferay
 Portal by means of an OSGi container.
+
+---------------------------------------
+
+### Taglibs are no longer accessible via the `${theme}` variable in Freemarker
+- **Date:** 2016-Jan-06
+- **JIRA Ticket:** LPS-61683
+
+#### What changed?
+
+The `${theme}` variable that was injected in the freemarker context providing access to some taglibs or utils does no longer provide them. Only the `${theme.include}` method is preserved for performance reasons.
+
+#### Who is affected?
+
+Freemarker templates that are using the `${theme}` variable to access any of its provided taglibs.
+
+#### How should I update my code?
+
+All the provided taglibs available in the `${theme}` variable can be replaced by the direct usage of a taglib. For example:
+
+`${theme.runtime("com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry", portletProviderAction.VIEW, "", default_preferences)}` can be replaced by:
+
+```
+<@liferay_portlet["runtime"]
+    defaultPreferences=default_preferences
+    portletProviderAction=portletProviderAction.VIEW
+    portletProviderClassName="com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry"
+/>
+```
+
+`${theme.wrapPortlet("portlet.ftl", content_include)}` can be replaced by:
+
+```
+<@liferay_theme["wrap-portlet"] page="portlet.ftl">
+    <@liferay_util["include"] page=content_include />
+</@>
+```
+
+`${theme.iconHelp(portlet_description)}` can be replaced by:
+
+```
+<@liferay_ui["icon-help"] message=portlet_description />
+```
+
+`${nav_item.icon()}` can be replaced by:
+
+```
+<@liferay_theme["layout-icon"] layout=${nav_item.getLayout()} />
+```
+
+#### Why was this change made?
+
+For historic reasons, the `{$theme} variable was being injected with the `VelocityTaglibImpl` class. This was creating some coupling between the template engines and between some specific taglibs and the template engines at the same time.
+
+Freemarker already offers native support for taglibs which cover all the functionality originally provided by the `{$theme}` variable. Removing this coupling would help future developments while still keeping all the existing functionality.
+
+---------------------------------------
+
+### Portlet configuration options may not always be displayed
+- **Date:** 2016-Jan-07
+- **JIRA Ticket:** LPS-54620 and LPS-61820
+
+#### What changed?
+
+The portlet configuration options (configuration, export/import, look and feel, etc) were always displayed in every view of the portlet and they couldn't be customized.
+
+With Lexicon, the options that are displayed will be based on the context, so not all the options will always be displayed.
+
+#### Who is affected?
+
+Portlets that should always display all the configuration options no matter which view of the portlet is rendered.
+
+#### How should I update my code?
+
+If you don't apply any change to your source code you will experience the following behaviour based on the portlet type:
+
+- If it's a Struts Portlet and you have defined a `view-action` init parameter, the configuration options will only be displayed for that particular view when invoking a url with a parameter `struts-action` with the value indicated in `view-action` init parameter.
+
+- If it's a Liferay MVC Portlet and you have defined a `view-template` init parameter, the configuration options will only be displayed when that template is rendered by invoking a url with a parameter `mvcPath` with the value indicated in `view-template` init parameter.
+
+- If it's a portlet using any other framework, the configuration options will never be displayed.
+
+In order to keep the old behaviour of adding the configuration options in every view you need to add the init parameter `always-display-default-configuration-icons` with the value `true`.
+
+#### Why was this change made?
+
+Lexicon patterns require the ability to specify different configuration options depending on the view of the portlet by adding or removing options. This can be easily achieved by using `PortletConfigurationIconFactory` and `PortletConfigurationIconFactory` classes.
+
+---------------------------------------
+
+### The `getURLView` method of AssetRenderer returns `String` instead of `PortletURL`
+- **Date:** 2016-Jan-08
+- **JIRA Ticket:** LPS-61853
+
+#### What changed?
+
+The AssetRenderer interface has changed and now the method  `getURLView` returns `String` instead of `PortletURL`
+
+#### Who is affected?
+
+All custom assets that implements AssetRenderer interface.
+
+#### How should I update my code?
+
+You should update the method signature to reflect that it returns a `String` and you should adapt your implementation accordingly.
+
+In general, it should be as easy as returning `portletURL.toString()`.
+
+#### Why was this change made?
+
+The API was forcing to return a PortletURL and this makes things harder when we want to use any other link instead of a PortletURL. For example, in the case of Bookmarks, where we want to automatically redirect to any other potential url.
+
+---------------------------------------
+
+### The `icon` method of NavItem has been removed
+- **Date:** 2016-Jan-11
+- **JIRA Ticket:** LPS-61900
+
+#### What changed?
+
+The NavItem interface has changed and the method  `icon` that would render the nav item icon has been removed.
+
+#### Who is affected?
+
+All themes using nav_item.icon() method.
+
+#### How should I update my code?
+
+You should update the code to call the method nav_item.iconURL that would return the URL of the image and then you can use it as preferred. For example:
+	
+```
+<img alt="Page Icon" class="layout-logo" src="<%= nav_item.iconURL()" />
+```
+
+To keep the previous behaviour in velocity you can just add this:
+
+```
+$theme.layoutIcon($nav_item.getLayout())
+```
+
+To keep the previous behaviour in freemarker you can just add this:
+
+```
+<@liferay_theme["layout-icon"] layout=nav_item_layout />
+```
+ 
+#### Why was this change made?
+
+The API was forcing to have a dependency on a taglib and didn't give enough flexibility to developers.

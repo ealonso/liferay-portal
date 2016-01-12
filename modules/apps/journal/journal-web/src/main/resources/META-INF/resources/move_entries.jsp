@@ -40,7 +40,7 @@ JournalMoveEntriesDisplayContext journalMovesEntriesDisplayContext = new Journal
 			%>
 
 			<c:if test="<%= !validMoveFolders.isEmpty() %>">
-				<h4><liferay-ui:message arguments="<%= validMoveFolders.size() %>" key="x-folders-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
+				<h4><liferay-ui:message arguments="<%= validMoveFolders.size() %>" key="x-folders-are-ready-to-be-moved" translateArguments="<%= false %>" /></h4>
 
 				<ul class="list-unstyled">
 

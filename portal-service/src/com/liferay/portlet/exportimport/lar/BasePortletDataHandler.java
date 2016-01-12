@@ -200,16 +200,16 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 				companyId, PortletKeys.PREFS_OWNER_TYPE_COMPANY,
 				portlet.getRootPortletId(), false) > 0)) {
 
-				PortletDataHandlerControl[] portletDataHandlerControls = null;
+			PortletDataHandlerControl[] portletDataHandlerControls = null;
 
-				if (isDisplayPortlet()) {
-					portletDataHandlerControls = getExportControls();
-				}
+			if (isDisplayPortlet()) {
+				portletDataHandlerControls = getExportControls();
+			}
 
-				configurationControls.add(
-					new PortletDataHandlerBoolean(
-						null, PortletDataHandlerKeys.PORTLET_SETUP, "setup",
-						true, false, portletDataHandlerControls, null, null));
+			configurationControls.add(
+				new PortletDataHandlerBoolean(
+					null, PortletDataHandlerKeys.PORTLET_SETUP, "setup", true,
+					false, portletDataHandlerControls, null, null));
 		}
 
 		// Archived setups
@@ -665,9 +665,28 @@ public abstract class BasePortletDataHandler implements PortletDataHandler {
 	protected boolean doValidateSchemaVersion(String schemaVersion)
 		throws Exception {
 
-		Version currentVersion = Version.getInstance(getSchemaVersion());
+		// Major version has to be identical
 
-		if (currentVersion.isLaterVersionThan(schemaVersion)) {
+		Version currentVersion = Version.getInstance(getSchemaVersion());
+		Version importedVersion = Version.getInstance(schemaVersion);
+
+		if (!Validator.equals(
+				currentVersion.getMajor(), importedVersion.getMajor())) {
+
+			return false;
+		}
+
+		// Imported minor version should be less than or equal to the current
+		// minor version
+
+		int currentMinorVersion = GetterUtil.getInteger(
+			currentVersion.getMinor(), -1);
+		int importedMinorVersion = GetterUtil.getInteger(
+			importedVersion.getMinor(), -1);
+
+		if (((currentMinorVersion == -1) && (importedMinorVersion == -1)) ||
+			(currentMinorVersion < importedMinorVersion)) {
+
 			return false;
 		}
 

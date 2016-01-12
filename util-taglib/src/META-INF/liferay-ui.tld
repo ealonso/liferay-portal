@@ -18,7 +18,7 @@
 			<name>animationTime</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>Integer</type>
+			<type>java.lang.Integer</type>
 		</attribute>
 		<attribute>
 			<name>closeable</name>
@@ -30,7 +30,7 @@
 			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
 			<name>destroyOnHide</name>
@@ -42,31 +42,31 @@
 			<name>message</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
 			<name>targetContainer</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
 			<name>timeout</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>Integer</type>
+			<type>java.lang.Integer</type>
 		</attribute>
 		<attribute>
 			<name>title</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
 			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>String</type>
+			<type>java.lang.String</type>
 		</attribute>
 	</tag>
 	<tag>
@@ -1314,6 +1314,11 @@
 		<attribute>
 			<name>message</name>
 			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>search</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
@@ -3160,96 +3165,6 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>layouts-tree</name>
-		<tag-class>com.liferay.taglib.ui.LayoutsTreeTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>checkContentDisplayPage</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>defaultStateChecked</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>draggableTree</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>expandFirstNode</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>groupId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>incomplete</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>linkTemplate</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>portletURL</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>privateLayout</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>rootLinkTemplate</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>rootNodeName</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>saveState</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>selectableTree</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>selectedLayoutIds</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>selPlid</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>treeId</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>portletURLs</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
 		<name>logo-selector</name>
 		<tag-class>com.liferay.taglib.ui.LogoSelectorTag</tag-class>
 		<body-content>JSP</body-content>
@@ -3365,6 +3280,12 @@
 		<attribute>
 			<description>Whether to translate the arguments into the user's language. The default value is <![CDATA[<code>true</code>]]>.</description>
 			<name>translateArguments</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<name>resourceBundle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 			<type>boolean</type>

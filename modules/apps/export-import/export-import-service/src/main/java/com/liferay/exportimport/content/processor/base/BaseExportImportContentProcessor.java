@@ -515,7 +515,7 @@ public class BaseExportImportContentProcessor
 
 			String url = content.substring(beginPos + offset, endPos);
 
-			StringBundler urlSB = new StringBundler(5);
+			StringBundler urlSB = new StringBundler(6);
 
 			try {
 				url = replaceExportHostname(
@@ -707,7 +707,7 @@ public class BaseExportImportContentProcessor
 
 				String oldLinkToLayout = matcher.group(0);
 
-				StringBundler sb = new StringBundler(5);
+				StringBundler sb = new StringBundler(3);
 
 				sb.append(type);
 				sb.append(StringPool.AT);
@@ -1095,7 +1095,7 @@ public class BaseExportImportContentProcessor
 
 			String url = content.substring(beginPos + offset, endPos);
 
-			StringBundler urlSB = new StringBundler(5);
+			StringBundler urlSB = new StringBundler(1);
 
 			url = replaceExportHostname(groupId, url, urlSB);
 
@@ -1279,17 +1279,17 @@ public class BaseExportImportContentProcessor
 	protected static final String PRIVATE_GROUP_SERVLET_MAPPING =
 		PropsUtil.get(
 			PropsKeys.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING) +
-			StringPool.SLASH;
+				StringPool.SLASH;
 
 	protected static final String PRIVATE_USER_SERVLET_MAPPING =
 		PropsUtil.get(
 			PropsKeys.LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING) +
-			StringPool.SLASH;
+				StringPool.SLASH;
 
 	protected static final String PUBLIC_GROUP_SERVLET_MAPPING =
 		PropsUtil.get(
 			PropsKeys.LAYOUT_FRIENDLY_URL_PUBLIC_SERVLET_MAPPING) +
-			StringPool.SLASH;
+				StringPool.SLASH;
 
 	protected static final Pattern exportLinksToLayoutPattern = Pattern.compile(
 		"\\[([\\d]+)@(private(-group|-user)?|public)(@([\\d]+))?\\]");

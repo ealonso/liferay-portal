@@ -309,12 +309,11 @@ public class LDAPPropertiesVerifyProcess extends VerifyProcess {
 				verifyLDAPServerConfiguration(companyId, ldapServerId, postfix);
 
 				for (int i = 0;
-						i < LegacyLDAPPropsKeys.SERVER_ID_POSTFIXED_KEYS.length;
+						i < LegacyLDAPPropsKeys.POSTFIXED_LDAP_KEYS.length;
 							i++) {
 
 					keys.add(
-						LegacyLDAPPropsKeys.SERVER_ID_POSTFIXED_KEYS[i] +
-							postfix);
+						LegacyLDAPPropsKeys.POSTFIXED_LDAP_KEYS[i] + postfix);
 				}
 			}
 
@@ -563,19 +562,19 @@ public class LDAPPropertiesVerifyProcess extends VerifyProcess {
 	private static final Log _log = LogFactoryUtil.getLog(
 		LDAPPropertiesVerifyProcess.class);
 
-	private volatile CompanyLocalService _companyLocalService;
-	private volatile ConfigurationProvider<LDAPAuthConfiguration>
+	private CompanyLocalService _companyLocalService;
+	private ConfigurationProvider<LDAPAuthConfiguration>
 		_ldapAuthConfigurationProvider;
-	private volatile ConfigurationProvider<LDAPExportConfiguration>
+	private ConfigurationProvider<LDAPExportConfiguration>
 		_ldapExportConfigurationProvider;
-	private volatile ConfigurationProvider<LDAPImportConfiguration>
+	private ConfigurationProvider<LDAPImportConfiguration>
 		_ldapImportConfigurationProvider;
-	private volatile ConfigurationProvider<LDAPServerConfiguration>
+	private ConfigurationProvider<LDAPServerConfiguration>
 		_ldapServerConfigurationProvider;
-	private volatile LDAPSettings _ldapSettings;
-	private volatile PrefsProps _prefsProps;
-	private volatile Props _props;
-	private volatile ConfigurationProvider<SystemLDAPConfiguration>
+	private LDAPSettings _ldapSettings;
+	private PrefsProps _prefsProps;
+	private Props _props;
+	private ConfigurationProvider<SystemLDAPConfiguration>
 		_systemLDAPConfigurationProvider;
 
 }

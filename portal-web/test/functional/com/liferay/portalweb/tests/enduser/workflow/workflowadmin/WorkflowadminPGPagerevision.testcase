@@ -31,16 +31,19 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="SitePage#addCP">
+		<execute macro="Page#add">
 			<var name="page" value="Public Pages" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="siteName" value="${siteName}" />
-			<var name="sitePageName" value="${sitePageName}" />
 			<var name="sitePagePrivacy" value="${sitePagePrivacy}" />
 		</execute>
 
-		<execute macro="Page#gotoPublishingTools">
-			<var name="portletName" value="Staging Processes" />
-			<var name="siteScopeName" value="${siteName}" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="${siteName}" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesPublishingTools">
+			<var name="portlet" value="Staging" />
 		</execute>
 
 		<execute macro="Staging#activateStagingCP">
@@ -48,9 +51,12 @@
 			<var name="siteName" value="${siteName}" />
 		</execute>
 
-		<execute macro="Page#gotoConfigurationCP">
-			<var name="portletName" value="Workflow Configuration" />
-			<var name="siteScopeName" value="${siteName}" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="${siteName}" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesConfiguration">
+			<var name="portlet" value="Workflow Configuration" />
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">
@@ -77,14 +83,20 @@
 		</if>
 	</tear-down>
 
-	<command name="ApprovePageRevisionPG" priority="4">
+	<command name="ApprovePageRevisionPG" priority="5">
+		<property name="portal.acceptance" value="true" />
+
+		<execute macro="Page#gotoPG">
+			<var name="pageName" value="Site Page Name" />
+			<var name="pageStaging" value="true" />
+			<var name="siteName" value="Site Name" />
+			<var name="siteURL" value="true" />
+		</execute>
+
 		<var name="pageName" value="Page Revision Page" />
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="${pageName}" />
-			<var name="pageStaging" value="true" />
-			<var name="siteName" value="${siteName}" />
-			<var name="siteURL" value="true" />
 		</execute>
 
 		<execute macro="Page#gotoPG">
@@ -186,7 +198,7 @@
 	<command name="RejectPageRevisionPG" priority="4">
 		<var name="pageName" value="Page Revision Page" />
 
-		<execute macro="Page#addPG">
+		<execute macro="Page#add">
 			<var name="pageName" value="${pageName}" />
 			<var name="pageStaging" value="true" />
 			<var name="siteName" value="${siteName}" />
@@ -364,9 +376,12 @@
 			<var name="workflowTask" value="Review" />
 		</execute>
 
-		<execute macro="Page#gotoConfigurationCP">
-			<var name="portletName" value="Workflow Configuration" />
-			<var name="siteScopeName" value="${siteName}" />
+		<execute macro="ProductMenu#gotoSite">
+			<var name="site" value="${siteName}" />
+		</execute>
+
+		<execute macro="ProductMenu#gotoSitesConfiguration">
+			<var name="portlet" value="Workflow Configuration" />
 		</execute>
 
 		<execute macro="Workflow#configureWorkflow">

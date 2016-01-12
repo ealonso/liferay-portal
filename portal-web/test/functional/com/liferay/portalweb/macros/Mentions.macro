@@ -9,7 +9,7 @@
 
 		<execute function="Type#sendKeys" locator1="AlloyEditor#CONTENT_FIELD" value1="${entryContent} @${mentionsUserScreenName}" />
 
-		<execute function="AssertClick" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" value1="${mentionsUserFullName}@${mentionsUserScreenName}" />
+		<execute function="Click#clickNoMouseOver" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" />
 
 		<execute macro="BlogsEntry#publish" />
 	</command>
@@ -20,11 +20,11 @@
 
 		<execute function="Type#sendKeys" locator1="Comments#COMMENT_FIELD"  value1="${entryComment} @${mentionsUserScreenName}" />
 
-		<execute function="AssertClick" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" value1="${mentionsUserFullName}@${mentionsUserScreenName}" />
+		<execute function="Click#clickNoMouseOver" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" />
 
 		<execute function="AssertClick" locator1="Button#REPLY" value1="Reply" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="addMentionViaMessageBoardsReply">
@@ -41,11 +41,11 @@
 
 		<execute function="SelectFrame#selectFrameTop" />
 
-		<execute function="AssertClick" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" value1="${mentionsUserFullName}&#64;${mentionsUserScreenName}" />
+		<execute function="Click#clickNoMouseOver" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" />
 
 		<execute function="Click" locator1="Button#PUBLISH" />
 
-		<execute function="AssertTextEquals#assertText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="addMentionViaMessageBoardThread">
@@ -71,11 +71,11 @@
 
 		<execute function="SelectFrame#selectFrameTop" />
 
-		<execute function="AssertClick" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" value1="${mentionsUserFullName}&#64;${mentionsUserScreenName}" />
+		<execute function="Click#clickNoMouseOver" locator1="Mentions#MENTIONS_USER_DISPLAY_OPTION" />
 
 		<execute function="Click" locator1="Button#PUBLISH" value1="Publish" />
 
-		<execute function="AssertTextEquals#assertText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 	</command>
 
 	<command name="disableMentionsViaPortalSettings">
@@ -87,7 +87,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertNotChecked" locator1="Checkbox#MENTIONS" />
 	</command>
 
@@ -101,7 +101,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertNotChecked" locator1="Checkbox#MENTIONS" />
 	</command>
 
@@ -114,7 +114,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertChecked" locator1="Checkbox#MENTIONS" />
 	</command>
 
@@ -128,7 +128,7 @@
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
 
-		<execute function="AssertTextEquals" locator1="Message#SUCCESS" value1="Your request completed successfully." />
+		<execute function="AssertTextEquals#assertPartialText" locator1="Message#SUCCESS" value1="Your request completed successfully." />
 		<execute function="AssertChecked" locator1="Checkbox#MENTIONS" />
 	</command>
 

@@ -1222,8 +1222,8 @@ public class TableMapperTest {
 		RecordInvocationHandler recordInvocationHandler =
 			new RecordInvocationHandler();
 
-		TableMapper<Left, Right> tableMapper = (TableMapper<Left, Right>)
-			ProxyUtil.newProxyInstance(
+		TableMapper<Left, Right> tableMapper =
+			(TableMapper<Left, Right>)ProxyUtil.newProxyInstance(
 				classLoader, new Class<?>[] {TableMapper.class},
 				recordInvocationHandler);
 
@@ -1416,7 +1416,7 @@ public class TableMapperTest {
 
 	private DataSource _dataSource;
 	private MockBasePersistence<Left> _leftBasePersistence;
-		private final Map<Long, long[]> _mappingStore = new HashMap<>();
+	private final Map<Long, long[]> _mappingStore = new HashMap<>();
 	private MockBasePersistence<Right> _rightBasePersistence;
 	private TableMapperImpl<Left, Right> _tableMapperImpl;
 
@@ -1442,10 +1442,13 @@ public class TableMapperTest {
 
 	}
 
-	private interface Left
-		extends LeftModel {}; private interface LeftModel
-		extends BaseModel<Left> {}; private class MockAddMappingSqlUpdate
-		implements SqlUpdate {
+	private interface Left extends LeftModel {
+	};
+
+	private interface LeftModel extends BaseModel<Left> {
+	};
+
+	private class MockAddMappingSqlUpdate implements SqlUpdate {
 
 		public MockAddMappingSqlUpdate(
 			DataSource dataSource, String sql, int[] types) {
@@ -1457,8 +1460,7 @@ public class TableMapperTest {
 						"VALUES (?, ?, ?)",
 				sql);
 			Assert.assertArrayEquals(
-				new int[] {Types.BIGINT, Types.BIGINT, Types.BIGINT},
-				types);
+				new int[] {Types.BIGINT, Types.BIGINT, Types.BIGINT}, types);
 		}
 
 		@Override

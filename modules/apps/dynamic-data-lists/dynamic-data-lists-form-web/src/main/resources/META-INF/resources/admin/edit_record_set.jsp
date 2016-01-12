@@ -104,7 +104,7 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 				<aui:input name="name" type="hidden" />
 
 				<h2>
-					<liferay-ui:input-editor contents="<%= HtmlUtil.escape(LocalizationUtil.getLocalization(description, themeDisplay.getLanguageId())) %>" cssClass="ddl-form-description" editorName="alloyeditor" name="descriptionEditor" placeholder="form-description" showSource="<%= false %>" />
+					<liferay-ui:input-editor contents="<%= HtmlUtil.escape(LocalizationUtil.getLocalization(description, themeDisplay.getLanguageId())) %>" cssClass="ddl-form-description" editorName="alloyeditor" name="descriptionEditor" placeholder="add-a-short-description-for-this-page" showSource="<%= false %>" />
 				</h2>
 
 				<aui:input name="description" type="hidden" />
@@ -209,7 +209,7 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 				if (event.portletId === '<%= portletDisplay.getRootPortletId() %>') {
 					initHandler.detach();
 
-					Liferay.Util.getWindow('<portlet:namespace />settingsModal').destroy();
+					Liferay.namespace('DDL').destroySettings();
 
 					Liferay.detach('destroyPortlet', clearPortletHandlers);
 				}
@@ -224,6 +224,14 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 	</div>
 
 	<aui:script use="aui-base">
+		Liferay.namespace('DDL').destroySettings = function() {
+			var settingsNode = A.one('#<portlet:namespace />settingsModal');
+
+			if (settingsNode) {
+				Liferay.Util.getWindow('<portlet:namespace />settingsModal').destroy();
+			}
+		};
+
 		Liferay.namespace('DDL').openSettings = function() {
 			Liferay.Util.openWindow(
 				{
@@ -261,7 +269,7 @@ renderResponse.setTitle((recordSet == null) ? LanguageUtil.get(request, "new-for
 						width: 720
 					},
 					id: '<portlet:namespace />settingsModal',
-					title: '<liferay-ui:message key="settings" />'
+					title: '<liferay-ui:message key="form-settings" />'
 				},
 				function(dialogWindow) {
 					var bodyNode = dialogWindow.bodyNode;

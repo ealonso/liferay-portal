@@ -494,101 +494,6 @@ public class StagingImpl implements Staging {
 		deleteRecentLayoutRevisionId(user.getUserId(), layoutSetBranchId, plid);
 	}
 
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#disableStaging(Group, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void disableStaging(
-			Group scopeGroup, Group liveGroup, ServiceContext serviceContext)
-		throws Exception {
-
-		disableStaging((PortletRequest)null, liveGroup, serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#disableStaging(Group, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void disableStaging(Group liveGroup, ServiceContext serviceContext)
-		throws Exception {
-
-		disableStaging((PortletRequest)null, liveGroup, serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#disableStaging(PortletRequest, Group,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void disableStaging(
-			PortletRequest portletRequest, Group scopeGroup, Group liveGroup,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		disableStaging(portletRequest, liveGroup, serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#disableStaging(PortletRequest, Group,
-	 *             ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void disableStaging(
-			PortletRequest portletRequest, Group liveGroup,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		_stagingLocalService.disableStaging(
-			portletRequest, liveGroup, serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#enableLocalStaging(long, Group, boolean,
-	 *             boolean, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void enableLocalStaging(
-			long userId, Group scopeGroup, Group liveGroup,
-			boolean branchingPublic, boolean branchingPrivate,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		_stagingLocalService.enableLocalStaging(
-			userId, liveGroup, branchingPublic, branchingPrivate,
-			serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             StagingLocalService#enableRemoteStaging(long, Group, boolean,
-	 *             boolean, String, int, String, boolean, long, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void enableRemoteStaging(
-			long userId, Group scopeGroup, Group liveGroup,
-			boolean branchingPublic, boolean branchingPrivate,
-			String remoteAddress, int remotePort, String remotePathContext,
-			boolean secureConnection, long remoteGroupId,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		_stagingLocalService.enableRemoteStaging(
-			userId, liveGroup, branchingPublic, branchingPrivate, remoteAddress,
-			remotePort, remotePathContext, secureConnection, remoteGroupId,
-			serviceContext);
-	}
-
 	@Override
 	public JSONArray getErrorMessagesJSONArray(
 		Locale locale, Map<String, MissingReference> missingReferences) {
@@ -2108,7 +2013,8 @@ public class StagingImpl implements Staging {
 	}
 
 	protected long getRecentLayoutBranchId(
-		long userId, long layoutSetBranchId, long plid) {
+			long userId, long layoutSetBranchId, long plid)
+		throws PortalException {
 
 		RecentLayoutBranch recentLayoutBranch =
 			_recentLayoutBranchLocalService.fetchRecentLayoutBranch(
@@ -2116,6 +2022,16 @@ public class StagingImpl implements Staging {
 
 		if (recentLayoutBranch != null) {
 			return recentLayoutBranch.getLayoutBranchId();
+		}
+
+		try {
+			LayoutBranch masterLayoutBranch =
+				_layoutBranchLocalService.getMasterLayoutBranch(
+					layoutSetBranchId, plid);
+
+			return masterLayoutBranch.getLayoutBranchId();
+		}
+		catch (NoSuchLayoutBranchException nslbe) {
 		}
 
 		return 0;
@@ -2676,24 +2592,21 @@ public class StagingImpl implements Staging {
 
 	private static final Log _log = LogFactoryUtil.getLog(StagingImpl.class);
 
-	private volatile ExportImportConfigurationLocalService
+	private ExportImportConfigurationLocalService
 		_exportImportConfigurationLocalService;
-	private volatile GroupLocalService _groupLocalService;
-	private volatile LayoutBranchLocalService _layoutBranchLocalService;
-	private volatile LayoutLocalService _layoutLocalService;
-	private volatile LayoutRevisionLocalService _layoutRevisionLocalService;
-	private volatile LayoutService _layoutService;
-	private volatile LayoutSetBranchLocalService _layoutSetBranchLocalService;
-	private volatile LockManager _lockManager;
-	private volatile RecentLayoutBranchLocalService
-		_recentLayoutBranchLocalService;
-	private volatile RecentLayoutRevisionLocalService
-		_recentLayoutRevisionLocalService;
-	private volatile RecentLayoutSetBranchLocalService
+	private GroupLocalService _groupLocalService;
+	private LayoutBranchLocalService _layoutBranchLocalService;
+	private LayoutLocalService _layoutLocalService;
+	private LayoutRevisionLocalService _layoutRevisionLocalService;
+	private LayoutService _layoutService;
+	private LayoutSetBranchLocalService _layoutSetBranchLocalService;
+	private LockManager _lockManager;
+	private RecentLayoutBranchLocalService _recentLayoutBranchLocalService;
+	private RecentLayoutRevisionLocalService _recentLayoutRevisionLocalService;
+	private RecentLayoutSetBranchLocalService
 		_recentLayoutSetBranchLocalService;
-	private volatile StagingLocalService _stagingLocalService;
-	private volatile UserLocalService _userLocalService;
-	private volatile WorkflowInstanceLinkLocalService
-		_workflowInstanceLinkLocalService;
+	private StagingLocalService _stagingLocalService;
+	private UserLocalService _userLocalService;
+	private WorkflowInstanceLinkLocalService _workflowInstanceLinkLocalService;
 
 }
