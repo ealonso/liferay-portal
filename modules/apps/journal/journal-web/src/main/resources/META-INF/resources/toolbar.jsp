@@ -21,6 +21,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 %>
 
 <liferay-frontend:management-bar
+	checkBoxDisabled="<%= journalDisplayContext.isDisabledManagementBar() %>"
 	includeCheckBox="<%= !user.isDefaultUser() && journalDisplayContext.isShowEditActions() %>"
 	searchContainerId="<%= searchContainerId %>"
 >
@@ -30,6 +31,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 		</c:if>
 
 		<liferay-frontend:management-bar-display-buttons
+			disabled="<%= journalDisplayContext.isDisabledManagementBar() %>"
 			displayViews="<%= journalDisplayContext.getDisplayViews() %>"
 			portletURL="<%= journalDisplayContext.getPortletURL() %>"
 			selectedDisplayStyle="<%= journalDisplayContext.getDisplayStyle() %>"

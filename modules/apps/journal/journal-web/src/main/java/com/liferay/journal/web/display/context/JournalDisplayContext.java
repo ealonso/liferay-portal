@@ -648,6 +648,18 @@ public class JournalDisplayContext {
 		return false;
 	}
 
+	public boolean isDisabledManagementBar() throws PortalException {
+		if (hasResults()) {
+			return false;
+		}
+
+		if (isSearch()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public boolean isNavigationHome() {
 		if (Validator.equals(getNavigation(), "all")) {
 			return true;
@@ -741,18 +753,6 @@ public class JournalDisplayContext {
 		}
 
 		return true;
-	}
-
-	public boolean isShowManagementBar() throws PortalException {
-		if (hasResults()) {
-			return true;
-		}
-
-		if (isSearch()) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public boolean isShowSearch() throws PortalException {
