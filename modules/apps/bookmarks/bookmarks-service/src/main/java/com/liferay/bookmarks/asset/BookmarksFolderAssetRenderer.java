@@ -80,17 +80,6 @@ public class BookmarksFolderAssetRenderer
 	}
 
 	@Override
-	public String getIconCssClass() throws PortalException {
-		if (BookmarksFolderServiceUtil.getFoldersAndEntriesCount(
-				_folder.getGroupId(), _folder.getFolderId()) > 0) {
-
-			return "icon-folder-open";
-		}
-
-		return super.getIconCssClass();
-	}
-
-	@Override
 	public String getJspPath(HttpServletRequest request, String template) {
 		if (template.equals(TEMPLATE_FULL_CONTENT)) {
 			return "/bookmarks/asset/folder_" + template + ".jsp";

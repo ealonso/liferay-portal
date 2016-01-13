@@ -79,18 +79,6 @@ public class JournalFolderAssetRenderer
 	}
 
 	@Override
-	public String getIconCssClass() throws PortalException {
-		if (JournalServiceConfigurationValues.JOURNAL_FOLDER_ICON_CHECK_COUNT &&
-			JournalFolderServiceUtil.getFoldersAndArticlesCount(
-				_folder.getGroupId(), _folder.getFolderId()) > 0) {
-
-			return "icon-folder-open";
-		}
-
-		return super.getIconCssClass();
-	}
-
-	@Override
 	public String getJspPath(HttpServletRequest request, String template) {
 		if (template.equals(TEMPLATE_FULL_CONTENT)) {
 			request.setAttribute(WebKeys.JOURNAL_FOLDER, _folder);

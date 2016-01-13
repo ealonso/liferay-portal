@@ -88,50 +88,6 @@ public class DLFolderAssetRenderer
 	}
 
 	@Override
-	public String getIconCssClass() throws PortalException {
-		try {
-			if (_folder.isMountPoint()) {
-				return "icon-hdd";
-			}
-
-			if (!PropsValues.DL_FOLDER_ICON_CHECK_COUNT) {
-				return "icon-folder-open";
-			}
-
-			List<Long> subfolderIds = DLAppServiceUtil.getSubfolderIds(
-				_folder.getRepositoryId(), _folder.getFolderId(), false);
-
-			if (!subfolderIds.isEmpty()) {
-				return "icon-folder-open";
-			}
-
-			int count = DLAppServiceUtil.getFoldersFileEntriesCount(
-				_folder.getRepositoryId(), Arrays.asList(_folder.getFolderId()),
-				WorkflowConstants.STATUS_APPROVED);
-
-			if (count > 0) {
-				return "icon-folder-open";
-			}
-		}
-		catch (PrincipalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(pe, pe);
-			}
-
-			return "icon-remove";
-		}
-		catch (RepositoryException re) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(re, re);
-			}
-
-			return "icon-remove";
-		}
-
-		return super.getIconCssClass();
-	}
-
-	@Override
 	public String getJspPath(HttpServletRequest request, String template) {
 		if (template.equals(TEMPLATE_ABSTRACT) ||
 			template.equals(TEMPLATE_FULL_CONTENT)) {
