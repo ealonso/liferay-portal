@@ -302,8 +302,13 @@ MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 								<%
 								PortletURL categoryURL = renderResponse.createRenderURL();
 
-								categoryURL.setParameter("mvcRenderCommandName", "/message_boards/view");
-								categoryURL.setParameter("mbCategoryId", String.valueOf(message.getCategoryId()));
+								if (message.getCategoryId() == MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID) {
+									categoryURL.setParameter("mvcRenderCommandName", "/message_boards/view");
+								}
+								else {
+									categoryURL.setParameter("mvcRenderCommandName", "/message_boards/view_category");
+									categoryURL.setParameter("mbCategoryId", String.valueOf(message.getCategoryId()));
+								}
 								%>
 
 								<portlet:actionURL name="/message_boards/edit_message" var="deleteURL">
@@ -419,8 +424,9 @@ MBThread thread = (MBThread)request.getAttribute("edit_message.jsp-thread");
 								%>
 
 								<liferay-ui:icon
-									iconCssClass="<%= assetRenderer.getIconCssClass() %>"
+									icon="<%= assetRenderer.getIconCssClass() %>"
 									label="<%= true %>"
+									markupView="lexicon"
 									message="<%= sb.toString() %>"
 									url="<%= PortletFileRepositoryUtil.getDownloadPortletFileEntryURL(themeDisplay, fileEntry, StringPool.BLANK) %>"
 								/>

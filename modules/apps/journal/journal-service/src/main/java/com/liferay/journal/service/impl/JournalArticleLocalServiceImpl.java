@@ -61,8 +61,8 @@ import com.liferay.journal.util.comparator.ArticleIDComparator;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.journal.util.impl.JournalUtil;
 import com.liferay.portal.LocaleException;
-import com.liferay.portal.NoSuchImageException;
-import com.liferay.portal.NoSuchLayoutException;
+import com.liferay.portal.exception.NoSuchImageException;
+import com.liferay.portal.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -128,6 +128,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.xml.Document;
@@ -152,7 +153,6 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.SubscriptionSender;
-import com.liferay.portal.webserver.WebServerServletTokenUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLink;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -5328,24 +5328,6 @@ public class JournalArticleLocalServiceImpl
 			userId, groupId, folderId, articleId, version,
 			article.getTitleMap(), article.getDescriptionMap(), content,
 			article.getLayoutUuid(), serviceContext);
-	}
-
-	/**
-	 * @deprecated As of 6.2.0, replaced by {@link
-	 *             #updateArticleTranslation(long, String, double, Locale,
-	 *             String, String, String, Map, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public JournalArticle updateArticleTranslation(
-			long groupId, String articleId, double version, Locale locale,
-			String title, String description, String content,
-			Map<String, byte[]> images)
-		throws PortalException {
-
-		return journalArticleLocalService.updateArticleTranslation(
-			groupId, articleId, version, locale, title, description, content,
-			images, null);
 	}
 
 	/**

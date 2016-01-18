@@ -107,8 +107,8 @@ public class JavaSourceTabCalculator {
 
 						tabLevel = calculateTabLevel(tabLevel, line);
 						calculateExtraTabs(
-							trimmedLine, lineCount, remainingContent,
-							forClause, ifClause);
+							trimmedLine, lineCount, remainingContent, forClause,
+							ifClause);
 					}
 				}
 				else if (line.endsWith("*/")) {
@@ -175,8 +175,8 @@ public class JavaSourceTabCalculator {
 	}
 
 	protected void calculateExtraTabs(
-		String line, int lineCount, String remainingContent,
-		boolean forClause, boolean ifClause) {
+		String line, int lineCount, String remainingContent, boolean forClause,
+		boolean ifClause) {
 
 		if (Validator.isNull(line)) {
 			return;
@@ -324,9 +324,8 @@ public class JavaSourceTabCalculator {
 				return;
 			}
 
-			if (line.startsWith("-(") || line.endsWith(".concat(") ||
-				line.endsWith("&") || line.endsWith("|") ||
-				(line.endsWith("+") && (extra > 2))) {
+			if (line.startsWith("-(") || line.endsWith("&") ||
+				line.endsWith("|") || (line.endsWith("+") && (extra > 2))) {
 
 				addIgnoreTabChecks(lineCount, extra);
 
@@ -337,6 +336,14 @@ public class JavaSourceTabCalculator {
 				if (s.contains(";\n")) {
 					addIgnoreTabChecks(lineCount, extra);
 				}
+
+				return;
+			}
+
+			if ((lineTabLevel == 0) && !line.startsWith(")") &&
+				line.endsWith("(")) {
+
+				addIgnoreTabChecks(lineCount, extra);
 
 				return;
 			}
@@ -398,7 +405,9 @@ public class JavaSourceTabCalculator {
 		}
 	}
 
-	protected Tuple getFirstOccurenceTuple(String s, String[] texts, int startIndex) {
+	protected Tuple getFirstOccurenceTuple(
+		String s, String[] texts, int startIndex) {
+
 		String matchingText = null;
 		int firstIndexOf = -1;
 
@@ -460,9 +469,13 @@ public class JavaSourceTabCalculator {
 			return false;
 		}
 
-		if ((line.endsWith("(") || line.endsWith("{")) &&
-			!line.endsWith(".concat(") && !forClause) {
+		if ((lineTabLevel == 0) && !line.startsWith(")") &&
+			line.endsWith("(")) {
 
+			return false;
+		}
+
+		if ((line.endsWith("(") || line.endsWith("{")) && !forClause) {
 			return true;
 		}
 

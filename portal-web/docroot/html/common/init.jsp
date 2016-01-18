@@ -29,7 +29,7 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page import="com.liferay.portal.NoSuchOrganizationException" %><%@
+<%@ page import="com.liferay.portal.exception.NoSuchOrganizationException" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanPropertiesUtil" %><%@
 page import="com.liferay.portal.kernel.cal.Recurrence" %><%@
@@ -121,6 +121,7 @@ page import="com.liferay.portal.kernel.util.UnicodeFormatter" %><%@
 page import="com.liferay.portal.kernel.util.UnicodeProperties" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil" %><%@
 page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %><%@
 page import="com.liferay.portal.layoutconfiguration.util.RuntimePageUtil" %><%@
 page import="com.liferay.portal.model.*" %><%@
@@ -152,7 +153,6 @@ page import="com.liferay.portal.util.ShutdownUtil" %><%@
 page import="com.liferay.portal.util.WebAppPool" %><%@
 page import="com.liferay.portal.util.comparator.PortletCategoryComparator" %><%@
 page import="com.liferay.portal.util.comparator.PortletTitleComparator" %><%@
-page import="com.liferay.portal.webserver.WebServerServletTokenUtil" %><%@
 page import="com.liferay.portlet.InvokerPortlet" %><%@
 page import="com.liferay.portlet.PortletConfigFactoryUtil" %><%@
 page import="com.liferay.portlet.PortletInstanceFactoryUtil" %><%@
@@ -187,8 +187,6 @@ page import="com.liferay.portlet.expando.model.ExpandoBridge" %><%@
 page import="com.liferay.portlet.exportimport.staging.LayoutStagingUtil" %><%@
 page import="com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil" %><%@
 page import="com.liferay.portlet.ratings.RatingsType" %><%@
-page import="com.liferay.portlet.sites.util.Sites" %><%@
-page import="com.liferay.portlet.sites.util.SitesUtil" %><%@
 page import="com.liferay.portlet.trash.model.TrashEntry" %><%@
 page import="com.liferay.portlet.trash.util.TrashUtil" %><%@
 page import="com.liferay.portlet.usergroupsadmin.search.UserGroupDisplayTerms" %><%@
@@ -200,12 +198,14 @@ page import="com.liferay.portlet.usersadmin.search.OrganizationSearchTerms" %><%
 page import="com.liferay.portlet.usersadmin.search.UserDisplayTerms" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearch" %><%@
 page import="com.liferay.portlet.usersadmin.search.UserSearchTerms" %><%@
-page import="com.liferay.portlet.usersadmin.util.UsersAdmin" %><%@
-page import="com.liferay.portlet.usersadmin.util.UsersAdminUtil" %><%@
+page import="com.liferay.sites.kernel.util.Sites" %><%@
+page import="com.liferay.sites.kernel.util.SitesUtil" %><%@
 page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.taglib.search.SearchEntry" %><%@
 page import="com.liferay.taglib.search.TextSearchEntry" %><%@
 page import="com.liferay.taglib.util.OutputTag" %><%@
+page import="com.liferay.users.admin.kernel.util.UsersAdmin" %><%@
+page import="com.liferay.users.admin.kernel.util.UsersAdminUtil" %><%@
 page import="com.liferay.util.Encryptor" %>
 
 <%@ page import="java.io.Serializable" %>

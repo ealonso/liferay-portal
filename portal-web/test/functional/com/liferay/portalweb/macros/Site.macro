@@ -143,12 +143,12 @@
 				<if>
 					<equals arg1="${siteLimitMembership}" arg2="Yes" />
 					<then>
-						<execute function="Check" locator1="SitesEditSite#PARENT_SITE_LIMIT_MEMBERSHIP_CHECKBOX" />
+						<execute function="Check#checkToggleSwitch" locator1="SitesEditSite#PARENT_SITE_LIMIT_MEMBERSHIP_CHECKBOX" />
 					</then>
 					<elseif>
 						<equals arg1="${siteLimitMembership}" arg2="No" />
 						<then>
-							<execute function="Uncheck" locator1="SitesEditSite#PARENT_SITE_LIMIT_MEMBERSHIP_CHECKBOX" />
+							<execute function="Uncheck#uncheckToggleSwitch" locator1="SitesEditSite#PARENT_SITE_LIMIT_MEMBERSHIP_CHECKBOX" />
 						</then>
 					</elseif>
 				</if>
@@ -336,7 +336,7 @@
 	</command>
 
 	<command name="assignDefaultSiteTeam">
-		<execute function="Click" locator1="SitesEditSite#MENU_ADVANCED_DEFAULT_USER_ASSOCIATIONS" />
+		<execute function="Click" locator1="SitesEditSite#MENU_ADVANCED_TAB" />
 
 		<execute function="AssertClick" locator1="SiteSettingsDefaultUserAssociations#TEAMS_SELECT" value1="Select" />
 		<execute function="SelectFrame" locator1="SiteSettingsDefaultUserAssociations#TEAMS_SELECT_IFRAME" />
@@ -347,7 +347,10 @@
 		<execute function="SelectFrame" value1="relative=top" />
 
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
 		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
+
+		<execute function="Click" locator1="SitesEditSite#MENU_ADVANCED_TAB" />
 
 		<execute function="AssertTextEquals" locator1="SiteSettingsDefaultUserAssociations#TEAMS_SELECTED" value1="${teamName}" />
 	</command>
@@ -448,8 +451,6 @@
 	</command>
 
 	<command name="assignUserSitesCP">
-		<execute function="AssertClick" locator1="NavTab#ALL_USERS" value1="All Users" />
-
 		<var name="key_userScreenName" value="${userScreenName}" />
 
 		<execute function="AssertTextEquals" locator1="UsersAndOrganizations#USER_TABLE_SCREEN_NAME" value1="${userScreenName}" />
@@ -575,7 +576,10 @@
 	</command>
 
 	<command name="editFriendlyURLCP">
-		<execute function="AssertClick" locator1="NavListItem#SITE_URL" value1="Site URL" />
+		<execute macro="Panel#expandPanel">
+			<var name="panelHeading" value="Site URL" />
+		</execute>
+
 		<execute function="AssertTextEquals" locator1="SiteSettingsSiteURL#SITE_URL_FRIENDLY_URL_LABEL" value1="Friendly URL" />
 
 		<execute function="Pause" locator1="5000" />
@@ -587,6 +591,9 @@
 			<equals arg1="${friendlyURLInvalid}" arg2="true" />
 			<then>
 				<execute function="AssertTextEquals" locator1="Message#ERROR" value1="Your request failed to complete." />
+
+				<execute function="AssertClick" locator1="SiteSettingsSiteURL#SITE_URL_LABEL" value1="Site URL" />
+
 				<execute function="AssertTextEquals" locator1="Message#ERROR_2" value1="The friendly URL has too many slashes." />
 				<execute function="AssertTextEquals" locator1="TextInput#FRIENDLY_URL" value1="${siteFriendlyURLEdit}" />
 			</then>
@@ -668,8 +675,11 @@
 	<command name="inactivateCP">
 		<execute function="AssertTextEquals" locator1="TextInput#NAME" value1="${siteName}" />
 		<execute function="AssertTextEquals" locator1="SitesEditSite#ACTIVE_LABEL" value1="Active" />
-		<execute function="Uncheck" locator1="Checkbox#ACTIVE" />
+
+		<execute function="Uncheck#uncheckToggleSwitch" locator1="Checkbox#ACTIVE" />
+
 		<execute function="AssertClick" locator1="Button#SAVE" value1="Save" />
+
 		<execute macro="Alert#viewRequestCompletedSuccessMessage" />
 	</command>
 
@@ -788,12 +798,12 @@
 		<if>
 			<equals arg1="${allowManualMembershipManagement}" arg2="true" />
 			<then>
-				<execute function="Check" locator1="Checkbox#ALLOW_MANUAL_MEMBERSHIP_MANAGEMENT" />
+				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ALLOW_MANUAL_MEMBERSHIP_MANAGEMENT" />
 			</then>
 			<elseif>
 				<equals arg1="${allowManualMembershipManagement}" arg2="false" />
 				<then>
-					<execute function="Uncheck" locator1="Checkbox#ALLOW_MANUAL_MEMBERSHIP_MANAGEMENT" />
+					<execute function="Uncheck#uncheckToggleSwitch" locator1="Checkbox#ALLOW_MANUAL_MEMBERSHIP_MANAGEMENT" />
 				</then>
 			</elseif>
 		</if>

@@ -74,13 +74,13 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.blogs.util.LinkbackProducerUtil;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
-import com.liferay.portlet.messageboards.DiscussionMaxCommentsException;
 import com.liferay.portlet.messageboards.MBGroupServiceSettings;
-import com.liferay.portlet.messageboards.MessageBodyException;
-import com.liferay.portlet.messageboards.MessageSubjectException;
-import com.liferay.portlet.messageboards.NoSuchThreadException;
-import com.liferay.portlet.messageboards.RequiredMessageException;
 import com.liferay.portlet.messageboards.constants.MBConstants;
+import com.liferay.portlet.messageboards.exception.DiscussionMaxCommentsException;
+import com.liferay.portlet.messageboards.exception.MessageBodyException;
+import com.liferay.portlet.messageboards.exception.MessageSubjectException;
+import com.liferay.portlet.messageboards.exception.NoSuchThreadException;
+import com.liferay.portlet.messageboards.exception.RequiredMessageException;
 import com.liferay.portlet.messageboards.model.MBCategory;
 import com.liferay.portlet.messageboards.model.MBCategoryConstants;
 import com.liferay.portlet.messageboards.model.MBDiscussion;
@@ -1181,8 +1181,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(
-	 *             long, long, int, boolean)}
+	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(long,
+	 *             long, int, boolean)}
 	 */
 	@Deprecated
 	@Override
@@ -1284,8 +1284,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(
-	 *             long, MBMessage, int, boolean)}
+	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(long,
+	 *             MBMessage, int, boolean)}
 	 */
 	@Deprecated
 	@Override
@@ -1300,8 +1300,8 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(
-	 *             long, MBMessage, int, boolean, Comparator)} (
+	 * @deprecated As of 7.0.0, replaced by {@link #getMessageDisplay(long,
+	 *             MBMessage, int, boolean, Comparator)} (
 	 */
 	@Deprecated
 	@Override
