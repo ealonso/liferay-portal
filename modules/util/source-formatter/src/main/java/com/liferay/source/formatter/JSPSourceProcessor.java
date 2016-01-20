@@ -598,6 +598,8 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 				String trimmedPreviousLine = StringUtil.trimLeading(
 					previousLine);
 
+				checkChaining(trimmedLine, fileName, lineCount);
+
 				checkStringBundler(trimmedLine, fileName, lineCount);
 
 				checkEmptyCollection(trimmedLine, fileName, lineCount);
@@ -996,8 +998,8 @@ public class JSPSourceProcessor extends BaseSourceProcessor {
 		String imports = matcher.group();
 
 		imports = StringUtil.replace(
-			imports, new String[] {"<%@\r\n", "<%@\n"},
-			new String[] {"\r\n<%@ ", "\n<%@ "});
+			imports, new String[] {"<%@\r\n", "<%@\n", " %><%@ "},
+			new String[] {"\r\n<%@ ", "\n<%@ ", " %>\n<%@ "});
 
 		if (checkUnusedImports) {
 			List<String> importLines = new ArrayList<>();

@@ -81,7 +81,7 @@ public class SiteSiteTemplateFormNavigatorEntry
 			publicLayoutSet = _layoutSetLocalService.getLayoutSet(
 				group.getGroupId(), false);
 		}
-		catch (PortalException e) {
+		catch (PortalException pe) {
 			return false;
 		}
 

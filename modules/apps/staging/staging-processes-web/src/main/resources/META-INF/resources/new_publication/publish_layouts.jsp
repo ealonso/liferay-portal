@@ -250,7 +250,7 @@ renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(r
 
 			<aui:fieldset-group markupView="lexicon">
 				<aui:fieldset>
-					<aui:input name="name" />
+					<aui:input name="name" placeholder="process-name-placeholder" />
 				</aui:fieldset>
 
 				<aui:fieldset collapsible="<%= true %>" cssClass="options-group" label="date">
@@ -275,7 +275,7 @@ renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(r
 				<liferay-staging:deletions cmd="<%= Constants.PUBLISH %>" />
 
 				<aui:fieldset collapsible="<%= true %>" cssClass="options-group" label="permissions">
-					<%@ include file="/new_publication/permissions.jspf" %>
+					<aui:input helpMessage='<%= group.isCompany() ? "publish-global-permissions-help" : "export-import-permissions-help" %>' label="permissions" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="toggle-switch" />
 				</aui:fieldset>
 
 				<c:if test="<%= !localPublishing %>">
@@ -289,7 +289,7 @@ renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(r
 		<aui:button-row>
 			<aui:button cssClass="btn-lg" id="addButton" onClick='<%= renderResponse.getNamespace() + "schedulePublishEvent();" %>' value="add-event" />
 
-			<aui:button cssClass="btn-lg" id="publishButton" type="submit" value="<%= publishMessageKey %>" />
+			<aui:button cssClass="btn-lg" id="publishButton" type="submit" value="<%= LanguageUtil.get(request, publishMessageKey) %>" />
 
 			<aui:button cssClass="btn-lg" href="<%= basePortletURL %>" type="reset" value="cancel" />
 		</aui:button-row>

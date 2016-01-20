@@ -240,6 +240,29 @@ public class ExportImportConfigurationLocalServiceImpl
 	}
 
 	@Override
+	public List<ExportImportConfiguration> getExportImportConfigurations(
+		long companyId, long groupId, String keywords, int type, int start,
+		int end,
+		OrderByComparator<ExportImportConfiguration> orderByComparator) {
+
+		return exportImportConfigurationFinder.findByKeywords(
+			companyId, groupId, keywords, type,
+			WorkflowConstants.STATUS_APPROVED, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<ExportImportConfiguration> getExportImportConfigurations(
+		long companyId, long groupId, String name, String description, int type,
+		boolean andSearch, int start, int end,
+		OrderByComparator<ExportImportConfiguration> orderByComparator) {
+
+		return exportImportConfigurationFinder.findByC_G_N_D_T(
+			companyId, groupId, name, description, type,
+			WorkflowConstants.STATUS_APPROVED, andSearch, start, end,
+			orderByComparator);
+	}
+
+	@Override
 	public int getExportImportConfigurationsCount(long groupId) {
 		return exportImportConfigurationPersistence.countByG_S(
 			groupId, WorkflowConstants.STATUS_APPROVED);
@@ -249,6 +272,25 @@ public class ExportImportConfigurationLocalServiceImpl
 	public int getExportImportConfigurationsCount(long groupId, int type) {
 		return exportImportConfigurationPersistence.countByG_T_S(
 			groupId, type, WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getExportImportConfigurationsCount(
+		long companyId, long groupId, String keywords, int type) {
+
+		return exportImportConfigurationFinder.countByKeywords(
+			companyId, groupId, keywords, type,
+			WorkflowConstants.STATUS_APPROVED);
+	}
+
+	@Override
+	public int getExportImportConfigurationsCount(
+		long companyId, long groupId, String name, String description, int type,
+		boolean andSearch) {
+
+		return exportImportConfigurationFinder.countByC_G_N_D_T(
+			companyId, groupId, name, description, type,
+			WorkflowConstants.STATUS_APPROVED, andSearch);
 	}
 
 	@Indexable(type = IndexableType.REINDEX)

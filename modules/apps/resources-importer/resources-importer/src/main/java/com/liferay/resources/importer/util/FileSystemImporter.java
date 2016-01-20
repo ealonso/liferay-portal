@@ -181,15 +181,15 @@ public class FileSystemImporter extends BaseImporter {
 					script, false, serviceContext);
 			}
 		}
-		catch (PortalException e) {
+		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
 					"Unable to import application display template " +
 						file.getName(),
-					e);
+					pe);
 			}
 
-			throw e;
+			throw pe;
 		}
 	}
 

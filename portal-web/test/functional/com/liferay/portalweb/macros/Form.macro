@@ -26,9 +26,15 @@
 	<command name="editName">
 		<var name="key_columnSize" value="${columnSize}" />
 
-		<execute function="AssertElementPresent#assertVisible" locator1="Form#ADD_FIRST_FIELD" />
+		<execute function="AssertVisible" locator1="Form#ADD_FIRST_FIELD" />
+		<execute function="AssertVisible" locator1="Form#NAME_FIELD" />
+		<execute function="AssertVisible" locator1="Form#DESCRIPTION_FIELD" />
 
-		<execute function="Type#typeAceEditor" locator1="Form#NAME_FIELD" value1="${formName}" />
+		<execute function="Pause" locator1="5000" />
+
+		<execute function="Click" locator1="Form#NAME_FIELD" />
+
+		<execute function="Type#typeAlloyEditor" locator1="AlloyEditor#NAME_FIELD" value1="${formName}" />
 	</command>
 
 	<command name="editPageDescription">

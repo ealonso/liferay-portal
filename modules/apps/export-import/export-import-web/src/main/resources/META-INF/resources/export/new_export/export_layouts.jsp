@@ -107,7 +107,7 @@ Map<String, String[]> parameterMap = Collections.emptyMap();
 			<div class="export-dialog-tree">
 				<aui:fieldset-group markupView="lexicon">
 					<aui:fieldset>
-						<aui:input name="name" />
+						<aui:input name="name" placeholder="process-name-placeholder" />
 					</aui:fieldset>
 
 					<c:if test="<%= !group.isLayoutPrototype() && !group.isCompany() %>">
@@ -130,7 +130,7 @@ Map<String, String[]> parameterMap = Collections.emptyMap();
 					<liferay-staging:content cmd="<%= Constants.EXPORT %>" parameterMap="<%= parameterMap %>" type="<%= Constants.EXPORT %>" />
 
 					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" cssClass="options-group" label="permissions">
-						<%@ include file="/permissions.jspf" %>
+						<aui:input helpMessage='<%= group.isCompany() ? "publish-global-permissions-help" : "export-import-permissions-help" %>' label="permissions" name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="toggle-switch" value="<%= MapUtil.getBoolean(parameterMap, PortletDataHandlerKeys.PERMISSIONS, false) %>" />
 					</aui:fieldset>
 				</aui:fieldset-group>
 			</div>
