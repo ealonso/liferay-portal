@@ -268,19 +268,16 @@ if (Validator.isNotNull(keywords)) {
 
 				<liferay-ui:search-container-column-text
 					name="type"
-					orderable="<%= true %>"
 					value="<%= ResourceActionsUtil.getModelResource(locale, entry.getClassName()) %>"
 				/>
 
 				<liferay-ui:search-container-column-date
 					name="removed-date"
-					orderable="<%= true %>"
 					value="<%= entry.getCreateDate() %>"
 				/>
 
 				<liferay-ui:search-container-column-text
 					name="removed-by"
-					orderable="<%= true %>"
 					value="<%= HtmlUtil.escape(entry.getUserName()) %>"
 				/>
 
