@@ -34,6 +34,8 @@ TeamDisplayTerms searchTerms = (TeamDisplayTerms)teamSearchContainer.getSearchTe
 int teamsCount = TeamServiceUtil.searchCount(scopeGroupId, searchTerms.getName(), searchTerms.getDescription(), new LinkedHashMap<String, Object>());
 
 teamSearchContainer.setTotal(teamsCount);
+
+teamSearchContainer.setSearch(Validator.isNotNull(searchTerms.getKeywords()));
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
@@ -41,7 +43,7 @@ teamSearchContainer.setTotal(teamsCount);
 		<aui:nav-item label="teams" selected="<%= true %>" />
 	</aui:nav>
 
-	<c:if test="<%= (teamsCount) > 0 || searchTerms.isSearch() %>">
+	<c:if test="<%= (teamsCount > 0) || searchTerms.isSearch() %>">
 		<aui:nav-bar-search>
 			<aui:form action="<%= portletURL.toString() %>" method="get" name="searchFm">
 				<liferay-portlet:renderURLParams varImpl="portletURL" />
