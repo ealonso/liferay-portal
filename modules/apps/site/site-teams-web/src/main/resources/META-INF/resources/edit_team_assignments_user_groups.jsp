@@ -43,45 +43,46 @@ List<UserGroup> userGroups = UserGroupLocalServiceUtil.search(company.getCompany
 
 userGroupSearchContainer.setResults(userGroups);
 
+userGroupSearchContainer.setSearch(Validator.isNotNull(searchTerms.getKeywords()));
+
 RowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
 %>
 
-<c:if test="<%= userGroupsCount > 0 %>">
-	<liferay-frontend:management-bar
-		includeCheckBox="<%= true %>"
-		searchContainerId="userGroups"
-	>
-		<liferay-frontend:management-bar-filters>
-			<liferay-frontend:management-bar-navigation
-				navigationKeys='<%= new String[] {"all"} %>'
-				portletURL="<%= portletURL %>"
-			/>
+<liferay-util:include page="/navigation_bar.jsp" servletContext="<%= application %>">
+	<liferay-util:param name="searchEnabled" value="<%= String.valueOf((userGroupsCount > 0) || searchTerms.isSearch()) %>" />
+</liferay-util:include>
 
-			<liferay-frontend:management-bar-sort
-				orderByCol="<%= orderByCol %>"
-				orderByType="<%= orderByType %>"
-				orderColumns='<%= new String[] {"name", "description"} %>'
-				portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
-			/>
-		</liferay-frontend:management-bar-filters>
+<liferay-frontend:management-bar
+	disabled="<%= userGroupsCount <= 0 %>"
+	includeCheckBox="<%= true %>"
+	searchContainerId="userGroups"
+>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= portletURL %>"
+		/>
 
-		<liferay-frontend:management-bar-buttons>
-			<liferay-frontend:management-bar-display-buttons
-				displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
-				portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
-				selectedDisplayStyle="<%= displayStyle %>"
-			/>
-		</liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"name", "description"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
 
-		<liferay-frontend:management-bar-action-buttons>
-			<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteUserGroups" label="delete" />
-		</liferay-frontend:management-bar-action-buttons>
-	</liferay-frontend:management-bar>
-</c:if>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
 
-<aui:button-row cssClass="text-center">
-	<aui:button cssClass="btn-lg btn-primary" id="addUserGroups" value="add-team-members" />
-</aui:button-row>
+	<liferay-frontend:management-bar-action-buttons>
+		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteUserGroups" label="delete" />
+	</liferay-frontend:management-bar-action-buttons>
+</liferay-frontend:management-bar>
 
 <portlet:actionURL name="deleteTeamUserGroups" var="deleteTeamUserGroupsURL" />
 
@@ -122,6 +123,10 @@ RowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="teamId" type="hidden" value="<%= String.valueOf(team.getTeamId()) %>" />
 </aui:form>
+
+<liferay-frontend:add-menu>
+	<liferay-frontend:add-menu-item id="addUserGroups" title='<%= LanguageUtil.get(request, "add-team-members") %>' url="javascript:;" />
+</liferay-frontend:add-menu>
 
 <aui:script use="liferay-item-selector-dialog">
 	var Util = Liferay.Util;

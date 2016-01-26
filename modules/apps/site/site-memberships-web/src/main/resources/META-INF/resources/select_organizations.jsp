@@ -45,10 +45,15 @@ organizationSearch.setTotal(organizationsCount);
 List<Organization> organizations = OrganizationLocalServiceUtil.search(company.getCompanyId(), parentOrganizationId, searchTerms.getKeywords(), searchTerms.getType(), searchTerms.getRegionIdObj(), searchTerms.getCountryIdObj(), organizationParams, organizationSearch.getStart(), organizationSearch.getEnd(), organizationSearch.getOrderByComparator());
 
 organizationSearch.setResults(organizations);
+
+organizationSearch.setSearch(Validator.isNotNull(searchTerms.getKeywords()));
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
-	<c:if test="<%= organizationsCount > 0 %>">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item label="organizations" selected="<%= true %>" />
+	</aui:nav>
+	<c:if test="<%= (organizationsCount > 0) || searchTerms.isSearch() %>">
 		<aui:nav-bar-search>
 			<aui:form action="<%= viewOrganizationsURL.toString() %>" name="searchFm">
 				<liferay-ui:input-search autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" markupView="lexicon" />
@@ -57,34 +62,33 @@ organizationSearch.setResults(organizations);
 	</c:if>
 </aui:nav-bar>
 
-<c:if test="<%= organizationsCount > 0 %>">
-	<liferay-frontend:management-bar
-		includeCheckBox="<%= true %>"
-		searchContainerId="organizations"
-	>
-		<liferay-frontend:management-bar-buttons>
-			<liferay-frontend:management-bar-display-buttons
-				displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
-				portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-				selectedDisplayStyle="<%= displayStyle %>"
-			/>
-		</liferay-frontend:management-bar-buttons>
+<liferay-frontend:management-bar
+	disabled="<%= organizationsCount <= 0 %>"
+	includeCheckBox="<%= true %>"
+	searchContainerId="organizations"
+>
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"icon", "descriptive", "list"} %>'
+			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
+			selectedDisplayStyle="<%= displayStyle %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
 
-		<liferay-frontend:management-bar-filters>
-			<liferay-frontend:management-bar-navigation
-				navigationKeys='<%= new String[] {"all"} %>'
-				portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-			/>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
+		/>
 
-			<liferay-frontend:management-bar-sort
-				orderByCol="<%= orderByCol %>"
-				orderByType="<%= orderByType %>"
-				orderColumns='<%= new String[] {"name", "type"} %>'
-				portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
-			/>
-		</liferay-frontend:management-bar-filters>
-	</liferay-frontend:management-bar>
-</c:if>
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= orderByCol %>"
+			orderByType="<%= orderByType %>"
+			orderColumns='<%= new String[] {"name", "type"} %>'
+			portletURL="<%= PortletURLUtil.clone(viewOrganizationsURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
 
 <aui:form cssClass="container-fluid-1280" name="fm">
 	<liferay-ui:search-container
