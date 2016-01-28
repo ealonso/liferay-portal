@@ -22,11 +22,13 @@ import java.util.List;
 public class ExportContext {
 
 	public ExportContext(
-		List<Long> companyIds, String outputDirName, String schemaName) {
+		List<Long> companyIds, String outputDirName, String schemaName,
+		boolean writeFile) {
 
 		_companyIds = companyIds;
 		_outputDirName = outputDirName;
 		_schemaName = schemaName;
+		_writeFile = writeFile;
 	}
 
 	public List<Long> getCompanyIds() {
@@ -41,8 +43,13 @@ public class ExportContext {
 		return _schemaName;
 	}
 
+	public boolean isWriteFile() {
+		return _writeFile;
+	}
+
 	private final List<Long> _companyIds;
 	private final String _outputDirName;
 	private final String _schemaName;
+	private final boolean _writeFile;
 
 }

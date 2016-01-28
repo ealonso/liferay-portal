@@ -29,47 +29,84 @@ import java.util.List;
  */
 public class ExportProcess {
 
-	public ExportProcess(DBProvider dbProvider) {
-		_dbProvider = dbProvider;
+	public ExportProcess(DBExporter dbExporter) {
+		_dbExporter = dbExporter;
 	}
 
 	public void export(ExportContext exportContext) throws IOException {
 		List<String> partitionedTableNames =
-			_dbProvider.getPartitionedTableNames(exportContext.getSchemaName());
-		List<String> controlTableNames = _dbProvider.getControlTableNames(
+			_dbExporter.getPartitionedTableNames(exportContext.getSchemaName());
+		List<String> controlTableNames = _dbExporter.getControlTableNames(
 			exportContext.getSchemaName());
 
 		List<Long> companyIds = exportContext.getCompanyIds();
 
 		for (Long companyId : companyIds) {
-			_exportCompany(companyId, partitionedTableNames, exportContext);
-			_exportCompany(companyId, controlTableNames, exportContext);
+			_exportCompany(
+				companyId, partitionedTableNames, exportContext, true);
+			_exportCompany(companyId, controlTableNames, exportContext, false);
 		}
 	}
 
 	private void _exportCompany(
 			long companyId, List<String> tableNames,
-			ExportContext exportContext)
+			ExportContext exportContext, boolean filterByCompanyId)
 		throws IOException {
 
 		String outputFileName =
-			exportContext.getSchemaName() + "-" + companyId + ".sql";
+			exportContext.getSchemaName() + "-" + companyId + "-";
+
+		if (filterByCompanyId) {
+			outputFileName += "partitioned";
+		}
+		else {
+			outputFileName += "control";
+		}
+
+		outputFileName += ".sql";
 
 		File outputFile = new File(
 			exportContext.getOutputDirName(), outputFileName);
 
-		OutputStream outputStream = new BufferedOutputStream(
-			new FileOutputStream(outputFile));
+		OutputStream outputStream = null;
 
-		for (String tableName : tableNames) {
-			_dbProvider.write(tableName, outputStream);
+		if (!exportContext.isWriteFile()) {
+			outputStream = new BufferedOutputStream(
+				new FileOutputStream(outputFile));
 		}
 
-		outputStream.flush();
+		for (String tableName : tableNames) {
+			if (exportContext.isWriteFile()) {
+				outputFileName =
+					exportContext.getSchemaName() + "-" + companyId +
+						"-table-" + tableName + ".sql";
 
-		outputStream.close();
+				outputFile = new File(
+					exportContext.getOutputDirName(), outputFileName);
+
+				outputStream = new BufferedOutputStream(
+					new FileOutputStream(outputFile));
+			}
+
+			if (filterByCompanyId) {
+				_dbExporter.write(companyId, tableName, outputStream);
+			}
+			else {
+				_dbExporter.write(tableName, outputStream);
+			}
+
+			outputStream.flush();
+
+			if (exportContext.isWriteFile()) {
+				outputStream.close();
+			}
+		}
+
+		if (!exportContext.isWriteFile()) {
+			outputStream.close();
+		}
 	}
 
-	private final DBProvider _dbProvider;
+	private final DBExporter _dbExporter;
 
 }
