@@ -20,7 +20,7 @@
 	</div>
 
 	<div class="card-section flex-item-expand flex-container">
-		<div class="flex-item-expand flex-item-center">
+		<div class="flex-item-expand">
 			<div class="theme-details">
 				<div class="theme-fields">
 
@@ -101,7 +101,7 @@ Map<String, ThemeSetting> configurableSettings = curTheme.getConfigurableSetting
 				value = selLayoutSet.getThemeSetting(name, device);
 			}
 
-			String propertyName = HtmlUtil.escapeAttribute(device + "ThemeSettingsProperties--" + name + StringPool.DOUBLE_DASH);
+			String propertyName = HtmlUtil.escapeAttribute(device + "ThemeSettingsProperties--" + name + curTheme.getThemeId() + StringPool.DOUBLE_DASH);
 		%>
 
 			<c:choose>
