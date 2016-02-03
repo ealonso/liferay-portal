@@ -25,8 +25,6 @@ List<ColorScheme> colorSchemes = (List<ColorScheme>)request.getAttribute("edit_p
 Theme selTheme = (Theme)request.getAttribute("edit_pages.jsp-selTheme");
 ColorScheme selColorScheme = (ColorScheme)request.getAttribute("edit_pages.jsp-selColorScheme");
 String device = (String)request.getAttribute("edit_pages.jsp-device");
-
-Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSettings();
 %>
 
 <div class="lfr-theme-list">

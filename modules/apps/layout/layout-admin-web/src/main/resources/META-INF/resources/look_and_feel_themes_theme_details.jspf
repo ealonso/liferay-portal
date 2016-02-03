@@ -80,6 +80,10 @@
 	</liferay-ui:panel>
 </c:if>
 
+<%
+Map<String, ThemeSetting> configurableSettings = curTheme.getConfigurableSettings();
+%>
+
 <c:if test="<%= !configurableSettings.isEmpty() %>">
 	<aui:fieldset>
 
