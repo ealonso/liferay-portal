@@ -31,55 +31,43 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 
 <div class="lfr-theme-list">
 	<div class="float-container lfr-current-theme" id="<%= device %>LookAndFeel">
-		<legend><liferay-ui:message key="current-theme" /></legend>
+		<h3><liferay-ui:message key="current-theme" /></h3>
 
-		<%@ include file="/look_and_feel_themes_theme_details.jspf" %>
+		<aui:select label="" name='<%= device + "ThemeId" %>'>
+
+			<%
+			for (Theme curTheme : themes) {
+			%>
+
+				<aui:option selected="<%= selTheme.getThemeId().equals(curTheme.getThemeId()) %>" label="<%= HtmlUtil.escape(curTheme.getName()) %>" value="<%= curTheme.getThemeId() %>" />
+
+			<%
+			}
+			%>
+
+		</aui:select>
+
+		<%
+		for (Theme curTheme : themes) {
+		%>
+
+			<div class="theme-details-<%= device %> <%= selTheme.getThemeId().equals(curTheme.getThemeId()) ? StringPool.BLANK : "hide" %>" id="<%= device  + curTheme.getThemeId() %>">
+				<%@ include file="/look_and_feel_themes_theme_details.jspf" %>
+			</div>
+
+		<%
+		}
+		%>
 	</div>
 
-	<div class="float-container lfr-available-themes" id="<%= device %>availableThemes">
-		<legend>
-			<span class="header-title">
-				<liferay-ui:message arguments="<%= themes.size() - 1 %>" key="available-themes-x" translateArguments="<%= false %>" />
-			</span>
+	<c:if test="<%= permissionChecker.isOmniadmin() && PortletLocalServiceUtil.hasPortlet(themeDisplay.getCompanyId(), PortletKeys.MARKETPLACE_STORE) && PrefsPropsUtil.getBoolean(PropsKeys.AUTO_DEPLOY_ENABLED, PropsValues.AUTO_DEPLOY_ENABLED) %>">
 
-			<c:if test="<%= permissionChecker.isOmniadmin() && PortletLocalServiceUtil.hasPortlet(themeDisplay.getCompanyId(), PortletKeys.MARKETPLACE_STORE) && PrefsPropsUtil.getBoolean(PropsKeys.AUTO_DEPLOY_ENABLED, PropsValues.AUTO_DEPLOY_ENABLED) %>">
+		<%
+		PortletURL marketplaceURL = PortalUtil.getControlPanelPortletURL(request, PortletKeys.MARKETPLACE_STORE, PortletRequest.RENDER_PHASE);
+		%>
 
-				<%
-				PortletURL marketplaceURL = PortalUtil.getControlPanelPortletURL(request, PortletKeys.MARKETPLACE_STORE, PortletRequest.RENDER_PHASE);
-				%>
-
-				<aui:button-row>
-					<aui:button cssClass="btn-lg manage-layout-set-branches-link" href="<%= marketplaceURL.toString() %>" id="installMore" value="install-more" />
-				</aui:button-row>
-			</c:if>
-		</legend>
-
-		<c:if test="<%= themes.size() > 1 %>">
-			<ul class="lfr-theme-list list-unstyled">
-
-				<%
-				for (int i = 0; i < themes.size(); i++) {
-					Theme curTheme = themes.get(i);
-
-					if (!selTheme.getThemeId().equals(curTheme.getThemeId())) {
-				%>
-
-						<li>
-							<div class="theme-entry">
-								<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectTheme('ThemeId<%= i %>', true);" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(curTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(curTheme.getImagesPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(curTheme.getName()) %>" />
-
-								<aui:input cssClass="theme-title" id='<%= device + "ThemeId" + i %>' label="<%= HtmlUtil.escape(curTheme.getName()) %>" name='<%= device + "ThemeId" %>' type="radio" value="<%= curTheme.getThemeId() %>" />
-							</div>
-						</li>
-
-				<%
-					}
-				}
-				%>
-
-			</ul>
-		</c:if>
-	</div>
+		<aui:button cssClass="btn-lg" href="<%= marketplaceURL.toString() %>" id="installMore" value="install-more" />
+	</c:if>
 </div>
 
 <aui:script sandbox="<%= true %>">
@@ -104,6 +92,15 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 			}
 		);
 	}
+
+	$('#<portlet:namespace /><%= device %>ThemeId').on(
+		'change',
+		function(event) {
+			$('#<%= device %>LookAndFeel').find('.theme-details-<%= device %>').addClass('hide');
+
+			$('#<%= device%>' + $(event.currentTarget).val()).removeClass('hide');
+		}
+	);
 </aui:script>
 
 <aui:script>

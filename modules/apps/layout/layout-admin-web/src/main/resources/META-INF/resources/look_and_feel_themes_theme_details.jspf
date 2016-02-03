@@ -14,36 +14,38 @@
  */
 --%>
 
-<div>
-	<img alt="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" class="img-thumbnail theme-screenshot" onclick="<portlet:namespace /><%= device %>selectTheme('SelTheme', false);" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(selTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(selTheme.getImagesPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" />
+<div class="card flex-container">
+	<div class="figure">
+		<img alt="<%= HtmlUtil.escapeAttribute(curTheme.getName()) %>" class="img-thumbnail theme-screenshot" onclick="<portlet:namespace /><%= device %>selectTheme('SelTheme', false);" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(curTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(curTheme.getImagesPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(curTheme.getName()) %>" />
+	</div>
 
-	<div class="theme-details">
-		<aui:input checked="<%= true %>" cssClass="selected-theme theme-title" id='<%= device + "SelTheme" %>' label="<%= HtmlUtil.escape(selTheme.getName()) %>" name='<%= device + "ThemeId" %>' type="radio" value="<%= selTheme.getThemeId() %>" />
+	<div class="card-section flex-item-expand flex-container">
+		<div class="flex-item-expand flex-item-center">
+			<div class="theme-details">
+				<div class="theme-fields">
 
-		<dl class="theme-fields">
+					<%
+					PluginPackage selPluginPackage = curTheme.getPluginPackage();
+					%>
 
-			<%
-			PluginPackage selPluginPackage = selTheme.getPluginPackage();
-			%>
+					<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getShortDescription()) %>">
+						<h5><liferay-ui:message key="description" /></h5>
 
-			<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getShortDescription()) %>">
-				<dt>
-					<liferay-ui:message key="description" />
-				</dt>
-				<dd>
-					<%= HtmlUtil.escape(selPluginPackage.getShortDescription()) %>
-				</dd>
-			</c:if>
+						<h6 class="text-default">
+							<%= HtmlUtil.escape(selPluginPackage.getShortDescription()) %>
+						</h6>
+					</c:if>
 
-			<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getAuthor()) %>">
-				<dt>
-					<liferay-ui:message key="author" />
-				</dt>
-				<dd>
-					<a href="<%= HtmlUtil.escapeHREF(selPluginPackage.getPageURL()) %>"><%= HtmlUtil.escape(selPluginPackage.getAuthor()) %></a>
-				</dd>
-			</c:if>
-		</dl>
+					<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getAuthor()) %>">
+						<h5><liferay-ui:message key="author" /></h5>
+
+						<h6 class="text-default">
+							<a href="<%= HtmlUtil.escapeHREF(selPluginPackage.getPageURL()) %>"><%= HtmlUtil.escape(selPluginPackage.getAuthor()) %></a>
+						</h6>
+					</c:if>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -64,7 +66,7 @@
 				%>
 
 				<div class="<%= cssClass %> theme-entry">
-					<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectColorScheme('#<portlet:namespace /><%= device %>ColorSchemeId<%= i %>');" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(selTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(curColorScheme.getColorSchemeThumbnailPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(curColorScheme.getName()) %>" />
+					<img alt="" class="modify-link theme-thumbnail" onclick="<portlet:namespace /><%= device %>selectColorScheme('#<portlet:namespace /><%= device %>ColorSchemeId<%= i %>');" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(curTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(curColorScheme.getColorSchemeThumbnailPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(curColorScheme.getName()) %>" />
 
 					<aui:input checked="<%= selColorScheme.getColorSchemeId().equals(curColorScheme.getColorSchemeId()) %>" cssClass="theme-title" id='<%= device + "ColorSchemeId" + i %>' label="<%= HtmlUtil.escape(curColorScheme.getName()) %>" name='<%= device + "ColorSchemeId" %>' type="radio" value="<%= curColorScheme.getColorSchemeId() %>" />
 				</div>
@@ -79,57 +81,58 @@
 </c:if>
 
 <c:if test="<%= !configurableSettings.isEmpty() %>">
-	<liferay-ui:panel collapsible="<%= true %>" extended="<%= false %>" id='<%= device + "layoutsAdminLookAndFeelSettingsPanel" %>' persistState="<%= true %>" title="settings">
-		<aui:fieldset>
+	<aui:fieldset>
 
-			<%
-			for (String name : configurableSettings.keySet()) {
-				ThemeSetting themeSetting = configurableSettings.get(name);
+		<%
+		for (String name : configurableSettings.keySet()) {
+			ThemeSetting themeSetting = configurableSettings.get(name);
 
-				String type = GetterUtil.getString(themeSetting.getType(), "text");
-				String value = StringPool.BLANK;
+			String type = GetterUtil.getString(themeSetting.getType(), "text");
+			String value = StringPool.BLANK;
 
-				if (selLayout != null) {
-					value = selLayout.getThemeSetting(name, device);
-				}
-				else {
-					value = selLayoutSet.getThemeSetting(name, device);
-				}
-
-				String propertyName = HtmlUtil.escapeAttribute(device + "ThemeSettingsProperties--" + name + StringPool.DOUBLE_DASH);
-			%>
-
-				<c:choose>
-					<c:when test='<%= type.equals("checkbox") || type.equals("text") || type.equals("textarea") %>'>
-						<aui:input label="<%= HtmlUtil.escape(name) %>" name="<%= propertyName %>" type="<%= type %>" value="<%= value %>" />
-					</c:when>
-					<c:when test='<%= type.equals("select") %>'>
-						<aui:select label="<%= HtmlUtil.escape(name) %>" name="<%= propertyName %>">
-
-							<%
-							for (String option : themeSetting.getOptions()) {
-							%>
-
-								<aui:option label="<%= HtmlUtil.escape(option) %>" selected="<%= option.equals(value) %>" />
-
-							<%
-							}
-							%>
-
-						</aui:select>
-					</c:when>
-				</c:choose>
-
-				<c:if test="<%= Validator.isNotNull(themeSetting.getScript()) %>">
-					<aui:script position="inline">
-						<%= StringUtil.replace(themeSetting.getScript(), "[@NAMESPACE@]", liferayPortletResponse.getNamespace()) %>
-					</aui:script>
-				</c:if>
-
-			<%
+			if (selLayout != null) {
+				value = selLayout.getThemeSetting(name, device);
 			}
-			%>
+			else {
+				value = selLayoutSet.getThemeSetting(name, device);
+			}
 
-		</aui:fieldset>
-	</liferay-ui:panel>
+			String propertyName = HtmlUtil.escapeAttribute(device + "ThemeSettingsProperties--" + name + StringPool.DOUBLE_DASH);
+		%>
+
+			<c:choose>
+				<c:when test='<%= type.equals("text") || type.equals("textarea") %>'>
+					<aui:input label="<%= HtmlUtil.escape(name) %>" name="<%= propertyName %>" type="<%= type %>" value="<%= value %>" />
+				</c:when>
+				<c:when test='<%= type.equals("checkbox") %>'>
+					<aui:input label="<%= HtmlUtil.escape(name) %>" name="<%= propertyName %>" type="toggle-switch" value="<%= value %>" />
+				</c:when>
+				<c:when test='<%= type.equals("select") %>'>
+					<aui:select label="<%= HtmlUtil.escape(name) %>" name="<%= propertyName %>">
+
+						<%
+						for (String option : themeSetting.getOptions()) {
+						%>
+
+							<aui:option label="<%= HtmlUtil.escape(option) %>" selected="<%= option.equals(value) %>" />
+
+						<%
+						}
+						%>
+
+					</aui:select>
+				</c:when>
+			</c:choose>
+
+			<c:if test="<%= Validator.isNotNull(themeSetting.getScript()) %>">
+				<aui:script position="inline">
+					<%= StringUtil.replace(themeSetting.getScript(), "[@NAMESPACE@]", liferayPortletResponse.getNamespace()) %>
+				</aui:script>
+			</c:if>
+
+		<%
+		}
+		%>
+
+	</aui:fieldset>
 </c:if>
