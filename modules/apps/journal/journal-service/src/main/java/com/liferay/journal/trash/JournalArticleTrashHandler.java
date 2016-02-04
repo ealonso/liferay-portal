@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.service.permission.JournalArticlePermission;
@@ -33,8 +34,11 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.ContainerModel;
 import com.liferay.portal.model.TrashedModel;
 import com.liferay.portal.service.ServiceContext;
@@ -45,6 +49,7 @@ import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashEntryConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
@@ -166,6 +171,31 @@ public class JournalArticleTrashHandler extends JournalBaseTrashHandler {
 			classPK);
 
 		return article.getTrashEntry();
+	}
+
+	@Override
+	public List<TrashRenderer> getTrashModelTrashRenderers(
+			long classPK, int start, int end, OrderByComparator obc)
+		throws PortalException {
+
+		List<TrashRenderer> trashRenderers = new ArrayList<>();
+
+		JournalArticle article =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				classPK, WorkflowConstants.STATUS_IN_TRASH);
+
+		if (article != null) {
+			TrashHandler trashHandler =
+				TrashHandlerRegistryUtil.getTrashHandler(
+					JournalArticle.class.getName());
+
+			TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
+				article.getResourcePrimKey());
+
+			trashRenderers.add(trashRenderer);
+		}
+
+		return trashRenderers;
 	}
 
 	@Override
