@@ -29,67 +29,70 @@ if (selLayout != null) {
 }
 
 Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSettings();
+
+PluginPackage selPluginPackage = selTheme.getPluginPackage();
 %>
 
-<div class="lfr-theme-list">
-	<div class="float-container lfr-current-theme" id="LookAndFeel">
-		<h3><liferay-ui:message key="current-theme" /></h3>
+<h5 class="text-default"><liferay-ui:message key="current-theme" /></h5>
 
-		<div class="selected-theme theme-title"><%= HtmlUtil.escape(selTheme.getName()) %></div>
-
+<div class="card-horizontal main-content-card">
+	<div class="card-row card-row-padded">
 		<aui:row>
-			<aui:col span="<%= 3 %>">
-				<img alt="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" class="img-thumbnail theme-screenshot" onclick="<portlet:namespace />regularselectTheme('SelTheme', false);" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(selTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(selTheme.getImagesPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" />
+			<aui:col span="<%= 2 %>">
+				<img alt="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" class="img-thumbnail theme-screenshot" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(selTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(selTheme.getImagesPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(selTheme.getName()) %>" />
 			</aui:col>
 
-			<aui:col span="<%= 9 %>">
-				<div class="theme-details">
-					<div class="theme-fields">
+			<aui:col span="<%= 10 %>">
+				<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getName()) %>">
+					<h4><liferay-ui:message key="name" /></h4>
 
-						<%
-						PluginPackage selPluginPackage = selTheme.getPluginPackage();
-						%>
+					<p class="text-default">
+						<%= HtmlUtil.escape(selPluginPackage.getName()) %>
+					</p>
+				</c:if>
 
-						<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getShortDescription()) %>">
-							<h4><liferay-ui:message key="description" /></h4>
+				<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getAuthor()) %>">
+					<h4><liferay-ui:message key="author" /></h4>
 
-							<p class="text-default">
-								<%= HtmlUtil.escape(selPluginPackage.getShortDescription()) %>
-							</p>
-						</c:if>
+					<p class="text-default">
+						<a href="<%= HtmlUtil.escapeHREF(selPluginPackage.getPageURL()) %>"><%= HtmlUtil.escape(selPluginPackage.getAuthor()) %></a>
+					</p>
+				</c:if>
 
-						<%
-						List<ColorScheme> colorSchemes = selTheme.getColorSchemes();
-						%>
-
-						<c:if test="<%= !colorSchemes.isEmpty() && Validator.isNotNull(selColorScheme) %>">
-							<h4 class="current-color-scheme"><liferay-ui:message key="color-scheme" /></h4>
-
-							<p class="text-default">
-								<%= HtmlUtil.escape(selColorScheme.getName()) %>
-							</p>
-						</c:if>
-
-						<c:if test="<%= !configurableSettings.isEmpty() %>">
-
-							<%
-							for (String name : configurableSettings.keySet()) {
-							%>
-
-								<h4 class="theme-setting"><liferay-ui:message key="<%= HtmlUtil.escape(name) %>" /></h4>
-
-								<p class="text-default">
-									<%= HtmlUtil.escape(selLayoutSet.getThemeSetting(name, "regular")) %>
-								</p>
-
-							<%
-							}
-							%>
-
-						</c:if>
-					</div>
-				</div>
 			</aui:col>
 		</aui:row>
+
+		<c:if test="<%= (selPluginPackage != null) && Validator.isNotNull(selPluginPackage.getShortDescription()) %>">
+			<h4><liferay-ui:message key="description" /></h4>
+
+			<p class="text-default">
+				<%= HtmlUtil.escape(selPluginPackage.getShortDescription()) %>
+			</p>
+		</c:if>
+
+		<%
+		List<ColorScheme> colorSchemes = selTheme.getColorSchemes();
+		%>
+
+		<c:if test="<%= !colorSchemes.isEmpty() && Validator.isNotNull(selColorScheme) %>">
+			<h4><liferay-ui:message key="color-scheme" /></h4>
+
+			<img alt="" class="img-thumbnail theme-screenshot" src="<%= themeDisplay.getCDNBaseURL() %><%= HtmlUtil.escapeAttribute(selTheme.getStaticResourcePath()) %><%= HtmlUtil.escapeAttribute(selColorScheme.getColorSchemeThumbnailPath()) %>/thumbnail.png" title="<%= HtmlUtil.escapeAttribute(selColorScheme.getName()) %>" />
+		</c:if>
+
+		<c:if test="<%= !configurableSettings.isEmpty() %>">
+			<h4><liferay-ui:message key="settings" /></h4>
+
+			<%
+			for (String name : configurableSettings.keySet()) {
+			%>
+
+				<p class="text-default"><liferay-ui:message key="<%= HtmlUtil.escape(name) %>" />: <%= HtmlUtil.escape(selLayoutSet.getThemeSetting(name, "regular")) %></p>
+
+			<%
+			}
+			%>
+
+		</c:if>
 	</div>
 </div>
