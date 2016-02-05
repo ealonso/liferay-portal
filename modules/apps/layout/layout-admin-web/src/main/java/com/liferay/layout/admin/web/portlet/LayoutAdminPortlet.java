@@ -884,11 +884,14 @@ public class LayoutAdminPortlet extends MVCPortlet {
 				groupId, privateLayout, layoutId);
 		}
 
+		String deviceThemeId = ParamUtil.getString(
+			actionRequest, device + "ThemeId");
+
 		for (String key : themeSettings.keySet()) {
 			ThemeSetting themeSetting = themeSettings.get(key);
 
 			String property =
-				device + "ThemeSettingsProperties--" + key +
+				device + "ThemeSettingsProperties--" + key + deviceThemeId +
 					StringPool.DOUBLE_DASH;
 
 			String value = ParamUtil.getString(
