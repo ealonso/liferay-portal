@@ -14,20 +14,10 @@
  */
 --%>
 
+<%@ include file="/init.jsp" %>
+
 <%
-List<Theme> themes = ThemeLocalServiceUtil.getPageThemes(company.getCompanyId(), liveGroupId, user.getUserId());
-List<ColorScheme> colorSchemes = selTheme.getColorSchemes();
-
-request.setAttribute("edit_pages.jsp-themes", themes);
-request.setAttribute("edit_pages.jsp-colorSchemes", colorSchemes);
-request.setAttribute("edit_pages.jsp-selTheme", selTheme);
-request.setAttribute("edit_pages.jsp-selColorScheme", selColorScheme);
-request.setAttribute("edit_pages.jsp-device", "regular");
-request.setAttribute("edit_pages.jsp-editable", true);
+LayoutSet layoutSet = layoutsAdminDisplayContext.getSelLayoutSet();
 %>
-
-<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
-
-<legend><liferay-ui:message key="css" /></legend>
 
 <aui:input label="insert-custom-css-that-is-loaded-after-the-theme" name="regularCss" type="textarea" value="<%= layoutSet.getCss() %>" />
