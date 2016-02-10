@@ -31,7 +31,7 @@ if (selLayout.isSupportsEmbeddedPortlets()) {
 	embeddedPortlets = selLayoutTypePortlet.getEmbeddedPortlets();
 }
 
-PortletTitleComparator portletTitleComparator = new PortletTitleComparator(application, locale);
+PortletTitleComparator portletTitleComparator = new PortletTitleComparator(application, locale, orderByType.equals("asc"));
 
 embeddedPortlets = ListUtil.sort(embeddedPortlets, portletTitleComparator);
 
