@@ -62,6 +62,8 @@ portletDisplay.setShowBackIcon(containerModel != null);
 portletDisplay.setURLBack(backURL);
 
 renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelName));
+
+request.setAttribute(WebKeys.SINGLE_PAGE_APPLICATION_CLEAR_CACHE, true);
 %>
 
 <div class="alert alert-block">
@@ -108,6 +110,8 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelN
 			<%
 			long curContainerModelId = curContainerModel.getContainerModelId();
 
+			long curParentContainerModelId = curContainerModel.getParentContainerModelId();
+
 			containerURL.setParameter("containerModelId", String.valueOf(curContainerModelId));
 
 			TrashHandler curContainerTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(curContainerModel.getModelClassName());
@@ -133,7 +137,7 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", containerModelN
 
 			<liferay-ui:search-container-column-text
 				name='<%= LanguageUtil.format(request, "num-of-x", containerModelName) %>'
-				value="<%= String.valueOf(curContainerTrashHandler.getContainerModelsCount(classPK, curContainerModelId)) %>"
+				value="<%= String.valueOf(curContainerTrashHandler.getContainerModelsCount(curContainerModelId, curParentContainerModelId)) %>"
 			/>
 
 			<liferay-ui:search-container-column-text>
