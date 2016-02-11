@@ -57,10 +57,6 @@ public class JournalPermissionsFormNavigatorEntry
 			return false;
 		}
 
-		if ((article != null) && (article.getId() > 0)) {
-			return false;
-		}
-
 		return true;
 	}
 
