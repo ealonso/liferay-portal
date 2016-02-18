@@ -28,9 +28,9 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 <c:choose>
 	<c:when test="<%= group.isLayout() %>">
-		<div class="alert alert-info">
+		<p class="text-muted">
 			<liferay-ui:message key="the-display-page-cannot-be-set-when-the-scope-of-the-web-content-is-a-page" />
-		</div>
+		</p>
 	</c:when>
 	<c:otherwise>
 
@@ -59,15 +59,13 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 				}
 			}
 		}
-
-		Group parentGroup = themeDisplay.getSiteGroup();
 		%>
 
 		<liferay-ui:error-marker key="<%= WebKeys.ERROR_SECTION %>" value="display-page" />
 
-		<div class="alert alert-info">
+		<p class="text-muted">
 			<liferay-ui:message key="default-display-page-help" />
-		</div>
+		</p>
 
 		<div id="<portlet:namespace />pagesContainer">
 			<aui:input id="pagesContainerInput" ignoreRequestValue="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />

@@ -550,8 +550,6 @@ public class PropsValues {
 
 	public static String DL_WEBDAV_SUBSTITUTION_CHAR = PropsUtil.get(PropsKeys.DL_WEBDAV_SUBSTITUTION_CHAR);
 
-	public static String[] DOCKBAR_ADD_PORTLETS = PropsUtil.getArray(PropsKeys.DOCKBAR_ADD_PORTLETS);
-
 	public static final String[] DYNAMIC_RESOURCE_SERVLET_ALLOWED_PATHS = PropsUtil.getArray(PropsKeys.DYNAMIC_RESOURCE_SERVLET_ALLOWED_PATHS);
 
 	public static final String EDITOR_WYSIWYG_DEFAULT = PropsUtil.get(PropsKeys.EDITOR_WYSIWYG_DEFAULT);
@@ -1292,7 +1290,11 @@ public class PropsValues {
 
 	public static final int SEARCH_CONTAINER_PAGE_DEFAULT_DELTA = GetterUtil.getInteger(PropsUtil.get(PropsKeys.SEARCH_CONTAINER_PAGE_DEFAULT_DELTA), 20);
 
+	public static final int SEARCH_CONTAINER_PAGE_DEFAULT_ICON_DELTA = GetterUtil.getInteger(PropsUtil.get(PropsKeys.SEARCH_CONTAINER_PAGE_DEFAULT_ICON_DELTA), 12);
+
 	public static final int[] SEARCH_CONTAINER_PAGE_DELTA_VALUES = GetterUtil.getIntegerValues(PropsUtil.getArray(PropsKeys.SEARCH_CONTAINER_PAGE_DELTA_VALUES));
+
+	public static final int[] SEARCH_CONTAINER_PAGE_DELTA_ICON_VALUES = GetterUtil.getIntegerValues(PropsUtil.getArray(PropsKeys.SEARCH_CONTAINER_PAGE_DELTA_ICON_VALUES));
 
 	public static final int SEARCH_CONTAINER_PAGE_ITERATOR_MAX_PAGES = GetterUtil.getInteger(PropsUtil.get(PropsKeys.SEARCH_CONTAINER_PAGE_ITERATOR_MAX_PAGES));
 
