@@ -109,7 +109,3 @@ JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 		<liferay-ui:search-iterator markupView="lexicon" />
 	</liferay-ui:search-container>
 </aui:form>
-
-<aui:script>
-	Liferay.Util.selectEntityHandler('#<portlet:namespace />selectFolderFm', '<%= HtmlUtil.escapeJS(eventName) %>');
-</aui:script>
