@@ -36,12 +36,14 @@ for (String displayStyle : defaultViews) {
 	else if (displayStyle.equals("icon")) {
 		icon = "cards2";
 	}
+
+	boolean disabledButton = disabled || !ArrayUtil.contains(displayViews, displayStyle);
 %>
 
 	<liferay-frontend:management-bar-button
 		active="<%= displayStyle.equals(selectedDisplayStyle) %>"
-		disabled="<%= disabled || !ArrayUtil.contains(displayViews, displayStyle) %>"
-		href="<%= displayStyleURL.toString() %>"
+		disabled="<%= disabledButton %>"
+		href='<%= (disabledButton) ? "javascript:;" : displayStyleURL.toString() %>'
 		icon="<%= icon %>"
 		label="<%= displayStyle %>"
 	/>
