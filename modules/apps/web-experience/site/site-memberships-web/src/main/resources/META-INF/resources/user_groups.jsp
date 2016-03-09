@@ -151,7 +151,7 @@ userGroupSearch.setResults(userGroups);
 		}
 	);
 
-	form.on(
+	$('body').on(
 		'click',
 		'.assign-site-roles a',
 		function(event) {
