@@ -36,6 +36,12 @@ portletURL.setParameter("roleType", String.valueOf(roleType));
 
 RoleSearch roleSearch = new RoleSearch(renderRequest, portletURL);
 
+EmptyOnClickRowChecker rowChecker = new EmptyOnClickRowChecker(renderResponse);
+
+rowChecker.setMultipleRowChecker(false);
+
+roleSearch.setRowChecker(rowChecker);
+
 RoleSearchTerms searchTerms = (RoleSearchTerms)roleSearch.getSearchTerms();
 
 List<Role> roles = RoleLocalServiceUtil.search(company.getCompanyId(), searchTerms.getKeywords(), new Integer[] {roleType}, QueryUtil.ALL_POS, QueryUtil.ALL_POS, roleSearch.getOrderByComparator());
