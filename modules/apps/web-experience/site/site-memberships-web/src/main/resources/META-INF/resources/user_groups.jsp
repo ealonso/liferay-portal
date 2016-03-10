@@ -177,6 +177,7 @@ userGroupSearch.setResults(userGroups);
 							}
 						}
 					},
+					'strings.add': '<liferay-ui:message key="done" />',
 					title: '<liferay-ui:message key="assign-site-roles" />',
 					url: currentTarget.data('href')
 				}
@@ -207,6 +208,7 @@ userGroupSearch.setResults(userGroups);
 							}
 						}
 					},
+					'strings.add': '<liferay-ui:message key="done" />',
 					title: '<liferay-ui:message key="assign-user-groups-to-this-site" />',
 					url: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/select_user_groups.jsp" /></portlet:renderURL>'
 				}

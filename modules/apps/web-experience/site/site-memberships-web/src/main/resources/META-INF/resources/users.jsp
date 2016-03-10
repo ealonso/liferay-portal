@@ -182,6 +182,7 @@ userSearch.setResults(users);
 							}
 						}
 					},
+					'strings.add': '<liferay-ui:message key="done" />',
 					title: '<liferay-ui:message key="assign-site-roles" />',
 					url: currentTarget.data('href')
 				}
@@ -212,6 +213,7 @@ userSearch.setResults(users);
 							}
 						}
 					},
+					'strings.add': '<liferay-ui:message key="done" />',
 					title: '<liferay-ui:message key="assign-users-to-this-site" />',
 					url: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/select_users.jsp" /></portlet:renderURL>'
 				}
