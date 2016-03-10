@@ -133,6 +133,10 @@ public class RowChecker {
 		return false;
 	}
 
+	public boolean isMultipleRowChecker() {
+		return _multipleRowChecker;
+	}
+
 	public boolean isRememberCheckBoxState() {
 		return _rememberCheckBoxState;
 	}
@@ -159,6 +163,10 @@ public class RowChecker {
 
 	public void setFormName(String formName) {
 		_formName = getNamespacedValue(formName);
+	}
+
+	public void setMultipleRowChecker(boolean multipleRowChecker) {
+		_multipleRowChecker = multipleRowChecker;
 	}
 
 	public void setRememberCheckBoxState(boolean rememberCheckBoxState) {
@@ -305,6 +313,7 @@ public class RowChecker {
 	private String _cssClass = CSS_CLASS;
 	private Map<String, Object> _data;
 	private String _formName;
+	private boolean _multipleRowChecker = true;
 	private final PortletResponse _portletResponse;
 	private boolean _rememberCheckBoxState = true;
 	private String _rememberCheckBoxStateURLRegex;
