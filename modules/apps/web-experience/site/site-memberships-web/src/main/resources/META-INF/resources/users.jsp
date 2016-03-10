@@ -82,6 +82,10 @@ userSearch.setResults(users);
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-action-buttons>
+		<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ASSIGN_USER_ROLES) %>">
+			<liferay-frontend:management-bar-button href="javascript:;" icon="users" id="selectSiteRole" label="assign-site-roles" />
+		</c:if>
+
 		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedUsers" label="delete" />
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
@@ -146,6 +150,35 @@ userSearch.setResults(users);
 	var Util = Liferay.Util;
 
 	var form = $(document.<portlet:namespace />fm);
+
+	<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ASSIGN_USER_ROLES) %>">
+		<portlet:renderURL var="selectSiteRoleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="mvcPath" value="/site_roles.jsp" />
+			<portlet:param name="className" value="<%= User.class.getName() %>" />
+			<portlet:param name="groupId" value="<%= String.valueOf(siteMembershipsDisplayContext.getGroupId()) %>" />
+		</portlet:renderURL>
+
+		$('#<portlet:namespace />selectSiteRole').on(
+			'click',
+			function() {
+				var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+					{
+						eventName: '<portlet:namespace />selectSiteRole',
+						on: {
+							selectedItemChange: function(event) {
+
+							}
+						},
+						'strings.add': '<liferay-ui:message key="done" />',
+						title: '<liferay-ui:message key="assign-site-roles" />',
+						url: '<%= selectSiteRoleURL %>'
+					}
+				);
+
+				itemSelectorDialog.open();
+			}
+		);
+	</c:if>
 
 	$('#<portlet:namespace />deleteSelectedUsers').on(
 		'click',
