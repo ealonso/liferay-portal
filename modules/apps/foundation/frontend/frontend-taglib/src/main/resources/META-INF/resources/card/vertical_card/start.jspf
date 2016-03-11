@@ -15,7 +15,21 @@
 --%>
 
 <div class="taglib-vertical-card <%= Validator.isNotNull(cssClass) ? cssClass : StringPool.BLANK %> <%= showCheckbox ? "selectable" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
-	<div class="<%= showCheckbox ? "checkbox toggle-card-dm" : StringPool.BLANK %>">
+	<%
+	String inputWrapperCssClass = StringPool.BLANK;
+
+	if (showCheckbox) {
+		inputWrapperCssClass = "checkbox";
+
+		if ((rowChecker != null) && !rowChecker.isMultipleRowChecker()) {
+			inputWrapperCssClass = "radio";
+		}
+
+		inputWrapperCssClass += " toggle-card-dm";
+	}
+	%>
+
+	<div class="<%= inputWrapperCssClass %>">
 		<c:if test="<%= showCheckbox %>">
 			<label>
 		</c:if>
