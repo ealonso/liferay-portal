@@ -8,8 +8,6 @@ AUI.add(
 
 		var REGEX_MATCH_NOTHING = /^[]/;
 
-		var STR_CHECKBOX_SELECTOR = 'input[type=checkbox]';
-
 		var STR_CHECKED = 'checked';
 
 		var STR_CLICK = 'click';
@@ -22,9 +20,11 @@ AUI.add(
 
 		var STR_ROW_SELECTOR = 'rowSelector';
 
-		var TPL_HIDDEN_INPUT = '<input class="hide" name="{name}" value="{value}" type="checkbox" ' + STR_CHECKED + ' />';
+		var TPL_CHECKBOX_SELECTOR = 'input[type={inputType}]';
 
-		var TPL_INPUT_SELECTOR = 'input[type="checkbox"][value="{value}"]';
+		var TPL_HIDDEN_INPUT = '<input class="hide" name="{name}" value="{value}" type="{inputType}" ' + STR_CHECKED + ' />';
+
+		var TPL_INPUT_SELECTOR = 'input[type="{inputType}"][value="{value}"]';
 
 		var SearchContainerSelect = A.Component.create(
 			{
@@ -41,6 +41,11 @@ AUI.add(
 							return keepSelection;
 						},
 						value: REGEX_MATCH_EVERYTHING
+					},
+
+					multipleSelection: {
+						validator: Lang.isBoolean,
+						value: true
 					},
 
 					rowCheckerSelector: {
@@ -69,6 +74,13 @@ AUI.add(
 					initializer: function() {
 						var instance = this;
 
+						instance._checkboxSelector = Lang.sub(
+							TPL_CHECKBOX_SELECTOR,
+							{
+								inputType: instance.get('multipleSelection') ? "checkbox" : "radio"
+							}
+						);
+
 						var host = instance.get(STR_HOST);
 
 						var toggleRowFn = A.bind(
@@ -82,8 +94,9 @@ AUI.add(
 						var toggleRowCSSFn = A.bind('_onClickRowSelector', instance, {});
 
 						instance._eventHandles = [
-							host.get(STR_CONTENT_BOX).delegate(STR_CLICK, toggleRowCSSFn, instance.get(STR_ROW_SELECTOR) + ' ' + STR_CHECKBOX_SELECTOR, instance),
+							host.get(STR_CONTENT_BOX).delegate(STR_CLICK, toggleRowCSSFn, instance.get(STR_ROW_SELECTOR) + ' ' + instance._getCheckboxSelector(), instance),
 							host.get(STR_CONTENT_BOX).delegate(STR_CLICK, toggleRowFn, instance.get(STR_ROW_SELECTOR) + ' ' + instance.get('rowCheckerSelector'), instance),
+							instance.on('multipleSelectionChange', instance._onMultipleSelectionChange, instance),
 							Liferay.on('startNavigate', instance._onStartNavigate, instance)
 						];
 					},
@@ -107,7 +120,7 @@ AUI.add(
 					},
 
 					isSelected: function(element) {
-						return element.one(STR_CHECKBOX_SELECTOR).attr(STR_CHECKED);
+						return element.one(instance._getCheckboxSelector()).attr(STR_CHECKED);
 					},
 
 					toggleAllRows: function(selected) {
@@ -115,7 +128,7 @@ AUI.add(
 
 						instance._getCurrentPageElements().attr(STR_CHECKED, selected);
 
-						instance.get(STR_HOST).get(STR_CONTENT_BOX).all(instance.get(STR_ROW_SELECTOR)).toggleClass(instance.get(STR_ROW_CLASS_NAME_ACTIVE), selected);
+						instance._toggleAllRowsCssClass(selected);
 
 						instance._notifyRowToggle();
 					},
@@ -124,9 +137,13 @@ AUI.add(
 						var instance = this;
 
 						if (config && config.toggleCheckbox) {
-							var checkbox = row.one(STR_CHECKBOX_SELECTOR);
+							var checkbox = row.one(instance._getCheckboxSelector());
 
 							checkbox.attr(STR_CHECKED, !checkbox.attr(STR_CHECKED));
+						}
+
+						if (!instance.get('multipleSelection')) {
+							instance._toggleAllRowsCssClass(false);
 						}
 
 						row.toggleClass(instance.get(STR_ROW_CLASS_NAME_ACTIVE));
@@ -166,6 +183,7 @@ AUI.add(
 							function(item, index) {
 								elements.push(
 									{
+										inputType: instance.get('multipleSelection') ? "checkbox" : "radio",
 										name: item.attr('name'),
 										value: item.val()
 									}
@@ -186,13 +204,13 @@ AUI.add(
 					_getAllElements: function(onlySelected) {
 						var instance = this;
 
-						return instance._getElements(STR_CHECKBOX_SELECTOR, onlySelected);
+						return instance._getElements(instance._getCheckboxSelector(), onlySelected);
 					},
 
 					_getCurrentPageElements: function(onlySelected) {
 						var instance = this;
 
-						return instance._getElements(instance.get(STR_ROW_SELECTOR) + ' ' + STR_CHECKBOX_SELECTOR, onlySelected);
+						return instance._getElements(instance.get(STR_ROW_SELECTOR) + ' ' + instance._getCheckboxSelector(), onlySelected);
 					},
 
 					_getElements: function(selector, onlySelected) {
@@ -203,6 +221,12 @@ AUI.add(
 						var checked = onlySelected ? ':' + STR_CHECKED : '';
 
 						return host.get(STR_CONTENT_BOX).all(selector + checked);
+					},
+
+					_getCheckboxSelector: function() {
+						var instance = this;
+
+						return instance._checkboxSelector;
 					},
 
 					_notifyRowToggle: function() {
@@ -229,6 +253,17 @@ AUI.add(
 						instance.toggleRow(config, row);
 					},
 
+					_onMultipleSelectionChange: function(event) {
+						var instance = this;
+
+						instance._checkboxSelector = Lang.sub(
+							TPL_CHECKBOX_SELECTOR,
+							{
+								inputType: instance.get('multipleSelection') ? "checkbox" : "radio"
+							}
+						);
+					},
+
 					_onStartNavigate: function(event) {
 						var instance = this;
 
@@ -236,6 +271,12 @@ AUI.add(
 							instance._addRestoreTask();
 							instance._addRestoreTaskState();
 						}
+					},
+
+					_toggleAllRowsCssClass: function(selected) {
+						var instance = this;
+
+						instance.get(STR_HOST).get(STR_CONTENT_BOX).all(instance.get(STR_ROW_SELECTOR)).toggleClass(instance.get(STR_ROW_CLASS_NAME_ACTIVE), selected);
 					}
 				},
 

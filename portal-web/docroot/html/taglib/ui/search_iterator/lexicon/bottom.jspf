@@ -51,6 +51,7 @@
 		var rowSelector = '<%= rowHtmlTag %><%= rowCheckerRowSelector %>';
 
 		<c:if test="<%= rowChecker != null %>">
+			var multipleSelection = <%= rowChecker.isMultipleRowChecker() %>;
 			var rememberCheckBoxState = <%= rowChecker.isRememberCheckBoxState() %>;
 
 			<c:if test="<%= rowChecker.isRememberCheckBoxState() && Validator.isNotNull(rowChecker.getRememberCheckBoxStateURLRegex()) %>">
@@ -61,6 +62,7 @@
 				{
 					cfg: {
 						keepSelection: rememberCheckBoxState,
+						multipleSelection: multipleSelection,
 						rowSelector: rowSelector
 					},
 					fn: A.Plugin.SearchContainerSelect
