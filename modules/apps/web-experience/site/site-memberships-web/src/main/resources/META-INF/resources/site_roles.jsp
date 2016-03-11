@@ -112,25 +112,18 @@ roleSearch.setResults(ListUtil.subList(roles, roleSearch.getStart(), roleSearch.
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script use="aui-base">
-	var siteRoles = A.one('#<portlet:namespace />siteRoles');
+<aui:script use="aui-base,liferay-search-container">
+	var searchContainer = Liferay.SearchContainer.get('#<portlet:namespace />siteRoles');
 
-	siteRoles.delegate(
-		'click',
+	searchContainer.on(
+		'rowToggled',
 		function(event) {
-			var currentTarget = event.currentTarget;
-
-			siteRoles.all('.site-role-selector').removeClass('selected');
-
-			currentTarget.addClass('selected');
-
 			Liferay.Util.getOpener().Liferay.fire(
 				'<%= HtmlUtil.escapeJS(eventName) %>',
 				{
-					data: currentTarget.attr('data-roleid')
+					data: event.elements.allSelectedElements
 				}
 			);
-		},
-		'.site-role-selector'
+		}
 	);
 </aui:script>
