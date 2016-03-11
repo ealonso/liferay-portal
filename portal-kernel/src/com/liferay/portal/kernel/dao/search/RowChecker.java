@@ -292,7 +292,9 @@ public class RowChecker {
 		sb.append(name);
 		sb.append("\" title=\"");
 		sb.append(LanguageUtil.get(request.getLocale(), "select"));
-		sb.append("\" type=\"checkbox\" value=\"");
+		sb.append("\" type=\"");
+		sb.append(isMultipleRowChecker() ? "checkbox" : "radio");
+		sb.append("\" value=\"");
 		sb.append(HtmlUtil.escapeAttribute(value));
 		sb.append("\" ");
 
