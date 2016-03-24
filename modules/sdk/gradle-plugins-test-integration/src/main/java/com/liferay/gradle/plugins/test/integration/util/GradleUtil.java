@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,15 +11,26 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/html/taglib/init.jsp" %>
+package com.liferay.gradle.plugins.test.integration.util;
 
-<%
-Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ui:section:data");
-String name = (String)request.getAttribute("liferay-ui:section:name");
-String param = (String)request.getAttribute("liferay-ui:section:param");
-boolean selected = (Boolean)request.getAttribute("liferay-ui:section:selected");
-%>
+import java.io.File;
 
-<div class="<%= selected ? StringPool.BLANK : "hide" %>" <%= AUIUtil.buildData(data) %> id="<%= namespace %><%= param %><%= StringUtil.toCharCode(name) %>TabsSection">
+import org.gradle.api.Project;
+
+/**
+ * @author Andrea Di Giorgi
+ */
+public class GradleUtil extends com.liferay.gradle.util.GradleUtil {
+
+	public static File toFile(Project project, Object object) {
+		object = toObject(object);
+
+		if (object == null) {
+			return null;
+		}
+
+		return project.file(object);
+	}
+
+}
