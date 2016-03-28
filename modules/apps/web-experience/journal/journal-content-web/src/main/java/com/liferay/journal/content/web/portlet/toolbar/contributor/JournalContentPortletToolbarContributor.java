@@ -102,7 +102,7 @@ public class JournalContentPortletToolbarContributor
 		Map<String, Object> data = new HashMap<>();
 
 		data.put(
-			"id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
+			"id", HtmlUtil.escape(portletDisplay.getNamespace()) + "addAsset");
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			portletURL.setParameter(
@@ -187,6 +187,9 @@ public class JournalContentPortletToolbarContributor
 			"mvcPath", "/update_journal_article_redirect.jsp");
 		redirectURL.setParameter(
 			"referringPortletResource", portletDisplay.getId());
+		redirectURL.setParameter(
+			"windowId",
+			HtmlUtil.escape(portletDisplay.getNamespace()) + "addAsset");
 
 		return redirectURL.toString();
 	}
