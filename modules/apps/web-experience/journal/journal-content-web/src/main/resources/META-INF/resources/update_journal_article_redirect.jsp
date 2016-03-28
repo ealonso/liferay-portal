@@ -22,13 +22,15 @@ journalContentDisplayContext.clearCache();
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 
 Portlet selPortlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), referringPortletResource);
+
+String windowId = HtmlUtil.escapeJS(ParamUtil.getString(request, "windowId", selPortlet.getPortletId() + "_editAsset"));
 %>
 
 <aui:script>
 	Liferay.fire(
 		'closeWindow',
 		{
-			id: '<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>_editAsset',
+			id: '<%= windowId %>',
 			portletAjaxable: <%= selPortlet.isAjaxable() %>,
 			refresh: '<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>'
 		}
