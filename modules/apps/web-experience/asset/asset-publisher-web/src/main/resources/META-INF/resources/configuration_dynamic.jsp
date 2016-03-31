@@ -22,6 +22,7 @@ PortletURL configurationRenderURL = (PortletURL)request.getAttribute("configurat
 String redirect = (String)request.getAttribute("configuration.jsp-redirect");
 String selectScope = (String)request.getAttribute("configuration.jsp-selectScope");
 String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle");
+boolean showScopesPanel = ParamUtil.getBoolean(request, "showScopesPanel");
 %>
 
 <liferay-ui:tabs
@@ -37,7 +38,7 @@ String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle
 		<aui:fieldset-group markupView="lexicon">
 			<%= selectStyle %>
 
-			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" id="assetPublisherSourcePanel" label="source">
+			<aui:fieldset collapsed="<%= !showScopesPanel %>" collapsible="<%= true %>" id="assetPublisherSourcePanel" label="source">
 				<aui:fieldset cssClass='<%= assetPublisherDisplayContext.isShowScopeSelector() ? StringPool.BLANK : "hide" %>' label="scope">
 					<%= selectScope %>
 				</aui:fieldset>

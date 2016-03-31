@@ -21,6 +21,7 @@ PortletURL configurationRenderURL = (PortletURL)request.getAttribute("configurat
 String selectScope = (String)request.getAttribute("configuration.jsp-selectScope");
 String selectStyle = (String)request.getAttribute("configuration.jsp-selectStyle");
 String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortletResource()) + "_selectAsset";
+boolean showScopesPanel = ParamUtil.getBoolean(request, "showScopesPanel");
 %>
 
 <liferay-ui:tabs
@@ -38,7 +39,7 @@ String eventName = "_" + HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortl
 				<%= selectStyle %>
 			</aui:fieldset>
 
-			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="scope">
+			<aui:fieldset collapsed="<%= !showScopesPanel %>" collapsible="<%= true %>" label="scope">
 				<%= selectScope %>
 			</aui:fieldset>
 
