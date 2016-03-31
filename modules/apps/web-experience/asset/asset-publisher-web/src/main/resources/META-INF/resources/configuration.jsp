@@ -103,7 +103,7 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 					>
 						<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="deleteURL">
 							<portlet:param name="<%= Constants.CMD %>" value="remove-scope" />
-							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="redirect" value="<%= configurationRenderURL.toString() %>" />
 							<portlet:param name="scopeId" value="<%= AssetPublisherUtil.getScopeId(group, scopeGroupId) %>" />
 						</liferay-portlet:actionURL>
 
@@ -132,7 +132,7 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 
 						<liferay-portlet:actionURL portletConfiguration="<%= true %>" var="addScopeURL">
 							<portlet:param name="<%= Constants.CMD %>" value="add-scope" />
-							<portlet:param name="redirect" value="<%= currentURL %>" />
+							<portlet:param name="redirect" value="<%= configurationRenderURL.toString() %>" />
 							<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
 						</liferay-portlet:actionURL>
 

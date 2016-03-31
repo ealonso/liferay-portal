@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -159,8 +160,15 @@ public class AssetPublisherConfigurationAction
 			}
 		}
 		else {
+			String redirect = PortalUtil.escapeRedirect(
+				ParamUtil.getString(actionRequest, "redirect"));
+
 			if (cmd.equals("add-scope")) {
 				addScope(actionRequest, preferences);
+
+				redirect = HttpUtil.addParameter(
+					redirect, actionResponse.getNamespace() + "showScopesPanel",
+					true);
 			}
 			else if (cmd.equals("add-selection")) {
 				AssetPublisherUtil.addSelection(
@@ -177,6 +185,10 @@ public class AssetPublisherConfigurationAction
 			}
 			else if (cmd.equals("remove-scope")) {
 				removeScope(actionRequest, preferences);
+
+				redirect = HttpUtil.addParameter(
+					redirect, actionResponse.getNamespace() + "showScopesPanel",
+					true);
 			}
 			else if (cmd.equals("select-scope")) {
 				setScopes(actionRequest, preferences);
@@ -199,9 +211,6 @@ public class AssetPublisherConfigurationAction
 					PortalUtil.getPortletId(actionRequest) +
 						SessionMessages.KEY_SUFFIX_UPDATED_CONFIGURATION);
 			}
-
-			String redirect = PortalUtil.escapeRedirect(
-				ParamUtil.getString(actionRequest, "redirect"));
 
 			if (Validator.isNotNull(redirect)) {
 				actionResponse.sendRedirect(redirect);
