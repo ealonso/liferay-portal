@@ -47,7 +47,7 @@ PanelCategory panelCategory = panelCategoryRegistry.getPanelCategory(SimulationP
 						</div>
 					</div>
 
-					<div aria-expanded="<%= true %>" aria-labelledby="<%= renderResponse.getNamespace() + panelAppKey + "Header" %>" class="collapse panel-collapse in" id="<%= renderResponse.getNamespace() + panelAppKey + "Collapse" %>" role="tabpanel">
+					<div aria-expanded="<%= true %>" aria-labelledby="<%= renderResponse.getNamespace() + panelAppKey + "Header" %>" class="collapse in panel-collapse" id="<%= renderResponse.getNamespace() + panelAppKey + "Collapse" %>" role="tabpanel">
 						<div class="simulation-app-panel-body">
 							<liferay-application-list:panel-app label="" panelApp="<%= panelApp %>" />
 						</div>
