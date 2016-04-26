@@ -72,11 +72,11 @@
 						path: 'asset_categories_selector.js',
 						requires: [
 							'aui-tree',
-							'liferay-asset-tags-selector'
+							'liferay-asset-tags-selector-deprecated'
 						]
 					},
-					'liferay-asset-tags-selector': {
-						path: 'asset_tags_selector.js',
+					'liferay-asset-tags-selector-deprecated': {
+						path: 'asset_tags_selector_deprecated.js',
 						requires: [
 							'array-extras',
 							'async-queue',
