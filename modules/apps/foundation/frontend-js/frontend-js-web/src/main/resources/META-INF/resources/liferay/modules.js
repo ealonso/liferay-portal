@@ -75,6 +75,22 @@
 							'liferay-asset-tags-selector-deprecated'
 						]
 					},
+					'liferay-asset-tags-selector': {
+						path: 'asset_tags_selector.js',
+						requires: [
+							'array-extras',
+							'async-queue',
+							'aui-autocomplete-deprecated',
+							'aui-io-plugin-deprecated',
+							'aui-io-request',
+							'aui-live-search-deprecated',
+							'aui-modal',
+							'aui-template-deprecated',
+							'aui-textboxlist-deprecated',
+							'datasource-cache',
+							'liferay-service-datasource'
+						]
+					},
 					'liferay-asset-tags-selector-deprecated': {
 						path: 'asset_tags_selector_deprecated.js',
 						requires: [
