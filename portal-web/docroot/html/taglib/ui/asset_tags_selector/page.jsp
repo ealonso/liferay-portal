@@ -54,8 +54,8 @@ if (!ignoreRequestValue) {
 	</c:if>
 </div>
 
-<aui:script use="liferay-asset-tags-selector">
-	var assetTagsSelector = new Liferay.AssetTagsSelector(
+<aui:script use="liferay-asset-tags-picker">
+	var assetTagsSelector = new Liferay.AssetTagsPicker(
 		{
 			allowAddEntry: <%= allowAddEntry %>,
 			contentBox: '#<%= namespace + id %>assetTagsSelector',

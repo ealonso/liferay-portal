@@ -6,8 +6,8 @@
 					base: MODULE_PATH + '/js/',
 					combine: Liferay.AUI.getCombine(),
 					modules: {
-						'liferay-asset-tags-selector': {
-							path: 'asset_tags_selector.js',
+						'liferay-asset-tags-picker': {
+							path: 'asset_tags_picker.js',
 							requires: [
 								'aui-io-plugin-deprecated',
 								'aui-live-search-deprecated',
