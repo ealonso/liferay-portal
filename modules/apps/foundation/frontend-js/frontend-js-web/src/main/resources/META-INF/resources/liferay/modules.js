@@ -78,11 +78,7 @@
 					'liferay-asset-tags-selector': {
 						path: 'asset_tags_selector.js',
 						requires: [
-							'array-extras',
-							'async-queue',
-							'aui-autocomplete-deprecated',
 							'aui-io-plugin-deprecated',
-							'aui-io-request',
 							'aui-live-search-deprecated',
 							'aui-modal',
 							'aui-template-deprecated',

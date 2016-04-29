@@ -54,8 +54,8 @@ if (!ignoreRequestValue) {
 	</c:if>
 </div>
 
-<aui:script use="liferay-asset-tags-selector">
-	var assetTagsSelector = new Liferay.AssetTagsSelector(
+<aui:script use="liferay-asset-tags-picker">
+	var assetTagsSelector = new Liferay.AssetTagsPicker(
 		{
 			allowAddEntry: <%= allowAddEntry %>,
 			contentBox: '#<%= namespace + id %>assetTagsSelector',
@@ -72,7 +72,29 @@ if (!ignoreRequestValue) {
 			</c:if>
 
 			instanceVar: '<%= namespace + id %>',
-			portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>
+
+			<%
+			String portletId = PortletProviderUtil.getPortletId(AssetTag.class.getName(), PortletProvider.Action.BROWSE);
+			%>
+
+			<c:if test="<%= Validator.isNotNull(portletId) %>">
+				namespace: '<%= PortalUtil.getPortletNamespace(portletId) %>',
+			</c:if>
+
+			portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>,
+
+			<%
+			PortletURL portletURL = PortletProviderUtil.getPortletURL(request, AssetTag.class.getName(), PortletProvider.Action.BROWSE);
+			%>
+
+			<c:if test="<%= portletURL != null %>">
+
+				<%
+				portletURL.setWindowState(LiferayWindowState.POP_UP);
+				%>
+
+				portletURL: '<%= portletURL.toString() %>'
+			</c:if>
 		}
 	).render();
 
