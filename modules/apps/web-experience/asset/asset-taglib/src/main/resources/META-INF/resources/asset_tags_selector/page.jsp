@@ -65,7 +65,6 @@ if (!ignoreRequestValue) {
 
 			hiddenInput: '#<portlet:namespace /><%= hiddenInput %>',
 
-
 			<c:if test="<%= allowAddEntry %>">
 				input: '#<%= id %>assetTagNames',
 			</c:if>
