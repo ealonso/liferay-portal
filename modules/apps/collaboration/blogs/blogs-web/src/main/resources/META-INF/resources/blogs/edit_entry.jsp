@@ -173,8 +173,16 @@ renderResponse.setTitle((entry != null) ? entry.getTitle() : LanguageUtil.get(re
 			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
 				<%-- <aui:input name="categories" type="assetCategories" /> --%>
 
-				<liferay-asset:asset-categories-selector />
-				<liferay-asset:asset-tags-selector id="<%= renderResponse.getNamespace() + entryId %>" ignoreRequestValue="<%= true %>" />
+				<liferay-asset:asset-categories-selector
+						className="<%= BlogsEntry.class.getName() %>"
+						classPK="<%= entryId %>"
+				/>
+				<liferay-asset:asset-tags-selector
+						className="<%= BlogsEntry.class.getName() %>"
+						classPK="<%= entryId %>"
+						id="<%= renderResponse.getNamespace() + entryId %>"
+						ignoreRequestValue="<%= true %>"
+				/>
 				<%--<aui:input name="tags" type="assetTags" />--%>
 			</aui:fieldset>
 
