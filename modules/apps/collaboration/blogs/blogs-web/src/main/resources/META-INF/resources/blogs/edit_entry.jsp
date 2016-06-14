@@ -15,6 +15,7 @@
 --%>
 
 <%@ include file="/blogs/init.jsp" %>
+<%@ taglib uri="http://liferay.com/tld/asset" prefix="liferay-asset" %>
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
@@ -170,9 +171,11 @@ renderResponse.setTitle((entry != null) ? entry.getTitle() : LanguageUtil.get(re
 			</aui:fieldset>
 
 			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="categorization">
-				<aui:input name="categories" type="assetCategories" />
+				<%-- <aui:input name="categories" type="assetCategories" /> --%>
 
-				<aui:input name="tags" type="assetTags" />
+				<liferay-asset:asset-categories-selector />
+				<liferay-asset:asset-tags-selector id="<%= renderResponse.getNamespace() + entryId %>" ignoreRequestValue="<%= true %>" />
+				<%--<aui:input name="tags" type="assetTags" />--%>
 			</aui:fieldset>
 
 			<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="related-assets">
