@@ -703,6 +703,8 @@ AUI.add(
 							type: 'io'
 						};
 
+						debugger;
+
 						instance.TREEVIEWS[vocabularyId] = new A.TreeView(
 							{
 								children: [vocabularyRootNode],

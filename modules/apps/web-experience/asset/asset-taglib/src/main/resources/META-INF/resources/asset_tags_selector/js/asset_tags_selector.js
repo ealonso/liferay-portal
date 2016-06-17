@@ -362,6 +362,7 @@ AUI.add(
 								eventName: instance.get('namespace') + 'selectTag',
 								on: {
 									selectedItemChange: function(event) {
+										debugger;
 										var selectedItem = event.newVal;
 
 										if (selectedItem) {
@@ -381,7 +382,7 @@ AUI.add(
 									}
 								},
 								'strings.add': Liferay.Language.get('done'),
-								title: Liferay.Language.get('tags'),
+								title: Liferay.Language.get('categories'),
 								url: uri
 							}
 						);

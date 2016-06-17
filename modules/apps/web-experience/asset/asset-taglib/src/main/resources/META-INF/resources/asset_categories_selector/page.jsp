@@ -1,4 +1,7 @@
-<%--
+<%@ page import="javax.portlet.PortletURL" %>
+<%@ page import="com.liferay.portal.kernel.portlet.PortletProviderUtil" %>
+<%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %>
+<%@ page import="com.liferay.portal.kernel.portlet.PortletProvider" %><%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -30,6 +33,8 @@ boolean ignoreRequestValue = GetterUtil.getBoolean(request.getAttribute("liferay
 boolean showRequiredLabel = GetterUtil.getBoolean((String)request.getAttribute("liferay-asset:asset-categories-selector:showRequiredLabel"), true);
 
 int maxEntries = GetterUtil.getInteger(PropsUtil.get(PropsKeys.ASSET_CATEGORIES_SELECTOR_MAX_ENTRIES));
+
+PortletURL portletURL = PortletProviderUtil.getPortletURL(request, AssetCategory.class.getName(), PortletProvider.Action.BROWSE);
 
 if (ArrayUtil.isEmpty(groupIds)) {
 	groupIds = PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId);
@@ -91,13 +96,13 @@ if (Validator.isNotNull(className)) {
 				</c:if>
 			</label>
 
-			<div class="lfr-tags-selector-content" id="<%= namespace + randomNamespace %>assetCategoriesSelector_<%= vocabulary.getVocabularyId() %>">
+			<div class="lfr-tags-selector-content" id="<%= namespace + randomNamespace %>assetCategoriesSelector_<%= vocabulary.getVocabularyId() %>" data-vocabulary-id="<%= vocabulary.getVocabularyId() %>">
 				<aui:input name="<%= hiddenInput + StringPool.UNDERLINE + vocabulary.getVocabularyId() %>" type="hidden" />
 			</div>
 		</span>
 
-		<aui:script use="liferay-asset-categories-selector">
-			new Liferay.AssetCategoriesSelector(
+		<aui:script use="liferay-asset-taglib-categories-selector">
+			new Liferay.AssetTaglibCategoriesSelector(
 			{
 			className: '<%= className %>',
 			contentBox: '#<%= namespace + randomNamespace %>assetCategoriesSelector_<%= vocabulary.getVocabularyId() %>',
@@ -108,7 +113,24 @@ if (Validator.isNotNull(className)) {
 			labelNode: '#<%= namespace %>assetCategoriesLabel_<%= vocabulary.getVocabularyId() %>',
 			maxEntries: <%= maxEntries %>,
 			moreResultsLabel: '<%= UnicodeLanguageUtil.get(resourceBundle, "load-more-results") %>',
+			<%
+				String portletId = PortletProviderUtil.getPortletId(AssetCategory.class.getName(), PortletProvider.Action.BROWSE);
+			%>
+
+			<c:if test="<%= Validator.isNotNull(portletId) %>">
+				namespace: '<%= PortalUtil.getPortletNamespace(portletId) %>',
+			</c:if>
 			portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>,
+
+			<c:if test="<%= portletURL != null %>">
+
+				<%
+					portletURL.setWindowState(LiferayWindowState.POP_UP);
+				%>
+
+				portletURL: '<%= portletURL.toString() %>',
+			</c:if>
+
 			singleSelect: <%= !vocabulary.isMultiValued() %>,
 			title: '<%= UnicodeLanguageUtil.format(request, "select-x", vocabulary.getTitle(locale), false) %>',
 			vocabularyGroupIds: '<%= StringUtil.merge(groupIds) %>',
@@ -136,8 +158,8 @@ else {
 		<aui:input name="<%= hiddenInput %>" type="hidden" />
 	</div>
 
-	<aui:script use="liferay-asset-categories-selector">
-		new Liferay.AssetCategoriesSelector(
+	<aui:script use="liferay-asset-taglib-categories-selector">
+		new Liferay.AssetTaglibCategoriesSelector(
 		{
 		className: '<%= className %>',
 		contentBox: '#<%= namespace + randomNamespace %>assetCategoriesSelector',
@@ -147,7 +169,18 @@ else {
 		instanceVar: '<%= namespace + randomNamespace %>',
 		maxEntries: <%= maxEntries %>,
 		moreResultsLabel: '<%= UnicodeLanguageUtil.get(resourceBundle, "load-more-results") %>',
+		namespace: '<%= namespace %>',
 		portalModelResource: <%= Validator.isNotNull(className) && (ResourceActionsUtil.isPortalModelResource(className) || className.equals(Group.class.getName())) %>,
+
+		<c:if test="<%= portletURL != null %>">
+
+			<%
+				portletURL.setWindowState(LiferayWindowState.POP_UP);
+			%>
+
+			portletURL: '<%= portletURL.toString() %>',
+		</c:if>
+
 		vocabularyGroupIds: '<%= StringUtil.merge(groupIds) %>',
 		vocabularyIds: '<%= ListUtil.toString(vocabularies, "vocabularyId") %>'
 		}
