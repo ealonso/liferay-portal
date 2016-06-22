@@ -381,7 +381,7 @@ AUI.add(
 									}
 								},
 								'strings.add': Liferay.Language.get('done'),
-								title: Liferay.Language.get('tags'),
+								title: Liferay.Language.get('categories'),
 								url: uri
 							}
 						);
