@@ -221,75 +221,6 @@ AUI.add(
 
 							_bindTagsSelector: EMPTY_FN,
 
-							_clearEntries: function() {
-								var instance = this;
-
-								var entries = instance.entries;
-
-								entries.each(A.fn('removeAt', entries, 0));
-							},
-
-							_formatJSONResult: function(json) {
-								var instance = this;
-
-								var output = [];
-
-								var type = 'check';
-
-								if (instance.get('singleSelect')) {
-									type = 'radio';
-								}
-
-								json.forEach(
-										function(item, index) {
-											var checked = false;
-											var treeId = 'category' + item.categoryId;
-
-											if (instance.entries.findIndexBy('categoryId', item.categoryId) > -1) {
-												checked = true;
-											}
-
-											var newTreeNode = {
-												after: {
-													checkedChange: A.bind('_onCheckedChange', instance)
-												},
-												checked: checked,
-												id: treeId,
-												label: LString.escapeHTML(item.titleCurrentValue),
-												leaf: !item.hasChildren,
-												paginator: instance._getPaginatorConfig(item),
-												type: type
-											};
-
-											output.push(newTreeNode);
-										}
-								);
-
-								return output;
-							},
-
-							_formatRequestData: function(treeNode) {
-								var instance = this;
-
-								var data = {};
-
-								data.p_auth = Liferay.authToken;
-
-								var assetId = instance._getTreeNodeAssetId(treeNode);
-								var assetType = instance._getTreeNodeAssetType(treeNode);
-
-								if (Lang.isValue(assetId)) {
-									if (assetType == 'category') {
-										data.categoryId = assetId;
-									}
-									else {
-										data.vocabularyId = assetId;
-									}
-								}
-
-								return data;
-							},
-
 							_getEntries: function(className, callback) {
 								var instance = this;
 
@@ -344,22 +275,6 @@ AUI.add(
 								}
 							},
 
-							_getTreeNodeAssetId: function(treeNode) {
-								var treeId = treeNode.get(ID);
-
-								var match = treeId.match(/(\d+)$/);
-
-								return match ? match[1] : null;
-							},
-
-							_getTreeNodeAssetType: function(treeNode) {
-								var treeId = treeNode.get(ID);
-
-								var match = treeId.match(/^(vocabulary|category)/);
-
-								return match ? match[1] : null;
-							},
-
 							_isValidString: function(value) {
 								var instance = this;
 
@@ -367,82 +282,6 @@ AUI.add(
 							},
 
 							_onBoundingBoxClick: EMPTY_FN,
-
-							_onCheckboxCheck: function(event) {
-								var instance = this;
-
-								var currentTarget = event.currentTarget;
-
-								var assetId;
-								var entryMatchKey;
-
-								if (A.instanceOf(currentTarget, A.Node)) {
-									assetId = currentTarget.attr('data-categoryId');
-
-									entryMatchKey = currentTarget.val();
-								}
-								else {
-									assetId = instance._getTreeNodeAssetId(currentTarget);
-
-									entryMatchKey = currentTarget.get('label');
-								}
-
-								var matchKey = instance.get('matchKey');
-
-								var entry = {
-									categoryId: assetId
-								};
-
-								entry[matchKey] = entryMatchKey;
-
-								entry.value = LString.unescapeHTML(entry.value);
-
-								instance.entries.add(entry);
-							},
-
-							_onCheckboxClick: function(event) {
-								var instance = this;
-
-								var method = '_onCheckboxUncheck';
-
-								if (event.currentTarget.attr('checked')) {
-									method = '_onCheckboxCheck';
-								}
-
-								instance[method](event);
-							},
-
-							_onCheckboxUncheck: function(event) {
-								var instance = this;
-
-								var currentTarget = event.currentTarget;
-
-								var assetId;
-
-								if (A.instanceOf(currentTarget, A.Node)) {
-									assetId = currentTarget.attr('data-categoryId');
-								}
-								else {
-									assetId = instance._getTreeNodeAssetId(currentTarget);
-								}
-
-								instance.entries.removeKey(assetId);
-							},
-
-							_onCheckedChange: function(event) {
-								var instance = this;
-
-								if (event.newVal) {
-									if (instance.get('singleSelect')) {
-										instance._clearEntries();
-									}
-
-									instance._onCheckboxCheck(event);
-								}
-								else {
-									instance._onCheckboxUncheck(event);
-								}
-							},
 
 							_onSelectChange: function(event) {
 								var instance = this;
