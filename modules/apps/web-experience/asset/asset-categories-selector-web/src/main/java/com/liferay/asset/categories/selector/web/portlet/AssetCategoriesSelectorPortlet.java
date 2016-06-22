@@ -16,7 +16,7 @@ package com.liferay.asset.categories.selector.web.portlet;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
+import com.liferay.asset.kernel.service.AssetCategoryService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -38,6 +38,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -80,7 +81,7 @@ public class AssetCategoriesSelectorPortlet extends MVCPortlet {
 					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 					List<AssetCategory> childCategories =
-						AssetCategoryServiceUtil.getChildCategories(
+						_assetCategoryService.getChildCategories(
 							category.getCategoryId());
 
 					jsonObject.put("categoryId", category.getCategoryId());
@@ -122,7 +123,7 @@ public class AssetCategoriesSelectorPortlet extends MVCPortlet {
 		}
 
 		if (categoryId > 0) {
-			return AssetCategoryServiceUtil.getChildCategories(
+			return _assetCategoryService.getChildCategories(
 				categoryId, start, end, null);
 		}
 
@@ -130,8 +131,17 @@ public class AssetCategoriesSelectorPortlet extends MVCPortlet {
 			portletRequest, "parentCategoryId",
 			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID);
 
-		return AssetCategoryServiceUtil.getVocabularyCategories(
+		return _assetCategoryService.getVocabularyCategories(
 			parentCategoryId, vocabularyId, start, end, null);
 	}
+
+	@Reference(unbind = "-")
+	protected void setAssetCategoryService(
+		AssetCategoryService assetCategoryService) {
+
+		_assetCategoryService = assetCategoryService;
+	}
+
+	private AssetCategoryService _assetCategoryService;
 
 }
