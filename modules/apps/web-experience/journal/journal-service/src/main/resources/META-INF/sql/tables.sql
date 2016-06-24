@@ -35,18 +35,6 @@ create table JournalArticle (
 	statusDate DATE null
 );
 
-create table JournalArticleImage (
-	articleImageId LONG not null primary key,
-	groupId LONG,
-	companyId LONG,
-	articleId VARCHAR(75) null,
-	version DOUBLE,
-	elInstanceId VARCHAR(75) null,
-	elName VARCHAR(75) null,
-	languageId VARCHAR(75) null,
-	tempImage BOOLEAN
-);
-
 create table JournalArticleResource (
 	uuid_ VARCHAR(75) null,
 	resourcePrimKey LONG not null primary key,
