@@ -166,9 +166,11 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 					<li class="dropdown-header">
 						<liferay-ui:message arguments="<%= new Object[] {maxItems, allAddMenuItemsCount} %>" key="showing-x-of-x-items" />
 					</li>
+
 					<%
 					if (Validator.isNotNull(viewMoreUrl)) {
 					%>
+
 						<li class="divider"></li>
 						<li>
 							<a href="javascript:;" id="<%= namespace %>view-more-add-menu-elements"><%= LanguageUtil.get(request, "more") %></a>
@@ -190,7 +192,8 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 								}
 							);
 						</aui:script>
-					<%
+
+				<%
 					}
 				}
 				%>
