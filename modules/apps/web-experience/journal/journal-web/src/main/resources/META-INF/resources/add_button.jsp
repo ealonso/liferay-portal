@@ -39,6 +39,11 @@
 			List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
 
 			for (DDMStructure ddmStructure : ddmStructures) {
+				AddMenuKeys.AddMenuType type = AddMenuKeys.AddMenuType.DEFAULT;
+
+				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), ddmStructure.getStructureKey())) {
+					type = AddMenuKeys.AddMenuType.FAVORITE;
+				}
 			%>
 
 				<portlet:renderURL var="addArticleURL">
@@ -49,7 +54,7 @@
 					<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
 				</portlet:renderURL>
 
-				<liferay-frontend:add-menu-item title="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>" url="<%= addArticleURL.toString() %>" />
+				<liferay-frontend:add-menu-item title="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>" type="<%= type %>" url="<%= addArticleURL.toString() %>" />
 
 			<%
 			}
