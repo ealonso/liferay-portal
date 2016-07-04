@@ -3422,10 +3422,16 @@ public class JournalArticleLocalServiceImpl
 		List<JournalArticle> articles = journalArticlePersistence.findByG_A(
 			groupId, articleId);
 
+		String portletId = PortletProviderUtil.getPortletId(
+			JournalArticle.class.getName(), PortletProvider.Action.EDIT);
+
+		String articleURL = PortalUtil.getControlPanelFullURL(
+			groupId, portletId, null);
+
 		for (JournalArticle article : articles) {
 			if (serviceContext != null) {
 				notifySubscribers(
-					serviceContext.getUserId(), article, article.getUrlTitle(),
+					serviceContext.getUserId(), article, articleURL,
 					"move_from", serviceContext);
 			}
 
@@ -3436,8 +3442,8 @@ public class JournalArticleLocalServiceImpl
 
 			if (serviceContext != null) {
 				notifySubscribers(
-					serviceContext.getUserId(), article, article.getUrlTitle(),
-					"move_to", serviceContext);
+					serviceContext.getUserId(), article, articleURL, "move_to",
+					serviceContext);
 			}
 		}
 
