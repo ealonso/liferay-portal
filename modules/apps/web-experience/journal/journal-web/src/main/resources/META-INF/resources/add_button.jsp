@@ -21,7 +21,7 @@
 		<portlet:param name="mvcPath" value="/view_more_menu_items.jsp" />
 	</portlet:renderURL>
 
-	<liferay-frontend:add-menu viewMoreUrl="<%= viewMoreURL %>">
+	<liferay-frontend:add-menu maxItems="<%= journalDisplayContext.getMaxAddMenuItems() %>" viewMoreUrl="<%= viewMoreURL %>">
 		<c:if test="<%= JournalFolderPermission.contains(permissionChecker, scopeGroupId, journalDisplayContext.getFolderId(), ActionKeys.ADD_FOLDER) %>">
 			<portlet:renderURL var="addFolderURL">
 				<portlet:param name="mvcPath" value="/edit_folder.jsp" />
