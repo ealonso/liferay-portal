@@ -43,6 +43,10 @@ public class AddMenuItemTag extends IncludeTag {
 		_title = title;
 	}
 
+	public void setType(String type) {
+		_type = type;
+	}
+
 	public void setUrl(String url) {
 		_url = url;
 	}
@@ -54,12 +58,7 @@ public class AddMenuItemTag extends IncludeTag {
 		_url = null;
 	}
 
-	@Override
-	protected void setAttributes(HttpServletRequest request) {
-		List<AddMenuItem> addMenuItems =
-			(List<AddMenuItem>)request.getAttribute(
-				"liferay-frontend:add-menu:addMenuItems");
-
+	protected void setAddMenuItems(List<AddMenuItem> addMenuItems) {
 		if (addMenuItems != null) {
 			AddMenuItem addMenuItem = new AddMenuItem(
 				_anchorData, _id, _title, _url);
@@ -68,9 +67,34 @@ public class AddMenuItemTag extends IncludeTag {
 		}
 	}
 
+	@Override
+	protected void setAttributes(HttpServletRequest request) {
+		if (_type == "primary") {
+			setAddMenuItems(
+				(List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuPrimaryItems"));
+		}
+		else if (_type == "favorite") {
+			setAddMenuItems(
+				(List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuFavItems"));
+		}
+		else if (_type == "recent") {
+			setAddMenuItems(
+				(List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuRecentItems"));
+		}
+		else {
+			setAddMenuItems(
+				(List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuItems"));
+		}
+	}
+
 	private Map<String, Object> _anchorData;
 	private String _id;
 	private String _title;
+	private String _type;
 	private String _url;
 
 }
