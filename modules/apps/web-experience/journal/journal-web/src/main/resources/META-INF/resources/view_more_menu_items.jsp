@@ -59,6 +59,7 @@ portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
 
 	<liferay-ui:search-container
 		total="<%= ddmStructures.size() %>"
+		iteratorURL="<%= portletURL %>"
 	>
 
 		<liferay-ui:search-container-results
