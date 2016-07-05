@@ -24,7 +24,6 @@ import com.liferay.expando.kernel.service.persistence.ExpandoRowPersistence;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleService;
 import com.liferay.journal.service.persistence.JournalArticleFinder;
-import com.liferay.journal.service.persistence.JournalArticleImagePersistence;
 import com.liferay.journal.service.persistence.JournalArticlePersistence;
 import com.liferay.journal.service.persistence.JournalArticleResourcePersistence;
 import com.liferay.journal.service.persistence.JournalContentSearchPersistence;
@@ -1120,44 +1119,6 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
-	 * Returns the journal article image local service.
-	 *
-	 * @return the journal article image local service
-	 */
-	public com.liferay.journal.service.JournalArticleImageLocalService getJournalArticleImageLocalService() {
-		return journalArticleImageLocalService;
-	}
-
-	/**
-	 * Sets the journal article image local service.
-	 *
-	 * @param journalArticleImageLocalService the journal article image local service
-	 */
-	public void setJournalArticleImageLocalService(
-		com.liferay.journal.service.JournalArticleImageLocalService journalArticleImageLocalService) {
-		this.journalArticleImageLocalService = journalArticleImageLocalService;
-	}
-
-	/**
-	 * Returns the journal article image persistence.
-	 *
-	 * @return the journal article image persistence
-	 */
-	public JournalArticleImagePersistence getJournalArticleImagePersistence() {
-		return journalArticleImagePersistence;
-	}
-
-	/**
-	 * Sets the journal article image persistence.
-	 *
-	 * @param journalArticleImagePersistence the journal article image persistence
-	 */
-	public void setJournalArticleImagePersistence(
-		JournalArticleImagePersistence journalArticleImagePersistence) {
-		this.journalArticleImagePersistence = journalArticleImagePersistence;
-	}
-
-	/**
 	 * Returns the journal article resource local service.
 	 *
 	 * @return the journal article resource local service
@@ -1466,10 +1427,6 @@ public abstract class JournalArticleServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.trash.kernel.service.TrashVersionLocalService trashVersionLocalService;
 	@ServiceReference(type = TrashVersionPersistence.class)
 	protected TrashVersionPersistence trashVersionPersistence;
-	@BeanReference(type = com.liferay.journal.service.JournalArticleImageLocalService.class)
-	protected com.liferay.journal.service.JournalArticleImageLocalService journalArticleImageLocalService;
-	@BeanReference(type = JournalArticleImagePersistence.class)
-	protected JournalArticleImagePersistence journalArticleImagePersistence;
 	@BeanReference(type = com.liferay.journal.service.JournalArticleResourceLocalService.class)
 	protected com.liferay.journal.service.JournalArticleResourceLocalService journalArticleResourceLocalService;
 	@BeanReference(type = JournalArticleResourcePersistence.class)
