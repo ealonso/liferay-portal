@@ -1,0 +1,124 @@
+<%--
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%@ include file="/init.jsp" %>
+
+<%
+String eventName = ParamUtil.getString(request, "eventName", renderResponse.getNamespace() + "selectAddMenuItem");
+
+String redirect = ParamUtil.getString(request, "redirect");
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
+portletURL.setParameter("eventName", eventName);
+%>
+
+<liferay-ui:error exception="<%= MaxAddMenuFavItemsException.class %>" message='<%= LanguageUtil.format(resourceBundle, "you-cannot-add-more-than-x-favorites", journalWebConfiguration.maxAddMenuItems()) %>' />
+
+<c:if test="<%= journalDisplayContext.getAddMenuFavItemsLength() >= journalWebConfiguration.maxAddMenuItems() %>">
+	<liferay-ui:alert message='<%= LanguageUtil.get(resourceBundle, "your-main-menu-is-full-of-favorites.-please-remove-any-of-them-to-add-another-one") %>' timeout="0" type="warning" />
+</c:if>
+
+<aui:nav-bar markupView="lexicon">
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item label="all-menu-items" selected="<%= true %>" />
+	</aui:nav>
+</aui:nav-bar>
+
+<liferay-frontend:management-bar>
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation
+			navigationKeys='<%= new String[] {"all"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews='<%= new String[] {"list"} %>'
+			portletURL="<%= PortletURLUtil.clone(portletURL, renderResponse) %>"
+			selectedDisplayStyle="list"
+		/>
+	</liferay-frontend:management-bar-buttons>
+</liferay-frontend:management-bar>
+
+<aui:form cssClass="container-fluid-1280" name="addMenuItemFm">
+
+	<%
+	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
+	%>
+
+	<liferay-ui:search-container
+		iteratorURL="<%= portletURL %>"
+		total="<%= ddmStructures.size() %>"
+	>
+		<liferay-ui:search-container-results
+			results="<%= ListUtil.subList(ddmStructures, searchContainer.getStart(), searchContainer.getEnd()) %>"
+		/>
+
+		<liferay-ui:search-container-row
+			className="com.liferay.dynamic.data.mapping.model.DDMStructure"
+			cssClass="selectable"
+			escapedModel="<%= true %>"
+			modelVar="ddmStructure"
+		>
+			<portlet:renderURL var="addArticleURL">
+				<portlet:param name="mvcPath" value="/edit_article.jsp" />
+				<portlet:param name="redirect" value="<%= redirect %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+				<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
+				<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
+			</portlet:renderURL>
+
+			<%
+			Map<String, Object> data = new HashMap<>();
+
+			data.put("url", addArticleURL.toString());
+			%>
+
+			<liferay-ui:search-container-column-text
+				name="menu-item-name"
+			>
+				<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+					<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>
+				</aui:a>
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text
+				name="user"
+				property="userName"
+			/>
+
+			<liferay-ui:search-container-column-date
+				name="create-date"
+				property="createDate"
+			/>
+
+			<liferay-ui:search-container-column-jsp
+				align="center"
+				name='<%= LanguageUtil.format(request, "add-to-favorites-x", String.valueOf(journalDisplayContext.getAddMenuFavItemsLength())) %>'
+				path="/view_more_menu_items_actions.jsp"
+			/>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />
+	</liferay-ui:search-container>
+</aui:form>
+
+<aui:script>
+	Liferay.Util.selectEntityHandler('#<portlet:namespace />addMenuItemFm', '<%= HtmlUtil.escapeJS(eventName) %>');
+</aui:script>

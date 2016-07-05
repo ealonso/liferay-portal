@@ -14,10 +14,12 @@
 
 package com.liferay.frontend.taglib.servlet.taglib;
 
+import com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,6 +45,10 @@ public class AddMenuItemTag extends IncludeTag {
 		_title = title;
 	}
 
+	public void setType(AddMenuKeys.AddMenuType type) {
+		_type = type;
+	}
+
 	public void setUrl(String url) {
 		_url = url;
 	}
@@ -51,14 +57,30 @@ public class AddMenuItemTag extends IncludeTag {
 	protected void cleanUp() {
 		_id = null;
 		_title = null;
+		_type = AddMenuKeys.AddMenuType.DEFAULT;
 		_url = null;
 	}
 
 	@Override
 	protected void setAttributes(HttpServletRequest request) {
-		List<AddMenuItem> addMenuItems =
-			(List<AddMenuItem>)request.getAttribute(
+		List<AddMenuItem> addMenuItems = null;
+
+		if (Objects.equals(_type, AddMenuKeys.AddMenuType.PRIMARY)) {
+			addMenuItems = (List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuPrimaryItems");
+		}
+		else if (Objects.equals(_type, AddMenuKeys.AddMenuType.FAVORITE)) {
+			addMenuItems = (List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuFavItems");
+		}
+		else if (Objects.equals(_type, AddMenuKeys.AddMenuType.RECENT)) {
+			addMenuItems = (List<AddMenuItem>)request.getAttribute(
+				"liferay-frontend:add-menu:addMenuRecentItems");
+		}
+		else {
+			addMenuItems = (List<AddMenuItem>)request.getAttribute(
 				"liferay-frontend:add-menu:addMenuItems");
+		}
 
 		if (addMenuItems != null) {
 			AddMenuItem addMenuItem = new AddMenuItem(
@@ -71,6 +93,7 @@ public class AddMenuItemTag extends IncludeTag {
 	private Map<String, Object> _anchorData;
 	private String _id;
 	private String _title;
+	private AddMenuKeys.AddMenuType _type = AddMenuKeys.AddMenuType.DEFAULT;
 	private String _url;
 
 }
