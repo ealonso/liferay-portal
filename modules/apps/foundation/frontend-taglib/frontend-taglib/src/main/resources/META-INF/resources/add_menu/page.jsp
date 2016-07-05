@@ -181,7 +181,7 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 							viewMoreAddMenuElements.on(
 								'click',
 								function(event) {
-									Liferay.Util.openWindow(
+									Liferay.Util.selectEntity(
 										{
 											dialog: {
 												after: {
@@ -192,9 +192,14 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 												destroyOnHide: true,
 												modal: true
 											},
-											id: '<%= namespace %>viewMoreAddMenuElements',
+											id: '<%= namespace %>selectAddMenuItem',
 											title: '<liferay-ui:message key="more" />',
 											uri: '<%= viewMoreUrl %>'
+										},
+										function(event) {
+											event.preventDefault();
+
+											location.href = event.url;
 										}
 									);
 								}
