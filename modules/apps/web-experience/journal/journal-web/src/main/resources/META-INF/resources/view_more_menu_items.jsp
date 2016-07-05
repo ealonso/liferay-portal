@@ -17,9 +17,14 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String eventName = ParamUtil.getString(request, "eventName", renderResponse.getNamespace() + "selectAddMenuItem");
+
+String redirect = ParamUtil.getString(request, "redirect");
+
 PortletURL portletURL = renderResponse.createRenderURL();
 
 portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
+portletURL.setParameter("eventName", eventName);
 %>
 
 <liferay-ui:error exception="<%= MaxAddMenuFavItemsException.class %>" message='<%= LanguageUtil.format(resourceBundle, "you-cannot-add-more-than-x-favorites", journalWebConfiguration.maxAddMenuItems()) %>' />
@@ -51,17 +56,16 @@ portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
 	</liferay-frontend:management-bar-buttons>
 </liferay-frontend:management-bar>
 
-<div class="container-fluid-1280">
+<aui:form cssClass="container-fluid-1280" name="addMenuItemFm">
 
 	<%
 	List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
 	%>
 
 	<liferay-ui:search-container
-		total="<%= ddmStructures.size() %>"
 		iteratorURL="<%= portletURL %>"
+		total="<%= ddmStructures.size() %>"
 	>
-
 		<liferay-ui:search-container-results
 			results="<%= ListUtil.subList(ddmStructures, searchContainer.getStart(), searchContainer.getEnd()) %>"
 		/>
@@ -72,11 +76,28 @@ portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
 			escapedModel="<%= true %>"
 			modelVar="ddmStructure"
 		>
+			<portlet:renderURL var="addArticleURL">
+				<portlet:param name="mvcPath" value="/edit_article.jsp" />
+				<portlet:param name="redirect" value="<%= redirect %>" />
+				<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+				<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
+				<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
+			</portlet:renderURL>
+
+			<%
+			Map<String, Object> data = new HashMap<>();
+
+			data.put("url", addArticleURL.toString());
+			%>
+
 			<liferay-ui:search-container-column-text
 				name="menu-item-name"
 				truncate="<%= true %>"
-				value="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>"
-			/>
+			>
+				<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+					<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>
+				</aui:a>
+			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text
 				name="user"
@@ -96,4 +117,8 @@ portletURL.setParameter("mvcPath", "/view_more_menu_items.jsp");
 
 		<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />
 	</liferay-ui:search-container>
-</div>
+</aui:form>
+
+<aui:script>
+	Liferay.Util.selectEntityHandler('#<portlet:namespace />addMenuItemFm', '<%= HtmlUtil.escapeJS(eventName) %>');
+</aui:script>
