@@ -183,6 +183,15 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 								function(event) {
 									Liferay.Util.openWindow(
 										{
+											dialog: {
+												after: {
+													destroy: function(event) {
+														window.location.reload();
+													}
+												},
+												destroyOnHide: true,
+												modal: true
+											},
 											id: '<%= namespace %>viewMoreAddMenuElements',
 											title: '<liferay-ui:message key="more" />',
 											uri: '<%= viewMoreUrl %>'
