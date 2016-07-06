@@ -12,38 +12,37 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.servlet.taglib.util;
+package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.portal.kernel.util.StringPool;
+
+import java.util.List;
 
 /**
  * @author Eudaldo Alonso
  */
-public class AddMenuKeys {
+public class MenuItemGroup {
 
-	public static final int MAX_ITEMS = Integer.MAX_VALUE;
+	public MenuItemGroup(List<AddMenuItem> addMenuItems) {
+		_addMenuItems = addMenuItems;
 
-	public static String getAddMenuTypeLabel(AddMenuType addMenuType) {
-		if (addMenuType == AddMenuType.FAVORITE) {
-			return "favorite";
-		}
-		else if (addMenuType == AddMenuType.PRIMARY) {
-			return "primary";
-		}
-		else if (addMenuType == AddMenuType.RECENT) {
-			return "recent";
-		}
-		else if (addMenuType == AddMenuType.DEFAULT) {
-			return "default";
-		}
-
-		return StringPool.BLANK;
+		_label = StringPool.BLANK;
 	}
 
-	public enum AddMenuType {
-
-		DEFAULT, FAVORITE, PRIMARY, RECENT
-
+	public MenuItemGroup(String label, List<AddMenuItem> addMenuItems) {
+		_label = label;
+		_addMenuItems = addMenuItems;
 	}
+
+	public List<AddMenuItem> getAddMenuItems() {
+		return _addMenuItems;
+	}
+
+	public String getLabel() {
+		return _label;
+	}
+
+	private final List<AddMenuItem> _addMenuItems;
+	private final String _label;
 
 }

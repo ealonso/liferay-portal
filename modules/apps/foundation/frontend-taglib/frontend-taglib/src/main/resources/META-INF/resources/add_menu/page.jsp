@@ -17,20 +17,20 @@
 <%@ include file="/add_menu/init.jsp" %>
 
 <%
-List<AddMenuItem> addMenuFavItems = (List<AddMenuItem>)request.getAttribute("liferay-frontend:add-menu:addMenuFavItems");
-List<AddMenuItem> addMenuItems = (List<AddMenuItem>)request.getAttribute("liferay-frontend:add-menu:addMenuItems");
-List<AddMenuItem> addMenuPrimaryItems = (List<AddMenuItem>)request.getAttribute("liferay-frontend:add-menu:addMenuPrimaryItems");
-List<AddMenuItem> addMenuRecentItems = (List<AddMenuItem>)request.getAttribute("liferay-frontend:add-menu:addMenuRecentItems");
-int maxItems = (int)request.getAttribute("liferay-frontend:add-menu:maxItems");
+int addMenuItemsCount = GetterUtil.getInteger(request.getAttribute("liferay-frontend:add-menu:addMenuItemsCount"));
+int maxItems = GetterUtil.getInteger(request.getAttribute("liferay-frontend:add-menu:maxItems"));
+Map<AddMenuKeys.AddMenuType, MenuItemGroup> menuItems = (Map<AddMenuKeys.AddMenuType, MenuItemGroup>)request.getAttribute("liferay-frontend:add-menu:menuItems");
 String viewMoreUrl = (String)request.getAttribute("liferay-frontend:add-menu:viewMoreUrl");
-
-int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMenuRecentItems.size();
 %>
 
 <c:choose>
-	<c:when test="<%= allAddMenuItemsCount + addMenuPrimaryItems.size() == 1 %>">
+	<c:when test="<%= addMenuItemsCount == 1 %>">
 
 		<%
+		MenuItemGroup menuItem = menuItems.get(AddMenuKeys.AddMenuType.DEFAULT);
+
+		List<AddMenuItem> addMenuItems = menuItem.getAddMenuItems();
+
 		AddMenuItem addMenuItem = addMenuItems.get(0);
 
 		String id = addMenuItem.getId();
@@ -70,94 +70,32 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 				boolean customizeAddMenuAdviceHidden = GetterUtil.getBoolean(SessionClicks.get(request, "com.liferay.addmenu_customizeAddMenuAdviceHidden", "false"));
 				%>
 
-				<c:if test="<%= !customizeAddMenuAdviceHidden %>">
+				<c:if test="<%= !customizeAddMenuAdviceHidden && Validator.isNotNull(viewMoreUrl) %>">
 					<li class="active add-menu-advice">
 						<a href="javascript:;"><liferay-ui:message key="you-can-customize-this-menu-or-see-all-you-have-by-pressing-more" /></a>
 					</li>
 				</c:if>
 
 				<%
-				for (int i = 0; i< addMenuPrimaryItems.size(); i++) {
-					AddMenuItem addMenuPrimaryItem = addMenuPrimaryItems.get(i);
+				int index = 0;
 
-					String id = addMenuPrimaryItem.getId();
-
-					if (Validator.isNull(id)) {
-						id = "menuPrimaryItem" + i;
-					}
+				for (MenuItemGroup menuItem : menuItems.values()) {
+					List<AddMenuItem> addMenuItems = menuItem.getAddMenuItems();
 				%>
 
-					<li>
-						<a <%= AUIUtil.buildData(addMenuPrimaryItem.getAnchorData()) %> href="<%= HtmlUtil.escapeAttribute(addMenuPrimaryItem.getUrl()) %>" id="<%= namespace + id %>"><%= HtmlUtil.escape(addMenuPrimaryItem.getLabel()) %></a>
-					</li>
-
-				<%
-				}
-				%>
-
-				<c:if test="<%= (addMenuPrimaryItems.size() > 0) %>">
-					<li class="divider"></li>
-				</c:if>
-
-				<c:if test="<%= addMenuFavItems.size() > 0 %>">
-					<li class="dropdown-header">
-						<liferay-ui:message key="favorites" />
-					</li>
-				</c:if>
-
-				<%
-				for (int i = 0; i < addMenuFavItems.size() && (i < allAddMenuItemsCount); i++) {
-					AddMenuItem addMenuFavItem = addMenuFavItems.get(i);
-
-					String id = addMenuFavItem.getId();
-
-					if (Validator.isNull(id)) {
-						id = "menuFavItem" + i;
-					}
-				%>
-
-					<li>
-						<a <%= AUIUtil.buildData(addMenuFavItem.getAnchorData()) %> href="<%= HtmlUtil.escapeAttribute(addMenuFavItem.getUrl()) %>" id="<%= namespace + id %>"><%= HtmlUtil.escape(addMenuFavItem.getLabel()) %></a>
-					</li>
-
-				<%
-				}
-				%>
-
-				<c:if test="<%= (addMenuFavItems.size() < maxItems) && ((addMenuRecentItems.size() > 0) || (addMenuItems.size() > 0)) %>">
-					<c:if test="<%= addMenuFavItems.size() > 0 %>">
-						<li class="divider"></li>
-					</c:if>
-
-					<%
-					for (int i = 0; i < addMenuRecentItems.size() && ((addMenuFavItems.size() + i) < maxItems); i++) {
-						AddMenuItem addMenuRecentItem = addMenuRecentItems.get(i);
-
-						String id = addMenuRecentItem.getId();
-
-						if (Validator.isNull(id)) {
-							id = "menuRecentItem" + i;
-						}
-					%>
-
-						<li>
-							<a <%= AUIUtil.buildData(addMenuRecentItem.getAnchorData()) %> href="<%= HtmlUtil.escapeAttribute(addMenuRecentItem.getUrl()) %>" id="<%= namespace + id %>"><%= HtmlUtil.escape(addMenuRecentItem.getLabel()) %></a>
-						</li>
-
-					<%
-					}
-					%>
-
-					<c:if test="<%= (addMenuFavItems.size() + addMenuRecentItems.size()) < maxItems %>">
+					<c:if test="<%= !addMenuItems.isEmpty() %>">
+						<c:if test="<%= Validator.isNotNull(menuItem.getLabel()) %>">
+							<li class="dropdown-header">
+								<liferay-ui:message key="<%= menuItem.getLabel() %>" />
+							</li>
+						</c:if>
 
 						<%
-						for (int i = 0; i < addMenuItems.size() && ((addMenuFavItems.size() + addMenuRecentItems.size() + i) < maxItems); i++) {
-							AddMenuItem addMenuItem = addMenuItems.get(i);
-
+						for (AddMenuItem addMenuItem : addMenuItems) {
 							String id = addMenuItem.getId();
 
 							if (Validator.isNull(id)) {
-								id = "menuItem" + i;
+								id = "menuItem" + index;
 							}
 						%>
 
@@ -166,15 +104,27 @@ int allAddMenuItemsCount = addMenuFavItems.size() + addMenuItems.size() + addMen
 							</li>
 
 						<%
+							index++;
+
+							if (index >= maxItems) {
+								break;
+							}
 						}
 						%>
 
+						<li class="divider"></li>
 					</c:if>
-				</c:if>
 
-				<c:if test="<%= allAddMenuItemsCount > maxItems %>">
+				<%
+					if (index >= maxItems) {
+						break;
+					}
+				}
+				%>
+
+				<c:if test="<%= addMenuItemsCount > maxItems %>">
 					<li class="dropdown-header">
-						<liferay-ui:message arguments="<%= new Object[] {maxItems, allAddMenuItemsCount} %>" key="showing-x-of-x-items" />
+						<liferay-ui:message arguments="<%= new Object[] {maxItems, addMenuItemsCount} %>" key="showing-x-of-x-items" />
 					</li>
 
 					<c:if test="<%= Validator.isNotNull(viewMoreUrl) %>">
