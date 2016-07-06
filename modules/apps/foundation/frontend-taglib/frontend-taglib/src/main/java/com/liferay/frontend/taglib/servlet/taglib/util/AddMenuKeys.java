@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,8 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/init.jsp" %>
+package com.liferay.frontend.taglib.servlet.taglib.util;
 
-<%@ page import="com.liferay.portal.kernel.util.SessionClicks" %>
+/**
+ * @author Eudaldo Alonso
+ */
+public class AddMenuKeys {
+
+	public static final int MAX_ITEMS = 7;
+
+	public enum AddMenuType {
+
+		DEFAULT, FAVORITE, PRIMARY, RECENT
+
+	}
+
+}

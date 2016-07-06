@@ -17,7 +17,13 @@
 <%@ include file="/init.jsp" %>
 
 <c:if test="<%= JournalFolderPermission.contains(permissionChecker, scopeGroupId, journalDisplayContext.getFolderId(), ActionKeys.ADD_FOLDER) || JournalFolderPermission.contains(permissionChecker, scopeGroupId, journalDisplayContext.getFolderId(), ActionKeys.ADD_ARTICLE) %>">
-	<liferay-frontend:add-menu>
+	<portlet:renderURL var="viewMoreURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<portlet:param name="mvcPath" value="/view_more_menu_items.jsp" />
+		<portlet:param name="eventName" value='<%= renderResponse.getNamespace() + "selectAddMenuItem" %>' />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+	</portlet:renderURL>
+
+	<liferay-frontend:add-menu maxItems="<%= journalDisplayContext.getMaxAddMenuItems() %>" viewMoreUrl="<%= viewMoreURL %>">
 		<c:if test="<%= JournalFolderPermission.contains(permissionChecker, scopeGroupId, journalDisplayContext.getFolderId(), ActionKeys.ADD_FOLDER) %>">
 			<portlet:renderURL var="addFolderURL">
 				<portlet:param name="mvcPath" value="/edit_folder.jsp" />
@@ -35,6 +41,11 @@
 			List<DDMStructure> ddmStructures = JournalFolderServiceUtil.getDDMStructures(PortalUtil.getCurrentAndAncestorSiteGroupIds(scopeGroupId), journalDisplayContext.getFolderId(), journalDisplayContext.getRestrictionType());
 
 			for (DDMStructure ddmStructure : ddmStructures) {
+				AddMenuKeys.AddMenuType type = AddMenuKeys.AddMenuType.DEFAULT;
+
+				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), ddmStructure.getStructureKey())) {
+					type = AddMenuKeys.AddMenuType.FAVORITE;
+				}
 			%>
 
 				<portlet:renderURL var="addArticleURL">
@@ -45,7 +56,7 @@
 					<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
 				</portlet:renderURL>
 
-				<liferay-frontend:add-menu-item title="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>" url="<%= addArticleURL.toString() %>" />
+				<liferay-frontend:add-menu-item title="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>" type="<%= type %>" url="<%= addArticleURL.toString() %>" />
 
 			<%
 			}
