@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,10 +11,29 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/init.jsp" %>
+package com.liferay.journal.exception;
 
-<%@ page import="com.liferay.frontend.taglib.servlet.taglib.MenuItemGroup" %><%@
-page import="com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys" %><%@
-page import="com.liferay.portal.kernel.util.SessionClicks" %>
+import com.liferay.portal.kernel.exception.PortalException;
+
+/**
+ * @author Eudaldo Alonso
+ */
+public class MaxAddMenuFavItemsException extends PortalException {
+
+	public MaxAddMenuFavItemsException() {
+	}
+
+	public MaxAddMenuFavItemsException(String msg) {
+		super(msg);
+	}
+
+	public MaxAddMenuFavItemsException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public MaxAddMenuFavItemsException(Throwable cause) {
+		super(cause);
+	}
+
+}
