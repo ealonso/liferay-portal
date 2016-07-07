@@ -12,34 +12,28 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.servlet.taglib;
+package com.liferay.journal.exception;
 
-import com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys;
-
-import java.util.Map;
+import com.liferay.portal.kernel.exception.PortalException;
 
 /**
- * @author Ambrín Chaudhary
+ * @author Eudaldo Alonso
  */
-public class AddMenuItem extends MenuItem {
+public class MaxAddMenuFavItemsException extends PortalException {
 
-	public AddMenuItem(
-		Map<String, Object> anchorData, String id, String label,
-		AddMenuKeys.AddMenuType type, String url) {
-
-		super(anchorData, id, label, url);
-
-		_type = type;
+	public MaxAddMenuFavItemsException() {
 	}
 
-	public AddMenuKeys.AddMenuType getType() {
-		return _type;
+	public MaxAddMenuFavItemsException(String msg) {
+		super(msg);
 	}
 
-	public void setType(AddMenuKeys.AddMenuType type) {
-		_type = type;
+	public MaxAddMenuFavItemsException(String msg, Throwable cause) {
+		super(msg, cause);
 	}
 
-	private AddMenuKeys.AddMenuType _type = AddMenuKeys.AddMenuType.DEFAULT;
+	public MaxAddMenuFavItemsException(Throwable cause) {
+		super(cause);
+	}
 
 }
