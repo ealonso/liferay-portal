@@ -140,3 +140,96 @@ JournalPortletUtil.addPortletBreadcrumbEntries(folder, request, portletURL);
 		'.selector-button'
 	);
 </aui:script>
+
+<aui:script require="journal-web/js/TreeviewCards.es, metal-dom/src/dom">
+	var TreeviewCards = journalWebJsTreeviewCardsEs.default;
+
+	var DOM = metalDomSrcDom.default;
+
+	new TreeviewCards(
+		{
+			nodes: [
+				{
+					children: [
+						{
+							children: [
+								{
+									icon: 'folder',
+									id: 3,
+									name: 'year: 2012'
+								},
+								{
+									icon: 'folder',
+									id: 4,
+									name: 'director: Thomas Vinterberg'
+								}
+							],
+							icon: 'folder',
+							id: 2,
+							name: 'The Hunt'
+						},
+						{
+							children: [
+								{
+									icon: 'folder',
+									id: 6,
+									name: 'year: 2015'
+								},
+								{
+									children: [
+										{
+											icon: 'folder',
+											id: 8,
+											name: 'year: 2012'
+										},
+										{
+											icon: 'folder',
+											id: 9,
+											name: 'director: Thomas Vinterberg'
+										}
+									],
+									icon: 'folder',
+									id: 7,
+									name: 'director: Damián Szifron'
+								}
+							],
+							expanded: true,
+							icon: 'folder',
+							id: 5,
+							name: 'Wild Tales'
+						}
+					],
+					expanded: true,
+					icon: 'folder',
+					id: 1,
+					name: 'Movies'
+				}
+			],
+			onNodeClick: function(event) {
+				var currentTarget = event.delegateTarget;
+
+				this.element.querySelectorAll('.selectable').forEach(
+					function(element) {
+						DOM.removeClasses(element, 'selected');
+					}
+				);
+
+				DOM.addClasses(currentTarget.querySelector('.selectable'), 'selected');
+
+				var data = {
+					folderId: currentTarget.getAttribute('data-treeitemid'),
+					folderName: currentTarget.getAttribute('data-treeitemname')
+				};
+
+				Liferay.Util.getOpener().Liferay.fire(
+					'<%= HtmlUtil.escapeJS(eventName) %>',
+					{
+						data: data
+					}
+				);
+			},
+			pathThemeImages: '<%= themeDisplay.getPathThemeImages() %>'
+		},
+		'[name="<portlet:namespace />selectFolderFm"]'
+	);
+</aui:script>
