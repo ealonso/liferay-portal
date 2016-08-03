@@ -1,4 +1,19 @@
 apply plugin: "com.liferay.lang.merger"
+apply plugin: "com.liferay.cache"
+
+cache {
+	task(classes) {
+		baseDir = "classes/META-INF"
+		cacheDir = ".task-cache"
+
+		skipTaskDependency configJSModules
+		skipTaskDependency transpileJS
+
+		testFile "build.gradle"
+		testFile "package.json"
+		testFile fileTree(dir: "src/main/resources/META-INF/resources/js")
+	}
+}
 
 dependencies {
 	provided group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
