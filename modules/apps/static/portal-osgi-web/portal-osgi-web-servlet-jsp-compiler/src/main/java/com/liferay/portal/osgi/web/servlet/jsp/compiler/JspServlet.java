@@ -40,6 +40,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -638,27 +639,33 @@ public class JspServlet extends HttpServlet {
 				_INIT_PARAMETER_NAME_SCRATCH_DIR);
 
 			while (enumeration.hasMoreElements()) {
-				FileSystem fileSystem = FileSystems.getDefault();
-
-				StringBuilder sb = new StringBuilder(4);
-
-				sb.append(scratchDirName);
-				sb.append("/org/apache/jsp");
-
 				URL url = enumeration.nextElement();
 
-				String urlPath = url.getPath();
+				Path path = Paths.get(url.getPath());
 
-				String[] urlPathParts = urlPath.split(_DIR_NAME_RESOURCES);
+				if (path.startsWith(_DIR_NAME_RESOURCES)) {
+					path = path.subpath(2, path.getNameCount());
+				}
 
-				String jspPath = urlPathParts[1];
+				String dirName = "/org/apache/jsp/";
 
-				sb.append(
-					jspPath.replace(StringPool.PERIOD, StringPool.UNDERLINE));
+				Path parentPath = path.getParent();
 
-				sb.append(".class");
+				if (parentPath != null) {
+					dirName += parentPath.toString() + "/";
+				}
 
-				paths.add(fileSystem.getPath(sb.toString()));
+				Path fileNamePath = path.getFileName();
+
+				String fileName = fileNamePath.toString();
+
+				fileName = fileName.replaceAll(StringPool.UNDERLINE, "_005f");
+
+				fileName = fileName.substring(0, fileName.length() - 4);
+
+				fileName = fileName + "_jsp.class";
+
+				paths.add(Paths.get(scratchDirName, dirName, fileName));
 			}
 
 			_deleteOutdatedJspFiles(scratchDirName, paths);

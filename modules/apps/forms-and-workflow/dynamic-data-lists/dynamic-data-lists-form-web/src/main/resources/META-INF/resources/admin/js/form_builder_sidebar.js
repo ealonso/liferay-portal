@@ -113,7 +113,7 @@ AUI.add(
 
 						return {
 							bodyContent: instance.get('bodyContent'),
-							closeButtonIcon: Liferay.Util.getLexiconIconTpl('times', 'icon-monospaced'),
+							closeButtonIcon: Liferay.Util.getLexiconIconTpl('angle-right', 'icon-monospaced'),
 							description: instance.get('description'),
 							title: instance.get('title'),
 							toolbarButtonIcon: Liferay.Util.getLexiconIconTpl('ellipsis-v', 'icon-monospaced'),
