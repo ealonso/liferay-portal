@@ -17,6 +17,7 @@ package com.liferay.asset.browser.web.internal.display.context;
 import com.liferay.asset.browser.web.internal.configuration.AssetBrowserWebConfigurationValues;
 import com.liferay.asset.browser.web.internal.constants.AssetBrowserPortletKeys;
 import com.liferay.asset.browser.web.internal.search.AssetBrowserSearch;
+import com.liferay.asset.browser.web.internal.util.AssetEntryOrderByComparator;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
@@ -35,6 +36,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -45,6 +47,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.PortletURL;
@@ -149,6 +152,9 @@ public class AssetBrowserDisplayContext {
 
 		assetBrowserSearch.setTotal(total);
 
+		OrderByComparator orderByComparator = new AssetEntryOrderByComparator(
+			getOrderByCol(), getOrderByType());
+
 		if (AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE) {
 			List<AssetEntry> assetEntries =
 				AssetEntryLocalServiceUtil.getEntries(
@@ -173,6 +179,8 @@ public class AssetBrowserDisplayContext {
 
 			assetBrowserSearch.setResults(assetEntries);
 		}
+
+		Collections.sort(assetBrowserSearch.getResults(), orderByComparator);
 
 		return assetBrowserSearch;
 	}
@@ -317,6 +325,24 @@ public class AssetBrowserDisplayContext {
 
 		return HtmlUtil.escape(
 			group.getDescriptiveName(themeDisplay.getLocale()));
+	}
+
+	public String getOrderByCol() {
+		if (_orderByCol == null) {
+			_orderByCol = ParamUtil.getString(
+				_renderRequest, "orderByCol", "title");
+		}
+
+		return _orderByCol;
+	}
+
+	public String getOrderByType() {
+		if (_orderByType == null) {
+			_orderByType = ParamUtil.getString(
+				_renderRequest, "orderByType", "asc");
+		}
+
+		return _orderByType;
 	}
 
 	public PortletURL getPortletURL() {
@@ -464,6 +490,8 @@ public class AssetBrowserDisplayContext {
 	private String _eventName;
 	private Long _groupId;
 	private String _keywords;
+	private String _orderByCol;
+	private String _orderByType;
 	private Long _refererAssetEntryId;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
