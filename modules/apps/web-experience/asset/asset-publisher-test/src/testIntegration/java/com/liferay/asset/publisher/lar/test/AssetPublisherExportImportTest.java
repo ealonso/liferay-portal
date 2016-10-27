@@ -25,7 +25,9 @@ import com.liferay.asset.publisher.test.util.AssetPublisherTestUtil;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.display.context.AssetEntryResult;
 import com.liferay.asset.publisher.web.display.context.AssetPublisherDisplayContext;
+import com.liferay.asset.publisher.web.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.asset.publisher.web.util.DefaultAssetPublisherCustomizer;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
 import com.liferay.document.library.kernel.model.DLFileEntryType;
@@ -1090,7 +1092,7 @@ public class AssetPublisherExportImportTest
 				ServiceContextTestUtil.getServiceContext());
 		}
 
-		PortletRequest portletRequest = new MockPortletRequest();
+		MockPortletRequest portletRequest = new MockPortletRequest();
 
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
@@ -1119,11 +1121,17 @@ public class AssetPublisherExportImportTest
 		mockHttpServletRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, themeDisplay);
 
+		portletRequest.setPreferences(portletPreferences);
+
 		portletRequest.setAttribute(
 			PortletServlet.PORTLET_SERVLET_REQUEST, mockHttpServletRequest);
 
+		AssetPublisherCustomizer assetPublisherCustomizer =
+			new DefaultAssetPublisherCustomizer();
+
 		AssetPublisherDisplayContext assetPublisherDisplayContext =
 			new AssetPublisherDisplayContext(
+				assetPublisherCustomizer,
 				portletRequest, new MockPortletResponse(), portletPreferences);
 
 		SearchContainer<AssetEntry> searchContainer = new SearchContainer<>();
