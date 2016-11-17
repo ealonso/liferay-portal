@@ -80,27 +80,37 @@ for (String categoryKey : categoryKeys) {
 	</aui:button-row>
 </c:if>
 
-<aui:script sandbox="<%= true %>" use="aui-url">
-	var redirectField = $('#<portlet:namespace />redirect');
+<aui:script use="aui-url">
+	var redirectField = A.one('#<portlet:namespace />redirect');
 
-	if (redirectField.length) {
+	if (redirectField) {
 		var currentURL = new A.Url(document.location.href);
-		var redirectURL = new A.Url(redirectField.val());
 
 		var parameterName = '<portlet:namespace/>tabs1';
 
 		var tabs1 = currentURL.getParameter(parameterName);
 
-		if (tabs1) {
-			redirectURL.setParameter(parameterName, tabs1);
+		var redirectFieldVal = redirectField.val();
 
-			redirectField.val(redirectURL.toString());
+		if (redirectFieldVal) {
+			var redirectURL = new A.Url(redirectFieldVal);
+
+			if (redirectURL) {
+				if (tabs1) {
+					redirectURL.setParameter(parameterName, tabs1);
+
+					redirectField.val(redirectURL.toString());
+				}
+
+				Liferay.on(
+					'showTab',
+					function(event) {
+						redirectURL.setParameter(parameterName, event.id);
+
+						redirectField.val(redirectURL.toString());
+					}
+				);
+			}
 		}
-
-		Liferay.on('showTab', function(event) {
-			redirectURL.setParameter(parameterName, event.id);
-
-			redirectField.val(redirectURL.toString());
-		});
 	}
 </aui:script>
