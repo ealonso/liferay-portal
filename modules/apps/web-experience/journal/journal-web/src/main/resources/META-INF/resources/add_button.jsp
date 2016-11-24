@@ -43,7 +43,7 @@
 			for (DDMStructure ddmStructure : ddmStructures) {
 				AddMenuKeys.AddMenuType type = AddMenuKeys.AddMenuType.DEFAULT;
 
-				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), ddmStructure.getStructureKey())) {
+				if (ArrayUtil.contains(journalDisplayContext.getAddMenuFavItems(), String.valueOf(ddmStructure.getStructureId()))) {
 					type = AddMenuKeys.AddMenuType.FAVORITE;
 				}
 			%>
@@ -53,7 +53,7 @@
 					<portlet:param name="redirect" value="<%= currentURL %>" />
 					<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 					<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
-					<portlet:param name="ddmStructureKey" value="<%= ddmStructure.getStructureKey() %>" />
+					<portlet:param name="ddmStructureId" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
 				</portlet:renderURL>
 
 				<liferay-frontend:add-menu-item title="<%= ddmStructure.getUnambiguousName(ddmStructures, themeDisplay.getScopeGroupId(), locale) %>" type="<%= type %>" url="<%= addArticleURL.toString() %>" />
@@ -78,7 +78,7 @@
 			function(event) {
 				var uri = '<%= addArticleURL %>';
 
-				uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureKey=' + event.ddmStructureKey, uri);
+				uri = Liferay.Util.addParams('<portlet:namespace />ddmStructureId=' + event.ddmStructureId, uri);
 
 				location.href = uri;
 			}
