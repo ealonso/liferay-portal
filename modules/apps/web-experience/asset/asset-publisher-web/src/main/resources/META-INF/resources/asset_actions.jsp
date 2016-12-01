@@ -46,29 +46,77 @@ if (showEditURL && assetRenderer.hasEditPermission(permissionChecker)) {
 	editPortletURL.setParameter("hideDefaultSuccessMessage", Boolean.TRUE.toString());
 	editPortletURL.setParameter("showHeader", Boolean.FALSE.toString());
 }
+
+PortletURL viewFullContentURL = renderResponse.createRenderURL();
+
+AssetRendererFactory assetRendererFactory = assetRenderer.getAssetRendererFactory();
+
+AssetEntry assetEntry = assetRendererFactory.getAssetEntry(assetRenderer.getClassName(), assetRenderer.getClassPK());
+
+viewFullContentURL.setParameter("mvcPath", "/view_content.jsp");
+viewFullContentURL.setParameter("type", assetRendererFactory.getType());
+
+if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
+	if (assetRenderer.getGroupId() != scopeGroupId) {
+		viewFullContentURL.setParameter("groupId", String.valueOf(assetRenderer.getGroupId()));
+	}
+
+	viewFullContentURL.setParameter("urlTitle", assetRenderer.getUrlTitle());
+}
+
+String languageId = LanguageUtil.getLanguageId(request);
+
+String title = assetRenderer.getTitle(LocaleUtil.fromLanguageId(languageId));
+
+String socialBookmarksDisplayPosition = assetPublisherDisplayContext.getSocialBookmarksDisplayPosition();
 %>
 
 <c:if test="<%= editPortletURL != null %>">
+	<c:if test='<%= assetPublisherDisplayContext.isEnableSocialBookmarks() && socialBookmarksDisplayPosition.equals("top") %>'>
+		<div class="icon-monospaced visible-interaction">
+			<liferay-ui:social-bookmarks
+				contentId="<%= String.valueOf(assetEntry.getEntryId()) %>"
+				displayStyle="<%= assetPublisherDisplayContext.getSocialBookmarksDisplayStyle() %>"
+				target="_blank"
+				title="<%= title %>"
+				url="<%= PortalUtil.getCanonicalURL(viewFullContentURL.toString(), themeDisplay, layout) %>"
+			/>
+		</div>
+	</c:if>
+
 	<div class="pull-right">
+		<div class="icon-monospaced visible-interaction">
 
-		<%
-		Map<String, Object> data = new HashMap<String, Object>();
+			<%
+			Map<String, Object> data = new HashMap<String, Object>();
 
-		data.put("destroyOnHide", true);
-		data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
-		data.put("title", LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false));
-		%>
+			data.put("destroyOnHide", true);
+			data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
+			data.put("title", LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false));
+			%>
 
-		<liferay-ui:icon
-			cssClass="asset-actions icon-monospaced visible-interaction"
-			data="<%= data %>"
-			icon="pencil"
-			label="<%= false %>"
-			markupView="lexicon"
-			message='<%= showIconLabel ? LanguageUtil.format(request, "edit-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(assetRenderer.getTitle(locale))}, false) : LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false) %>'
-			method="get"
-			url="<%= editPortletURL.toString() %>"
-			useDialog="<%= true %>"
-		/>
+			<liferay-ui:icon
+				data="<%= data %>"
+				icon="pencil"
+				label="<%= false %>"
+				markupView="lexicon"
+				message='<%= showIconLabel ? LanguageUtil.format(request, "edit-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(assetRenderer.getTitle(locale))}, false) : LanguageUtil.format(request, "edit-x", HtmlUtil.escape(assetRenderer.getTitle(locale)), false) %>'
+				method="get"
+				url="<%= editPortletURL.toString() %>"
+				useDialog="<%= true %>"
+			/>
+		</div>
+
+		<c:if test='<%= assetPublisherDisplayContext.isEnableSocialBookmarks() && socialBookmarksDisplayPosition.equals("bottom") %>'>
+			<div class="icon-monospaced visible-interaction">
+				<liferay-ui:social-bookmarks
+					contentId="<%= String.valueOf(assetEntry.getEntryId()) %>"
+					displayStyle="<%= assetPublisherDisplayContext.getSocialBookmarksDisplayStyle() %>"
+					target="_blank"
+					title="<%= title %>"
+					url="<%= PortalUtil.getCanonicalURL(viewFullContentURL.toString(), themeDisplay, layout) %>"
+				/>
+			</div>
+		</c:if>
 	</div>
 </c:if>
