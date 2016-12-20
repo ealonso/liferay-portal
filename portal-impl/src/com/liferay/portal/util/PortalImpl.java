@@ -7720,7 +7720,9 @@ public class PortalImpl implements Portal {
 					virtualHostname, themeDisplay.getServerPort(),
 					themeDisplay.isSecure());
 
-				if (canonicalURL || virtualHostname.contains(portalDomain)) {
+				if (canonicalURL ||
+					virtualHostname.equalsIgnoreCase(portalDomain)) {
+
 					String path = StringPool.BLANK;
 
 					if (themeDisplay.isWidget()) {
