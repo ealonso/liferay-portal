@@ -824,6 +824,9 @@ public abstract class PortletRequestImpl implements LiferayPortletRequest {
 				RenderParametersPool.put(
 					request, plid, _portletName, renderParameters);
 			}
+			else {
+				RenderParametersPool.clear(request, plid, _portletName);
+			}
 		}
 		else {
 			Map<String, String[]> renderParameters = RenderParametersPool.get(
