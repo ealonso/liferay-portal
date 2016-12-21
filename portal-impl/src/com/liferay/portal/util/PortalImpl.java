@@ -7721,7 +7721,8 @@ public class PortalImpl implements Portal {
 					themeDisplay.isSecure());
 
 				if (canonicalURL ||
-					virtualHostname.equalsIgnoreCase(portalDomain)) {
+					StringUtil.equalsIgnoreCase(
+						virtualHostname, portalDomain)) {
 
 					String path = StringPool.BLANK;
 
