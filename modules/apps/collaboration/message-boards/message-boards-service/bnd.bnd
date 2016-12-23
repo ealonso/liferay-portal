@@ -1,5 +1,8 @@
 Bundle-Name: Liferay Message Boards Service
 Bundle-SymbolicName: com.liferay.message.boards.service
 Bundle-Version: 1.0.10
+Import-Package:\
+	com.liferay.portal.kernel.model;version='[1.0.0,2.0.0)',\
+	*
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Message Boards
