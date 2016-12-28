@@ -84,6 +84,7 @@ public class ATag extends BaseATag {
 		String ariaRole = getAriaRole();
 		String cssClass = getCssClass();
 		Map<String, Object> data = getData();
+		Boolean dataSennaOff = getDataSennaOff();
 		String href = getHref();
 		String id = getId();
 		String iconCssClass = getIconCssClass();
@@ -105,6 +106,12 @@ public class ATag extends BaseATag {
 			if (Validator.isNotNull(target)) {
 				jspWriter.write("target=\"");
 				jspWriter.write(target);
+				jspWriter.write("\" ");
+			}
+
+			if (dataSennaOff == true) {
+				jspWriter.write("data-senna-off=\"");
+				jspWriter.write("true");
 				jspWriter.write("\" ");
 			}
 		}
