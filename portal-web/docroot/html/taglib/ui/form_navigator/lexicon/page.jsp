@@ -79,3 +79,38 @@ for (String categoryKey : categoryKeys) {
 		<aui:button cssClass="btn-lg" href="<%= backURL %>" type="cancel" />
 	</aui:button-row>
 </c:if>
+
+<aui:script use="aui-url">
+	var redirectField = A.one('#<portlet:namespace />redirect');
+
+	if (redirectField) {
+		var currentURL = new A.Url(document.location.href);
+
+		var parameterName = '<portlet:namespace/>tabs1';
+
+		var tabs1 = currentURL.getParameter(parameterName);
+
+		var redirectFieldVal = redirectField.val();
+
+		if (redirectFieldVal) {
+			var redirectURL = new A.Url(redirectFieldVal);
+
+			if (redirectURL) {
+				if (tabs1) {
+					redirectURL.setParameter(parameterName, tabs1);
+
+					redirectField.val(redirectURL.toString());
+				}
+
+				Liferay.on(
+					'showTab',
+					function(event) {
+						redirectURL.setParameter(parameterName, event.id);
+
+						redirectField.val(redirectURL.toString());
+					}
+				);
+			}
+		}
+	}
+</aui:script>
