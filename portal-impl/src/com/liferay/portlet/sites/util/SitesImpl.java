@@ -1508,7 +1508,7 @@ public class SitesImpl implements Sites {
 				Layout.class.getName(), targetLayout.getPlid(),
 				GroupConstants.DEFAULT_LIVE_GROUP_ID, targetLayout.getNameMap(),
 				null, 0, true, GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,
-				null, false, true, null);
+				"", false, true, null);
 		}
 
 		String portletTitle = PortalUtil.getPortletTitle(

@@ -164,7 +164,7 @@ public class UpdateLanguageAction extends Action {
 		}
 
 		if (PortalUtil.isGroupFriendlyURL(
-				layoutURL, group.getFriendlyURL(),
+				layoutURL, group.getFriendlyURL(locale),
 				layout.getFriendlyURL(locale))) {
 
 			return true;
