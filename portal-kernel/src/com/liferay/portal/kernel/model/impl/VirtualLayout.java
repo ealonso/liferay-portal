@@ -73,7 +73,12 @@ public class VirtualLayout extends LayoutWrapper {
 		try {
 			Group group = _sourceLayout.getGroup();
 
-			sb.append(group.getFriendlyURL());
+			if (locale == null) {
+				sb.append(group.getFriendlyURL());
+			}
+			else {
+				sb.append(group.getFriendlyURL(locale));
+			}
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -185,11 +190,11 @@ public class VirtualLayout extends LayoutWrapper {
 					_LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING);
 			}
 
-			int pos = layoutURL.indexOf(group.getFriendlyURL());
+			int pos = layoutURL.indexOf(group.getFriendlyURL(locale));
 
 			sb.append(layoutURL.substring(0, pos));
 
-			sb.append(_targetGroup.getFriendlyURL());
+			sb.append(_targetGroup.getFriendlyURL(locale));
 			sb.append(getFriendlyURL(locale));
 
 			pos = layoutURL.indexOf(StringPool.QUESTION);

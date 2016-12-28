@@ -1207,7 +1207,8 @@ public class WebServerServlet extends HttpServlet {
 		List<Group> groups = WebDAVUtil.getGroups(user);
 
 		for (Group group : groups) {
-			String name = HttpUtil.fixPath(group.getFriendlyURL());
+			String name = HttpUtil.fixPath(
+				group.getFriendlyURL(user.getLocale()));
 
 			WebServerEntry webServerEntry = new WebServerEntry(
 				path, name + StringPool.SLASH, null, null,

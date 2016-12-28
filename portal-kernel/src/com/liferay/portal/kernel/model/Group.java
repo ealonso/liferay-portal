@@ -95,6 +95,17 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay,
 		boolean privateLayout);
 
+	public java.lang.String getFriendlyURL(java.util.Locale locale);
+
+	/**
+	* Returns the friendly URLs for all configured locales.
+	*
+	* @return the friendly URLs for all configured locales
+	*/
+	public java.util.Map<java.util.Locale, java.lang.String> getFriendlyURLMap();
+
+	public java.lang.String getFriendlyURLsXML();
+
 	public java.lang.String getIconCssClass();
 
 	public java.lang.String getIconURL(

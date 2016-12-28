@@ -116,7 +116,7 @@ public class GroupServiceTest {
 			companyGroup.getDescriptionMap(), companyGroup.getType(),
 			companyGroup.isManualMembership(),
 			companyGroup.getMembershipRestriction(),
-			companyGroup.getFriendlyURL(), false, companyGroup.isActive(),
+			companyGroup.getFriendlyURLMap(), false, companyGroup.isActive(),
 			serviceContext);
 
 		Assert.assertTrue(companyStagingGroup.isCompanyStagingGroup());
@@ -722,7 +722,7 @@ public class GroupServiceTest {
 			stagingGroup.getNameMap(), stagingGroup.getDescriptionMap(),
 			stagingGroup.getType(), stagingGroup.isManualMembership(),
 			stagingGroup.getMembershipRestriction(),
-			stagingGroup.getFriendlyURL(), stagingGroup.isInheritContent(),
+			stagingGroup.getFriendlyURLMap(), stagingGroup.isInheritContent(),
 			stagingGroup.isActive(),
 			ServiceContextTestUtil.getServiceContext());
 	}
@@ -735,8 +735,8 @@ public class GroupServiceTest {
 			group.getGroupId(), group.getGroupId(), group.getNameMap(),
 			group.getDescriptionMap(), group.getType(),
 			group.isManualMembership(), group.getMembershipRestriction(),
-			group.getFriendlyURL(), group.isInheritContent(), group.isActive(),
-			ServiceContextTestUtil.getServiceContext());
+			group.getFriendlyURLMap(), group.isInheritContent(),
+			group.isActive(), ServiceContextTestUtil.getServiceContext());
 	}
 
 	@Test

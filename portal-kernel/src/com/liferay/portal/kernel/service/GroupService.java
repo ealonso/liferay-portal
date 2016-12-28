@@ -123,6 +123,14 @@ public interface GroupService extends BaseService {
 		boolean active, ServiceContext serviceContext)
 		throws PortalException;
 
+	public Group addGroup(long parentGroupId, long liveGroupId,
+		Map<Locale, java.lang.String> nameMap,
+		Map<Locale, java.lang.String> descriptionMap, int type,
+		boolean manualMembership, int membershipRestriction,
+		Map<Locale, java.lang.String> friendlyURLMap, boolean site,
+		boolean inheritContent, boolean active, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	* Returns the company group.
 	*
@@ -180,6 +188,17 @@ public interface GroupService extends BaseService {
 		throws PortalException;
 
 	/**
+	* Updates the group's friendly URLs map.
+	*
+	* @param groupId the primary key of the group
+	* @param friendlyURLMap the group's localized friendlyURL map
+	* @return the group
+	* @throws PortalException if a portal exception occurred
+	*/
+	public Group updateFriendlyURL(long groupId,
+		Map<Locale, java.lang.String> friendlyURLMap) throws PortalException;
+
+	/**
 	* Updates the group's type settings.
 	*
 	* @param groupId the primary key of the group
@@ -232,6 +251,14 @@ public interface GroupService extends BaseService {
 		boolean manualMembership, int membershipRestriction,
 		java.lang.String friendlyURL, boolean inheritContent, boolean active,
 		ServiceContext serviceContext) throws PortalException;
+
+	public Group updateGroup(long groupId, long parentGroupId,
+		Map<Locale, java.lang.String> nameMap,
+		Map<Locale, java.lang.String> descriptionMap, int type,
+		boolean manualMembership, int membershipRestriction,
+		Map<Locale, java.lang.String> friendlyURLMap, boolean inheritContent,
+		boolean active, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	* Returns the number of the guest or current user's groups

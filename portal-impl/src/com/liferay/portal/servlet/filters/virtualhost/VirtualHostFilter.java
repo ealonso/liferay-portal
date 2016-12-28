@@ -345,7 +345,8 @@ public class VirtualHostFilter extends BasePortalFilter {
 						forwardURL.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 					}
 
-					forwardURL.append(group.getFriendlyURL());
+					forwardURL.append(
+						group.getFriendlyURL(PortalUtil.getLocale(request)));
 				}
 			}
 

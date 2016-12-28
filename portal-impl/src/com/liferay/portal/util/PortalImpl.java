@@ -155,6 +155,7 @@ import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.DeterminateKeyGenerator;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -3105,7 +3106,8 @@ public class PortalImpl implements Portal {
 		}
 
 		String layoutSetFriendlyURL =
-			_pathContext + friendlyURL + group.getFriendlyURL();
+			_pathContext + friendlyURL +
+				group.getFriendlyURL(themeDisplay.getLocale());
 
 		return addPreservedParameters(themeDisplay, layoutSetFriendlyURL);
 	}
@@ -3556,6 +3558,26 @@ public class PortalImpl implements Portal {
 		String virtualHostname = layoutSet.getVirtualHostname();
 
 		String portalURL = getPortalURL(request);
+
+		int pos = path.indexOf(CharPool.SLASH, 1);
+
+		if (pos == -1) {
+			pos = path.length();
+		}
+
+		String groupFriendlyURL =
+			FriendlyURLNormalizerUtil.normalizeWithEncoding(
+				HttpUtil.decodeURL(path.substring(0, pos)));
+
+		long companyId = getCompanyId(request);
+
+		Group group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+			companyId, groupFriendlyURL);
+
+		if (group != null) {
+			requestURI = requestURI.replaceFirst(
+				groupFriendlyURL, group.getFriendlyURL(locale));
+		}
 
 		if (Validator.isNull(virtualHostname) ||
 			!portalURL.contains(virtualHostname)) {
@@ -7805,7 +7827,7 @@ public class PortalImpl implements Portal {
 		}
 
 		sb.append(friendlyURL);
-		sb.append(group.getFriendlyURL());
+		sb.append(group.getFriendlyURL(themeDisplay.getLocale()));
 
 		return sb.toString();
 	}
@@ -7934,7 +7956,7 @@ public class PortalImpl implements Portal {
 			sb.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 		}
 
-		sb.append(group.getFriendlyURL());
+		sb.append(group.getFriendlyURL(themeDisplay.getLocale()));
 		sb.append(layout.getFriendlyURL(themeDisplay.getLocale()));
 
 		sb.append(FRIENDLY_URL_SEPARATOR);

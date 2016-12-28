@@ -710,6 +710,16 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 		return _group.getFriendlyURL();
 	}
 
+	@Override
+	public java.lang.String getFriendlyURL(java.util.Locale locale) {
+		return _group.getFriendlyURL(locale);
+	}
+
+	@Override
+	public java.lang.String getFriendlyURLsXML() {
+		return _group.getFriendlyURLsXML();
+	}
+
 	/**
 	* Returns the group key of this group.
 	*
@@ -940,6 +950,16 @@ public class GroupWrapper implements Group, ModelWrapper<Group> {
 	@Override
 	public Map<java.util.Locale, java.lang.String> getDescriptionMap() {
 		return _group.getDescriptionMap();
+	}
+
+	/**
+	* Returns the friendly URLs for all configured locales.
+	*
+	* @return the friendly URLs for all configured locales
+	*/
+	@Override
+	public Map<java.util.Locale, java.lang.String> getFriendlyURLMap() {
+		return _group.getFriendlyURLMap();
 	}
 
 	/**
