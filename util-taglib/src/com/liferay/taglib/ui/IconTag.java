@@ -81,6 +81,10 @@ public class IconTag extends IncludeTag {
 		_data = data;
 	}
 
+	public void setDataSennaOff(boolean dataSennaOff) {
+		_dataSennaOff = dataSennaOff;
+	}
+
 	public void setIcon(String icon) {
 		_icon = icon;
 	}
@@ -163,6 +167,7 @@ public class IconTag extends IncludeTag {
 		_ariaRole = null;
 		_cssClass = null;
 		_data = null;
+		_dataSennaOff = false;
 		_icon = null;
 		_iconCssClass = null;
 		_id = null;
@@ -580,6 +585,8 @@ public class IconTag extends IncludeTag {
 			"liferay-ui:icon:auiImage", String.valueOf(isAUIImage()));
 		request.setAttribute("liferay-ui:icon:cssClass", _cssClass);
 		request.setAttribute("liferay-ui:icon:data", getData());
+		request.setAttribute(
+			"liferay-ui:icon:dataSennaOff", String.valueOf(_dataSennaOff));
 		request.setAttribute("liferay-ui:icon:details", getDetails());
 		request.setAttribute(
 			"liferay-ui:icon:forcePost", String.valueOf(isForcePost()));
@@ -628,6 +635,7 @@ public class IconTag extends IncludeTag {
 	private String _ariaRole;
 	private String _cssClass;
 	private Map<String, Object> _data;
+	private boolean _dataSennaOff;
 	private String _icon;
 	private String _iconCssClass;
 	private String _id;

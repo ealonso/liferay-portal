@@ -44,6 +44,10 @@ public abstract class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		return _data;
 	}
 
+	public boolean getDataSennaOff() {
+		return _dataSennaOff;
+	}
+
 	public java.lang.String getHref() {
 		return _href;
 	}
@@ -96,6 +100,12 @@ public abstract class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		_data = data;
 
 		setScopedAttribute("data", data);
+	}
+
+	public void setDataSennaOff (boolean dataSennaOff) {
+		_dataSennaOff = dataSennaOff;
+
+		setScopedAttribute("dataSennaOff", dataSennaOff);
 	}
 
 	public void setHref(java.lang.String href) {
@@ -159,6 +169,7 @@ public abstract class BaseATag extends com.liferay.taglib.util.IncludeTag {
 		_ariaRole = null;
 		_cssClass = null;
 		_data = null;
+		_dataSennaOff = false;
 		_href = null;
 		_iconCssClass = null;
 		_id = null;
@@ -191,6 +202,7 @@ public abstract class BaseATag extends com.liferay.taglib.util.IncludeTag {
 	private java.lang.String _ariaRole = null;
 	private java.lang.String _cssClass = null;
 	private java.util.Map<java.lang.String, java.lang.Object> _data = null;
+	private boolean _dataSennaOff = false;
 	private java.lang.String _href = null;
 	private java.lang.String _iconCssClass = null;
 	private java.lang.String _id = null;

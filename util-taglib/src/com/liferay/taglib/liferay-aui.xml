@@ -29,6 +29,14 @@
 				<outputType><![CDATA[java.util.Map<java.lang.String, java.lang.Object>]]></outputType>
 			</attribute>
 			<attribute>
+				<description>Set the hability to disable SPA on links</description>
+				<name>dataSennaOff</name>
+				<inputType>boolean</inputType>
+				<outputType>boolean</outputType>
+				<defaultValue>false</defaultValue>
+				<required>false</required>
+			</attribute>
+			<attribute>
 				<description>A URL to navigate to when the link is clicked.</description>
 				<name>href</name>
 				<inputType>java.lang.String</inputType>
