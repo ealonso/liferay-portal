@@ -55,6 +55,7 @@ import com.liferay.portal.kernel.service.persistence.AccountPersistence;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.CompanyPersistence;
 import com.liferay.portal.kernel.service.persistence.GroupFinder;
+import com.liferay.portal.kernel.service.persistence.GroupFriendlyURLPersistence;
 import com.liferay.portal.kernel.service.persistence.GroupPersistence;
 import com.liferay.portal.kernel.service.persistence.LayoutFinder;
 import com.liferay.portal.kernel.service.persistence.LayoutPersistence;
@@ -1622,6 +1623,44 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the group friendly url local service.
+	 *
+	 * @return the group friendly url local service
+	 */
+	public com.liferay.portal.kernel.service.GroupFriendlyURLLocalService getGroupFriendlyURLLocalService() {
+		return groupFriendlyURLLocalService;
+	}
+
+	/**
+	 * Sets the group friendly url local service.
+	 *
+	 * @param groupFriendlyURLLocalService the group friendly url local service
+	 */
+	public void setGroupFriendlyURLLocalService(
+		com.liferay.portal.kernel.service.GroupFriendlyURLLocalService groupFriendlyURLLocalService) {
+		this.groupFriendlyURLLocalService = groupFriendlyURLLocalService;
+	}
+
+	/**
+	 * Returns the group friendly url persistence.
+	 *
+	 * @return the group friendly url persistence
+	 */
+	public GroupFriendlyURLPersistence getGroupFriendlyURLPersistence() {
+		return groupFriendlyURLPersistence;
+	}
+
+	/**
+	 * Sets the group friendly url persistence.
+	 *
+	 * @param groupFriendlyURLPersistence the group friendly url persistence
+	 */
+	public void setGroupFriendlyURLPersistence(
+		GroupFriendlyURLPersistence groupFriendlyURLPersistence) {
+		this.groupFriendlyURLPersistence = groupFriendlyURLPersistence;
+	}
+
+	/**
 	 * Returns the layout local service.
 	 *
 	 * @return the layout local service
@@ -2783,6 +2822,10 @@ public abstract class GroupLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected com.liferay.trash.kernel.service.TrashEntryLocalService trashEntryLocalService;
 	@BeanReference(type = TrashEntryPersistence.class)
 	protected TrashEntryPersistence trashEntryPersistence;
+	@BeanReference(type = com.liferay.portal.kernel.service.GroupFriendlyURLLocalService.class)
+	protected com.liferay.portal.kernel.service.GroupFriendlyURLLocalService groupFriendlyURLLocalService;
+	@BeanReference(type = GroupFriendlyURLPersistence.class)
+	protected GroupFriendlyURLPersistence groupFriendlyURLPersistence;
 	@BeanReference(type = com.liferay.portal.kernel.service.LayoutLocalService.class)
 	protected com.liferay.portal.kernel.service.LayoutLocalService layoutLocalService;
 	@BeanReference(type = LayoutPersistence.class)
