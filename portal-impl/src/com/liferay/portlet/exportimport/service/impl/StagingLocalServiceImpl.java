@@ -572,7 +572,7 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			liveGroup.getClassPK(), liveGroup.getGroupId(),
 			liveGroup.getNameMap(), liveGroup.getDescriptionMap(),
 			liveGroup.getType(), liveGroup.isManualMembership(),
-			liveGroup.getMembershipRestriction(), liveGroup.getFriendlyURL(),
+			liveGroup.getMembershipRestriction(), liveGroup.getFriendlyURLMap(),
 			false, true, serviceContext);
 
 		if (LanguageUtil.isInheritLocales(liveGroup.getGroupId())) {

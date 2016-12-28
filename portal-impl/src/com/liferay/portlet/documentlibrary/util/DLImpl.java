@@ -902,7 +902,7 @@ public class DLImpl implements DL {
 			group = themeDisplay.getScopeGroup();
 		}
 
-		webDavURL.append(group.getFriendlyURL());
+		webDavURL.append(group.getFriendlyURL(themeDisplay.getLocale()));
 		webDavURL.append("/document_library");
 
 		StringBuilder sb = new StringBuilder();

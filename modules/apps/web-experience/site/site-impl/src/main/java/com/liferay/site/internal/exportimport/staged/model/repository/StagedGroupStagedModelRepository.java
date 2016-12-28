@@ -193,7 +193,7 @@ public class StagedGroupStagedModelRepository
 			stagedGroup.getNameMap(), stagedGroup.getDescriptionMap(),
 			stagedGroup.getType(), stagedGroup.getManualMembership(),
 			stagedGroup.getMembershipRestriction(),
-			stagedGroup.getFriendlyURL(), stagedGroup.isInheritContent(),
+			stagedGroup.getFriendlyURLMap(), stagedGroup.isInheritContent(),
 			stagedGroup.isActive(), serviceContext);
 
 		return ModelAdapterUtil.adapt(group, Group.class, StagedGroup.class);

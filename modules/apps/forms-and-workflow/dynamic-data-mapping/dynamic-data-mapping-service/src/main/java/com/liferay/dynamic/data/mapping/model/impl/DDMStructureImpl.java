@@ -363,7 +363,7 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 
 		Group group = themeDisplay.getScopeGroup();
 
-		sb.append(group.getFriendlyURL());
+		sb.append(group.getFriendlyURL(themeDisplay.getLocale()));
 
 		sb.append(StringPool.SLASH);
 		sb.append(webDAVToken);
