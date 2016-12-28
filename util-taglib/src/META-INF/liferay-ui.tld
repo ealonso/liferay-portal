@@ -1695,6 +1695,13 @@
 			<type>java.util.Map</type>
 		</attribute>
 		<attribute>
+			<description>Set the hability to disable SPA on links</description>
+			<name>dataSennaOff</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
 			<name>icon</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>

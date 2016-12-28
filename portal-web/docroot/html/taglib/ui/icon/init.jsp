@@ -39,6 +39,7 @@ String ariaRole = (String)request.getAttribute("liferay-ui:icon:ariaRole");
 boolean auiImage = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:icon:auiImage"));
 String cssClass = GetterUtil.getString((String)request.getAttribute("liferay-ui:icon:cssClass"));
 Map<String, Object> data = (Map<String, Object>)request.getAttribute("liferay-ui:icon:data");
+boolean dataSennaOff = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:icon:dataSennaOff"));
 String details = GetterUtil.getString((String)request.getAttribute("liferay-ui:icon:details"));
 String icon = (String)request.getAttribute("liferay-ui:icon:icon");
 String iconCssClass = (String)request.getAttribute("liferay-ui:icon:iconCssClass");
