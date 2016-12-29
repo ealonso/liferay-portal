@@ -29,6 +29,8 @@ String redirect = ParamUtil.getString(request, "redirect");
 		<div class="container-fluid-1280">
 			<aui:fieldset-group markupView="lexicon">
 				<aui:fieldset>
+					<aui:input helpMessage="api-key-help" name="preferences--apiKey--" type="text" value="<%= apiKey %>" wrapperCssClass="lfr-input-text-container" />
+
 					<aui:input name="preferences--mapAddress--" type="text" value="<%= mapAddress %>" wrapperCssClass="lfr-input-text-container" />
 
 					<aui:input label="allow-map-address-to-be-edited" name="preferences--mapInputEnabled--" type="toggle-switch" value="<%= mapInputEnabled %>" />
