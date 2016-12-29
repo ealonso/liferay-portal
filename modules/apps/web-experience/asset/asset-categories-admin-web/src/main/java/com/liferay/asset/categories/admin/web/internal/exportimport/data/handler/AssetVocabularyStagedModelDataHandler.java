@@ -24,9 +24,12 @@ import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 
@@ -124,7 +127,101 @@ public class AssetVocabularyStagedModelDataHandler
 
 		vocabularyElement.addAttribute("path", vocabularyPath);
 
-		vocabulary.setUserUuid(vocabulary.getUserUuid());
+		UnicodeProperties properties = new UnicodeProperties(true);
+
+		properties.fastLoad(vocabulary.getSettings());
+
+		String selectedClassNameIdsProperty = GetterUtil.getString(
+			properties.remove("selectedClassNameIds"), "");
+
+		String[] selectedClassNameIds = selectedClassNameIdsProperty.split(
+			StringPool.COMMA);
+
+		StringBundler selectedClassNames = new StringBundler(
+			selectedClassNameIds.length * 4 - 1);
+
+		for (String selectedClassNameId : selectedClassNameIds) {
+			String[] types = selectedClassNameId.split(StringPool.COLON);
+
+			if (types.length != 2) {
+				continue;
+			}
+
+			if (selectedClassNames.length() > 0) {
+				selectedClassNames.append(StringPool.COMMA);
+			}
+
+			long classNameId = Long.parseLong(types[0]);
+
+			if (classNameId <= 0) {
+				selectedClassNames.append("0");
+				selectedClassNames.append(StringPool.COLON);
+				selectedClassNames.append("-1");
+
+				continue;
+			}
+
+			String classType = types[1];
+
+			String className = PortalUtil.getClassName(classNameId);
+
+			selectedClassNames.append(className);
+
+			selectedClassNames.append(StringPool.COLON);
+			selectedClassNames.append(classType);
+		}
+
+		if (selectedClassNames.length() > 0) {
+			properties.setProperty(
+				"selectedClassNames", selectedClassNames.toString());
+		}
+
+		String requiredClassNameIdsProperty = GetterUtil.getString(
+			properties.remove("requiredClassNameIds"), "");
+
+		String[] requiredClassNameIds = requiredClassNameIdsProperty.split(
+			StringPool.COMMA);
+
+		StringBundler requiredClassNames = new StringBundler(
+			requiredClassNameIds.length * 4 - 1);
+
+		for (String requiredClassNameId : requiredClassNameIds) {
+			String[] types = requiredClassNameId.split(StringPool.COLON);
+
+			if (types.length != 2) {
+				continue;
+			}
+
+			if (requiredClassNames.length() > 0) {
+				requiredClassNames.append(StringPool.COMMA);
+			}
+
+			long classNameId = Long.parseLong(types[0]);
+
+			if (classNameId <= 0) {
+				requiredClassNames.append("0");
+				requiredClassNames.append(StringPool.COLON);
+				requiredClassNames.append("-1");
+
+				continue;
+			}
+
+			String classType = types[1];
+
+			String className = PortalUtil.getClassName(classNameId);
+
+			requiredClassNames.append(className);
+
+			requiredClassNames.append(StringPool.COLON);
+			requiredClassNames.append(classType);
+		}
+
+		if (requiredClassNames.length() > 0) {
+			properties.setProperty(
+				"requiredClassNames", requiredClassNames.toString());
+		}
+
+		vocabulary.setSettings(properties.toString());
 
 		portletDataContext.addReferenceElement(
 			vocabulary, vocabularyElement, vocabulary,
@@ -170,6 +267,94 @@ public class AssetVocabularyStagedModelDataHandler
 
 		AssetVocabulary existingVocabulary = fetchStagedModelByUuidAndGroupId(
 			vocabulary.getUuid(), portletDataContext.getScopeGroupId());
+
+		UnicodeProperties properties = new UnicodeProperties(true);
+
+		properties.fastLoad(vocabulary.getSettings());
+
+		String selectedClassNamesProperty = GetterUtil.getString(
+			properties.remove("selectedClassNames"), "");
+
+		String[] selectedClassNames = selectedClassNamesProperty.split(
+			StringPool.COMMA);
+
+		StringBundler selectedClassNameIds = new StringBundler(
+			selectedClassNames.length * 4 - 1);
+
+		for (String selectedClassName : selectedClassNames) {
+			String[] types = selectedClassName.split(StringPool.COLON);
+
+			if (types.length != 2) {
+				continue;
+			}
+
+			if (selectedClassNameIds.length() > 0) {
+				selectedClassNameIds.append(StringPool.COMMA);
+			}
+
+			if (types[0].equals("0")) {
+				selectedClassNameIds.append("0");
+				selectedClassNameIds.append(StringPool.COLON);
+				selectedClassNameIds.append("-1");
+
+				continue;
+			}
+
+			long classNameId = PortalUtil.getClassNameId(types[0]);
+			String classType = types[1];
+
+			selectedClassNameIds.append(classNameId);
+			selectedClassNameIds.append(StringPool.COLON);
+			selectedClassNameIds.append(classType);
+		}
+
+		if (selectedClassNameIds.length() > 0) {
+			properties.put(
+				"selectedClassNameIds", selectedClassNameIds.toString());
+		}
+
+		String requiredClassNamesProperty = GetterUtil.getString(
+			properties.remove("requiredClassNames"), "");
+
+		String[] requiredClassNames = requiredClassNamesProperty.split(
+			StringPool.COMMA);
+
+		StringBundler requiredClassNameIds = new StringBundler(
+			requiredClassNames.length * 4 - 1);
+
+		for (String requiredClassName : requiredClassNames) {
+			String[] types = requiredClassName.split(StringPool.COLON);
+
+			if (types.length != 2) {
+				continue;
+			}
+
+			if (requiredClassNameIds.length() > 0) {
+				requiredClassNameIds.append(StringPool.COMMA);
+			}
+
+			if (types[0].equals("0")) {
+				requiredClassNameIds.append("0");
+				requiredClassNameIds.append(StringPool.COLON);
+				requiredClassNameIds.append("-1");
+
+				continue;
+			}
+
+			long classNameId = PortalUtil.getClassNameId(types[0]);
+			String classType = types[1];
+
+			requiredClassNameIds.append(classNameId);
+			requiredClassNameIds.append(StringPool.COLON);
+			requiredClassNameIds.append(classType);
+		}
+
+		if (requiredClassNameIds.length() > 0) {
+			properties.put(
+				"requiredClassNameIds", selectedClassNameIds.toString());
+		}
+
+		vocabulary.setSettings(properties.toString());
 
 		if (existingVocabulary == null) {
 			String name = getVocabularyName(
