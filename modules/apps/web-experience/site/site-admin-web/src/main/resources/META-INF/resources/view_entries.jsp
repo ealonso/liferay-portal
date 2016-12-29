@@ -59,7 +59,11 @@ siteChecker.setRememberCheckBoxStateURLRegex("^(?!.*" + liferayPortletResponse.g
 
 		GroupURLProvider groupURLProvider = (GroupURLProvider)request.getAttribute(SiteWebKeys.GROUP_URL_PROVIDER);
 
-		String viewSiteURL = groupURLProvider.getGroupURL(curGroup, liferayPortletRequest);
+		String viewSiteURL = StringPool.BLANK;
+
+		if (curGroup.isActive()) {
+			viewSiteURL = groupURLProvider.getGroupURL(curGroup, liferayPortletRequest);
+		}
 		%>
 
 		<c:choose>

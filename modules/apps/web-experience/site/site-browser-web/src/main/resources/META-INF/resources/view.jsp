@@ -115,16 +115,66 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 			data.put("url", group.getDisplayURL(themeDisplay));
 			%>
 
-			<c:choose>
-				<c:when test='<%= displayStyle.equals("descriptive") %>'>
-					<liferay-ui:search-container-column-icon
-						icon="sites"
-					/>
+			<c:if test="<%= group.isActive() %>">
+				<c:choose>
+					<c:when test='<%= displayStyle.equals("descriptive") %>'>
+						<liferay-ui:search-container-column-icon
+							icon="sites"
+						/>
 
-					<liferay-ui:search-container-column-text
-						colspan="<%= 2 %>"
-					>
-						<h5>
+						<liferay-ui:search-container-column-text
+							colspan="<%= 2 %>"
+						>
+							<h5>
+								<c:choose>
+									<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
+										<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+											<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+										</aui:a>
+									</c:when>
+									<c:otherwise>
+										<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
+									</c:otherwise>
+								</c:choose>
+							</h5>
+
+							<h6 class="text-default">
+								<span><%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %></span>
+							</h6>
+						</liferay-ui:search-container-column-text>
+					</c:when>
+					<c:when test='<%= displayStyle.equals("icon") %>'>
+
+						<%
+						row.setCssClass("entry-card lfr-asset-item " + row.getCssClass());
+						%>
+
+						<liferay-ui:search-container-column-text>
+							<c:choose>
+								<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
+
+									<%
+									Map<String, Object> urlData = data;
+									%>
+
+									<%@ include file="/site_vertical_card.jspf" %>
+								</c:when>
+								<c:otherwise>
+
+									<%
+									Map<String, Object> urlData = null;
+									%>
+
+									<%@ include file="/site_vertical_card.jspf" %>
+								</c:otherwise>
+							</c:choose>
+						</liferay-ui:search-container-column-text>
+					</c:when>
+					<c:when test='<%= displayStyle.equals("list") %>'>
+						<liferay-ui:search-container-column-text
+							name="name"
+							truncate="<%= true %>"
+						>
 							<c:choose>
 								<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
 									<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
@@ -135,63 +185,15 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 									<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
 								</c:otherwise>
 							</c:choose>
-						</h5>
+						</liferay-ui:search-container-column-text>
 
-						<h6 class="text-default">
-							<span><%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %></span>
-						</h6>
-					</liferay-ui:search-container-column-text>
-				</c:when>
-				<c:when test='<%= displayStyle.equals("icon") %>'>
-
-					<%
-					row.setCssClass("entry-card lfr-asset-item " + row.getCssClass());
-					%>
-
-					<liferay-ui:search-container-column-text>
-						<c:choose>
-							<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
-
-								<%
-								Map<String, Object> urlData = data;
-								%>
-
-								<%@ include file="/site_vertical_card.jspf" %>
-							</c:when>
-							<c:otherwise>
-
-								<%
-								Map<String, Object> urlData = null;
-								%>
-
-								<%@ include file="/site_vertical_card.jspf" %>
-							</c:otherwise>
-						</c:choose>
-					</liferay-ui:search-container-column-text>
-				</c:when>
-				<c:when test='<%= displayStyle.equals("list") %>'>
-					<liferay-ui:search-container-column-text
-						name="name"
-						truncate="<%= true %>"
-					>
-						<c:choose>
-							<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
-								<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-									<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
-								</aui:a>
-							</c:when>
-							<c:otherwise>
-								<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
-							</c:otherwise>
-						</c:choose>
-					</liferay-ui:search-container-column-text>
-
-					<liferay-ui:search-container-column-text
-						name="type"
-						value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
-					/>
-				</c:when>
-			</c:choose>
+						<liferay-ui:search-container-column-text
+							name="type"
+							value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
+						/>
+					</c:when>
+				</c:choose>
+			</c:if>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />

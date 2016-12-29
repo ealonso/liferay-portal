@@ -94,116 +94,118 @@ GroupSearch groupSearch = siteItemSelectorViewDisplayContext.getGroupSearch();
 			}
 			%>
 
-			<c:choose>
-				<c:when test='<%= displayStyle.equals("descriptive") %>'>
-					<liferay-ui:search-container-column-icon
-						icon="sites"
-					/>
+			<c:if test="<%= group.isActive() %>">
+				<c:choose>
+					<c:when test='<%= displayStyle.equals("descriptive") %>'>
+						<liferay-ui:search-container-column-icon
+							icon="sites"
+						/>
 
-					<liferay-ui:search-container-column-text
-						colspan="<%= 2 %>"
-					>
-						<h5>
+						<liferay-ui:search-container-column-text
+							colspan="<%= 2 %>"
+						>
+							<h5>
+								<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
+									<%= HtmlUtil.escape(siteItemSelectorViewDisplayContext.getGroupName(group)) %>
+								</aui:a>
+							</h5>
+
+							<h6 class="text-default">
+								<span><%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %></span>
+							</h6>
+
+							<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
+								<h6>
+									<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' href="<%= childGroupsHREF %>">
+										<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
+									</aui:a>
+								</h6>
+							</c:if>
+						</liferay-ui:search-container-column-text>
+					</c:when>
+					<c:when test='<%= displayStyle.equals("icon") %>'>
+
+						<%
+						row.setCssClass("entry-card lfr-asset-item " + row.getCssClass());
+
+						Map<String, Object> linkData = new HashMap<String, Object>();
+
+						linkData.put("prevent-selection", true);
+						%>
+
+						<liferay-ui:search-container-column-text>
+							<div role="button">
+								<c:choose>
+									<c:when test="<%= Validator.isNotNull(group.getLogoURL(themeDisplay, false)) %>">
+										<liferay-frontend:vertical-card
+											cssClass="selector-button"
+											data="<%= data %>"
+											imageUrl="<%= group.getLogoURL(themeDisplay, false) %>"
+											resultRow="<%= row %>"
+											rowChecker="<%= searchContainer.getRowChecker() %>"
+											showCheckbox="<%= false %>"
+											title="<%= siteItemSelectorViewDisplayContext.getGroupName(group) %>"
+										>
+											<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
+												<liferay-frontend:vertical-card-footer>
+													<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
+														<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
+													</aui:a>
+												</liferay-frontend:vertical-card-footer>
+											</c:if>
+										</liferay-frontend:vertical-card>
+									</c:when>
+									<c:otherwise>
+										<liferay-frontend:icon-vertical-card
+											cssClass="selector-button"
+											data="<%= data %>"
+											icon="sites"
+											resultRow="<%= row %>"
+											rowChecker="<%= searchContainer.getRowChecker() %>"
+											showCheckbox="<%= false %>"
+											title="<%= siteItemSelectorViewDisplayContext.getGroupName(group) %>"
+										>
+											<liferay-frontend:vertical-card-footer>
+												<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
+													<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
+														<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
+													</aui:a>
+												</c:if>
+											</liferay-frontend:vertical-card-footer>
+										</liferay-frontend:icon-vertical-card>
+									</c:otherwise>
+								</c:choose>
+							</div>
+						</liferay-ui:search-container-column-text>
+					</c:when>
+					<c:when test='<%= displayStyle.equals("list") %>'>
+						<liferay-ui:search-container-column-text
+							name="name"
+							truncate="<%= true %>"
+						>
 							<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
 								<%= HtmlUtil.escape(siteItemSelectorViewDisplayContext.getGroupName(group)) %>
 							</aui:a>
-						</h5>
-
-						<h6 class="text-default">
-							<span><%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %></span>
-						</h6>
+						</liferay-ui:search-container-column-text>
 
 						<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
-							<h6>
+							<liferay-ui:search-container-column-text
+								name="child-sites"
+								truncate="<%= true %>"
+							>
 								<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' href="<%= childGroupsHREF %>">
 									<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
 								</aui:a>
-							</h6>
+							</liferay-ui:search-container-column-text>
 						</c:if>
-					</liferay-ui:search-container-column-text>
-				</c:when>
-				<c:when test='<%= displayStyle.equals("icon") %>'>
 
-					<%
-					row.setCssClass("entry-card lfr-asset-item " + row.getCssClass());
-
-					Map<String, Object> linkData = new HashMap<String, Object>();
-
-					linkData.put("prevent-selection", true);
-					%>
-
-					<liferay-ui:search-container-column-text>
-						<div role="button">
-							<c:choose>
-								<c:when test="<%= Validator.isNotNull(group.getLogoURL(themeDisplay, false)) %>">
-									<liferay-frontend:vertical-card
-										cssClass="selector-button"
-										data="<%= data %>"
-										imageUrl="<%= group.getLogoURL(themeDisplay, false) %>"
-										resultRow="<%= row %>"
-										rowChecker="<%= searchContainer.getRowChecker() %>"
-										showCheckbox="<%= false %>"
-										title="<%= siteItemSelectorViewDisplayContext.getGroupName(group) %>"
-									>
-										<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
-											<liferay-frontend:vertical-card-footer>
-												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
-													<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
-												</aui:a>
-											</liferay-frontend:vertical-card-footer>
-										</c:if>
-									</liferay-frontend:vertical-card>
-								</c:when>
-								<c:otherwise>
-									<liferay-frontend:icon-vertical-card
-										cssClass="selector-button"
-										data="<%= data %>"
-										icon="sites"
-										resultRow="<%= row %>"
-										rowChecker="<%= searchContainer.getRowChecker() %>"
-										showCheckbox="<%= false %>"
-										title="<%= siteItemSelectorViewDisplayContext.getGroupName(group) %>"
-									>
-										<liferay-frontend:vertical-card-footer>
-											<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
-												<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' data="<%= linkData %>" href="<%= childGroupsHREF %>">
-													<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
-												</aui:a>
-											</c:if>
-										</liferay-frontend:vertical-card-footer>
-									</liferay-frontend:icon-vertical-card>
-								</c:otherwise>
-							</c:choose>
-						</div>
-					</liferay-ui:search-container-column-text>
-				</c:when>
-				<c:when test='<%= displayStyle.equals("list") %>'>
-					<liferay-ui:search-container-column-text
-						name="name"
-						truncate="<%= true %>"
-					>
-						<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-							<%= HtmlUtil.escape(siteItemSelectorViewDisplayContext.getGroupName(group)) %>
-						</aui:a>
-					</liferay-ui:search-container-column-text>
-
-					<c:if test="<%= siteItemSelectorViewDisplayContext.isShowChildSitesLink() %>">
 						<liferay-ui:search-container-column-text
-							name="child-sites"
-							truncate="<%= true %>"
-						>
-							<aui:a cssClass='<%= !childGroups.isEmpty() ? "text-default" : "disabled text-muted" %>' href="<%= childGroupsHREF %>">
-								<liferay-ui:message arguments="<%= String.valueOf(childGroups.size()) %>" key="x-child-sites" />
-							</aui:a>
-						</liferay-ui:search-container-column-text>
-					</c:if>
-
-					<liferay-ui:search-container-column-text
-						name="type"
-						value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
-					/>
-				</c:when>
-			</c:choose>
+							name="type"
+							value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
+						/>
+					</c:when>
+				</c:choose>
+			</c:if>
 		</liferay-ui:search-container-row>
 
 		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
