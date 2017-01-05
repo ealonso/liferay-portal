@@ -1332,7 +1332,8 @@ public class LayoutTypePortletImpl
 			}
 
 			if ((PortletConstants.hasInstanceId(portletId) ||
-				 portlet.isPreferencesUniquePerLayout()) &&
+				 portlet.isPreferencesUniquePerLayout() ||
+				 !portlet.isInstanceable()) &&
 				hasUserPreferences()) {
 
 				portletId = PortletConstants.assemblePortletId(
