@@ -230,17 +230,31 @@ public class SiteAdminPortlet extends MVCPortlet {
 				SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed");
 		}
 
-		PortletURL siteAdministrationURL = PortalUtil.getControlPanelPortletURL(
-			actionRequest, group, SiteAdminPortletKeys.SITE_SETTINGS, 0, 0,
-			PortletRequest.RENDER_PHASE);
+		String redirect = StringPool.BLANK;
 
-		siteAdministrationURL.setParameter(
-			"historyKey", getHistoryKey(actionRequest, actionResponse));
-		siteAdministrationURL.setParameter(
-			"redirect", siteAdministrationURL.toString());
+		if (group.isActive()) {
+			PortletURL siteAdministrationURL =
+				PortalUtil.getControlPanelPortletURL(
+					actionRequest, group, SiteAdminPortletKeys.SITE_SETTINGS, 0,
+					0,
+				PortletRequest.RENDER_PHASE);
 
-		actionRequest.setAttribute(
-			WebKeys.REDIRECT, siteAdministrationURL.toString());
+			siteAdministrationURL.setParameter(
+				"historyKey", getHistoryKey(actionRequest, actionResponse));
+			siteAdministrationURL.setParameter(
+				"redirect", siteAdministrationURL.toString());
+
+			redirect = siteAdministrationURL.toString();
+		}
+		else {
+			PortletURL siteListURL = PortalUtil.getControlPanelPortletURL(
+				actionRequest, SiteAdminPortletKeys.SITE_ADMIN,
+				PortletRequest.RENDER_PHASE);
+
+			redirect = siteListURL.toString();
+		}
+
+		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
