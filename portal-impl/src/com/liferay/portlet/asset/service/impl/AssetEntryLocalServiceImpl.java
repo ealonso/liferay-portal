@@ -1080,6 +1080,22 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		long companyId, long[] groupIds, long userId, long classTypeId,
 		String keywords, String assetCategoryIds, String assetTagNames,
 		boolean showNonindexable, int[] statuses, boolean andSearch, int start,
+		int end, Sort sort) {
+
+		SearchContext searchContext = buildSearchContext(
+			companyId, groupIds, userId, classTypeId, assetCategoryIds,
+			assetTagNames, showNonindexable, statuses, andSearch, start, end,
+			sort);
+
+		searchContext.setKeywords(keywords);
+
+		return searchContext;
+	}
+
+	protected SearchContext buildSearchContext(
+		long companyId, long[] groupIds, long userId, long classTypeId,
+		String keywords, String assetCategoryIds, String assetTagNames,
+		boolean showNonindexable, int[] statuses, boolean andSearch, int start,
 		int end) {
 
 		SearchContext searchContext = buildSearchContext(
