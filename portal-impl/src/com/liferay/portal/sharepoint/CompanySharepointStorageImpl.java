@@ -15,10 +15,15 @@
 package com.liferay.portal.sharepoint;
 
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Bruno Farache
@@ -33,8 +38,26 @@ public class CompanySharepointStorageImpl extends BaseSharepointStorageImpl {
 
 		List<Group> groups = WebDAVUtil.getGroups(sharepointRequest.getUser());
 
+		Locale locale = PortalUtil.getLocale(
+			sharepointRequest.getHttpServletRequest());
+
+		long companyId = PortalUtil.getCompanyId(
+			sharepointRequest.getHttpServletRequest());
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+
 		for (Group group : groups) {
-			String name = group.getFriendlyURL();
+			String friendlyURL = group.getFriendlyURL();
+
+			GroupFriendlyURL groupFriendlyURL =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					companyId, group.getGroupId(), languageId);
+
+			if (groupFriendlyURL != null) {
+				friendlyURL = groupFriendlyURL.getFriendlyURL();
+			}
+
+			String name = friendlyURL;
 
 			name = name.substring(1);
 
