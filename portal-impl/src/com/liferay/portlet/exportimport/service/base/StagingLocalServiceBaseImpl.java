@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.dao.jdbc.SqlUpdate;
 import com.liferay.portal.kernel.dao.jdbc.SqlUpdateFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiService;
+import com.liferay.portal.kernel.route.service.persistence.GroupFriendlyURLPersistence;
 import com.liferay.portal.kernel.service.BaseLocalServiceImpl;
 import com.liferay.portal.kernel.service.persistence.ClassNamePersistence;
 import com.liferay.portal.kernel.service.persistence.GroupFinder;
@@ -572,6 +573,44 @@ public abstract class StagingLocalServiceBaseImpl extends BaseLocalServiceImpl
 		this.userFinder = userFinder;
 	}
 
+	/**
+	 * Returns the group friendly url local service.
+	 *
+	 * @return the group friendly url local service
+	 */
+	public com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService getGroupFriendlyURLLocalService() {
+		return groupFriendlyURLLocalService;
+	}
+
+	/**
+	 * Sets the group friendly url local service.
+	 *
+	 * @param groupFriendlyURLLocalService the group friendly url local service
+	 */
+	public void setGroupFriendlyURLLocalService(
+		com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService groupFriendlyURLLocalService) {
+		this.groupFriendlyURLLocalService = groupFriendlyURLLocalService;
+	}
+
+	/**
+	 * Returns the group friendly url persistence.
+	 *
+	 * @return the group friendly url persistence
+	 */
+	public GroupFriendlyURLPersistence getGroupFriendlyURLPersistence() {
+		return groupFriendlyURLPersistence;
+	}
+
+	/**
+	 * Sets the group friendly url persistence.
+	 *
+	 * @param groupFriendlyURLPersistence the group friendly url persistence
+	 */
+	public void setGroupFriendlyURLPersistence(
+		GroupFriendlyURLPersistence groupFriendlyURLPersistence) {
+		this.groupFriendlyURLPersistence = groupFriendlyURLPersistence;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -666,4 +705,8 @@ public abstract class StagingLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected UserPersistence userPersistence;
 	@BeanReference(type = UserFinder.class)
 	protected UserFinder userFinder;
+	@BeanReference(type = com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService.class)
+	protected com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService groupFriendlyURLLocalService;
+	@BeanReference(type = GroupFriendlyURLPersistence.class)
+	protected GroupFriendlyURLPersistence groupFriendlyURLPersistence;
 }

@@ -24,8 +24,11 @@ import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.model.LayoutWrapper;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.VirtualLayoutConstants;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LayoutTypePortletFactoryUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -73,7 +76,23 @@ public class VirtualLayout extends LayoutWrapper {
 		try {
 			Group group = _sourceLayout.getGroup();
 
-			sb.append(group.getFriendlyURL());
+			if (locale == null) {
+				sb.append(group.getFriendlyURL());
+			}
+			else {
+				String languageId = LocaleUtil.toLanguageId(locale);
+
+				GroupFriendlyURL groupFriendlyURL =
+					GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+						getCompanyId(), group.getGroupId(), languageId);
+
+				if (groupFriendlyURL != null) {
+					sb.append(groupFriendlyURL.getFriendlyURL());
+				}
+				else {
+					sb.append(group.getFriendlyURL());
+				}
+			}
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -185,11 +204,25 @@ public class VirtualLayout extends LayoutWrapper {
 					_LAYOUT_FRIENDLY_URL_PRIVATE_USER_SERVLET_MAPPING);
 			}
 
-			int pos = layoutURL.indexOf(group.getFriendlyURL());
+			String groupFriendlyUrl = "";
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			GroupFriendlyURL targetGroupFriendlyURL =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					getCompanyId(), _targetGroup.getGroupId(), languageId);
+
+			int pos = layoutURL.indexOf(groupFriendlyUrl);
 
 			sb.append(layoutURL.substring(0, pos));
 
-			sb.append(_targetGroup.getFriendlyURL());
+			if (targetGroupFriendlyURL == null) {
+				sb.append(_targetGroup.getFriendlyURL());
+			}
+			else {
+				sb.append(targetGroupFriendlyURL.getFriendlyURL());
+			}
+
 			sb.append(getFriendlyURL(locale));
 
 			pos = layoutURL.indexOf(StringPool.QUESTION);
