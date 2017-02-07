@@ -26,15 +26,21 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.model.adapter.ModelAdapterUtil;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.site.model.adapter.StagedGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -188,19 +194,34 @@ public class StagedGroupStagedModelRepository
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			stagedGroup);
 
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			_groupFriendlyURLLocalService.getGroupFriendlyURLs(
+				stagedGroup.getCompanyId(), stagedGroup.getGroupId());
+
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		Group group = _groupLocalService.updateGroup(
 			stagedGroup.getGroupId(), stagedGroup.getParentGroupId(),
 			stagedGroup.getNameMap(), stagedGroup.getDescriptionMap(),
 			stagedGroup.getType(), stagedGroup.getManualMembership(),
-			stagedGroup.getMembershipRestriction(),
-			stagedGroup.getFriendlyURL(), stagedGroup.isInheritContent(),
-			stagedGroup.isActive(), serviceContext);
+			stagedGroup.getMembershipRestriction(), groupFriendlyURLMap,
+			stagedGroup.isInheritContent(), stagedGroup.isActive(),
+			serviceContext);
 
 		return ModelAdapterUtil.adapt(group, Group.class, StagedGroup.class);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		StagedGroupStagedModelRepository.class);
+
+	@Reference(unbind = "-")
+	private GroupFriendlyURLLocalService _groupFriendlyURLLocalService;
 
 	@Reference(unbind = "-")
 	private GroupLocalService _groupLocalService;

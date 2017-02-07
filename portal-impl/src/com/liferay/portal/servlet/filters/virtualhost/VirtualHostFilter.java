@@ -21,10 +21,13 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.struts.LastPath;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -345,7 +348,21 @@ public class VirtualHostFilter extends BasePortalFilter {
 						forwardURL.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 					}
 
-					forwardURL.append(group.getFriendlyURL());
+					String groupFriendlyURL = group.getFriendlyURL();
+
+					String languageId = LocaleUtil.toLanguageId(
+						PortalUtil.getLocale(request));
+
+					GroupFriendlyURL groupFriendlyURLInstance =
+						GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+							companyId, group.getGroupId(), languageId);
+
+					if (groupFriendlyURLInstance != null) {
+						groupFriendlyURL =
+							groupFriendlyURLInstance.getFriendlyURL();
+					}
+
+					forwardURL.append(groupFriendlyURL);
 				}
 			}
 

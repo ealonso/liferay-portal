@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -109,15 +111,26 @@ public class GroupServiceTest {
 
 		serviceContext.setAttribute("staging", Boolean.TRUE);
 
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			GroupFriendlyURLLocalServiceUtil.getGroupFriendlyURLs(
+				companyGroup.getCompanyId(), companyGroup.getGroupId());
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		Group companyStagingGroup = GroupLocalServiceUtil.addGroup(
 			TestPropsValues.getUserId(), GroupConstants.DEFAULT_PARENT_GROUP_ID,
 			companyGroup.getClassName(), companyGroup.getClassPK(),
 			companyGroup.getGroupId(), companyGroup.getNameMap(),
 			companyGroup.getDescriptionMap(), companyGroup.getType(),
 			companyGroup.isManualMembership(),
-			companyGroup.getMembershipRestriction(),
-			companyGroup.getFriendlyURL(), false, companyGroup.isActive(),
-			serviceContext);
+			companyGroup.getMembershipRestriction(), groupFriendlyURLMap, false,
+			companyGroup.isActive(), serviceContext);
 
 		Assert.assertTrue(companyStagingGroup.isCompanyStagingGroup());
 
@@ -658,7 +671,7 @@ public class GroupServiceTest {
 			Layout.class.getName(), layout.getPlid(),
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, nameMap,
 			(Map<Locale, String>)null, 0, true,
-			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, false, true,
+			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "", false, true,
 			null);
 
 		Assert.assertFalse(scope.isRoot());
@@ -717,13 +730,24 @@ public class GroupServiceTest {
 
 		Group stagingGroup = group.getStagingGroup();
 
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			GroupFriendlyURLLocalServiceUtil.getGroupFriendlyURLs(
+				stagingGroup.getCompanyId(), stagingGroup.getGroupId());
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		GroupLocalServiceUtil.updateGroup(
 			stagingGroup.getGroupId(), group.getGroupId(),
 			stagingGroup.getNameMap(), stagingGroup.getDescriptionMap(),
 			stagingGroup.getType(), stagingGroup.isManualMembership(),
-			stagingGroup.getMembershipRestriction(),
-			stagingGroup.getFriendlyURL(), stagingGroup.isInheritContent(),
-			stagingGroup.isActive(),
+			stagingGroup.getMembershipRestriction(), groupFriendlyURLMap,
+			stagingGroup.isInheritContent(), stagingGroup.isActive(),
 			ServiceContextTestUtil.getServiceContext());
 	}
 
@@ -731,11 +755,23 @@ public class GroupServiceTest {
 	public void testSelectOwnGroupAsParentSite() throws Exception {
 		Group group = GroupTestUtil.addGroup();
 
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			GroupFriendlyURLLocalServiceUtil.getGroupFriendlyURLs(
+				group.getCompanyId(), group.getGroupId());
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		GroupLocalServiceUtil.updateGroup(
 			group.getGroupId(), group.getGroupId(), group.getNameMap(),
 			group.getDescriptionMap(), group.getType(),
 			group.isManualMembership(), group.getMembershipRestriction(),
-			group.getFriendlyURL(), group.isInheritContent(), group.isActive(),
+			groupFriendlyURLMap, group.isInheritContent(), group.isActive(),
 			ServiceContextTestUtil.getServiceContext());
 	}
 
@@ -884,8 +920,8 @@ public class GroupServiceTest {
 				GroupConstants.DEFAULT_PARENT_GROUP_ID, Layout.class.getName(),
 				scopeLayout.getPlid(), GroupConstants.DEFAULT_LIVE_GROUP_ID,
 				nameMap, (Map<Locale, String>)null, 0, true,
-				GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, false,
-				true, null);
+				GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "", false, true,
+				null);
 		}
 		else if (layoutPrototype) {
 			Group group = GroupTestUtil.addGroup();

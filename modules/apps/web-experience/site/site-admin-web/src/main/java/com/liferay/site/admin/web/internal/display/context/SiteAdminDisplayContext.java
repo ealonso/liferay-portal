@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.security.membershippolicy.SiteMembershipPolicyUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -38,8 +40,11 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortalPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -49,7 +54,11 @@ import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
 import com.liferay.site.constants.SiteWebKeys;
 import com.liferay.site.util.GroupSearchProvider;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletURL;
 
@@ -105,6 +114,24 @@ public class SiteAdminDisplayContext {
 		return _displayStyle;
 	}
 
+	public String getFriendlyURLsXML(Group group) {
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			GroupFriendlyURLLocalServiceUtil.getGroupFriendlyURLs(
+				group.getCompanyId(), group.getGroupId());
+
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
+		return LocalizationUtil.updateLocalization(
+			groupFriendlyURLMap, StringPool.BLANK, "FriendlyURL",
+			LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault()));
+	}
+
 	public Group getGroup() throws PortalException {
 		long groupId = getGroupId();
 
@@ -113,6 +140,23 @@ public class SiteAdminDisplayContext {
 		}
 
 		return _group;
+	}
+
+	public String getGroupFriendlyURL(Group group) throws PortalException {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURL groupFriendlyURL =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				themeDisplay.getCompanyId(), getGroupId(), languageId);
+
+		if (groupFriendlyURL != null) {
+			return groupFriendlyURL.getFriendlyURL();
+		}
+
+		return group.getFriendlyURL();
 	}
 
 	public long getGroupId() {
