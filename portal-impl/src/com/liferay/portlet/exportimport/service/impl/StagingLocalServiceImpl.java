@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
 import com.liferay.portal.kernel.security.auth.HttpPrincipal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.RemoteAuthException;
@@ -567,13 +568,25 @@ public class StagingLocalServiceImpl extends StagingLocalServiceBaseImpl {
 			parentGroupId = parentGroup.getGroupId();
 		}
 
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			groupFriendlyURLLocalService.getGroupFriendlyURLs(
+				liveGroup.getCompanyId(), liveGroup.getGroupId());
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		Group stagingGroup = groupLocalService.addGroup(
 			userId, parentGroupId, liveGroup.getClassName(),
 			liveGroup.getClassPK(), liveGroup.getGroupId(),
 			liveGroup.getNameMap(), liveGroup.getDescriptionMap(),
 			liveGroup.getType(), liveGroup.isManualMembership(),
-			liveGroup.getMembershipRestriction(), liveGroup.getFriendlyURL(),
-			false, true, serviceContext);
+			liveGroup.getMembershipRestriction(), groupFriendlyURLMap, false,
+			true, serviceContext);
 
 		if (LanguageUtil.isInheritLocales(liveGroup.getGroupId())) {
 			return stagingGroup;
