@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -111,7 +113,11 @@ public class UpdateLanguageAction extends Action {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (isGroupFriendlyURL(layout.getGroup(), layout, layoutURL, locale)) {
+		long companyId = PortalUtil.getCompanyId(request);
+
+		if (isGroupFriendlyURL(
+				companyId, layout.getGroup(), layout, layoutURL, locale)) {
+
 			if (PropsValues.LOCALE_PREPEND_FRIENDLY_URL_STYLE == 0) {
 				redirect = layoutURL;
 			}
@@ -146,7 +152,8 @@ public class UpdateLanguageAction extends Action {
 	}
 
 	protected boolean isGroupFriendlyURL(
-		Group group, Layout layout, String layoutURL, Locale locale) {
+		long companyId, Group group, Layout layout, String layoutURL,
+		Locale locale) {
 
 		if (Validator.isNull(layoutURL)) {
 			return true;
@@ -163,9 +170,20 @@ public class UpdateLanguageAction extends Action {
 			return true;
 		}
 
+		String friendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		GroupFriendlyURL groupFriendlyURL =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				companyId, group.getGroupId(), languageId);
+
+		if (groupFriendlyURL != null) {
+			friendlyURL = groupFriendlyURL.getFriendlyURL();
+		}
+
 		if (PortalUtil.isGroupFriendlyURL(
-				layoutURL, group.getFriendlyURL(),
-				layout.getFriendlyURL(locale))) {
+				layoutURL, friendlyURL, layout.getFriendlyURL(locale))) {
 
 			return true;
 		}
