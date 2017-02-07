@@ -773,7 +773,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 					GroupConstants.DEFAULT_PARENT_GROUP_ID,
 					Layout.class.getName(), scopeLayout.getPlid(),
 					GroupConstants.DEFAULT_LIVE_GROUP_ID, nameMap, null, 0,
-					true, GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null,
+					true, GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "",
 					false, true, null);
 			}
 
