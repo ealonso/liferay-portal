@@ -51,6 +51,8 @@ import com.liferay.portal.kernel.model.Team;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalService;
 import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.RemoteAuthException;
@@ -79,6 +81,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -100,6 +103,7 @@ import com.liferay.sites.kernel.util.SitesUtil;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -579,11 +583,23 @@ public class SiteAdminPortlet extends MVCPortlet {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			Group.class.getName(), actionRequest);
 
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			groupFriendlyURLLocalService.getGroupFriendlyURLs(
+				group.getCompanyId(), group.getGroupId());
+
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		groupService.updateGroup(
 			groupId, group.getParentGroupId(), group.getNameMap(),
 			group.getDescriptionMap(), group.getType(),
 			group.isManualMembership(), group.getMembershipRestriction(),
-			group.getFriendlyURL(), group.isInheritContent(), active,
+			groupFriendlyURLMap, group.isInheritContent(), active,
 			serviceContext);
 	}
 
@@ -601,7 +617,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 		Map<Locale, String> nameMap = null;
 		Map<Locale, String> descriptionMap = null;
 		int type = 0;
-		String friendlyURL = null;
+		Map<Locale, String> friendlyURLMap = null;
 		boolean inheritContent = false;
 		boolean active = false;
 		boolean manualMembership = true;
@@ -635,7 +651,8 @@ public class SiteAdminPortlet extends MVCPortlet {
 			descriptionMap = LocalizationUtil.getLocalizationMap(
 				actionRequest, "description");
 			type = ParamUtil.getInteger(actionRequest, "type");
-			friendlyURL = ParamUtil.getString(actionRequest, "friendlyURL");
+			friendlyURLMap = LocalizationUtil.getLocalizationMap(
+				actionRequest, "friendlyURL");
 			manualMembership = ParamUtil.getBoolean(
 				actionRequest, "manualMembership");
 			inheritContent = ParamUtil.getBoolean(
@@ -645,7 +662,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 			liveGroup = groupService.addGroup(
 				parentGroupId, GroupConstants.DEFAULT_LIVE_GROUP_ID, nameMap,
 				descriptionMap, type, manualMembership, membershipRestriction,
-				friendlyURL, true, inheritContent, active, serviceContext);
+				friendlyURLMap, true, inheritContent, active, serviceContext);
 
 			LiveUsers.joinGroup(
 				themeDisplay.getCompanyId(), liveGroup.getGroupId(), userId);
@@ -656,6 +673,18 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 			liveGroup = groupLocalService.getGroup(liveGroupId);
 
+			List<GroupFriendlyURL> groupFriendlyURLs =
+				groupFriendlyURLLocalService.getGroupFriendlyURLs(
+					liveGroup.getCompanyId(), liveGroup.getGroupId());
+
+			Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+			for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+				groupFriendlyURLMap.put(
+					LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+					groupFriendlyURL.getFriendlyURL());
+			}
+
 			nameMap = LocalizationUtil.getLocalizationMap(
 				actionRequest, "name", liveGroup.getNameMap());
 			descriptionMap = LocalizationUtil.getLocalizationMap(
@@ -665,8 +694,8 @@ public class SiteAdminPortlet extends MVCPortlet {
 			manualMembership = ParamUtil.getBoolean(
 				actionRequest, "manualMembership",
 				liveGroup.isManualMembership());
-			friendlyURL = ParamUtil.getString(
-				actionRequest, "friendlyURL", liveGroup.getFriendlyURL());
+			friendlyURLMap = LocalizationUtil.getLocalizationMap(
+				actionRequest, "friendlyURL", groupFriendlyURLMap);
 			inheritContent = ParamUtil.getBoolean(
 				actionRequest, "inheritContent", liveGroup.getInheritContent());
 			active = ParamUtil.getBoolean(
@@ -674,7 +703,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 			liveGroup = groupService.updateGroup(
 				liveGroupId, parentGroupId, nameMap, descriptionMap, type,
-				manualMembership, membershipRestriction, friendlyURL,
+				manualMembership, membershipRestriction, friendlyURLMap,
 				inheritContent, active, serviceContext);
 
 			if (type == GroupConstants.TYPE_SITE_OPEN) {
@@ -816,12 +845,23 @@ public class SiteAdminPortlet extends MVCPortlet {
 		if (liveGroup.hasStagingGroup()) {
 			Group stagingGroup = liveGroup.getStagingGroup();
 
-			friendlyURL = ParamUtil.getString(
-				actionRequest, "stagingFriendlyURL",
-				stagingGroup.getFriendlyURL());
+			List<GroupFriendlyURL> groupFriendlyURLs =
+				groupFriendlyURLLocalService.getGroupFriendlyURLs(
+					stagingGroup.getCompanyId(), stagingGroup.getGroupId());
+
+			Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+			for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+				groupFriendlyURLMap.put(
+					LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+					groupFriendlyURL.getFriendlyURL());
+			}
+
+			friendlyURLMap = LocalizationUtil.getLocalizationMap(
+				actionRequest, "stagingFriendlyURL", groupFriendlyURLMap);
 
 			groupService.updateFriendlyURL(
-				stagingGroup.getGroupId(), friendlyURL);
+				stagingGroup.getGroupId(), friendlyURLMap);
 
 			LayoutSet stagingPublicLayoutSet =
 				stagingGroup.getPublicLayoutSet();
@@ -916,6 +956,9 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 		return liveGroup;
 	}
+
+	@Reference(unbind = "-")
+	protected GroupFriendlyURLLocalService groupFriendlyURLLocalService;
 
 	protected GroupLocalService groupLocalService;
 	protected GroupSearchProvider groupSearchProvider;
