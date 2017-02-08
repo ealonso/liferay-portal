@@ -203,6 +203,38 @@ public class GroupLocalServiceUtil {
 			serviceContext);
 	}
 
+	public static com.liferay.portal.kernel.model.Group addGroup(long userId,
+		long parentGroupId, java.lang.String className, long classPK,
+		long liveGroupId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		boolean site, boolean active, ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addGroup(userId, parentGroupId, className, classPK,
+			liveGroupId, nameMap, descriptionMap, type, manualMembership,
+			membershipRestriction, friendlyURLMap, site, active, serviceContext);
+	}
+
+	public static com.liferay.portal.kernel.model.Group addGroup(long userId,
+		long parentGroupId, java.lang.String className, long classPK,
+		long liveGroupId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		boolean site, boolean inheritContent, boolean active,
+		ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addGroup(userId, parentGroupId, className, classPK,
+			liveGroupId, nameMap, descriptionMap, type, manualMembership,
+			membershipRestriction, friendlyURLMap, site, inheritContent,
+			active, serviceContext);
+	}
+
 	public static com.liferay.portal.kernel.model.Group checkScopeGroup(
 		com.liferay.portal.kernel.model.Layout layout, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -542,6 +574,13 @@ public class GroupLocalServiceUtil {
 		return getService().updateFriendlyURL(groupId, friendlyURL);
 	}
 
+	public static com.liferay.portal.kernel.model.Group updateFriendlyURL(
+		long groupId,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateFriendlyURL(groupId, friendlyURLMap);
+	}
+
 	/**
 	* Updates the group in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*
@@ -610,6 +649,19 @@ public class GroupLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.model.Group updateGroup(
+		long groupId, long parentGroupId, java.lang.String name,
+		java.lang.String description, int type, boolean manualMembership,
+		int membershipRestriction,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		boolean inheritContent, boolean active, ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateGroup(groupId, parentGroupId, name, description,
+			type, manualMembership, membershipRestriction, friendlyURLMap,
+			inheritContent, active, serviceContext);
+	}
+
+	public static com.liferay.portal.kernel.model.Group updateGroup(
 		long groupId, long parentGroupId,
 		java.util.Map<java.util.Locale, java.lang.String> nameMap,
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
@@ -621,6 +673,20 @@ public class GroupLocalServiceUtil {
 				   .updateGroup(groupId, parentGroupId, nameMap,
 			descriptionMap, type, manualMembership, membershipRestriction,
 			friendlyURL, inheritContent, active, serviceContext);
+	}
+
+	public static com.liferay.portal.kernel.model.Group updateGroup(
+		long groupId, long parentGroupId,
+		java.util.Map<java.util.Locale, java.lang.String> nameMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		int type, boolean manualMembership, int membershipRestriction,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		boolean inheritContent, boolean active, ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateGroup(groupId, parentGroupId, nameMap,
+			descriptionMap, type, manualMembership, membershipRestriction,
+			friendlyURLMap, inheritContent, active, serviceContext);
 	}
 
 	/**
