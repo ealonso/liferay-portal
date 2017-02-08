@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.ReleaseInfo;
 import com.liferay.portal.upgrade.v7_0_3.UpgradeExpando;
 import com.liferay.portal.upgrade.v7_0_3.UpgradeGroup;
+import com.liferay.portal.upgrade.v7_0_3.UpgradeGroupFriendlyURL;
 import com.liferay.portal.upgrade.v7_0_3.UpgradeMessageBoards;
 import com.liferay.portal.upgrade.v7_0_3.UpgradeModules;
 import com.liferay.portal.upgrade.v7_0_3.UpgradeOracle;
@@ -39,6 +40,7 @@ public class UpgradeProcess_7_0_3 extends UpgradeProcess {
 	protected void doUpgrade() throws Exception {
 		upgrade(UpgradeExpando.class);
 		upgrade(UpgradeGroup.class);
+		upgrade(UpgradeGroupFriendlyURL.class);
 		upgrade(UpgradeMessageBoards.class);
 		upgrade(UpgradeModules.class);
 		upgrade(UpgradeOrganization.class);

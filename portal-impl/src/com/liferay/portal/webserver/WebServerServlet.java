@@ -53,6 +53,8 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -89,6 +91,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -1207,7 +1210,19 @@ public class WebServerServlet extends HttpServlet {
 		List<Group> groups = WebDAVUtil.getGroups(user);
 
 		for (Group group : groups) {
-			String name = HttpUtil.fixPath(group.getFriendlyURL());
+			String languageId = LocaleUtil.toLanguageId(user.getLocale());
+
+			GroupFriendlyURL groupFriendlyURL =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					user.getCompanyId(), group.getGroupId(), languageId);
+
+			String friendlyURL = group.getFriendlyURL();
+
+			if (groupFriendlyURL != null) {
+				friendlyURL = groupFriendlyURL.getFriendlyURL();
+			}
+
+			String name = HttpUtil.fixPath(friendlyURL);
 
 			WebServerEntry webServerEntry = new WebServerEntry(
 				path, name + StringPool.SLASH, null, null,

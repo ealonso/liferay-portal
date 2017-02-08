@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.service.DDMTemplateVersionLocalServiceUt
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Image;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.ImageLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -133,7 +134,14 @@ public class DDMTemplateImpl extends DDMTemplateBaseImpl {
 
 		Group group = themeDisplay.getScopeGroup();
 
-		sb.append(group.getFriendlyURL());
+		String friendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+			themeDisplay.getCompanyId(), group.getGroupId(), languageId);
+
+		sb.append(friendlyURL);
 
 		sb.append(StringPool.SLASH);
 		sb.append(webDAVToken);

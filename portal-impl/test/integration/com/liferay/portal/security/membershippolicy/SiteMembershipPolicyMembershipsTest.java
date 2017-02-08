@@ -18,6 +18,8 @@ import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.security.membershippolicy.MembershipPolicyException;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
@@ -294,11 +296,23 @@ public class SiteMembershipPolicyMembershipsTest
 
 		nameMap.put(LocaleUtil.getDefault(), RandomTestUtil.randomString());
 
+		List<GroupFriendlyURL> groupFriendlyURLs =
+			GroupFriendlyURLLocalServiceUtil.getGroupFriendlyURLs(
+				group.getCompanyId(), group.getGroupId());
+
+		Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+		for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+			groupFriendlyURLMap.put(
+				LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+				groupFriendlyURL.getFriendlyURL());
+		}
+
 		GroupServiceUtil.updateGroup(
 			group.getGroupId(), group.getParentGroupId(), nameMap,
 			group.getDescriptionMap(), group.getType(),
 			group.isManualMembership(), group.getMembershipRestriction(),
-			group.getFriendlyURL(), group.isInheritContent(), group.isActive(),
+			groupFriendlyURLMap, group.isInheritContent(), group.isActive(),
 			ServiceContextTestUtil.getServiceContext());
 
 		Assert.assertTrue(isVerify());
