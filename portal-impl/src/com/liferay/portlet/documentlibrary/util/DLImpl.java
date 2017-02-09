@@ -48,6 +48,8 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
@@ -64,6 +66,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
@@ -906,7 +909,19 @@ public class DLImpl implements DL {
 			group = themeDisplay.getScopeGroup();
 		}
 
-		webDavURL.append(group.getFriendlyURL());
+		String friendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURL groupFriendlyURL =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				themeDisplay.getCompanyId(), group.getGroupId(), languageId);
+
+		if (groupFriendlyURL != null) {
+			friendlyURL = groupFriendlyURL.getFriendlyURL();
+		}
+
+		webDavURL.append(friendlyURL);
 		webDavURL.append("/document_library");
 
 		StringBuilder sb = new StringBuilder();

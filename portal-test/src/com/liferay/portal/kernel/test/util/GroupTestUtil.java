@@ -76,7 +76,7 @@ public class GroupTestUtil {
 		return GroupLocalServiceUtil.addGroup(
 			userId, parentGroupId, Layout.class.getName(), layout.getPlid(),
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, nameMap, null, 0, true,
-			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, false, true,
+			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "", false, true,
 			null);
 	}
 
@@ -104,8 +104,7 @@ public class GroupTestUtil {
 			LocaleUtil.getDefault(), RandomTestUtil.randomString());
 
 		int type = GroupConstants.TYPE_SITE_OPEN;
-		String friendlyURL =
-			StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(name);
+		String friendlyURL = StringPool.SLASH + name;
 		boolean site = true;
 		boolean active = true;
 		boolean manualMembership = true;

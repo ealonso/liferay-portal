@@ -103,6 +103,8 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.UserAttributes;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.security.auth.AlwaysAllowDoAsUser;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.FullNameGenerator;
@@ -155,6 +157,7 @@ import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.CookieKeys;
 import com.liferay.portal.kernel.util.DeterminateKeyGenerator;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -3070,8 +3073,16 @@ public class PortalImpl implements Portal {
 			friendlyURL = themeDisplay.getI18nPath() + friendlyURL;
 		}
 
+		String groupFriendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURL groupFriendlyURLInstance =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				themeDisplay.getCompanyId(), group.getGroupId(), languageId);
+
 		String layoutSetFriendlyURL =
-			_pathContext + friendlyURL + group.getFriendlyURL();
+			_pathContext + friendlyURL + groupFriendlyURL;
 
 		return addPreservedParameters(themeDisplay, layoutSetFriendlyURL);
 	}
@@ -3522,6 +3533,39 @@ public class PortalImpl implements Portal {
 		String virtualHostname = layoutSet.getVirtualHostname();
 
 		String portalURL = getPortalURL(request);
+
+		int pos = path.indexOf(CharPool.SLASH, 1);
+
+		if (pos == -1) {
+			pos = path.length();
+		}
+
+		String groupFriendlyURL =
+			FriendlyURLNormalizerUtil.normalizeWithEncoding(
+				HttpUtil.decodeURL(path.substring(0, pos)));
+
+		long companyId = getCompanyId(request);
+
+		Group group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+			companyId, groupFriendlyURL);
+
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		if (group != null) {
+			String localizedFriendlyURL = group.getFriendlyURL();
+
+			GroupFriendlyURL groupFriendlyURLInstance =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					companyId, group.getGroupId(), languageId);
+
+			if (groupFriendlyURLInstance != null) {
+				localizedFriendlyURL =
+					groupFriendlyURLInstance.getFriendlyURL();
+			}
+
+			requestURI = requestURI.replaceFirst(
+				groupFriendlyURL, localizedFriendlyURL);
+		}
 
 		if (Validator.isNull(virtualHostname) ||
 			!portalURL.contains(virtualHostname)) {
@@ -7826,7 +7870,20 @@ public class PortalImpl implements Portal {
 		}
 
 		sb.append(friendlyURL);
-		sb.append(group.getFriendlyURL());
+
+		String groupFriendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURL groupFriendlyURLInstance =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				group.getCompanyId(), group.getGroupId(), languageId);
+
+		if (groupFriendlyURLInstance != null) {
+			groupFriendlyURL = groupFriendlyURLInstance.getFriendlyURL();
+		}
+
+		sb.append(groupFriendlyURL);
 
 		return sb.toString();
 	}
@@ -7955,7 +8012,19 @@ public class PortalImpl implements Portal {
 			sb.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 		}
 
-		sb.append(group.getFriendlyURL());
+		String groupFriendlyURL = group.getFriendlyURL();
+
+		String languageId = LocaleUtil.toLanguageId(themeDisplay.getLocale());
+
+		GroupFriendlyURL groupFriendlyURLInstance =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				themeDisplay.getCompanyId(), group.getGroupId(), languageId);
+
+		if (groupFriendlyURLInstance != null) {
+			groupFriendlyURL = groupFriendlyURLInstance.getFriendlyURL();
+		}
+
+		sb.append(groupFriendlyURL);
 		sb.append(layout.getFriendlyURL(themeDisplay.getLocale()));
 
 		sb.append(FRIENDLY_URL_SEPARATOR);

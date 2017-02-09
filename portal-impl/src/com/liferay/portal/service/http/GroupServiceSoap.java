@@ -75,6 +75,40 @@ public class GroupServiceSoap {
 		java.lang.String[] descriptionMapLanguageIds,
 		java.lang.String[] descriptionMapValues, int type,
 		boolean manualMembership, int membershipRestriction,
+		java.lang.String[] friendlyURLMapLanguageIds,
+		java.lang.String[] friendlyURLMapValues, boolean site,
+		boolean inheritContent, boolean active,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(nameMapLanguageIds,
+					nameMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+			Map<Locale, String> friendlyURLMap = LocalizationUtil.getLocalizationMap(friendlyURLMapLanguageIds,
+					friendlyURLMapValues);
+
+			com.liferay.portal.kernel.model.Group returnValue = GroupServiceUtil.addGroup(parentGroupId,
+					liveGroupId, nameMap, descriptionMap, type,
+					manualMembership, membershipRestriction, friendlyURLMap,
+					site, inheritContent, active, serviceContext);
+
+			return com.liferay.portal.kernel.model.GroupSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portal.kernel.model.GroupSoap addGroup(
+		long parentGroupId, long liveGroupId,
+		java.lang.String[] nameMapLanguageIds,
+		java.lang.String[] nameMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, int type,
+		boolean manualMembership, int membershipRestriction,
 		java.lang.String friendlyURL, boolean site, boolean inheritContent,
 		boolean active,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -793,6 +827,33 @@ public class GroupServiceSoap {
 	}
 
 	/**
+	* Updates the group's friendly URLs map.
+	*
+	* @param groupId the primary key of the group
+	* @param friendlyURLMap the group's localized friendlyURL map
+	* @return the group
+	* @throws PortalException if a portal exception occurred
+	*/
+	public static com.liferay.portal.kernel.model.GroupSoap updateFriendlyURL(
+		long groupId, java.lang.String[] friendlyURLMapLanguageIds,
+		java.lang.String[] friendlyURLMapValues) throws RemoteException {
+		try {
+			Map<Locale, String> friendlyURLMap = LocalizationUtil.getLocalizationMap(friendlyURLMapLanguageIds,
+					friendlyURLMapValues);
+
+			com.liferay.portal.kernel.model.Group returnValue = GroupServiceUtil.updateFriendlyURL(groupId,
+					friendlyURLMap);
+
+			return com.liferay.portal.kernel.model.GroupSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	/**
 	* Updates the group's friendly URL.
 	*
 	* @param groupId the primary key of the group
@@ -806,6 +867,40 @@ public class GroupServiceSoap {
 		try {
 			com.liferay.portal.kernel.model.Group returnValue = GroupServiceUtil.updateFriendlyURL(groupId,
 					friendlyURL);
+
+			return com.liferay.portal.kernel.model.GroupSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portal.kernel.model.GroupSoap updateGroup(
+		long groupId, long parentGroupId,
+		java.lang.String[] nameMapLanguageIds,
+		java.lang.String[] nameMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues, int type,
+		boolean manualMembership, int membershipRestriction,
+		java.lang.String[] friendlyURLMapLanguageIds,
+		java.lang.String[] friendlyURLMapValues, boolean inheritContent,
+		boolean active,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(nameMapLanguageIds,
+					nameMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+			Map<Locale, String> friendlyURLMap = LocalizationUtil.getLocalizationMap(friendlyURLMapLanguageIds,
+					friendlyURLMapValues);
+
+			com.liferay.portal.kernel.model.Group returnValue = GroupServiceUtil.updateGroup(groupId,
+					parentGroupId, nameMap, descriptionMap, type,
+					manualMembership, membershipRestriction, friendlyURLMap,
+					inheritContent, active, serviceContext);
 
 			return com.liferay.portal.kernel.model.GroupSoap.toSoapModel(returnValue);
 		}

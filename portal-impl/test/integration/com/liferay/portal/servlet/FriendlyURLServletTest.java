@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -162,7 +164,14 @@ public class FriendlyURLServletTest {
 
 		FriendlyURLServlet.Redirect expectedRedirect = null;
 
-		if (!Objects.equals(i18nPath, expectedI18nPath)) {
+		GroupFriendlyURL groupFriendlyURL =
+			GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+				_group.getCompanyId(), _group.getGroupId(),
+				i18nData.getLanguageId());
+
+		if (!Objects.equals(i18nPath, expectedI18nPath) &&
+			(groupFriendlyURL != null)) {
+
 			expectedRedirect = new FriendlyURLServlet.Redirect(
 				expectedI18nPath + requestURI, true, true);
 		}

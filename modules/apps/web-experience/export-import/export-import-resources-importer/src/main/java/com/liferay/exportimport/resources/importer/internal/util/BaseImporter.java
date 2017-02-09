@@ -135,8 +135,8 @@ public abstract class BaseImporter implements Importer {
 						GroupConstants.DEFAULT_LIVE_GROUP_ID,
 						getMap(targetValue), null,
 						GroupConstants.TYPE_SITE_OPEN, true,
-						GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null,
-						true, true, new ServiceContext());
+						GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "", true,
+						true, new ServiceContext());
 				}
 			}
 
