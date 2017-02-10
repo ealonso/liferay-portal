@@ -25,13 +25,24 @@ if (Validator.isNotNull(portletConfigurationPermissionsDisplayContext.getModelRe
 }
 
 Resource resource = portletConfigurationPermissionsDisplayContext.getResource();
+
+String tabs1 = portletConfigurationPermissionsDisplayContext.getCurrentTab();
 %>
 
 <div class="edit-permissions portlet-configuration-edit-permissions">
 	<div class="portlet-configuration-body-content">
 		<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
 			<aui:nav cssClass="navbar-nav">
-				<aui:nav-item label="permissions" selected="<%= true %>" />
+
+				<%
+				PortletURL currentPermissionsURL = portletConfigurationPermissionsDisplayContext.getIteratorURL();
+				PortletURL availablePermissionsURL = portletConfigurationPermissionsDisplayContext.getIteratorURL();
+				currentPermissionsURL.setParameter("tabs1", "current");
+				availablePermissionsURL.setParameter("tabs1", "available");
+				%>
+
+				<aui:nav-item href="<%= currentPermissionsURL.toString() %>" label="current" selected='<%= tabs1.equals("current") %>' />
+				<aui:nav-item href="<%= availablePermissionsURL.toString() %>" label="available" selected='<%= tabs1.equals("available") %>' />
 			</aui:nav>
 
 			<aui:nav-bar-search>
