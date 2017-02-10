@@ -47,7 +47,7 @@ String viewMode = ParamUtil.getString(request, "viewMode");
 		/>
 	</c:if>
 
-	<liferay-ui:discussion
+	<liferay-comment:discussion
 		className="<%= JournalArticle.class.getName() %>"
 		classPK="<%= articleDisplay.getResourcePrimKey() %>"
 		hideControls="<%= viewMode.equals(Constants.PRINT) %>"
