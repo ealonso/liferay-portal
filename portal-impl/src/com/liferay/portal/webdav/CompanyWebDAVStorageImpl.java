@@ -16,7 +16,10 @@ package com.liferay.portal.webdav;
 
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.webdav.BaseResourceImpl;
 import com.liferay.portal.kernel.webdav.BaseWebDAVStorageImpl;
@@ -65,6 +68,12 @@ public class CompanyWebDAVStorageImpl extends BaseWebDAVStorageImpl {
 			String parentPath = getRootPath();
 
 			String name = group.getFriendlyURL();
+
+			String languageId = LocaleUtil.toLanguageId(user.getLocale());
+
+			GroupFriendlyURL groupFriendlyURL =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					user.getCompanyId(), group.getGroupId(), languageId);
 
 			name = name.substring(1);
 

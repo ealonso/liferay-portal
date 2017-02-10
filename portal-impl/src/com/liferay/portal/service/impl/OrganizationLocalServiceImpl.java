@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -54,6 +55,7 @@ import com.liferay.portal.kernel.tree.TreePathUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -84,6 +86,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -222,7 +225,7 @@ public class OrganizationLocalServiceImpl
 			userId, parentGroupId, Organization.class.getName(), organizationId,
 			GroupConstants.DEFAULT_LIVE_GROUP_ID, getLocalizationMap(name),
 			null, GroupConstants.TYPE_SITE_PRIVATE, false,
-			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, null, site, true,
+			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION, "", site, true,
 			null);
 
 		// Role
@@ -1822,12 +1825,24 @@ public class OrganizationLocalServiceImpl
 		}
 
 		if (createSite || !oldName.equals(name) || organizationGroup) {
+			Map<Locale, String> groupFriendlyURLMap = new HashMap<>();
+
+			List<GroupFriendlyURL> groupFriendlyURLs =
+				groupFriendlyURLLocalService.getGroupFriendlyURLs(
+					companyId, group.getGroupId());
+
+			for (GroupFriendlyURL groupFriendlyURL : groupFriendlyURLs) {
+				groupFriendlyURLMap.put(
+					LocaleUtil.fromLanguageId(groupFriendlyURL.getLanguageId()),
+					groupFriendlyURL.getFriendlyURL());
+			}
+
 			groupLocalService.updateGroup(
 				group.getGroupId(), parentGroupId, getLocalizationMap(name),
 				group.getDescriptionMap(), group.getType(),
 				group.isManualMembership(), group.getMembershipRestriction(),
-				group.getFriendlyURL(), group.isInheritContent(),
-				group.isActive(), null);
+				groupFriendlyURLMap, group.isInheritContent(), group.isActive(),
+				null);
 		}
 
 		if (group.isSite() != site) {

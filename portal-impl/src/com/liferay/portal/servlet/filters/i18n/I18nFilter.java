@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.route.model.GroupFriendlyURL;
+import com.liferay.portal.kernel.route.service.GroupFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.HttpMethods;
 import com.liferay.portal.kernel.util.CookieKeys;
@@ -198,7 +200,17 @@ public class I18nFilter extends BasePortalFilter {
 
 			Group group = layoutSet.getGroup();
 
-			if (groupFriendlyURL.equals(group.getFriendlyURL())) {
+			String friendlyURL = group.getFriendlyURL();
+
+			GroupFriendlyURL groupFriendlyURLInstance =
+				GroupFriendlyURLLocalServiceUtil.fetchGroupFriendlyURL(
+					companyId, group.getGroupId(), i18nLanguageId);
+
+			if (groupFriendlyURLInstance != null) {
+				friendlyURL = groupFriendlyURLInstance.getFriendlyURL();
+			}
+
+			if (groupFriendlyURL.equals(friendlyURL)) {
 				redirect =
 					contextPath + i18nPath +
 						requestURI.substring(friendlyURLEnd);
