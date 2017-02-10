@@ -1003,6 +1003,42 @@
 				)
 		]]>
 	</sql>
+	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.countByGroupRoleAndTeamRoleAndRoleIds">
+		<![CDATA[
+			SELECT
+				COUNT(Role_.roleId) AS COUNT_VALUE
+			FROM
+				Role_
+			WHERE
+				(Role_.companyId = ?)
+				[$ROLE_IDS$] AND
+				(
+					(
+						(lower(Role_.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+						(lower(Role_.description) LIKE ? [$AND_OR_NULL_CHECK$])
+					)
+					[$EXCLUDED_NAMES$]
+					[$TYPE$]
+				) OR
+				(
+					(Role_.classNameId = ?) AND
+					(Role_.roleId != ?) AND
+					(Role_.classPK IN (
+						SELECT
+							Team.teamId
+						FROM
+							Team
+						WHERE
+							(groupId = ?) AND
+							(
+								(lower(Team.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+								(lower(Team.description) LIKE ? [$AND_OR_NULL_CHECK$])
+							)
+						)
+					)
+				)
+		]]>
+	</sql>
 	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.countByOrganization">
 		<![CDATA[
 			SELECT
@@ -1157,6 +1193,44 @@
 				Role_
 			WHERE
 				(Role_.companyId = ?) AND
+				(
+					(
+						(lower(Role_.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+						(lower(Role_.description) LIKE ? [$AND_OR_NULL_CHECK$])
+					)
+					[$EXCLUDED_NAMES$]
+					[$TYPE$]
+				) OR
+				(
+					(Role_.classNameId = ?) AND
+					(Role_.roleId != ?) AND
+					(Role_.classPK IN (
+						SELECT
+							Team.teamId
+						FROM
+							Team
+						WHERE
+							(groupId = ?) AND
+							(
+								(lower(Team.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
+								(lower(Team.description) LIKE ? [$AND_OR_NULL_CHECK$])
+							)
+						)
+					)
+				)
+			ORDER BY
+				Role_.name ASC
+		]]>
+	</sql>
+	<sql id="com.liferay.portal.kernel.service.persistence.RoleFinder.findByGroupRoleAndTeamRoleAndRoleIds">
+		<![CDATA[
+			SELECT
+				{Role_.*}
+			FROM
+				Role_
+			WHERE
+				(Role_.companyId = ?)
+				[$ROLE_IDS$] AND
 				(
 					(
 						(lower(Role_.name) LIKE ? [$AND_OR_NULL_CHECK$]) [$AND_OR_CONNECTOR$]
