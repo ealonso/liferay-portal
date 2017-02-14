@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.pacl.NotPrivileged;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import org.hibernate.Criteria;
 
 import java.io.Serializable;
 
@@ -55,6 +56,12 @@ public class SQLQueryImpl implements SQLQuery {
 		}
 
 		_names = names;
+	}
+
+	@Override
+	public SQLQuery addDistinctOnRootEntity() {
+		_sqlQuery.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return this;
 	}
 
 	@Override
