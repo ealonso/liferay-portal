@@ -14,8 +14,8 @@
 
 package com.liferay.portlet.asset.util;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -30,35 +30,30 @@ import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
+import com.liferay.portlet.asset.service.permission.AssetTagPermission;
+
+import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 /**
- * @author Istvan Andras Dezsi
+ * @author Pavel Savinov
  */
 @OSGiBeanProperties
-public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
+public class AssetTagIndexer extends BaseIndexer<AssetTag> {
 
-	public static final String CLASS_NAME = AssetCategory.class.getName();
+	public static final String CLASS_NAME = AssetTag.class.getName();
 
 	public AssetTagIndexer() {
 		setDefaultSelectedFieldNames(
-			Field.ASSET_CATEGORY_ID, Field.COMPANY_ID, Field.GROUP_ID,
-			Field.UID);
+			Field.COMPANY_ID, Field.GROUP_ID, Field.UID);
 		setFilterSearch(true);
 		setPermissionAware(true);
 	}
@@ -74,45 +69,10 @@ public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
 			long entryClassPK, String actionId)
 		throws Exception {
 
-		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(
-			entryClassPK);
+		AssetTag tag = AssetTagLocalServiceUtil.getTag(entryClassPK);
 
-		return AssetCategoryPermission.contains(
-			permissionChecker, category, ActionKeys.VIEW);
-	}
-
-	@Override
-	public void postProcessContextBooleanFilter(
-			BooleanFilter contextBooleanFilter, SearchContext searchContext)
-		throws Exception {
-
-		long[] parentCategoryIds = (long[])searchContext.getAttribute(
-			Field.ASSET_PARENT_CATEGORY_IDS);
-
-		if (!ArrayUtil.isEmpty(parentCategoryIds)) {
-			TermsFilter parentCategoryTermsFilter = new TermsFilter(
-				Field.ASSET_PARENT_CATEGORY_ID);
-
-			parentCategoryTermsFilter.addValues(
-				ArrayUtil.toStringArray(parentCategoryIds));
-
-			contextBooleanFilter.add(
-				parentCategoryTermsFilter, BooleanClauseOccur.MUST);
-		}
-
-		long[] vocabularyIds = (long[])searchContext.getAttribute(
-			Field.ASSET_VOCABULARY_IDS);
-
-		if (!ArrayUtil.isEmpty(vocabularyIds)) {
-			TermsFilter vocabularyTermsFilter = new TermsFilter(
-				Field.ASSET_VOCABULARY_ID);
-
-			vocabularyTermsFilter.addValues(
-				ArrayUtil.toStringArray(vocabularyIds));
-
-			contextBooleanFilter.add(
-				vocabularyTermsFilter, BooleanClauseOccur.MUST);
-		}
+		return AssetTagPermission.contains(
+			permissionChecker, tag, ActionKeys.VIEW);
 	}
 
 	@Override
@@ -121,69 +81,34 @@ public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
 			SearchContext searchContext)
 		throws Exception {
 
-		String title = (String)searchContext.getAttribute(Field.TITLE);
+		String name = (String)searchContext.getAttribute(Field.NAME);
 
-		if (Validator.isNotNull(title)) {
-			BooleanQuery localizedQuery = new BooleanQueryImpl();
+		if (Validator.isNotNull(name)) {
+			BooleanQuery nameQuery = new BooleanQueryImpl();
 
-			searchContext.setAttribute(Field.ASSET_CATEGORY_TITLE, title);
+			addSearchTerm(nameQuery, searchContext, Field.NAME, true);
 
-			addSearchLocalizedTerm(
-				localizedQuery, searchContext, Field.ASSET_CATEGORY_TITLE,
-				true);
-			addSearchLocalizedTerm(
-				localizedQuery, searchContext, Field.TITLE, true);
-
-			searchQuery.add(localizedQuery, BooleanClauseOccur.SHOULD);
+			searchQuery.add(nameQuery, BooleanClauseOccur.SHOULD);
 		}
 	}
 
 	@Override
-	protected void doDelete(AssetCategory assetCategory) throws Exception {
-		deleteDocument(
-			assetCategory.getCompanyId(), assetCategory.getCategoryId());
+	protected void doDelete(AssetTag assetTag) throws Exception {
+		deleteDocument(assetTag.getCompanyId(), assetTag.getTagId());
 	}
 
 	@Override
-	protected Document doGetDocument(AssetCategory assetCategory)
-		throws Exception {
-
+	protected Document doGetDocument(AssetTag assetTag) throws Exception {
 		if (_log.isDebugEnabled()) {
-			_log.debug("Indexing asset category " + assetCategory);
+			_log.debug("Indexing asset tag " + assetTag);
 		}
 
-		Document document = getBaseModelDocument(CLASS_NAME, assetCategory);
+		Document document = getBaseModelDocument(CLASS_NAME, assetTag);
 
-		document.addKeyword(
-			Field.ASSET_CATEGORY_ID, assetCategory.getCategoryId());
-
-		List<AssetCategory> categories = new ArrayList<>(1);
-
-		categories.add(assetCategory);
-
-		addSearchAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLE, categories);
-
-		document.addKeyword(
-			Field.ASSET_PARENT_CATEGORY_ID,
-			assetCategory.getParentCategoryId());
-		document.addKeyword(
-			Field.ASSET_VOCABULARY_ID, assetCategory.getVocabularyId());
-
-		Locale siteDefaultLocale = PortalUtil.getSiteDefaultLocale(
-			assetCategory.getGroupId());
-
-		addLocalizedField(
-			document, Field.DESCRIPTION, siteDefaultLocale,
-			assetCategory.getDescriptionMap());
-
-		document.addText(Field.NAME, assetCategory.getName());
-		addLocalizedField(
-			document, Field.TITLE, siteDefaultLocale,
-			assetCategory.getTitleMap());
+		document.addText(Field.NAME, assetTag.getName());
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Document " + assetCategory + " indexed successfully");
+			_log.debug("Document " + assetTag + " indexed successfully");
 		}
 
 		return document;
@@ -198,20 +123,19 @@ public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
 	}
 
 	@Override
-	protected void doReindex(AssetCategory assetCategory) throws Exception {
-		Document document = getDocument(assetCategory);
+	protected void doReindex(AssetTag assetTag) throws Exception {
+		Document document = getDocument(assetTag);
 
 		IndexWriterHelperUtil.updateDocument(
-			getSearchEngineId(), assetCategory.getCompanyId(), document,
+			getSearchEngineId(), assetTag.getCompanyId(), document,
 			isCommitImmediately());
 	}
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
-		AssetCategory category = AssetCategoryLocalServiceUtil.getCategory(
-			classPK);
+		AssetTag tag = AssetTagLocalServiceUtil.getTag(classPK);
 
-		doReindex(category);
+		doReindex(tag);
 	}
 
 	@Override
@@ -225,16 +149,16 @@ public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
 		throws PortalException {
 
 		final IndexableActionableDynamicQuery indexableActionableDynamicQuery =
-			AssetCategoryLocalServiceUtil.getIndexableActionableDynamicQuery();
+			AssetTagLocalServiceUtil.getIndexableActionableDynamicQuery();
 
 		indexableActionableDynamicQuery.setCompanyId(companyId);
 		indexableActionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod<AssetCategory>() {
+			new ActionableDynamicQuery.PerformActionMethod<AssetTag>() {
 
 				@Override
-				public void performAction(AssetCategory category) {
+				public void performAction(AssetTag tag) {
 					try {
-						Document document = getDocument(category);
+						Document document = getDocument(tag);
 
 						if (document != null) {
 							indexableActionableDynamicQuery.addDocuments(
@@ -244,8 +168,7 @@ public class AssetTagIndexer extends BaseIndexer<AssetCategory> {
 					catch (PortalException pe) {
 						if (_log.isWarnEnabled()) {
 							_log.warn(
-								"Unable to index asset category " +
-									category.getCategoryId(),
+								"Unable to index asset tag " + tag.getTagId(),
 								pe);
 						}
 					}
