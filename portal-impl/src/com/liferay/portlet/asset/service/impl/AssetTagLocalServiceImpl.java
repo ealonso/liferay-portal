@@ -24,6 +24,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -60,6 +64,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 * @param  serviceContext the service context to be applied
 	 * @return the asset tag that was added
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag addTag(
 			long userId, long groupId, String name,
@@ -170,6 +175,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 *         tag had been applied
 	 * @return the asset tag
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag decrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
@@ -225,6 +231,11 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		// Indexer
 
 		assetEntryLocalService.reindex(entries);
+
+		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			AssetTag.class);
+
+		indexer.delete(tag);
 	}
 
 	/**
@@ -558,6 +569,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 *         tag is being applied
 	 * @return the asset tag
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag incrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
@@ -628,6 +640,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			groupIds, name, start, end, new AssetTagNameComparator());
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag updateTag(
 			long userId, long tagId, String name, ServiceContext serviceContext)
