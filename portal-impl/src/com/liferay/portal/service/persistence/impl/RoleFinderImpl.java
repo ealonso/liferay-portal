@@ -14,6 +14,14 @@
 
 package com.liferay.portal.service.persistence.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -36,14 +44,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.impl.RoleImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Brian Wing Shun Chan
@@ -1394,13 +1394,13 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 
 		StringBundler sb = new StringBundler(roleIds.length + 1);
 
-		sb.append(" AND (");
+		sb.append(" AND ( Role_.roleId IN ( ");
 
 		for (int i = 0; i < roleIds.length - 1; i++) {
-			sb.append("Role_.roleId = ? OR ");
+			sb.append("?, ");
 		}
 
-		sb.append("Role_.roleId = ?)");
+		sb.append("? ) )");
 
 		return sb.toString();
 	}
