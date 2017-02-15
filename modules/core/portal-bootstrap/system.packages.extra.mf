@@ -3614,7 +3614,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  eray.portal.kernel.bean,com.liferay.portal.kernel.model,com.liferay.p
  ortal.kernel.social,com.liferay.portal.kernel.spring.osgi,com.liferay
  .social.kernel.service";version="1.0.0",com.liferay.portlet.asset.uti
- l;version="1.1.0";uses:="com.liferay.asset.kernel.model,com.liferay.a
+ l;version="1.2.0";uses:="com.liferay.asset.kernel.model,com.liferay.a
  sset.kernel.service.persistence,com.liferay.portal.kernel.exception,c
  om.liferay.portal.kernel.model,com.liferay.portal.kernel.portlet,com.
  liferay.portal.kernel.search,com.liferay.portal.kernel.search.filter,
@@ -4402,6 +4402,8 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  xml.serializer;version="2.7.1",org.objectweb.asm.attrs;version="5.0.1
  ",sun.misc;version="1.0.0",sun.net.util;version="1.0.0",sun.security.
  provider;version="1.0.0"
+Git-Descriptor: 4525b7b-dirty
+Git-SHA: 4525b7b4b83b3ccf0f1110d86cb22cf59ca8a2da
 Javac-Debug: on
 Javac-Deprecation: off
 Javac-Encoding: UTF-8
