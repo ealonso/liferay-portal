@@ -81,6 +81,7 @@ import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortalPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.service.permission.UserPermissionUtil;
 import com.liferay.portal.kernel.service.persistence.LayoutSetUtil;
 import com.liferay.portal.kernel.service.persistence.LayoutUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -1579,6 +1580,8 @@ public class SitesImpl implements Sites {
 				ActionKeys.UPDATE);
 		}
 		else if (group.isUser() &&
+				 !UserPermissionUtil.contains(permissionChecker,
+					 permissionChecker.getUserId(), ActionKeys.UPDATE) &&
 				 (permissionChecker.getUserId() != group.getClassPK())) {
 
 			throw new PrincipalException();
