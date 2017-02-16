@@ -261,7 +261,7 @@ AUI.add(
 											serviceQueryObj = {
 												end: 20,
 												groupIds: instance.get('groupIds'),
-												name: '%' + term + '%',
+												name: term,
 												start: 0,
 												tagProperties: ''
 											};

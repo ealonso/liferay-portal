@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -105,10 +104,6 @@ public class AssetTagsDisplayContext {
 		}
 
 		_keywords = ParamUtil.getString(_request, "keywords", null);
-
-		if (Validator.isNotNull(_keywords)) {
-			_keywords = StringUtil.quote(_keywords, StringPool.PERCENT);
-		}
 
 		return _keywords;
 	}
