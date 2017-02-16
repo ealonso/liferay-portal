@@ -330,6 +330,11 @@ public class AssetTagLocalServiceWrapper implements AssetTagLocalService,
 		return _assetTagLocalService.getTagsSize(groupId, classNameId, name);
 	}
 
+	@Override
+	public int searchCount(long[] groupIds, java.lang.String name) {
+		return _assetTagLocalService.searchCount(groupIds, name);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -669,6 +674,12 @@ public class AssetTagLocalServiceWrapper implements AssetTagLocalService,
 		return _assetTagLocalService.search(groupId, name, start, end);
 	}
 
+	@Override
+	public java.util.List<com.liferay.asset.kernel.model.AssetTag> search(
+		long[] groupIds, java.lang.String name, int start, int end) {
+		return _assetTagLocalService.search(groupIds, name, start, end);
+	}
+
 	/**
 	* Returns the asset tags in the groups whose names match the pattern.
 	*
@@ -676,12 +687,14 @@ public class AssetTagLocalServiceWrapper implements AssetTagLocalService,
 	* @param name the pattern to match
 	* @param start the lower bound of the range of asset tags
 	* @param end the upper bound of the range of asset tags (not inclusive)
+	* @param obc the comparator to order the asset tags
 	* @return the asset tags in the groups whose names match the pattern
 	*/
 	@Override
 	public java.util.List<com.liferay.asset.kernel.model.AssetTag> search(
-		long[] groupIds, java.lang.String name, int start, int end) {
-		return _assetTagLocalService.search(groupIds, name, start, end);
+		long[] groupIds, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetTag> obc) {
+		return _assetTagLocalService.search(groupIds, name, start, end, obc);
 	}
 
 	/**

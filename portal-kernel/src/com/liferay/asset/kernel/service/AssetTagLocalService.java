@@ -105,6 +105,7 @@ public interface AssetTagLocalService extends BaseLocalService,
 	* @param serviceContext the service context to be applied
 	* @return the asset tag that was added
 	*/
+	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag addTag(long userId, long groupId, java.lang.String name,
 		ServiceContext serviceContext) throws PortalException;
 
@@ -124,6 +125,7 @@ public interface AssetTagLocalService extends BaseLocalService,
 	tag had been applied
 	* @return the asset tag
 	*/
+	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag decrementAssetCount(long tagId, long classNameId)
 		throws PortalException;
 
@@ -221,6 +223,7 @@ public interface AssetTagLocalService extends BaseLocalService,
 	tag is being applied
 	* @return the asset tag
 	*/
+	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag incrementAssetCount(long tagId, long classNameId)
 		throws PortalException;
 
@@ -233,6 +236,7 @@ public interface AssetTagLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag updateAssetTag(AssetTag assetTag);
 
+	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag updateTag(long userId, long tagId, java.lang.String name,
 		ServiceContext serviceContext) throws PortalException;
 
@@ -282,6 +286,9 @@ public interface AssetTagLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getTagsSize(long groupId, long classNameId, java.lang.String name);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int searchCount(long[] groupIds, java.lang.String name);
 
 	/**
 	* Returns the OSGi service identifier.
@@ -539,6 +546,10 @@ public interface AssetTagLocalService extends BaseLocalService,
 	public List<AssetTag> search(long groupId, java.lang.String name,
 		int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> search(long[] groupIds, java.lang.String name,
+		int start, int end);
+
 	/**
 	* Returns the asset tags in the groups whose names match the pattern.
 	*
@@ -546,11 +557,12 @@ public interface AssetTagLocalService extends BaseLocalService,
 	* @param name the pattern to match
 	* @param start the lower bound of the range of asset tags
 	* @param end the upper bound of the range of asset tags (not inclusive)
+	* @param obc the comparator to order the asset tags
 	* @return the asset tags in the groups whose names match the pattern
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetTag> search(long[] groupIds, java.lang.String name,
-		int start, int end);
+		int start, int end, OrderByComparator<AssetTag> obc);
 
 	/**
 	* Returns the number of rows matching the dynamic query.
