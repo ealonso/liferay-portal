@@ -1580,8 +1580,9 @@ public class SitesImpl implements Sites {
 				ActionKeys.UPDATE);
 		}
 		else if (group.isUser() &&
-				 !UserPermissionUtil.contains(permissionChecker,
-					 permissionChecker.getUserId(), ActionKeys.UPDATE) &&
+				 !UserPermissionUtil.contains(
+					 permissionChecker, permissionChecker.getUserId(),
+					 ActionKeys.UPDATE) &&
 				 (permissionChecker.getUserId() != group.getClassPK())) {
 
 			throw new PrincipalException();
