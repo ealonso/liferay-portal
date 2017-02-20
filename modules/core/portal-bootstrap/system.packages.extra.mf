@@ -3614,7 +3614,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  portal.kernel.bean,com.liferay.portal.kernel.model,com.liferay.portal
  .kernel.social,com.liferay.portal.kernel.spring.osgi,com.liferay.soci
  al.kernel.service";version="1.0.0",com.liferay.portlet.asset.util;ver
- sion="1.1.0";uses:="com.liferay.asset.kernel.model,com.liferay.asset.
+ sion="1.2.0";uses:="com.liferay.asset.kernel.model,com.liferay.asset.
  kernel.service.persistence,com.liferay.portal.kernel.exception,com.li
  feray.portal.kernel.model,com.liferay.portal.kernel.portlet,com.lifer
  ay.portal.kernel.search,com.liferay.portal.kernel.search.filter,com.l
