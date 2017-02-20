@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -652,106 +651,41 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> search(
 		long[] groupIds, String name, int start, int end) {
 
-		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetTag.class);
-
-		SearchContext searchContext = new SearchContext();
-
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		if (serviceContext != null) {
-			searchContext.setCompanyId(serviceContext.getCompanyId());
-			searchContext.setUserId(serviceContext.getUserId());
+		SearchContext searchContext = buildSearchContext(
+			serviceContext.getCompanyId(), groupIds, name, start, end);
+
+		try {
+			BaseModelSearchResult<AssetTag> baseModelSearchResult = searchTags(
+				searchContext);
+
+			return baseModelSearchResult.getBaseModels();
 		}
-
-		name = HtmlUtil.escapeURL(name);
-
-		Map<String, Serializable> attributes = new HashMap<>();
-
-		attributes.put(Field.NAME, name);
-
-		searchContext.setAttributes(attributes);
-
-		searchContext.setEnd(end);
-		searchContext.setGroupIds(groupIds);
-		searchContext.setKeywords(name);
-		searchContext.setStart(start);
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		for (int i = 0; i < 10; i++) {
-			Hits hits = null;
-
-			try {
-				hits = indexer.search(searchContext);
-			}
-			catch (SearchException se) {
-				_log.error("Unable to find asset tag documents", se);
-
-				continue;
-			}
-
-			List<AssetTag> tags = getTags(hits);
-
-			if (tags != null) {
-				BaseModelSearchResult<AssetTag> baseModelSearchResult =
-					new BaseModelSearchResult<>(tags, hits.getLength());
-
-				return baseModelSearchResult.getBaseModels();
-			}
+		catch (PortalException pe) {
+			return assetTagPersistence.findByG_LikeN(
+				groupIds, name, start, end, new AssetTagNameComparator());
 		}
-
-		return assetTagPersistence.findByG_LikeN(
-			groupIds, name, start, end, new AssetTagNameComparator());
 	}
 
 	@Override
-	public int searchCount(long groupId, String name) {
-		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetTag.class);
+	public int searchCount(long[] groupIds, String name) {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
 
-		SearchContext searchContext = new SearchContext();
+		SearchContext searchContext = buildSearchContext(
+			serviceContext.getCompanyId(), groupIds, name, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
-		Map<String, Serializable> attributes = new HashMap<>();
+		try {
+			BaseModelSearchResult<AssetTag> baseModelSearchResult = searchTags(
+				searchContext);
 
-		attributes.put(Field.NAME, name);
-
-		searchContext.setAttributes(attributes);
-
-		searchContext.setEnd(QueryUtil.ALL_POS);
-		searchContext.setGroupIds(new long[] {groupId});
-		searchContext.setKeywords(name);
-		searchContext.setStart(QueryUtil.ALL_POS);
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		for (int i = 0; i < 10; i++) {
-			Hits hits = null;
-
-			try {
-				hits = indexer.search(searchContext);
-			}
-			catch (SearchException se) {
-				_log.error("Unable to find asset tag documents", se);
-
-				continue;
-			}
-
-			List<AssetTag> tags = getTags(hits);
-
-			if (tags != null) {
-				BaseModelSearchResult<AssetTag> baseModelSearchResult =
-					new BaseModelSearchResult<>(tags, hits.getLength());
-
-				return baseModelSearchResult.getLength();
-			}
+			return baseModelSearchResult.getLength();
+		}
+		catch (PortalException pe) {
+			return assetTagPersistence.countByG_LikeN(groupIds, name);
 		}
 	}
 
@@ -803,11 +737,36 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		return tag;
 	}
 
+	protected SearchContext buildSearchContext(
+		long companyId, long[] groupIds, String name, int start, int end) {
+
+		SearchContext searchContext = new SearchContext();
+
+		Map<String, Serializable> attributes = new HashMap<>();
+
+		attributes.put(Field.NAME, name);
+
+		searchContext.setAttributes(attributes);
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setEnd(end);
+		searchContext.setGroupIds(groupIds);
+		searchContext.setKeywords(name);
+		searchContext.setStart(start);
+
+		QueryConfig queryConfig = searchContext.getQueryConfig();
+
+		queryConfig.setHighlightEnabled(false);
+		queryConfig.setScoreEnabled(false);
+
+		return searchContext;
+	}
+
 	protected String[] getTagNames(List<AssetTag> tags) {
 		return ListUtil.toArray(tags, AssetTag.NAME_ACCESSOR);
 	}
 
-	protected List<AssetTag> getTags(Hits hits) {
+	protected List<AssetTag> getTags(Hits hits) throws PortalException {
 		List<Document> documents = hits.toList();
 
 		List<AssetTag> tags = new ArrayList<>(documents.size());
@@ -815,7 +774,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		for (Document document : documents) {
 			long tagId = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
-			AssetTag tag = assetTagLocalService.fetchAssetTag(tagId);
+			AssetTag tag = fetchAssetTag(tagId);
 
 			if (tag == null) {
 				tags = null;
@@ -826,15 +785,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 				long companyId = GetterUtil.getLong(
 					document.get(Field.COMPANY_ID));
 
-				try {
-					indexer.delete(companyId, document.getUID());
-				}
-				catch (SearchException se) {
-					_log.error(
-						"Unable to delete asset tag document" +
-							document.getUID(),
-						se);
-				}
+				indexer.delete(companyId, document.getUID());
 			}
 			else if (tags != null) {
 				tags.add(tag);
@@ -842,6 +793,27 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		}
 
 		return tags;
+	}
+
+	protected BaseModelSearchResult<AssetTag> searchTags(
+			SearchContext searchContext)
+		throws PortalException {
+
+		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			AssetTag.class);
+
+		for (int i = 0; i < 10; i++) {
+			Hits hits = indexer.search(searchContext);
+
+			List<AssetTag> tags = getTags(hits);
+
+			if (tags != null) {
+				return new BaseModelSearchResult<>(tags, hits.getLength());
+			}
+		}
+
+		throw new SearchException(
+			"Unable to fix the search index after 10 attempts");
 	}
 
 	protected void validate(String name) throws PortalException {
