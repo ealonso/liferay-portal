@@ -142,12 +142,10 @@ public class AssetTagIndexer extends BaseIndexer<AssetTag> {
 	protected void doReindex(String[] ids) throws Exception {
 		long companyId = GetterUtil.getLong(ids[0]);
 
-		reindexCategories(companyId);
+		reindexTags(companyId);
 	}
 
-	protected void reindexCategories(final long companyId)
-		throws PortalException {
-
+	protected void reindexTags(final long companyId) throws PortalException {
 		final IndexableActionableDynamicQuery indexableActionableDynamicQuery =
 			AssetTagLocalServiceUtil.getIndexableActionableDynamicQuery();
 
@@ -175,6 +173,7 @@ public class AssetTagIndexer extends BaseIndexer<AssetTag> {
 				}
 
 			});
+
 		indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
 		indexableActionableDynamicQuery.performActions();
