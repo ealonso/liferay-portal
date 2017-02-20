@@ -664,6 +664,10 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			return baseModelSearchResult.getBaseModels();
 		}
 		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to use search index ", pe);
+			}
+
 			return assetTagPersistence.findByG_LikeN(
 				groupIds, name, start, end, new AssetTagNameComparator());
 		}
@@ -685,6 +689,10 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			return baseModelSearchResult.getLength();
 		}
 		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to use search index ", pe);
+			}
+
 			return assetTagPersistence.countByG_LikeN(groupIds, name);
 		}
 	}
