@@ -179,7 +179,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		OrderByComparator<AssetTag> obc) {
 
 		if (Validator.isNull(name)) {
-			return assetTagPersistence.findByGroupId(groupIds, start, end);
+			return assetTagPersistence.findByGroupId(groupIds, start, end, obc);
 		}
 
 		return assetTagLocalService.search(groupIds, name, start, end);
@@ -196,7 +196,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			return assetTagPersistence.countByGroupId(groupId);
 		}
 
-		return assetTagLocalService.searchCount(groupId, name);
+		return assetTagLocalService.searchCount(new long[] {groupId}, name);
 	}
 
 	@Override
