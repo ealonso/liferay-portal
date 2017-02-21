@@ -182,7 +182,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			return assetTagPersistence.findByGroupId(groupIds, start, end, obc);
 		}
 
-		return assetTagLocalService.search(groupIds, name, start, end);
+		return assetTagLocalService.search(groupIds, name, start, end, obc);
 	}
 
 	@Override
