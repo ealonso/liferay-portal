@@ -494,6 +494,8 @@ public class WebServerServlet extends HttpServlet {
 						PermissionCheckerFactoryUtil.create(user);
 
 					if (!permissionChecker.isGroupMember(
+							layoutSet.getGroupId()) &&
+						!permissionChecker.isGroupOwner(
 							layoutSet.getGroupId())) {
 
 						throw new PrincipalException.MustHavePermission(
