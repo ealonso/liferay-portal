@@ -21,13 +21,31 @@ import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.SortFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.asset.service.base.AssetTagLocalServiceBaseImpl;
@@ -35,9 +53,13 @@ import com.liferay.portlet.asset.util.AssetUtil;
 import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.social.kernel.util.SocialCounterPeriodUtil;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the local service for accessing, adding, checking, deleting,
@@ -60,6 +82,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 * @param  serviceContext the service context to be applied
 	 * @return the asset tag that was added
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag addTag(
 			long userId, long groupId, String name,
@@ -170,6 +193,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 *         tag had been applied
 	 * @return the asset tag
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag decrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
@@ -225,6 +249,11 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		// Indexer
 
 		assetEntryLocalService.reindex(entries);
+
+		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			AssetTag.class);
+
+		indexer.delete(tag);
 	}
 
 	/**
@@ -558,6 +587,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 *         tag is being applied
 	 * @return the asset tag
 	 */
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag incrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
@@ -611,6 +641,13 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		return search(new long[] {groupId}, name, start, end);
 	}
 
+	@Override
+	public List<AssetTag> search(
+		long[] groupIds, String name, int start, int end) {
+
+		return search(groupIds, name, start, end, null);
+	}
+
 	/**
 	 * Returns the asset tags in the groups whose names match the pattern.
 	 *
@@ -618,16 +655,69 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 * @param  name the pattern to match
 	 * @param  start the lower bound of the range of asset tags
 	 * @param  end the upper bound of the range of asset tags (not inclusive)
+	 * @param  obc the comparator to order the asset tags
 	 * @return the asset tags in the groups whose names match the pattern
 	 */
 	@Override
 	public List<AssetTag> search(
-		long[] groupIds, String name, int start, int end) {
+		long[] groupIds, String name, int start, int end,
+		OrderByComparator<AssetTag> obc) {
 
-		return assetTagPersistence.findByG_LikeN(
-			groupIds, name, start, end, new AssetTagNameComparator());
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		SearchContext searchContext = buildSearchContext(
+			serviceContext.getCompanyId(), groupIds, name, start, end, obc);
+
+		try {
+			BaseModelSearchResult<AssetTag> baseModelSearchResult = searchTags(
+				searchContext);
+
+			return baseModelSearchResult.getBaseModels();
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to use search index ", pe);
+			}
+
+			OrderByComparator comparator = obc;
+
+			if (comparator == null) {
+				comparator = new AssetTagNameComparator();
+			}
+
+			name = StringUtil.quote(name, StringPool.PERCENT);
+
+			return assetTagPersistence.findByG_LikeN(
+				groupIds, name, start, end, comparator);
+		}
 	}
 
+	@Override
+	public int searchCount(long[] groupIds, String name) {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		SearchContext searchContext = buildSearchContext(
+			serviceContext.getCompanyId(), groupIds, name, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+
+		try {
+			BaseModelSearchResult<AssetTag> baseModelSearchResult = searchTags(
+				searchContext);
+
+			return baseModelSearchResult.getLength();
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to use search index ", pe);
+			}
+
+			return assetTagPersistence.countByG_LikeN(groupIds, name);
+		}
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public AssetTag updateTag(
 			long userId, long tagId, String name, ServiceContext serviceContext)
@@ -675,8 +765,107 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		return tag;
 	}
 
+	protected SearchContext buildSearchContext(
+		long companyId, long[] groupIds, String name, int start, int end,
+		OrderByComparator<AssetTag> obc) {
+
+		SearchContext searchContext = new SearchContext();
+
+		Map<String, Serializable> attributes = new HashMap<>();
+
+		String fixedName = StringUtil.replace(name, ' ', "%20");
+
+		attributes.put(Field.NAME, fixedName);
+
+		searchContext.setAttributes(attributes);
+
+		searchContext.setCompanyId(companyId);
+		searchContext.setEnd(end);
+		searchContext.setGroupIds(groupIds);
+		searchContext.setKeywords(fixedName);
+		searchContext.setStart(start);
+
+		if (obc != null) {
+			String orderType = "ASC";
+
+			if (!obc.isAscending()) {
+				orderType = "DESC";
+			}
+
+			String fieldName = obc.getOrderByFields()[0];
+
+			int type = Sort.STRING_TYPE;
+
+			if (!fieldName.equals(Field.NAME)) {
+				type = Sort.INT_TYPE;
+			}
+
+			Sort sort = SortFactoryUtil.getSort(
+				AssetTag.class, type, fieldName, orderType);
+
+			searchContext.setSorts(sort);
+		}
+
+		QueryConfig queryConfig = searchContext.getQueryConfig();
+
+		queryConfig.setHighlightEnabled(false);
+		queryConfig.setScoreEnabled(false);
+
+		return searchContext;
+	}
+
 	protected String[] getTagNames(List<AssetTag> tags) {
 		return ListUtil.toArray(tags, AssetTag.NAME_ACCESSOR);
+	}
+
+	protected List<AssetTag> getTags(Hits hits) throws PortalException {
+		List<Document> documents = hits.toList();
+
+		List<AssetTag> tags = new ArrayList<>(documents.size());
+
+		for (Document document : documents) {
+			long tagId = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
+
+			AssetTag tag = fetchAssetTag(tagId);
+
+			if (tag == null) {
+				tags = null;
+
+				Indexer<AssetTag> indexer = IndexerRegistryUtil.getIndexer(
+					AssetTag.class);
+
+				long companyId = GetterUtil.getLong(
+					document.get(Field.COMPANY_ID));
+
+				indexer.delete(companyId, document.getUID());
+			}
+			else if (tags != null) {
+				tags.add(tag);
+			}
+		}
+
+		return tags;
+	}
+
+	protected BaseModelSearchResult<AssetTag> searchTags(
+			SearchContext searchContext)
+		throws PortalException {
+
+		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			AssetTag.class);
+
+		for (int i = 0; i < 10; i++) {
+			Hits hits = indexer.search(searchContext);
+
+			List<AssetTag> tags = getTags(hits);
+
+			if (tags != null) {
+				return new BaseModelSearchResult<>(tags, hits.getLength());
+			}
+		}
+
+		throw new SearchException(
+			"Unable to fix the search index after 10 attempts");
 	}
 
 	protected void validate(String name) throws PortalException {
@@ -687,5 +876,8 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 				AssetTagException.INVALID_CHARACTER);
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AssetTagLocalServiceImpl.class);
 
 }

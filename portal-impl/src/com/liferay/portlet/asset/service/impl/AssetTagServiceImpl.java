@@ -182,8 +182,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			return assetTagPersistence.findByGroupId(groupIds, start, end, obc);
 		}
 
-		return assetTagPersistence.findByG_LikeN(
-			groupIds, name, start, end, obc);
+		return assetTagLocalService.search(groupIds, name, start, end, obc);
 	}
 
 	@Override
@@ -197,7 +196,7 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			return assetTagPersistence.countByGroupId(groupId);
 		}
 
-		return assetTagPersistence.countByG_LikeN(groupId, name);
+		return assetTagLocalService.searchCount(new long[] {groupId}, name);
 	}
 
 	@Override
