@@ -58,6 +58,7 @@ public class SQLQueryImpl implements SQLQuery {
 		_names = names;
 	}
 
+	@Deprecated
 	@Override
 	public SQLQuery addDistinctOnRootEntity() {
 		_sqlQuery.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
