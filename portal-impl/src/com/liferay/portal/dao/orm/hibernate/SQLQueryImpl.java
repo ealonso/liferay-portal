@@ -58,6 +58,9 @@ public class SQLQueryImpl implements SQLQuery {
 		_names = names;
 	}
 
+	/**
+	 * @deprecated Is only used in Liferay 6.2
+	 */
 	@Deprecated
 	@Override
 	public SQLQuery addDistinctOnRootEntity() {
