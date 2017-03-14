@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.security.pacl.DoPrivileged;
 import com.liferay.portal.kernel.security.pacl.NotPrivileged;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import org.hibernate.Criteria;
 
 import java.io.Serializable;
 
@@ -35,6 +34,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.hibernate.Criteria;
 
 /**
  * @author Brian Wing Shun Chan
@@ -59,7 +60,7 @@ public class SQLQueryImpl implements SQLQuery {
 	}
 
 	/**
-	 * @deprecated Is only used in Liferay 6.2
+	 * @deprecated As of 7.0.0, Is only used in Liferay 6.2
 	 */
 	@Deprecated
 	@Override
