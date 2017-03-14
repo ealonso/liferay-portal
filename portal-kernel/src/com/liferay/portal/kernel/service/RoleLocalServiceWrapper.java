@@ -401,6 +401,17 @@ public class RoleLocalServiceWrapper implements RoleLocalService,
 	}
 
 	@Override
+	public int getGroupRolesAndTeamRolesAndRoleIdsCount(long companyId,
+		java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
+		long excludedTeamRoleId, long teamGroupId, long[] roleIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _roleLocalService.getGroupRolesAndTeamRolesAndRoleIdsCount(companyId,
+			keywords, excludedNames, types, excludedTeamRoleId, teamGroupId,
+			roleIds);
+	}
+
+	@Override
 	public int getGroupRolesAndTeamRolesCount(long companyId,
 		java.lang.String keywords,
 		java.util.List<java.lang.String> excludedNames, int[] types,
@@ -622,6 +633,17 @@ public class RoleLocalServiceWrapper implements RoleLocalService,
 		long excludedTeamRoleId, long teamGroupId, int start, int end) {
 		return _roleLocalService.getGroupRolesAndTeamRoles(companyId, keywords,
 			excludedNames, types, excludedTeamRoleId, teamGroupId, start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.model.Role> getGroupRolesAndTeamRolesAndRoleIds(
+		long companyId, java.lang.String keywords,
+		java.util.List<java.lang.String> excludedNames, int[] types,
+		long excludedTeamRoleId, long teamGroupId, long[] roleIds, int start,
+		int end) throws com.liferay.portal.kernel.exception.PortalException {
+		return _roleLocalService.getGroupRolesAndTeamRolesAndRoleIds(companyId,
+			keywords, excludedNames, types, excludedTeamRoleId, teamGroupId,
+			roleIds, start, end);
 	}
 
 	@Override
