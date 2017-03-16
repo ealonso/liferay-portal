@@ -17,7 +17,7 @@ class ColorPickerInput extends Component {
 				{
 					constrain: true,
 					color: instance.color,
-					trigger: '#' + instance.id + ' input',
+					trigger: '#' + instance.id,
 					zIndex: Liferay.zIndex.POPOVER
 				}
 			);

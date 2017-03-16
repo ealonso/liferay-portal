@@ -10,13 +10,14 @@
  * @param? wrapperCssClass
  */
 {template .render}
-	<div class="form-group {$wrapperCssClass ? $wrapperCssClass : ''}" id="{$id}">
+	<div class="form-group {$wrapperCssClass ? $wrapperCssClass : ''}">
 		<label>
 			{$label}
 		</label>
 
 		{let $inputAttributes kind="attributes"}
 			class="form-control"
+			id="{$id}"
 			type="text"
 
 			{if $name}
