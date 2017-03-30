@@ -28,6 +28,7 @@ import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.expando.kernel.util.ExpandoBridgeIndexerUtil;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
@@ -86,6 +87,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.ratings.kernel.model.RatingsStats;
 import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
+import com.liferay.registry.collections.ServiceTrackerCollections;
 import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.io.Serializable;
@@ -1669,6 +1671,12 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		ExpandoBridgeIndexerUtil.addAttributes(
 			document, baseModel.getExpandoBridge());
 
+		for (IndexerAttributesCustomizer indexerAttributesCustomizer :
+				_indexerAttributesCustomizers) {
+
+			indexerAttributesCustomizer.addAttributes(document, baseModel);
+		}
+
 		return document;
 	}
 
@@ -1955,6 +1963,10 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 	private static final long _DEFAULT_FOLDER_ID = 0L;
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseIndexer.class);
+
+	private static final ServiceTrackerList<IndexerAttributesCustomizer>
+		_indexerAttributesCustomizers = ServiceTrackerCollections.openList(
+			IndexerAttributesCustomizer.class);
 
 	private boolean _commitImmediately;
 	private String[] _defaultSelectedFieldNames;
