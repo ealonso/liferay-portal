@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexerAttributesCustomizer;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -33,6 +33,7 @@ import com.liferay.trash.kernel.model.TrashEntry;
 import java.util.Date;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -72,7 +73,7 @@ public class TrashIndexerAttributesCustomizer
 
 			if (serviceContext != null) {
 				try {
-					User user = UserLocalServiceUtil.getUser(
+					User user = _userLocalService.getUser(
 						serviceContext.getUserId());
 
 					document.addKeyword(
@@ -127,7 +128,14 @@ public class TrashIndexerAttributesCustomizer
 		}
 	}
 
+	@Reference(unbind = "-")
+	protected void setUserLocalService(UserLocalService userLocalService) {
+		_userLocalService = userLocalService;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		TrashIndexerAttributesCustomizer.class);
+
+	private UserLocalService _userLocalService;
 
 }
