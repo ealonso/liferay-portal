@@ -28,7 +28,6 @@ import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.expando.kernel.util.ExpandoBridgeIndexerUtil;
-import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
@@ -46,7 +45,6 @@ import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.ResourcedModel;
 import com.liferay.portal.kernel.model.TrashedModel;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.WorkflowedModel;
 import com.liferay.portal.kernel.search.facet.AssetEntriesFacet;
 import com.liferay.portal.kernel.search.facet.Facet;
@@ -65,11 +63,6 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CountryServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RegionServiceUtil;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashUtil;
@@ -88,7 +81,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.ratings.kernel.model.RatingsStats;
 import com.liferay.ratings.kernel.service.RatingsStatsLocalServiceUtil;
 import com.liferay.registry.collections.ServiceTrackerCollections;
-import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.io.Serializable;
 
@@ -1290,81 +1282,12 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	protected void addTrashFields(
 		Document document, TrashedModel trashedModel) {
-
-		TrashEntry trashEntry = null;
-
-		try {
-			trashEntry = trashedModel.getTrashEntry();
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get trash entry for " + trashedModel, pe);
-			}
-		}
-
-		if (trashEntry == null) {
-			document.addDate(Field.REMOVED_DATE, new Date());
-
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
-			if (serviceContext != null) {
-				try {
-					User user = UserLocalServiceUtil.getUser(
-						serviceContext.getUserId());
-
-					document.addKeyword(
-						Field.REMOVED_BY_USER_NAME, user.getFullName(), true);
-				}
-				catch (PortalException pe) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							"Unable to locate user: " +
-								serviceContext.getUserId(),
-							pe);
-					}
-				}
-			}
-		}
-		else {
-			document.addDate(Field.REMOVED_DATE, trashEntry.getCreateDate());
-			document.addKeyword(
-				Field.REMOVED_BY_USER_NAME, trashEntry.getUserName(), true);
-
-			if (trashedModel.isInTrash() &&
-				!trashedModel.isInTrashExplicitly()) {
-
-				document.addKeyword(
-					Field.ROOT_ENTRY_CLASS_NAME, trashEntry.getClassName());
-				document.addKeyword(
-					Field.ROOT_ENTRY_CLASS_PK, trashEntry.getClassPK());
-			}
-		}
-
-		TrashHandler trashHandler = trashedModel.getTrashHandler();
-
-		try {
-			TrashRenderer trashRenderer = null;
-
-			if ((trashHandler != null) && (trashEntry != null)) {
-				trashRenderer = trashHandler.getTrashRenderer(
-					trashEntry.getClassPK());
-			}
-
-			if (trashRenderer != null) {
-				document.addKeyword(Field.TYPE, trashRenderer.getType(), true);
-			}
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Unable to get trash renderer for " +
-						trashEntry.getClassName(),
-					pe);
-			}
-		}
 	}
 
 	protected BooleanQuery createFullQuery(
@@ -1656,14 +1579,6 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 				(WorkflowedModel)workflowedBaseModel;
 
 			document.addKeyword(Field.STATUS, workflowedModel.getStatus());
-		}
-
-		if ((groupedModel != null) && (baseModel instanceof TrashedModel)) {
-			TrashedModel trashedModel = (TrashedModel)baseModel;
-
-			if (trashedModel.isInTrash()) {
-				addTrashFields(document, trashedModel);
-			}
 		}
 
 		addAssetFields(document, className, classPK);
@@ -1964,7 +1879,7 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseIndexer.class);
 
-	private static final ServiceTrackerList<IndexerAttributesCustomizer>
+	private static final List<IndexerAttributesCustomizer>
 		_indexerAttributesCustomizers = ServiceTrackerCollections.openList(
 			IndexerAttributesCustomizer.class);
 
