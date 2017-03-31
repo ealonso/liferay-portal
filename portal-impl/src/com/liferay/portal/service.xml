@@ -514,6 +514,7 @@
 		<reference entity="UserGroupGroupRole" package-path="com.liferay.portal" />
 		<reference entity="UserGroupRole" package-path="com.liferay.portal" />
 		<reference entity="WorkflowDefinitionLink" package-path="com.liferay.portal" />
+		<reference entity="GroupFriendlyURL" package-path="com.liferay.portal.route" />
 		<reference entity="AssetCategory" package-path="com.liferay.portlet.asset" />
 		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
@@ -1295,6 +1296,7 @@
 		<reference entity="User" package-path="com.liferay.portal" />
 		<reference entity="UserGroupRole" package-path="com.liferay.portal" />
 		<reference entity="Website" package-path="com.liferay.portal" />
+		<reference entity="GroupFriendlyURL" package-path="com.liferay.portal.route" />
 		<reference entity="AssetCategory" package-path="com.liferay.portlet.asset" />
 		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
