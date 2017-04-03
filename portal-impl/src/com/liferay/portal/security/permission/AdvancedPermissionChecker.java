@@ -1055,14 +1055,20 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		if (group.isSite()) {
-			if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-					getUserId(), group.getGroupId(),
-					RoleConstants.SITE_ADMINISTRATOR, true) ||
-				UserGroupRoleLocalServiceUtil.hasUserGroupRole(
-					getUserId(), group.getGroupId(), RoleConstants.SITE_OWNER,
-					true)) {
+			Group curGroup = group;
 
-				return true;
+			while (curGroup != null) {
+				if (UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+						getUserId(), curGroup.getGroupId(),
+						RoleConstants.SITE_ADMINISTRATOR, true) ||
+					UserGroupRoleLocalServiceUtil.hasUserGroupRole(
+						getUserId(), curGroup.getGroupId(),
+						RoleConstants.SITE_OWNER, true)) {
+
+					return true;
+				}
+
+				curGroup = curGroup.getParentGroup();
 			}
 
 			StopWatch stopWatch = new StopWatch();
