@@ -99,12 +99,6 @@ public class ToolDependencies {
 
 		fileUtil.setFile(new FileImpl());
 
-		FriendlyURLNormalizerUtil friendlyURLNormalizerUtil =
-			new FriendlyURLNormalizerUtil();
-
-		friendlyURLNormalizerUtil.setFriendlyURLNormalizer(
-			new FriendlyURLNormalizerImpl());
-
 		HtmlUtil htmlUtil = new HtmlUtil();
 
 		htmlUtil.setHtml(new HtmlImpl());
