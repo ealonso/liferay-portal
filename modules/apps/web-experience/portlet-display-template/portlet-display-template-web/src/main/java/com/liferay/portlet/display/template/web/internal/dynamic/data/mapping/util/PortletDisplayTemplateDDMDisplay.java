@@ -20,9 +20,11 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.util.BaseDDMDisplay;
 import com.liferay.dynamic.data.mapping.util.DDMDisplay;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -80,14 +82,25 @@ public class PortletDisplayTemplateDDMDisplay extends BaseDDMDisplay {
 			ThemeDisplay themeDisplay, boolean includeAncestorTemplates)
 		throws Exception {
 
+		long ddmTemplateGroupId = themeDisplay.getScopeGroupId();
+
+		Group ddmTemplateGroup = _groupLocalService.getGroup(
+			ddmTemplateGroupId);
+
+		if (ddmTemplateGroup.isLayoutPrototype()) {
+			ddmTemplateGroup = _groupLocalService.getCompanyGroup(
+				ddmTemplateGroup.getCompanyId());
+
+			ddmTemplateGroupId = ddmTemplateGroup.getGroupId();
+		}
+
 		if (includeAncestorTemplates) {
 			return _portal.getCurrentAndAncestorSiteGroupIds(
-				themeDisplay.getScopeGroupId());
+				ddmTemplateGroupId);
 		}
 
 		return new long[] {
-			portletDisplayTemplate.getDDMTemplateGroupId(
-				themeDisplay.getScopeGroupId())
+			portletDisplayTemplate.getDDMTemplateGroupId(ddmTemplateGroupId)
 		};
 	}
 
@@ -190,6 +203,11 @@ public class PortletDisplayTemplateDDMDisplay extends BaseDDMDisplay {
 	}
 
 	@Reference(unbind = "-")
+	protected void setGroupLocalService(GroupLocalService groupLocalService) {
+		_groupLocalService = groupLocalService;
+	}
+
+	@Reference(unbind = "-")
 	protected void setPortletDisplayTemplate(
 		PortletDisplayTemplate portletDisplayTemplate) {
 
@@ -200,6 +218,8 @@ public class PortletDisplayTemplateDDMDisplay extends BaseDDMDisplay {
 
 	private static final Set<String> _viewTemplateExcludedColumnNames =
 		SetUtil.fromArray(new String[] {"language", "mode", "structure"});
+
+	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private Portal _portal;
