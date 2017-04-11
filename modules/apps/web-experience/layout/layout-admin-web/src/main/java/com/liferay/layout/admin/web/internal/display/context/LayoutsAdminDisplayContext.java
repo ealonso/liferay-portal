@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -59,6 +60,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.site.model.SiteFriendlyURL;
+import com.liferay.site.service.SiteFriendlyURLLocalServiceUtil;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import java.util.Collections;
@@ -620,6 +623,22 @@ public class LayoutsAdminDisplayContext {
 			_liferayPortletRequest, "selPlid", LayoutConstants.DEFAULT_PLID);
 
 		return _selPlid;
+	}
+
+	public String getSiteFriendlyURL() {
+		String languageId = LocaleUtil.toLanguageId(_themeDisplay.getLocale());
+
+		SiteFriendlyURL siteFriendlyURL =
+			SiteFriendlyURLLocalServiceUtil.fetchSiteFriendlyURL(
+				_themeDisplay.getCompanyId(), getGroupId(), languageId);
+
+		if (siteFriendlyURL != null) {
+			return siteFriendlyURL.getFriendlyURL();
+		}
+
+		Group group = getGroup();
+
+		return group.getFriendlyURL();
 	}
 
 	public Group getStagingGroup() {
