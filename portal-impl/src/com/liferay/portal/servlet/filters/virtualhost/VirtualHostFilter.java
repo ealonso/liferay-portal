@@ -39,6 +39,7 @@ import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.webserver.WebServerServlet;
+import com.liferay.sites.kernel.util.SitesFriendlyURLAdapterUtil;
 
 import java.util.Map;
 
@@ -359,7 +360,10 @@ public class VirtualHostFilter extends BasePortalFilter {
 						sb.append(_PUBLIC_GROUP_SERVLET_MAPPING);
 					}
 
-					sb.append(group.getFriendlyURL());
+					sb.append(
+						SitesFriendlyURLAdapterUtil.getSiteFriendlyURL(
+							group.getGroupId(), PortalUtil.getLocale(request)));
+
 				}
 			}
 
