@@ -115,6 +115,16 @@ public abstract class BaseMVCActionCommand implements MVCActionCommand {
 				SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE);
 	}
 
+	protected void hideDefaultSuccessMessage(
+		PortletRequest portletRequest, Object data) {
+
+		SessionMessages.add(
+			portletRequest,
+			PortalUtil.getPortletId(portletRequest) +
+				SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE,
+			data);
+	}
+
 	protected boolean isDisplaySuccessMessage(PortletRequest portletRequest) {
 		if (!SessionErrors.isEmpty(portletRequest)) {
 			return false;
