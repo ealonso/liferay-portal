@@ -59,7 +59,6 @@ import com.liferay.trash.kernel.model.TrashVersion;
 import com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil;
 import com.liferay.trash.kernel.service.TrashVersionLocalServiceUtil;
 import com.liferay.trash.kernel.util.Trash;
-import com.liferay.trash.kernel.util.TrashUtil;
 import com.liferay.trash.kernel.util.comparator.EntryCreateDateComparator;
 import com.liferay.trash.kernel.util.comparator.EntryTypeComparator;
 import com.liferay.trash.kernel.util.comparator.EntryUserNameComparator;
@@ -87,6 +86,10 @@ import javax.servlet.http.HttpServletRequest;
 @DoPrivileged
 public class TrashImpl implements Trash {
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public void addBaseModelBreadcrumbEntries(
 			HttpServletRequest request,
@@ -99,6 +102,10 @@ public class TrashImpl implements Trash {
 			containerModelURL, true);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public void addContainerModelBreadcrumbEntries(
 			HttpServletRequest request,
@@ -210,13 +217,17 @@ public class TrashImpl implements Trash {
 		addTrashSessionMessages(actionRequest, trashedModels, cmd);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public void deleteEntriesAttachments(
 		long companyId, long repositoryId, Date date,
 		String[] attachmentFileNames) {
 
 		for (String attachmentFileName : attachmentFileNames) {
-			String trashTime = TrashUtil.getTrashTime(
+			String trashTime = getTrashTime(
 				attachmentFileName, TRASH_TIME_SEPARATOR);
 
 			long timestamp = GetterUtil.getLong(trashTime);
@@ -240,6 +251,10 @@ public class TrashImpl implements Trash {
 		return GroupLocalServiceUtil.updateGroup(group);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public List<TrashEntry> getEntries(Hits hits) {
 		List<TrashEntry> entries = new ArrayList<>();
@@ -303,6 +318,10 @@ public class TrashImpl implements Trash {
 		return entries;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public OrderByComparator<TrashEntry> getEntryOrderByComparator(
 		String orderByCol, String orderByType) {
@@ -399,6 +418,10 @@ public class TrashImpl implements Trash {
 		return getOriginalTitle(title, paramName, TRASH_PREFIX);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public String getTrashTime(String title, String separator) {
 		int index = title.lastIndexOf(separator);
@@ -555,6 +578,10 @@ public class TrashImpl implements Trash {
 		return isValidTrashTitle(title, TRASH_PREFIX);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	protected void addBreadcrumbEntries(
 			HttpServletRequest request,
 			LiferayPortletResponse liferayPortletResponse, String className,
@@ -597,7 +624,7 @@ public class TrashImpl implements Trash {
 			if (containerModelTrashHandler.isInTrash(
 					containerModel.getContainerModelId())) {
 
-				name = TrashUtil.getOriginalTitle(name);
+				name = getOriginalTitle(name);
 			}
 
 			PortalUtil.addPortletBreadcrumbEntry(
