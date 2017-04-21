@@ -12,14 +12,13 @@
  * details.
  */
 
-package com.liferay.asset;
+package com.liferay.asset.bundle.assetrendererfactoryregistryutil.test;
 
-import com.liferay.asset.bundle.assetrendererfactoryregistryutil.test.TestAssetRendererFactory;
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.SyntheticBundleRule;
 import com.liferay.portal.util.PortalImpl;
 
 import java.util.List;
@@ -28,18 +27,18 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Peter Fellwock
  */
+@RunWith(Arquillian.class)
 public class AssetRendererFactoryRegistryUtilTest {
 
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new AggregateTestRule(
-			new LiferayIntegrationTestRule(),
-			new SyntheticBundleRule("bundle.assetrendererfactoryregistryutil"));
+		new LiferayIntegrationTestRule();
 
 	@Test
 	public void testGetAssetRendererFactories() {
