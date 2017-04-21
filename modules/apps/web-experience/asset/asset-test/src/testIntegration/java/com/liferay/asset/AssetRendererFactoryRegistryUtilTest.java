@@ -12,15 +12,15 @@
  * details.
  */
 
-package com.liferay.portlet.asset;
+package com.liferay.asset;
 
+import com.liferay.asset.bundle.assetrendererfactoryregistryutil.test.TestAssetRendererFactory;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.SyntheticBundleRule;
 import com.liferay.portal.util.PortalImpl;
-import com.liferay.portlet.asset.bundle.assetrendererfactoryregistryutil.TestAssetRendererFactory;
 
 import java.util.List;
 
