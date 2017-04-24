@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.trash.kernel.model.TrashEntry;
-import com.liferay.trash.kernel.util.TrashUtil;
+import com.liferay.trash.web.internal.util.TrashUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
