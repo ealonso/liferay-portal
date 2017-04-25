@@ -33,9 +33,12 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.kernel.service.TrashEntryService;
 
 import java.io.IOException;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
@@ -158,6 +161,15 @@ public class JournalContentPortlet extends MVCPortlet {
 		super.render(renderRequest, renderResponse);
 	}
 
+	public void restoreTrashEntry(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long trashEntryId = ParamUtil.getLong(actionRequest, "trashEntryId");
+
+		_trashEntryService.restoreEntry(trashEntryId);
+	}
+
 	@Override
 	public void serveResource(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
@@ -212,6 +224,11 @@ public class JournalContentPortlet extends MVCPortlet {
 		_journalArticleLocalService = journalArticleLocalService;
 	}
 
+	@Reference
+	protected void setTrashEntryService(TrashEntryService trashEntryService) {
+		_trashEntryService = trashEntryService;
+	}
+
 	protected void unsetExportArticleUtil(ExportArticleUtil exportArticleUtil) {
 		_exportArticleUtil = exportArticleUtil;
 	}
@@ -229,5 +246,6 @@ public class JournalContentPortlet extends MVCPortlet {
 	private ExportArticleUtil _exportArticleUtil;
 	private JournalArticleLocalService _journalArticleLocalService;
 	private JournalContent _journalContent;
+	private TrashEntryService _trashEntryService;
 
 }
