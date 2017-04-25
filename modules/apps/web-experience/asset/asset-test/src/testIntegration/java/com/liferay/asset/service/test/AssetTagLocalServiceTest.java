@@ -15,6 +15,8 @@
 package com.liferay.asset.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.asset.kernel.exception.DuplicateTagException;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.model.AssetTagStats;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
@@ -35,7 +37,9 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portlet.asset.util.AssetUtil;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -71,6 +75,80 @@ public class AssetTagLocalServiceTest {
 		if (_organizationIndexer != null) {
 			IndexerRegistryUtil.register(_organizationIndexer);
 		}
+	}
+
+	@Test(expected = DuplicateTagException.class)
+	public void testCannotAddDuplicateTags() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+		long groupId = _group.getGroupId();
+		long userId = TestPropsValues.getUserId();
+
+		String tagName = "test";
+
+		AssetTagLocalServiceUtil.addTag(
+			userId, groupId, tagName, serviceContext);
+
+		AssetTagLocalServiceUtil.addTag(
+			userId, groupId, tagName, serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithEmptyName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+		long groupId = _group.getGroupId();
+		long userId = TestPropsValues.getUserId();
+
+		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
+			userId, groupId, StringPool.BLANK, serviceContext);
+
+		Assert.assertFalse(assetTag.getName().equals(StringPool.BLANK));
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithInvalidCharacters() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+		long groupId = _group.getGroupId();
+		long userId = TestPropsValues.getUserId();
+
+		String stringWithInvalidCharacters = String.valueOf(
+			AssetUtil.INVALID_CHARACTERS);
+
+		AssetTagLocalServiceUtil.addTag(
+			userId, groupId, stringWithInvalidCharacters, serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithNullName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+		long groupId = _group.getGroupId();
+		long userId = TestPropsValues.getUserId();
+
+		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
+			userId, groupId, null, serviceContext);
+
+		Assert.assertNotNull(assetTag.getName());
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithOnlySpacesInName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+		long groupId = _group.getGroupId();
+		long userId = TestPropsValues.getUserId();
+
+		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
+			userId, groupId, StringPool.SPACE, serviceContext);
+
+		Assert.assertFalse(assetTag.getName().equals(StringPool.SPACE));
 	}
 
 	@Test
