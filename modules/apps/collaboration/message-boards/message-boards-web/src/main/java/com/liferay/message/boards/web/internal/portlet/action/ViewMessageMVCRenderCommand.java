@@ -21,12 +21,15 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.util.TrashWebKeys;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
@@ -45,6 +48,8 @@ public class ViewMessageMVCRenderCommand implements MVCRenderCommand {
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortletException {
+
+		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 
 		try {
 			MBMessageDisplay messageDisplay = ActionUtil.getMessageDisplay(
@@ -67,5 +72,8 @@ public class ViewMessageMVCRenderCommand implements MVCRenderCommand {
 			throw new PortletException(e);
 		}
 	}
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 }

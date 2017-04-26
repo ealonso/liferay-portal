@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.util.TrashWebKeys;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -34,6 +36,8 @@ public abstract class GetMessageMVCRenderCommand implements MVCRenderCommand {
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortletException {
+
+		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, getTrashHelper());
 
 		try {
 			MBMessage message = ActionUtil.getMessage(renderRequest);
@@ -56,5 +60,7 @@ public abstract class GetMessageMVCRenderCommand implements MVCRenderCommand {
 	}
 
 	protected abstract String getPath();
+
+	protected abstract TrashHelper getTrashHelper();
 
 }
