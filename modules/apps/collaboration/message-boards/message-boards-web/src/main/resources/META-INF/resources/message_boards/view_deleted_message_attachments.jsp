@@ -97,7 +97,7 @@ String trashEntriesMaxAgeTimeDescription = LanguageUtil.getTimeDescription(local
 				icon="<%= assetRenderer.getIconCssClass() %>"
 				label="<%= true %>"
 				markupView="lexicon"
-				message="<%= TrashUtil.getOriginalTitle(fileEntry.getTitle()) %>"
+				message="<%= trashHelper.getOriginalTitle(fileEntry.getTitle()) %>"
 			/>
 		</liferay-ui:search-container-column-text>
 
