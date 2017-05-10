@@ -14,10 +14,12 @@
 
 package com.liferay.frontend.taglib.servlet.taglib;
 
+import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -71,6 +73,11 @@ public class ScreenNavigationHelper {
 		}
 
 		screenNavigationCategories.add(screenNavigationCategory);
+
+		Collections.sort(
+			screenNavigationCategories,
+			new PropertyServiceReferenceComparator(
+				"screen.navigation.category.order"));
 	}
 
 	@Reference(
@@ -95,6 +102,11 @@ public class ScreenNavigationHelper {
 		}
 
 		screenNavigationEntries.add(screenNavigationEntry);
+
+		Collections.sort(
+			screenNavigationEntries,
+			new PropertyServiceReferenceComparator(
+				"screen.navigation.entry.order"));
 	}
 
 	protected void unsetScreenNavigationCategory(
