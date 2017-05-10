@@ -16,6 +16,7 @@ package com.liferay.trash.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchPaginationUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -334,7 +335,8 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 				TrashPermissionException.RESTORE);
 		}
 
-		TrashEntry trashEntry = trashHandler.getTrashEntry(classPK);
+		com.liferay.trash.kernel.model.TrashEntry trashEntry =
+			trashHandler.getTrashEntry(classPK);
 
 		if (trashEntry.isTrashEntry(className, classPK)) {
 			trashHandler.checkRestorableEntry(
@@ -420,7 +422,9 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			trashHandler.deleteTrashEntry(overrideClassPK);
 
 			trashHandler.checkRestorableEntry(
-				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, null);
+				ModelAdapterUtil.adapt(
+					com.liferay.trash.kernel.model.TrashEntry.class, entry),
+				TrashEntryConstants.DEFAULT_CONTAINER_ID, null);
 		}
 		else if (name != null) {
 			if (!trashHandler.hasTrashPermission(
@@ -432,7 +436,9 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			}
 
 			trashHandler.checkRestorableEntry(
-				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, name);
+				ModelAdapterUtil.adapt(
+					com.liferay.trash.kernel.model.TrashEntry.class, entry),
+				TrashEntryConstants.DEFAULT_CONTAINER_ID, name);
 
 			trashHandler.updateTitle(entry.getClassPK(), name);
 		}
