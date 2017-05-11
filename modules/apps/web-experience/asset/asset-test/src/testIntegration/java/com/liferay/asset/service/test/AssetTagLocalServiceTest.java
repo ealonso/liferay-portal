@@ -231,6 +231,168 @@ public class AssetTagLocalServiceTest {
 	}
 
 	@Test
+	public void testAddMultipleTags() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		int originalTagsCount = AssetTagLocalServiceUtil.getAssetTagsCount();
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), "tag1",
+			serviceContext);
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), "tag2",
+			serviceContext);
+
+		int actualTagsCount = AssetTagLocalServiceUtil.getAssetTagsCount();
+
+		Assert.assertEquals(originalTagsCount + 2, actualTagsCount);
+	}
+
+	@Test
+	public void testAddTagWithMultipleWords() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String tagName = "tag name";
+
+		AssetTag tag = AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), tagName,
+			serviceContext);
+
+		Assert.assertEquals(tagName, tag.getName());
+	}
+
+	@Test
+	public void testAddTagWithPermittedSpecialCharacter()
+		throws PortalException {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String permittedCharactersString = "-_^()!$";
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			permittedCharactersString, serviceContext);
+	}
+
+	@Test
+	public void testAddTagWithSingleWord() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		int originalTagsCount = AssetTagLocalServiceUtil.getAssetTagsCount();
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), "tag",
+			serviceContext);
+
+		int actualTagsCount = AssetTagLocalServiceUtil.getAssetTagsCount();
+
+		Assert.assertEquals(originalTagsCount + 1, actualTagsCount);
+	}
+
+	@Test
+	public void testAddUTF8FormattedTags() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String utf8FormattedString = "標籤名稱";
+
+		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			utf8FormattedString, serviceContext);
+
+		Assert.assertEquals(utf8FormattedString, assetTag.getName());
+	}
+
+	@Test(expected = DuplicateTagException.class)
+	public void testCannotAddDuplicateTags() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String tagName = "tag";
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), tagName,
+			serviceContext);
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), tagName,
+			serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithEmptyName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), StringPool.BLANK,
+			serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithInvalidCharacters() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String stringWithInvalidCharacters = String.valueOf(
+			AssetUtil.INVALID_CHARACTERS);
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			stringWithInvalidCharacters, serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithNullName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), null,
+			serviceContext);
+	}
+
+	@Test(expected = AssetTagException.class)
+	public void testCannotAddTagWithOnlySpacesInName() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), StringPool.SPACE,
+			serviceContext);
+	}
+
+	@Test
+	public void testCreateTag() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String tagName = "tag";
+
+		AssetTag assetTag = AssetTagLocalServiceUtil.addTag(
+			TestPropsValues.getUserId(), _group.getGroupId(), tagName,
+			serviceContext);
+
+		Assert.assertEquals(tagName, assetTag.getName());
+	}
+
+	@Test
 	public void testDeleteTag() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
