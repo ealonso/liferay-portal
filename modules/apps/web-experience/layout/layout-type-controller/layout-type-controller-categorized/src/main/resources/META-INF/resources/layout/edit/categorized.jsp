@@ -40,6 +40,6 @@
 
 <div class="form-group">
 	<aui:field-wrapper label="category">
-		<liferay-asset:asset-categories-selector categoryIds='<%= selLayout != null ? selLayout.getTypeSettingsProperty("categoryId") : "" %>' hiddenInput="TypeSettingsProperties--categoryId--" showRequiredLabel="<%= true %>" singleSelect="<%= true %>" />
+		<liferay-asset:asset-categories-selector categoryIds='<%= (selLayout != null) ? selLayout.getTypeSettingsProperty("categoryId") : "" %>' hiddenInput="TypeSettingsProperties--categoryId--" showRequiredLabel="<%= true %>" singleSelect="<%= true %>" />
 	</aui:field-wrapper>
 </div>
