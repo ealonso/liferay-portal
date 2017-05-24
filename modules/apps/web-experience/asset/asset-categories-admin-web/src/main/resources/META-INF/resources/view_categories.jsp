@@ -18,7 +18,7 @@
 
 <%
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(assetCategoriesDisplayContext.getCategoriesRedirect());
+portletDisplay.setURLBack(assetCategoriesDisplayContext.getCategoriesRedirect(false));
 
 renderResponse.setTitle(assetCategoriesDisplayContext.getCategoryTitle());
 
@@ -61,14 +61,14 @@ AssetCategoryUtil.addPortletBreadcrumbEntry(assetCategoriesDisplayContext.getVoc
 		<liferay-frontend:management-bar-filters>
 			<liferay-frontend:management-bar-navigation
 				navigationKeys='<%= new String[] {"all"} %>'
-				portletURL="<%= PortletURLUtil.clone(assetCategoriesDisplayContext.getIteratorURL(), liferayPortletResponse) %>"
+				portletURL="<%= PortletURLUtil.clone(assetCategoriesDisplayContext.getIteratorURL(false), liferayPortletResponse) %>"
 			/>
 
 			<liferay-frontend:management-bar-sort
 				orderByCol="<%= assetCategoriesDisplayContext.getOrderByCol() %>"
 				orderByType="<%= assetCategoriesDisplayContext.getOrderByType() %>"
 				orderColumns='<%= new String[] {"create-date"} %>'
-				portletURL="<%= PortletURLUtil.clone(assetCategoriesDisplayContext.getIteratorURL(), liferayPortletResponse) %>"
+				portletURL="<%= PortletURLUtil.clone(assetCategoriesDisplayContext.getIteratorURL(false), liferayPortletResponse) %>"
 			/>
 		</liferay-frontend:management-bar-filters>
 

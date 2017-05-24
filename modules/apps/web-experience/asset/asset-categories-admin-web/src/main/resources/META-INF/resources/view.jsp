@@ -95,10 +95,19 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 			keyProperty="vocabularyId"
 			modelVar="vocabulary"
 		>
-			<portlet:renderURL var="rowURL">
-				<portlet:param name="mvcPath" value="/view_categories.jsp" />
-				<portlet:param name="vocabularyId" value="<%= String.valueOf(vocabulary.getVocabularyId()) %>" />
-			</portlet:renderURL>
+
+			<%
+			PortletURL rowURL = renderResponse.createRenderURL();
+
+			String mvcPath = "/view_categories.jsp";
+
+			if (assetCategoriesDisplayContext.isFlattenedNavigationAllowed()) {
+				mvcPath = "/flatten_tree.jsp";
+			}
+
+			rowURL.setParameter("mvcPath", mvcPath);
+			rowURL.setParameter("vocabularyId", String.valueOf(vocabulary.getVocabularyId()));
+			%>
 
 			<c:choose>
 				<c:when test='<%= Objects.equals(assetCategoriesDisplayContext.getDisplayStyle(), "descriptive") %>'>
@@ -123,7 +132,16 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 						</h6>
 
 						<h6 class="text-default">
-							<strong><liferay-ui:message key="number-of-categories" /></strong>: <%= vocabulary.getCategoriesCount() %>
+							<strong><liferay-ui:message key="number-of-categories" /></strong>:
+
+							<c:choose>
+								<c:when test="<%= assetCategoriesDisplayContext.isFlattenedNavigationAllowed() %>">
+									<liferay-ui:message arguments="<%= vocabulary.getCategoriesCount() %>" key="flatten-x" translateArguments="<%= false %>" />
+								</c:when>
+								<c:otherwise>
+									<%= vocabulary.getCategoriesCount() %>
+								</c:otherwise>
+							</c:choose>
 						</h6>
 
 						<h6 class="text-default">
@@ -183,8 +201,16 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 
 					<liferay-ui:search-container-column-text
 						name="number-of-categories"
-						value="<%= String.valueOf(vocabulary.getCategoriesCount()) %>"
-					/>
+					>
+						<c:choose>
+							<c:when test="<%= assetCategoriesDisplayContext.isFlattenedNavigationAllowed() %>">
+								<liferay-ui:message arguments="<%= vocabulary.getCategoriesCount() %>" key="flatten-x" translateArguments="<%= false %>" />
+							</c:when>
+							<c:otherwise>
+								<%= vocabulary.getCategoriesCount() %>
+							</c:otherwise>
+						</c:choose>
+					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
 						name="asset-type"
