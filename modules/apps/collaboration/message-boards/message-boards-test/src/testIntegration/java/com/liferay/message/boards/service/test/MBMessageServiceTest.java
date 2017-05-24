@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
@@ -37,10 +39,12 @@ import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.security.permission.DoAsUserThread;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.spring.transaction.DefaultTransactionExecutor;
 import com.liferay.portal.test.log.CaptureAppender;
@@ -57,6 +61,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import org.hibernate.util.JDBCExceptionReporter;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -80,6 +85,8 @@ public class MBMessageServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
+		setUpPermissionThreadLocal();
+
 		String name = "Test Category";
 		String description = "This is a test category.";
 		String displayStyle = MBCategoryConstants.DEFAULT_DISPLAY_STYLE;
@@ -123,6 +130,11 @@ public class MBMessageServiceTest {
 			outPassword, allowAnonymous, mailingListActive, serviceContext);
 
 		_userIds = UserLocalServiceUtil.getGroupUserIds(_group.getGroupId());
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
 	}
 
 	@Test
@@ -233,11 +245,34 @@ public class MBMessageServiceTest {
 			successCount == _userIds.length);
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	private MBCategory _category;
 
 	@DeleteAfterTestRun
 	private Group _group;
 
+	private PermissionChecker _originalPermissionChecker;
 	private long[] _userIds;
 
 	private class AddMessageThread extends DoAsUserThread {
