@@ -299,7 +299,8 @@ public class MBMessageLocalServiceTest {
 	}
 
 	private static final File _attachmentFile = new File(
-		"dependencies/company_logo.png");
+		"com/liferay/message/boards/service/test/dependencies" +
+			"/company_logo.png");
 
 	@DeleteAfterTestRun
 	private Group _group;
