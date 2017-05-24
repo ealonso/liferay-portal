@@ -23,6 +23,7 @@ import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
@@ -38,7 +39,9 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,6 +60,19 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		setUpPrincipalThreadLocal();
+
+		super.setUp();
+	}
+
+	@After
+	public void tearDown() {
+		PrincipalThreadLocal.setName(_originalName);
+	}
 
 	@Test
 	public void testDeleteOneVersion() throws Exception {
@@ -322,6 +338,12 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 		}
 	}
 
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
 	private static final String _VERSION_1_0 = "Test Version 1.0.txt";
 
 	private static final String _VERSION_1_1 = "Test Version 1.1.txt";
@@ -329,5 +351,6 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 	private static final String _VERSION_PWC = "Test Version PWC.txt";
 
 	private FileEntry _fileEntry;
+	private String _originalName;
 
 }
