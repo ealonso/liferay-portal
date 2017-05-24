@@ -20,16 +20,20 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,6 +52,22 @@ public class DLFileVersionUpdateTest extends BaseDLAppTestCase {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		setUpPrincipalThreadLocal();
+
+		super.setUp();
+	}
+
+	@After
+	@Override
+	public void tearDown() throws Exception {
+		PrincipalThreadLocal.setName(_originalName);
+
+		super.tearDown();
+	}
 
 	@Test
 	public void testWithExtensionWithContent() throws Exception {
@@ -76,6 +96,12 @@ public class DLFileVersionUpdateTest extends BaseDLAppTestCase {
 			_BASE_FILE_NAME, _ZERO_BYTES, ContentTypes.APPLICATION_OCTET_STREAM,
 			_BASE_FILE_NAME, _ZERO_BYTES,
 			ContentTypes.APPLICATION_OCTET_STREAM);
+	}
+
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
 	}
 
 	protected void testVersionUpdate(
@@ -116,5 +142,7 @@ public class DLFileVersionUpdateTest extends BaseDLAppTestCase {
 	private static final String _FULL_FILE_NAME = "Test.txt";
 
 	private static final byte[] _ZERO_BYTES = new byte[0];
+
+	private String _originalName;
 
 }
