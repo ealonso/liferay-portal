@@ -295,18 +295,20 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Stream<String> searchTerms = Stream.of(word1, word2, prefix1, prefix2);
 
-		searchTerms.forEach(searchTerm -> {
-			Document document = _search(searchTerm, LocaleUtil.JAPAN);
+		searchTerms.forEach(
+			searchTerm -> {
+				Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-			FieldValuesAssert.assertFieldValues(
-				titleStrings, "title", document, searchTerm);
+				FieldValuesAssert.assertFieldValues(
+					titleStrings, "title", document, searchTerm);
 
-			FieldValuesAssert.assertFieldValues(
-				contentStrings, "content", document, searchTerm);
+				FieldValuesAssert.assertFieldValues(
+					contentStrings, "content", document, searchTerm);
 
-			FieldValuesAssert.assertFieldValues(
-				localizedTitleStrings, "localized_title", document, searchTerm);
-		});
+				FieldValuesAssert.assertFieldValues(
+					localizedTitleStrings, "localized_title", document,
+					searchTerm);
+			});
 	}
 
 	@Test
@@ -317,26 +319,29 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Stream<String> titles = Stream.of(full, partial1, partial2);
 
-		titles.forEach(title -> {
-			setTitle(
-				new JournalArticleTitle() {
-					{
-						put(LocaleUtil.JAPAN, title);
-					}
-				});
+		titles.forEach(
+			title -> {
+				setTitle(
+					new JournalArticleTitle() {
+						{
+							put(LocaleUtil.JAPAN, title);
+						}
+					});
 
-			setContent(
-				new JournalArticleContent() {
-					{
-						name = "content";
-						defaultLocale = LocaleUtil.JAPAN;
+				setContent(
+					new JournalArticleContent() {
+						{
+							name = "content";
+							defaultLocale = LocaleUtil.JAPAN;
 
-						put(LocaleUtil.JAPAN, RandomTestUtil.randomString());
-					}
-				});
+							put(
+								LocaleUtil.JAPAN,
+								RandomTestUtil.randomString());
+						}
+					});
 
-			addArticle();
-		});
+				addArticle();
+			});
 
 		Map<String, String> titleStrings = new HashMap<String, String>() {
 			{
@@ -349,12 +354,13 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Stream<String> searchTerms = Stream.of(word1, word2);
 
-		searchTerms.forEach(searchTerm -> {
-			Document document = _search(searchTerm, LocaleUtil.JAPAN);
+		searchTerms.forEach(
+			searchTerm -> {
+				Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-			FieldValuesAssert.assertFieldValues(
-				titleStrings, "title", document, searchTerm);
-		});
+				FieldValuesAssert.assertFieldValues(
+					titleStrings, "title", document, searchTerm);
+			});
 	}
 
 	protected JournalArticle addArticle() {
