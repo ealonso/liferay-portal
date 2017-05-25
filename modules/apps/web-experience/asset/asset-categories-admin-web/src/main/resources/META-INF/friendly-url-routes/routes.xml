@@ -13,6 +13,11 @@
 		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
 	</route>
 	<route>
+		<pattern>/vocabulary/{vocabularyId:\d+}/category/{categoryId:\d+}/tree</pattern>
+		<implicit-parameter name="mvcPath">/flatten_tree.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
 		<pattern>/vocabulary/{vocabularyId:\d+}/category/{categoryId:\d+}</pattern>
 		<implicit-parameter name="mvcPath">/view_categories.jsp</implicit-parameter>
 		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
@@ -25,6 +30,11 @@
 	<route>
 		<pattern>/vocabulary/{vocabularyId:\d+}/edit</pattern>
 		<implicit-parameter name="mvcPath">/edit_vocabulary.jsp</implicit-parameter>
+		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
+	</route>
+	<route>
+		<pattern>/vocabulary/{vocabularyId:\d+}/tree</pattern>
+		<implicit-parameter name="mvcPath">/flatten_tree.jsp</implicit-parameter>
 		<implicit-parameter name="p_p_state">maximized</implicit-parameter>
 	</route>
 	<route>
