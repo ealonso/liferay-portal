@@ -48,6 +48,9 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.AssertUtils;
@@ -58,6 +61,7 @@ import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -66,6 +70,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.security.permission.DoAsUserThread;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
 import com.liferay.portal.test.rule.ExpectedLog;
@@ -130,6 +135,15 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 
 			AssertUtils.assertEqualsSorted(
 				assetTagNames, assetEntry.getTagNames());
+		}
+
+		@Before
+		@Override
+		public void setUp() throws Exception {
+			setUpPermissionThreadLocal();
+			setUpPrincipalThreadLocal();
+
+			super.setUp();
 		}
 
 		@Test
@@ -410,7 +424,48 @@ public class DLAppServiceTest extends BaseDLAppTestCase {
 				StringPool.BLANK, null, 0, serviceContext);
 		}
 
+		@After
+		@Override
+		public void tearDown() throws Exception {
+			PermissionThreadLocal.setPermissionChecker(
+				_originalPermissionChecker);
+
+			PrincipalThreadLocal.setName(_originalName);
+
+			super.tearDown();
+		}
+
+		protected void setUpPermissionThreadLocal() throws Exception {
+			_originalPermissionChecker =
+				PermissionThreadLocal.getPermissionChecker();
+
+			PermissionThreadLocal.setPermissionChecker(
+				new SimplePermissionChecker() {
+
+					{
+						init(TestPropsValues.getUser());
+					}
+
+					@Override
+					public boolean hasOwnerPermission(
+						long companyId, String name, String primKey,
+						long ownerId, String actionId) {
+
+						return true;
+					}
+
+				});
+		}
+
+		protected void setUpPrincipalThreadLocal() throws Exception {
+			_originalName = PrincipalThreadLocal.getName();
+
+			PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+		}
+
 		private long[] _fileEntryIds;
+		private String _originalName;
+		private PermissionChecker _originalPermissionChecker;
 
 		@DeleteAfterTestRun
 		private User[] _users;

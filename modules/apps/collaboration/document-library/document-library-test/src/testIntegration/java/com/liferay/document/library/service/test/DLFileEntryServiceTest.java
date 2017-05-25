@@ -26,6 +26,7 @@ import com.liferay.document.library.kernel.service.DLFileVersionLocalServiceUtil
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -74,11 +75,14 @@ public class DLFileEntryServiceTest {
 		_group = GroupTestUtil.addGroup();
 
 		setUpPermissionThreadLocal();
+		setUpPrincipalThreadLocal();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
+		PrincipalThreadLocal.setName(_originalName);
 	}
 
 	@Test
@@ -358,6 +362,12 @@ public class DLFileEntryServiceTest {
 			});
 	}
 
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
 	protected DLFileEntry updateDLFileEntry(
 			DLFileEntry dlFileEntry, ServiceContext serviceContext)
 		throws Exception {
@@ -387,6 +397,7 @@ public class DLFileEntryServiceTest {
 	@DeleteAfterTestRun
 	private Group _group;
 
+	private String _originalName;
 	private PermissionChecker _originalPermissionChecker;
 
 }

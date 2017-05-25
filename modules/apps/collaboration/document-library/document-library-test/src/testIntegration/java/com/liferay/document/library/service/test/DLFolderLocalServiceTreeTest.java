@@ -22,6 +22,7 @@ import com.liferay.document.library.kernel.service.DLAppServiceUtil;
 import com.liferay.document.library.kernel.service.DLFolderLocalServiceUtil;
 import com.liferay.portal.kernel.model.TreeModel;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -33,7 +34,9 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -49,6 +52,16 @@ public class DLFolderLocalServiceTreeTest extends BaseLocalServiceTreeTestCase {
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
+
+	@Before
+	public void setUp() throws Exception {
+		setUpPrincipalThreadLocal();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PrincipalThreadLocal.setName(_originalName);
+	}
 
 	@Test
 	public void testFolderTreePathWhenMovingFolderWithSubfolder()
@@ -135,5 +148,13 @@ public class DLFolderLocalServiceTreeTest extends BaseLocalServiceTreeTestCase {
 	protected void rebuildTree() throws Exception {
 		DLFolderLocalServiceUtil.rebuildTree(TestPropsValues.getCompanyId());
 	}
+
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
+	private String _originalName;
 
 }

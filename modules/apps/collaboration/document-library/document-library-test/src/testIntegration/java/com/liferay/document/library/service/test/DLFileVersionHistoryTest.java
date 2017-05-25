@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.Sync;
@@ -34,6 +36,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
@@ -64,6 +67,7 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 	@Before
 	@Override
 	public void setUp() throws Exception {
+		setUpPermissionThreadLocal();
 		setUpPrincipalThreadLocal();
 
 		super.setUp();
@@ -71,6 +75,8 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 
 	@After
 	public void tearDown() {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
 		PrincipalThreadLocal.setName(_originalName);
 	}
 
@@ -338,6 +344,28 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 		}
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	protected void setUpPrincipalThreadLocal() throws Exception {
 		_originalName = PrincipalThreadLocal.getName();
 
@@ -352,5 +380,6 @@ public class DLFileVersionHistoryTest extends BaseDLAppTestCase {
 
 	private FileEntry _fileEntry;
 	private String _originalName;
+	private PermissionChecker _originalPermissionChecker;
 
 }

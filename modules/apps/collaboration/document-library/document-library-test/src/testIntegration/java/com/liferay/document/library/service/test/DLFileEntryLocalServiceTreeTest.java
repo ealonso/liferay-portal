@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -32,6 +34,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
@@ -62,11 +65,14 @@ public class DLFileEntryLocalServiceTreeTest {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
+		setUpPermissionThreadLocal();
 		setUpPrincipalThreadLocal();
 	}
 
 	@After
 	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
 		PrincipalThreadLocal.setName(_originalName);
 	}
 
@@ -161,6 +167,28 @@ public class DLFileEntryLocalServiceTreeTest {
 		return fileEntries;
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	protected void setUpPrincipalThreadLocal() throws Exception {
 		_originalName = PrincipalThreadLocal.getName();
 
@@ -171,5 +199,6 @@ public class DLFileEntryLocalServiceTreeTest {
 	private Group _group;
 
 	private String _originalName;
+	private PermissionChecker _originalPermissionChecker;
 
 }

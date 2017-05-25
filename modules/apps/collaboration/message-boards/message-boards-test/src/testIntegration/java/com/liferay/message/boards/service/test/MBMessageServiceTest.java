@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.messaging.SynchronousDestination;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -86,6 +87,7 @@ public class MBMessageServiceTest {
 	@Before
 	public void setUp() throws Exception {
 		setUpPermissionThreadLocal();
+		setUpPrincipalThreadLocal();
 
 		String name = "Test Category";
 		String description = "This is a test category.";
@@ -135,6 +137,8 @@ public class MBMessageServiceTest {
 	@After
 	public void tearDown() throws Exception {
 		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
+		PrincipalThreadLocal.setName(_originalName);
 	}
 
 	@Test
@@ -267,11 +271,18 @@ public class MBMessageServiceTest {
 			});
 	}
 
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
 	private MBCategory _category;
 
 	@DeleteAfterTestRun
 	private Group _group;
 
+	private String _originalName;
 	private PermissionChecker _originalPermissionChecker;
 	private long[] _userIds;
 
