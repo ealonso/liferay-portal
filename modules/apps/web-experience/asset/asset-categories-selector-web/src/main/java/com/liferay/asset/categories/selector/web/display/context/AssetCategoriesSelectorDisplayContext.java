@@ -217,10 +217,10 @@ public class AssetCategoriesSelectorDisplayContext {
 			long vocabularyId, long categoryId)
 		throws Exception {
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<AssetCategory> categories =
 			AssetCategoryServiceUtil.getVocabularyCategories(
@@ -230,18 +230,19 @@ public class AssetCategoriesSelectorDisplayContext {
 		for (AssetCategory category : categories) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-			JSONArray children = _getCategoriesJSONArray(
+			JSONArray childrenJSONArray = _getCategoriesJSONArray(
 				vocabularyId, category.getCategoryId());
 
-			if (children.length() > 0) {
-				jsonObject.put("children", children);
+			if (childrenJSONArray.length() > 0) {
+				jsonObject.put("children", childrenJSONArray);
 			}
 
 			jsonObject.put("icon", "page");
 			jsonObject.put("id", category.getCategoryId());
 			jsonObject.put("name", category.getTitle(themeDisplay.getLocale()));
 
-			if (getSelectedCategories().contains(
+			if (StringUtil.contains(
+					getSelectedCategories(),
 					String.valueOf(category.getCategoryId()))) {
 
 				jsonObject.put("selected", true);
