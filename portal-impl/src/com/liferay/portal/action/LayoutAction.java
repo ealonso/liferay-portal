@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.LayoutType;
+import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletContainerUtil;
@@ -335,6 +337,20 @@ public class LayoutAction extends Action {
 
 				// Include layout content before the page loads because portlets
 				// on the page can set the page title and page subtitle
+
+				LayoutType layoutType = layout.getLayoutType();
+				LayoutTypePortlet layoutTypePortlet = null;
+
+				if (layoutType instanceof LayoutTypePortlet) {
+					layoutTypePortlet = (LayoutTypePortlet)layoutType;
+
+					for (Portlet layoutPortlet :
+							layoutTypePortlet.getPortlets()) {
+
+						PortletContainerUtil.preparePortlet(
+							request, layoutPortlet);
+					}
+				}
 
 				if (layout.includeLayoutContent(request, response)) {
 					return null;
