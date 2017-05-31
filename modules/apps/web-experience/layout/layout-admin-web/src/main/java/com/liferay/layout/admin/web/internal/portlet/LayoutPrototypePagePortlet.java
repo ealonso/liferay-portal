@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.web.constants.LayoutAdminPortletKeys;
 
 import javax.portlet.Portlet;
 

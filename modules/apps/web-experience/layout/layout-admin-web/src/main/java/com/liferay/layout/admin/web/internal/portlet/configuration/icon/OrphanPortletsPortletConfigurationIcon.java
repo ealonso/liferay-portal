@@ -14,7 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet.configuration.icon;
 
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.web.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.display.context.OrphanPortletsDisplayContext;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
