@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.messageboards.service.permission;
+package com.liferay.message.boards.permission.test;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.kernel.service.MBCategoryLocalServiceUtil;
@@ -26,16 +27,20 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.permission.test.BasePermissionTestCase;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
+import com.liferay.portlet.messageboards.service.permission.MBPermission;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Eric Chin
  * @author Shinn Lok
  */
+@RunWith(Arquillian.class)
 public class MBCategoryPermissionCheckerTest extends BasePermissionTestCase {
 
 	@ClassRule

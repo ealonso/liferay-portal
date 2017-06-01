@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.messageboards.service;
+package com.liferay.message.boards.service.test;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.kernel.model.MBMessage;
@@ -24,6 +25,8 @@ import com.liferay.message.boards.kernel.service.MBMessageLocalServiceUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.context.ContextUserReplace;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -36,6 +39,7 @@ import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.io.InputStream;
@@ -43,15 +47,18 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Sergio González
  */
+@RunWith(Arquillian.class)
 public class MBCategoryServiceTest {
 
 	@ClassRule
@@ -64,6 +71,13 @@ public class MBCategoryServiceTest {
 		_group = GroupTestUtil.addGroup();
 
 		_user = UserTestUtil.addGroupUser(_group, RoleConstants.POWER_USER);
+
+		setUpPermissionThreadLocal();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
 	}
 
 	@Test
@@ -353,8 +367,32 @@ public class MBCategoryServiceTest {
 			inputStreamOVPs, false, priority, false, serviceContext);
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	@DeleteAfterTestRun
 	private Group _group;
+
+	private PermissionChecker _originalPermissionChecker;
 
 	@DeleteAfterTestRun
 	private User _user;

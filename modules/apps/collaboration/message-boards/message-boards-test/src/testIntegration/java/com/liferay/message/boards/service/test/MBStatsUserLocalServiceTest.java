@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.messageboards.service;
+package com.liferay.message.boards.service.test;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.kernel.model.MBMessage;
 import com.liferay.message.boards.kernel.model.MBStatsUser;
@@ -36,10 +37,12 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Roberto Díaz
  */
+@RunWith(Arquillian.class)
 public class MBStatsUserLocalServiceTest {
 
 	@ClassRule

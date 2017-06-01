@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.messageboards.service;
+package com.liferay.message.boards.service.test;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
@@ -56,11 +58,13 @@ import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Jonathan McCann
  * @author Sergio González
  */
+@RunWith(Arquillian.class)
 public class MBMessageLocalServiceTest {
 
 	@ClassRule
@@ -77,9 +81,14 @@ public class MBMessageLocalServiceTest {
 	public void testAddMessageAttachment() throws Exception {
 		MBMessage message = addMessage(null, false);
 
+		byte[] fileBytes = FileUtil.getBytes(
+			getClass(), "dependencies/company_logo.png");
+
+		File file = FileUtil.createTempFile(fileBytes);
+
 		MBMessageLocalServiceUtil.addMessageAttachment(
-			TestPropsValues.getUserId(), message.getMessageId(), "test",
-			_attachmentFile, "image/png");
+			TestPropsValues.getUserId(), message.getMessageId(), "test", file,
+			"image/png");
 
 		Assert.assertEquals(1, message.getAttachmentsFileEntriesCount());
 	}
@@ -188,9 +197,14 @@ public class MBMessageLocalServiceTest {
 	public void testDeleteMessageAttachment() throws Exception {
 		MBMessage message = addMessage(null, false);
 
+		byte[] fileBytes = FileUtil.getBytes(
+			getClass(), "dependencies/company_logo.png");
+
+		File file = FileUtil.createTempFile(fileBytes);
+
 		MBMessageLocalServiceUtil.addMessageAttachment(
-			TestPropsValues.getUserId(), message.getMessageId(), "test",
-			_attachmentFile, "image/png");
+			TestPropsValues.getUserId(), message.getMessageId(), "test", file,
+			"image/png");
 
 		Assert.assertEquals(1, message.getAttachmentsFileEntriesCount());
 
@@ -294,10 +308,6 @@ public class MBMessageLocalServiceTest {
 			MBMessageConstants.DEFAULT_FORMAT, inputStreamOVPs, false, 0.0,
 			false, serviceContext);
 	}
-
-	private static final File _attachmentFile = new File(
-		"portal-impl/test/integration/com/liferay/portlet/messageboards" +
-			"/attachments/dependencies/company_logo.png");
 
 	@DeleteAfterTestRun
 	private Group _group;
