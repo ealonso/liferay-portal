@@ -16,10 +16,14 @@ package com.liferay.portal.security.membership.policy;
 
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.registry.ServiceRegistration;
 
 import java.util.HashSet;
@@ -64,6 +68,8 @@ public abstract class BaseMembershipPolicyTestCase {
 	@Before
 	public void setUp() throws Exception {
 		group = GroupTestUtil.addGroup();
+
+		setUpPermissionThreadLocal();
 	}
 
 	@After
@@ -80,6 +86,8 @@ public abstract class BaseMembershipPolicyTestCase {
 		_propagateRoles = false;
 		_userIds = new long[2];
 		_verify = false;
+
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
 	}
 
 	protected long[] addUsers() throws Exception {
@@ -95,6 +103,27 @@ public abstract class BaseMembershipPolicyTestCase {
 		return _userIds;
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	@DeleteAfterTestRun
 	protected Group group;
 
@@ -105,5 +134,7 @@ public abstract class BaseMembershipPolicyTestCase {
 	private static boolean _propagateRoles;
 	private static long[] _userIds = new long[2];
 	private static boolean _verify;
+
+	private PermissionChecker _originalPermissionChecker;
 
 }
