@@ -86,7 +86,7 @@ public class TestUserGroupMembershipPolicy
 		_atomicReference.set(StackTraceUtil.getCallerKey());
 	}
 
-	@Reference(target = "(test=AtomicState)")
+	@Reference(target = "(test=AtomicState)", unbind = "-")
 	protected void setAtomicReference(AtomicReference<String> atomicReference) {
 		_atomicReference = atomicReference;
 	}
