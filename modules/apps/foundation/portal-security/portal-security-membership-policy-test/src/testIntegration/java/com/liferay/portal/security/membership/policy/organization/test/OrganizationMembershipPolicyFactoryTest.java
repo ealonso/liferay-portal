@@ -17,11 +17,17 @@ package com.liferay.portal.security.membership.policy.organization.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicy;
 import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicyFactoryUtil;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.security.membership.policy.organization.bundle.organizationmembershippolicyfactory.TestOrganizationMembershipPolicy;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,6 +44,16 @@ public class OrganizationMembershipPolicyFactoryTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
 
+	@Before
+	public void setUp() throws Exception {
+		setUpPermissionThreadLocal();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+	}
+
 	@Test
 	public void testGetOrganizationMembershipPolicy() {
 		OrganizationMembershipPolicy organizationMembershipPolicy =
@@ -49,5 +65,28 @@ public class OrganizationMembershipPolicyFactoryTest {
 		Assert.assertEquals(
 			TestOrganizationMembershipPolicy.class.getName(), clazz.getName());
 	}
+
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
+	private PermissionChecker _originalPermissionChecker;
 
 }

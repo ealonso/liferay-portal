@@ -19,9 +19,13 @@ import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicy;
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactory;
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactoryUtil;
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyUtil;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.model.impl.RoleImpl;
 import com.liferay.portal.security.membership.policy.role.bundle.rolemembershippolicyfactoryimpl.TestRoleMembershipPolicy;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.AtomicState;
 
@@ -29,8 +33,10 @@ import java.io.Serializable;
 
 import java.util.HashMap;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -56,6 +62,16 @@ public class RoleMembershipPolicyFactoryImplTest {
 	@AfterClass
 	public static void tearDownClass() {
 		_atomicState.close();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		setUpPermissionThreadLocal();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
 	}
 
 	@Test
@@ -146,6 +162,29 @@ public class RoleMembershipPolicyFactoryImplTest {
 		Assert.assertTrue(_atomicState.isSet());
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	private static AtomicState _atomicState;
+
+	private PermissionChecker _originalPermissionChecker;
 
 }
