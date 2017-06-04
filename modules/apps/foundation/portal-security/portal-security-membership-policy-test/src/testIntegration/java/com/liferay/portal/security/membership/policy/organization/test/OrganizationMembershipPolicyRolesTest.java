@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserGroupRole;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.membershippolicy.MembershipPolicyException;
 import com.liferay.portal.kernel.service.RoleServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -40,6 +41,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -57,6 +59,14 @@ public class OrganizationMembershipPolicyRolesTest
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
 
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+
+		setUpPrincipalThreadLocal();
+	}
+
 	@After
 	@Override
 	public void tearDown() throws Exception {
@@ -64,6 +74,8 @@ public class OrganizationMembershipPolicyRolesTest
 
 		ExpandoTableLocalServiceUtil.deleteTables(
 			TestPropsValues.getCompanyId(), Role.class.getName());
+
+		PrincipalThreadLocal.setName(_originalName);
 	}
 
 	@Test(expected = MembershipPolicyException.class)
@@ -241,5 +253,13 @@ public class OrganizationMembershipPolicyRolesTest
 
 		Assert.assertTrue(isVerify());
 	}
+
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
+	private String _originalName;
 
 }
