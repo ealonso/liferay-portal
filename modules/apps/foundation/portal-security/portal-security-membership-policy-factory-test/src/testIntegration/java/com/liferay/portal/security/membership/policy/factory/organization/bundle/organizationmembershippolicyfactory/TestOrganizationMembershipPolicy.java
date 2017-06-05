@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.organization.bundle.organizationmembershippolicyfactory;
+package com.liferay.portal.security.membership.policy.factory.organization.bundle.organizationmembershippolicyfactory;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetTag;

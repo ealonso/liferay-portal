@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.site.test;
+package com.liferay.portal.security.membership.policy.factory.site.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
@@ -28,8 +28,8 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.impl.RoleImpl;
-import com.liferay.portal.security.membership.policy.site.bundle.sitemembershippolicyfactoryimpl.TestGroup;
-import com.liferay.portal.security.membership.policy.site.bundle.sitemembershippolicyfactoryimpl.TestSiteMembershipPolicy;
+import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl.TestGroup;
+import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl.TestSiteMembershipPolicy;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.AtomicState;
