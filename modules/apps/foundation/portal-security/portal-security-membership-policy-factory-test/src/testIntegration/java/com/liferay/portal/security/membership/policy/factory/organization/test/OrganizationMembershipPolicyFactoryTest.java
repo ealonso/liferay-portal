@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.organization.test;
+package com.liferay.portal.security.membership.policy.factory.organization.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershipPolicy;
@@ -21,10 +21,9 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.security.membership.policy.organization.bundle.organizationmembershippolicyfactory.TestOrganizationMembershipPolicy;
+import com.liferay.portal.security.membership.policy.factory.organization.bundle.organizationmembershippolicyfactory.TestOrganizationMembershipPolicy;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

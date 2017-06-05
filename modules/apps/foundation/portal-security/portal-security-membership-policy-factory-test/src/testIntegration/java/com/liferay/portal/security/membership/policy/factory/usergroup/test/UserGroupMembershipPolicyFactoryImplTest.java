@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.usergroup.test;
+package com.liferay.portal.security.membership.policy.factory.usergroup.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicy;
@@ -23,11 +23,10 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.security.membership.policy.usergroup.bundle.usergroupmembershippolicyfactoryimpl.TestUserGroupMembershipPolicy;
+import com.liferay.portal.security.membership.policy.factory.usergroup.bundle.usergroupmembershippolicyfactoryimpl.TestUserGroupMembershipPolicy;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.AtomicState;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;

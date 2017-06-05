@@ -12,19 +12,17 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.role.bundle.rolemembershippolicyfactoryimpl;
+package com.liferay.portal.security.membership.policy.factory.usergroup.bundle.usergroupmembershippolicyfactoryimpl;
 
-import com.liferay.portal.kernel.model.Role;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicy;
+import com.liferay.portal.kernel.model.UserGroup;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicy;
 import com.liferay.portal.kernel.util.StackTraceUtil;
-
-import java.io.Serializable;
-
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import java.io.Serializable;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Peter Fellwock
@@ -33,17 +31,18 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {"service.ranking:Integer=" + Integer.MAX_VALUE}
 )
-public class TestRoleMembershipPolicy implements RoleMembershipPolicy {
+public class TestUserGroupMembershipPolicy
+	implements UserGroupMembershipPolicy {
 
 	@Override
-	public void checkRoles(
-		long[] userIds, long[] addRoleIds, long[] removeRoleIds) {
+	public void checkMembership(
+		long[] userIds, long[] addUserGroupIds, long[] removeUserGroupIds) {
 
 		_atomicReference.set(StackTraceUtil.getCallerKey());
 	}
 
 	@Override
-	public boolean isRoleAllowed(long userId, long roleId) {
+	public boolean isMembershipAllowed(long userId, long userGroupId) {
 		if (userId == 1) {
 			return true;
 		}
@@ -52,7 +51,7 @@ public class TestRoleMembershipPolicy implements RoleMembershipPolicy {
 	}
 
 	@Override
-	public boolean isRoleRequired(long userId, long roleId) {
+	public boolean isMembershipRequired(long userId, long userGroupId) {
 		if (userId == 1) {
 			return true;
 		}
@@ -61,8 +60,8 @@ public class TestRoleMembershipPolicy implements RoleMembershipPolicy {
 	}
 
 	@Override
-	public void propagateRoles(
-		long[] userIds, long[] addRoleIds, long[] removeRoleIds) {
+	public void propagateMembership(
+		long[] userIds, long[] addUserGroupIds, long[] removeUserGroupIds) {
 
 		_atomicReference.set(StackTraceUtil.getCallerKey());
 	}
@@ -73,13 +72,13 @@ public class TestRoleMembershipPolicy implements RoleMembershipPolicy {
 	}
 
 	@Override
-	public void verifyPolicy(Role role) {
+	public void verifyPolicy(UserGroup userGroup) {
 		_atomicReference.set(StackTraceUtil.getCallerKey());
 	}
 
 	@Override
 	public void verifyPolicy(
-		Role role, Role oldRole,
+		UserGroup userGroup, UserGroup oldUserGroup,
 		Map<String, Serializable> oldExpandoAttributes) {
 
 		_atomicReference.set(StackTraceUtil.getCallerKey());

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.site.bundle.sitemembershippolicyfactoryimpl;
+package com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.model.BaseModel;
@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 
 import java.io.Serializable;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;

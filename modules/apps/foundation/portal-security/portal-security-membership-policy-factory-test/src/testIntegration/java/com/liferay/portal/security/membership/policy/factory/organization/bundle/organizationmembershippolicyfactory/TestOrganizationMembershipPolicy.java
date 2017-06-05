@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.organization.bundle.organizationmembershippolicyfactory;
+package com.liferay.portal.security.membership.policy.factory.organization.bundle.organizationmembershippolicyfactory;
 
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetTag;
@@ -23,19 +23,12 @@ import com.liferay.portal.kernel.security.membershippolicy.OrganizationMembershi
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
 import java.io.Serializable;
-
 import java.util.List;
 import java.util.Map;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Peter Fellwock
  */
-@Component(
-	immediate = true,
-	property = {"service.ranking:Integer=" + Integer.MAX_VALUE}
-)
 public class TestOrganizationMembershipPolicy
 	implements OrganizationMembershipPolicy {
 
