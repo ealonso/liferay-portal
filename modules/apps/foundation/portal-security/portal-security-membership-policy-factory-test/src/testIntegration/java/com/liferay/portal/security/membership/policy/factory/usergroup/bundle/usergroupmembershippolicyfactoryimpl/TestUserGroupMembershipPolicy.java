@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.usergroup.bundle.usergroupmembershippolicyfactoryimpl;
+package com.liferay.portal.security.membership.policy.factory.usergroup.bundle.usergroupmembershippolicyfactoryimpl;
 
 import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicy;
