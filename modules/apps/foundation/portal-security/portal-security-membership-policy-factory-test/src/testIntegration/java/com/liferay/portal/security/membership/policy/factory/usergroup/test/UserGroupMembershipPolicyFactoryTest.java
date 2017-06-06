@@ -12,26 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.factory.role.test;
+package com.liferay.portal.security.membership.policy.factory.usergroup.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicy;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactory;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyFactoryUtil;
-import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyUtil;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicy;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicyFactory;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicyFactoryUtil;
+import com.liferay.portal.kernel.security.membershippolicy.UserGroupMembershipPolicyUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.model.impl.RoleImpl;
-import com.liferay.portal.security.membership.policy.factory.role.bundle.rolemembershippolicyfactoryimpl.TestRoleMembershipPolicy;
+import com.liferay.portal.security.membership.policy.factory.usergroup.bundle.usergroupmembershippolicyfactory.TestUserGroupMembershipPolicy;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.AtomicState;
-
-import java.io.Serializable;
-
-import java.util.HashMap;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,7 +42,7 @@ import org.junit.runner.RunWith;
  * @author Peter Fellwock
  */
 @RunWith(Arquillian.class)
-public class RoleMembershipPolicyFactoryImplTest {
+public class UserGroupMembershipPolicyFactoryTest {
 
 	@ClassRule
 	@Rule
@@ -75,60 +70,65 @@ public class RoleMembershipPolicyFactoryImplTest {
 	}
 
 	@Test
-	public void testCheckRoles() throws Exception {
+	public void testCheckMembership() throws Exception {
 		_atomicState.reset();
 
 		long[] array = {1, 2, 3};
 
-		RoleMembershipPolicyUtil.checkRoles(array, array, array);
+		UserGroupMembershipPolicyUtil.checkMembership(array, array, array);
 
 		Assert.assertTrue(_atomicState.isSet());
 	}
 
 	@Test
-	public void testGetRoleMembershipPolicy() {
-		RoleMembershipPolicy roleMembershipPolicy =
-			RoleMembershipPolicyFactoryUtil.getRoleMembershipPolicy();
+	public void testGetUserGroupMembershipPolicy() {
+		UserGroupMembershipPolicy userGroupMembershipPolicy =
+			UserGroupMembershipPolicyFactoryUtil.getUserGroupMembershipPolicy();
 
-		Class<?> clazz = roleMembershipPolicy.getClass();
-
-		Assert.assertEquals(
-			TestRoleMembershipPolicy.class.getName(), clazz.getName());
-	}
-
-	@Test
-	public void testGetRoleMembershipPolicyFactory() {
-		RoleMembershipPolicyFactory roleMembershipPolicyFactory =
-			RoleMembershipPolicyFactoryUtil.getRoleMembershipPolicyFactory();
-
-		RoleMembershipPolicy roleMembershipPolicy =
-			roleMembershipPolicyFactory.getRoleMembershipPolicy();
-
-		Class<?> clazz = roleMembershipPolicy.getClass();
+		Class<?> clazz = userGroupMembershipPolicy.getClass();
 
 		Assert.assertEquals(
-			TestRoleMembershipPolicy.class.getName(), clazz.getName());
+			TestUserGroupMembershipPolicy.class.getName(), clazz.getName());
 	}
 
 	@Test
-	public void testIsRoleAllowed() throws Exception {
-		Assert.assertTrue(RoleMembershipPolicyUtil.isRoleAllowed(1, 1));
-		Assert.assertFalse(RoleMembershipPolicyUtil.isRoleAllowed(2, 2));
+	public void testGetUserGroupMembershipPolicyFactory() {
+		UserGroupMembershipPolicyFactory userGroupMembershipPolicyFactory =
+			UserGroupMembershipPolicyFactoryUtil.
+				getUserGroupMembershipPolicyFactory();
+
+		UserGroupMembershipPolicy userGroupMembershipPolicy =
+			userGroupMembershipPolicyFactory.getUserGroupMembershipPolicy();
+
+		Class<?> clazz = userGroupMembershipPolicy.getClass();
+
+		Assert.assertEquals(
+			TestUserGroupMembershipPolicy.class.getName(), clazz.getName());
 	}
 
 	@Test
-	public void testIsRoleRequired() throws Exception {
-		Assert.assertTrue(RoleMembershipPolicyUtil.isRoleRequired(1, 1));
-		Assert.assertFalse(RoleMembershipPolicyUtil.isRoleRequired(2, 2));
+	public void testIsMembershipAllowed() throws Exception {
+		Assert.assertTrue(
+			UserGroupMembershipPolicyUtil.isMembershipAllowed(1, 1));
+		Assert.assertFalse(
+			UserGroupMembershipPolicyUtil.isMembershipAllowed(2, 2));
 	}
 
 	@Test
-	public void testPropagateRoles() throws Exception {
+	public void testIsMembershipRequired() throws Exception {
+		Assert.assertTrue(
+			UserGroupMembershipPolicyUtil.isMembershipRequired(1, 1));
+		Assert.assertFalse(
+			UserGroupMembershipPolicyUtil.isMembershipRequired(2, 2));
+	}
+
+	@Test
+	public void testPropagateMembership() throws Exception {
 		_atomicState.reset();
 
 		long[] array = {1, 2, 3};
 
-		RoleMembershipPolicyUtil.propagateRoles(array, array, array);
+		UserGroupMembershipPolicyUtil.propagateMembership(array, array, array);
 
 		Assert.assertTrue(_atomicState.isSet());
 	}
@@ -137,7 +137,7 @@ public class RoleMembershipPolicyFactoryImplTest {
 	public void testVerifyPolicy1() throws Exception {
 		_atomicState.reset();
 
-		RoleMembershipPolicyUtil.verifyPolicy();
+		UserGroupMembershipPolicyUtil.verifyPolicy();
 
 		Assert.assertTrue(_atomicState.isSet());
 	}
@@ -146,7 +146,7 @@ public class RoleMembershipPolicyFactoryImplTest {
 	public void testVerifyPolicy2() throws Exception {
 		_atomicState.reset();
 
-		RoleMembershipPolicyUtil.verifyPolicy(new RoleImpl());
+		UserGroupMembershipPolicyUtil.verifyPolicy(null);
 
 		Assert.assertTrue(_atomicState.isSet());
 	}
@@ -155,9 +155,7 @@ public class RoleMembershipPolicyFactoryImplTest {
 	public void testVerifyPolicy3() throws Exception {
 		_atomicState.reset();
 
-		RoleMembershipPolicyUtil.verifyPolicy(
-			new RoleImpl(), new RoleImpl(),
-			new HashMap<String, Serializable>());
+		UserGroupMembershipPolicyUtil.verifyPolicy(null, null, null);
 
 		Assert.assertTrue(_atomicState.isSet());
 	}

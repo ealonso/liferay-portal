@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.factory.role.bundle.rolemembershippolicyfactoryimpl;
+package com.liferay.portal.security.membership.policy.factory.role.bundle.rolemembershippolicyfactory;
 
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicy;
