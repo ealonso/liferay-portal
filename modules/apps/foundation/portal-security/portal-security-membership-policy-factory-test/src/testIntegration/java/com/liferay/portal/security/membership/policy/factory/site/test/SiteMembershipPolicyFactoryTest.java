@@ -28,8 +28,8 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.impl.RoleImpl;
-import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl.TestGroup;
-import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl.TestSiteMembershipPolicy;
+import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactory.TestGroup;
+import com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactory.TestSiteMembershipPolicy;
 import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.test.AtomicState;
@@ -53,7 +53,7 @@ import org.junit.runner.RunWith;
  * @author Peter Fellwock
  */
 @RunWith(Arquillian.class)
-public class SiteMembershipPolicyFactoryImplTest {
+public class SiteMembershipPolicyFactoryTest {
 
 	@ClassRule
 	@Rule

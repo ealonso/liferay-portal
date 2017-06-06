@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactoryimpl;
+package com.liferay.portal.security.membership.policy.factory.site.bundle.sitemembershippolicyfactory;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.model.BaseModel;
