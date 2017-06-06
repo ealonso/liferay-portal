@@ -264,6 +264,12 @@ public class PortalUtil {
 	}
 
 	public static String addPreservedParameters(
+		ThemeDisplay themeDisplay, String url, boolean user) {
+
+		return getPortal().addPreservedParameters(themeDisplay, url, user);
+	}
+
+	public static String addPreservedParameters(
 		ThemeDisplay themeDisplay, String url, boolean typeControlPanel,
 		boolean doAsUser) {
 
