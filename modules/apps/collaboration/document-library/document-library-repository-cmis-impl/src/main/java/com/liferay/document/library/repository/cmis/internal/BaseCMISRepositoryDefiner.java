@@ -65,7 +65,8 @@ public abstract class BaseCMISRepositoryDefiner extends BaseRepositoryDefiner {
 			ProcessorCapability.class,
 			new RefreshingProcessorCapability(
 				portalCapabilityLocator.getProcessorCapability(
-					documentRepository)));
+					documentRepository,
+					ProcessorCapability.ResourceGenerationStrategy.REUSE)));
 	}
 
 	protected PortalCapabilityLocator getPortalCapabilityLocator() {
@@ -76,16 +77,11 @@ public abstract class BaseCMISRepositoryDefiner extends BaseRepositoryDefiner {
 		return _resourceBundleLoader;
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortalCapabilityLocator(
-		PortalCapabilityLocator portalCapabilityLocator) {
-
-		_portalCapabilityLocator = portalCapabilityLocator;
-	}
-
 	private static final String _MODEL_RESOURCE_NAME_PREFIX = "model.resource.";
 
+	@Reference
 	private PortalCapabilityLocator _portalCapabilityLocator;
+
 	private final ResourceBundleLoader _resourceBundleLoader =
 		new CacheResourceBundleLoader(
 			new ClassResourceBundleLoader(
