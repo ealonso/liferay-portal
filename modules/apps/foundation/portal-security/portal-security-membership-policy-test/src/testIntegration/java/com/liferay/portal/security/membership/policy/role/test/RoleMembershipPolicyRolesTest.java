@@ -37,6 +37,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import java.util.Collections;
 import java.util.List;
 
+import com.liferay.portal.test.rule.SynchronousMailTestRule;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,7 +56,8 @@ public class RoleMembershipPolicyRolesTest
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new LiferayIntegrationTestRule();
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(), SynchronousMailTestRule.INSTANCE);
 
 	@Before
 	@Override
