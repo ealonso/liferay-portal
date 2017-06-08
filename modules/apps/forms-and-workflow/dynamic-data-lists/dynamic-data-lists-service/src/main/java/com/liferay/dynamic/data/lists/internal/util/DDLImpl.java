@@ -118,9 +118,9 @@ public class DDLImpl implements DDL {
 				continue;
 			}
 
-			if (fieldType.equals(DDMFormFieldType.DOCUMENT_LIBRARY)) {
-				Stream<Object> fieldValuesStream = Arrays.stream(fieldValues);
+			Stream<Object> fieldValuesStream = Arrays.stream(fieldValues);
 
+			if (fieldType.equals(DDMFormFieldType.DOCUMENT_LIBRARY)) {
 				Stream<String> fieldValuesStringStream = fieldValuesStream.map(
 					fieldValue -> getDocumentLibraryFieldValue(fieldValue));
 
@@ -134,8 +134,6 @@ public class DDLImpl implements DDL {
 				jsonObject.put(fieldName, fieldJSONObject.toString());
 			}
 			else if (fieldType.equals(DDMFormFieldType.LINK_TO_PAGE)) {
-				Stream<Object> fieldValuesStream = Arrays.stream(fieldValues);
-
 				Stream<String> fieldValuesStringStream = fieldValuesStream.map(
 					fieldValue -> getLinkToPageFieldValue(fieldValue, locale));
 
@@ -153,18 +151,17 @@ public class DDLImpl implements DDL {
 
 				JSONArray fieldJSONArray = JSONFactoryUtil.createJSONArray();
 
-				for (Object fieldValue : fieldValues) {
-					JSONArray tempJSONArray = JSONFactoryUtil.createJSONArray(
-						String.valueOf(fieldValue));
+				fieldValuesStream.forEach(
+					fieldValue -> {
+						JSONArray jsonArrayValue = getJSONArrayValue(
+							fieldValue);
 
-					fieldJSONArray.put(tempJSONArray.get(0));
-				}
+						fieldJSONArray.put(jsonArrayValue.get(0));
+					});
 
 				jsonObject.put(fieldName, fieldJSONArray);
 			}
 			else {
-				Stream<Object> fieldValuesStream = Arrays.stream(fieldValues);
-
 				Stream<String> fieldValuesStringStream = fieldValuesStream.map(
 					fieldValue -> {
 						if (fieldValue instanceof Date) {
@@ -417,6 +414,15 @@ public class DDLImpl implements DDL {
 			return LanguageUtil.format(
 				LocaleUtil.getSiteDefault(), "is-temporarily-unavailable",
 				"content");
+		}
+	}
+
+	protected JSONArray getJSONArrayValue(Object fieldValue) {
+		try {
+			return JSONFactoryUtil.createJSONArray(String.valueOf(fieldValue));
+		}
+		catch (Exception e) {
+			return JSONFactoryUtil.createJSONArray();
 		}
 	}
 
