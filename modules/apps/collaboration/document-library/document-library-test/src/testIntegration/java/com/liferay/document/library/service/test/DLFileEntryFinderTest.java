@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.portlet.documentlibrary.service.persistence;
+package com.liferay.document.library.service.test;
 
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryTypeConstants;
@@ -31,6 +32,8 @@ import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.RepositoryLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -51,6 +54,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.LiferayRepository;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
+import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portal.spring.hibernate.LastSessionRecorderUtil;
 import com.liferay.portal.test.randomizerbumpers.TikaSafeRandomizerBumper;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -59,17 +63,21 @@ import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * @author Zsolt Berentey
  */
+@RunWith(Arquillian.class)
 @Sync
 public class DLFileEntryFinderTest {
 
@@ -79,6 +87,11 @@ public class DLFileEntryFinderTest {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@Before
+	public void setUp() throws Exception {
+		setUpPermissionThreadLocal();
+	}
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
@@ -108,6 +121,11 @@ public class DLFileEntryFinderTest {
 			_repository.getRepositoryId(), "-NewRepository", serviceContext);
 
 		_newRepositoryFolder = (Folder)objects[0];
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
 	}
 
 	@AfterClass
@@ -1500,12 +1518,35 @@ public class DLFileEntryFinderTest {
 			userId, repositoryIds, folderIds, mimeType, queryDefinition);
 	}
 
+	protected void setUpPermissionThreadLocal() throws Exception {
+		_originalPermissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		PermissionThreadLocal.setPermissionChecker(
+			new SimplePermissionChecker() {
+
+				{
+					init(TestPropsValues.getUser());
+				}
+
+				@Override
+				public boolean hasOwnerPermission(
+					long companyId, String name, String primKey, long ownerId,
+					String actionId) {
+
+					return true;
+				}
+
+			});
+	}
+
 	private static final long _SMALL_IMAGE_ID = 1234L;
 
 	private static DLFileVersion _defaultRepositoryDLFileVersion;
 	private static Folder _defaultRepositoryFolder;
 	private static Group _group;
 	private static Folder _newRepositoryFolder;
+	private PermissionChecker _originalPermissionChecker;
 	private static Repository _repository;
 	private static User _user;
 
