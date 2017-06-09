@@ -12,19 +12,19 @@
  * details.
  */
 
-package com.liferay.document.library.service.test;
+package com.liferay.portlet.documentlibrary.service;
 
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.RoleConstants;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.RoleTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.security.permission.SimplePermissionChecker;
 import com.liferay.portlet.documentlibrary.service.permission.DLPermission;
 
 import org.junit.After;
@@ -45,8 +44,7 @@ public abstract class BaseDLAppTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpPermissionThreadLocal();
-		setUpPrincipalThreadLocal();
+		_name = PrincipalThreadLocal.getName();
 
 		group = GroupTestUtil.addGroup();
 
@@ -58,6 +56,9 @@ public abstract class BaseDLAppTestCase {
 				"Test Folder");
 		}
 		catch (NoSuchFolderException nsfe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsfe, nsfe);
+			}
 		}
 
 		ServiceContext serviceContext =
@@ -76,42 +77,12 @@ public abstract class BaseDLAppTestCase {
 
 	@After
 	public void tearDown() throws Exception {
-		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
-
-		PrincipalThreadLocal.setName(_originalName);
+		PrincipalThreadLocal.setName(_name);
 
 		RoleTestUtil.removeResourcePermission(
 			RoleConstants.GUEST, DLPermission.RESOURCE_NAME,
 			ResourceConstants.SCOPE_GROUP, String.valueOf(group.getGroupId()),
 			ActionKeys.VIEW);
-	}
-
-	protected void setUpPermissionThreadLocal() throws Exception {
-		_originalPermissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
-
-		PermissionThreadLocal.setPermissionChecker(
-			new SimplePermissionChecker() {
-
-				{
-					init(TestPropsValues.getUser());
-				}
-
-				@Override
-				public boolean hasOwnerPermission(
-					long companyId, String name, String primKey, long ownerId,
-					String actionId) {
-
-					return true;
-				}
-
-			});
-	}
-
-	protected void setUpPrincipalThreadLocal() throws Exception {
-		_originalName = PrincipalThreadLocal.getName();
-
-		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
 	}
 
 	protected static final String CONTENT =
@@ -125,7 +96,9 @@ public abstract class BaseDLAppTestCase {
 	@DeleteAfterTestRun
 	protected Group targetGroup;
 
-	private String _originalName;
-	private PermissionChecker _originalPermissionChecker;
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseDLAppTestCase.class);
+
+	private String _name;
 
 }
