@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
@@ -89,6 +90,7 @@ public class DLFileEntryFinderTest {
 	@BeforeClass
 	public static void setUpClass() throws Exception {
 		setUpPermissionThreadLocal();
+		setUpPrincipalThreadLocal();
 
 		_user = UserTestUtil.addUser();
 
@@ -125,6 +127,8 @@ public class DLFileEntryFinderTest {
 		UserLocalServiceUtil.deleteUser(_user);
 
 		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
+		PrincipalThreadLocal.setName(_originalName);
 	}
 
 	@Test
@@ -1532,12 +1536,19 @@ public class DLFileEntryFinderTest {
 			});
 	}
 
+	protected static void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
 	private static final long _SMALL_IMAGE_ID = 1234L;
 
 	private static DLFileVersion _defaultRepositoryDLFileVersion;
 	private static Folder _defaultRepositoryFolder;
 	private static Group _group;
 	private static Folder _newRepositoryFolder;
+	private static String _originalName;
 	private static PermissionChecker _originalPermissionChecker;
 	private static Repository _repository;
 	private static User _user;

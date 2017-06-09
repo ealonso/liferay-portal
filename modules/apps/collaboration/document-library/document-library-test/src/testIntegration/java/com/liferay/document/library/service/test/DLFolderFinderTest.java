@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.RepositoryLocalServiceUtil;
@@ -81,6 +82,7 @@ public class DLFolderFinderTest {
 		_group = GroupTestUtil.addGroup();
 
 		setUpPermissionThreadLocal();
+		setUpPrincipalThreadLocal();
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
@@ -135,6 +137,8 @@ public class DLFolderFinderTest {
 	@After
 	public void tearDown() throws Exception {
 		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
+
+		PrincipalThreadLocal.setName(_originalName);
 	}
 
 	@Test
@@ -423,12 +427,19 @@ public class DLFolderFinderTest {
 			});
 	}
 
+	protected void setUpPrincipalThreadLocal() throws Exception {
+		_originalName = PrincipalThreadLocal.getName();
+
+		PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+	}
+
 	private FileShortcut _fileShortcut;
 
 	private Folder _folder;
 	@DeleteAfterTestRun
 	private Group _group;
 
+	private String _originalName;
 	private PermissionChecker _originalPermissionChecker;
 
 }
