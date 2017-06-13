@@ -57,4 +57,22 @@ public class LayoutTypePortletConstants {
 
 	public static final String STATIC_PORTLET_USER_SELECTOR = "user";
 
+	public static boolean isDivId(String id) {
+		if (id.equals(DEFAULT_ASSET_PUBLISHER_PORTLET_ID) ||
+			id.equals(LAYOUT_TEMPLATE_ID) || id.equals(MODE_ABOUT) ||
+			id.equals(MODE_CONFIG) || id.equals(MODE_EDIT) ||
+			id.equals(MODE_EDIT_DEFAULTS) || id.equals(MODE_EDIT_GUEST) ||
+			id.equals(MODE_HELP) || id.equals(MODE_PREVIEW) ||
+			id.equals(MODE_PRINT) || id.equals(NESTED_COLUMN_IDS) ||
+			id.equals(STATE_MAX) || id.equals(STATE_MIN) ||
+			id.equals(STATIC_PORTLET_ORGANIZATION_SELECTOR) ||
+			id.equals(STATIC_PORTLET_REGULAR_SITE_SELECTOR) ||
+			id.equals(STATIC_PORTLET_USER_SELECTOR)) {
+
+			return false;
+		}
+
+		return true;
+	}
+
 }
