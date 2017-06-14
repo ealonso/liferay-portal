@@ -20,6 +20,12 @@ package com.liferay.portal.kernel.model;
  */
 public class LayoutTypePortletConstants {
 
+	// COLUMN_PREFIX should only be used when generating an arbitrary
+	// typeSettings based on no particular Layout template. It should never be
+	// used when reading in a pre-existing typeSettings to determine whether or
+	// not an a parameter in the typeSettings is the id of a div. Use the
+	// isDivId method for this instead.
+
 	public static final String COLUMN_PREFIX = "column-";
 
 	public static final String DEFAULT_ASSET_PUBLISHER_PORTLET_ID =
