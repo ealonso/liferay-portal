@@ -24,4 +24,5 @@ String hiddenInput = (String)request.getAttribute("liferay-ui:asset-addon-entry-
 String id = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-addon-entry-selector:id"));
 List<AssetAddonEntry> selectedAssetAddonEntries = (List<AssetAddonEntry>)request.getAttribute("liferay-ui:asset-addon-entry-selector:selectedAssetAddonEntries");
 String title = GetterUtil.getString((String)request.getAttribute("liferay-ui:asset-addon-entry-selector:title"));
+boolean useHiddenInputNamespace = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:asset-addon-entry-selector:useHiddenInputNamespace"));
 %>
