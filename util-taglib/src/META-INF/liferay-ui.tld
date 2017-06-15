@@ -521,6 +521,13 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description>Whether to use a namespace with the hidden input. The default value is <![CDATA[<code>true</code>]]>.</description>
+			<name>useHiddenInputNamespace</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
 	</tag>
 	<tag>
 		<name>asset-categories-available</name>
