@@ -153,6 +153,11 @@ AUI.add(
 
 									var contentParent = node.ancestorsByClassName(instance.get('categorySelector'));
 
+									var openCategories = $('.list-group-heading');
+									openCategories.collapse('show');
+									openCategories = $('.list-group-panel');
+									openCategories.collapse('show');
+
 									if (contentParent) {
 										contentParent.show();
 
