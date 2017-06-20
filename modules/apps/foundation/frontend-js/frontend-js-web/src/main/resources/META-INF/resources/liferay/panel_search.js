@@ -153,16 +153,20 @@ AUI.add(
 
 									var contentParent = node.ancestorsByClassName(instance.get('categorySelector'));
 
-									var openCategories = $('.list-group-heading');
-									openCategories.collapse('show');
-									openCategories = $('.list-group-panel');
-									openCategories.collapse('show');
-
 									if (contentParent) {
 										contentParent.show();
 
-										contentParent.all('> .list-group-heading').removeClass('collapsed');
-										contentParent.all('> .list-group-panel').addClass('in');
+										var heading = contentParent.all('> .list-group-heading');
+
+										heading = heading.getDOM();
+
+										AUI.$(heading).collapse('show');
+
+										var panel = contentParent.all('> .list-group-panel');
+
+										panel = panel.getDOM();
+
+										AUI.$(panel).collapse('show');
 									}
 								}
 							);
