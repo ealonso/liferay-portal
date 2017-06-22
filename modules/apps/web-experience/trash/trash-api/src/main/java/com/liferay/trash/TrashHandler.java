@@ -12,10 +12,9 @@
  * details.
  */
 
-package com.liferay.portal.kernel.trash;
+package com.liferay.trash;
 
 import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.ContainerModel;
@@ -29,11 +28,10 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.trash.kernel.model.TrashEntry;
 
+import javax.portlet.PortletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.portlet.PortletRequest;
 
 /**
  * The interface for managing the basic trash operations of the Recycle Bin,
@@ -98,8 +96,8 @@ import javax.portlet.PortletRequest;
 public interface TrashHandler {
 
 	public SystemEvent addDeletionSystemEvent(
-			long userId, long groupId, long classPK, String classUuid,
-			String referrerClassName)
+		long userId, long groupId, long classPK, String classUuid,
+		String referrerClassName)
 		throws PortalException;
 
 	/**
@@ -108,7 +106,7 @@ public interface TrashHandler {
 	 */
 	@Deprecated
 	public void checkDuplicateEntry(
-			long classPK, long containerModelId, String newName)
+		long classPK, long containerModelId, String newName)
 		throws PortalException;
 
 	/**
@@ -131,11 +129,11 @@ public interface TrashHandler {
 	 */
 	@Deprecated
 	public void checkDuplicateTrashEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
+		TrashEntry trashEntry, long containerModelId, String newName)
 		throws PortalException;
 
 	public void checkRestorableEntry(
-			long classPK, long containerModelId, String newName)
+		long classPK, long containerModelId, String newName)
 		throws PortalException;
 
 	/**
@@ -153,7 +151,7 @@ public interface TrashHandler {
 	 *        <code>null</code> to forego renaming the trash entry)
 	 */
 	public void checkRestorableEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
+		TrashEntry trashEntry, long containerModelId, String newName)
 		throws PortalException;
 
 	/**
@@ -226,7 +224,7 @@ public interface TrashHandler {
 	 * @return the range of matching container models
 	 */
 	public List<ContainerModel> getContainerModels(
-			long classPK, long containerModelId, int start, int end)
+		long classPK, long containerModelId, int start, int end)
 		throws PortalException;
 
 	/**
@@ -310,7 +308,7 @@ public interface TrashHandler {
 		throws PortalException;
 
 	public String getRestoreContainedModelLink(
-			PortletRequest portletRequest, long classPK)
+		PortletRequest portletRequest, long classPK)
 		throws PortalException;
 
 	/**
@@ -321,7 +319,7 @@ public interface TrashHandler {
 	 * @return the restore link
 	 */
 	public String getRestoreContainerModelLink(
-			PortletRequest portletRequest, long classPK)
+		PortletRequest portletRequest, long classPK)
 		throws PortalException;
 
 	/**
@@ -413,7 +411,7 @@ public interface TrashHandler {
 	 */
 	@Deprecated
 	public List<TrashRenderer> getTrashContainedModelTrashRenderers(
-			long classPK, int start, int end)
+		long classPK, int start, int end)
 		throws PortalException;
 
 	/**
@@ -472,7 +470,7 @@ public interface TrashHandler {
 	 */
 	@Deprecated
 	public List<TrashRenderer> getTrashContainerModelTrashRenderers(
-			long classPK, int start, int end)
+		long classPK, int start, int end)
 		throws PortalException;
 
 	public TrashedModel getTrashedModel(long classPK);
@@ -492,7 +490,7 @@ public interface TrashHandler {
 	public int getTrashModelsCount(long classPK) throws PortalException;
 
 	public default List<TrashedModel> getTrashModelTrashedModels(
-			long classPK, int start, int end, OrderByComparator<?> obc)
+		long classPK, int start, int end, OrderByComparator<?> obc)
 		throws PortalException {
 
 		return Collections.emptyList();
@@ -504,7 +502,7 @@ public interface TrashHandler {
 	 */
 	@Deprecated
 	public default List<TrashRenderer> getTrashModelTrashRenderers(
-			long classPK, int start, int end, OrderByComparator<?> obc)
+		long classPK, int start, int end, OrderByComparator<?> obc)
 		throws PortalException {
 
 		List<TrashedModel> trashedModels = getTrashModelTrashedModels(
@@ -555,8 +553,8 @@ public interface TrashHandler {
 	 *         <code>false</code> otherwise
 	 */
 	public boolean hasTrashPermission(
-			PermissionChecker permissionChecker, long groupId, long classPK,
-			String trashActionId)
+		PermissionChecker permissionChecker, long groupId, long classPK,
+		String trashActionId)
 		throws PortalException;
 
 	/**
@@ -651,8 +649,8 @@ public interface TrashHandler {
 	 * @param serviceContext the service context to be applied
 	 */
 	public void moveEntry(
-			long userId, long classPK, long containerModelId,
-			ServiceContext serviceContext)
+		long userId, long classPK, long containerModelId,
+		ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -666,8 +664,8 @@ public interface TrashHandler {
 	 * @param serviceContext the service context to be applied
 	 */
 	public void moveTrashEntry(
-			long userId, long classPK, long containerModelId,
-			ServiceContext serviceContext)
+		long userId, long classPK, long containerModelId,
+		ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

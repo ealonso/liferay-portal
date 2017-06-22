@@ -12,16 +12,15 @@
  * details.
  */
 
-package com.liferay.portal.kernel.trash;
+package com.liferay.trash;
 
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.trash.kernel.util.TrashUtil;
 
-import java.util.Locale;
-
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import java.util.Locale;
 
 /**
  * @author Alexander Chow

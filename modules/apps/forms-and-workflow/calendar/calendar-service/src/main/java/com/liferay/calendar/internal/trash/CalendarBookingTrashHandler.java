@@ -20,7 +20,7 @@ import com.liferay.calendar.service.CalendarBookingLocalService;
 import com.liferay.calendar.service.permission.CalendarPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.trash.BaseTrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandler;
 
 import org.osgi.service.component.annotations.Component;
