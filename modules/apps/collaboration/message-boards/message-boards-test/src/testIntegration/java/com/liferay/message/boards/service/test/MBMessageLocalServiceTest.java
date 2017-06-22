@@ -44,7 +44,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.messageboards.util.test.MBTestUtil;
-import com.liferay.trash.kernel.util.TrashUtil;
+import com.liferay.trash.test.util.TrashTestUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -146,7 +146,7 @@ public class MBMessageLocalServiceTest {
 	public void testDeleteAttachmentsWhenUpdatingMessageAndTrashDisabled()
 		throws Exception {
 
-		TrashUtil.disableTrash(_group);
+		TrashTestUtil.disableTrash(_group);
 
 		MBMessage message = addMessage(null, true);
 
