@@ -41,7 +41,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.trash.kernel.util.TrashUtil;
+import com.liferay.portal.spring.extender.service.ServiceReference;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashVersion;
 import com.liferay.trash.model.impl.TrashEntryImpl;
@@ -165,7 +166,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 					Date date = getMaxAge(group);
 
 					if (createDate.before(date) ||
-						!TrashUtil.isTrashEnabled(group)) {
+						!_trashHelper.isTrashEnabled(group)) {
 
 						TrashHandler trashHandler =
 							TrashHandlerRegistryUtil.getTrashHandler(
@@ -431,7 +432,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 		calendar.setTime(new Date());
 
-		int maxAge = TrashUtil.getMaxAge(group);
+		int maxAge = _trashHelper.getMaxAge(group);
 
 		calendar.add(Calendar.MINUTE, -maxAge);
 
@@ -503,5 +504,8 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		TrashEntryLocalServiceImpl.class);
+
+	@ServiceReference(type = TrashHelper.class)
+	private TrashHelper _trashHelper;
 
 }
