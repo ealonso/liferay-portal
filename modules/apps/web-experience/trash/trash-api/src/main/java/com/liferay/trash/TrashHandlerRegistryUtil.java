@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.trash;
+package com.liferay.trash;
 
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.registry.Registry;
@@ -47,7 +47,8 @@ public class TrashHandlerRegistryUtil {
 		}
 	}
 
-	public static void register(TrashHandler trashHandler) {
+	public static void register(
+		TrashHandler trashHandler) {
 		_instance._register(trashHandler);
 	}
 
@@ -57,7 +58,8 @@ public class TrashHandlerRegistryUtil {
 		}
 	}
 
-	public static void unregister(TrashHandler trashHandler) {
+	public static void unregister(
+		TrashHandler trashHandler) {
 		_instance._unregister(trashHandler);
 	}
 
@@ -78,16 +80,19 @@ public class TrashHandlerRegistryUtil {
 		return ListUtil.fromMapValues(_trashHandlers);
 	}
 
-	private void _register(TrashHandler trashHandler) {
+	private void _register(
+		TrashHandler trashHandler) {
 		Registry registry = RegistryUtil.getRegistry();
 
 		ServiceRegistration<TrashHandler> serviceRegistration =
-			registry.registerService(TrashHandler.class, trashHandler);
+			registry.registerService(
+				TrashHandler.class, trashHandler);
 
 		_serviceRegistrations.put(trashHandler, serviceRegistration);
 	}
 
-	private void _unregister(TrashHandler trashHandler) {
+	private void _unregister(
+		TrashHandler trashHandler) {
 		ServiceRegistration<TrashHandler> serviceRegistration =
 			_serviceRegistrations.remove(trashHandler);
 
@@ -96,7 +101,8 @@ public class TrashHandlerRegistryUtil {
 		}
 	}
 
-	private static final TrashHandlerRegistryUtil _instance =
+	private static final TrashHandlerRegistryUtil
+		_instance =
 		new TrashHandlerRegistryUtil();
 
 	private final ServiceRegistrationMap<TrashHandler> _serviceRegistrations =

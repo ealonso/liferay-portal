@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.kernel.trash;
+package com.liferay.trash;
 
 import com.liferay.asset.kernel.model.Renderer;
 
@@ -40,7 +40,7 @@ public interface TrashRenderer extends Renderer {
 	public String getType();
 
 	public String renderActions(
-			RenderRequest renderRequest, RenderResponse renderResponse)
+		RenderRequest renderRequest, RenderResponse renderResponse)
 		throws Exception;
 
 }

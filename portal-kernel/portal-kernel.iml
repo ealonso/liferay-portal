@@ -1,22 +1,52 @@
-<?xml version="1.0"?>
-
+<?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-	<component name="NewModuleRootManager" inherit-compiler-output="true">
-		<content url="file://$MODULE_DIR$">
-			<sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-			<sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
-			<excludeFolder url="file://$MODULE_DIR$/.gradle" />
-			<excludeFolder url="file://$MODULE_DIR$/build" />
-			<excludeFolder url="file://$MODULE_DIR$/classes" />
-			<excludeFolder url="file://$MODULE_DIR$/test-classes" />
-			<excludeFolder url="file://$MODULE_DIR$/test-results" />
-		</content>
-		<orderEntry type="inheritedJdk" />
-		<orderEntry type="sourceFolder" forTests="false" />
-		<orderEntry type="module" module-name="registry-api" scope="PROVIDED" />
-		<orderEntry type="module" module-name="portal-test" scope="TEST" />
-		<orderEntry type="library" name="development" level="project" />
-		<orderEntry type="library" name="global" level="project" />
-		<orderEntry type="library" name="portal" level="project" />
-	</component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/test/unit" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/build" />
+      <excludeFolder url="file://$MODULE_DIR$/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/test-classes" />
+      <excludeFolder url="file://$MODULE_DIR$/test-results" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="registry-api" scope="PROVIDED" />
+    <orderEntry type="module" module-name="portal-test" scope="TEST" />
+    <orderEntry type="library" name="development" level="project" />
+    <orderEntry type="library" name="global" level="project" />
+    <orderEntry type="library" name="portal" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../.gradle/caches/modules-2/files-2.1/com.liferay/aQute.bnd/2.3.0/6701930c122906eccd52723ec33b94fe296a2f53/aQute.bnd-2.3.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.liferay/com.liferay.registry.api/1.0.0/617206cab307d903067982024b22365cbbbf40da/com.liferay.registry.api-1.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.liferay/com.liferay.registry.api/1.0.0/3708f9da312c5b1d93ba842c46cafb17d4f785c6/com.liferay.registry.api-1.0.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.portlet/portlet-api/2.0/1cd72f2a37fcf8ab9893a9468d7ba71c85fe2653/portlet-api-2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/javax.portlet/portlet-api/2.0/aa3977c82050c29bb3577fc98c428d61ec187503/portlet-api-2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
 </module>

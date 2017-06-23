@@ -17,8 +17,8 @@ package com.liferay.document.library.web.internal.trash;
 import com.liferay.document.library.kernel.model.DLFileShortcut;
 import com.liferay.document.library.kernel.service.DLFileShortcutLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.trash.TrashRendererFactory;
+import com.liferay.trash.TrashRenderer;
+import com.liferay.trash.TrashRendererFactory;
 import com.liferay.trash.TrashHelper;
 
 import org.osgi.service.component.annotations.Component;

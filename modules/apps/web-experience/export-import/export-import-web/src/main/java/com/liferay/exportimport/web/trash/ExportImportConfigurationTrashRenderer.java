@@ -18,8 +18,8 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.web.constants.ExportImportWebKeys;
-import com.liferay.portal.kernel.trash.BaseJSPTrashRenderer;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.trash.BaseJSPTrashRenderer;
 
 import java.util.Locale;
 
