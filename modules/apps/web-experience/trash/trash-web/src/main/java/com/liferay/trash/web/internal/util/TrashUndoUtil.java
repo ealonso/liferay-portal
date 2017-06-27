@@ -20,7 +20,7 @@ import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ObjectValuePair;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -31,12 +31,16 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Eudaldo Alonso
  */
+@Component(immediate = true, service = TrashUndoUtil.class)
 public class TrashUndoUtil {
 
-	public static void addRestoreData(
+	public void addRestoreData(
 			ActionRequest actionRequest,
 			List<ObjectValuePair<String, Long>> entries)
 		throws Exception {
@@ -96,12 +100,12 @@ public class TrashUndoUtil {
 
 		SessionMessages.add(
 			actionRequest,
-			PortalUtil.getPortletId(actionRequest) +
+			_portal.getPortletId(actionRequest) +
 				SessionMessages.KEY_SUFFIX_DELETE_SUCCESS_DATA,
 			data);
 	}
 
-	public static void addRestoreData(
+	public void addRestoreData(
 			ActionRequest actionRequest, String className, long classPK)
 		throws Exception {
 
@@ -114,5 +118,8 @@ public class TrashUndoUtil {
 
 		addRestoreData(actionRequest, entries);
 	}
+
+	@Reference
+	private Portal _portal;
 
 }
