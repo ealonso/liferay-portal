@@ -167,7 +167,7 @@ public class TrashPortlet extends MVCPortlet {
 		_trashEntryService.moveEntry(
 			className, classPK, containerModelId, serviceContext);
 
-		TrashUndoUtil.addRestoreData(actionRequest, className, classPK);
+		_trashUndoUtil.addRestoreData(actionRequest, className, classPK);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -214,7 +214,7 @@ public class TrashPortlet extends MVCPortlet {
 			}
 		}
 
-		TrashUndoUtil.addRestoreData(actionRequest, entries);
+		_trashUndoUtil.addRestoreData(actionRequest, entries);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -247,7 +247,7 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryService.restoreEntry(
 			trashEntryId, duplicateEntryId, null);
 
-		TrashUndoUtil.addRestoreData(
+		_trashUndoUtil.addRestoreData(
 			actionRequest, entry.getClassName(), entry.getClassPK());
 
 		sendRedirect(actionRequest, actionResponse);
@@ -273,7 +273,7 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryService.restoreEntry(
 			trashEntryId, 0, newName);
 
-		TrashUndoUtil.addRestoreData(
+		_trashUndoUtil.addRestoreData(
 			actionRequest, entry.getClassName(), entry.getClassPK());
 
 		sendRedirect(actionRequest, actionResponse);
@@ -358,6 +358,9 @@ public class TrashPortlet extends MVCPortlet {
 
 	@Reference
 	private TrashHelper _trashHelper;
+
+	@Reference
+	private TrashUndoUtil _trashUndoUtil;
 
 	@Reference
 	private TrashUtil _trashUtil;
