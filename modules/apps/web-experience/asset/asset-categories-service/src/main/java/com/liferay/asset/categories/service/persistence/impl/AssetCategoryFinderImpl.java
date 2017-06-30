@@ -19,6 +19,7 @@ import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.model.impl.AssetCategoryImpl;
 import com.liferay.asset.categories.service.persistence.AssetCategoryFinder;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -30,7 +31,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,7 +63,7 @@ public class AssetCategoryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(COUNT_BY_G_C_N);
+			String sql = CustomSQLUtil.get(getClass(), COUNT_BY_G_C_N);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -105,7 +105,7 @@ public class AssetCategoryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(COUNT_BY_G_N_P);
+			String sql = CustomSQLUtil.get(getClass(), COUNT_BY_G_N_P);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -150,7 +150,7 @@ public class AssetCategoryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_G_N);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_G_N);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
@@ -204,7 +204,7 @@ public class AssetCategoryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_G_N_P);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_G_N_P);
 
 			sql = StringUtil.replace(
 				sql, "[$JOIN$]", getJoin(categoryProperties));
