@@ -383,7 +383,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 	public void incrementViewCounter(long userId, AssetEntry assetEntry)
 		throws PortalException {
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		assetEntryLocalService.incrementViewCounter(
 			user.getUserId(), assetEntry.getClassName(),
@@ -402,7 +402,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			long userId, String className, long classPK)
 		throws PortalException {
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		assetEntryLocalService.incrementViewCounter(
 			user.getUserId(), className, classPK, 1);
@@ -704,7 +704,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 			entry.setUserId(userId);
 
-			User user = userPersistence.fetchByPrimaryKey(userId);
+			User user = userLocalService.getUser(userId);
 
 			if (user != null) {
 				entry.setUserName(user.getFullName());
