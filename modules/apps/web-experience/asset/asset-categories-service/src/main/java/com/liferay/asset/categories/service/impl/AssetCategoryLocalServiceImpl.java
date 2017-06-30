@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -89,7 +90,7 @@ public class AssetCategoryLocalServiceImpl
 
 		// Category
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		String name = titleMap.get(LocaleUtil.getSiteDefault());
 
@@ -106,7 +107,7 @@ public class AssetCategoryLocalServiceImpl
 			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
 		}
 
-		assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
+		assetVocabularyLocalService.getVocabulary(vocabularyId);
 
 		long categoryId = counterLocalService.increment();
 
@@ -400,21 +401,21 @@ public class AssetCategoryLocalServiceImpl
 	@Override
 	@ThreadLocalCachable
 	public List<AssetCategory> getCategories(long classNameId, long classPK) {
-		AssetEntry entry = assetEntryPersistence.fetchByC_C(
-			classNameId, classPK);
+		String className = PortalUtil.getClassName(classNameId);
+
+		return getCategories(className, classPK);
+	}
+
+	@Override
+	public List<AssetCategory> getCategories(String className, long classPK) {
+		AssetEntry entry = assetEntryLocalService.fetchEntry(
+			className, classPK);
 
 		if (entry == null) {
 			return Collections.emptyList();
 		}
 
 		return assetEntryPersistence.getAssetCategories(entry.getEntryId());
-	}
-
-	@Override
-	public List<AssetCategory> getCategories(String className, long classPK) {
-		long classNameId = classNameLocalService.getClassNameId(className);
-
-		return getCategories(classNameId, classPK);
 	}
 
 	@Override
@@ -539,7 +540,8 @@ public class AssetCategoryLocalServiceImpl
 		assetCategoryPersistence.addAssetEntries(toCategoryId, entries);
 
 		List<AssetCategoryProperty> categoryProperties =
-			assetCategoryPropertyPersistence.findByCategoryId(fromCategoryId);
+			assetCategoryPropertyLocalService.getCategoryProperties(
+				fromCategoryId);
 
 		for (AssetCategoryProperty fromCategoryProperty : categoryProperties) {
 			AssetCategoryProperty toCategoryProperty =
@@ -549,7 +551,8 @@ public class AssetCategoryLocalServiceImpl
 			if (toCategoryProperty == null) {
 				fromCategoryProperty.setCategoryId(toCategoryId);
 
-				assetCategoryPropertyPersistence.update(fromCategoryProperty);
+				assetCategoryPropertyLocalService.updateAssetCategoryProperty(
+					fromCategoryProperty);
 			}
 		}
 
@@ -576,7 +579,7 @@ public class AssetCategoryLocalServiceImpl
 		}
 
 		if (vocabularyId != category.getVocabularyId()) {
-			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
+			assetVocabularyLocalService.getVocabulary(vocabularyId);
 
 			category.setVocabularyId(vocabularyId);
 
@@ -686,7 +689,7 @@ public class AssetCategoryLocalServiceImpl
 		String oldName = category.getName();
 
 		if (vocabularyId != category.getVocabularyId()) {
-			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
+			assetVocabularyLocalService.getVocabulary(vocabularyId);
 
 			parentCategoryId =
 				AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID;
@@ -706,7 +709,7 @@ public class AssetCategoryLocalServiceImpl
 		// Properties
 
 		List<AssetCategoryProperty> oldCategoryProperties =
-			assetCategoryPropertyPersistence.findByCategoryId(categoryId);
+			assetCategoryPropertyLocalService.getCategoryProperties(categoryId);
 
 		oldCategoryProperties = ListUtil.copy(oldCategoryProperties);
 
