@@ -19,7 +19,10 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 /**
  * @author Juan Fernández
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.tags.util.comparator.AssetTagNameComparator}
  */
+@Deprecated
 public class AssetTagNameComparator extends OrderByComparator<AssetTag> {
 
 	public static final String ORDER_BY_ASC = "AssetTag.name ASC";

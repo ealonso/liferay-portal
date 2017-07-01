@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.exception.NoSuchModelException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.exception.NoSuchEntryException}
  */
+@Deprecated
 public class NoSuchEntryException extends NoSuchModelException {
 
 	public NoSuchEntryException() {
