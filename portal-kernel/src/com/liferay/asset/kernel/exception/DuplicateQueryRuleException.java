@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 
 /**
  * @author Roberto Díaz
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.exception.DuplicateQueryRuleException}
  */
+@Deprecated
 public class DuplicateQueryRuleException extends PortalException {
 
 	public DuplicateQueryRuleException(
