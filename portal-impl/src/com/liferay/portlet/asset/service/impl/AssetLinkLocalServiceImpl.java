@@ -14,43 +14,12 @@
 
 package com.liferay.portlet.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.NoSuchLinkException;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
-import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
-import com.liferay.exportimport.kernel.lar.StagedModelType;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Criterion;
-import com.liferay.portal.kernel.dao.orm.Disjunction;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
-import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.QueryPos;
-import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.SQLQuery;
-import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.SystemEventConstants;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.model.adapter.ModelAdapterUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portlet.asset.model.impl.AssetLinkImpl;
 import com.liferay.portlet.asset.service.base.AssetLinkLocalServiceBaseImpl;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,7 +31,10 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @author Juan Fernández
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.model.impl.AssetLinkLocalServiceImpl}
  */
+@Deprecated
 public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 
 	/**
@@ -85,93 +57,30 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 			long userId, long entryId1, long entryId2, int type, int weight)
 		throws PortalException {
 
-		User user = userPersistence.findByPrimaryKey(userId);
-		Date now = new Date();
-
-		long linkId = counterLocalService.increment();
-
-		AssetLink link = assetLinkPersistence.create(linkId);
-
-		link.setCompanyId(user.getCompanyId());
-		link.setUserId(user.getUserId());
-		link.setUserName(user.getFullName());
-		link.setCreateDate(now);
-		link.setEntryId1(entryId1);
-		link.setEntryId2(entryId2);
-		link.setType(type);
-		link.setWeight(weight);
-
-		assetLinkPersistence.update(link);
-
-		if (AssetLinkConstants.isTypeBi(type)) {
-			long linkId2 = counterLocalService.increment();
-
-			AssetLink link2 = assetLinkPersistence.create(linkId2);
-
-			link2.setCompanyId(user.getCompanyId());
-			link2.setUserId(user.getUserId());
-			link2.setUserName(user.getFullName());
-			link2.setCreateDate(now);
-			link2.setEntryId1(entryId2);
-			link2.setEntryId2(entryId1);
-			link2.setType(type);
-			link2.setWeight(weight);
-
-			assetLinkPersistence.update(link2);
-		}
-
-		return link;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public AssetLink deleteAssetLink(AssetLink assetLink) {
-		AssetLink deletedAssetLink = super.deleteAssetLink(assetLink);
-
-		addDeletionSystemEvent(assetLink);
-
-		return deletedAssetLink;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public AssetLink deleteAssetLink(long linkId) throws PortalException {
-		AssetLink assetLink = super.deleteAssetLink(linkId);
-
-		addDeletionSystemEvent(assetLink);
-
-		return assetLink;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public void deleteGroupLinks(long groupId) {
-		Session session = assetLinkPersistence.openSession();
-
-		try {
-			String sql = CustomSQLUtil.get(_FIND_BY_ASSET_ENTRY_GROUP_ID);
-
-			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
-
-			sqlQuery.addEntity("AssetLink", AssetLinkImpl.class);
-
-			QueryPos qPos = QueryPos.getInstance(sqlQuery);
-
-			qPos.add(groupId);
-			qPos.add(groupId);
-
-			List<AssetLink> assetLinks = sqlQuery.list();
-
-			if (ListUtil.isEmpty(assetLinks)) {
-				return;
-			}
-
-			for (AssetLink assetLink : assetLinks) {
-				deleteAssetLink(assetLink);
-			}
-		}
-		finally {
-			assetLinkPersistence.closeSession(session);
-
-			assetLinkPersistence.clearCache();
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -181,23 +90,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteLink(AssetLink link) {
-		if (AssetLinkConstants.isTypeBi(link.getType())) {
-			try {
-				AssetLink assetLink = assetLinkPersistence.findByE_E_T(
-					link.getEntryId2(), link.getEntryId1(), link.getType());
-
-				deleteAssetLink(assetLink);
-			}
-			catch (NoSuchLinkException nsle) {
-				if (_log.isWarnEnabled()) {
-					_log.warn("Unable to delete asset link", nsle);
-				}
-			}
-		}
-
-		assetLinkPersistence.remove(link);
-
-		addDeletionSystemEvent(link);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -207,9 +102,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteLink(long linkId) throws PortalException {
-		AssetLink link = assetLinkPersistence.findByPrimaryKey(linkId);
-
-		deleteLink(link);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -219,13 +114,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteLinks(long entryId) {
-		for (AssetLink link : assetLinkPersistence.findByE1(entryId)) {
-			deleteLink(link);
-		}
-
-		for (AssetLink link : assetLinkPersistence.findByE2(entryId)) {
-			deleteLink(link);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -236,12 +127,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteLinks(long entryId1, long entryId2) {
-		List<AssetLink> links = assetLinkPersistence.findByE_E(
-			entryId1, entryId2);
-
-		for (AssetLink link : links) {
-			deleteLink(link);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -252,16 +140,18 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetLink> getDirectLinks(long entryId) {
-		return getDirectLinks(entryId, true);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetLink> getDirectLinks(
 		long entryId, boolean excludeInvisibleLinks) {
 
-		List<AssetLink> assetLinks = assetLinkPersistence.findByE1(entryId);
-
-		return filterAssetLinks(assetLinks, excludeInvisibleLinks);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -279,98 +169,27 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetLink> getDirectLinks(long entryId, int typeId) {
-		return getDirectLinks(entryId, typeId, true);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetLink> getDirectLinks(
 		long entryId, int typeId, boolean excludeInvisibleLinks) {
 
-		List<AssetLink> assetLinks = assetLinkPersistence.findByE1_T(
-			entryId, typeId);
-
-		return filterAssetLinks(assetLinks, excludeInvisibleLinks);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
 	public ExportActionableDynamicQuery getExportActionbleDynamicQuery(
 		final PortletDataContext portletDataContext) {
 
-		final ExportActionableDynamicQuery exportActionableDynamicQuery =
-			new ExportActionableDynamicQuery();
-
-		exportActionableDynamicQuery.setAddCriteriaMethod(
-			new ActionableDynamicQuery.AddCriteriaMethod() {
-
-				@Override
-				public void addCriteria(DynamicQuery dynamicQuery) {
-					Criterion createDateCriterion =
-						portletDataContext.getDateRangeCriteria("createDate");
-
-					if (createDateCriterion != null) {
-						dynamicQuery.add(createDateCriterion);
-					}
-
-					DynamicQuery assetEntryDynamicQuery =
-						DynamicQueryFactoryUtil.forClass(
-							AssetEntry.class, "assetEntry", getClassLoader());
-
-					assetEntryDynamicQuery.setProjection(
-						ProjectionFactoryUtil.alias(
-							ProjectionFactoryUtil.property(
-								"assetEntry.entryId"),
-							"assetEntry.assetEntryId"));
-
-					Property groupIdProperty = PropertyFactoryUtil.forName(
-						"groupId");
-
-					Criterion groupIdCriterion = groupIdProperty.eq(
-						portletDataContext.getScopeGroupId());
-
-					assetEntryDynamicQuery.add(groupIdCriterion);
-
-					Disjunction disjunction =
-						RestrictionsFactoryUtil.disjunction();
-
-					Property entryId1Property = PropertyFactoryUtil.forName(
-						"entryId1");
-					Property entryId2Property = PropertyFactoryUtil.forName(
-						"entryId2");
-
-					disjunction.add(
-						entryId1Property.in(assetEntryDynamicQuery));
-					disjunction.add(
-						entryId2Property.in(assetEntryDynamicQuery));
-
-					dynamicQuery.add(disjunction);
-				}
-
-			});
-		exportActionableDynamicQuery.setBaseLocalService(this);
-		exportActionableDynamicQuery.setClassLoader(getClassLoader());
-		exportActionableDynamicQuery.setCompanyId(
-			portletDataContext.getCompanyId());
-		exportActionableDynamicQuery.setModelClass(AssetLink.class);
-		exportActionableDynamicQuery.setPerformActionMethod(
-			new ActionableDynamicQuery.PerformActionMethod<AssetLink>() {
-
-				@Override
-				public void performAction(AssetLink assetLink)
-					throws PortalException {
-
-					StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
-						assetLink, AssetLink.class, StagedAssetLink.class);
-
-					StagedModelDataHandlerUtil.exportStagedModel(
-						portletDataContext, stagedAssetLink);
-				}
-
-			});
-		exportActionableDynamicQuery.setPrimaryKeyPropertyName("linkId");
-		exportActionableDynamicQuery.setStagedModelType(
-			new StagedModelType(StagedModelType.class));
-
-		return exportActionableDynamicQuery;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -383,16 +202,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetLink> getLinks(long entryId) {
-		List<AssetLink> e1Links = assetLinkPersistence.findByE1(entryId);
-		List<AssetLink> e2Links = assetLinkPersistence.findByE2(entryId);
-
-		List<AssetLink> links = new ArrayList<>(
-			e1Links.size() + e2Links.size());
-
-		links.addAll(e1Links);
-		links.addAll(e2Links);
-
-		return links;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -410,18 +222,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetLink> getLinks(long entryId, int typeId) {
-		List<AssetLink> e1Links = assetLinkPersistence.findByE1_T(
-			entryId, typeId);
-		List<AssetLink> e2Links = assetLinkPersistence.findByE2_T(
-			entryId, typeId);
-
-		List<AssetLink> links = new ArrayList<>(
-			e1Links.size() + e2Links.size());
-
-		links.addAll(e1Links);
-		links.addAll(e2Links);
-
-		return links;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -439,7 +242,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetLink> getReverseLinks(long entryId, int typeId) {
-		return assetLinkPersistence.findByE2_T(entryId, typeId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	@Override
@@ -447,18 +252,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 			long userId, long entryId1, long entryId2, int typeId, int weight)
 		throws PortalException {
 
-		AssetLink assetLink = assetLinkPersistence.fetchByE_E_T(
-			entryId1, entryId2, typeId);
-
-		if (assetLink == null) {
-			return addLink(userId, entryId1, entryId2, typeId, weight);
-		}
-
-		assetLink.setWeight(weight);
-
-		assetLinkPersistence.update(assetLink);
-
-		return assetLink;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
 
 	/**
@@ -488,85 +284,9 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 			long userId, long entryId, long[] linkEntryIds, int typeId)
 		throws PortalException {
 
-		if (linkEntryIds == null) {
-			return;
-		}
-
-		List<AssetLink> links = getLinks(entryId, typeId);
-
-		for (AssetLink link : links) {
-			if (((link.getEntryId1() == entryId) &&
-				 !ArrayUtil.contains(linkEntryIds, link.getEntryId2())) ||
-				((link.getEntryId2() == entryId) &&
-				 !ArrayUtil.contains(linkEntryIds, link.getEntryId1()))) {
-
-				deleteLink(link);
-			}
-		}
-
-		for (long assetLinkEntryId : linkEntryIds) {
-			if (assetLinkEntryId != entryId) {
-				AssetLink link = assetLinkPersistence.fetchByE_E_T(
-					entryId, assetLinkEntryId, typeId);
-
-				if (link == null) {
-					addLink(userId, entryId, assetLinkEntryId, typeId, 0);
-				}
-			}
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.service.impl.AssetLinkLocalServiceImpl");
 	}
-
-	protected void addDeletionSystemEvent(AssetLink assetLink) {
-		StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
-			assetLink, AssetLink.class, StagedAssetLink.class);
-
-		StagedModelType stagedModelType = stagedAssetLink.getStagedModelType();
-
-		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
-			assetLink.getEntryId1());
-
-		if (assetEntry == null) {
-			return;
-		}
-
-		try {
-			systemEventLocalService.addSystemEvent(
-				0, assetEntry.getGroupId(), stagedModelType.getClassName(),
-				stagedAssetLink.getPrimaryKey(), stagedAssetLink.getUuid(),
-				null, SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
-		}
-		catch (PortalException pe) {
-			throw new RuntimeException(pe);
-		}
-	}
-
-	protected List<AssetLink> filterAssetLinks(
-		List<AssetLink> assetLinks, boolean excludeInvisibleLinks) {
-
-		if (assetLinks.isEmpty() || !excludeInvisibleLinks) {
-			return assetLinks;
-		}
-
-		List<AssetLink> filteredAssetLinks = new ArrayList<>(assetLinks.size());
-
-		for (AssetLink assetLink : assetLinks) {
-			AssetEntry assetEntry = assetEntryPersistence.fetchByPrimaryKey(
-				assetLink.getEntryId2());
-
-			if ((assetEntry != null) && assetEntry.isVisible()) {
-				filteredAssetLinks.add(assetLink);
-			}
-		}
-
-		assetLinks = Collections.unmodifiableList(filteredAssetLinks);
-
-		return assetLinks;
-	}
-
-	private static final String _FIND_BY_ASSET_ENTRY_GROUP_ID =
-		AssetLinkLocalServiceImpl.class.getName() + ".findByAssetEntryGroupId";
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		AssetLinkLocalServiceImpl.class);
 
 }

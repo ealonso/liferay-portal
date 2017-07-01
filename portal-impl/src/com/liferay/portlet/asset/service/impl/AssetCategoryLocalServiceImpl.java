@@ -14,57 +14,25 @@
 
 package com.liferay.portlet.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.AssetCategoryNameException;
-import com.liferay.asset.kernel.exception.DuplicateCategoryException;
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetCategoryProperty;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.ModelHintsUtil;
-import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
-import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
-import com.liferay.portal.kernel.util.CharPool;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.service.base.AssetCategoryLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.comparator.AssetCategoryLeftCategoryIdComparator;
 
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Provides the local service for accessing, adding, deleting, merging, moving,
@@ -74,7 +42,10 @@ import java.util.concurrent.Callable;
  * @author Alvaro del Castillo
  * @author Jorge Ferrer
  * @author Bruno Farache
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.impl.AssetCategoryLocalServiceImpl}
  */
+@Deprecated
 public class AssetCategoryLocalServiceImpl
 	extends AssetCategoryLocalServiceBaseImpl {
 
@@ -87,85 +58,10 @@ public class AssetCategoryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		// Category
-
-		User user = userPersistence.findByPrimaryKey(userId);
-
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
-
-		name = ModelHintsUtil.trimString(
-			AssetCategory.class.getName(), "name", name);
-
-		if (categoryProperties == null) {
-			categoryProperties = new String[0];
-		}
-
-		validate(0, parentCategoryId, name, vocabularyId);
-
-		if (parentCategoryId > 0) {
-			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
-		}
-
-		assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
-
-		long categoryId = counterLocalService.increment();
-
-		AssetCategory category = assetCategoryPersistence.create(categoryId);
-
-		category.setUuid(serviceContext.getUuid());
-		category.setGroupId(groupId);
-		category.setCompanyId(user.getCompanyId());
-		category.setUserId(user.getUserId());
-		category.setUserName(user.getFullName());
-		category.setParentCategoryId(parentCategoryId);
-		category.setName(name);
-		category.setTitleMap(titleMap);
-		category.setDescriptionMap(descriptionMap);
-		category.setVocabularyId(vocabularyId);
-
-		assetCategoryPersistence.update(category);
-
-		// Resources
-
-		if (serviceContext.isAddGroupPermissions() ||
-			serviceContext.isAddGuestPermissions()) {
-
-			addCategoryResources(
-				category, serviceContext.isAddGroupPermissions(),
-				serviceContext.isAddGuestPermissions());
-		}
-		else {
-			addCategoryResources(
-				category, serviceContext.getModelPermissions());
-		}
-
-		// Properties
-
-		for (int i = 0; i < categoryProperties.length; i++) {
-			String[] categoryProperty = StringUtil.split(
-				categoryProperties[i],
-				AssetCategoryConstants.PROPERTY_KEY_VALUE_SEPARATOR);
-
-			if (categoryProperty.length <= 1) {
-				categoryProperty = StringUtil.split(
-					categoryProperties[i], CharPool.COLON);
-			}
-
-			String key = StringPool.BLANK;
-			String value = StringPool.BLANK;
-
-			if (categoryProperty.length > 1) {
-				key = GetterUtil.getString(categoryProperty[0]);
-				value = GetterUtil.getString(categoryProperty[1]);
-			}
-
-			if (Validator.isNotNull(key)) {
-				assetCategoryPropertyLocalService.addCategoryProperty(
-					userId, categoryId, key, value);
-			}
-		}
-
-		return category;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -174,19 +70,10 @@ public class AssetCategoryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		Locale locale = LocaleUtil.getSiteDefault();
-
-		titleMap.put(locale, title);
-
-		Map<Locale, String> descriptionMap = new HashMap<>();
-
-		descriptionMap.put(locale, StringPool.BLANK);
-
-		return assetCategoryLocalService.addCategory(
-			userId, groupId, AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
-			titleMap, descriptionMap, vocabularyId, null, serviceContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -195,11 +82,10 @@ public class AssetCategoryLocalServiceImpl
 			boolean addGuestPermissions)
 		throws PortalException {
 
-		resourceLocalService.addResources(
-			category.getCompanyId(), category.getGroupId(),
-			category.getUserId(), AssetCategory.class.getName(),
-			category.getCategoryId(), false, addGroupPermissions,
-			addGuestPermissions);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -207,63 +93,38 @@ public class AssetCategoryLocalServiceImpl
 			AssetCategory category, ModelPermissions modelPermissions)
 		throws PortalException {
 
-		resourceLocalService.addModelResources(
-			category.getCompanyId(), category.getGroupId(),
-			category.getUserId(), AssetCategory.class.getName(),
-			category.getCategoryId(), modelPermissions);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public void deleteCategories(List<AssetCategory> categories)
 		throws PortalException {
 
-		List<Long> rebuildTreeGroupIds = new ArrayList<>();
-
-		for (AssetCategory category : categories) {
-			if (!rebuildTreeGroupIds.contains(category.getGroupId()) &&
-				(getChildCategoriesCount(category.getCategoryId()) > 0)) {
-
-				final long groupId = category.getGroupId();
-
-				TransactionCommitCallbackUtil.registerCallback(
-					new Callable<Void>() {
-
-						@Override
-						public Void call() throws Exception {
-							assetCategoryLocalService.rebuildTree(
-								groupId, true);
-
-							return null;
-						}
-
-					});
-
-				rebuildTreeGroupIds.add(groupId);
-			}
-
-			assetCategoryLocalService.deleteCategory(category, true);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public void deleteCategories(long[] categoryIds) throws PortalException {
-		List<AssetCategory> categories = new ArrayList<>();
-
-		for (long categoryId : categoryIds) {
-			AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
-				categoryId);
-
-			categories.add(category);
-		}
-
-		deleteCategories(categories);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory deleteCategory(AssetCategory category)
 		throws PortalException {
 
-		return assetCategoryLocalService.deleteCategory(category, false);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Indexable(type = IndexableType.DELETE)
@@ -273,92 +134,48 @@ public class AssetCategoryLocalServiceImpl
 			AssetCategory category, boolean skipRebuildTree)
 		throws PortalException {
 
-		// Categories
-
-		List<AssetCategory> categories =
-			assetCategoryPersistence.findByParentCategoryId(
-				category.getCategoryId());
-
-		for (AssetCategory curCategory : categories) {
-			assetCategoryLocalService.deleteCategory(curCategory, true);
-		}
-
-		if (!categories.isEmpty() && !skipRebuildTree) {
-			final long groupId = category.getGroupId();
-
-			TransactionCommitCallbackUtil.registerCallback(
-				new Callable<Void>() {
-
-					@Override
-					public Void call() throws Exception {
-						assetCategoryLocalService.rebuildTree(groupId, true);
-
-						return null;
-					}
-
-				});
-		}
-
-		// Entries
-
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			category.getCategoryId());
-
-		// Category
-
-		assetCategoryPersistence.remove(category);
-
-		// Resources
-
-		resourceLocalService.deleteResource(
-			category.getCompanyId(), AssetCategory.class.getName(),
-			ResourceConstants.SCOPE_INDIVIDUAL, category.getCategoryId());
-
-		// Properties
-
-		assetCategoryPropertyLocalService.deleteCategoryProperties(
-			category.getCategoryId());
-
-		// Indexer
-
-		assetEntryLocalService.reindex(entries);
-
-		return category;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory deleteCategory(long categoryId)
 		throws PortalException {
 
-		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
-			categoryId);
-
-		return assetCategoryLocalService.deleteCategory(category);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public void deleteVocabularyCategories(long vocabularyId)
 		throws PortalException {
 
-		List<AssetCategory> categories = assetCategoryPersistence.findByP_V(
-			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, vocabularyId,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new AssetCategoryLeftCategoryIdComparator(false));
-
-		assetCategoryLocalService.deleteCategories(categories);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory fetchCategory(long categoryId) {
-		return assetCategoryPersistence.fetchByPrimaryKey(categoryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory fetchCategory(
 		long groupId, long parentCategoryId, String name, long vocabularyId) {
 
-		return assetCategoryPersistence.fetchByG_P_N_V_First(
-			groupId, parentCategoryId, name, vocabularyId, null);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -368,91 +185,85 @@ public class AssetCategoryLocalServiceImpl
 
 	@Override
 	public List<AssetCategory> getCategories(Hits hits) throws PortalException {
-		List<Document> documents = hits.toList();
-
-		List<AssetCategory> categories = new ArrayList<>(documents.size());
-
-		for (Document document : documents) {
-			long categoryId = GetterUtil.getLong(
-				document.get(Field.ASSET_CATEGORY_ID));
-
-			AssetCategory category = fetchCategory(categoryId);
-
-			if (category == null) {
-				categories = null;
-
-				Indexer<AssetCategory> indexer = IndexerRegistryUtil.getIndexer(
-					AssetCategory.class);
-
-				long companyId = GetterUtil.getLong(
-					document.get(Field.COMPANY_ID));
-
-				indexer.delete(companyId, document.getUID());
-			}
-			else if (categories != null) {
-				categories.add(category);
-			}
-		}
-
-		return categories;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	@ThreadLocalCachable
 	public List<AssetCategory> getCategories(long classNameId, long classPK) {
-		AssetEntry entry = assetEntryPersistence.fetchByC_C(
-			classNameId, classPK);
-
-		if (entry == null) {
-			return Collections.emptyList();
-		}
-
-		return assetEntryPersistence.getAssetCategories(entry.getEntryId());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetCategory> getCategories(String className, long classPK) {
-		long classNameId = classNameLocalService.getClassNameId(className);
-
-		return getCategories(classNameId, classPK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory getCategory(long categoryId) throws PortalException {
-		return assetCategoryPersistence.findByPrimaryKey(categoryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public AssetCategory getCategory(String uuid, long groupId)
 		throws PortalException {
 
-		return assetCategoryPersistence.findByUUID_G(uuid, groupId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public long[] getCategoryIds(String className, long classPK) {
-		return getCategoryIds(getCategories(className, classPK));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public String[] getCategoryNames() {
-		return getCategoryNames(getCategories());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public String[] getCategoryNames(long classNameId, long classPK) {
-		return getCategoryNames(getCategories(classNameId, classPK));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public String[] getCategoryNames(String className, long classPK) {
-		return getCategoryNames(getCategories(className, classPK));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetCategory> getChildCategories(long parentCategoryId) {
-		return assetCategoryPersistence.findByParentCategoryId(
-			parentCategoryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -460,33 +271,34 @@ public class AssetCategoryLocalServiceImpl
 		long parentCategoryId, int start, int end,
 		OrderByComparator<AssetCategory> obc) {
 
-		return assetCategoryPersistence.findByParentCategoryId(
-			parentCategoryId, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public int getChildCategoriesCount(long parentCategoryId) {
-		return assetCategoryPersistence.countByParentCategoryId(
-			parentCategoryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetCategory> getEntryCategories(long entryId) {
-		return assetEntryPersistence.getAssetCategories(entryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public List<Long> getSubcategoryIds(long parentCategoryId) {
-		AssetCategory parentAssetCategory =
-			assetCategoryPersistence.fetchByPrimaryKey(parentCategoryId);
-
-		if (parentAssetCategory == null) {
-			return Collections.emptyList();
-		}
-
-		return ListUtil.toList(
-			assetCategoryPersistence.getDescendants(parentAssetCategory),
-			AssetCategory.CATEGORY_ID_ACCESSOR);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -494,8 +306,10 @@ public class AssetCategoryLocalServiceImpl
 		long vocabularyId, int start, int end,
 		OrderByComparator<AssetCategory> obc) {
 
-		return assetCategoryPersistence.findByVocabularyId(
-			vocabularyId, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -503,13 +317,18 @@ public class AssetCategoryLocalServiceImpl
 		long parentCategoryId, long vocabularyId, int start, int end,
 		OrderByComparator<AssetCategory> obc) {
 
-		return assetCategoryPersistence.findByP_V(
-			parentCategoryId, vocabularyId, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public int getVocabularyCategoriesCount(long vocabularyId) {
-		return assetCategoryPersistence.countByVocabularyId(vocabularyId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -517,15 +336,18 @@ public class AssetCategoryLocalServiceImpl
 		long vocabularyId, int start, int end,
 		OrderByComparator<AssetCategory> obc) {
 
-		return getVocabularyCategories(
-			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, vocabularyId,
-			start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public int getVocabularyRootCategoriesCount(long vocabularyId) {
-		return assetCategoryPersistence.countByP_V(
-			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, vocabularyId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -533,29 +355,10 @@ public class AssetCategoryLocalServiceImpl
 	public AssetCategory mergeCategories(long fromCategoryId, long toCategoryId)
 		throws PortalException {
 
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			fromCategoryId);
-
-		assetCategoryPersistence.addAssetEntries(toCategoryId, entries);
-
-		List<AssetCategoryProperty> categoryProperties =
-			assetCategoryPropertyPersistence.findByCategoryId(fromCategoryId);
-
-		for (AssetCategoryProperty fromCategoryProperty : categoryProperties) {
-			AssetCategoryProperty toCategoryProperty =
-				assetCategoryPropertyPersistence.fetchByCA_K(
-					toCategoryId, fromCategoryProperty.getKey());
-
-			if (toCategoryProperty == null) {
-				fromCategoryProperty.setCategoryId(toCategoryId);
-
-				assetCategoryPropertyPersistence.update(fromCategoryProperty);
-			}
-		}
-
-		assetCategoryLocalService.deleteCategory(fromCategoryId);
-
-		return getCategory(toCategoryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -565,34 +368,18 @@ public class AssetCategoryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
-			categoryId);
-
-		validate(
-			categoryId, parentCategoryId, category.getName(), vocabularyId);
-
-		if (parentCategoryId > 0) {
-			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
-		}
-
-		if (vocabularyId != category.getVocabularyId()) {
-			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
-
-			category.setVocabularyId(vocabularyId);
-
-			updateChildrenVocabularyId(category, vocabularyId);
-		}
-
-		category.setParentCategoryId(parentCategoryId);
-
-		assetCategoryPersistence.update(category);
-
-		return category;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
 	public void rebuildTree(long groupId, boolean force) {
-		assetCategoryPersistence.rebuildTree(groupId, force);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -600,8 +387,10 @@ public class AssetCategoryLocalServiceImpl
 		long groupId, String name, String[] categoryProperties, int start,
 		int end) {
 
-		return assetCategoryFinder.findByG_N_P(
-			groupId, name, categoryProperties, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -610,9 +399,10 @@ public class AssetCategoryLocalServiceImpl
 			int start, int end)
 		throws PortalException {
 
-		return searchCategories(
-			companyId, new long[] {groupIds}, title, new long[] {vocabularyId},
-			start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -621,11 +411,10 @@ public class AssetCategoryLocalServiceImpl
 			int start, int end)
 		throws PortalException {
 
-		SearchContext searchContext = buildSearchContext(
-			companyId, groupIds, title, new long[0], vocabularyIds, start, end,
-			null);
-
-		return searchCategories(searchContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -634,11 +423,10 @@ public class AssetCategoryLocalServiceImpl
 			long[] parentCategoryIds, long[] vocabularyIds, int start, int end)
 		throws PortalException {
 
-		SearchContext searchContext = buildSearchContext(
-			companyId, groupIds, title, parentCategoryIds, vocabularyIds, start,
-			end, null);
-
-		return searchCategories(searchContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Override
@@ -647,11 +435,10 @@ public class AssetCategoryLocalServiceImpl
 			long[] parentCategoryIds, int start, int end, Sort sort)
 		throws PortalException {
 
-		SearchContext searchContext = buildSearchContext(
-			companyId, groupIds, title, parentCategoryIds, vocabularyIds, start,
-			end, sort);
-
-		return searchCategories(searchContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -663,205 +450,53 @@ public class AssetCategoryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		// Category
-
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
-
-		name = ModelHintsUtil.trimString(
-			AssetCategory.class.getName(), "name", name);
-
-		if (categoryProperties == null) {
-			categoryProperties = new String[0];
-		}
-
-		validate(categoryId, parentCategoryId, name, vocabularyId);
-
-		if (parentCategoryId > 0) {
-			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
-		}
-
-		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
-			categoryId);
-
-		String oldName = category.getName();
-
-		if (vocabularyId != category.getVocabularyId()) {
-			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
-
-			parentCategoryId =
-				AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID;
-
-			category.setVocabularyId(vocabularyId);
-
-			updateChildrenVocabularyId(category, vocabularyId);
-		}
-
-		category.setParentCategoryId(parentCategoryId);
-		category.setName(name);
-		category.setTitleMap(titleMap);
-		category.setDescriptionMap(descriptionMap);
-
-		assetCategoryPersistence.update(category);
-
-		// Properties
-
-		List<AssetCategoryProperty> oldCategoryProperties =
-			assetCategoryPropertyPersistence.findByCategoryId(categoryId);
-
-		oldCategoryProperties = ListUtil.copy(oldCategoryProperties);
-
-		for (int i = 0; i < categoryProperties.length; i++) {
-			String[] categoryProperty = StringUtil.split(
-				categoryProperties[i],
-				AssetCategoryConstants.PROPERTY_KEY_VALUE_SEPARATOR);
-
-			if (categoryProperty.length <= 1) {
-				categoryProperty = StringUtil.split(
-					categoryProperties[i], CharPool.COLON);
-			}
-
-			String key = StringPool.BLANK;
-
-			if (categoryProperty.length > 0) {
-				key = GetterUtil.getString(categoryProperty[0]);
-			}
-
-			String value = StringPool.BLANK;
-
-			if (categoryProperty.length > 1) {
-				value = GetterUtil.getString(categoryProperty[1]);
-			}
-
-			if (Validator.isNotNull(key)) {
-				boolean addCategoryProperty = true;
-
-				AssetCategoryProperty oldCategoryProperty = null;
-
-				Iterator<AssetCategoryProperty> iterator =
-					oldCategoryProperties.iterator();
-
-				while (iterator.hasNext()) {
-					oldCategoryProperty = iterator.next();
-
-					if ((categoryId == oldCategoryProperty.getCategoryId()) &&
-						key.equals(oldCategoryProperty.getKey())) {
-
-						addCategoryProperty = false;
-
-						if (!value.equals(oldCategoryProperty.getValue())) {
-							assetCategoryPropertyLocalService.
-								updateCategoryProperty(
-									userId,
-									oldCategoryProperty.getCategoryPropertyId(),
-									key, value);
-						}
-
-						iterator.remove();
-
-						break;
-					}
-				}
-
-				if (addCategoryProperty) {
-					assetCategoryPropertyLocalService.addCategoryProperty(
-						userId, categoryId, key, value);
-				}
-			}
-		}
-
-		for (AssetCategoryProperty categoryProperty : oldCategoryProperties) {
-			assetCategoryPropertyLocalService.deleteAssetCategoryProperty(
-				categoryProperty);
-		}
-
-		// Indexer
-
-		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-				category.getCategoryId());
-
-			assetEntryLocalService.reindex(entries);
-		}
-
-		return category;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected SearchContext buildSearchContext(
 		long companyId, long[] groupIds, String title, long[] parentCategoryIds,
 		long[] vocabularyIds, int start, int end, Sort sort) {
 
-		SearchContext searchContext = new SearchContext();
-
-		Map<String, Serializable> attributes = new HashMap<>();
-
-		attributes.put(Field.ASSET_PARENT_CATEGORY_IDS, parentCategoryIds);
-		attributes.put(Field.ASSET_VOCABULARY_IDS, vocabularyIds);
-		attributes.put(Field.TITLE, title);
-
-		searchContext.setAttributes(attributes);
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setEnd(end);
-		searchContext.setGroupIds(groupIds);
-		searchContext.setKeywords(title);
-		searchContext.setSorts(sort);
-		searchContext.setStart(start);
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		return searchContext;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected long[] getCategoryIds(List<AssetCategory> categories) {
-		return ListUtil.toLongArray(
-			categories, AssetCategory.CATEGORY_ID_ACCESSOR);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected String[] getCategoryNames(List<AssetCategory> categories) {
-		return ListUtil.toArray(categories, AssetCategory.NAME_ACCESSOR);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected BaseModelSearchResult<AssetCategory> searchCategories(
 			SearchContext searchContext)
 		throws PortalException {
 
-		Indexer<AssetCategory> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetCategory.class);
-
-		for (int i = 0; i < 10; i++) {
-			Hits hits = indexer.search(searchContext);
-
-			List<AssetCategory> categories = getCategories(hits);
-
-			if (categories != null) {
-				return new BaseModelSearchResult<>(
-					categories, hits.getLength());
-			}
-		}
-
-		throw new SearchException(
-			"Unable to fix the search index after 10 attempts");
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected void updateChildrenVocabularyId(
 		AssetCategory category, long vocabularyId) {
 
-		List<AssetCategory> childrenCategories =
-			assetCategoryPersistence.findByParentCategoryId(
-				category.getCategoryId());
-
-		if (!childrenCategories.isEmpty()) {
-			for (AssetCategory childCategory : childrenCategories) {
-				childCategory.setVocabularyId(vocabularyId);
-
-				assetCategoryPersistence.update(childCategory);
-
-				updateChildrenVocabularyId(childCategory, vocabularyId);
-			}
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 	protected void validate(
@@ -869,34 +504,10 @@ public class AssetCategoryLocalServiceImpl
 			long vocabularyId)
 		throws PortalException {
 
-		if (Validator.isNull(name)) {
-			StringBundler sb = new StringBundler(5);
-
-			sb.append(
-				"Asset category name cannot be null for key {categoryId=");
-			sb.append(categoryId);
-			sb.append(", vocabularyId=");
-			sb.append(vocabularyId);
-			sb.append("}");
-
-			throw new AssetCategoryNameException(
-				"Category name cannot be null for category " + categoryId +
-					" and vocabulary " + vocabularyId);
-		}
-
-		AssetCategory category = assetCategoryPersistence.fetchByP_N_V(
-			parentCategoryId, name, vocabularyId);
-
-		if ((category != null) && (category.getCategoryId() != categoryId)) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append("There is another category named ");
-			sb.append(name);
-			sb.append(" as a child of category ");
-			sb.append(parentCategoryId);
-
-			throw new DuplicateCategoryException(sb.toString());
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.service.impl." +
+					"AssetCategoryLocalServiceImpl");
 	}
 
 }

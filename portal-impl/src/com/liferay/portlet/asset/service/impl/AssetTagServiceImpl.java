@@ -16,24 +16,13 @@ package com.liferay.portlet.asset.service.impl;
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.model.AssetTagDisplay;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.util.Autocomplete;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.service.base.AssetTagServiceBaseImpl;
-import com.liferay.portlet.asset.service.permission.AssetTagPermission;
-import com.liferay.portlet.asset.service.permission.AssetTagsPermission;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Provides the remote service for accessing, adding, checking, deleting,
@@ -45,7 +34,10 @@ import java.util.TreeSet;
  * @author Eduardo Lundgren
  * @author Bruno Farache
  * @author Juan Fernández
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  */
+@Deprecated
 public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 
 	@Override
@@ -53,92 +45,76 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			long groupId, String name, ServiceContext serviceContext)
 		throws PortalException {
 
-		AssetTagsPermission.check(
-			getPermissionChecker(), groupId, ActionKeys.ADD_TAG);
-
-		return assetTagLocalService.addTag(
-			getUserId(), groupId, name, serviceContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public void deleteTag(long tagId) throws PortalException {
-		AssetTagPermission.check(
-			getPermissionChecker(), tagId, ActionKeys.DELETE);
-
-		assetTagLocalService.deleteTag(tagId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public void deleteTags(long[] tagIds) throws PortalException {
-		for (long tagId : tagIds) {
-			AssetTagPermission.check(
-				getPermissionChecker(), tagId, ActionKeys.DELETE);
-
-			assetTagLocalService.deleteTag(tagId);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getGroupsTags(long[] groupIds) {
-		Set<AssetTag> groupsTags = new TreeSet<>(new AssetTagNameComparator());
-
-		for (long groupId : groupIds) {
-			List<AssetTag> groupTags = getGroupTags(groupId);
-
-			groupsTags.addAll(groupTags);
-		}
-
-		return new ArrayList<>(groupsTags);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getGroupTags(long groupId) {
-		return assetTagPersistence.findByGroupId(groupId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getGroupTags(
 		long groupId, int start, int end, OrderByComparator<AssetTag> obc) {
 
-		return assetTagPersistence.findByGroupId(groupId, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public int getGroupTagsCount(long groupId) {
-		return assetTagPersistence.countByGroupId(groupId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public AssetTagDisplay getGroupTagsDisplay(
 		long groupId, String name, int start, int end) {
 
-		List<AssetTag> tags = null;
-		int total = 0;
-
-		if (Validator.isNotNull(name)) {
-			name = (CustomSQLUtil.keywords(name))[0];
-
-			tags = getTags(groupId, name, start, end);
-			total = getTagsCount(groupId, name);
-		}
-		else {
-			tags = getGroupTags(groupId, start, end, null);
-			total = getGroupTagsCount(groupId);
-		}
-
-		return new AssetTagDisplay(tags, total, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public AssetTag getTag(long tagId) throws PortalException {
-		return assetTagLocalService.getTag(tagId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(long groupId, long classNameId, String name) {
-		return assetTagFinder.findByG_C_N(
-			groupId, classNameId, name, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
@@ -146,15 +122,18 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		long groupId, long classNameId, String name, int start, int end,
 		OrderByComparator<AssetTag> obc) {
 
-		return assetTagFinder.findByG_C_N(
-			groupId, classNameId, name, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(
 		long groupId, String name, int start, int end) {
 
-		return getTags(new long[] {groupId}, name, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
@@ -162,15 +141,18 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		long groupId, String name, int start, int end,
 		OrderByComparator<AssetTag> obc) {
 
-		return getTags(new long[] {groupId}, name, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(
 		long[] groupIds, String name, int start, int end) {
 
-		return getTags(
-			groupIds, name, start, end, new AssetTagNameComparator());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
@@ -178,67 +160,69 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 		long[] groupIds, String name, int start, int end,
 		OrderByComparator<AssetTag> obc) {
 
-		if (Validator.isNull(name)) {
-			return assetTagPersistence.findByGroupId(groupIds, start, end, obc);
-		}
-
-		return assetTagPersistence.findByG_LikeN(
-			groupIds, name, start, end, obc);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(String className, long classPK) {
-		return assetTagLocalService.getTags(className, classPK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public int getTagsCount(long groupId, String name) {
-		if (Validator.isNull(name)) {
-			return assetTagPersistence.countByGroupId(groupId);
-		}
-
-		return assetTagPersistence.countByG_LikeN(groupId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public int getVisibleAssetsTagsCount(
 		long groupId, long classNameId, String name) {
 
-		return assetTagFinder.countByG_C_N(groupId, classNameId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public int getVisibleAssetsTagsCount(long groupId, String name) {
-		return assetTagFinder.countByG_N(groupId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public void mergeTags(long fromTagId, long toTagId) throws PortalException {
-		AssetTagPermission.check(
-			getPermissionChecker(), toTagId, ActionKeys.UPDATE);
-
-		assetTagLocalService.mergeTags(fromTagId, toTagId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public void mergeTags(long[] fromTagIds, long toTagId)
 		throws PortalException {
 
-		for (long fromTagId : fromTagIds) {
-			mergeTags(fromTagId, toTagId);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public JSONArray search(long groupId, String name, int start, int end) {
-		return search(new long[] {groupId}, name, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
 	public JSONArray search(long[] groupIds, String name, int start, int end) {
-		List<AssetTag> tags = getTags(groupIds, name, start, end);
-
-		return Autocomplete.arrayToJSONArray(tags, "name", "name");
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 	@Override
@@ -246,11 +230,9 @@ public class AssetTagServiceImpl extends AssetTagServiceBaseImpl {
 			long tagId, String name, ServiceContext serviceContext)
 		throws PortalException {
 
-		AssetTagPermission.check(
-			getPermissionChecker(), tagId, ActionKeys.UPDATE);
-
-		return assetTagLocalService.updateTag(
-			getUserId(), tagId, name, serviceContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
 	}
 
 }
