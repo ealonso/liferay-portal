@@ -22,7 +22,10 @@ import java.util.List;
 
 /**
  * @author Igor Spasic
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.model.AssetVocabularyDisplay}
  */
+@Deprecated
 public class AssetVocabularyDisplay implements Serializable {
 
 	public AssetVocabularyDisplay() {
