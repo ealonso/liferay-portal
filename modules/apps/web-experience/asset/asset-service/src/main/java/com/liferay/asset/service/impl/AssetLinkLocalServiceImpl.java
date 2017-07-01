@@ -22,6 +22,7 @@ import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -46,7 +47,6 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portlet.asset.model.impl.AssetLinkImpl;
 import com.liferay.portlet.asset.service.base.AssetLinkLocalServiceBaseImpl;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,7 +146,8 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		Session session = assetLinkPersistence.openSession();
 
 		try {
-			String sql = CustomSQLUtil.get(_FIND_BY_ASSET_ENTRY_GROUP_ID);
+			String sql = CustomSQLUtil.get(
+				getClass(), _FIND_BY_ASSET_ENTRY_GROUP_ID);
 
 			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
 
