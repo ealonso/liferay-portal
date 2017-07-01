@@ -17,6 +17,7 @@ package com.liferay.asset.service.impl;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetCategoryDisplay;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.service.base.AssetCategoryServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
