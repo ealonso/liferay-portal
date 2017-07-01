@@ -46,7 +46,10 @@ import javax.portlet.PortletRequest;
  * @author Brian Wing Shun Chan
  * @author Jorge Ferrer
  * @author Juan Fernández
+ * @deprecated As of 7.0.0, replaced by {@link
+ *            com.liferay.asset.service.persistence.AssetEntryQuery}
  */
+@Deprecated
 public class AssetEntryQuery {
 
 	public static final String[] ORDER_BY_COLUMNS = {
