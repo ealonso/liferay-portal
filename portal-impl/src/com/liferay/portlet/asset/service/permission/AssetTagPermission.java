@@ -22,7 +22,10 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
 /**
  * @author Eduardo Lundgren
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.permission.AssetTagPermission}
  */
+@Deprecated
 public class AssetTagPermission {
 
 	public static void check(
