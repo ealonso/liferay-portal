@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetCategoryUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryFinder;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -37,7 +38,6 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.impl.AssetEntryImpl;
 import com.liferay.portlet.documentlibrary.service.persistence.impl.DLFileEntryFinderImpl;
 import com.liferay.portlet.documentlibrary.service.persistence.impl.DLFolderFinderImpl;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.sql.Timestamp;
 
@@ -102,11 +102,12 @@ public class AssetEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_CLASS_NAME_ID);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_CLASS_NAME_ID);
 
 			sql = StringUtil.replace(
 				sql, "[$JOIN$]",
 				CustomSQLUtil.get(
+					getClass(),
 					DLFileEntryFinderImpl.JOIN_AE_BY_DL_FILE_ENTRY));
 			sql = StringUtil.replace(
 				sql, "[$WHERE$]", "DLFileEntry.treePath LIKE ? AND");
@@ -140,11 +141,12 @@ public class AssetEntryFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_CLASS_NAME_ID);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_CLASS_NAME_ID);
 
 			sql = StringUtil.replace(
 				sql, "[$JOIN$]",
-				CustomSQLUtil.get(DLFolderFinderImpl.JOIN_AE_BY_DL_FOLDER));
+				CustomSQLUtil.get(
+					getClass(), DLFolderFinderImpl.JOIN_AE_BY_DL_FOLDER));
 			sql = StringUtil.replace(
 				sql, "[$WHERE$]", "DLFolder.treePath LIKE ? AND");
 
@@ -190,7 +192,7 @@ public class AssetEntryFinderImpl
 
 	protected void buildAllCategoriesSQL(long[] categoryIds, StringBundler sb) {
 		String findByAndCategoryIdsSQL = CustomSQLUtil.get(
-			FIND_BY_AND_CATEGORY_IDS);
+			getClass(), FIND_BY_AND_CATEGORY_IDS);
 
 		sb.append(" AND (");
 
@@ -227,7 +229,7 @@ public class AssetEntryFinderImpl
 		sb.append(" AND AssetEntry.entryId IN (");
 
 		for (int i = 0; i < tagIds.length; i++) {
-			String sql = CustomSQLUtil.get(FIND_BY_AND_TAG_IDS);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_AND_TAG_IDS);
 
 			sql = StringUtil.replace(sql, "[$TAG_ID$]", getTagIds(tagIds[i]));
 
@@ -248,7 +250,7 @@ public class AssetEntryFinderImpl
 	}
 
 	protected void buildAnyCategoriesSQL(long[] categoryIds, StringBundler sb) {
-		String sql = CustomSQLUtil.get(FIND_BY_AND_CATEGORY_IDS);
+		String sql = CustomSQLUtil.get(getClass(), FIND_BY_AND_CATEGORY_IDS);
 
 		String categoryIdsString = null;
 
@@ -596,7 +598,7 @@ public class AssetEntryFinderImpl
 		long[] categoryIds, StringBundler sb) {
 
 		String findByAndCategoryIdsSQL = CustomSQLUtil.get(
-			FIND_BY_AND_CATEGORY_IDS);
+			getClass(), FIND_BY_AND_CATEGORY_IDS);
 
 		sb.append(" AND (");
 
@@ -637,7 +639,7 @@ public class AssetEntryFinderImpl
 		for (int i = 0; i < tagIds.length; i++) {
 			sb.append("AssetEntry.entryId NOT IN (");
 
-			String sql = CustomSQLUtil.get(FIND_BY_AND_TAG_IDS);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_AND_TAG_IDS);
 
 			sql = StringUtil.replace(sql, "[$TAG_ID$]", getTagIds(tagIds[i]));
 
@@ -658,7 +660,7 @@ public class AssetEntryFinderImpl
 
 		sb.append(" AND (NOT ");
 
-		String sql = CustomSQLUtil.get(FIND_BY_AND_CATEGORY_IDS);
+		String sql = CustomSQLUtil.get(getClass(), FIND_BY_AND_CATEGORY_IDS);
 
 		String notCategoryIdsString = null;
 
@@ -686,7 +688,7 @@ public class AssetEntryFinderImpl
 		for (int i = 0; i < notTagIds.length; i++) {
 			sb.append("AssetEntry.entryId NOT IN (");
 
-			String sql = CustomSQLUtil.get(FIND_BY_AND_TAG_IDS);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_AND_TAG_IDS);
 
 			sql = StringUtil.replace(sql, "[$TAG_ID$]", getTagIds(notTagIds));
 
