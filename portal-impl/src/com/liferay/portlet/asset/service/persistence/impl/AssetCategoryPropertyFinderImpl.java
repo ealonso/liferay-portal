@@ -32,7 +32,10 @@ import java.util.List;
 /**
  * @author Brian Wing Shun Chan
  * @author Jorge Ferrer
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.persistence.impl.AssetCategoryPropertyFinderImpl}
  */
+@Deprecated
 public class AssetCategoryPropertyFinderImpl
 	extends AssetCategoryPropertyFinderBaseImpl
 	implements AssetCategoryPropertyFinder {

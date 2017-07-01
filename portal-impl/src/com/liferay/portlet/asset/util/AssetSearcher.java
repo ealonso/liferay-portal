@@ -41,7 +41,10 @@ import java.util.Map;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.asset.internal.util.AssetSearcher}
  */
+@Deprecated
 public class AssetSearcher extends BaseSearcher {
 
 	public static Indexer<?> getInstance() {

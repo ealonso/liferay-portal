@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.tags.exception.AssetTagException}
  */
+@Deprecated
 public class AssetTagException extends PortalException {
 
 	public static final int AT_LEAST_ONE_TAG = 1;
