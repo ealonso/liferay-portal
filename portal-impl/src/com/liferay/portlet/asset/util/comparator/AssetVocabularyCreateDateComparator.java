@@ -20,7 +20,10 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.util.comparator.AssetCategoryCreateDateComparator}
  */
+@Deprecated
 public class AssetVocabularyCreateDateComparator
 	extends OrderByComparator<AssetVocabulary> {
 

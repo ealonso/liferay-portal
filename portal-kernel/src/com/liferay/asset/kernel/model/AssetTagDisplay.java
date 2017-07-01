@@ -22,7 +22,10 @@ import java.util.List;
 
 /**
  * @author Igor Spasic
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.tags.model.AssetTagDisplay}
  */
+@Deprecated
 public class AssetTagDisplay implements Serializable {
 
 	public AssetTagDisplay() {

@@ -20,7 +20,10 @@ import com.liferay.portal.kernel.verify.model.VerifiableUUIDModel;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.asset.tags.internal.verify.model.AssetTagVerifiableModel}
  */
+@Deprecated
 public class AssetTagVerifiableModel
 	implements VerifiableResourcedModel, VerifiableUUIDModel {
 

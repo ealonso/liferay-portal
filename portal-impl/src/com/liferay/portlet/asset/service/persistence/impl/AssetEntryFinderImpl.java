@@ -51,7 +51,10 @@ import java.util.List;
  * @author Brian Wing Shun Chan
  * @author Jorge Ferrer
  * @author Shuyang Zhou
+ * @deprecated As of 7.0.0, replaced by {@link
+ *            com.liferay.asset.service.persistence.impl.AssetEntryFinderImpl}
  */
+@Deprecated
 public class AssetEntryFinderImpl
 	extends AssetEntryFinderBaseImpl implements AssetEntryFinder {
 
