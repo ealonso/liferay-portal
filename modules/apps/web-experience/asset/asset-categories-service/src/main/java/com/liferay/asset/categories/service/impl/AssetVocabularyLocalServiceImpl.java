@@ -19,6 +19,7 @@ import com.liferay.asset.categories.exception.VocabularyNameException;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.asset.categories.service.base.AssetVocabularyLocalServiceBaseImpl;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
@@ -271,8 +272,13 @@ public class AssetVocabularyLocalServiceImpl
 			return vocabularies;
 		}
 
-		return AssetUtil.filterVocabularies(
-			vocabularies, className, classTypePK);
+		return ModelAdapterUtil.adapt(
+			AssetVocabulary.class,
+			AssetUtil.filterVocabularies(
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.kernel.model.AssetVocabulary.class,
+					vocabularies),
+				className, classTypePK));
 	}
 
 	@Override
