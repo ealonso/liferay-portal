@@ -17,6 +17,7 @@ package com.liferay.asset.categories.internal.search;
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.service.AssetCategoryLocalService;
 import com.liferay.asset.service.permission.AssetCategoryPermission;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -166,7 +167,10 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 		categories.add(assetCategory);
 
 		addSearchAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLE, categories);
+			document, Field.ASSET_CATEGORY_TITLE,
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.kernel.model.AssetCategory.class,
+				categories));
 
 		document.addKeyword(
 			Field.ASSET_PARENT_CATEGORY_ID,
