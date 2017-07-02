@@ -14,8 +14,13 @@
 		<field name="leftCategoryId" type="long" />
 		<field name="rightCategoryId" type="long" />
 		<field name="name" type="String" />
-		<field localized="true" name="title" type="String" />
-		<field localized="true" name="description" type="String" />
+		<field localized="true" name="title" type="String">
+			<validator name="required" />
+		</field>
+		<field localized="true" name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+			<hint name="display-width">350</hint>
+		</field>
 		<field name="vocabularyId" type="long" />
 		<field name="lastPublishDate" type="Date" />
 	</model>
@@ -27,8 +32,12 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="categoryId" type="long" />
-		<field name="key" type="String" />
-		<field name="value" type="String" />
+		<field name="key" type="String">
+			<hint name="display-width">210</hint>
+		</field>
+		<field name="value" type="String">
+			<hint name="display-width">210</hint>
+		</field>
 	</model>
 	<model name="com.liferay.asset.model.AssetEntry">
 		<field name="entryId" type="long" />
@@ -49,10 +58,18 @@
 		<field name="publishDate" type="Date" />
 		<field name="expirationDate" type="Date" />
 		<field name="mimeType" type="String" />
-		<field localized="true" name="title" type="String" />
-		<field localized="true" name="description" type="String" />
-		<field localized="true" name="summary" type="String" />
-		<field name="url" type="String" />
+		<field localized="true" name="title" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field localized="true" name="description" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field localized="true" name="summary" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="url" type="String">
+			<hint-collection name="URL" />
+		</field>
 		<field name="layoutUuid" type="String" />
 		<field name="height" type="int" />
 		<field name="width" type="int" />
@@ -79,7 +96,9 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="name" type="String" />
+		<field name="name" type="String">
+			<validator name="required" />
+		</field>
 		<field name="assetCount" type="int" />
 		<field name="lastPublishDate" type="Date" />
 	</model>
@@ -100,9 +119,16 @@
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
 		<field name="name" type="String" />
-		<field localized="true" name="title" type="String" />
-		<field localized="true" name="description" type="String" />
-		<field name="settings" type="String" />
+		<field localized="true" name="title" type="String">
+			<validator name="required" />
+		</field>
+		<field localized="true" name="description" type="String">
+			<hint-collection name="TEXTAREA" />
+			<hint name="display-width">350</hint>
+		</field>
+		<field name="settings" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
 		<field name="lastPublishDate" type="Date" />
 	</model>
 </model-hints>
