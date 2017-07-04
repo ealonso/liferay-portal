@@ -1,0 +1,6 @@
+Bundle-Name: Liferay Asset Tags Test
+Bundle-SymbolicName: com.liferay.asset.tags.test
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Asset
+-includeresource: test-classes/integration
