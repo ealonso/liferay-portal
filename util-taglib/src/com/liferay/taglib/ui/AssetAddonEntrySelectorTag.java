@@ -52,6 +52,10 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 		_title = title;
 	}
 
+	public void setUseHiddenInputNamespace(boolean useHiddenInputNamespace) {
+		_useHiddenInputNamespace = useHiddenInputNamespace;
+	}
+
 	@Override
 	protected void cleanUp() {
 		_assetAddonEntries = null;
@@ -59,6 +63,7 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 		_id = null;
 		_selectedAssetAddonEntries = null;
 		_title = "select-entries";
+		_useHiddenInputNamespace = true;
 	}
 
 	protected String getId() {
@@ -89,6 +94,9 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 			_selectedAssetAddonEntries);
 		request.setAttribute(
 			"liferay-ui:asset-addon-entry-selector:title", _title);
+		request.setAttribute(
+			"liferay-ui:asset-addon-entry-selector:useHiddenInputNamespace",
+			String.valueOf(_useHiddenInputNamespace));
 	}
 
 	private static final String _PAGE =
@@ -99,5 +107,6 @@ public class AssetAddonEntrySelectorTag extends IncludeTag {
 	private String _id;
 	private List<AssetAddonEntry> _selectedAssetAddonEntries;
 	private String _title = "select-entries";
+	private boolean _useHiddenInputNamespace = true;
 
 }
