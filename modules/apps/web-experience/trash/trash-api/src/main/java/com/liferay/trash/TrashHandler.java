@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -37,7 +38,7 @@ import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.trash.constants.TrashActionKeys;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.model.TrashEntry;
 
 import java.util.Collections;
 import java.util.List;
@@ -458,7 +459,8 @@ public interface TrashHandler {
 		TrashedModel trashedModel = getTrashedModel(classPK);
 
 		if (trashedModel != null) {
-			return trashedModel.getTrashEntry();
+			return ModelAdapterUtil.adapt(
+				TrashEntry.class, trashedModel.getTrashEntry());
 		}
 
 		return null;
