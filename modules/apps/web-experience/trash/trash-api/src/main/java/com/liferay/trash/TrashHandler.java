@@ -16,16 +16,27 @@ package com.liferay.trash;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.SystemEvent;
+import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.SystemEventLocalServiceUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.trash.constants.TrashActionKeys;
 import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.util.Collections;
@@ -95,14 +106,25 @@ import javax.portlet.PortletRequest;
 @ProviderType
 public interface TrashHandler {
 
-	public SystemEvent addDeletionSystemEvent(
+	public default SystemEvent addDeletionSystemEvent(
 			long userId, long groupId, long classPK, String classUuid,
 			String referrerClassName)
-		throws PortalException;
+		throws PortalException {
 
-	public void checkRestorableEntry(
+		JSONObject extraDataJSONObject = JSONFactoryUtil.createJSONObject();
+
+		extraDataJSONObject.put("inTrash", true);
+
+		return SystemEventLocalServiceUtil.addSystemEvent(
+			userId, groupId, getSystemEventClassName(), classPK, classUuid,
+			referrerClassName, SystemEventConstants.TYPE_DELETE,
+			extraDataJSONObject.toString());
+	}
+
+	public default void checkRestorableEntry(
 			long classPK, long containerModelId, String newName)
-		throws PortalException;
+		throws PortalException {
+	}
 
 	/**
 	 * Checks if a duplicate trash entry already exists in the destination
@@ -118,9 +140,10 @@ public interface TrashHandler {
 	 * @param newName the new name to be assigned to the trash entry (optionally
 	 *        <code>null</code> to forego renaming the trash entry)
 	 */
-	public void checkRestorableEntry(
+	public default void checkRestorableEntry(
 			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException;
+		throws PortalException {
+	}
 
 	/**
 	 * Deletes the model entity with the primary key.
@@ -142,17 +165,24 @@ public interface TrashHandler {
 	 * @param  containerModelId the primary key of the container model
 	 * @return the container model with the primary key
 	 */
-	public ContainerModel getContainerModel(long containerModelId)
-		throws PortalException;
+	public default ContainerModel getContainerModel(long containerModelId)
+		throws PortalException {
 
-	public String getContainerModelClassName(long classPK);
+		return null;
+	}
+
+	public default String getContainerModelClassName(long classPK) {
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the name of the container model (e.g. folder name).
 	 *
 	 * @return the name of the container model
 	 */
-	public String getContainerModelName();
+	public default String getContainerModelName() {
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns a range of all the container models that are children of the
@@ -182,9 +212,12 @@ public interface TrashHandler {
 	 * @param  end the upper bound of the range of results (not inclusive)
 	 * @return the range of matching container models
 	 */
-	public List<ContainerModel> getContainerModels(
+	public default List<ContainerModel> getContainerModels(
 			long classPK, long containerModelId, int start, int end)
-		throws PortalException;
+		throws PortalException {
+
+		return Collections.emptyList();
+	}
 
 	/**
 	 * Returns the number of container models that are children of the parent
@@ -202,8 +235,12 @@ public interface TrashHandler {
 	 * @param  containerModelId the primary key of the parent container model
 	 * @return the number of matching container models
 	 */
-	public int getContainerModelsCount(long classPK, long containerModelId)
-		throws PortalException;
+	public default int getContainerModelsCount(
+			long classPK, long containerModelId)
+		throws PortalException {
+
+		return 0;
+	}
 
 	/**
 	 * Returns the language key to the localized message to display next to a
@@ -220,12 +257,19 @@ public interface TrashHandler {
 	 * @return the language key to the localized message to display next to a
 	 *         trash entry listed in a search result
 	 */
-	public String getDeleteMessage();
+	public default String getDeleteMessage() {
+		return "deleted-in-x";
+	}
 
-	public long getDestinationContainerModelId(
-		long classPK, long destinationContainerModelId);
+	public default long getDestinationContainerModelId(
+		long classPK, long destinationContainerModelId) {
 
-	public Filter getExcludeFilter(SearchContext searchContext);
+		return destinationContainerModelId;
+	}
+
+	public default Filter getExcludeFilter(SearchContext searchContext) {
+		return null;
+	}
 
 	/**
 	 * Returns the parent container model of the model entity with the primary
@@ -236,11 +280,26 @@ public interface TrashHandler {
 	 * @return the parent container model of the model entity with the primary
 	 *         key
 	 */
-	public ContainerModel getParentContainerModel(long classPK)
-		throws PortalException;
+	public default ContainerModel getParentContainerModel(long classPK)
+		throws PortalException {
 
-	public ContainerModel getParentContainerModel(TrashedModel trashedModel)
-		throws PortalException;
+		return null;
+	}
+
+	public default ContainerModel getParentContainerModel(
+			TrashedModel trashedModel)
+		throws PortalException {
+
+		if ((trashedModel == null) ||
+			!(trashedModel instanceof ContainerModel)) {
+
+			return null;
+		}
+
+		ContainerModel containerModel = (ContainerModel)trashedModel;
+
+		return getContainerModel(containerModel.getParentContainerModelId());
+	}
 
 	/**
 	 * Returns all the parent container models of the model entity with the
@@ -256,12 +315,18 @@ public interface TrashHandler {
 	 *         must be able to contain
 	 * @return all the matching parent container models of the model entity
 	 */
-	public List<ContainerModel> getParentContainerModels(long classPK)
-		throws PortalException;
+	public default List<ContainerModel> getParentContainerModels(long classPK)
+		throws PortalException {
 
-	public String getRestoreContainedModelLink(
+		return Collections.emptyList();
+	}
+
+	public default String getRestoreContainedModelLink(
 			PortletRequest portletRequest, long classPK)
-		throws PortalException;
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the link to the location to which the model entity was restored.
@@ -270,9 +335,12 @@ public interface TrashHandler {
 	 * @param  classPK the primary key of the restored model entity
 	 * @return the restore link
 	 */
-	public String getRestoreContainerModelLink(
+	public default String getRestoreContainerModelLink(
 			PortletRequest portletRequest, long classPK)
-		throws PortalException;
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the message describing the location to which the model entity was
@@ -282,15 +350,21 @@ public interface TrashHandler {
 	 * @param  classPK the primary key of the restored model entity
 	 * @return the restore message
 	 */
-	public String getRestoreMessage(PortletRequest portletRequest, long classPK)
-		throws PortalException;
+	public default String getRestoreMessage(
+			PortletRequest portletRequest, long classPK)
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the name of the root container (e.g. "home").
 	 *
 	 * @return the name of the root container
 	 */
-	public String getRootContainerModelName();
+	public default String getRootContainerModelName() {
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the name of the subcontainer model (e.g. for a folder the
@@ -298,9 +372,13 @@ public interface TrashHandler {
 	 *
 	 * @return the name of the subcontainer model
 	 */
-	public String getSubcontainerModelName();
+	public default String getSubcontainerModelName() {
+		return StringPool.BLANK;
+	}
 
-	public String getSystemEventClassName();
+	public default String getSystemEventClassName() {
+		return getClassName();
+	}
 
 	/**
 	 * Returns the name of the contained model.
@@ -312,7 +390,9 @@ public interface TrashHandler {
 	 *
 	 * @return the name of the contained model
 	 */
-	public String getTrashContainedModelName();
+	public default String getTrashContainedModelName() {
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the number of model entities (excluding container model entities)
@@ -329,8 +409,11 @@ public interface TrashHandler {
 	 * @return the number of model entities that are children of the parent
 	 *         container model identified by the primary key
 	 */
-	public int getTrashContainedModelsCount(long classPK)
-		throws PortalException;
+	public default int getTrashContainedModelsCount(long classPK)
+		throws PortalException {
+
+		return 0;
+	}
 
 	/**
 	 * Returns the name of the container model.
@@ -341,7 +424,9 @@ public interface TrashHandler {
 	 *
 	 * @return the name of the container model
 	 */
-	public String getTrashContainerModelName();
+	public default String getTrashContainerModelName() {
+		return StringPool.BLANK;
+	}
 
 	/**
 	 * Returns the number of container models that are children of the parent
@@ -357,10 +442,15 @@ public interface TrashHandler {
 	 * @return the number of container models that are children of the parent
 	 *         container model identified by the primary key
 	 */
-	public int getTrashContainerModelsCount(long classPK)
-		throws PortalException;
+	public default int getTrashContainerModelsCount(long classPK)
+		throws PortalException {
 
-	public TrashedModel getTrashedModel(long classPK);
+		return 0;
+	}
+
+	public default TrashedModel getTrashedModel(long classPK) {
+		return null;
+	}
 
 	public default TrashEntry getTrashEntry(long classPK)
 		throws PortalException {
@@ -374,7 +464,11 @@ public interface TrashHandler {
 		return null;
 	}
 
-	public int getTrashModelsCount(long classPK) throws PortalException;
+	public default int getTrashModelsCount(long classPK)
+		throws PortalException {
+
+		return 0;
+	}
 
 	public default List<TrashedModel> getTrashModelTrashedModels(
 			long classPK, int start, int end, OrderByComparator<?> obc)
@@ -390,7 +484,28 @@ public interface TrashHandler {
 	 * @param  classPK the primary key of the model entity
 	 * @return the trash renderer associated to the model entity
 	 */
-	public TrashRenderer getTrashRenderer(long classPK) throws PortalException;
+	public default TrashRenderer getTrashRenderer(long classPK)
+		throws PortalException {
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				getClassName());
+
+		if (assetRendererFactory != null) {
+			AssetRenderer<?> assetRenderer =
+				assetRendererFactory.getAssetRenderer(classPK);
+
+			if (assetRenderer instanceof TrashRenderer) {
+				return (TrashRenderer)assetRenderer;
+			}
+		}
+
+		return null;
+	}
+
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException;
 
 	/**
 	 * Returns <code>true</code> if the user has the required permission to
@@ -409,10 +524,31 @@ public interface TrashHandler {
 	 * @return <code>true</code> if the user has the required permission;
 	 *         <code>false</code> otherwise
 	 */
-	public boolean hasTrashPermission(
+	public default boolean hasTrashPermission(
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
-		throws PortalException;
+		throws PortalException {
+
+		String actionId = trashActionId;
+
+		if (trashActionId.equals(ActionKeys.DELETE)) {
+			actionId = ActionKeys.DELETE;
+		}
+		else if (trashActionId.equals(TrashActionKeys.OVERWRITE)) {
+			actionId = ActionKeys.DELETE;
+		}
+		else if (trashActionId.equals(TrashActionKeys.MOVE)) {
+			return false;
+		}
+		else if (trashActionId.equals(TrashActionKeys.RENAME)) {
+			actionId = ActionKeys.UPDATE;
+		}
+		else if (trashActionId.equals(TrashActionKeys.RESTORE)) {
+			actionId = ActionKeys.DELETE;
+		}
+
+		return hasPermission(permissionChecker, classPK, actionId);
+	}
 
 	/**
 	 * Returns <code>true</code> if the entity is a container model.
@@ -420,7 +556,9 @@ public interface TrashHandler {
 	 * @return <code>true</code> if the entity is a container model;
 	 *         <code>false</code> otherwise
 	 */
-	public boolean isContainerModel();
+	public default boolean isContainerModel() {
+		return false;
+	}
 
 	/**
 	 * Returns <code>true</code> if the entity can be deleted from the Recycle
@@ -429,7 +567,9 @@ public interface TrashHandler {
 	 * @return <code>true</code> if the entity can be deleted from the Recycle
 	 *         Bin.
 	 */
-	public boolean isDeletable();
+	public default boolean isDeletable() {
+		return true;
+	}
 
 	/**
 	 * Returns <code>true</code> if the model entity with the primary key is in
@@ -477,7 +617,9 @@ public interface TrashHandler {
 	 * @return <code>true</code> if the entity can be moved from one container
 	 *         model to another; <code>false</code> otherwise
 	 */
-	public boolean isMovable();
+	public default boolean isMovable() {
+		return false;
+	}
 
 	/**
 	 * Returns <code>true</code> if the model entity can be restored to its
@@ -493,7 +635,9 @@ public interface TrashHandler {
 	 * @return <code>true</code> if the model entity can be restored to its
 	 *         original location; <code>false</code> otherwise
 	 */
-	public boolean isRestorable(long classPK) throws PortalException;
+	public default boolean isRestorable(long classPK) throws PortalException {
+		return true;
+	}
 
 	/**
 	 * Moves the entity with the class primary key to the container model with
@@ -505,10 +649,11 @@ public interface TrashHandler {
 	 *        model
 	 * @param serviceContext the service context to be applied
 	 */
-	public void moveEntry(
+	public default void moveEntry(
 			long userId, long classPK, long containerModelId,
 			ServiceContext serviceContext)
-		throws PortalException;
+		throws PortalException {
+	}
 
 	/**
 	 * Moves the model entity with the primary key out of the Recycle Bin to a
@@ -520,10 +665,20 @@ public interface TrashHandler {
 	 *        model
 	 * @param serviceContext the service context to be applied
 	 */
-	public void moveTrashEntry(
+	public default void moveTrashEntry(
 			long userId, long classPK, long containerModelId,
 			ServiceContext serviceContext)
-		throws PortalException;
+		throws PortalException {
+
+		if (isRestorable(classPK)) {
+			restoreTrashEntry(userId, classPK);
+		}
+
+		Class<?> clazz = getClass();
+
+		throw new SystemException(
+			"moveTrashEntry() is not implemented in " + clazz.getName());
+	}
 
 	/**
 	 * Restores the model entity that is related to the model entity with the
@@ -537,8 +692,9 @@ public interface TrashHandler {
 	 * @param classPK the primary key of the model entity with a related model
 	 *        entity to restore
 	 */
-	public void restoreRelatedTrashEntry(String className, long classPK)
-		throws PortalException;
+	public default void restoreRelatedTrashEntry(String className, long classPK)
+		throws PortalException {
+	}
 
 	/**
 	 * Restores the model entity with the primary key.
@@ -557,6 +713,8 @@ public interface TrashHandler {
 	 * @param classPK the primary key of the model entity
 	 * @param title the title to be assigned
 	 */
-	public void updateTitle(long classPK, String title) throws PortalException;
+	public default void updateTitle(long classPK, String title)
+		throws PortalException {
+	}
 
 }
