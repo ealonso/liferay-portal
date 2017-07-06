@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.SystemEvent;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.TrashedModel;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.SystemEventLocalServiceUtil;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.trash.kernel.model.TrashEntry;
 
@@ -73,32 +71,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 			extraDataJSONObject.toString());
 	}
 
-	/**
-	 * @deprecated As of 1.0.0, replaced by {@link #checkRestorableEntry(long,
-	 *             long, String)}
-	 */
-	@Deprecated
-	@Override
-	public void checkDuplicateEntry(
-			long classPK, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(classPK, containerModelId, newName);
-	}
-
-	/**
-	 * @deprecated As of 1.0.0, replaced by {@link
-	 *             #checkRestorableEntry(TrashEntry, long, String)}
-	 */
-	@Deprecated
-	@Override
-	public void checkDuplicateTrashEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(trashEntry, containerModelId, newName);
-	}
-
 	@Override
 	@SuppressWarnings("unused")
 	public void checkRestorableEntry(
@@ -119,15 +91,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		throws PortalException {
 
 		return null;
-	}
-
-	/**
-	 * @deprecated As of 1.0.0, replaced by {@link #getContainerModel(long)}
-	 */
-	@Deprecated
-	@Override
-	public String getContainerModelClassName() {
-		return getContainerModelClassName(0);
 	}
 
 	@Override
@@ -171,16 +134,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 	@Override
 	public Filter getExcludeFilter(SearchContext searchContext) {
-		return null;
-	}
-
-	/**
-	 * @deprecated As of 1.0.0, replaced by {@link
-	 *             #getExcludeFilter(SearchContext)}
-	 */
-	@Deprecated
-	@Override
-	public Query getExcludeQuery(SearchContext searchContext) {
 		return null;
 	}
 
@@ -269,19 +222,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return 0;
 	}
 
-	/**
-	 * @deprecated As of 1.0.0, with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	@SuppressWarnings("unused")
-	public List<TrashRenderer> getTrashContainedModelTrashRenderers(
-			long classPK, int start, int end)
-		throws PortalException {
-
-		return Collections.emptyList();
-	}
-
 	@Override
 	public String getTrashContainerModelName() {
 		return StringPool.BLANK;
@@ -295,19 +235,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		return 0;
 	}
 
-	/**
-	 * @deprecated As of 1.0.0, with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	@SuppressWarnings("unused")
-	public List<TrashRenderer> getTrashContainerModelTrashRenderers(
-			long classPK, int start, int end)
-		throws PortalException {
-
-		return Collections.emptyList();
-	}
-
 	@Override
 	public TrashedModel getTrashedModel(long classPK) {
 		return null;
@@ -317,20 +244,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 	@SuppressWarnings("unused")
 	public int getTrashModelsCount(long classPK) throws PortalException {
 		return 0;
-	}
-
-	/**
-	 * @deprecated As of 1.0.0, replaced by {@link
-	 *             #getTrashModelTrashedModels(long, int, int, OrderByComparator)}
-	 */
-	@Deprecated
-	@Override
-	@SuppressWarnings("unused")
-	public List<TrashRenderer> getTrashModelTrashRenderers(
-			long classPK, int start, int end, OrderByComparator<?> obc)
-		throws PortalException {
-
-		return Collections.emptyList();
 	}
 
 	@Override
