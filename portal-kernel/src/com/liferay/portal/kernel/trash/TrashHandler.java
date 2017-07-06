@@ -93,7 +93,9 @@ import javax.portlet.PortletRequest;
  *
  * @author Alexander Chow
  * @author Zsolt Berentey
+ * @deprecated As of 7.0.0, replaced by {@link com.liferay.trash.TrashHandler}
  */
+@Deprecated
 @ProviderType
 public interface TrashHandler {
 
