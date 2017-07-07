@@ -37,8 +37,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -48,6 +46,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
 import com.liferay.ratings.kernel.model.RatingsEntry;
 import com.liferay.ratings.kernel.service.RatingsEntryLocalService;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.io.InputStream;
 
@@ -457,7 +457,7 @@ public class MBMessageStagedModelDataHandler
 
 		if (existingMessage.isInTrash()) {
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
+				_trashHandlerRegistryUtil.getTrashHandler(
 					MBMessage.class.getName());
 
 			if (trashHandler.isRestorable(existingMessage.getMessageId())) {
@@ -470,7 +470,7 @@ public class MBMessageStagedModelDataHandler
 			MBThread existingThread = existingMessage.getThread();
 
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
+				_trashHandlerRegistryUtil.getTrashHandler(
 					MBThread.class.getName());
 
 			if (trashHandler.isRestorable(existingThread.getThreadId())) {
@@ -606,5 +606,8 @@ public class MBMessageStagedModelDataHandler
 	private MBMessageLocalService _mbMessageLocalService;
 	private MBThreadLocalService _mbThreadLocalService;
 	private RatingsEntryLocalService _ratingsEntryLocalService;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
