@@ -14,7 +14,6 @@
 
 package com.liferay.trash.service.impl;
 
-import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchPaginationUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -26,12 +25,13 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Transactional;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.constants.TrashActionKeys;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashEntryConstants;
@@ -77,7 +77,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 			try {
 				TrashHandler trashHandler =
-					TrashHandlerRegistryUtil.getTrashHandler(
+					_trashHandlerRegistryUtil.getTrashHandler(
 						entry.getClassName());
 
 				if (!trashHandler.hasTrashPermission(
@@ -344,7 +344,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			scopeGroupId = serviceContext.getScopeGroupId();
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			className);
 
 		destinationContainerModelId =
@@ -366,15 +366,11 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 				TrashPermissionException.RESTORE);
 		}
 
-		TrashEntry trashEntry = ModelAdapterUtil.adapt(
-			TrashEntry.class, trashHandler.getTrashEntry(classPK));
+		TrashEntry trashEntry = trashHandler.getTrashEntry(classPK);
 
 		if (trashEntry.isTrashEntry(className, classPK)) {
 			trashHandler.checkRestorableEntry(
-				ModelAdapterUtil.adapt(
-					com.liferay.trash.kernel.model.TrashEntry.class,
-					trashEntry),
-				destinationContainerModelId, StringPool.BLANK);
+				trashEntry, destinationContainerModelId, StringPool.BLANK);
 		}
 		else {
 			trashHandler.checkRestorableEntry(
@@ -433,7 +429,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 		TrashEntry entry = trashEntryPersistence.findByPrimaryKey(entryId);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			entry.getClassName());
 
 		if (!trashHandler.hasTrashPermission(
@@ -456,9 +452,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			trashHandler.deleteTrashEntry(overrideClassPK);
 
 			trashHandler.checkRestorableEntry(
-				ModelAdapterUtil.adapt(
-					com.liferay.trash.kernel.model.TrashEntry.class, entry),
-				TrashEntryConstants.DEFAULT_CONTAINER_ID, null);
+				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, null);
 		}
 		else if (name != null) {
 			if (!trashHandler.hasTrashPermission(
@@ -470,9 +464,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 			}
 
 			trashHandler.checkRestorableEntry(
-				ModelAdapterUtil.adapt(
-					com.liferay.trash.kernel.model.TrashEntry.class, entry),
-				TrashEntryConstants.DEFAULT_CONTAINER_ID, name);
+				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, name);
 
 			trashHandler.updateTitle(entry.getClassPK(), name);
 		}
@@ -507,7 +499,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 	protected void deleteEntry(TrashEntry entry) throws PortalException {
 		PermissionChecker permissionChecker = getPermissionChecker();
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			entry.getClassName());
 
 		if (!trashHandler.hasTrashPermission(
@@ -532,7 +524,7 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 			try {
 				TrashHandler trashHandler =
-					TrashHandlerRegistryUtil.getTrashHandler(className);
+					_trashHandlerRegistryUtil.getTrashHandler(className);
 
 				if (trashHandler.hasTrashPermission(
 						permissionChecker, 0, classPK, ActionKeys.VIEW)) {
@@ -550,5 +542,8 @@ public class TrashEntryServiceImpl extends TrashEntryServiceBaseImpl {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		TrashEntryServiceImpl.class);
+
+	@ServiceReference(type = TrashHandlerRegistryUtil.class)
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
