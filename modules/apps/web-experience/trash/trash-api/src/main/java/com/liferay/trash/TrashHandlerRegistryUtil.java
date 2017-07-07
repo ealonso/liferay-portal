@@ -14,7 +14,7 @@
 
 package com.liferay.trash;
 
-import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 
 import java.util.List;
@@ -34,11 +34,43 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
 public class TrashHandlerRegistryUtil {
 
 	public TrashHandler getTrashHandler(String className) {
-		return _trashHandlers.get(className);
+		TrashHandler trashHandler = _trashHandlers.get(className);
+
+		if (trashHandler != null) {
+			return trashHandler;
+		}
+
+		com.liferay.portal.kernel.trash.TrashHandler deprecatedTrashHandler =
+			_deprecatedTrashHandlers.get(className);
+
+		if (deprecatedTrashHandler != null) {
+			return ModelAdapterUtil.adapt(
+				TrashHandler.class, deprecatedTrashHandler);
+		}
+
+		return null;
 	}
 
 	public List<TrashHandler> getTrashHandlers() {
-		return ListUtil.fromMapValues(_trashHandlers);
+		List<TrashHandler> trashHandlers = ModelAdapterUtil.adapt(
+			TrashHandler.class,
+			ListUtil.fromMapValues(_deprecatedTrashHandlers));
+
+		trashHandlers.addAll(ListUtil.fromMapValues(_trashHandlers));
+
+		return trashHandlers;
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		unbind = "unsetDeprecatedTrashHandler"
+	)
+	protected void setDeprecatedTrashHandler(
+		com.liferay.portal.kernel.trash.TrashHandler trashHandler) {
+
+		_deprecatedTrashHandlers.put(trashHandler.getClassName(), trashHandler);
 	}
 
 	@Reference(
@@ -51,10 +83,18 @@ public class TrashHandlerRegistryUtil {
 		_trashHandlers.put(trashHandler.getClassName(), trashHandler);
 	}
 
+	protected void unsetDeprecatedTrashHandler(
+		com.liferay.portal.kernel.trash.TrashHandler trashHandler) {
+
+		_deprecatedTrashHandlers.remove(trashHandler.getClassName());
+	}
+
 	protected void unsetTrashHandler(TrashHandler trashHandler) {
 		_trashHandlers.remove(trashHandler.getClassName());
 	}
 
+	private final Map<String, com.liferay.portal.kernel.trash.TrashHandler>
+		_deprecatedTrashHandlers = new ConcurrentSkipListMap<>();
 	private final Map<String, TrashHandler> _trashHandlers =
 		new ConcurrentSkipListMap<>();
 
