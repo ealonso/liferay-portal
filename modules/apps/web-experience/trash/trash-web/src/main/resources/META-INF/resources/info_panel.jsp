@@ -28,7 +28,7 @@ List<TrashEntry> trashEntries = (List<TrashEntry>)request.getAttribute(TrashWebK
 				<%
 				TrashEntry trashEntry = trashEntries.get(0);
 
-				TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashEntry.getClassName());
+				TrashHandler trashHandler = trashHandlerRegistryUtil.getTrashHandler(trashEntry.getClassName());
 
 				TrashRenderer trashRenderer = trashHandler.getTrashRenderer(trashEntry.getClassPK());
 				%>

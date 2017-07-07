@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -31,6 +29,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
+import com.liferay.trash.util.TrashWebKeys;
 
 import java.util.List;
 
@@ -54,6 +55,10 @@ public class TrashContainerModelDisplayContext {
 		_liferayPortletResponse = liferayPortletResponse;
 
 		_request = PortalUtil.getHttpServletRequest(liferayPortletRequest);
+
+		_trashHandlerRegistryUtil =
+			(TrashHandlerRegistryUtil)_request.getAttribute(
+				TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL);
 	}
 
 	public String getBackURL() {
@@ -276,7 +281,7 @@ public class TrashContainerModelDisplayContext {
 			return _trashHandler;
 		}
 
-		_trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		_trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			getClassName());
 
 		return _trashHandler;
@@ -302,7 +307,7 @@ public class TrashContainerModelDisplayContext {
 		}
 
 		TrashHandler containerTrashHandler =
-			TrashHandlerRegistryUtil.getTrashHandler(
+			_trashHandlerRegistryUtil.getTrashHandler(
 				getContainerModelClassName());
 
 		ContainerModel containerModel = null;
@@ -342,6 +347,7 @@ public class TrashContainerModelDisplayContext {
 	private SearchContainer _searchContainer;
 	private Boolean _showBackIcon;
 	private TrashHandler _trashHandler;
+	private final TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 	private TrashRenderer _trashRenderer;
 
 }

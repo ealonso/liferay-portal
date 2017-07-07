@@ -97,7 +97,7 @@ renderResponse.setTitle(trashRenderer.getTitle(locale));
 					<%
 					String modelClassName = ((ClassedModel)curTrashedModel).getModelClassName();
 
-					TrashHandler curTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(modelClassName);
+					TrashHandler curTrashHandler = trashHandlerRegistryUtil.getTrashHandler(modelClassName);
 
 					TrashRenderer curTrashRenderer = curTrashHandler.getTrashRenderer(curTrashedModel.getTrashEntryClassPK());
 
@@ -224,7 +224,7 @@ renderResponse.setTitle(trashRenderer.getTitle(locale));
 					</c:choose>
 				</liferay-ui:search-container-row>
 
-				<liferay-ui:search-iterator displayStyle="<%= trashDisplayContext.getDisplayStyle() %>" markupView="lexicon" resultRowSplitter="<%= new TrashResultRowSplitter() %>" />
+				<liferay-ui:search-iterator displayStyle="<%= trashDisplayContext.getDisplayStyle() %>" markupView="lexicon" resultRowSplitter="<%= new TrashResultRowSplitter(trashHandlerRegistryUtil) %>" />
 			</liferay-ui:search-container>
 		</div>
 	</div>

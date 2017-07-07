@@ -39,8 +39,6 @@ page import="com.liferay.portal.kernel.search.Sort" %><%@
 page import="com.liferay.portal.kernel.search.SortFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.security.permission.ResourceActionsUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
-page import="com.liferay.portal.kernel.trash.TrashHandler" %><%@
-page import="com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil" %><%@
 page import="com.liferay.portal.kernel.trash.TrashRenderer" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
@@ -54,6 +52,8 @@ page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Time" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.trash.TrashHandler" %><%@
+page import="com.liferay.trash.TrashHandlerRegistryUtil" %><%@
 page import="com.liferay.trash.exception.RestoreEntryException" %><%@
 page import="com.liferay.trash.exception.TrashEntryException" %><%@
 page import="com.liferay.trash.model.TrashEntry" %><%@
@@ -90,6 +90,7 @@ page import="javax.portlet.WindowState" %>
 <%
 TrashDisplayContext trashDisplayContext = new TrashDisplayContext(request, liferayPortletResponse);
 
+TrashHandlerRegistryUtil trashHandlerRegistryUtil = (TrashHandlerRegistryUtil)request.getAttribute(TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL);
 TrashUtil trashUtil = (TrashUtil)request.getAttribute(TrashWebKeys.TRASH_UTIL);
 
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);

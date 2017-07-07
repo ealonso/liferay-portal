@@ -16,13 +16,13 @@ package com.liferay.trash.web.internal.util;
 
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public class TrashUndoUtil {
 
 		for (ObjectValuePair<String, Long> entry : entries) {
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(entry.getKey());
+				_trashHandlerRegistryUtil.getTrashHandler(entry.getKey());
 
 			String restoreEntryLink = trashHandler.getRestoreContainedModelLink(
 				actionRequest, entry.getValue());
@@ -121,5 +121,8 @@ public class TrashUndoUtil {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
