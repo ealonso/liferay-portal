@@ -26,10 +26,9 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
 
 import javax.portlet.PortletRequest;
 
@@ -49,7 +48,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = TrashHandler.class
 )
 @ProviderType
-public class ExportImportConfigurationTrashHandler extends BaseTrashHandler {
+public class ExportImportConfigurationTrashHandler implements TrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) throws PortalException {
@@ -96,6 +95,21 @@ public class ExportImportConfigurationTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		ExportImportConfiguration exportImportConfiguration =
+			_exportImportConfigurationLocalService.getExportImportConfiguration(
+				classPK);
+
+		Group group = _groupLocalService.getGroup(
+			exportImportConfiguration.getGroupId());
+
+		return GroupPermissionUtil.contains(permissionChecker, group, actionId);
+	}
+
+	@Override
 	public void restoreTrashEntry(long userId, long classPK)
 		throws PortalException {
 
@@ -109,21 +123,6 @@ public class ExportImportConfigurationTrashHandler extends BaseTrashHandler {
 	)
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		ExportImportConfiguration exportImportConfiguration =
-			_exportImportConfigurationLocalService.getExportImportConfiguration(
-				classPK);
-
-		Group group = _groupLocalService.getGroup(
-			exportImportConfiguration.getGroupId());
-
-		return GroupPermissionUtil.contains(permissionChecker, group, actionId);
 	}
 
 	@Reference(unbind = "-")

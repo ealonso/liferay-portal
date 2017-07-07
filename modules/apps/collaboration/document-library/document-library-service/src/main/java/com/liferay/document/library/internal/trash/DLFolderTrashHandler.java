@@ -37,13 +37,12 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.constants.TrashActionKeys;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashEntryConstants;
 
 import javax.portlet.PortletRequest;
@@ -74,16 +73,6 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 
 		checkRestorableEntry(
 			classPK, 0, containerModelId, dlFolder.getName(), newName);
-	}
-
-	@Override
-	public void checkRestorableEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(
-			trashEntry.getClassPK(), trashEntry.getEntryId(), containerModelId,
-			trashEntry.getTypeSettingsProperty("title"), newName);
 	}
 
 	@Override
@@ -186,6 +175,21 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 				DLFolder.class.getName());
 
 		return (TrashRenderer)assetRendererFactory.getAssetRenderer(classPK);
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		DLFolder dlFolder = getDLFolder(classPK);
+
+		if (dlFolder.isInHiddenFolder() && actionId.equals(ActionKeys.VIEW)) {
+			return false;
+		}
+
+		return DLFolderPermission.contains(
+			permissionChecker, dlFolder, actionId);
 	}
 
 	@Override
@@ -339,21 +343,6 @@ public class DLFolderTrashHandler extends DLBaseTrashHandler {
 		}
 
 		return localRepository;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		DLFolder dlFolder = getDLFolder(classPK);
-
-		if (dlFolder.isInHiddenFolder() && actionId.equals(ActionKeys.VIEW)) {
-			return false;
-		}
-
-		return DLFolderPermission.contains(
-			permissionChecker, dlFolder, actionId);
 	}
 
 	@Reference(unbind = "-")

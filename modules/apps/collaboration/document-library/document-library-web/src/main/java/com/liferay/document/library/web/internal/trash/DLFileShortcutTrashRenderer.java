@@ -19,9 +19,9 @@ import com.liferay.document.library.kernel.model.DLFileShortcut;
 import com.liferay.document.library.kernel.model.DLFileShortcutConstants;
 import com.liferay.document.library.web.constants.DLPortletKeys;
 import com.liferay.portal.kernel.trash.BaseTrashRenderer;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 
 import java.util.Locale;
@@ -42,14 +42,16 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 	 */
 	@Deprecated
 	public DLFileShortcutTrashRenderer(DLFileShortcut dlFileShortcut) {
-		this(dlFileShortcut, null);
+		this(dlFileShortcut, null, null);
 	}
 
 	public DLFileShortcutTrashRenderer(
-		DLFileShortcut dlFileShortcut, TrashHelper trashHelper) {
+		DLFileShortcut dlFileShortcut, TrashHelper trashHelper,
+		TrashHandlerRegistryUtil trashHandlerRegistryUtil) {
 
 		_dlFileShortcut = dlFileShortcut;
 		_trashHelper = trashHelper;
+		_trashHandlerRegistryUtil = trashHandlerRegistryUtil;
 	}
 
 	@Override
@@ -90,7 +92,7 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 			String template)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			DLFileEntryConstants.getClassName());
 
 		TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
@@ -100,6 +102,7 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 	}
 
 	private final DLFileShortcut _dlFileShortcut;
+	private final TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 	private final TrashHelper _trashHelper;
 
 }
