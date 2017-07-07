@@ -2060,7 +2060,9 @@ public class PortletImpl extends PortletBaseImpl {
 	 * Returns the trash handler instances of the portlet.
 	 *
 	 * @return the trash handler instances of the portlet
+	 * @deprecated As of 7.0.0, with no direct replacement
 	 */
+	@Deprecated
 	@Override
 	public List<TrashHandler> getTrashHandlerInstances() {
 		if (_trashHandlerClasses.isEmpty()) {
