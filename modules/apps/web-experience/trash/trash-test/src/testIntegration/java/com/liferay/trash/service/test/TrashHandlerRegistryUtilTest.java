@@ -16,14 +16,22 @@ package com.liferay.trash.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.service.test.trashhandlerresgistryutil.TestTrashHandler;
 
 import java.util.List;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,9 +48,31 @@ public class TrashHandlerRegistryUtilTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new LiferayIntegrationTestRule();
 
+	@BeforeClass
+	public static void setUpClass() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			TrashHandlerRegistryUtil.class.getName());
+
+		_serviceTracker.open();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		_serviceTracker.close();
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		ServiceTestUtil.setUser(TestPropsValues.getUser());
+
+		_trashHandlerRegistryUtil = _serviceTracker.getService();
+	}
+
 	@Test
 	public void testGetTrashHandler() {
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			TestTrashHandler.class.getName());
 
 		Class<?> clazz = trashHandler.getClass();
@@ -53,7 +83,7 @@ public class TrashHandlerRegistryUtilTest {
 	@Test
 	public void testGetTrashHandlers() {
 		List<TrashHandler> trashHandlers =
-			TrashHandlerRegistryUtil.getTrashHandlers();
+			_trashHandlerRegistryUtil.getTrashHandlers();
 
 		boolean exists = false;
 
@@ -72,5 +102,11 @@ public class TrashHandlerRegistryUtilTest {
 		Assert.assertTrue(
 			TestTrashHandler.class.getName() + " is not registered", exists);
 	}
+
+	private static
+		ServiceTracker<TrashHandlerRegistryUtil, TrashHandlerRegistryUtil>
+			_serviceTracker;
+
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
