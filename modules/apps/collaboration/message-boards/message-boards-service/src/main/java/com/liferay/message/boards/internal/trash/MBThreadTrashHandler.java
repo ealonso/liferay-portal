@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.trash.TrashRendererFactory;
 import com.liferay.portal.kernel.util.Portal;
@@ -36,6 +34,8 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.messageboards.util.MBUtil;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.constants.TrashActionKeys;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -125,6 +125,17 @@ public class MBThreadTrashHandler extends BaseMBTrashHandler {
 	@Override
 	public TrashRenderer getTrashRenderer(long classPK) throws PortalException {
 		return _trashRendererFactory.getTrashRenderer(classPK);
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		MBThread thread = _mbThreadLocalService.getThread(classPK);
+
+		return MBMessagePermission.contains(
+			permissionChecker, thread.getRootMessageId(), actionId);
 	}
 
 	@Override
@@ -230,17 +241,6 @@ public class MBThreadTrashHandler extends BaseMBTrashHandler {
 		}
 
 		return portletURL;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		MBThread thread = _mbThreadLocalService.getThread(classPK);
-
-		return MBMessagePermission.contains(
-			permissionChecker, thread.getRootMessageId(), actionId);
 	}
 
 	@Reference(unbind = "-")

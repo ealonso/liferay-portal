@@ -20,16 +20,16 @@ import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHandler;
 import com.liferay.trash.TrashHelper;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.model.TrashEntry;
 import com.liferay.wiki.asset.WikiNodeTrashRenderer;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
@@ -179,6 +179,15 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		return WikiNodePermissionChecker.contains(
+			permissionChecker, classPK, actionId);
+	}
+
+	@Override
 	public boolean isContainerModel() {
 		return true;
 	}
@@ -228,15 +237,6 @@ public class WikiNodeTrashHandler extends BaseWikiTrashHandler {
 		}
 
 		return portletURL;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		return WikiNodePermissionChecker.contains(
-			permissionChecker, classPK, actionId);
 	}
 
 	@Reference(unbind = "-")
