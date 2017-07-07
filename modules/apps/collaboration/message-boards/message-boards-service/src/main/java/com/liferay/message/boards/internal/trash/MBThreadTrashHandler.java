@@ -14,13 +14,11 @@
 
 package com.liferay.message.boards.internal.trash;
 
-import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.kernel.model.MBThread;
 import com.liferay.message.boards.kernel.service.MBCategoryLocalService;
 import com.liferay.message.boards.kernel.service.MBThreadLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.PortletProvider;
@@ -29,7 +27,6 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -39,9 +36,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.messageboards.util.MBUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -58,7 +52,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {"model.class.name=com.liferay.message.boards.kernel.model.MBThread"},
 	service = TrashHandler.class
 )
-public class MBThreadTrashHandler extends BaseTrashHandler {
+public class MBThreadTrashHandler extends BaseMBTrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) throws PortalException {
@@ -68,43 +62,6 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 	@Override
 	public String getClassName() {
 		return MBThread.class.getName();
-	}
-
-	@Override
-	public ContainerModel getContainerModel(long containerModelId)
-		throws PortalException {
-
-		return _mbCategoryLocalService.getCategory(containerModelId);
-	}
-
-	@Override
-	public String getContainerModelClassName(long classPK) {
-		return MBCategory.class.getName();
-	}
-
-	@Override
-	public String getContainerModelName() {
-		return "category";
-	}
-
-	@Override
-	public List<ContainerModel> getContainerModels(
-			long classPK, long parentContainerModelId, int start, int end)
-		throws PortalException {
-
-		List<ContainerModel> containerModels = new ArrayList<>();
-
-		MBThread thread = _mbThreadLocalService.getThread(classPK);
-
-		List<MBCategory> categories = _mbCategoryLocalService.getCategories(
-			thread.getGroupId(), parentContainerModelId,
-			WorkflowConstants.STATUS_APPROVED, start, end);
-
-		for (MBCategory category : categories) {
-			containerModels.add(category);
-		}
-
-		return containerModels;
 	}
 
 	@Override
