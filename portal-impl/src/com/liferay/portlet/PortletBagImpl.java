@@ -321,6 +321,10 @@ public class PortletBagImpl implements PortletBag {
 		return _templateHandlerInstances;
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public List<TrashHandler> getTrashHandlerInstances() {
 		return _trashHandlerInstances;
