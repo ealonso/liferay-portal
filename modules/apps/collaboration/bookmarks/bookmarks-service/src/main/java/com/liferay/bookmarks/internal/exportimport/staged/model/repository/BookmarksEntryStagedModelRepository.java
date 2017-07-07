@@ -28,8 +28,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.util.List;
 
@@ -152,7 +152,7 @@ public class BookmarksEntryStagedModelRepository
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			BookmarksEntry.class.getName());
 
 		try {
@@ -208,5 +208,8 @@ public class BookmarksEntryStagedModelRepository
 
 	@Reference
 	private StagedModelRepositoryHelper _stagedModelRepositoryHelper;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }

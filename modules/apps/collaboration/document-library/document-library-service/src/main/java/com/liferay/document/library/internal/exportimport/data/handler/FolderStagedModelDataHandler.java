@@ -36,8 +36,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.service.RepositoryLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -48,6 +46,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFolder;
 import com.liferay.portal.repository.portletrepository.PortletRepository;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -300,7 +300,7 @@ public class FolderStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			DLFolder.class.getName());
 
 		if (trashHandler.isRestorable(existingFolder.getFolderId())) {
@@ -529,5 +529,8 @@ public class FolderStagedModelDataHandler
 	private Portal _portal;
 
 	private RepositoryLocalService _repositoryLocalService;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
