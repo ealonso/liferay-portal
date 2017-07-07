@@ -26,16 +26,15 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHandler;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashEntryConstants;
 import com.liferay.wiki.asset.WikiPageAssetRenderer;
 import com.liferay.wiki.constants.WikiPortletKeys;
@@ -94,16 +93,6 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 
 		checkRestorableEntry(
 			classPK, 0, containerModelId, page.getTitle(), newName);
-	}
-
-	@Override
-	public void checkRestorableEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(
-			trashEntry.getClassPK(), trashEntry.getEntryId(), containerModelId,
-			trashEntry.getTypeSettingsProperty("title"), newName);
 	}
 
 	@Override
@@ -274,6 +263,15 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		return WikiPagePermissionChecker.contains(
+			permissionChecker, classPK, actionId);
+	}
+
+	@Override
 	public boolean hasTrashPermission(
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
@@ -434,15 +432,6 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 		}
 
 		return portletURL;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		return WikiPagePermissionChecker.contains(
-			permissionChecker, classPK, actionId);
 	}
 
 	@Reference(unbind = "-")

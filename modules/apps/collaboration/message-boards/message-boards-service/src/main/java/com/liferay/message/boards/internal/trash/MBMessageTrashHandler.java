@@ -26,10 +26,9 @@ import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portlet.messageboards.service.permission.MBMessagePermission;
 import com.liferay.portlet.messageboards.util.MBMessageAttachmentsUtil;
+import com.liferay.trash.TrashHandler;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,7 +42,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {"model.class.name=com.liferay.message.boards.kernel.model.MBMessage"},
 	service = TrashHandler.class
 )
-public class MBMessageTrashHandler extends BaseTrashHandler {
+public class MBMessageTrashHandler implements TrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) {
@@ -81,6 +80,15 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		return MBMessagePermission.contains(
+			permissionChecker, classPK, actionId);
+	}
+
+	@Override
 	public boolean isDeletable() {
 		return false;
 	}
@@ -104,15 +112,6 @@ public class MBMessageTrashHandler extends BaseTrashHandler {
 
 	@Override
 	public void restoreTrashEntry(long userId, long classPK) {
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		return MBMessagePermission.contains(
-			permissionChecker, classPK, actionId);
 	}
 
 	@Reference(unbind = "-")

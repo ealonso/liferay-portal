@@ -26,8 +26,8 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.trash.TrashHandler;
 import com.liferay.trash.TrashHelper;
 
 import javax.portlet.PortletRequest;
@@ -121,6 +121,17 @@ public class BookmarksFolderTrashHandler extends BookmarksBaseTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		BookmarksFolder folder = getBookmarksFolder(classPK);
+
+		return BookmarksFolderPermissionChecker.contains(
+			permissionChecker, folder, actionId);
+	}
+
+	@Override
 	public boolean hasTrashPermission(
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
@@ -191,17 +202,6 @@ public class BookmarksFolderTrashHandler extends BookmarksBaseTrashHandler {
 		BookmarksFolder folder = getBookmarksFolder(classPK);
 
 		return folder.getGroupId();
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		BookmarksFolder folder = getBookmarksFolder(classPK);
-
-		return BookmarksFolderPermissionChecker.contains(
-			permissionChecker, folder, actionId);
 	}
 
 	@Reference(unbind = "-")

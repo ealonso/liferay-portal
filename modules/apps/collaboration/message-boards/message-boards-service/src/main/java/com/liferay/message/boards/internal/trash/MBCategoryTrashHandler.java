@@ -28,9 +28,6 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.trash.TrashRendererFactory;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -38,6 +35,9 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.messageboards.service.permission.MBCategoryPermission;
 import com.liferay.portlet.messageboards.util.MBUtil;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
+import com.liferay.trash.constants.TrashActionKeys;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,33 +191,6 @@ public class MBCategoryTrashHandler extends BaseMBTrashHandler {
 	}
 
 	@Override
-	public List<TrashRenderer> getTrashContainerModelTrashRenderers(
-			long classPK, int start, int end)
-		throws PortalException {
-
-		List<TrashRenderer> trashRenderers = new ArrayList<>();
-
-		MBCategory category = _mbCategoryLocalService.getCategory(classPK);
-
-		List<MBCategory> categories = _mbCategoryLocalService.getCategories(
-			category.getGroupId(), classPK, WorkflowConstants.STATUS_IN_TRASH,
-			start, end);
-
-		for (MBCategory curCategory : categories) {
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					MBCategory.class.getName());
-
-			TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
-				curCategory.getPrimaryKey());
-
-			trashRenderers.add(trashRenderer);
-		}
-
-		return trashRenderers;
-	}
-
-	@Override
 	public TrashedModel getTrashedModel(long classPK) {
 		return _mbCategoryLocalService.fetchMBCategory(classPK);
 	}
@@ -269,6 +242,17 @@ public class MBCategoryTrashHandler extends BaseMBTrashHandler {
 	@Override
 	public TrashRenderer getTrashRenderer(long classPK) throws PortalException {
 		return _trashRendererFactory.getTrashRenderer(classPK);
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		MBCategory category = _mbCategoryLocalService.getCategory(classPK);
+
+		return MBCategoryPermission.contains(
+			permissionChecker, category, actionId);
 	}
 
 	@Override
@@ -376,17 +360,6 @@ public class MBCategoryTrashHandler extends BaseMBTrashHandler {
 		return portletURL;
 	}
 
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		MBCategory category = _mbCategoryLocalService.getCategory(classPK);
-
-		return MBCategoryPermission.contains(
-			permissionChecker, category, actionId);
-	}
-
 	@Reference(unbind = "-")
 	protected void setMBCategoryLocalService(
 		MBCategoryLocalService mbCategoryLocalService) {
@@ -416,6 +389,9 @@ public class MBCategoryTrashHandler extends BaseMBTrashHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	private TrashRendererFactory _trashRendererFactory;
 

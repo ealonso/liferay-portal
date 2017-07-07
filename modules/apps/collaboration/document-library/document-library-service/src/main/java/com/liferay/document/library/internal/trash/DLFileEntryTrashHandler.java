@@ -45,13 +45,12 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileEntryPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.kernel.model.TrashEntryConstants;
 
 import javax.portlet.PortletRequest;
@@ -84,17 +83,6 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 		checkRestorableEntry(
 			classPK, 0, containerModelId, dlFileEntry.getFileName(),
 			dlFileEntry.getTitle(), newName);
-	}
-
-	@Override
-	public void checkRestorableEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(
-			trashEntry.getClassPK(), trashEntry.getEntryId(), containerModelId,
-			trashEntry.getTypeSettingsProperty("fileName"),
-			trashEntry.getTypeSettingsProperty("title"), newName);
 	}
 
 	@Override
@@ -201,6 +189,23 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
+
+		if (dlFileEntry.isInHiddenFolder() &&
+			actionId.equals(ActionKeys.VIEW)) {
+
+			return false;
+		}
+
+		return DLFileEntryPermission.contains(
+			permissionChecker, classPK, actionId);
+	}
+
+	@Override
 	public boolean hasTrashPermission(
 			PermissionChecker permissionChecker, long groupId, long classPK,
 			String trashActionId)
@@ -263,7 +268,7 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 			(dlFileEntry.getClassPK() > 0)) {
 
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
+				_trashHandlerRegistryUtil.getTrashHandler(
 					dlFileEntry.getClassName());
 
 			trashHandler.restoreRelatedTrashEntry(getClassName(), classPK);
@@ -410,23 +415,6 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 		return localRepository;
 	}
 
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		DLFileEntry dlFileEntry = getDLFileEntry(classPK);
-
-		if (dlFileEntry.isInHiddenFolder() &&
-			actionId.equals(ActionKeys.VIEW)) {
-
-			return false;
-		}
-
-		return DLFileEntryPermission.contains(
-			permissionChecker, classPK, actionId);
-	}
-
 	@Reference(unbind = "-")
 	protected void setDLAppLocalService(DLAppLocalService dlAppLocalService) {
 		_dlAppLocalService = dlAppLocalService;
@@ -471,5 +459,8 @@ public class DLFileEntryTrashHandler extends DLBaseTrashHandler {
 
 	@Reference
 	private DLValidator _dlValidator;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
