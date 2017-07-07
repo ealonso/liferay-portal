@@ -20,11 +20,11 @@ import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class TrashUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			className);
 
 		String rootContainerModelTitle = LanguageUtil.get(
@@ -100,7 +100,7 @@ public class TrashUtil {
 		PortletURL portletURL = PortletURLUtil.clone(
 			containerModelURL, liferayPortletResponse);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			className);
 
 		List<ContainerModel> containerModels =
@@ -110,7 +110,7 @@ public class TrashUtil {
 
 		for (ContainerModel containerModel : containerModels) {
 			TrashHandler containerModelTrashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
+				_trashHandlerRegistryUtil.getTrashHandler(
 					containerModel.getModelClassName());
 
 			if (checkInTrashContainers &&
@@ -144,6 +144,9 @@ public class TrashUtil {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	@Reference
 	private TrashHelper _trashHelper;
