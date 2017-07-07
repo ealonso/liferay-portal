@@ -29,10 +29,10 @@ import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.model.TrashEntry;
 
 import java.util.List;
@@ -42,6 +42,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Julio Camarero
@@ -77,7 +78,7 @@ public class TrashIndexer extends BaseIndexer<TrashEntry> {
 				Field.COMPANY_ID, searchContext.getCompanyId());
 
 			List<TrashHandler> trashHandlers =
-				TrashHandlerRegistryUtil.getTrashHandlers();
+				_trashHandlerRegistryUtil.getTrashHandlers();
 
 			for (TrashHandler trashHandler : trashHandlers) {
 				Filter filter = trashHandler.getExcludeFilter(searchContext);
@@ -124,7 +125,7 @@ public class TrashIndexer extends BaseIndexer<TrashEntry> {
 			long entryClassPK, String actionId)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			entryClassName);
 
 		return trashHandler.hasTrashPermission(
@@ -208,5 +209,8 @@ public class TrashIndexer extends BaseIndexer<TrashEntry> {
 				new QueryFilter(query), BooleanClauseOccur.MUST_NOT);
 		}
 	}
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
