@@ -51,7 +51,7 @@
 			<liferay-frontend:management-bar-filter-item active='<%= Objects.equals(trashDisplayContext.getNavigation(), "all") %>' label="all" url="<%= allURL.toString() %>" />
 
 			<%
-			List<TrashHandler> trashHandlers = TrashHandlerRegistryUtil.getTrashHandlers();
+			List<TrashHandler> trashHandlers = trashHandlerRegistryUtil.getTrashHandlers();
 
 			for (TrashHandler trashHandler : trashHandlers) {
 				PortletURL trashHandlerURL = trashDisplayContext.getPortletURL();

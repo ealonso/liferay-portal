@@ -46,6 +46,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandlerRegistryUtil;
+import com.liferay.trash.util.TrashWebKeys;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -332,6 +334,10 @@ public class AssetPublisherPortlet extends MVCPortlet {
 
 			renderRequest.setAttribute(
 				WebKeys.SINGLE_PAGE_APPLICATION_CLEAR_CACHE, Boolean.TRUE);
+
+			renderRequest.setAttribute(
+				TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL,
+				trashHandlerRegistryUtil);
 		}
 		catch (Exception e) {
 			_log.error("Unable to get asset publisher customizer", e);
@@ -367,6 +373,9 @@ public class AssetPublisherPortlet extends MVCPortlet {
 
 	@Reference
 	protected Portal portal;
+
+	@Reference
+	protected TrashHandlerRegistryUtil trashHandlerRegistryUtil;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetPublisherPortlet.class);
