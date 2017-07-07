@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
 import com.liferay.portal.kernel.trash.TrashActionKeys;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -58,7 +57,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {"model.class.name=com.liferay.message.boards.kernel.model.MBCategory"},
 	service = TrashHandler.class
 )
-public class MBCategoryTrashHandler extends BaseTrashHandler {
+public class MBCategoryTrashHandler extends BaseMBTrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) throws PortalException {
@@ -70,43 +69,6 @@ public class MBCategoryTrashHandler extends BaseTrashHandler {
 	@Override
 	public String getClassName() {
 		return MBCategory.class.getName();
-	}
-
-	@Override
-	public ContainerModel getContainerModel(long containerModelId)
-		throws PortalException {
-
-		return _mbCategoryLocalService.getCategory(containerModelId);
-	}
-
-	@Override
-	public String getContainerModelClassName(long classPK) {
-		return MBCategory.class.getName();
-	}
-
-	@Override
-	public String getContainerModelName() {
-		return "category";
-	}
-
-	@Override
-	public List<ContainerModel> getContainerModels(
-			long classPK, long parentContainerModelId, int start, int end)
-		throws PortalException {
-
-		MBCategory category = _mbCategoryLocalService.getCategory(classPK);
-
-		List<MBCategory> categories = _mbCategoryLocalService.getCategories(
-			category.getGroupId(), parentContainerModelId,
-			WorkflowConstants.STATUS_APPROVED, start, end);
-
-		List<ContainerModel> containerModels = new ArrayList<>();
-
-		for (MBCategory curCategory : categories) {
-			containerModels.add(curCategory);
-		}
-
-		return containerModels;
 	}
 
 	@Override
