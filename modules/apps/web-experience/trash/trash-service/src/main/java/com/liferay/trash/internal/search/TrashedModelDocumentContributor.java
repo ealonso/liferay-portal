@@ -26,8 +26,9 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.kernel.model.TrashEntry;
 
 import java.util.Date;
@@ -103,7 +104,8 @@ public class TrashedModelDocumentContributor implements DocumentContributor {
 			}
 		}
 
-		TrashHandler trashHandler = trashedModel.getTrashHandler();
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
+			baseModel.getModelClassName());
 
 		try {
 			TrashRenderer trashRenderer = null;
@@ -134,6 +136,9 @@ public class TrashedModelDocumentContributor implements DocumentContributor {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		TrashedModelDocumentContributor.class);
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	private UserLocalService _userLocalService;
 
