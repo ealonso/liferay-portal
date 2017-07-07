@@ -18,8 +18,8 @@ import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.service.MBCategoryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ContainerModel;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHandler;
 
 import java.util.ArrayList;
 import java.util.List;
