@@ -14,6 +14,8 @@
 
 package com.liferay.trash.taglib.servlet;
 
+import com.liferay.trash.TrashHandlerRegistryUtil;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -40,6 +42,10 @@ public class ServletContextUtil {
 		return _instance._getServletContext();
 	}
 
+	public static final TrashHandlerRegistryUtil getTrashHandlerRegistryUtil() {
+		return _instance._getTrashHandlerRegistryUtil();
+	}
+
 	@Activate
 	protected void activate() {
 		_instance = this;
@@ -62,8 +68,15 @@ public class ServletContextUtil {
 		return _servletContext;
 	}
 
+	private TrashHandlerRegistryUtil _getTrashHandlerRegistryUtil() {
+		return _trashHandlerRegistryUtil;
+	}
+
 	private static ServletContextUtil _instance;
 
 	private ServletContext _servletContext;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
