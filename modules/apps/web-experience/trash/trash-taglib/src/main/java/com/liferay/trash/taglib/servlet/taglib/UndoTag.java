@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.JavaConstants;
@@ -26,6 +25,8 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.kernel.model.TrashEntry;
 import com.liferay.trash.taglib.servlet.ServletContextUtil;
 
@@ -98,6 +99,9 @@ public class UndoTag extends IncludeTag {
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		TrashHandlerRegistryUtil trashHandlerRegistryUtil =
+			ServletContextUtil.getTrashHandlerRegistryUtil();
+
 		List<TrashedModel> trashedModels = _getTrashedModels();
 
 		List<String> classNames = new ArrayList<>();
@@ -108,7 +112,9 @@ public class UndoTag extends IncludeTag {
 			try {
 				TrashEntry trashEntry = trashedModel.getTrashEntry();
 
-				TrashHandler trashHandler = trashedModel.getTrashHandler();
+				TrashHandler trashHandler =
+					trashHandlerRegistryUtil.getTrashHandler(
+						trashEntry.getClassName());
 
 				TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
 					trashedModel.getTrashEntryClassPK());
