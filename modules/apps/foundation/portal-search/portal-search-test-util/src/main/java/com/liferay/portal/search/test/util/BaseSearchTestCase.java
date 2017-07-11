@@ -38,20 +38,25 @@ import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.test.randomizerbumpers.BBCodeRandomizerBumper;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -60,9 +65,26 @@ import org.junit.Test;
  */
 public abstract class BaseSearchTestCase {
 
+	@BeforeClass
+	public static void setUpClass() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			TrashHandlerRegistryUtil.class.getName());
+
+		_serviceTracker.open();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		_serviceTracker.close();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		group = GroupTestUtil.addGroup();
+
+		_trashHandlerRegistryUtil = _serviceTracker.getService();
 	}
 
 	@Test
@@ -823,7 +845,7 @@ public abstract class BaseSearchTestCase {
 		assertGroupEntriesCount(initialUser2SearchGroupEntriesCount + 1, user2);
 
 		TrashHandler parentTrashHandler =
-			TrashHandlerRegistryUtil.getTrashHandler(
+			_trashHandlerRegistryUtil.getTrashHandler(
 				getParentBaseModelClassName());
 
 		parentTrashHandler.restoreTrashEntry(
@@ -891,7 +913,7 @@ public abstract class BaseSearchTestCase {
 		assertGroupEntriesCount(initialSearchGroupEntriesCount + 3);
 
 		TrashHandler parentTrashHandler =
-			TrashHandlerRegistryUtil.getTrashHandler(
+			_trashHandlerRegistryUtil.getTrashHandler(
 				getParentBaseModelClassName());
 
 		parentTrashHandler.restoreTrashEntry(
@@ -1072,5 +1094,11 @@ public abstract class BaseSearchTestCase {
 
 	@DeleteAfterTestRun
 	protected Group group;
+
+	private static
+		ServiceTracker<TrashHandlerRegistryUtil, TrashHandlerRegistryUtil>
+			_serviceTracker;
+
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }
