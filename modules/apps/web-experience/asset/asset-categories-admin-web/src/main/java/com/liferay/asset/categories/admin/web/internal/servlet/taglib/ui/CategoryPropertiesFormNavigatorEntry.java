@@ -14,6 +14,7 @@
 
 package com.liferay.asset.categories.admin.web.internal.servlet.taglib.ui;
 
+import com.liferay.asset.categories.admin.web.constants.AssetCategoriesConstants;
 import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 
 import javax.servlet.ServletContext;
@@ -30,6 +31,12 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class CategoryPropertiesFormNavigatorEntry
 	extends BaseCategoryFormNavigatorEntry {
+
+	@Override
+	public String getFormNavigatorId() {
+		return
+			AssetCategoriesConstants.FORM_NAVIGATOR_ID_EDIT_CATEGORY_PROPERTIES;
+	}
 
 	@Override
 	public String getKey() {

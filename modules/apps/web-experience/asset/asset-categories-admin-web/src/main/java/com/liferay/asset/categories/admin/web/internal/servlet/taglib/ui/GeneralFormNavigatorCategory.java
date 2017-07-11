@@ -33,7 +33,7 @@ public class GeneralFormNavigatorCategory implements FormNavigatorCategory {
 
 	@Override
 	public String getFormNavigatorId() {
-		return AssetCategoriesConstants.FORM_NAVIGATOR_ID_EDIT_CATEGORY;
+		return AssetCategoriesConstants.FORM_NAVIGATOR_ID_EDIT_CATEGORY_DETAILS;
 	}
 
 	@Override
