@@ -26,11 +26,14 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.trash.service.TrashVersionLocalServiceUtil;
 import com.liferay.wiki.model.WikiNode;
@@ -41,8 +44,10 @@ import com.liferay.wiki.service.WikiPageResourceLocalServiceUtil;
 import com.liferay.wiki.util.test.WikiPageTrashHandlerTestUtil;
 import com.liferay.wiki.util.test.WikiTestUtil;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -62,6 +67,21 @@ public class WikiPageDependentsTrashHandlerTest {
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
 
+	@BeforeClass
+	public static void setUpClass() {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(
+			TrashHandlerRegistryUtil.class.getName());
+
+		_serviceTracker.open();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		_serviceTracker.close();
+	}
+
 	@Before
 	public void setUp() throws Exception {
 		ServiceTestUtil.setUser(TestPropsValues.getUser());
@@ -69,6 +89,8 @@ public class WikiPageDependentsTrashHandlerTest {
 		_group = GroupTestUtil.addGroup();
 
 		_node = WikiTestUtil.addNode(_group.getGroupId());
+
+		_trashHandlerRegistryUtil = _serviceTracker.getService();
 	}
 
 	@Test
@@ -1029,7 +1051,7 @@ public class WikiPageDependentsTrashHandlerTest {
 	protected void movePage(WikiPage trashedPage, WikiPage newParentPage)
 		throws PortalException {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			WikiPage.class.getName());
 
 		ServiceContext serviceContext =
@@ -1048,7 +1070,7 @@ public class WikiPageDependentsTrashHandlerTest {
 	protected void moveTrashEntry(long classPK, long newContainerId)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			WikiPage.class.getName());
 
 		ServiceContext serviceContext =
@@ -1060,7 +1082,7 @@ public class WikiPageDependentsTrashHandlerTest {
 	}
 
 	protected void restoreFromTrash(WikiPage page) throws Exception {
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			WikiPage.class.getName());
 
 		trashHandler.restoreTrashEntry(
@@ -1080,10 +1102,15 @@ public class WikiPageDependentsTrashHandlerTest {
 
 	private static final String _REDIRECTOR_PAGE_TITLE = "RedirectorPage";
 
+	private static
+		ServiceTracker<TrashHandlerRegistryUtil, TrashHandlerRegistryUtil>
+			_serviceTracker;
+
 	@DeleteAfterTestRun
 	private Group _group;
 
 	private WikiNode _node;
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	private static class RelatedPages {
 

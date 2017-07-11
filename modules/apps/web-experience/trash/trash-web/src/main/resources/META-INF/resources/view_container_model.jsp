@@ -69,7 +69,7 @@ renderResponse.setTitle(LanguageUtil.format(request, "select-x", trashContainerM
 
 			containerURL.setParameter("containerModelId", String.valueOf(curContainerModelId));
 
-			TrashHandler curContainerTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(curContainerModel.getModelClassName());
+			TrashHandler curContainerTrashHandler = trashHandlerRegistryUtil.getTrashHandler(curContainerModel.getModelClassName());
 			%>
 
 			<liferay-ui:search-container-column-text
