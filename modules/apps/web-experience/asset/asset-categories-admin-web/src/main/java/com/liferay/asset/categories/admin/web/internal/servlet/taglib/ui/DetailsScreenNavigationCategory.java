@@ -15,35 +15,37 @@
 package com.liferay.asset.categories.admin.web.internal.servlet.taglib.ui;
 
 import com.liferay.asset.categories.admin.web.constants.AssetCategoriesConstants;
+import com.liferay.asset.categories.admin.web.constants.AssetCategoriesScreenNavigationKeys;
+import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationCategory;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorCategory;
 
 import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Eudaldo Alonso
+ * @author Jürgen Kappler
  */
 @Component(
-	property = {"form.navigator.category.order:Integer=10"},
-	service = FormNavigatorCategory.class
+	property = {"screen.navigation.category.order:Integer=10"},
+	service = ScreenNavigationCategory.class
 )
-public class GeneralFormNavigatorCategory implements FormNavigatorCategory {
+public class DetailsScreenNavigationCategory
+	implements ScreenNavigationCategory {
 
 	@Override
-	public String getFormNavigatorId() {
-		return AssetCategoriesConstants.FORM_NAVIGATOR_ID_EDIT_CATEGORY_DETAILS;
-	}
-
-	@Override
-	public String getKey() {
-		return AssetCategoriesConstants.CATEGORY_KEY_GENERAL;
+	public String getCategoryKey() {
+		return AssetCategoriesScreenNavigationKeys.DETAILS;
 	}
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "general");
+		return LanguageUtil.get(locale, "details");
+	}
+
+	@Override
+	public String getScreenNavigationKey() {
+		return AssetCategoriesConstants.CATEGORY_KEY_GENERAL;
 	}
 
 }

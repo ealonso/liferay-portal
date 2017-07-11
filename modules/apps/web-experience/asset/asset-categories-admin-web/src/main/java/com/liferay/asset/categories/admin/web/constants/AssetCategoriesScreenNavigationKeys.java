@@ -15,16 +15,12 @@
 package com.liferay.asset.categories.admin.web.constants;
 
 /**
- * @author Eudaldo Alonso
+ * @author Jürgen Kappler
  */
-public class AssetCategoriesConstants {
+public class AssetCategoriesScreenNavigationKeys {
 
-	public static final String CATEGORY_KEY_GENERAL = "general";
+	public static final String DETAILS = "details";
 
-	public static final String FORM_NAVIGATOR_ID_EDIT_CATEGORY_DETAILS =
-		"edit.category.details.form";
-
-	public static final String FORM_NAVIGATOR_ID_EDIT_CATEGORY_PROPERTIES =
-		"edit.category.properties.form";
+	public static final String PROPERTIES = "properties";
 
 }
