@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portlet.social.test;
+package com.liferay.social.activity.test.util;
 
 import com.liferay.portal.events.ServicePreAction;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
