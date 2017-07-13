@@ -14,40 +14,37 @@
 
 package com.liferay.asset.categories.admin.web.internal.servlet.taglib.ui;
 
-import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
+import com.liferay.asset.categories.admin.web.constants.AssetCategoriesConstants;
+import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationCategory;
+import com.liferay.portal.kernel.language.LanguageUtil;
 
-import javax.servlet.ServletContext;
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Eudaldo Alonso
+ * @author Jürgen Kappler
  */
 @Component(
-	property = {"form.navigator.entry.order:Integer=20"},
-	service = FormNavigatorEntry.class
+	property = {"screen.navigation.category.order:Integer=10"},
+	service = ScreenNavigationCategory.class
 )
-public class CategoryPropertiesFormNavigatorEntry
-	extends BaseCategoryFormNavigatorEntry {
+public class DetailsScreenNavigationCategory
+	implements ScreenNavigationCategory {
 
 	@Override
-	public String getKey() {
-		return "properties";
+	public String getCategoryKey() {
+		return "details";
 	}
 
 	@Override
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.asset.categories.admin.web)",
-		unbind = "-"
-	)
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "details");
 	}
 
 	@Override
-	protected String getJspPath() {
-		return "/category/properties.jsp";
+	public String getScreenNavigationKey() {
+		return AssetCategoriesConstants.CATEGORY_KEY_GENERAL;
 	}
 
 }
