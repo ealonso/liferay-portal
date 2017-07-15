@@ -15,6 +15,7 @@
 package com.liferay.asset.tags.service.impl;
 
 import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.asset.tags.exception.AssetTagException;
 import com.liferay.asset.tags.exception.DuplicateTagException;
 import com.liferay.asset.tags.model.AssetTag;
@@ -46,6 +47,7 @@ import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.asset.util.AssetUtil;
@@ -89,7 +91,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 
 		// Tag
 
-		User user = userPersistence.findByPrimaryKey(userId);
+		User user = userLocalService.getUser(userId);
 
 		long tagId = counterLocalService.increment();
 
@@ -178,7 +180,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> checkTags(long userId, long groupId, String[] names)
 		throws PortalException {
 
-		Group group = groupPersistence.findByPrimaryKey(groupId);
+		Group group = groupLocalService.getGroup(groupId);
 
 		return checkTags(userId, group, names);
 	}
@@ -512,8 +514,8 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getTags(long classNameId, long classPK) {
-		AssetEntry entry = assetEntryPersistence.fetchByC_C(
-			classNameId, classPK);
+		AssetEntry entry = assetEntryLocalService.fetchEntry(
+			PortalUtil.getClassName(classNameId), classPK);
 
 		if (entry == null) {
 			return Collections.emptyList();
@@ -810,6 +812,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 				AssetTagException.INVALID_CHARACTER);
 		}
 	}
+
+	@BeanReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetTagLocalServiceImpl.class);
