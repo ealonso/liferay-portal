@@ -20,10 +20,18 @@
 		<field name="publishDate" type="Date" />
 		<field name="expirationDate" type="Date" />
 		<field name="mimeType" type="String" />
-		<field localized="true" name="title" type="String" />
-		<field localized="true" name="description" type="String" />
-		<field localized="true" name="summary" type="String" />
-		<field name="url" type="String" />
+		<field localized="true" name="title" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field localized="true" name="description" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field localized="true" name="summary" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+		<field name="url" type="String">
+			<hint-collection name="URL" />
+		</field>
 		<field name="layoutUuid" type="String" />
 		<field name="height" type="int" />
 		<field name="width" type="int" />
