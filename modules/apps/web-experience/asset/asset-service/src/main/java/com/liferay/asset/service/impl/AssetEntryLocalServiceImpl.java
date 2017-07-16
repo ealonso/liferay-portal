@@ -16,6 +16,7 @@ package com.liferay.asset.service.impl;
 
 import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
 import com.liferay.asset.categories.service.permission.AssetCategoryPermission;
 import com.liferay.asset.exception.NoSuchEntryException;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
@@ -28,6 +29,8 @@ import com.liferay.asset.model.AssetLinkConstants;
 import com.liferay.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.tags.model.AssetTag;
+import com.liferay.asset.tags.service.AssetTagLocalService;
+import com.liferay.asset.tags.service.AssetTagStatsLocalService;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -61,6 +64,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.util.AssetSearcher;
 import com.liferay.portlet.asset.validator.AssetEntryValidatorRegistry;
+import com.liferay.registry.collections.ServiceTrackerCollections;
+import com.liferay.registry.collections.ServiceTrackerMap;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 
 import java.util.ArrayList;
@@ -1294,8 +1299,14 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		indexer.reindex(className, entry.getClassPK());
 	}
 
+	@BeanReference(type = AssetCategoryLocalService.class)
+	protected AssetCategoryLocalService assetCategoryLocalService;
+
 	@BeanReference(type = AssetEntryValidatorRegistry.class)
 	protected AssetEntryValidatorRegistry assetEntryValidatorRegistry;
+
+	@BeanReference(type = AssetTagStatsLocalService.class)
+	protected AssetTagLocalService assetTagLocalService;
 
 	private final ServiceTrackerMap
 		<String, List<AssetEntryValidatorExclusionRule>>
