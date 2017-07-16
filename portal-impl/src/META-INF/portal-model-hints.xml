@@ -118,28 +118,6 @@
 		<field name="type" type="int" />
 		<field name="weight" type="int" />
 	</model>
-	<model name="com.liferay.asset.kernel.model.AssetTag">
-		<field name="uuid" type="String" />
-		<field name="tagId" type="long" />
-		<field name="groupId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="userId" type="long" />
-		<field name="userName" type="String" />
-		<field name="createDate" type="Date" />
-		<field name="modifiedDate" type="Date" />
-		<field name="name" type="String">
-			<validator name="required" />
-		</field>
-		<field name="assetCount" type="int" />
-		<field name="lastPublishDate" type="Date" />
-	</model>
-	<model name="com.liferay.asset.kernel.model.AssetTagStats">
-		<field name="tagStatsId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="tagId" type="long" />
-		<field name="classNameId" type="long" />
-		<field name="assetCount" type="int" />
-	</model>
 	<model name="com.liferay.counter.kernel.model.Counter">
 		<field name="name" type="String" />
 		<field name="currentId" type="long" />
