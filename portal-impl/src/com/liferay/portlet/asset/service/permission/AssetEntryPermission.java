@@ -25,7 +25,10 @@ import com.liferay.portal.kernel.util.PortalUtil;
 
 /**
  * @author Samuel Kong
+ * @deprecated As of 7.0.0, moved to {@link
+ *             com.liferay.asset.categories.service.permission.AssetEntryPermission}
  */
+@Deprecated
 public class AssetEntryPermission {
 
 	public static void check(
