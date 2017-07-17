@@ -81,8 +81,8 @@ public class RenderResponseImpl
 			Validator.isNull(localizedCustomTitle)) {
 
 			_title = title;
-		} else
-		{
+		}
+		else {
 			_title = localizedCustomTitle;
 		}
 
