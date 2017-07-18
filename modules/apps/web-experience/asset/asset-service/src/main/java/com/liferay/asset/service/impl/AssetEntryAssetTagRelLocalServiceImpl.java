@@ -14,28 +14,73 @@
 
 package com.liferay.asset.service.impl;
 
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetEntryAssetTagRel;
 import com.liferay.asset.service.base.AssetEntryAssetTagRelLocalServiceBaseImpl;
+import com.liferay.asset.tags.model.AssetTag;
+import com.liferay.portal.kernel.util.ListUtil;
+
+import java.util.List;
 
 /**
- * The implementation of the asset entry asset tag rel local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.asset.service.AssetEntryAssetTagRelLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see AssetEntryAssetTagRelLocalServiceBaseImpl
- * @see com.liferay.asset.service.AssetEntryAssetTagRelLocalServiceUtil
+ * @author Eudaldo Alonso
  */
 public class AssetEntryAssetTagRelLocalServiceImpl
 	extends AssetEntryAssetTagRelLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.asset.service.AssetEntryAssetTagRelLocalServiceUtil} to access the asset entry asset tag rel local service.
-	 */
+	@Override
+	public void addAssetEntryAssetTagRel(
+		AssetEntry assetEntry, List<AssetTag> assetTags) {
+
+		for (AssetTag assetTag : assetTags) {
+			addAssetEntryAssetTagRel(
+				assetEntry.getCompanyId(), assetEntry.getEntryId(),
+				assetTag.getTagId());
+		}
+	}
+
+	@Override
+	public void addAssetEntryAssetTagRel(long assetEntryId, long assetTagId) {
+		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(assetEntryId);
+
+		addAssetEntryAssetTagRel(
+			assetEntry.getCompanyId(), assetEntry.getEntryId(), assetTagId);
+	}
+
+	@Override
+	public AssetEntryAssetTagRel addAssetEntryAssetTagRel(
+		long companyId, long assetEntryId, long assetTagId) {
+
+		long entryId = counterLocalService.increment();
+
+		AssetEntryAssetTagRel assetEntryAssetTagRel =
+			assetEntryAssetTagRelPersistence.create(entryId);
+
+		assetEntryAssetTagRel.setCompanyId(companyId);
+		assetEntryAssetTagRel.setAssetEntryId(assetEntryId);
+		assetEntryAssetTagRel.setAssetTagId(assetTagId);
+
+		return assetEntryAssetTagRel;
+	}
+
+	@Override
+	public long[] getAssetEntryIdsByAssetTagId(long assetTagId) {
+		List<AssetEntryAssetTagRel> assetEntryAssetTagRels =
+			assetEntryAssetTagRelPersistence.findByAssetTagId(assetTagId);
+
+		return ListUtil.toLongArray(
+			assetEntryAssetTagRels,
+			AssetEntryAssetTagRel.ASSET_ENTRY_ID_ACCESSOR);
+	}
+
+	@Override
+	public long[] getAssetTagIdsByAssetEntryId(long assetEntryId) {
+		List<AssetEntryAssetTagRel> assetEntryAssetTagRels =
+			assetEntryAssetTagRelPersistence.findByAssetEntryId(assetEntryId);
+
+		return ListUtil.toLongArray(
+			assetEntryAssetTagRels,
+			AssetEntryAssetTagRel.ASSET_TAG_ID_ACCESSOR);
+	}
+
 }
