@@ -19,6 +19,7 @@ import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.service.AssetCategoryLocalService;
 import com.liferay.asset.categories.service.permission.AssetCategoryPermission;
 import com.liferay.asset.exception.NoSuchEntryException;
+import com.liferay.asset.internal.util.AssetEntryValidatorExclusionRuleRegistry;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.validator.AssetEntryValidator;
@@ -65,8 +66,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.util.AssetSearcher;
 import com.liferay.portlet.asset.validator.AssetEntryValidatorRegistry;
-import com.liferay.registry.collections.ServiceTrackerCollections;
-import com.liferay.registry.collections.ServiceTrackerMap;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 
 import java.util.ArrayList;
@@ -139,13 +138,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		for (AssetEntry assetEntry : assetEntries) {
 			deleteEntry(assetEntry);
 		}
-	}
-
-	@Override
-	public void destroy() {
-		super.destroy();
-
-		_serviceTrackerMap.close();
 	}
 
 	@Override
@@ -1029,7 +1021,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		}
 
 		List<AssetEntryValidatorExclusionRule> exclusionRules =
-			_serviceTrackerMap.getService(className);
+			assetEntryValidatorExclusionRuleRegistry.
+				getAssetEntryValidatorExclusionRules(className);
 
 		if (exclusionRules != null) {
 			for (AssetEntryValidatorExclusionRule exclusionRule :
@@ -1310,15 +1303,14 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 	@BeanReference(type = AssetCategoryLocalService.class)
 	protected AssetCategoryLocalService assetCategoryLocalService;
 
+	@BeanReference(type = AssetEntryValidatorExclusionRuleRegistry.class)
+	protected AssetEntryValidatorExclusionRuleRegistry
+		assetEntryValidatorExclusionRuleRegistry;
+
 	@BeanReference(type = AssetEntryValidatorRegistry.class)
 	protected AssetEntryValidatorRegistry assetEntryValidatorRegistry;
 
 	@BeanReference(type = AssetTagStatsLocalService.class)
 	protected AssetTagLocalService assetTagLocalService;
-
-	private final ServiceTrackerMap
-		<String, List<AssetEntryValidatorExclusionRule>>
-			_serviceTrackerMap = ServiceTrackerCollections.openMultiValueMap(
-				AssetEntryValidatorExclusionRule.class, "model.class.name");
 
 }
