@@ -14,28 +14,86 @@
 
 package com.liferay.asset.service.impl;
 
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetEntryAssetCategoryRel;
 import com.liferay.asset.service.base.AssetEntryAssetCategoryRelLocalServiceBaseImpl;
+import com.liferay.portal.kernel.util.ListUtil;
+
+import java.util.List;
 
 /**
- * The implementation of the asset entry asset category rel local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.asset.service.AssetEntryAssetCategoryRelLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see AssetEntryAssetCategoryRelLocalServiceBaseImpl
- * @see com.liferay.asset.service.AssetEntryAssetCategoryRelLocalServiceUtil
+ * @author Eudaldo Alonso
  */
 public class AssetEntryAssetCategoryRelLocalServiceImpl
 	extends AssetEntryAssetCategoryRelLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.asset.service.AssetEntryAssetCategoryRelLocalServiceUtil} to access the asset entry asset category rel local service.
-	 */
+	@Override
+	public void addAssetEntryAssetCategoryRel(
+		AssetEntry assetEntry, long assetCategoryId) {
+
+		addAssetEntryAssetCategoryRel(
+			assetEntry.getCompanyId(), assetEntry.getEntryId(),
+			assetCategoryId);
+	}
+
+	@Override
+	public void addAssetEntryAssetCategoryRel(
+		AssetEntry assetEntry, long[] assetCategoryIds) {
+
+		for (long assetCategoryId : assetCategoryIds) {
+			addAssetEntryAssetCategoryRel(
+				assetEntry.getCompanyId(), assetEntry.getEntryId(),
+				assetCategoryId);
+		}
+	}
+
+	@Override
+	public void addAssetEntryAssetCategoryRel(
+		long assetEntryId, long assetCategoryId) {
+
+		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(assetEntryId);
+
+		addAssetEntryAssetCategoryRel(
+			assetEntry.getCompanyId(), assetEntry.getEntryId(),
+			assetCategoryId);
+	}
+
+	@Override
+	public AssetEntryAssetCategoryRel addAssetEntryAssetCategoryRel(
+		long companyId, long assetEntryId, long assetCategoryId) {
+
+		long entryId = counterLocalService.increment();
+
+		AssetEntryAssetCategoryRel assetEntryAssetCategoryRel =
+			assetEntryAssetCategoryRelPersistence.create(entryId);
+
+		assetEntryAssetCategoryRel.setCompanyId(companyId);
+		assetEntryAssetCategoryRel.setAssetEntryId(assetEntryId);
+		assetEntryAssetCategoryRel.setAssetCategoryId(assetCategoryId);
+
+		return assetEntryAssetCategoryRel;
+	}
+
+	@Override
+	public long[] getAssetCategoryIdsByAssetEntryId(long assetEntryId) {
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			assetEntryAssetCategoryRelPersistence.findByAssetEntryId(
+				assetEntryId);
+
+		return ListUtil.toLongArray(
+			assetEntryAssetCategoryRels,
+			AssetEntryAssetCategoryRel.ASSET_CATEGORY_ID_ACCESSOR);
+	}
+
+	@Override
+	public long[] getAssetEntryIdsByAssetCategoryId(long assetCategoryId) {
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			assetEntryAssetCategoryRelPersistence.findByAssetCategoryId(
+				assetCategoryId);
+
+		return ListUtil.toLongArray(
+			assetEntryAssetCategoryRels,
+			AssetEntryAssetCategoryRel.ASSET_ENTRY_ID_ACCESSOR);
+	}
+
 }
