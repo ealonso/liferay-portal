@@ -60,6 +60,7 @@ import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -87,8 +88,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		// Entry
 
-		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
-			entry.getEntryId());
+		long[] assetTagsIds =
+			assetEntryAssetTagRelLocalService.getAssetTagIdsByAssetEntryId(
+				entry.getEntryId());
 
 		assetEntryPersistence.remove(entry);
 
@@ -98,10 +100,10 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		// Tags
 
-		for (AssetTag tag : tags) {
-			if (entry.isVisible()) {
+		if (entry.isVisible()) {
+			for (long assetTagId : assetTagsIds) {
 				assetTagLocalService.decrementAssetCount(
-					tag.getTagId(), entry.getClassNameId());
+					assetTagId, entry.getClassNameId());
 			}
 		}
 
@@ -761,8 +763,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		if (categoryIds != null) {
 			categoryIds = checkCategories(className, classPK, categoryIds);
 
-			assetEntryPersistence.setAssetCategories(
-				entry.getEntryId(), categoryIds);
+			assetEntryAssetCategoryRelLocalService.
+				addAssetEntryAssetCategoryRel(entry, categoryIds);
 		}
 
 		// Tags
@@ -775,7 +777,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			List<AssetTag> tags = assetTagLocalService.checkTags(
 				userId, siteGroup, tagNames);
 
-			assetEntryPersistence.setAssetTags(entry.getEntryId(), tags);
+			assetEntryAssetTagRelLocalService.addAssetEntryAssetTagRel(
+				entry, tags);
 
 			if (entry.isVisible()) {
 				if (entry.isNew()) {
@@ -785,31 +788,36 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 					}
 				}
 				else {
-					List<AssetTag> oldTags = assetEntryPersistence.getAssetTags(
-						entry.getEntryId());
+					long[] tagsIds = ListUtil.toLongArray(
+						tags, AssetTag.TAG_ID_ACCESSOR);
 
-					for (AssetTag oldTag : oldTags) {
-						if (!tags.contains(oldTag)) {
+					long[] oldTagsIds =
+						assetEntryAssetTagRelLocalService.
+							getAssetTagIdsByAssetEntryId(entry.getEntryId());
+
+					for (long oldTagId : oldTagsIds) {
+						if (!ArrayUtil.contains(tagsIds, oldTagId)) {
 							assetTagLocalService.decrementAssetCount(
-								oldTag.getTagId(), classNameId);
+								oldTagId, classNameId);
 						}
 					}
 
-					for (AssetTag tag : tags) {
-						if (!oldTags.contains(tag)) {
+					for (long tagId : tagsIds) {
+						if (!ArrayUtil.contains(oldTagsIds, tagId)) {
 							assetTagLocalService.incrementAssetCount(
-								tag.getTagId(), classNameId);
+								tagId, classNameId);
 						}
 					}
 				}
 			}
 			else if (oldVisible) {
-				List<AssetTag> oldTags = assetEntryPersistence.getAssetTags(
-					entry.getEntryId());
+				long[] oldTagsIds =
+					assetEntryAssetTagRelLocalService.
+						getAssetTagIdsByAssetEntryId(entry.getEntryId());
 
-				for (AssetTag oldTag : oldTags) {
+				for (long oldTag : oldTagsIds) {
 					assetTagLocalService.decrementAssetCount(
-						oldTag.getTagId(), classNameId);
+						oldTag, classNameId);
 				}
 			}
 		}
@@ -972,22 +980,23 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetEntryPersistence.update(entry);
 
-		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
-			entry.getEntryId());
+		long[] assetTagsIds =
+			assetEntryAssetTagRelLocalService.getAssetTagIdsByAssetEntryId(
+				entry.getEntryId());
 
 		if (visible) {
-			for (AssetTag tag : tags) {
+			for (long assetTagId : assetTagsIds) {
 				assetTagLocalService.incrementAssetCount(
-					tag.getTagId(), entry.getClassNameId());
+					assetTagId, entry.getClassNameId());
 			}
 
 			socialActivityCounterLocalService.enableActivityCounters(
 				entry.getClassNameId(), entry.getClassPK());
 		}
 		else {
-			for (AssetTag tag : tags) {
+			for (long assetTagId : assetTagsIds) {
 				assetTagLocalService.decrementAssetCount(
-					tag.getTagId(), entry.getClassNameId());
+					assetTagId, entry.getClassNameId());
 			}
 
 			socialActivityCounterLocalService.disableActivityCounters(

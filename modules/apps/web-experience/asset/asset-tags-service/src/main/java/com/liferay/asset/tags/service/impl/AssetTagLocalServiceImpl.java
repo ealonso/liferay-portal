@@ -15,12 +15,14 @@
 package com.liferay.asset.tags.service.impl;
 
 import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryAssetTagRelLocalService;
 import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.asset.tags.exception.AssetTagException;
 import com.liferay.asset.tags.exception.DuplicateTagException;
 import com.liferay.asset.tags.model.AssetTag;
 import com.liferay.asset.tags.service.base.AssetTagLocalServiceBaseImpl;
 import com.liferay.asset.tags.util.comparator.AssetTagNameComparator;
+import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -236,8 +238,19 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 
 		// Entries
 
-		List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-			tag.getTagId());
+		long[] entryIds =
+			assetEntryAssetTagRelLocalService.getAssetEntryIdsByAssetTagId(
+				tag.getTagId());
+
+		List<AssetEntry> entries = new ArrayList<>();
+
+		for (long entryId : entryIds) {
+			AssetEntry entry = assetEntryLocalService.fetchEntry(entryId);
+
+			if (entry != null) {
+				entries.add(entry);
+			}
+		}
 
 		// Tag
 
@@ -290,7 +303,21 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getEntryTags(long entryId) {
-		return assetEntryPersistence.getAssetTags(entryId);
+		long[] tagIds =
+			assetEntryAssetTagRelLocalService.getAssetTagIdsByAssetEntryId(
+				entryId);
+
+		List<AssetTag> tags = new ArrayList<>();
+
+		for (long tagId : tagIds) {
+			AssetTag tag = fetchAssetTag(tagId);
+
+			if (tag != null) {
+				tags.add(tag);
+			}
+		}
+
+		return tags;
 	}
 
 	/**
@@ -527,7 +554,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			return Collections.emptyList();
 		}
 
-		return assetEntryPersistence.getAssetTags(entry.getEntryId());
+		return getEntryTags(entry.getEntryId());
 	}
 
 	@Override
@@ -619,15 +646,19 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public void mergeTags(long fromTagId, long toTagId) throws PortalException {
-		List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-			fromTagId);
+		long[] entryIds =
+			assetEntryAssetTagRelLocalService.getAssetEntryIdsByAssetTagId(
+				fromTagId);
 
-		assetTagPersistence.addAssetEntries(toTagId, entries);
+		for (long entryId : entryIds) {
+			assetEntryAssetTagRelLocalService.addAssetEntryAssetTagRel(
+				entryId, toTagId);
+		}
 
 		deleteTag(fromTagId);
 
-		for (AssetEntry entry : entries) {
-			incrementAssetCount(toTagId, entry.getClassNameId());
+		for (long entryId : entryIds) {
+			incrementAssetCount(toTagId, entryId);
 		}
 	}
 
@@ -717,8 +748,19 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		// Indexer
 
 		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-				tag.getTagId());
+			long[] entryIds =
+				assetEntryAssetTagRelLocalService.getAssetEntryIdsByAssetTagId(
+					tag.getTagId());
+
+			List<AssetEntry> entries = new ArrayList<>();
+
+			for (long entryId : entryIds) {
+				AssetEntry entry = assetEntryLocalService.fetchEntry(entryId);
+
+				if (entry != null) {
+					entries.add(entry);
+				}
+			}
 
 			assetEntryLocalService.reindex(entries);
 		}
@@ -818,6 +860,10 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 				AssetTagException.INVALID_CHARACTER);
 		}
 	}
+
+	@BeanReference(type = AssetEntryAssetTagRelLocalService.class)
+	protected AssetEntryAssetTagRelLocalService
+		assetEntryAssetTagRelLocalService;
 
 	@BeanReference(type = AssetEntryLocalService.class)
 	protected AssetEntryLocalService assetEntryLocalService;

@@ -22,6 +22,7 @@ import com.liferay.asset.categories.model.AssetCategoryProperty;
 import com.liferay.asset.categories.service.base.AssetCategoryLocalServiceBaseImpl;
 import com.liferay.asset.categories.util.comparator.AssetCategoryLeftCategoryIdComparator;
 import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryAssetCategoryRelLocalService;
 import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
@@ -302,11 +303,6 @@ public class AssetCategoryLocalServiceImpl
 				});
 		}
 
-		// Entries
-
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			category.getCategoryId());
-
 		// Category
 
 		assetCategoryPersistence.remove(category);
@@ -324,7 +320,7 @@ public class AssetCategoryLocalServiceImpl
 
 		// Indexer
 
-		assetEntryLocalService.reindex(entries);
+		_reindex(category.getCategoryId());
 
 		return category;
 	}
@@ -417,7 +413,7 @@ public class AssetCategoryLocalServiceImpl
 			return Collections.emptyList();
 		}
 
-		return assetEntryPersistence.getAssetCategories(entry.getEntryId());
+		return getEntryCategories(entry.getEntryId());
 	}
 
 	@Override
@@ -475,7 +471,21 @@ public class AssetCategoryLocalServiceImpl
 
 	@Override
 	public List<AssetCategory> getEntryCategories(long entryId) {
-		return assetEntryPersistence.getAssetCategories(entryId);
+		long[] categoryIds =
+			assetEntryAssetCategoryRelLocalService.
+				getAssetCategoryIdsByAssetEntryId(entryId);
+
+		List<AssetCategory> categories = new ArrayList<>();
+
+		for (long categoryId : categoryIds) {
+			AssetCategory category = fetchCategory(categoryId);
+
+			if (category != null) {
+				categories.add(category);
+			}
+		}
+
+		return categories;
 	}
 
 	@Override
@@ -536,10 +546,14 @@ public class AssetCategoryLocalServiceImpl
 	public AssetCategory mergeCategories(long fromCategoryId, long toCategoryId)
 		throws PortalException {
 
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			fromCategoryId);
+		long[] entryIds =
+			assetEntryAssetCategoryRelLocalService.
+				getAssetEntryIdsByAssetCategoryId(fromCategoryId);
 
-		assetCategoryPersistence.addAssetEntries(toCategoryId, entries);
+		for (long entryId : entryIds) {
+			assetEntryAssetCategoryRelLocalService.
+				addAssetEntryAssetCategoryRel(entryId, toCategoryId);
+		}
 
 		List<AssetCategoryProperty> categoryProperties =
 			assetCategoryPropertyLocalService.getCategoryProperties(
@@ -782,10 +796,7 @@ public class AssetCategoryLocalServiceImpl
 		// Indexer
 
 		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-				category.getCategoryId());
-
-			assetEntryLocalService.reindex(entries);
+			_reindex(category.getCategoryId());
 		}
 
 		return category;
@@ -905,6 +916,28 @@ public class AssetCategoryLocalServiceImpl
 	}
 
 	@BeanReference
+	protected AssetEntryAssetCategoryRelLocalService
+		assetEntryAssetCategoryRelLocalService;
+
+	@BeanReference
 	protected AssetEntryLocalService assetEntryLocalService;
+
+	private void _reindex(long categoryId) throws PortalException {
+		List<AssetEntry> entries = new ArrayList<>();
+
+		long[] entryIds =
+			assetEntryAssetCategoryRelLocalService.
+				getAssetEntryIdsByAssetCategoryId(categoryId);
+
+		for (long entryId : entryIds) {
+			AssetEntry entry = assetEntryLocalService.fetchEntry(entryId);
+
+			if (entry != null) {
+				entries.add(entry);
+			}
+		}
+
+		assetEntryLocalService.reindex(entries);
+	}
 
 }
