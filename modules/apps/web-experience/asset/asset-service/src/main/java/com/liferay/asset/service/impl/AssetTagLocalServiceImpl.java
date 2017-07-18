@@ -21,6 +21,7 @@ import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.service.base.AssetTagLocalServiceBaseImpl;
 import com.liferay.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -501,6 +502,11 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	@Override
 	public List<AssetTag> getTags() {
 		return assetTagPersistence.findAll();
+	}
+
+	@Override
+	public List<AssetTag> getTags(DynamicQuery dynamicQuery) {
+		return assetTagPersistence.findWithDynamicQuery(dynamicQuery);
 	}
 
 	/**
