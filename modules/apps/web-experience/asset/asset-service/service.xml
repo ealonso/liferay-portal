@@ -91,6 +91,8 @@
 
 		<!-- References -->
 
+		<reference entity="AssetEntryAssetCategoryRel" package-path="com.liferay.asset" />
+		<reference entity="AssetEntryAssetTagRel" package-path="com.liferay.asset" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Company" package-path="com.liferay.portal" />
 		<reference entity="Group" package-path="com.liferay.portal" />
@@ -101,6 +103,62 @@
 		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
 		<reference entity="SocialActivity" package-path="com.liferay.portlet.social" />
 		<reference entity="SocialActivityCounter" package-path="com.liferay.portlet.social" />
+	</entity>
+	<entity local-service="true" name="AssetEntryAssetCategoryRel" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="entryId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column accessor="true" name="assetEntryId" type="long" />
+		<column accessor="true" name="assetCategoryId" type="long" />
+
+		<!-- Finder methods -->
+
+		<finder name="AssetEntryId" return-type="Collection">
+			<finder-column name="assetEntryId" />
+		</finder>
+		<finder name="AssetCategoryId" return-type="Collection">
+			<finder-column name="assetCategoryId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
+	</entity>
+	<entity local-service="true" name="AssetEntryAssetTagRel" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="entryId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column accessor="true" name="assetEntryId" type="long" />
+		<column accessor="true" name="assetTagId" type="long" />
+
+		<!-- Finder methods -->
+
+		<finder name="AssetEntryId" return-type="Collection">
+			<finder-column name="assetEntryId" />
+		</finder>
+		<finder name="AssetTagId" return-type="Collection">
+			<finder-column name="assetTagId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
 	</entity>
 	<entity local-service="true" name="AssetLink" remote-service="false">
 
