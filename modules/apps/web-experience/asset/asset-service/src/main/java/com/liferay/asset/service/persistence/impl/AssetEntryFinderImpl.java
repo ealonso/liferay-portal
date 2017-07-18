@@ -17,7 +17,7 @@ package com.liferay.asset.service.persistence.impl;
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.impl.AssetEntryImpl;
-import com.liferay.asset.service.persistence.AssetCategoryUtil;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.service.persistence.AssetEntryFinder;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
@@ -759,15 +759,15 @@ public class AssetEntryFinderImpl
 	}
 
 	protected List<Long> getSubcategoryIds(long parentCategoryId) {
-		AssetCategory parentAssetCategory = AssetCategoryUtil.fetchByPrimaryKey(
-			parentCategoryId);
+		AssetCategory parentAssetCategory =
+			AssetCategoryLocalServiceUtil.fetchAssetCategory(parentCategoryId);
 
 		if (parentAssetCategory == null) {
 			return Collections.emptyList();
 		}
 
 		return ListUtil.toList(
-			AssetCategoryUtil.getDescendants(parentAssetCategory),
+			AssetCategoryLocalServiceUtil.getChildCategories(parentCategoryId),
 			AssetCategory.CATEGORY_ID_ACCESSOR);
 	}
 
