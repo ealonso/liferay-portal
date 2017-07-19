@@ -19,15 +19,16 @@ import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.service.TrashEntryLocalServiceUtil;
+import com.liferay.trash.util.TrashWebKeys;
 import com.liferay.trash.web.internal.constants.TrashPortletKeys;
 
 import java.util.Objects;
@@ -50,6 +51,10 @@ public class TrashDisplayContext {
 
 		_request = request;
 		_liferayPortletResponse = liferayPortletResponse;
+
+		_trashHandlerRegistryUtil =
+			(TrashHandlerRegistryUtil)request.getAttribute(
+				TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL);
 	}
 
 	public String getClassName() {
@@ -242,7 +247,7 @@ public class TrashDisplayContext {
 			return _trashHandler;
 		}
 
-		_trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		_trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			getClassName());
 
 		return _trashHandler;
@@ -329,6 +334,7 @@ public class TrashDisplayContext {
 	private final HttpServletRequest _request;
 	private TrashEntry _trashEntry;
 	private TrashHandler _trashHandler;
+	private final TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 	private TrashRenderer _trashRenderer;
 
 }

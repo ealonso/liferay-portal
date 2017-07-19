@@ -51,7 +51,10 @@ import javax.portlet.PortletRequest;
  * @author Alexander Chow
  * @author Zsolt Berentey
  * @see    TrashHandler
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.trash.BaseTrashHandler}
  */
+@Deprecated
 @ProviderType
 public abstract class BaseTrashHandler implements TrashHandler {
 
