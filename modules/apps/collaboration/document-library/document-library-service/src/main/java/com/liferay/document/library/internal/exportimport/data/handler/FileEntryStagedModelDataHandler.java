@@ -62,8 +62,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -75,6 +73,8 @@ import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
 import com.liferay.portal.repository.portletrepository.PortletRepository;
 import com.liferay.portal.verify.extender.marker.VerifyProcessCompletionMarker;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 
 import java.io.IOException;
@@ -639,7 +639,7 @@ public class FileEntryStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			DLFileEntry.class.getName());
 
 		if (trashHandler.isRestorable(existingFileEntry.getFileEntryId())) {
@@ -1030,6 +1030,9 @@ public class FileEntryStagedModelDataHandler
 		<DLPluggableContentDataHandler, DLPluggableContentDataHandler>
 			_serviceTrackerList;
 	private StorageEngine _storageEngine;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	@Reference
 	private TrashHelper _trashHelper;
