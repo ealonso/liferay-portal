@@ -44,11 +44,6 @@
 		<column name="priority" type="double" />
 		<column name="viewCount" type="int" />
 
-		<!-- Relationships -->
-
-		<column entity="AssetCategory" mapping-table="AssetEntries_AssetCategories" name="categories" type="Collection" />
-		<column entity="AssetTag" mapping-table="AssetEntries_AssetTags" name="tags" type="Collection" />
-
 		<!-- Finder methods -->
 
 		<finder name="GroupId" return-type="Collection">
@@ -93,14 +88,12 @@
 
 		<reference entity="AssetEntryAssetCategoryRel" package-path="com.liferay.asset" />
 		<reference entity="AssetEntryAssetTagRel" package-path="com.liferay.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.asset" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Company" package-path="com.liferay.portal" />
 		<reference entity="Group" package-path="com.liferay.portal" />
 		<reference entity="SystemEvent" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetCategory" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetLink" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
 		<reference entity="SocialActivity" package-path="com.liferay.portlet.social" />
 		<reference entity="SocialActivityCounter" package-path="com.liferay.portlet.social" />
 	</entity>
@@ -214,9 +207,9 @@
 
 		<!-- References -->
 
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
 		<reference entity="SystemEvent" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
 	</entity>
 	<exceptions>
 		<exception>AssetLink</exception>
