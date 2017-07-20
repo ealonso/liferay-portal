@@ -274,14 +274,13 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 		</div>
 	</liferay-util:buffer>
 
+	<liferay-util:dynamic-include key="/panel/app/layouts_tree.jsp#messages" />
+
 	<%
 	Layout selLayout = layoutsTreeDisplayContext.getSelLayout();
 
 	String targetNode = "#controlMenuAlertsContainer";
 	%>
-
-	<liferay-ui:success key="layoutAdded" message='<%= LanguageUtil.get(resourceBundle, "the-page-was-created-succesfully") %>' targetNode="<%= targetNode %>" />
-	<liferay-ui:success key="layoutDeleted" message='<%= LanguageUtil.get(resourceBundle, "the-page-was-deleted-succesfully") %>' targetNode="<%= targetNode %>" />
 
 	<%@ include file="/layout_exception.jspf" %>
 
