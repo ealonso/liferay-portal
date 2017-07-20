@@ -32,10 +32,6 @@
 		<column name="vocabularyId" type="long" />
 		<column name="lastPublishDate" type="Date" />
 
-		<!-- Relationships -->
-
-		<column entity="AssetEntry" mapping-table="AssetEntries_AssetCategories" name="entries" type="Collection" />
-
 		<!-- Order -->
 
 		<order by="asc">
@@ -93,13 +89,11 @@
 
 		<!-- References -->
 
+		<reference entity="AssetCategoryProperty" package-path="com.liferay.asset.categories" />
+		<reference entity="AssetVocabulary" package-path="com.liferay.asset.categories" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetCategoryProperty" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetVocabulary" package-path="com.liferay.portlet.asset" />
 	</entity>
 	<entity local-service="true" name="AssetCategoryProperty" remote-service="true">
 
@@ -199,11 +193,11 @@
 
 		<!-- References -->
 
+		<reference entity="AssetCategory" package-path="com.liferay.asset.categories" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Group" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetCategory" package-path="com.liferay.portlet.asset" />
 	</entity>
 	<exceptions>
 		<exception>AssetCategory</exception>

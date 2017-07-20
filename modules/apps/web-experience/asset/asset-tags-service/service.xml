@@ -27,10 +27,6 @@
 		<column name="assetCount" type="int" />
 		<column name="lastPublishDate" type="Date" />
 
-		<!-- Relationships -->
-
-		<column entity="AssetEntry" mapping-table="AssetEntries_AssetTags" name="entries" type="Collection" />
-
 		<!-- Order -->
 
 		<order by="asc">
@@ -53,12 +49,11 @@
 
 		<!-- References -->
 
+		<reference entity="AssetTagStats" package-path="com.liferay.asset.tags" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Group" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
-		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
-		<reference entity="AssetTagStats" package-path="com.liferay.portlet.asset" />
 	</entity>
 	<entity local-service="true" name="AssetTagStats" remote-service="false">
 
@@ -97,7 +92,7 @@
 
 		<!-- References -->
 
-		<reference entity="AssetTag" package-path="com.liferay.portlet.asset" />
+		<reference entity="AssetTag" package-path="com.liferay.asset.tags" />
 	</entity>
 	<exceptions>
 		<exception>AssetTag</exception>
