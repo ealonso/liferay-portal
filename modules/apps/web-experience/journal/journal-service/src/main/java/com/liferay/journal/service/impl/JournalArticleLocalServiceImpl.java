@@ -151,6 +151,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -6900,7 +6901,7 @@ public class JournalArticleLocalServiceImpl
 			configurationProvider.getCompanyConfiguration(
 				JournalServiceConfiguration.class, companyId);
 
-		return journalServiceConfiguration.checkInterval();
+		return journalServiceConfiguration.checkInterval() * Time.MINUTE;
 	}
 
 	protected Locale getArticleDefaultLocale(String content) {
