@@ -16,6 +16,8 @@
 
 <%@ include file="/init.jsp" %>
 
+<liferay-util:dynamic-include key="/panel/app/layouts_tree.jsp#messages" />
+
 <liferay-site-navigation:navigation
 	ddmTemplateGroupId="<%= siteNavigationMenuDisplayContext.getDisplayStyleGroupId() %>"
 	ddmTemplateKey="<%= siteNavigationMenuDisplayContext.getDDMTemplateKey() %>"
