@@ -8359,16 +8359,6 @@ public class JournalArticleLocalServiceImpl
 			journalArticleLocalization);
 	}
 
-	private long _getArticleCheckInterval() throws PortalException {
-		long companyId = CompanyThreadLocal.getCompanyId();
-
-		JournalServiceConfiguration journalServiceConfiguration =
-			configurationProvider.getCompanyConfiguration(
-				JournalServiceConfiguration.class, companyId);
-
-		return journalServiceConfiguration.checkInterval();
-	}
-
 	private int _getUniqueUrlTitleCount(
 			long groupId, String articleId, String urlTitle)
 		throws PortalException {
