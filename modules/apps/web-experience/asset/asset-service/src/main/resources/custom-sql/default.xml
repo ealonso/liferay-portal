@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<custom-sql>
+	<sql id="com.liferay.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
+		<![CDATA[
+			SELECT
+				AssetLink.*
+			FROM
+				AssetLink
+			WHERE
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							AssetEntry AssetEntry1, AssetEntry AssetEntry2
+						WHERE
+							(AssetLink.entryId1 = AssetEntry1.entryId) AND
+							(AssetLink.entryId2 = AssetEntry2.entryId) AND
+							(
+								(AssetEntry1.groupId = ?) OR
+								(AssetEntry2.groupId = ?)
+							)
+					)
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByAndCategoryIds">
+		<![CDATA[
+			EXISTS
+				(
+					SELECT
+						1
+					FROM
+						AssetEntries_AssetCategories
+					WHERE
+						(AssetEntries_AssetCategories.entryId = AssetEntry.entryId) AND
+						(AssetEntries_AssetCategories.categoryId IN ([$CATEGORY_ID$]))
+				)
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByAndTagIds">
+		<![CDATA[
+			SELECT
+				DISTINCT AssetEntries_AssetTags.entryId
+			FROM
+				AssetEntries_AssetTags
+			WHERE
+				([$TAG_ID$])
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByClassNameId">
+		<![CDATA[
+			SELECT
+				{AssetEntry.*}
+			FROM
+				AssetEntry
+			[$JOIN$]
+			WHERE
+				[$WHERE$]
+				(AssetEntry.classNameId = ?)
+		]]>
+	</sql>
+</custom-sql>
