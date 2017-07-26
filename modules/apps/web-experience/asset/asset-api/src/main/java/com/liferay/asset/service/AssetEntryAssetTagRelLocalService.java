@@ -16,7 +16,9 @@ package com.liferay.asset.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetEntryAssetTagRel;
+import com.liferay.asset.tags.model.AssetTag;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -70,6 +72,9 @@ public interface AssetEntryAssetTagRelLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetEntryAssetTagRel addAssetEntryAssetTagRel(
 		AssetEntryAssetTagRel assetEntryAssetTagRel);
+
+	public AssetEntryAssetTagRel addAssetEntryAssetTagRel(long companyId,
+		long assetEntryId, long assetTagId);
 
 	/**
 	* Creates a new asset entry asset tag rel with the primary key. Does not add the asset entry asset tag rel to the database.
@@ -230,4 +235,15 @@ public interface AssetEntryAssetTagRelLocalService extends BaseLocalService,
 	*/
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
 		Projection projection);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getAssetEntryIdsByAssetTagId(long assetTagId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getAssetTagIdsByAssetEntryId(long assetEntryId);
+
+	public void addAssetEntryAssetTagRel(AssetEntry assetEntry,
+		List<AssetTag> assetTags);
+
+	public void addAssetEntryAssetTagRel(long assetEntryId, long assetTagId);
 }

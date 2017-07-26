@@ -54,6 +54,13 @@ public class AssetEntryAssetCategoryRelLocalServiceUtil {
 				   .addAssetEntryAssetCategoryRel(assetEntryAssetCategoryRel);
 	}
 
+	public static com.liferay.asset.model.AssetEntryAssetCategoryRel addAssetEntryAssetCategoryRel(
+		long companyId, long assetEntryId, long assetCategoryId) {
+		return getService()
+				   .addAssetEntryAssetCategoryRel(companyId, assetEntryId,
+			assetCategoryId);
+	}
+
 	/**
 	* Creates a new asset entry asset category rel with the primary key. Does not add the asset entry asset category rel to the database.
 	*
@@ -253,6 +260,29 @@ public class AssetEntryAssetCategoryRelLocalServiceUtil {
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
+	}
+
+	public static long[] getAssetCategoryIdsByAssetEntryId(long assetEntryId) {
+		return getService().getAssetCategoryIdsByAssetEntryId(assetEntryId);
+	}
+
+	public static long[] getAssetEntryIdsByAssetCategoryId(long assetCategoryId) {
+		return getService().getAssetEntryIdsByAssetCategoryId(assetCategoryId);
+	}
+
+	public static void addAssetEntryAssetCategoryRel(
+		com.liferay.asset.model.AssetEntry assetEntry, long assetCategoryId) {
+		getService().addAssetEntryAssetCategoryRel(assetEntry, assetCategoryId);
+	}
+
+	public static void addAssetEntryAssetCategoryRel(
+		com.liferay.asset.model.AssetEntry assetEntry, long[] assetCategoryIds) {
+		getService().addAssetEntryAssetCategoryRel(assetEntry, assetCategoryIds);
+	}
+
+	public static void addAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId) {
+		getService().addAssetEntryAssetCategoryRel(assetEntryId, assetCategoryId);
 	}
 
 	public static AssetEntryAssetCategoryRelLocalService getService() {

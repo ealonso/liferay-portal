@@ -319,6 +319,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	}
 
 	@Override
+	public com.liferay.asset.kernel.model.AssetRenderer<?> getAssetRenderer() {
+		return _assetEntry.getAssetRenderer();
+	}
+
+	@Override
+	public com.liferay.asset.kernel.model.AssetRendererFactory<?> getAssetRendererFactory() {
+		return _assetEntry.getAssetRendererFactory();
+	}
+
+	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return _assetEntry.getExpandoBridge();
 	}
@@ -681,6 +691,11 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 		return _assetEntry.getAvailableLanguageIds();
 	}
 
+	@Override
+	public java.lang.String[] getTagNames() {
+		return _assetEntry.getTagNames();
+	}
+
 	/**
 	* Returns the create date of this asset entry.
 	*
@@ -739,6 +754,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	@Override
 	public Date getStartDate() {
 		return _assetEntry.getStartDate();
+	}
+
+	@Override
+	public java.util.List<com.liferay.asset.categories.model.AssetCategory> getCategories() {
+		return _assetEntry.getCategories();
+	}
+
+	@Override
+	public java.util.List<com.liferay.asset.tags.model.AssetTag> getTags() {
+		return _assetEntry.getTags();
 	}
 
 	/**
@@ -849,6 +874,11 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	@Override
 	public long getUserId() {
 		return _assetEntry.getUserId();
+	}
+
+	@Override
+	public long[] getCategoryIds() {
+		return _assetEntry.getCategoryIds();
 	}
 
 	@Override

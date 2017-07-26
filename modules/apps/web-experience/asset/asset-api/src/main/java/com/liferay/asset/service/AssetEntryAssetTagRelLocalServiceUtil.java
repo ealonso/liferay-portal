@@ -53,6 +53,12 @@ public class AssetEntryAssetTagRelLocalServiceUtil {
 		return getService().addAssetEntryAssetTagRel(assetEntryAssetTagRel);
 	}
 
+	public static com.liferay.asset.model.AssetEntryAssetTagRel addAssetEntryAssetTagRel(
+		long companyId, long assetEntryId, long assetTagId) {
+		return getService()
+				   .addAssetEntryAssetTagRel(companyId, assetEntryId, assetTagId);
+	}
+
 	/**
 	* Creates a new asset entry asset tag rel with the primary key. Does not add the asset entry asset tag rel to the database.
 	*
@@ -250,6 +256,25 @@ public class AssetEntryAssetTagRelLocalServiceUtil {
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
+	}
+
+	public static long[] getAssetEntryIdsByAssetTagId(long assetTagId) {
+		return getService().getAssetEntryIdsByAssetTagId(assetTagId);
+	}
+
+	public static long[] getAssetTagIdsByAssetEntryId(long assetEntryId) {
+		return getService().getAssetTagIdsByAssetEntryId(assetEntryId);
+	}
+
+	public static void addAssetEntryAssetTagRel(
+		com.liferay.asset.model.AssetEntry assetEntry,
+		java.util.List<com.liferay.asset.tags.model.AssetTag> assetTags) {
+		getService().addAssetEntryAssetTagRel(assetEntry, assetTags);
+	}
+
+	public static void addAssetEntryAssetTagRel(long assetEntryId,
+		long assetTagId) {
+		getService().addAssetEntryAssetTagRel(assetEntryId, assetTagId);
 	}
 
 	public static AssetEntryAssetTagRelLocalService getService() {

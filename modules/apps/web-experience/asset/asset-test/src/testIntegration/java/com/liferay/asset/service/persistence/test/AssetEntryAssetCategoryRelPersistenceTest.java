@@ -150,6 +150,13 @@ public class AssetEntryAssetCategoryRelPersistenceTest {
 	}
 
 	@Test
+	public void testCountByAssetCategoryId() throws Exception {
+		_persistence.countByAssetCategoryId(RandomTestUtil.nextLong());
+
+		_persistence.countByAssetCategoryId(0L);
+	}
+
+	@Test
 	public void testFindByPrimaryKeyExisting() throws Exception {
 		AssetEntryAssetCategoryRel newAssetEntryAssetCategoryRel = addAssetEntryAssetCategoryRel();
 

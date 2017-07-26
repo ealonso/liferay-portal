@@ -8,6 +8,7 @@ create index IX_FEC4A201 on AssetEntry (layoutUuid[$COLUMN_LENGTH:75$]);
 create index IX_2E4E3885 on AssetEntry (publishDate);
 create index IX_9029E15A on AssetEntry (visible);
 
+create index IX_19EC1746 on AssetEntryAssetCategoryRel (assetCategoryId);
 create index IX_CB3E2B64 on AssetEntryAssetCategoryRel (assetEntryId);
 
 create index IX_5AA0B2E4 on AssetEntryAssetTagRel (assetEntryId);

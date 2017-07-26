@@ -20,6 +20,7 @@ import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.asset.service.persistence.AssetEntryAssetCategoryRelPersistence;
 import com.liferay.asset.service.persistence.AssetEntryAssetTagRelPersistence;
+import com.liferay.asset.service.persistence.AssetEntryFinder;
 import com.liferay.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.asset.service.persistence.AssetLinkPersistence;
 
@@ -356,6 +357,24 @@ public abstract class AssetEntryLocalServiceBaseImpl
 	public void setAssetEntryPersistence(
 		AssetEntryPersistence assetEntryPersistence) {
 		this.assetEntryPersistence = assetEntryPersistence;
+	}
+
+	/**
+	 * Returns the asset entry finder.
+	 *
+	 * @return the asset entry finder
+	 */
+	public AssetEntryFinder getAssetEntryFinder() {
+		return assetEntryFinder;
+	}
+
+	/**
+	 * Sets the asset entry finder.
+	 *
+	 * @param assetEntryFinder the asset entry finder
+	 */
+	public void setAssetEntryFinder(AssetEntryFinder assetEntryFinder) {
+		this.assetEntryFinder = assetEntryFinder;
 	}
 
 	/**
@@ -810,6 +829,8 @@ public abstract class AssetEntryLocalServiceBaseImpl
 	protected AssetEntryLocalService assetEntryLocalService;
 	@BeanReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
+	@BeanReference(type = AssetEntryFinder.class)
+	protected AssetEntryFinder assetEntryFinder;
 	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@ServiceReference(type = com.liferay.portal.kernel.service.ClassNameLocalService.class)
