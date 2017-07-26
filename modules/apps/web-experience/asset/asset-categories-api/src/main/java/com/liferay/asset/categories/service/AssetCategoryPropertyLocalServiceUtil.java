@@ -53,6 +53,13 @@ public class AssetCategoryPropertyLocalServiceUtil {
 		return getService().addAssetCategoryProperty(assetCategoryProperty);
 	}
 
+	public static com.liferay.asset.categories.model.AssetCategoryProperty addCategoryProperty(
+		long userId, long categoryId, java.lang.String key,
+		java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().addCategoryProperty(userId, categoryId, key, value);
+	}
+
 	/**
 	* Creates a new asset category property with the primary key. Does not add the asset category property to the database.
 	*
@@ -106,6 +113,18 @@ public class AssetCategoryPropertyLocalServiceUtil {
 		return getService().getAssetCategoryProperty(categoryPropertyId);
 	}
 
+	public static com.liferay.asset.categories.model.AssetCategoryProperty getCategoryProperty(
+		long categoryId, java.lang.String key)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getCategoryProperty(categoryId, key);
+	}
+
+	public static com.liferay.asset.categories.model.AssetCategoryProperty getCategoryProperty(
+		long categoryPropertyId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getCategoryProperty(categoryPropertyId);
+	}
+
 	/**
 	* Updates the asset category property in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*
@@ -115,6 +134,22 @@ public class AssetCategoryPropertyLocalServiceUtil {
 	public static com.liferay.asset.categories.model.AssetCategoryProperty updateAssetCategoryProperty(
 		com.liferay.asset.categories.model.AssetCategoryProperty assetCategoryProperty) {
 		return getService().updateAssetCategoryProperty(assetCategoryProperty);
+	}
+
+	public static com.liferay.asset.categories.model.AssetCategoryProperty updateCategoryProperty(
+		long categoryPropertyId, java.lang.String key, java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateCategoryProperty(categoryPropertyId, key, value);
+	}
+
+	public static com.liferay.asset.categories.model.AssetCategoryProperty updateCategoryProperty(
+		long userId, long categoryPropertyId, java.lang.String key,
+		java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateCategoryProperty(userId, categoryPropertyId, key,
+			value);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
@@ -228,6 +263,20 @@ public class AssetCategoryPropertyLocalServiceUtil {
 		return getService().getAssetCategoryProperties(start, end);
 	}
 
+	public static java.util.List<com.liferay.asset.categories.model.AssetCategoryProperty> getCategoryProperties() {
+		return getService().getCategoryProperties();
+	}
+
+	public static java.util.List<com.liferay.asset.categories.model.AssetCategoryProperty> getCategoryProperties(
+		long entryId) {
+		return getService().getCategoryProperties(entryId);
+	}
+
+	public static java.util.List<com.liferay.asset.categories.model.AssetCategoryProperty> getCategoryPropertyValues(
+		long groupId, java.lang.String key) {
+		return getService().getCategoryPropertyValues(groupId, key);
+	}
+
 	/**
 	* Returns the number of rows matching the dynamic query.
 	*
@@ -250,6 +299,20 @@ public class AssetCategoryPropertyLocalServiceUtil {
 		com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery,
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return getService().dynamicQueryCount(dynamicQuery, projection);
+	}
+
+	public static void deleteCategoryProperties(long entryId) {
+		getService().deleteCategoryProperties(entryId);
+	}
+
+	public static void deleteCategoryProperty(
+		com.liferay.asset.categories.model.AssetCategoryProperty categoryProperty) {
+		getService().deleteCategoryProperty(categoryProperty);
+	}
+
+	public static void deleteCategoryProperty(long categoryPropertyId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteCategoryProperty(categoryPropertyId);
 	}
 
 	public static AssetCategoryPropertyLocalService getService() {

@@ -205,6 +205,16 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
+	public boolean isRootCategory() {
+		return _assetCategory.isRootCategory();
+	}
+
+	@Override
+	public AssetCategory getParentCategory() {
+		return _assetCategory.getParentCategory();
+	}
+
+	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return _assetCategory.getExpandoBridge();
 	}
@@ -315,6 +325,18 @@ public class AssetCategoryWrapper implements AssetCategory,
 	@Override
 	public java.lang.String getName() {
 		return _assetCategory.getName();
+	}
+
+	@Override
+	public java.lang.String getPath(java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getPath(locale);
+	}
+
+	@Override
+	public java.lang.String getPath(java.util.Locale locale, boolean reverse)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getPath(locale, reverse);
 	}
 
 	/**
@@ -457,6 +479,12 @@ public class AssetCategoryWrapper implements AssetCategory,
 	@Override
 	public Date getModifiedDate() {
 		return _assetCategory.getModifiedDate();
+	}
+
+	@Override
+	public java.util.List<AssetCategory> getAncestors()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getAncestors();
 	}
 
 	/**

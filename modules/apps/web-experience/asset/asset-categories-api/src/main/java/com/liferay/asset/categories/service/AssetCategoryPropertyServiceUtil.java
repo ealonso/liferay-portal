@@ -41,6 +41,27 @@ public class AssetCategoryPropertyServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.asset.categories.service.impl.AssetCategoryPropertyServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.asset.categories.model.AssetCategoryProperty addCategoryProperty(
+		long entryId, java.lang.String key, java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().addCategoryProperty(entryId, key, value);
+	}
+
+	public static com.liferay.asset.categories.model.AssetCategoryProperty updateCategoryProperty(
+		long categoryPropertyId, java.lang.String key, java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateCategoryProperty(categoryPropertyId, key, value);
+	}
+
+	public static com.liferay.asset.categories.model.AssetCategoryProperty updateCategoryProperty(
+		long userId, long categoryPropertyId, java.lang.String key,
+		java.lang.String value)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateCategoryProperty(userId, categoryPropertyId, key,
+			value);
+	}
 
 	/**
 	* Returns the OSGi service identifier.
@@ -49,6 +70,21 @@ public class AssetCategoryPropertyServiceUtil {
 	*/
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static java.util.List<com.liferay.asset.categories.model.AssetCategoryProperty> getCategoryProperties(
+		long entryId) {
+		return getService().getCategoryProperties(entryId);
+	}
+
+	public static java.util.List<com.liferay.asset.categories.model.AssetCategoryProperty> getCategoryPropertyValues(
+		long companyId, java.lang.String key) {
+		return getService().getCategoryPropertyValues(companyId, key);
+	}
+
+	public static void deleteCategoryProperty(long categoryPropertyId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteCategoryProperty(categoryPropertyId);
 	}
 
 	public static AssetCategoryPropertyService getService() {

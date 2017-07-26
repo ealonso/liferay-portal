@@ -16,6 +16,7 @@ package com.liferay.asset.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetEntryAssetCategoryRel;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -70,6 +71,9 @@ public interface AssetEntryAssetCategoryRelLocalService extends BaseLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetEntryAssetCategoryRel addAssetEntryAssetCategoryRel(
 		AssetEntryAssetCategoryRel assetEntryAssetCategoryRel);
+
+	public AssetEntryAssetCategoryRel addAssetEntryAssetCategoryRel(
+		long companyId, long assetEntryId, long assetCategoryId);
 
 	/**
 	* Creates a new asset entry asset category rel with the primary key. Does not add the asset entry asset category rel to the database.
@@ -232,4 +236,19 @@ public interface AssetEntryAssetCategoryRelLocalService extends BaseLocalService
 	*/
 	public long dynamicQueryCount(DynamicQuery dynamicQuery,
 		Projection projection);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getAssetCategoryIdsByAssetEntryId(long assetEntryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getAssetEntryIdsByAssetCategoryId(long assetCategoryId);
+
+	public void addAssetEntryAssetCategoryRel(AssetEntry assetEntry,
+		long assetCategoryId);
+
+	public void addAssetEntryAssetCategoryRel(AssetEntry assetEntry,
+		long[] assetCategoryIds);
+
+	public void addAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId);
 }

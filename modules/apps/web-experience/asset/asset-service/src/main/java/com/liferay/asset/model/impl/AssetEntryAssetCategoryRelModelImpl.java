@@ -90,8 +90,9 @@ public class AssetEntryAssetCategoryRelModelImpl extends BaseModelImpl<AssetEntr
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.asset.service.util.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.asset.model.AssetEntryAssetCategoryRel"),
 			true);
-	public static final long ASSETENTRYID_COLUMN_BITMASK = 1L;
-	public static final long ENTRYID_COLUMN_BITMASK = 2L;
+	public static final long ASSETCATEGORYID_COLUMN_BITMASK = 1L;
+	public static final long ASSETENTRYID_COLUMN_BITMASK = 2L;
+	public static final long ENTRYID_COLUMN_BITMASK = 4L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.asset.service.util.ServiceProps.get(
 				"lock.expiration.time.com.liferay.asset.model.AssetEntryAssetCategoryRel"));
 
@@ -219,7 +220,19 @@ public class AssetEntryAssetCategoryRelModelImpl extends BaseModelImpl<AssetEntr
 
 	@Override
 	public void setAssetCategoryId(long assetCategoryId) {
+		_columnBitmask |= ASSETCATEGORYID_COLUMN_BITMASK;
+
+		if (!_setOriginalAssetCategoryId) {
+			_setOriginalAssetCategoryId = true;
+
+			_originalAssetCategoryId = _assetCategoryId;
+		}
+
 		_assetCategoryId = assetCategoryId;
+	}
+
+	public long getOriginalAssetCategoryId() {
+		return _originalAssetCategoryId;
 	}
 
 	public long getColumnBitmask() {
@@ -323,6 +336,10 @@ public class AssetEntryAssetCategoryRelModelImpl extends BaseModelImpl<AssetEntr
 
 		assetEntryAssetCategoryRelModelImpl._setOriginalAssetEntryId = false;
 
+		assetEntryAssetCategoryRelModelImpl._originalAssetCategoryId = assetEntryAssetCategoryRelModelImpl._assetCategoryId;
+
+		assetEntryAssetCategoryRelModelImpl._setOriginalAssetCategoryId = false;
+
 		assetEntryAssetCategoryRelModelImpl._columnBitmask = 0;
 	}
 
@@ -399,6 +416,8 @@ public class AssetEntryAssetCategoryRelModelImpl extends BaseModelImpl<AssetEntr
 	private long _originalAssetEntryId;
 	private boolean _setOriginalAssetEntryId;
 	private long _assetCategoryId;
+	private long _originalAssetCategoryId;
+	private boolean _setOriginalAssetCategoryId;
 	private long _columnBitmask;
 	private AssetEntryAssetCategoryRel _escapedModel;
 }

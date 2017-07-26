@@ -46,6 +46,13 @@ public class AssetEntryAssetCategoryRelLocalServiceWrapper
 		return _assetEntryAssetCategoryRelLocalService.addAssetEntryAssetCategoryRel(assetEntryAssetCategoryRel);
 	}
 
+	@Override
+	public com.liferay.asset.model.AssetEntryAssetCategoryRel addAssetEntryAssetCategoryRel(
+		long companyId, long assetEntryId, long assetCategoryId) {
+		return _assetEntryAssetCategoryRelLocalService.addAssetEntryAssetCategoryRel(companyId,
+			assetEntryId, assetCategoryId);
+	}
+
 	/**
 	* Creates a new asset entry asset category rel with the primary key. Does not add the asset entry asset category rel to the database.
 	*
@@ -265,6 +272,37 @@ public class AssetEntryAssetCategoryRelLocalServiceWrapper
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 		return _assetEntryAssetCategoryRelLocalService.dynamicQueryCount(dynamicQuery,
 			projection);
+	}
+
+	@Override
+	public long[] getAssetCategoryIdsByAssetEntryId(long assetEntryId) {
+		return _assetEntryAssetCategoryRelLocalService.getAssetCategoryIdsByAssetEntryId(assetEntryId);
+	}
+
+	@Override
+	public long[] getAssetEntryIdsByAssetCategoryId(long assetCategoryId) {
+		return _assetEntryAssetCategoryRelLocalService.getAssetEntryIdsByAssetCategoryId(assetCategoryId);
+	}
+
+	@Override
+	public void addAssetEntryAssetCategoryRel(
+		com.liferay.asset.model.AssetEntry assetEntry, long assetCategoryId) {
+		_assetEntryAssetCategoryRelLocalService.addAssetEntryAssetCategoryRel(assetEntry,
+			assetCategoryId);
+	}
+
+	@Override
+	public void addAssetEntryAssetCategoryRel(
+		com.liferay.asset.model.AssetEntry assetEntry, long[] assetCategoryIds) {
+		_assetEntryAssetCategoryRelLocalService.addAssetEntryAssetCategoryRel(assetEntry,
+			assetCategoryIds);
+	}
+
+	@Override
+	public void addAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId) {
+		_assetEntryAssetCategoryRelLocalService.addAssetEntryAssetCategoryRel(assetEntryId,
+			assetCategoryId);
 	}
 
 	@Override

@@ -16,8 +16,11 @@ package com.liferay.asset.categories.service.base;
 
 import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.asset.categories.service.AssetCategoryService;
+import com.liferay.asset.categories.service.persistence.AssetCategoryFinder;
 import com.liferay.asset.categories.service.persistence.AssetCategoryPersistence;
+import com.liferay.asset.categories.service.persistence.AssetCategoryPropertyFinder;
 import com.liferay.asset.categories.service.persistence.AssetCategoryPropertyPersistence;
+import com.liferay.asset.categories.service.persistence.AssetVocabularyFinder;
 import com.liferay.asset.categories.service.persistence.AssetVocabularyPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -110,6 +113,24 @@ public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 	public void setAssetCategoryPersistence(
 		AssetCategoryPersistence assetCategoryPersistence) {
 		this.assetCategoryPersistence = assetCategoryPersistence;
+	}
+
+	/**
+	 * Returns the asset category finder.
+	 *
+	 * @return the asset category finder
+	 */
+	public AssetCategoryFinder getAssetCategoryFinder() {
+		return assetCategoryFinder;
+	}
+
+	/**
+	 * Sets the asset category finder.
+	 *
+	 * @param assetCategoryFinder the asset category finder
+	 */
+	public void setAssetCategoryFinder(AssetCategoryFinder assetCategoryFinder) {
+		this.assetCategoryFinder = assetCategoryFinder;
 	}
 
 	/**
@@ -321,6 +342,25 @@ public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
+	 * Returns the asset category property finder.
+	 *
+	 * @return the asset category property finder
+	 */
+	public AssetCategoryPropertyFinder getAssetCategoryPropertyFinder() {
+		return assetCategoryPropertyFinder;
+	}
+
+	/**
+	 * Sets the asset category property finder.
+	 *
+	 * @param assetCategoryPropertyFinder the asset category property finder
+	 */
+	public void setAssetCategoryPropertyFinder(
+		AssetCategoryPropertyFinder assetCategoryPropertyFinder) {
+		this.assetCategoryPropertyFinder = assetCategoryPropertyFinder;
+	}
+
+	/**
 	 * Returns the asset vocabulary local service.
 	 *
 	 * @return the asset vocabulary local service
@@ -377,6 +417,25 @@ public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 		this.assetVocabularyPersistence = assetVocabularyPersistence;
 	}
 
+	/**
+	 * Returns the asset vocabulary finder.
+	 *
+	 * @return the asset vocabulary finder
+	 */
+	public AssetVocabularyFinder getAssetVocabularyFinder() {
+		return assetVocabularyFinder;
+	}
+
+	/**
+	 * Sets the asset vocabulary finder.
+	 *
+	 * @param assetVocabularyFinder the asset vocabulary finder
+	 */
+	public void setAssetVocabularyFinder(
+		AssetVocabularyFinder assetVocabularyFinder) {
+		this.assetVocabularyFinder = assetVocabularyFinder;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -431,6 +490,8 @@ public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 	protected AssetCategoryService assetCategoryService;
 	@BeanReference(type = AssetCategoryPersistence.class)
 	protected AssetCategoryPersistence assetCategoryPersistence;
+	@BeanReference(type = AssetCategoryFinder.class)
+	protected AssetCategoryFinder assetCategoryFinder;
 	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@ServiceReference(type = com.liferay.portal.kernel.service.ClassNameLocalService.class)
@@ -453,10 +514,14 @@ public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.asset.categories.service.AssetCategoryPropertyService assetCategoryPropertyService;
 	@BeanReference(type = AssetCategoryPropertyPersistence.class)
 	protected AssetCategoryPropertyPersistence assetCategoryPropertyPersistence;
+	@BeanReference(type = AssetCategoryPropertyFinder.class)
+	protected AssetCategoryPropertyFinder assetCategoryPropertyFinder;
 	@BeanReference(type = com.liferay.asset.categories.service.AssetVocabularyLocalService.class)
 	protected com.liferay.asset.categories.service.AssetVocabularyLocalService assetVocabularyLocalService;
 	@BeanReference(type = com.liferay.asset.categories.service.AssetVocabularyService.class)
 	protected com.liferay.asset.categories.service.AssetVocabularyService assetVocabularyService;
 	@BeanReference(type = AssetVocabularyPersistence.class)
 	protected AssetVocabularyPersistence assetVocabularyPersistence;
+	@BeanReference(type = AssetVocabularyFinder.class)
+	protected AssetVocabularyFinder assetVocabularyFinder;
 }
