@@ -22,6 +22,8 @@ import com.liferay.asset.categories.model.AssetCategoryProperty;
 import com.liferay.asset.categories.service.base.AssetCategoryLocalServiceBaseImpl;
 import com.liferay.asset.categories.util.comparator.AssetCategoryLeftCategoryIdComparator;
 import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -901,5 +903,8 @@ public class AssetCategoryLocalServiceImpl
 			throw new DuplicateCategoryException(sb.toString());
 		}
 	}
+
+	@BeanReference
+	protected AssetEntryLocalService assetEntryLocalService;
 
 }
