@@ -22,7 +22,10 @@ import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 
 /**
  * @author Pavel Savinov
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.permission.AssetCategoriesPermission}
  */
+@Deprecated
 @OSGiBeanProperties(
 	property = {"resource.name=" + AssetCategoriesPermission.RESOURCE_NAME}
 )
