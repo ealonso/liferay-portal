@@ -228,6 +228,7 @@ public class AssetEntriesCheckerUtil {
 		subscriptionSender.setPortletId(
 			AssetPublisherPortletKeys.ASSET_PUBLISHER);
 		subscriptionSender.setReplyToAddress(fromAddress);
+		subscriptionSender.setGroupId(assetEntry.getGroupId());
 
 		return subscriptionSender;
 	}
@@ -286,6 +287,14 @@ public class AssetEntriesCheckerUtil {
 			}
 
 			for (User user : users) {
+				if (subscriptionSender.getGroupId() > 0) {
+					List<Long> groups = ListUtil.toList(user.getGroupIds());
+
+					if (!groups.contains(subscriptionSender.getGroupId())) {
+						continue;
+					}
+				}
+
 				subscriptionSender.addRuntimeSubscribers(
 					user.getEmailAddress(), user.getFullName());
 			}

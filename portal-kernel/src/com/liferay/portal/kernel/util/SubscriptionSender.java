@@ -242,6 +242,10 @@ public class SubscriptionSender implements Serializable {
 		return currentUserId;
 	}
 
+	public long getGroupId() {
+		return groupId;
+	}
+
 	public String getMailId() {
 		return mailId;
 	}
