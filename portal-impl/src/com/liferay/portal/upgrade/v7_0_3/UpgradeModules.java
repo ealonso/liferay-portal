@@ -31,7 +31,7 @@ public class UpgradeModules
 	}
 
 	private static final String[] _BUNDLE_SYMBOLIC_NAMES = {
-		"com.liferay.asset.categories.service",
+		"com.liferay.asset.service", "com.liferay.asset.categories.service",
 		"com.liferay.asset.tags.service", "com.liferay.blogs.service",
 		"com.liferay.portal.reports.engine.console.web",
 		"com.liferay.portal.workflow.kaleo.forms.web",
