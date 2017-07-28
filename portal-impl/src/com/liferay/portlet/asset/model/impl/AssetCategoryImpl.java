@@ -15,107 +15,68 @@
 package com.liferay.portlet.asset.model.impl;
 
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.Validator;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.model.impl.AssetCategoryImpl}
  */
+@Deprecated
 public class AssetCategoryImpl extends AssetCategoryBaseImpl {
 
 	@Override
 	public List<AssetCategory> getAncestors() throws PortalException {
-		List<AssetCategory> categories = new ArrayList<>();
-
-		AssetCategory category = this;
-
-		while (!category.isRootCategory()) {
-			category = AssetCategoryLocalServiceUtil.getAssetCategory(
-				category.getParentCategoryId());
-
-			categories.add(category);
-		}
-
-		return categories;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public AssetCategory getParentCategory() {
-		return AssetCategoryLocalServiceUtil.fetchCategory(
-			getParentCategoryId());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public String getPath(Locale locale) throws PortalException {
-		return getPath(locale, false);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public String getPath(Locale locale, boolean reverse)
 		throws PortalException {
 
-		List<AssetCategory> categories = getAncestors();
-
-		StringBundler sb = new StringBundler((categories.size() * 4) + 1);
-
-		AssetVocabulary vocabulary =
-			AssetVocabularyLocalServiceUtil.getVocabulary(getVocabularyId());
-
-		sb.append(vocabulary.getTitle(locale));
-
-		if (reverse) {
-			Collections.reverse(categories);
-		}
-
-		for (AssetCategory category : categories) {
-			sb.append(StringPool.SPACE);
-			sb.append(StringPool.GREATER_THAN);
-			sb.append(StringPool.SPACE);
-			sb.append(category.getTitle(locale));
-		}
-
-		return sb.toString();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public String getTitle(String languageId) {
-		String value = super.getTitle(languageId);
-
-		if (Validator.isNull(value)) {
-			value = getName();
-		}
-
-		return value;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public String getTitle(String languageId, boolean useDefault) {
-		String value = super.getTitle(languageId, useDefault);
-
-		if (Validator.isNull(value)) {
-			value = getName();
-		}
-
-		return value;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 	@Override
 	public boolean isRootCategory() {
-		if (getParentCategoryId() == 0) {
-			return true;
-		}
-
-		return false;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetCategoryImpl");
 	}
 
 }

@@ -15,18 +15,9 @@
 package com.liferay.portlet.asset.model.impl;
 
 import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
 
 import java.util.List;
@@ -35,53 +26,52 @@ import java.util.Locale;
 /**
  * @author Brian Wing Shun Chan
  * @author Juan Fernández
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.model.impl.AssetVocabularyImpl}
  */
+@Deprecated
 public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 
 	@Override
 	public List<AssetCategory> getCategories() {
-		return AssetCategoryLocalServiceUtil.getVocabularyCategories(
-			getVocabularyId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public int getCategoriesCount() {
-		return AssetCategoryLocalServiceUtil.getVocabularyCategoriesCount(
-			getVocabularyId());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public long[] getRequiredClassNameIds() {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.getRequiredClassNameIds();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public long[] getSelectedClassNameIds() {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.getClassNameIds();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public long[] getSelectedClassTypePKs() {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.getClassTypePKs();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public String getSettings() {
-		if (_vocabularySettingsHelper == null) {
-			return super.getSettings();
-		}
-		else {
-			return _vocabularySettingsHelper.toString();
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	/**
@@ -90,36 +80,23 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public UnicodeProperties getSettingsProperties() {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		UnicodeProperties settingsProperties = new UnicodeProperties(true);
-
-		settingsProperties.fastLoad(vocabularySettingsHelper.toString());
-
-		return settingsProperties;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public String getTitle(String languageId) {
-		String value = super.getTitle(languageId);
-
-		if (Validator.isNull(value)) {
-			value = getName();
-		}
-
-		return value;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public String getTitle(String languageId, boolean useDefault) {
-		String value = super.getTitle(languageId, useDefault);
-
-		if (Validator.isNull(value)) {
-			value = getName();
-		}
-
-		return value;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
@@ -128,103 +105,48 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 			final Locale locale)
 		throws PortalException {
 
-		if (getGroupId() == groupId) {
-			return getTitle(locale);
-		}
-
-		boolean hasAmbiguousTitle = ListUtil.exists(
-			vocabularies,
-			new PredicateFilter<AssetVocabulary>() {
-
-				@Override
-				public boolean filter(AssetVocabulary vocabulary) {
-					String title = vocabulary.getTitle(locale);
-
-					if (title.equals(getTitle(locale)) &&
-						(vocabulary.getVocabularyId() != getVocabularyId())) {
-
-						return true;
-					}
-
-					return false;
-				}
-
-			});
-
-		if (hasAmbiguousTitle) {
-			Group group = GroupLocalServiceUtil.getGroup(getGroupId());
-
-			return group.getUnambiguousName(getTitle(locale), locale);
-		}
-
-		return getTitle(locale);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean hasMoreThanOneCategorySelected(final long[] categoryIds) {
-		PredicateFilter<AssetCategory> predicateFilter =
-			new PredicateFilter<AssetCategory>() {
-
-				@Override
-				public boolean filter(AssetCategory assetCategory) {
-					return ArrayUtil.contains(
-						categoryIds, assetCategory.getCategoryId());
-				}
-
-			};
-
-		if (ListUtil.count(getCategories(), predicateFilter) > 1) {
-			return true;
-		}
-
-		return false;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean isAssociatedToClassNameId(long classNameId) {
-		return isAssociatedToClassNameIdAndClassTypePK(
-			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_PK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean isAssociatedToClassNameIdAndClassTypePK(
 		long classNameId, long classTypePK) {
 
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.hasClassNameIdAndClassTypePK(
-			classNameId, classTypePK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean isMissingRequiredCategory(
 		long classNameId, long classTypePK, final long[] categoryIds) {
 
-		if (!isRequired(classNameId, classTypePK)) {
-			return false;
-		}
-
-		PredicateFilter<AssetCategory> predicateFilter =
-			new PredicateFilter<AssetCategory>() {
-
-				@Override
-				public boolean filter(AssetCategory assetCategory) {
-					return ArrayUtil.contains(
-						categoryIds, assetCategory.getCategoryId());
-				}
-
-			};
-
-		return !ListUtil.exists(getCategories(), predicateFilter);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean isMultiValued() {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.isMultiValued();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	/**
@@ -233,24 +155,23 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public boolean isRequired(long classNameId) {
-		return isRequired(
-			classNameId, AssetCategoryConstants.ALL_CLASS_TYPE_PK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public boolean isRequired(long classNameId, long classTypePK) {
-		AssetVocabularySettingsHelper vocabularySettingsHelper =
-			getVocabularySettingsHelper();
-
-		return vocabularySettingsHelper.isClassNameIdAndClassTypePKRequired(
-			classNameId, classTypePK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	@Override
 	public void setSettings(String settings) {
-		_vocabularySettingsHelper = null;
-
-		super.setSettings(settings);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	/**
@@ -259,20 +180,15 @@ public class AssetVocabularyImpl extends AssetVocabularyBaseImpl {
 	@Deprecated
 	@Override
 	public void setSettingsProperties(UnicodeProperties settingsProperties) {
-		super.setSettings(settingsProperties.toString());
-
-		_vocabularySettingsHelper = getVocabularySettingsHelper();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
 
 	protected AssetVocabularySettingsHelper getVocabularySettingsHelper() {
-		if (_vocabularySettingsHelper == null) {
-			_vocabularySettingsHelper = new AssetVocabularySettingsHelper(
-				super.getSettings());
-		}
-
-		return _vocabularySettingsHelper;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.categories.model.impl.AssetVocabularyImpl");
 	}
-
-	private AssetVocabularySettingsHelper _vocabularySettingsHelper;
 
 }

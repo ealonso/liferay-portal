@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder auto-import-default-references="false" auto-namespace-tables="false"  package-path="com.liferay.asset">
+	<namespace>Asset</namespace>
+	<entity local-service="true" name="AssetEntry" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="entryId" primary="true" type="long" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="classNameId" type="long" />
+		<column name="classPK" type="long" />
+		<column name="classUuid" type="String" />
+		<column name="classTypeId" type="long" />
+		<column name="listable" type="boolean" />
+		<column name="visible" type="boolean" />
+		<column name="startDate" type="Date" />
+		<column name="endDate" type="Date" />
+		<column name="publishDate" type="Date" />
+		<column name="expirationDate" type="Date" />
+		<column name="mimeType" type="String" />
+		<column localized="true" name="title" type="String" />
+		<column localized="true" name="description" type="String" />
+		<column localized="true" name="summary" type="String" />
+		<column name="url" type="String" />
+		<column name="layoutUuid" type="String" />
+		<column name="height" type="int" />
+		<column name="width" type="int" />
+		<column name="priority" type="double" />
+		<column name="viewCount" type="int" />
+
+		<!-- Finder methods -->
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+		<finder name="Visible" return-type="Collection">
+			<finder-column name="visible" />
+		</finder>
+		<finder name="PublishDate" return-type="Collection">
+			<finder-column name="publishDate" />
+		</finder>
+		<finder name="ExpirationDate" return-type="Collection">
+			<finder-column name="expirationDate" />
+		</finder>
+		<finder name="LayoutUuid" return-type="Collection">
+			<finder-column name="layoutUuid" />
+		</finder>
+		<finder name="G_CU" return-type="AssetEntry">
+			<finder-column name="groupId" />
+			<finder-column name="classUuid" />
+		</finder>
+		<finder name="C_C" return-type="AssetEntry" unique="true">
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="G_C_V" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="classNameId" />
+			<finder-column name="visible" />
+		</finder>
+		<finder name="G_C_P_E" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="classNameId" />
+			<finder-column name="publishDate" />
+			<finder-column name="expirationDate" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntryAssetCategoryRel" package-path="com.liferay.asset" />
+		<reference entity="AssetEntryAssetTagRel" package-path="com.liferay.asset" />
+		<reference entity="AssetLink" package-path="com.liferay.asset" />
+		<reference entity="ClassName" package-path="com.liferay.portal" />
+		<reference entity="Company" package-path="com.liferay.portal" />
+		<reference entity="Group" package-path="com.liferay.portal" />
+		<reference entity="SystemEvent" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+		<reference entity="SocialActivity" package-path="com.liferay.portlet.social" />
+		<reference entity="SocialActivityCounter" package-path="com.liferay.portlet.social" />
+	</entity>
+	<entity local-service="true" name="AssetEntryAssetCategoryRel" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="entryId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column accessor="true" name="assetEntryId" type="long" />
+		<column accessor="true" name="assetCategoryId" type="long" />
+
+		<!-- Finder methods -->
+
+		<finder name="AssetEntryId" return-type="Collection">
+			<finder-column name="assetEntryId" />
+		</finder>
+		<finder name="AssetCategoryId" return-type="Collection">
+			<finder-column name="assetCategoryId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
+	</entity>
+	<entity local-service="true" name="AssetEntryAssetTagRel" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="entryId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+
+		<!-- Other fields -->
+
+		<column accessor="true" name="assetEntryId" type="long" />
+		<column accessor="true" name="assetTagId" type="long" />
+
+		<!-- Finder methods -->
+
+		<finder name="AssetEntryId" return-type="Collection">
+			<finder-column name="assetEntryId" />
+		</finder>
+		<finder name="AssetTagId" return-type="Collection">
+			<finder-column name="assetTagId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
+	</entity>
+	<entity local-service="true" name="AssetLink" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="linkId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="entryId1" type="long" />
+		<column accessor="true" name="entryId2" type="long" />
+		<column name="type" type="int" />
+		<column name="weight" type="int" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="weight" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="E1" return-type="Collection">
+			<finder-column name="entryId1" />
+		</finder>
+		<finder name="E2" return-type="Collection">
+			<finder-column name="entryId2" />
+		</finder>
+		<finder name="E_E" return-type="Collection">
+			<finder-column name="entryId1" />
+			<finder-column name="entryId2" />
+		</finder>
+		<finder name="E1_T" return-type="Collection">
+			<finder-column name="entryId1" />
+			<finder-column name="type" />
+		</finder>
+		<finder name="E2_T" return-type="Collection">
+			<finder-column name="entryId2" />
+			<finder-column name="type" />
+		</finder>
+		<finder name="E_E_T" return-type="AssetLink" unique="true">
+			<finder-column name="entryId1" />
+			<finder-column name="entryId2" />
+			<finder-column name="type" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetEntry" package-path="com.liferay.asset" />
+		<reference entity="SystemEvent" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+	</entity>
+	<exceptions>
+		<exception>AssetLink</exception>
+		<exception>DuplicateQueryRule</exception>
+	</exceptions>
+</service-builder>
