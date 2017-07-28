@@ -107,7 +107,7 @@ int maxEntries = GetterUtil.getInteger(PropsUtil.get(PropsKeys.ASSET_CATEGORIES_
 		%>
 
 		<div class="lfr-tags-selector-content" id="<%= randomNamespace %>assetCategoriesSelector">
-			<aui:input name="<%= hiddenInput %>" type="hidden" />
+			<aui:input id="<%= hiddenInput %>" name="<%= hiddenInput %>" type="hidden" />
 		</div>
 
 		<aui:script use="liferay-asset-taglib-categories-selector">
