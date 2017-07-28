@@ -24,10 +24,9 @@ import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -44,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = {"model.class.name=com.liferay.blogs.model.BlogsEntry"},
 	service = TrashHandler.class
 )
-public class BlogsEntryTrashHandler extends BaseTrashHandler {
+public class BlogsEntryTrashHandler implements TrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) throws PortalException {
@@ -92,6 +91,15 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		return BlogsEntryPermission.contains(
+			permissionChecker, classPK, actionId);
+	}
+
+	@Override
 	public boolean isInTrash(long classPK) throws PortalException {
 		BlogsEntry entry = _blogsEntryLocalService.getEntry(classPK);
 
@@ -135,15 +143,6 @@ public class BlogsEntryTrashHandler extends BaseTrashHandler {
 		}
 
 		return portletURL;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		return BlogsEntryPermission.contains(
-			permissionChecker, classPK, actionId);
 	}
 
 	@Reference(unbind = "-")

@@ -22,8 +22,6 @@ import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
@@ -37,6 +35,8 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashVersion;
@@ -84,7 +84,7 @@ public class TrashHelperImpl implements TrashHelper {
 
 		if (Validator.isNotNull(className) && (classPK > 0)) {
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(className);
+				_trashHandlerRegistryUtil.getTrashHandler(className);
 
 			trashRenderer = trashHandler.getTrashRenderer(classPK);
 		}
@@ -265,6 +265,9 @@ public class TrashHelperImpl implements TrashHelper {
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
+
+	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;

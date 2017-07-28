@@ -169,7 +169,7 @@ request.setAttribute("view.jsp-recycleBinEntrySearch", entrySearch);
 				>
 
 					<%
-					TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(trashEntry.getClassName());
+					TrashHandler trashHandler = trashHandlerRegistryUtil.getTrashHandler(trashEntry.getClassName());
 
 					TrashRenderer trashRenderer = trashHandler.getTrashRenderer(trashEntry.getClassPK());
 
@@ -307,7 +307,7 @@ request.setAttribute("view.jsp-recycleBinEntrySearch", entrySearch);
 									<%
 									TrashEntry rootEntry = trashEntry.getRootEntry();
 
-									TrashHandler rootTrashHandler = TrashHandlerRegistryUtil.getTrashHandler(rootEntry.getClassName());
+									TrashHandler rootTrashHandler = trashHandlerRegistryUtil.getTrashHandler(rootEntry.getClassName());
 
 									TrashRenderer rootTrashRenderer = rootTrashHandler.getTrashRenderer(rootEntry.getClassPK());
 

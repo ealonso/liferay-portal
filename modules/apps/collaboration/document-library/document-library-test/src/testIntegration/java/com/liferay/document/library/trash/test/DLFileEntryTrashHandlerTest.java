@@ -43,8 +43,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -55,6 +53,8 @@ import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceTracker;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
@@ -113,14 +113,22 @@ public class DLFileEntryTrashHandlerTest
 	public static void setUpClass() {
 		Registry registry = RegistryUtil.getRegistry();
 
-		_serviceTracker = registry.trackServices(TrashHelper.class.getName());
+		_trashHandlerRegistryUtilServiceTracker = registry.trackServices(
+			TrashHandlerRegistryUtil.class.getName());
 
-		_serviceTracker.open();
+		_trashHandlerRegistryUtilServiceTracker.open();
+
+		_trashHelperServiceTracker = registry.trackServices(
+			TrashHelper.class.getName());
+
+		_trashHelperServiceTracker.open();
 	}
 
 	@AfterClass
 	public static void tearDownClass() {
-		_serviceTracker.close();
+		_trashHandlerRegistryUtilServiceTracker.close();
+
+		_trashHelperServiceTracker.close();
 	}
 
 	@Override
@@ -225,7 +233,9 @@ public class DLFileEntryTrashHandlerTest
 	public void setUp() throws Exception {
 		super.setUp();
 
-		_trashHelper = _serviceTracker.getService();
+		_trashHandlerRegistryUtil =
+			_trashHandlerRegistryUtilServiceTracker.getService();
+		_trashHelper = _trashHelperServiceTracker.getService();
 	}
 
 	@Test
@@ -238,7 +248,7 @@ public class DLFileEntryTrashHandlerTest
 
 		moveBaseModelToTrash(dlFileEntry.getFileEntryId());
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			getBaseModelClassName());
 
 		String title = RandomTestUtil.randomString();
@@ -445,7 +455,7 @@ public class DLFileEntryTrashHandlerTest
 		BaseModel<?> parentBaseModel = getParentBaseModel(
 			group, serviceContext);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			getBaseModelClassName());
 
 		try {
@@ -486,8 +496,13 @@ public class DLFileEntryTrashHandlerTest
 
 	private static final int _FOLDER_NAME_MAX_LENGTH = 100;
 
-	private static ServiceTracker<TrashHelper, TrashHelper> _serviceTracker;
+	private static
+		ServiceTracker<TrashHandlerRegistryUtil, TrashHandlerRegistryUtil>
+			_trashHandlerRegistryUtilServiceTracker;
+	private static ServiceTracker<TrashHelper, TrashHelper>
+		_trashHelperServiceTracker;
 
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 	private TrashHelper _trashHelper;
 	private final WhenIsAssetable _whenIsAssetable =
 		new DefaultWhenIsAssetable();

@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.dao.search.ResultRowSplitter;
 import com.liferay.portal.kernel.dao.search.ResultRowSplitterEntry;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.TrashedModel;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +38,12 @@ import java.util.List;
  * @author Eudaldo Alonso
  */
 public class TrashResultRowSplitter implements ResultRowSplitter {
+
+	public TrashResultRowSplitter(
+		TrashHandlerRegistryUtil trashHandlerRegistryUtil) {
+
+		_trashHandlerRegistryUtil = trashHandlerRegistryUtil;
+	}
 
 	@Override
 	public List<ResultRowSplitterEntry> split(List<ResultRow> resultRows) {
@@ -56,7 +62,7 @@ public class TrashResultRowSplitter implements ResultRowSplitter {
 			ClassedModel classedModel = (ClassedModel)trashedModel;
 
 			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
+				_trashHandlerRegistryUtil.getTrashHandler(
 					classedModel.getModelClassName());
 
 			if (Validator.isNull(containerModelName) &&
@@ -88,5 +94,7 @@ public class TrashResultRowSplitter implements ResultRowSplitter {
 
 		return resultRowSplitterEntries;
 	}
+
+	private final TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
 
 }

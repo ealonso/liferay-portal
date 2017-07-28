@@ -164,7 +164,7 @@ request.setAttribute("view.jsp-showIconLabel", true);
 		<c:if test="<%= assetPublisherDisplayContext.isEnableFlags() %>">
 
 			<%
-			TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(assetRenderer.getClassName());
+			TrashHandler trashHandler = trashHandlerRegistryUtil.getTrashHandler(assetRenderer.getClassName());
 
 			boolean inTrash = trashHandler.isInTrash(assetEntry.getClassPK());
 			%>

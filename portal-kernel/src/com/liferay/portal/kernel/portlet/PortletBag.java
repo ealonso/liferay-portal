@@ -108,6 +108,10 @@ public interface PortletBag extends Cloneable {
 
 	public List<TemplateHandler> getTemplateHandlerInstances();
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public List<TrashHandler> getTrashHandlerInstances();
 
 	public List<URLEncoder> getURLEncoderInstances();

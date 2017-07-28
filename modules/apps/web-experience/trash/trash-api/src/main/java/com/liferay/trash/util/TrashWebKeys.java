@@ -19,6 +19,9 @@ package com.liferay.trash.util;
  */
 public class TrashWebKeys {
 
+	public static final String TRASH_HANDLER_REGISTRY_UTIL =
+		"TRASH_HANDLER_REGISTRY_UTIL";
+
 	public static final String TRASH_HELPER = "TRASH_HELPER";
 
 }

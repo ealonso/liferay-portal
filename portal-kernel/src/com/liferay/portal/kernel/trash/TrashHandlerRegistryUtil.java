@@ -30,7 +30,10 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * @author Alexander Chow
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.trash.TrashHandlerRegistryUtil}
  */
+@Deprecated
 public class TrashHandlerRegistryUtil {
 
 	public static TrashHandler getTrashHandler(String className) {

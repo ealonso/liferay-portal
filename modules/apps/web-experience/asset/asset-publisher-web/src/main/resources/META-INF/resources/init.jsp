@@ -84,8 +84,6 @@ page import="com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServic
 page import="com.liferay.portal.kernel.service.permission.PortletPermissionUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionErrors" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
-page import="com.liferay.portal.kernel.trash.TrashHandler" %><%@
-page import="com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil" %><%@
 page import="com.liferay.portal.kernel.util.ArrayUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
@@ -113,7 +111,10 @@ page import="com.liferay.portlet.asset.util.AssetUtil" %><%@
 page import="com.liferay.portlet.usersadmin.search.GroupSearch" %><%@
 page import="com.liferay.site.item.selector.criteria.SiteItemSelectorReturnType" %><%@
 page import="com.liferay.site.item.selector.criterion.SiteItemSelectorCriterion" %><%@
-page import="com.liferay.taglib.servlet.PipingServletResponse" %>
+page import="com.liferay.taglib.servlet.PipingServletResponse" %><%@
+page import="com.liferay.trash.TrashHandler" %><%@
+page import="com.liferay.trash.TrashHandlerRegistryUtil" %><%@
+page import="com.liferay.trash.util.TrashWebKeys" %>
 
 <%@ page import="java.io.Serializable" %>
 
@@ -145,6 +146,8 @@ AssetPublisherPortletInstanceConfiguration assetPublisherPortletInstanceConfigur
 AssetPublisherWebConfiguration assetPublisherWebConfiguration = (AssetPublisherWebConfiguration)request.getAttribute(AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_CONFIGURATION);
 
 Format dateFormatDate = FastDateFormatFactoryUtil.getDate(locale, timeZone);
+
+TrashHandlerRegistryUtil trashHandlerRegistryUtil = (TrashHandlerRegistryUtil)request.getAttribute(TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL);
 %>
 
 <%@ include file="/init-ext.jsp" %>

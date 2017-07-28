@@ -14,7 +14,6 @@
 
 package com.liferay.trash.web.internal.portlet;
 
-import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.TrashPermissionException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
@@ -23,8 +22,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -32,6 +29,8 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.TrashHandlerRegistryUtil;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.model.TrashEntry;
@@ -167,7 +166,7 @@ public class TrashPortlet extends MVCPortlet {
 		_trashEntryService.moveEntry(
 			className, classPK, containerModelId, serviceContext);
 
-		TrashUndoUtil.addRestoreData(actionRequest, className, classPK);
+		_trashUndoUtil.addRestoreData(actionRequest, className, classPK);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -177,6 +176,9 @@ public class TrashPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		renderRequest.setAttribute(
+			TrashWebKeys.TRASH_HANDLER_REGISTRY_UTIL,
+			_trashHandlerRegistryUtil);
 		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 		renderRequest.setAttribute(TrashWebKeys.TRASH_UTIL, _trashUtil);
 
@@ -214,7 +216,7 @@ public class TrashPortlet extends MVCPortlet {
 			}
 		}
 
-		TrashUndoUtil.addRestoreData(actionRequest, entries);
+		_trashUndoUtil.addRestoreData(actionRequest, entries);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -247,7 +249,7 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryService.restoreEntry(
 			trashEntryId, duplicateEntryId, null);
 
-		TrashUndoUtil.addRestoreData(
+		_trashUndoUtil.addRestoreData(
 			actionRequest, entry.getClassName(), entry.getClassPK());
 
 		sendRedirect(actionRequest, actionResponse);
@@ -273,7 +275,7 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryService.restoreEntry(
 			trashEntryId, 0, newName);
 
-		TrashUndoUtil.addRestoreData(
+		_trashUndoUtil.addRestoreData(
 			actionRequest, entry.getClassName(), entry.getClassPK());
 
 		sendRedirect(actionRequest, actionResponse);
@@ -290,14 +292,12 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryLocalService.fetchTrashEntry(
 			trashEntryId);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistryUtil.getTrashHandler(
 			entry.getClassName());
 
 		try {
 			trashHandler.checkRestorableEntry(
-				ModelAdapterUtil.adapt(
-					com.liferay.trash.kernel.model.TrashEntry.class, entry),
-				TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
+				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
 		}
 		catch (RestoreEntryException ree) {
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
@@ -357,7 +357,13 @@ public class TrashPortlet extends MVCPortlet {
 	private TrashEntryService _trashEntryService;
 
 	@Reference
+	private TrashHandlerRegistryUtil _trashHandlerRegistryUtil;
+
+	@Reference
 	private TrashHelper _trashHelper;
+
+	@Reference
+	private TrashUndoUtil _trashUndoUtil;
 
 	@Reference
 	private TrashUtil _trashUtil;

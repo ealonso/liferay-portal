@@ -20,8 +20,7 @@ import com.liferay.calendar.service.CalendarBookingLocalService;
 import com.liferay.calendar.service.permission.CalendarPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.trash.TrashHandler;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,7 +29,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pier Paolo Ramon
  */
 @Component(immediate = true, service = TrashHandler.class)
-public class CalendarBookingTrashHandler extends BaseTrashHandler {
+public class CalendarBookingTrashHandler implements TrashHandler {
 
 	@Override
 	public void deleteTrashEntry(long classPK) throws PortalException {
@@ -40,6 +39,19 @@ public class CalendarBookingTrashHandler extends BaseTrashHandler {
 	@Override
 	public String getClassName() {
 		return CalendarBooking.class.getName();
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		CalendarBooking calendarBooking =
+			_calendarBookingLocalService.getCalendarBooking(classPK);
+
+		return CalendarPermission.contains(
+			permissionChecker, calendarBooking.getCalendar(),
+			CalendarActionKeys.MANAGE_BOOKINGS);
 	}
 
 	@Override
@@ -68,19 +80,6 @@ public class CalendarBookingTrashHandler extends BaseTrashHandler {
 
 		_calendarBookingLocalService.restoreCalendarBookingFromTrash(
 			userId, classPK);
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		CalendarBooking calendarBooking =
-			_calendarBookingLocalService.getCalendarBooking(classPK);
-
-		return CalendarPermission.contains(
-			permissionChecker, calendarBooking.getCalendar(),
-			CalendarActionKeys.MANAGE_BOOKINGS);
 	}
 
 	@Reference(unbind = "-")

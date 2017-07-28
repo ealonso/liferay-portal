@@ -33,8 +33,6 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -540,10 +538,7 @@ public abstract class BaseSocialActivityInterpreter
 			String className, long classPK, ServiceContext serviceContext)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			className);
-
-		if ((trashHandler != null) && trashHandler.isInTrash(classPK)) {
+		if (TrashUtil.isInTrash(className, classPK)) {
 			PortletURL portletURL = TrashUtil.getViewContentURL(
 				serviceContext.getRequest(), className, classPK);
 

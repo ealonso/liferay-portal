@@ -43,7 +43,7 @@ if (trashEntry != null) {
 	classPK = trashEntry.getClassPK();
 }
 
-TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+TrashHandler trashHandler = trashHandlerRegistryUtil.getTrashHandler(className);
 
 TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
 %>

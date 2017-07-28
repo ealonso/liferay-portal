@@ -39,7 +39,7 @@ else {
 	classPK = GetterUtil.getLong(request.getAttribute("view.jsp-classPK"));
 }
 
-TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+TrashHandler trashHandler = trashHandlerRegistryUtil.getTrashHandler(className);
 %>
 
 <liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">

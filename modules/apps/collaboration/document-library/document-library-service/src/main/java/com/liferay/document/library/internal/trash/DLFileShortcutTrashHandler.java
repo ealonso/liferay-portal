@@ -36,12 +36,12 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashActionKeys;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.trash.TrashRendererFactory;
 import com.liferay.portlet.documentlibrary.service.permission.DLFileShortcutPermission;
 import com.liferay.portlet.documentlibrary.service.permission.DLFolderPermission;
+import com.liferay.trash.TrashHandler;
+import com.liferay.trash.constants.TrashActionKeys;
 
 import javax.portlet.PortletRequest;
 
@@ -144,6 +144,23 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 	@Override
 	public TrashRenderer getTrashRenderer(long classPK) throws PortalException {
 		return _trashRendererFactory.getTrashRenderer(classPK);
+	}
+
+	@Override
+	public boolean hasPermission(
+			PermissionChecker permissionChecker, long classPK, String actionId)
+		throws PortalException {
+
+		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
+
+		if (dlFileShortcut.isInHiddenFolder() &&
+			actionId.equals(ActionKeys.VIEW)) {
+
+			return false;
+		}
+
+		return DLFileShortcutPermission.contains(
+			permissionChecker, classPK, actionId);
 	}
 
 	@Override
@@ -260,23 +277,6 @@ public class DLFileShortcutTrashHandler extends DLBaseTrashHandler {
 		}
 
 		return localRepository;
-	}
-
-	@Override
-	protected boolean hasPermission(
-			PermissionChecker permissionChecker, long classPK, String actionId)
-		throws PortalException {
-
-		DLFileShortcut dlFileShortcut = getDLFileShortcut(classPK);
-
-		if (dlFileShortcut.isInHiddenFolder() &&
-			actionId.equals(ActionKeys.VIEW)) {
-
-			return false;
-		}
-
-		return DLFileShortcutPermission.contains(
-			permissionChecker, classPK, actionId);
 	}
 
 	@Reference(unbind = "-")
