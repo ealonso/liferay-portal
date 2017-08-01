@@ -14,29 +14,35 @@
 
 package com.liferay.asset.exception;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Roberto Díaz
  */
-@ProviderType
 public class DuplicateQueryRuleException extends PortalException {
 
-	public DuplicateQueryRuleException() {
+	public DuplicateQueryRuleException(
+		boolean contains, boolean andOperator, String name) {
+
+		_contains = contains;
+		_andOperator = andOperator;
+		_name = name;
 	}
 
-	public DuplicateQueryRuleException(String msg) {
-		super(msg);
+	public String getName() {
+		return _name;
 	}
 
-	public DuplicateQueryRuleException(String msg, Throwable cause) {
-		super(msg, cause);
+	public boolean isAndOperator() {
+		return _andOperator;
 	}
 
-	public DuplicateQueryRuleException(Throwable cause) {
-		super(cause);
+	public boolean isContains() {
+		return _contains;
 	}
+
+	private final boolean _andOperator;
+	private final boolean _contains;
+	private final String _name;
 
 }

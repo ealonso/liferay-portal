@@ -14,26 +14,71 @@
 
 package com.liferay.asset.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+
+import java.util.List;
 
 /**
- * The extended model implementation for the AssetEntry service. Represents a row in the &quot;AssetEntry&quot; database table, with each column mapped to a property of this class.
- *
- * <p>
- * Helper methods and all application logic should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.asset.model.AssetEntry} interface.
- * </p>
- *
  * @author Brian Wing Shun Chan
+ * @author Juan Fernández
  */
-@ProviderType
 public class AssetEntryImpl extends AssetEntryBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a asset entry model instance should use the {@link com.liferay.asset.model.AssetEntry} interface instead.
-	 */
-	public AssetEntryImpl() {
+	@Override
+	public AssetRenderer<?> getAssetRenderer() {
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				getClassName());
+
+		try {
+			return assetRendererFactory.getAssetRenderer(getClassPK());
+		}
+		catch (Exception e) {
+			if (_log.isWarnEnabled()) {
+				_log.warn("Unable to get asset renderer", e);
+			}
+		}
+
+		return null;
 	}
+
+	@Override
+	public AssetRendererFactory<?> getAssetRendererFactory() {
+		return
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				getClassName());
+	}
+
+	@Override
+	public List<AssetCategory> getCategories() {
+		return AssetCategoryLocalServiceUtil.getEntryCategories(getEntryId());
+	}
+
+	@Override
+	public long[] getCategoryIds() {
+		return ListUtil.toLongArray(
+			getCategories(), AssetCategory.CATEGORY_ID_ACCESSOR);
+	}
+
+	@Override
+	public String[] getTagNames() {
+		return ListUtil.toArray(getTags(), AssetTag.NAME_ACCESSOR);
+	}
+
+	@Override
+	public List<AssetTag> getTags() {
+		return AssetTagLocalServiceUtil.getEntryTags(getEntryId());
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(AssetEntryImpl.class);
 
 }
