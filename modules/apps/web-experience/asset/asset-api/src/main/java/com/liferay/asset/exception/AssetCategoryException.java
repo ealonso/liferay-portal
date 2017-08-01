@@ -15,7 +15,7 @@ package com.liferay.asset.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**

@@ -14,8 +14,9 @@
 
 package com.liferay.asset.categories.internal.search;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -39,7 +40,6 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 
 import java.util.ArrayList;
 import java.util.List;
