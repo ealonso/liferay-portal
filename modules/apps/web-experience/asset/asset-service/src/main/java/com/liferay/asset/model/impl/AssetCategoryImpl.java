@@ -14,24 +14,108 @@
 
 package com.liferay.asset.model.impl;
 
-import aQute.bnd.annotation.ProviderType;
+import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 /**
- * The extended model implementation for the AssetCategory service. Represents a row in the &quot;AssetCategory&quot; database table, with each column mapped to a property of this class.
- *
- * <p>
- * Helper methods and all application logic should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.asset.model.AssetCategory} interface.
- * </p>
- *
  * @author Brian Wing Shun Chan
  */
-@ProviderType
 public class AssetCategoryImpl extends AssetCategoryBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a asset category model instance should use the {@link com.liferay.asset.model.AssetCategory} interface instead.
-	 */
-	public AssetCategoryImpl() {
+
+	@Override
+	public List<AssetCategory> getAncestors() throws PortalException {
+		List<AssetCategory> categories = new ArrayList<>();
+
+		AssetCategory category = this;
+
+		while (!category.isRootCategory()) {
+			category = AssetCategoryLocalServiceUtil.getAssetCategory(
+				category.getParentCategoryId());
+
+			categories.add(category);
+		}
+
+		return categories;
 	}
+
+	@Override
+	public AssetCategory getParentCategory() {
+		return AssetCategoryLocalServiceUtil.fetchCategory(
+			getParentCategoryId());
+	}
+
+	@Override
+	public String getPath(Locale locale) throws PortalException {
+		return getPath(locale, false);
+	}
+
+	@Override
+	public String getPath(Locale locale, boolean reverse)
+		throws PortalException {
+
+		List<AssetCategory> categories = getAncestors();
+
+		StringBundler sb = new StringBundler((categories.size() * 4) + 1);
+
+		AssetVocabulary vocabulary =
+			AssetVocabularyLocalServiceUtil.getVocabulary(getVocabularyId());
+
+		sb.append(vocabulary.getTitle(locale));
+
+		if (reverse) {
+			Collections.reverse(categories);
+		}
+
+		for (AssetCategory category : categories) {
+			sb.append(StringPool.SPACE);
+			sb.append(StringPool.GREATER_THAN);
+			sb.append(StringPool.SPACE);
+			sb.append(category.getTitle(locale));
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public String getTitle(String languageId) {
+		String value = super.getTitle(languageId);
+
+		if (Validator.isNull(value)) {
+			value = getName();
+		}
+
+		return value;
+	}
+
+	@Override
+	public String getTitle(String languageId, boolean useDefault) {
+		String value = super.getTitle(languageId, useDefault);
+
+		if (Validator.isNull(value)) {
+			value = getName();
+		}
+
+		return value;
+	}
+
+	@Override
+	public boolean isRootCategory() {
+		if (getParentCategoryId() == 0) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
