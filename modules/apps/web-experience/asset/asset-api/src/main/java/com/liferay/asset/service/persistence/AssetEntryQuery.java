@@ -14,9 +14,9 @@
 
 package com.liferay.asset.service.persistence;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManager;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
