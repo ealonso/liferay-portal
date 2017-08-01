@@ -16,6 +16,7 @@ package com.liferay.asset.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**
@@ -24,19 +25,24 @@ import com.liferay.portal.kernel.exception.PortalException;
 @ProviderType
 public class AssetCategoryException extends PortalException {
 
-	public AssetCategoryException() {
+	public static final int AT_LEAST_ONE_CATEGORY = 1;
+
+	public static final int TOO_MANY_CATEGORIES = 2;
+
+	public AssetCategoryException(AssetVocabulary vocabulary, int type) {
+		_vocabulary = vocabulary;
+		_type = type;
 	}
 
-	public AssetCategoryException(String msg) {
-		super(msg);
+	public int getType() {
+		return _type;
 	}
 
-	public AssetCategoryException(String msg, Throwable cause) {
-		super(msg, cause);
+	public AssetVocabulary getVocabulary() {
+		return _vocabulary;
 	}
 
-	public AssetCategoryException(Throwable cause) {
-		super(cause);
-	}
+	private final int _type;
+	private final AssetVocabulary _vocabulary;
 
 }
