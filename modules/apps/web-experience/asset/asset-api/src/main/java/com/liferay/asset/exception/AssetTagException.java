@@ -24,19 +24,24 @@ import com.liferay.portal.kernel.exception.PortalException;
 @ProviderType
 public class AssetTagException extends PortalException {
 
-	public AssetTagException() {
+	public static final int AT_LEAST_ONE_TAG = 1;
+
+	public static final int INVALID_CHARACTER = 2;
+
+	public AssetTagException(int type) {
+		_type = type;
 	}
 
-	public AssetTagException(String msg) {
-		super(msg);
+	public AssetTagException(String message, int type) {
+		super(message);
+
+		_type = type;
 	}
 
-	public AssetTagException(String msg, Throwable cause) {
-		super(msg, cause);
+	public int getType() {
+		return _type;
 	}
 
-	public AssetTagException(Throwable cause) {
-		super(cause);
-	}
+	private final int _type;
 
 }
