@@ -3112,6 +3112,12 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			String[] assetTagNames)
 		throws PortalException {
 
+		if (ArrayUtil.isEmpty(assetCategoryIds) &&
+			ArrayUtil.isEmpty(assetTagNames)) {
+
+			return;
+		}
+
 		User user = userPersistence.findByPrimaryKey(userId);
 
 		Company company = companyPersistence.findByPrimaryKey(
