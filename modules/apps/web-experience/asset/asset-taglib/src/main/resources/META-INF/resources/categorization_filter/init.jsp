@@ -25,16 +25,16 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.asset.kernel.model.AssetCategory" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
-page import="com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil" %><%@
-page import="com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil" %><%@
+<%@ page import="com.liferay.asset.model.AssetCategory" %><%@
+page import="com.liferay.asset.model.AssetVocabulary" %><%@
+page import="com.liferay.asset.service.AssetCategoryLocalServiceUtil" %><%@
+page import="com.liferay.asset.service.AssetVocabularyLocalServiceUtil" %><%@
+page import="com.liferay.asset.util.impl.AssetUtil" %><%@
 page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
-page import="com.liferay.portal.kernel.util.Validator" %><%@
-page import="com.liferay.portlet.asset.util.AssetUtil" %>
+page import="com.liferay.portal.kernel.util.Validator" %>
 
 <%@ page import="javax.portlet.PortletURL" %>
 

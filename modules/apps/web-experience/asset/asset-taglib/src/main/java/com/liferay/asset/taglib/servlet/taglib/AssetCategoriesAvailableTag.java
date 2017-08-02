@@ -14,8 +14,8 @@
 
 package com.liferay.asset.taglib.servlet.taglib;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.service.AssetCategoryServiceUtil;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.taglib.TagSupport;
 
