@@ -117,7 +117,7 @@ AssetCategoryUtil.addPortletBreadcrumbEntry(assetCategoriesDisplayContext.getVoc
 		searchContainer="<%= assetCategoriesDisplayContext.getCategoriesSearchContainer() %>"
 	>
 		<liferay-ui:search-container-row
-			className="com.liferay.asset.kernel.model.AssetCategory"
+			className="com.liferay.asset.categories.model.AssetCategory"
 			keyProperty="categoryId"
 			modelVar="curCategory"
 		>

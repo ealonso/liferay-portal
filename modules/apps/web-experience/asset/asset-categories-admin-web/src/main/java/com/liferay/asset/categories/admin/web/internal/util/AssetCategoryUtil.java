@@ -14,8 +14,8 @@
 
 package com.liferay.asset.categories.admin.web.internal.util;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
