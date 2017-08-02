@@ -14,7 +14,7 @@
 
 package com.liferay.asset.taglib.servlet.taglib;
 
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
