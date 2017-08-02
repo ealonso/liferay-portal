@@ -15,12 +15,12 @@
 package com.liferay.asset.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.exception.DuplicateTagException;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetTagStats;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagStatsLocalServiceUtil;
+import com.liferay.asset.tags.exception.AssetTagException;
+import com.liferay.asset.tags.exception.DuplicateTagException;
+import com.liferay.asset.tags.model.AssetTag;
+import com.liferay.asset.tags.model.AssetTagStats;
+import com.liferay.asset.tags.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.tags.service.AssetTagStatsLocalServiceUtil;
 import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
