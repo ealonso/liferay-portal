@@ -32,4 +32,5 @@ dependencies {
 	provided project(":apps:web-experience:site:site-api")
 	provided project(":apps:web-experience:site:site-item-selector-api")
 	provided project(":apps:web-experience:site:site-taglib")
+	provided project(":apps:web-experience:asset:asset-display-template:asset-display-template-api")
 }
