@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexSearcher;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.GeoDistanceSort;
 import com.liferay.portal.kernel.search.GroupBy;
 import com.liferay.portal.kernel.search.Hits;
@@ -42,7 +43,10 @@ import com.liferay.portal.kernel.search.highlight.HighlightUtil;
 import com.liferay.portal.kernel.search.query.QueryTranslator;
 import com.liferay.portal.kernel.search.suggest.QuerySuggester;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Props;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration;
@@ -54,7 +58,6 @@ import com.liferay.portal.search.elasticsearch.internal.facet.CompositeFacetProc
 import com.liferay.portal.search.elasticsearch.internal.facet.FacetCollectorFactory;
 import com.liferay.portal.search.elasticsearch.internal.util.DocumentTypes;
 import com.liferay.portal.search.elasticsearch.stats.StatsTranslator;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -132,7 +135,8 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			}
 
 			if (end == QueryUtil.ALL_POS) {
-				end = PropsValues.INDEX_SEARCH_LIMIT;
+				end = GetterUtil.getInteger(
+					props.get(PropsKeys.INDEX_SEARCH_LIMIT));
 			}
 			else if (end < 0) {
 				throw new IllegalArgumentException("Invalid end " + end);
@@ -322,13 +326,10 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 		String snippet = StringPool.BLANK;
 
-		String localizedContentName = DocumentImpl.getLocalizedName(
+		String snippetFieldName = DocumentImpl.getLocalizedName(
 			locale, fieldName);
 
-		String snippetFieldName = localizedContentName;
-
-		HighlightField highlightField = highlightFields.get(
-			localizedContentName);
+		HighlightField highlightField = highlightFields.get(snippetFieldName);
 
 		if (highlightField == null) {
 			highlightField = highlightFields.get(fieldName);
@@ -351,8 +352,9 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			snippet = sb.toString();
 		}
 
-		HighlightUtil.addSnippet(
-			document, queryTerms, snippet, snippetFieldName);
+		document.addText(
+			Field.SNIPPET.concat(StringPool.UNDERLINE).concat(snippetFieldName),
+			snippet);
 	}
 
 	protected void addSnippets(
@@ -747,6 +749,9 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 	@Reference
 	protected IndexNameBuilder indexNameBuilder;
+
+	@Reference
+	protected Props props;
 
 	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected QueryTranslator<QueryBuilder> queryTranslator;

@@ -15,7 +15,10 @@
 package com.liferay.portal.portlet.bridge.soy;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCCommandCache;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
@@ -81,9 +84,17 @@ public class SoyPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		Template template = getTemplate(renderRequest);
+		Template template = (Template)renderRequest.getAttribute(
+			WebKeys.TEMPLATE);
 
-		renderRequest.setAttribute(WebKeys.TEMPLATE, template);
+		if (template == null) {
+			try {
+				_createRequestTemplate(renderRequest);
+			}
+			catch (TemplateException te) {
+				throw new PortletException(te);
+			}
+		}
 
 		super.render(renderRequest, renderResponse);
 	}
@@ -112,16 +123,19 @@ public class SoyPortlet extends MVCPortlet {
 	protected Template getTemplate(PortletRequest portletRequest)
 		throws PortletException {
 
-		if (_template == null) {
-			try {
-				_template = _createTemplate();
-			}
-			catch (TemplateException te) {
-				throw new PortletException("Unable to create template", te);
-			}
+		Template template = (Template)portletRequest.getAttribute(
+			WebKeys.TEMPLATE);
+
+		if (template != null) {
+			return (Template)portletRequest.getAttribute(WebKeys.TEMPLATE);
 		}
 
-		return _template;
+		try {
+			return _createRequestTemplate(portletRequest);
+		}
+		catch (TemplateException te) {
+			throw new PortletException("Unable to create template", te);
+		}
 	}
 
 	@Override
@@ -219,20 +233,49 @@ public class SoyPortlet extends MVCPortlet {
 	@Deprecated
 	protected Template template;
 
-	private Template _createTemplate() throws TemplateException {
+	private Template _createRequestTemplate(PortletRequest portletRequest)
+		throws TemplateException {
+
 		List<TemplateResource> templateResources = _getTemplateResources();
 
-		return TemplateManagerUtil.getTemplate(
+		Template template = TemplateManagerUtil.getTemplate(
 			TemplateConstants.LANG_TYPE_SOY, templateResources, false);
+
+		portletRequest.setAttribute(WebKeys.TEMPLATE, template);
+
+		return template;
+	}
+
+	private MVCRenderCommand _getMVCRenderCommand(String mvcRenderCommandName) {
+		MVCCommandCache mvcRenderCommandCache = getRenderMVCCommandCache();
+
+		return (MVCRenderCommand)mvcRenderCommandCache.getMVCCommand(
+			mvcRenderCommandName);
 	}
 
 	private List<TemplateResource> _getTemplateResources()
 		throws TemplateException {
 
-		if (_templateResources == null) {
-			_templateResources =
+		if (_templateResources != null) {
+			return _templateResources;
+		}
+
+		_templateResources =
+			SoyTemplateResourcesProvider.getBundleTemplateResources(
+				_bundle, templatePath);
+
+		MVCCommandCache mvcCommandCache = getRenderMVCCommandCache();
+
+		for (String mvcCommandName : mvcCommandCache.getMVCCommandNames()) {
+			MVCCommand mvcCommand = _getMVCRenderCommand(mvcCommandName);
+
+			Bundle bundle = FrameworkUtil.getBundle(mvcCommand.getClass());
+
+			List<TemplateResource> mvcCommandTemplateResources =
 				SoyTemplateResourcesProvider.getBundleTemplateResources(
-					_bundle, templatePath);
+					bundle, templatePath);
+
+			_templateResources.addAll(mvcCommandTemplateResources);
 		}
 
 		return _templateResources;
@@ -262,7 +305,6 @@ public class SoyPortlet extends MVCPortlet {
 
 	private Bundle _bundle;
 	private SoyPortletHelper _soyPortletHelper;
-	private Template _template;
 	private List<TemplateResource> _templateResources;
 
 }
