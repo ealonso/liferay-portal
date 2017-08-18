@@ -16,14 +16,21 @@ package com.liferay.modern.site.building.fragment.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.modern.site.building.fragment.model.FragmentCollection;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+import com.liferay.portal.kernel.util.OrderByComparator;
+
+import java.util.List;
 
 /**
  * Provides the remote service interface for FragmentCollection. Methods of this
@@ -51,9 +58,51 @@ public interface FragmentCollectionService extends BaseService {
 	 */
 
 	/**
+	* NOTE FOR DEVELOPERS:
+	*
+	* Never reference this class directly. Always use {@link FragmentCollectionServiceUtil} to access the fragment collection remote service.
+	*/
+	public FragmentCollection addFragmentCollection(long groupId,
+		java.lang.String name, java.lang.String description,
+		ServiceContext serviceContext) throws PortalException;
+
+	public FragmentCollection deleteFragmentCollection(
+		long fragmentCollectionId) throws PortalException;
+
+	public List<FragmentCollection> deleteFragmentCollections(
+		long[] fragmentCollectionIds) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public FragmentCollection fetchFragmentCollection(long fragmentCollectionId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		int start, int end,
+		OrderByComparator<FragmentCollection> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<FragmentCollection> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getGroupFragmentCollectionsCount(long groupId);
+
+	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
+
+	public FragmentCollection updateFragmentCollection(
+		long fragmentCollectionId, java.lang.String name,
+		java.lang.String description) throws PortalException;
 }
