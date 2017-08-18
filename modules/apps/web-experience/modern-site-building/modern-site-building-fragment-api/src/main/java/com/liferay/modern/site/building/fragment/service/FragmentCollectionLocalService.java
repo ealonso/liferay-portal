@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -73,6 +74,16 @@ public interface FragmentCollectionLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentCollection addFragmentCollection(
 		FragmentCollection fragmentCollection);
+
+	/**
+	* NOTE FOR DEVELOPERS:
+	*
+	* Never reference this class directly. Always use {@link FragmentCollectionLocalServiceUtil} to access the fragment collection local service.
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public FragmentCollection addFragmentCollection(long userId, long groupId,
+		java.lang.String name, java.lang.String description,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Creates a new fragment collection with the primary key. Does not add the fragment collection to the database.
@@ -228,6 +239,21 @@ public interface FragmentCollectionLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentCollection> getFragmentCollections(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		int start, int end,
+		OrderByComparator<FragmentCollection> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentCollection> getFragmentCollections(long groupId,
+		java.lang.String name, int start, int end,
+		OrderByComparator<FragmentCollection> obc);
+
 	/**
 	* Returns all the fragment collections matching the UUID and company.
 	*
@@ -286,4 +312,9 @@ public interface FragmentCollectionLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentCollection updateFragmentCollection(
 		FragmentCollection fragmentCollection);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public FragmentCollection updateFragmentCollection(
+		long fragmentCollectionId, java.lang.String name,
+		java.lang.String description) throws PortalException;
 }

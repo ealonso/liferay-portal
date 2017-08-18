@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -72,6 +73,17 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentEntry addFragmentEntry(FragmentEntry fragmentEntry);
+
+	/**
+	* NOTE FOR DEVELOPERS:
+	*
+	* Never reference this class directly. Always use {@link FragmentEntryLocalServiceUtil} to access the fragment entry local service.
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public FragmentEntry addFragmentEntry(long userId, long groupId,
+		long fragmentCollectionId, java.lang.String name, java.lang.String css,
+		java.lang.String html, java.lang.String js,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Creates a new fragment entry with the primary key. Does not add the fragment entry to the database.
@@ -168,6 +180,9 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 		Projection projection);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> fetchFragmentEntries(long fragmentCollectionId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public FragmentEntry fetchFragmentEntry(long fragmentEntryId);
 
 	/**
@@ -201,6 +216,21 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntries(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId,
+		int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long groupId,
+		long fragmentCollectionId, int start, int end,
+		OrderByComparator<FragmentEntry> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long groupId,
+		long fragmentCollectionId, java.lang.String name, int start, int end,
+		OrderByComparator<FragmentEntry> obc);
 
 	/**
 	* Returns all the fragment entries matching the UUID and company.
@@ -282,4 +312,9 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentEntry updateFragmentEntry(FragmentEntry fragmentEntry);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public FragmentEntry updateFragmentEntry(long fragmentEntryId,
+		java.lang.String name, java.lang.String css, java.lang.String html,
+		java.lang.String js) throws PortalException;
 }
