@@ -1273,8 +1273,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		dynamicQuery.add(property.eq(tagName));
 
-		List<AssetTag> assetTags = assetTagPersistence.findWithDynamicQuery(
-			dynamicQuery);
+		List<AssetTag> assetTags = assetTagLocalService.getTags(dynamicQuery);
 
 		for (AssetTag assetTag : assetTags) {
 			tagIds.add(assetTag.getTagId());
