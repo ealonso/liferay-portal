@@ -85,8 +85,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		// Entry
 
-		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
-			entry.getEntryId());
+		List<AssetTag> tags = null;
 
 		assetEntryPersistence.remove(entry);
 
@@ -754,9 +753,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		if (categoryIds != null) {
 			categoryIds = checkCategories(className, classPK, categoryIds);
-
-			assetEntryPersistence.setAssetCategories(
-				entry.getEntryId(), categoryIds);
 		}
 
 		// Tags
@@ -769,8 +765,6 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			List<AssetTag> tags = assetTagLocalService.checkTags(
 				userId, siteGroup, tagNames);
 
-			assetEntryPersistence.setAssetTags(entry.getEntryId(), tags);
-
 			if (entry.isVisible()) {
 				if (entry.isNew()) {
 					for (AssetTag tag : tags) {
@@ -779,8 +773,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 					}
 				}
 				else {
-					List<AssetTag> oldTags = assetEntryPersistence.getAssetTags(
-						entry.getEntryId());
+					List<AssetTag> oldTags = null;
 
 					for (AssetTag oldTag : oldTags) {
 						if (!tags.contains(oldTag)) {
@@ -798,8 +791,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 				}
 			}
 			else if (oldVisible) {
-				List<AssetTag> oldTags = assetEntryPersistence.getAssetTags(
-					entry.getEntryId());
+				List<AssetTag> oldTags = null;
 
 				for (AssetTag oldTag : oldTags) {
 					assetTagLocalService.decrementAssetCount(
@@ -966,8 +958,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetEntryPersistence.update(entry);
 
-		List<AssetTag> tags = assetEntryPersistence.getAssetTags(
-			entry.getEntryId());
+		List<AssetTag> tags = null;
 
 		if (visible) {
 			for (AssetTag tag : tags) {

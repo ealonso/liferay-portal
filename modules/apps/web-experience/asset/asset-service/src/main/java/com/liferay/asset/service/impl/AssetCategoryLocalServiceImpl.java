@@ -21,7 +21,7 @@ import com.liferay.asset.model.AssetCategoryConstants;
 import com.liferay.asset.model.AssetCategoryProperty;
 import com.liferay.asset.service.base.AssetCategoryLocalServiceBaseImpl;
 import com.liferay.asset.util.comparator.AssetCategoryLeftCategoryIdComparator;
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;

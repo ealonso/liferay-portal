@@ -14,7 +14,7 @@
 
 package com.liferay.asset.tags.admin.web.internal.display.context;
 
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.tags.admin.web.internal.constants.AssetTagsAdminPortletKeys;
 import com.liferay.asset.tags.model.AssetTag;
 import com.liferay.asset.tags.service.AssetTagLocalServiceUtil;

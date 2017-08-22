@@ -26,8 +26,7 @@ taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.asset.NoSuchClassTypeException" %><%@
-page import="com.liferay.asset.categories.admin.web.constants.AssetCategoriesConstants" %><%@
+<%@ page import="com.liferay.asset.categories.admin.web.constants.AssetCategoriesConstants" %><%@
 page import="com.liferay.asset.categories.admin.web.internal.display.context.AssetCategoriesDisplayContext" %><%@
 page import="com.liferay.asset.categories.admin.web.internal.util.AssetCategoryUtil" %><%@
 page import="com.liferay.asset.categories.exception.AssetCategoryNameException" %><%@
@@ -48,6 +47,7 @@ page import="com.liferay.asset.categories.service.AssetCategoryPropertyServiceUt
 page import="com.liferay.asset.categories.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.asset.categories.service.persistence.AssetCategoryPropertyUtil" %><%@
 page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
+page import="com.liferay.asset.kernel.NoSuchClassTypeException" %><%@
 page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
 page import="com.liferay.asset.kernel.model.ClassType" %><%@
 page import="com.liferay.asset.kernel.model.ClassTypeReader" %><%@
