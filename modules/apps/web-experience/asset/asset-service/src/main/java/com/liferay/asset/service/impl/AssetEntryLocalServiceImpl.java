@@ -16,6 +16,8 @@ package com.liferay.asset.service.impl;
 
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.model.AssetCategoryConstants;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.asset.exception.NoSuchEntryException;
 import com.liferay.asset.internal.util.AssetEntryValidatorExclusionRuleRegistry;
@@ -1289,11 +1291,17 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		indexer.reindex(className, entry.getClassPK());
 	}
 
+	@BeanReference(type = AssetCategoryLocalService.class)
+	protected AssetCategoryLocalService assetCategoryLocalService;
+
 	@BeanReference(type = AssetEntryValidatorExclusionRuleRegistry.class)
 	protected AssetEntryValidatorExclusionRuleRegistry
 		assetEntryValidatorExclusionRuleRegistry;
 
 	@BeanReference(type = AssetEntryValidatorRegistry.class)
 	protected AssetEntryValidatorRegistry assetEntryValidatorRegistry;
+
+	@BeanReference(type = AssetTagLocalService.class)
+	protected AssetTagLocalService assetTagLocalService;
 
 }
