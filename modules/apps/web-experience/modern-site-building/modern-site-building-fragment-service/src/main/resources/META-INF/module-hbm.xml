@@ -31,6 +31,6 @@
 		<property name="css" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="html" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="js" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="fragmentCollectionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="msbFragmentCollectionId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 </hibernate-mapping>

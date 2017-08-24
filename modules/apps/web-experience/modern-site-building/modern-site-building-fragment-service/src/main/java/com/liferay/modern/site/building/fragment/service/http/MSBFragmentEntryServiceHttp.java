@@ -56,9 +56,9 @@ import com.liferay.portal.kernel.util.MethodKey;
 @ProviderType
 public class MSBFragmentEntryServiceHttp {
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntry addFragmentEntry(
-		HttpPrincipal httpPrincipal, long groupId, long fragmentCollectionId,
-		java.lang.String name, java.lang.String css, java.lang.String html,
-		java.lang.String js,
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name,
+		java.lang.String css, java.lang.String html, java.lang.String js,
+		long msbFragmentCollectionId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -66,7 +66,7 @@ public class MSBFragmentEntryServiceHttp {
 					"addFragmentEntry", _addFragmentEntryParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					fragmentCollectionId, name, css, html, js, serviceContext);
+					name, css, html, js, msbFragmentCollectionId, serviceContext);
 
 			Object returnObj = null;
 
@@ -156,14 +156,14 @@ public class MSBFragmentEntryServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> fetchFragmentEntries(
-		HttpPrincipal httpPrincipal, long fragmentCollectionId)
+		HttpPrincipal httpPrincipal, long msbFragmentCollectionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"fetchFragmentEntries", _fetchFragmentEntriesParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					fragmentCollectionId);
+					msbFragmentCollectionId);
 
 			Object returnObj = null;
 
@@ -215,14 +215,14 @@ public class MSBFragmentEntryServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		HttpPrincipal httpPrincipal, long fragmentCollectionId, int start,
+		HttpPrincipal httpPrincipal, long msbFragmentCollectionId, int start,
 		int end) throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getFragmentEntries", _getFragmentEntriesParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					fragmentCollectionId, start, end);
+					msbFragmentCollectionId, start, end);
 
 			Object returnObj = null;
 
@@ -247,8 +247,8 @@ public class MSBFragmentEntryServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		HttpPrincipal httpPrincipal, long groupId, long fragmentCollectionId,
-		int start, int end,
+		HttpPrincipal httpPrincipal, long groupId,
+		long msbFragmentCollectionId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -256,7 +256,7 @@ public class MSBFragmentEntryServiceHttp {
 					"getFragmentEntries", _getFragmentEntriesParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					fragmentCollectionId, start, end, orderByComparator);
+					msbFragmentCollectionId, start, end, orderByComparator);
 
 			Object returnObj = null;
 
@@ -281,15 +281,16 @@ public class MSBFragmentEntryServiceHttp {
 	}
 
 	public static java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		HttpPrincipal httpPrincipal, long groupId, long fragmentCollectionId,
-		java.lang.String name, int start, int end,
+		HttpPrincipal httpPrincipal, long groupId,
+		long msbFragmentCollectionId, java.lang.String name, int start,
+		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> obc) {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getFragmentEntries", _getFragmentEntriesParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					fragmentCollectionId, name, start, end, obc);
+					msbFragmentCollectionId, name, start, end, obc);
 
 			Object returnObj = null;
 
@@ -310,14 +311,14 @@ public class MSBFragmentEntryServiceHttp {
 	}
 
 	public static int getGroupFragmentCollectionsCount(
-		HttpPrincipal httpPrincipal, long fragmentCollectionId) {
+		HttpPrincipal httpPrincipal, long msbFragmentCollectionId) {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getGroupFragmentCollectionsCount",
 					_getGroupFragmentCollectionsCountParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					fragmentCollectionId);
+					msbFragmentCollectionId);
 
 			Object returnObj = null;
 
@@ -373,9 +374,8 @@ public class MSBFragmentEntryServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(MSBFragmentEntryServiceHttp.class);
 	private static final Class<?>[] _addFragmentEntryParameterTypes0 = new Class[] {
-			long.class, long.class, java.lang.String.class,
-			java.lang.String.class, java.lang.String.class,
-			java.lang.String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
+			java.lang.String.class, java.lang.String.class, long.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteFragmentEntriesParameterTypes1 = new Class[] {

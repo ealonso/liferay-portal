@@ -61,8 +61,8 @@ public interface MSBFragmentCollectionLocalService extends BaseLocalService,
 	 *
 	 * Never modify or reference this interface directly. Always use {@link MSBFragmentCollectionLocalServiceUtil} to access the msb fragment collection local service. Add custom service methods to {@link com.liferay.modern.site.building.fragment.service.impl.MSBFragmentCollectionLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public MSBFragmentCollection addFragmentCollection(long userId,
-		long groupId, java.lang.String name, java.lang.String description,
+	public MSBFragmentCollection addFragmentCollection(long groupId,
+		long userId, java.lang.String name, java.lang.String description,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**

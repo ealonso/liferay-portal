@@ -959,91 +959,93 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "msbFragmentEntry.groupId = ?";
-	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID =
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID =
 		new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED,
 			MSBFragmentEntryImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
-			"findByFragmentCollectionId",
+			"findByMSBFragmentCollectionId",
 			new String[] {
 				Long.class.getName(),
 				
 			Integer.class.getName(), Integer.class.getName(),
 				OrderByComparator.class.getName()
 			});
-	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID =
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID =
 		new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED,
 			MSBFragmentEntryImpl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"findByFragmentCollectionId",
+			"findByMSBFragmentCollectionId",
 			new String[] { Long.class.getName() },
-			MSBFragmentEntryModelImpl.FRAGMENTCOLLECTIONID_COLUMN_BITMASK |
+			MSBFragmentEntryModelImpl.MSBFRAGMENTCOLLECTIONID_COLUMN_BITMASK |
 			MSBFragmentEntryModelImpl.NAME_COLUMN_BITMASK);
-	public static final FinderPath FINDER_PATH_COUNT_BY_FRAGMENTCOLLECTIONID = new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
+	public static final FinderPath FINDER_PATH_COUNT_BY_MSBFRAGMENTCOLLECTIONID = new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
-			"countByFragmentCollectionId", new String[] { Long.class.getName() });
+			"countByMSBFragmentCollectionId",
+			new String[] { Long.class.getName() });
 
 	/**
-	 * Returns all the msb fragment entries where fragmentCollectionId = &#63;.
+	 * Returns all the msb fragment entries where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the matching msb fragment entries
 	 */
 	@Override
-	public List<MSBFragmentEntry> findByFragmentCollectionId(
-		long fragmentCollectionId) {
-		return findByFragmentCollectionId(fragmentCollectionId,
+	public List<MSBFragmentEntry> findByMSBFragmentCollectionId(
+		long msbFragmentCollectionId) {
+		return findByMSBFragmentCollectionId(msbFragmentCollectionId,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the msb fragment entries where fragmentCollectionId = &#63;.
+	 * Returns a range of all the msb fragment entries where msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @return the range of matching msb fragment entries
 	 */
 	@Override
-	public List<MSBFragmentEntry> findByFragmentCollectionId(
-		long fragmentCollectionId, int start, int end) {
-		return findByFragmentCollectionId(fragmentCollectionId, start, end, null);
+	public List<MSBFragmentEntry> findByMSBFragmentCollectionId(
+		long msbFragmentCollectionId, int start, int end) {
+		return findByMSBFragmentCollectionId(msbFragmentCollectionId, start,
+			end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching msb fragment entries
 	 */
 	@Override
-	public List<MSBFragmentEntry> findByFragmentCollectionId(
-		long fragmentCollectionId, int start, int end,
+	public List<MSBFragmentEntry> findByMSBFragmentCollectionId(
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		return findByFragmentCollectionId(fragmentCollectionId, start, end,
-			orderByComparator, true);
+		return findByMSBFragmentCollectionId(msbFragmentCollectionId, start,
+			end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1051,8 +1053,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 * @return the ordered range of matching msb fragment entries
 	 */
 	@Override
-	public List<MSBFragmentEntry> findByFragmentCollectionId(
-		long fragmentCollectionId, int start, int end,
+	public List<MSBFragmentEntry> findByMSBFragmentCollectionId(
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator,
 		boolean retrieveFromCache) {
 		boolean pagination = true;
@@ -1062,13 +1064,13 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
 				(orderByComparator == null)) {
 			pagination = false;
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID;
-			finderArgs = new Object[] { fragmentCollectionId };
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID;
+			finderArgs = new Object[] { msbFragmentCollectionId };
 		}
 		else {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID;
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID;
 			finderArgs = new Object[] {
-					fragmentCollectionId,
+					msbFragmentCollectionId,
 					
 					start, end, orderByComparator
 				};
@@ -1082,7 +1084,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			if ((list != null) && !list.isEmpty()) {
 				for (MSBFragmentEntry msbFragmentEntry : list) {
-					if ((fragmentCollectionId != msbFragmentEntry.getFragmentCollectionId())) {
+					if ((msbFragmentCollectionId != msbFragmentEntry.getMsbFragmentCollectionId())) {
 						list = null;
 
 						break;
@@ -1104,7 +1106,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			query.append(_SQL_SELECT_MSBFRAGMENTENTRY_WHERE);
 
-			query.append(_FINDER_COLUMN_FRAGMENTCOLLECTIONID_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_MSBFRAGMENTCOLLECTIONID_MSBFRAGMENTCOLLECTIONID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -1126,7 +1128,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				if (!pagination) {
 					list = (List<MSBFragmentEntry>)QueryUtil.list(q,
@@ -1159,19 +1161,19 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
-	public MSBFragmentEntry findByFragmentCollectionId_First(
-		long fragmentCollectionId,
+	public MSBFragmentEntry findByMSBFragmentCollectionId_First(
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
-		MSBFragmentEntry msbFragmentEntry = fetchByFragmentCollectionId_First(fragmentCollectionId,
+		MSBFragmentEntry msbFragmentEntry = fetchByMSBFragmentCollectionId_First(msbFragmentCollectionId,
 				orderByComparator);
 
 		if (msbFragmentEntry != null) {
@@ -1182,8 +1184,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append("msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1191,17 +1193,17 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
-	public MSBFragmentEntry fetchByFragmentCollectionId_First(
-		long fragmentCollectionId,
+	public MSBFragmentEntry fetchByMSBFragmentCollectionId_First(
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		List<MSBFragmentEntry> list = findByFragmentCollectionId(fragmentCollectionId,
+		List<MSBFragmentEntry> list = findByMSBFragmentCollectionId(msbFragmentCollectionId,
 				0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
@@ -1212,19 +1214,19 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
-	public MSBFragmentEntry findByFragmentCollectionId_Last(
-		long fragmentCollectionId,
+	public MSBFragmentEntry findByMSBFragmentCollectionId_Last(
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
-		MSBFragmentEntry msbFragmentEntry = fetchByFragmentCollectionId_Last(fragmentCollectionId,
+		MSBFragmentEntry msbFragmentEntry = fetchByMSBFragmentCollectionId_Last(msbFragmentCollectionId,
 				orderByComparator);
 
 		if (msbFragmentEntry != null) {
@@ -1235,8 +1237,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append("msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1244,23 +1246,23 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
-	public MSBFragmentEntry fetchByFragmentCollectionId_Last(
-		long fragmentCollectionId,
+	public MSBFragmentEntry fetchByMSBFragmentCollectionId_Last(
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		int count = countByFragmentCollectionId(fragmentCollectionId);
+		int count = countByMSBFragmentCollectionId(msbFragmentCollectionId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<MSBFragmentEntry> list = findByFragmentCollectionId(fragmentCollectionId,
+		List<MSBFragmentEntry> list = findByMSBFragmentCollectionId(msbFragmentCollectionId,
 				count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
@@ -1271,17 +1273,17 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where fragmentCollectionId = &#63;.
+	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where msbFragmentCollectionId = &#63;.
 	 *
 	 * @param fragmentEntryId the primary key of the current msb fragment entry
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a msb fragment entry with the primary key could not be found
 	 */
 	@Override
-	public MSBFragmentEntry[] findByFragmentCollectionId_PrevAndNext(
-		long fragmentEntryId, long fragmentCollectionId,
+	public MSBFragmentEntry[] findByMSBFragmentCollectionId_PrevAndNext(
+		long fragmentEntryId, long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = findByPrimaryKey(fragmentEntryId);
@@ -1293,15 +1295,15 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			MSBFragmentEntry[] array = new MSBFragmentEntryImpl[3];
 
-			array[0] = getByFragmentCollectionId_PrevAndNext(session,
-					msbFragmentEntry, fragmentCollectionId, orderByComparator,
-					true);
+			array[0] = getByMSBFragmentCollectionId_PrevAndNext(session,
+					msbFragmentEntry, msbFragmentCollectionId,
+					orderByComparator, true);
 
 			array[1] = msbFragmentEntry;
 
-			array[2] = getByFragmentCollectionId_PrevAndNext(session,
-					msbFragmentEntry, fragmentCollectionId, orderByComparator,
-					false);
+			array[2] = getByMSBFragmentCollectionId_PrevAndNext(session,
+					msbFragmentEntry, msbFragmentCollectionId,
+					orderByComparator, false);
 
 			return array;
 		}
@@ -1313,9 +1315,9 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		}
 	}
 
-	protected MSBFragmentEntry getByFragmentCollectionId_PrevAndNext(
+	protected MSBFragmentEntry getByMSBFragmentCollectionId_PrevAndNext(
 		Session session, MSBFragmentEntry msbFragmentEntry,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -1330,7 +1332,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		query.append(_SQL_SELECT_MSBFRAGMENTENTRY_WHERE);
 
-		query.append(_FINDER_COLUMN_FRAGMENTCOLLECTIONID_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_MSBFRAGMENTCOLLECTIONID_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
@@ -1400,7 +1402,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		qPos.add(fragmentCollectionId);
+		qPos.add(msbFragmentCollectionId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(msbFragmentEntry);
@@ -1421,29 +1423,30 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Removes all the msb fragment entries where fragmentCollectionId = &#63; from the database.
+	 * Removes all the msb fragment entries where msbFragmentCollectionId = &#63; from the database.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 */
 	@Override
-	public void removeByFragmentCollectionId(long fragmentCollectionId) {
-		for (MSBFragmentEntry msbFragmentEntry : findByFragmentCollectionId(
-				fragmentCollectionId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+	public void removeByMSBFragmentCollectionId(long msbFragmentCollectionId) {
+		for (MSBFragmentEntry msbFragmentEntry : findByMSBFragmentCollectionId(
+				msbFragmentCollectionId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				null)) {
 			remove(msbFragmentEntry);
 		}
 	}
 
 	/**
-	 * Returns the number of msb fragment entries where fragmentCollectionId = &#63;.
+	 * Returns the number of msb fragment entries where msbFragmentCollectionId = &#63;.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the number of matching msb fragment entries
 	 */
 	@Override
-	public int countByFragmentCollectionId(long fragmentCollectionId) {
-		FinderPath finderPath = FINDER_PATH_COUNT_BY_FRAGMENTCOLLECTIONID;
+	public int countByMSBFragmentCollectionId(long msbFragmentCollectionId) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_MSBFRAGMENTCOLLECTIONID;
 
-		Object[] finderArgs = new Object[] { fragmentCollectionId };
+		Object[] finderArgs = new Object[] { msbFragmentCollectionId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1452,7 +1455,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			query.append(_SQL_COUNT_MSBFRAGMENTENTRY_WHERE);
 
-			query.append(_FINDER_COLUMN_FRAGMENTCOLLECTIONID_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_MSBFRAGMENTCOLLECTIONID_MSBFRAGMENTCOLLECTIONID_2);
 
 			String sql = query.toString();
 
@@ -1465,7 +1468,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				count = (Long)q.uniqueResult();
 
@@ -1484,8 +1487,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_FRAGMENTCOLLECTIONID_FRAGMENTCOLLECTIONID_2 =
-		"msbFragmentEntry.fragmentCollectionId = ?";
+	private static final String _FINDER_COLUMN_MSBFRAGMENTCOLLECTIONID_MSBFRAGMENTCOLLECTIONID_2 =
+		"msbFragmentEntry.msbFragmentCollectionId = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_N = new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED,
 			MSBFragmentEntryImpl.class, FINDER_CLASS_NAME_ENTITY, "fetchByG_N",
@@ -1756,7 +1759,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_FC",
 			new String[] { Long.class.getName(), Long.class.getName() },
 			MSBFragmentEntryModelImpl.GROUPID_COLUMN_BITMASK |
-			MSBFragmentEntryModelImpl.FRAGMENTCOLLECTIONID_COLUMN_BITMASK |
+			MSBFragmentEntryModelImpl.MSBFRAGMENTCOLLECTIONID_COLUMN_BITMASK |
 			MSBFragmentEntryModelImpl.NAME_COLUMN_BITMASK);
 	public static final FinderPath FINDER_PATH_COUNT_BY_G_FC = new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED, Long.class,
@@ -1764,47 +1767,47 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			new String[] { Long.class.getName(), Long.class.getName() });
 
 	/**
-	 * Returns all the msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns all the msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the matching msb fragment entries
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_FC(long groupId,
-		long fragmentCollectionId) {
-		return findByG_FC(groupId, fragmentCollectionId, QueryUtil.ALL_POS,
+		long msbFragmentCollectionId) {
+		return findByG_FC(groupId, msbFragmentCollectionId, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns a range of all the msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @return the range of matching msb fragment entries
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_FC(long groupId,
-		long fragmentCollectionId, int start, int end) {
-		return findByG_FC(groupId, fragmentCollectionId, start, end, null);
+		long msbFragmentCollectionId, int start, int end) {
+		return findByG_FC(groupId, msbFragmentCollectionId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1812,21 +1815,21 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_FC(long groupId,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		return findByG_FC(groupId, fragmentCollectionId, start, end,
+		return findByG_FC(groupId, msbFragmentCollectionId, start, end,
 			orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1835,7 +1838,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_FC(long groupId,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator,
 		boolean retrieveFromCache) {
 		boolean pagination = true;
@@ -1846,12 +1849,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_FC;
-			finderArgs = new Object[] { groupId, fragmentCollectionId };
+			finderArgs = new Object[] { groupId, msbFragmentCollectionId };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_FC;
 			finderArgs = new Object[] {
-					groupId, fragmentCollectionId,
+					groupId, msbFragmentCollectionId,
 					
 					start, end, orderByComparator
 				};
@@ -1866,7 +1869,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			if ((list != null) && !list.isEmpty()) {
 				for (MSBFragmentEntry msbFragmentEntry : list) {
 					if ((groupId != msbFragmentEntry.getGroupId()) ||
-							(fragmentCollectionId != msbFragmentEntry.getFragmentCollectionId())) {
+							(msbFragmentCollectionId != msbFragmentEntry.getMsbFragmentCollectionId())) {
 						list = null;
 
 						break;
@@ -1890,7 +1893,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-			query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -1914,7 +1917,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 				qPos.add(groupId);
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				if (!pagination) {
 					list = (List<MSBFragmentEntry>)QueryUtil.list(q,
@@ -1947,21 +1950,21 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry findByG_FC_First(long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = fetchByG_FC_First(groupId,
-				fragmentCollectionId, orderByComparator);
+				msbFragmentCollectionId, orderByComparator);
 
 		if (msbFragmentEntry != null) {
 			return msbFragmentEntry;
@@ -1974,8 +1977,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		msg.append("groupId=");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append(", msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -1983,19 +1986,19 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry fetchByG_FC_First(long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		List<MSBFragmentEntry> list = findByG_FC(groupId, fragmentCollectionId,
-				0, 1, orderByComparator);
+		List<MSBFragmentEntry> list = findByG_FC(groupId,
+				msbFragmentCollectionId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2005,21 +2008,21 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry findByG_FC_Last(long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = fetchByG_FC_Last(groupId,
-				fragmentCollectionId, orderByComparator);
+				msbFragmentCollectionId, orderByComparator);
 
 		if (msbFragmentEntry != null) {
 			return msbFragmentEntry;
@@ -2032,8 +2035,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		msg.append("groupId=");
 		msg.append(groupId);
 
-		msg.append(", fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append(", msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -2041,25 +2044,25 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry fetchByG_FC_Last(long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		int count = countByG_FC(groupId, fragmentCollectionId);
+		int count = countByG_FC(groupId, msbFragmentCollectionId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<MSBFragmentEntry> list = findByG_FC(groupId, fragmentCollectionId,
-				count - 1, count, orderByComparator);
+		List<MSBFragmentEntry> list = findByG_FC(groupId,
+				msbFragmentCollectionId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2069,18 +2072,18 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param fragmentEntryId the primary key of the current msb fragment entry
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a msb fragment entry with the primary key could not be found
 	 */
 	@Override
 	public MSBFragmentEntry[] findByG_FC_PrevAndNext(long fragmentEntryId,
-		long groupId, long fragmentCollectionId,
+		long groupId, long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = findByPrimaryKey(fragmentEntryId);
@@ -2093,12 +2096,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			MSBFragmentEntry[] array = new MSBFragmentEntryImpl[3];
 
 			array[0] = getByG_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, fragmentCollectionId, orderByComparator, true);
+					groupId, msbFragmentCollectionId, orderByComparator, true);
 
 			array[1] = msbFragmentEntry;
 
 			array[2] = getByG_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, fragmentCollectionId, orderByComparator, false);
+					groupId, msbFragmentCollectionId, orderByComparator, false);
 
 			return array;
 		}
@@ -2112,7 +2115,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 	protected MSBFragmentEntry getByG_FC_PrevAndNext(Session session,
 		MSBFragmentEntry msbFragmentEntry, long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -2129,7 +2132,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-		query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
@@ -2201,7 +2204,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		qPos.add(groupId);
 
-		qPos.add(fragmentCollectionId);
+		qPos.add(msbFragmentCollectionId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(msbFragmentEntry);
@@ -2222,47 +2225,48 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns all the msb fragment entries that the user has permission to view where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns all the msb fragment entries that the user has permission to view where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the matching msb fragment entries that the user has permission to view
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_FC(long groupId,
-		long fragmentCollectionId) {
-		return filterFindByG_FC(groupId, fragmentCollectionId,
+		long msbFragmentCollectionId) {
+		return filterFindByG_FC(groupId, msbFragmentCollectionId,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the msb fragment entries that the user has permission to view where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns a range of all the msb fragment entries that the user has permission to view where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @return the range of matching msb fragment entries that the user has permission to view
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_FC(long groupId,
-		long fragmentCollectionId, int start, int end) {
-		return filterFindByG_FC(groupId, fragmentCollectionId, start, end, null);
+		long msbFragmentCollectionId, int start, int end) {
+		return filterFindByG_FC(groupId, msbFragmentCollectionId, start, end,
+			null);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries that the user has permissions to view where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries that the user has permissions to view where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2270,10 +2274,10 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_FC(long groupId,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
-			return findByG_FC(groupId, fragmentCollectionId, start, end,
+			return findByG_FC(groupId, msbFragmentCollectionId, start, end,
 				orderByComparator);
 		}
 
@@ -2296,7 +2300,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-		query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
 			query.append(_FILTER_SQL_SELECT_MSBFRAGMENTENTRY_NO_INLINE_DISTINCT_WHERE_2);
@@ -2343,7 +2347,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			qPos.add(groupId);
 
-			qPos.add(fragmentCollectionId);
+			qPos.add(msbFragmentCollectionId);
 
 			return (List<MSBFragmentEntry>)QueryUtil.list(q, getDialect(),
 				start, end);
@@ -2357,23 +2361,23 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set of msb fragment entries that the user has permission to view where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set of msb fragment entries that the user has permission to view where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param fragmentEntryId the primary key of the current msb fragment entry
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a msb fragment entry with the primary key could not be found
 	 */
 	@Override
 	public MSBFragmentEntry[] filterFindByG_FC_PrevAndNext(
-		long fragmentEntryId, long groupId, long fragmentCollectionId,
+		long fragmentEntryId, long groupId, long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
 			return findByG_FC_PrevAndNext(fragmentEntryId, groupId,
-				fragmentCollectionId, orderByComparator);
+				msbFragmentCollectionId, orderByComparator);
 		}
 
 		MSBFragmentEntry msbFragmentEntry = findByPrimaryKey(fragmentEntryId);
@@ -2386,12 +2390,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			MSBFragmentEntry[] array = new MSBFragmentEntryImpl[3];
 
 			array[0] = filterGetByG_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, fragmentCollectionId, orderByComparator, true);
+					groupId, msbFragmentCollectionId, orderByComparator, true);
 
 			array[1] = msbFragmentEntry;
 
 			array[2] = filterGetByG_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, fragmentCollectionId, orderByComparator, false);
+					groupId, msbFragmentCollectionId, orderByComparator, false);
 
 			return array;
 		}
@@ -2405,7 +2409,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 	protected MSBFragmentEntry filterGetByG_FC_PrevAndNext(Session session,
 		MSBFragmentEntry msbFragmentEntry, long groupId,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -2427,7 +2431,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-		query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
 			query.append(_FILTER_SQL_SELECT_MSBFRAGMENTENTRY_NO_INLINE_DISTINCT_WHERE_2);
@@ -2529,7 +2533,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		qPos.add(groupId);
 
-		qPos.add(fragmentCollectionId);
+		qPos.add(msbFragmentCollectionId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(msbFragmentEntry);
@@ -2550,31 +2554,32 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Removes all the msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63; from the database.
+	 * Removes all the msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 */
 	@Override
-	public void removeByG_FC(long groupId, long fragmentCollectionId) {
+	public void removeByG_FC(long groupId, long msbFragmentCollectionId) {
 		for (MSBFragmentEntry msbFragmentEntry : findByG_FC(groupId,
-				fragmentCollectionId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+				msbFragmentCollectionId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				null)) {
 			remove(msbFragmentEntry);
 		}
 	}
 
 	/**
-	 * Returns the number of msb fragment entries where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the number of msb fragment entries where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the number of matching msb fragment entries
 	 */
 	@Override
-	public int countByG_FC(long groupId, long fragmentCollectionId) {
+	public int countByG_FC(long groupId, long msbFragmentCollectionId) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_FC;
 
-		Object[] finderArgs = new Object[] { groupId, fragmentCollectionId };
+		Object[] finderArgs = new Object[] { groupId, msbFragmentCollectionId };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -2585,7 +2590,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-			query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 			String sql = query.toString();
 
@@ -2600,7 +2605,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 				qPos.add(groupId);
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				count = (Long)q.uniqueResult();
 
@@ -2620,16 +2625,16 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the number of msb fragment entries that the user has permission to view where groupId = &#63; and fragmentCollectionId = &#63;.
+	 * Returns the number of msb fragment entries that the user has permission to view where groupId = &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the number of matching msb fragment entries that the user has permission to view
 	 */
 	@Override
-	public int filterCountByG_FC(long groupId, long fragmentCollectionId) {
+	public int filterCountByG_FC(long groupId, long msbFragmentCollectionId) {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
-			return countByG_FC(groupId, fragmentCollectionId);
+			return countByG_FC(groupId, msbFragmentCollectionId);
 		}
 
 		StringBundler query = new StringBundler(3);
@@ -2638,7 +2643,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		query.append(_FINDER_COLUMN_G_FC_GROUPID_2);
 
-		query.append(_FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
 				MSBFragmentEntry.class.getName(),
@@ -2658,7 +2663,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 			qPos.add(groupId);
 
-			qPos.add(fragmentCollectionId);
+			qPos.add(msbFragmentCollectionId);
 
 			Long count = (Long)q.uniqueResult();
 
@@ -2673,7 +2678,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	private static final String _FINDER_COLUMN_G_FC_GROUPID_2 = "msbFragmentEntry.groupId = ? AND ";
-	private static final String _FINDER_COLUMN_G_FC_FRAGMENTCOLLECTIONID_2 = "msbFragmentEntry.fragmentCollectionId = ?";
+	private static final String _FINDER_COLUMN_G_FC_MSBFRAGMENTCOLLECTIONID_2 = "msbFragmentEntry.msbFragmentCollectionId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN_FC =
 		new FinderPath(MSBFragmentEntryModelImpl.ENTITY_CACHE_ENABLED,
 			MSBFragmentEntryModelImpl.FINDER_CACHE_ENABLED,
@@ -2696,22 +2701,22 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			});
 
 	/**
-	 * Returns all the msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns all the msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the matching msb fragment entries
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId) {
-		return findByG_LikeN_FC(groupId, name, fragmentCollectionId,
+		long msbFragmentCollectionId) {
+		return findByG_LikeN_FC(groupId, name, msbFragmentCollectionId,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns a range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -2719,20 +2724,20 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @return the range of matching msb fragment entries
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId, int start, int end) {
-		return findByG_LikeN_FC(groupId, name, fragmentCollectionId, start,
+		long msbFragmentCollectionId, int start, int end) {
+		return findByG_LikeN_FC(groupId, name, msbFragmentCollectionId, start,
 			end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -2740,7 +2745,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2748,14 +2753,14 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		return findByG_LikeN_FC(groupId, name, fragmentCollectionId, start,
+		return findByG_LikeN_FC(groupId, name, msbFragmentCollectionId, start,
 			end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -2763,7 +2768,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -2772,7 +2777,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> findByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator,
 		boolean retrieveFromCache) {
 		boolean pagination = true;
@@ -2781,7 +2786,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 		finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_G_LIKEN_FC;
 		finderArgs = new Object[] {
-				groupId, name, fragmentCollectionId,
+				groupId, name, msbFragmentCollectionId,
 				
 				start, end, orderByComparator
 			};
@@ -2799,7 +2804,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 								msbFragmentEntry.getName(), name,
 								CharPool.UNDERLINE, CharPool.PERCENT,
 								CharPool.BACK_SLASH, false) ||
-							(fragmentCollectionId != msbFragmentEntry.getFragmentCollectionId())) {
+							(msbFragmentCollectionId != msbFragmentEntry.getMsbFragmentCollectionId())) {
 						list = null;
 
 						break;
@@ -2837,7 +2842,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 			}
 
-			query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
@@ -2865,7 +2870,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 					qPos.add(StringUtil.toLowerCase(name));
 				}
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				if (!pagination) {
 					list = (List<MSBFragmentEntry>)QueryUtil.list(q,
@@ -2898,22 +2903,22 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry findByG_LikeN_FC_First(long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = fetchByG_LikeN_FC_First(groupId,
-				name, fragmentCollectionId, orderByComparator);
+				name, msbFragmentCollectionId, orderByComparator);
 
 		if (msbFragmentEntry != null) {
 			return msbFragmentEntry;
@@ -2929,8 +2934,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		msg.append(", name=");
 		msg.append(name);
 
-		msg.append(", fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append(", msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -2938,20 +2943,20 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the first msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry fetchByG_LikeN_FC_First(long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
 		List<MSBFragmentEntry> list = findByG_LikeN_FC(groupId, name,
-				fragmentCollectionId, 0, 1, orderByComparator);
+				msbFragmentCollectionId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2961,22 +2966,22 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry findByG_LikeN_FC_Last(long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = fetchByG_LikeN_FC_Last(groupId,
-				name, fragmentCollectionId, orderByComparator);
+				name, msbFragmentCollectionId, orderByComparator);
 
 		if (msbFragmentEntry != null) {
 			return msbFragmentEntry;
@@ -2992,8 +2997,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		msg.append(", name=");
 		msg.append(name);
 
-		msg.append(", fragmentCollectionId=");
-		msg.append(fragmentCollectionId);
+		msg.append(", msbFragmentCollectionId=");
+		msg.append(msbFragmentCollectionId);
 
 		msg.append(StringPool.CLOSE_CURLY_BRACE);
 
@@ -3001,26 +3006,26 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the last msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching msb fragment entry, or <code>null</code> if a matching msb fragment entry could not be found
 	 */
 	@Override
 	public MSBFragmentEntry fetchByG_LikeN_FC_Last(long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
-		int count = countByG_LikeN_FC(groupId, name, fragmentCollectionId);
+		int count = countByG_LikeN_FC(groupId, name, msbFragmentCollectionId);
 
 		if (count == 0) {
 			return null;
 		}
 
 		List<MSBFragmentEntry> list = findByG_LikeN_FC(groupId, name,
-				fragmentCollectionId, count - 1, count, orderByComparator);
+				msbFragmentCollectionId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -3030,12 +3035,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param fragmentEntryId the primary key of the current msb fragment entry
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a msb fragment entry with the primary key could not be found
@@ -3043,7 +3048,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	@Override
 	public MSBFragmentEntry[] findByG_LikeN_FC_PrevAndNext(
 		long fragmentEntryId, long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		MSBFragmentEntry msbFragmentEntry = findByPrimaryKey(fragmentEntryId);
@@ -3056,12 +3061,13 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			MSBFragmentEntry[] array = new MSBFragmentEntryImpl[3];
 
 			array[0] = getByG_LikeN_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, name, fragmentCollectionId, orderByComparator, true);
+					groupId, name, msbFragmentCollectionId, orderByComparator,
+					true);
 
 			array[1] = msbFragmentEntry;
 
 			array[2] = getByG_LikeN_FC_PrevAndNext(session, msbFragmentEntry,
-					groupId, name, fragmentCollectionId, orderByComparator,
+					groupId, name, msbFragmentCollectionId, orderByComparator,
 					false);
 
 			return array;
@@ -3076,7 +3082,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 	protected MSBFragmentEntry getByG_LikeN_FC_PrevAndNext(Session session,
 		MSBFragmentEntry msbFragmentEntry, long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -3107,7 +3113,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 		}
 
-		query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
@@ -3183,7 +3189,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			qPos.add(StringUtil.toLowerCase(name));
 		}
 
-		qPos.add(fragmentCollectionId);
+		qPos.add(msbFragmentCollectionId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(msbFragmentEntry);
@@ -3204,22 +3210,22 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns all the msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns all the msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the matching msb fragment entries that the user has permission to view
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_LikeN_FC(long groupId,
-		String name, long fragmentCollectionId) {
-		return filterFindByG_LikeN_FC(groupId, name, fragmentCollectionId,
+		String name, long msbFragmentCollectionId) {
+		return filterFindByG_LikeN_FC(groupId, name, msbFragmentCollectionId,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns a range of all the msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -3227,20 +3233,20 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @return the range of matching msb fragment entries that the user has permission to view
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_LikeN_FC(long groupId,
-		String name, long fragmentCollectionId, int start, int end) {
-		return filterFindByG_LikeN_FC(groupId, name, fragmentCollectionId,
+		String name, long msbFragmentCollectionId, int start, int end) {
+		return filterFindByG_LikeN_FC(groupId, name, msbFragmentCollectionId,
 			start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the msb fragment entries that the user has permissions to view where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns an ordered range of all the msb fragment entries that the user has permissions to view where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link MSBFragmentEntryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
@@ -3248,7 +3254,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param start the lower bound of the range of msb fragment entries
 	 * @param end the upper bound of the range of msb fragment entries (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -3256,11 +3262,11 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	 */
 	@Override
 	public List<MSBFragmentEntry> filterFindByG_LikeN_FC(long groupId,
-		String name, long fragmentCollectionId, int start, int end,
+		String name, long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator) {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
-			return findByG_LikeN_FC(groupId, name, fragmentCollectionId, start,
-				end, orderByComparator);
+			return findByG_LikeN_FC(groupId, name, msbFragmentCollectionId,
+				start, end, orderByComparator);
 		}
 
 		StringBundler query = null;
@@ -3296,7 +3302,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 		}
 
-		query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
 			query.append(_FILTER_SQL_SELECT_MSBFRAGMENTENTRY_NO_INLINE_DISTINCT_WHERE_2);
@@ -3347,7 +3353,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				qPos.add(StringUtil.toLowerCase(name));
 			}
 
-			qPos.add(fragmentCollectionId);
+			qPos.add(msbFragmentCollectionId);
 
 			return (List<MSBFragmentEntry>)QueryUtil.list(q, getDialect(),
 				start, end);
@@ -3361,12 +3367,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set of msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the msb fragment entries before and after the current msb fragment entry in the ordered set of msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param fragmentEntryId the primary key of the current msb fragment entry
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next msb fragment entry
 	 * @throws NoSuchMSBFragmentEntryException if a msb fragment entry with the primary key could not be found
@@ -3374,12 +3380,12 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	@Override
 	public MSBFragmentEntry[] filterFindByG_LikeN_FC_PrevAndNext(
 		long fragmentEntryId, long groupId, String name,
-		long fragmentCollectionId,
+		long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws NoSuchMSBFragmentEntryException {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
 			return findByG_LikeN_FC_PrevAndNext(fragmentEntryId, groupId, name,
-				fragmentCollectionId, orderByComparator);
+				msbFragmentCollectionId, orderByComparator);
 		}
 
 		MSBFragmentEntry msbFragmentEntry = findByPrimaryKey(fragmentEntryId);
@@ -3392,13 +3398,13 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			MSBFragmentEntry[] array = new MSBFragmentEntryImpl[3];
 
 			array[0] = filterGetByG_LikeN_FC_PrevAndNext(session,
-					msbFragmentEntry, groupId, name, fragmentCollectionId,
+					msbFragmentEntry, groupId, name, msbFragmentCollectionId,
 					orderByComparator, true);
 
 			array[1] = msbFragmentEntry;
 
 			array[2] = filterGetByG_LikeN_FC_PrevAndNext(session,
-					msbFragmentEntry, groupId, name, fragmentCollectionId,
+					msbFragmentEntry, groupId, name, msbFragmentCollectionId,
 					orderByComparator, false);
 
 			return array;
@@ -3413,7 +3419,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 	protected MSBFragmentEntry filterGetByG_LikeN_FC_PrevAndNext(
 		Session session, MSBFragmentEntry msbFragmentEntry, long groupId,
-		String name, long fragmentCollectionId,
+		String name, long msbFragmentCollectionId,
 		OrderByComparator<MSBFragmentEntry> orderByComparator, boolean previous) {
 		StringBundler query = null;
 
@@ -3449,7 +3455,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 		}
 
-		query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		if (!getDB().isSupportsInlineDistinct()) {
 			query.append(_FILTER_SQL_SELECT_MSBFRAGMENTENTRY_NO_INLINE_DISTINCT_WHERE_2);
@@ -3555,7 +3561,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			qPos.add(StringUtil.toLowerCase(name));
 		}
 
-		qPos.add(fragmentCollectionId);
+		qPos.add(msbFragmentCollectionId);
 
 		if (orderByComparator != null) {
 			Object[] values = orderByComparator.getOrderByConditionValues(msbFragmentEntry);
@@ -3576,36 +3582,38 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Removes all the msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63; from the database.
+	 * Removes all the msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 */
 	@Override
 	public void removeByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId) {
+		long msbFragmentCollectionId) {
 		for (MSBFragmentEntry msbFragmentEntry : findByG_LikeN_FC(groupId,
-				name, fragmentCollectionId, QueryUtil.ALL_POS,
+				name, msbFragmentCollectionId, QueryUtil.ALL_POS,
 				QueryUtil.ALL_POS, null)) {
 			remove(msbFragmentEntry);
 		}
 	}
 
 	/**
-	 * Returns the number of msb fragment entries where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the number of msb fragment entries where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the number of matching msb fragment entries
 	 */
 	@Override
 	public int countByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId) {
+		long msbFragmentCollectionId) {
 		FinderPath finderPath = FINDER_PATH_WITH_PAGINATION_COUNT_BY_G_LIKEN_FC;
 
-		Object[] finderArgs = new Object[] { groupId, name, fragmentCollectionId };
+		Object[] finderArgs = new Object[] {
+				groupId, name, msbFragmentCollectionId
+			};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -3630,7 +3638,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 			}
 
-			query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+			query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 			String sql = query.toString();
 
@@ -3649,7 +3657,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 					qPos.add(StringUtil.toLowerCase(name));
 				}
 
-				qPos.add(fragmentCollectionId);
+				qPos.add(msbFragmentCollectionId);
 
 				count = (Long)q.uniqueResult();
 
@@ -3669,18 +3677,18 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	}
 
 	/**
-	 * Returns the number of msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and fragmentCollectionId = &#63;.
+	 * Returns the number of msb fragment entries that the user has permission to view where groupId = &#63; and name LIKE &#63; and msbFragmentCollectionId = &#63;.
 	 *
 	 * @param groupId the group ID
 	 * @param name the name
-	 * @param fragmentCollectionId the fragment collection ID
+	 * @param msbFragmentCollectionId the msb fragment collection ID
 	 * @return the number of matching msb fragment entries that the user has permission to view
 	 */
 	@Override
 	public int filterCountByG_LikeN_FC(long groupId, String name,
-		long fragmentCollectionId) {
+		long msbFragmentCollectionId) {
 		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
-			return countByG_LikeN_FC(groupId, name, fragmentCollectionId);
+			return countByG_LikeN_FC(groupId, name, msbFragmentCollectionId);
 		}
 
 		StringBundler query = new StringBundler(4);
@@ -3703,7 +3711,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			query.append(_FINDER_COLUMN_G_LIKEN_FC_NAME_2);
 		}
 
-		query.append(_FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2);
+		query.append(_FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2);
 
 		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
 				MSBFragmentEntry.class.getName(),
@@ -3727,7 +3735,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				qPos.add(StringUtil.toLowerCase(name));
 			}
 
-			qPos.add(fragmentCollectionId);
+			qPos.add(msbFragmentCollectionId);
 
 			Long count = (Long)q.uniqueResult();
 
@@ -3745,8 +3753,8 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 	private static final String _FINDER_COLUMN_G_LIKEN_FC_NAME_1 = "msbFragmentEntry.name IS NULL AND ";
 	private static final String _FINDER_COLUMN_G_LIKEN_FC_NAME_2 = "lower(msbFragmentEntry.name) LIKE ? AND ";
 	private static final String _FINDER_COLUMN_G_LIKEN_FC_NAME_3 = "(msbFragmentEntry.name IS NULL OR msbFragmentEntry.name LIKE '') AND ";
-	private static final String _FINDER_COLUMN_G_LIKEN_FC_FRAGMENTCOLLECTIONID_2 =
-		"msbFragmentEntry.fragmentCollectionId = ?";
+	private static final String _FINDER_COLUMN_G_LIKEN_FC_MSBFRAGMENTCOLLECTIONID_2 =
+		"msbFragmentEntry.msbFragmentCollectionId = ?";
 
 	public MSBFragmentEntryPersistenceImpl() {
 		setModelClass(MSBFragmentEntry.class);
@@ -4047,17 +4055,17 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 				args);
 
 			args = new Object[] {
-					msbFragmentEntryModelImpl.getFragmentCollectionId()
+					msbFragmentEntryModelImpl.getMsbFragmentCollectionId()
 				};
 
-			finderCache.removeResult(FINDER_PATH_COUNT_BY_FRAGMENTCOLLECTIONID,
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_MSBFRAGMENTCOLLECTIONID,
 				args);
-			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID,
+			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID,
 				args);
 
 			args = new Object[] {
 					msbFragmentEntryModelImpl.getGroupId(),
-					msbFragmentEntryModelImpl.getFragmentCollectionId()
+					msbFragmentEntryModelImpl.getMsbFragmentCollectionId()
 				};
 
 			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_FC, args);
@@ -4088,23 +4096,23 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 			}
 
 			if ((msbFragmentEntryModelImpl.getColumnBitmask() &
-					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID.getColumnBitmask()) != 0) {
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						msbFragmentEntryModelImpl.getOriginalFragmentCollectionId()
+						msbFragmentEntryModelImpl.getOriginalMsbFragmentCollectionId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_FRAGMENTCOLLECTIONID,
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_MSBFRAGMENTCOLLECTIONID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID,
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID,
 					args);
 
 				args = new Object[] {
-						msbFragmentEntryModelImpl.getFragmentCollectionId()
+						msbFragmentEntryModelImpl.getMsbFragmentCollectionId()
 					};
 
-				finderCache.removeResult(FINDER_PATH_COUNT_BY_FRAGMENTCOLLECTIONID,
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_MSBFRAGMENTCOLLECTIONID,
 					args);
-				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_FRAGMENTCOLLECTIONID,
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MSBFRAGMENTCOLLECTIONID,
 					args);
 			}
 
@@ -4112,7 +4120,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G_FC.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						msbFragmentEntryModelImpl.getOriginalGroupId(),
-						msbFragmentEntryModelImpl.getOriginalFragmentCollectionId()
+						msbFragmentEntryModelImpl.getOriginalMsbFragmentCollectionId()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_FC, args);
@@ -4121,7 +4129,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 
 				args = new Object[] {
 						msbFragmentEntryModelImpl.getGroupId(),
-						msbFragmentEntryModelImpl.getFragmentCollectionId()
+						msbFragmentEntryModelImpl.getMsbFragmentCollectionId()
 					};
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_G_FC, args);
@@ -4164,7 +4172,7 @@ public class MSBFragmentEntryPersistenceImpl extends BasePersistenceImpl<MSBFrag
 		msbFragmentEntryImpl.setCss(msbFragmentEntry.getCss());
 		msbFragmentEntryImpl.setHtml(msbFragmentEntry.getHtml());
 		msbFragmentEntryImpl.setJs(msbFragmentEntry.getJs());
-		msbFragmentEntryImpl.setFragmentCollectionId(msbFragmentEntry.getFragmentCollectionId());
+		msbFragmentEntryImpl.setMsbFragmentCollectionId(msbFragmentEntry.getMsbFragmentCollectionId());
 
 		return msbFragmentEntryImpl;
 	}

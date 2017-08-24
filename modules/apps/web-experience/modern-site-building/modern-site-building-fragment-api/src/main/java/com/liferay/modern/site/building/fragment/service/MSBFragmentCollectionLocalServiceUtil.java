@@ -42,12 +42,12 @@ public class MSBFragmentCollectionLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.modern.site.building.fragment.service.impl.MSBFragmentCollectionLocalServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentCollection addFragmentCollection(
-		long userId, long groupId, java.lang.String name,
+		long groupId, long userId, java.lang.String name,
 		java.lang.String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addFragmentCollection(userId, groupId, name, description,
+				   .addFragmentCollection(groupId, userId, name, description,
 			serviceContext);
 	}
 

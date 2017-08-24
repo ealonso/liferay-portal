@@ -57,8 +57,8 @@ public interface MSBFragmentEntryService extends BaseService {
 	 * Never modify or reference this interface directly. Always use {@link MSBFragmentEntryServiceUtil} to access the msb fragment entry remote service. Add custom service methods to {@link com.liferay.modern.site.building.fragment.service.impl.MSBFragmentEntryServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public MSBFragmentEntry addFragmentEntry(long groupId,
-		long fragmentCollectionId, java.lang.String name, java.lang.String css,
-		java.lang.String html, java.lang.String js,
+		java.lang.String name, java.lang.String css, java.lang.String html,
+		java.lang.String js, long msbFragmentCollectionId,
 		ServiceContext serviceContext) throws PortalException;
 
 	public List<MSBFragmentEntry> deleteFragmentEntries(
@@ -69,29 +69,29 @@ public interface MSBFragmentEntryService extends BaseService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> fetchFragmentEntries(
-		long fragmentCollectionId) throws PortalException;
+		long msbFragmentCollectionId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public MSBFragmentEntry fetchFragmentEntry(long fragmentEntryId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(
-		long fragmentCollectionId, int start, int end)
+		long msbFragmentCollectionId, int start, int end)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(long groupId,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(long groupId,
-		long fragmentCollectionId, java.lang.String name, int start, int end,
-		OrderByComparator<MSBFragmentEntry> obc);
+		long msbFragmentCollectionId, java.lang.String name, int start,
+		int end, OrderByComparator<MSBFragmentEntry> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getGroupFragmentCollectionsCount(long fragmentCollectionId);
+	public int getGroupFragmentCollectionsCount(long msbFragmentCollectionId);
 
 	/**
 	* Returns the OSGi service identifier.

@@ -253,18 +253,18 @@ public interface MSBFragmentEntryModel extends BaseModel<MSBFragmentEntry>,
 	public void setJs(String js);
 
 	/**
-	 * Returns the fragment collection ID of this msb fragment entry.
+	 * Returns the msb fragment collection ID of this msb fragment entry.
 	 *
-	 * @return the fragment collection ID of this msb fragment entry
+	 * @return the msb fragment collection ID of this msb fragment entry
 	 */
-	public long getFragmentCollectionId();
+	public long getMsbFragmentCollectionId();
 
 	/**
-	 * Sets the fragment collection ID of this msb fragment entry.
+	 * Sets the msb fragment collection ID of this msb fragment entry.
 	 *
-	 * @param fragmentCollectionId the fragment collection ID of this msb fragment entry
+	 * @param msbFragmentCollectionId the msb fragment collection ID of this msb fragment entry
 	 */
-	public void setFragmentCollectionId(long fragmentCollectionId);
+	public void setMsbFragmentCollectionId(long msbFragmentCollectionId);
 
 	@Override
 	public boolean isNew();

@@ -66,14 +66,15 @@ import java.rmi.RemoteException;
 @ProviderType
 public class MSBFragmentEntryServiceSoap {
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap addFragmentEntry(
-		long groupId, long fragmentCollectionId, java.lang.String name,
-		java.lang.String css, java.lang.String html, java.lang.String js,
+		long groupId, java.lang.String name, java.lang.String css,
+		java.lang.String html, java.lang.String js,
+		long msbFragmentCollectionId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			com.liferay.modern.site.building.fragment.model.MSBFragmentEntry returnValue =
-				MSBFragmentEntryServiceUtil.addFragmentEntry(groupId,
-					fragmentCollectionId, name, css, html, js, serviceContext);
+				MSBFragmentEntryServiceUtil.addFragmentEntry(groupId, name,
+					css, html, js, msbFragmentCollectionId, serviceContext);
 
 			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModel(returnValue);
 		}
@@ -115,10 +116,10 @@ public class MSBFragmentEntryServiceSoap {
 	}
 
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap[] fetchFragmentEntries(
-		long fragmentCollectionId) throws RemoteException {
+		long msbFragmentCollectionId) throws RemoteException {
 		try {
 			java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> returnValue =
-				MSBFragmentEntryServiceUtil.fetchFragmentEntries(fragmentCollectionId);
+				MSBFragmentEntryServiceUtil.fetchFragmentEntries(msbFragmentCollectionId);
 
 			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModels(returnValue);
 		}
@@ -145,11 +146,11 @@ public class MSBFragmentEntryServiceSoap {
 	}
 
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap[] getFragmentEntries(
-		long fragmentCollectionId, int start, int end)
+		long msbFragmentCollectionId, int start, int end)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> returnValue =
-				MSBFragmentEntryServiceUtil.getFragmentEntries(fragmentCollectionId,
+				MSBFragmentEntryServiceUtil.getFragmentEntries(msbFragmentCollectionId,
 					start, end);
 
 			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModels(returnValue);
@@ -162,13 +163,13 @@ public class MSBFragmentEntryServiceSoap {
 	}
 
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap[] getFragmentEntries(
-		long groupId, long fragmentCollectionId, int start, int end,
+		long groupId, long msbFragmentCollectionId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> orderByComparator)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> returnValue =
 				MSBFragmentEntryServiceUtil.getFragmentEntries(groupId,
-					fragmentCollectionId, start, end, orderByComparator);
+					msbFragmentCollectionId, start, end, orderByComparator);
 
 			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModels(returnValue);
 		}
@@ -180,14 +181,14 @@ public class MSBFragmentEntryServiceSoap {
 	}
 
 	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap[] getFragmentEntries(
-		long groupId, long fragmentCollectionId, java.lang.String name,
+		long groupId, long msbFragmentCollectionId, java.lang.String name,
 		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> obc)
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> returnValue =
 				MSBFragmentEntryServiceUtil.getFragmentEntries(groupId,
-					fragmentCollectionId, name, start, end, obc);
+					msbFragmentCollectionId, name, start, end, obc);
 
 			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModels(returnValue);
 		}
@@ -199,9 +200,9 @@ public class MSBFragmentEntryServiceSoap {
 	}
 
 	public static int getGroupFragmentCollectionsCount(
-		long fragmentCollectionId) throws RemoteException {
+		long msbFragmentCollectionId) throws RemoteException {
 		try {
-			int returnValue = MSBFragmentEntryServiceUtil.getGroupFragmentCollectionsCount(fragmentCollectionId);
+			int returnValue = MSBFragmentEntryServiceUtil.getGroupFragmentCollectionsCount(msbFragmentCollectionId);
 
 			return returnValue;
 		}

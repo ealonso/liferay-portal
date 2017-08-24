@@ -45,7 +45,7 @@ public class MSBFragmentEntrySoap implements Serializable {
 		soapModel.setCss(model.getCss());
 		soapModel.setHtml(model.getHtml());
 		soapModel.setJs(model.getJs());
-		soapModel.setFragmentCollectionId(model.getFragmentCollectionId());
+		soapModel.setMsbFragmentCollectionId(model.getMsbFragmentCollectionId());
 
 		return soapModel;
 	}
@@ -188,12 +188,12 @@ public class MSBFragmentEntrySoap implements Serializable {
 		_js = js;
 	}
 
-	public long getFragmentCollectionId() {
-		return _fragmentCollectionId;
+	public long getMsbFragmentCollectionId() {
+		return _msbFragmentCollectionId;
 	}
 
-	public void setFragmentCollectionId(long fragmentCollectionId) {
-		_fragmentCollectionId = fragmentCollectionId;
+	public void setMsbFragmentCollectionId(long msbFragmentCollectionId) {
+		_msbFragmentCollectionId = msbFragmentCollectionId;
 	}
 
 	private long _fragmentEntryId;
@@ -207,5 +207,5 @@ public class MSBFragmentEntrySoap implements Serializable {
 	private String _css;
 	private String _html;
 	private String _js;
-	private long _fragmentCollectionId;
+	private long _msbFragmentCollectionId;
 }

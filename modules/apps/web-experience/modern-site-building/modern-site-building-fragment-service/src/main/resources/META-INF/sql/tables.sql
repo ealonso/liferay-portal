@@ -22,5 +22,5 @@ create table MSBFragmentEntry (
 	css STRING null,
 	html STRING null,
 	js STRING null,
-	fragmentCollectionId LONG
+	msbFragmentCollectionId LONG
 );

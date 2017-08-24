@@ -36,12 +36,12 @@ public class MSBFragmentCollectionLocalServiceWrapper
 
 	@Override
 	public com.liferay.modern.site.building.fragment.model.MSBFragmentCollection addFragmentCollection(
-		long userId, long groupId, java.lang.String name,
+		long groupId, long userId, java.lang.String name,
 		java.lang.String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _msbFragmentCollectionLocalService.addFragmentCollection(userId,
-			groupId, name, description, serviceContext);
+		return _msbFragmentCollectionLocalService.addFragmentCollection(groupId,
+			userId, name, description, serviceContext);
 	}
 
 	/**

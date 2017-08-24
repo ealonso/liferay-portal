@@ -90,8 +90,8 @@ public class MSBFragmentEntryCacheModel implements CacheModel<MSBFragmentEntry>,
 		sb.append(html);
 		sb.append(", js=");
 		sb.append(js);
-		sb.append(", fragmentCollectionId=");
-		sb.append(fragmentCollectionId);
+		sb.append(", msbFragmentCollectionId=");
+		sb.append(msbFragmentCollectionId);
 		sb.append("}");
 
 		return sb.toString();
@@ -155,7 +155,7 @@ public class MSBFragmentEntryCacheModel implements CacheModel<MSBFragmentEntry>,
 			msbFragmentEntryImpl.setJs(js);
 		}
 
-		msbFragmentEntryImpl.setFragmentCollectionId(fragmentCollectionId);
+		msbFragmentEntryImpl.setMsbFragmentCollectionId(msbFragmentCollectionId);
 
 		msbFragmentEntryImpl.resetOriginalValues();
 
@@ -179,7 +179,7 @@ public class MSBFragmentEntryCacheModel implements CacheModel<MSBFragmentEntry>,
 		html = objectInput.readUTF();
 		js = objectInput.readUTF();
 
-		fragmentCollectionId = objectInput.readLong();
+		msbFragmentCollectionId = objectInput.readLong();
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class MSBFragmentEntryCacheModel implements CacheModel<MSBFragmentEntry>,
 			objectOutput.writeUTF(js);
 		}
 
-		objectOutput.writeLong(fragmentCollectionId);
+		objectOutput.writeLong(msbFragmentCollectionId);
 	}
 
 	public long fragmentEntryId;
@@ -245,5 +245,5 @@ public class MSBFragmentEntryCacheModel implements CacheModel<MSBFragmentEntry>,
 	public String css;
 	public String html;
 	public String js;
-	public long fragmentCollectionId;
+	public long msbFragmentCollectionId;
 }

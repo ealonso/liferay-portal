@@ -30,6 +30,6 @@
 		<field name="js" type="String">
 			<hint name="max-length">4000</hint>
 		</field>
-		<field name="fragmentCollectionId" type="long" />
+		<field name="msbFragmentCollectionId" type="long" />
 	</model>
 </model-hints>

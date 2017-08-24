@@ -145,7 +145,7 @@ public class MSBFragmentEntryPersistenceTest {
 
 		newMSBFragmentEntry.setJs(RandomTestUtil.randomString());
 
-		newMSBFragmentEntry.setFragmentCollectionId(RandomTestUtil.nextLong());
+		newMSBFragmentEntry.setMsbFragmentCollectionId(RandomTestUtil.nextLong());
 
 		_msbFragmentEntries.add(_persistence.update(newMSBFragmentEntry));
 
@@ -175,8 +175,8 @@ public class MSBFragmentEntryPersistenceTest {
 			newMSBFragmentEntry.getHtml());
 		Assert.assertEquals(existingMSBFragmentEntry.getJs(),
 			newMSBFragmentEntry.getJs());
-		Assert.assertEquals(existingMSBFragmentEntry.getFragmentCollectionId(),
-			newMSBFragmentEntry.getFragmentCollectionId());
+		Assert.assertEquals(existingMSBFragmentEntry.getMsbFragmentCollectionId(),
+			newMSBFragmentEntry.getMsbFragmentCollectionId());
 	}
 
 	@Test
@@ -187,10 +187,10 @@ public class MSBFragmentEntryPersistenceTest {
 	}
 
 	@Test
-	public void testCountByFragmentCollectionId() throws Exception {
-		_persistence.countByFragmentCollectionId(RandomTestUtil.nextLong());
+	public void testCountByMSBFragmentCollectionId() throws Exception {
+		_persistence.countByMSBFragmentCollectionId(RandomTestUtil.nextLong());
 
-		_persistence.countByFragmentCollectionId(0L);
+		_persistence.countByMSBFragmentCollectionId(0L);
 	}
 
 	@Test
@@ -253,7 +253,7 @@ public class MSBFragmentEntryPersistenceTest {
 			"fragmentEntryId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "name", true, "css", true, "html", true,
-			"js", true, "fragmentCollectionId", true);
+			"js", true, "msbFragmentCollectionId", true);
 	}
 
 	@Test
@@ -491,7 +491,7 @@ public class MSBFragmentEntryPersistenceTest {
 
 		msbFragmentEntry.setJs(RandomTestUtil.randomString());
 
-		msbFragmentEntry.setFragmentCollectionId(RandomTestUtil.nextLong());
+		msbFragmentEntry.setMsbFragmentCollectionId(RandomTestUtil.nextLong());
 
 		_msbFragmentEntries.add(_persistence.update(msbFragmentEntry));
 

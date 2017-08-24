@@ -61,9 +61,9 @@ public interface MSBFragmentEntryLocalService extends BaseLocalService,
 	 *
 	 * Never modify or reference this interface directly. Always use {@link MSBFragmentEntryLocalServiceUtil} to access the msb fragment entry local service. Add custom service methods to {@link com.liferay.modern.site.building.fragment.service.impl.MSBFragmentEntryLocalServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
-	public MSBFragmentEntry addFragmentEntry(long userId, long groupId,
-		long fragmentCollectionId, java.lang.String name, java.lang.String css,
-		java.lang.String html, java.lang.String js,
+	public MSBFragmentEntry addFragmentEntry(long groupId, long userId,
+		java.lang.String name, java.lang.String css, java.lang.String html,
+		java.lang.String js, long msbFragmentCollectionId,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**
@@ -179,7 +179,7 @@ public interface MSBFragmentEntryLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> fetchFragmentEntries(
-		long fragmentCollectionId);
+		long msbFragmentCollectionId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public MSBFragmentEntry fetchFragmentEntry(long fragmentEntryId);
@@ -192,19 +192,19 @@ public interface MSBFragmentEntryLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(
-		long fragmentCollectionId, int start, int end)
+		long msbFragmentCollectionId, int start, int end)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(long groupId,
-		long fragmentCollectionId, int start, int end,
+		long msbFragmentCollectionId, int start, int end,
 		OrderByComparator<MSBFragmentEntry> orderByComparator)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MSBFragmentEntry> getFragmentEntries(long groupId,
-		long fragmentCollectionId, java.lang.String name, int start, int end,
-		OrderByComparator<MSBFragmentEntry> obc);
+		long msbFragmentCollectionId, java.lang.String name, int start,
+		int end, OrderByComparator<MSBFragmentEntry> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();

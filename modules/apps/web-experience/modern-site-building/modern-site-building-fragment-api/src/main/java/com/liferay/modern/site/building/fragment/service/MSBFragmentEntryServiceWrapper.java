@@ -35,12 +35,13 @@ public class MSBFragmentEntryServiceWrapper implements MSBFragmentEntryService,
 
 	@Override
 	public com.liferay.modern.site.building.fragment.model.MSBFragmentEntry addFragmentEntry(
-		long groupId, long fragmentCollectionId, java.lang.String name,
-		java.lang.String css, java.lang.String html, java.lang.String js,
+		long groupId, java.lang.String name, java.lang.String css,
+		java.lang.String html, java.lang.String js,
+		long msbFragmentCollectionId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _msbFragmentEntryService.addFragmentEntry(groupId,
-			fragmentCollectionId, name, css, html, js, serviceContext);
+		return _msbFragmentEntryService.addFragmentEntry(groupId, name, css,
+			html, js, msbFragmentCollectionId, serviceContext);
 	}
 
 	@Override
@@ -59,9 +60,9 @@ public class MSBFragmentEntryServiceWrapper implements MSBFragmentEntryService,
 
 	@Override
 	public java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> fetchFragmentEntries(
-		long fragmentCollectionId)
+		long msbFragmentCollectionId)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _msbFragmentEntryService.fetchFragmentEntries(fragmentCollectionId);
+		return _msbFragmentEntryService.fetchFragmentEntries(msbFragmentCollectionId);
 	}
 
 	@Override
@@ -72,33 +73,33 @@ public class MSBFragmentEntryServiceWrapper implements MSBFragmentEntryService,
 
 	@Override
 	public java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		long fragmentCollectionId, int start, int end)
+		long msbFragmentCollectionId, int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _msbFragmentEntryService.getFragmentEntries(fragmentCollectionId,
+		return _msbFragmentEntryService.getFragmentEntries(msbFragmentCollectionId,
 			start, end);
 	}
 
 	@Override
 	public java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		long groupId, long fragmentCollectionId, int start, int end,
+		long groupId, long msbFragmentCollectionId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> orderByComparator)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _msbFragmentEntryService.getFragmentEntries(groupId,
-			fragmentCollectionId, start, end, orderByComparator);
+			msbFragmentCollectionId, start, end, orderByComparator);
 	}
 
 	@Override
 	public java.util.List<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> getFragmentEntries(
-		long groupId, long fragmentCollectionId, java.lang.String name,
+		long groupId, long msbFragmentCollectionId, java.lang.String name,
 		int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.modern.site.building.fragment.model.MSBFragmentEntry> obc) {
 		return _msbFragmentEntryService.getFragmentEntries(groupId,
-			fragmentCollectionId, name, start, end, obc);
+			msbFragmentCollectionId, name, start, end, obc);
 	}
 
 	@Override
-	public int getGroupFragmentCollectionsCount(long fragmentCollectionId) {
-		return _msbFragmentEntryService.getGroupFragmentCollectionsCount(fragmentCollectionId);
+	public int getGroupFragmentCollectionsCount(long msbFragmentCollectionId) {
+		return _msbFragmentEntryService.getGroupFragmentCollectionsCount(msbFragmentCollectionId);
 	}
 
 	/**
