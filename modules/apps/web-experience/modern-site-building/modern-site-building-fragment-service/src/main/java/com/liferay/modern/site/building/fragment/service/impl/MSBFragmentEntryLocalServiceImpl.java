@@ -36,8 +36,8 @@ public class MSBFragmentEntryLocalServiceImpl
 
 	@Override
 	public MSBFragmentEntry addFragmentEntry(
-			long userId, long groupId, long msbFragmentCollectionId,
-			String name, String css, String html, String js,
+			long groupId, long userId, String name, String css, String html,
+			String js, long msbFragmentCollectionId,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -56,11 +56,11 @@ public class MSBFragmentEntryLocalServiceImpl
 		fragmentEntry.setCompanyId(user.getCompanyId());
 		fragmentEntry.setUserId(user.getUserId());
 		fragmentEntry.setUserName(user.getFullName());
-		fragmentEntry.setMsbFragmentCollectionId(msbFragmentCollectionId);
 		fragmentEntry.setName(name);
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setMsbFragmentCollectionId(msbFragmentCollectionId);
 
 		msbFragmentEntryPersistence.update(fragmentEntry);
 

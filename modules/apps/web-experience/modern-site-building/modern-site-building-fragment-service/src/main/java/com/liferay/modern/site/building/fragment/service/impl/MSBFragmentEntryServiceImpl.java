@@ -37,8 +37,8 @@ public class MSBFragmentEntryServiceImpl
 
 	@Override
 	public MSBFragmentEntry addFragmentEntry(
-			long groupId, long msbFragmentCollectionId, String name, String css,
-			String html, String js, ServiceContext serviceContext)
+			long groupId, String name, String css, String html, String js,
+			long msbFragmentCollectionId, ServiceContext serviceContext)
 		throws PortalException {
 
 		MSBFragmentPermission.check(
@@ -46,7 +46,7 @@ public class MSBFragmentEntryServiceImpl
 			MSBFragmentActionKeys.ADD_MSB_FRAGMENT_ENTRY);
 
 		return msbFragmentEntryLocalService.addFragmentEntry(
-			getUserId(), groupId, msbFragmentCollectionId, name, css, html, js,
+			groupId, getUserId(), name, css, html, js, msbFragmentCollectionId,
 			serviceContext);
 	}
 

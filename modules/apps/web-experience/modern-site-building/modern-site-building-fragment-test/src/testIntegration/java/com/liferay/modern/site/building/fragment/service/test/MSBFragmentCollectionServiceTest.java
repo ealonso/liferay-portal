@@ -168,9 +168,9 @@ public class MSBFragmentCollectionServiceTest {
 				serviceContext);
 
 		MSBFragmentEntryServiceUtil.addFragmentEntry(
-			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
-			"Fragment Entry", StringPool.BLANK, StringPool.BLANK,
-			StringPool.BLANK, serviceContext);
+			_group.getGroupId(), "Fragment Entry", StringPool.BLANK,
+			StringPool.BLANK, StringPool.BLANK,
+			fragmentCollection.getFragmentCollectionId(), serviceContext);
 
 		MSBFragmentCollectionServiceUtil.deleteFragmentCollection(
 			fragmentCollection.getFragmentCollectionId());
