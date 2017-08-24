@@ -840,7 +840,8 @@ public class JournalUtil {
 	public static boolean isLatestArticle(JournalArticle article) {
 		JournalArticle latestArticle =
 			JournalArticleLocalServiceUtil.fetchLatestArticle(
-				article.getResourcePrimKey(), WorkflowConstants.STATUS_ANY);
+				article.getResourcePrimKey(), WorkflowConstants.STATUS_ANY,
+				false);
 
 		if ((latestArticle != null) &&
 			(article.getId() == latestArticle.getId())) {
