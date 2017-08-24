@@ -76,7 +76,7 @@
 		<column name="css" type="String" />
 		<column name="html" type="String" />
 		<column name="js" type="String" />
-		<column name="fragmentCollectionId" type="long" />
+		<column name="msbFragmentCollectionId" type="long" />
 
 		<!-- Order -->
 
@@ -89,8 +89,8 @@
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
-		<finder name="FragmentCollectionId" return-type="Collection">
-			<finder-column name="fragmentCollectionId" />
+		<finder name="MSBFragmentCollectionId" return-type="Collection">
+			<finder-column name="msbFragmentCollectionId" />
 		</finder>
 		<finder name="G_N" return-type="FragmentEntry" unique="true">
 			<finder-column name="groupId" />
@@ -98,12 +98,12 @@
 		</finder>
 		<finder name="G_FC" return-type="Collection">
 			<finder-column name="groupId" />
-			<finder-column name="fragmentCollectionId" />
+			<finder-column name="msbFragmentCollectionId" />
 		</finder>
 		<finder name="G_LikeN_FC" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column case-sensitive="false" comparator="LIKE" name="name" />
-			<finder-column name="fragmentCollectionId" />
+			<finder-column name="msbFragmentCollectionId" />
 		</finder>
 
 		<!-- References -->
