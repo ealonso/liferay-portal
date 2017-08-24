@@ -524,6 +524,10 @@ public class JournalArticleIndexer
 
 		document.addKeyword("headListable", headListable);
 
+		boolean latestArticle = JournalUtil.isLatestArticle(journalArticle);
+
+		document.addKeyword("latest", latestArticle);
+
 		// Scheduled listable articles should be visible in asset browser
 
 		if (journalArticle.isScheduled() && headListable) {
