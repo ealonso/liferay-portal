@@ -140,6 +140,10 @@ public class MSBFragmentDisplayContext {
 		return _orderByType;
 	}
 
+	public String[] getOrderColumns() {
+		return new String[] {"create-date", "name"};
+	}
+
 	public boolean hasMSBFragmentCollectionsResults() throws PortalException {
 		SearchContainer searchContainer =
 			getMSBFragmentCollectionsSearchContainer();
