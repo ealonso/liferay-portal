@@ -17,9 +17,13 @@ package com.liferay.asset.display.template.web.internal.display.context;
 import com.liferay.asset.display.template.constants.AssetDisplayTemplatePortletKeys;
 import com.liferay.asset.display.template.model.AssetDisplayTemplate;
 import com.liferay.asset.display.template.service.AssetDisplayTemplateLocalServiceUtil;
+import com.liferay.asset.display.template.service.permission.AssetDisplayTemplatePermission;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateClassNameIdComparator;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateCreateDateComparator;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
+import com.liferay.dynamic.data.mapping.util.DDMDisplay;
 import com.liferay.dynamic.data.mapping.util.DDMDisplayRegistry;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -27,9 +31,11 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -81,6 +87,34 @@ public class AssetDisplayTemplateDisplayContext {
 		_ddmTemplateHelper = ddmTemplateHelper;
 	}
 
+	public AssetDisplayTemplate getAssetDisplayTemplate()
+		throws PortalException {
+
+		if (_assetDisplayTemplate == null) {
+			_assetDisplayTemplate =
+				AssetDisplayTemplateLocalServiceUtil.fetchAssetDisplayTemplate(
+					getAssetDisplayTemplateId());
+		}
+
+		return _assetDisplayTemplate;
+	}
+
+	public long getAssetDisplayTemplateId() {
+		if (_assetDisplayTemplateId == null) {
+			_assetDisplayTemplateId = ParamUtil.getLong(
+				_request, "assetDisplayTemplateId");
+		}
+
+		return _assetDisplayTemplateId;
+	}
+
+	public String getAutocompleteJSON(
+			HttpServletRequest request, String language)
+		throws Exception {
+
+		return _ddmTemplateHelper.getAutocompleteJSON(request, language);
+	}
+
 	public long[] getAvailableClassNameIds() {
 		if (_availableClassNameIds == null) {
 			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
@@ -92,6 +126,30 @@ public class AssetDisplayTemplateDisplayContext {
 		}
 
 		return _availableClassNameIds;
+	}
+
+	public DDMDisplay getDDMDisplay() {
+		return _ddmDisplayRegistry.getDDMDisplay(
+			AssetDisplayTemplatePortletKeys.ASSET_DISPLAY_TEMPLATE);
+	}
+
+	public DDMTemplate getDDMTemplate() throws Exception {
+		if (_ddmTemplate != null) {
+			return _ddmTemplate;
+		}
+
+		AssetDisplayTemplate assetDisplayTemplate = getAssetDisplayTemplate();
+
+		if (assetDisplayTemplate != null) {
+			_ddmTemplate = DDMTemplateLocalServiceUtil.getDDMTemplate(
+				assetDisplayTemplate.getDDMTemplateId());
+		}
+
+		return _ddmTemplate;
+	}
+
+	public long getDefaultClassNameId() {
+		return PortalUtil.getClassNameId(AssetDisplayTemplate.class);
 	}
 
 	public String getDisplayStyle() {
@@ -204,6 +262,24 @@ public class AssetDisplayTemplateDisplayContext {
 		return _searchContainer;
 	}
 
+	public boolean hasPermission(
+			AssetDisplayTemplate assetDisplayTemplate, String actionId)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PermissionChecker permissionChecker =
+			themeDisplay.getPermissionChecker();
+
+		return AssetDisplayTemplatePermission.contains(
+			permissionChecker, assetDisplayTemplate, actionId);
+	}
+
+	public boolean isAutocompleteEnabled(String language) {
+		return _ddmTemplateHelper.isAutocompleteEnabled(language);
+	}
+
 	public boolean isDisabledManagementBar() throws PortalException {
 		SearchContainer searchContainer = getSearchContainer();
 
@@ -226,8 +302,11 @@ public class AssetDisplayTemplateDisplayContext {
 		return false;
 	}
 
+	private AssetDisplayTemplate _assetDisplayTemplate;
+	private Long _assetDisplayTemplateId;
 	private long[] _availableClassNameIds;
 	private final DDMDisplayRegistry _ddmDisplayRegistry;
+	private DDMTemplate _ddmTemplate;
 	private final DDMTemplateHelper _ddmTemplateHelper;
 	private String _displayStyle;
 	private String _keywords;
