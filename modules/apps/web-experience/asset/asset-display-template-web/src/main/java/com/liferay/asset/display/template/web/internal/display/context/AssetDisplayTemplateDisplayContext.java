@@ -19,6 +19,7 @@ import com.liferay.asset.display.template.model.AssetDisplayTemplate;
 import com.liferay.asset.display.template.service.AssetDisplayTemplateLocalServiceUtil;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateClassNameIdComparator;
 import com.liferay.asset.display.template.util.comparator.AssetDisplayTemplateCreateDateComparator;
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.dynamic.data.mapping.util.DDMDisplayRegistry;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -78,6 +79,19 @@ public class AssetDisplayTemplateDisplayContext {
 
 		_ddmDisplayRegistry = ddmDisplayRegistry;
 		_ddmTemplateHelper = ddmTemplateHelper;
+	}
+
+	public long[] getAvailableClassNameIds() {
+		if (_availableClassNameIds == null) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			_availableClassNameIds =
+				AssetRendererFactoryRegistryUtil.getClassNameIds(
+					themeDisplay.getCompanyId(), true);
+		}
+
+		return _availableClassNameIds;
 	}
 
 	public String getDisplayStyle() {
@@ -200,6 +214,10 @@ public class AssetDisplayTemplateDisplayContext {
 		return false;
 	}
 
+	public boolean isShowAddButton() {
+		return true;
+	}
+
 	public boolean isShowSearch() {
 		if (Validator.isNotNull(getKeywords())) {
 			return true;
@@ -208,6 +226,7 @@ public class AssetDisplayTemplateDisplayContext {
 		return false;
 	}
 
+	private long[] _availableClassNameIds;
 	private final DDMDisplayRegistry _ddmDisplayRegistry;
 	private final DDMTemplateHelper _ddmTemplateHelper;
 	private String _displayStyle;
