@@ -23,7 +23,10 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.modern.site.building.fragment.web.internal.display.context.MSBFragmentDisplayContext" %><%@
+<%@ page import="com.liferay.modern.site.building.fragment.exception.DuplicateMSBFragmentCollectionException" %><%@
+page import="com.liferay.modern.site.building.fragment.exception.MSBFragmentCollectionNameException" %><%@
+page import="com.liferay.modern.site.building.fragment.model.MSBFragmentCollection" %><%@
+page import="com.liferay.modern.site.building.fragment.web.internal.display.context.MSBFragmentDisplayContext" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %>
 

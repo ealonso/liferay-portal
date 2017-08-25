@@ -21,6 +21,7 @@ import com.liferay.modern.site.building.fragment.web.util.MSBFragmentPortletUtil
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -64,6 +66,20 @@ public class MSBFragmentDisplayContext {
 		return _displayStyle;
 	}
 
+	public String getEditMSBFragmentCollectionRedirect()
+		throws PortalException {
+
+		String redirect = ParamUtil.getString(_request, "redirect");
+
+		if (Validator.isNull(redirect)) {
+			PortletURL portletURL = _renderResponse.createRenderURL();
+
+			redirect = portletURL.toString();
+		}
+
+		return redirect;
+	}
+
 	public String getKeywords() {
 		if (_keywords != null) {
 			return _keywords;
@@ -72,6 +88,33 @@ public class MSBFragmentDisplayContext {
 		_keywords = ParamUtil.getString(_request, "keywords");
 
 		return _keywords;
+	}
+
+	public MSBFragmentCollection getMSBFragmentCollection()
+		throws PortalException {
+
+		if (_msbfragmentCollection != null) {
+			return _msbfragmentCollection;
+		}
+
+		MSBFragmentCollection msbfragmentCollection =
+			MSBFragmentCollectionServiceUtil.fetchMSBFragmentCollection(
+				getMSBFragmentCollectionId());
+
+		_msbfragmentCollection = msbfragmentCollection;
+
+		return _msbfragmentCollection;
+	}
+
+	public long getMSBFragmentCollectionId() {
+		if (Validator.isNotNull(_msbfragmentCollectionId)) {
+			return _msbfragmentCollectionId;
+		}
+
+		_msbfragmentCollectionId = ParamUtil.getLong(
+			_request, "msbfragmentCollectionId");
+
+		return _msbfragmentCollectionId;
 	}
 
 	public SearchContainer getMSBFragmentCollectionsSearchContainer()
@@ -151,6 +194,17 @@ public class MSBFragmentDisplayContext {
 		return _msbfragmentCollectionsSearchContainer;
 	}
 
+	public String getMSBFragmentCollectionTitle() throws PortalException {
+		MSBFragmentCollection msbfragmentCollection =
+			getMSBFragmentCollection();
+
+		if (msbfragmentCollection == null) {
+			return LanguageUtil.get(_request, "add-fragment-collection");
+		}
+
+		return msbfragmentCollection.getName();
+	}
+
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -223,6 +277,8 @@ public class MSBFragmentDisplayContext {
 
 	private String _displayStyle;
 	private String _keywords;
+	private MSBFragmentCollection _msbfragmentCollection;
+	private Long _msbfragmentCollectionId;
 	private SearchContainer _msbfragmentCollectionsSearchContainer;
 	private String _orderByCol;
 	private String _orderByType;
