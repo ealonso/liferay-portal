@@ -203,12 +203,17 @@ public class JournalArticleIndexer
 
 		boolean head = GetterUtil.getBoolean(
 			searchContext.getAttribute("head"), Boolean.TRUE);
+		boolean latest = GetterUtil.getBoolean(
+			searchContext.getAttribute("latest"));
 		boolean relatedClassName = GetterUtil.getBoolean(
 			searchContext.getAttribute("relatedClassName"));
 		boolean showNonindexable = GetterUtil.getBoolean(
 			searchContext.getAttribute("showNonindexable"));
 
-		if (head && !relatedClassName && !showNonindexable) {
+		if (latest && !relatedClassName && !showNonindexable) {
+			contextBooleanFilter.addRequiredTerm("latest", Boolean.TRUE);
+		}
+		else if (head && !relatedClassName && !showNonindexable) {
 			contextBooleanFilter.addRequiredTerm("head", Boolean.TRUE);
 		}
 
