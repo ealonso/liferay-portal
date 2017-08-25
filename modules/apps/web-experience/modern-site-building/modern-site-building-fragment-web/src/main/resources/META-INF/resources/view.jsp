@@ -20,6 +20,28 @@
 renderResponse.setTitle(LanguageUtil.get(request, "fragment-collections"));
 %>
 
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<portlet:renderURL var="mainURL" />
+
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item href="<%= mainURL.toString() %>" label="fragments" selected="<%= true %>" />
+	</aui:nav>
+
+	<c:if test="<%= msbfragmentDisplayContext.isShowMSBFragmentCollectionsSearch() %>">
+		<portlet:renderURL var="portletURL">
+			<portlet:param name="mvcPath" value="/view.jsp" />
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="displayStyle" value="<%= msbfragmentDisplayContext.getDisplayStyle() %>" />
+		</portlet:renderURL>
+
+		<aui:nav-bar-search>
+			<aui:form action="<%= portletURL.toString() %>" method="post" name="fm1">
+				<liferay-ui:input-search markupView="lexicon" />
+			</aui:form>
+		</aui:nav-bar-search>
+	</c:if>
+</aui:nav-bar>
+
 <liferay-frontend:management-bar
 	disabled="<%= msbfragmentDisplayContext.isDisabledMSBFragmentCollectionsManagementBar() %>"
 	includeCheckBox="true"
