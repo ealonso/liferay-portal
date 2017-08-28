@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.reader.ClassType;
 import com.liferay.asset.reader.ClassTypeReader;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -139,7 +140,9 @@ public class AssetVocabularySettingsImportHelper
 				getAssetRendererFactoryByClassNameId(newClassNameId);
 
 		ClassTypeReader classTypeReader =
-			assetRendererFactory.getClassTypeReader();
+			ModelAdapterUtil.adapt(
+				ClassTypeReader.class,
+				assetRendererFactory.getClassTypeReader());
 
 		List<ClassType> availableClassTypes =
 			classTypeReader.getAvailableClassTypes(_groupIds, _locale);

@@ -38,6 +38,7 @@ import com.liferay.asset.kernel.service.AssetCategoryService;
 import com.liferay.asset.kernel.service.AssetVocabularyService;
 import com.liferay.asset.reader.ClassTypeReader;
 import com.liferay.asset.reader.exception.NoSuchClassTypeException;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -391,7 +392,9 @@ public class AssetCategoryAdminPortlet extends MVCPortlet {
 						getAssetRendererFactoryByClassNameId(classNameIds[i]);
 
 				ClassTypeReader classTypeReader =
-					assetRendererFactory.getClassTypeReader();
+					ModelAdapterUtil.adapt(
+						ClassTypeReader.class,
+						assetRendererFactory.getClassTypeReader());
 
 				try {
 					classTypeReader.getClassType(

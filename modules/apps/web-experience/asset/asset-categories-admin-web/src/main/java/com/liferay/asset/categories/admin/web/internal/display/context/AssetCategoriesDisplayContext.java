@@ -32,6 +32,7 @@ import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.reader.ClassType;
 import com.liferay.asset.reader.ClassTypeReader;
 import com.liferay.exportimport.kernel.staging.permission.StagingPermissionUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -135,7 +136,9 @@ public class AssetCategoriesDisplayContext {
 							getAssetRendererFactoryByClassNameId(classNameId);
 
 					ClassTypeReader classTypeReader =
-						assetRendererFactory.getClassTypeReader();
+						ModelAdapterUtil.adapt(
+							ClassTypeReader.class,
+							assetRendererFactory.getClassTypeReader());
 
 					try {
 						ClassType classType = classTypeReader.getClassType(

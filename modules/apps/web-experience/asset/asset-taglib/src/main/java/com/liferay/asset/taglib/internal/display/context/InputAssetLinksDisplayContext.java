@@ -24,6 +24,7 @@ import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
 import com.liferay.asset.reader.ClassType;
 import com.liferay.asset.reader.ClassTypeReader;
 import com.liferay.asset.util.comparator.AssetRendererFactoryTypeNameComparator;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -348,7 +349,9 @@ public class InputAssetLinksDisplayContext {
 		long groupId = _getAssetBrowserGroupId(assetRendererFactory);
 
 		ClassTypeReader classTypeReader =
-			assetRendererFactory.getClassTypeReader();
+			ModelAdapterUtil.adapt(
+				ClassTypeReader.class,
+				assetRendererFactory.getClassTypeReader());
 
 		List<ClassType> classTypes = classTypeReader.getAvailableClassTypes(
 			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
