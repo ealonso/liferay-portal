@@ -15,3 +15,35 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<%
+AssetDisplayTemplate assetDisplayTemplate = (AssetDisplayTemplate)request.getAttribute(AssetDisplayLayoutTypeControllerWebKeys.ASSET_DISPLAY_TEMPLATE);
+
+Map<String, Object> contextObjects = (Map<String, Object>)request.getAttribute(AssetDisplayLayoutTypeControllerWebKeys.CONTEXT_OBJECTS);
+
+DDMTemplate ddmTemplate = (DDMTemplate)request.getAttribute(WebKeys.TEMPLATE);
+
+List<AssetEntry> entries = (List<AssetEntry>)request.getAttribute(AssetDisplayLayoutTypeControllerWebKeys.ENTRIES);
+%>
+
+<c:choose>
+	<c:when test="<%= ddmTemplate != null %>">
+
+		<%
+		String displayStyle = "ddmTemplate_" + ddmTemplate.getTemplateKey();
+		%>
+
+		<liferay-ddm:template-renderer
+			className="<%= AssetDisplayTemplate.class.getName() %>"
+			contextObjects="<%= contextObjects %>"
+			displayStyle="<%= displayStyle %>"
+			displayStyleGroupId="<%= ddmTemplate.getGroupId() %>"
+			entries="<%= entries %>"
+		/>
+	</c:when>
+	<c:otherwise>
+		<div class="alert alert-warning">
+			<liferay-ui:message arguments="<%= assetDisplayTemplate.getAssetTypeName(locale) %>" key="there-is-no-appropriate-template-for-asset-type-x" />
+		</div>
+	</c:otherwise>
+</c:choose>
