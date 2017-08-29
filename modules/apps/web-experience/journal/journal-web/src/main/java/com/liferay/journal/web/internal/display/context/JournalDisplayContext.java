@@ -1265,7 +1265,6 @@ public class JournalDisplayContext {
 		attributes.put("ddmStructureKey", ddmStructureKey);
 		attributes.put("ddmTemplateKey", ddmTemplateKey);
 		attributes.put("params", params);
-
 		searchContext.setAttributes(attributes);
 
 		searchContext.setCompanyId(companyId);
@@ -1284,6 +1283,7 @@ public class JournalDisplayContext {
 		}
 
 		searchContext.setAttribute("head", !showVersions);
+		searchContext.setAttribute("latest", !showVersions);
 		searchContext.setAttribute("params", params);
 		searchContext.setEnd(end);
 		searchContext.setFolderIds(folderIds);
