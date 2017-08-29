@@ -15,16 +15,33 @@
 package com.liferay.layout.type.controller.asset.display.internal.controller;
 
 import com.liferay.layout.type.controller.asset.display.constants.AssetDisplayLayoutTypeControllerConstants;
+import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerPortletKeys;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
+import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.service.PortletLocalService;
+import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portlet.RenderRequestFactory;
+import com.liferay.portlet.RenderRequestImpl;
+import com.liferay.portlet.RenderResponseFactory;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.portlet.WindowState;
+
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -45,6 +62,39 @@ public class AssetDisplayLayoutTypeController
 	@Override
 	public String getURL() {
 		return _URL;
+	}
+
+	@Override
+	public boolean includeLayoutContent(
+			HttpServletRequest request, HttpServletResponse response,
+			Layout layout)
+		throws Exception {
+
+		Portlet portlet = _portletLocalService.getPortletById(
+			AssetDisplayLayoutTypeControllerPortletKeys.
+				ASSET_DISPLAY_LAYOUT_TYPE_CONTROLLER);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesFactoryUtil.getPortletPreferences(
+				request, portlet.getPortletId());
+
+		PortletRequest portletRequest = RenderRequestFactory.create(
+			request, portlet, null, null, WindowState.NORMAL, PortletMode.VIEW,
+			portletPreferences);
+
+		PortletResponse portletResponse = RenderResponseFactory.create(
+			(RenderRequestImpl)portletRequest, response);
+
+		request.setAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST, portletRequest);
+
+		request.setAttribute(
+			JavaConstants.JAVAX_PORTLET_RESPONSE, portletResponse);
+
+		request.setAttribute(
+			PortletRequest.LIFECYCLE_PHASE, PortletRequest.RENDER_PHASE);
+
+		return super.includeLayoutContent(request, response, layout);
 	}
 
 	@Override
@@ -98,5 +148,8 @@ public class AssetDisplayLayoutTypeController
 		"${liferay:mainPath}/portal/layout?p_l_id=${liferay:plid}" +
 			"&p_v_l_s_g_id=${liferay:pvlsgid}&assetDisplayTemplateId=" +
 				"${assetDisplayTemplateId}";
+
+	@Reference
+	private PortletLocalService _portletLocalService;
 
 }
