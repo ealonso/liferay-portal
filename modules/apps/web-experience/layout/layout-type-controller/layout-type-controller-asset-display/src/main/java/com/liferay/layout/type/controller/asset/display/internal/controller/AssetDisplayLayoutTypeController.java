@@ -50,6 +50,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.WindowState;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -191,18 +192,30 @@ public class AssetDisplayLayoutTypeController
 
 	@Override
 	protected String getEditPage() {
-		return null;
+		return _EDIT_PAGE;
 	}
 
 	@Override
 	protected String getViewPage() {
-		return null;
+		return _VIEW_PAGE;
 	}
+
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.layout.type.controller.asset.display)",
+		unbind = "-"
+	)
+	protected void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
+
+	private static final String _EDIT_PAGE = "/layout/edit/asset_display.jsp";
 
 	private static final String _URL =
 		"${liferay:mainPath}/portal/layout?p_l_id=${liferay:plid}" +
 			"&p_v_l_s_g_id=${liferay:pvlsgid}&assetDisplayTemplateId=" +
 				"${assetDisplayTemplateId}";
+
+	private static final String _VIEW_PAGE = "/layout/view/asset_display.jsp";
 
 	@Reference
 	private AssetDisplayTemplateLocalService _assetDisplayTemplateLocalService;
