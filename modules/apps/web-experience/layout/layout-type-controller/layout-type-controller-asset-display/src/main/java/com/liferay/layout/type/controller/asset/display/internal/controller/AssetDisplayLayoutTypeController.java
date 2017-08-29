@@ -16,8 +16,10 @@ package com.liferay.layout.type.controller.asset.display.internal.controller;
 
 import com.liferay.layout.type.controller.asset.display.constants.AssetDisplayLayoutTypeControllerConstants;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.taglib.servlet.PipingServletResponse;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -36,18 +38,33 @@ public class AssetDisplayLayoutTypeController
 	extends BaseLayoutTypeControllerImpl {
 
 	@Override
+	public String getType() {
+		return LayoutConstants.TYPE_PORTLET;
+	}
+
+	@Override
 	public String getURL() {
-		return null;
+		return _URL;
+	}
+
+	@Override
+	public boolean isBrowsable() {
+		return true;
 	}
 
 	@Override
 	public boolean isFirstPageable() {
-		return false;
+		return true;
+	}
+
+	@Override
+	public boolean isFullPageDisplayable() {
+		return true;
 	}
 
 	@Override
 	public boolean isParentable() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -57,14 +74,14 @@ public class AssetDisplayLayoutTypeController
 
 	@Override
 	public boolean isURLFriendliable() {
-		return false;
+		return true;
 	}
 
 	@Override
 	protected ServletResponse createServletResponse(
 		HttpServletResponse response, UnsyncStringWriter unsyncStringWriter) {
 
-		return null;
+		return new PipingServletResponse(response, unsyncStringWriter);
 	}
 
 	@Override
@@ -76,5 +93,10 @@ public class AssetDisplayLayoutTypeController
 	protected String getViewPage() {
 		return null;
 	}
+
+	private static final String _URL =
+		"${liferay:mainPath}/portal/layout?p_l_id=${liferay:plid}" +
+			"&p_v_l_s_g_id=${liferay:pvlsgid}&assetDisplayTemplateId=" +
+				"${assetDisplayTemplateId}";
 
 }
