@@ -14,15 +14,25 @@
 
 package com.liferay.asset.publisher.web.util;
 
+import com.liferay.asset.display.template.model.AssetDisplayTemplate;
+import com.liferay.asset.display.template.service.AssetDisplayTemplateLocalServiceUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.layout.type.controller.asset.display.route.AssetDisplayFriendlyURLResolver;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -64,6 +74,43 @@ public class AssetPublisherHelper {
 		AssetRenderer<?> assetRenderer, AssetEntry assetEntry,
 		boolean viewInContext) {
 
+		AssetRendererFactory<?> assetRendererFactory =
+			assetRenderer.getAssetRendererFactory();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)liferayPortletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		if (viewInContext) {
+			AssetDisplayTemplate assetDisplayTemplate =
+				AssetDisplayTemplateLocalServiceUtil.fetchAssetDisplayTemplate(
+					themeDisplay.getScopeGroupId(),
+					assetRendererFactory.getClassNameId());
+
+			if (assetDisplayTemplate != null) {
+				try {
+					Layout layout = LayoutLocalServiceUtil.getLayout(
+						assetDisplayTemplate.getPlid());
+
+					StringBundler sb = new StringBundler(5);
+
+					sb.append(
+						PortalUtil.getGroupFriendlyURL(
+							layout.getLayoutSet(), themeDisplay));
+					sb.append(
+						AssetDisplayFriendlyURLResolver.FRIENDLY_URL_SEPARATOR);
+					sb.append(layout.getFriendlyURL(themeDisplay.getLocale()));
+					sb.append(StringPool.SLASH);
+					sb.append(assetEntry.getEntryId());
+
+					return sb.toString();
+				}
+				catch (PortalException pe) {
+					_log.error(pe, pe);
+				}
+			}
+		}
+
 		PortletURL viewFullContentURL =
 			liferayPortletResponse.createRenderURL();
 
@@ -90,14 +137,7 @@ public class AssetPublisherHelper {
 
 		viewFullContentURL.setParameter("redirect", redirectURL.toString());
 
-		AssetRendererFactory<?> assetRendererFactory =
-			assetRenderer.getAssetRendererFactory();
-
 		viewFullContentURL.setParameter("type", assetRendererFactory.getType());
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)liferayPortletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
 
 		if (Validator.isNotNull(assetRenderer.getUrlTitle())) {
 			if (assetRenderer.getGroupId() != themeDisplay.getScopeGroupId()) {
@@ -128,6 +168,7 @@ public class AssetPublisherHelper {
 				}
 			}
 			catch (Exception e) {
+				_log.error(e, e);
 			}
 		}
 
@@ -137,5 +178,8 @@ public class AssetPublisherHelper {
 
 		return viewURL;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AssetPublisherHelper.class);
 
 }
