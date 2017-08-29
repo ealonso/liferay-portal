@@ -14,8 +14,14 @@
 
 package com.liferay.layout.type.controller.asset.display.internal.controller;
 
+import com.liferay.asset.display.template.model.AssetDisplayTemplate;
+import com.liferay.asset.display.template.service.AssetDisplayTemplateLocalService;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
+import com.liferay.dynamic.data.mapping.kernel.DDMTemplateManager;
 import com.liferay.layout.type.controller.asset.display.constants.AssetDisplayLayoutTypeControllerConstants;
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerPortletKeys;
+import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerWebKeys;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -25,10 +31,18 @@ import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.RenderRequestFactory;
 import com.liferay.portlet.RenderRequestImpl;
 import com.liferay.portlet.RenderResponseFactory;
 import com.liferay.taglib.servlet.PipingServletResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
@@ -128,6 +142,47 @@ public class AssetDisplayLayoutTypeController
 	}
 
 	@Override
+	protected void addAttributes(HttpServletRequest request) {
+		Map<String, Object> contextObjects = new HashMap<>();
+
+		long assetDisplayTemplateId = ParamUtil.getLong(
+			request, "assetDisplayTemplateId");
+
+		AssetEntry assetEntry = (AssetEntry)request.getAttribute(
+			AssetDisplayLayoutTypeControllerWebKeys.ASSET_ENTRY);
+
+		AssetDisplayTemplate assetDisplayTemplate =
+			_assetDisplayTemplateLocalService.fetchAssetDisplayTemplate(
+				assetDisplayTemplateId);
+
+		if (assetDisplayTemplate != null) {
+			long classNameId = _portal.getClassNameId(
+				AssetDisplayTemplate.class);
+
+			DDMTemplate ddmTemplate = _ddmTemplateManager.fetchTemplate(
+				assetDisplayTemplate.getGroupId(), classNameId,
+				String.valueOf(assetDisplayTemplateId));
+
+			request.setAttribute(WebKeys.TEMPLATE, ddmTemplate);
+
+			List<AssetEntry> entries = new ArrayList<>();
+
+			entries.add(assetEntry);
+
+			request.setAttribute(
+				AssetDisplayLayoutTypeControllerWebKeys.ENTRIES, entries);
+
+			contextObjects.put("assetEntry", assetEntry);
+		}
+
+		request.setAttribute(
+			AssetDisplayLayoutTypeControllerWebKeys.CONTEXT_OBJECTS,
+			contextObjects);
+
+		super.addAttributes(request);
+	}
+
+	@Override
 	protected ServletResponse createServletResponse(
 		HttpServletResponse response, UnsyncStringWriter unsyncStringWriter) {
 
@@ -148,6 +203,15 @@ public class AssetDisplayLayoutTypeController
 		"${liferay:mainPath}/portal/layout?p_l_id=${liferay:plid}" +
 			"&p_v_l_s_g_id=${liferay:pvlsgid}&assetDisplayTemplateId=" +
 				"${assetDisplayTemplateId}";
+
+	@Reference
+	private AssetDisplayTemplateLocalService _assetDisplayTemplateLocalService;
+
+	@Reference
+	private DDMTemplateManager _ddmTemplateManager;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortletLocalService _portletLocalService;
