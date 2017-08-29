@@ -46,6 +46,7 @@ public class AssetDisplayTemplateSoap implements Serializable {
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setDDMTemplateId(model.getDDMTemplateId());
 		soapModel.setMain(model.getMain());
+		soapModel.setPlid(model.getPlid());
 
 		return soapModel;
 	}
@@ -193,6 +194,14 @@ public class AssetDisplayTemplateSoap implements Serializable {
 		_main = main;
 	}
 
+	public long getPlid() {
+		return _plid;
+	}
+
+	public void setPlid(long plid) {
+		_plid = plid;
+	}
+
 	private long _assetDisplayTemplateId;
 	private long _groupId;
 	private long _companyId;
@@ -204,4 +213,5 @@ public class AssetDisplayTemplateSoap implements Serializable {
 	private long _classNameId;
 	private long _DDMTemplateId;
 	private boolean _main;
+	private long _plid;
 }

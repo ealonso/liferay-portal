@@ -82,7 +82,8 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 			{ "name", Types.VARCHAR },
 			{ "classNameId", Types.BIGINT },
 			{ "DDMTemplateId", Types.BIGINT },
-			{ "main", Types.BOOLEAN }
+			{ "main", Types.BOOLEAN },
+			{ "plid", Types.BIGINT }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -98,9 +99,10 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		TABLE_COLUMNS_MAP.put("classNameId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("DDMTemplateId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("main", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("plid", Types.BIGINT);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table AssetDisplayTemplate (assetDisplayTemplateId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,classNameId LONG,DDMTemplateId LONG,main BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table AssetDisplayTemplate (assetDisplayTemplateId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,classNameId LONG,DDMTemplateId LONG,main BOOLEAN,plid LONG)";
 	public static final String TABLE_SQL_DROP = "drop table AssetDisplayTemplate";
 	public static final String ORDER_BY_JPQL = " ORDER BY assetDisplayTemplate.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY AssetDisplayTemplate.name ASC";
@@ -145,6 +147,7 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		model.setClassNameId(soapModel.getClassNameId());
 		model.setDDMTemplateId(soapModel.getDDMTemplateId());
 		model.setMain(soapModel.getMain());
+		model.setPlid(soapModel.getPlid());
 
 		return model;
 	}
@@ -221,6 +224,7 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("DDMTemplateId", getDDMTemplateId());
 		attributes.put("main", getMain());
+		attributes.put("plid", getPlid());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -295,6 +299,12 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 
 		if (main != null) {
 			setMain(main);
+		}
+
+		Long plid = (Long)attributes.get("plid");
+
+		if (plid != null) {
+			setPlid(plid);
 		}
 	}
 
@@ -511,6 +521,17 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		_main = main;
 	}
 
+	@JSON
+	@Override
+	public long getPlid() {
+		return _plid;
+	}
+
+	@Override
+	public void setPlid(long plid) {
+		_plid = plid;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -553,6 +574,7 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		assetDisplayTemplateImpl.setClassNameId(getClassNameId());
 		assetDisplayTemplateImpl.setDDMTemplateId(getDDMTemplateId());
 		assetDisplayTemplateImpl.setMain(getMain());
+		assetDisplayTemplateImpl.setPlid(getPlid());
 
 		assetDisplayTemplateImpl.resetOriginalValues();
 
@@ -680,12 +702,14 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 
 		assetDisplayTemplateCacheModel.main = getMain();
 
+		assetDisplayTemplateCacheModel.plid = getPlid();
+
 		return assetDisplayTemplateCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{assetDisplayTemplateId=");
 		sb.append(getAssetDisplayTemplateId());
@@ -709,6 +733,8 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 		sb.append(getDDMTemplateId());
 		sb.append(", main=");
 		sb.append(getMain());
+		sb.append(", plid=");
+		sb.append(getPlid());
 		sb.append("}");
 
 		return sb.toString();
@@ -716,7 +742,7 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append(
@@ -767,6 +793,10 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 			"<column><column-name>main</column-name><column-value><![CDATA[");
 		sb.append(getMain());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>plid</column-name><column-value><![CDATA[");
+		sb.append(getPlid());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -794,6 +824,7 @@ public class AssetDisplayTemplateModelImpl extends BaseModelImpl<AssetDisplayTem
 	private boolean _setOriginalClassNameId;
 	private long _DDMTemplateId;
 	private boolean _main;
+	private long _plid;
 	private long _columnBitmask;
 	private AssetDisplayTemplate _escapedModel;
 }

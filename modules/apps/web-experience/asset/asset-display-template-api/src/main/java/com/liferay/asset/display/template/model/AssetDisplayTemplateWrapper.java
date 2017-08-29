@@ -70,6 +70,7 @@ public class AssetDisplayTemplateWrapper implements AssetDisplayTemplate,
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("DDMTemplateId", getDDMTemplateId());
 		attributes.put("main", getMain());
+		attributes.put("plid", getPlid());
 
 		return attributes;
 	}
@@ -141,6 +142,12 @@ public class AssetDisplayTemplateWrapper implements AssetDisplayTemplate,
 
 		if (main != null) {
 			setMain(main);
+		}
+
+		Long plid = (Long)attributes.get("plid");
+
+		if (plid != null) {
+			setPlid(plid);
 		}
 	}
 
@@ -263,6 +270,16 @@ public class AssetDisplayTemplateWrapper implements AssetDisplayTemplate,
 	@Override
 	public java.lang.String getName() {
 		return _assetDisplayTemplate.getName();
+	}
+
+	/**
+	* Returns the plid of this asset display template.
+	*
+	* @return the plid of this asset display template
+	*/
+	@Override
+	public long getPlid() {
+		return _assetDisplayTemplate.getPlid();
 	}
 
 	/**
@@ -464,6 +481,16 @@ public class AssetDisplayTemplateWrapper implements AssetDisplayTemplate,
 	@Override
 	public void setNew(boolean n) {
 		_assetDisplayTemplate.setNew(n);
+	}
+
+	/**
+	* Sets the plid of this asset display template.
+	*
+	* @param plid the plid of this asset display template
+	*/
+	@Override
+	public void setPlid(long plid) {
+		_assetDisplayTemplate.setPlid(plid);
 	}
 
 	/**
