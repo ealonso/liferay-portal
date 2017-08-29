@@ -23,6 +23,8 @@ import com.liferay.layout.type.controller.asset.display.constants.AssetDisplayLa
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerPortletKeys;
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerWebKeys;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
@@ -157,12 +159,19 @@ public class AssetDisplayLayoutTypeController
 				assetDisplayTemplateId);
 
 		if (assetDisplayTemplate != null) {
-			long classNameId = _portal.getClassNameId(
-				AssetDisplayTemplate.class);
+			request.setAttribute(
+				AssetDisplayLayoutTypeControllerWebKeys.ASSET_DISPLAY_TEMPLATE,
+				assetDisplayTemplate);
 
-			DDMTemplate ddmTemplate = _ddmTemplateManager.fetchTemplate(
-				assetDisplayTemplate.getGroupId(), classNameId,
-				String.valueOf(assetDisplayTemplateId));
+			DDMTemplate ddmTemplate = null;
+
+			try {
+				ddmTemplate = _ddmTemplateManager.getTemplate(
+					assetDisplayTemplate.getDDMTemplateId());
+			}
+			catch (Exception e) {
+				_log.error(e, e);
+			}
 
 			request.setAttribute(WebKeys.TEMPLATE, ddmTemplate);
 
@@ -216,6 +225,9 @@ public class AssetDisplayLayoutTypeController
 				"${assetDisplayTemplateId}";
 
 	private static final String _VIEW_PAGE = "/layout/view/asset_display.jsp";
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AssetDisplayLayoutTypeController.class);
 
 	@Reference
 	private AssetDisplayTemplateLocalService _assetDisplayTemplateLocalService;
