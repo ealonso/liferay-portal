@@ -269,6 +269,20 @@ public interface AssetDisplayTemplateModel extends BaseModel<AssetDisplayTemplat
 	 */
 	public void setMain(boolean main);
 
+	/**
+	 * Returns the plid of this asset display template.
+	 *
+	 * @return the plid of this asset display template
+	 */
+	public long getPlid();
+
+	/**
+	 * Sets the plid of this asset display template.
+	 *
+	 * @param plid the plid of this asset display template
+	 */
+	public void setPlid(long plid);
+
 	@Override
 	public boolean isNew();
 
