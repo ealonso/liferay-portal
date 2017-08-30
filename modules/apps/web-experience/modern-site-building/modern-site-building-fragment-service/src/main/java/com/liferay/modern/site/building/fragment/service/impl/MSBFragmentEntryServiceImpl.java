@@ -120,6 +120,21 @@ public class MSBFragmentEntryServiceImpl
 	}
 
 	@Override
+	public MSBFragmentEntry fetchMSBFragmentEntry(long groupId, String name)
+		throws PortalException {
+
+		MSBFragmentEntry msbFragmentEntry =
+			msbFragmentEntryPersistence.fetchByG_N(groupId, name);
+
+		if (msbFragmentEntry != null) {
+			MSBFragmentEntryPermission.check(
+				getPermissionChecker(), msbFragmentEntry, ActionKeys.VIEW);
+		}
+
+		return msbFragmentEntry;
+	}
+
+	@Override
 	public int getMSBFragmentCollectionsCount(
 		long groupId, long msbFragmentCollectionId) {
 
