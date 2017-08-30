@@ -144,6 +144,21 @@ public class MSBFragmentEntryServiceSoap {
 		}
 	}
 
+	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap fetchMSBFragmentEntry(
+		long groupId, java.lang.String name) throws RemoteException {
+		try {
+			com.liferay.modern.site.building.fragment.model.MSBFragmentEntry returnValue =
+				MSBFragmentEntryServiceUtil.fetchMSBFragmentEntry(groupId, name);
+
+			return com.liferay.modern.site.building.fragment.model.MSBFragmentEntrySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static int getMSBFragmentCollectionsCount(long groupId,
 		long msbFragmentCollectionId) throws RemoteException {
 		try {

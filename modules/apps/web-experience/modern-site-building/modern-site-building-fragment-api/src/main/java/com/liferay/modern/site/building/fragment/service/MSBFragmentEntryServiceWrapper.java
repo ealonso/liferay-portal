@@ -72,6 +72,13 @@ public class MSBFragmentEntryServiceWrapper implements MSBFragmentEntryService,
 	}
 
 	@Override
+	public com.liferay.modern.site.building.fragment.model.MSBFragmentEntry fetchMSBFragmentEntry(
+		long groupId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _msbFragmentEntryService.fetchMSBFragmentEntry(groupId, name);
+	}
+
+	@Override
 	public int getMSBFragmentCollectionsCount(long groupId,
 		long msbFragmentCollectionId) {
 		return _msbFragmentEntryService.getMSBFragmentCollectionsCount(groupId,

@@ -75,6 +75,12 @@ public class MSBFragmentEntryServiceUtil {
 		return getService().fetchMSBFragmentEntry(msbFragmentEntryId);
 	}
 
+	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntry fetchMSBFragmentEntry(
+		long groupId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchMSBFragmentEntry(groupId, name);
+	}
+
 	public static int getMSBFragmentCollectionsCount(long groupId,
 		long msbFragmentCollectionId) {
 		return getService()

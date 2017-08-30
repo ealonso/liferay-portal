@@ -222,12 +222,45 @@ public class MSBFragmentEntryServiceHttp {
 		}
 	}
 
+	public static com.liferay.modern.site.building.fragment.model.MSBFragmentEntry fetchMSBFragmentEntry(
+		HttpPrincipal httpPrincipal, long groupId, java.lang.String name)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
+					"fetchMSBFragmentEntry",
+					_fetchMSBFragmentEntryParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
+					name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.modern.site.building.fragment.model.MSBFragmentEntry)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static int getMSBFragmentCollectionsCount(
 		HttpPrincipal httpPrincipal, long groupId, long msbFragmentCollectionId) {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getMSBFragmentCollectionsCount",
-					_getMSBFragmentCollectionsCountParameterTypes5);
+					_getMSBFragmentCollectionsCountParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					msbFragmentCollectionId);
@@ -256,7 +289,7 @@ public class MSBFragmentEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getMSBFragmentCollectionsCount",
-					_getMSBFragmentCollectionsCountParameterTypes6);
+					_getMSBFragmentCollectionsCountParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					msbFragmentCollectionId, name);
@@ -286,7 +319,7 @@ public class MSBFragmentEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getMSBFragmentEntries",
-					_getMSBFragmentEntriesParameterTypes7);
+					_getMSBFragmentEntriesParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					msbFragmentCollectionId, start, end);
@@ -321,7 +354,7 @@ public class MSBFragmentEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getMSBFragmentEntries",
-					_getMSBFragmentEntriesParameterTypes8);
+					_getMSBFragmentEntriesParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					msbFragmentCollectionId, start, end, orderByComparator);
@@ -356,7 +389,7 @@ public class MSBFragmentEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"getMSBFragmentEntries",
-					_getMSBFragmentEntriesParameterTypes9);
+					_getMSBFragmentEntriesParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					msbFragmentCollectionId, name, start, end, orderByComparator);
@@ -387,7 +420,7 @@ public class MSBFragmentEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MSBFragmentEntryServiceUtil.class,
 					"updateMSBFragmentEntry",
-					_updateMSBFragmentEntryParameterTypes10);
+					_updateMSBFragmentEntryParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					msbFragmentEntryId, name, css, html, js);
@@ -433,22 +466,25 @@ public class MSBFragmentEntryServiceHttp {
 	private static final Class<?>[] _fetchMSBFragmentEntryParameterTypes4 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _getMSBFragmentCollectionsCountParameterTypes5 =
-		new Class[] { long.class, long.class };
+	private static final Class<?>[] _fetchMSBFragmentEntryParameterTypes5 = new Class[] {
+			long.class, java.lang.String.class
+		};
 	private static final Class<?>[] _getMSBFragmentCollectionsCountParameterTypes6 =
+		new Class[] { long.class, long.class };
+	private static final Class<?>[] _getMSBFragmentCollectionsCountParameterTypes7 =
 		new Class[] { long.class, long.class, java.lang.String.class };
-	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes7 = new Class[] {
+	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes8 = new Class[] {
 			long.class, long.class, int.class, int.class
 		};
-	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes8 = new Class[] {
+	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes9 = new Class[] {
 			long.class, long.class, int.class, int.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
-	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes9 = new Class[] {
+	private static final Class<?>[] _getMSBFragmentEntriesParameterTypes10 = new Class[] {
 			long.class, long.class, java.lang.String.class, int.class, int.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
-	private static final Class<?>[] _updateMSBFragmentEntryParameterTypes10 = new Class[] {
+	private static final Class<?>[] _updateMSBFragmentEntryParameterTypes11 = new Class[] {
 			long.class, java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class
 		};
