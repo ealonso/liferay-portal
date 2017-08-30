@@ -32,6 +32,7 @@ import com.liferay.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.model.AssetTag;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -633,7 +634,11 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			queryConfig.setHighlightEnabled(false);
 			queryConfig.setScoreEnabled(false);
 
-			assetSearcher.setAssetEntryQuery(assetEntryQuery);
+			assetSearcher.setAssetEntryQuery(
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+						.class,
+					assetEntryQuery));
 
 			return assetSearcher.searchCount(searchContext);
 		}
@@ -1192,7 +1197,11 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		queryConfig.setHighlightEnabled(false);
 		queryConfig.setScoreEnabled(false);
 
-		assetSearcher.setAssetEntryQuery(assetEntryQuery);
+		assetSearcher.setAssetEntryQuery(
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+					.class,
+				assetEntryQuery));
 
 		return assetSearcher.search(searchContext);
 	}
