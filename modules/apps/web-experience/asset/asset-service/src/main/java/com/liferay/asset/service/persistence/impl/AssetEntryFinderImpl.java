@@ -16,10 +16,10 @@ package com.liferay.asset.service.persistence.impl;
 
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.impl.AssetEntryImpl;
 import com.liferay.asset.service.persistence.AssetEntryFinder;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
