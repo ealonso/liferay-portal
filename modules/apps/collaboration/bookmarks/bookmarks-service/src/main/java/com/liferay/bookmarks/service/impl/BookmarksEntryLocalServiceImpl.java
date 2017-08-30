@@ -14,8 +14,10 @@
 
 package com.liferay.bookmarks.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetLinkConstants;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetLinkLocalService;
 import com.liferay.bookmarks.configuration.BookmarksGroupServiceOverriddenConfiguration;
 import com.liferay.bookmarks.constants.BookmarksConstants;
 import com.liferay.bookmarks.constants.BookmarksPortletKeys;
@@ -27,6 +29,7 @@ import com.liferay.bookmarks.service.base.BookmarksEntryLocalServiceBaseImpl;
 import com.liferay.bookmarks.service.permission.BookmarksResourcePermissionChecker;
 import com.liferay.bookmarks.social.BookmarksActivityKeys;
 import com.liferay.bookmarks.util.comparator.EntryModifiedDateComparator;
+import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
@@ -889,6 +892,12 @@ public class BookmarksEntryLocalServiceImpl
 			throw new EntryURLException();
 		}
 	}
+
+	@BeanReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
+
+	@BeanReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
 
 	@ServiceReference(type = ConfigurationProvider.class)
 	protected ConfigurationProvider configurationProvider;
