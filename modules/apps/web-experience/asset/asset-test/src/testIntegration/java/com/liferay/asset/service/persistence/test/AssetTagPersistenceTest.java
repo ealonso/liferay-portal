@@ -213,6 +213,23 @@ public class AssetTagPersistenceTest {
 	}
 
 	@Test
+	public void testCountByName() throws Exception {
+		_persistence.countByName(StringPool.BLANK);
+
+		_persistence.countByName(StringPool.NULL);
+
+		_persistence.countByName((String)null);
+	}
+
+	@Test
+	public void testCountByNameArrayable() throws Exception {
+		_persistence.countByName(new String[] {
+				RandomTestUtil.randomString(), StringPool.BLANK, StringPool.NULL,
+				null, null
+			});
+	}
+
+	@Test
 	public void testCountByG_N() throws Exception {
 		_persistence.countByG_N(RandomTestUtil.nextLong(), StringPool.BLANK);
 
@@ -256,6 +273,12 @@ public class AssetTagPersistenceTest {
 	public void testFindAll() throws Exception {
 		_persistence.findAll(QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 			getOrderByComparator());
+	}
+
+	@Test
+	public void testFilterFindByGroupId() throws Exception {
+		_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, getOrderByComparator());
 	}
 
 	protected OrderByComparator<AssetTag> getOrderByComparator() {

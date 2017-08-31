@@ -35,8 +35,11 @@ import java.util.Objects;
  *
  * @author Brian Wing Shun Chan
  * @see AssetLink
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkWrapper implements AssetLink, ModelWrapper<AssetLink> {
 	public AssetLinkWrapper(AssetLink assetLink) {

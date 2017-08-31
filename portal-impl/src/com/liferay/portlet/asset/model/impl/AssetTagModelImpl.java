@@ -60,8 +60,11 @@ import java.util.Map;
  * @see AssetTagImpl
  * @see AssetTag
  * @see AssetTagModel
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @JSON(strict = true)
 @ProviderType
 public class AssetTagModelImpl extends BaseModelImpl<AssetTag>

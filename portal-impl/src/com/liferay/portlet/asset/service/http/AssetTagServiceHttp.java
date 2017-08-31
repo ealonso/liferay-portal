@@ -51,8 +51,11 @@ import com.liferay.portal.kernel.util.MethodKey;
  * @see AssetTagServiceSoap
  * @see HttpPrincipal
  * @see AssetTagServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetTagServiceHttp {
 	public static com.liferay.asset.kernel.model.AssetTag addTag(

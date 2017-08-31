@@ -45,8 +45,11 @@ import java.util.Map;
  * @see AssetEntry
  * @see com.liferay.portlet.asset.model.impl.AssetEntryImpl
  * @see com.liferay.portlet.asset.model.impl.AssetEntryModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.model.impl.AssetEntryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetEntryModel extends AttachedModel, BaseModel<AssetEntry>,
 	GroupedModel, LocalizedModel, ShardedModel {
