@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see AssetEntryService
  * @see com.liferay.portlet.asset.service.base.AssetEntryServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetEntryServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetEntryServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetEntryServiceUtil {
 	/*

@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.service.persistence.BasePersistence;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.persistence.impl.AssetTagPersistenceImpl
  * @see AssetTagUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetTagPersistence extends BasePersistence<AssetTag> {
 	/*

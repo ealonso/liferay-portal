@@ -16,9 +16,16 @@ package com.liferay.asset.service.http;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.service.AssetTagServiceUtil;
+
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
+import java.rmi.RemoteException;
+
 /**
  * Provides the SOAP utility for the
- * {@link com.liferay.asset.service.AssetTagServiceUtil} service utility. The
+ * {@link AssetTagServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it is difficult for SOAP to
  * support certain types.
@@ -53,9 +60,364 @@ import aQute.bnd.annotation.ProviderType;
  * @author Brian Wing Shun Chan
  * @see AssetTagServiceHttp
  * @see com.liferay.asset.model.AssetTagSoap
- * @see com.liferay.asset.service.AssetTagServiceUtil
+ * @see AssetTagServiceUtil
  * @generated
  */
 @ProviderType
 public class AssetTagServiceSoap {
+	public static com.liferay.asset.model.AssetTagSoap addTag(long groupId,
+		java.lang.String name,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.asset.model.AssetTag returnValue = AssetTagServiceUtil.addTag(groupId,
+					name, serviceContext);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteTag(long tagId) throws RemoteException {
+		try {
+			AssetTagServiceUtil.deleteTag(tagId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteTags(long[] tagIds) throws RemoteException {
+		try {
+			AssetTagServiceUtil.deleteTags(tagIds);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getGroupsTags(
+		long[] groupIds) throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getGroupsTags(groupIds);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getGroupTags(
+		long groupId) throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getGroupTags(groupId);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getGroupTags(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetTag> obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getGroupTags(groupId,
+					start, end, obc);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static int getGroupTagsCount(long groupId) throws RemoteException {
+		try {
+			int returnValue = AssetTagServiceUtil.getGroupTagsCount(groupId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagDisplay getGroupTagsDisplay(
+		long groupId, java.lang.String name, int start, int end)
+		throws RemoteException {
+		try {
+			com.liferay.asset.model.AssetTagDisplay returnValue = AssetTagServiceUtil.getGroupTagsDisplay(groupId,
+					name, start, end);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap getTag(long tagId)
+		throws RemoteException {
+		try {
+			com.liferay.asset.model.AssetTag returnValue = AssetTagServiceUtil.getTag(tagId);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(long groupId,
+		long classNameId, java.lang.String name) throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupId,
+					classNameId, name);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(long groupId,
+		long classNameId, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetTag> obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupId,
+					classNameId, name, start, end, obc);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(long groupId,
+		java.lang.String name, int start, int end) throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupId,
+					name, start, end);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(long groupId,
+		java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetTag> obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupId,
+					name, start, end, obc);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(
+		long[] groupIds, java.lang.String name, int start, int end)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupIds,
+					name, start, end);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(
+		long[] groupIds, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetTag> obc)
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(groupIds,
+					name, start, end, obc);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap[] getTags(
+		java.lang.String className, long classPK) throws RemoteException {
+		try {
+			java.util.List<com.liferay.asset.model.AssetTag> returnValue = AssetTagServiceUtil.getTags(className,
+					classPK);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static int getTagsCount(long groupId, java.lang.String name)
+		throws RemoteException {
+		try {
+			int returnValue = AssetTagServiceUtil.getTagsCount(groupId, name);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static int getVisibleAssetsTagsCount(long groupId, long classNameId,
+		java.lang.String name) throws RemoteException {
+		try {
+			int returnValue = AssetTagServiceUtil.getVisibleAssetsTagsCount(groupId,
+					classNameId, name);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static int getVisibleAssetsTagsCount(long groupId,
+		java.lang.String name) throws RemoteException {
+		try {
+			int returnValue = AssetTagServiceUtil.getVisibleAssetsTagsCount(groupId,
+					name);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void mergeTags(long fromTagId, long toTagId)
+		throws RemoteException {
+		try {
+			AssetTagServiceUtil.mergeTags(fromTagId, toTagId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void mergeTags(long[] fromTagIds, long toTagId)
+		throws RemoteException {
+		try {
+			AssetTagServiceUtil.mergeTags(fromTagIds, toTagId);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String search(long groupId, java.lang.String name,
+		int start, int end) throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = AssetTagServiceUtil.search(groupId,
+					name, start, end);
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String search(long[] groupIds,
+		java.lang.String name, int start, int end) throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = AssetTagServiceUtil.search(groupIds,
+					name, start, end);
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.model.AssetTagSoap updateTag(long tagId,
+		java.lang.String name,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.asset.model.AssetTag returnValue = AssetTagServiceUtil.updateTag(tagId,
+					name, serviceContext);
+
+			return com.liferay.asset.model.AssetTagSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(AssetTagServiceSoap.class);
 }
