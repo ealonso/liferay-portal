@@ -18,7 +18,6 @@ import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.impl.AssetEntryImpl;
 import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.service.persistence.AssetCategoryUtil;
 import com.liferay.asset.service.persistence.AssetEntryFinder;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
