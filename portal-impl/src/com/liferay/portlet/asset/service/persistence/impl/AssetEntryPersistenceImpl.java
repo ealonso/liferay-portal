@@ -76,8 +76,11 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @see AssetEntryPersistence
  * @see com.liferay.asset.kernel.service.persistence.AssetEntryUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.model.impl.AssetEntryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetEntryPersistenceImpl extends BasePersistenceImpl<AssetEntry>
 	implements AssetEntryPersistence {

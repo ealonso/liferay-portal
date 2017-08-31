@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.persistence.CompanyProvider;
@@ -1964,6 +1965,317 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	}
 
 	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByGroupId(long groupId) {
+		return filterFindByGroupId(groupId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByGroupId(long groupId, int start,
+		int end) {
+		return filterFindByGroupId(groupId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permissions to view where groupId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByGroupId(long groupId, int start,
+		int end, OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByGroupId(groupId, start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(3 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the asset categories before and after the current asset category in the ordered set of asset categories that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param categoryId the primary key of the current asset category
+	 * @param groupId the group ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset category
+	 * @throws NoSuchCategoryException if a asset category with the primary key could not be found
+	 */
+	@Override
+	public AssetCategory[] filterFindByGroupId_PrevAndNext(long categoryId,
+		long groupId, OrderByComparator<AssetCategory> orderByComparator)
+		throws NoSuchCategoryException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByGroupId_PrevAndNext(categoryId, groupId,
+				orderByComparator);
+		}
+
+		AssetCategory assetCategory = findByPrimaryKey(categoryId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AssetCategory[] array = new AssetCategoryImpl[3];
+
+			array[0] = filterGetByGroupId_PrevAndNext(session, assetCategory,
+					groupId, orderByComparator, true);
+
+			array[1] = assetCategory;
+
+			array[2] = filterGetByGroupId_PrevAndNext(session, assetCategory,
+					groupId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AssetCategory filterGetByGroupId_PrevAndNext(Session session,
+		AssetCategory assetCategory, long groupId,
+		OrderByComparator<AssetCategory> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(assetCategory);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AssetCategory> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Removes all the asset categories where groupId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
@@ -2025,6 +2337,54 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByGroupId(long groupId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByGroupId(groupId);
+		}
+
+		StringBundler query = new StringBundler(2);
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "assetCategory.groupId = ?";
@@ -3533,6 +3893,478 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	}
 
 	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyId the vocabulary ID
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId, long vocabularyId) {
+		return filterFindByG_V(groupId, vocabularyId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId, long vocabularyId,
+		int start, int end) {
+		return filterFindByG_V(groupId, vocabularyId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permissions to view where groupId = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId, long vocabularyId,
+		int start, int end, OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_V(groupId, vocabularyId, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(vocabularyId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the asset categories before and after the current asset category in the ordered set of asset categories that the user has permission to view where groupId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param categoryId the primary key of the current asset category
+	 * @param groupId the group ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset category
+	 * @throws NoSuchCategoryException if a asset category with the primary key could not be found
+	 */
+	@Override
+	public AssetCategory[] filterFindByG_V_PrevAndNext(long categoryId,
+		long groupId, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator)
+		throws NoSuchCategoryException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_V_PrevAndNext(categoryId, groupId, vocabularyId,
+				orderByComparator);
+		}
+
+		AssetCategory assetCategory = findByPrimaryKey(categoryId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AssetCategory[] array = new AssetCategoryImpl[3];
+
+			array[0] = filterGetByG_V_PrevAndNext(session, assetCategory,
+					groupId, vocabularyId, orderByComparator, true);
+
+			array[1] = assetCategory;
+
+			array[2] = filterGetByG_V_PrevAndNext(session, assetCategory,
+					groupId, vocabularyId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AssetCategory filterGetByG_V_PrevAndNext(Session session,
+		AssetCategory assetCategory, long groupId, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(5);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(vocabularyId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(assetCategory);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AssetCategory> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and vocabularyId = any &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyIds the vocabulary IDs
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId,
+		long[] vocabularyIds) {
+		return filterFindByG_V(groupId, vocabularyIds, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and vocabularyId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyIds the vocabulary IDs
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId,
+		long[] vocabularyIds, int start, int end) {
+		return filterFindByG_V(groupId, vocabularyIds, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permission to view where groupId = &#63; and vocabularyId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyIds the vocabulary IDs
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_V(long groupId,
+		long[] vocabularyIds, int start, int end,
+		OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_V(groupId, vocabularyIds, start, end,
+				orderByComparator);
+		}
+
+		if (vocabularyIds == null) {
+			vocabularyIds = new long[0];
+		}
+		else if (vocabularyIds.length > 1) {
+			vocabularyIds = ArrayUtil.unique(vocabularyIds);
+
+			Arrays.sort(vocabularyIds);
+		}
+
+		StringBundler query = new StringBundler();
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_V_GROUPID_2);
+
+		if (vocabularyIds.length > 0) {
+			query.append(StringPool.OPEN_PARENTHESIS);
+
+			query.append(_FINDER_COLUMN_G_V_VOCABULARYID_7);
+
+			query.append(StringUtil.merge(vocabularyIds));
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+		}
+
+		query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),
+			query.index() - 1);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
 	 * Returns all the asset categories where groupId = &#63; and vocabularyId = any &#63;.
 	 *
 	 * <p>
@@ -3880,6 +4712,132 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyId the vocabulary ID
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_V(long groupId, long vocabularyId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_V(groupId, vocabularyId);
+		}
+
+		StringBundler query = new StringBundler(3);
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_V_VOCABULARYID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(vocabularyId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and vocabularyId = any &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param vocabularyIds the vocabulary IDs
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_V(long groupId, long[] vocabularyIds) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_V(groupId, vocabularyIds);
+		}
+
+		if (vocabularyIds == null) {
+			vocabularyIds = new long[0];
+		}
+		else if (vocabularyIds.length > 1) {
+			vocabularyIds = ArrayUtil.unique(vocabularyIds);
+
+			Arrays.sort(vocabularyIds);
+		}
+
+		StringBundler query = new StringBundler();
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_V_GROUPID_2);
+
+		if (vocabularyIds.length > 0) {
+			query.append(StringPool.OPEN_PARENTHESIS);
+
+			query.append(_FINDER_COLUMN_G_V_VOCABULARYID_7);
+
+			query.append(StringUtil.merge(vocabularyIds));
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+		}
+
+		query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),
+			query.index() - 1);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_G_V_GROUPID_2 = "assetCategory.groupId = ? AND ";
@@ -6116,6 +7074,349 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	}
 
 	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param vocabularyId the vocabulary ID
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_V(long groupId,
+		long parentCategoryId, long vocabularyId) {
+		return filterFindByG_P_V(groupId, parentCategoryId, vocabularyId,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_V(long groupId,
+		long parentCategoryId, long vocabularyId, int start, int end) {
+		return filterFindByG_P_V(groupId, parentCategoryId, vocabularyId,
+			start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permissions to view where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_V(long groupId,
+		long parentCategoryId, long vocabularyId, int start, int end,
+		OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_P_V(groupId, parentCategoryId, vocabularyId, start,
+				end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_PARENTCATEGORYID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(parentCategoryId);
+
+			qPos.add(vocabularyId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the asset categories before and after the current asset category in the ordered set of asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param categoryId the primary key of the current asset category
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param vocabularyId the vocabulary ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset category
+	 * @throws NoSuchCategoryException if a asset category with the primary key could not be found
+	 */
+	@Override
+	public AssetCategory[] filterFindByG_P_V_PrevAndNext(long categoryId,
+		long groupId, long parentCategoryId, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator)
+		throws NoSuchCategoryException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_P_V_PrevAndNext(categoryId, groupId,
+				parentCategoryId, vocabularyId, orderByComparator);
+		}
+
+		AssetCategory assetCategory = findByPrimaryKey(categoryId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AssetCategory[] array = new AssetCategoryImpl[3];
+
+			array[0] = filterGetByG_P_V_PrevAndNext(session, assetCategory,
+					groupId, parentCategoryId, vocabularyId, orderByComparator,
+					true);
+
+			array[1] = assetCategory;
+
+			array[2] = filterGetByG_P_V_PrevAndNext(session, assetCategory,
+					groupId, parentCategoryId, vocabularyId, orderByComparator,
+					false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AssetCategory filterGetByG_P_V_PrevAndNext(Session session,
+		AssetCategory assetCategory, long groupId, long parentCategoryId,
+		long vocabularyId, OrderByComparator<AssetCategory> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(7 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_PARENTCATEGORYID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(parentCategoryId);
+
+		qPos.add(vocabularyId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(assetCategory);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AssetCategory> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Removes all the asset categories where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
@@ -6194,6 +7495,65 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param vocabularyId the vocabulary ID
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_P_V(long groupId, long parentCategoryId,
+		long vocabularyId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_P_V(groupId, parentCategoryId, vocabularyId);
+		}
+
+		StringBundler query = new StringBundler(4);
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_P_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_PARENTCATEGORYID_2);
+
+		query.append(_FINDER_COLUMN_G_P_V_VOCABULARYID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(parentCategoryId);
+
+			qPos.add(vocabularyId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_G_P_V_GROUPID_2 = "assetCategory.groupId = ? AND ";
@@ -6722,6 +8082,544 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	}
 
 	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long vocabularyId) {
+		return filterFindByG_LikeN_V(groupId, name, vocabularyId,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long vocabularyId, int start, int end) {
+		return filterFindByG_LikeN_V(groupId, name, vocabularyId, start, end,
+			null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permissions to view where groupId = &#63; and name LIKE &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long vocabularyId, int start, int end,
+		OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_LikeN_V(groupId, name, vocabularyId, start, end,
+				orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_GROUPID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			if (bindName) {
+				qPos.add(StringUtil.toLowerCase(name));
+			}
+
+			qPos.add(vocabularyId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the asset categories before and after the current asset category in the ordered set of asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = &#63;.
+	 *
+	 * @param categoryId the primary key of the current asset category
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset category
+	 * @throws NoSuchCategoryException if a asset category with the primary key could not be found
+	 */
+	@Override
+	public AssetCategory[] filterFindByG_LikeN_V_PrevAndNext(long categoryId,
+		long groupId, String name, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator)
+		throws NoSuchCategoryException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_LikeN_V_PrevAndNext(categoryId, groupId, name,
+				vocabularyId, orderByComparator);
+		}
+
+		AssetCategory assetCategory = findByPrimaryKey(categoryId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AssetCategory[] array = new AssetCategoryImpl[3];
+
+			array[0] = filterGetByG_LikeN_V_PrevAndNext(session, assetCategory,
+					groupId, name, vocabularyId, orderByComparator, true);
+
+			array[1] = assetCategory;
+
+			array[2] = filterGetByG_LikeN_V_PrevAndNext(session, assetCategory,
+					groupId, name, vocabularyId, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AssetCategory filterGetByG_LikeN_V_PrevAndNext(Session session,
+		AssetCategory assetCategory, long groupId, String name,
+		long vocabularyId, OrderByComparator<AssetCategory> orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(7 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(6);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_GROUPID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		if (bindName) {
+			qPos.add(StringUtil.toLowerCase(name));
+		}
+
+		qPos.add(vocabularyId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(assetCategory);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AssetCategory> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = any &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyIds the vocabulary IDs
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long[] vocabularyIds) {
+		return filterFindByG_LikeN_V(groupId, name, vocabularyIds,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyIds the vocabulary IDs
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long[] vocabularyIds, int start, int end) {
+		return filterFindByG_LikeN_V(groupId, name, vocabularyIds, start, end,
+			null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = any &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyIds the vocabulary IDs
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_LikeN_V(long groupId, String name,
+		long[] vocabularyIds, int start, int end,
+		OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_LikeN_V(groupId, name, vocabularyIds, start, end,
+				orderByComparator);
+		}
+
+		if (vocabularyIds == null) {
+			vocabularyIds = new long[0];
+		}
+		else if (vocabularyIds.length > 1) {
+			vocabularyIds = ArrayUtil.unique(vocabularyIds);
+
+			Arrays.sort(vocabularyIds);
+		}
+
+		StringBundler query = new StringBundler();
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_GROUPID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_2);
+		}
+
+		if (vocabularyIds.length > 0) {
+			query.append(StringPool.OPEN_PARENTHESIS);
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_VOCABULARYID_7);
+
+			query.append(StringUtil.merge(vocabularyIds));
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+		}
+
+		query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),
+			query.index() - 1);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			if (bindName) {
+				qPos.add(StringUtil.toLowerCase(name));
+			}
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
 	 * Returns all the asset categories where groupId = &#63; and name LIKE &#63; and vocabularyId = any &#63;.
 	 *
 	 * <p>
@@ -7139,6 +9037,172 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_LikeN_V(long groupId, String name,
+		long vocabularyId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_LikeN_V(groupId, name, vocabularyId);
+		}
+
+		StringBundler query = new StringBundler(4);
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_GROUPID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_VOCABULARYID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			if (bindName) {
+				qPos.add(StringUtil.toLowerCase(name));
+			}
+
+			qPos.add(vocabularyId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and name LIKE &#63; and vocabularyId = any &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param name the name
+	 * @param vocabularyIds the vocabulary IDs
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_LikeN_V(long groupId, String name,
+		long[] vocabularyIds) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_LikeN_V(groupId, name, vocabularyIds);
+		}
+
+		if (vocabularyIds == null) {
+			vocabularyIds = new long[0];
+		}
+		else if (vocabularyIds.length > 1) {
+			vocabularyIds = ArrayUtil.unique(vocabularyIds);
+
+			Arrays.sort(vocabularyIds);
+		}
+
+		StringBundler query = new StringBundler();
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_LIKEN_V_GROUPID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_NAME_2);
+		}
+
+		if (vocabularyIds.length > 0) {
+			query.append(StringPool.OPEN_PARENTHESIS);
+
+			query.append(_FINDER_COLUMN_G_LIKEN_V_VOCABULARYID_7);
+
+			query.append(StringUtil.merge(vocabularyIds));
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+
+			query.append(StringPool.CLOSE_PARENTHESIS);
+		}
+
+		query.setStringAt(removeConjunction(query.stringAt(query.index() - 1)),
+			query.index() - 1);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			if (bindName) {
+				qPos.add(StringUtil.toLowerCase(name));
+			}
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_G_LIKEN_V_GROUPID_2 = "assetCategory.groupId = ? AND ";
@@ -8004,6 +10068,390 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	}
 
 	/**
+	 * Returns all the asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @return the matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_N_V(long groupId,
+		long parentCategoryId, String name, long vocabularyId) {
+		return filterFindByG_P_N_V(groupId, parentCategoryId, name,
+			vocabularyId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @return the range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_N_V(long groupId,
+		long parentCategoryId, String name, long vocabularyId, int start,
+		int end) {
+		return filterFindByG_P_N_V(groupId, parentCategoryId, name,
+			vocabularyId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the asset categories that the user has permissions to view where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetCategoryModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param start the lower bound of the range of asset categories
+	 * @param end the upper bound of the range of asset categories (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public List<AssetCategory> filterFindByG_P_N_V(long groupId,
+		long parentCategoryId, String name, long vocabularyId, int start,
+		int end, OrderByComparator<AssetCategory> orderByComparator) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_P_N_V(groupId, parentCategoryId, name, vocabularyId,
+				start, end, orderByComparator);
+		}
+
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 2));
+		}
+		else {
+			query = new StringBundler(7);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_N_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_N_V_PARENTCATEGORYID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_N_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			if (getDB().isSupportsInlineDistinct()) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator, true);
+			}
+			else {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_TABLE,
+					orderByComparator, true);
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			if (getDB().isSupportsInlineDistinct()) {
+				q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+			}
+			else {
+				q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+			}
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(parentCategoryId);
+
+			if (bindName) {
+				qPos.add(name);
+			}
+
+			qPos.add(vocabularyId);
+
+			return (List<AssetCategory>)QueryUtil.list(q, getDialect(), start,
+				end);
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	/**
+	 * Returns the asset categories before and after the current asset category in the ordered set of asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param categoryId the primary key of the current asset category
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next asset category
+	 * @throws NoSuchCategoryException if a asset category with the primary key could not be found
+	 */
+	@Override
+	public AssetCategory[] filterFindByG_P_N_V_PrevAndNext(long categoryId,
+		long groupId, long parentCategoryId, String name, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator)
+		throws NoSuchCategoryException {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return findByG_P_N_V_PrevAndNext(categoryId, groupId,
+				parentCategoryId, name, vocabularyId, orderByComparator);
+		}
+
+		AssetCategory assetCategory = findByPrimaryKey(categoryId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AssetCategory[] array = new AssetCategoryImpl[3];
+
+			array[0] = filterGetByG_P_N_V_PrevAndNext(session, assetCategory,
+					groupId, parentCategoryId, name, vocabularyId,
+					orderByComparator, true);
+
+			array[1] = assetCategory;
+
+			array[2] = filterGetByG_P_N_V_PrevAndNext(session, assetCategory,
+					groupId, parentCategoryId, name, vocabularyId,
+					orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AssetCategory filterGetByG_P_N_V_PrevAndNext(Session session,
+		AssetCategory assetCategory, long groupId, long parentCategoryId,
+		String name, long vocabularyId,
+		OrderByComparator<AssetCategory> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(8 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(7);
+		}
+
+		if (getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_WHERE);
+		}
+		else {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_N_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_N_V_PARENTCATEGORYID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_N_V_VOCABULARYID_2);
+
+		if (!getDB().isSupportsInlineDistinct()) {
+			query.append(_FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				if (getDB().isSupportsInlineDistinct()) {
+					query.append(_ORDER_BY_ENTITY_ALIAS);
+				}
+				else {
+					query.append(_ORDER_BY_ENTITY_TABLE);
+				}
+
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			if (getDB().isSupportsInlineDistinct()) {
+				query.append(AssetCategoryModelImpl.ORDER_BY_JPQL);
+			}
+			else {
+				query.append(AssetCategoryModelImpl.ORDER_BY_SQL);
+			}
+		}
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		if (getDB().isSupportsInlineDistinct()) {
+			q.addEntity(_FILTER_ENTITY_ALIAS, AssetCategoryImpl.class);
+		}
+		else {
+			q.addEntity(_FILTER_ENTITY_TABLE, AssetCategoryImpl.class);
+		}
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(parentCategoryId);
+
+		if (bindName) {
+			qPos.add(name);
+		}
+
+		qPos.add(vocabularyId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(assetCategory);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AssetCategory> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Removes all the asset categories where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
@@ -8102,6 +10550,84 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 		}
 
 		return count.intValue();
+	}
+
+	/**
+	 * Returns the number of asset categories that the user has permission to view where groupId = &#63; and parentCategoryId = &#63; and name = &#63; and vocabularyId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param parentCategoryId the parent category ID
+	 * @param name the name
+	 * @param vocabularyId the vocabulary ID
+	 * @return the number of matching asset categories that the user has permission to view
+	 */
+	@Override
+	public int filterCountByG_P_N_V(long groupId, long parentCategoryId,
+		String name, long vocabularyId) {
+		if (!InlineSQLHelperUtil.isEnabled(groupId)) {
+			return countByG_P_N_V(groupId, parentCategoryId, name, vocabularyId);
+		}
+
+		StringBundler query = new StringBundler(5);
+
+		query.append(_FILTER_SQL_COUNT_ASSETCATEGORY_WHERE);
+
+		query.append(_FINDER_COLUMN_G_P_N_V_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_G_P_N_V_PARENTCATEGORYID_2);
+
+		boolean bindName = false;
+
+		if (name == null) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_1);
+		}
+		else if (name.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_3);
+		}
+		else {
+			bindName = true;
+
+			query.append(_FINDER_COLUMN_G_P_N_V_NAME_2);
+		}
+
+		query.append(_FINDER_COLUMN_G_P_N_V_VOCABULARYID_2);
+
+		String sql = InlineSQLHelperUtil.replacePermissionCheck(query.toString(),
+				AssetCategory.class.getName(),
+				_FILTER_ENTITY_TABLE_FILTER_PK_COLUMN, groupId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			SQLQuery q = session.createSynchronizedSQLQuery(sql);
+
+			q.addScalar(COUNT_COLUMN_NAME,
+				com.liferay.portal.kernel.dao.orm.Type.LONG);
+
+			QueryPos qPos = QueryPos.getInstance(q);
+
+			qPos.add(groupId);
+
+			qPos.add(parentCategoryId);
+
+			if (bindName) {
+				qPos.add(name);
+			}
+
+			qPos.add(vocabularyId);
+
+			Long count = (Long)q.uniqueResult();
+
+			return count.intValue();
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
 	}
 
 	private static final String _FINDER_COLUMN_G_P_N_V_GROUPID_2 = "assetCategory.groupId = ? AND ";
@@ -9838,7 +12364,17 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	private static final String _SQL_SELECT_ASSETCATEGORY_WHERE = "SELECT assetCategory FROM AssetCategory assetCategory WHERE ";
 	private static final String _SQL_COUNT_ASSETCATEGORY = "SELECT COUNT(assetCategory) FROM AssetCategory assetCategory";
 	private static final String _SQL_COUNT_ASSETCATEGORY_WHERE = "SELECT COUNT(assetCategory) FROM AssetCategory assetCategory WHERE ";
+	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "assetCategory.categoryId";
+	private static final String _FILTER_SQL_SELECT_ASSETCATEGORY_WHERE = "SELECT DISTINCT {assetCategory.*} FROM AssetCategory assetCategory WHERE ";
+	private static final String _FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_1 =
+		"SELECT {AssetCategory.*} FROM (SELECT DISTINCT assetCategory.categoryId FROM AssetCategory assetCategory WHERE ";
+	private static final String _FILTER_SQL_SELECT_ASSETCATEGORY_NO_INLINE_DISTINCT_WHERE_2 =
+		") TEMP_TABLE INNER JOIN AssetCategory ON TEMP_TABLE.categoryId = AssetCategory.categoryId";
+	private static final String _FILTER_SQL_COUNT_ASSETCATEGORY_WHERE = "SELECT COUNT(DISTINCT assetCategory.categoryId) AS COUNT_VALUE FROM AssetCategory assetCategory WHERE ";
+	private static final String _FILTER_ENTITY_ALIAS = "assetCategory";
+	private static final String _FILTER_ENTITY_TABLE = "AssetCategory";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "assetCategory.";
+	private static final String _ORDER_BY_ENTITY_TABLE = "AssetCategory.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No AssetCategory exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No AssetCategory exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(AssetCategoryPersistenceImpl.class);

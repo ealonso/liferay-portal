@@ -58,8 +58,11 @@ import javax.sql.DataSource;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.impl.AssetEntryServiceImpl
  * @see com.liferay.asset.kernel.service.AssetEntryServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetEntryServiceImpl}
  * @generated
  */
+@Deprecated
 public abstract class AssetEntryServiceBaseImpl extends BaseServiceImpl
 	implements AssetEntryService, IdentifiableOSGiService {
 	/*
