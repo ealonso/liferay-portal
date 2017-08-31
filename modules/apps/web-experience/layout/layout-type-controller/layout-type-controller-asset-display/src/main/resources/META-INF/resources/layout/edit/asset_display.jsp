@@ -15,3 +15,5 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<liferay-ui:message key="layout.types.asset_display.description" />
