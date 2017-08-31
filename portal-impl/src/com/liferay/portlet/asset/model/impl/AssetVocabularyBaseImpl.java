@@ -29,8 +29,11 @@ import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
  * @author Brian Wing Shun Chan
  * @see AssetVocabularyImpl
  * @see AssetVocabulary
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetVocabularyImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public abstract class AssetVocabularyBaseImpl extends AssetVocabularyModelImpl
 	implements AssetVocabulary {

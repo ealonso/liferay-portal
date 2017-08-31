@@ -27,8 +27,11 @@ import com.liferay.portal.kernel.util.Accessor;
  * @see AssetLinkModel
  * @see com.liferay.portlet.asset.model.impl.AssetLinkImpl
  * @see com.liferay.portlet.asset.model.impl.AssetLinkModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ImplementationClassName("com.liferay.portlet.asset.model.impl.AssetLinkImpl")
 @ProviderType
 public interface AssetLink extends AssetLinkModel, PersistedModel {

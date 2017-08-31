@@ -29,8 +29,11 @@ import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
  * @author Brian Wing Shun Chan
  * @see AssetTagImpl
  * @see AssetTag
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public abstract class AssetTagBaseImpl extends AssetTagModelImpl
 	implements AssetTag {

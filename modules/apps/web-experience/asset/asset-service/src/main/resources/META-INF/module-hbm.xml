@@ -64,8 +64,8 @@
 		<property name="expirationDate" type="org.hibernate.type.TimestampType" />
 		<property name="mimeType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="summary" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringClobType" />
+		<property name="summary" type="com.liferay.portal.dao.orm.hibernate.StringClobType" />
 		<property name="url" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="layoutUuid" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="height" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />

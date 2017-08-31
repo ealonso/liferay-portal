@@ -33,8 +33,11 @@ import java.util.Date;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.persistence.impl.AssetEntryPersistenceImpl
  * @see AssetEntryUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetEntryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetEntryPersistence extends BasePersistence<AssetEntry> {
 	/*

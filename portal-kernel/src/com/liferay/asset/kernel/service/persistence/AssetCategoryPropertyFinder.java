@@ -18,8 +18,11 @@ import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.service.persistence.impl.AssetCategoryPropertyFinderImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetCategoryPropertyFinder {
 	public int countByG_K(long groupId, java.lang.String key);

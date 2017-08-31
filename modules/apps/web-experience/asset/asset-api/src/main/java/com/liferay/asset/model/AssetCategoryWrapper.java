@@ -190,6 +190,12 @@ public class AssetCategoryWrapper implements AssetCategory,
 	}
 
 	@Override
+	public java.util.List<AssetCategory> getAncestors()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getAncestors();
+	}
+
+	@Override
 	public java.lang.String[] getAvailableLanguageIds() {
 		return _assetCategory.getAvailableLanguageIds();
 	}
@@ -362,6 +368,11 @@ public class AssetCategoryWrapper implements AssetCategory,
 		return _assetCategory.getName();
 	}
 
+	@Override
+	public AssetCategory getParentCategory() {
+		return _assetCategory.getParentCategory();
+	}
+
 	/**
 	* Returns the parent category ID of this asset category.
 	*
@@ -370,6 +381,18 @@ public class AssetCategoryWrapper implements AssetCategory,
 	@Override
 	public long getParentCategoryId() {
 		return _assetCategory.getParentCategoryId();
+	}
+
+	@Override
+	public java.lang.String getPath(java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getPath(locale);
+	}
+
+	@Override
+	public java.lang.String getPath(java.util.Locale locale, boolean reverse)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetCategory.getPath(locale, reverse);
 	}
 
 	/**
@@ -542,6 +565,11 @@ public class AssetCategoryWrapper implements AssetCategory,
 	@Override
 	public boolean isNew() {
 		return _assetCategory.isNew();
+	}
+
+	@Override
+	public boolean isRootCategory() {
+		return _assetCategory.isRootCategory();
 	}
 
 	@Override
