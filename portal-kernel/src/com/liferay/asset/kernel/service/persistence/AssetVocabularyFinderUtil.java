@@ -21,8 +21,11 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.service.persistence.impl.AssetVocabularyFinderImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetVocabularyFinderUtil {
 	public static int countByG_N(long groupId, java.lang.String name) {

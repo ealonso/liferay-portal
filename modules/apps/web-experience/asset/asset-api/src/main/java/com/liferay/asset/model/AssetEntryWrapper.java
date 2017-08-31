@@ -264,8 +264,28 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	}
 
 	@Override
+	public com.liferay.asset.kernel.model.AssetRenderer<?> getAssetRenderer() {
+		return _assetEntry.getAssetRenderer();
+	}
+
+	@Override
+	public com.liferay.asset.kernel.model.AssetRendererFactory<?> getAssetRendererFactory() {
+		return _assetEntry.getAssetRendererFactory();
+	}
+
+	@Override
 	public java.lang.String[] getAvailableLanguageIds() {
 		return _assetEntry.getAvailableLanguageIds();
+	}
+
+	@Override
+	public java.util.List<AssetCategory> getCategories() {
+		return _assetEntry.getCategories();
+	}
+
+	@Override
+	public long[] getCategoryIds() {
+		return _assetEntry.getCategoryIds();
 	}
 
 	/**
@@ -637,6 +657,16 @@ public class AssetEntryWrapper implements AssetEntry, ModelWrapper<AssetEntry> {
 	@Override
 	public Map<java.util.Locale, java.lang.String> getSummaryMap() {
 		return _assetEntry.getSummaryMap();
+	}
+
+	@Override
+	public java.lang.String[] getTagNames() {
+		return _assetEntry.getTagNames();
+	}
+
+	@Override
+	public java.util.List<AssetTag> getTags() {
+		return _assetEntry.getTags();
 	}
 
 	/**
