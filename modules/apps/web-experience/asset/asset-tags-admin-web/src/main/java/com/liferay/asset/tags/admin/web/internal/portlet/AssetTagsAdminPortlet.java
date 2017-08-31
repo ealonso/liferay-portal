@@ -14,13 +14,13 @@
 
 package com.liferay.asset.tags.admin.web.internal.portlet;
 
+import com.liferay.asset.exception.AssetTagException;
+import com.liferay.asset.exception.DuplicateTagException;
+import com.liferay.asset.exception.NoSuchTagException;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.AssetTagService;
 import com.liferay.asset.tags.admin.web.internal.constants.AssetTagsAdminPortletKeys;
-import com.liferay.asset.tags.exception.AssetTagException;
-import com.liferay.asset.tags.exception.DuplicateTagException;
-import com.liferay.asset.tags.exception.NoSuchTagException;
-import com.liferay.asset.tags.model.AssetTag;
-import com.liferay.asset.tags.service.AssetTagLocalService;
-import com.liferay.asset.tags.service.AssetTagService;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;

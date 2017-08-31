@@ -14,7 +14,7 @@
 
 package com.liferay.asset.categories.admin.web.internal.portlet.configuration.icon;
 
-import com.liferay.asset.categories.service.permission.AssetCategoriesPermission;
+import com.liferay.asset.service.permission.AssetCategoriesPermission;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;

@@ -14,18 +14,18 @@
 
 package com.liferay.asset.publisher.web.internal.portlet.template;
 
-import com.liferay.asset.categories.service.AssetCategoryLocalService;
-import com.liferay.asset.categories.service.AssetCategoryService;
-import com.liferay.asset.categories.service.AssetVocabularyLocalService;
-import com.liferay.asset.categories.service.AssetVocabularyService;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.util.AssetPublisherHelper;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetCategoryService;
 import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.asset.service.AssetEntryService;
-import com.liferay.asset.tags.service.AssetTagLocalService;
-import com.liferay.asset.tags.service.AssetTagService;
-import com.liferay.asset.tags.service.AssetTagStatsLocalService;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.AssetTagService;
+import com.liferay.asset.service.AssetTagStatsLocalService;
+import com.liferay.asset.service.AssetVocabularyLocalService;
+import com.liferay.asset.service.AssetVocabularyService;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portletdisplaytemplate.BasePortletDisplayTemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandler;

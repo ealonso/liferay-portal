@@ -95,8 +95,7 @@ public class ModularAssetVocabularyLocalServiceWrapper
 
 		_assetVocabularyLocalService.addVocabularyResources(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetVocabulary.class,
-				vocabulary),
+				com.liferay.asset.model.AssetVocabulary.class, vocabulary),
 			addGroupPermissions, addGuestPermissions);
 	}
 
@@ -107,8 +106,7 @@ public class ModularAssetVocabularyLocalServiceWrapper
 
 		_assetVocabularyLocalService.addVocabularyResources(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetVocabulary.class,
-				vocabulary),
+				com.liferay.asset.model.AssetVocabulary.class, vocabulary),
 			modelPermissions);
 	}
 
@@ -125,7 +123,7 @@ public class ModularAssetVocabularyLocalServiceWrapper
 			AssetVocabulary.class,
 			_assetVocabularyLocalService.deleteVocabulary(
 				ModelAdapterUtil.adapt(
-					com.liferay.asset.categories.model.AssetVocabulary.class,
+					com.liferay.asset.model.AssetVocabulary.class,
 					vocabulary)));
 	}
 
@@ -272,7 +270,7 @@ public class ModularAssetVocabularyLocalServiceWrapper
 		throws PortalException {
 
 		BaseModelSearchResult
-			<com.liferay.asset.categories.model.AssetVocabulary>
+			<com.liferay.asset.model.AssetVocabulary>
 				baseModelSearchResult =
 					_assetVocabularyLocalService.searchVocabularies(
 						companyId, groupId, title, start, end, sort);

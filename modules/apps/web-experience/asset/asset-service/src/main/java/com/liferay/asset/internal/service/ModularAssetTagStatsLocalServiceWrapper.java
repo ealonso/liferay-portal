@@ -55,7 +55,7 @@ public class ModularAssetTagStatsLocalServiceWrapper
 	public void deleteTagStats(AssetTagStats tagStats) {
 		_assetTagStatsLocalService.deleteTagStats(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.tags.model.AssetTagStats.class, tagStats));
+				com.liferay.asset.model.AssetTagStats.class, tagStats));
 	}
 
 	@Override

@@ -635,8 +635,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 			assetSearcher.setAssetEntryQuery(
 				ModelAdapterUtil.adapt(
-					com.liferay.asset.kernel.service.persistence.AssetEntryQuery
-						.class,
+					com.liferay.asset.kernel.service.persistence.
+						AssetEntryQuery.class,
 					assetEntryQuery));
 
 			return assetSearcher.searchCount(searchContext);
@@ -1206,8 +1206,8 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetSearcher.setAssetEntryQuery(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.kernel.service.persistence.AssetEntryQuery
-					.class,
+				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
+					class,
 				assetEntryQuery));
 
 		return assetSearcher.search(searchContext);

@@ -88,8 +88,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 
 		_assetCategoryLocalService.addCategoryResources(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetCategory.class,
-				category),
+				com.liferay.asset.model.AssetCategory.class, category),
 			addGroupPermissions, addGuestPermissions);
 	}
 
@@ -100,8 +99,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 
 		_assetCategoryLocalService.addCategoryResources(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetCategory.class,
-				category),
+				com.liferay.asset.model.AssetCategory.class, category),
 			modelPermissions);
 	}
 
@@ -111,8 +109,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 
 		_assetCategoryLocalService.deleteCategories(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetCategory.class,
-				categories));
+				com.liferay.asset.model.AssetCategory.class, categories));
 	}
 
 	@Override
@@ -128,8 +125,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 			AssetCategory.class,
 			_assetCategoryLocalService.deleteAssetCategory(
 				ModelAdapterUtil.adapt(
-					com.liferay.asset.categories.model.AssetCategory.class,
-					category)));
+					com.liferay.asset.model.AssetCategory.class, category)));
 	}
 
 	@Override
@@ -141,8 +137,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 			AssetCategory.class,
 			_assetCategoryLocalService.deleteCategory(
 				ModelAdapterUtil.adapt(
-					com.liferay.asset.categories.model.AssetCategory.class,
-					category),
+					com.liferay.asset.model.AssetCategory.class, category),
 				skipRebuildTree));
 	}
 
@@ -382,7 +377,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 		throws PortalException {
 
 		BaseModelSearchResult
-			<com.liferay.asset.categories.model.AssetCategory>
+			<com.liferay.asset.model.AssetCategory>
 				baseModelSearchResult =
 					_assetCategoryLocalService.searchCategories(
 						companyId, groupIds, title, vocabularyIds, start, end);
@@ -400,7 +395,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 		throws PortalException {
 
 		BaseModelSearchResult
-			<com.liferay.asset.categories.model.AssetCategory>
+			<com.liferay.asset.model.AssetCategory>
 				baseModelSearchResult =
 					_assetCategoryLocalService.searchCategories(
 						companyId, groupIds, title, parentCategoryIds,
@@ -419,7 +414,7 @@ public class ModularAssetCategoryLocalServiceWrapper
 		throws PortalException {
 
 		BaseModelSearchResult
-			<com.liferay.asset.categories.model.AssetCategory>
+			<com.liferay.asset.model.AssetCategory>
 				baseModelSearchResult =
 					_assetCategoryLocalService.searchCategories(
 						companyId, groupIds, title, vocabularyIds,

@@ -94,7 +94,7 @@ public class ModularAssetTagLocalServiceWrapper
 	public void deleteTag(AssetTag tag) throws PortalException {
 		_assetTagLocalService.deleteTag(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.tags.model.AssetTag.class, tag));
+				com.liferay.asset.model.AssetTag.class, tag));
 	}
 
 	@Override

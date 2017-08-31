@@ -84,7 +84,7 @@
 		searchContainer="<%= assetTagsDisplayContext.getTagsSearchContainer() %>"
 	>
 		<liferay-ui:search-container-row
-			className="com.liferay.asset.tags.model.AssetTag"
+			className="com.liferay.asset.model.AssetTag"
 			keyProperty="tagId"
 			modelVar="tag"
 		>

@@ -229,7 +229,7 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 	private static class AssetTagEntryOrderByComparatorAdapter
 		extends
 			OrderByComparatorAdapter
-				<com.liferay.asset.tags.model.AssetTag, AssetTag> {
+				<com.liferay.asset.model.AssetTag, AssetTag> {
 
 		public AssetTagEntryOrderByComparatorAdapter(
 			OrderByComparator<AssetTag> orderByComparator) {
@@ -238,7 +238,7 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 		}
 
 		@Override
-		public AssetTag adapt(com.liferay.asset.tags.model.AssetTag assetTag) {
+		public AssetTag adapt(com.liferay.asset.model.AssetTag assetTag) {
 			return ModelAdapterUtil.adapt(AssetTag.class, assetTag);
 		}
 

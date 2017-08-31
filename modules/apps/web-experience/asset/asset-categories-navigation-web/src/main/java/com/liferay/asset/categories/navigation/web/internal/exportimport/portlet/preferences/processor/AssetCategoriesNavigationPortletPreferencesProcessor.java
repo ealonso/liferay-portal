@@ -14,9 +14,9 @@
 
 package com.liferay.asset.categories.navigation.web.internal.exportimport.portlet.preferences.processor;
 
-import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.asset.categories.navigation.web.constants.AssetCategoriesNavigationPortletKeys;
-import com.liferay.asset.categories.service.AssetVocabularyLocalService;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.AssetVocabularyLocalService;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataException;
 import com.liferay.exportimport.portlet.preferences.processor.Capability;

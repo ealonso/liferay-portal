@@ -28,10 +28,13 @@ import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.service.AssetCategoryPropertyLocalServiceUtil;
 import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.service.permission.AssetCategoryPermission;
+import com.liferay.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManager;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManagerUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -75,8 +78,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.PortletURLImpl;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
-import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.portlet.asset.util.AssetSearcher;
 
 import java.io.Serializable;
@@ -880,7 +881,11 @@ public class AssetUtil {
 
 		AssetSearcher assetSearcher = (AssetSearcher)searcher;
 
-		assetSearcher.setAssetEntryQuery(assetEntryQuery);
+		assetSearcher.setAssetEntryQuery(
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
+					class,
+				assetEntryQuery));
 
 		Layout layout = assetEntryQuery.getLayout();
 

@@ -128,7 +128,9 @@ public class ModularAssetEntryLocalServiceWrapper
 		return ModelAdapterUtil.adapt(
 			AssetEntry.class,
 			_assetEntryLocalService.getEntries(
-				ModelAdapterUtil.adapt(AssetEntryQuery.class, entryQuery)));
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.service.persistence.AssetEntryQuery.class,
+					entryQuery)));
 	}
 
 	@Override
@@ -150,7 +152,9 @@ public class ModularAssetEntryLocalServiceWrapper
 	@Override
 	public int getEntriesCount(AssetEntryQuery entryQuery) {
 		return _assetEntryLocalService.getEntriesCount(
-			ModelAdapterUtil.adapt(AssetEntryQuery.class, entryQuery));
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.service.persistence.AssetEntryQuery.class,
+				entryQuery));
 	}
 
 	@Override

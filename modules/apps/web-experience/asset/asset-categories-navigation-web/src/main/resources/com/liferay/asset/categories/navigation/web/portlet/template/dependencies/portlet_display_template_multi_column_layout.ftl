@@ -32,7 +32,7 @@
 
 					<#if serviceLocator??>
 						<#assign
-							assetCategoryService = serviceLocator.findService("com.liferay.asset.categories.service.AssetCategoryService")
+							assetCategoryService = serviceLocator.findService("com.liferay.asset.service.AssetCategoryService")
 
 							childCategories = assetCategoryService.getChildCategories(category.getCategoryId())
 						/>

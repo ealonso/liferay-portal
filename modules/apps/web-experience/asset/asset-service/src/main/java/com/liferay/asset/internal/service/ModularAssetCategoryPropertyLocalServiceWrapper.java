@@ -64,7 +64,7 @@ public class ModularAssetCategoryPropertyLocalServiceWrapper
 	public void deleteCategoryProperty(AssetCategoryProperty categoryProperty) {
 		_assetCategoryPropertyLocalService.deleteCategoryProperty(
 			ModelAdapterUtil.adapt(
-				com.liferay.asset.categories.model.AssetCategoryProperty.class,
+				com.liferay.asset.model.AssetCategoryProperty.class,
 				categoryProperty));
 	}
 

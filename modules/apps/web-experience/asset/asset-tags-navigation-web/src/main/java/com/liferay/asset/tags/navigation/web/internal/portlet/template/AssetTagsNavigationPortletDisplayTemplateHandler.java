@@ -14,11 +14,11 @@
 
 package com.liferay.asset.tags.navigation.web.internal.portlet.template;
 
-import com.liferay.asset.tags.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.AssetTagService;
+import com.liferay.asset.service.AssetTagStatsLocalService;
 import com.liferay.asset.tags.navigation.web.constants.AssetTagsNavigationPortletKeys;
-import com.liferay.asset.tags.service.AssetTagLocalService;
-import com.liferay.asset.tags.service.AssetTagService;
-import com.liferay.asset.tags.service.AssetTagStatsLocalService;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portletdisplaytemplate.BasePortletDisplayTemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandler;
