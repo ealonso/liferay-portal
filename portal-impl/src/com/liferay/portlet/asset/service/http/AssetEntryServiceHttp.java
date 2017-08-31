@@ -51,8 +51,11 @@ import com.liferay.portal.kernel.util.MethodKey;
  * @see AssetEntryServiceSoap
  * @see HttpPrincipal
  * @see AssetEntryServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetEntryServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetEntryServiceHttp {
 	public static com.liferay.asset.kernel.model.AssetEntry fetchEntry(
