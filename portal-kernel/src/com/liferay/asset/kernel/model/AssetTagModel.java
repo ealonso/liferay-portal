@@ -40,8 +40,11 @@ import java.util.Date;
  * @see AssetTag
  * @see com.liferay.portlet.asset.model.impl.AssetTagImpl
  * @see com.liferay.portlet.asset.model.impl.AssetTagModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetTagModel extends BaseModel<AssetTag>, ShardedModel,
 	StagedGroupedModel {

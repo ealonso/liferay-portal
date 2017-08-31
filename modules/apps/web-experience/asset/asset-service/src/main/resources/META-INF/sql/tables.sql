@@ -63,9 +63,9 @@ create table AssetEntry (
 	expirationDate DATE null,
 	mimeType VARCHAR(75) null,
 	title STRING null,
-	description STRING null,
-	summary STRING null,
-	url VARCHAR(75) null,
+	description TEXT null,
+	summary TEXT null,
+	url STRING null,
 	layoutUuid VARCHAR(75) null,
 	height INTEGER,
 	width INTEGER,
@@ -119,6 +119,6 @@ create table AssetVocabulary (
 	name VARCHAR(75) null,
 	title STRING null,
 	description STRING null,
-	settings_ VARCHAR(75) null,
+	settings_ STRING null,
 	lastPublishDate DATE null
 );

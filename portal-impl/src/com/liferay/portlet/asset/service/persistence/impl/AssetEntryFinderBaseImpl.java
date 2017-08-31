@@ -22,8 +22,11 @@ import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.service.persistence.impl.AssetEntryFinderImpl}
  * @generated
  */
+@Deprecated
 public class AssetEntryFinderBaseImpl extends BasePersistenceImpl<AssetEntry> {
 	public AssetEntryFinderBaseImpl() {
 		setModelClass(AssetEntry.class);

@@ -27,8 +27,11 @@ import java.util.List;
  *
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.http.AssetCategoryServiceSoap
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetCategoryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetCategorySoap implements Serializable {
 	public static AssetCategorySoap toSoapModel(AssetCategory model) {
