@@ -53,4 +53,52 @@ public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {
 				return AssetVocabulary.class;
 			}
 		};
+
+	public java.util.List<AssetCategory> getCategories();
+
+	public int getCategoriesCount();
+
+	public long[] getRequiredClassNameIds();
+
+	public long[] getSelectedClassNameIds();
+
+	public long[] getSelectedClassTypePKs();
+
+	/**
+	* @deprecated As of 1.1.0, with no direct replacement
+	*/
+	@java.lang.Deprecated()
+	public com.liferay.portal.kernel.util.UnicodeProperties getSettingsProperties();
+
+	public java.lang.String getUnambiguousTitle(
+		java.util.List<AssetVocabulary> vocabularies, long groupId,
+		java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public boolean hasMoreThanOneCategorySelected(long[] categoryIds);
+
+	public boolean isAssociatedToClassNameId(long classNameId);
+
+	public boolean isAssociatedToClassNameIdAndClassTypePK(long classNameId,
+		long classTypePK);
+
+	public boolean isMissingRequiredCategory(long classNameId,
+		long classTypePK, long[] categoryIds);
+
+	public boolean isMultiValued();
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #isRequired(long, long)}
+	*/
+	@java.lang.Deprecated()
+	public boolean isRequired(long classNameId);
+
+	public boolean isRequired(long classNameId, long classTypePK);
+
+	/**
+	* @deprecated As of 1.1.0, with no direct replacement
+	*/
+	@java.lang.Deprecated()
+	public void setSettingsProperties(
+		com.liferay.portal.kernel.util.UnicodeProperties settingsProperties);
 }

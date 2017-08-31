@@ -67,8 +67,11 @@ import java.util.TreeSet;
  * @see AssetVocabularyImpl
  * @see AssetVocabulary
  * @see AssetVocabularyModel
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetVocabularyImpl}
  * @generated
  */
+@Deprecated
 @JSON(strict = true)
 @ProviderType
 public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
@@ -112,7 +115,7 @@ public class AssetVocabularyModelImpl extends BaseModelImpl<AssetVocabulary>
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table AssetVocabulary (uuid_ VARCHAR(75) null,vocabularyId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,title STRING null,description STRING null,settings_ STRING null,lastPublishDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table AssetVocabulary (uuid_ VARCHAR(75) null,vocabularyId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,title STRING null,description STRING null,settings_ VARCHAR(75) null,lastPublishDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table AssetVocabulary";
 	public static final String ORDER_BY_JPQL = " ORDER BY assetVocabulary.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY AssetVocabulary.name ASC";

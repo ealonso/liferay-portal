@@ -20,6 +20,7 @@ import com.liferay.asset.model.AssetCategory;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 
+import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
@@ -28,10 +29,17 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.SystemEventConstants;
+import com.liferay.portal.kernel.search.BaseModelSearchResult;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.permission.ModelPermissions;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -40,6 +48,8 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import java.io.Serializable;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Provides the local service interface for AssetCategory. Methods of this
@@ -83,6 +93,24 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 
 	public void addAssetEntryAssetCategory(long entryId, long categoryId);
 
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetCategory addCategory(long userId, long groupId,
+		long parentCategoryId, Map<Locale, java.lang.String> titleMap,
+		Map<Locale, java.lang.String> descriptionMap, long vocabularyId,
+		java.lang.String[] categoryProperties, ServiceContext serviceContext)
+		throws PortalException;
+
+	public AssetCategory addCategory(long userId, long groupId,
+		java.lang.String title, long vocabularyId, ServiceContext serviceContext)
+		throws PortalException;
+
+	public void addCategoryResources(AssetCategory category,
+		boolean addGroupPermissions, boolean addGuestPermissions)
+		throws PortalException;
+
+	public void addCategoryResources(AssetCategory category,
+		ModelPermissions modelPermissions) throws PortalException;
+
 	public void clearAssetEntryAssetCategories(long entryId);
 
 	/**
@@ -123,11 +151,30 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 
 	public void deleteAssetEntryAssetCategory(long entryId, long categoryId);
 
+	public void deleteCategories(List<AssetCategory> categories)
+		throws PortalException;
+
+	public void deleteCategories(long[] categoryIds) throws PortalException;
+
+	public AssetCategory deleteCategory(AssetCategory category)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.DELETE)
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public AssetCategory deleteCategory(AssetCategory category,
+		boolean skipRebuildTree) throws PortalException;
+
+	public AssetCategory deleteCategory(long categoryId)
+		throws PortalException;
+
 	/**
 	* @throws PortalException
 	*/
 	@Override
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
+		throws PortalException;
+
+	public void deleteVocabularyCategories(long vocabularyId)
 		throws PortalException;
 
 	public DynamicQuery dynamicQuery();
@@ -202,6 +249,13 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AssetCategory fetchAssetCategoryByUuidAndGroupId(
 		java.lang.String uuid, long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetCategory fetchCategory(long categoryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetCategory fetchCategory(long groupId, long parentCategoryId,
+		java.lang.String name, long vocabularyId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -301,6 +355,54 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 	public long[] getAssetEntryPrimaryKeys(long categoryId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getCategories();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getCategories(Hits hits)
+		throws PortalException;
+
+	@ThreadLocalCachable
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getCategories(long classNameId, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getCategories(java.lang.String className,
+		long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetCategory getCategory(long categoryId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetCategory getCategory(java.lang.String uuid, long groupId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getCategoryIds(java.lang.String className, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getCategoryNames();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getCategoryNames(long classNameId, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getCategoryNames(java.lang.String className,
+		long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getChildCategories(long parentCategoryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getChildCategories(long parentCategoryId,
+		int start, int end, OrderByComparator<AssetCategory> obc);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getChildCategoriesCount(long parentCategoryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getEntryCategories(long entryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
 		PortletDataContext portletDataContext);
 
@@ -320,10 +422,69 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<java.lang.Long> getSubcategoryIds(long parentCategoryId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getVocabularyCategories(long vocabularyId,
+		int start, int end, OrderByComparator<AssetCategory> obc);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getVocabularyCategories(long parentCategoryId,
+		long vocabularyId, int start, int end,
+		OrderByComparator<AssetCategory> obc);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getVocabularyCategoriesCount(long vocabularyId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> getVocabularyRootCategories(long vocabularyId,
+		int start, int end, OrderByComparator<AssetCategory> obc);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getVocabularyRootCategoriesCount(long vocabularyId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAssetEntryAssetCategories(long entryId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAssetEntryAssetCategory(long entryId, long categoryId);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetCategory mergeCategories(long fromCategoryId, long toCategoryId)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetCategory moveCategory(long categoryId, long parentCategoryId,
+		long vocabularyId, ServiceContext serviceContext)
+		throws PortalException;
+
+	public void rebuildTree(long groupId, boolean force);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetCategory> search(long groupId, java.lang.String name,
+		java.lang.String[] categoryProperties, int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+		long companyId, long groupIds, java.lang.String title,
+		long vocabularyId, int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+		long companyId, long[] groupIds, java.lang.String title,
+		long[] vocabularyIds, int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+		long companyId, long[] groupIds, java.lang.String title,
+		long[] parentCategoryIds, long[] vocabularyIds, int start, int end)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public BaseModelSearchResult<AssetCategory> searchCategories(
+		long companyId, long[] groupIds, java.lang.String title,
+		long[] vocabularyIds, long[] parentCategoryIds, int start, int end,
+		Sort sort) throws PortalException;
 
 	public void setAssetEntryAssetCategories(long entryId, long[] categoryIds);
 
@@ -335,4 +496,11 @@ public interface AssetCategoryLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetCategory updateAssetCategory(AssetCategory assetCategory);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetCategory updateCategory(long userId, long categoryId,
+		long parentCategoryId, Map<Locale, java.lang.String> titleMap,
+		Map<Locale, java.lang.String> descriptionMap, long vocabularyId,
+		java.lang.String[] categoryProperties, ServiceContext serviceContext)
+		throws PortalException;
 }

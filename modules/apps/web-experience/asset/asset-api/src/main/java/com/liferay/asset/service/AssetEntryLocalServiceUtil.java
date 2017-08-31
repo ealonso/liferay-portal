@@ -170,6 +170,26 @@ public class AssetEntryLocalServiceUtil {
 		getService().deleteAssetTagAssetEntry(tagId, entryId);
 	}
 
+	public static void deleteEntry(com.liferay.asset.model.AssetEntry entry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteEntry(entry);
+	}
+
+	public static void deleteEntry(long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteEntry(entryId);
+	}
+
+	public static void deleteEntry(java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteEntry(className, classPK);
+	}
+
+	public static void deleteGroupEntries(long groupId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteGroupEntries(groupId);
+	}
+
 	/**
 	* @throws PortalException
 	*/
@@ -262,8 +282,28 @@ public class AssetEntryLocalServiceUtil {
 		return getService().fetchAssetEntry(entryId);
 	}
 
+	public static com.liferay.asset.model.AssetEntry fetchEntry(long entryId) {
+		return getService().fetchEntry(entryId);
+	}
+
+	public static com.liferay.asset.model.AssetEntry fetchEntry(long groupId,
+		java.lang.String classUuid) {
+		return getService().fetchEntry(groupId, classUuid);
+	}
+
+	public static com.liferay.asset.model.AssetEntry fetchEntry(
+		java.lang.String className, long classPK) {
+		return getService().fetchEntry(className, classPK);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return getService().getActionableDynamicQuery();
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getAncestorEntries(
+		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getAncestorEntries(entryId);
 	}
 
 	public static java.util.List<com.liferay.asset.model.AssetEntry> getAssetCategoryAssetEntries(
@@ -366,8 +406,82 @@ public class AssetEntryLocalServiceUtil {
 		return getService().getAssetTagPrimaryKeys(entryId);
 	}
 
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getChildEntries(
+		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getChildEntries(entryId);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getCompanyEntries(
+		long companyId, int start, int end) {
+		return getService().getCompanyEntries(companyId, start, end);
+	}
+
+	public static int getCompanyEntriesCount(long companyId) {
+		return getService().getCompanyEntriesCount(companyId);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getEntries(
+		com.liferay.asset.service.persistence.AssetEntryQuery entryQuery) {
+		return getService().getEntries(entryQuery);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getEntries(
+		long[] groupIds, long[] classNameIds, java.lang.String keywords,
+		java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.Boolean listable,
+		boolean advancedSearch, boolean andOperator, int start, int end,
+		java.lang.String orderByCol1, java.lang.String orderByCol2,
+		java.lang.String orderByType1, java.lang.String orderByType2) {
+		return getService()
+				   .getEntries(groupIds, classNameIds, keywords, userName,
+			title, description, listable, advancedSearch, andOperator, start,
+			end, orderByCol1, orderByCol2, orderByType1, orderByType2);
+	}
+
+	public static int getEntriesCount(
+		com.liferay.asset.service.persistence.AssetEntryQuery entryQuery) {
+		return getService().getEntriesCount(entryQuery);
+	}
+
+	public static int getEntriesCount(long[] groupIds, long[] classNameIds,
+		java.lang.String keywords, java.lang.String userName,
+		java.lang.String title, java.lang.String description,
+		java.lang.Boolean listable, boolean advancedSearch, boolean andOperator) {
+		return getService()
+				   .getEntriesCount(groupIds, classNameIds, keywords, userName,
+			title, description, listable, advancedSearch, andOperator);
+	}
+
+	public static com.liferay.asset.model.AssetEntry getEntry(long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getEntry(entryId);
+	}
+
+	public static com.liferay.asset.model.AssetEntry getEntry(long groupId,
+		java.lang.String classUuid)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getEntry(groupId, classUuid);
+	}
+
+	public static com.liferay.asset.model.AssetEntry getEntry(
+		java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getEntry(className, classPK);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getGroupEntries(
+		long groupId) {
+		return getService().getGroupEntries(groupId);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
 		return getService().getIndexableActionableDynamicQuery();
+	}
+
+	public static com.liferay.asset.model.AssetEntry getNextEntry(long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getNextEntry(entryId);
 	}
 
 	/**
@@ -379,10 +493,32 @@ public class AssetEntryLocalServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static com.liferay.asset.model.AssetEntry getParentEntry(
+		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getParentEntry(entryId);
+	}
+
 	public static com.liferay.portal.kernel.model.PersistedModel getPersistedModel(
 		java.io.Serializable primaryKeyObj)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getPersistedModel(primaryKeyObj);
+	}
+
+	public static com.liferay.asset.model.AssetEntry getPreviousEntry(
+		long entryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getPreviousEntry(entryId);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getTopViewedEntries(
+		java.lang.String className, boolean asc, int start, int end) {
+		return getService().getTopViewedEntries(className, asc, start, end);
+	}
+
+	public static java.util.List<com.liferay.asset.model.AssetEntry> getTopViewedEntries(
+		java.lang.String[] className, boolean asc, int start, int end) {
+		return getService().getTopViewedEntries(className, asc, start, end);
 	}
 
 	public static boolean hasAssetCategoryAssetEntries(long categoryId) {
@@ -400,6 +536,154 @@ public class AssetEntryLocalServiceUtil {
 
 	public static boolean hasAssetTagAssetEntry(long tagId, long entryId) {
 		return getService().hasAssetTagAssetEntry(tagId, entryId);
+	}
+
+	public static void incrementViewCounter(long userId,
+		com.liferay.asset.model.AssetEntry assetEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().incrementViewCounter(userId, assetEntry);
+	}
+
+	public static com.liferay.asset.model.AssetEntry incrementViewCounter(
+		long userId, java.lang.String className, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().incrementViewCounter(userId, className, classPK);
+	}
+
+	public static void incrementViewCounter(long userId,
+		java.lang.String className, long classPK, int increment) {
+		getService().incrementViewCounter(userId, className, classPK, increment);
+	}
+
+	public static void reindex(
+		java.util.List<com.liferay.asset.model.AssetEntry> entries)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().reindex(entries);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String keywords, boolean showNonindexable,
+		int status, int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			keywords, showNonindexable, status, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String keywords, boolean showNonindexable,
+		int[] statuses, int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			keywords, showNonindexable, statuses, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String keywords, boolean showNonindexable,
+		int[] statuses, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			keywords, showNonindexable, statuses, start, end, sort);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String keywords, int status, int start,
+		int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			keywords, status, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, boolean showNonindexable, int status,
+		boolean andSearch, int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			userName, title, description, assetCategoryIds, assetTagNames,
+			showNonindexable, status, andSearch, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, boolean showNonindexable,
+		int[] statuses, boolean andSearch, int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			userName, title, description, assetCategoryIds, assetTagNames,
+			showNonindexable, statuses, andSearch, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		long classTypeId, java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, int status, boolean andSearch,
+		int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, classTypeId,
+			userName, title, description, assetCategoryIds, assetTagNames,
+			status, andSearch, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		java.lang.String keywords, int status, int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, keywords,
+			status, start, end);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(long companyId,
+		long[] groupIds, long userId, java.lang.String className,
+		java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, int status, boolean andSearch,
+		int start, int end) {
+		return getService()
+				   .search(companyId, groupIds, userId, className, userName,
+			title, description, assetCategoryIds, assetTagNames, status,
+			andSearch, start, end);
+	}
+
+	public static long searchCount(long companyId, long[] groupIds,
+		long userId, java.lang.String className, long classTypeId,
+		java.lang.String keywords, boolean showNonindexable, int[] statuses) {
+		return getService()
+				   .searchCount(companyId, groupIds, userId, className,
+			classTypeId, keywords, showNonindexable, statuses);
+	}
+
+	public static long searchCount(long companyId, long[] groupIds,
+		long userId, java.lang.String className, long classTypeId,
+		java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, boolean showInvisible,
+		boolean showNonindexable, int[] statuses, boolean andSearch) {
+		return getService()
+				   .searchCount(companyId, groupIds, userId, className,
+			classTypeId, userName, title, description, assetCategoryIds,
+			assetTagNames, showInvisible, showNonindexable, statuses, andSearch);
+	}
+
+	public static long searchCount(long companyId, long[] groupIds,
+		long userId, java.lang.String className, long classTypeId,
+		java.lang.String userName, java.lang.String title,
+		java.lang.String description, java.lang.String assetCategoryIds,
+		java.lang.String assetTagNames, boolean showNonindexable,
+		int[] statuses, boolean andSearch) {
+		return getService()
+				   .searchCount(companyId, groupIds, userId, className,
+			classTypeId, userName, title, description, assetCategoryIds,
+			assetTagNames, showNonindexable, statuses, andSearch);
 	}
 
 	public static void setAssetCategoryAssetEntries(long categoryId,
@@ -420,6 +704,160 @@ public class AssetEntryLocalServiceUtil {
 	public static com.liferay.asset.model.AssetEntry updateAssetEntry(
 		com.liferay.asset.model.AssetEntry assetEntry) {
 		return getService().updateAssetEntry(assetEntry);
+	}
+
+	public static com.liferay.asset.model.AssetEntry updateEntry(long userId,
+		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean listable, boolean visible, java.util.Date startDate,
+		java.util.Date endDate, java.util.Date publishDate,
+		java.util.Date expirationDate, java.lang.String mimeType,
+		java.lang.String title, java.lang.String description,
+		java.lang.String summary, java.lang.String url,
+		java.lang.String layoutUuid, int height, int width,
+		java.lang.Double priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(userId, groupId, createDate, modifiedDate,
+			className, classPK, classUuid, classTypeId, categoryIds, tagNames,
+			listable, visible, startDate, endDate, publishDate, expirationDate,
+			mimeType, title, description, summary, url, layoutUuid, height,
+			width, priority);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #updateEntry(long, long,
+	Date, Date, String, long, String, long, long[], String[],
+	boolean, boolean, Date, Date, Date, Date, String, String,
+	String, String, String, String, int, int, Double)}
+	*/
+	@Deprecated
+	public static com.liferay.asset.model.AssetEntry updateEntry(long userId,
+		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean listable, boolean visible, java.util.Date startDate,
+		java.util.Date endDate, java.util.Date expirationDate,
+		java.lang.String mimeType, java.lang.String title,
+		java.lang.String description, java.lang.String summary,
+		java.lang.String url, java.lang.String layoutUuid, int height,
+		int width, java.lang.Double priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(userId, groupId, createDate, modifiedDate,
+			className, classPK, classUuid, classTypeId, categoryIds, tagNames,
+			listable, visible, startDate, endDate, expirationDate, mimeType,
+			title, description, summary, url, layoutUuid, height, width,
+			priority);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #updateEntry(long, long,
+	Date, Date, String, long, String, long, long[], String[],
+	boolean, boolean, Date, Date, Date, Date, String, String,
+	String, String, String, String, int, int, Double)}
+	*/
+	@Deprecated
+	public static com.liferay.asset.model.AssetEntry updateEntry(long userId,
+		long groupId, java.util.Date createDate, java.util.Date modifiedDate,
+		java.lang.String className, long classPK, java.lang.String classUuid,
+		long classTypeId, long[] categoryIds, java.lang.String[] tagNames,
+		boolean visible, java.util.Date startDate, java.util.Date endDate,
+		java.util.Date expirationDate, java.lang.String mimeType,
+		java.lang.String title, java.lang.String description,
+		java.lang.String summary, java.lang.String url,
+		java.lang.String layoutUuid, int height, int width,
+		java.lang.Integer priority, boolean sync)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(userId, groupId, createDate, modifiedDate,
+			className, classPK, classUuid, classTypeId, categoryIds, tagNames,
+			visible, startDate, endDate, expirationDate, mimeType, title,
+			description, summary, url, layoutUuid, height, width, priority, sync);
+	}
+
+	public static com.liferay.asset.model.AssetEntry updateEntry(long userId,
+		long groupId, java.lang.String className, long classPK,
+		long[] categoryIds, java.lang.String[] tagNames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(userId, groupId, className, classPK,
+			categoryIds, tagNames);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #updateEntry(String, long,
+	Date, Date, boolean, boolean)}
+	*/
+	@Deprecated
+	public static com.liferay.asset.model.AssetEntry updateEntry(
+		java.lang.String className, long classPK, java.util.Date publishDate,
+		boolean visible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateEntry(className, classPK, publishDate, visible);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #updateEntry(String, long,
+	Date, Date, boolean, boolean)}
+	*/
+	@Deprecated
+	public static com.liferay.asset.model.AssetEntry updateEntry(
+		java.lang.String className, long classPK, java.util.Date publishDate,
+		java.util.Date expirationDate, boolean visible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(className, classPK, publishDate,
+			expirationDate, visible);
+	}
+
+	public static com.liferay.asset.model.AssetEntry updateEntry(
+		java.lang.String className, long classPK, java.util.Date publishDate,
+		java.util.Date expirationDate, boolean listable, boolean visible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateEntry(className, classPK, publishDate,
+			expirationDate, listable, visible);
+	}
+
+	public static com.liferay.asset.model.AssetEntry updateVisible(
+		com.liferay.asset.model.AssetEntry entry, boolean visible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateVisible(entry, visible);
+	}
+
+	public static com.liferay.asset.model.AssetEntry updateVisible(
+		java.lang.String className, long classPK, boolean visible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().updateVisible(className, classPK, visible);
+	}
+
+	public static void validate(long groupId, java.lang.String className,
+		long classPK, long classTypePK, long[] categoryIds,
+		java.lang.String[] tagNames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.validate(groupId, className, classPK, classTypePK, categoryIds,
+			tagNames);
+	}
+
+	public static void validate(long groupId, java.lang.String className,
+		long classTypePK, long[] categoryIds, java.lang.String[] tagNames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.validate(groupId, className, classTypePK, categoryIds, tagNames);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #validate(long, String, long,
+	long[], String[])}
+	*/
+	@Deprecated
+	public static void validate(long groupId, java.lang.String className,
+		long[] categoryIds, java.lang.String[] tagNames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().validate(groupId, className, categoryIds, tagNames);
 	}
 
 	public static AssetEntryLocalService getService() {
