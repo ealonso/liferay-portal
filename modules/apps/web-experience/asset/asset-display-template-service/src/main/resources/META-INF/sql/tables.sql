@@ -9,5 +9,6 @@ create table AssetDisplayTemplate (
 	name VARCHAR(75) null,
 	classNameId LONG,
 	DDMTemplateId LONG,
-	main BOOLEAN
+	main BOOLEAN,
+	plid LONG
 );
