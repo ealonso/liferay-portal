@@ -20,6 +20,7 @@ import com.liferay.asset.model.AssetTag;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 
+import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
@@ -27,11 +28,17 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.SystemEventConstants;
+import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -80,6 +87,52 @@ public interface AssetTagLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag addAssetTag(AssetTag assetTag);
 
+	/**
+	* Adds an asset tag.
+	*
+	* @param userId the primary key of the user adding the asset tag
+	* @param groupId the primary key of the group in which the asset tag is to
+	be added
+	* @param name the asset tag's name
+	* @param serviceContext the service context to be applied
+	* @return the asset tag that was added
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetTag addTag(long userId, long groupId, java.lang.String name,
+		ServiceContext serviceContext) throws PortalException;
+
+	/**
+	* Returns the asset tags matching the group and names, creating new asset
+	* tags matching the names if the group doesn't already have them.
+	*
+	* <p>
+	* For each name, if an asset tag with the name doesn't already exist in the
+	* group, this method creates a new asset tag with the name in the group.
+	* </p>
+	*
+	* @param userId the primary key of the user checking the asset tags
+	* @param group the group in which to check the asset tags
+	* @param names the asset tag names
+	* @return the asset tags matching the group and names and new asset tags
+	matching the names that don't already exist in the group
+	*/
+	public List<AssetTag> checkTags(long userId, Group group,
+		java.lang.String[] names) throws PortalException;
+
+	/**
+	* Returns the asset tags matching the group and names, creating new asset
+	* tags matching the names if the group doesn't already have them.
+	*
+	* @param userId the primary key of the user checking the asset tags
+	* @param groupId the primary key of the group in which check the asset
+	tags
+	* @param names the asset tag names
+	* @return the asset tags matching the group and names and new asset tags
+	matching the names that don't already exist in the group
+	*/
+	public List<AssetTag> checkTags(long userId, long groupId,
+		java.lang.String[] names) throws PortalException;
+
 	public void clearAssetEntryAssetTags(long entryId);
 
 	/**
@@ -89,6 +142,18 @@ public interface AssetTagLocalService extends BaseLocalService,
 	* @return the new asset tag
 	*/
 	public AssetTag createAssetTag(long tagId);
+
+	/**
+	* Decrements the number of assets to which the asset tag has been applied.
+	*
+	* @param tagId the primary key of the asset tag
+	* @param classNameId the class name ID of the entity to which the asset
+	tag had been applied
+	* @return the asset tag
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetTag decrementAssetCount(long tagId, long classNameId)
+		throws PortalException;
 
 	public void deleteAssetEntryAssetTag(long entryId, AssetTag assetTag);
 
@@ -118,11 +183,34 @@ public interface AssetTagLocalService extends BaseLocalService,
 	public AssetTag deleteAssetTag(long tagId) throws PortalException;
 
 	/**
+	* Deletes all asset tags in the group.
+	*
+	* @param groupId the primary key of the group in which to delete all asset
+	tags
+	*/
+	public void deleteGroupTags(long groupId) throws PortalException;
+
+	/**
 	* @throws PortalException
 	*/
 	@Override
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException;
+
+	/**
+	* Deletes the asset tag.
+	*
+	* @param tag the asset tag to be deleted
+	*/
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public void deleteTag(AssetTag tag) throws PortalException;
+
+	/**
+	* Deletes the asset tag.
+	*
+	* @param tagId the primary key of the asset tag
+	*/
+	public void deleteTag(long tagId) throws PortalException;
 
 	public DynamicQuery dynamicQuery();
 
@@ -196,6 +284,17 @@ public interface AssetTagLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AssetTag fetchAssetTagByUuidAndGroupId(java.lang.String uuid,
 		long groupId);
+
+	/**
+	* Returns the asset tag with the name in the group.
+	*
+	* @param groupId the primary key of the group
+	* @param name the asset tag's name
+	* @return the asset tag with the name in the group or <code>null</code> if
+	it could not be found
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetTag fetchTag(long groupId, java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
@@ -293,9 +392,56 @@ public interface AssetTagLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssetTagsCount();
 
+	/**
+	* Returns the asset tags of the asset entry.
+	*
+	* @param entryId the primary key of the asset entry
+	* @return the asset tags of the asset entry
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getEntryTags(long entryId);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
 		PortletDataContext portletDataContext);
+
+	/**
+	* Returns the asset tags in the groups.
+	*
+	* @param groupIds the primary keys of the groups
+	* @return the asset tags in the groups
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getGroupsTags(long[] groupIds);
+
+	/**
+	* Returns the asset tags in the group.
+	*
+	* @param groupId the primary key of the group
+	* @return the asset tags in the group
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getGroupTags(long groupId);
+
+	/**
+	* Returns a range of all the asset tags in the group.
+	*
+	* @param groupId the primary key of the group
+	* @param start the lower bound of the range of asset tags
+	* @param end the upper bound of the range of asset tags (not inclusive)
+	* @return the range of matching asset tags
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getGroupTags(long groupId, int start, int end);
+
+	/**
+	* Returns the number of asset tags in the group.
+	*
+	* @param groupId the primary key of the group
+	* @return the number of asset tags in the group
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getGroupTagsCount(long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -313,10 +459,205 @@ public interface AssetTagLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getSocialActivityCounterOffsetTags(long groupId,
+		java.lang.String socialActivityCounterName, int startOffset,
+		int endOffset);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getSocialActivityCounterPeriodTags(long groupId,
+		java.lang.String socialActivityCounterName, int startPeriod,
+		int endPeriod);
+
+	/**
+	* Returns the asset tag with the primary key.
+	*
+	* @param tagId the primary key of the asset tag
+	* @return the asset tag with the primary key
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetTag getTag(long tagId) throws PortalException;
+
+	/**
+	* Returns the asset tag with the name in the group.
+	*
+	* @param groupId the primary key of the group
+	* @param name the name of the asset tag
+	* @return the asset tag with the name in the group
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetTag getTag(long groupId, java.lang.String name)
+		throws PortalException;
+
+	/**
+	* Returns the primary keys of the asset tags with the names in the group.
+	*
+	* @param groupId the primary key of the group
+	* @param names the names of the asset tags
+	* @return the primary keys of the asset tags with the names in the group
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getTagIds(long groupId, java.lang.String[] names);
+
+	/**
+	* Returns the primary keys of the asset tags with the name in the groups.
+	*
+	* @param groupIds the primary keys of the groups
+	* @param name the name of the asset tags
+	* @return the primary keys of the asset tags with the name in the groups
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getTagIds(long[] groupIds, java.lang.String name);
+
+	/**
+	* Returns the primary keys of the asset tags with the names in the groups.
+	*
+	* @param groupIds the primary keys of the groups
+	* @param names the names of the asset tags
+	* @return the primary keys of the asset tags with the names in the groups
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getTagIds(long[] groupIds, java.lang.String[] names);
+
+	/**
+	* Returns the names of all the asset tags.
+	*
+	* @return the names of all the asset tags
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getTagNames();
+
+	/**
+	* Returns the names of the asset tags of the entity.
+	*
+	* @param classNameId the class name ID of the entity
+	* @param classPK the primary key of the entity
+	* @return the names of the asset tags of the entity
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getTagNames(long classNameId, long classPK);
+
+	/**
+	* Returns the names of the asset tags of the entity
+	*
+	* @param className the class name of the entity
+	* @param classPK the primary key of the entity
+	* @return the names of the asset tags of the entity
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String[] getTagNames(java.lang.String className,
+		long classPK);
+
+	/**
+	* Returns all the asset tags.
+	*
+	* @return the asset tags
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags();
+
+	/**
+	* Returns the asset tags of the entity.
+	*
+	* @param classNameId the class name ID of the entity
+	* @param classPK the primary key of the entity
+	* @return the asset tags of the entity
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(long classNameId, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(long groupId, long classNameId,
+		java.lang.String name);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(long groupId, long classNameId,
+		java.lang.String name, int start, int end);
+
+	/**
+	* Returns the asset tags of the entity.
+	*
+	* @param className the class name of the entity
+	* @param classPK the primary key of the entity
+	* @return the asset tags of the entity
+	*/
+	@ThreadLocalCachable
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> getTags(java.lang.String className, long classPK);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getTagsSize(long groupId, long classNameId, java.lang.String name);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAssetEntryAssetTag(long entryId, long tagId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public boolean hasAssetEntryAssetTags(long entryId);
+
+	/**
+	* Returns <code>true</code> if the group contains an asset tag with the
+	* name.
+	*
+	* @param groupId the primary key of the group
+	* @param name the name of the asset tag
+	* @return <code>true</code> if the group contains an asset tag with the
+	name; <code>false</code> otherwise.
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasTag(long groupId, java.lang.String name);
+
+	/**
+	* Increments the number of assets to which the asset tag has been applied.
+	*
+	* @param tagId the primary key of the asset tag
+	* @param classNameId the class name ID of the entity to which the asset
+	tag is being applied
+	* @return the asset tag
+	*/
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetTag incrementAssetCount(long tagId, long classNameId)
+		throws PortalException;
+
+	/**
+	* Replaces all occurrences of the first asset tag with the second asset tag
+	* and deletes the first asset tag.
+	*
+	* @param fromTagId the primary key of the asset tag to be replaced
+	* @param toTagId the primary key of the asset tag to apply to the asset
+	entries of the other asset tag
+	*/
+	public void mergeTags(long fromTagId, long toTagId)
+		throws PortalException;
+
+	/**
+	* Returns the asset tags in the group whose names match the pattern.
+	*
+	* @param groupId the primary key of the group
+	* @param name the pattern to match
+	* @param start the lower bound of the range of asset tags
+	* @param end the upper bound of the range of asset tags (not inclusive)
+	* @return the asset tags in the group whose names match the pattern
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> search(long groupId, java.lang.String name,
+		int start, int end);
+
+	/**
+	* Returns the asset tags in the groups whose names match the pattern.
+	*
+	* @param groupIds the primary keys of the groups
+	* @param name the pattern to match
+	* @param start the lower bound of the range of asset tags
+	* @param end the upper bound of the range of asset tags (not inclusive)
+	* @return the asset tags in the groups whose names match the pattern
+	*/
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetTag> search(long[] groupIds, java.lang.String name,
+		int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public BaseModelSearchResult<AssetTag> searchTags(long[] groupIds,
+		java.lang.String name, int start, int end, Sort sort)
+		throws PortalException;
 
 	public void setAssetEntryAssetTags(long entryId, long[] tagIds);
 
@@ -328,4 +669,8 @@ public interface AssetTagLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetTag updateAssetTag(AssetTag assetTag);
+
+	@Indexable(type = IndexableType.REINDEX)
+	public AssetTag updateTag(long userId, long tagId, java.lang.String name,
+		ServiceContext serviceContext) throws PortalException;
 }

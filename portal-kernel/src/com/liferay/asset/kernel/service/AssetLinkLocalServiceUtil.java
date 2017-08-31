@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see AssetLinkLocalService
  * @see com.liferay.portlet.asset.service.base.AssetLinkLocalServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkLocalServiceUtil {
 	/*

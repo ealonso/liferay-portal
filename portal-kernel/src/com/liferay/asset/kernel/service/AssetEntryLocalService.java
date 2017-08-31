@@ -54,8 +54,11 @@ import java.util.List;
  * @see AssetEntryLocalServiceUtil
  * @see com.liferay.portlet.asset.service.base.AssetEntryLocalServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetEntryLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetEntryLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})
