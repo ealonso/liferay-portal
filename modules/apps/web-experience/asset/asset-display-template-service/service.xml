@@ -27,6 +27,7 @@
 		<column name="classNameId" type="long" />
 		<column name="DDMTemplateId" type="long" />
 		<column name="main" type="boolean" />
+		<column name="plid" type="long" />
 
 		<!-- Order -->
 
@@ -50,6 +51,7 @@
 
 		<!-- References -->
 
+		<reference entity="Layout" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
