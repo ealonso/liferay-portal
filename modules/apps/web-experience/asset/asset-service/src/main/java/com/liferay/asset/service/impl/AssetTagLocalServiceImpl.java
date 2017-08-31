@@ -16,7 +16,7 @@ package com.liferay.asset.service.impl;
 
 import com.liferay.asset.exception.AssetTagException;
 import com.liferay.asset.exception.DuplicateTagException;
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.service.base.AssetTagLocalServiceBaseImpl;
 import com.liferay.asset.util.comparator.AssetTagNameComparator;

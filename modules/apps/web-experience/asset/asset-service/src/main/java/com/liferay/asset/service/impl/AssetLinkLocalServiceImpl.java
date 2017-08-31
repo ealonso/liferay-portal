@@ -15,10 +15,10 @@
 package com.liferay.asset.service.impl;
 
 import com.liferay.asset.exception.NoSuchLinkException;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetLink;
 import com.liferay.asset.model.AssetLinkConstants;
+import com.liferay.asset.model.adapter.StagedAssetLink;
 import com.liferay.asset.model.impl.AssetLinkImpl;
 import com.liferay.asset.service.base.AssetLinkLocalServiceBaseImpl;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
