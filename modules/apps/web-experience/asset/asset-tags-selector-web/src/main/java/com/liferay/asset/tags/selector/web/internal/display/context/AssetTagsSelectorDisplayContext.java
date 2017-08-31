@@ -14,16 +14,16 @@
 
 package com.liferay.asset.tags.selector.web.internal.display.context;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagServiceUtil;
+import com.liferay.asset.tags.model.AssetTag;
 import com.liferay.asset.tags.selector.web.internal.search.EntriesChecker;
+import com.liferay.asset.tags.service.AssetTagServiceUtil;
+import com.liferay.asset.tags.util.comparator.AssetTagNameComparator;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
 import java.util.List;
 

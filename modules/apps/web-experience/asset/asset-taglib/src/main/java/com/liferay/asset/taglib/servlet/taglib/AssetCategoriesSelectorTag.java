@@ -14,14 +14,15 @@
 
 package com.liferay.asset.taglib.servlet.taglib;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryServiceUtil;
+import com.liferay.asset.categories.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.asset.taglib.internal.util.AssetCategoryUtil;
 import com.liferay.asset.util.impl.AssetUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
@@ -233,8 +234,13 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 			AssetVocabularyServiceUtil.getGroupVocabularies(getGroupIds());
 
 		if (Validator.isNotNull(_className)) {
-			vocabularies = AssetUtil.filterVocabularies(
-				vocabularies, _className, _classTypePK);
+			vocabularies = ModelAdapterUtil.adapt(
+				AssetVocabulary.class,
+				AssetUtil.filterVocabularies(
+					ModelAdapterUtil.adapt(
+						com.liferay.asset.kernel.model.AssetVocabulary.class,
+						vocabularies),
+					_className, _classTypePK));
 		}
 
 		return ListUtil.filter(

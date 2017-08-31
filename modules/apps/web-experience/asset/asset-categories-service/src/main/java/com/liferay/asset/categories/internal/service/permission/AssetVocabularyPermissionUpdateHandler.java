@@ -14,8 +14,8 @@
 
 package com.liferay.asset.categories.internal.service.permission;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.AssetVocabularyLocalService;
 import com.liferay.portal.kernel.security.permission.PermissionUpdateHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 
@@ -29,7 +29,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = {
-		"model.class.name=com.liferay.asset.kernel.model.AssetVocabulary"
+		"model.class.name=com.liferay.asset.model.AssetVocabulary"
 	},
 	service = PermissionUpdateHandler.class
 )

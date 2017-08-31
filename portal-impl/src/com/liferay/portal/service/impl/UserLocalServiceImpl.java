@@ -4219,6 +4219,12 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			String[] assetTagNames)
 		throws PortalException {
 
+		if (ArrayUtil.isEmpty(assetCategoryIds) &&
+			ArrayUtil.isEmpty(assetTagNames)) {
+
+			return;
+		}
+
 		User owner = userPersistence.findByPrimaryKey(userId);
 
 		Company company = companyPersistence.findByPrimaryKey(

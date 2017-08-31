@@ -25,11 +25,11 @@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.asset.kernel.exception.AssetTagException" %><%@
-page import="com.liferay.asset.kernel.exception.DuplicateTagException" %><%@
-page import="com.liferay.asset.kernel.exception.NoSuchTagException" %><%@
-page import="com.liferay.asset.kernel.model.AssetTag" %><%@
-page import="com.liferay.asset.tags.admin.web.internal.display.context.AssetTagsDisplayContext" %><%@
+<%@ page import="com.liferay.asset.tags.admin.web.internal.display.context.AssetTagsDisplayContext" %><%@
+page import="com.liferay.asset.tags.exception.AssetTagException" %><%@
+page import="com.liferay.asset.tags.exception.DuplicateTagException" %><%@
+page import="com.liferay.asset.tags.exception.NoSuchTagException" %><%@
+page import="com.liferay.asset.tags.model.AssetTag" %><%@
 page import="com.liferay.asset.util.impl.AssetUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
