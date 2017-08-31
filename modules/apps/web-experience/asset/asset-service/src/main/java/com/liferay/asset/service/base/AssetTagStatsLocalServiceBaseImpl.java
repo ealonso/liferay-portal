@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.asset.model.AssetTagStats;
 import com.liferay.asset.service.AssetTagStatsLocalService;
+import com.liferay.asset.service.persistence.AssetTagFinder;
 import com.liferay.asset.service.persistence.AssetTagPersistence;
 import com.liferay.asset.service.persistence.AssetTagStatsPersistence;
 
@@ -388,6 +389,24 @@ public abstract class AssetTagStatsLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the asset tag finder.
+	 *
+	 * @return the asset tag finder
+	 */
+	public AssetTagFinder getAssetTagFinder() {
+		return assetTagFinder;
+	}
+
+	/**
+	 * Sets the asset tag finder.
+	 *
+	 * @param assetTagFinder the asset tag finder
+	 */
+	public void setAssetTagFinder(AssetTagFinder assetTagFinder) {
+		this.assetTagFinder = assetTagFinder;
+	}
+
+	/**
 	 * Returns the counter local service.
 	 *
 	 * @return the counter local service
@@ -466,6 +485,8 @@ public abstract class AssetTagStatsLocalServiceBaseImpl
 	protected com.liferay.asset.service.AssetTagLocalService assetTagLocalService;
 	@BeanReference(type = AssetTagPersistence.class)
 	protected AssetTagPersistence assetTagPersistence;
+	@BeanReference(type = AssetTagFinder.class)
+	protected AssetTagFinder assetTagFinder;
 	@ServiceReference(type = com.liferay.counter.kernel.service.CounterLocalService.class)
 	protected com.liferay.counter.kernel.service.CounterLocalService counterLocalService;
 	@ServiceReference(type = PersistedModelLocalServiceRegistry.class)

@@ -44,8 +44,11 @@ import java.util.Map;
  * @see AssetCategory
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryImpl
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetCategoryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetCategoryModel extends BaseModel<AssetCategory>,
 	LocalizedModel, ShardedModel, StagedGroupedModel {
