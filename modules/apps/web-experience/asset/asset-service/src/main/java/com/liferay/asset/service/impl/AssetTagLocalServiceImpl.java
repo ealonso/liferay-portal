@@ -14,10 +14,14 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.exception.DuplicateTagException;
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.exception.AssetTagException;
+import com.liferay.asset.exception.DuplicateTagException;
+import com.liferay.asset.internal.util.AssetServiceUtil;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.base.AssetTagLocalServiceBaseImpl;
+import com.liferay.asset.util.AssetHelper;
+import com.liferay.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -46,9 +50,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portlet.asset.service.base.AssetTagLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.AssetUtil;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.social.kernel.util.SocialCounterPeriodUtil;
 
 import java.io.Serializable;
@@ -829,10 +830,10 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	}
 
 	protected void validate(String name) throws PortalException {
-		if (!AssetUtil.isValidWord(name)) {
+		if (!AssetServiceUtil.isValidWord(name)) {
 			throw new AssetTagException(
 				StringUtil.merge(
-					AssetUtil.INVALID_CHARACTERS, StringPool.SPACE),
+					AssetHelper.INVALID_CHARACTERS, StringPool.SPACE),
 				AssetTagException.INVALID_CHARACTER);
 		}
 	}

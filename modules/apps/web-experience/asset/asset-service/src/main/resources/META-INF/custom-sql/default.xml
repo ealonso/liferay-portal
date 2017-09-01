@@ -1,7 +1,30 @@
 <?xml version="1.0"?>
 
 <custom-sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.countByG_C_N">
+	<sql id="com.liferay.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
+		<![CDATA[
+			SELECT
+				AssetLink.*
+			FROM
+				AssetLink
+			WHERE
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							AssetEntry AssetEntry1, AssetEntry AssetEntry2
+						WHERE
+							(AssetLink.entryId1 = AssetEntry1.entryId) AND
+							(AssetLink.entryId2 = AssetEntry2.entryId) AND
+							(
+								(AssetEntry1.groupId = ?) OR
+								(AssetEntry2.groupId = ?)
+							)
+					)
+		]]>
+	</sql>
+	<sql id="com.liferay.asset.service.persistence.AssetCategoryFinder.countByG_C_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetEntries_AssetCategories.entryId) AS COUNT_VALUE
@@ -27,7 +50,7 @@
 				(AssetCategory.name LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.countByG_N_P">
+	<sql id="com.liferay.asset.service.persistence.AssetCategoryFinder.countByG_N_P">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetCategory.categoryId) AS COUNT_VALUE
@@ -39,7 +62,7 @@
 				(AssetCategory.name LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByG_N">
+	<sql id="com.liferay.asset.service.persistence.AssetCategoryFinder.findByG_N">
 		<![CDATA[
 			SELECT
 				{AssetCategory.*}
@@ -50,7 +73,7 @@
 				(lower(AssetCategory.name) = ?)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByG_N_P">
+	<sql id="com.liferay.asset.service.persistence.AssetCategoryFinder.findByG_N_P">
 		<![CDATA[
 			SELECT
 				{AssetCategory.*}
@@ -64,7 +87,7 @@
 				AssetCategory.name ASC
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetEntryFinder.findByAndCategoryIds">
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByAndCategoryIds">
 		<![CDATA[
 			EXISTS
 				(
@@ -78,7 +101,7 @@
 				)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetEntryFinder.findByAndTagIds">
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByAndTagIds">
 		<![CDATA[
 			SELECT
 				DISTINCT AssetEntries_AssetTags.entryId
@@ -88,7 +111,7 @@
 				([$TAG_ID$])
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetEntryFinder.findByClassNameId">
+	<sql id="com.liferay.asset.service.persistence.AssetEntryFinder.findByClassNameId">
 		<![CDATA[
 			SELECT
 				{AssetEntry.*}
@@ -100,7 +123,7 @@
 				(AssetEntry.classNameId = ?)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetTagFinder.countByG_N">
+	<sql id="com.liferay.asset.service.persistence.AssetTagFinder.countByG_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetEntries_AssetTags.entryId) AS COUNT_VALUE
@@ -125,7 +148,7 @@
 				(AssetTag.name LIKE ?)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetTagFinder.countByG_C_N">
+	<sql id="com.liferay.asset.service.persistence.AssetTagFinder.countByG_C_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetEntries_AssetTags.entryId) AS COUNT_VALUE
@@ -151,7 +174,7 @@
 				(AssetTag.name LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetTagFinder.findByG_C_N">
+	<sql id="com.liferay.asset.service.persistence.AssetTagFinder.findByG_C_N">
 		<![CDATA[
 			SELECT
 				DISTINCT {AssetTag.*}
@@ -179,7 +202,7 @@
 				AssetTag.name ASC
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetTagFinder.findByG_N_S_E">
+	<sql id="com.liferay.asset.service.persistence.AssetTagFinder.findByG_N_S_E">
 		<![CDATA[
 			SELECT
 				AssetTag.tagId, AssetTag.name, SUM(SocialActivityCounter.currentValue)
@@ -205,7 +228,7 @@
 				AssetTag.tagId, AssetTag.name
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetVocabularyFinder.countByG_N">
+	<sql id="com.liferay.asset.service.persistence.AssetVocabularyFinder.countByG_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetVocabulary.vocabularyId) AS COUNT_VALUE
@@ -216,7 +239,7 @@
 				(AssetVocabulary.name LIKE ? OR ? IS NULL)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetVocabularyFinder.findByG_N">
+	<sql id="com.liferay.asset.service.persistence.AssetVocabularyFinder.findByG_N">
 		<![CDATA[
 			SELECT
 				{AssetVocabulary.*}
@@ -227,29 +250,6 @@
 				(lower(AssetVocabulary.name) LIKE ? OR ? IS NULL)
 			ORDER BY
 				AssetVocabulary.name ASC
-		]]>
-	</sql>
-	<sql id="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
-		<![CDATA[
-			SELECT
-				AssetLink.*
-			FROM
-				AssetLink
-			WHERE
-				EXISTS
-					(
-						SELECT
-							1
-						FROM
-							AssetEntry AssetEntry1, AssetEntry AssetEntry2
-						WHERE
-							(AssetLink.entryId1 = AssetEntry1.entryId) AND
-							(AssetLink.entryId2 = AssetEntry2.entryId) AND
-							(
-								(AssetEntry1.groupId = ?) OR
-								(AssetEntry2.groupId = ?)
-							)
-					)
 		]]>
 	</sql>
 </custom-sql>

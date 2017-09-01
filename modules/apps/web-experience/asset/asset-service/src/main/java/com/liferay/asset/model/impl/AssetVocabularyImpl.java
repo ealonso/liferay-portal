@@ -14,10 +14,10 @@
 
 package com.liferay.asset.model.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetCategoryConstants;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;

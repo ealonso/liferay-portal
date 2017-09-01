@@ -14,7 +14,7 @@
 
 package com.liferay.asset.util.comparator;
 
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 /**
