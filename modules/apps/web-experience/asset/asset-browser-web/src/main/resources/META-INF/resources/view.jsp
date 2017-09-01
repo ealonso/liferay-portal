@@ -65,7 +65,7 @@
 		searchContainer="<%= assetBrowserDisplayContext.getAssetBrowserSearch() %>"
 	>
 		<liferay-ui:search-container-row
-			className="com.liferay.asset.kernel.model.AssetEntry"
+			className="com.liferay.asset.model.AssetEntry"
 			escapedModel="<%= true %>"
 			modelVar="assetEntry"
 		>

@@ -14,8 +14,8 @@
 
 package com.liferay.asset.categories.internal.service.permission;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.service.AssetCategoryLocalService;
 import com.liferay.portal.kernel.security.permission.PermissionUpdateHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 
@@ -28,9 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Gergely Mathe
  */
 @Component(
-	property = {
-		"model.class.name=com.liferay.asset.kernel.model.AssetCategory"
-	},
+	property = {"model.class.name=com.liferay.asset.model.AssetCategory"},
 	service = PermissionUpdateHandler.class
 )
 public class AssetCategoryPermissionUpdateHandler

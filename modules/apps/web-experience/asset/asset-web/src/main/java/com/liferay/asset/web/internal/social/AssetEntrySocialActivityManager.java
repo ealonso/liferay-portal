@@ -14,7 +14,7 @@
 
 package com.liferay.asset.web.internal.social;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.portal.kernel.social.BaseSocialActivityManager;
 import com.liferay.portal.kernel.social.SocialActivityManager;
 import com.liferay.social.kernel.service.SocialActivityLocalService;
@@ -26,7 +26,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Adolfo Pérez
  */
 @Component(
-	property = "model.class.name=com.liferay.asset.kernel.model.AssetEntry",
+	property = "model.class.name=com.liferay.asset.model.AssetEntry",
 	service = SocialActivityManager.class
 )
 public class AssetEntrySocialActivityManager
