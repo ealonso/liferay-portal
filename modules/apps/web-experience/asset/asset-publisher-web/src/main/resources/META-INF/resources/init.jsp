@@ -63,6 +63,7 @@ page import="com.liferay.document.library.kernel.util.DLUtil" %><%@
 page import="com.liferay.dynamic.data.mapping.model.DDMStructure" %><%@
 page import="com.liferay.item.selector.ItemSelector" %><%@
 page import="com.liferay.item.selector.ItemSelectorReturnType" %><%@
+page import="com.liferay.petra.model.adapter.util.ModelAdapterUtil" %><%@
 page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.dao.search.SearchContainer" %><%@
 page import="com.liferay.portal.kernel.exception.NoSuchGroupException" %><%@
