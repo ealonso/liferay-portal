@@ -14,7 +14,7 @@
 
 package com.liferay.asset.util;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.kernel.model.User;
 
 import java.io.IOException;
