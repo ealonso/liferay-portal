@@ -23,8 +23,12 @@ taglib uri="http://liferay.com/tld/soy" prefix="soy" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.modern.site.building.page.web.internal.display.context.PagesDisplayContext" %><%@
-page import="com.liferay.portal.kernel.language.LanguageUtil" %>
+<%@ page import="com.liferay.frontend.taglib.servlet.taglib.util.AddMenuKeys" %><%@
+page import="com.liferay.modern.site.building.page.web.internal.display.context.PagesDisplayContext" %><%@
+page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
+page import="com.liferay.portal.kernel.model.Layout" %><%@
+page import="com.liferay.portal.kernel.portlet.PortletProvider" %><%@
+page import="com.liferay.portal.kernel.portlet.PortletProviderUtil" %>
 
 <%@ page import="java.util.HashMap" %><%@
 page import="java.util.Map" %>
