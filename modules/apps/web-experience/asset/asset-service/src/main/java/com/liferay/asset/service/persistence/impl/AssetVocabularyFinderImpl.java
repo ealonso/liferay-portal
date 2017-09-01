@@ -14,8 +14,9 @@
 
 package com.liferay.asset.service.persistence.impl;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.persistence.AssetVocabularyFinder;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.model.impl.AssetVocabularyImpl;
+import com.liferay.asset.service.persistence.AssetVocabularyFinder;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portlet.asset.model.impl.AssetVocabularyImpl;
 
 import java.util.Iterator;
 import java.util.List;
