@@ -1,0 +1,407 @@
+/* global AUI, Liferay */
+
+import Component from 'metal-component';
+import {Config} from 'metal-state';
+import Soy from 'metal-soy';
+import './PageListBlock.es';
+import templates from './PageList.soy';
+
+/**
+ * Component that allows to show layouts tree in form of three dependent blocks.
+ * It integrates three <PageListBlock /> components for N-th, N-th + 2 and
+ * N-th + 3 levels of layouts tree.
+ */
+class PageList extends Component {
+
+	/**
+	 * @inheritDoc
+	 */
+	attached() {
+		let A = new AUI();
+
+		A.use(
+			'liferay-search-container',
+			'liferay-search-container-select',
+			(A) => {
+				let plugins = [];
+
+				plugins.push(
+					{
+						cfg: {
+							rowSelector: '.page-list-block',
+						},
+						fn: A.Plugin.SearchContainerSelect,
+					}
+				);
+
+				let searchContainer = new Liferay.SearchContainer(
+					{
+						contentBox: A.one(this.refs.pageList),
+						id: this.getInitialConfig().portletNamespace +
+							this.getInitialConfig().searchContainerId,
+						plugins: plugins,
+					}
+				);
+
+				this.searchContainer_ = searchContainer;
+
+				Liferay.fire(
+					'search-container:registered',
+					{
+						searchContainer: searchContainer,
+					}
+				);
+			}
+		);
+	}
+
+	/**
+	 * Returns last selected node for specified page list block.
+	 *
+	 * @param {string} ref Page list block name.
+	 * @return {object} Last selected node or undefined if there is no node
+	 * 		   selected.
+	 * @private
+	 */
+	_getLastSelectedNode(ref) {
+		let node = this[ref].reduce(
+			(value, node) => (!value.layoutId && node.selected ? node : value),
+			{}
+		);
+
+		node.ref = ref;
+
+		return node;
+	}
+
+	/**
+	 * This is called when one of breadcrumb's entries is clicked.
+	 * @param {!Event} event
+	 * @private
+	 */
+	_handleBreadcrumbEntryClicked(event) {
+		const index = event.delegateTarget.dataset.index;
+		const layoutId = event.delegateTarget.dataset.layoutid;
+		const parentLayoutId = event.delegateTarget.dataset.parentlayoutid;
+		const title = event.delegateTarget.dataset.title;
+
+		this._loadParents(
+			{
+				layoutId: parentLayoutId,
+				selectedLayoutId: layoutId,
+			},
+			false, false
+		);
+
+		if (index > 1) {
+			let previousEntry = this.breadcrumbEntries[index - 1];
+
+			previousEntry.selectedLayoutId = layoutId;
+
+			this.handleFirstBlockNodeSelected(previousEntry);
+
+			this.refs.secondLevelNodes.selectNode(layoutId, parentLayoutId, title);
+		}		else if (index == 1) {
+			this.refs.firstLevelNodes.selectNode(layoutId, parentLayoutId, title);
+		}		else {
+			this.secondLevelNodes = [];
+			this.thirdLevelNodes = [];
+
+			this._updateBreadcrumb(
+				{
+					layoutId: layoutId,
+					parentLayoutId: -1,
+				}
+			);
+		}
+	}
+
+	/**
+	 * Loads children nodes for selected node in the first block.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @private
+	 */
+	_handleFirstBlockNodeSelected(event) {
+		if (event.loadParents && event.parentLayoutId > 0) {
+			this._loadParents({
+				layoutId: event.parentLayoutId,
+			});
+
+			return;
+		}
+
+		this._loadLayouts(
+			event.layoutId,
+			false,
+			event.selectedLayoutId,
+			(layouts) => {
+				this.secondLevelNodes = layouts;
+				this.thirdLevelNodes = [];
+			}
+		);
+
+		this._updateBreadcrumb(event);
+
+		this._resetActive(event);
+	}
+
+	/**
+	 * Loads children nodes for selected node in the second block.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @private
+	 */
+	_handleSecondBlockNodeSelected(event) {
+		this._loadLayouts(
+			event.layoutId,
+			false,
+			event.selectedLayoutId,
+			(layouts) => {
+				this.thirdLevelNodes = layouts;
+			}
+		);
+
+		this._updateBreadcrumb(event);
+
+		this._resetActive(event);
+	}
+
+	/**
+	 * Switches page blocks when user selects a node in the third block.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @private
+	 */
+	_handleThirdBlockNodeSelected(event) {
+		const secondLevelNodes = this.secondLevelNodes;
+		const thirdLevelNodes = this.thirdLevelNodes;
+
+		this._loadLayouts(
+			event.layoutId,
+			false,
+			event.selectedLayoutId,
+			(layouts) => {
+				if (layouts.length > 0) {
+					this.thirdLevelNodes = layouts;
+
+					this.firstLevelNodes = secondLevelNodes;
+					this.secondLevelNodes = thirdLevelNodes;
+				}
+			}
+		);
+
+		this._updateBreadcrumb(event);
+
+		this._resetActive(event);
+	}
+
+	/**
+	 * Loads parent or children layouts for specified node.
+	 *
+	 * @param {number} parentLayoutId Parent layout ID.
+	 * @param {boolean} loadParentLayouts If true when loads parents for the
+	 *        selected node.
+	 * @param {number} selectedLayoutId Layout ID to be selected.
+	 * @param {!Function} callback Callback function to be executed after the
+	 *        AJAX call.
+	 * @private
+	 */
+	_loadLayouts(parentLayoutId, loadParentLayouts, selectedLayoutId, callback) {
+		const orderBy = this.getInitialConfig().orderBy;
+
+		let body = new URLSearchParams();
+
+		body.append(`${this.portletNamespace}parentLayoutId`, parentLayoutId);
+		body.append(`${this.portletNamespace}loadParentLayouts`, loadParentLayouts);
+		body.append(`${this.portletNamespace}selectedLayoutId`, selectedLayoutId);
+		body.append(`${this.portletNamespace}orderByCol`, orderBy.orderByCol);
+		body.append(`${this.portletNamespace}orderByType`, orderBy.orderByType);
+
+		let data = {
+			cache: 'no-cache',
+			credentials: 'same-origin',
+			method: 'GET',
+
+		};
+
+		let queryString = this.getLayoutsURL + '&' + body.toString();
+
+		let request = new Request(queryString);
+
+		fetch(request, data).then(
+			(response) => response.json().then(callback)
+		);
+	}
+
+	/**
+	 * Loads parent layouts for selected node.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @param {boolean} switchBlocks If true when PageList switches blocks as
+	 * 	      the first block node was clicked.
+	 * @param {boolean} updateBreadcrumb If true when PageList updates
+	 *        breadcrumb entrues.
+	 * @private
+	 */
+	_loadParents(event, switchBlocks = true, updateBreadcrumb = true) {
+		const firstLevelNodes = this.firstLevelNodes;
+
+		this._loadLayouts(
+			event.layoutId,
+			true,
+			event.selectedLayoutId,
+			(layouts) => {
+				this.firstLevelNodes = layouts;
+
+				if (switchBlocks) {
+					this.secondLevelNodes = firstLevelNodes;
+					this.thirdLevelNodes = [];
+
+					let selectedNode = this._getLastSelectedNode('secondLevelNodes');
+
+					if (selectedNode.layoutId > 0) {
+						this.handleSecondBlockNodeSelected(selectedNode);
+					}
+
+					if (updateBreadcrumb) {
+						this._updateBreadcrumb(selectedNode);
+					}
+				}
+			}
+		);
+	}
+
+	/**
+	 * Resets all active selected nodes except the last selected.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @private
+	 */
+	_resetActive(event) {
+		const ref = event.ref;
+
+		for (let key in this.refs) {
+			if (key != ref && Array.isArray(this[key])) {
+				this[key].forEach(
+					(node) => {
+						node.active = false;
+					}
+				);
+
+				this[key] = this[key];
+			}
+		}
+	}
+
+	/**
+	 * Updates breadcrumb when some node was clicked.
+	 *
+	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * 		  the node. Also contains reference name of current active block and
+	 * 		  selected layout ID.
+	 * @private
+	 */
+	_updateBreadcrumb(event) {
+		const layoutId = event.layoutId;
+		const parentLayoutId = event.parentLayoutId;
+		const title = event.title;
+
+		let breadcrumbEntries = [];
+
+		breadcrumbEntries.push(this.breadcrumbEntries[0]);
+
+		let index = 1;
+
+		this.breadcrumbEntries.forEach(
+			(entry) => {
+				if (entry.parentLayoutId < parentLayoutId && entry.layoutId >= 0) {
+					entry.index = index++;
+
+					breadcrumbEntries.push(entry);
+				}
+			}
+		);
+
+		if (layoutId > 0) {
+			breadcrumbEntries.push(
+				{
+					index: index,
+					layoutId: layoutId,
+					parentLayoutId: parentLayoutId,
+					title: title,
+				}
+			);
+		}
+
+		this.breadcrumbEntries = breadcrumbEntries;
+	}
+
+}
+
+PageList.STATE = {
+	/**
+	 * Breadcrumb entries
+	 * @instance
+	 * @memberof PageList
+	 * @type {!Array}
+	 */
+	breadcrumbEntries: Config.array().required(),
+
+	/**
+	 * First block nodes
+	 * @instance
+	 * @memberof PageList
+	 * @type {!Array}
+	 */
+	firstLevelNodes: Config.array().required(),
+
+	/**
+	 * URL to get nodes via AJAX
+	 * @instance
+	 * @memberof PageList
+	 * @type {?string}
+	 * @default undefined
+	 */
+	getLayoutsURL: Config.string(),
+
+	/**
+	 * Namespace of portlet to prefix parameters names
+	 * @instance
+	 * @memberof PageList
+	 * @type {!string}
+	 */
+	portletNamespace: Config.string().required(),
+
+	/**
+	 * Second block nodes
+	 * @instance
+	 * @memberof PageList
+	 * @type {?Array}
+	 * @default []
+	 */
+	secondLevelNodes: Config.array().value([]),
+
+	/**
+	 * Third block nodes
+	 * @instance
+	 * @memberof PageList
+	 * @type {?Array}
+	 * @default []
+	 */
+	thirdLevelNodes: Config.array().value([]),
+};
+
+Soy.register(PageList, templates);
+
+export default PageList;
