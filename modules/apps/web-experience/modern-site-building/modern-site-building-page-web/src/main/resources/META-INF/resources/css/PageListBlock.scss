@@ -1,0 +1,47 @@
+@import "mixins";
+
+@include sm {
+	.page-list-block {
+		background-color: white;
+		border: 1px solid lightgray;
+		margin: 5px;
+		overflow-x: visible;
+		overflow-y: scroll;
+		padding-left: 1px;
+		padding-right: 1px;
+
+		.card {
+			margin-bottom: 2px;
+
+			.card-icon {
+				visibility: hidden;
+			}
+
+			.page-selected {
+				width: 30px;
+			}
+
+			&:hover, a:focus {
+				.card-icon {
+					visibility: visible;
+				}
+			}
+		}
+
+		.card.selected {
+			 background-color: #F7FAFA;
+
+			.card-icon {
+				visibility: visible;
+			}
+
+			span.active {
+				color: #65B6F0;
+			}
+		}
+	}
+
+	.page-list-block.empty {
+		opacity: 0.4;
+	}
+}

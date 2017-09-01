@@ -1,0 +1,123 @@
+{namespace PageListBlock}
+
+/**
+ * PageListBlock
+ */
+{template .render}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param? nodes: list<?>}
+
+	{let $blockClasses kind="text"}
+		page-list-block col-lg-4
+		{if not $nodes or length($nodes) == 0}
+			{sp}empty
+		{/if}
+	{/let}
+
+	<div class="{$blockClasses}" ref="pages">
+		{if $nodes}
+			{foreach $node in $nodes}
+				{call .card}
+					{param actions: $node.actions /}
+					{param active: $node.active /}
+					{param icon: $node.icon /}
+					{param layoutId: $node.layoutId /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param portletNamespace: $portletNamespace /}
+					{param parentLayoutId: $node.parentLayoutId /}
+					{param selected: $node.selected /}
+					{param title: $node.title /}
+				{/call}
+			{/foreach}
+		{/if}
+	</div>
+{/template}
+
+/**
+ * Renders a Lexicon Horizontal Card
+ */
+{template .card}
+	{@param actions: map<string, ?>}
+	{@param icon: string}
+	{@param layoutId: string}
+	{@param pathThemeImages: string}
+	{@param parentLayoutId: string}
+	{@param portletNamespace: string}
+	{@param title: string}
+	{@param? active: bool}
+	{@param? selected: bool}
+
+	{let $nodeAttributes kind="attributes"}
+		class="card card-horizontal {$selected ? 'selected' : ''}"
+		data-layoutid="{$layoutId}"
+		data-onclick="_handleNodeClicked"
+		data-parentlayoutid="{$parentLayoutId}"
+		data-title="{$title}"
+	{/let}
+
+	<div {$nodeAttributes}>
+		<div class="card-row card-row-padded">
+			<div class="page-selected card-col-content card-col-gutters">
+				<input class="entry-selector" name="{$portletNamespace}rowIds" type="checkbox" value="{$layoutId}"/>
+			</div>
+
+			{if $icon}
+				<div class="card-col-field">
+					<div class="sticker sticker-default sticker-lg sticker-static">
+						<svg class="lexicon-icon lexicon-icon-{$icon}" role="img" title="{$title}">
+							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#{$icon}"></use>
+						</svg>
+					</div>
+				</div>
+			{/if}
+
+			<div class="card-col-content card-col-gutters">
+				<span class="lfr-card-title-text text-default treeview-node-name truncate-text {$active ? 'active' : ''}">
+					{$title}
+				</span>
+			</div>
+
+			{if $actions['add']}
+				<div class="card-col-field">
+					<a href="{$actions['add'].url}">
+						<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-plus text-default" role="img">
+							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#plus"></use>
+						</svg>
+					</a>
+				</div>
+			{/if}
+
+			<div class="card-col-field">
+				{call Dropdown.render}
+					{param alignElementSelector: '#' + $portletNamespace + 'dropdown' + $layoutId /}
+					{param header kind="html"}
+						<a id="{$portletNamespace + 'dropdown' + $layoutId}" class="icon-monospaced" data-onclick="toggle" href="javascript:;">
+							<svg class="action-icon card-icon icon-monospaced lexicon-icon lexicon-icon-ellipsis-v" role="img">
+								<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#ellipsis-v"></use>
+							</svg>
+						</a>
+					{/param}
+
+					{param body kind="html"}
+						{foreach $action in keys($actions)}
+							{if $action != 'add'}
+								<li data-onclick="toggle">
+									<a href="{$actions[$action].url}">{$actions[$action].label}</a>
+								</li>
+							{/if}
+						{/foreach}
+					{/param}
+
+					{param position: 3 /}
+				{/call}
+			</div>
+
+			<div class="card-col-field">
+				<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
+					<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
+				</svg>
+			</div>
+		</div>
+	</div>
+{/template}
