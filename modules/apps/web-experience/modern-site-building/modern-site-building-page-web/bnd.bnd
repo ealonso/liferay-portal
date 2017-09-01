@@ -1,0 +1,13 @@
+Bundle-Name: Liferay Modern Site Building Page Web
+Bundle-SymbolicName: com.liferay.modern.site.building.page.web
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: Modern Site Building
+Provide-Capability:\
+	soy;\
+		type="modern-site-building-page";\
+		version:Version="${Bundle-Version}"
+Require-Capability:\
+	osgi.extender;\
+		filter:="(&(osgi.extender=jsp.taglib)(uri=http://liferay.com/tld/soy))"
+Web-ContextPath: /modern-site-building-page-web
