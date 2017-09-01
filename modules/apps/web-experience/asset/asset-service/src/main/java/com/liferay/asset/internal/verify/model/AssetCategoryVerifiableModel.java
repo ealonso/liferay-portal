@@ -14,7 +14,7 @@
 
 package com.liferay.asset.internal.verify.model;
 
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.model.AssetCategory;
 import com.liferay.portal.kernel.verify.model.VerifiableResourcedModel;
 
 /**

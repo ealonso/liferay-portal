@@ -14,9 +14,13 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.model.AssetVocabularyDisplay;
+import com.liferay.asset.model.AssetCategoryConstants;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.model.AssetVocabularyDisplay;
+import com.liferay.asset.service.base.AssetVocabularyServiceBaseImpl;
+import com.liferay.asset.service.permission.AssetCategoriesPermission;
+import com.liferay.asset.service.permission.AssetVocabularyPermission;
+import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
@@ -28,10 +32,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.base.AssetVocabularyServiceBaseImpl;
-import com.liferay.portlet.asset.service.permission.AssetCategoriesPermission;
-import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
-import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;

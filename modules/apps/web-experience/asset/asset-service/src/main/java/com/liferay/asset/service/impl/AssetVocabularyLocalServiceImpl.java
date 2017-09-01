@@ -14,10 +14,12 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.DuplicateVocabularyException;
-import com.liferay.asset.kernel.exception.VocabularyNameException;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.exception.DuplicateVocabularyException;
+import com.liferay.asset.exception.VocabularyNameException;
+import com.liferay.asset.model.AssetCategoryConstants;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.base.AssetVocabularyLocalServiceBaseImpl;
+import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
@@ -44,8 +46,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.asset.service.base.AssetVocabularyLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -14,13 +14,13 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.model.AssetCategoryProperty;
+import com.liferay.asset.model.AssetCategoryProperty;
+import com.liferay.asset.service.base.AssetCategoryPropertyServiceBaseImpl;
+import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portlet.asset.service.base.AssetCategoryPropertyServiceBaseImpl;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 
 import java.util.ArrayList;
 import java.util.List;
