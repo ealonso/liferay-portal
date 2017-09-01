@@ -14,14 +14,14 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.CategoryPropertyKeyException;
-import com.liferay.asset.kernel.exception.CategoryPropertyValueException;
-import com.liferay.asset.kernel.exception.DuplicateCategoryPropertyException;
-import com.liferay.asset.kernel.model.AssetCategoryProperty;
+import com.liferay.asset.exception.CategoryPropertyKeyException;
+import com.liferay.asset.exception.CategoryPropertyValueException;
+import com.liferay.asset.exception.DuplicateCategoryPropertyException;
+import com.liferay.asset.model.AssetCategoryProperty;
+import com.liferay.asset.service.base.AssetCategoryPropertyLocalServiceBaseImpl;
+import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portlet.asset.service.base.AssetCategoryPropertyLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.List;
 
