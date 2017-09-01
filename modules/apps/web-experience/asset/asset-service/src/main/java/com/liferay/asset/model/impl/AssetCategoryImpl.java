@@ -14,10 +14,10 @@
 
 package com.liferay.asset.model.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;

@@ -14,8 +14,11 @@
 
 package com.liferay.asset.service.impl;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetTagDisplay;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.model.AssetTagDisplay;
+import com.liferay.asset.service.base.AssetTagServiceBaseImpl;
+import com.liferay.asset.service.permission.AssetTagsPermission;
+import com.liferay.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -30,9 +33,6 @@ import com.liferay.portal.kernel.util.Autocomplete;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.base.AssetTagServiceBaseImpl;
-import com.liferay.portlet.asset.service.permission.AssetTagsPermission;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;

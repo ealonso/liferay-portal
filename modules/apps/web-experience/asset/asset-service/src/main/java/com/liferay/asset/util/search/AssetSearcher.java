@@ -14,9 +14,10 @@
 
 package com.liferay.asset.util.search;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.internal.util.AssetServiceUtil;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.kernel.search.BaseSearcher;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
@@ -33,7 +34,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +94,7 @@ public class AssetSearcher extends BaseSearcher {
 			return;
 		}
 
-		long[] filteredAllCategoryIds = AssetUtil.filterCategoryIds(
+		long[] filteredAllCategoryIds = AssetServiceUtil.filterCategoryIds(
 			permissionChecker, allCategoryIds);
 
 		if (allCategoryIds.length != filteredAllCategoryIds.length) {
@@ -181,7 +181,7 @@ public class AssetSearcher extends BaseSearcher {
 			return;
 		}
 
-		long[] filteredAnyCategoryIds = AssetUtil.filterCategoryIds(
+		long[] filteredAnyCategoryIds = AssetServiceUtil.filterCategoryIds(
 			permissionChecker, anyCategoryIds);
 
 		if (filteredAnyCategoryIds.length == 0) {

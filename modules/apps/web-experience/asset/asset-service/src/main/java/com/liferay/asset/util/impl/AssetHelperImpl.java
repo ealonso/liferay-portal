@@ -15,18 +15,19 @@
 package com.liferay.asset.util.impl;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.asset.kernel.model.NullClassTypeReader;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
+import com.liferay.asset.util.search.AssetSearcher;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManager;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
@@ -65,7 +66,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.PortletURLImpl;
-import com.liferay.portlet.asset.util.AssetSearcher;
 
 import java.io.Serializable;
 
