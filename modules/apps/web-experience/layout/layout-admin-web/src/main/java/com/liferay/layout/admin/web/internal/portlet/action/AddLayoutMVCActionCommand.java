@@ -238,11 +238,11 @@ public class AddLayoutMVCActionCommand extends BaseMVCActionCommand {
 
 		if (Validator.isNull(redirect)) {
 			redirect = _portal.getLayoutFullURL(layout, themeDisplay);
+		}
 
-			if (layout.isTypeURL()) {
-				redirect = _portal.getGroupFriendlyURL(
-					layout.getLayoutSet(), themeDisplay);
-			}
+		if (layout.isTypeURL()) {
+			redirect = _portal.getGroupFriendlyURL(
+				layout.getLayoutSet(), themeDisplay);
 		}
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);

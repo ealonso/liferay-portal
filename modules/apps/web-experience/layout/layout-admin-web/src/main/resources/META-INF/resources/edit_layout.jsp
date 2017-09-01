@@ -31,8 +31,6 @@ Group group = layoutsAdminDisplayContext.getGroup();
 
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
-PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
-
 long refererPlid = ParamUtil.getLong(request, "refererPlid", LayoutConstants.DEFAULT_PLID);
 
 Set<Long> parentPlids = new HashSet<Long>();
@@ -97,7 +95,7 @@ renderResponse.setTitle(selLayout.getName(locale));
 
 			<portlet:actionURL name="/layout/enable_layout" var="enableLayoutURL">
 				<portlet:param name="mvcPath" value="/view.jsp" />
-				<portlet:param name="redirect" value="<%= redirectURL.toString() %>" />
+				<portlet:param name="redirect" value="<%= redirect %>" />
 				<portlet:param name="incompleteLayoutRevisionId" value="<%= String.valueOf(layoutRevision.getLayoutRevisionId()) %>" />
 			</portlet:actionURL>
 
@@ -114,7 +112,7 @@ renderResponse.setTitle(selLayout.getName(locale));
 
 			<portlet:actionURL name="/layout/delete_layout" var="deleteLayoutURL">
 				<portlet:param name="mvcPath" value="/view.jsp" />
-				<portlet:param name="redirect" value='<%= HttpUtil.addParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>' />
+				<portlet:param name="redirect" value='<%= HttpUtil.addParameter(redirect, liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>' />
 				<portlet:param name="selPlid" value="<%= String.valueOf(layoutsAdminDisplayContext.getSelPlid()) %>" />
 				<portlet:param name="layoutSetBranchId" value="0" />
 				<portlet:param name="selPlid" value="<%= String.valueOf(selLayout.getParentPlid()) %>" />
