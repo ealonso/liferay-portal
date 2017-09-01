@@ -26,6 +26,9 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ page import="com.liferay.modern.site.building.page.web.internal.display.context.PagesDisplayContext" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 
+<%@ page import="java.util.HashMap" %><%@
+page import="java.util.Map" %>
+
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
