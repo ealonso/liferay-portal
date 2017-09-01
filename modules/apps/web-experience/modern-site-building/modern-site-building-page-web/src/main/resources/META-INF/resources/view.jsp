@@ -27,3 +27,5 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 		/>
 	</aui:nav>
 </aui:nav-bar>
+
+<%@ include file="/view_pages.jspf" %>
