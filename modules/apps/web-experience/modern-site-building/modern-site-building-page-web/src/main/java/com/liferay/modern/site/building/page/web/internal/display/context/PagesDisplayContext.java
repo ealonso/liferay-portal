@@ -15,17 +15,33 @@
 package com.liferay.modern.site.building.page.web.internal.display.context;
 
 import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
+import com.liferay.modern.site.building.page.web.internal.util.PagesPortletUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Pavel Savinov
@@ -41,6 +57,49 @@ public class PagesDisplayContext {
 		_request = request;
 	}
 
+	public JSONArray getBreadcrumbEntriesJSONArray() throws Exception {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("index", 0);
+		jsonObject.put("layoutId", -1);
+		jsonObject.put("parentLayoutId", 0);
+		jsonObject.put("title", LanguageUtil.get(_request, "home"));
+
+		jsonArray.put(jsonObject);
+
+		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
+			getGroupId(), isPrivateLayout(), getSelectedLayoutId());
+
+		if (selectedLayout != null) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			List<Layout> ancestors = selectedLayout.getAncestors();
+
+			Collections.reverse(ancestors);
+
+			int index = 1;
+
+			for (Layout ancestor : ancestors) {
+				JSONObject ancestorJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				ancestorJSONObject.put("index", index++);
+				ancestorJSONObject.put("layoutId", ancestor.getLayoutId());
+				ancestorJSONObject.put(
+					"parentLayoutId", ancestor.getParentLayoutId());
+				ancestorJSONObject.put(
+					"title", ancestor.getName(themeDisplay.getLocale()));
+
+				jsonArray.put(ancestorJSONObject);
+			}
+		}
+
+		return jsonArray;
+	}
+
 	public String getDisplayStyle() {
 		if (Validator.isNotNull(_displayStyle)) {
 			return _displayStyle;
@@ -53,6 +112,78 @@ public class PagesDisplayContext {
 			PagesPortletKeys.PAGES, "display-style", "icon");
 
 		return _displayStyle;
+	}
+
+	public long getGroupId() {
+		if (_groupId != null) {
+			return _groupId;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		_groupId = ParamUtil.getLong(
+			_request, "groupId", themeDisplay.getScopeGroupId());
+
+		return _groupId;
+	}
+
+	public JSONArray getLayoutsJSONArray(boolean children) throws Exception {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long parentLayoutId = getSelectedLayoutId();
+
+		if (!children && (parentLayoutId > 0)) {
+			Layout selectedLayout = LayoutLocalServiceUtil.getLayout(
+				getGroupId(), isPrivateLayout(), getSelectedLayoutId());
+
+			parentLayoutId = selectedLayout.getParentLayoutId();
+		}
+		else if (children && (parentLayoutId == 0)) {
+			return jsonArray;
+		}
+
+		DynamicQuery dynamicQuery = LayoutLocalServiceUtil.dynamicQuery();
+
+		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
+		Property privateLayoutProperty = PropertyFactoryUtil.forName(
+			"privateLayout");
+		Property parentLayoutIdProperty = PropertyFactoryUtil.forName(
+			"parentLayoutId");
+
+		dynamicQuery.add(groupIdProperty.eq(themeDisplay.getScopeGroupId()));
+		dynamicQuery.add(privateLayoutProperty.eq(isPrivateLayout()));
+		dynamicQuery.add(parentLayoutIdProperty.eq(parentLayoutId));
+
+		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
+			dynamicQuery, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
+
+		for (Layout layout : layouts) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			JSONObject actionsJSONObject =
+				PagesPortletUtil.getActionsJSONObject(layout, _request);
+
+			if (actionsJSONObject.length() > 0) {
+				jsonObject.put("actions", actionsJSONObject);
+			}
+
+			jsonObject.put(
+				"active", layout.getLayoutId() == getSelectedLayoutId());
+			jsonObject.put("icon", "page");
+			jsonObject.put("layoutId", layout.getLayoutId());
+			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
+			jsonObject.put("selected", jsonObject.getBoolean("active"));
+			jsonObject.put("title", layout.getName(themeDisplay.getLocale()));
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	public String getNavigation() {
@@ -75,6 +206,15 @@ public class PagesDisplayContext {
 			_request, "orderByCol", "create-date");
 
 		return _orderByCol;
+	}
+
+	public JSONObject getOrderByJSONObject() {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("orderByCol", getOrderByCol());
+		jsonObject.put("orderByType", getOrderByType());
+
+		return jsonObject;
 	}
 
 	public String getOrderByType() {
@@ -101,12 +241,38 @@ public class PagesDisplayContext {
 		return portletURL;
 	}
 
+	public long getSelectedLayoutId() {
+		if (_selectedLayoutId != null) {
+			return _selectedLayoutId;
+		}
+
+		_selectedLayoutId = ParamUtil.getLong(_request, "selectedLayoutId", 0);
+
+		return _selectedLayoutId;
+	}
+
+	public boolean isPrivateLayout() {
+		boolean privateLayout = ParamUtil.getBoolean(_request, "privateLayout");
+
+		if (privateLayout) {
+			return true;
+		}
+
+		if (Objects.equals(getNavigation(), "private-pages")) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private String _displayStyle;
+	private Long _groupId;
 	private String _navigation;
 	private String _orderByCol;
 	private String _orderByType;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private Long _selectedLayoutId;
 
 }
