@@ -1,0 +1,15 @@
+@import "mixins";
+
+@include sm {
+	.page-list {
+		display: flex;
+		height: 60%;
+		justify-content: space-around;
+		position: fixed;
+		width: 65%;
+	}
+
+	.page-list-breadcrumb {
+		margin-top: 20px;
+	}
+}

@@ -1,0 +1,88 @@
+{namespace PageList}
+
+/**
+ * PageList
+ */
+{template .render}
+	{@param breadcrumbEntries: list<?>}
+	{@param firstLevelNodes: list<?>}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param? _handleFirstBlockNodeSelected: any}
+	{@param? _handleSecondBlockNodeSelected: any}
+	{@param? _handleThirdBlockNodeSelected: any}
+	{@param? secondLevelNodes: list<?>}
+	{@param? thirdLevelNodes: list<?>}
+
+	<div class="container-fluid-1280" ref="pageList">
+		<div class="page-list-breadcrumb">
+			<ul class="breadcrumb breadcrumb-horizontal">
+				{foreach $entry in $breadcrumbEntries}
+					{call .breadcrumbEntry}
+						{param entry: $entry /}
+						{param last: isLast($entry) /}
+					{/call}
+				{/foreach}
+			</ul>
+		</div>
+
+		<div class="page-list">
+			{call PageListBlock.render}
+				{param events: [
+					'nodeSelected': $_handleFirstBlockNodeSelected
+				] /}
+				{param nodes: $firstLevelNodes /}
+				{param pathThemeImages: $pathThemeImages /}
+				{param portletNamespace: $portletNamespace /}
+				{param ref: 'nodes' /}
+			{/call}
+			{call PageListBlock.render}
+				{param events: [
+					'nodeSelected': $_handleSecondBlockNodeSelected
+				] /}
+				{param nodes: $secondLevelNodes /}
+				{param pathThemeImages: $pathThemeImages /}
+				{param portletNamespace: $portletNamespace /}
+				{param ref: 'children' /}
+			{/call}
+			{call PageListBlock.render}
+				{param events: [
+					'nodeSelected': $_handleThirdBlockNodeSelected
+				] /}
+				{param nodes: $thirdLevelNodes /}
+				{param pathThemeImages: $pathThemeImages /}
+				{param portletNamespace: $portletNamespace /}
+				{param ref: 'grandChildren' /}
+			{/call}
+		</div>
+	</div>
+{/template}
+
+/**
+ *	Renders a Lexicon breadcrumb entry
+ */
+{template .breadcrumbEntry}
+	{@param entry: ?}
+	{@param last: bool}
+
+	{let $nodeAttributes kind="attributes"}
+		class="{$last ? 'active' : ''}"
+		data-index="{$entry.index}"
+		data-layoutId="{$entry.layoutId}"
+
+		{if not $last}
+			data-onclick="_handleBreadcrumbEntryClicked"
+		{/if}
+
+		data-parentLayoutId="{$entry.parentLayoutId}"
+		data-title="{$entry.title}"
+	{/let}
+
+	<li {$nodeAttributes}>
+		{if $last}
+			<span>{$entry.title}</span>
+		{else}
+			{$entry.title}
+		{/if}
+	</li>
+{/template}
