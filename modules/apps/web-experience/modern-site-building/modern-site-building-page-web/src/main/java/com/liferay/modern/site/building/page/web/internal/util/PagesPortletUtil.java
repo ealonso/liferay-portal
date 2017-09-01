@@ -15,6 +15,7 @@
 package com.liferay.modern.site.building.page.web.internal.util;
 
 import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
+import com.liferay.modern.site.building.page.web.internal.util.comparator.LayoutCreateDateComparator;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -161,6 +163,24 @@ public class PagesPortletUtil {
 		}
 
 		return jsonObject;
+	}
+
+	public static OrderByComparator<Layout>
+		getLayoutOrderByComparator(String orderByCol, String orderByType) {
+
+		boolean orderByAsc = false;
+
+		if (orderByType.equals("asc")) {
+			orderByAsc = true;
+		}
+
+		OrderByComparator<Layout> orderByComparator = null;
+
+		if (orderByCol.equals("create-date")) {
+			orderByComparator = new LayoutCreateDateComparator(orderByAsc);
+		}
+
+		return orderByComparator;
 	}
 
 }

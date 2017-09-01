@@ -30,18 +30,20 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Pavel Savinov
@@ -159,9 +161,13 @@ public class PagesDisplayContext {
 		dynamicQuery.add(privateLayoutProperty.eq(isPrivateLayout()));
 		dynamicQuery.add(parentLayoutIdProperty.eq(parentLayoutId));
 
+		OrderByComparator orderByComparator =
+			PagesPortletUtil.getLayoutOrderByComparator(
+				getOrderByCol(), getOrderByType());
+
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
 			dynamicQuery, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
+			orderByComparator);
 
 		for (Layout layout : layouts) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
