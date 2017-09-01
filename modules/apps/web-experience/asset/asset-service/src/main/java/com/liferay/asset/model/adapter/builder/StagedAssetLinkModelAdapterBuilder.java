@@ -14,10 +14,10 @@
 
 package com.liferay.asset.model.adapter.builder;
 
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
+import com.liferay.asset.model.AssetLink;
+import com.liferay.asset.model.adapter.StagedAssetLink;
+import com.liferay.asset.model.adapter.impl.StagedAssetLinkImpl;
 import com.liferay.portal.kernel.model.adapter.builder.ModelAdapterBuilder;
-import com.liferay.portlet.asset.model.adapter.impl.StagedAssetLinkImpl;
 
 /**
  * @author Mate Thurzo
