@@ -14,7 +14,7 @@
 
 package com.liferay.asset.internal.verify.model;
 
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.portal.kernel.verify.model.VerifiableResourcedModel;
 import com.liferay.portal.kernel.verify.model.VerifiableUUIDModel;
 
