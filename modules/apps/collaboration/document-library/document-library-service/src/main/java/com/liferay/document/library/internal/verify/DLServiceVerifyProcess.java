@@ -585,6 +585,13 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 		ApplicationContext applicationContext) {
 	}
 
+	@Reference(
+		target = "(&(release.bundle.symbolic.name=com.liferay.asset.service)(release.schema.version=1.0.0))",
+		unbind = "-"
+	)
+	protected void setAssetRelease(Release release) {
+	}
+
 	@Reference(unbind = "-")
 	protected void setCounterLocalService(
 		CounterLocalService counterLocalService) {
