@@ -31,7 +31,6 @@ import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetSearcher;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
-import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -1294,7 +1293,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 	protected AssetEntryValidatorExclusionRuleRegistry
 		assetEntryValidatorExclusionRuleRegistry;
 
-	@BeanReference(type = AssetEntryValidatorRegistry.class)
+	@ServiceReference(type = AssetEntryValidatorRegistry.class)
 	protected AssetEntryValidatorRegistry assetEntryValidatorRegistry;
 
 }
