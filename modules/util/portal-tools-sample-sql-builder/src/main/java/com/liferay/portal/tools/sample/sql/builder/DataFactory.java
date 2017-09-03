@@ -23,11 +23,11 @@ import com.liferay.asset.model.AssetTagModel;
 import com.liferay.asset.model.AssetTagStatsModel;
 import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.model.AssetVocabularyModel;
-import com.liferay.asset.model.impl.AssetCategoryModelImpl;
-import com.liferay.asset.model.impl.AssetEntryModelImpl;
-import com.liferay.asset.model.impl.AssetTagModelImpl;
-import com.liferay.asset.model.impl.AssetTagStatsModelImpl;
-import com.liferay.asset.model.impl.AssetVocabularyModelImpl;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.service.AssetTagStatsLocalServiceUtil;
+import com.liferay.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.model.BlogsEntryModel;
 import com.liferay.blogs.model.BlogsStatsUserModel;
@@ -847,10 +847,10 @@ public class DataFactory {
 				_maxAssetTagCount * 3);
 
 			for (int j = 0; j < _maxAssetTagCount; j++) {
-				AssetTagModel assetTagModel = new AssetTagModelImpl();
+				AssetTagModel assetTagModel =
+					AssetTagLocalServiceUtil.createAssetTag(_counter.get());
 
 				assetTagModel.setUuid(SequentialUUID.generate());
-				assetTagModel.setTagId(_counter.get());
 				assetTagModel.setGroupId(i);
 				assetTagModel.setCompanyId(_companyId);
 				assetTagModel.setUserId(_sampleUserId);
@@ -2931,10 +2931,10 @@ public class DataFactory {
 		long groupId, long lastRightCategoryId, String name,
 		long vocabularyId) {
 
-		AssetCategoryModel assetCategoryModel = new AssetCategoryModelImpl();
+		AssetCategoryModel assetCategoryModel =
+			AssetCategoryLocalServiceUtil.createAssetCategory(_counter.get());
 
 		assetCategoryModel.setUuid(SequentialUUID.generate());
-		assetCategoryModel.setCategoryId(_counter.get());
 		assetCategoryModel.setGroupId(groupId);
 		assetCategoryModel.setCompanyId(_companyId);
 		assetCategoryModel.setUserId(_sampleUserId);
@@ -2967,9 +2967,9 @@ public class DataFactory {
 		long classPK, String uuid, long classTypeId, boolean listable,
 		boolean visible, String mimeType, String title) {
 
-		AssetEntryModel assetEntryModel = new AssetEntryModelImpl();
+		AssetEntryModel assetEntryModel =
+			AssetEntryLocalServiceUtil.createAssetEntry(_counter.get());
 
-		assetEntryModel.setEntryId(_counter.get());
 		assetEntryModel.setGroupId(groupId);
 		assetEntryModel.setCompanyId(_companyId);
 		assetEntryModel.setUserId(_sampleUserId);
@@ -2995,9 +2995,9 @@ public class DataFactory {
 	protected AssetTagStatsModel newAssetTagStatsModel(
 		long tagId, long classNameId) {
 
-		AssetTagStatsModel assetTagStatsModel = new AssetTagStatsModelImpl();
+		AssetTagStatsModel assetTagStatsModel =
+			AssetTagStatsLocalServiceUtil.createAssetTagStats(_counter.get());
 
-		assetTagStatsModel.setTagStatsId(_counter.get());
 		assetTagStatsModel.setTagId(tagId);
 		assetTagStatsModel.setClassNameId(classNameId);
 
@@ -3008,10 +3008,10 @@ public class DataFactory {
 		long grouId, long userId, String userName, String name) {
 
 		AssetVocabularyModel assetVocabularyModel =
-			new AssetVocabularyModelImpl();
+			AssetVocabularyLocalServiceUtil.createAssetVocabulary(
+				_counter.get());
 
 		assetVocabularyModel.setUuid(SequentialUUID.generate());
-		assetVocabularyModel.setVocabularyId(_counter.get());
 		assetVocabularyModel.setGroupId(grouId);
 		assetVocabularyModel.setCompanyId(_companyId);
 		assetVocabularyModel.setUserId(userId);
