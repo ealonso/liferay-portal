@@ -14,8 +14,8 @@
 
 package com.liferay.asset.tags.internal.service.permission;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.portal.kernel.security.permission.PermissionUpdateHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 
@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Gergely Mathe
  */
 @Component(
-	property = {"model.class.name=com.liferay.asset.kernel.model.AssetTag"},
+	property = {"model.class.name=com.liferay.asset.model.AssetTag"},
 	service = PermissionUpdateHandler.class
 )
 public class AssetTagPermissionUpdateHandler
