@@ -1,8 +1,13 @@
 Bundle-Name: Liferay Asset Service
 Bundle-SymbolicName: com.liferay.asset.service
-Bundle-Version: 1.2.0
+Bundle-Version: 2.0.0
 Export-Package:\
 	com.liferay.asset.exportimport.staged.model.repository,\
+	com.liferay.asset.model.impl,\
+	com.liferay.asset.service.permission,\
+	com.liferay.asset.util,\
 	com.liferay.asset.util.impl
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Asset
+Liferay-Require-SchemaVersion: 1.0.0
+Liferay-Service: true

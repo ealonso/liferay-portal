@@ -14,7 +14,7 @@
 
 package com.liferay.document.library.internal.verify;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
@@ -36,7 +36,6 @@ import com.liferay.portal.instances.service.PortalInstancesLocalService;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -585,6 +584,13 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 		ApplicationContext applicationContext) {
 	}
 
+	@Reference(
+		target = "(&(release.bundle.symbolic.name=com.liferay.asset.service)(release.schema.version=1.0.0))",
+		unbind = "-"
+	)
+	protected void setAssetRelease(Release release) {
+	}
+
 	@Reference(unbind = "-")
 	protected void setCounterLocalService(
 		CounterLocalService counterLocalService) {
@@ -670,7 +676,7 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 							PropertyFactoryUtil.forName("fileEntryId");
 
 						DynamicQuery assetEntryDynamicQuery =
-							DynamicQueryFactoryUtil.forClass(AssetEntry.class);
+							_assetEntryLocalService.dynamicQuery();
 
 						Property classNameIdProperty =
 							PropertyFactoryUtil.forName("classNameId");
@@ -749,7 +755,7 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 							"folderId");
 
 						DynamicQuery assetEntryDynamicQuery =
-							DynamicQueryFactoryUtil.forClass(AssetEntry.class);
+							_assetEntryLocalService.dynamicQuery();
 
 						Property classNameIdProperty =
 							PropertyFactoryUtil.forName("classNameId");
@@ -815,6 +821,9 @@ public class DLServiceVerifyProcess extends VerifyProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLServiceVerifyProcess.class);
+
+	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
 
 	private CounterLocalService _counterLocalService;
 	private DLAppHelperLocalService _dlAppHelperLocalService;

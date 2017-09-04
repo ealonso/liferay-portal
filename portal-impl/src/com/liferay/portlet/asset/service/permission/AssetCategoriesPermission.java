@@ -18,14 +18,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.BaseResourcePermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 
 /**
  * @author Pavel Savinov
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.permission.AssetCategoriesPermission}
  */
-@OSGiBeanProperties(
-	property = {"resource.name=" + AssetCategoriesPermission.RESOURCE_NAME}
-)
+@Deprecated
 public class AssetCategoriesPermission extends BaseResourcePermissionChecker {
 
 	public static final String RESOURCE_NAME = "com.liferay.asset.categories";

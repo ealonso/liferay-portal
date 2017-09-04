@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see AssetTagService
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetTagServiceWrapper implements AssetTagService,
 	ServiceWrapper<AssetTagService> {
