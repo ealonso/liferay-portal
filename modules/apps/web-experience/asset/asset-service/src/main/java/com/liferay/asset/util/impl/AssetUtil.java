@@ -14,7 +14,6 @@
 
 package com.liferay.asset.util.impl;
 
-import com.liferay.asset.internal.util.AssetSearcher;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
@@ -32,6 +31,7 @@ import com.liferay.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
+import com.liferay.asset.util.AssetSearcher;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManager;
 import com.liferay.dynamic.data.mapping.kernel.DDMStructureManagerUtil;
