@@ -22,7 +22,7 @@ String type = ParamUtil.getString(request, "type");
 
 AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByType(type);
 
-AssetEntry assetEntry = assetRendererFactory.getAssetEntry(assetEntryId);
+AssetEntry assetEntry = ModelAdapterUtil.adapt(AssetEntry.class, assetRendererFactory.getAssetEntry(assetEntryId));
 
 AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
 %>
