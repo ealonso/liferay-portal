@@ -1,0 +1,21 @@
+{
+	"dependencies": {
+		"metal": "^2.13.2",
+		"metal-component": "^2.13.2",
+		"metal-dom": "^2.13.2",
+		"metal-dropdown": "^3.0.0",
+		"metal-events": "^2.13.2",
+		"metal-position": "^2.1.0",
+		"metal-soy": "^2.13.2",
+		"metal-state": "^2.13.2"
+	},
+	"devDependencies": {
+		"eslint": "^3.17.1",
+		"eslint-config-liferay": "^1.0.2",
+		"gulp": "^3.9.1",
+		"gulp-metal": "^2.0.2",
+		"metal-cli": "^4.3.3"
+	},
+	"name": "modern-site-building-page-web",
+	"version": "1.0.0"
+}
