@@ -26,24 +26,6 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	</aui:nav>
 </aui:nav-bar>
 
-<liferay-portlet:resourceURL id="getLayouts" var="getLayoutsURL">
-	<liferay-portlet:param name="groupId" value="<%= String.valueOf(pageDisplayContext.getGroupId()) %>" />
-	<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(pageDisplayContext.isPrivateLayout()) %>" />
-</liferay-portlet:resourceURL>
-
-<%
-Map<String, Object> context = new HashMap<>();
-
-context.put("breadcrumbEntries", pageDisplayContext.getBreadcrumbEntriesJSONArray());
-context.put("firstLevelNodes", pageDisplayContext.getLayoutsJSONArray(false));
-context.put("getLayoutsURL", getLayoutsURL);
-context.put("orderBy", pageDisplayContext.getOrderByJSONObject());
-context.put("pathThemeImages", themeDisplay.getPathThemeImages());
-context.put("portletNamespace", renderResponse.getNamespace());
-context.put("secondLevelNodes", pageDisplayContext.getLayoutsJSONArray(true));
-context.put("searchContainerId", "pages");
-%>
-
 <liferay-frontend:management-bar
 	disabled="<%= false %>"
 	includeCheckBox="<%= true %>"
@@ -83,6 +65,24 @@ context.put("searchContainerId", "pages");
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutURL %>" name="fm">
+	<liferay-portlet:resourceURL id="getLayouts" var="getLayoutsURL">
+		<liferay-portlet:param name="groupId" value="<%= String.valueOf(pageDisplayContext.getGroupId()) %>" />
+		<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(pageDisplayContext.isPrivateLayout()) %>" />
+	</liferay-portlet:resourceURL>
+
+	<%
+	Map<String, Object> context = new HashMap<>();
+
+	context.put("breadcrumbEntries", pageDisplayContext.getBreadcrumbEntriesJSONArray());
+	context.put("firstLevelNodes", pageDisplayContext.getLayoutsJSONArray(false));
+	context.put("getLayoutsURL", getLayoutsURL);
+	context.put("orderBy", pageDisplayContext.getOrderByJSONObject());
+	context.put("pathThemeImages", themeDisplay.getPathThemeImages());
+	context.put("portletNamespace", renderResponse.getNamespace());
+	context.put("searchContainerId", "pages");
+	context.put("secondLevelNodes", pageDisplayContext.getLayoutsJSONArray(true));
+	%>
+
 	<soy:template-renderer
 		context="<%= context %>"
 		module="modern-site-building-page-web/js/PageList.es"
