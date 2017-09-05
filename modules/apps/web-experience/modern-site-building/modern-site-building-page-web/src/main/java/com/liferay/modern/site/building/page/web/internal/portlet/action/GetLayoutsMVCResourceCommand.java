@@ -16,9 +16,6 @@ package com.liferay.modern.site.building.page.web.internal.portlet.action;
 
 import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
 import com.liferay.modern.site.building.page.web.internal.util.PagesPortletUtil;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -91,21 +88,9 @@ public class GetLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 			selectedLayoutId = parentLayout.getLayoutId();
 		}
 
-		DynamicQuery dynamicQuery = _layoutLocalService.dynamicQuery();
-
-		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
-		Property privateLayoutProperty = PropertyFactoryUtil.forName(
-			"privateLayout");
-		Property parentLayoutIdProperty = PropertyFactoryUtil.forName(
-			"parentLayoutId");
-
-		dynamicQuery.add(groupIdProperty.eq(groupId));
-		dynamicQuery.add(privateLayoutProperty.eq(privateLayout));
-		dynamicQuery.add(parentLayoutIdProperty.eq(parentLayoutId));
-
-		List<Layout> layouts = _layoutLocalService.dynamicQuery(
-			dynamicQuery, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			orderByComparator);
+		List<Layout> layouts = _layoutLocalService.getLayouts(
+			groupId, privateLayout, parentLayoutId, true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, orderByComparator);
 
 		HttpServletRequest request = _portal.getHttpServletRequest(
 			resourceRequest);
