@@ -20,10 +20,8 @@
 renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 %>
 
-<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+<aui:nav-bar markupView="lexicon">
 	<aui:nav cssClass="navbar-nav">
-		<aui:nav-item
-			label="pages"
-		/>
+		<aui:nav-item label="pages" />
 	</aui:nav>
 </aui:nav-bar>
