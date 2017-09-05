@@ -34,22 +34,22 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-display-buttons
 			displayViews='<%= new String[] {"icon"} %>'
-			portletURL="<%= pageDisplayContext.getPortletURL() %>"
-			selectedDisplayStyle="<%= pageDisplayContext.getDisplayStyle() %>"
+			portletURL="<%= msbPagesDisplayContext.getPortletURL() %>"
+			selectedDisplayStyle="<%= msbPagesDisplayContext.getDisplayStyle() %>"
 		/>
 	</liferay-frontend:management-bar-buttons>
 
 	<liferay-frontend:management-bar-filters>
 		<liferay-frontend:management-bar-navigation
 			navigationKeys='<%= new String[] {"public-pages", "private-pages"} %>'
-			portletURL="<%= pageDisplayContext.getPortletURL() %>"
+			portletURL="<%= msbPagesDisplayContext.getPortletURL() %>"
 		/>
 
 		<liferay-frontend:management-bar-sort
-			orderByCol="<%= pageDisplayContext.getOrderByCol() %>"
-			orderByType="<%= pageDisplayContext.getOrderByType() %>"
-			orderColumns="<%= pageDisplayContext.getOrderColumns() %>"
-			portletURL="<%= pageDisplayContext.getPortletURL() %>"
+			orderByCol="<%= msbPagesDisplayContext.getOrderByCol() %>"
+			orderByType="<%= msbPagesDisplayContext.getOrderByType() %>"
+			orderColumns="<%= msbPagesDisplayContext.getOrderColumns() %>"
+			portletURL="<%= msbPagesDisplayContext.getPortletURL() %>"
 		/>
 	</liferay-frontend:management-bar-filters>
 
@@ -58,29 +58,29 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
-<portlet:actionURL name="/pages/delete_layout" var="deleteLayoutURL">
-	<portlet:param name="groupId" value="<%= String.valueOf(pageDisplayContext.getGroupId()) %>" />
-	<portlet:param name="privateLayout" value="<%= String.valueOf(pageDisplayContext.isPrivateLayout()) %>" />
+<portlet:actionURL name="/msb_pages/delete_layout" var="deleteLayoutURL">
+	<portlet:param name="groupId" value="<%= String.valueOf(msbPagesDisplayContext.getGroupId()) %>" />
+	<portlet:param name="privateLayout" value="<%= String.valueOf(msbPagesDisplayContext.isPrivateLayout()) %>" />
 	<portlet:param name="redirect" value="<%= currentURL %>" />
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutURL %>" name="fm">
-	<liferay-portlet:resourceURL id="getLayouts" var="getLayoutsURL">
-		<liferay-portlet:param name="groupId" value="<%= String.valueOf(pageDisplayContext.getGroupId()) %>" />
-		<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(pageDisplayContext.isPrivateLayout()) %>" />
+	<liferay-portlet:resourceURL id="/msb_pages/get_layouts" var="getLayoutsURL">
+		<liferay-portlet:param name="groupId" value="<%= String.valueOf(msbPagesDisplayContext.getGroupId()) %>" />
+		<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(msbPagesDisplayContext.isPrivateLayout()) %>" />
 	</liferay-portlet:resourceURL>
 
 	<%
 	Map<String, Object> context = new HashMap<>();
 
-	context.put("breadcrumbEntries", pageDisplayContext.getBreadcrumbEntriesJSONArray());
-	context.put("firstLevelNodes", pageDisplayContext.getLayoutsJSONArray(false));
+	context.put("breadcrumbEntries", msbPagesDisplayContext.getBreadcrumbEntriesJSONArray());
+	context.put("firstLevelNodes", msbPagesDisplayContext.getLayoutsJSONArray(false));
 	context.put("getLayoutsURL", getLayoutsURL);
-	context.put("orderBy", pageDisplayContext.getOrderByJSONObject());
+	context.put("orderBy", msbPagesDisplayContext.getOrderByJSONObject());
 	context.put("pathThemeImages", themeDisplay.getPathThemeImages());
 	context.put("portletNamespace", renderResponse.getNamespace());
 	context.put("searchContainerId", "pages");
-	context.put("secondLevelNodes", pageDisplayContext.getLayoutsJSONArray(true));
+	context.put("secondLevelNodes", msbPagesDisplayContext.getLayoutsJSONArray(true));
 	%>
 
 	<soy:template-renderer

@@ -47,8 +47,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + MSBPagesPortletKeys.PAGES,
-		"mvc.command.name=getLayouts"
+		"javax.portlet.name=" + MSBPagesPortletKeys.MSB_PAGES,
+		"mvc.command.name=/msb_pages/get_layouts"
 	},
 	service = MVCResourceCommand.class
 )

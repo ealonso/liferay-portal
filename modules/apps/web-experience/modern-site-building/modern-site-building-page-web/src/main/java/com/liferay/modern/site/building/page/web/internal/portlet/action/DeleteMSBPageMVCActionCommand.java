@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + MSBPagesPortletKeys.PAGES,
-		"mvc.command.name=/pages/delete_layout"
+		"javax.portlet.name=" + MSBPagesPortletKeys.MSB_PAGES,
+		"mvc.command.name=/msb_pages/delete_layout"
 	},
 	service = MVCActionCommand.class
 )

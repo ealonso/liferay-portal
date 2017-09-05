@@ -40,7 +40,7 @@ page import="java.util.Map" %>
 <portlet:defineObjects />
 
 <%
-MSBPagesDisplayContext pageDisplayContext = new MSBPagesDisplayContext(renderRequest, renderResponse, request);
+MSBPagesDisplayContext msbPagesDisplayContext = new MSBPagesDisplayContext(renderRequest, renderResponse, request);
 %>
 
 <%@ include file="/init-ext.jsp" %>

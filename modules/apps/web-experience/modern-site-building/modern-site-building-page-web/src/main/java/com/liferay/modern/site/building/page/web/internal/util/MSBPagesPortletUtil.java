@@ -53,7 +53,8 @@ public class MSBPagesPortletUtil {
 			Layout.class.getName(), PortletProvider.Action.EDIT);
 
 		PortletURL redirectURL = PortalUtil.getControlPanelPortletURL(
-			request, MSBPagesPortletKeys.PAGES, PortletRequest.RENDER_PHASE);
+			request, MSBPagesPortletKeys.MSB_PAGES,
+			PortletRequest.RENDER_PHASE);
 
 		redirectURL.setParameter(
 			"groupId", String.valueOf(layout.getGroupId()));
