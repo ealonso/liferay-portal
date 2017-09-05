@@ -14,14 +14,10 @@
  */
 --%>
 
-<%
-String searchContainerId = "pages";
-%>
-
 <liferay-frontend:management-bar
 	disabled="false"
 	includeCheckBox="true"
-	searchContainerId="<%= searchContainerId %>"
+	searchContainerId="pages"
 >
 	<liferay-frontend:management-bar-buttons>
 		<liferay-frontend:management-bar-display-buttons
