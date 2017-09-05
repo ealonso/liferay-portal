@@ -65,12 +65,12 @@ public class GetLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
-		boolean loadParentLayouts = ParamUtil.getBoolean(
-			resourceRequest, "loadParentLayouts");
 		long parentLayoutId = ParamUtil.getLong(
 			resourceRequest, "parentLayoutId");
 		boolean privateLayout = ParamUtil.getBoolean(
 			resourceRequest, "privateLayout");
+		boolean loadParentLayouts = ParamUtil.getBoolean(
+			resourceRequest, "loadParentLayouts");
 		long selectedLayoutId = ParamUtil.getLong(
 			resourceRequest, "selectedLayoutId");
 
