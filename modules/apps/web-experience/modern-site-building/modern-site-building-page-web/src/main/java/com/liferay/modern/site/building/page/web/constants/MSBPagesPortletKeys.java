@@ -19,7 +19,7 @@ package com.liferay.modern.site.building.page.web.constants;
  */
 public class MSBPagesPortletKeys {
 
-	public static final String PAGES =
+	public static final String MSB_PAGES =
 		"com_liferay_modern_site_building_page_web_portlet_MSBPagesPortlet";
 
 }

@@ -38,12 +38,12 @@ public class MSBPagesPanelApp extends BasePanelApp {
 
 	@Override
 	public String getPortletId() {
-		return MSBPagesPortletKeys.PAGES;
+		return MSBPagesPortletKeys.MSB_PAGES;
 	}
 
 	@Override
 	@Reference(
-		target = "(javax.portlet.name=" + MSBPagesPortletKeys.PAGES + ")",
+		target = "(javax.portlet.name=" + MSBPagesPortletKeys.MSB_PAGES + ")",
 		unbind = "-"
 	)
 	public void setPortlet(Portlet portlet) {
