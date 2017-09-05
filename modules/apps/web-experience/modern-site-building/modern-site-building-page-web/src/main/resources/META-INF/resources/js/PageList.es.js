@@ -101,9 +101,11 @@ class PageList extends Component {
 			this.handleFirstBlockNodeSelected(previousEntry);
 
 			this.refs.secondLevelNodes.selectNode(layoutId, parentLayoutId, title);
-		}		else if (index == 1) {
+		}
+		else if (index == 1) {
 			this.refs.firstLevelNodes.selectNode(layoutId, parentLayoutId, title);
-		}		else {
+		}
+		else {
 			this.secondLevelNodes = [];
 			this.thirdLevelNodes = [];
 
