@@ -15,7 +15,7 @@
 package com.liferay.modern.site.building.page.web.internal.util;
 
 import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
-import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
+import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Pavel Savinov
  */
-public class PagesPortletUtil {
+public class MSBPagesPortletUtil {
 
 	public static JSONObject getActionsJSONObject(
 			Layout layout, HttpServletRequest request)
@@ -53,7 +53,7 @@ public class PagesPortletUtil {
 			Layout.class.getName(), PortletProvider.Action.EDIT);
 
 		PortletURL redirectURL = PortalUtil.getControlPanelPortletURL(
-			request, PagesPortletKeys.PAGES, PortletRequest.RENDER_PHASE);
+			request, MSBPagesPortletKeys.PAGES, PortletRequest.RENDER_PHASE);
 
 		redirectURL.setParameter(
 			"groupId", String.valueOf(layout.getGroupId()));
