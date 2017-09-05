@@ -26,15 +26,14 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ page import="com.liferay.modern.site.building.page.web.internal.display.context.PagesDisplayContext" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %>
 
-
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
 
 <portlet:defineObjects />
 
-<%@ include file="/init-ext.jsp" %>
-
 <%
 PagesDisplayContext pageDisplayContext = new PagesDisplayContext(renderRequest, renderResponse, request);
 %>
+
+<%@ include file="/init-ext.jsp" %>
