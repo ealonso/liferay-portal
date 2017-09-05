@@ -14,8 +14,8 @@
 
 package com.liferay.modern.site.building.page.web.internal.util;
 
+import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
 import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
-import com.liferay.modern.site.building.page.web.internal.util.comparator.LayoutCreateDateComparator;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
