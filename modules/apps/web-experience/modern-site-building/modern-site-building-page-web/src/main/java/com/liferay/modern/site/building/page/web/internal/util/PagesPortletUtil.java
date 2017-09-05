@@ -23,7 +23,6 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -50,11 +49,6 @@ public class PagesPortletUtil {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		PermissionChecker permissionChecker =
-			themeDisplay.getPermissionChecker();
-
-		boolean privateLayout = layout.isPrivateLayout();
-
 		String portletId = PortletProviderUtil.getPortletId(
 			Layout.class.getName(), PortletProvider.Action.EDIT);
 
@@ -67,7 +61,8 @@ public class PagesPortletUtil {
 			"privateLayout", String.valueOf(layout.isPrivateLayout()));
 
 		if (LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.ADD_LAYOUT)) {
+				themeDisplay.getPermissionChecker(), layout,
+				ActionKeys.ADD_LAYOUT)) {
 
 			JSONObject addChildPageJSONObject =
 				JSONFactoryUtil.createJSONObject();
@@ -79,14 +74,15 @@ public class PagesPortletUtil {
 			PortletURL addLayoutURL = PortalUtil.getControlPanelPortletURL(
 				request, portletId, PortletRequest.RENDER_PHASE);
 
-			redirectURL.setParameter(
-				"selectedLayoutId", String.valueOf(layout.getLayoutId()));
-
 			addLayoutURL.setParameter("mvcPath", "/add_layout.jsp");
 			addLayoutURL.setParameter(
 				"groupId", String.valueOf(layout.getGroupId()));
 			addLayoutURL.setParameter(
-				"privateLayout", String.valueOf(privateLayout));
+				"privateLayout", String.valueOf(layout.isPrivateLayout()));
+
+			redirectURL.setParameter(
+				"selectedLayoutId", String.valueOf(layout.getLayoutId()));
+
 			addLayoutURL.setParameter("redirect", redirectURL.toString());
 			addLayoutURL.setParameter(
 				"selPlid", String.valueOf(layout.getPlid()));
@@ -97,7 +93,8 @@ public class PagesPortletUtil {
 		}
 
 		if (LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.DELETE)) {
+				themeDisplay.getPermissionChecker(), layout,
+				ActionKeys.DELETE)) {
 
 			JSONObject deletePageJSONObject =
 				JSONFactoryUtil.createJSONObject();
@@ -114,19 +111,20 @@ public class PagesPortletUtil {
 			PortletURL deleteLayoutURL = PortalUtil.getControlPanelPortletURL(
 				request, portletId, PortletRequest.ACTION_PHASE);
 
-			redirectURL.setParameter(
-				"selectedLayoutId", String.valueOf(layout.getParentLayoutId()));
-
 			deleteLayoutURL.setParameter(
 				ActionRequest.ACTION_NAME, "deleteLayout");
 			deleteLayoutURL.setParameter("mvcPath", "/edit_layout.jsp");
+
+			redirectURL.setParameter(
+				"selectedLayoutId", String.valueOf(layout.getParentLayoutId()));
+
 			deleteLayoutURL.setParameter("redirect", redirectURL.toString());
 			deleteLayoutURL.setParameter(
 				"groupId", String.valueOf(layout.getGroupId()));
 			deleteLayoutURL.setParameter(
 				"selPlid", String.valueOf(layout.getPlid()));
 			deleteLayoutURL.setParameter(
-				"privateLayout", String.valueOf(privateLayout));
+				"privateLayout", String.valueOf(layout.isPrivateLayout()));
 
 			deletePageJSONObject.put("url", deleteLayoutURL.toString());
 
@@ -134,7 +132,8 @@ public class PagesPortletUtil {
 		}
 
 		if (LayoutPermissionUtil.contains(
-				permissionChecker, layout, ActionKeys.UPDATE)) {
+				themeDisplay.getPermissionChecker(), layout,
+				ActionKeys.UPDATE)) {
 
 			JSONObject configurePageJSONObject =
 				JSONFactoryUtil.createJSONObject();
@@ -146,16 +145,17 @@ public class PagesPortletUtil {
 			PortletURL editLayoutURL = PortalUtil.getControlPanelPortletURL(
 				request, portletId, PortletRequest.RENDER_PHASE);
 
-			redirectURL.setParameter(
-				"selectedLayoutId", String.valueOf(layout.getLayoutId()));
-
 			editLayoutURL.setParameter(
 				"groupId", String.valueOf(layout.getGroupId()));
 			editLayoutURL.setParameter(
 				"selPlid", String.valueOf(layout.getPlid()));
+
+			redirectURL.setParameter(
+				"selectedLayoutId", String.valueOf(layout.getLayoutId()));
+
 			editLayoutURL.setParameter("redirect", redirectURL.toString());
 			editLayoutURL.setParameter(
-				"privateLayout", String.valueOf(privateLayout));
+				"privateLayout", String.valueOf(layout.isPrivateLayout()));
 
 			configurePageJSONObject.put("url", editLayoutURL.toString());
 
@@ -165,8 +165,8 @@ public class PagesPortletUtil {
 		return jsonObject;
 	}
 
-	public static OrderByComparator<Layout>
-		getLayoutOrderByComparator(String orderByCol, String orderByType) {
+	public static OrderByComparator<Layout> getLayoutOrderByComparator(
+		String orderByCol, String orderByType) {
 
 		boolean orderByAsc = false;
 
