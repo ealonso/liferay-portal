@@ -26,22 +26,6 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	</aui:nav>
 </aui:nav-bar>
 
-<liferay-portlet:resourceURL id="getLayouts" var="getLayoutsURL">
-	<liferay-portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
-	<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
-</liferay-portlet:resourceURL>
-
-<%
-Map<String, Object> context = new HashMap<>();
-
-context.put("layoutBlocks", layoutsAdminDisplayContext.getLayoutBlocksJSONArray());
-context.put("orderBy", layoutsAdminDisplayContext.getOrderByJSONObject());
-context.put("pathThemeImages", themeDisplay.getPathThemeImages());
-context.put("portletNamespace", renderResponse.getNamespace());
-context.put("portletURL", layoutsAdminDisplayContext.getPortletURL().toString());
-context.put("searchContainerId", "pages");
-%>
-
 <liferay-frontend:management-bar
 	disabled="<%= false %>"
 	includeCheckBox="<%= true %>"
@@ -81,6 +65,22 @@ context.put("searchContainerId", "pages");
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutURL %>" name="fm">
+	<liferay-portlet:resourceURL id="getLayouts" var="getLayoutsURL">
+		<liferay-portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
+		<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
+	</liferay-portlet:resourceURL>
+
+	<%
+	Map<String, Object> context = new HashMap<>();
+
+	context.put("layoutBlocks", layoutsAdminDisplayContext.getLayoutBlocksJSONArray());
+	context.put("orderBy", layoutsAdminDisplayContext.getOrderByJSONObject());
+	context.put("pathThemeImages", themeDisplay.getPathThemeImages());
+	context.put("portletNamespace", renderResponse.getNamespace());
+	context.put("portletURL", layoutsAdminDisplayContext.getPortletURL().toString());
+	context.put("searchContainerId", "pages");
+	%>
+
 	<soy:template-renderer
 		context="<%= context %>"
 		module="layout-admin-web/js/PageList"
