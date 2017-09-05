@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.modern.site.building.page.web.internal.util.comparator;
+package com.liferay.layout.util.comparator;
 
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.DateUtil;
