@@ -17,9 +17,9 @@ package com.liferay.modern.site.building.page.web.constants;
 /**
  * @author Pavel Savinov
  */
-public class PagesPortletKeys {
+public class MSBPagesPortletKeys {
 
 	public static final String PAGES =
-		"com_liferay_modern_site_building_page_web_portlet_PagesPortlet";
+		"com_liferay_modern_site_building_page_web_portlet_MSBPagesPortlet";
 
 }

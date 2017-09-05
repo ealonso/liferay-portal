@@ -14,8 +14,8 @@
 
 package com.liferay.modern.site.building.page.web.internal.portlet.action;
 
-import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
-import com.liferay.modern.site.building.page.web.internal.util.PagesPortletUtil;
+import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
+import com.liferay.modern.site.building.page.web.internal.util.MSBPagesPortletUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -47,12 +47,12 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + PagesPortletKeys.PAGES,
+		"javax.portlet.name=" + MSBPagesPortletKeys.PAGES,
 		"mvc.command.name=getLayouts"
 	},
 	service = MVCResourceCommand.class
 )
-public class GetLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
+public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 
 	@Override
 	protected void doServeResource(
@@ -76,7 +76,7 @@ public class GetLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 			resourceRequest, "orderByType");
 
 		OrderByComparator orderByComparator =
-			PagesPortletUtil.getLayoutOrderByComparator(
+			MSBPagesPortletUtil.getLayoutOrderByComparator(
 				orderByCol, orderByType);
 
 		Layout parentLayout = _layoutLocalService.fetchLayout(
@@ -102,7 +102,7 @@ public class GetLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			JSONObject actionsJSONObject =
-				PagesPortletUtil.getActionsJSONObject(layout, request);
+				MSBPagesPortletUtil.getActionsJSONObject(layout, request);
 
 			if (actionsJSONObject.length() > 0) {
 				jsonObject.put("actions", actionsJSONObject);

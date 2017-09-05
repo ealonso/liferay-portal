@@ -1,7 +1,7 @@
-{namespace PageList}
+{namespace MSBPageList}
 
 /**
- * PageList
+ * MSBPageList
  */
 {template .render}
 	{@param breadcrumbEntries: list<?>}
@@ -14,7 +14,7 @@
 	{@param? secondLevelNodes: list<?>}
 	{@param? thirdLevelNodes: list<?>}
 
-	<div class="container-fluid-1280" ref="pageList">
+	<div class="container-fluid-1280" ref="msbPageList">
 		<div class="page-list-breadcrumb">
 			<ul class="breadcrumb breadcrumb-horizontal">
 				{foreach $entry in $breadcrumbEntries}
@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="page-list">
-			{call PageListBlock.render}
+			{call MSBPageListBlock.render}
 				{param events: [
 					'nodeSelected': $_handleFirstBlockNodeSelected
 				] /}
@@ -36,7 +36,7 @@
 				{param portletNamespace: $portletNamespace /}
 				{param ref: 'nodes' /}
 			{/call}
-			{call PageListBlock.render}
+			{call MSBPageListBlock.render}
 				{param events: [
 					'nodeSelected': $_handleSecondBlockNodeSelected
 				] /}
@@ -45,7 +45,7 @@
 				{param portletNamespace: $portletNamespace /}
 				{param ref: 'children' /}
 			{/call}
-			{call PageListBlock.render}
+			{call MSBPageListBlock.render}
 				{param events: [
 					'nodeSelected': $_handleThirdBlockNodeSelected
 				] /}
