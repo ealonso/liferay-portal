@@ -43,7 +43,8 @@ class PageListBlock extends Component {
 			(node) => {
 				if (node.layoutId !== layoutId) {
 					node.selected = false;
-				}				else {
+				}
+				else {
 					node.active = true;
 					node.selected = true;
 				}
