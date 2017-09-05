@@ -3,15 +3,15 @@
 import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
-import './PageListBlock.es';
-import templates from './PageList.soy';
+import './MSBPageListBlock.es';
+import templates from './MSBPageList.soy';
 
 /**
  * Component that allows to show layouts tree in form of three dependent blocks.
- * It integrates three <PageListBlock /> components for N-th, N-th + 2 and
+ * It integrates three <MSBPageListBlock /> components for N-th, N-th + 2 and
  * N-th + 3 levels of layouts tree.
  */
-class PageList extends Component {
+class MSBPageList extends Component {
 
 	/**
 	 * @inheritDoc
@@ -36,7 +36,7 @@ class PageList extends Component {
 
 				let searchContainer = new Liferay.SearchContainer(
 					{
-						contentBox: A.one(this.refs.pageList),
+						contentBox: A.one(this.refs.msbPageList),
 						id: this.getInitialConfig().portletNamespace +
 							this.getInitialConfig().searchContainerId,
 						plugins: plugins,
@@ -248,9 +248,9 @@ class PageList extends Component {
 	 * @param {object} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @param {boolean} switchBlocks If true when PageList switches blocks as
+	 * @param {boolean} switchBlocks If true when MSBPageList switches blocks as
 	 * 	      the first block node was clicked.
-	 * @param {boolean} updateBreadcrumb If true when PageList updates
+	 * @param {boolean} updateBreadcrumb If true when MSBPageList updates
 	 *        breadcrumb entrues.
 	 * @private
 	 */
@@ -351,11 +351,11 @@ class PageList extends Component {
 
 }
 
-PageList.STATE = {
+MSBPageList.STATE = {
 	/**
 	 * Breadcrumb entries
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {!Array}
 	 */
 	breadcrumbEntries: Config.array().required(),
@@ -363,7 +363,7 @@ PageList.STATE = {
 	/**
 	 * First block nodes
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {!Array}
 	 */
 	firstLevelNodes: Config.array().required(),
@@ -371,7 +371,7 @@ PageList.STATE = {
 	/**
 	 * URL to get nodes via AJAX
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {?string}
 	 * @default undefined
 	 */
@@ -380,7 +380,7 @@ PageList.STATE = {
 	/**
 	 * Namespace of portlet to prefix parameters names
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -388,7 +388,7 @@ PageList.STATE = {
 	/**
 	 * Second block nodes
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {?Array}
 	 * @default []
 	 */
@@ -397,13 +397,13 @@ PageList.STATE = {
 	/**
 	 * Third block nodes
 	 * @instance
-	 * @memberof PageList
+	 * @memberof MSBPageList
 	 * @type {?Array}
 	 * @default []
 	 */
 	thirdLevelNodes: Config.array().value([]),
 };
 
-Soy.register(PageList, templates);
+Soy.register(MSBPageList, templates);
 
-export default PageList;
+export default MSBPageList;

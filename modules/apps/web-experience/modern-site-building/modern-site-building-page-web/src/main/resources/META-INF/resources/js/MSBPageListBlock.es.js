@@ -4,12 +4,12 @@ import {hasClass} from 'metal-dom';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 import 'metal-dropdown';
-import templates from './PageListBlock.soy';
+import templates from './MSBPageListBlock.soy';
 
 /**
- * Component that represents one block of layouts for <PageList /> component.
+ * Component that represents one block of layouts for <MSBPageList /> component.
  */
-class PageListBlock extends Component {
+class MSBPageListBlock extends Component {
 
 	/**
 	 * This is called when one of this block's nodes is clicked.
@@ -70,16 +70,16 @@ class PageListBlock extends Component {
 
 }
 
-PageListBlock.STATE = {
+MSBPageListBlock.STATE = {
 	/**
 	 * Current block nodes list
 	 * @instance
-	 * @memberof PageListBlock
+	 * @memberof MSBPageListBlock
 	 * @type {!Array}
 	 */
 	nodes: Config.array().required(),
 };
 
-Soy.register(PageListBlock, templates);
+Soy.register(MSBPageListBlock, templates);
 
-export default PageListBlock;
+export default MSBPageListBlock;

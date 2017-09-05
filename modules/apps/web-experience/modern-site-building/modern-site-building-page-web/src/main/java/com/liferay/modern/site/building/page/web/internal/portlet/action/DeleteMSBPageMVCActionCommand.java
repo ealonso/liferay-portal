@@ -14,7 +14,7 @@
 
 package com.liferay.modern.site.building.page.web.internal.portlet.action;
 
-import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
+import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.LayoutService;
@@ -34,12 +34,12 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + PagesPortletKeys.PAGES,
+		"javax.portlet.name=" + MSBPagesPortletKeys.PAGES,
 		"mvc.command.name=/pages/delete_layout"
 	},
 	service = MVCActionCommand.class
 )
-public class DeleteLayoutMVCActionCommand extends BaseMVCActionCommand {
+public class DeleteMSBPageMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(

@@ -14,8 +14,8 @@
 
 package com.liferay.modern.site.building.page.web.internal.display.context;
 
-import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
-import com.liferay.modern.site.building.page.web.internal.util.PagesPortletUtil;
+import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
+import com.liferay.modern.site.building.page.web.internal.util.MSBPagesPortletUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -45,9 +45,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Pavel Savinov
  */
-public class PagesDisplayContext {
+public class MSBPagesDisplayContext {
 
-	public PagesDisplayContext(
+	public MSBPagesDisplayContext(
 		RenderRequest renderRequest, RenderResponse renderResponse,
 		HttpServletRequest request) {
 
@@ -109,7 +109,7 @@ public class PagesDisplayContext {
 			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
 
 		_displayStyle = portalPreferences.getValue(
-			PagesPortletKeys.PAGES, "display-style", "icon");
+			MSBPagesPortletKeys.PAGES, "display-style", "icon");
 
 		return _displayStyle;
 	}
@@ -147,18 +147,18 @@ public class PagesDisplayContext {
 		}
 
 		OrderByComparator orderByComparator =
-			PagesPortletUtil.getLayoutOrderByComparator(
+			MSBPagesPortletUtil.getLayoutOrderByComparator(
 				getOrderByCol(), getOrderByType());
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			themeDisplay.getScopeGroupId(), isPrivateLayout(),parentLayoutId,
+			themeDisplay.getScopeGroupId(), isPrivateLayout(), parentLayoutId,
 			true, QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
 
 		for (Layout layout : layouts) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			JSONObject actionsJSONObject =
-				PagesPortletUtil.getActionsJSONObject(layout, _request);
+				MSBPagesPortletUtil.getActionsJSONObject(layout, _request);
 
 			if (actionsJSONObject.length() > 0) {
 				jsonObject.put("actions", actionsJSONObject);

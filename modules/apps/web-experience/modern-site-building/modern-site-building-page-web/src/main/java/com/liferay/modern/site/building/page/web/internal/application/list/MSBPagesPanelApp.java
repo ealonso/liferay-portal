@@ -17,7 +17,7 @@ package com.liferay.modern.site.building.page.web.internal.application.list;
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
-import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
+import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
 import com.liferay.portal.kernel.model.Portlet;
 
 import org.osgi.service.component.annotations.Component;
@@ -34,16 +34,16 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = PanelApp.class
 )
-public class PagesPanelApp extends BasePanelApp {
+public class MSBPagesPanelApp extends BasePanelApp {
 
 	@Override
 	public String getPortletId() {
-		return PagesPortletKeys.PAGES;
+		return MSBPagesPortletKeys.PAGES;
 	}
 
 	@Override
 	@Reference(
-		target = "(javax.portlet.name=" + PagesPortletKeys.PAGES + ")",
+		target = "(javax.portlet.name=" + MSBPagesPortletKeys.PAGES + ")",
 		unbind = "-"
 	)
 	public void setPortlet(Portlet portlet) {
