@@ -16,9 +16,6 @@ package com.liferay.modern.site.building.page.web.internal.display.context;
 
 import com.liferay.modern.site.building.page.web.constants.PagesPortletKeys;
 import com.liferay.modern.site.building.page.web.internal.util.PagesPortletUtil;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -149,25 +146,13 @@ public class PagesDisplayContext {
 			return jsonArray;
 		}
 
-		DynamicQuery dynamicQuery = LayoutLocalServiceUtil.dynamicQuery();
-
-		Property groupIdProperty = PropertyFactoryUtil.forName("groupId");
-		Property privateLayoutProperty = PropertyFactoryUtil.forName(
-			"privateLayout");
-		Property parentLayoutIdProperty = PropertyFactoryUtil.forName(
-			"parentLayoutId");
-
-		dynamicQuery.add(groupIdProperty.eq(themeDisplay.getScopeGroupId()));
-		dynamicQuery.add(privateLayoutProperty.eq(isPrivateLayout()));
-		dynamicQuery.add(parentLayoutIdProperty.eq(parentLayoutId));
-
 		OrderByComparator orderByComparator =
 			PagesPortletUtil.getLayoutOrderByComparator(
 				getOrderByCol(), getOrderByType());
 
-		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(
-			dynamicQuery, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			orderByComparator);
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			themeDisplay.getScopeGroupId(), isPrivateLayout(),parentLayoutId,
+			true, QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
 
 		for (Layout layout : layouts) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
