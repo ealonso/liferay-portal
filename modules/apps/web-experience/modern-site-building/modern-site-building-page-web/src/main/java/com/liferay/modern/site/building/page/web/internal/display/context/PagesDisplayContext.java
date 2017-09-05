@@ -72,29 +72,30 @@ public class PagesDisplayContext {
 		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
 			getGroupId(), isPrivateLayout(), getSelectedLayoutId());
 
-		if (selectedLayout != null) {
-			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-				WebKeys.THEME_DISPLAY);
+		if (selectedLayout == null) {
+			return jsonArray;
+		}
 
-			List<Layout> ancestors = selectedLayout.getAncestors();
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-			Collections.reverse(ancestors);
+		List<Layout> ancestors = selectedLayout.getAncestors();
 
-			int index = 1;
+		Collections.reverse(ancestors);
 
-			for (Layout ancestor : ancestors) {
-				JSONObject ancestorJSONObject =
-					JSONFactoryUtil.createJSONObject();
+		for (int i = 0; i < ancestors.size(); i++) {
+			Layout ancestor = ancestors.get(i);
 
-				ancestorJSONObject.put("index", index++);
-				ancestorJSONObject.put("layoutId", ancestor.getLayoutId());
-				ancestorJSONObject.put(
-					"parentLayoutId", ancestor.getParentLayoutId());
-				ancestorJSONObject.put(
-					"title", ancestor.getName(themeDisplay.getLocale()));
+			JSONObject ancestorJSONObject = JSONFactoryUtil.createJSONObject();
 
-				jsonArray.put(ancestorJSONObject);
-			}
+			ancestorJSONObject.put("index", i);
+			ancestorJSONObject.put("layoutId", ancestor.getLayoutId());
+			ancestorJSONObject.put(
+				"parentLayoutId", ancestor.getParentLayoutId());
+			ancestorJSONObject.put(
+				"title", ancestor.getName(themeDisplay.getLocale()));
+
+			jsonArray.put(ancestorJSONObject);
 		}
 
 		return jsonArray;
@@ -129,10 +130,10 @@ public class PagesDisplayContext {
 	}
 
 	public JSONArray getLayoutsJSONArray(boolean children) throws Exception {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		long parentLayoutId = getSelectedLayoutId();
 
