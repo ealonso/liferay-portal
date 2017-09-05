@@ -31,77 +31,64 @@ renderResponse.setTitle(msbFragmentDisplayContext.getMSBFragmentEntryTitle());
 	<portlet:param name="mvcPath" value="/edit_msb_fragment_entry.jsp" />
 </portlet:actionURL>
 
-<aui:form action="<%= editMSBFragmentEntryURL %>" cssClass="container-fluid-1280" enctype="multipart/form-data" method="post" name="fm">
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
+	<portlet:renderURL var="mainURL" />
+
+	<aui:nav cssClass="navbar-nav">
+		<aui:nav-item href="<%= mainURL.toString() %>" label="code" selected="<%= true %>" />
+	</aui:nav>
+</aui:nav-bar>
+
+<aui:form action="<%= editMSBFragmentEntryURL %>" enctype="multipart/form-data" method="post" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="msbFragmentEntryId" type="hidden" value="<%= msbFragmentDisplayContext.getMSBFragmentEntryId() %>" />
 	<aui:input name="msbFragmentCollectionId" type="hidden" value="<%= msbFragmentDisplayContext.getMSBFragmentCollectionId() %>" />
-	<aui:input name="cssContent" type="hidden" />
-	<aui:input name="htmlContent" type="hidden" />
-	<aui:input name="jsContent" type="hidden" />
+	<aui:input name="htmlContent" type="hidden" value="" />
+	<aui:input name="cssContent" type="hidden" value="" />
+	<aui:input name="jsContent" type="hidden" value="" />
 
 	<aui:model-context bean="<%= msbFragmentEntry %>" model="<%= MSBFragmentEntry.class %>" />
 
-	<liferay-ui:error exception="<%= DuplicateMSBFragmentEntryException.class %>" message="please-enter-a-unique-name" />
-	<liferay-ui:error exception="<%= MSBFragmentEntryNameException.class %>" message="please-enter-a-valid-name" />
+	<div class="msb-fragment-name">
+		<aui:input autoFocus="<%= false %>" label="name" name="name" placeholder="name" />
+	</div>
 
-	<%
-	Map<String, Object> editorContext = new HashMap<>();
+	<div id="<portlet:namespace />msbFragmentEditor"></div>
 
-	editorContext.put("namespace", portletDisplay.getNamespace());
-	%>
-
-	<aui:fieldset-group markupView="lexicon">
-		<aui:fieldset>
-			<aui:input autoFocus="<%= true %>" label="name" name="name" placeholder="name" />
-
-			<div class="entry-content form-group">
-				<liferay-ui:input-editor
-					contents="<%= HtmlUtil.escape((msbFragmentEntry != null) ? msbFragmentEntry.getCss() : StringPool.BLANK) %>"
-					editorName="alloyeditor"
-					name="cssEditor"
-					placeholder="css"
-					showSource="<%= false %>"
-				/>
-			</div>
-
-			<div class="entry-content form-group">
-				<liferay-ui:input-editor
-					contents="<%= HtmlUtil.escape((msbFragmentEntry != null) ? msbFragmentEntry.getHtml() : StringPool.BLANK) %>"
-					editorName="alloyeditor"
-					name="htmlEditor"
-					placeholder="html"
-					showSource="<%= false %>"
-				/>
-			</div>
-
-			<div class="entry-content form-group">
-				<liferay-ui:input-editor
-					contents="<%= HtmlUtil.escape((msbFragmentEntry != null) ? msbFragmentEntry.getJs() : StringPool.BLANK) %>"
-					editorName="alloyeditor"
-					name="jsEditor"
-					placeholder="js"
-					showSource="<%= false %>"
-				/>
-			</div>
-		</aui:fieldset>
-	</aui:fieldset-group>
-
-	<aui:button-row>
-		<aui:button cssClass="btn-lg" type="submit" />
-
-		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
+	<aui:button-row cssClass="msb-fragment-submit-buttons">
+		<aui:button cssClass="btn" type="submit" />
 	</aui:button-row>
 </aui:form>
 
-<aui:script use="aui-base,event-input">
-	var form = A.one('#<portlet:namespace />fm');
+<aui:script require="modern-site-building-fragment-web/js/MSBFragmentEditor.es">
+	var MSBFragmentEditor = modernSiteBuildingFragmentWebJsMSBFragmentEditorEs.default;
 
-	form.on(
-		'submit',
-		function() {
-			form.one('#<portlet:namespace />cssContent').val(window.<portlet:namespace />cssEditor.getText());
-			form.one('#<portlet:namespace />htmlContent').val(window.<portlet:namespace />htmlEditor.getText());
-			form.one('#<portlet:namespace />jsContent').val(window.<portlet:namespace />jsEditor.getText());
-		}
-	);
+	var wrapper = document.getElementById('<portlet:namespace />msbFragmentEditor');
+
+	var namespace = '<portlet:namespace />';
+	var initialHTML = '<%= HtmlUtil.escapeJS(msbFragmentEntry != null ? msbFragmentEntry.getHtml() : StringPool.BLANK) %>';
+	var initialCSS = '<%= HtmlUtil.escapeJS(msbFragmentEntry != null ? msbFragmentEntry.getCss() : StringPool.BLANK) %>';
+	var initialJS = '<%= HtmlUtil.escapeJS(msbFragmentEntry != null ? msbFragmentEntry.getJs() : StringPool.BLANK) %>';
+
+	var htmlInput = document.getElementById('<portlet:namespace />htmlContent');
+	var cssInput = document.getElementById('<portlet:namespace />cssContent');
+	var jsInput = document.getElementById('<portlet:namespace />jsContent');
+
+	var editor = new MSBFragmentEditor({
+		events: {
+			contentChanged: function(event) {
+				htmlInput.value = event.html;
+				cssInput.value = event.css;
+				jsInput.value = event.js;
+			}
+		},
+
+		namespace: namespace,
+
+		initialHTML: initialHTML,
+		initialCSS: initialCSS,
+		initialJS: initialJS,
+
+		spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+	}, wrapper);
 </aui:script>
