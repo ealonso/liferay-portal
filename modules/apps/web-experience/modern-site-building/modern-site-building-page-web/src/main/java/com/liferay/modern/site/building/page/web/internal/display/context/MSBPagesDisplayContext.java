@@ -109,7 +109,7 @@ public class MSBPagesDisplayContext {
 			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
 
 		_displayStyle = portalPreferences.getValue(
-			MSBPagesPortletKeys.PAGES, "display-style", "icon");
+			MSBPagesPortletKeys.MSB_PAGES, "display-style", "icon");
 
 		return _displayStyle;
 	}
