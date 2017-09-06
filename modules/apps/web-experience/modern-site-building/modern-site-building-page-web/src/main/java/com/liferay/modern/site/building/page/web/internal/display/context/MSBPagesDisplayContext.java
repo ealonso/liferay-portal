@@ -167,6 +167,13 @@ public class MSBPagesDisplayContext {
 
 			jsonObject.put(
 				"active", layout.getLayoutId() == getSelectedLayoutId());
+
+			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+				themeDisplay.getScopeGroup(), isPrivateLayout(),
+				layout.getLayoutId());
+
+			jsonObject.put("hasChild", childLayoutsCount > 0);
+
 			jsonObject.put("icon", "page");
 			jsonObject.put("layoutId", layout.getLayoutId());
 			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
