@@ -40,10 +40,10 @@ import javax.servlet.http.HttpServletRequest;
 public class PagesPortletUtil {
 
 	public static JSONObject getActionsJSONObject(
-			Layout layout, HttpServletRequest request)
+			Layout layout, PortletRequest portletRequest)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -52,7 +52,8 @@ public class PagesPortletUtil {
 			Layout.class.getName(), PortletProvider.Action.EDIT);
 
 		PortletURL redirectURL = PortalUtil.getControlPanelPortletURL(
-			request, PagesPortletKeys.PAGES, PortletRequest.RENDER_PHASE);
+			portletRequest, PagesPortletKeys.PAGES,
+			PortletRequest.RENDER_PHASE);
 
 		redirectURL.setParameter(
 			"groupId", String.valueOf(layout.getGroupId()));
@@ -71,7 +72,7 @@ public class PagesPortletUtil {
 				LanguageUtil.get(themeDisplay.getLocale(), "add-child-page"));
 
 			PortletURL addLayoutURL = PortalUtil.getControlPanelPortletURL(
-				request, portletId, PortletRequest.RENDER_PHASE);
+				portletRequest, portletId, PortletRequest.RENDER_PHASE);
 
 			addLayoutURL.setParameter("mvcPath", "/add_layout.jsp");
 			addLayoutURL.setParameter(
@@ -98,6 +99,9 @@ public class PagesPortletUtil {
 			JSONObject deletePageJSONObject =
 				JSONFactoryUtil.createJSONObject();
 
+			HttpServletRequest request = PortalUtil.getHttpServletRequest(
+				portletRequest);
+
 			deletePageJSONObject.put(
 				"confirmMessage",
 				LanguageUtil.get(
@@ -108,7 +112,7 @@ public class PagesPortletUtil {
 				"label", LanguageUtil.get(themeDisplay.getLocale(), "delete"));
 
 			PortletURL deleteLayoutURL = PortalUtil.getControlPanelPortletURL(
-				request, portletId, PortletRequest.ACTION_PHASE);
+				portletRequest, portletId, PortletRequest.ACTION_PHASE);
 
 			deleteLayoutURL.setParameter(
 				ActionRequest.ACTION_NAME, "deleteLayout");
@@ -142,7 +146,7 @@ public class PagesPortletUtil {
 				LanguageUtil.get(themeDisplay.getLocale(), "configure"));
 
 			PortletURL editLayoutURL = PortalUtil.getControlPanelPortletURL(
-				request, portletId, PortletRequest.RENDER_PHASE);
+				portletRequest, portletId, PortletRequest.RENDER_PHASE);
 
 			editLayoutURL.setParameter(
 				"groupId", String.valueOf(layout.getGroupId()));
