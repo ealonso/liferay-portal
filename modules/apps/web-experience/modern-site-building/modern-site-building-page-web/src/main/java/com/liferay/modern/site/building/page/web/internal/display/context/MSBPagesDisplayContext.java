@@ -158,7 +158,8 @@ public class MSBPagesDisplayContext {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			JSONObject actionsJSONObject =
-				MSBPagesPortletUtil.getActionsJSONObject(layout, _request);
+				MSBPagesPortletUtil.getActionsJSONObject(
+					layout, _renderRequest);
 
 			if (actionsJSONObject.length() > 0) {
 				jsonObject.put("actions", actionsJSONObject);
