@@ -568,6 +568,14 @@ public class LayoutsTreeImpl implements LayoutsTree {
 			themeDisplay.getPermissionChecker(), groupId,
 			ActionKeys.MANAGE_LAYOUTS);
 
+		boolean mobile = false;
+
+		String userAgent = request.getHeader("User-Agent");
+
+		if (userAgent.indexOf("Mobile") != -1) {
+			mobile = true;
+		}
+
 		for (LayoutTreeNode layoutTreeNode : layoutTreeNodes) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -609,7 +617,7 @@ public class LayoutsTreeImpl implements LayoutsTree {
 			jsonObject.put("regularURL", layout.getRegularURL(request));
 			jsonObject.put(
 				"sortable",
-				hasManageLayoutsPermission &&
+				hasManageLayoutsPermission && !mobile &&
 				SitesUtil.isLayoutSortable(layout));
 			jsonObject.put("type", layout.getType());
 			jsonObject.put(
