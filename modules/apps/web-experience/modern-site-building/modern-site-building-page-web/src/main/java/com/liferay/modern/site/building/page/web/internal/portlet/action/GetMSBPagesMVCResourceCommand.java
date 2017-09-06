@@ -28,15 +28,12 @@ import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -59,7 +56,8 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
 		long parentLayoutId = ParamUtil.getLong(
@@ -88,21 +86,18 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 			selectedLayoutId = parentLayout.getLayoutId();
 		}
 
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
 		List<Layout> layouts = _layoutLocalService.getLayouts(
 			groupId, privateLayout, parentLayoutId, true, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, orderByComparator);
-
-		HttpServletRequest request = _portal.getHttpServletRequest(
-			resourceRequest);
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		for (Layout layout : layouts) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			JSONObject actionsJSONObject =
-				MSBPagesPortletUtil.getActionsJSONObject(layout, request);
+				MSBPagesPortletUtil.getActionsJSONObject(
+					layout, resourceRequest);
 
 			if (actionsJSONObject.length() > 0) {
 				jsonObject.put("actions", actionsJSONObject);
@@ -124,8 +119,5 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private Portal _portal;
 
 }
