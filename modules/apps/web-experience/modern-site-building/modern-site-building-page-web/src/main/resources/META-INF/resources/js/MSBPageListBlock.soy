@@ -22,6 +22,7 @@
 					{param actions: $node.actions /}
 					{param active: $node.active /}
 					{param icon: $node.icon /}
+					{param hasChild: $node.hasChild /}
 					{param layoutId: $node.layoutId /}
 					{param pathThemeImages: $pathThemeImages /}
 					{param portletNamespace: $portletNamespace /}
@@ -40,6 +41,7 @@
 {template .card}
 	{@param actions: map<string, ?>}
 	{@param icon: string}
+	{@param hasChild: bool}
 	{@param layoutId: string}
 	{@param pathThemeImages: string}
 	{@param parentLayoutId: string}
@@ -113,11 +115,13 @@
 				{/call}
 			</div>
 
-			<div class="card-col-field">
-				<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
-					<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
-				</svg>
-			</div>
+			{if $hasChild}
+				<div class="card-col-field">
+					<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
+						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
+					</svg>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/template}

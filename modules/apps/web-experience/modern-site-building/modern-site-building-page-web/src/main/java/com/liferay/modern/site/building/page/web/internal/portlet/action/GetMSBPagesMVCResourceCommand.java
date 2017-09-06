@@ -104,6 +104,13 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 			}
 
 			jsonObject.put("active", layout.getLayoutId() == selectedLayoutId);
+
+			int childLayoutsCount = _layoutLocalService.getLayoutsCount(
+				themeDisplay.getScopeGroup(), privateLayout,
+				layout.getLayoutId());
+
+			jsonObject.put("hasChild", childLayoutsCount > 0);
+
 			jsonObject.put("icon", "page");
 			jsonObject.put("layoutId", layout.getLayoutId());
 			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
