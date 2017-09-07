@@ -14,13 +14,13 @@ class MSBPageList extends Component {
 	 * @inheritDoc
 	 */
 	attached() {
-		let A = new AUI();
+		const A = new AUI();
 
 		A.use(
 			'liferay-search-container',
 			'liferay-search-container-select',
 			(A) => {
-				let plugins = [];
+				const plugins = [];
 
 				plugins.push(
 					{
@@ -31,7 +31,7 @@ class MSBPageList extends Component {
 					}
 				);
 
-				let searchContainer = new Liferay.SearchContainer(
+				const searchContainer = new Liferay.SearchContainer(
 					{
 						contentBox: A.one(this.refs.msbPageList),
 						id: this.getInitialConfig().portletNamespace +
@@ -61,7 +61,7 @@ class MSBPageList extends Component {
 	 * @private
 	 */
 	_getLastSelectedNode(ref) {
-		let node = this[ref].reduce(
+		const node = this[ref].reduce(
 			(value, node) => (!value.layoutId && node.selected ? node : value),
 			{}
 		);
@@ -91,7 +91,7 @@ class MSBPageList extends Component {
 		);
 
 		if (index > 1) {
-			let previousEntry = this.breadcrumbEntries[index - 1];
+			const previousEntry = this.breadcrumbEntries[index - 1];
 
 			previousEntry.selectedLayoutId = layoutId;
 
@@ -215,7 +215,7 @@ class MSBPageList extends Component {
 	_loadLayouts(parentLayoutId, loadParentLayouts, selectedLayoutId, callback) {
 		const orderBy = this.getInitialConfig().orderBy;
 
-		let body = new URLSearchParams();
+		const body = new URLSearchParams();
 
 		body.append(`${this.portletNamespace}parentLayoutId`, parentLayoutId);
 		body.append(`${this.portletNamespace}loadParentLayouts`, loadParentLayouts);
@@ -223,16 +223,16 @@ class MSBPageList extends Component {
 		body.append(`${this.portletNamespace}orderByCol`, orderBy.orderByCol);
 		body.append(`${this.portletNamespace}orderByType`, orderBy.orderByType);
 
-		let data = {
+		const data = {
 			cache: 'no-cache',
 			credentials: 'same-origin',
 			method: 'GET',
 
 		};
 
-		let queryString = this.getLayoutsURL + '&' + body.toString();
+		const queryString = this.getLayoutsURL + '&' + body.toString();
 
-		let request = new Request(queryString);
+		const request = new Request(queryString);
 
 		fetch(request, data).then(
 			(response) => response.json().then(callback)
@@ -265,7 +265,7 @@ class MSBPageList extends Component {
 					this.secondLevelNodes = firstLevelNodes;
 					this.thirdLevelNodes = [];
 
-					let selectedNode = this._getLastSelectedNode('secondLevelNodes');
+					const selectedNode = this._getLastSelectedNode('secondLevelNodes');
 
 					if (selectedNode.layoutId > 0) {
 						this.handleSecondBlockNodeSelected(selectedNode);
@@ -316,7 +316,7 @@ class MSBPageList extends Component {
 		const parentLayoutId = event.parentLayoutId;
 		const title = event.title;
 
-		let breadcrumbEntries = [];
+		const breadcrumbEntries = [];
 
 		breadcrumbEntries.push(this.breadcrumbEntries[0]);
 

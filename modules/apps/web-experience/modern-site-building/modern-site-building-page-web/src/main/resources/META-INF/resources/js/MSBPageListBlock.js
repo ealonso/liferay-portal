@@ -16,7 +16,7 @@ class MSBPageListBlock extends Component {
 	 * @private
 	 */
 	_handleNodeClicked(event) {
-		let target = event.target;
+		const target = event.target;
 
 		if (hasClass(target, 'action-icon')) {
 			return;
