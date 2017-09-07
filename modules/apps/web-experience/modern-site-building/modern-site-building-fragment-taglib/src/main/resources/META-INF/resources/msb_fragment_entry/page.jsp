@@ -1,3 +1,5 @@
+<%@ page import="java.util.Map" %>
+
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -17,6 +19,8 @@
 <%@ include file="/msb_fragment_entry/init.jsp" %>
 
 <%
+Map<String, Object> context = (Map<String, Object>)request.getAttribute("liferay-modern-site-building-fragment:msb-fragment-entry-renderer:context");
+
 MSBFragmentEntry msbFragmentEntry = (MSBFragmentEntry)request.getAttribute("liferay-modern-site-building-fragment:msb-fragment-entry-renderer:msbFragmentEntry");
 
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_modern_site_building_msb_fragment_entry_renderer_page") + StringPool.UNDERLINE;
