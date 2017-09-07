@@ -76,6 +76,10 @@ public interface MSBFragmentEntryService extends BaseService {
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public MSBFragmentEntry fetchMSBFragmentEntry(long groupId,
+		java.lang.String name) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getMSBFragmentCollectionsCount(long groupId,
 		long msbFragmentCollectionId);
 
