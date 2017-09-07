@@ -1,9 +1,13 @@
 {
-	"extends": "liferay",
 	"env": {
 		"browser": true,
 		"es6": true,
 		"node": true
+	},
+	"extends": "liferay",
+	"globals": {
+		"AUI": true,
+		"Liferay": true
 	},
 	"rules": {
 		"eol-last": ["error", "never"]
