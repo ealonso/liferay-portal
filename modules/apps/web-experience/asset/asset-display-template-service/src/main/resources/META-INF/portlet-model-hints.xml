@@ -13,5 +13,6 @@
 		<field name="classNameId" type="long" />
 		<field name="DDMTemplateId" type="long" />
 		<field name="main" type="boolean" />
+		<field name="plid" type="long" />
 	</model>
 </model-hints>
