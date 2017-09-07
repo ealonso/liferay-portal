@@ -10,7 +10,6 @@ import templates from './MSBPageListBlock.soy';
  * Component that represents one block of layouts for <MSBPageList /> component.
  */
 class MSBPageListBlock extends Component {
-
 	/**
 	 * This is called when one of this block's nodes is clicked.
 	 * @param {!Event} event
@@ -67,7 +66,6 @@ class MSBPageListBlock extends Component {
 			);
 		}
 	}
-
 }
 
 MSBPageListBlock.STATE = {

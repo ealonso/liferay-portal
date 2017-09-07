@@ -10,7 +10,6 @@ import templates from './MSBPageList.soy';
  * N-th + 3 levels of layouts tree.
  */
 class MSBPageList extends Component {
-
 	/**
 	 * @inheritDoc
 	 */
@@ -346,7 +345,6 @@ class MSBPageList extends Component {
 
 		this.breadcrumbEntries = breadcrumbEntries;
 	}
-
 }
 
 MSBPageList.STATE = {
