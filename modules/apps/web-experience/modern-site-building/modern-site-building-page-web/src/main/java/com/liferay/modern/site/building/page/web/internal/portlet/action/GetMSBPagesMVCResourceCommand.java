@@ -16,21 +16,14 @@ package com.liferay.modern.site.building.page.web.internal.portlet.action;
 
 import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
 import com.liferay.modern.site.building.page.web.internal.util.MSBPagesPortletUtil;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.List;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -55,9 +48,6 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 	protected void doServeResource(
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		long groupId = ParamUtil.getLong(resourceRequest, "groupId");
 		long parentLayoutId = ParamUtil.getLong(
@@ -86,39 +76,9 @@ public class GetMSBPagesMVCResourceCommand extends BaseMVCResourceCommand {
 			selectedLayoutId = parentLayout.getLayoutId();
 		}
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		List<Layout> layouts = _layoutLocalService.getLayouts(
-			groupId, privateLayout, parentLayoutId, true, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, orderByComparator);
-
-		for (Layout layout : layouts) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			JSONObject actionsJSONObject =
-				MSBPagesPortletUtil.getActionsJSONObject(
-					layout, resourceRequest);
-
-			if (actionsJSONObject.length() > 0) {
-				jsonObject.put("actions", actionsJSONObject);
-			}
-
-			jsonObject.put("active", layout.getLayoutId() == selectedLayoutId);
-
-			int childLayoutsCount = _layoutLocalService.getLayoutsCount(
-				themeDisplay.getScopeGroup(), privateLayout,
-				layout.getLayoutId());
-
-			jsonObject.put("hasChild", childLayoutsCount > 0);
-
-			jsonObject.put("icon", "page");
-			jsonObject.put("layoutId", layout.getLayoutId());
-			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
-			jsonObject.put("selected", jsonObject.getBoolean("active"));
-			jsonObject.put("title", layout.getName(themeDisplay.getLocale()));
-
-			jsonArray.put(jsonObject);
-		}
+		JSONArray jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
+			groupId, privateLayout, parentLayoutId, selectedLayoutId,
+			orderByComparator, resourceRequest);
 
 		JSONPortletResponseUtil.writeJSON(
 			resourceRequest, resourceResponse, jsonArray);

@@ -16,7 +16,6 @@ package com.liferay.modern.site.building.page.web.internal.display.context;
 
 import com.liferay.modern.site.building.page.web.constants.MSBPagesPortletKeys;
 import com.liferay.modern.site.building.page.web.internal.util.MSBPagesPortletUtil;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -150,38 +149,9 @@ public class MSBPagesDisplayContext {
 			MSBPagesPortletUtil.getLayoutOrderByComparator(
 				getOrderByCol(), getOrderByType());
 
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+		jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
 			themeDisplay.getScopeGroupId(), isPrivateLayout(), parentLayoutId,
-			true, QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
-
-		for (Layout layout : layouts) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			JSONObject actionsJSONObject =
-				MSBPagesPortletUtil.getActionsJSONObject(
-					layout, _renderRequest);
-
-			if (actionsJSONObject.length() > 0) {
-				jsonObject.put("actions", actionsJSONObject);
-			}
-
-			jsonObject.put(
-				"active", layout.getLayoutId() == getSelectedLayoutId());
-
-			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				themeDisplay.getScopeGroup(), isPrivateLayout(),
-				layout.getLayoutId());
-
-			jsonObject.put("hasChild", childLayoutsCount > 0);
-
-			jsonObject.put("icon", "page");
-			jsonObject.put("layoutId", layout.getLayoutId());
-			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
-			jsonObject.put("selected", jsonObject.getBoolean("active"));
-			jsonObject.put("title", layout.getName(themeDisplay.getLocale()));
-
-			jsonArray.put(jsonObject);
-		}
+			getSelectedLayoutId(), orderByComparator, _renderRequest);
 
 		return jsonArray;
 	}
