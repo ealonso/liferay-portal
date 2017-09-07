@@ -77,9 +77,9 @@ class MSBPageList extends Component {
 	 * @protected
 	 */
 	_handleBreadcrumbEntryClicked(event) {
-		const index = event.delegateTarget.dataset.index;
-		const layoutId = event.delegateTarget.dataset.layoutid;
-		const parentLayoutId = event.delegateTarget.dataset.parentlayoutid;
+		const index = parseInt(event.delegateTarget.dataset.index, 10);
+		const layoutId = parseInt(event.delegateTarget.dataset.layoutid, 10);
+		const parentLayoutId = parseInt(event.delegateTarget.dataset.parentlayoutid, 10);
 		const title = event.delegateTarget.dataset.title;
 
 		this._loadParents(
@@ -99,7 +99,7 @@ class MSBPageList extends Component {
 
 			this.refs.secondLevelNodes.selectNode(layoutId, parentLayoutId, title);
 		}
-		else if (index == 1) {
+		else if (index === 1) {
 			this.refs.firstLevelNodes.selectNode(layoutId, parentLayoutId, title);
 		}
 		else {
