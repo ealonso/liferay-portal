@@ -23,4 +23,6 @@ public class LayoutAdminWebKeys {
 
 	public static final String ITEM_SELECTOR = "ITEM_SELECTOR";
 
+	public static final String MILLER_COLUMNS = "MILLER_COLUMNS";
+
 }
