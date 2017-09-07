@@ -85,7 +85,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 
 	<soy:template-renderer
 		context="<%= context %>"
-		module="modern-site-building-page-web/js/MSBPageList.es"
+		module="modern-site-building-page-web/js/MSBPageList"
 		templateNamespace="MSBPageList.render"
 	/>
 </aui:form>
