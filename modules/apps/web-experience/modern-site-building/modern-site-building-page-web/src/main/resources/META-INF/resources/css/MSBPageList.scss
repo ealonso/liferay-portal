@@ -12,4 +12,12 @@
 	.page-list-breadcrumb {
 		margin-top: 20px;
 	}
+
+	.breadcrumb > li {
+		cursor: pointer;
+
+		&.active {
+			cursor: default;
+		}
+	}
 }
