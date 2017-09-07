@@ -14,8 +14,9 @@
 
 package com.liferay.asset.tags.internal.search;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.permission.AssetTagPermission;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -36,7 +37,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.permission.AssetTagPermission;
 
 import java.util.Locale;
 

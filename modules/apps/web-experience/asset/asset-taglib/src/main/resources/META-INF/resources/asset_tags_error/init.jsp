@@ -18,4 +18,4 @@
 
 <%@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.asset.kernel.exception.AssetTagException" %>
+<%@ page import="com.liferay.asset.exception.AssetTagException" %>

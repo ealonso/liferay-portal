@@ -15,16 +15,16 @@
 package com.liferay.asset.publisher.web.internal.exportimport.portlet.preferences.processor;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetVocabularyLocalService;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileEntryType;
 import com.liferay.document.library.kernel.service.DLFileEntryTypeLocalService;

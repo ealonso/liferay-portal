@@ -1,0 +1,12 @@
+Bundle-Name: Liferay Portal Impl Asset Compat
+Bundle-SymbolicName: com.liferay.portal.impl.asset.compat
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.portlet.asset,\
+	com.liferay.portlet.asset.model.impl,\
+	com.liferay.portlet.asset.service.base,\
+	com.liferay.portlet.asset.service.http,\
+	com.liferay.portlet.asset.service.impl,\
+	com.liferay.portlet.asset.service.persistence.impl,\
+	com.liferay.portlet.asset.social,\
+	com.liferay.portlet.asset.util.comparator

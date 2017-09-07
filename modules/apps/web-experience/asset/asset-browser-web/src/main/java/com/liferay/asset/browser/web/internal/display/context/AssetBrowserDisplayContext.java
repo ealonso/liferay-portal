@@ -18,9 +18,9 @@ import com.liferay.asset.browser.web.internal.configuration.AssetBrowserWebConfi
 import com.liferay.asset.browser.web.internal.constants.AssetBrowserPortletKeys;
 import com.liferay.asset.browser.web.internal.search.AssetBrowserSearch;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.frontend.taglib.servlet.taglib.ManagementBarFilterItem;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -192,7 +192,7 @@ public class AssetBrowserDisplayContext {
 				getStatuses(), assetBrowserSearch.getStart(),
 				assetBrowserSearch.getEnd(), sort);
 
-			List<AssetEntry> assetEntries = AssetUtil.getAssetEntries(hits);
+			List<AssetEntry> assetEntries = null;
 
 			assetBrowserSearch.setResults(assetEntries);
 		}

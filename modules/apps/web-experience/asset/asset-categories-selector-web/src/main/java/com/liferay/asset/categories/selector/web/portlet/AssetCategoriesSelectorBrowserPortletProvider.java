@@ -25,7 +25,10 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.asset.kernel.model.AssetCategory"},
+	property = {
+		"model.class.name=com.liferay.asset.categories.model.AssetCategory",
+		"model.class.name=com.liferay.asset.kernel.model.AssetCategory"
+	},
 	service = BrowsePortletProvider.class
 )
 public class AssetCategoriesSelectorBrowserPortletProvider
