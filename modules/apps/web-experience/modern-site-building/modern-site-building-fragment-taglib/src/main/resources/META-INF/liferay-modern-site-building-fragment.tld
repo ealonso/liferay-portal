@@ -10,6 +10,12 @@
 		<tag-class>com.liferay.modern.site.building.fragment.taglib.servlet.taglib.MSBFragmentEntryRendererTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
+			<name>context</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>java.util.Map</type>
+		</attribute>
+		<attribute>
 			<name>msbFragmentEntryId</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>

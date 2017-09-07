@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.taglib.util.IncludeTag;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -49,6 +51,10 @@ public class MSBFragmentEntryRendererTag extends IncludeTag {
 		return super.doStartTag();
 	}
 
+	public void setContext(Map<String, Object> context) {
+		_context = context;
+	}
+
 	public void setMsbFragmentEntryId(long msbFragmentEntryId) {
 		_msbFragmentEntryId = msbFragmentEntryId;
 	}
@@ -62,6 +68,7 @@ public class MSBFragmentEntryRendererTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
+		_context = null;
 		_msbFragmentEntry = null;
 		_msbFragmentEntryId = 0;
 	}
@@ -75,6 +82,10 @@ public class MSBFragmentEntryRendererTag extends IncludeTag {
 	protected void setAttributes(HttpServletRequest request) {
 		request.setAttribute(
 			"liferay-modern-site-building-fragment:" +
+				"msb-fragment-entry-renderer:context",
+			_context);
+		request.setAttribute(
+			"liferay-modern-site-building-fragment:" +
 				"msb-fragment-entry-renderer:msbFragmentEntry",
 			_msbFragmentEntry);
 	}
@@ -84,6 +95,7 @@ public class MSBFragmentEntryRendererTag extends IncludeTag {
 	private static final Log _log = LogFactoryUtil.getLog(
 		MSBFragmentEntryRendererTag.class);
 
+	private Map<String, Object> _context;
 	private MSBFragmentEntry _msbFragmentEntry;
 	private long _msbFragmentEntryId;
 
