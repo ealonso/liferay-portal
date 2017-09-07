@@ -1,7 +1,7 @@
 import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
-import './MSBPageListBlock.es';
+import './MSBPageListBlock';
 import templates from './MSBPageList.soy';
 
 /**
