@@ -89,10 +89,11 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 </aui:form>
 
 <liferay-frontend:add-menu>
-	<liferay-portlet:renderURL portletName="<%= PortletProviderUtil.getPortletId(Layout.class.getName(), PortletProvider.Action.EDIT) %>" var="addLayoutURL">
+	<liferay-portlet:renderURL var="addLayoutURL">
 		<portlet:param name="mvcPath" value="/add_layout.jsp" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
 		<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
+		<portlet:param name="selPlid" value="0" />
 	</liferay-portlet:renderURL>
 
 	<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "page") %>' type="<%= AddMenuKeys.AddMenuType.PRIMARY %>" url="<%= addLayoutURL.toString() %>" />
