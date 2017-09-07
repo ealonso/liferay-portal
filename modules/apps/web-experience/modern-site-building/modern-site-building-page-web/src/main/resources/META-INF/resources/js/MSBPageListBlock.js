@@ -13,7 +13,7 @@ class MSBPageListBlock extends Component {
 	/**
 	 * This is called when one of this block's nodes is clicked.
 	 * @param {!Event} event
-	 * @private
+	 * @protected
 	 */
 	_handleNodeClicked(event) {
 		const target = event.target;
@@ -35,7 +35,7 @@ class MSBPageListBlock extends Component {
 	 * @param {number} layoutId Node's layout ID
 	 * @param {number} parentLayoutId Node's parent layout ID
 	 * @param {string} title Node's title
-	 * @private
+	 * @protected
 	 */
 	_selectNode(layoutId, parentLayoutId, title) {
 		this.nodes.forEach(
@@ -68,6 +68,11 @@ class MSBPageListBlock extends Component {
 	}
 }
 
+/**
+ * State definition.
+ * @type {!Object}
+ * @static
+ */
 MSBPageListBlock.STATE = {
 	/**
 	 * Current block nodes list

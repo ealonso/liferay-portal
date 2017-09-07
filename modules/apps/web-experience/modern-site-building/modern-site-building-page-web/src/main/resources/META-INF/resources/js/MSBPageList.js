@@ -58,7 +58,7 @@ class MSBPageList extends Component {
 	 * @param {string} ref Page list block name.
 	 * @return {object} Last selected node or undefined if there is no node
 	 * 		   selected.
-	 * @private
+	 * @protected
 	 */
 	_getLastSelectedNode(ref) {
 		const node = this[ref].reduce(
@@ -74,7 +74,7 @@ class MSBPageList extends Component {
 	/**
 	 * This is called when one of breadcrumb's entries is clicked.
 	 * @param {!Event} event
-	 * @private
+	 * @protected
 	 */
 	_handleBreadcrumbEntryClicked(event) {
 		const index = event.delegateTarget.dataset.index;
@@ -118,10 +118,10 @@ class MSBPageList extends Component {
 	/**
 	 * Loads children nodes for selected node in the first block.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @private
+	 * @protected
 	 */
 	_handleFirstBlockNodeSelected(event) {
 		if (event.loadParents && event.parentLayoutId > 0) {
@@ -150,10 +150,10 @@ class MSBPageList extends Component {
 	/**
 	 * Loads children nodes for selected node in the second block.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @private
+	 * @protected
 	 */
 	_handleSecondBlockNodeSelected(event) {
 		this._loadLayouts(
@@ -173,10 +173,10 @@ class MSBPageList extends Component {
 	/**
 	 * Switches page blocks when user selects a node in the third block.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @private
+	 * @protected
 	 */
 	_handleThirdBlockNodeSelected(event) {
 		const secondLevelNodes = this.secondLevelNodes;
@@ -210,7 +210,7 @@ class MSBPageList extends Component {
 	 * @param {number} selectedLayoutId Layout ID to be selected.
 	 * @param {!Function} callback Callback function to be executed after the
 	 *        AJAX call.
-	 * @private
+	 * @protected
 	 */
 	_loadLayouts(parentLayoutId, loadParentLayouts, selectedLayoutId, callback) {
 		const orderBy = this.getInitialConfig().orderBy;
@@ -242,14 +242,14 @@ class MSBPageList extends Component {
 	/**
 	 * Loads parent layouts for selected node.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
 	 * @param {boolean} switchBlocks If true when MSBPageList switches blocks as
 	 * 	      the first block node was clicked.
 	 * @param {boolean} updateBreadcrumb If true when MSBPageList updates
 	 *        breadcrumb entrues.
-	 * @private
+	 * @protected
 	 */
 	_loadParents(event, switchBlocks = true, updateBreadcrumb = true) {
 		const firstLevelNodes = this.firstLevelNodes;
@@ -282,10 +282,10 @@ class MSBPageList extends Component {
 	/**
 	 * Resets all active selected nodes except the last selected.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @private
+	 * @protected
 	 */
 	_resetActive(event) {
 		const ref = event.ref;
@@ -306,10 +306,10 @@ class MSBPageList extends Component {
 	/**
 	 * Updates breadcrumb when some node was clicked.
 	 *
-	 * @param {object} event Contains layout ID, parent layout ID and title of
+	 * @param {Event} event Contains layout ID, parent layout ID and title of
 	 * 		  the node. Also contains reference name of current active block and
 	 * 		  selected layout ID.
-	 * @private
+	 * @protected
 	 */
 	_updateBreadcrumb(event) {
 		const layoutId = event.layoutId;
@@ -347,6 +347,11 @@ class MSBPageList extends Component {
 	}
 }
 
+/**
+ * State definition.
+ * @type {!Object}
+ * @static
+ */
 MSBPageList.STATE = {
 	/**
 	 * Breadcrumb entries
