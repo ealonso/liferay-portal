@@ -31,8 +31,11 @@ import java.util.Set;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.service.persistence.impl.AssetCategoryPropertyFinderImpl}
  * @generated
  */
+@Deprecated
 public class AssetCategoryPropertyFinderBaseImpl extends BasePersistenceImpl<AssetCategoryProperty> {
 	public AssetCategoryPropertyFinderBaseImpl() {
 		setModelClass(AssetCategoryProperty.class);
