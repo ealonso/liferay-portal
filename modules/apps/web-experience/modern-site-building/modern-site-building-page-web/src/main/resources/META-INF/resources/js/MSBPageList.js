@@ -1,7 +1,9 @@
 import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
+
 import './MSBPageListBlock';
+import { isBreadcrumbEntry, isNode } from './validators';
 import templates from './MSBPageList.soy';
 
 /**
@@ -78,8 +80,8 @@ class MSBPageList extends Component {
 	 */
 	_handleBreadcrumbEntryClicked(event) {
 		const index = parseInt(event.delegateTarget.dataset.index, 10);
-		const layoutId = parseInt(event.delegateTarget.dataset.layoutid, 10);
-		const parentLayoutId = parseInt(event.delegateTarget.dataset.parentlayoutid, 10);
+		const layoutId = event.delegateTarget.dataset.layoutid;
+		const parentLayoutId = event.delegateTarget.dataset.parentlayoutid;
 		const title = event.delegateTarget.dataset.title;
 
 		this._loadParents(
@@ -359,7 +361,14 @@ MSBPageList.STATE = {
 	 * @memberof MSBPageList
 	 * @type {!Array}
 	 */
-	breadcrumbEntries: Config.array().required(),
+	breadcrumbEntries: Config
+		.arrayOf(Config.shapeOf({
+			index: Config.number().required(),
+			layoutId: Config.string().required(),
+			parentLayoutId: Config.string().required(),
+			title: Config.string().required(),
+		}))
+		.required(),
 
 	/**
 	 * First block nodes
@@ -367,7 +376,9 @@ MSBPageList.STATE = {
 	 * @memberof MSBPageList
 	 * @type {!Array}
 	 */
-	firstLevelNodes: Config.array().required(),
+	firstLevelNodes: Config
+		.arrayOf(isNode)
+		.required(),
 
 	/**
 	 * URL to get nodes via AJAX
@@ -384,7 +395,9 @@ MSBPageList.STATE = {
 	 * @memberof MSBPageList
 	 * @type {!string}
 	 */
-	portletNamespace: Config.string().required(),
+	portletNamespace: Config
+		.string()
+		.required(),
 
 	/**
 	 * Second block nodes
@@ -393,7 +406,7 @@ MSBPageList.STATE = {
 	 * @type {?Array}
 	 * @default []
 	 */
-	secondLevelNodes: Config.array().value([]),
+	secondLevelNodes: Config.arrayOf(isNode).value([]),
 
 	/**
 	 * Third block nodes
@@ -402,7 +415,7 @@ MSBPageList.STATE = {
 	 * @type {?Array}
 	 * @default []
 	 */
-	thirdLevelNodes: Config.array().value([]),
+	thirdLevelNodes: Config.arrayOf(isNode).value([]),
 };
 
 Soy.register(MSBPageList, templates);

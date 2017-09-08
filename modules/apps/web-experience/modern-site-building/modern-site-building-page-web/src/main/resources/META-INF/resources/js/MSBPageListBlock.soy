@@ -40,15 +40,15 @@
  */
 {template .card}
 	{@param actions: map<string, ?>}
+	{@param active: bool}
 	{@param icon: string}
 	{@param hasChild: bool}
 	{@param layoutId: string}
 	{@param pathThemeImages: string}
 	{@param parentLayoutId: string}
 	{@param portletNamespace: string}
+	{@param selected: bool}
 	{@param title: string}
-	{@param? active: bool}
-	{@param? selected: bool}
 
 	{let $nodeAttributes kind="attributes"}
 		class="card card-horizontal {$selected ? 'selected' : ''}"
