@@ -4,6 +4,8 @@ import {hasClass} from 'metal-dom';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 import 'metal-dropdown';
+
+import { isNode } from './validators';
 import templates from './MSBPageListBlock.soy';
 
 /**
@@ -80,7 +82,9 @@ MSBPageListBlock.STATE = {
 	 * @memberof MSBPageListBlock
 	 * @type {!Array}
 	 */
-	nodes: Config.array().required(),
+	nodes: Config
+		.arrayOf(isNode)
+		.required(),
 };
 
 Soy.register(MSBPageListBlock, templates);

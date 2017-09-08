@@ -61,8 +61,8 @@ public class MSBPagesDisplayContext {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		jsonObject.put("index", 0);
-		jsonObject.put("layoutId", -1);
-		jsonObject.put("parentLayoutId", 0);
+		jsonObject.put("layoutId", "-1");
+		jsonObject.put("parentLayoutId", "0");
 		jsonObject.put("title", LanguageUtil.get(_request, "home"));
 
 		jsonArray.put(jsonObject);
