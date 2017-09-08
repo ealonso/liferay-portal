@@ -65,8 +65,11 @@ import java.util.TreeSet;
  * @see AssetEntryImpl
  * @see AssetEntry
  * @see AssetEntryModel
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.model.impl.AssetEntryImpl}
  * @generated
  */
+@Deprecated
 @JSON(strict = true)
 @ProviderType
 public class AssetEntryModelImpl extends BaseModelImpl<AssetEntry>
