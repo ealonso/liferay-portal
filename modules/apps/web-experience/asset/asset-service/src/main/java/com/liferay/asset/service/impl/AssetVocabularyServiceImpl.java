@@ -21,6 +21,7 @@ import com.liferay.asset.service.base.AssetVocabularyServiceBaseImpl;
 import com.liferay.asset.service.permission.AssetCategoriesPermission;
 import com.liferay.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.asset.util.impl.AssetUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
@@ -174,8 +175,13 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 			return vocabularies;
 		}
 
-		return AssetUtil.filterVocabularies(
-			vocabularies, className, classTypePK);
+		return ModelAdapterUtil.adapt(
+			AssetVocabulary.class,
+			AssetUtil.filterVocabularies(
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.kernel.model.AssetVocabulary.class,
+					vocabularies),
+				className, classTypePK));
 	}
 
 	@Override
