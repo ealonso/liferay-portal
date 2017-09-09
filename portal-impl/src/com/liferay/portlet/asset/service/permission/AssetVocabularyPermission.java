@@ -23,7 +23,10 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 /**
  * @author Eduardo Lundgren
  * @author JorgeFerrer
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.permission.AssetVocabularyPermission}
  */
+@Deprecated
 public class AssetVocabularyPermission {
 
 	public static void check(

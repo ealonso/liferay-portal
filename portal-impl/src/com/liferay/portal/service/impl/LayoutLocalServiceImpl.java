@@ -2341,6 +2341,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			String[] assetTagNames)
 		throws PortalException {
 
+		if (ArrayUtil.isEmpty(assetCategoryIds) &&
+			ArrayUtil.isEmpty(assetTagNames)) {
+
+			return;
+		}
+
 		assetEntryLocalService.updateEntry(
 			userId, layout.getGroupId(), layout.getCreateDate(),
 			layout.getModifiedDate(), Layout.class.getName(), layout.getPlid(),
