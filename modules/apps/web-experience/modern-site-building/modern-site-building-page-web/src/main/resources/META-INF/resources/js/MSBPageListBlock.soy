@@ -6,6 +6,7 @@
 {template .render}
 	{@param pathThemeImages: string}
 	{@param portletNamespace: string}
+	{@param portletURL: string}
 	{@param? nodes: list<?>}
 
 	{let $blockClasses kind="text"}
@@ -26,7 +27,7 @@
 					{param layoutId: $node.layoutId /}
 					{param pathThemeImages: $pathThemeImages /}
 					{param portletNamespace: $portletNamespace /}
-					{param parentLayoutId: $node.parentLayoutId /}
+					{param portletURL: $portletURL /}
 					{param selected: $node.selected /}
 					{param title: $node.title /}
 				{/call}
@@ -45,8 +46,8 @@
 	{@param hasChild: bool}
 	{@param layoutId: string}
 	{@param pathThemeImages: string}
-	{@param parentLayoutId: string}
 	{@param portletNamespace: string}
+	{@param portletURL: string}
 	{@param selected: bool}
 	{@param title: string}
 
@@ -54,7 +55,6 @@
 		class="card card-horizontal {$selected ? 'selected' : ''}"
 		data-layoutid="{$layoutId}"
 		data-onclick="_handleNodeClicked"
-		data-parentlayoutid="{$parentLayoutId}"
 		data-title="{$title}"
 	{/let}
 
@@ -117,9 +117,11 @@
 
 			{if $hasChild}
 				<div class="card-col-field">
-					<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
-						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
-					</svg>
+					<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$layoutId}">
+						<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
+							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
+						</svg>
+					</a>
 				</div>
 			{/if}
 		</div>
