@@ -4,56 +4,37 @@
  * MSBPageList
  */
 {template .render}
-	{@param breadcrumbEntries: list<?>}
-	{@param firstLevelNodes: list<?>}
+	{@param nodeBlocks: list<?>}
 	{@param pathThemeImages: string}
 	{@param portletNamespace: string}
-	{@param? _handleFirstBlockNodeSelected: any}
-	{@param? _handleSecondBlockNodeSelected: any}
-	{@param? _handleThirdBlockNodeSelected: any}
-	{@param? secondLevelNodes: list<?>}
-	{@param? thirdLevelNodes: list<?>}
+	{@param portletURL: string}
 
 	<div class="container-fluid-1280" ref="msbPageList">
 		<div class="page-list-breadcrumb">
 			<ul class="breadcrumb breadcrumb-horizontal">
-				{foreach $entry in $breadcrumbEntries}
-					{call .breadcrumbEntry}
-						{param entry: $entry /}
-						{param last: isLast($entry) /}
-					{/call}
+				<li>{msg desc=""}home{/msg}</li>
+				{foreach $nodeBlock in $nodeBlocks}
+					{foreach $node in $nodeBlock}
+						{if $node.active}
+							{call .breadcrumbEntry}
+								{param node: $node /}
+								{param last: isLast($nodeBlock) /}
+							{/call}
+						{/if}
+					{/foreach}
 				{/foreach}
 			</ul>
 		</div>
 
 		<div class="page-list">
-			{call MSBPageListBlock.render}
-				{param events: [
-					'nodeSelected': $_handleFirstBlockNodeSelected
-				] /}
-				{param nodes: $firstLevelNodes /}
-				{param pathThemeImages: $pathThemeImages /}
-				{param portletNamespace: $portletNamespace /}
-				{param ref: 'nodes' /}
-			{/call}
-			{call MSBPageListBlock.render}
-				{param events: [
-					'nodeSelected': $_handleSecondBlockNodeSelected
-				] /}
-				{param nodes: $secondLevelNodes /}
-				{param pathThemeImages: $pathThemeImages /}
-				{param portletNamespace: $portletNamespace /}
-				{param ref: 'children' /}
-			{/call}
-			{call MSBPageListBlock.render}
-				{param events: [
-					'nodeSelected': $_handleThirdBlockNodeSelected
-				] /}
-				{param nodes: $thirdLevelNodes /}
-				{param pathThemeImages: $pathThemeImages /}
-				{param portletNamespace: $portletNamespace /}
-				{param ref: 'grandChildren' /}
-			{/call}
+			{foreach $nodeBlock in $nodeBlocks}
+				{call MSBPageListBlock.render}
+					{param nodes: $nodeBlock /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param portletNamespace: $portletNamespace /}
+					{param portletURL: $portletURL /}
+				{/call}
+			{/foreach}
 		</div>
 	</div>
 {/template}
@@ -62,27 +43,23 @@
  *	Renders a Lexicon breadcrumb entry
  */
 {template .breadcrumbEntry}
-	{@param entry: ?}
+	{@param node: ?}
 	{@param last: bool}
 
 	{let $nodeAttributes kind="attributes"}
-		class="{$last ? 'active' : ''}"
-		data-index="{$entry.index}"
-		data-layoutId="{$entry.layoutId}"
-
 		{if not $last}
 			data-onclick="_handleBreadcrumbEntryClicked"
+			data-layout-id="{$node.layoutId}"
+		{else}
+			class="active"
 		{/if}
-
-		data-parentLayoutId="{$entry.parentLayoutId}"
-		data-title="{$entry.title}"
 	{/let}
 
 	<li {$nodeAttributes}>
 		{if $last}
-			<span>{$entry.title}</span>
+			<span>{$node.title}</span>
 		{else}
-			{$entry.title}
+			{$node.title}
 		{/if}
 	</li>
 {/template}
