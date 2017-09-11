@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
@@ -31,8 +30,10 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.portlet.PortletURL;
@@ -53,50 +54,6 @@ public class MSBPagesDisplayContext {
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_request = request;
-	}
-
-	public JSONArray getBreadcrumbEntriesJSONArray() throws Exception {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("index", 0);
-		jsonObject.put("layoutId", "-1");
-		jsonObject.put("parentLayoutId", "0");
-		jsonObject.put("title", LanguageUtil.get(_request, "home"));
-
-		jsonArray.put(jsonObject);
-
-		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
-			getGroupId(), isPrivateLayout(), getSelectedLayoutId());
-
-		if (selectedLayout == null) {
-			return jsonArray;
-		}
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		List<Layout> ancestors = selectedLayout.getAncestors();
-
-		Collections.reverse(ancestors);
-
-		for (int i = 0; i < ancestors.size(); i++) {
-			Layout ancestor = ancestors.get(i);
-
-			JSONObject ancestorJSONObject = JSONFactoryUtil.createJSONObject();
-
-			ancestorJSONObject.put("index", i);
-			ancestorJSONObject.put("layoutId", ancestor.getLayoutId());
-			ancestorJSONObject.put(
-				"parentLayoutId", ancestor.getParentLayoutId());
-			ancestorJSONObject.put(
-				"title", ancestor.getName(themeDisplay.getLocale()));
-
-			jsonArray.put(ancestorJSONObject);
-		}
-
-		return jsonArray;
 	}
 
 	public String getDisplayStyle() {
@@ -167,6 +124,54 @@ public class MSBPagesDisplayContext {
 		return _navigation;
 	}
 
+	public JSONArray getNodeBlocksJSONArray() throws Exception {
+		List<JSONArray> nodeBlocksList = new ArrayList<>();
+		JSONArray nodeBlocksJSONArray = JSONFactoryUtil.createJSONArray();
+		long selectedLayoutId = getSelectedLayoutId();
+
+		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
+			getGroupId(), isPrivateLayout(), selectedLayoutId);
+
+		Locale locale = (
+			(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY)
+		).getLocale();
+
+		while (selectedLayout != null) {
+			JSONArray nodeBlockJSONArray = JSONFactoryUtil.createJSONArray();
+
+			for (Layout childLayout : selectedLayout.getChildren()) {
+				boolean layoutIsActive = false;
+
+				if (childLayout.getLayoutId() == selectedLayoutId) {
+					layoutIsActive = true;
+				}
+
+				nodeBlockJSONArray.put(
+					jsonObjectFromLayout(childLayout, layoutIsActive, locale));
+			}
+
+			if (nodeBlockJSONArray.length() > 0) {
+				nodeBlocksList.add(nodeBlockJSONArray);
+			}
+
+			selectedLayoutId = selectedLayout.getParentLayoutId();
+
+			selectedLayout = LayoutLocalServiceUtil.fetchLayout(
+				getGroupId(), isPrivateLayout(),
+				selectedLayout.getParentLayoutId());
+		}
+
+		nodeBlocksList.add(getRootLayoutsJSONArray());
+
+		Collections.reverse(nodeBlocksList);
+
+		for (JSONArray nodeBlockJSONArray : nodeBlocksList) {
+			nodeBlocksJSONArray.put(nodeBlockJSONArray);
+		}
+
+		return nodeBlocksJSONArray;
+	}
+
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -211,6 +216,23 @@ public class MSBPagesDisplayContext {
 		return portletURL;
 	}
 
+	public JSONArray getRootLayoutsJSONArray() throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		JSONArray jsonArray;
+
+		OrderByComparator orderByComparator =
+			MSBPagesPortletUtil.getLayoutOrderByComparator(
+				getOrderByCol(), getOrderByType());
+
+		jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
+			themeDisplay.getScopeGroupId(), isPrivateLayout(), 0,
+			getSelectedLayoutId(), orderByComparator, _renderRequest);
+
+		return jsonArray;
+	}
+
 	public long getSelectedLayoutId() {
 		if (_selectedLayoutId != null) {
 			return _selectedLayoutId;
@@ -233,6 +255,22 @@ public class MSBPagesDisplayContext {
 		}
 
 		return false;
+	}
+
+	public JSONObject jsonObjectFromLayout(
+		Layout layout, boolean active, Locale locale) {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("actions", JSONFactoryUtil.createJSONObject());
+		jsonObject.put("active", active);
+		jsonObject.put("hasChild", layout.getChildren().size() > 0);
+		jsonObject.put("icon", "");
+		jsonObject.put("layoutId", layout.getLayoutId());
+		jsonObject.put("selected", active);
+		jsonObject.put("title", layout.getName(locale));
+
+		return jsonObject;
 	}
 
 	private String _displayStyle;
