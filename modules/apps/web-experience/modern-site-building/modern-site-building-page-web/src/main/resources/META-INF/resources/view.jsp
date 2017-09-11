@@ -65,22 +65,15 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutURL %>" name="fm">
-	<liferay-portlet:resourceURL id="/msb_pages/get_layouts" var="getLayoutsURL">
-		<liferay-portlet:param name="groupId" value="<%= String.valueOf(msbPagesDisplayContext.getGroupId()) %>" />
-		<liferay-portlet:param name="privateLayout" value="<%= String.valueOf(msbPagesDisplayContext.isPrivateLayout()) %>" />
-	</liferay-portlet:resourceURL>
-
 	<%
 	Map<String, Object> context = new HashMap<>();
 
-	context.put("breadcrumbEntries", msbPagesDisplayContext.getBreadcrumbEntriesJSONArray());
-	context.put("firstLevelNodes", msbPagesDisplayContext.getLayoutsJSONArray(false));
-	context.put("getLayoutsURL", getLayoutsURL);
+	context.put("nodeBlocks", msbPagesDisplayContext.getNodeBlocksJSONArray());
 	context.put("orderBy", msbPagesDisplayContext.getOrderByJSONObject());
 	context.put("pathThemeImages", themeDisplay.getPathThemeImages());
 	context.put("portletNamespace", renderResponse.getNamespace());
+	context.put("portletURL", msbPagesDisplayContext.getPortletURL().toString());
 	context.put("searchContainerId", "pages");
-	context.put("secondLevelNodes", msbPagesDisplayContext.getLayoutsJSONArray(true));
 	%>
 
 	<soy:template-renderer
