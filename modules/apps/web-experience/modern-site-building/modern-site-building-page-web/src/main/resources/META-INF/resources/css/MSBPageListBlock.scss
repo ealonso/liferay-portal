@@ -1,47 +1,49 @@
 @import "mixins";
 
-@include sm {
-	.page-list-block {
-		background-color: white;
-		border: 1px solid lightgray;
-		margin: 5px;
-		overflow-x: visible;
-		overflow-y: scroll;
-		padding-left: 1px;
-		padding-right: 1px;
+.page-list-block {
+	background-color: white;
+	overflow-x: visible;
+	overflow-y: auto;
+	width: 85vw;
+	max-width: 40ch;
+	display: inline-block;
+	height: 100%;
 
-		.card {
-			margin-bottom: 2px;
+	& + .page-list-block {
+		border-left: none;
+	}
 
-			.card-icon {
-				visibility: hidden;
-			}
+	.card {
+		margin-bottom: 2px;
 
-			.page-selected {
-				width: 30px;
-			}
-
-			&:hover, a:focus {
-				.card-icon {
-					visibility: visible;
-				}
-			}
+		.card-icon {
+			cursor: pointer;
 		}
 
-		.card.selected {
-			 background-color: #F7FAFA;
-
-			.card-icon {
-				visibility: visible;
-			}
-
-			span.active {
-				color: #65B6F0;
-			}
+		.page-selected {
+			width: 30px;
 		}
 	}
 
-	.page-list-block.empty {
-		opacity: 0.4;
+	.card-row {
+		cursor: default;
+		display: block;
+		text-decoration: none;
 	}
+
+	.card-col-content {
+		height: 44px;
+	}
+
+	.card.selected {
+		 background-color: #F7FAFA;
+
+		span.active {
+			color: #65B6F0;
+		}
+	}
+}
+
+.page-list-block.empty {
+	opacity: 0.4;
 }

@@ -84,23 +84,22 @@ public class MSBPagesDisplayContext {
 		return _groupId;
 	}
 
-	public JSONArray getLayoutsJSONArray(boolean children) throws Exception {
+	public String getNavigation() {
+		if (_navigation != null) {
+			return _navigation;
+		}
+
+		_navigation = ParamUtil.getString(
+			_request, "navigation", "public-pages");
+
+		return _navigation;
+	}
+
+	public JSONArray getLayoutsJSONArray(long parentLayoutId) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		long parentLayoutId = getSelectedLayoutId();
-
-		if (!children && (parentLayoutId > 0)) {
-			Layout selectedLayout = LayoutLocalServiceUtil.getLayout(
-				getGroupId(), isPrivateLayout(), getSelectedLayoutId());
-
-			parentLayoutId = selectedLayout.getParentLayoutId();
-		}
-		else if (children && (parentLayoutId == 0)) {
-			return jsonArray;
-		}
+		JSONArray jsonArray;
 
 		OrderByComparator orderByComparator =
 			MSBPagesPortletUtil.getLayoutOrderByComparator(
@@ -113,15 +112,14 @@ public class MSBPagesDisplayContext {
 		return jsonArray;
 	}
 
-	public String getNavigation() {
-		if (_navigation != null) {
-			return _navigation;
+	public long getSelectedLayoutId() {
+		if (_selectedLayoutId != null) {
+			return _selectedLayoutId;
 		}
 
-		_navigation = ParamUtil.getString(
-			_request, "navigation", "public-pages");
+		_selectedLayoutId = ParamUtil.getLong(_request, "selectedLayoutId", 0);
 
-		return _navigation;
+		return _selectedLayoutId;
 	}
 
 	public JSONArray getNodeBlocksJSONArray() throws Exception {
@@ -151,7 +149,7 @@ public class MSBPagesDisplayContext {
 			}
 
 			if (nodeBlockJSONArray.length() > 0) {
-				nodeBlocksList.add(nodeBlockJSONArray);
+				nodeBlocksList.add(getLayoutsJSONArray(selectedLayoutId));
 			}
 
 			selectedLayoutId = selectedLayout.getParentLayoutId();
@@ -161,7 +159,7 @@ public class MSBPagesDisplayContext {
 				selectedLayout.getParentLayoutId());
 		}
 
-		nodeBlocksList.add(getRootLayoutsJSONArray());
+		nodeBlocksList.add(getLayoutsJSONArray(0));
 
 		Collections.reverse(nodeBlocksList);
 
@@ -214,33 +212,6 @@ public class MSBPagesDisplayContext {
 		portletURL.setParameter("orderByType", getOrderByType());
 
 		return portletURL;
-	}
-
-	public JSONArray getRootLayoutsJSONArray() throws Exception {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		JSONArray jsonArray;
-
-		OrderByComparator orderByComparator =
-			MSBPagesPortletUtil.getLayoutOrderByComparator(
-				getOrderByCol(), getOrderByType());
-
-		jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
-			themeDisplay.getScopeGroupId(), isPrivateLayout(), 0,
-			getSelectedLayoutId(), orderByComparator, _renderRequest);
-
-		return jsonArray;
-	}
-
-	public long getSelectedLayoutId() {
-		if (_selectedLayoutId != null) {
-			return _selectedLayoutId;
-		}
-
-		_selectedLayoutId = ParamUtil.getLong(_request, "selectedLayoutId", 0);
-
-		return _selectedLayoutId;
 	}
 
 	public boolean isPrivateLayout() {

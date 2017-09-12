@@ -53,6 +53,13 @@ class MSBPageList extends Component {
 			}
 		);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	rendered() {
+		this.refs.pageList.scrollLeft = this.refs.pageList.scrollWidth;
+	}
 }
 
 /**

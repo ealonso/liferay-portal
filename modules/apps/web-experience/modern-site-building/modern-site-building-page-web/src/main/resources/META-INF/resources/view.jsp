@@ -65,6 +65,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 </portlet:actionURL>
 
 <aui:form action="<%= deleteLayoutURL %>" name="fm">
+
 	<%
 	Map<String, Object> context = new HashMap<>();
 

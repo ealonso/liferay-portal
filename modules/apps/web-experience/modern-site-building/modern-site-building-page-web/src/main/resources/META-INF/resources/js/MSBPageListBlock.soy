@@ -10,7 +10,7 @@
 	{@param? nodes: list<?>}
 
 	{let $blockClasses kind="text"}
-		page-list-block col-lg-4
+		page-list-block
 		{if not $nodes or length($nodes) == 0}
 			{sp}empty
 		{/if}
@@ -116,13 +116,11 @@
 			</div>
 
 			{if $hasChild}
-				<div class="card-col-field">
-					<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$layoutId}">
-						<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
-							<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
-						</svg>
-					</a>
-				</div>
+				<a class="card-col-field" href="{$portletURL}&{$portletNamespace}selectedLayoutId={$layoutId}">
+					<svg class="card-icon icon-monospaced lexicon-icon lexicon-icon-angle-right text-default" role="img">
+						<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#angle-right"></use>
+					</svg>
+				</a>
 			{/if}
 		</div>
 	</div>
