@@ -12,13 +12,19 @@
 	<div class="container-fluid-1280" ref="msbPageList">
 		<div class="page-list-breadcrumb">
 			<ul class="breadcrumb breadcrumb-horizontal">
-				<li>{msg desc=""}home{/msg}</li>
+				<li>
+					<a href="{$portletURL}&{$portletNamespace}selectedLayoutId=">
+						{msg desc=""}home{/msg}
+					</a>
+				</li>
 				{foreach $nodeBlock in $nodeBlocks}
 					{foreach $node in $nodeBlock}
 						{if $node.active}
 							{call .breadcrumbEntry}
 								{param node: $node /}
 								{param last: isLast($nodeBlock) /}
+								{param portletNamespace: $portletNamespace /}
+								{param portletURL: $portletURL /}
 							{/call}
 						{/if}
 					{/foreach}
@@ -26,7 +32,7 @@
 			</ul>
 		</div>
 
-		<div class="page-list">
+		<div class="page-list" ref="pageList">
 			{foreach $nodeBlock in $nodeBlocks}
 				{call MSBPageListBlock.render}
 					{param nodes: $nodeBlock /}
@@ -45,6 +51,8 @@
 {template .breadcrumbEntry}
 	{@param node: ?}
 	{@param last: bool}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
 
 	{let $nodeAttributes kind="attributes"}
 		{if not $last}
@@ -56,10 +64,12 @@
 	{/let}
 
 	<li {$nodeAttributes}>
-		{if $last}
-			<span>{$node.title}</span>
-		{else}
-			{$node.title}
-		{/if}
+		<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$node.layoutId}">
+			{if $last}
+				<span>{$node.title}</span>
+			{else}
+				{$node.title}
+			{/if}
+		</a>
 	</li>
 {/template}
