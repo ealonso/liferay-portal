@@ -24,6 +24,14 @@
 		.page-selected {
 			width: 30px;
 		}
+
+		.add-child-page {
+			visibility: hidden;
+		}
+
+		&:hover .add-child-page {
+			visibility: visible;
+		}
 	}
 
 	.card-row {
