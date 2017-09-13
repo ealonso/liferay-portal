@@ -95,7 +95,7 @@ public class MSBPagesDisplayContext {
 		return _navigation;
 	}
 
-	public JSONArray getLayoutsJSONArray(long parentLayoutId) throws Exception {
+	public JSONArray getLayoutsJSONArray(long parentLayoutId, long selectedId) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -107,9 +107,13 @@ public class MSBPagesDisplayContext {
 
 		jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
 			themeDisplay.getScopeGroupId(), isPrivateLayout(), parentLayoutId,
-			getSelectedLayoutId(), orderByComparator, _renderRequest);
+			selectedId, orderByComparator, _renderRequest);
 
 		return jsonArray;
+	}
+
+	public JSONArray getLayoutsJSONArray(long parentLayoutId) throws Exception {
+		return getLayoutsJSONArray(parentLayoutId, getSelectedLayoutId());
 	}
 
 	public long getSelectedLayoutId() {
@@ -125,41 +129,35 @@ public class MSBPagesDisplayContext {
 	public JSONArray getNodeBlocksJSONArray() throws Exception {
 		List<JSONArray> nodeBlocksList = new ArrayList<>();
 		JSONArray nodeBlocksJSONArray = JSONFactoryUtil.createJSONArray();
-		long selectedLayoutId = getSelectedLayoutId();
+		long activeLayoutId = getSelectedLayoutId();
 
 		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
-			getGroupId(), isPrivateLayout(), selectedLayoutId);
+			getGroupId(), isPrivateLayout(), activeLayoutId);
 
 		Locale locale = (
 			(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY)
 		).getLocale();
 
+		if (selectedLayout != null) {
+			nodeBlocksList.add(getLayoutsJSONArray(
+				selectedLayout.getLayoutId()));
+		}
+
 		while (selectedLayout != null) {
-			JSONArray nodeBlockJSONArray = JSONFactoryUtil.createJSONArray();
-
-			for (Layout childLayout : selectedLayout.getChildren()) {
-				boolean layoutIsActive = false;
-
-				if (childLayout.getLayoutId() == selectedLayoutId) {
-					layoutIsActive = true;
-				}
-
-				nodeBlockJSONArray.put(
-					jsonObjectFromLayout(childLayout, layoutIsActive, locale));
-			}
-
-			if (nodeBlockJSONArray.length() > 0) {
-				nodeBlocksList.add(getLayoutsJSONArray(selectedLayoutId));
-			}
-
-			selectedLayoutId = selectedLayout.getParentLayoutId();
-
 			selectedLayout = LayoutLocalServiceUtil.fetchLayout(
 				getGroupId(), isPrivateLayout(),
 				selectedLayout.getParentLayoutId());
+
+			if (selectedLayout != null) {
+				nodeBlocksList.add(getLayoutsJSONArray(
+					selectedLayout.getLayoutId(), activeLayoutId));
+
+				activeLayoutId = selectedLayout.getLayoutId();
+			}
 		}
 
-		nodeBlocksList.add(getLayoutsJSONArray(0));
+		nodeBlocksList.add(getLayoutsJSONArray(
+			0, activeLayoutId));
 
 		Collections.reverse(nodeBlocksList);
 
@@ -226,22 +224,6 @@ public class MSBPagesDisplayContext {
 		}
 
 		return false;
-	}
-
-	public JSONObject jsonObjectFromLayout(
-		Layout layout, boolean active, Locale locale) {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		jsonObject.put("actions", JSONFactoryUtil.createJSONObject());
-		jsonObject.put("active", active);
-		jsonObject.put("hasChild", layout.getChildren().size() > 0);
-		jsonObject.put("icon", "");
-		jsonObject.put("layoutId", layout.getLayoutId());
-		jsonObject.put("selected", active);
-		jsonObject.put("title", layout.getName(locale));
-
-		return jsonObject;
 	}
 
 	private String _displayStyle;
