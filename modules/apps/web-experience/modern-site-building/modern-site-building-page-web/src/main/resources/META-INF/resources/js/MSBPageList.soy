@@ -54,16 +54,7 @@
 	{@param portletNamespace: string}
 	{@param portletURL: string}
 
-	{let $nodeAttributes kind="attributes"}
-		{if not $last}
-			data-onclick="_handleBreadcrumbEntryClicked"
-			data-layout-id="{$node.layoutId}"
-		{else}
-			class="active"
-		{/if}
-	{/let}
-
-	<li {$nodeAttributes}>
+	<li {if $last}class="active"{/if}>
 		<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$node.layoutId}">
 			{if $last}
 				<span>{$node.title}</span>
