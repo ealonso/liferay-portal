@@ -1,9 +1,8 @@
 import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
+import 'metal-dropdown';
 
-import './MSBPageListBlock';
-import {isLayout} from './validators';
 import templates from './MSBPageList.soy';
 
 /**
@@ -75,7 +74,19 @@ MSBPageList.STATE = {
 	 * @type {!Array}
 	 */
 	layoutBlocks: Config
-		.arrayOf(Config.arrayOf(isLayout))
+		.arrayOf(
+			Config.arrayOf(
+				Config.shapeOf({
+					active: Config.bool().required(),
+					hasChild: Config.bool().required(),
+					icon: Config.string().required(),
+					layoutId: Config.string().required(),
+					parentLayoutId: Config.string().required(),
+					selected: Config.bool().required(),
+					title: Config.string().required(),
+				})
+			)
+		)
 		.required(),
 
 	/**
