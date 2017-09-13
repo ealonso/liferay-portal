@@ -27,6 +27,34 @@ MSBPageListBlock.STATE = {
 	nodes: Config
 		.arrayOf(isNode)
 		.required(),
+
+	/**
+	 * URL for using icons
+	 * @instance
+	 * @memberof MSBPageList
+	 * @type {!string}
+	 */
+	pathThemeImages: Config
+		.string()
+		.required(),
+
+	/**
+	 * Namespace of portlet to prefix parameters names
+	 * @instance
+	 * @memberof MSBPageList
+	 * @type {!string}
+	 */
+	portletNamespace: Config
+		.string()
+		.required(),
+
+	/**
+	 * URL of portlet to prefix block links
+	 * @instance
+	 * @memberof MSBPageList
+	 * @type {!string}
+	 */
+	portletURL: Config.string().required(),
 };
 
 Soy.register(MSBPageListBlock, templates);
