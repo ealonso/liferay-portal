@@ -51,14 +51,16 @@
 	{@param selected: bool}
 	{@param title: string}
 
-	{let $nodeAttributes kind="attributes"}
-		class="card card-horizontal {$selected ? 'selected' : ''}"
-		data-layoutid="{$layoutId}"
-		data-onclick="_handleNodeClicked"
-		data-title="{$title}"
+	{let $class kind="text"}
+		card
+		{sp}card-horizontal
+
+		{if $selected}
+			{sp}selected
+		{/if}
 	{/let}
 
-	<div {$nodeAttributes}>
+	<div class="{$class}">
 		<div class="card-row card-row-padded">
 			<div class="page-selected card-col-content card-col-gutters">
 				<input class="entry-selector" name="{$portletNamespace}rowIds" type="checkbox" value="{$layoutId}"/>
