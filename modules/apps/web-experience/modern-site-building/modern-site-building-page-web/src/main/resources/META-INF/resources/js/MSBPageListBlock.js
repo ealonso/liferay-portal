@@ -3,7 +3,7 @@ import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 import 'metal-dropdown';
 
-import { isLayout } from './validators';
+import {isLayout} from './validators';
 import templates from './MSBPageListBlock.soy';
 
 /**

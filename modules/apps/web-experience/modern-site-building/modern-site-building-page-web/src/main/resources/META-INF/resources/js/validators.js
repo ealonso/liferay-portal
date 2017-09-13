@@ -1,4 +1,4 @@
-import { Config } from 'metal-state';
+import {Config} from 'metal-state';
 
 const isLayout = Config
 	.shapeOf({
