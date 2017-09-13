@@ -4,35 +4,33 @@
  * MSBPageListBlock
  */
 {template .render}
-	{@param nodes: list<?>}
+	{@param layouts: list<?>}
 	{@param pathThemeImages: string}
 	{@param portletNamespace: string}
 	{@param portletURL: string}
 
 	{let $blockClasses kind="text"}
 		page-list-block
-		{if not $nodes or length($nodes) == 0}
+		{if not $layouts or length($layouts) == 0}
 			{sp}empty
 		{/if}
 	{/let}
 
 	<div class="{$blockClasses}" ref="pages">
-		{if $nodes}
-			{foreach $node in $nodes}
-				{call .card}
-					{param actions: $node.actions /}
-					{param active: $node.active /}
-					{param icon: $node.icon /}
-					{param hasChild: $node.hasChild /}
-					{param layoutId: $node.layoutId /}
-					{param pathThemeImages: $pathThemeImages /}
-					{param portletNamespace: $portletNamespace /}
-					{param portletURL: $portletURL /}
-					{param selected: $node.selected /}
-					{param title: $node.title /}
-				{/call}
-			{/foreach}
-		{/if}
+		{foreach $layout in $layouts}
+			{call .card}
+				{param actions: $layout.actions /}
+				{param active: $layout.active /}
+				{param hasChild: $layout.hasChild /}
+				{param icon: $layout.icon /}
+				{param layoutId: $layout.layoutId /}
+				{param pathThemeImages: $pathThemeImages /}
+				{param portletNamespace: $portletNamespace /}
+				{param portletURL: $portletURL /}
+				{param selected: $layout.selected /}
+				{param title: $layout.title /}
+			{/call}
+		{/foreach}
 	</div>
 {/template}
 
@@ -42,8 +40,8 @@
 {template .card}
 	{@param actions: map<string, ?>}
 	{@param active: bool}
-	{@param icon: string}
 	{@param hasChild: bool}
+	{@param icon: string}
 	{@param layoutId: string}
 	{@param pathThemeImages: string}
 	{@param portletNamespace: string}
