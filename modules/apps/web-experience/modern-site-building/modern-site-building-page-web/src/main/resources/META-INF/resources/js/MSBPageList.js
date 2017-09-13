@@ -79,6 +79,16 @@ MSBPageList.STATE = {
 		.required(),
 
 	/**
+	 * URL for using icons
+	 * @instance
+	 * @memberof MSBPageList
+	 * @type {!string}
+	 */
+	pathThemeImages: Config
+		.string()
+		.required(),
+
+	/**
 	 * Namespace of portlet to prefix parameters names
 	 * @instance
 	 * @memberof MSBPageList
