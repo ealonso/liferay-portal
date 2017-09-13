@@ -3,12 +3,12 @@
 .page-list-block {
 	background-color: white;
 	border: 1px solid lightgray;
+	display: inline-block;
+	height: 100%;
+	max-width: 40ch;
 	overflow-x: visible;
 	overflow-y: auto;
 	width: 85vw;
-	max-width: 40ch;
-	display: inline-block;
-	height: 100%;
 
 	& + .page-list-block {
 		border-left: none;

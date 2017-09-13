@@ -84,18 +84,55 @@ public class MSBPagesDisplayContext {
 		return _groupId;
 	}
 
-	public String getNavigation() {
-		if (_navigation != null) {
-			return _navigation;
+	public JSONArray getLayoutBlocksJSONArray() throws Exception {
+		List<JSONArray> layoutBlocksList = new ArrayList<>();
+		JSONArray layoutBlocksJSONArray = JSONFactoryUtil.createJSONArray();
+		long activeLayoutId = getSelectedLayoutId();
+
+		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
+			getGroupId(), isPrivateLayout(), activeLayoutId);
+
+		Locale locale = (
+			(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY)
+		).getLocale();
+
+		if (selectedLayout != null) {
+			layoutBlocksList.add(
+				getLayoutsJSONArray(selectedLayout.getLayoutId()));
 		}
 
-		_navigation = ParamUtil.getString(
-			_request, "navigation", "public-pages");
+		while (selectedLayout != null) {
+			selectedLayout = LayoutLocalServiceUtil.fetchLayout(
+				getGroupId(), isPrivateLayout(),
+				selectedLayout.getParentLayoutId());
 
-		return _navigation;
+			if (selectedLayout != null) {
+				layoutBlocksList.add(
+					getLayoutsJSONArray(
+						selectedLayout.getLayoutId(), activeLayoutId));
+
+				activeLayoutId = selectedLayout.getLayoutId();
+			}
+		}
+
+		layoutBlocksList.add(getLayoutsJSONArray(0, activeLayoutId));
+
+		Collections.reverse(layoutBlocksList);
+
+		for (JSONArray layoutBlockJSONArray : layoutBlocksList) {
+			layoutBlocksJSONArray.put(layoutBlockJSONArray);
+		}
+
+		return layoutBlocksJSONArray;
 	}
 
-	public JSONArray getLayoutsJSONArray(long parentLayoutId, long selectedId) throws Exception {
+	public JSONArray getLayoutsJSONArray(long parentLayoutId) throws Exception {
+		return getLayoutsJSONArray(parentLayoutId, getSelectedLayoutId());
+	}
+
+	public JSONArray getLayoutsJSONArray(long parentLayoutId, long selectedId)
+		throws Exception {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -112,60 +149,15 @@ public class MSBPagesDisplayContext {
 		return jsonArray;
 	}
 
-	public JSONArray getLayoutsJSONArray(long parentLayoutId) throws Exception {
-		return getLayoutsJSONArray(parentLayoutId, getSelectedLayoutId());
-	}
-
-	public long getSelectedLayoutId() {
-		if (_selectedLayoutId != null) {
-			return _selectedLayoutId;
+	public String getNavigation() {
+		if (_navigation != null) {
+			return _navigation;
 		}
 
-		_selectedLayoutId = ParamUtil.getLong(_request, "selectedLayoutId", 0);
+		_navigation = ParamUtil.getString(
+			_request, "navigation", "public-pages");
 
-		return _selectedLayoutId;
-	}
-
-	public JSONArray getLayoutBlocksJSONArray() throws Exception {
-		List<JSONArray> layoutBlocksList = new ArrayList<>();
-		JSONArray layoutBlocksJSONArray = JSONFactoryUtil.createJSONArray();
-		long activeLayoutId = getSelectedLayoutId();
-
-		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
-			getGroupId(), isPrivateLayout(), activeLayoutId);
-
-		Locale locale = (
-			(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY)
-		).getLocale();
-
-		if (selectedLayout != null) {
-			layoutBlocksList.add(getLayoutsJSONArray(
-				selectedLayout.getLayoutId()));
-		}
-
-		while (selectedLayout != null) {
-			selectedLayout = LayoutLocalServiceUtil.fetchLayout(
-				getGroupId(), isPrivateLayout(),
-				selectedLayout.getParentLayoutId());
-
-			if (selectedLayout != null) {
-				layoutBlocksList.add(getLayoutsJSONArray(
-					selectedLayout.getLayoutId(), activeLayoutId));
-
-				activeLayoutId = selectedLayout.getLayoutId();
-			}
-		}
-
-		layoutBlocksList.add(getLayoutsJSONArray(
-			0, activeLayoutId));
-
-		Collections.reverse(layoutBlocksList);
-
-		for (JSONArray layoutBlockJSONArray : layoutBlocksList) {
-			layoutBlocksJSONArray.put(layoutBlockJSONArray);
-		}
-
-		return layoutBlocksJSONArray;
+		return _navigation;
 	}
 
 	public String getOrderByCol() {
@@ -210,6 +202,16 @@ public class MSBPagesDisplayContext {
 		portletURL.setParameter("orderByType", getOrderByType());
 
 		return portletURL;
+	}
+
+	public long getSelectedLayoutId() {
+		if (_selectedLayoutId != null) {
+			return _selectedLayoutId;
+		}
+
+		_selectedLayoutId = ParamUtil.getLong(_request, "selectedLayoutId", 0);
+
+		return _selectedLayoutId;
 	}
 
 	public boolean isPrivateLayout() {
