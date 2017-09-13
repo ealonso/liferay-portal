@@ -126,9 +126,9 @@ public class MSBPagesDisplayContext {
 		return _selectedLayoutId;
 	}
 
-	public JSONArray getNodeBlocksJSONArray() throws Exception {
-		List<JSONArray> nodeBlocksList = new ArrayList<>();
-		JSONArray nodeBlocksJSONArray = JSONFactoryUtil.createJSONArray();
+	public JSONArray getLayoutBlocksJSONArray() throws Exception {
+		List<JSONArray> layoutBlocksList = new ArrayList<>();
+		JSONArray layoutBlocksJSONArray = JSONFactoryUtil.createJSONArray();
 		long activeLayoutId = getSelectedLayoutId();
 
 		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
@@ -139,7 +139,7 @@ public class MSBPagesDisplayContext {
 		).getLocale();
 
 		if (selectedLayout != null) {
-			nodeBlocksList.add(getLayoutsJSONArray(
+			layoutBlocksList.add(getLayoutsJSONArray(
 				selectedLayout.getLayoutId()));
 		}
 
@@ -149,23 +149,23 @@ public class MSBPagesDisplayContext {
 				selectedLayout.getParentLayoutId());
 
 			if (selectedLayout != null) {
-				nodeBlocksList.add(getLayoutsJSONArray(
+				layoutBlocksList.add(getLayoutsJSONArray(
 					selectedLayout.getLayoutId(), activeLayoutId));
 
 				activeLayoutId = selectedLayout.getLayoutId();
 			}
 		}
 
-		nodeBlocksList.add(getLayoutsJSONArray(
+		layoutBlocksList.add(getLayoutsJSONArray(
 			0, activeLayoutId));
 
-		Collections.reverse(nodeBlocksList);
+		Collections.reverse(layoutBlocksList);
 
-		for (JSONArray nodeBlockJSONArray : nodeBlocksList) {
-			nodeBlocksJSONArray.put(nodeBlockJSONArray);
+		for (JSONArray layoutBlockJSONArray : layoutBlocksList) {
+			layoutBlocksJSONArray.put(layoutBlockJSONArray);
 		}
 
-		return nodeBlocksJSONArray;
+		return layoutBlocksJSONArray;
 	}
 
 	public String getOrderByCol() {

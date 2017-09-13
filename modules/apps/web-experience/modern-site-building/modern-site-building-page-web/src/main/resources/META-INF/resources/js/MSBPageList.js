@@ -3,7 +3,7 @@ import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
 import './MSBPageListBlock';
-import { isBreadcrumbEntry, isNode } from './validators';
+import {isLayout} from './validators';
 import templates from './MSBPageList.soy';
 
 /**
@@ -69,13 +69,13 @@ class MSBPageList extends Component {
  */
 MSBPageList.STATE = {
 	/**
-	 * Block nodes
+	 * Layout blocks
 	 * @instance
 	 * @memberof MSBPageList
 	 * @type {!Array}
 	 */
-	nodeBlocks: Config
-		.arrayOf(Config.arrayOf(isNode))
+	layoutBlocks: Config
+		.arrayOf(Config.arrayOf(isLayout))
 		.required(),
 
 	/**

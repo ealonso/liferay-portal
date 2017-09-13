@@ -69,7 +69,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	<%
 	Map<String, Object> context = new HashMap<>();
 
-	context.put("nodeBlocks", msbPagesDisplayContext.getNodeBlocksJSONArray());
+	context.put("layoutBlocks", msbPagesDisplayContext.getLayoutBlocksJSONArray());
 	context.put("orderBy", msbPagesDisplayContext.getOrderByJSONObject());
 	context.put("pathThemeImages", themeDisplay.getPathThemeImages());
 	context.put("portletNamespace", renderResponse.getNamespace());

@@ -3,7 +3,7 @@ import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 import 'metal-dropdown';
 
-import { isNode } from './validators';
+import { isLayout } from './validators';
 import templates from './MSBPageListBlock.soy';
 
 /**
@@ -19,13 +19,13 @@ class MSBPageListBlock extends Component {
  */
 MSBPageListBlock.STATE = {
 	/**
-	 * Current block nodes list
+	 * Current block layouts list
 	 * @instance
 	 * @memberof MSBPageListBlock
 	 * @type {!Array}
 	 */
-	nodes: Config
-		.arrayOf(isNode)
+	layouts: Config
+		.arrayOf(isLayout)
 		.required(),
 
 	/**

@@ -4,7 +4,7 @@
  * MSBPageList
  */
 {template .render}
-	{@param nodeBlocks: list<?>}
+	{@param layoutBlocks: list<?>}
 	{@param pathThemeImages: string}
 	{@param portletNamespace: string}
 	{@param portletURL: string}
@@ -17,12 +17,12 @@
 						{msg desc=""}home{/msg}
 					</a>
 				</li>
-				{foreach $nodeBlock in $nodeBlocks}
-					{foreach $node in $nodeBlock}
-						{if $node.active}
+				{foreach $layoutBlock in $layoutBlocks}
+					{foreach $layout in $layoutBlock}
+						{if $layout.active}
 							{call .breadcrumbEntry}
-								{param node: $node /}
-								{param last: isLast($nodeBlock) /}
+								{param layout: $layout /}
+								{param last: isLast($layoutBlock) /}
 								{param portletNamespace: $portletNamespace /}
 								{param portletURL: $portletURL /}
 							{/call}
@@ -33,9 +33,9 @@
 		</div>
 
 		<div class="page-list" ref="pageList">
-			{foreach $nodeBlock in $nodeBlocks}
+			{foreach $layoutBlock in $layoutBlocks}
 				{call MSBPageListBlock.render}
-					{param nodes: $nodeBlock /}
+					{param layouts: $layoutBlock /}
 					{param pathThemeImages: $pathThemeImages /}
 					{param portletNamespace: $portletNamespace /}
 					{param portletURL: $portletURL /}
@@ -49,17 +49,17 @@
  *	Renders a Lexicon breadcrumb entry
  */
 {template .breadcrumbEntry}
-	{@param node: ?}
+	{@param layout: ?}
 	{@param last: bool}
 	{@param portletNamespace: string}
 	{@param portletURL: string}
 
 	<li {if $last}class="active"{/if}>
-		<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$node.layoutId}">
+		<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$layout.layoutId}">
 			{if $last}
-				<span>{$node.title}</span>
+				<span>{$layout.title}</span>
 			{else}
-				{$node.title}
+				{$layout.title}
 			{/if}
 		</a>
 	</li>

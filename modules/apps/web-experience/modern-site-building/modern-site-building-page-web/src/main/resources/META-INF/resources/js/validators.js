@@ -1,6 +1,6 @@
 import { Config } from 'metal-state';
 
-const isNode = Config
+const isLayout = Config
 	.shapeOf({
 		active: Config.bool().required(),
 		hasChild: Config.bool().required(),
@@ -12,5 +12,5 @@ const isNode = Config
 	});
 
 export {
-	isNode,
+	isLayout,
 };
