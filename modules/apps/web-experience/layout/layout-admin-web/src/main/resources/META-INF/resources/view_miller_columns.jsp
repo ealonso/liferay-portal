@@ -14,6 +14,8 @@
  */
 --%>
 
+<%@ include file="/init.jsp" %>
+
 <%
 renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 %>
@@ -56,7 +58,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
 
-<portlet:actionURL name="/msb_pages/delete_layout" var="deleteLayoutURL">
+<portlet:actionURL name="/layout/delete_layout" var="deleteLayoutURL">
 	<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
 	<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
 	<portlet:param name="redirect" value="<%= currentURL %>" />
