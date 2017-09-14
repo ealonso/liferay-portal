@@ -46,22 +46,27 @@ public class DeleteLayoutMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long[] plids = null;
+		long[] layoutIds = null;
 
-		long plid = ParamUtil.getLong(actionRequest, "plid");
+		long groupId = ParamUtil.getLong(actionRequest, "groupId");
+		boolean privateLayout = ParamUtil.getBoolean(
+			actionRequest, "privateLayout");
 
-		if (plid > 0) {
-			plids = new long[] {plid};
+		long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
+
+		if (layoutId > 0) {
+			layoutIds = new long[] {layoutId};
 		}
 		else {
-			plids = ParamUtil.getLongValues(actionRequest, "rowIds");
+			layoutIds = ParamUtil.getLongValues(actionRequest, "rowIds");
 		}
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
-		for (long curPlid : plids) {
-			_layoutService.deleteLayout(curPlid, serviceContext);
+		for (long deleteLayoutId : layoutIds) {
+			_layoutService.deleteLayout(
+				groupId, privateLayout, deleteLayoutId, serviceContext);
 		}
 	}
 
