@@ -61,8 +61,11 @@ import java.rmi.RemoteException;
  * @see AssetTagServiceHttp
  * @see com.liferay.asset.kernel.model.AssetTagSoap
  * @see AssetTagServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetTagServiceSoap {
 	public static com.liferay.asset.kernel.model.AssetTagSoap addTag(

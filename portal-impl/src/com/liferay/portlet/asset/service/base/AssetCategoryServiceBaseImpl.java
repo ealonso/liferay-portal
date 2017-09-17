@@ -52,8 +52,11 @@ import javax.sql.DataSource;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.impl.AssetCategoryServiceImpl
  * @see com.liferay.asset.kernel.service.AssetCategoryServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.model.impl.AssetCategoryServiceImpl}
  * @generated
  */
+@Deprecated
 public abstract class AssetCategoryServiceBaseImpl extends BaseServiceImpl
 	implements AssetCategoryService, IdentifiableOSGiService {
 	/*
