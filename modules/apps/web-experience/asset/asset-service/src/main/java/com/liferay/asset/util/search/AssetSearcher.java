@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.asset.util;
+package com.liferay.asset.util.search;
 
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
