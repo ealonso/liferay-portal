@@ -95,9 +95,14 @@ public class ModularAssetVocabularyServiceWrapper
 	public AssetVocabulary fetchVocabulary(long vocabularyId)
 		throws PortalException {
 
-		return ModelAdapterUtil.adapt(
-			AssetVocabulary.class,
-			_assetVocabularyService.fetchVocabulary(vocabularyId));
+		com.liferay.asset.model.AssetVocabulary assetVocabulary =
+			_assetVocabularyService.fetchVocabulary(vocabularyId);
+
+		if (assetVocabulary == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetVocabulary.class, assetVocabulary);
 	}
 
 	/**

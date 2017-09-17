@@ -104,8 +104,14 @@ public class ModularAssetTagLocalServiceWrapper
 
 	@Override
 	public AssetTag fetchTag(long groupId, String name) {
-		return ModelAdapterUtil.adapt(
-			AssetTag.class, _assetTagLocalService.fetchTag(groupId, name));
+		com.liferay.asset.model.AssetTag assetTag =
+			_assetTagLocalService.fetchTag(groupId, name);
+
+		if (assetTag == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetTag.class, assetTag);
 	}
 
 	@Override

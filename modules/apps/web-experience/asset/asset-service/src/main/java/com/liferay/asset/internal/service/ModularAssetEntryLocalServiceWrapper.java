@@ -74,22 +74,38 @@ public class ModularAssetEntryLocalServiceWrapper
 
 	@Override
 	public AssetEntry fetchEntry(long entryId) {
-		return ModelAdapterUtil.adapt(
-			AssetEntry.class, _assetEntryLocalService.fetchEntry(entryId));
+		com.liferay.asset.model.AssetEntry assetEntry =
+			_assetEntryLocalService.fetchEntry(entryId);
+
+		if (assetEntry == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetEntry.class, assetEntry);
 	}
 
 	@Override
 	public AssetEntry fetchEntry(long groupId, String classUuid) {
-		return ModelAdapterUtil.adapt(
-			AssetEntry.class,
-			_assetEntryLocalService.fetchEntry(groupId, classUuid));
+		com.liferay.asset.model.AssetEntry assetEntry =
+			_assetEntryLocalService.fetchEntry(groupId, classUuid);
+
+		if (assetEntry == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetEntry.class, assetEntry);
 	}
 
 	@Override
 	public AssetEntry fetchEntry(String className, long classPK) {
-		return ModelAdapterUtil.adapt(
-			AssetEntry.class,
-			_assetEntryLocalService.fetchEntry(className, classPK));
+		com.liferay.asset.model.AssetEntry assetEntry =
+			_assetEntryLocalService.fetchEntry(className, classPK);
+
+		if (assetEntry == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetEntry.class, assetEntry);
 	}
 
 	@Override

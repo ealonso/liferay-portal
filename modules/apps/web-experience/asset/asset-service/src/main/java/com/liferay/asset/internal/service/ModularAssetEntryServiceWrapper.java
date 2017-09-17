@@ -46,8 +46,14 @@ public class ModularAssetEntryServiceWrapper extends AssetEntryServiceWrapper {
 
 	@Override
 	public AssetEntry fetchEntry(long entryId) throws PortalException {
-		return ModelAdapterUtil.adapt(
-			AssetEntry.class, _assetEntryService.fetchEntry(entryId));
+		com.liferay.asset.model.AssetEntry assetEntry =
+			_assetEntryService.fetchEntry(entryId);
+
+		if (assetEntry == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetEntry.class, assetEntry);
 	}
 
 	@Override

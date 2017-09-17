@@ -104,9 +104,14 @@ public class ModularAssetCategoryServiceWrapper
 
 	@Override
 	public AssetCategory fetchCategory(long categoryId) throws PortalException {
-		return ModelAdapterUtil.adapt(
-			AssetCategory.class,
-			_assetCategoryService.fetchCategory(categoryId));
+		com.liferay.asset.model.AssetCategory assetCategory =
+			_assetCategoryService.fetchCategory(categoryId);
+
+		if (assetCategory == null) {
+			return null;
+		}
+
+		return ModelAdapterUtil.adapt(AssetCategory.class, assetCategory);
 	}
 
 	@Override
