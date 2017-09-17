@@ -42,8 +42,8 @@ public class ModularAssetEntryLocalServiceWrapper
 	}
 
 	public ModularAssetEntryLocalServiceWrapper(
-		com.liferay.asset.
-			kernel.service.AssetEntryLocalService assetEntryLocalService) {
+		com.liferay.asset.kernel.service.AssetEntryLocalService
+			assetEntryLocalService) {
 
 		super(assetEntryLocalService);
 	}

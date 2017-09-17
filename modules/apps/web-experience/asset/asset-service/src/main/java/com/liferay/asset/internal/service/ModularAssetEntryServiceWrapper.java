@@ -15,9 +15,9 @@
 package com.liferay.asset.internal.service;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryService;
 import com.liferay.asset.kernel.service.AssetEntryServiceWrapper;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.service.AssetEntryService;
 import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceWrapper;
@@ -39,7 +39,7 @@ public class ModularAssetEntryServiceWrapper extends AssetEntryServiceWrapper {
 	}
 
 	public ModularAssetEntryServiceWrapper(
-		AssetEntryService assetEntryService) {
+		com.liferay.asset.kernel.service.AssetEntryService assetEntryService) {
 
 		super(assetEntryService);
 	}
@@ -69,14 +69,21 @@ public class ModularAssetEntryServiceWrapper extends AssetEntryServiceWrapper {
 		throws PortalException {
 
 		return ModelAdapterUtil.adapt(
-			AssetEntry.class, _assetEntryService.getEntries(entryQuery));
+			AssetEntry.class,
+			_assetEntryService.getEntries(
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.service.persistence.AssetEntryQuery.class,
+					entryQuery)));
 	}
 
 	@Override
 	public int getEntriesCount(AssetEntryQuery entryQuery)
 		throws PortalException {
 
-		return _assetEntryService.getEntriesCount(entryQuery);
+		return _assetEntryService.getEntriesCount(
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.service.persistence.AssetEntryQuery.class,
+				entryQuery));
 	}
 
 	@Override
@@ -89,7 +96,9 @@ public class ModularAssetEntryServiceWrapper extends AssetEntryServiceWrapper {
 	public void incrementViewCounter(AssetEntry assetEntry)
 		throws PortalException {
 
-		_assetEntryService.incrementViewCounter(assetEntry);
+		_assetEntryService.incrementViewCounter(
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.model.AssetEntry.class, assetEntry));
 	}
 
 	@Override

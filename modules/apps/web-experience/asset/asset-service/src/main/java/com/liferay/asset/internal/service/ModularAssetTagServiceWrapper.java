@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.OrderByComparatorAdapter;
 
 import java.util.List;
 
@@ -87,7 +86,7 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 			AssetTag.class,
 			_assetTagService.getGroupTags(
 				groupId, start, end,
-				new AssetTagEntryOrderByComparatorAdapter(obc)));
+				ModelAdapterUtil.adapt(AssetTag.class, obc)));
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 			AssetTag.class,
 			_assetTagService.getTags(
 				groupId, classNameId, name, start, end,
-				new AssetTagEntryOrderByComparatorAdapter(obc)));
+				ModelAdapterUtil.adapt(AssetTag.class, obc)));
 	}
 
 	@Override
@@ -143,9 +142,11 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 		long groupId, String name, int start, int end,
 		OrderByComparator<AssetTag> obc) {
 
-		throw new UnsupportedOperationException(
-			"This class is deprecate and replaced by " +
-				"com.liferay.asset.tags.service.impl.AssetTagServiceImpl");
+		return ModelAdapterUtil.adapt(
+			AssetTag.class,
+			_assetTagService.getTags(
+				groupId, name, start, end,
+				ModelAdapterUtil.adapt(AssetTag.class, obc)));
 	}
 
 	@Override
@@ -225,23 +226,5 @@ public class ModularAssetTagServiceWrapper extends AssetTagServiceWrapper {
 
 	@Reference
 	private AssetTagService _assetTagService;
-
-	private static class AssetTagEntryOrderByComparatorAdapter
-		extends
-			OrderByComparatorAdapter
-				<com.liferay.asset.model.AssetTag, AssetTag> {
-
-		public AssetTagEntryOrderByComparatorAdapter(
-			OrderByComparator<AssetTag> orderByComparator) {
-
-			super(orderByComparator);
-		}
-
-		@Override
-		public AssetTag adapt(com.liferay.asset.model.AssetTag assetTag) {
-			return ModelAdapterUtil.adapt(AssetTag.class, assetTag);
-		}
-
-	}
 
 }

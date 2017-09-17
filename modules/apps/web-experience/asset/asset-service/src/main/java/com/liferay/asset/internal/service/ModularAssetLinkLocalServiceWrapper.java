@@ -40,8 +40,8 @@ public class ModularAssetLinkLocalServiceWrapper
 	}
 
 	public ModularAssetLinkLocalServiceWrapper(
-		com.liferay.
-			asset.kernel.service.AssetLinkLocalService assetLinkLocalService) {
+		com.liferay.asset.kernel.service.AssetLinkLocalService
+			assetLinkLocalService) {
 
 		super(assetLinkLocalService);
 	}
