@@ -29,7 +29,7 @@ import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
-import com.liferay.asset.util.AssetSearcher;
+import com.liferay.asset.util.search.AssetSearcher;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
