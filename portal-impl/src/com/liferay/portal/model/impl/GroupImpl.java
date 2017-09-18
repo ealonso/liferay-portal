@@ -997,27 +997,45 @@ public class GroupImpl extends GroupBaseImpl {
 					true);
 
 				if (privateSite) {
-					showSite =
-						PropsValues.
+					if (!PropsValues.
+							LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED) {
+
+						return PropsValues.
 							MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS;
+					}
 
-					if (PropsValues.
-							LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED &&
-						!hasPowerUserRole) {
+					boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
+						permissionChecker.getUserId(),
+						permissionChecker.getCompanyId(),
+						RoleConstants.POWER_USER, true);
 
-						showSite = false;
+					if (hasPowerUserRole) {
+						return PropsValues.
+							MY_SITES_SHOW_USER_PRIVATE_SITES_WITH_NO_LAYOUTS;
+					}
+					else {
+						return false;
 					}
 				}
 				else {
-					showSite =
-						PropsValues.
+					if (!PropsValues.
+							LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED) {
+
+						return PropsValues.
 							MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS;
+					}
 
-					if (PropsValues.
-							LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED &&
-						!hasPowerUserRole) {
+					boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
+						permissionChecker.getUserId(),
+						permissionChecker.getCompanyId(),
+						RoleConstants.POWER_USER, true);
 
-						showSite = false;
+					if (hasPowerUserRole) {
+						return PropsValues.
+							MY_SITES_SHOW_USER_PUBLIC_SITES_WITH_NO_LAYOUTS;
+					}
+					else {
+						return false;
 					}
 				}
 			}
