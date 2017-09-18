@@ -177,11 +177,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		return ModelAdapterUtil.adapt(
 			AssetVocabulary.class,
-			AssetUtil.filterVocabularies(
-				ModelAdapterUtil.adapt(
-					com.liferay.asset.kernel.model.AssetVocabulary.class,
-					vocabularies),
-				className, classTypePK));
+			AssetUtil.filterVocabularies(vocabularies, className, classTypePK));
 	}
 
 	@Override
