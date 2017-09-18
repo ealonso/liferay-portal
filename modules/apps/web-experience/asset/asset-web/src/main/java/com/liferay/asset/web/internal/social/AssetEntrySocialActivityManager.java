@@ -26,7 +26,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Adolfo Pérez
  */
 @Component(
-	property = "model.class.name=com.liferay.asset.kernel.model.AssetEntry",
+	property = "model.class.name=com.liferay.asset.model.AssetEntry",
 	service = SocialActivityManager.class
 )
 public class AssetEntrySocialActivityManager

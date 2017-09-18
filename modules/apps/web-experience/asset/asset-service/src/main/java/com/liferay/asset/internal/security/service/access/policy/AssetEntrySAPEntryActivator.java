@@ -14,7 +14,7 @@
 
 package com.liferay.asset.internal.security.service.access.policy;
 
-import com.liferay.asset.kernel.service.AssetEntryService;
+import com.liferay.asset.service.AssetEntryService;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.exception.PortalException;
