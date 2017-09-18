@@ -14,48 +14,22 @@
 
 package com.liferay.portlet.asset.service.impl;
 
-import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.exception.DuplicateTagException;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.SystemEventConstants;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
-import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.asset.service.base.AssetTagLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.AssetUtil;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
-import com.liferay.social.kernel.util.SocialCounterPeriodUtil;
 
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides the local service for accessing, adding, checking, deleting,
@@ -65,7 +39,10 @@ import java.util.Map;
  * @author Alvaro del Castillo
  * @author Jorge Ferrer
  * @author Bruno Farache
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.tags.model.impl.AssetTagLocalServiceImpl}
  */
+@Deprecated
 public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 
 	/**
@@ -85,38 +62,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		// Tag
-
-		User user = userPersistence.findByPrimaryKey(userId);
-
-		long tagId = counterLocalService.increment();
-
-		AssetTag tag = assetTagPersistence.create(tagId);
-
-		tag.setUuid(serviceContext.getUuid());
-		tag.setGroupId(groupId);
-		tag.setCompanyId(user.getCompanyId());
-		tag.setUserId(user.getUserId());
-		tag.setUserName(user.getFullName());
-
-		name = StringUtil.toLowerCase(StringUtil.trim(name));
-
-		if (hasTag(groupId, name)) {
-			throw new DuplicateTagException(
-				"A tag with the name " + name + " already exists");
-		}
-
-		validate(name);
-
-		tag.setName(name);
-
-		assetTagPersistence.update(tag);
-
-		// Resources
-
-		resourceLocalService.addModelResources(tag, serviceContext);
-
-		return tag;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -138,29 +86,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> checkTags(long userId, Group group, String[] names)
 		throws PortalException {
 
-		List<AssetTag> tags = new ArrayList<>();
-
-		for (String name : names) {
-			name = StringUtil.toLowerCase(StringUtil.trim(name));
-
-			AssetTag tag = fetchTag(group.getGroupId(), name);
-
-			if (tag == null) {
-				ServiceContext serviceContext = new ServiceContext();
-
-				serviceContext.setAddGroupPermissions(true);
-				serviceContext.setAddGuestPermissions(true);
-				serviceContext.setScopeGroupId(group.getGroupId());
-
-				tag = addTag(userId, group.getGroupId(), name, serviceContext);
-			}
-
-			if (tag != null) {
-				tags.add(tag);
-			}
-		}
-
-		return tags;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -178,9 +106,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> checkTags(long userId, long groupId, String[] names)
 		throws PortalException {
 
-		Group group = groupPersistence.findByPrimaryKey(groupId);
-
-		return checkTags(userId, group, names);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -196,15 +124,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public AssetTag decrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
 
-		AssetTag tag = assetTagPersistence.findByPrimaryKey(tagId);
-
-		tag.setAssetCount(Math.max(0, tag.getAssetCount() - 1));
-
-		assetTagPersistence.update(tag);
-
-		assetTagStatsLocalService.updateTagStats(tagId, classNameId);
-
-		return tag;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -215,11 +137,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteGroupTags(long groupId) throws PortalException {
-		List<AssetTag> tags = getGroupTags(groupId);
-
-		for (AssetTag tag : tags) {
-			assetTagLocalService.deleteTag(tag);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -230,28 +150,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public void deleteTag(AssetTag tag) throws PortalException {
-
-		// Entries
-
-		List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-			tag.getTagId());
-
-		// Tag
-
-		assetTagPersistence.remove(tag);
-
-		// Stats
-
-		assetTagStatsLocalService.deleteTagStatsByTagId(tag.getTagId());
-
-		// Indexer
-
-		assetEntryLocalService.reindex(entries);
-
-		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetTag.class);
-
-		indexer.delete(tag);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -261,9 +162,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public void deleteTag(long tagId) throws PortalException {
-		AssetTag tag = assetTagPersistence.findByPrimaryKey(tagId);
-
-		assetTagLocalService.deleteTag(tag);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -276,7 +177,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public AssetTag fetchTag(long groupId, String name) {
-		return assetTagPersistence.fetchByG_N(groupId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -287,7 +190,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getEntryTags(long entryId) {
-		return assetEntryPersistence.getAssetTags(entryId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -298,15 +203,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getGroupsTags(long[] groupIds) {
-		List<AssetTag> groupsTags = new ArrayList<>();
-
-		for (long groupId : groupIds) {
-			List<AssetTag> groupTags = getGroupTags(groupId);
-
-			groupsTags.addAll(groupTags);
-		}
-
-		return groupsTags;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -317,7 +216,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getGroupTags(long groupId) {
-		return assetTagPersistence.findByGroupId(groupId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -330,7 +231,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getGroupTags(long groupId, int start, int end) {
-		return assetTagPersistence.findByGroupId(groupId, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -341,7 +244,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public int getGroupTagsCount(long groupId) {
-		return assetTagPersistence.countByGroupId(groupId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
@@ -349,11 +254,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		long groupId, String socialActivityCounterName, int startOffset,
 		int endOffset) {
 
-		int startPeriod = SocialCounterPeriodUtil.getStartPeriod(startOffset);
-		int endPeriod = SocialCounterPeriodUtil.getEndPeriod(endOffset);
-
-		return getSocialActivityCounterPeriodTags(
-			groupId, socialActivityCounterName, startPeriod, endPeriod);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
@@ -361,13 +264,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		long groupId, String socialActivityCounterName, int startPeriod,
 		int endPeriod) {
 
-		int offset = SocialCounterPeriodUtil.getOffset(endPeriod);
-
-		int periodLength = SocialCounterPeriodUtil.getPeriodLength(offset);
-
-		return assetTagFinder.findByG_N_S_E(
-			groupId, socialActivityCounterName, startPeriod, endPeriod,
-			periodLength);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -378,7 +277,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public AssetTag getTag(long tagId) throws PortalException {
-		return assetTagPersistence.findByPrimaryKey(tagId);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -390,7 +291,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public AssetTag getTag(long groupId, String name) throws PortalException {
-		return assetTagPersistence.findByG_N(groupId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -402,19 +305,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public long[] getTagIds(long groupId, String[] names) {
-		List<Long> tagIds = new ArrayList<>(names.length);
-
-		for (String name : names) {
-			AssetTag tag = fetchTag(groupId, name);
-
-			if (tag == null) {
-				continue;
-			}
-
-			tagIds.add(tag.getTagId());
-		}
-
-		return ArrayUtil.toArray(tagIds.toArray(new Long[tagIds.size()]));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -426,19 +319,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public long[] getTagIds(long[] groupIds, String name) {
-		List<Long> tagIds = new ArrayList<>(groupIds.length);
-
-		for (long groupId : groupIds) {
-			AssetTag tag = fetchTag(groupId, name);
-
-			if (tag == null) {
-				continue;
-			}
-
-			tagIds.add(tag.getTagId());
-		}
-
-		return ArrayUtil.toArray(tagIds.toArray(new Long[tagIds.size()]));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -450,13 +333,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public long[] getTagIds(long[] groupIds, String[] names) {
-		long[] tagsIds = new long[0];
-
-		for (long groupId : groupIds) {
-			tagsIds = ArrayUtil.append(tagsIds, getTagIds(groupId, names));
-		}
-
-		return tagsIds;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -466,7 +345,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public String[] getTagNames() {
-		return getTagNames(getTags());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -478,7 +359,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public String[] getTagNames(long classNameId, long classPK) {
-		return getTagNames(getTags(classNameId, classPK));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -490,7 +373,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public String[] getTagNames(String className, long classPK) {
-		return getTagNames(getTags(className, classPK));
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -500,7 +385,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getTags() {
-		return assetTagPersistence.findAll();
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -512,29 +399,25 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<AssetTag> getTags(long classNameId, long classPK) {
-		AssetEntry entry = assetEntryPersistence.fetchByC_C(
-			classNameId, classPK);
-
-		if (entry == null) {
-			return Collections.emptyList();
-		}
-
-		return assetEntryPersistence.getAssetTags(entry.getEntryId());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(long groupId, long classNameId, String name) {
-		return assetTagFinder.findByG_C_N(
-			groupId, classNameId, name, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
 	public List<AssetTag> getTags(
 		long groupId, long classNameId, String name, int start, int end) {
 
-		return assetTagFinder.findByG_C_N(
-			groupId, classNameId, name, start, end, null);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -547,14 +430,16 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	@Override
 	@ThreadLocalCachable
 	public List<AssetTag> getTags(String className, long classPK) {
-		long classNameId = classNameLocalService.getClassNameId(className);
-
-		return getTags(classNameId, classPK);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
 	public int getTagsSize(long groupId, long classNameId, String name) {
-		return assetTagFinder.countByG_C_N(groupId, classNameId, name);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -568,13 +453,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public boolean hasTag(long groupId, String name) {
-		AssetTag tag = fetchTag(groupId, name);
-
-		if (tag != null) {
-			return true;
-		}
-
-		return false;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -590,15 +471,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public AssetTag incrementAssetCount(long tagId, long classNameId)
 		throws PortalException {
 
-		AssetTag tag = assetTagPersistence.findByPrimaryKey(tagId);
-
-		tag.setAssetCount(tag.getAssetCount() + 1);
-
-		assetTagPersistence.update(tag);
-
-		assetTagStatsLocalService.updateTagStats(tagId, classNameId);
-
-		return tag;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -611,16 +486,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	 */
 	@Override
 	public void mergeTags(long fromTagId, long toTagId) throws PortalException {
-		List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-			fromTagId);
-
-		assetTagPersistence.addAssetEntries(toTagId, entries);
-
-		deleteTag(fromTagId);
-
-		for (AssetEntry entry : entries) {
-			incrementAssetCount(toTagId, entry.getClassNameId());
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -636,7 +504,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> search(
 		long groupId, String name, int start, int end) {
 
-		return search(new long[] {groupId}, name, start, end);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	/**
@@ -652,8 +522,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	public List<AssetTag> search(
 		long[] groupIds, String name, int start, int end) {
 
-		return assetTagPersistence.findByG_LikeN(
-			groupIds, name, start, end, new AssetTagNameComparator());
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Override
@@ -661,13 +532,9 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			long[] groupIds, String name, int start, int end, Sort sort)
 		throws PortalException {
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		SearchContext searchContext = buildSearchContext(
-			serviceContext.getCompanyId(), groupIds, name, start, end, sort);
-
-		return searchTags(searchContext);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -676,139 +543,45 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 			long userId, long tagId, String name, ServiceContext serviceContext)
 		throws PortalException {
 
-		// Tag
-
-		AssetTag tag = assetTagPersistence.findByPrimaryKey(tagId);
-
-		String oldName = tag.getName();
-
-		name = StringUtil.toLowerCase(StringUtil.trim(name));
-
-		if (!name.equals(tag.getName()) && hasTag(tag.getGroupId(), name)) {
-			throw new DuplicateTagException(
-				"A tag with the name " + name + " already exists");
-		}
-
-		if (!tag.getName().equals(name)) {
-			AssetTag existingAssetTag = fetchTag(tag.getGroupId(), name);
-
-			if ((existingAssetTag != null) &&
-				(existingAssetTag.getTagId() != tagId)) {
-
-				throw new DuplicateTagException(
-					"A tag with the name " + name + " already exists");
-			}
-		}
-
-		validate(name);
-
-		tag.setName(name);
-
-		assetTagPersistence.update(tag);
-
-		// Indexer
-
-		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetTagPersistence.getAssetEntries(
-				tag.getTagId());
-
-			assetEntryLocalService.reindex(entries);
-		}
-
-		return tag;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	protected SearchContext buildSearchContext(
 		long companyId, long[] groupIds, String name, int start, int end,
 		Sort sort) {
 
-		SearchContext searchContext = new SearchContext();
-
-		Map<String, Serializable> attributes = new HashMap<>();
-
-		attributes.put(Field.NAME, name);
-
-		searchContext.setAttributes(attributes);
-
-		searchContext.setCompanyId(companyId);
-		searchContext.setEnd(end);
-		searchContext.setGroupIds(groupIds);
-		searchContext.setKeywords(name);
-		searchContext.setStart(start);
-
-		if (sort != null) {
-			searchContext.setSorts(sort);
-		}
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		return searchContext;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	protected String[] getTagNames(List<AssetTag> tags) {
-		return ListUtil.toArray(tags, AssetTag.NAME_ACCESSOR);
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	protected List<AssetTag> getTags(Hits hits) throws PortalException {
-		List<Document> documents = hits.toList();
-
-		List<AssetTag> tags = new ArrayList<>(documents.size());
-
-		for (Document document : documents) {
-			long tagId = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
-
-			AssetTag tag = fetchAssetTag(tagId);
-
-			if (tag == null) {
-				tags = null;
-
-				Indexer<AssetTag> indexer = IndexerRegistryUtil.getIndexer(
-					AssetTag.class);
-
-				long companyId = GetterUtil.getLong(
-					document.get(Field.COMPANY_ID));
-
-				indexer.delete(companyId, document.getUID());
-			}
-			else if (tags != null) {
-				tags.add(tag);
-			}
-		}
-
-		return tags;
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	protected BaseModelSearchResult<AssetTag> searchTags(
 			SearchContext searchContext)
 		throws PortalException {
 
-		Indexer<AssetTag> indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			AssetTag.class);
-
-		for (int i = 0; i < 10; i++) {
-			Hits hits = indexer.search(searchContext);
-
-			List<AssetTag> tags = getTags(hits);
-
-			if (tags != null) {
-				return new BaseModelSearchResult<>(tags, hits.getLength());
-			}
-		}
-
-		throw new SearchException(
-			"Unable to fix the search index after 10 attempts");
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 	protected void validate(String name) throws PortalException {
-		if (!AssetUtil.isValidWord(name)) {
-			throw new AssetTagException(
-				StringUtil.merge(
-					AssetUtil.INVALID_CHARACTERS, StringPool.SPACE),
-				AssetTagException.INVALID_CHARACTER);
-		}
+		throw new UnsupportedOperationException(
+			"This class is deprecate and replaced by " +
+				"com.liferay.asset.tags.service.impl.AssetTagLocalServiceImpl");
 	}
 
 }

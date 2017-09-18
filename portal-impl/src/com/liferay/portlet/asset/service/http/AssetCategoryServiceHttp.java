@@ -51,8 +51,11 @@ import com.liferay.portal.kernel.util.MethodKey;
  * @see AssetCategoryServiceSoap
  * @see HttpPrincipal
  * @see AssetCategoryServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.model.impl.AssetCategoryServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetCategoryServiceHttp {
 	public static com.liferay.asset.kernel.model.AssetCategory addCategory(

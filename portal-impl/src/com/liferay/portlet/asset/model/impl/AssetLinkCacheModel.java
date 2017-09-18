@@ -35,8 +35,11 @@ import java.util.Date;
  *
  * @author Brian Wing Shun Chan
  * @see AssetLink
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkCacheModel implements CacheModel<AssetLink>,
 	Externalizable {
