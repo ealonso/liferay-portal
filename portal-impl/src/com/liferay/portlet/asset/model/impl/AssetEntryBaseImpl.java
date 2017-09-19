@@ -29,8 +29,11 @@ import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
  * @author Brian Wing Shun Chan
  * @see AssetEntryImpl
  * @see AssetEntry
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.model.impl.AssetEntryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public abstract class AssetEntryBaseImpl extends AssetEntryModelImpl
 	implements AssetEntry {

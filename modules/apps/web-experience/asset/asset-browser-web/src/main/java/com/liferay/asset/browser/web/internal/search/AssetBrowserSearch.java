@@ -14,7 +14,7 @@
 
 package com.liferay.asset.browser.web.internal.search;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 
 import java.util.ArrayList;

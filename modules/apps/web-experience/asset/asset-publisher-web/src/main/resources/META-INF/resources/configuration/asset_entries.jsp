@@ -34,7 +34,7 @@ List<AssetEntry> assetEntries = AssetPublisherUtil.getAssetEntries(renderRequest
 	/>
 
 	<liferay-ui:search-container-row
-		className="com.liferay.asset.kernel.model.AssetEntry"
+		className="com.liferay.asset.model.AssetEntry"
 		escapedModel="<%= true %>"
 		keyProperty="entryId"
 		modelVar="assetEntry"

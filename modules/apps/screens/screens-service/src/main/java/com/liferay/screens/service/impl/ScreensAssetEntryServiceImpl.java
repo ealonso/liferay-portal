@@ -14,7 +14,10 @@
 
 package com.liferay.screens.service.impl;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.blogs.model.BlogsEntry;
@@ -33,13 +36,13 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.PortletItem;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -47,6 +50,9 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.URLCodec;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.screens.service.base.ScreensAssetEntryServiceBaseImpl;
@@ -135,13 +141,8 @@ public class ScreensAssetEntryServiceImpl
 		}
 		else {
 			try {
-				PermissionChecker permissionChecker =
-					PermissionCheckerFactoryUtil.create(getUser());
-
-				List<AssetEntry> assetEntries =
-					_assetPublisherUtil.getAssetEntries(
-						null, portletPreferences, permissionChecker,
-						new long[] {groupId}, false, false, false);
+				List<AssetEntry> assetEntries = getAssetEntries(
+					portletPreferences, new long[] {groupId});
 
 				assetEntries = filterAssetEntries(assetEntries);
 
@@ -155,6 +156,65 @@ public class ScreensAssetEntryServiceImpl
 			}
 		}
 	}
+
+	public static List<AssetEntry> getAssetEntries(
+			PortletPreferences portletPreferences, long[] groupIds)
+		throws Exception {
+
+		String[] assetEntryXmls = portletPreferences.getValues(
+			"assetEntryXml", new String[0]);
+
+		List<AssetEntry> assetEntries = new ArrayList<>();
+
+		for (String assetEntryXml : assetEntryXmls) {
+			Document document = SAXReaderUtil.read(assetEntryXml);
+
+			Element rootElement = document.getRootElement();
+
+			String assetEntryUuid = rootElement.elementText("asset-entry-uuid");
+
+			String assetEntryType = rootElement.elementText("asset-entry-type");
+
+			AssetRendererFactory<?> assetRendererFactory =
+				AssetRendererFactoryRegistryUtil.
+					getAssetRendererFactoryByClassName(assetEntryType);
+
+			String portletId = assetRendererFactory.getPortletId();
+
+			AssetEntry assetEntry = null;
+
+			for (long groupId : groupIds) {
+				Group group = _groupLocalService.fetchGroup(groupId);
+
+				if (group.isStagingGroup() &&
+					!group.isStagedPortlet(portletId)) {
+
+					groupId = group.getLiveGroupId();
+				}
+
+				assetEntry = _assetEntryLocalService.fetchEntry(
+					groupId, assetEntryUuid);
+
+				if (assetEntry != null) {
+					break;
+				}
+			}
+
+			if ((assetEntry == null) || !assetEntry.isVisible()) {
+				continue;
+			}
+
+			assetEntries.add(assetEntry);
+		}
+
+		return assetEntries;
+	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	private static AssetEntryLocalService _assetEntryLocalService;
+
+	@ServiceReference(type = GroupLocalService.class)
+	private static GroupLocalService _groupLocalService;
 
 	@Override
 	public JSONObject getAssetEntry(long entryId, Locale locale)

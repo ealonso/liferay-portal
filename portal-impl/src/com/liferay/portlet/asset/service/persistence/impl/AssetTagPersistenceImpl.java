@@ -82,8 +82,11 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @see AssetTagPersistence
  * @see com.liferay.asset.kernel.service.persistence.AssetTagUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	implements AssetTagPersistence {
