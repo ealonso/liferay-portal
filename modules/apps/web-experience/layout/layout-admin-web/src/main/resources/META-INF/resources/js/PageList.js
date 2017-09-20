@@ -3,14 +3,14 @@ import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 import 'metal-dropdown';
 
-import templates from './MSBPageList.soy';
+import templates from './PageList.soy';
 
 /**
  * Component that allows to show layouts tree in form of three dependent blocks.
- * It integrates three <MSBPageListBlock /> components for N-th, N-th + 2 and
+ * It integrates three <PageListBlock /> components for N-th, N-th + 2 and
  * N-th + 3 levels of layouts tree.
  */
-class MSBPageList extends Component {
+class PageList extends Component {
 	/**
 	 * @inheritDoc
 	 */
@@ -66,11 +66,11 @@ class MSBPageList extends Component {
  * @type {!Object}
  * @static
  */
-MSBPageList.STATE = {
+PageList.STATE = {
 	/**
 	 * Layout blocks
 	 * @instance
-	 * @memberof MSBPageList
+	 * @memberof PageList
 	 * @type {!Array}
 	 */
 	layoutBlocks: Config
@@ -92,7 +92,7 @@ MSBPageList.STATE = {
 	/**
 	 * URL for using icons
 	 * @instance
-	 * @memberof MSBPageList
+	 * @memberof PageList
 	 * @type {!string}
 	 */
 	pathThemeImages: Config
@@ -102,7 +102,7 @@ MSBPageList.STATE = {
 	/**
 	 * Namespace of portlet to prefix parameters names
 	 * @instance
-	 * @memberof MSBPageList
+	 * @memberof PageList
 	 * @type {!string}
 	 */
 	portletNamespace: Config
@@ -112,12 +112,12 @@ MSBPageList.STATE = {
 	/**
 	 * URL of portlet to prefix block links
 	 * @instance
-	 * @memberof MSBPageList
+	 * @memberof PageList
 	 * @type {!string}
 	 */
 	portletURL: Config.string().required(),
 };
 
-Soy.register(MSBPageList, templates);
+Soy.register(PageList, templates);
 
-export default MSBPageList;
+export default PageList;
