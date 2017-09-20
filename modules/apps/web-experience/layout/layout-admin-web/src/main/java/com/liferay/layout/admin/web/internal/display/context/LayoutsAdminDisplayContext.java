@@ -15,7 +15,7 @@
 package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.admin.web.internal.util.MSBPagesPortletUtil;
+import com.liferay.layout.admin.web.internal.util.PagesPortletUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -212,10 +212,10 @@ public class LayoutsAdminDisplayContext extends BaseLayoutDisplayContext {
 		JSONArray jsonArray;
 
 		OrderByComparator orderByComparator =
-			MSBPagesPortletUtil.getLayoutOrderByComparator(
+			PagesPortletUtil.getLayoutOrderByComparator(
 				getOrderByCol(), getOrderByType());
 
-		jsonArray = MSBPagesPortletUtil.getLayoutsJSONArray(
+		jsonArray = PagesPortletUtil.getLayoutsJSONArray(
 			themeDisplay.getScopeGroupId(), isPrivateLayout(), parentLayoutId,
 			selectedId, orderByComparator, liferayPortletRequest);
 

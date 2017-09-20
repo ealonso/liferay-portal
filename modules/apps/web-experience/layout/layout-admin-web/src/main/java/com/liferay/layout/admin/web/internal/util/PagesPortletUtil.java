@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Pavel Savinov
  */
-public class MSBPagesPortletUtil {
+public class PagesPortletUtil {
 
 	public static JSONObject getActionsJSONObject(
 			Layout layout, PortletRequest portletRequest)
