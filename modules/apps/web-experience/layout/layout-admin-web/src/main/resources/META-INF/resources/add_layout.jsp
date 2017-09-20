@@ -26,6 +26,8 @@ boolean privateLayout = layoutsAdminDisplayContext.isPrivateLayout();
 long parentPlid = LayoutConstants.DEFAULT_PLID;
 long parentLayoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
 
+String redirect = ParamUtil.getString(request, "redirect");
+
 String selThemeId = null;
 
 if (layout.isTypeControlPanel()) {
@@ -69,6 +71,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "add-new-page"));
 	<aui:input name="parentPlid" type="hidden" value="<%= parentPlid %>" />
 	<aui:input name="parentLayoutId" type="hidden" value="<%= parentLayoutId %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="type" type="hidden" value="portlet" />
 	<aui:input name="layoutPrototypeId" type="hidden" value="" />
 	<aui:input name="explicitCreation" type="hidden" value="<%= true %>" />
