@@ -14,7 +14,8 @@
 
 package com.liferay.screens.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.portal.kernel.comment.Comment;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.comment.Discussion;
@@ -221,6 +222,9 @@ public class ScreensCommentServiceImpl extends ScreensCommentServiceBaseImpl {
 
 		return jsonObject;
 	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 	@ServiceReference(type = CommentManager.class)
 	protected CommentManager commentManager;

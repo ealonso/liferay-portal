@@ -26,6 +26,8 @@ dependencies {
 	compile project(":apps:collaboration:wiki:wiki-service")
 	compile project(":apps:foundation:friendly-url:friendly-url-api")
 	compile project(":apps:foundation:friendly-url:friendly-url-service")
+	compile project(":apps:web-experience:asset:asset-api")
+	compile project(":apps:web-experience:asset:asset-service")
 	compile project(":apps:web-experience:journal:journal-api")
 	compile project(":apps:web-experience:journal:journal-service")
 
