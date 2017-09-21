@@ -16,7 +16,7 @@ package com.liferay.screens.service;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -56,6 +56,11 @@ public interface ScreensAssetEntryService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link ScreensAssetEntryServiceUtil} to access the screens asset entry remote service. Add custom service methods to {@link com.liferay.screens.service.impl.ScreensAssetEntryServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getAssetEntries(
+		com.liferay.asset.kernel.service.persistence.AssetEntryQuery assetEntryQuery,
+		Locale locale) throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getAssetEntries(AssetEntryQuery assetEntryQuery,
 		Locale locale) throws PortalException;
