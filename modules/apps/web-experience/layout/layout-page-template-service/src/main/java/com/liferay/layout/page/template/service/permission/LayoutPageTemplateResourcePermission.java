@@ -19,18 +19,21 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.BaseResourcePermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.ResourcePermissionChecker;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Jürgen Kappler
  */
 @Component(
-	property = {"resource.name=" + FragmentPermission.RESOURCE_NAME},
+	property = {"resource.name=" + LayoutPageTemplateResourcePermission.RESOURCE_NAME},
 	service = ResourcePermissionChecker.class
 )
-public class PageTemplateResourcePermission extends BaseResourcePermissionChecker {
+public class LayoutPageTemplateResourcePermission
+	extends BaseResourcePermissionChecker {
 
-	public static final String RESOURCE_NAME = "com.liferay.fragment";
+	public static final String RESOURCE_NAME =
+		"com.liferay.layout.page.template";
 
 	public static void check(
 			PermissionChecker permissionChecker, long groupId, String actionId)
