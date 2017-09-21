@@ -14,13 +14,15 @@
 
 package com.liferay.screens.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.permission.AssetEntryPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.ratings.kernel.model.RatingsEntry;
 import com.liferay.screens.service.base.ScreensRatingsEntryServiceBaseImpl;
 
@@ -117,5 +119,8 @@ public class ScreensRatingsEntryServiceImpl
 
 		return getRatingsEntries(classPK, className, ratingsLength);
 	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 }

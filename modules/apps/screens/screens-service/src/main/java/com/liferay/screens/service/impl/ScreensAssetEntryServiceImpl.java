@@ -14,9 +14,11 @@
 
 package com.liferay.screens.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.permission.AssetEntryPermission;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryService;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -24,6 +26,7 @@ import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.permission.JournalArticlePermission;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -48,7 +51,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.spring.extender.service.ServiceReference;
-import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.screens.service.base.ScreensAssetEntryServiceBaseImpl;
 
 import java.util.ArrayList;
@@ -70,6 +72,21 @@ public class ScreensAssetEntryServiceImpl
 
 		List<AssetEntry> assetEntries = assetEntryLocalService.getEntries(
 			assetEntryQuery);
+
+		assetEntries = filterAssetEntries(assetEntries);
+
+		return toJSONArray(assetEntries, locale);
+	}
+
+	@Override
+	public JSONArray getAssetEntries(
+			com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+				assetEntryQuery,
+			Locale locale)
+		throws PortalException {
+
+		List<AssetEntry> assetEntries = assetEntryLocalService.getEntries(
+			ModelAdapterUtil.adapt(AssetEntryQuery.class, assetEntryQuery));
 
 		assetEntries = filterAssetEntries(assetEntries);
 
@@ -360,6 +377,9 @@ public class ScreensAssetEntryServiceImpl
 
 		return jsonObject;
 	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 	@ServiceReference(type = AssetPublisherUtil.class)
 	private AssetPublisherUtil _assetPublisherUtil;
