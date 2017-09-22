@@ -170,23 +170,35 @@ public class LanguageTag extends IncludeTag {
 
 		Locale currentLocale = null;
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		if (Validator.isNotNull(_languageId)) {
 			currentLocale = LocaleUtil.fromLanguageId(_languageId);
 		}
 		else {
-			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
 			currentLocale = themeDisplay.getLocale();
 		}
+
+		String currentHTMLTitle =
+			themeDisplay.getLayout().getHTMLTitle(currentLocale);
 
 		for (Locale locale : locales) {
 			boolean disabled = false;
 			String url = null;
+			String localizedHTMLTitle =
+				themeDisplay.getLayout().getHTMLTitle(locale);
+			String localizedFormAction = formAction;
+
+			if (!currentHTMLTitle.equals(localizedHTMLTitle)) {
+				localizedFormAction = formAction.replace(
+					currentHTMLTitle, localizedHTMLTitle);
+			}
 
 			if (!LocaleUtil.equals(locale, currentLocale)) {
 				url = HttpUtil.setParameter(
-					formAction, parameterName, LocaleUtil.toLanguageId(locale));
+					localizedFormAction, parameterName,
+					LocaleUtil.toLanguageId(locale));
 			}
 			else if (!displayCurrentLocale) {
 				disabled = true;
