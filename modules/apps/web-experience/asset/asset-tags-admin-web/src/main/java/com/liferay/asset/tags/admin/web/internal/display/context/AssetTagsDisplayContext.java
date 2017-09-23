@@ -14,11 +14,14 @@
 
 package com.liferay.asset.tags.admin.web.internal.display.context;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagServiceUtil;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.service.AssetTagServiceUtil;
+import com.liferay.asset.service.permission.AssetTagsPermission;
 import com.liferay.asset.tags.constants.AssetTagsAdminPortletKeys;
+import com.liferay.asset.util.comparator.AssetTagAssetCountComparator;
+import com.liferay.asset.util.comparator.AssetTagNameComparator;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -38,9 +41,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portlet.asset.service.permission.AssetTagsPermission;
-import com.liferay.portlet.asset.util.comparator.AssetTagAssetCountComparator;
-import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
 import java.util.ArrayList;
 import java.util.List;
