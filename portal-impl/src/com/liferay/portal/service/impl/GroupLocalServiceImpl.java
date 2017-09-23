@@ -775,19 +775,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			deletePortletData(group);
 
-			// Asset
-
-			if (group.isRegularSite()) {
-				assetEntryLocalService.deleteEntry(
-					Group.class.getName(), group.getGroupId());
-			}
-
-			assetEntryLocalService.deleteGroupEntries(group.getGroupId());
-
-			assetTagLocalService.deleteGroupTags(group.getGroupId());
-
-			assetVocabularyLocalService.deleteVocabularies(group.getGroupId());
-
 			// Expando
 
 			expandoRowLocalService.deleteRows(group.getGroupId());
