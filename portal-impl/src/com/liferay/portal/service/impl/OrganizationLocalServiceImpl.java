@@ -349,11 +349,6 @@ public class OrganizationLocalServiceImpl
 			}
 		}
 
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			Organization.class.getName(), organization.getOrganizationId());
-
 		// Addresses
 
 		addressLocalService.deleteAddresses(

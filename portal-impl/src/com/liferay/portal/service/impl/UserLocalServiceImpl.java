@@ -1911,11 +1911,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		announcementsDeliveryLocalService.deleteDeliveries(user.getUserId());
 
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			User.class.getName(), user.getUserId());
-
 		// Document library
 
 		dlFileRankLocalService.deleteFileRanksByUserId(user.getUserId());
