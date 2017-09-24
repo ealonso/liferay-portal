@@ -23,6 +23,7 @@ import com.liferay.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.impl.AssetUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Group;
@@ -1280,10 +1281,15 @@ public abstract class BaseAssetSearchTestCase {
 		throws Exception {
 
 		Hits results = AssetUtil.search(
-			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS);
+			searchContext,
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
+					class,
+				assetEntryQuery),
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		return AssetUtil.getAssetEntries(results);
+		return ModelAdapterUtil.adapt(
+			AssetEntry.class, AssetUtil.getAssetEntries(results));
 	}
 
 	protected int searchCount(
@@ -1292,7 +1298,12 @@ public abstract class BaseAssetSearchTestCase {
 		throws Exception {
 
 		Hits results = AssetUtil.search(
-			searchContext, assetEntryQuery, start, end);
+			searchContext,
+			ModelAdapterUtil.adapt(
+				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
+					class,
+				assetEntryQuery),
+			start, end);
 
 		return results.getLength();
 	}

@@ -16,13 +16,13 @@ package com.liferay.asset.util.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.model.AssetCategory;
-import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.test.util.AssetTestUtil;
 import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -121,11 +121,15 @@ public class AssetUtilTest {
 			TimeZone timezone, long userId)
 		throws Exception {
 
-		BaseModelSearchResult<AssetEntry> baseModelSearchResult =
+		BaseModelSearchResult baseModelSearchResult =
 			AssetUtil.searchAssetEntries(
-				assetEntryQuery, assetCategoryIds, assetTagNames, attributes,
-				companyId, keywords, layout, locale, scopeGroupId, timezone,
-				userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+				ModelAdapterUtil.adapt(
+					com.liferay.asset.kernel.service.persistence.
+						AssetEntryQuery.class,
+					assetEntryQuery),
+				assetCategoryIds, assetTagNames, attributes, companyId,
+				keywords, layout, locale, scopeGroupId, timezone, userId,
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		Assert.assertEquals(
 			baseModelSearchResult.toString(), expectedCount,
