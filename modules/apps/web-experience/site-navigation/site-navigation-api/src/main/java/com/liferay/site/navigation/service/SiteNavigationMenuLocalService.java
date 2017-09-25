@@ -245,6 +245,10 @@ public interface SiteNavigationMenuLocalService extends BaseLocalService,
 	public int getSiteNavigationMenusCount(long groupId,
 		java.lang.String keywords);
 
+	public SiteNavigationMenu updateSiteNavigationMenu(long userId,
+		long siteNavigationMenuId, java.lang.String name,
+		ServiceContext serviceContext) throws PortalException;
+
 	/**
 	* Updates the site navigation menu in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*
