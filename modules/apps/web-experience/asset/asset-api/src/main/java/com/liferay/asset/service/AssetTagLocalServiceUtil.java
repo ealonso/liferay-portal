@@ -612,6 +612,10 @@ public class AssetTagLocalServiceUtil {
 		return getService().getTagIds(groupIds, names);
 	}
 
+	public static long[] getTagIds(java.lang.String name) {
+		return getService().getTagIds(name);
+	}
+
 	/**
 	* Returns the names of all the asset tags.
 	*
