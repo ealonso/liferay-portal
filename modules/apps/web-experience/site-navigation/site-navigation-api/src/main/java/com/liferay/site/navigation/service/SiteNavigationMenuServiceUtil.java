@@ -68,6 +68,31 @@ public class SiteNavigationMenuServiceUtil {
 		return getService().getSiteNavigationMenus(groupId);
 	}
 
+	public static java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return getService()
+				   .getSiteNavigationMenus(groupId, start, end,
+			orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return getService()
+				   .getSiteNavigationMenus(groupId, keywords, start, end,
+			orderByComparator);
+	}
+
+	public static int getSiteNavigationMenusCount(long groupId) {
+		return getService().getSiteNavigationMenusCount(groupId);
+	}
+
+	public static int getSiteNavigationMenusCount(long groupId,
+		java.lang.String keywords) {
+		return getService().getSiteNavigationMenusCount(groupId, keywords);
+	}
+
 	public static SiteNavigationMenuService getService() {
 		return _serviceTracker.getService();
 	}

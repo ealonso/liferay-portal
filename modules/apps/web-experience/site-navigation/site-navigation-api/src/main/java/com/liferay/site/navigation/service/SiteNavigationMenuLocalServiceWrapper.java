@@ -261,6 +261,22 @@ public class SiteNavigationMenuLocalServiceWrapper
 		return _siteNavigationMenuLocalService.getSiteNavigationMenus(groupId);
 	}
 
+	@Override
+	public java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return _siteNavigationMenuLocalService.getSiteNavigationMenus(groupId,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return _siteNavigationMenuLocalService.getSiteNavigationMenus(groupId,
+			keywords, start, end, orderByComparator);
+	}
+
 	/**
 	* Returns the number of site navigation menus.
 	*
@@ -269,6 +285,18 @@ public class SiteNavigationMenuLocalServiceWrapper
 	@Override
 	public int getSiteNavigationMenusCount() {
 		return _siteNavigationMenuLocalService.getSiteNavigationMenusCount();
+	}
+
+	@Override
+	public int getSiteNavigationMenusCount(long groupId) {
+		return _siteNavigationMenuLocalService.getSiteNavigationMenusCount(groupId);
+	}
+
+	@Override
+	public int getSiteNavigationMenusCount(long groupId,
+		java.lang.String keywords) {
+		return _siteNavigationMenuLocalService.getSiteNavigationMenusCount(groupId,
+			keywords);
 	}
 
 	/**
