@@ -15,7 +15,7 @@
 package com.liferay.asset.model.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetTagDisplay;
+import com.liferay.asset.model.AssetTagDisplay;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import org.junit.Assert;
