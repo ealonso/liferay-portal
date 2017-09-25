@@ -518,6 +518,9 @@ public interface AssetTagLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public long[] getTagIds(long[] groupIds, java.lang.String[] names);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long[] getTagIds(java.lang.String name);
+
 	/**
 	* Returns the names of all the asset tags.
 	*
