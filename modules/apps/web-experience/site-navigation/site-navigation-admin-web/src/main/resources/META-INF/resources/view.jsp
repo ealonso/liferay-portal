@@ -110,6 +110,10 @@ String searchContainerId = "siteNavigationMenus";
 							<%= siteNavigationMenu.getName() %>
 						</h4>
 					</liferay-ui:search-container-column-text>
+
+					<liferay-ui:search-container-column-jsp
+						path="/menu_action.jsp"
+					/>
 				</c:when>
 				<c:when test='<%= displayStyle.equals("icon") %>'>
 
@@ -119,6 +123,7 @@ String searchContainerId = "siteNavigationMenus";
 
 					<liferay-ui:search-container-column-text>
 						<liferay-frontend:icon-vertical-card
+							actionJsp="/menu_action.jsp"
 							actionJspServletContext="<%= application %>"
 							icon="list"
 							resultRow="<%= row %>"
@@ -147,6 +152,10 @@ String searchContainerId = "siteNavigationMenus";
 						name="create-date"
 						orderable="<%= false %>"
 						property="createDate"
+					/>
+
+					<liferay-ui:search-container-column-jsp
+						path="/menu_action.jsp"
 					/>
 				</c:otherwise>
 			</c:choose>
