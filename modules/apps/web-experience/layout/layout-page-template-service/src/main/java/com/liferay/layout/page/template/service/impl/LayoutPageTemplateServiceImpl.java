@@ -49,7 +49,7 @@ public class LayoutPageTemplateServiceImpl
 			LayoutPageTemplateActionKeys.ADD_LAYOUT_PAGE_TEMPLATE);
 
 		return layoutPageTemplateLocalService.addLayoutPageTemplate(
-			groupId, getUserId(), layoutPageTemplateFolderId, name,
+			getUserId(), groupId, layoutPageTemplateFolderId, name,
 			layoutPageTemplateFragments, serviceContext);
 	}
 
