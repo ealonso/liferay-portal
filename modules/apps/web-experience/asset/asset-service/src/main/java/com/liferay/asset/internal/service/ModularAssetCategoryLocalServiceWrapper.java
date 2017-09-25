@@ -159,29 +159,19 @@ public class ModularAssetCategoryLocalServiceWrapper
 
 	@Override
 	public AssetCategory fetchCategory(long categoryId) {
-		com.liferay.asset.model.AssetCategory assetCategory =
-			_assetCategoryLocalService.fetchCategory(categoryId);
-
-		if (assetCategory == null) {
-			return null;
-		}
-
-		return ModelAdapterUtil.adapt(AssetCategory.class, assetCategory);
+		return ModelAdapterUtil.adapt(
+			AssetCategory.class,
+			_assetCategoryLocalService.fetchCategory(categoryId));
 	}
 
 	@Override
 	public AssetCategory fetchCategory(
 		long groupId, long parentCategoryId, String name, long vocabularyId) {
 
-		com.liferay.asset.model.AssetCategory assetCategory =
+		return ModelAdapterUtil.adapt(
+			AssetCategory.class,
 			_assetCategoryLocalService.fetchCategory(
-				groupId, parentCategoryId, name, vocabularyId);
-
-		if (assetCategory == null) {
-			return null;
-		}
-
-		return ModelAdapterUtil.adapt(AssetCategory.class, assetCategory);
+				groupId, parentCategoryId, name, vocabularyId));
 	}
 
 	@Override
