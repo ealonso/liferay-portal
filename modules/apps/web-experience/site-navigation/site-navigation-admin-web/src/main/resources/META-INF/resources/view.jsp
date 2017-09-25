@@ -20,6 +20,8 @@
 Map<String, Object> data = new HashMap<>();
 
 data.put("qa-id", "navigation");
+
+String searchContainerId = "siteNavigationMenus";
 %>
 
 <aui:nav-bar cssClass="collapse-basic-search" data="<%= data %>" markupView="lexicon">
@@ -40,3 +42,26 @@ data.put("qa-id", "navigation");
 		</aui:form>
 	</aui:nav-bar-search>
 </aui:nav-bar>
+
+<liferay-frontend:management-bar searchContainerId="<%= searchContainerId %>">
+	<liferay-frontend:management-bar-buttons>
+		<liferay-frontend:management-bar-display-buttons
+			displayViews="<%= siteNavigationAdminDisplayContext.getDisplayViews() %>"
+			portletURL="<%= siteNavigationAdminDisplayContext.getPortletURL() %>"
+			selectedDisplayStyle="<%= siteNavigationAdminDisplayContext.getDisplayStyle() %>"
+		/>
+	</liferay-frontend:management-bar-buttons>
+
+	<liferay-frontend:management-bar-filters>
+		<liferay-frontend:management-bar-navigation label="all">
+			<liferay-frontend:management-bar-filter-item active="<%= true %>" label="all" url="<%= siteNavigationAdminDisplayContext.getPortletURL().toString() %>" />
+		</liferay-frontend:management-bar-navigation>
+
+		<liferay-frontend:management-bar-sort
+			orderByCol="<%= siteNavigationAdminDisplayContext.getOrderByCol() %>"
+			orderByType="<%= siteNavigationAdminDisplayContext.getOrderByType() %>"
+			orderColumns="<%= siteNavigationAdminDisplayContext.getOrderColumns() %>"
+			portletURL="<%= siteNavigationAdminDisplayContext.getPortletURL() %>"
+		/>
+	</liferay-frontend:management-bar-filters>
+</liferay-frontend:management-bar>
