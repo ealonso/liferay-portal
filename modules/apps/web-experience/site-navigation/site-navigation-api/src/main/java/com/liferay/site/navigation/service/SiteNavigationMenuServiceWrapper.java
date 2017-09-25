@@ -50,6 +50,13 @@ public class SiteNavigationMenuServiceWrapper
 		return _siteNavigationMenuService.deleteSiteNavigationMenu(siteNavigationMenuId);
 	}
 
+	@Override
+	public com.liferay.site.navigation.model.SiteNavigationMenu fetchSiteNavigationMenu(
+		long siteNavigationMenuId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _siteNavigationMenuService.fetchSiteNavigationMenu(siteNavigationMenuId);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -92,6 +99,15 @@ public class SiteNavigationMenuServiceWrapper
 		java.lang.String keywords) {
 		return _siteNavigationMenuService.getSiteNavigationMenusCount(groupId,
 			keywords);
+	}
+
+	@Override
+	public com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
+		long siteNavigationMenuId, java.lang.String name,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _siteNavigationMenuService.updateSiteNavigationMenu(siteNavigationMenuId,
+			name, serviceContext);
 	}
 
 	@Override

@@ -199,6 +199,12 @@ public class SiteNavigationMenuPersistenceTest {
 			getOrderByComparator());
 	}
 
+	@Test
+	public void testFilterFindByGroupId() throws Exception {
+		_persistence.filterFindByGroupId(0, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, getOrderByComparator());
+	}
+
 	protected OrderByComparator<SiteNavigationMenu> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create("SiteNavigationMenu",
 			"siteNavigationMenuId", true, "groupId", true, "companyId", true,

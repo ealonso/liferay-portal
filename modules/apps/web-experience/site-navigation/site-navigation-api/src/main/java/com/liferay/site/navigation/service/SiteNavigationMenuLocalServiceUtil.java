@@ -280,6 +280,15 @@ public class SiteNavigationMenuLocalServiceUtil {
 		return getService().getSiteNavigationMenusCount(groupId, keywords);
 	}
 
+	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
+		long userId, long siteNavigationMenuId, java.lang.String name,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateSiteNavigationMenu(userId, siteNavigationMenuId,
+			name, serviceContext);
+	}
+
 	/**
 	* Updates the site navigation menu in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*
