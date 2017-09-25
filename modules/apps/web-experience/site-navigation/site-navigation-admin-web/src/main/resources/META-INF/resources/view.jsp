@@ -102,13 +102,13 @@ String searchContainerId = "siteNavigationMenus";
 						String createDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - createDate.getTime(), true);
 						%>
 
-						<h5 class="text-default">
-							<liferay-ui:message arguments="<%= new String[] {siteNavigationMenu.getUserName(), createDateDescription} %>" key="x-created-x-ago" />
-						</h5>
-
 						<h4>
 							<%= siteNavigationMenu.getName() %>
 						</h4>
+
+						<h5 class="text-default">
+							<liferay-ui:message arguments="<%= new String[] {siteNavigationMenu.getUserName(), createDateDescription} %>" key="x-created-x-ago" />
+						</h5>
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-jsp
