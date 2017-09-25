@@ -21,6 +21,8 @@ Map<String, Object> data = new HashMap<>();
 
 data.put("qa-id", "navigation");
 
+String displayStyle = siteNavigationAdminDisplayContext.getDisplayStyle();
+
 String searchContainerId = "siteNavigationMenus";
 %>
 
@@ -64,4 +66,92 @@ String searchContainerId = "siteNavigationMenus";
 			portletURL="<%= siteNavigationAdminDisplayContext.getPortletURL() %>"
 		/>
 	</liferay-frontend:management-bar-filters>
+
+	<liferay-frontend:management-bar-action-buttons>
+		<liferay-frontend:management-bar-button href="javascript:;" icon="trash" id="deleteSelectedMenus" label="delete" />
+	</liferay-frontend:management-bar-action-buttons>
 </liferay-frontend:management-bar>
+
+<portlet:actionURL name="/navigation_menu/delete_menu" var="deleteMenuURL">
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:actionURL>
+
+<aui:form action="<%= deleteMenuURL %>" cssClass="container-fluid-1280" name="fm">
+	<liferay-ui:search-container
+		id="<%= searchContainerId %>"
+		searchContainer="<%= siteNavigationAdminDisplayContext.getSearchContainer() %>"
+	>
+		<liferay-ui:search-container-row
+			className="com.liferay.site.navigation.model.SiteNavigationMenu"
+			keyProperty="siteNavigationMenuId"
+			modelVar="siteNavigationMenu"
+		>
+			<c:choose>
+				<c:when test='<%= displayStyle.equals("descriptive") %>'>
+					<liferay-ui:search-container-column-user
+						cssClass="user-icon-lg"
+						showDetails="<%= false %>"
+						userId="<%= siteNavigationMenu.getUserId() %>"
+					/>
+
+					<liferay-ui:search-container-column-text colspan="<%= 2 %>">
+
+						<%
+						Date createDate = siteNavigationMenu.getCreateDate();
+
+						String createDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - createDate.getTime(), true);
+						%>
+
+						<h5 class="text-default">
+							<liferay-ui:message arguments="<%= new String[] {siteNavigationMenu.getUserName(), createDateDescription} %>" key="x-created-x-ago" />
+						</h5>
+
+						<h4>
+							<%= siteNavigationMenu.getName() %>
+						</h4>
+					</liferay-ui:search-container-column-text>
+				</c:when>
+				<c:when test='<%= displayStyle.equals("icon") %>'>
+
+					<%
+					row.setCssClass("entry-card lfr-asset-item");
+					%>
+
+					<liferay-ui:search-container-column-text>
+						<liferay-frontend:icon-vertical-card
+							actionJspServletContext="<%= application %>"
+							icon="list"
+							resultRow="<%= row %>"
+							rowChecker="<%= searchContainer.getRowChecker() %>"
+							title="<%= siteNavigationMenu.getName() %>"
+						>
+							<%@ include file="/menu_vertical_card.jspf" %>
+						</liferay-frontend:icon-vertical-card>
+					</liferay-ui:search-container-column-text>
+				</c:when>
+				<c:otherwise>
+					<liferay-ui:search-container-column-text
+						cssClass="table-cell-content"
+						name="title"
+						orderable="<%= false %>"
+						value="<%= siteNavigationMenu.getName() %>"
+					/>
+
+					<liferay-ui:search-container-column-text
+						name="author"
+						orderable="<%= false %>"
+						property="userName"
+					/>
+
+					<liferay-ui:search-container-column-date
+						name="create-date"
+						orderable="<%= false %>"
+						property="createDate"
+					/>
+				</c:otherwise>
+			</c:choose>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator displayStyle="<%= displayStyle %>" markupView="lexicon" />
+	</liferay-ui:search-container>
+</aui:form>
