@@ -75,7 +75,7 @@ public interface LayoutPageTemplateLocalService extends BaseLocalService,
 	public LayoutPageTemplate addLayoutPageTemplate(
 		LayoutPageTemplate layoutPageTemplate);
 
-	public LayoutPageTemplate addLayoutPageTemplate(long groupId, long userId,
+	public LayoutPageTemplate addLayoutPageTemplate(long userId, long groupId,
 		long layoutPageTemplateFolderId, java.lang.String name,
 		Map<java.lang.Integer, FragmentEntry> layoutPageTemplateFragments,
 		ServiceContext serviceContext) throws PortalException;
@@ -181,10 +181,6 @@ public interface LayoutPageTemplateLocalService extends BaseLocalService,
 	public LayoutPageTemplate fetchLayoutPageTemplate(long layoutPageTemplateId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplate> fetchLayoutPageTemplates(
-		long layoutPageTemplateFolderId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -214,6 +210,10 @@ public interface LayoutPageTemplateLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<LayoutPageTemplate> getLayoutPageTemplates(int start, int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplate> getLayoutPageTemplates(
+		long layoutPageTemplateFolderId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<LayoutPageTemplate> getLayoutPageTemplates(

@@ -64,19 +64,15 @@ public interface LayoutPageTemplateService extends BaseService {
 		Map<java.lang.Integer, FragmentEntry> layoutPageTemplateFragments,
 		ServiceContext serviceContext) throws PortalException;
 
-	public LayoutPageTemplate deleteLayoutPageTemplate(long pageTemplateId)
-		throws PortalException;
+	public LayoutPageTemplate deleteLayoutPageTemplate(
+		long layoutPageTemplateId) throws PortalException;
 
-	public List<LayoutPageTemplate> deletePageTemplates(long[] pageTemplatesIds)
-		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public LayoutPageTemplate fetchLayoutPageTemplate(long pageTemplateId)
-		throws PortalException;
+	public List<LayoutPageTemplate> deleteLayoutPageTemplates(
+		long[] layoutPageTemplateIds) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplate> fetchPageTemplates(
-		long layoutPageTemplateFolderId) throws PortalException;
+	public LayoutPageTemplate fetchLayoutPageTemplate(long layoutPageTemplateId)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getLayoutPageTemplateFoldersCount(long groupId,
@@ -86,6 +82,26 @@ public interface LayoutPageTemplateService extends BaseService {
 	public int getLayoutPageTemplateFoldersCount(long groupId,
 		long layoutPageTemplateFolderId, java.lang.String name);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplate> getLayoutPageTemplates(
+		long layoutPageTemplateFolderId) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplate> getLayoutPageTemplates(long groupId,
+		long layoutPageTemplateFolderId, int start, int end)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplate> getLayoutPageTemplates(long groupId,
+		long layoutPageTemplateFolderId, int start, int end,
+		OrderByComparator<LayoutPageTemplate> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplate> getLayoutPageTemplates(long groupId,
+		long layoutPageTemplateFolderId, java.lang.String name, int start,
+		int end, OrderByComparator<LayoutPageTemplate> orderByComparator);
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -93,24 +109,8 @@ public interface LayoutPageTemplateService extends BaseService {
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplate> getPageTemplates(long groupId,
-		long layoutPageTemplateFolderId, int start, int end)
-		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplate> getPageTemplates(long groupId,
-		long layoutPageTemplateFolderId, int start, int end,
-		OrderByComparator<LayoutPageTemplate> orderByComparator)
-		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplate> getPageTemplates(long groupId,
-		long layoutPageTemplateFolderId, java.lang.String name, int start,
-		int end, OrderByComparator<LayoutPageTemplate> orderByComparator);
-
-	public LayoutPageTemplate updateLayoutPageTemplate(long pageTemplateId,
-		java.lang.String name,
+	public LayoutPageTemplate updateLayoutPageTemplate(
+		long layoutPageTemplateId, java.lang.String name,
 		Map<java.lang.Integer, FragmentEntry> layoutPageTemplateFragments,
 		ServiceContext serviceContext) throws PortalException;
 }
