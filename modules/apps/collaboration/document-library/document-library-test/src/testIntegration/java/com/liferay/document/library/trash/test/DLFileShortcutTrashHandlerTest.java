@@ -15,8 +15,8 @@
 package com.liferay.document.library.trash.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.document.library.kernel.model.DLFileShortcut;
 import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
@@ -80,13 +80,6 @@ public class DLFileShortcutTrashHandlerTest
 			new LiferayIntegrationTestRule(),
 			PermissionCheckerTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
-
-	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
-		throws Exception {
-
-		return _whenIsAssetable.fetchAssetEntry(classedModel);
-	}
 
 	@Override
 	public String getParentBaseModelClassName() {

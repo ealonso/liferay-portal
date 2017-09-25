@@ -15,7 +15,6 @@
 package com.liferay.wiki.trash.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Group;
@@ -83,13 +82,6 @@ public class WikiPageTrashHandlerTest
 	@AfterClass
 	public static void tearDownClass() {
 		_serviceTracker.close();
-	}
-
-	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
-		throws Exception {
-
-		return _whenIsAssetable.fetchAssetEntry(classedModel);
 	}
 
 	@Override
