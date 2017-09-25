@@ -31,6 +31,10 @@ import com.liferay.asset.service.permission.AssetCategoryPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.search.AssetSearcher;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.Property;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -1258,7 +1262,23 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			return assetTagLocalService.getTagIds(groupIds, tagName);
 		}
 
-		return assetTagLocalService.getTagIds(tagName);
+		List<Long> tagIds = new ArrayList<>();
+
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
+			AssetTag.class);
+
+		Property property = PropertyFactoryUtil.forName("name");
+
+		dynamicQuery.add(property.eq(tagName));
+
+		List<AssetTag> assetTags = assetTagPersistence.findWithDynamicQuery(
+			dynamicQuery);
+
+		for (AssetTag assetTag : assetTags) {
+			tagIds.add(assetTag.getTagId());
+		}
+
+		return ArrayUtil.toLongArray(tagIds);
 	}
 
 	protected void reindex(AssetEntry entry) throws PortalException {
