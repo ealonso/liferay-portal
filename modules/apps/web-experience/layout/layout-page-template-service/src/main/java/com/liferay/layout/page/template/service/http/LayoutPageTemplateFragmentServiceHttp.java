@@ -125,39 +125,6 @@ public class LayoutPageTemplateFragmentServiceHttp {
 		}
 	}
 
-	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment> deleteByLayoutPageTemplate(
-		HttpPrincipal httpPrincipal, long groupId, long layoutPageTemplateId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		try {
-			MethodKey methodKey = new MethodKey(LayoutPageTemplateFragmentServiceUtil.class,
-					"deleteByLayoutPageTemplate",
-					_deleteByLayoutPageTemplateParameterTypes2);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					layoutPageTemplateId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
-					throw (com.liferay.portal.kernel.exception.PortalException)e;
-				}
-
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment>)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
 	public static com.liferay.layout.page.template.model.LayoutPageTemplateFragment deleteLayoutPageTemplateFragment(
 		HttpPrincipal httpPrincipal, long groupId, long layoutPageTemplateId,
 		long fragmentId,
@@ -166,7 +133,7 @@ public class LayoutPageTemplateFragmentServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateFragmentServiceUtil.class,
 					"deleteLayoutPageTemplateFragment",
-					_deleteLayoutPageTemplateFragmentParameterTypes3);
+					_deleteLayoutPageTemplateFragmentParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					layoutPageTemplateId, fragmentId, serviceContext);
@@ -193,34 +160,6 @@ public class LayoutPageTemplateFragmentServiceHttp {
 		}
 	}
 
-	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment> getLayoutPageTemplateFragmentsByPageTemplate(
-		HttpPrincipal httpPrincipal, long groupId, long layoutPageTemplateId) {
-		try {
-			MethodKey methodKey = new MethodKey(LayoutPageTemplateFragmentServiceUtil.class,
-					"getLayoutPageTemplateFragmentsByPageTemplate",
-					_getLayoutPageTemplateFragmentsByPageTemplateParameterTypes4);
-
-			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					layoutPageTemplateId);
-
-			Object returnObj = null;
-
-			try {
-				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
-			}
-			catch (Exception e) {
-				throw new com.liferay.portal.kernel.exception.SystemException(e);
-			}
-
-			return (java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment>)returnObj;
-		}
-		catch (com.liferay.portal.kernel.exception.SystemException se) {
-			_log.error(se, se);
-
-			throw se;
-		}
-	}
-
 	private static Log _log = LogFactoryUtil.getLog(LayoutPageTemplateFragmentServiceHttp.class);
 	private static final Class<?>[] _addLayoutPageTemplateFragmentParameterTypes0 =
 		new Class[] {
@@ -232,14 +171,9 @@ public class LayoutPageTemplateFragmentServiceHttp {
 			long.class, long.class, long.class, int.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _deleteByLayoutPageTemplateParameterTypes2 = new Class[] {
-			long.class, long.class
-		};
-	private static final Class<?>[] _deleteLayoutPageTemplateFragmentParameterTypes3 =
+	private static final Class<?>[] _deleteLayoutPageTemplateFragmentParameterTypes2 =
 		new Class[] {
 			long.class, long.class, long.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
-	private static final Class<?>[] _getLayoutPageTemplateFragmentsByPageTemplateParameterTypes4 =
-		new Class[] { long.class, long.class };
 }

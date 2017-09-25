@@ -314,12 +314,13 @@ public class LayoutPageTemplateLocalServiceWrapper
 
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplate updateLayoutPageTemplate(
-		long layoutPageTemplateId, java.lang.String name,
+		long userId, long layoutPageTemplateId, java.lang.String name,
 		java.util.Map<java.lang.Integer, com.liferay.fragment.model.FragmentEntry> layoutPageTemplateFragments,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
-		return _layoutPageTemplateLocalService.updateLayoutPageTemplate(layoutPageTemplateId,
-			name, layoutPageTemplateFragments, serviceContext);
+		return _layoutPageTemplateLocalService.updateLayoutPageTemplate(userId,
+			layoutPageTemplateId, name, layoutPageTemplateFragments,
+			serviceContext);
 	}
 
 	@Override

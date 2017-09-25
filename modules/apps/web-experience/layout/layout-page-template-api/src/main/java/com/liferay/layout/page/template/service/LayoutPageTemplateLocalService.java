@@ -261,7 +261,7 @@ public interface LayoutPageTemplateLocalService extends BaseLocalService,
 	public LayoutPageTemplate updateLayoutPageTemplate(
 		LayoutPageTemplate layoutPageTemplate);
 
-	public LayoutPageTemplate updateLayoutPageTemplate(
+	public LayoutPageTemplate updateLayoutPageTemplate(long userId,
 		long layoutPageTemplateId, java.lang.String name,
 		Map<java.lang.Integer, FragmentEntry> layoutPageTemplateFragments,
 		ServiceContext serviceContext) throws PortalException;

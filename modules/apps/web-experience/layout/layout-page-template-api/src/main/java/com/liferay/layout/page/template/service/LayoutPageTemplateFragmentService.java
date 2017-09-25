@@ -26,10 +26,7 @@ import com.liferay.portal.kernel.service.BaseService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
-import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
-
-import java.util.List;
 
 /**
  * Provides the remote service interface for LayoutPageTemplateFragment. Methods of this
@@ -63,16 +60,9 @@ public interface LayoutPageTemplateFragmentService extends BaseService {
 		long groupId, long layoutPageTemplateId, long fragmentId, int position,
 		ServiceContext serviceContext) throws PortalException;
 
-	public List<LayoutPageTemplateFragment> deleteByLayoutPageTemplate(
-		long groupId, long layoutPageTemplateId) throws PortalException;
-
 	public LayoutPageTemplateFragment deleteLayoutPageTemplateFragment(
 		long groupId, long layoutPageTemplateId, long fragmentId,
 		ServiceContext serviceContext) throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<LayoutPageTemplateFragment> getLayoutPageTemplateFragmentsByPageTemplate(
-		long groupId, long layoutPageTemplateId);
 
 	/**
 	* Returns the OSGi service identifier.

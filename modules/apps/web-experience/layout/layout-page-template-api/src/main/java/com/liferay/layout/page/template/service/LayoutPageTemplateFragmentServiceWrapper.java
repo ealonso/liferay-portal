@@ -53,27 +53,12 @@ public class LayoutPageTemplateFragmentServiceWrapper
 	}
 
 	@Override
-	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment> deleteByLayoutPageTemplate(
-		long groupId, long layoutPageTemplateId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-		return _layoutPageTemplateFragmentService.deleteByLayoutPageTemplate(groupId,
-			layoutPageTemplateId);
-	}
-
-	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateFragment deleteLayoutPageTemplateFragment(
 		long groupId, long layoutPageTemplateId, long fragmentId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateFragmentService.deleteLayoutPageTemplateFragment(groupId,
 			layoutPageTemplateId, fragmentId, serviceContext);
-	}
-
-	@Override
-	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateFragment> getLayoutPageTemplateFragmentsByPageTemplate(
-		long groupId, long layoutPageTemplateId) {
-		return _layoutPageTemplateFragmentService.getLayoutPageTemplateFragmentsByPageTemplate(groupId,
-			layoutPageTemplateId);
 	}
 
 	/**
