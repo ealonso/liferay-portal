@@ -179,8 +179,8 @@ public class LayoutPageTemplateServiceImpl
 			getPermissionChecker(), layoutPageTemplateId, ActionKeys.UPDATE);
 
 		return layoutPageTemplateLocalService.updateLayoutPageTemplate(
-			layoutPageTemplateId, name, layoutPageTemplateFragments,
-			serviceContext);
+			getUserId(), layoutPageTemplateId, name,
+			layoutPageTemplateFragments, serviceContext);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
