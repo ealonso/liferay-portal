@@ -133,17 +133,19 @@ public class ModularAssetVocabularyLocalServiceWrapper
 	}
 
 	@Override
+	public AssetVocabulary fetchAssetVocabulary(long vocabularyId) {
+		return ModelAdapterUtil.adapt(
+			AssetVocabulary.class,
+			_assetVocabularyLocalService.fetchAssetVocabulary(vocabularyId));
+	}
+
+	@Override
 	public AssetVocabulary fetchGroupVocabulary(long groupId, String name)
 		throws PortalException {
 
-		com.liferay.asset.model.AssetVocabulary assetVocabulary =
-			_assetVocabularyLocalService.fetchGroupVocabulary(groupId, name);
-
-		if (assetVocabulary == null) {
-			return null;
-		}
-
-		return ModelAdapterUtil.adapt(AssetVocabulary.class, assetVocabulary);
+		return ModelAdapterUtil.adapt(
+			AssetVocabulary.class,
+			_assetVocabularyLocalService.fetchGroupVocabulary(groupId, name));
 	}
 
 	@Override
