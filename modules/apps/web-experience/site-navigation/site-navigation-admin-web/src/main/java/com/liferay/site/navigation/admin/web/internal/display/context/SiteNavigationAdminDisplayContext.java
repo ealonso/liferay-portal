@@ -97,7 +97,8 @@ public class SiteNavigationAdminDisplayContext {
 		if (_displayViews == null) {
 			_displayViews = StringUtil.split(
 				PrefsParamUtil.getString(
-					_portletPreferences, _request, "displayViews"));
+					_portletPreferences, _request, "displayViews",
+					"list,icon,descriptive"));
 		}
 
 		return _displayViews;
@@ -122,7 +123,7 @@ public class SiteNavigationAdminDisplayContext {
 
 		if (Validator.isNull(_orderByCol)) {
 			_orderByCol = _portletPreferences.getValue(
-				"order-by-col", "modified-date");
+				"order-by-col", "create-date");
 		}
 		else {
 			boolean saveOrderBy = ParamUtil.getBoolean(_request, "saveOrderBy");
@@ -248,12 +249,32 @@ public class SiteNavigationAdminDisplayContext {
 					scopeGroupId);
 		}
 
-		_searchContainer.setResults(menus);
-		_searchContainer.setTotal(menusCount);
+		searchContainer.setResults(menus);
+		searchContainer.setTotal(menusCount);
 
 		_searchContainer = searchContainer;
 
 		return _searchContainer;
+	}
+
+	public SiteNavigationMenu getSiteNavigationMenu() throws PortalException {
+		if (getSiteNavigationMenuId() == 0) {
+			return null;
+		}
+
+		return SiteNavigationMenuServiceUtil.fetchSiteNavigationMenu(
+			getSiteNavigationMenuId());
+	}
+
+	public long getSiteNavigationMenuId() {
+		if (_siteNavigationMenuId != null) {
+			return _siteNavigationMenuId;
+		}
+
+		_siteNavigationMenuId = ParamUtil.getLong(
+			_request, "siteNavigationMenuId");
+
+		return _siteNavigationMenuId;
 	}
 
 	public boolean isShowAddButton() {
@@ -283,5 +304,7 @@ public class SiteNavigationAdminDisplayContext {
 	private final PortletPreferences _portletPreferences;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
+	private SiteNavigationMenu _siteNavigationMenu;
+	private Long _siteNavigationMenuId;
 
 }
