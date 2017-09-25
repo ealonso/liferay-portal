@@ -15,6 +15,7 @@
 package com.liferay.trash.test.util;
 
 import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portal.kernel.model.ClassedModel;
 
 /**
@@ -22,8 +23,22 @@ import com.liferay.portal.kernel.model.ClassedModel;
  */
 public interface WhenIsAssetable {
 
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
+	/**
+	 * @deprecated As of 1.1.0, replaced by {@link #fetchEntry(ClassedModel)}
+	 */
+	@Deprecated
+	public com.liferay.asset.kernel.model.AssetEntry fetchAssetEntry(
+			ClassedModel classedModel)
 		throws Exception;
+
+	public default AssetEntry fetchEntry(ClassedModel classedModel)
+		throws Exception {
+
+		Class<?> modelClass = classedModel.getModelClass();
+
+		return AssetEntryLocalServiceUtil.fetchEntry(
+			modelClass.getName(), (Long)classedModel.getPrimaryKeyObj());
+	}
 
 	public boolean isAssetEntryVisible(ClassedModel classedModel, long classPK)
 		throws Exception;
