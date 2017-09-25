@@ -14,8 +14,8 @@
 
 package com.liferay.asset.test.util;
 
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;

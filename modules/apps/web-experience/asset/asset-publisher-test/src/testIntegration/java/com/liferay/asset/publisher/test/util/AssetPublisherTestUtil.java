@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.test.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 
 /**
  * Provides a utility method to convert an asset entry to XML format so it can
