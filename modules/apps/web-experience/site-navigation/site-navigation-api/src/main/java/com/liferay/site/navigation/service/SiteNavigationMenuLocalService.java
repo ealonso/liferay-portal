@@ -221,6 +221,15 @@ public interface SiteNavigationMenuLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SiteNavigationMenu> getSiteNavigationMenus(long groupId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SiteNavigationMenu> getSiteNavigationMenus(long groupId,
+		int start, int end, OrderByComparator orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SiteNavigationMenu> getSiteNavigationMenus(long groupId,
+		java.lang.String keywords, int start, int end,
+		OrderByComparator orderByComparator);
+
 	/**
 	* Returns the number of site navigation menus.
 	*
@@ -228,6 +237,13 @@ public interface SiteNavigationMenuLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getSiteNavigationMenusCount();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getSiteNavigationMenusCount(long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getSiteNavigationMenusCount(long groupId,
+		java.lang.String keywords);
 
 	/**
 	* Updates the site navigation menu in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.

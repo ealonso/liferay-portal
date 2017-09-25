@@ -67,6 +67,34 @@ public class SiteNavigationMenuServiceWrapper
 	}
 
 	@Override
+	public java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return _siteNavigationMenuService.getSiteNavigationMenus(groupId,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.site.navigation.model.SiteNavigationMenu> getSiteNavigationMenus(
+		long groupId, java.lang.String keywords, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator) {
+		return _siteNavigationMenuService.getSiteNavigationMenus(groupId,
+			keywords, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getSiteNavigationMenusCount(long groupId) {
+		return _siteNavigationMenuService.getSiteNavigationMenusCount(groupId);
+	}
+
+	@Override
+	public int getSiteNavigationMenusCount(long groupId,
+		java.lang.String keywords) {
+		return _siteNavigationMenuService.getSiteNavigationMenusCount(groupId,
+			keywords);
+	}
+
+	@Override
 	public SiteNavigationMenuService getWrappedService() {
 		return _siteNavigationMenuService;
 	}
