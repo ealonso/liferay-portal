@@ -15,6 +15,7 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portletdisplaytemplate.PortletDisplayTemplateManagerUtil;
 import com.liferay.portal.kernel.servlet.taglib.ui.LanguageEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -180,14 +181,14 @@ public class LanguageTag extends IncludeTag {
 			currentLocale = themeDisplay.getLocale();
 		}
 
-		String currentHTMLTitle =
-			themeDisplay.getLayout().getHTMLTitle(currentLocale);
+		Layout layout = themeDisplay.getLayout();
+
+		String currentHTMLTitle = layout.getHTMLTitle(currentLocale);
 
 		for (Locale locale : locales) {
 			boolean disabled = false;
 			String url = null;
-			String localizedHTMLTitle =
-				themeDisplay.getLayout().getHTMLTitle(locale);
+			String localizedHTMLTitle = layout.getHTMLTitle(locale);
 			String localizedFormAction = formAction;
 
 			if (!currentHTMLTitle.equals(localizedHTMLTitle)) {
