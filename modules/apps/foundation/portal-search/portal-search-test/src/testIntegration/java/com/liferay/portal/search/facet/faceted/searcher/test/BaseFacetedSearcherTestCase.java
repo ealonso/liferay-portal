@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.facet.faceted.searcher.test;
 
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
