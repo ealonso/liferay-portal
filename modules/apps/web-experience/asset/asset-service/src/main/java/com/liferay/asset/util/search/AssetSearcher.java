@@ -14,10 +14,10 @@
 
 package com.liferay.asset.util.search;
 
+import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
-import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.search.BaseSearcher;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
@@ -94,7 +94,7 @@ public class AssetSearcher extends BaseSearcher {
 			return;
 		}
 
-		long[] filteredAllCategoryIds = AssetUtil.filterCategoryIds(
+		long[] filteredAllCategoryIds = AssetServiceUtil.filterCategoryIds(
 			permissionChecker, allCategoryIds);
 
 		if (allCategoryIds.length != filteredAllCategoryIds.length) {
@@ -181,7 +181,7 @@ public class AssetSearcher extends BaseSearcher {
 			return;
 		}
 
-		long[] filteredAnyCategoryIds = AssetUtil.filterCategoryIds(
+		long[] filteredAnyCategoryIds = AssetServiceUtil.filterCategoryIds(
 			permissionChecker, anyCategoryIds);
 
 		if (filteredAnyCategoryIds.length == 0) {

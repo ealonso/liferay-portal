@@ -14,13 +14,13 @@
 
 package com.liferay.asset.service.impl;
 
+import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.model.AssetCategoryConstants;
 import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.model.AssetVocabularyDisplay;
 import com.liferay.asset.service.base.AssetVocabularyServiceBaseImpl;
 import com.liferay.asset.service.permission.AssetCategoriesPermission;
 import com.liferay.asset.service.permission.AssetVocabularyPermission;
-import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -177,7 +177,7 @@ public class AssetVocabularyServiceImpl extends AssetVocabularyServiceBaseImpl {
 
 		return ModelAdapterUtil.adapt(
 			AssetVocabulary.class,
-			AssetUtil.filterVocabularies(
+			AssetServiceUtil.filterVocabularies(
 				ModelAdapterUtil.adapt(
 					com.liferay.asset.kernel.model.AssetVocabulary.class,
 					vocabularies),

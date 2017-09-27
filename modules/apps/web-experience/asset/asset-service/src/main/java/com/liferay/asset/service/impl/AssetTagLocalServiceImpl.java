@@ -16,6 +16,7 @@ package com.liferay.asset.service.impl;
 
 import com.liferay.asset.exception.AssetTagException;
 import com.liferay.asset.exception.DuplicateTagException;
+import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.service.base.AssetTagLocalServiceBaseImpl;
@@ -824,7 +825,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 	}
 
 	protected void validate(String name) throws PortalException {
-		if (!AssetUtil.isValidWord(name)) {
+		if (!AssetServiceUtil.isValidWord(name)) {
 			throw new AssetTagException(
 				StringUtil.merge(
 					AssetUtil.INVALID_CHARACTERS, StringPool.SPACE),

@@ -16,10 +16,10 @@ package com.liferay.asset.service.impl;
 
 import com.liferay.asset.exception.DuplicateVocabularyException;
 import com.liferay.asset.exception.VocabularyNameException;
+import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.model.AssetCategoryConstants;
 import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.service.base.AssetVocabularyLocalServiceBaseImpl;
-import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -274,7 +274,7 @@ public class AssetVocabularyLocalServiceImpl
 
 		return ModelAdapterUtil.adapt(
 			AssetVocabulary.class,
-			AssetUtil.filterVocabularies(
+			AssetServiceUtil.filterVocabularies(
 				ModelAdapterUtil.adapt(
 					com.liferay.asset.kernel.model.AssetVocabulary.class,
 					vocabularies),

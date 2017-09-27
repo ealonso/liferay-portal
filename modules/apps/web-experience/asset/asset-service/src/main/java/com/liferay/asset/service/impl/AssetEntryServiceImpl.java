@@ -14,13 +14,13 @@
 
 package com.liferay.asset.service.impl;
 
+import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.service.base.AssetEntryServiceBaseImpl;
 import com.liferay.asset.service.permission.AssetEntryPermission;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
-import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.cache.thread.local.Lifecycle;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCache;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCacheManager;
@@ -245,11 +245,11 @@ public class AssetEntryServiceImpl extends AssetEntryServiceBaseImpl {
 		AssetEntryQuery filteredEntryQuery = new AssetEntryQuery(entryQuery);
 
 		filteredEntryQuery.setAllCategoryIds(
-			AssetUtil.filterCategoryIds(
+			AssetServiceUtil.filterCategoryIds(
 				getPermissionChecker(), entryQuery.getAllCategoryIds()));
 		filteredEntryQuery.setAllTagIdsArray(entryQuery.getAllTagIdsArray());
 		filteredEntryQuery.setAnyCategoryIds(
-			AssetUtil.filterCategoryIds(
+			AssetServiceUtil.filterCategoryIds(
 				getPermissionChecker(), entryQuery.getAnyCategoryIds()));
 		filteredEntryQuery.setAnyTagIds(entryQuery.getAnyTagIds());
 
