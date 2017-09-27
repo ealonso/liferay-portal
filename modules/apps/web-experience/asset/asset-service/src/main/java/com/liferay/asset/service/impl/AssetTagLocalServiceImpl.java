@@ -20,8 +20,8 @@ import com.liferay.asset.internal.util.AssetServiceUtil;
 import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.service.base.AssetTagLocalServiceBaseImpl;
+import com.liferay.asset.util.AssetHelper;
 import com.liferay.asset.util.comparator.AssetTagNameComparator;
-import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -828,7 +828,7 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 		if (!AssetServiceUtil.isValidWord(name)) {
 			throw new AssetTagException(
 				StringUtil.merge(
-					AssetUtil.INVALID_CHARACTERS, StringPool.SPACE),
+					AssetHelper.INVALID_CHARACTERS, StringPool.SPACE),
 				AssetTagException.INVALID_CHARACTER);
 		}
 	}

@@ -22,8 +22,7 @@ import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.service.AssetTagLocalServiceUtil;
 import com.liferay.asset.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
-import com.liferay.asset.util.impl.AssetUtil;
-import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
+import com.liferay.asset.util.AssetHelper;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Group;
@@ -49,6 +48,9 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.text.DateFormat;
 
@@ -64,8 +66,10 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -82,6 +86,20 @@ public abstract class BaseAssetSearchTestCase {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(AssetHelper.class);
+
+		_serviceTracker.open();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		_serviceTracker.close();
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -1280,16 +1298,11 @@ public abstract class BaseAssetSearchTestCase {
 			AssetEntryQuery assetEntryQuery, SearchContext searchContext)
 		throws Exception {
 
-		Hits results = AssetUtil.search(
-			searchContext,
-			ModelAdapterUtil.adapt(
-				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
-					class,
-				assetEntryQuery),
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		Hits results = assetHelper.search(
+			searchContext, assetEntryQuery, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 
-		return ModelAdapterUtil.adapt(
-			AssetEntry.class, AssetUtil.getAssetEntries(results));
+		return assetHelper.getAssetEntries(results);
 	}
 
 	protected int searchCount(
@@ -1297,13 +1310,8 @@ public abstract class BaseAssetSearchTestCase {
 			int start, int end)
 		throws Exception {
 
-		Hits results = AssetUtil.search(
-			searchContext,
-			ModelAdapterUtil.adapt(
-				com.liferay.asset.kernel.service.persistence.AssetEntryQuery.
-					class,
-				assetEntryQuery),
-			start, end);
+		Hits results = assetHelper.search(
+			searchContext, assetEntryQuery, start, end);
 
 		return results.getLength();
 	}
@@ -1543,6 +1551,10 @@ public abstract class BaseAssetSearchTestCase {
 
 		assertCount(size, assetEntryQuery, searchContext, 0, 1);
 	}
+
+	protected AssetHelper assetHelper;
+
+	private static ServiceTracker<AssetHelper, AssetHelper> _serviceTracker;
 
 	private long[] _assetCategoryIds1;
 	private long[] _assetCategoryIds2;
