@@ -20,9 +20,8 @@ import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.test.util.AssetTestUtil;
-import com.liferay.asset.util.impl.AssetUtil;
+import com.liferay.asset.util.AssetHelper;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
-import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -39,6 +38,9 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.registry.Registry;
+import com.liferay.registry.RegistryUtil;
+import com.liferay.registry.ServiceTracker;
 
 import java.io.Serializable;
 
@@ -46,8 +48,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -66,6 +70,20 @@ public class AssetUtilTest {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		Registry registry = RegistryUtil.getRegistry();
+
+		_serviceTracker = registry.trackServices(AssetHelper.class);
+
+		_serviceTracker.open();
+	}
+
+	@AfterClass
+	public static void tearDownClass() {
+		_serviceTracker.close();
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -122,19 +140,19 @@ public class AssetUtilTest {
 		throws Exception {
 
 		BaseModelSearchResult baseModelSearchResult =
-			AssetUtil.searchAssetEntries(
-				ModelAdapterUtil.adapt(
-					com.liferay.asset.kernel.service.persistence.
-						AssetEntryQuery.class,
-					assetEntryQuery),
-				assetCategoryIds, assetTagNames, attributes, companyId,
-				keywords, layout, locale, scopeGroupId, timezone, userId,
-				QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			assetHelper.searchAssetEntries(
+				assetEntryQuery, assetCategoryIds, assetTagNames, attributes,
+				companyId, keywords, layout, locale, scopeGroupId, timezone,
+				userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		Assert.assertEquals(
 			baseModelSearchResult.toString(), expectedCount,
 			baseModelSearchResult.getLength());
 	}
+
+	protected AssetHelper assetHelper;
+
+	private static ServiceTracker<AssetHelper, AssetHelper> _serviceTracker;
 
 	private AssetCategory _assetCategory;
 	private AssetTag _assetTag;
