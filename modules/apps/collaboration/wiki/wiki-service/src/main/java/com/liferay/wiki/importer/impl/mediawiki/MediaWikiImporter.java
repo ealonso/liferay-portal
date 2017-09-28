@@ -321,7 +321,7 @@ public class MediaWikiImporter implements WikiImporter {
 	}
 
 	protected String normalize(String categoryName, int length) {
-		categoryName = toWord(categoryName.trim());
+		categoryName = _toWord(categoryName.trim());
 
 		return StringUtil.shorten(categoryName, length);
 	}
@@ -730,7 +730,21 @@ public class MediaWikiImporter implements WikiImporter {
 		_wikiPageTitleValidator = wikiPageTitleValidator;
 	}
 
-	protected String toWord(String text) {
+	protected String translateMediaWikiImagePaths(String content) {
+		return content.replaceAll(
+			_imagesPattern.pattern(),
+			"$1$2" + SHARED_IMAGES_TITLE + StringPool.SLASH + "$3$4");
+	}
+
+	protected String translateMediaWikiToCreole(
+		String content, boolean strictImportMode) {
+
+		_translator.setStrictImportMode(strictImportMode);
+
+		return _translator.translate(content);
+	}
+
+	private String _toWord(String text) {
 		if (Validator.isNull(text)) {
 			return text;
 		}
@@ -750,20 +764,6 @@ public class MediaWikiImporter implements WikiImporter {
 		}
 
 		return new String(textCharArray);
-	}
-
-	protected String translateMediaWikiImagePaths(String content) {
-		return content.replaceAll(
-			_imagesPattern.pattern(),
-			"$1$2" + SHARED_IMAGES_TITLE + StringPool.SLASH + "$3$4");
-	}
-
-	protected String translateMediaWikiToCreole(
-		String content, boolean strictImportMode) {
-
-		_translator.setStrictImportMode(strictImportMode);
-
-		return _translator.translate(content);
 	}
 
 	private static final String _WORK_IN_PROGRESS = "{{Work in progress}}";
