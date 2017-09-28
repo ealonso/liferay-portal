@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see AssetEntryService
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetEntryServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetEntryServiceWrapper implements AssetEntryService,
 	ServiceWrapper<AssetEntryService> {

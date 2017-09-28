@@ -36,8 +36,11 @@ import java.util.List;
  * @author Brian Wing Shun Chan
  * @see AssetCategoryPropertyPersistence
  * @see com.liferay.portlet.asset.service.persistence.impl.AssetCategoryPropertyPersistenceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.categories.model.impl.AssetCategoryPropertyImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetCategoryPropertyUtil {
 	/*

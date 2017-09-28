@@ -18,8 +18,11 @@ import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+           com.liferay.asset.service.persistence.impl.AssetEntryFinderImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetEntryFinder {
 	public int countEntries(AssetEntryQuery entryQuery);

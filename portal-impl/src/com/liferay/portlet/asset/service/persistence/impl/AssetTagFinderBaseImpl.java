@@ -31,8 +31,11 @@ import java.util.Set;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.service.persistence.impl.AssetTagFinderImpl}
  * @generated
  */
+@Deprecated
 public class AssetTagFinderBaseImpl extends BasePersistenceImpl<AssetTag> {
 	public AssetTagFinderBaseImpl() {
 		setModelClass(AssetTag.class);

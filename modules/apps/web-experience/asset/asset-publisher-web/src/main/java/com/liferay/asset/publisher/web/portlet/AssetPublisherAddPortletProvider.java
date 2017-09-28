@@ -40,7 +40,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.asset.kernel.model.AssetEntry"},
+	property = {
+		"model.class.name=com.liferay.asset.kernel.model.AssetEntry",
+		"model.class.name=com.liferay.asset.model.AssetEntry"
+	},
 	service = {AddPortletProvider.class, ViewPortletProvider.class}
 )
 public class AssetPublisherAddPortletProvider

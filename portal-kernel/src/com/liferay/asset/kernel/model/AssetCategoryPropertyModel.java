@@ -40,8 +40,11 @@ import java.util.Date;
  * @see AssetCategoryProperty
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryPropertyImpl
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryPropertyModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.model.impl.AssetCategoryPropertyImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetCategoryPropertyModel extends AuditedModel,
 	BaseModel<AssetCategoryProperty>, ShardedModel {
