@@ -507,7 +507,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		trashHandler.deleteTrashEntry(getTrashEntryClassPK(baseModel));
 
-		Assert.assertNull(whenIsAssetableBaseModel.fetchAssetEntry(baseModel));
+		Assert.assertNull(whenIsAssetableBaseModel.fetchEntry(baseModel));
 	}
 
 	@Test
@@ -608,7 +608,7 @@ public abstract class BaseTrashHandlerTestCase {
 
 		trashHandler.deleteTrashEntry(getTrashEntryClassPK(baseModel));
 
-		Assert.assertNull(whenIsAssetableBaseModel.fetchAssetEntry(baseModel));
+		Assert.assertNull(whenIsAssetableBaseModel.fetchEntry(baseModel));
 	}
 
 	@Test
@@ -2474,7 +2474,7 @@ public abstract class BaseTrashHandlerTestCase {
 		WhenIsAssetableBaseModel whenIsAssetableBaseModel =
 			(WhenIsAssetableBaseModel)this;
 
-		Assert.assertNull(whenIsAssetableBaseModel.fetchAssetEntry(baseModel));
+		Assert.assertNull(whenIsAssetableBaseModel.fetchEntry(baseModel));
 	}
 
 	@Test
