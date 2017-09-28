@@ -660,6 +660,12 @@ public class AssetTagLocalServiceWrapper implements AssetTagLocalService,
 		return _assetTagLocalService.getTagIds(groupIds, names);
 	}
 
+	/**
+	* Returns the primary keys of the asset tags with the names.
+	*
+	* @param name the name of the asset tags
+	* @return the primary keys of the asset tags with the names
+	*/
 	@Override
 	public long[] getTagIds(java.lang.String name) {
 		return _assetTagLocalService.getTagIds(name);
