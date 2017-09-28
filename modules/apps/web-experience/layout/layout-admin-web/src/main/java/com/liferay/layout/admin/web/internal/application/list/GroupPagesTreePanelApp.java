@@ -14,16 +14,18 @@
 
 package com.liferay.layout.admin.web.internal.application.list;
 
-import com.liferay.application.list.BasePanelApp;
+import com.liferay.application.list.BaseJSPPanelApp;
 import com.liferay.application.list.PanelApp;
+import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Portlet;
 
-import javax.portlet.PortletURL;
+import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,7 +41,12 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = PanelApp.class
 )
-public class GroupPagesPanelApp extends BasePanelApp {
+public class GroupPagesTreePanelApp extends BaseJSPPanelApp {
+
+	@Override
+	public String getJspPath() {
+		return "/panel/app/layouts_tree.jsp";
+	}
 
 	@Override
 	public String getPortletId() {
@@ -47,14 +54,14 @@ public class GroupPagesPanelApp extends BasePanelApp {
 	}
 
 	@Override
-	public PortletURL getPortletURL(HttpServletRequest request)
-		throws PortalException {
+	public boolean include(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException {
 
-		PortletURL portletURL = super.getPortletURL(request);
+		request.setAttribute(
+			ApplicationListWebKeys.GROUP_PROVIDER, groupProvider);
 
-		portletURL.setParameter("millerColumns", "true");
-
-		return portletURL;
+		return super.include(request, response);
 	}
 
 	@Override
@@ -64,6 +71,15 @@ public class GroupPagesPanelApp extends BasePanelApp {
 	)
 	public void setPortlet(Portlet portlet) {
 		super.setPortlet(portlet);
+	}
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.layout.admin.web)",
+		unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
 	}
 
 }

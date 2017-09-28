@@ -1,0 +1,123 @@
+{namespace PageListColumn}
+
+/**
+ * PageListColumn
+ */
+{template .render}
+	{@param layouts: list<?>}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
+
+	<div class="bg-light border col-11 col-md-6 col-lg-4 list-group p-0 page-list-block">
+		{foreach $layout in $layouts}
+			{call .pageListColumnItem}
+				{param actions: $layout.actions /}
+				{param active: $layout.active /}
+				{param hasChild: $layout.hasChild /}
+				{param layoutId: $layout.layoutId /}
+				{param pathThemeImages: $pathThemeImages /}
+				{param portletNamespace: $portletNamespace /}
+				{param portletURL: $portletURL /}
+				{param selected: $layout.selected /}
+				{param title: $layout.title /}
+			{/call}
+		{/foreach}
+	</div>
+{/template}
+
+/**
+ * Lexicon icon
+ */
+{template .lexiconIcon}
+	{@param name: string}
+	{@param pathThemeImages: string}
+
+	<svg aria-hidden="true" class="lexicon-icon lexicon-icon-{$name}">
+		<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#{$name}" />
+	</svg>
+{/template}
+
+/**
+ * Renders a Lexicon Horizontal Card
+ */
+{template .pageListColumnItem}
+	{@param actions: map<string, ?>}
+	{@param active: bool}
+	{@param hasChild: bool}
+	{@param layoutId: string}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
+	{@param selected: bool}
+	{@param title: string}
+
+	{let $listGroupItemClasses kind="text"}
+		list-group-item
+		{sp}list-group-item-flex
+		{sp}page-list-group-item
+
+		{if $selected or $active}
+			{sp}active
+		{/if}
+	{/let}
+
+	<span class="{$listGroupItemClasses}">
+		<div class="flex-col">
+			<input name="{$portletNamespace}rowIds" type="checkbox" value="{$layoutId}"/>
+		</div>
+
+		<div class="flex-col flex-col-expand">
+			<h4 class="list-group-title text-truncate">
+				{$title}
+			</h4>
+		</div>
+
+		{if $actions['add']}
+			<div class="flex-col page-list-group-item-add-button">
+				<a href="{$actions['add'].url}">
+					{call .lexiconIcon}
+						{param name: 'plus' /}
+						{param pathThemeImages: $pathThemeImages /}
+					{/call}
+				</a>
+			</div>
+		{/if}
+
+		<div class="dropdown dropdown-action flex-col">
+			<a
+				aria-expanded="false"
+				aria-haspopup="true"
+				class="dropdown-toggle p-0 text-primary"
+				data-toggle="dropdown"
+				href="javascript:;"
+				role="button"
+			>
+				{call .lexiconIcon}
+					{param name: 'ellipsis-v' /}
+					{param pathThemeImages: $pathThemeImages /}
+				{/call}
+			</a>
+			<div aria-labelledby="" class="dropdown-menu">
+				{foreach $action in keys($actions)}
+					{if $action != 'add'}
+						<a class="dropdown-item" href="{$actions[$action].url}">
+							{$actions[$action].label}
+						</a>
+					{/if}
+				{/foreach}
+			</div>
+		</div>
+
+		{if $hasChild}
+			<div class="flex-col p-0">
+				<a href="{$portletURL}&{$portletNamespace}selectedLayoutId={$layoutId}">
+					{call .lexiconIcon}
+						{param name: 'angle-right' /}
+						{param pathThemeImages: $pathThemeImages /}
+					{/call}
+				</a>
+			</div>
+		{/if}
+	</span>
+{/template}

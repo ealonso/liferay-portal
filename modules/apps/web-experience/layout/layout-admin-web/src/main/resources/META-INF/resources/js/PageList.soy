@@ -1,0 +1,30 @@
+{namespace PageList}
+
+/**
+ * PageList
+ */
+{template .render}
+	{@param layoutBlocks: list<?>}
+	{@param pathThemeImages: string}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
+
+	<div class="container-fluid-1280" ref="pageList">
+		{call PageListBreadcrumbs.render}
+			{param layoutBlocks: $layoutBlocks /}
+			{param portletNamespace: $portletNamespace /}
+			{param portletURL: $portletURL /}
+		{/call}
+
+		<div class="bg-light page-list row" ref="pageListColumns">
+			{foreach $layoutBlock in $layoutBlocks}
+				{call PageListColumn.render}
+					{param layouts: $layoutBlock /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param portletNamespace: $portletNamespace /}
+					{param portletURL: $portletURL /}
+				{/call}
+			{/foreach}
+		</div>
+	</div>
+{/template}

@@ -28,15 +28,22 @@ String targetNode = null;
 
 <%@ include file="/layout_exception.jspf" %>
 
-<div class="container-fluid-1280">
-	<div class="lfr-app-column-view manage-view">
-		<c:choose>
-			<c:when test="<%= layoutsAdminDisplayContext.getSelPlid() > 0 %>">
-				<liferay-util:include page="/edit_layout.jsp" servletContext="<%= application %>" />
-			</c:when>
-			<c:otherwise>
-				<liferay-util:include page="/edit_layout_set.jsp" servletContext="<%= application %>" />
-			</c:otherwise>
-		</c:choose>
-	</div>
-</div>
+<c:choose>
+	<c:when test="<%= layoutsAdminDisplayContext.isMillerColumnsEnabled() %>">
+		<%@ include file="/view_miller_columns.jsp" %>
+	</c:when>
+	<c:otherwise>
+		<div class="container-fluid-1280">
+			<div class="lfr-app-column-view manage-view">
+				<c:choose>
+					<c:when test="<%= layoutsAdminDisplayContext.getSelPlid() > 0 %>">
+						<liferay-util:include page="/edit_layout.jsp" servletContext="<%= application %>" />
+					</c:when>
+					<c:otherwise>
+						<liferay-util:include page="/edit_layout_set.jsp" servletContext="<%= application %>" />
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</div>
+	</c:otherwise>
+</c:choose>

@@ -1,0 +1,22 @@
+.page-list {
+	display: block;
+	height: 60vh;
+	overflow-x: auto;
+	overflow-y: hidden;
+	white-space: nowrap;
+}
+
+.page-list-block {
+	display: inline-block;
+	height: 100%;
+	overflow-x: visible;
+	overflow-y: auto;
+}
+
+.page-list-group-item-add-button {
+	visibility: hidden;
+}
+
+.page-list-group-item:hover .page-list-group-item-add-button {
+	visibility: visible;
+}

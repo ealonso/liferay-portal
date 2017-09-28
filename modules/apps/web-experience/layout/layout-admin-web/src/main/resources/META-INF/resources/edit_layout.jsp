@@ -31,6 +31,8 @@ Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
 PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 
+String redirect = ParamUtil.getString(request, "redirect", redirectURL.toString());
+
 long refererPlid = ParamUtil.getLong(request, "refererPlid", LayoutConstants.DEFAULT_PLID);
 
 Set<Long> parentPlids = new HashSet<Long>();
@@ -88,7 +90,7 @@ renderResponse.setTitle(selLayout.getName(locale));
 
 			<portlet:actionURL name="enableLayout" var="enableLayoutURL">
 				<portlet:param name="mvcPath" value="/view.jsp" />
-				<portlet:param name="redirect" value="<%= redirectURL.toString() %>" />
+				<portlet:param name="redirect" value="<%= redirect %>" />
 				<portlet:param name="incompleteLayoutRevisionId" value="<%= String.valueOf(layoutRevision.getLayoutRevisionId()) %>" />
 			</portlet:actionURL>
 
@@ -105,7 +107,7 @@ renderResponse.setTitle(selLayout.getName(locale));
 
 			<portlet:actionURL name="deleteLayout" var="deleteLayoutURL">
 				<portlet:param name="mvcPath" value="/view.jsp" />
-				<portlet:param name="redirect" value='<%= HttpUtil.addParameter(redirectURL.toString(), liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>' />
+				<portlet:param name="redirect" value='<%= HttpUtil.addParameter(redirect, liferayPortletResponse.getNamespace() + "selPlid", selLayout.getParentPlid()) %>' />
 				<portlet:param name="selPlid" value="<%= String.valueOf(layoutsAdminDisplayContext.getSelPlid()) %>" />
 				<portlet:param name="layoutSetBranchId" value="0" />
 				<portlet:param name="selPlid" value="<%= String.valueOf(selLayout.getParentPlid()) %>" />
@@ -130,6 +132,7 @@ renderResponse.setTitle(selLayout.getName(locale));
 			<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 			<aui:input name="groupId" type="hidden" value="<%= layoutsAdminDisplayContext.getGroupId() %>" />
 			<aui:input name="liveGroupId" type="hidden" value="<%= layoutsAdminDisplayContext.getLiveGroupId() %>" />
+			<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 			<aui:input name="stagingGroupId" type="hidden" value="<%= layoutsAdminDisplayContext.getStagingGroupId() %>" />
 			<aui:input name="selPlid" type="hidden" value="<%= layoutsAdminDisplayContext.getSelPlid() %>" />
 			<aui:input name="privateLayout" type="hidden" value="<%= layoutsAdminDisplayContext.isPrivateLayout() %>" />
