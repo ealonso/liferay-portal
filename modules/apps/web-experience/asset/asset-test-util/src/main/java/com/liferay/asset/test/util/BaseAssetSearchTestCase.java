@@ -103,6 +103,8 @@ public abstract class BaseAssetSearchTestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		assetHelper = _serviceTracker.getService();
+
 		_group1 = GroupTestUtil.addGroup();
 
 		ServiceContext serviceContext =
