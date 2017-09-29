@@ -26,19 +26,24 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
+page import="com.liferay.portal.kernel.model.LayoutConstants" %><%@
+page import="com.liferay.portal.kernel.model.LayoutTypeController" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.ResourceBundleUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.portal.util.LayoutTypeControllerTracker" %><%@
 page import="com.liferay.site.navigation.admin.web.internal.display.context.SiteNavigationAdminDisplayContext" %><%@
 page import="com.liferay.site.navigation.model.SiteNavigationMenu" %><%@
 page import="com.liferay.site.navigation.service.permission.SiteNavigationMenuPermission" %><%@
 page import="com.liferay.site.navigation.type.SiteNavigationMenuItemType" %><%@
 page import="com.liferay.site.navigation.type.SiteNavigationMenuItemTypeRegistry" %>
 
-<%@ page import="java.util.Date" %>
+<%@ page import="java.util.Date" %><%@
+page import="java.util.ResourceBundle" %>
 
 <%@ page import="javax.portlet.PortletURL" %>
 
