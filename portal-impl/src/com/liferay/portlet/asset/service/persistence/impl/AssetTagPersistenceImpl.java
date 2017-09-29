@@ -6615,8 +6615,6 @@ public class AssetTagPersistenceImpl extends BasePersistenceImpl<AssetTag>
 	 * Initializes the asset tag persistence.
 	 */
 	public void afterPropertiesSet() {
-		assetTagToAssetEntryTableMapper = TableMapperFactory.getTableMapper("AssetEntries_AssetTags",
-				"companyId", "tagId", "entryId", this, assetEntryPersistence);
 	}
 
 	public void destroy() {
