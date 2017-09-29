@@ -63,8 +63,11 @@ import javax.sql.DataSource;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl
  * @see com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetLinkLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public abstract class AssetLinkLocalServiceBaseImpl extends BaseLocalServiceImpl
 	implements AssetLinkLocalService, IdentifiableOSGiService {

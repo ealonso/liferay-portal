@@ -1911,11 +1911,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 
 		announcementsDeliveryLocalService.deleteDeliveries(user.getUserId());
 
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			User.class.getName(), user.getUserId());
-
 		// Document library
 
 		dlFileRankLocalService.deleteFileRanksByUserId(user.getUserId());
@@ -4221,6 +4216,12 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			long userId, User user, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
+
+		if (ArrayUtil.isEmpty(assetCategoryIds) &&
+			ArrayUtil.isEmpty(assetTagNames)) {
+
+			return;
+		}
 
 		User owner = userPersistence.findByPrimaryKey(userId);
 

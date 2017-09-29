@@ -51,7 +51,10 @@ import java.util.List;
  * @author Brian Wing Shun Chan
  * @author Jorge Ferrer
  * @author Shuyang Zhou
+ * @deprecated As of 7.0.0, replaced by {@link
+ *            com.liferay.asset.service.persistence.impl.AssetEntryFinderImpl}
  */
+@Deprecated
 public class AssetEntryFinderImpl
 	extends AssetEntryFinderBaseImpl implements AssetEntryFinder {
 
@@ -93,6 +96,10 @@ public class AssetEntryFinderImpl
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public List<AssetEntry> findByDLFileEntryC_T(
 		long classNameId, String treePath) {
@@ -131,6 +138,10 @@ public class AssetEntryFinderImpl
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public List<AssetEntry> findByDLFolderC_T(
 		long classNameId, String treePath) {

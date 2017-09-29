@@ -28,8 +28,11 @@ import com.liferay.portal.kernel.util.Accessor;
  * @see AssetCategoryModel
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryImpl
  * @see com.liferay.portlet.asset.model.impl.AssetCategoryModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetCategoryImpl}
  * @generated
  */
+@Deprecated
 @ImplementationClassName("com.liferay.portlet.asset.model.impl.AssetCategoryImpl")
 @ProviderType
 public interface AssetCategory extends AssetCategoryModel,

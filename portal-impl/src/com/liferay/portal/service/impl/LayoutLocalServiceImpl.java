@@ -486,11 +486,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		portletPreferencesLocalService.deletePortletPreferencesByPlid(
 			layout.getPlid());
 
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			Layout.class.getName(), layout.getPlid());
-
 		// Ratings
 
 		ratingsStatsLocalService.deleteStats(
@@ -2341,6 +2336,12 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long userId, Layout layout, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
+
+		if (ArrayUtil.isEmpty(assetCategoryIds) &&
+			ArrayUtil.isEmpty(assetTagNames)) {
+
+			return;
+		}
 
 		assetEntryLocalService.updateEntry(
 			userId, layout.getGroupId(), layout.getCreateDate(),

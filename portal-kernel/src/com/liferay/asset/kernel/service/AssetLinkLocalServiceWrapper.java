@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see AssetLinkLocalService
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkLocalServiceWrapper implements AssetLinkLocalService,
 	ServiceWrapper<AssetLinkLocalService> {

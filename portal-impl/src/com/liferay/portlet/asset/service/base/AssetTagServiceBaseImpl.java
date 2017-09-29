@@ -49,8 +49,11 @@ import javax.sql.DataSource;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.impl.AssetTagServiceImpl
  * @see com.liferay.asset.kernel.service.AssetTagServiceUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  * @generated
  */
+@Deprecated
 public abstract class AssetTagServiceBaseImpl extends BaseServiceImpl
 	implements AssetTagService, IdentifiableOSGiService {
 	/*

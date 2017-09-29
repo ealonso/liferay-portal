@@ -44,8 +44,11 @@ import java.util.Map;
  * @see AssetVocabulary
  * @see com.liferay.portlet.asset.model.impl.AssetVocabularyImpl
  * @see com.liferay.portlet.asset.model.impl.AssetVocabularyModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetVocabularyImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetVocabularyModel extends BaseModel<AssetVocabulary>,
 	LocalizedModel, ShardedModel, StagedGroupedModel {
