@@ -14,13 +14,13 @@
 
 package com.liferay.asset.categories.internal.validator;
 
+import com.liferay.asset.exception.AssetCategoryException;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.asset.kernel.validator.AssetEntryValidator;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.service.AssetVocabularyLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
