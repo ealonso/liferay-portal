@@ -120,6 +120,44 @@ public class AssetEntryQuery {
 	}
 
 	public AssetEntryQuery(
+		com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+			assetEntryQuery) {
+
+		setAllCategoryIds(assetEntryQuery.getAllCategoryIds());
+		setAllTagIdsArray(assetEntryQuery.getAllTagIdsArray());
+		setAndOperator(assetEntryQuery.isAndOperator());
+		setAnyCategoryIds(assetEntryQuery.getAnyCategoryIds());
+		setAnyTagIds(assetEntryQuery.getAnyTagIds());
+		setAttributes(assetEntryQuery.getAttributes());
+		setClassNameIds(assetEntryQuery.getClassNameIds());
+		setClassTypeIds(assetEntryQuery.getClassTypeIds());
+		setDescription(assetEntryQuery.getDescription());
+		setEnablePermissions(assetEntryQuery.isEnablePermissions());
+		setEnd(assetEntryQuery.getEnd());
+		setExcludeZeroViewCount(assetEntryQuery.isExcludeZeroViewCount());
+		setExpirationDate(assetEntryQuery.getExpirationDate());
+		setGroupIds(assetEntryQuery.getGroupIds());
+		setKeywords(assetEntryQuery.getKeywords());
+		setLayout(assetEntryQuery.getLayout());
+		setLinkedAssetEntryId(assetEntryQuery.getLinkedAssetEntryId());
+		setListable(assetEntryQuery.isListable());
+		setNotAllCategoryIds(assetEntryQuery.getNotAllCategoryIds());
+		setNotAllTagIdsArray(assetEntryQuery.getNotAllTagIdsArray());
+		setNotAnyCategoryIds(assetEntryQuery.getNotAnyCategoryIds());
+		setNotAnyTagIds(assetEntryQuery.getNotAnyTagIds());
+		setOrderByCol1(assetEntryQuery.getOrderByCol1());
+		setOrderByCol2(assetEntryQuery.getOrderByCol2());
+		setOrderByType1(assetEntryQuery.getOrderByType1());
+		setOrderByType2(assetEntryQuery.getOrderByType2());
+		setPaginationType(assetEntryQuery.getPaginationType());
+		setPublishDate(assetEntryQuery.getPublishDate());
+		setStart(assetEntryQuery.getStart());
+		setTitle(assetEntryQuery.getTitle());
+		setUserName(assetEntryQuery.getUserName());
+		setVisible(assetEntryQuery.isVisible());
+	}
+
+	public AssetEntryQuery(
 		long[] classNameIds, SearchContainer<?> searchContainer) {
 
 		this();
