@@ -317,6 +317,16 @@ public class LayoutPageTemplateDisplayContext {
 		return new String[] {"create-date", "name"};
 	}
 
+	public boolean isDisabledLayoutPageTemplateEntriesManagementBar()
+		throws PortalException {
+
+		if (_hasLayoutPageTemplateEntriesResults()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public boolean isDisabledLayoutPageTemplateCollectionsManagementBar()
 		throws PortalException {
 
@@ -365,6 +375,19 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		if (isSearch()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _hasLayoutPageTemplateEntriesResults()
+		throws PortalException {
+
+		SearchContainer searchContainer =
+			getLayoutPageTemplateEntriesSearchContainer();
+
+		if (searchContainer.getTotal() > 0) {
 			return true;
 		}
 
