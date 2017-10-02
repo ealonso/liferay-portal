@@ -245,11 +245,17 @@ public class LayoutPageTemplateDisplayContext {
 				_renderRequest, _renderResponse.createRenderURL(), null,
 				"there-are-no-page-templates");
 
-		layoutPageTemplateEntriesSearchContainer.setEmptyResultsMessage(
-			"there-are-no-page-templates.-you-can-add-a-page-template-by-" +
-				"clicking-the-plus-button-on-the-bottom-right-corner");
-		layoutPageTemplateEntriesSearchContainer.setEmptyResultsMessageCssClass(
-			"taglib-empty-result-message-header-has-plus-btn");
+		if (!isSearch()) {
+			layoutPageTemplateEntriesSearchContainer.setEmptyResultsMessage(
+				"there-are-no-page-templates.-you-can-add-a-page-template-by-" +
+					"clicking-the-plus-button-on-the-bottom-right-corner");
+			layoutPageTemplateEntriesSearchContainer.
+				setEmptyResultsMessageCssClass(
+					"taglib-empty-result-message-header-has-plus-btn");
+		}
+		else {
+			layoutPageTemplateEntriesSearchContainer.setSearch(true);
+		}
 
 		layoutPageTemplateEntriesSearchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(_renderResponse));
@@ -263,23 +269,45 @@ public class LayoutPageTemplateDisplayContext {
 
 		layoutPageTemplateEntriesSearchContainer.setOrderByComparator(
 			orderByComparator);
+
 		layoutPageTemplateEntriesSearchContainer.setOrderByType(
 			getOrderByType());
 
-		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
-			LayoutPageTemplateEntryLocalServiceUtil.
-				getLayoutPageTemplateEntries(
-					themeDisplay.getScopeGroupId(),
-					getLayoutPageTemplateCollectionId(), getKeywords(),
-					layoutPageTemplateEntriesSearchContainer.getStart(),
-					layoutPageTemplateEntriesSearchContainer.getEnd(),
-					orderByComparator);
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries = null;
+		int layoutPageTemplateEntriesCount = 0;
 
-		int layoutPageTemplateEntriesCount =
-			LayoutPageTemplateEntryServiceUtil.
-				getLayoutPageTemplateEntriesCount(
-					themeDisplay.getScopeGroupId(),
-					getLayoutPageTemplateCollectionId(), getKeywords());
+		if (isSearch()) {
+			layoutPageTemplateEntries =
+				LayoutPageTemplateEntryLocalServiceUtil.
+					getLayoutPageTemplateEntries(
+						themeDisplay.getScopeGroupId(),
+						getLayoutPageTemplateCollectionId(), getKeywords(),
+						layoutPageTemplateEntriesSearchContainer.getStart(),
+						layoutPageTemplateEntriesSearchContainer.getEnd(),
+						orderByComparator);
+
+			layoutPageTemplateEntriesCount =
+				LayoutPageTemplateEntryServiceUtil.
+					getLayoutPageTemplateEntriesCount(
+						themeDisplay.getScopeGroupId(),
+						getLayoutPageTemplateCollectionId(), getKeywords());
+		}
+		else {
+			layoutPageTemplateEntries =
+				LayoutPageTemplateEntryLocalServiceUtil.
+					getLayoutPageTemplateEntries(
+						themeDisplay.getScopeGroupId(),
+						getLayoutPageTemplateCollectionId(),
+						layoutPageTemplateEntriesSearchContainer.getStart(),
+						layoutPageTemplateEntriesSearchContainer.getEnd(),
+						orderByComparator);
+
+			layoutPageTemplateEntriesCount =
+				LayoutPageTemplateEntryServiceUtil.
+					getLayoutPageTemplateEntriesCount(
+						themeDisplay.getScopeGroupId(),
+						getLayoutPageTemplateCollectionId());
+		}
 
 		layoutPageTemplateEntriesSearchContainer.setResults(
 			layoutPageTemplateEntries);
@@ -317,16 +345,6 @@ public class LayoutPageTemplateDisplayContext {
 		return new String[] {"create-date", "name"};
 	}
 
-	public boolean isDisabledLayoutPageTemplateEntriesManagementBar()
-		throws PortalException {
-
-		if (_hasLayoutPageTemplateEntriesResults()) {
-			return false;
-		}
-
-		return true;
-	}
-
 	public boolean isDisabledLayoutPageTemplateCollectionsManagementBar()
 		throws PortalException {
 
@@ -336,6 +354,16 @@ public class LayoutPageTemplateDisplayContext {
 
 		if (isSearch()) {
 			return true;
+		}
+
+		return true;
+	}
+
+	public boolean isDisabledLayoutPageTemplateEntriesManagementBar()
+		throws PortalException {
+
+		if (_hasLayoutPageTemplateEntriesResults()) {
+			return false;
 		}
 
 		return true;
@@ -381,13 +409,10 @@ public class LayoutPageTemplateDisplayContext {
 		return false;
 	}
 
-	private boolean _hasLayoutPageTemplateEntriesResults()
+	public boolean isShowLayoutPageTemplateEntriesSearch()
 		throws PortalException {
 
-		SearchContainer searchContainer =
-			getLayoutPageTemplateEntriesSearchContainer();
-
-		if (searchContainer.getTotal() > 0) {
+		if (_hasLayoutPageTemplateEntriesResults()) {
 			return true;
 		}
 
@@ -399,6 +424,19 @@ public class LayoutPageTemplateDisplayContext {
 
 		SearchContainer searchContainer =
 			getLayoutPageTemplateCollectionsSearchContainer();
+
+		if (searchContainer.getTotal() > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _hasLayoutPageTemplateEntriesResults()
+		throws PortalException {
+
+		SearchContainer searchContainer =
+			getLayoutPageTemplateEntriesSearchContainer();
 
 		if (searchContainer.getTotal() > 0) {
 			return true;
