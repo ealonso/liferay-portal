@@ -146,6 +146,22 @@ public class LayoutPageTemplateEntryServiceImpl
 	}
 
 	@Override
+	public int getLayoutPageTemplateEntriesCount(
+		long groupId, long layoutPageTemplateFolder) {
+
+		return layoutPageTemplateEntryPersistence.filterCountByG_L(
+			groupId, layoutPageTemplateFolder);
+	}
+
+	@Override
+	public int getLayoutPageTemplateEntriesCount(
+		long groupId, long layoutPageTemplateFolder, String name) {
+
+		return layoutPageTemplateEntryPersistence.filterCountByG_L_LikeN(
+			groupId, layoutPageTemplateFolder, name);
+	}
+
+	@Override
 	public int getLayoutPageTemplateFoldersCount(
 		long groupId, long layoutPageTemplateFolderId) {
 
