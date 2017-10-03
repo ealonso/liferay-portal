@@ -26,7 +26,7 @@ portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(((siteNavigationMenu == null) ? LanguageUtil.get(request, "add-new-menu") : siteNavigationMenu.getName()));
 
-String[] types = LayoutTypeControllerTracker.getTypes();
+String[] types = siteNavigationMenuItemTypeRegistry.getTypes();
 %>
 
 <portlet:actionURL name="/navigation_menu/edit_site_navigation_menu" var="editSitaNavigationMenuURL">
@@ -38,7 +38,7 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationAdminDisplayContext.getSiteNavigationMenuId() %>" />
 	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= false %>" />
-	<aui:input name="firstItemType" type="hidden" value="" />
+	<aui:input name="selectedItemType" type="hidden" value="" />
 
 	<aui:model-context bean="<%= siteNavigationMenu %>" model="<%= SiteNavigationMenu.class %>" />
 
@@ -52,6 +52,20 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 		<c:choose>
 			<c:when test="<%= siteNavigationMenu != null %>">
 
+				<%
+				Map<String, Object> context = new HashMap<>();
+
+				context.put("availableItemTypes", siteNavigationAdminDisplayContext.getAvailableItemsJSONArray());
+				context.put("locale", locale);
+				context.put("pathThemeImages", themeDisplay.getPathThemeImages());
+				context.put("selectedItemType", siteNavigationAdminDisplayContext.getSelectedItemTypeJSONObject());
+				%>
+
+				<soy:template-renderer
+					context="<%= context %>"
+					module="site-navigation-admin-web/js/NavigationMenuBuilder.es"
+					templateNamespace="NavigationMenuBuilder.render"
+				/>
 			</c:when>
 			<c:otherwise>
 				<aui:fieldset>
@@ -59,27 +73,19 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 
 						<%
 						for (String type : types) {
-							if (type.equals(LayoutConstants.TYPE_PORTLET)) {
-								continue;
-							}
+							SiteNavigationMenuItemType siteNavigationMenuItemType = siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(type);
 
-							LayoutTypeController layoutTypeController = LayoutTypeControllerTracker.getLayoutTypeController(type);
-
-							if (!layoutTypeController.isInstanceable()) {
-								continue;
-							}
-
-							ResourceBundle layoutTypeResourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, layoutTypeController.getClass());
+							ResourceBundle siteNavigationMenuItemTypeResourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, siteNavigationMenuItemType.getClass());
 						%>
 
-							<div class="card col-md-2 item-type pt-xl-3 text-center toggle-switch" data-type="<%= type %>">
+							<div class="card col-md-2 item-type pt-xl-3 text-center" data-type="<%= type %>">
 								<liferay-ui:icon
-									icon="control-panel"
+									icon="<%= siteNavigationMenuItemType.getIcon() %>"
 									markupView="lexicon"
 								/>
 
 								<h5 class="mt-xl-3">
-									<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + type) %>
+									<%= LanguageUtil.get(request, siteNavigationMenuItemTypeResourceBundle, "site.navigation.menu.item.types." + type) %>
 								</h5>
 							</div>
 
@@ -119,7 +125,7 @@ String[] types = LayoutTypeControllerTracker.getTypes();
 				var type = event.currentTarget.getData().type;
 
 				document.getElementById('<portlet:namespace/>hideDefaultSuccessMessage').value = 'true';
-				document.getElementById('<portlet:namespace/>firstItemType').value = type;
+				document.getElementById('<portlet:namespace/>selectedItemType').value = type;
 				submitForm(document.<portlet:namespace/>fm);
 			},
 			'.item-type'
