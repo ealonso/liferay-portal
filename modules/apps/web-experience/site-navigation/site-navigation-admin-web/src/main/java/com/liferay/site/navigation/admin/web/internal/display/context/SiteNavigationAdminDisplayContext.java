@@ -17,6 +17,9 @@ package com.liferay.site.navigation.admin.web.internal.display.context;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
@@ -25,16 +28,20 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.navigation.admin.web.internal.constants.SiteNavigationAdminPortletKeys;
+import com.liferay.site.navigation.admin.web.internal.constants.SiteNavigationAdminWebKeys;
 import com.liferay.site.navigation.admin.web.internal.util.SiteNavigationMenuPortletUtil;
 import com.liferay.site.navigation.constants.SiteNavigationActionKeys;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.service.SiteNavigationMenuServiceUtil;
 import com.liferay.site.navigation.service.permission.SiteNavigationPermission;
+import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeController;
+import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeControllerTracker;
 
 import java.util.List;
 
@@ -42,6 +49,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Pavel Savinov
@@ -61,6 +69,41 @@ public class SiteNavigationAdminDisplayContext {
 		_portletPreferences =
 			PortletPreferencesFactoryUtil.getPortletPreferences(
 				request, SiteNavigationAdminPortletKeys.SITE_NAVIGATION_ADMIN);
+	}
+
+	public JSONArray getAvailableItemsJSONArray() throws Exception {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		SiteNavigationMenuItemTypeControllerTracker
+			siteNavigationMenuItemTypeControllerTracker =
+				getSiteNavigationMenuItemTypeControllerTracker();
+
+		for (String type :
+				siteNavigationMenuItemTypeControllerTracker.getTypes()) {
+
+			SiteNavigationMenuItemTypeController
+				siteNavigationMenuItemTypeController =
+					siteNavigationMenuItemTypeControllerTracker.
+						getSiteNavigationMenuItemTypeController(type);
+
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			HttpServletResponse response = PortalUtil.getHttpServletResponse(
+				_liferayPortletResponse);
+
+			jsonObject.put(
+				"editViewHTML",
+				siteNavigationMenuItemTypeController.includeEditContent(
+					_request, response, null));
+
+			jsonObject.put(
+				"icon", siteNavigationMenuItemTypeController.getIcon());
+			jsonObject.put("type", type);
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	public String getDisplayStyle() {
@@ -256,6 +299,50 @@ public class SiteNavigationAdminDisplayContext {
 		return _searchContainer;
 	}
 
+	public JSONObject getSelectedItemTypeJSONObject() throws Exception {
+		if (Validator.isNotNull(_selectedItemTypeJSONObject)) {
+			return _selectedItemTypeJSONObject;
+		}
+
+		String selectedItemType = ParamUtil.getString(
+			_request, "selectedItemType");
+
+		if (Validator.isNull(selectedItemType)) {
+			String[] types =
+				getSiteNavigationMenuItemTypeControllerTracker().getTypes();
+
+			selectedItemType = types.length > 0 ? types[0] : "";
+		}
+
+		SiteNavigationMenuItemTypeControllerTracker
+			siteNavigationMenuItemTypeControllerTracker =
+				getSiteNavigationMenuItemTypeControllerTracker();
+
+		SiteNavigationMenuItemTypeController
+			siteNavigationMenuItemTypeController =
+				siteNavigationMenuItemTypeControllerTracker.
+					getSiteNavigationMenuItemTypeController(selectedItemType);
+
+		if (siteNavigationMenuItemTypeController == null) {
+			return null;
+		}
+
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+			_liferayPortletResponse);
+
+		_selectedItemTypeJSONObject = JSONFactoryUtil.createJSONObject();
+
+		_selectedItemTypeJSONObject.put(
+			"editViewHTML",
+			siteNavigationMenuItemTypeController.includeEditContent(
+				_request, response, null));
+		_selectedItemTypeJSONObject.put(
+			"icon", siteNavigationMenuItemTypeController.getIcon());
+		_selectedItemTypeJSONObject.put("type", selectedItemType);
+
+		return _selectedItemTypeJSONObject;
+	}
+
 	public SiteNavigationMenu getSiteNavigationMenu() throws PortalException {
 		if (getSiteNavigationMenuId() == 0) {
 			return null;
@@ -274,6 +361,19 @@ public class SiteNavigationAdminDisplayContext {
 			_request, "siteNavigationMenuId");
 
 		return _siteNavigationMenuId;
+	}
+
+	public SiteNavigationMenuItemTypeControllerTracker
+		getSiteNavigationMenuItemTypeControllerTracker() {
+
+		SiteNavigationMenuItemTypeControllerTracker
+			siteNavigationMenuItemTypeControllerTracker =
+				(SiteNavigationMenuItemTypeControllerTracker)
+					_request.getAttribute(
+						SiteNavigationAdminWebKeys.
+							SITE_NAVIGATION_MENU_ITEM_TYPE_CONTROLLER_TRACKER);
+
+		return siteNavigationMenuItemTypeControllerTracker;
 	}
 
 	public boolean isShowAddButton() {
@@ -303,6 +403,7 @@ public class SiteNavigationAdminDisplayContext {
 	private final PortletPreferences _portletPreferences;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
+	private JSONObject _selectedItemTypeJSONObject;
 	private Long _siteNavigationMenuId;
 
 }
