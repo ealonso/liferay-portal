@@ -1,0 +1,16 @@
+@import "mixins";
+
+@import "NavigationMenuBuilder";
+@import "NavigationMenuToolbox";
+
+.portlet-navigation-admin {
+	.item-type {
+		display: table;
+		margin: 0 auto;
+
+		&:hover {
+			color: #0451E6;
+			cursor: pointer;
+		}
+	}
+}
