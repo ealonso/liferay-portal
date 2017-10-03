@@ -1,0 +1,41 @@
+{namespace NavigationMenuContainer}
+
+/**
+ * This renders the main element of NavigationMenuContainer.
+ */
+{template .render}
+	{@param? items: list<?>}
+
+	<div class="navigation-menu-container" ref="menuBuilderContainer">
+		{if $items}
+			{foreach $item in $items}
+				{call .menuItem}
+					{param item: $item /}
+				{/call}
+			{/foreach}
+		{else}
+			<div class="text-center">
+				<h3>
+					<span class="d-block mt-xl-3">
+						{msg desc=""}this-menu-is-empty{/msg}
+					</span>
+
+					<span class="d-block mt-xl-3">
+						{msg desc=""}please-add-elements-like-pages-categories-urls{/msg}
+					</span>
+				</h3>
+			</div>
+		{/if}
+	</div>
+{/template}
+
+/**
+ * Renders a single menu item.
+ */
+{template .menuItem}
+	{@param item: ?}
+
+	<div class="card">
+		{$item}
+	</div>
+{/template}
