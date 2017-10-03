@@ -58,6 +58,9 @@ public class EditSiteNavigationMenuMVCActionCommand
 		long siteNavigationMenuId = ParamUtil.getLong(
 			actionRequest, "siteNavigationMenuId");
 
+		String selectedItemType = ParamUtil.getString(
+			actionRequest, "selectedItemType");
+
 		String name = ParamUtil.getString(actionRequest, "name");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -95,12 +98,14 @@ public class EditSiteNavigationMenuMVCActionCommand
 
 			viewSiteNavigationMenusURL.setParameter("mvcPath", "/view.jsp");
 
-			redirectURL.setParameter("mvcPath", "/edit_menu.jsp");
+			redirectURL.setParameter(
+				"mvcPath", "/edit_site_navigation_menu.jsp");
+			redirectURL.setParameter(
+				"redirect", viewSiteNavigationMenusURL.toString());
 			redirectURL.setParameter(
 				"siteNavigationMenuId",
 				String.valueOf(siteNavigationMenu.getSiteNavigationMenuId()));
-			redirectURL.setParameter(
-				"redirect", viewSiteNavigationMenusURL.toString());
+			redirectURL.setParameter("selectedItemType", selectedItemType);
 
 			actionRequest.setAttribute(
 				WebKeys.REDIRECT, redirectURL.toString());
