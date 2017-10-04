@@ -1,7 +1,13 @@
 ;(function() {
-    var adjustScrollTop = function() {
-        window.scrollBy(0, -65);
-    };
+	var adjustScrollTop = function() {
+		var controlMenuId = Liferay.ControlMenu._namespace + 'ControlMenu';
+		var controlMenu = document.getElementById(controlMenuId);
+		var scroll = (controlMenu.offsetHeight || 0);
+
+		if (controlMenu) {
+			window.scrollBy(0, -scroll);
+		}
+	};
 
 	var handleFormRegistered = function(event) {
 		if (event.form && event.form.formValidator) {
