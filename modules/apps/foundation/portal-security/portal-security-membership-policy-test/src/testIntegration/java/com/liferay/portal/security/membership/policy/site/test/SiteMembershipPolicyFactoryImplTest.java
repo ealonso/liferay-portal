@@ -26,7 +26,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.impl.RoleImpl;
 import com.liferay.portal.security.membership.policy.site.bundle.sitemembershippolicyfactoryimpl.TestGroup;
-import com.liferay.portal.security.membership.policy.site.bundle.sitemembershippolicyfactoryimpl.TestSiteMembershipPolicy;
+import com.liferay.portal.security.membership.policy.site.samples.TestSiteMembershipPolicy;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.portal.util.test.AtomicState;

@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyF
 import com.liferay.portal.kernel.security.membershippolicy.RoleMembershipPolicyUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.model.impl.RoleImpl;
-import com.liferay.portal.security.membership.policy.role.bundle.rolemembershippolicyfactoryimpl.TestRoleMembershipPolicy;
+import com.liferay.portal.security.membership.policy.role.samples.TestRoleMembershipPolicy;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.portal.util.test.AtomicState;
