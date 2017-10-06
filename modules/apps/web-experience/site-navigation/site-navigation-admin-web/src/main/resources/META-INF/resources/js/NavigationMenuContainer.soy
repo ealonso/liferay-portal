@@ -44,7 +44,7 @@
 	{@param? selectedId: string}
 
 	<div class="card card-horizonal{$indent > 0 ? ' card-indent-' + $indent : ''}{$selectedId == $item.id ? ' selected' : ''}">
-		<a href="#1" onclick="javascript:;" data-onfocus="_handleFocus" data-onkeyup="_handleKeyUp" data-id="{$item.id}">
+		<a class="card-focus-link" href="#1" onclick="javascript:;" data-onfocus="_handleFocus" data-onkeyup="_handleKeyUp" data-id="{$item.id}">
 			<div class="card-row card-row-padded">
 				{if $item.icon}
 					<div class="card-col-field">
@@ -65,6 +65,14 @@
 							{msg desc=""}{$item.type}{/msg}
 						</span>
 					</div>
+				</div>
+
+				<div class="card-col-field" data-id="{$item.id}" data-onclick="_handleDeleteItem">
+					<a href="#1" onclick="javascript:;">
+						<svg class="lexicon-icon lexicon-icon-trash" role="img">
+							<use xlink:href="{$pathThemeImages}trash"></use>
+						</svg>
+					</a>
 				</div>
 			</div>
 		</a>
