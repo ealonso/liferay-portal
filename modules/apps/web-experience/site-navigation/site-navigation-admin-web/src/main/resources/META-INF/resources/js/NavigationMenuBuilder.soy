@@ -6,23 +6,26 @@
 {template .render}
 	{@param selectedItemType: ?}
 	{@param? availableItemTypes: list<?>}
+	{@param? _handleItemSelected: any}
 	{@param? menuItems: list<?>}
 	{@param? pathThemeImages: string}
 
 	<div class="card-horizontal navigation-menu-builder" ref="menuBuilder">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col col-md" ref="container">
+				<div class="col col-md menu-container " ref="container">
 					{call NavigationMenuContainer.render}
-						{param menuItems: $menuItems /}
+						{param items: $menuItems /}
+						{param pathThemeImages: $pathThemeImages /}
 					{/call}
 				</div>
 
-				<div class="col col-md-4" ref="toolbox">
+				<div class="col col-md-4 menu-toolbox" ref="toolbox">
 					{call NavigationMenuToolbox.render}
 						{param availableItemTypes: $availableItemTypes /}
-						{param selectedItemType: $selectedItemType /}
+						{param events: [ 'itemSelected': $_handleItemSelected ] /}
 						{param pathThemeImages: $pathThemeImages /}
+						{param selectedItemType: $selectedItemType /}
 					{/call}
 				</div>
 			</div>
