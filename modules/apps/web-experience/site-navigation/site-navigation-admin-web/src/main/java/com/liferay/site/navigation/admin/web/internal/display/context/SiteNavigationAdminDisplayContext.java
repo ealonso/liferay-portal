@@ -43,6 +43,7 @@ import com.liferay.site.navigation.service.permission.SiteNavigationPermission;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemTypeRegistry;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.portlet.PortletPreferences;
@@ -98,6 +99,19 @@ public class SiteNavigationAdminDisplayContext {
 
 			jsonObject.put("icon", siteNavigationMenuItemType.getIcon());
 			jsonObject.put("type", type);
+
+			JSONObject context = siteNavigationMenuItemType.getEditContext(
+				_request, response, null);
+
+			Iterator<String> contextKeys = context.keys();
+
+			while (contextKeys.hasNext()) {
+				String key = contextKeys.next();
+
+				Object value = context.get(key);
+
+				jsonObject.put(key, value);
+			}
 
 			jsonArray.put(jsonObject);
 		}
@@ -332,6 +346,19 @@ public class SiteNavigationAdminDisplayContext {
 		_selectedItemTypeJSONObject.put(
 			"icon", siteNavigationMenuItemType.getIcon());
 		_selectedItemTypeJSONObject.put("type", selectedItemType);
+
+		JSONObject context = siteNavigationMenuItemType.getEditContext(
+			_request, response, null);
+
+		Iterator<String> contextKeys = context.keys();
+
+		while (contextKeys.hasNext()) {
+			String key = contextKeys.next();
+
+			Object value = context.get(key);
+
+			_selectedItemTypeJSONObject.put(key, value);
+		}
 
 		return _selectedItemTypeJSONObject;
 	}
