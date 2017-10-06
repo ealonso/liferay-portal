@@ -4,6 +4,8 @@ import Soy from 'metal-soy';
 
 import 'metal-dropdown';
 
+import './NavigationMenuTree.es'
+
 import templates from './NavigationMenuToolbox.soy';
 
 /**
@@ -12,6 +14,12 @@ import templates from './NavigationMenuToolbox.soy';
  */
 class NavigationMenuToolbox extends Component {
 
+	_handleItemSelected(data) {
+		this.emit(
+			'itemSelected',
+			data
+		);
+	}
 }
 
 NavigationMenuToolbox.STATE = {
@@ -26,7 +34,8 @@ NavigationMenuToolbox.STATE = {
 	 */
 	availableItemTypes: Config.arrayOf(
 		Config.shapeOf({
-			editViewHTML: Config.string().required(),
+			context: Config.object().required(),
+			displayStyle: Config.string().required(),
 			icon: Config.string().required(),
 			type: Config.string().required()
 		})
@@ -40,7 +49,8 @@ NavigationMenuToolbox.STATE = {
 	 * @type {!String}
 	 */
 	selectedItemType: Config.shapeOf({
-		editViewHTML: Config.string().required(),
+		context: Config.object().required(),
+		displayStyle: Config.string().required(),
 		icon: Config.string().required(),
 		type: Config.string().required()
 	})
