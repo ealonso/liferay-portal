@@ -4,6 +4,7 @@ import Soy from 'metal-soy';
 
 import 'metal-dropdown';
 
+import './NavigationMenuFieldset.es'
 import './NavigationMenuTree.es'
 
 import templates from './NavigationMenuToolbox.soy';
@@ -14,12 +15,51 @@ import templates from './NavigationMenuToolbox.soy';
  */
 class NavigationMenuToolbox extends Component {
 
+	/**
+	 * This is called when user changes context of the selected item type.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
+	_handleContextChanged(data) {
+		let selectedItemType = this.selectedItemType;
+
+		for (let property in data) {
+			selectedItemType.context[property] = data[property];
+		}
+
+		this.emit('itemTypeSelected', selectedItemType);
+	}
+
+	/**
+	 * This is called when user wants to add a fieldset to the container.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
 	_handleItemSelected(data) {
 		this.emit(
 			'itemSelected',
 			data
 		);
 	}
+
+	/**
+	 * This is called when user selects menu item type in the dropdown.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
+	_handleItemTypeChanged(event) {
+		const node = event.delegateTarget;
+		const type = node.dataset.type;
+
+		let selectedItemType = this.availableItemTypes.filter(
+			(availableItemType) => availableItemType.type === type)[0];
+
+		this.emit('itemTypeSelected', selectedItemType);
+	}
+
 }
 
 NavigationMenuToolbox.STATE = {
