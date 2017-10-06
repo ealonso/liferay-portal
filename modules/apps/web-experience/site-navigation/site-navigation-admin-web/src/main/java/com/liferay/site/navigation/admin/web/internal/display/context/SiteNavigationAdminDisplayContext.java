@@ -43,6 +43,7 @@ import com.liferay.site.navigation.service.permission.SiteNavigationPermission;
 import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeController;
 import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeControllerTracker;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.portlet.PortletPreferences;
@@ -92,13 +93,22 @@ public class SiteNavigationAdminDisplayContext {
 				_liferayPortletResponse);
 
 			jsonObject.put(
-				"editViewHTML",
-				siteNavigationMenuItemTypeController.includeEditContent(
-					_request, response, null));
-
-			jsonObject.put(
 				"icon", siteNavigationMenuItemTypeController.getIcon());
 			jsonObject.put("type", type);
+
+			JSONObject context =
+				siteNavigationMenuItemTypeController.getEditContext(
+					_request, response, null);
+
+			Iterator<String> contextKeys = context.keys();
+
+			while (contextKeys.hasNext()) {
+				String key = contextKeys.next();
+
+				Object value = context.get(key);
+
+				jsonObject.put(key, value);
+			}
 
 			jsonArray.put(jsonObject);
 		}
@@ -333,12 +343,22 @@ public class SiteNavigationAdminDisplayContext {
 		_selectedItemTypeJSONObject = JSONFactoryUtil.createJSONObject();
 
 		_selectedItemTypeJSONObject.put(
-			"editViewHTML",
-			siteNavigationMenuItemTypeController.includeEditContent(
-				_request, response, null));
-		_selectedItemTypeJSONObject.put(
 			"icon", siteNavigationMenuItemTypeController.getIcon());
 		_selectedItemTypeJSONObject.put("type", selectedItemType);
+
+		JSONObject context =
+			siteNavigationMenuItemTypeController.getEditContext(
+				_request, response, null);
+
+		Iterator<String> contextKeys = context.keys();
+
+		while (contextKeys.hasNext()) {
+			String key = contextKeys.next();
+
+			Object value = context.get(key);
+
+			_selectedItemTypeJSONObject.put(key, value);
+		}
 
 		return _selectedItemTypeJSONObject;
 	}
