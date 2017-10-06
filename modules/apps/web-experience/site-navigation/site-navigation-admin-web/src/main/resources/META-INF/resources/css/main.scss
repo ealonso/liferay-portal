@@ -1,6 +1,9 @@
 @import "mixins";
 
 @import "NavigationMenuBuilder";
+@import "NavigationMenuContainer";
+@import "NavigationMenuFieldset";
+@import "NavigationMenuTree";
 @import "NavigationMenuToolbox";
 
 .portlet-navigation-admin {
