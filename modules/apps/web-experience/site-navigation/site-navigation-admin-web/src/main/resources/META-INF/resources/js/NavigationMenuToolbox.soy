@@ -6,7 +6,9 @@
 {template .render}
 	{@param selectedItemType: ?}
 	{@param? availableItemTypes: list<?>}
+	{@param? _handleContextChanged: any}
 	{@param? _handleItemSelected: any}
+	{@param? _handleItemTypeChanged: any}
 	{@param? pathThemeImages: string}
 
 	<div class="navigation-menu-toolbox sidebar sidebar-light sidebar-light-bg" ref="menuBuilderToolbox">
@@ -33,7 +35,7 @@
 					{if $availableItemTypes}
 						{foreach $availableItemType in $availableItemTypes}
 							<li data-onclick="toggle">
-								<a data-type="{$availableItemType.type}" href="javascript:;">
+								<a data-onclick="{$_handleItemTypeChanged}" data-type="{$availableItemType.type}" href="javascript:;">
 									<span class="icon-monospaced">
 										<svg class="lexicon-icon">
 											<use xlink:href="{$pathThemeImages}{$availableItemType.icon}"></use>
@@ -60,6 +62,19 @@
 						{param namespace: $selectedItemType.context.namespace /}
 						{param nodes: $selectedItemType.context.nodes /}
 						{param pathThemeImages: $selectedItemType.context.pathThemeImages /}
+					{/call}
+
+				{case 'fieldset'}
+					{call NavigationMenuFieldset.render}
+						{param events: [
+							'itemSelected': $_handleItemSelected,
+							'contextChanged': $_handleContextChanged
+						] /}
+						{param fields: $selectedItemType.context.fields /}
+						{param icon: $selectedItemType.context.icon /}
+						{param name: '' /}
+						{param namespace: $selectedItemType.context.namespace /}
+						{param type: $selectedItemType.context.type /}
 					{/call}
 			{/switch}
 		</div>
