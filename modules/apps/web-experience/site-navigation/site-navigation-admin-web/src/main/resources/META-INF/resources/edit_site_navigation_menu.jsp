@@ -39,6 +39,7 @@ String[] types = siteNavigationMenuItemTypeRegistry.getTypes();
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationAdminDisplayContext.getSiteNavigationMenuId() %>" />
 	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= false %>" />
 	<aui:input name="selectedItemType" type="hidden" value="" />
+	<aui:input name="menuItems" type="hidden" value="" />
 
 	<aui:model-context bean="<%= siteNavigationMenu %>" model="<%= SiteNavigationMenu.class %>" />
 
@@ -57,7 +58,8 @@ String[] types = siteNavigationMenuItemTypeRegistry.getTypes();
 
 				context.put("availableItemTypes", siteNavigationAdminDisplayContext.getAvailableItemsJSONArray());
 				context.put("locale", locale);
-				context.put("pathThemeImages", themeDisplay.getPathThemeImages());
+				context.put("menuItemsInput", liferayPortletResponse.getNamespace() + "menuItems");
+				context.put("pathThemeImages", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg#");
 				context.put("selectedItemType", siteNavigationAdminDisplayContext.getSelectedItemTypeJSONObject());
 				%>
 
