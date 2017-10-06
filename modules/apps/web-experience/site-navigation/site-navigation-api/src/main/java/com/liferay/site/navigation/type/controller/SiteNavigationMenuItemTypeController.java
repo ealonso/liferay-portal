@@ -14,6 +14,7 @@
 
 package com.liferay.site.navigation.type.controller;
 
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface SiteNavigationMenuItemTypeController {
 
+	public JSONObject getEditContext(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception;
+
 	public String getIcon();
 
 	public String getLabel(SiteNavigationMenuItem siteNavigationMenuItem);
@@ -31,11 +37,6 @@ public interface SiteNavigationMenuItemTypeController {
 	public String getType();
 
 	public String getURL(
-			HttpServletRequest request, HttpServletResponse response,
-			SiteNavigationMenuItem siteNavigationMenuItem)
-		throws Exception;
-
-	public String includeEditContent(
 			HttpServletRequest request, HttpServletResponse response,
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws Exception;
