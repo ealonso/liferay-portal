@@ -908,12 +908,12 @@
 		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<name>key</name>
+			<name>context</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>modelBean</name>
+			<name>key</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

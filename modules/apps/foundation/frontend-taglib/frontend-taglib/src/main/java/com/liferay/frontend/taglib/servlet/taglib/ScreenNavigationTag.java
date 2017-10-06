@@ -54,17 +54,17 @@ public class ScreenNavigationTag extends IncludeTag {
 
 		_screenNavigationCategories =
 			screenNavigationRegistry.getScreenNavigationCategories(
-				_key, themeDisplay.getUser(), _modelBean);
+				_key, themeDisplay.getUser(), _context);
 
 		return super.doStartTag();
 	}
 
-	public void setKey(String key) {
-		_key = key;
+	public void setContext(Object context) {
+		_context = context;
 	}
 
-	public void setModelBean(Object modelBean) {
-		_modelBean = modelBean;
+	public void setKey(String key) {
+		_key = key;
 	}
 
 	@Override
@@ -80,8 +80,8 @@ public class ScreenNavigationTag extends IncludeTag {
 
 	@Override
 	protected void cleanUp() {
+		_context = null;
 		_key = null;
-		_modelBean = null;
 		_portletURL = null;
 	}
 
@@ -142,8 +142,7 @@ public class ScreenNavigationTag extends IncludeTag {
 			_getSelectedScreenNavigationCategory();
 
 		return screenNavigationRegistry.getScreenNavigationEntries(
-			selectedScreenNavigationCategory, themeDisplay.getUser(),
-			_modelBean);
+			selectedScreenNavigationCategory, themeDisplay.getUser(), _context);
 	}
 
 	private ScreenNavigationCategory _getSelectedScreenNavigationCategory() {
@@ -191,8 +190,8 @@ public class ScreenNavigationTag extends IncludeTag {
 
 	private static final String _PAGE = "/screen_navigation/page.jsp";
 
+	private Object _context;
 	private String _key;
-	private Object _modelBean;
 	private PortletURL _portletURL;
 	private List<ScreenNavigationCategory> _screenNavigationCategories;
 
