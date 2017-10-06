@@ -13,6 +13,39 @@ import templates from './NavigationMenuBuilder.soy';
  */
 class NavigationMenuBuilder extends Component {
 
+	/**
+	 * This is called when user deletes the item from container.
+	 *
+	 * @param {!object} data
+	 * @private
+	 */
+	_handleItemDeleted(data) {
+		let menuItems = this.menuItems;
+
+		const deleteItem = (items, id) => {
+			items = items.filter((item) => item.id != id);
+
+			items.forEach(
+				(item) => {
+					if (item.children) {
+						item.children = deleteItem(item.children, id);
+					}
+			});
+
+			return items;
+		};
+
+		menuItems = deleteItem(menuItems, data.id);
+
+		this.menuItems = menuItems;
+	}
+
+	/**
+	 * This is called when some item was added to the container.
+	 *
+	 * @param {!object} data
+	 * @private
+	 */
 	_handleItemSelected(data) {
 		let item = {
 			children: [],
@@ -32,6 +65,16 @@ class NavigationMenuBuilder extends Component {
 		menuItemsInput.value = JSON.stringify(menuItems);
 
 		this.menuItems = menuItems;
+	}
+
+	/**
+	 * This is called when user selects some item type in the toolbox.
+	 *
+	 * @param {!object} type Selected item type
+	 * @private
+	 */
+	_handleItemTypeSelected(type) {
+		this.selectedItemType = type;
 	}
 
 }

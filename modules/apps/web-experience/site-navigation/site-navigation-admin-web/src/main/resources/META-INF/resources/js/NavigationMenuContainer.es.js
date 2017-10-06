@@ -10,12 +10,36 @@ import templates from './NavigationMenuContainer.soy';
  */
 class NavigationMenuContainer extends Component {
 
+	/**
+	 * @inheritDoc
+	 */
 	rendered() {
 		if (this.selectedId) {
 			document.querySelector(`a[data-id="${this.selectedId}"]`).focus();
 		}
 	}
 
+	/**
+	 * This is called when user deletes the item from container.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
+	_handleDeleteItem(event) {
+		let id = event.delegateTarget.dataset.id;
+
+		this.emit(
+			'itemDeleted',
+			{
+				id: id
+			}
+		);
+	}
+
+	/**
+	 * This is called when user selects some item in the container.
+	 * @private
+	 */
 	_handleFocus() {
 		let id = event.delegateTarget.dataset.id;
 
@@ -25,6 +49,13 @@ class NavigationMenuContainer extends Component {
 
 	}
 
+	/**
+	 * This is called when user presses some of the arrow keys in order to move
+	 * the item across or along the container.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
 	_handleKeyUp(event) {
 		let id = event.delegateTarget.dataset.id;
 
@@ -47,6 +78,14 @@ class NavigationMenuContainer extends Component {
 		}
 	}
 
+	/**
+	 * Moves item across the container
+	 *
+	 * @param {!Array} items Items to move through
+	 * @param {!Number} id Id of the item to move
+	 * @param {!boolean} forward True if item should be moved forward
+	 * @private
+	 */
 	_moveItemAcross(items, id, forward) {
 		if (forward) {
 			let oldIndex = items.reduce(
@@ -166,6 +205,14 @@ class NavigationMenuContainer extends Component {
 		}
 	}
 
+	/**
+	 * Moves item along the container
+	 *
+	 * @param {!Array} items Items to move through
+	 * @param {!Number} id Id of the item to move
+	 * @param {!boolean} forward True if item should be moved forward
+	 * @private
+	 */
 	_moveItemAlong(items, id, forward) {
 		let oldIndex = items.reduce(
 			(acc, item, index) => item.id === id ? index : acc, -1
