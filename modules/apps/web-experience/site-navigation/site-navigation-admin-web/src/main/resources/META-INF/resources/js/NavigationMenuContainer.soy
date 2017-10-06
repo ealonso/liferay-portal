@@ -5,12 +5,17 @@
  */
 {template .render}
 	{@param? items: list<?>}
+	{@param? pathThemeImages: string}
+	{@param? selectedId: string}
 
 	<div class="navigation-menu-container" ref="menuBuilderContainer">
-		{if $items}
+		{if $items and length($items) > 0}
 			{foreach $item in $items}
 				{call .menuItem}
 					{param item: $item /}
+					{param indent: 0 /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param selectedId: $selectedId /}
 				{/call}
 			{/foreach}
 		{else}
@@ -34,8 +39,44 @@
  */
 {template .menuItem}
 	{@param item: ?}
+	{@param indent: number}
+	{@param? pathThemeImages: string}
+	{@param? selectedId: string}
 
-	<div class="card">
-		{$item}
+	<div class="card card-horizonal{$indent > 0 ? ' card-indent-' + $indent : ''}{$selectedId == $item.id ? ' selected' : ''}">
+		<a href="#1" onclick="javascript:;" data-onfocus="_handleFocus" data-onkeyup="_handleKeyUp" data-id="{$item.id}">
+			<div class="card-row card-row-padded">
+				{if $item.icon}
+					<div class="card-col-field">
+						<div class="sticker sticker-default sticker-lg sticker-static">
+							<svg class="lexicon-icon lexicon-icon-{$item.icon}" role="img" title="{$item.name}">
+								<use xlink:href="{$pathThemeImages}{$item.icon}"></use>
+							</svg>
+						</div>
+					</div>
+				{/if}
+
+				<div class="card-col-content card-col-gutters">
+					<span class="lfr-card-title-text text-default treeview-node-name truncate-text">
+						{$item.name}
+					</span>
+					<div>
+						<span class="lfr-card-title-text text-muted treeview-node-name truncate-text">
+							{msg desc=""}{$item.type}{/msg}
+						</span>
+					</div>
+				</div>
+			</div>
+		</a>
 	</div>
+
+	{if $item.children and length($item.children) > 0}
+		{foreach $child in $item.children}
+			{call .menuItem}
+				{param item: $child /}
+				{param indent: $indent + 1 /}
+				{param pathThemeImages: $pathThemeImages /}
+			{/call}
+		{/foreach}
+	{/if}
 {/template}
