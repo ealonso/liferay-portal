@@ -14,18 +14,13 @@
 
 package com.liferay.site.navigation.type.controller.impl;
 
-import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeController;
-import com.liferay.taglib.servlet.PipingServletResponse;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Pavel Savinov
@@ -49,32 +44,6 @@ public abstract class BaseSiteNavigationMenuItemTypeControllerImpl
 	@Override
 	public String getType() {
 		return StringPool.BLANK;
-	}
-
-	@Override
-	public String includeEditContent(
-			HttpServletRequest request, HttpServletResponse response,
-			SiteNavigationMenuItem siteNavigationMenuItem)
-		throws Exception {
-
-		RequestDispatcher requestDispatcher =
-			servletContext.getRequestDispatcher(getEditPage());
-
-		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
-
-		ServletResponse servletResponse = new PipingServletResponse(
-			response, unsyncStringWriter);
-
-		try {
-			addAttributes(request);
-
-			requestDispatcher.include(request, servletResponse);
-		}
-		finally {
-			removeAttributes(request);
-		}
-
-		return unsyncStringWriter.toString();
 	}
 
 	@Override
@@ -109,8 +78,6 @@ public abstract class BaseSiteNavigationMenuItemTypeControllerImpl
 
 	protected void addAttributes(HttpServletRequest request) {
 	}
-
-	protected abstract String getEditPage();
 
 	protected UnicodeProperties getTypeSettingsProperties(
 		SiteNavigationMenuItem siteNavigationMenuItem) {
