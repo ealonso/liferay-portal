@@ -6,23 +6,24 @@
 {template .render}
 	{@param selectedItemType: ?}
 	{@param? availableItemTypes: list<?>}
+	{@param? _handleItemSelected: any}
 	{@param? pathThemeImages: string}
 
 	<div class="navigation-menu-toolbox sidebar sidebar-light sidebar-light-bg" ref="menuBuilderToolbox">
-		<div class="sidebar-header">
+		<div class="sidebar-header" ref="toolboxHeader">
 			{call Dropdown.render}
 				{param header kind="html"}
 					<div class="card-horizontal" data-onclick="toggle">
 						<div class="card-col-content card-col-gutters">
-							<span class="lfr-card-title-text text-default treeview-node-name truncate-text">
-								{msg desc="//TODO use variable $selectedItemType"}site.navigation.menu.item.types.layout{/msg}
+							<span class="lfr-card-title-text text-default treeview-node-name truncate-text" data-type="{$selectedItemType.type}">
+								{msg desc=""}{$selectedItemType.type}{/msg}
 							</span>
 						</div>
 
 						<div class="card-col-field">
 							<a class="btn icon-monospaced" href="javascript:;">
 								<svg class="lexicon-icon">
-									<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#caret-double"></use>
+									<use xlink:href="{$pathThemeImages}caret-double"></use>
 								</svg>
 							</a>
 						</div>
@@ -35,10 +36,10 @@
 								<a data-type="{$availableItemType.type}" href="javascript:;">
 									<span class="icon-monospaced">
 										<svg class="lexicon-icon">
-											<use xlink:href="{$pathThemeImages}/lexicon/icons.svg#{$availableItemType.icon}"></use>
+											<use xlink:href="{$pathThemeImages}{$availableItemType.icon}"></use>
 										</svg>
 									</span>
-									<span>{msg desc="//TODO use variable availableItemType.type"}site.navigation.menu.item.types.layout{/msg}</span>
+									<span>{msg desc=""}{$availableItemType.type}{/msg}</span>
 								</a>
 							</li>
 						{/foreach}
@@ -48,10 +49,19 @@
 			{/call}
 		</div>
 
-		<div class="item-selector" ref="itemSelector">
-			{if $selectedItemType.editViewHTML}
-				{$selectedItemType.editViewHTML}
-			{/if}
+		<div class="item-selector" ref="toolboxBody">
+			{switch $selectedItemType.displayStyle}
+				{case 'tree'}
+					{call NavigationMenuTree.render}
+						{param events: [ 'itemSelected': $_handleItemSelected ] /}
+						{param followURLOnTitleClick: $selectedItemType.context.followURLOnTitleClick /}
+						{param itemSelectorSaveEvent: $selectedItemType.context.itemSelectorSaveEvent /}
+						{param multiSelection: $selectedItemType.context.multiSelection /}
+						{param namespace: $selectedItemType.context.namespace /}
+						{param nodes: $selectedItemType.context.nodes /}
+						{param pathThemeImages: $selectedItemType.context.pathThemeImages /}
+					{/call}
+			{/switch}
 		</div>
 	</div>
 
