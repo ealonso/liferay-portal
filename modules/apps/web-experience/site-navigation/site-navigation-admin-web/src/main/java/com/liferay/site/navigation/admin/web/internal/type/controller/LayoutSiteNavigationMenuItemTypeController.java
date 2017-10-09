@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -36,7 +38,9 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.navigation.admin.web.internal.constants.SiteNavigationAdminPortletKeys;
 import com.liferay.site.navigation.constants.SiteNavigationMenuItemTypeControllerConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
+import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalService;
 import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeController;
+import com.liferay.site.navigation.type.controller.SiteNavigationMenuItemTypeControllerTracker;
 import com.liferay.site.navigation.type.controller.impl.BaseSiteNavigationMenuItemTypeControllerImpl;
 
 import java.util.ArrayList;
@@ -45,6 +49,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.portlet.ResourceRequest;
 
@@ -149,6 +154,11 @@ public class LayoutSiteNavigationMenuItemTypeController
 	}
 
 	@Override
+	public String getType() {
+		return "layout";
+	}
+
+	@Override
 	public String getURL(
 			HttpServletRequest request, HttpServletResponse response,
 			SiteNavigationMenuItem siteNavigationMenuItem)
@@ -165,6 +175,18 @@ public class LayoutSiteNavigationMenuItemTypeController
 		Layout layout = _layoutLocalService.getLayout(plid);
 
 		return _portal.getLayoutFriendlyURL(layout, themeDisplay);
+	}
+
+	@Override
+	public JSONObject getViewContext(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		JSONObject jsonObject = _getSiteNavigationMenuItemJSONObject(
+			request, response, siteNavigationMenuItem);
+
+		return jsonObject;
 	}
 
 	@Reference(
@@ -230,6 +252,75 @@ public class LayoutSiteNavigationMenuItemTypeController
 		return jsonArray;
 	}
 
+	private JSONObject _getSiteNavigationMenuItemJSONObject(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		UnicodeProperties properties = getTypeSettingsProperties(
+			siteNavigationMenuItem);
+
+		long plid = GetterUtil.getLong(properties.getProperty("id"));
+
+		Layout layout = _layoutLocalService.getLayout(plid);
+
+		jsonObject.put(
+			"children",
+			_getSiteNavigationMenuItemsJSONArray(
+				request, response, siteNavigationMenuItem));
+
+		ResourceBundle siteNavigationMenuItemTypeResourceBundle =
+			ResourceBundleUtil.getBundle(
+				"content.Language", themeDisplay.getLocale(), getClass());
+
+		jsonObject.put("icon", getIcon());
+		jsonObject.put("id", plid);
+		jsonObject.put("name", getLayoutBreadcrumb(themeDisplay, layout));
+		jsonObject.put("type", getType());
+		jsonObject.put(
+			"typeLabel",
+			LanguageUtil.get(
+				siteNavigationMenuItemTypeResourceBundle,
+				"site.navigation.menu.item.types." + getType()));
+		jsonObject.put("value", layout.getName(themeDisplay.getLocale()));
+
+		return jsonObject;
+	}
+
+	private JSONArray _getSiteNavigationMenuItemsJSONArray(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<SiteNavigationMenuItem> siteNavigationMenuItems =
+			_siteNavigationMenuItemLocalService.
+				getSiteNavigationMenuItemsByParent(
+					siteNavigationMenuItem.getSiteNavigationMenuItemId());
+
+		for (SiteNavigationMenuItem childSiteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			SiteNavigationMenuItemTypeController
+				siteNavigationMenuItemTypeController =
+					_siteNavigationMenuItemTypeControllerTracker.
+						getSiteNavigationMenuItemTypeController(
+							childSiteNavigationMenuItem.getType());
+
+			jsonArray.put(
+				siteNavigationMenuItemTypeController.getViewContext(
+					request, response, childSiteNavigationMenuItem));
+		}
+
+		return jsonArray;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutSiteNavigationMenuItemTypeController.class);
 
@@ -238,5 +329,13 @@ public class LayoutSiteNavigationMenuItemTypeController
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SiteNavigationMenuItemLocalService
+		_siteNavigationMenuItemLocalService;
+
+	@Reference
+	private SiteNavigationMenuItemTypeControllerTracker
+		_siteNavigationMenuItemTypeControllerTracker;
 
 }
