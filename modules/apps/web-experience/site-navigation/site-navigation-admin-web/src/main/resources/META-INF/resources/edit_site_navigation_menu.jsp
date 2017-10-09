@@ -58,6 +58,7 @@ String[] types = siteNavigationMenuItemTypeRegistry.getTypes();
 
 				context.put("availableItemTypes", siteNavigationAdminDisplayContext.getAvailableItemsJSONArray());
 				context.put("locale", locale);
+				context.put("menuItems", siteNavigationAdminDisplayContext.getMenuItemsJSONArray());
 				context.put("menuItemsInput", liferayPortletResponse.getNamespace() + "menuItems");
 				context.put("pathThemeImages", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg#");
 				context.put("selectedItemType", siteNavigationAdminDisplayContext.getSelectedItemTypeJSONObject());
