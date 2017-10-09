@@ -11,7 +11,6 @@ import templates from './NavigationMenuToolbox.soy';
 
 /**
  * NavigationMenuToolbox
- *
  */
 class NavigationMenuToolbox extends Component {
 
@@ -24,9 +23,9 @@ class NavigationMenuToolbox extends Component {
 	_handleContextChanged(data) {
 		let selectedItemType = this.selectedItemType;
 
-		for (let property in data) {
-			selectedItemType.context[property] = data[property];
-		}
+		Object.keys(data).forEach(
+			(property) => selectedItemType.context[property] = data[property]
+		);
 
 		this.emit('itemTypeSelected', selectedItemType);
 	}
@@ -54,8 +53,8 @@ class NavigationMenuToolbox extends Component {
 		const node = event.delegateTarget;
 		const type = node.dataset.type;
 
-		let selectedItemType = this.availableItemTypes.filter(
-			(availableItemType) => availableItemType.type === type)[0];
+		let selectedItemType = this.availableItemTypes.find(
+			(availableItemType) => availableItemType.type === type);
 
 		this.emit('itemTypeSelected', selectedItemType);
 	}
