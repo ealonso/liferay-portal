@@ -17,7 +17,15 @@
 						<div class="basic-search-slider">
 							<button class="basic-search-close btn btn-default" type="button"><span class="icon-remove"></span></button>
 
-							<input class="form-control" data-oninput="searchNodes_" name="{$namespace}filterKeywords" placeholder="Search" type="text"/>
+							{let $attributes kind="attributes"}
+								class="form-control"
+								data-oninput="searchNodes_"
+								name="{$namespace}filterKeywords"
+								placeholder="Search"
+								type="text"
+							{/let}
+
+							<input {$attributes} />
 						</div>
 					</div>
 
@@ -29,7 +37,7 @@
 		</nav>
 
 		<fieldset class="panel-body">
-			<div class="element-tree" id="{$namespace}layoutContainer" ref="treeContainer">
+			<div class="element-tree" id="{$namespace}layoutContainer">
 				{call CardsTreeview.render}
 					{param events: [ 'selectedNodesChanged': $_selectedNodeChange ] /}
 					{param nodes: $nodes /}
