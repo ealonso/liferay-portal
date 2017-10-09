@@ -7,23 +7,27 @@
 	{@param selectedItemType: ?}
 	{@param? availableItemTypes: list<?>}
 	{@param? _handleItemDeleted: any}
+	{@param? _handleItemMoved: any}
 	{@param? _handleItemSelected: any}
 	{@param? _handleItemTypeSelected: any}
 	{@param? menuItems: list<?>}
 	{@param? pathThemeImages: string}
 
-	<div class="card-horizontal navigation-menu-builder" ref="menuBuilder">
+	<div class="card navigation-menu-builder">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col col-md menu-container " ref="container">
+				<div class="col col-md">
 					{call NavigationMenuContainer.render}
-						{param events: [ 'itemDeleted': $_handleItemDeleted ] /}
+						{param events: [
+							'itemDeleted': $_handleItemDeleted,
+							'itemMoved': $_handleItemMoved
+						] /}
 						{param items: $menuItems /}
 						{param pathThemeImages: $pathThemeImages /}
 					{/call}
 				</div>
 
-				<div class="col col-md-4 menu-toolbox" ref="toolbox">
+				<div class="col col-md-4">
 					{call NavigationMenuToolbox.render}
 						{param availableItemTypes: $availableItemTypes /}
 						{param events: [
@@ -31,6 +35,7 @@
 							'itemTypeSelected': $_handleItemTypeSelected
 						] /}
 						{param pathThemeImages: $pathThemeImages /}
+						{param ref: 'toolbox' /}
 						{param selectedItemType: $selectedItemType /}
 					{/call}
 				</div>
