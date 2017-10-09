@@ -57,6 +57,7 @@ import com.liferay.site.navigation.service.SiteNavigationMenuServiceUtil;
 public class SiteNavigationMenuServiceHttp {
 	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
 		HttpPrincipal httpPrincipal, long groupId, java.lang.String name,
+		java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -65,7 +66,7 @@ public class SiteNavigationMenuServiceHttp {
 					_addSiteNavigationMenuParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
-					name, serviceContext);
+					name, serializedMenuItems, serviceContext);
 
 			Object returnObj = null;
 
@@ -298,7 +299,7 @@ public class SiteNavigationMenuServiceHttp {
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
 		HttpPrincipal httpPrincipal, long siteNavigationMenuId,
-		java.lang.String name,
+		java.lang.String name, java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -307,7 +308,8 @@ public class SiteNavigationMenuServiceHttp {
 					_updateSiteNavigationMenuParameterTypes8);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					siteNavigationMenuId, name, serviceContext);
+					siteNavigationMenuId, name, serializedMenuItems,
+					serviceContext);
 
 			Object returnObj = null;
 
@@ -333,7 +335,7 @@ public class SiteNavigationMenuServiceHttp {
 
 	private static Log _log = LogFactoryUtil.getLog(SiteNavigationMenuServiceHttp.class);
 	private static final Class<?>[] _addSiteNavigationMenuParameterTypes0 = new Class[] {
-			long.class, java.lang.String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[] _deleteSiteNavigationMenuParameterTypes1 = new Class[] {
@@ -360,7 +362,7 @@ public class SiteNavigationMenuServiceHttp {
 			long.class, java.lang.String.class
 		};
 	private static final Class<?>[] _updateSiteNavigationMenuParameterTypes8 = new Class[] {
-			long.class, java.lang.String.class,
+			long.class, java.lang.String.class, java.lang.String.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }

@@ -67,11 +67,12 @@ import java.rmi.RemoteException;
 public class SiteNavigationMenuServiceSoap {
 	public static com.liferay.site.navigation.model.SiteNavigationMenuSoap addSiteNavigationMenu(
 		long groupId, java.lang.String name,
+		java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			com.liferay.site.navigation.model.SiteNavigationMenu returnValue = SiteNavigationMenuServiceUtil.addSiteNavigationMenu(groupId,
-					name, serviceContext);
+					name, serializedMenuItems, serviceContext);
 
 			return com.liferay.site.navigation.model.SiteNavigationMenuSoap.toSoapModel(returnValue);
 		}
@@ -192,11 +193,12 @@ public class SiteNavigationMenuServiceSoap {
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenuSoap updateSiteNavigationMenu(
 		long siteNavigationMenuId, java.lang.String name,
+		java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 		try {
 			com.liferay.site.navigation.model.SiteNavigationMenu returnValue = SiteNavigationMenuServiceUtil.updateSiteNavigationMenu(siteNavigationMenuId,
-					name, serviceContext);
+					name, serializedMenuItems, serviceContext);
 
 			return com.liferay.site.navigation.model.SiteNavigationMenuSoap.toSoapModel(returnValue);
 		}
