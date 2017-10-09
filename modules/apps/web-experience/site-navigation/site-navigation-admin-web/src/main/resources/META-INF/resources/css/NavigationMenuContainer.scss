@@ -1,4 +1,5 @@
 .navigation-menu-container {
+	height: 100%;
 	padding: 40px;
 
 	.card {
@@ -56,5 +57,10 @@
 	.selected {
 		box-shadow: inset 0 0 0 2px #65B6F0;
 		outline: none;
+	}
+
+	.targetOver, &.targetOver {
+		box-shadow: none;
+		outline: 2px dashed #65B6F0;
 	}
 }

@@ -15,7 +15,33 @@ class NavigationMenuTree extends SelectLayout {
 	 * @inheritDoc
 	 */
 	attached() {
-		dom.on('.navigation-menu-tree .card', 'keyup', this._handleNodeKeyUp.bind(this))
+		dom.on(
+			'.navigation-menu-tree .card', 'keyup',
+			this._handleNodeKeyUp.bind(this));
+
+		dom.on(
+			'.navigation-menu-tree .card', 'dblclick',
+			this._handleNodeDblClick.bind(this));
+	}
+
+	/**
+	 * This is called when one of this tree view's nodes receives a double
+	 * click.
+	 *
+	 * @param {!Event} event
+	 * @protected
+	 */
+	_handleNodeDblClick(event) {
+		const target = event.delegateTarget.parentNode.parentNode.parentNode;
+		const treeView = this.refs.treeView;
+
+		const node = treeView.getNodeObj(
+			target.dataset.treeviewPath.split('-'));
+
+		this.emit(
+			'itemSelected',
+			node
+		);
 	}
 
 	/**
@@ -28,7 +54,8 @@ class NavigationMenuTree extends SelectLayout {
 		const target = event.delegateTarget.parentNode.parentNode.parentNode;
 		const treeView = this.refs.treeView;
 
-		const node = treeView.getNodeObj(target.dataset.treeviewPath.split('-'));
+		const node = treeView.getNodeObj(
+			target.dataset.treeviewPath.split('-'));
 
 		if (event.keyCode === 13) {
 			this.emit(
