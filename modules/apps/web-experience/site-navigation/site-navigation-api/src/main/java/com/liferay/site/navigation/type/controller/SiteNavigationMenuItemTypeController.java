@@ -41,6 +41,11 @@ public interface SiteNavigationMenuItemTypeController {
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws Exception;
 
+	public JSONObject getViewContext(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception;
+
 	public boolean isBrowsable();
 
 	public boolean isCheckViewPermission();
