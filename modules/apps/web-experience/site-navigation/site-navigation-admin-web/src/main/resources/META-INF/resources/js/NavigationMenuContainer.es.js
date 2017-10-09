@@ -1,22 +1,162 @@
 import Component from 'metal-component';
 import { Config } from 'metal-state';
+import { Drag, DragDrop } from 'metal-drag-drop';
 import Soy from 'metal-soy';
 
 import templates from './NavigationMenuContainer.soy';
 
 /**
  * NavigationMenuContainer
- *
  */
 class NavigationMenuContainer extends Component {
 
 	/**
 	 * @inheritDoc
 	 */
+	attached() {
+		const dragDrop = new DragDrop(
+			{
+				constrain: '.navigation-menu-container',
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				handles: '.draggable',
+				sources: '.navigation-menu-container .card',
+				targets: '.navigation-menu-container, ' +
+						 '.navigation-menu-container .card'
+			}
+		);
+
+		dragDrop.on(
+			DragDrop.Events.END,
+			(data, event) => {
+				event.preventDefault();
+
+				this._handleFocus(data);
+				this._handleDropItem(data);
+			}
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	rendered() {
 		if (this.selectedId) {
-			document.querySelector(`a[data-id="${this.selectedId}"]`).focus();
+			const selectedElement = document.querySelector(
+				`a[data-id="${this.selectedId}"]`);
+
+			if (!selectedElement) {
+				return;
+			}
+
+			selectedElement.focus();
 		}
+	}
+
+	/**
+	 *
+	 * Checks if item or any of it's children contains an element with
+	 * specified id.
+	 *
+	 * @param item Item to start search from.
+	 * @param id ID to check.
+	 * @returns {*} Parent item object in case when child exists and false
+	 * otherwise.
+	 * @private
+	 */
+	_getParent(item, id) {
+		if (this._hasChild(item, id)) {
+			return item;
+		}
+
+		if (item.children) {
+			return item.children.reduce(
+				(prev, next) => {
+					const parent = this._getParent(next, id);
+
+					if (!prev && parent) {
+						return parent;
+					}
+
+					return prev;
+				}, false
+			);
+		}
+	};
+
+	/**
+	 * This is called when user drops the item on the container.
+	 *
+	 * @param {!object} data Drop event data
+	 * @private
+	 */
+	_handleDropItem(data) {
+		if (!data.target || data.source === data.target) {
+			return;
+		}
+
+		let sourceId = data.source.querySelector("a").dataset.id;
+		let targetId = 0;
+
+		if (!data.target.classList.contains("navigation-menu-container")) {
+			targetId = data.target.querySelector("a").dataset.id;
+		}
+
+		let items = this.items;
+
+		let currentParent = items.reduce(
+			(result, item) => {
+				let parent = this._getParent(item, sourceId);
+
+				if (!result && parent) {
+					return parent;
+				}
+
+				return result;
+			}, false
+		);
+
+		let parentItems = items;
+
+		if (currentParent) {
+			parentItems = currentParent.children;
+		}
+
+		let currentIndex = parentItems.reduce(
+			(result, item, index) => item.id == sourceId ? index : result, -1
+		);
+
+		let item = parentItems.splice(currentIndex, 1)[0];
+
+		let newParent = items.reduce(
+			(result, item) => {
+				let parent = this._getParent(item, targetId);
+
+				if (!result && parent) {
+					return parent.children.reduce(
+						(prev, next) => next.id == targetId ? next : prev
+					);
+				}
+
+				return result;
+			}, false
+		);
+
+		if (!newParent) {
+			newParent = items.reduce(
+				(result, item) => item.id == targetId ? item : result, false);
+		}
+
+		if (newParent) {
+			newParent.children.push(item);
+		}
+		else {
+			items.push(item);
+		}
+
+		this.items = this.items;
+		this.selectedId = sourceId;
+
+		this.emit('itemMoved');
 	}
 
 	/**
@@ -26,7 +166,7 @@ class NavigationMenuContainer extends Component {
 	 * @private
 	 */
 	_handleDeleteItem(event) {
-		let id = event.delegateTarget.dataset.id;
+		const id = event.delegateTarget.dataset.id;
 
 		this.emit(
 			'itemDeleted',
@@ -40,8 +180,16 @@ class NavigationMenuContainer extends Component {
 	 * This is called when user selects some item in the container.
 	 * @private
 	 */
-	_handleFocus() {
-		let id = event.delegateTarget.dataset.id;
+	_handleFocus(event) {
+		let id;
+
+		if (event.source) {
+			id = event.source.querySelector("a").dataset.id;
+		}
+
+		if (!id && event.target.classList.contains("card-focus-link")) {
+			id = event.delegateTarget.dataset.id;
+		}
 
 		if (id) {
 			this.selectedId = id;
@@ -79,6 +227,25 @@ class NavigationMenuContainer extends Component {
 			this.emit('itemMoved');
 		}
 	}
+
+	/**
+	 * Checks if item contains a child element with specified id.
+	 *
+	 * @param item Item to start search from.
+	 * @param id ID to check.
+	 * @returns {boolean} True if item has child with specified id, false
+	 * otherwise.
+	 * @private
+	 */
+	_hasChild(item, id) {
+		if (!item.children) {
+			return false;
+		}
+
+		return item.children.reduce(
+			(prev, next) => !prev && next.id == id ? true : prev, false
+		)
+	};
 
 	/**
 	 * Moves item across the container
@@ -125,43 +292,12 @@ class NavigationMenuContainer extends Component {
 			items.splice(oldIndex - 1, 1, parent);
 		}
 		else {
-			const hasChild = (item, id) => {
-				if (!item.children) {
-					return false;
-				}
-
-				return item.children.reduce(
-					(prev, next) => !prev && next.id == id ? true : prev, false
-				)
-			};
-
-			const getParent = (item, id) => {
-				if (hasChild(item, id)) {
-					return item;
-				}
-
-				if (item.children) {
-					return item.children.reduce(
-						(prev, next) => {
-							let parent = getParent(next, id);
-
-							if (!prev && parent) {
-								return parent;
-							}
-							else {
-								return false;
-							}
-						}, false
-					);
-				}
-			};
-
 			let currentParent;
 			let newParent;
 
 			currentParent = items.reduce(
 				(result, item) => {
-					let parent = getParent(item, id);
+					let parent = this._getParent(item, id);
 
 					if (!result && parent) {
 						return parent;
@@ -177,7 +313,7 @@ class NavigationMenuContainer extends Component {
 
 			newParent = items.reduce(
 				(result, item) => {
-					let parent = getParent(item, currentParent.id);
+					let parent = this._getParent(item, currentParent.id);
 
 					if (!result && parent) {
 						return parent;
