@@ -75,6 +75,8 @@ class NavigationMenuContainer extends Component {
 		if (event.keyCode > 36 && event.keyCode < 50) {
 			this.items = this.items;
 			this.selectedId = id;
+
+			this.emit('itemMoved');
 		}
 	}
 
@@ -254,6 +256,7 @@ NavigationMenuContainer.STATE = {
 			icon: Config.string().required(),
 			name: Config.string().required(),
 			type: Config.string().required(),
+			typeLabel: Config.string().required(),
 			value: Config.any().required(),
 			children: Config.array()
 		})

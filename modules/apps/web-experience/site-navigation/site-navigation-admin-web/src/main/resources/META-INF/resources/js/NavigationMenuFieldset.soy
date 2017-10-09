@@ -20,14 +20,14 @@
 			{foreach $field in $fields}
 				<div class="fieldset-field">
 					<label class="control-label" for="{$namespace}{$field.name}">
-						{msg desc=""}{$field.label}{/msg}
+						{$field.label}
 					</label>
 
 					<input class="form-control" data-fieldname="{$field.name}" id="{$namespace}{$field.name}" name="{$namespace}{$field.name}" type="text" value="{$field.value}" />
 
 					{if $field.description}
 						<label class="text-muted control-label" for="{$namespace}{$field.name}">
-							{msg desc=""}{$field.description}{/msg}
+							{$field.description}
 						</label>
 					{/if}
 				</div>

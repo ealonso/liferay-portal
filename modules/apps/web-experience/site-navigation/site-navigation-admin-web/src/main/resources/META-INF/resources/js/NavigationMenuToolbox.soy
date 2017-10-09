@@ -18,7 +18,7 @@
 					<div class="card-horizontal" data-onclick="toggle">
 						<div class="card-col-content card-col-gutters">
 							<span class="lfr-card-title-text text-default treeview-node-name truncate-text" data-type="{$selectedItemType.type}">
-								{msg desc=""}{$selectedItemType.type}{/msg}
+								{$selectedItemType.label}
 							</span>
 						</div>
 
@@ -41,7 +41,7 @@
 											<use xlink:href="{$pathThemeImages}{$availableItemType.icon}"></use>
 										</svg>
 									</span>
-									<span>{msg desc=""}{$availableItemType.type}{/msg}</span>
+									<span>{$availableItemType.label}</span>
 								</a>
 							</li>
 						{/foreach}
@@ -72,7 +72,7 @@
 						] /}
 						{param fields: $selectedItemType.context.fields /}
 						{param icon: $selectedItemType.context.icon /}
-						{param name: '' /}
+						{param name: not $selectedItemType.context.name ? '' : $selectedItemType.context.name /}
 						{param namespace: $selectedItemType.context.namespace /}
 						{param type: $selectedItemType.context.type /}
 					{/call}
