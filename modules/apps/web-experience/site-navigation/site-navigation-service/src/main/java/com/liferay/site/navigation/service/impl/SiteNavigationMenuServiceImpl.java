@@ -34,7 +34,8 @@ public class SiteNavigationMenuServiceImpl
 
 	@Override
 	public SiteNavigationMenu addSiteNavigationMenu(
-			long groupId, String name, ServiceContext serviceContext)
+			long groupId, String name, String serializedMenuItems,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		SiteNavigationPermission.check(
@@ -42,7 +43,7 @@ public class SiteNavigationMenuServiceImpl
 			SiteNavigationActionKeys.ADD_SITE_NAVIGATION_MENU);
 
 		return siteNavigationMenuLocalService.addSiteNavigationMenu(
-			getUserId(), groupId, name, serviceContext);
+			getUserId(), groupId, name, serializedMenuItems, serviceContext);
 	}
 
 	@Override
@@ -103,7 +104,7 @@ public class SiteNavigationMenuServiceImpl
 
 	@Override
 	public SiteNavigationMenu updateSiteNavigationMenu(
-			long siteNavigationMenuId, String name,
+			long siteNavigationMenuId, String name, String serializedMenuItems,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -111,7 +112,8 @@ public class SiteNavigationMenuServiceImpl
 			getPermissionChecker(), siteNavigationMenuId, ActionKeys.UPDATE);
 
 		return siteNavigationMenuLocalService.updateSiteNavigationMenu(
-			getUserId(), siteNavigationMenuId, name, serviceContext);
+			getUserId(), siteNavigationMenuId, name, serializedMenuItems,
+			serviceContext);
 	}
 
 }

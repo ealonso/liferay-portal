@@ -61,6 +61,9 @@ public class EditSiteNavigationMenuMVCActionCommand
 		String selectedItemType = ParamUtil.getString(
 			actionRequest, "selectedItemType");
 
+		String serializedMenuItems = ParamUtil.getString(
+			actionRequest, "menuItems");
+
 		String name = ParamUtil.getString(actionRequest, "name");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -71,12 +74,14 @@ public class EditSiteNavigationMenuMVCActionCommand
 		if (siteNavigationMenuId > 0) {
 			siteNavigationMenu =
 				_siteNavigationMenuService.updateSiteNavigationMenu(
-					siteNavigationMenuId, name, serviceContext);
+					siteNavigationMenuId, name, serializedMenuItems,
+					serviceContext);
 		}
 		else {
 			siteNavigationMenu =
 				_siteNavigationMenuService.addSiteNavigationMenu(
-					themeDisplay.getScopeGroupId(), name, serviceContext);
+					themeDisplay.getScopeGroupId(), name, serializedMenuItems,
+					serviceContext);
 		}
 
 		boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(

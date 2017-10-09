@@ -14,6 +14,8 @@
 
 package com.liferay.site.navigation.admin.web.internal.portlet.action;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -60,9 +62,12 @@ public class AddSiteNavigationMenuMVCActionCommand
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
 		SiteNavigationMenu siteNavigationMenu =
 			_siteNavigationMenuService.addSiteNavigationMenu(
-				themeDisplay.getScopeGroupId(), name, serviceContext);
+				themeDisplay.getScopeGroupId(), name, jsonArray.toString(),
+				serviceContext);
 
 		hideDefaultSuccessMessage(actionRequest);
 
