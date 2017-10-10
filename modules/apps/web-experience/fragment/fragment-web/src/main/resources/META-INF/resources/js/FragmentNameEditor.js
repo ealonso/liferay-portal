@@ -31,7 +31,7 @@ class FragmentNameEditor extends Component {
 		const form = document.getElementById(`${this.namespace}fragmentNameEditorForm`);
 		const formData = new FormData(form);
 
-		fetch(this.actionURL, { 
+		fetch(this.actionURL, {
 			body: formData,
 			credentials: 'include',
 			method: 'POST',
@@ -63,7 +63,6 @@ class FragmentNameEditor extends Component {
 		}
 	}
 }
-
 
 /**
  * State definition.
