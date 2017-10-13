@@ -951,6 +951,11 @@ public class AssetPublisherDisplayContext {
 
 	public String getTagSelectorURL() {
 		try {
+			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
 			PortletURL portletURL = PortletProviderUtil.getPortletURL(
 				_request, AssetTag.class.getName(),
 				PortletProvider.Action.BROWSE);
@@ -962,8 +967,12 @@ public class AssetPublisherDisplayContext {
 			portletURL.setParameter(
 				"eventName", _portletResponse.getNamespace() + "selectTag");
 			portletURL.setParameter(
-				"groupIds", StringUtil.merge(getGroupIds()));
+				"portletResource", portletDisplay.getPortletResource());
 			portletURL.setParameter("selectedTags", "{selectedTags}");
+			portletURL.setParameter(
+				"selPlid", String.valueOf(themeDisplay.getPlid()));
+			portletURL.setParameter(
+				"useScopeGroupIds", Boolean.TRUE.toString());
 			portletURL.setWindowState(LiferayWindowState.POP_UP);
 
 			return portletURL.toString();
@@ -1001,9 +1010,6 @@ public class AssetPublisherDisplayContext {
 	}
 
 	public String getVocabularyIds() throws Exception {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		List<AssetVocabulary> vocabularies =
 			AssetVocabularyServiceUtil.getGroupsVocabularies(getGroupIds());
 
