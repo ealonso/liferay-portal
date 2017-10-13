@@ -163,6 +163,11 @@ public class AssetPublisherDisplayContext {
 	}
 
 	public long[] getAllAssetCategoryIds() throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
 		if (_allAssetCategoryIds != null) {
 			return _allAssetCategoryIds;
 		}
@@ -170,6 +175,8 @@ public class AssetPublisherDisplayContext {
 		_allAssetCategoryIds = new long[0];
 
 		long assetCategoryId = ParamUtil.getLong(_request, "categoryId");
+		String publicNamespace = ParamUtil.getString(
+			_request, "publicNamespace", "1");
 
 		String selectionStyle = getSelectionStyle();
 
@@ -179,7 +186,9 @@ public class AssetPublisherDisplayContext {
 		}
 
 		if ((assetCategoryId > 0) &&
-			!ArrayUtil.contains(_allAssetCategoryIds, assetCategoryId)) {
+			!ArrayUtil.contains(_allAssetCategoryIds, assetCategoryId) &&
+			(publicNamespace.equals("1") ||
+			 publicNamespace.equals(portletDisplay.getNamespace()))) {
 
 			_allAssetCategoryIds = ArrayUtil.append(
 				_allAssetCategoryIds, assetCategoryId);
@@ -189,6 +198,11 @@ public class AssetPublisherDisplayContext {
 	}
 
 	public String[] getAllAssetTagNames() throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
 		if (_allAssetTagNames != null) {
 			return _allAssetTagNames;
 		}
@@ -196,6 +210,8 @@ public class AssetPublisherDisplayContext {
 		_allAssetTagNames = new String[0];
 
 		String assetTagName = ParamUtil.getString(_request, "tag");
+		String publicNamespace = ParamUtil.getString(
+			_request, "publicNamespace", "1");
 
 		String selectionStyle = getSelectionStyle();
 
@@ -205,7 +221,9 @@ public class AssetPublisherDisplayContext {
 		}
 
 		if (Validator.isNotNull(assetTagName) &&
-			!ArrayUtil.contains(_allAssetTagNames, assetTagName)) {
+			!ArrayUtil.contains(_allAssetTagNames, assetTagName) &&
+			(publicNamespace.equals("1") ||
+			 publicNamespace.equals(portletDisplay.getNamespace()))) {
 
 			_allAssetTagNames = ArrayUtil.append(
 				_allAssetTagNames, assetTagName);
