@@ -3,7 +3,7 @@
 
 <routes>
 	<route>
-		<pattern>/{tag}</pattern>
+		<pattern>/{tag}/{publicNamespace}</pattern>
 		<ignored-parameter name="mvcPath" />
 	</route>
 	<route>
