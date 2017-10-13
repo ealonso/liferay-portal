@@ -16,19 +16,25 @@ package com.liferay.asset.tags.selector.web.internal.display.context;
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
+import com.liferay.asset.tags.selector.web.internal.contants.AssetTagsSelectorWebKeys;
 import com.liferay.asset.tags.selector.web.internal.search.EntriesChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
 import java.util.List;
 
+import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -43,6 +49,9 @@ public class AssetTagsSelectorDisplayContext {
 	public AssetTagsSelectorDisplayContext(
 		RenderRequest renderRequest, RenderResponse renderResponse,
 		HttpServletRequest request) {
+
+		_assetPublisherHelper = (AssetPublisherHelper)request.getAttribute(
+			AssetTagsSelectorWebKeys.ASSET_PUBLISHER_HELPER);
 
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
@@ -71,7 +80,7 @@ public class AssetTagsSelectorDisplayContext {
 		return _eventName;
 	}
 
-	public long[] getGroupIds() {
+	public long[] getGroupIds() throws PortalException {
 		if (ArrayUtil.isNotEmpty(_groupIds)) {
 			return _groupIds;
 		}
@@ -79,11 +88,27 @@ public class AssetTagsSelectorDisplayContext {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		_groupIds = StringUtil.split(
-			ParamUtil.getString(_request, "groupIds"), 0L);
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		if (ArrayUtil.isEmpty(_groupIds)) {
+		long selPlid = ParamUtil.getLong(
+			_request, "selPlid", themeDisplay.getPlid());
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(selPlid);
+
+		PortletPreferences portletPreferences =
+			PortletPreferencesFactoryUtil.getExistingPortletSetup(
+				layout, portletDisplay.getPortletResource());
+
+		boolean useScopeGroupIds = ParamUtil.getBoolean(
+			_request, "useScopeGroupIds");
+
+		if (!useScopeGroupIds) {
 			_groupIds = new long[] {themeDisplay.getScopeGroupId()};
+		}
+		else {
+			_groupIds = _assetPublisherHelper.getGroupIds(
+				portletPreferences, themeDisplay.getScopeGroupId(),
+				themeDisplay.getLayout());
 		}
 
 		return _groupIds;
@@ -127,7 +152,7 @@ public class AssetTagsSelectorDisplayContext {
 		return portletURL;
 	}
 
-	public SearchContainer getTagsSearchContainer() {
+	public SearchContainer getTagsSearchContainer() throws PortalException {
 		if (_tagsSearchContainer != null) {
 			return _tagsSearchContainer;
 		}
@@ -205,6 +230,7 @@ public class AssetTagsSelectorDisplayContext {
 		return false;
 	}
 
+	private final AssetPublisherHelper _assetPublisherHelper;
 	private String _displayStyle;
 	private String _eventName;
 	private long[] _groupIds;
