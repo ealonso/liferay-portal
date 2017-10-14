@@ -29,15 +29,16 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Eudaldo Alonso
  */
-public class YouTubeDisplayContext {
+public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayContext {
 
-	public YouTubeDisplayContext(
+	public BaseVideoEmbedderDisplayContext(
 		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		_request = request;
 		_portletPreferences = portletPreferences;
 	}
 
+	@Override
 	public String getEmbedURL() {
 		StringBundler sb = new StringBundler(13);
 
@@ -78,6 +79,7 @@ public class YouTubeDisplayContext {
 		return sb.toString();
 	}
 
+	@Override
 	public String getHeight() {
 		if (_height != null) {
 			return _height;
@@ -120,6 +122,7 @@ public class YouTubeDisplayContext {
 		return sb.toString();
 	}
 
+	@Override
 	public String getPresetSize() {
 		if (_presetSize != null) {
 			return _presetSize;
@@ -141,6 +144,7 @@ public class YouTubeDisplayContext {
 		return _startTime;
 	}
 
+	@Override
 	public String getURL() {
 		if (_url != null) {
 			return _url;
@@ -156,6 +160,7 @@ public class YouTubeDisplayContext {
 			getId();
 	}
 
+	@Override
 	public String getWidth() {
 		if (_width != null) {
 			return _width;
@@ -208,6 +213,7 @@ public class YouTubeDisplayContext {
 		return _closedCaptioning;
 	}
 
+	@Override
 	public boolean isCustomSize() {
 		String presetSize = getPresetSize();
 
