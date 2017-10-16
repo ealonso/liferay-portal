@@ -18,16 +18,7 @@
 
 <c:choose>
 	<c:when test="<%= Validator.isNotNull(displayContext.getURL()) %>">
-		<c:choose>
-			<c:when test="<%= displayContext.isShowThumbnail() %>">
-				<aui:a href="<%= displayContext.getWatchURL() %>" rel="external" title='<%= HtmlUtil.escapeAttribute(LanguageUtil.get(request, "watch-this-video-at-youtube")) %>'>
-					<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="youtube-video" />" height="<%= displayContext.getHeight() %>" src="<%= displayContext.getImageURL() %>" width="<%= displayContext.getWidth() %>" />
-				</aui:a>
-			</c:when>
-			<c:otherwise>
-				<iframe allowfullscreen frameborder="0" height="<%= displayContext.getHeight() %>" src="<%= displayContext.getEmbedURL() %>" width="<%= displayContext.getWidth() %>" wmode="Opaque" /></iframe>
-			</c:otherwise>
-		</c:choose>
+		<iframe allowfullscreen frameborder="0" height="<%= displayContext.getHeight() %>" src="<%= displayContext.getEmbedURL() %>" width="<%= displayContext.getWidth() %>" wmode="Opaque" /></iframe>
 	</c:when>
 	<c:otherwise>
 		<liferay-util:include page="/html/portal/portlet_not_setup.jsp" />

@@ -79,17 +79,6 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		return sb.toString();
 	}
 
-	public String getImageURL() {
-		StringBundler sb = new StringBundler(4);
-
-		sb.append(HttpUtil.getProtocol(_request));
-		sb.append("://img.youtube.com/vi/");
-		sb.append(getId());
-		sb.append("/0.jpg");
-
-		return sb.toString();
-	}
-
 	public String getStartTime() {
 		if (_startTime != null) {
 			return _startTime;
@@ -99,11 +88,6 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 			"startTime", StringPool.BLANK);
 
 		return _startTime;
-	}
-
-	public String getWatchURL() {
-		return HttpUtil.getProtocol(_request) + "://www.youtube.com/watch?v=" +
-			getId();
 	}
 
 	public boolean isAnnotations() {
@@ -161,23 +145,11 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		return _loop;
 	}
 
-	public boolean isShowThumbnail() {
-		if (_showThumbnail != null) {
-			return _showThumbnail;
-		}
-
-		_showThumbnail = GetterUtil.getBoolean(
-			_portletPreferences.getValue("showThumbnail", "false"));
-
-		return _showThumbnail;
-	}
-
 	private Boolean _annotations;
 	private Boolean _autoPlay;
 	private Boolean _closedCaptioning;
 	private Boolean _enableKeyboardControls;
 	private Boolean _loop;
-	private Boolean _showThumbnail;
 	private String _startTime;
 
 }
