@@ -18,6 +18,11 @@
 
 <%
 String redirect = ParamUtil.getString(request, "redirect");
+
+Class<?> clazz = displayContext.getClass();
+String[] displayContextFullQualifiedClass = clazz.toString().split("\\.| ");
+String displayContextClass = displayContextFullQualifiedClass[displayContextFullQualifiedClass.length - 1];
+String advancedConfigPath = "/advancedConfigs/" + displayContextClass + ".jsp";
 %>
 
 <liferay-portlet:actionURL portletConfiguration="<%= true %>" var="configurationActionURL" />
@@ -52,25 +57,11 @@ String redirect = ParamUtil.getString(request, "redirect");
 					</aui:input>
 				</aui:fieldset>
 
-				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="advanced-options">
-					<aui:input name="preferences--showThumbnail--" type="toggle-switch" value="<%= displayContext.isShowThumbnail() %>" />
-
-					<div class="<%= displayContext.isShowThumbnail() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />videoPreferences">
-						<aui:input inlineField="<%= true %>" label="auto-play" name="preferences--autoplay--" type="toggle-switch" value="<%= displayContext.isAutoPlay() %>" />
-
-						<aui:input inlineField="<%= true %>" name="preferences--loop--" type="toggle-switch" value="<%= displayContext.isLoop() %>" />
-
-						<aui:input inlineField="<%= true %>" name="preferences--enableKeyboardControls--" type="toggle-switch" value="<%= displayContext.isEnableKeyboardControls() %>" />
-
-						<aui:input inlineField="<%= true %>" name="preferences--annotations--" type="toggle-switch" value="<%= displayContext.isAnnotations() %>" />
-
-						<aui:input inlineField="<%= true %>" name="preferences--closedCaptioning--" type="toggle-switch" value="<%= displayContext.isClosedCaptioning() %>" />
-
-						<aui:input name="preferences--startTime--" value="<%= displayContext.getStartTime() %>">
-							<aui:validator name="digits" />
-						</aui:input>
-					</div>
-				</aui:fieldset>
+				<c:choose>
+					<c:when test='<%= !displayContextClass.equals("BaseVideoEmbedderDisplayContext") %>'>
+						<liferay-util:include page="<%= advancedConfigPath %>" servletContext="<%= application %>" />
+					</c:when>
+				</c:choose>
 			</aui:fieldset-group>
 		</div>
 	</div>
