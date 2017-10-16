@@ -12,14 +12,21 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.constants;
+package com.liferay.youtube.web.internal.portlet.action;
+
+import com.liferay.portal.kernel.portlet.ConfigurationAction;
+import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
+import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Peter Fellwock
  */
-public class YouTubePortletKeys {
-
-	public static final String YOUTUBE =
-		"com_liferay_youtube_web_portlet_YouTubePortlet";
-
+@Component(
+	immediate = true,
+	property = {"javax.portlet.name=" + VideoEmbedderPortletKeys.VideoEmbedder},
+	service = ConfigurationAction.class
+)
+public class VideoEmbedderConfigurationAction extends DefaultConfigurationAction {
 }

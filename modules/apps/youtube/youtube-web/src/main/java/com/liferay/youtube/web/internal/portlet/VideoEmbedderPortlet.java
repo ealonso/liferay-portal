@@ -17,9 +17,8 @@ package com.liferay.youtube.web.internal.portlet;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.youtube.web.internal.constants.YouTubePortletKeys;
 import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
-
+import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
 import java.io.IOException;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ import org.osgi.service.component.annotations.Reference;
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.template-path=/",
 		"javax.portlet.init-param.view-template=/view.jsp",
-		"javax.portlet.name=" + YouTubePortletKeys.YOUTUBE,
+		"javax.portlet.name=" + VideoEmbedderPortletKeys.VideoEmbedder,
 		"javax.portlet.portlet-info.keywords=Video",
 		"javax.portlet.portlet-info.short-title=VideoEmbedder",
 		"javax.portlet.portlet-info.title=VideoEmbedder",

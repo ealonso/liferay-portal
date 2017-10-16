@@ -26,7 +26,7 @@
 </c:choose>
 
 <aui:script>
-	var portlet = document.getElementById('portlet_<%= YouTubePortletKeys.YOUTUBE %>');
+	var portlet = document.getElementById('portlet_<%= VideoEmbedderPortletKeys.VideoEmbedder %>');
 	var container = portlet.querySelector('.portlet-body');
 	var frame = container.querySelector('iframe');
 

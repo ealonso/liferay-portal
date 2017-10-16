@@ -15,7 +15,7 @@
 package com.liferay.youtube.web.internal.upgrade.v1_0_0;
 
 import com.liferay.portal.kernel.upgrade.BaseUpgradePortletId;
-import com.liferay.youtube.web.internal.constants.YouTubePortletKeys;
+import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
 
 /**
  * @author Peter Fellwock
@@ -25,7 +25,7 @@ public class UpgradePortletId extends BaseUpgradePortletId {
 	@Override
 	protected String[][] getRenamePortletIdsArray() {
 		return new String[][] {
-			new String[] {"1_WAR_youtubeportlet", YouTubePortletKeys.YOUTUBE}
+			new String[] {"1_WAR_videoembedderportlet", VideoEmbedderPortletKeys.VideoEmbedder}
 		};
 	}
 

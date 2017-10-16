@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Peter Fellwock
  */
 @Component(immediate = true, service = UpgradeStepRegistrator.class)
-public class YouTubeWebUpgrade implements UpgradeStepRegistrator {
+public class VideoEmbedderWebUpgrade implements UpgradeStepRegistrator {
 
 	@Override
 	public void register(Registry registry) {
@@ -42,7 +42,7 @@ public class YouTubeWebUpgrade implements UpgradeStepRegistrator {
 
 				@Override
 				protected String[] getPortletIds() {
-					return new String[] {"1_WAR_youtubeportlet"};
+					return new String[] {"1_WAR_videoembedderportlet"};
 				}
 
 			};

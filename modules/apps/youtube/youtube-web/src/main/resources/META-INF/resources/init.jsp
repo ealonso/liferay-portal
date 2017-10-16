@@ -32,6 +32,7 @@ page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.youtube.web.internal.display.context.*" %><%@
 page import="com.liferay.youtube.web.configuration.VideoEmbedderConfiguration" %><%@
+page import="com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys" %>
 
 <%@ page import="java.util.Objects" %>
 
