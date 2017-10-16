@@ -69,15 +69,14 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 			return _height;
 		}
 
-		if (isCustomSize()) {
-			_height = _portletPreferences.getValue("height", "360");
+		if (isCustomRatio()) {
+		_height = _portletPreferences.getValue("height", "16");
 		}
 		else {
-			String presetSize = getPresetSize();
+			String presetRaio = getPresetRatio();
+			String[] ratio = presetRaio.split(":");
 
-			String[] dimensions = presetSize.split("x");
-
-			_height = dimensions[1];
+			_height = ratio[1];
 		}
 
 		return _height;
@@ -95,14 +94,13 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 	}
 
 	@Override
-	public String getPresetSize() {
-		if (_presetSize != null) {
-			return _presetSize;
+	public String getPresetRatio() {
+		if (_presetRatio != null) {
+			return _presetRatio;
 		}
+			_presetRatio = _portletPreferences.getValue("presetRatio", "16:9");
 
-		_presetSize = _portletPreferences.getValue("presetSize", "480x360");
-
-		return _presetSize;
+		return _presetRatio;
 	}
 
 	@Override
@@ -121,26 +119,24 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 		if (_width != null) {
 			return _width;
 		}
-
-		if (isCustomSize()) {
-			_width = _portletPreferences.getValue("width", "480");
+		if (isCustomRatio()) {
+			_width = _portletPreferences.getValue("width", "9");
 		}
 		else {
-			String presetSize = getPresetSize();
+			String presetRatio = getPresetRatio();
 
-			String[] dimensions = presetSize.split("x");
+			String[] ratio = presetRatio.split(":");
 
-			_width = dimensions[0];
+			_width = ratio[0];
 		}
-
 		return _width;
 	}
 
 	@Override
-	public boolean isCustomSize() {
-		String presetSize = getPresetSize();
+	public boolean isCustomRatio() {
+		String presetRatio = getPresetRatio();
 
-		if (Objects.equals(presetSize, "custom")) {
+		if (Objects.equals(presetRatio, "custom")) {
 			return true;
 		}
 
@@ -203,7 +199,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 	protected String _height;
 	protected String _id;
 	protected final PortletPreferences _portletPreferences;
-	protected String _presetSize;
+	protected String _presetRatio;
 	protected final HttpServletRequest _request;
 	protected String _url;
 	protected String _width;
