@@ -1,5 +1,3 @@
-
-
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -61,11 +59,11 @@ Layout curLayout = (Layout)row.getObject();
 	Group selGroup = layoutsAdminDisplayContext.getSelGroup();
 	%>
 
-	<c:if test="<%= !selGroup.isLayoutPrototype() && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), layoutsAdminDisplayContext.getSelLayout(), ActionKeys.PERMISSIONS) %>">
+	<c:if test="<%= !selGroup.isLayoutPrototype() && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), curLayout, ActionKeys.PERMISSIONS) %>">
 		<liferay-security:permissionsURL
 			modelResource="<%= Layout.class.getName() %>"
-			modelResourceDescription="<%= HtmlUtil.escape(layout.getName(themeDisplay.getLocale())) %>"
-			resourcePrimKey="<%= String.valueOf(layout.getPlid()) %>"
+			modelResourceDescription="<%= HtmlUtil.escape(curLayout.getName(themeDisplay.getLocale())) %>"
+			resourcePrimKey="<%= String.valueOf(curLayout.getPlid()) %>"
 			var="permissionsURL"
 			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
 		/>
