@@ -7,7 +7,6 @@ import templates from './NavigationMenuContainer.soy';
 
 /**
  * NavigationMenuContainer
- *
  */
 class NavigationMenuContainer extends Component {
 
@@ -15,7 +14,7 @@ class NavigationMenuContainer extends Component {
 	 * @inheritDoc
 	 */
 	attached() {
-		let dragDrop = new DragDrop(
+		const dragDrop = new DragDrop(
 			{
 				constrain: '.navigation-menu-container',
 				dragPlaceholder: Drag.Placeholder.CLONE,
@@ -42,7 +41,7 @@ class NavigationMenuContainer extends Component {
 	 */
 	rendered() {
 		if (this.selectedId) {
-			let selectedElement = document.querySelector(
+			const selectedElement = document.querySelector(
 				`a[data-id="${this.selectedId}"]`);
 
 			if (!selectedElement) {
@@ -72,7 +71,7 @@ class NavigationMenuContainer extends Component {
 		if (item.children) {
 			return item.children.reduce(
 				(prev, next) => {
-					let parent = this._getParent(next, id);
+					const parent = this._getParent(next, id);
 
 					if (!prev && parent) {
 						return parent;
@@ -91,7 +90,7 @@ class NavigationMenuContainer extends Component {
 	 * @private
 	 */
 	_handleDropItem(data) {
-		if (!data.target || data.source == data.target) {
+		if (!data.target || data.source === data.target) {
 			return;
 		}
 
@@ -167,7 +166,7 @@ class NavigationMenuContainer extends Component {
 	 * @private
 	 */
 	_handleDeleteItem(event) {
-		let id = event.delegateTarget.dataset.id;
+		const id = event.delegateTarget.dataset.id;
 
 		this.emit(
 			'itemDeleted',

@@ -1,3 +1,4 @@
+import {Config} from 'metal-state';
 import {dom} from 'metal-dom';
 import Soy from 'metal-soy';
 
@@ -7,7 +8,6 @@ import templates from './NavigationMenuTree.soy';
 
 /**
  * NavigationMenuTree
- *
  */
 class NavigationMenuTree extends SelectLayout {
 
@@ -38,10 +38,7 @@ class NavigationMenuTree extends SelectLayout {
 		const node = treeView.getNodeObj(
 			target.dataset.treeviewPath.split('-'));
 
-		this.emit(
-			'itemSelected',
-			node
-		);
+		this._selectItem(node);
 	}
 
 	/**
@@ -58,16 +55,105 @@ class NavigationMenuTree extends SelectLayout {
 			target.dataset.treeviewPath.split('-'));
 
 		if (event.keyCode === 13) {
-			this.emit(
-				'itemSelected',
-				node
-			);
+			this._selectItem(node);
 		}
+	}
+
+	/**
+	 * This is called to select an item in the tree and add selected item to
+	 * the container.
+	 *
+	 * @param {!object} item Selected item object.
+	 * @private
+	 */
+	_selectItem(item) {
+		if (item.disabled) {
+			return;
+		}
+
+		this.emit('itemSelected', item);
+
+		this.nodes.forEach(
+			(node) => {
+				if (node.id == item.id) {
+					node.disabled = true;
+				}
+			}
+		);
 	}
 
 }
 
+let nodeShape = {
+	id: Config.string().value(''),
+	label: Config.string().required(),
+	name: Config.string().required(),
+	value: Config.string().value('')
+};
+
+const nodesValidator = Config.arrayOf(Config.shapeOf(nodeShape));
+
+nodeShape.children = nodesValidator;
+
 NavigationMenuTree.STATE = {
+
+	/**
+	 * Enables URL following on the title click
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {?String}
+	 * @default false
+	 */
+	followURLOnTitleClick: Config.bool().value(false),
+
+	/**
+	 * Event name to fire on node selection
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {!String}
+	 */
+	itemSelectorSaveEvent: Config.string().required(),
+
+	/**
+	 * List of nodes
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {Array.<Object>}
+	 */
+	nodes: nodesValidator.required(),
+
+	/**
+	 * Enables multiple selection of tree elements
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {?boolean}
+	 * @default false
+	 */
+	multiSelection: Config.bool().value(false),
+
+	/**
+	 * Theme images root path
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {!String}
+	 */
+	pathThemeImages: Config.string().required(),
+
+	/**
+	 * Type of view to render. Accepted values are 'tree' and 'flat'
+	 *
+	 * @instance
+	 * @memberOf NavigationMenuTree
+	 * @type {?String}
+	 * @default tree
+	 */
+	viewType: Config.string().value('tree')
+
 };
 
 Soy.register(NavigationMenuTree, templates);

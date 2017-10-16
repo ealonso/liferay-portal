@@ -9,9 +9,25 @@ import templates from './NavigationMenuBuilder.soy';
 
 /**
  * NavigationMenuBuilder
- *
  */
 class NavigationMenuBuilder extends Component {
+
+	/**
+	 * This is called to enable a node in the type context
+	 *
+	 * @param {!Array} nodes Nodes list
+	 * @param {!String} id Node ID to enable
+	 * @private
+	 */
+	_enableNode(nodes, id) {
+		nodes.forEach(
+			(node) => {
+				if (node.id == id) {
+					node.disabled = false;
+				}
+			}
+		);
+	}
 
 	/**
 	 * This is called when user deletes the item from container.
@@ -37,6 +53,17 @@ class NavigationMenuBuilder extends Component {
 
 		menuItems = deleteItem(menuItems, data.id);
 
+		this.availableItemTypes.forEach(
+			(availableItemType) => {
+				if (availableItemType.context.nodes) {
+					this._enableNode(availableItemType.context.nodes, data.id);
+				}
+			}
+		);
+
+		if (this.selectedItemType.context.nodes) {
+			this._enableNode(this.selectedItemType.context.nodes, data.id);
+		}
 		this.menuItems = menuItems;
 
 		this._handleItemMoved();

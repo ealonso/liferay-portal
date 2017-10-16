@@ -6,21 +6,34 @@ import templates from './NavigationMenuFieldset.soy';
 
 /**
  * NavigationMenuFieldset
- *
  */
 class NavigationMenuFieldset extends Component {
 
+	/**
+	 * This is called to clear the fieldset.
+	 *
+	 * @private
+	 */
 	_clearFieldset() {
-		let fields = this.fields;
+		const fields = this.fields;
 
 		let fieldsetName = document.querySelector(
 			`#${this.namespace}fieldsetName`);
 
 		fieldsetName.value = '';
 
+		let dataFields = [];
+
 		fields.forEach(
 			(field) => {
-				field.value = ''
+				let dataField = {
+					description: field.description,
+					label: field.label,
+					name: field.name,
+					value: ''
+				};
+
+				dataFields.push(dataField);
 
 				let input = document.querySelector(
 					`#${this.namespace}${field.name}`);
@@ -32,33 +45,47 @@ class NavigationMenuFieldset extends Component {
 		this.emit(
 			'contextChanged',
 			{
-				fields: fields
+				fields: dataFields
 			}
 		);
 	}
 
-	_handleClick(event) {
-		let fields = this.fields;
+	/**
+	 * This is called when "Add to Menu" button is clicked.
+	 *
+	 * @param {!Event} event
+	 * @private
+	 */
+	_handleAddItemClick(event) {
+		const fields = this.fields;
+
+		let dataFields = [];
 
 		fields.forEach(
 			(field) => {
 				let input = document.querySelector(
 					`#${this.namespace}${field.name}`);
 
-				field.value = input.value;
+				let dataField = {
+					description: field.description,
+					label: field.label,
+					name: field.name,
+					value: input.value
+				};
+
+				dataFields.push(dataField);
 			}
 		);
 
-		let fieldsetName = document.querySelector(
+		const fieldsetName = document.querySelector(
 			`#${this.namespace}fieldsetName`);
 
 		let data = {};
 
 		data.id = this.type + "_" + new Date().getTime();
-		data.icon = this.icon;
 		data.name = fieldsetName.value;
 		data.type = this.type;
-		data.value = this.fields;
+		data.value = dataFields;
 
 		this.emit(
 			'itemSelected',
@@ -87,16 +114,7 @@ NavigationMenuFieldset.STATE = {
 			name: Config.string().required(),
 			value: Config.string().value('')
 		})
-	),
-
-	/**
-	 * The icon of current fieldset
-	 *
-	 * @instance
-	 * @memberOf NavigationMenuFieldset
-	 * @type {!string}
-	 */
-	icon: Config.string().required(),
+	).value([]),
 
 	/**
 	 * The name of current fieldset
