@@ -1,3 +1,5 @@
+
+
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -52,6 +54,27 @@ Layout curLayout = (Layout)row.getObject();
 		<liferay-ui:icon
 			message="add-child-page"
 			url="<%= addChildPageURL %>"
+		/>
+	</c:if>
+
+	<%
+	Group selGroup = layoutsAdminDisplayContext.getSelGroup();
+	%>
+
+	<c:if test="<%= !selGroup.isLayoutPrototype() && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), layoutsAdminDisplayContext.getSelLayout(), ActionKeys.PERMISSIONS) %>">
+		<liferay-security:permissionsURL
+			modelResource="<%= Layout.class.getName() %>"
+			modelResourceDescription="<%= HtmlUtil.escape(layout.getName(themeDisplay.getLocale())) %>"
+			resourcePrimKey="<%= String.valueOf(layout.getPlid()) %>"
+			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+		/>
+
+		<liferay-ui:icon
+			message="permissions"
+			method="get"
+			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
 		/>
 	</c:if>
 
