@@ -1326,6 +1326,13 @@ public class DLFileEntryLocalServiceImpl
 	}
 
 	@Override
+	public List<DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, String treePath) {
+
+		return dlFileEntryFinder.findByC_T(classNameId, treePath);
+	}
+
+	@Override
 	public int getFileEntriesCount() {
 		return dlFileEntryPersistence.countAll();
 	}
