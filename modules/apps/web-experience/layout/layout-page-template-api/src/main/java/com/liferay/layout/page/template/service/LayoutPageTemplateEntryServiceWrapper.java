@@ -92,6 +92,20 @@ public class LayoutPageTemplateEntryServiceWrapper
 	}
 
 	@Override
+	public int getLayoutPageTemplateEntriesCount(long groupId,
+		long layoutPageTemplateFolder) {
+		return _layoutPageTemplateEntryService.getLayoutPageTemplateEntriesCount(groupId,
+			layoutPageTemplateFolder);
+	}
+
+	@Override
+	public int getLayoutPageTemplateEntriesCount(long groupId,
+		long layoutPageTemplateFolder, java.lang.String name) {
+		return _layoutPageTemplateEntryService.getLayoutPageTemplateEntriesCount(groupId,
+			layoutPageTemplateFolder, name);
+	}
+
+	@Override
 	public int getLayoutPageTemplateFoldersCount(long groupId,
 		long layoutPageTemplateFolderId) {
 		return _layoutPageTemplateEntryService.getLayoutPageTemplateFoldersCount(groupId,

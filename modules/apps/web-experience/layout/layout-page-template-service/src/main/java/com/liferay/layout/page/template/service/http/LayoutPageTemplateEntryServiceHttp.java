@@ -292,13 +292,70 @@ public class LayoutPageTemplateEntryServiceHttp {
 		}
 	}
 
+	public static int getLayoutPageTemplateEntriesCount(
+		HttpPrincipal httpPrincipal, long groupId, long layoutPageTemplateFolder) {
+		try {
+			MethodKey methodKey = new MethodKey(LayoutPageTemplateEntryServiceUtil.class,
+					"getLayoutPageTemplateEntriesCount",
+					_getLayoutPageTemplateEntriesCountParameterTypes7);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
+					layoutPageTemplateFolder);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return ((Integer)returnObj).intValue();
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static int getLayoutPageTemplateEntriesCount(
+		HttpPrincipal httpPrincipal, long groupId,
+		long layoutPageTemplateFolder, java.lang.String name) {
+		try {
+			MethodKey methodKey = new MethodKey(LayoutPageTemplateEntryServiceUtil.class,
+					"getLayoutPageTemplateEntriesCount",
+					_getLayoutPageTemplateEntriesCountParameterTypes8);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
+					layoutPageTemplateFolder, name);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return ((Integer)returnObj).intValue();
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static int getLayoutPageTemplateFoldersCount(
 		HttpPrincipal httpPrincipal, long groupId,
 		long layoutPageTemplateFolderId) {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateEntryServiceUtil.class,
 					"getLayoutPageTemplateFoldersCount",
-					_getLayoutPageTemplateFoldersCountParameterTypes7);
+					_getLayoutPageTemplateFoldersCountParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					layoutPageTemplateFolderId);
@@ -327,7 +384,7 @@ public class LayoutPageTemplateEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateEntryServiceUtil.class,
 					"getLayoutPageTemplateFoldersCount",
-					_getLayoutPageTemplateFoldersCountParameterTypes8);
+					_getLayoutPageTemplateFoldersCountParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					layoutPageTemplateFolderId, name);
@@ -359,7 +416,7 @@ public class LayoutPageTemplateEntryServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateEntryServiceUtil.class,
 					"updateLayoutPageTemplateEntry",
-					_updateLayoutPageTemplateEntryParameterTypes9);
+					_updateLayoutPageTemplateEntryParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					layoutPageTemplateEntryId, name, fragmentEntries,
@@ -410,11 +467,15 @@ public class LayoutPageTemplateEntryServiceHttp {
 			long.class, long.class, java.lang.String.class, int.class, int.class,
 			com.liferay.portal.kernel.util.OrderByComparator.class
 		};
-	private static final Class<?>[] _getLayoutPageTemplateFoldersCountParameterTypes7 =
+	private static final Class<?>[] _getLayoutPageTemplateEntriesCountParameterTypes7 =
 		new Class[] { long.class, long.class };
-	private static final Class<?>[] _getLayoutPageTemplateFoldersCountParameterTypes8 =
+	private static final Class<?>[] _getLayoutPageTemplateEntriesCountParameterTypes8 =
 		new Class[] { long.class, long.class, java.lang.String.class };
-	private static final Class<?>[] _updateLayoutPageTemplateEntryParameterTypes9 =
+	private static final Class<?>[] _getLayoutPageTemplateFoldersCountParameterTypes9 =
+		new Class[] { long.class, long.class };
+	private static final Class<?>[] _getLayoutPageTemplateFoldersCountParameterTypes10 =
+		new Class[] { long.class, long.class, java.lang.String.class };
+	private static final Class<?>[] _updateLayoutPageTemplateEntryParameterTypes11 =
 		new Class[] {
 			long.class, java.lang.String.class, java.util.List.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
