@@ -14,8 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.message.boards.kernel.constants.MBConstants;
 import com.liferay.message.boards.kernel.exception.DiscussionMaxCommentsException;
@@ -36,8 +34,6 @@ import com.liferay.message.boards.kernel.util.comparator.MessageThreadComparator
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -63,8 +59,6 @@ import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
-import com.liferay.portal.kernel.util.Constants;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -87,7 +81,6 @@ import com.liferay.portlet.messageboards.MBGroupServiceSettings;
 import com.liferay.portlet.messageboards.model.impl.MBCategoryImpl;
 import com.liferay.portlet.messageboards.model.impl.MBMessageDisplayImpl;
 import com.liferay.portlet.messageboards.service.base.MBMessageLocalServiceBaseImpl;
-import com.liferay.portlet.messageboards.social.MBActivityKeys;
 import com.liferay.portlet.messageboards.util.MBSubscriptionSender;
 import com.liferay.portlet.messageboards.util.MBUtil;
 import com.liferay.social.kernel.model.SocialActivityConstants;
@@ -403,14 +396,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				message.getMessageId(), MBConstants.SERVICE_NAME,
 				folder.getFolderId(), inputStreamOVPs);
 		}
-
-		// Asset
-
-		updateAsset(
-			userId, message, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames(),
-			serviceContext.getAssetLinkEntryIds(),
-			serviceContext.isAssetEntryVisible());
 
 		// Workflow
 
@@ -777,11 +762,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 			indexer.reindex(thread);
 		}
-
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			message.getWorkflowClassName(), message.getMessageId());
 
 		// Expando
 
@@ -1543,10 +1523,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			long userId, MBMessage message, long[] assetCategoryIds,
 			String[] assetTagNames, long[] assetLinkEntryIds)
 		throws PortalException {
-
-		updateAsset(
-			userId, message, assetCategoryIds, assetTagNames, assetLinkEntryIds,
-			true);
 	}
 
 	@Override
@@ -1640,12 +1616,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				updateThreadStatus(
 					thread, message, user, oldStatus, modifiedDate);
 
-				// Asset
-
-				assetEntryLocalService.updateVisible(
-					message.getWorkflowClassName(), message.getMessageId(),
-					false);
-
 				if (!message.isDiscussion()) {
 
 					// Indexer
@@ -1721,13 +1691,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 			updatePriorities(thread.getThreadId(), priority);
 		}
-
-		// Asset
-
-		updateAsset(
-			userId, message, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames(),
-			serviceContext.getAssetLinkEntryIds());
 
 		// Workflow
 
@@ -1805,105 +1768,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			MBMessage.class);
 
 		if (status == WorkflowConstants.STATUS_APPROVED) {
-			if (oldStatus != WorkflowConstants.STATUS_APPROVED) {
-
-				// Asset
-
-				if (serviceContext.isAssetEntryVisible() &&
-					((message.getClassNameId() == 0) ||
-					 (message.getParentMessageId() != 0))) {
-
-					Date publishDate = null;
-
-					AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
-						message.getWorkflowClassName(), message.getMessageId());
-
-					if ((assetEntry != null) &&
-						(assetEntry.getPublishDate() != null)) {
-
-						publishDate = assetEntry.getPublishDate();
-					}
-					else {
-						publishDate = now;
-
-						serviceContext.setCommand(Constants.ADD);
-					}
-
-					assetEntryLocalService.updateEntry(
-						message.getWorkflowClassName(), message.getMessageId(),
-						publishDate, null, true, true);
-				}
-
-				if (serviceContext.isCommandAdd()) {
-
-					// Social
-
-					JSONObject extraDataJSONObject =
-						JSONFactoryUtil.createJSONObject();
-
-					String title = message.getSubject();
-
-					if (message.isDiscussion()) {
-						title = HtmlUtil.stripHtml(title);
-					}
-
-					extraDataJSONObject.put("title", title);
-
-					if (!message.isDiscussion()) {
-						if (!message.isAnonymous() && !user.isDefaultUser()) {
-							long receiverUserId = 0;
-
-							MBMessage parentMessage =
-								mbMessagePersistence.fetchByPrimaryKey(
-									message.getParentMessageId());
-
-							if (parentMessage != null) {
-								receiverUserId = parentMessage.getUserId();
-							}
-
-							SocialActivityManagerUtil.addActivity(
-								message.getUserId(), message,
-								MBActivityKeys.ADD_MESSAGE,
-								extraDataJSONObject.toString(), receiverUserId);
-
-							if ((parentMessage != null) &&
-								(receiverUserId != message.getUserId())) {
-
-								SocialActivityManagerUtil.addActivity(
-									message.getUserId(), parentMessage,
-									MBActivityKeys.REPLY_MESSAGE,
-									extraDataJSONObject.toString(), 0);
-							}
-						}
-					}
-					else {
-						String className = (String)serviceContext.getAttribute(
-							"className");
-						long classPK = ParamUtil.getLong(
-							serviceContext, "classPK");
-						long parentMessageId = message.getParentMessageId();
-
-						if (parentMessageId !=
-								MBMessageConstants.DEFAULT_PARENT_MESSAGE_ID) {
-
-							AssetEntry assetEntry =
-								assetEntryLocalService.fetchEntry(
-									className, classPK);
-
-							if (assetEntry != null) {
-								extraDataJSONObject.put(
-									"messageId", message.getMessageId());
-
-								SocialActivityManagerUtil.addActivity(
-									message.getUserId(), assetEntry,
-									SocialActivityConstants.TYPE_ADD_COMMENT,
-									extraDataJSONObject.toString(),
-									assetEntry.getUserId());
-							}
-						}
-					}
-				}
-			}
 
 			// Indexer
 
@@ -1914,11 +1778,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			pingPingback(message, serviceContext);
 		}
 		else if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
-
-			// Asset
-
-			assetEntryLocalService.updateVisible(
-				message.getWorkflowClassName(), message.getMessageId(), false);
 
 			// Indexer
 
@@ -2127,29 +1986,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			String[] assetTagNames, long[] assetLinkEntryIds,
 			boolean assetEntryVisible)
 		throws PortalException {
-
-		boolean visible = false;
-		Date publishDate = null;
-
-		if (assetEntryVisible && message.isApproved() &&
-			((message.getClassNameId() == 0) ||
-			 (message.getParentMessageId() != 0))) {
-
-			visible = true;
-			publishDate = message.getModifiedDate();
-		}
-
-		AssetEntry assetEntry = assetEntryLocalService.updateEntry(
-			userId, message.getGroupId(), message.getCreateDate(),
-			message.getModifiedDate(), message.getWorkflowClassName(),
-			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
-			assetTagNames, true, visible, null, null, publishDate, null,
-			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
-			null, 0, 0, message.getPriority());
-
-		assetLinkLocalService.updateLinks(
-			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
 	}
 
 	protected void updatePriorities(long threadId, double priority) {
