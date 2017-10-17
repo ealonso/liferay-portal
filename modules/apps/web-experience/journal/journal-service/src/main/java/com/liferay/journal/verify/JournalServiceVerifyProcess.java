@@ -14,8 +14,8 @@
 
 package com.liferay.journal.verify;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.dynamic.data.mapping.exception.NoSuchStructureException;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.internal.verify.model.JournalArticleResourceVerifiableModel;
