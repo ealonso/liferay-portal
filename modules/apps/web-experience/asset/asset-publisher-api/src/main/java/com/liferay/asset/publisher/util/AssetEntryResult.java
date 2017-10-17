@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 
 import java.util.List;
 
