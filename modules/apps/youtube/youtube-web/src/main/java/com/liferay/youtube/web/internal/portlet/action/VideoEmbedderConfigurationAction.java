@@ -28,5 +28,6 @@ import org.osgi.service.component.annotations.Component;
 	property = {"javax.portlet.name=" + VideoEmbedderPortletKeys.VideoEmbedder},
 	service = ConfigurationAction.class
 )
-public class VideoEmbedderConfigurationAction extends DefaultConfigurationAction {
+public class VideoEmbedderConfigurationAction
+	extends DefaultConfigurationAction {
 }

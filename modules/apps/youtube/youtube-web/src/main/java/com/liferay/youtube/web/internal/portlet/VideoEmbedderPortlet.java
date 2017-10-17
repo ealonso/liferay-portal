@@ -19,7 +19,9 @@ import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
 import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
+
 import java.io.IOException;
+
 import java.util.Map;
 
 import javax.portlet.Portlet;
@@ -58,11 +60,11 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = Portlet.class
 )
-
 public class VideoEmbedderPortlet extends MVCPortlet {
 
 	public void render(RenderRequest request, RenderResponse response)
 		throws IOException, PortletException {
+
 		request.setAttribute(VideoEmbedderConfiguration.class
 			.getName(), _configuration);
 
@@ -85,4 +87,5 @@ public class VideoEmbedderPortlet extends MVCPortlet {
 	}
 
 	private volatile VideoEmbedderConfiguration _configuration;
+
 }

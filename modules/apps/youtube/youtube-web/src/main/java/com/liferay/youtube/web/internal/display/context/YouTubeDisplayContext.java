@@ -15,13 +15,10 @@
 package com.liferay.youtube.web.internal.display.context;
 
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
-
-import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
 
@@ -34,7 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 
 	public YouTubeDisplayContext(
-		HttpServletRequest request, PortletPreferences portletPreferences, VideoEmbedderConfiguration configuration) {
+		HttpServletRequest request, PortletPreferences portletPreferences,
+		VideoEmbedderConfiguration configuration) {
 
 		super(request, portletPreferences, configuration);
 	}

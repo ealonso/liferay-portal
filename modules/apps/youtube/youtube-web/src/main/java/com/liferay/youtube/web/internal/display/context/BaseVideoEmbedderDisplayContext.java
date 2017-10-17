@@ -14,15 +14,14 @@
 
 package com.liferay.youtube.web.internal.display.context;
 
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
+
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
@@ -33,10 +32,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author Eudaldo Alonso
  * @author arthurchan35
  */
-public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayContext {
+public class BaseVideoEmbedderDisplayContext
+	implements VideoEmbedderDisplayContext {
 
 	public BaseVideoEmbedderDisplayContext(
-		HttpServletRequest request, PortletPreferences portletPreferences, VideoEmbedderConfiguration configuration) {
+		HttpServletRequest request, PortletPreferences portletPreferences,
+		VideoEmbedderConfiguration configuration) {
 
 		_request = request;
 		_portletPreferences = portletPreferences;
@@ -49,6 +50,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 	@Override
 	public String getEmbedURL() {
 		getURL();
+
 		if (_url == null) {
 			return "";
 		}
@@ -74,6 +76,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 		}
 		else {
 			String presetRaio = getPresetRatio();
+
 			String[] ratio = presetRaio.split(":");
 
 			_height = ratio[1];
@@ -86,6 +89,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 		if (Validator.isNotNull(_id)) {
 			return _id;
 		}
+
 		String regex = _getVideoPattern(_getSiteName());
 
 		_id = getURL().replaceAll(regex, "$1");
@@ -97,8 +101,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 	public String getPresetRatio() {
 		if (_presetRatio != null) {
 			return _presetRatio;
-		}
-			_presetRatio = _portletPreferences.getValue("presetRatio", "16:9");
+		} _presetRatio = _portletPreferences.getValue("presetRatio", "16:9");
 
 		return _presetRatio;
 	}
@@ -119,6 +122,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 		if (_width != null) {
 			return _width;
 		}
+
 		if (isCustomRatio()) {
 			_width = _portletPreferences.getValue("width", "9");
 		}
@@ -129,6 +133,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 
 			_width = ratio[0];
 		}
+
 		return _width;
 	}
 
@@ -142,6 +147,16 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 
 		return false;
 	}
+
+	protected String _height;
+	protected String _id;
+	protected final PortletPreferences _portletPreferences;
+	protected String _presetRatio;
+	protected final HttpServletRequest _request;
+	protected String _siteName;
+	protected Map<String, String[]> _systemSettings;
+	protected String _url;
+	protected String _width;
 
 	private String _getIFramePrefix(String siteName) {
 		return _systemSettings.get(siteName)[0];
@@ -168,6 +183,7 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 	private void _init(VideoEmbedderConfiguration configuration) {
 
 		//When this class is instantiated for configuration page, this configuration is not passed in and will be null
+
 		if (configuration == null) {
 			return;
 		}
@@ -175,11 +191,11 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 		String[] values = configuration.iframeURLs();
 
 		for (String val : values) {
-
 			String[] parts = val.split(VideoEmbedderConfiguration.DLM);
 
 			if (parts.length != 3) {
-				throw new IllegalArgumentException("Invalid configuration format, check system settings");
+				throw new IllegalArgumentException(
+					"Invalid configuration format, check system settings");
 			}
 
 			String[] copy = new String[2];
@@ -188,21 +204,11 @@ public class BaseVideoEmbedderDisplayContext implements VideoEmbedderDisplayCont
 			copy[1] = parts[1];
 
 			if (_systemSettings == null) {
-				_systemSettings = new HashMap<String, String[]>();
+				_systemSettings = new HashMap<>();
 			}
 
 			_systemSettings.put(parts[2], copy);
 		}
 	}
 
-
-	protected String _height;
-	protected String _id;
-	protected final PortletPreferences _portletPreferences;
-	protected String _presetRatio;
-	protected final HttpServletRequest _request;
-	protected String _url;
-	protected String _width;
-	protected Map<String, String[]> _systemSettings;
-	protected String _siteName;
 }
