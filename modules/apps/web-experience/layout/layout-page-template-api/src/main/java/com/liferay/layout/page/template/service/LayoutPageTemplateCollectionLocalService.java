@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -71,6 +72,11 @@ public interface LayoutPageTemplateCollectionLocalService
 	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 		LayoutPageTemplateCollection layoutPageTemplateCollection);
 
+	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long userId, long groupId, java.lang.String name,
+		java.lang.String description, ServiceContext serviceContext)
+		throws PortalException;
+
 	/**
 	* Creates a new layout page template collection with the primary key. Does not add the layout page template collection to the database.
 	*
@@ -85,10 +91,12 @@ public interface LayoutPageTemplateCollectionLocalService
 	*
 	* @param layoutPageTemplateCollection the layout page template collection
 	* @return the layout page template collection that was removed
+	* @throws PortalException
 	*/
 	@Indexable(type = IndexableType.DELETE)
 	public LayoutPageTemplateCollection deleteLayoutPageTemplateCollection(
-		LayoutPageTemplateCollection layoutPageTemplateCollection);
+		LayoutPageTemplateCollection layoutPageTemplateCollection)
+		throws PortalException;
 
 	/**
 	* Deletes the layout page template collection with the primary key from the database. Also notifies the appropriate model listeners.
@@ -203,6 +211,21 @@ public interface LayoutPageTemplateCollectionLocalService
 	public List<LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
 		int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end,
+		OrderByComparator<LayoutPageTemplateCollection> orderByComparator)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, java.lang.String name, int start, int end,
+		OrderByComparator<LayoutPageTemplateCollection> orderByComparator);
+
 	/**
 	* Returns the number of layout page template collections.
 	*
@@ -232,4 +255,8 @@ public interface LayoutPageTemplateCollectionLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutPageTemplateCollection updateLayoutPageTemplateCollection(
 		LayoutPageTemplateCollection layoutPageTemplateCollection);
+
+	public LayoutPageTemplateCollection updateLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId, java.lang.String name,
+		java.lang.String description) throws PortalException;
 }

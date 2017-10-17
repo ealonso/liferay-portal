@@ -41,6 +41,68 @@ public class LayoutPageTemplateCollectionServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.layout.page.template.service.impl.LayoutPageTemplateCollectionServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long groupId, java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addLayoutPageTemplateCollection(groupId, name, description,
+			serviceContext);
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection deleteLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .deleteLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> deleteLayoutPageTemplateCollections(
+		long[] layoutPageTemplateCollectionIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getLayoutPageTemplateCollections(groupId, start, end);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getLayoutPageTemplateCollections(groupId, start, end,
+			orderByComparator);
+	}
+
+	public static java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .getLayoutPageTemplateCollections(groupId, name, start, end,
+			orderByComparator);
+	}
+
+	public static int getLayoutPageTemplateCollectionsCount(long groupId) {
+		return getService().getLayoutPageTemplateCollectionsCount(groupId);
+	}
+
+	public static int getLayoutPageTemplateCollectionsCount(long groupId,
+		java.lang.String name) {
+		return getService().getLayoutPageTemplateCollectionsCount(groupId, name);
+	}
 
 	/**
 	* Returns the OSGi service identifier.
@@ -49,6 +111,15 @@ public class LayoutPageTemplateCollectionServiceUtil {
 	*/
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection updateLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId, java.lang.String name,
+		java.lang.String description)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateLayoutPageTemplateCollection(layoutPageTemplateCollectionId,
+			name, description);
 	}
 
 	public static LayoutPageTemplateCollectionService getService() {

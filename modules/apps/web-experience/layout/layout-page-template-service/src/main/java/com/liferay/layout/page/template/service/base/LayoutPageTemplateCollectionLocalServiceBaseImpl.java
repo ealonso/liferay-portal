@@ -120,11 +120,13 @@ public abstract class LayoutPageTemplateCollectionLocalServiceBaseImpl
 	 *
 	 * @param layoutPageTemplateCollection the layout page template collection
 	 * @return the layout page template collection that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public LayoutPageTemplateCollection deleteLayoutPageTemplateCollection(
-		LayoutPageTemplateCollection layoutPageTemplateCollection) {
+		LayoutPageTemplateCollection layoutPageTemplateCollection)
+		throws PortalException {
 		return layoutPageTemplateCollectionPersistence.remove(layoutPageTemplateCollection);
 	}
 

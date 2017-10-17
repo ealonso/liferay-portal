@@ -34,6 +34,74 @@ public class LayoutPageTemplateCollectionServiceWrapper
 		_layoutPageTemplateCollectionService = layoutPageTemplateCollectionService;
 	}
 
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long groupId, java.lang.String name, java.lang.String description,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.addLayoutPageTemplateCollection(groupId,
+			name, description, serviceContext);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection deleteLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.deleteLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> deleteLayoutPageTemplateCollections(
+		long[] layoutPageTemplateCollectionIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.deleteLayoutPageTemplateCollections(layoutPageTemplateCollectionIds);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollections(groupId,
+			start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollections(groupId,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> getLayoutPageTemplateCollections(
+		long groupId, java.lang.String name, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.layout.page.template.model.LayoutPageTemplateCollection> orderByComparator)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollections(groupId,
+			name, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getLayoutPageTemplateCollectionsCount(long groupId) {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollectionsCount(groupId);
+	}
+
+	@Override
+	public int getLayoutPageTemplateCollectionsCount(long groupId,
+		java.lang.String name) {
+		return _layoutPageTemplateCollectionService.getLayoutPageTemplateCollectionsCount(groupId,
+			name);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -42,6 +110,15 @@ public class LayoutPageTemplateCollectionServiceWrapper
 	@Override
 	public java.lang.String getOSGiServiceIdentifier() {
 		return _layoutPageTemplateCollectionService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection updateLayoutPageTemplateCollection(
+		long layoutPageTemplateCollectionId, java.lang.String name,
+		java.lang.String description)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionService.updateLayoutPageTemplateCollection(layoutPageTemplateCollectionId,
+			name, description);
 	}
 
 	@Override
