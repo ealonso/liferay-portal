@@ -572,6 +572,11 @@ public interface MBMessageLocalService extends BaseLocalService,
 		long[] assetCategoryIds, java.lang.String[] assetTagNames,
 		long[] assetLinkEntryIds) throws PortalException;
 
+	public void updateAsset(long userId, MBMessage message,
+		long[] assetCategoryIds, java.lang.String[] assetTagNames,
+		long[] assetLinkEntryIds, boolean assetEntryVisible)
+		throws PortalException;
+
 	public MBMessage updateDiscussionMessage(long userId, long messageId,
 		java.lang.String className, long classPK, java.lang.String subject,
 		java.lang.String body, ServiceContext serviceContext)
