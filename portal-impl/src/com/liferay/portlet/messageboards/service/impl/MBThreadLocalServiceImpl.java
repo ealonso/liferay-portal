@@ -14,7 +14,6 @@
 
 package com.liferay.portlet.messageboards.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.message.boards.kernel.constants.MBConstants;
@@ -117,19 +116,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 		mbThreadPersistence.update(thread);
 
-		// Asset
-
-		if (categoryId >= 0) {
-			assetEntryLocalService.updateEntry(
-				message.getUserId(), message.getGroupId(),
-				thread.getStatusDate(), thread.getLastPostDate(),
-				MBThread.class.getName(), thread.getThreadId(),
-				thread.getUuid(), 0, new long[0], new String[0], true, false,
-				null, null, thread.getStatusDate(), null, null,
-				String.valueOf(thread.getRootMessageId()), null, null, null,
-				null, 0, 0, serviceContext.getAssetPriority());
-		}
-
 		return thread;
 	}
 
@@ -177,11 +163,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 			// Ratings
 
 			ratingsStatsLocalService.deleteStats(
-				message.getWorkflowClassName(), message.getMessageId());
-
-			// Asset
-
-			assetEntryLocalService.deleteEntry(
 				message.getWorkflowClassName(), message.getMessageId());
 
 			// Resources
@@ -233,20 +214,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 				}
 			}
 		}
-
-		// Asset
-
-		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
-			MBThread.class.getName(), thread.getThreadId());
-
-		if (assetEntry != null) {
-			assetEntry.setTitle(rootMessage.getSubject());
-
-			assetEntryLocalService.updateAssetEntry(assetEntry);
-		}
-
-		assetEntryLocalService.deleteEntry(
-			MBThread.class.getName(), thread.getThreadId());
 
 		// Indexer
 
@@ -562,13 +529,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 					message.getMessageId(), status, null);
 			}
 
-			// Asset
-
-			if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
-				assetEntryLocalService.updateVisible(
-					MBMessage.class.getName(), message.getMessageId(), false);
-			}
-
 			// Attachments
 
 			for (FileEntry fileEntry : message.getAttachmentsFileEntries()) {
@@ -824,13 +784,6 @@ public class MBThreadLocalServiceImpl extends MBThreadLocalServiceBaseImpl {
 
 			if (trashVersion != null) {
 				trashVersionLocalService.deleteTrashVersion(trashVersion);
-			}
-
-			// Asset
-
-			if (oldStatus == WorkflowConstants.STATUS_APPROVED) {
-				assetEntryLocalService.updateVisible(
-					MBMessage.class.getName(), message.getMessageId(), true);
 			}
 
 			// Attachments
