@@ -16,7 +16,7 @@ package com.liferay.layout.page.template.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 
 import com.liferay.portal.kernel.model.CacheModel;
 import com.liferay.portal.kernel.util.HashUtil;
@@ -31,14 +31,14 @@ import java.io.ObjectOutput;
 import java.util.Date;
 
 /**
- * The cache model class for representing LayoutPageTemplateEntry in entity cache.
+ * The cache model class for representing LayoutPageTemplateCollection in entity cache.
  *
  * @author Brian Wing Shun Chan
- * @see LayoutPageTemplateEntry
+ * @see LayoutPageTemplateCollection
  * @generated
  */
 @ProviderType
-public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageTemplateEntry>,
+public class LayoutPageTemplateCollectionCacheModel implements CacheModel<LayoutPageTemplateCollection>,
 	Externalizable {
 	@Override
 	public boolean equals(Object obj) {
@@ -46,13 +46,14 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 			return true;
 		}
 
-		if (!(obj instanceof LayoutPageTemplateEntryCacheModel)) {
+		if (!(obj instanceof LayoutPageTemplateCollectionCacheModel)) {
 			return false;
 		}
 
-		LayoutPageTemplateEntryCacheModel layoutPageTemplateEntryCacheModel = (LayoutPageTemplateEntryCacheModel)obj;
+		LayoutPageTemplateCollectionCacheModel layoutPageTemplateCollectionCacheModel =
+			(LayoutPageTemplateCollectionCacheModel)obj;
 
-		if (layoutPageTemplateEntryId == layoutPageTemplateEntryCacheModel.layoutPageTemplateEntryId) {
+		if (layoutPageTemplateCollectionId == layoutPageTemplateCollectionCacheModel.layoutPageTemplateCollectionId) {
 			return true;
 		}
 
@@ -61,15 +62,15 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 
 	@Override
 	public int hashCode() {
-		return HashUtil.hash(0, layoutPageTemplateEntryId);
+		return HashUtil.hash(0, layoutPageTemplateCollectionId);
 	}
 
 	@Override
 	public String toString() {
 		StringBundler sb = new StringBundler(19);
 
-		sb.append("{layoutPageTemplateEntryId=");
-		sb.append(layoutPageTemplateEntryId);
+		sb.append("{layoutPageTemplateCollectionId=");
+		sb.append(layoutPageTemplateCollectionId);
 		sb.append(", groupId=");
 		sb.append(groupId);
 		sb.append(", companyId=");
@@ -82,62 +83,68 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", layoutPageTemplateCollectionId=");
-		sb.append(layoutPageTemplateCollectionId);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", description=");
+		sb.append(description);
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	@Override
-	public LayoutPageTemplateEntry toEntityModel() {
-		LayoutPageTemplateEntryImpl layoutPageTemplateEntryImpl = new LayoutPageTemplateEntryImpl();
+	public LayoutPageTemplateCollection toEntityModel() {
+		LayoutPageTemplateCollectionImpl layoutPageTemplateCollectionImpl = new LayoutPageTemplateCollectionImpl();
 
-		layoutPageTemplateEntryImpl.setLayoutPageTemplateEntryId(layoutPageTemplateEntryId);
-		layoutPageTemplateEntryImpl.setGroupId(groupId);
-		layoutPageTemplateEntryImpl.setCompanyId(companyId);
-		layoutPageTemplateEntryImpl.setUserId(userId);
+		layoutPageTemplateCollectionImpl.setLayoutPageTemplateCollectionId(layoutPageTemplateCollectionId);
+		layoutPageTemplateCollectionImpl.setGroupId(groupId);
+		layoutPageTemplateCollectionImpl.setCompanyId(companyId);
+		layoutPageTemplateCollectionImpl.setUserId(userId);
 
 		if (userName == null) {
-			layoutPageTemplateEntryImpl.setUserName(StringPool.BLANK);
+			layoutPageTemplateCollectionImpl.setUserName(StringPool.BLANK);
 		}
 		else {
-			layoutPageTemplateEntryImpl.setUserName(userName);
+			layoutPageTemplateCollectionImpl.setUserName(userName);
 		}
 
 		if (createDate == Long.MIN_VALUE) {
-			layoutPageTemplateEntryImpl.setCreateDate(null);
+			layoutPageTemplateCollectionImpl.setCreateDate(null);
 		}
 		else {
-			layoutPageTemplateEntryImpl.setCreateDate(new Date(createDate));
+			layoutPageTemplateCollectionImpl.setCreateDate(new Date(createDate));
 		}
 
 		if (modifiedDate == Long.MIN_VALUE) {
-			layoutPageTemplateEntryImpl.setModifiedDate(null);
+			layoutPageTemplateCollectionImpl.setModifiedDate(null);
 		}
 		else {
-			layoutPageTemplateEntryImpl.setModifiedDate(new Date(modifiedDate));
+			layoutPageTemplateCollectionImpl.setModifiedDate(new Date(
+					modifiedDate));
 		}
-
-		layoutPageTemplateEntryImpl.setLayoutPageTemplateCollectionId(layoutPageTemplateCollectionId);
 
 		if (name == null) {
-			layoutPageTemplateEntryImpl.setName(StringPool.BLANK);
+			layoutPageTemplateCollectionImpl.setName(StringPool.BLANK);
 		}
 		else {
-			layoutPageTemplateEntryImpl.setName(name);
+			layoutPageTemplateCollectionImpl.setName(name);
 		}
 
-		layoutPageTemplateEntryImpl.resetOriginalValues();
+		if (description == null) {
+			layoutPageTemplateCollectionImpl.setDescription(StringPool.BLANK);
+		}
+		else {
+			layoutPageTemplateCollectionImpl.setDescription(description);
+		}
 
-		return layoutPageTemplateEntryImpl;
+		layoutPageTemplateCollectionImpl.resetOriginalValues();
+
+		return layoutPageTemplateCollectionImpl;
 	}
 
 	@Override
 	public void readExternal(ObjectInput objectInput) throws IOException {
-		layoutPageTemplateEntryId = objectInput.readLong();
+		layoutPageTemplateCollectionId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
 
@@ -147,15 +154,14 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-
-		layoutPageTemplateCollectionId = objectInput.readLong();
 		name = objectInput.readUTF();
+		description = objectInput.readUTF();
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput objectOutput)
 		throws IOException {
-		objectOutput.writeLong(layoutPageTemplateEntryId);
+		objectOutput.writeLong(layoutPageTemplateCollectionId);
 
 		objectOutput.writeLong(groupId);
 
@@ -173,23 +179,28 @@ public class LayoutPageTemplateEntryCacheModel implements CacheModel<LayoutPageT
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
-		objectOutput.writeLong(layoutPageTemplateCollectionId);
-
 		if (name == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
 		else {
 			objectOutput.writeUTF(name);
 		}
+
+		if (description == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(description);
+		}
 	}
 
-	public long layoutPageTemplateEntryId;
+	public long layoutPageTemplateCollectionId;
 	public long groupId;
 	public long companyId;
 	public long userId;
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public long layoutPageTemplateCollectionId;
 	public String name;
+	public String description;
 }
