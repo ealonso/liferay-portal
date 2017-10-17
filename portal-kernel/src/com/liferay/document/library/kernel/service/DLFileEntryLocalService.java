@@ -485,6 +485,10 @@ public interface DLFileEntryLocalService extends BaseLocalService,
 	public List<DLFileEntry> getFileEntries(long folderId, java.lang.String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, java.lang.String treePath);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getFileEntriesCount();
 
 	/**
