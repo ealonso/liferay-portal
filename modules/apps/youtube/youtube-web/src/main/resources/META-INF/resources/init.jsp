@@ -25,16 +25,19 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
+page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
-page import="com.liferay.youtube.web.internal.display.context.YouTubeDisplayContext" %>
+page import="com.liferay.youtube.web.internal.display.context.*" %><%@
+page import="com.liferay.youtube.web.configuration.VideoEmbedderConfiguration" %><%@
 
 <%@ page import="java.util.Objects" %>
 
 <portlet:defineObjects />
 
 <%
-YouTubeDisplayContext youTubeDisplayContext = new YouTubeDisplayContext(request, portletPreferences);
+VideoEmbedderConfiguration configuration = (VideoEmbedderConfiguration)GetterUtil.getObject(request.getAttribute(VideoEmbedderConfiguration.class.getName()));
+VideoEmbedderDisplayContext displayContext = VideoEmbedderDisplayContextSimpleFactory.create(request, portletPreferences, configuration);
 %>

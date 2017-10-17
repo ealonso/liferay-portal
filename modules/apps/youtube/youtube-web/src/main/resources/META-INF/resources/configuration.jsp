@@ -29,44 +29,44 @@ String redirect = ParamUtil.getString(request, "redirect");
 		<div class="container-fluid-1280">
 			<aui:fieldset-group markupView="lexicon">
 				<aui:fieldset>
-					<aui:input label="video-id" name="preferences--url--" value="<%= youTubeDisplayContext.getURL() %>" />
+					<aui:input label="video-id" name="preferences--url--" value="<%= displayContext.getURL() %>" />
 
-					<aui:select inlineField="<%= true %>" label="preset-frame-size" name="preferences--presetSize--" onChange='<%= renderResponse.getNamespace() + "updateFrameSize(this.value);" %>' value="<%= youTubeDisplayContext.getPresetSize() %>">
-						<aui:option label="custom" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "custom") %>' value="custom" />
-						<aui:option label="standard-360-4-3" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "480x360") %>' value="480x360" />
-						<aui:option label="standard-360-16-9" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "640x360") %>' value="640x360" />
-						<aui:option label="enhanced-480-4-3" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "640x480") %>' value="640x480" />
-						<aui:option label="enhanced-480-16-9" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "854x480") %>' value="854x480" />
-						<aui:option label="hd-720-4-3" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "960x720") %>' value="960x720" />
-						<aui:option label="hd-720-16-9" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "1280x720") %>' value="1280x720" />
-						<aui:option label="full-hd-1080-4-3" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "1440x1080") %>' value="1440x1080" />
-						<aui:option label="full-hd-1080-16-9" selected='<%= Objects.equals(youTubeDisplayContext.getPresetSize(), "1920x1080") %>' value="1920x1080" />
+					<aui:select inlineField="<%= true %>" label="preset-frame-size" name="preferences--presetSize--" onChange='<%= renderResponse.getNamespace() + "updateFrameSize(this.value);" %>' value="<%= displayContext.getPresetSize() %>">
+						<aui:option label="custom" selected='<%= Objects.equals(displayContext.getPresetSize(), "custom") %>' value="custom" />
+						<aui:option label="standard-360-4-3" selected='<%= Objects.equals(displayContext.getPresetSize(), "480x360") %>' value="480x360" />
+						<aui:option label="standard-360-16-9" selected='<%= Objects.equals(displayContext.getPresetSize(), "640x360") %>' value="640x360" />
+						<aui:option label="enhanced-480-4-3" selected='<%= Objects.equals(displayContext.getPresetSize(), "640x480") %>' value="640x480" />
+						<aui:option label="enhanced-480-16-9" selected='<%= Objects.equals(displayContext.getPresetSize(), "854x480") %>' value="854x480" />
+						<aui:option label="hd-720-4-3" selected='<%= Objects.equals(displayContext.getPresetSize(), "960x720") %>' value="960x720" />
+						<aui:option label="hd-720-16-9" selected='<%= Objects.equals(displayContext.getPresetSize(), "1280x720") %>' value="1280x720" />
+						<aui:option label="full-hd-1080-4-3" selected='<%= Objects.equals(displayContext.getPresetSize(), "1440x1080") %>' value="1440x1080" />
+						<aui:option label="full-hd-1080-16-9" selected='<%= Objects.equals(displayContext.getPresetSize(), "1920x1080") %>' value="1920x1080" />
 					</aui:select>
 
-					<aui:input disabled="<%= !youTubeDisplayContext.isCustomSize() %>" inlineField="<%= true %>" label="frame-width" name="preferences--width--" value="<%= youTubeDisplayContext.getWidth() %>">
+					<aui:input disabled="<%= !displayContext.isCustomSize() %>" inlineField="<%= true %>" label="frame-width" name="preferences--width--" value="<%= displayContext.getWidth() %>">
 						<aui:validator name="digits" />
 					</aui:input>
 
-					<aui:input disabled="<%= !youTubeDisplayContext.isCustomSize() %>" inlineField="<%= true %>" label="frame-height" name="preferences--height--" value="<%= youTubeDisplayContext.getHeight() %>">
+					<aui:input disabled="<%= !displayContext.isCustomSize() %>" inlineField="<%= true %>" label="frame-height" name="preferences--height--" value="<%= displayContext.getHeight() %>">
 						<aui:validator name="digits" />
 					</aui:input>
 				</aui:fieldset>
 
 				<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="advanced-options">
-					<aui:input name="preferences--showThumbnail--" type="toggle-switch" value="<%= youTubeDisplayContext.isShowThumbnail() %>" />
+					<aui:input name="preferences--showThumbnail--" type="toggle-switch" value="<%= displayContext.isShowThumbnail() %>" />
 
-					<div class="<%= youTubeDisplayContext.isShowThumbnail() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />videoPreferences">
-						<aui:input inlineField="<%= true %>" label="auto-play" name="preferences--autoplay--" type="toggle-switch" value="<%= youTubeDisplayContext.isAutoPlay() %>" />
+					<div class="<%= displayContext.isShowThumbnail() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />videoPreferences">
+						<aui:input inlineField="<%= true %>" label="auto-play" name="preferences--autoplay--" type="toggle-switch" value="<%= displayContext.isAutoPlay() %>" />
 
-						<aui:input inlineField="<%= true %>" name="preferences--loop--" type="toggle-switch" value="<%= youTubeDisplayContext.isLoop() %>" />
+						<aui:input inlineField="<%= true %>" name="preferences--loop--" type="toggle-switch" value="<%= displayContext.isLoop() %>" />
 
-						<aui:input inlineField="<%= true %>" name="preferences--enableKeyboardControls--" type="toggle-switch" value="<%= youTubeDisplayContext.isEnableKeyboardControls() %>" />
+						<aui:input inlineField="<%= true %>" name="preferences--enableKeyboardControls--" type="toggle-switch" value="<%= displayContext.isEnableKeyboardControls() %>" />
 
-						<aui:input inlineField="<%= true %>" name="preferences--annotations--" type="toggle-switch" value="<%= youTubeDisplayContext.isAnnotations() %>" />
+						<aui:input inlineField="<%= true %>" name="preferences--annotations--" type="toggle-switch" value="<%= displayContext.isAnnotations() %>" />
 
-						<aui:input inlineField="<%= true %>" name="preferences--closedCaptioning--" type="toggle-switch" value="<%= youTubeDisplayContext.isClosedCaptioning() %>" />
+						<aui:input inlineField="<%= true %>" name="preferences--closedCaptioning--" type="toggle-switch" value="<%= displayContext.isClosedCaptioning() %>" />
 
-						<aui:input name="preferences--startTime--" value="<%= youTubeDisplayContext.getStartTime() %>">
+						<aui:input name="preferences--startTime--" value="<%= displayContext.getStartTime() %>">
 							<aui:validator name="digits" />
 						</aui:input>
 					</div>
@@ -124,5 +124,5 @@ String redirect = ParamUtil.getString(request, "redirect");
 		}
 	}
 
-	Liferay.Util.toggleBoxes('<portlet:namespace />showThumbnail','<portlet:namespace />videoPreferences','<%= youTubeDisplayContext.isShowThumbnail() %>');
+	Liferay.Util.toggleBoxes('<portlet:namespace />showThumbnail','<portlet:namespace />videoPreferences','<%= displayContext.isShowThumbnail() %>');
 </aui:script>
