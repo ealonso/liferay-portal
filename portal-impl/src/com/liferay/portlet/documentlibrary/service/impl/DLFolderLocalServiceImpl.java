@@ -440,6 +440,11 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 	}
 
 	@Override
+	public List<DLFolder> getFolders(long classNameId, String treePath) {
+		return dlFolderFinder.findF_ByC_T(classNameId, treePath);
+	}
+
+	@Override
 	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(
 		long groupId, long folderId, String[] mimeTypes,
 		boolean includeMountFolders, QueryDefinition<?> queryDefinition) {
