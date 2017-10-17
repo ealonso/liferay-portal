@@ -16,9 +16,6 @@ package com.liferay.portlet.messageboards.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryFinder;
-import com.liferay.asset.kernel.service.persistence.AssetEntryPersistence;
-
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
 import com.liferay.exportimport.kernel.lar.ManifestSummary;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -740,62 +737,6 @@ public abstract class MBThreadLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * Returns the asset entry local service.
-	 *
-	 * @return the asset entry local service
-	 */
-	public com.liferay.asset.kernel.service.AssetEntryLocalService getAssetEntryLocalService() {
-		return assetEntryLocalService;
-	}
-
-	/**
-	 * Sets the asset entry local service.
-	 *
-	 * @param assetEntryLocalService the asset entry local service
-	 */
-	public void setAssetEntryLocalService(
-		com.liferay.asset.kernel.service.AssetEntryLocalService assetEntryLocalService) {
-		this.assetEntryLocalService = assetEntryLocalService;
-	}
-
-	/**
-	 * Returns the asset entry persistence.
-	 *
-	 * @return the asset entry persistence
-	 */
-	public AssetEntryPersistence getAssetEntryPersistence() {
-		return assetEntryPersistence;
-	}
-
-	/**
-	 * Sets the asset entry persistence.
-	 *
-	 * @param assetEntryPersistence the asset entry persistence
-	 */
-	public void setAssetEntryPersistence(
-		AssetEntryPersistence assetEntryPersistence) {
-		this.assetEntryPersistence = assetEntryPersistence;
-	}
-
-	/**
-	 * Returns the asset entry finder.
-	 *
-	 * @return the asset entry finder
-	 */
-	public AssetEntryFinder getAssetEntryFinder() {
-		return assetEntryFinder;
-	}
-
-	/**
-	 * Sets the asset entry finder.
-	 *
-	 * @param assetEntryFinder the asset entry finder
-	 */
-	public void setAssetEntryFinder(AssetEntryFinder assetEntryFinder) {
-		this.assetEntryFinder = assetEntryFinder;
-	}
-
-	/**
 	 * Returns the message boards category local service.
 	 *
 	 * @return the message boards category local service
@@ -1117,12 +1058,6 @@ public abstract class MBThreadLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService workflowInstanceLinkLocalService;
 	@BeanReference(type = WorkflowInstanceLinkPersistence.class)
 	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@BeanReference(type = com.liferay.asset.kernel.service.AssetEntryLocalService.class)
-	protected com.liferay.asset.kernel.service.AssetEntryLocalService assetEntryLocalService;
-	@BeanReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@BeanReference(type = AssetEntryFinder.class)
-	protected AssetEntryFinder assetEntryFinder;
 	@BeanReference(type = com.liferay.message.boards.kernel.service.MBCategoryLocalService.class)
 	protected com.liferay.message.boards.kernel.service.MBCategoryLocalService mbCategoryLocalService;
 	@BeanReference(type = MBCategoryPersistence.class)
