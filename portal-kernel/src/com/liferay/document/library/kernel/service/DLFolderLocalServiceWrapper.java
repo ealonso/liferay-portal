@@ -579,6 +579,12 @@ public class DLFolderLocalServiceWrapper implements DLFolderLocalService,
 	}
 
 	@Override
+	public java.util.List<com.liferay.document.library.kernel.model.DLFolder> getFolders(
+		long classNameId, java.lang.String treePath) {
+		return _dlFolderLocalService.getFolders(classNameId, treePath);
+	}
+
+	@Override
 	public java.util.List<java.lang.Object> getFoldersAndFileEntriesAndFileShortcuts(
 		long groupId, long folderId, java.lang.String[] mimeTypes,
 		boolean includeMountFolders,
