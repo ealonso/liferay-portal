@@ -413,6 +413,9 @@ public interface DLFolderLocalService extends BaseLocalService,
 		int start, int end, OrderByComparator<DLFolder> obc);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFolder> getFolders(long classNameId, java.lang.String treePath);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<java.lang.Object> getFoldersAndFileEntriesAndFileShortcuts(
 		long groupId, long folderId, java.lang.String[] mimeTypes,
 		boolean includeMountFolders, QueryDefinition<?> queryDefinition);
