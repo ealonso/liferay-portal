@@ -43,7 +43,7 @@ String stagingURL = (String)request.getAttribute(StagingProcessesWebKeys.STAGING
 					boolean selected = (group.isStagingGroup() || group.isStagedRemotely()) && (curLayoutSetBranch.getLayoutSetBranchId() == layoutRevision.getLayoutSetBranchId());
 				%>
 
-					<portlet:actionURL name="selectLayoutSetBranch" var="curLayoutSetBranchURL">
+					<portlet:actionURL name="/select_layout_set_branch" var="curLayoutSetBranchURL">
 						<portlet:param name="redirect" value="<%= stagingURL %>" />
 						<portlet:param name="groupId" value="<%= String.valueOf(curLayoutSetBranch.getGroupId()) %>" />
 						<portlet:param name="privateLayout" value="<%= String.valueOf(layout.isPrivateLayout()) %>" />
