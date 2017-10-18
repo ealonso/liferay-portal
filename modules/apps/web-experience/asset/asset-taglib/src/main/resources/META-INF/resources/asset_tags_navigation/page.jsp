@@ -28,6 +28,8 @@ String tag = ParamUtil.getString(request, "tag");
 
 PortletURL portletURL = renderResponse.createRenderURL();
 
+portletURL.removePublicRenderParameter("publicNamespace");
+
 String tagsNavigation = _buildTagsNavigation(scopeGroupId, tag, portletURL, classNameId, displayStyle, maxAssetTags, showAssetCount, showZeroAssetCount);
 
 if (Validator.isNotNull(tagsNavigation)) {

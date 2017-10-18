@@ -27,6 +27,8 @@ if (portletURL == null) {
 long assetCategoryId = ParamUtil.getLong(request, "categoryId");
 String assetTagName = ParamUtil.getString(request, "tag");
 
+String publicNamespace = ParamUtil.getString(request, "publicNamespace", "1");
+
 String assetCategoryTitle = null;
 String assetVocabularyTitle = null;
 
@@ -48,6 +50,7 @@ if (assetCategoryId != 0) {
 
 			<portlet:renderURL var="viewURLWithoutCategory">
 				<portlet:param name="categoryId" value="0" />
+				<portlet:param name="publicNamespace" value="1" />
 			</portlet:renderURL>
 
 			<a href="<%= viewURLWithoutCategory %>" title="<liferay-ui:message key="remove" />">
@@ -63,6 +66,7 @@ if (assetCategoryId != 0) {
 			<%= HtmlUtil.escape(assetTagName) %>
 
 			<liferay-portlet:renderURL allowEmptyParam="<%= true %>" var="viewURLWithoutTag">
+				<liferay-portlet:param name="publicNamespace" value="1" />
 				<liferay-portlet:param name="tag" value="" />
 			</liferay-portlet:renderURL>
 
@@ -73,44 +77,46 @@ if (assetCategoryId != 0) {
 	</c:if>
 </liferay-util:buffer>
 
-<c:choose>
-	<c:when test="<%= (assetCategoryId != 0) && Validator.isNotNull(assetTagName) %>">
+<c:if test='<%= publicNamespace.equals("1") || publicNamespace.equals(portletDisplay.getNamespace()) %>'>
+	<c:choose>
+		<c:when test="<%= (assetCategoryId != 0) && Validator.isNotNull(assetTagName) %>">
 
-		<%
-		AssetCategoryUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
+			<%
+			AssetCategoryUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
 
-		PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
+			PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
 
-		PortalUtil.addPageKeywords(assetCategoryTitle, request);
-		PortalUtil.addPageKeywords(assetTagName, request);
-		%>
+			PortalUtil.addPageKeywords(assetCategoryTitle, request);
+			PortalUtil.addPageKeywords(assetTagName, request);
+			%>
 
-		<h2 class="entry-title taglib-categorization-filter">
-			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory, removeTag} %>" key='<%= assetType.concat("-with-x-x-and-tag-x") %>' translateArguments="<%= false %>" />
-		</h2>
-	</c:when>
-	<c:when test="<%= assetCategoryId != 0 %>">
+			<h2 class="entry-title taglib-categorization-filter">
+				<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory, removeTag} %>" key='<%= assetType.concat("-with-x-x-and-tag-x") %>' translateArguments="<%= false %>" />
+			</h2>
+		</c:when>
+		<c:when test="<%= assetCategoryId != 0 %>">
 
-		<%
-		AssetCategoryUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
+			<%
+			AssetCategoryUtil.addPortletBreadcrumbEntries(assetCategoryId, request, portletURL);
 
-		PortalUtil.addPageKeywords(assetCategoryTitle, request);
-		%>
+			PortalUtil.addPageKeywords(assetCategoryTitle, request);
+			%>
 
-		<h2 class="entry-title taglib-categorization-filter">
-			<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory} %>" key='<%= assetType.concat("-with-x-x") %>' translateArguments="<%= false %>" />
-		</h2>
-	</c:when>
-	<c:when test="<%= Validator.isNotNull(assetTagName) %>">
+			<h2 class="entry-title taglib-categorization-filter">
+				<liferay-ui:message arguments="<%= new String[] {assetVocabularyTitle, removeCategory} %>" key='<%= assetType.concat("-with-x-x") %>' translateArguments="<%= false %>" />
+			</h2>
+		</c:when>
+		<c:when test="<%= Validator.isNotNull(assetTagName) %>">
 
-		<%
-		PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
+			<%
+			PortalUtil.addPortletBreadcrumbEntry(request, assetTagName, currentURL);
 
-		PortalUtil.addPageKeywords(assetTagName, request);
-		%>
+			PortalUtil.addPageKeywords(assetTagName, request);
+			%>
 
-		<h2 class="entry-title taglib-categorization-filter">
-			<liferay-ui:message arguments="<%= removeTag %>" key='<%= assetType.concat("-with-tag-x") %>' translateArguments="<%= false %>" />
-		</h2>
-	</c:when>
-</c:choose>
+			<h2 class="entry-title taglib-categorization-filter">
+				<liferay-ui:message arguments="<%= removeTag %>" key='<%= assetType.concat("-with-tag-x") %>' translateArguments="<%= false %>" />
+			</h2>
+		</c:when>
+	</c:choose>
+</c:if>

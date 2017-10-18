@@ -40,6 +40,8 @@ else {
 }
 
 PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.removePublicRenderParameter("publicNamespace");
 %>
 
 <liferay-ui:panel-container cssClass="taglib-asset-categories-navigation" extended="<%= true %>" id='<%= namespace + "taglibAssetCategoriesNavigationPanel" %>' persistState="<%= true %>">
