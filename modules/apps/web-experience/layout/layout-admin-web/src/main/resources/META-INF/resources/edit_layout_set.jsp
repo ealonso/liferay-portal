@@ -41,7 +41,7 @@ if (Validator.isNotNull(backURL)) {
 renderResponse.setTitle(selGroup.getLayoutRootNodeName(privateLayout, locale));
 %>
 
-<portlet:actionURL name="editLayoutSet" var="editLayoutSetURL">
+<portlet:actionURL name="/edit_layout_set" var="editLayoutSetURL">
 	<portlet:param name="mvcPath" value="/view.jsp" />
 </portlet:actionURL>
 
