@@ -2,16 +2,16 @@
 	var adjustScrollTop = function() {
 		var controlMenu;
 		var controlMenuId;
-		var scroll;
+		var controlMenuScroll;
 
 		if (Liferay.ControlMenu) {
 			controlMenuId = Liferay.ControlMenu._namespace + 'ControlMenu';
 			controlMenu = document.getElementById(controlMenuId);
 
 			if (controlMenu) {
-				scroll = (controlMenu.offsetHeight || 0);
+				controlMenuScroll = (controlMenu.offsetHeight || 0);
 
-				window.scrollBy(0, -scroll);
+				window.scrollBy(0, -controlMenuScroll);
 			}
 		}
 	};
