@@ -46,7 +46,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		sb.append("?wmode=transparent");
 
 		if (isAutoPlay()) {
-			sb.append("&amp;autoplay=1");
+			sb.append("&amp;auto_play=1");
 		}
 
 		if (isClosedCaptioning()) {
@@ -82,8 +82,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 			return _startTime;
 		}
 
-		_startTime = _portletPreferences.getValue(
-			"startTime", StringPool.BLANK);
+		_startTime = portletPreferences.getValue("startTime", StringPool.BLANK);
 
 		return _startTime;
 	}
@@ -94,7 +93,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		}
 
 		_annotations = GetterUtil.getBoolean(
-			_portletPreferences.getValue("annotations", "true"));
+			portletPreferences.getValue("annotations", "true"));
 
 		return _annotations;
 	}
@@ -105,7 +104,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		}
 
 		_autoPlay = GetterUtil.getBoolean(
-			_portletPreferences.getValue("autoplay", "false"));
+			portletPreferences.getValue("autoplay", "false"));
 
 		return _autoPlay;
 	}
@@ -116,7 +115,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		}
 
 		_closedCaptioning = GetterUtil.getBoolean(
-			_portletPreferences.getValue("closedCaptioning", "false"));
+			portletPreferences.getValue("closedCaptioning", "false"));
 
 		return _closedCaptioning;
 	}
@@ -127,7 +126,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		}
 
 		_enableKeyboardControls = GetterUtil.getBoolean(
-			_portletPreferences.getValue("enableKeyboardControls", "true"));
+			portletPreferences.getValue("enableKeyboardControls", "true"));
 
 		return _enableKeyboardControls;
 	}
@@ -138,7 +137,7 @@ public class YouTubeDisplayContext extends BaseVideoEmbedderDisplayContext {
 		}
 
 		_loop = GetterUtil.getBoolean(
-			_portletPreferences.getValue("loop", "false"));
+			portletPreferences.getValue("loop", "false"));
 
 		return _loop;
 	}

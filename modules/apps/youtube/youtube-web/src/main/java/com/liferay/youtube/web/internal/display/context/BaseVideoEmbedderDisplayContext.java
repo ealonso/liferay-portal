@@ -39,10 +39,10 @@ public class BaseVideoEmbedderDisplayContext
 		HttpServletRequest request, PortletPreferences portletPreferences,
 		VideoEmbedderConfiguration configuration) {
 
-		_request = request;
-		_portletPreferences = portletPreferences;
-		_id = StringPool.BLANK;
-		_siteName = StringPool.BLANK;
+		this.request = request;
+		this.portletPreferences = portletPreferences;
+		id = StringPool.BLANK;
+		siteName = StringPool.BLANK;
 
 		_init(configuration);
 	}
@@ -51,13 +51,13 @@ public class BaseVideoEmbedderDisplayContext
 	public String getEmbedURL() {
 		getURL();
 
-		if (_url == null) {
+		if (url == null) {
 			return "";
 		}
 
 		StringBundler sb = new StringBundler(13);
 
-		sb.append(HttpUtil.getProtocol(_request));
+		sb.append(HttpUtil.getProtocol(request));
 		sb.append("://");
 		sb.append(_getIFramePrefix(_getSiteName()));
 		sb.append(getId());
@@ -67,74 +67,62 @@ public class BaseVideoEmbedderDisplayContext
 
 	@Override
 	public String getHeight() {
-		if (_height != null) {
-			return _height;
+		if (height != null) {
+			return height;
 		}
 
 		if (isCustomRatio()) {
-		_height = _portletPreferences.getValue("height", "16");
+			height = portletPreferences.getValue("height", "16");
 		}
 		else {
 			String presetRaio = getPresetRatio();
 
 			String[] ratio = presetRaio.split(":");
 
-			_height = ratio[1];
+			height = ratio[1];
 		}
 
-		return _height;
-	}
-
-	public String getId() {
-		if (Validator.isNotNull(_id)) {
-			return _id;
-		}
-
-		String regex = _getVideoPattern(_getSiteName());
-
-		_id = getURL().replaceAll(regex, "$1");
-
-		return _id;
+		return height;
 	}
 
 	@Override
 	public String getPresetRatio() {
-		if (_presetRatio != null) {
-			return _presetRatio;
-		} _presetRatio = _portletPreferences.getValue("presetRatio", "16:9");
+		if (presetRatio != null) {
+			return presetRatio;
+		} presetRatio = portletPreferences.getValue("presetRatio", "16:9");
 
-		return _presetRatio;
+		return presetRatio;
 	}
 
 	@Override
 	public String getURL() {
-		if (_url != null) {
-			return _url;
+		if (url != null) {
+			return url;
 		}
 
-		_url = _portletPreferences.getValue("url", StringPool.BLANK);
+		url = portletPreferences.getValue("url", StringPool.BLANK);
 
-		return _url;
+		return url;
 	}
 
 	@Override
 	public String getWidth() {
-		if (_width != null) {
-			return _width;
+		if (width != null) {
+			return width;
 		}
 
 		if (isCustomRatio()) {
-			_width = _portletPreferences.getValue("width", "9");
+			width = portletPreferences.getValue("width", "9");
 		}
 		else {
 			String presetRatio = getPresetRatio();
 
 			String[] ratio = presetRatio.split(":");
 
-			_width = ratio[0];
+			width = ratio[0];
 		}
 
-		return _width;
+		return width;
 	}
 
 	@Override
@@ -148,27 +136,39 @@ public class BaseVideoEmbedderDisplayContext
 		return false;
 	}
 
-	protected String _height;
-	protected String _id;
-	protected final PortletPreferences _portletPreferences;
-	protected String _presetRatio;
-	protected final HttpServletRequest _request;
-	protected String _siteName;
-	protected Map<String, String[]> _systemSettings;
-	protected String _url;
-	protected String _width;
+	protected String getId() {
+		if (Validator.isNotNull(id)) {
+			return id;
+		}
+
+		String regex = _getVideoPattern(_getSiteName());
+
+		id = getURL().replaceAll(regex, "$1");
+
+		return id;
+	}
+
+	protected String height;
+	protected String id;
+	protected final PortletPreferences portletPreferences;
+	protected String presetRatio;
+	protected final HttpServletRequest request;
+	protected String siteName;
+	protected Map<String, String[]> systemSettings;
+	protected String url;
+	protected String width;
 
 	private String _getIFramePrefix(String siteName) {
-		return _systemSettings.get(siteName)[0];
+		return systemSettings.get(siteName)[0];
 	}
 
 	private String _getSiteName() {
-		if (Validator.isNotNull(_siteName)) {
-			return _siteName;
+		if (Validator.isNotNull(siteName)) {
+			return siteName;
 		}
 
-		for (String key : _systemSettings.keySet()) {
-			if (_url.contains(key)) {
+		for (String key : systemSettings.keySet()) {
+			if (url.contains(key)) {
 				return key;
 			}
 		}
@@ -177,12 +177,13 @@ public class BaseVideoEmbedderDisplayContext
 	}
 
 	private String _getVideoPattern(String siteName) {
-		return _systemSettings.get(siteName)[1];
+		return systemSettings.get(siteName)[1];
 	}
 
 	private void _init(VideoEmbedderConfiguration configuration) {
 
-		//When this class is instantiated for configuration page, this configuration is not passed in and will be null
+		//When this class is instantiated for configuration page,
+		//this configuration is not passed in and will be null
 
 		if (configuration == null) {
 			return;
@@ -203,11 +204,11 @@ public class BaseVideoEmbedderDisplayContext
 			copy[0] = parts[0];
 			copy[1] = parts[1];
 
-			if (_systemSettings == null) {
-				_systemSettings = new HashMap<>();
+			if (systemSettings == null) {
+				systemSettings = new HashMap<>();
 			}
 
-			_systemSettings.put(parts[2], copy);
+			systemSettings.put(parts[2], copy);
 		}
 	}
 

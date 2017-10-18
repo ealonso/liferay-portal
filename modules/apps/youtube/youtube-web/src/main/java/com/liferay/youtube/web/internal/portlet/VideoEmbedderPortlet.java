@@ -65,8 +65,8 @@ public class VideoEmbedderPortlet extends MVCPortlet {
 	public void render(RenderRequest request, RenderResponse response)
 		throws IOException, PortletException {
 
-		request.setAttribute(VideoEmbedderConfiguration.class
-			.getName(), _configuration);
+		request.setAttribute(
+			VideoEmbedderConfiguration.class.getName(), _configuration);
 
 		super.render(request, response);
 	}
