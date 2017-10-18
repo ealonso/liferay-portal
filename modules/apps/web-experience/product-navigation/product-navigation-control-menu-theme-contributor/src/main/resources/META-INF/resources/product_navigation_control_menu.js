@@ -1,11 +1,15 @@
 ;(function() {
 	var adjustScrollTop = function() {
+		var controlMenu;
+		var controlMenuId;
+		var scroll;
+
 		if (Liferay.ControlMenu) {
-			var controlMenuId = Liferay.ControlMenu._namespace + 'ControlMenu';
-			var controlMenu = document.getElementById(controlMenuId);
+			controlMenuId = Liferay.ControlMenu._namespace + 'ControlMenu';
+			controlMenu = document.getElementById(controlMenuId);
 
 			if (controlMenu) {
-				var scroll = (controlMenu.offsetHeight || 0);
+				scroll = (controlMenu.offsetHeight || 0);
 
 				window.scrollBy(0, -scroll);
 			}
