@@ -72,7 +72,6 @@ import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.service.LayoutSetBranchLocalService;
 import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.service.LayoutSetService;
-import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
@@ -405,32 +404,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		MultiSessionMessages.add(actionRequest, "layoutDeleted", selPlid);
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
-	}
-
-	public void deleteOrphanPortlets(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
-
-		String[] portletIds = null;
-
-		String portletId = ParamUtil.getString(actionRequest, "portletId");
-
-		if (Validator.isNotNull(portletId)) {
-			portletIds = new String[] {portletId};
-		}
-		else {
-			portletIds = ParamUtil.getStringValues(actionRequest, "rowIds");
-		}
-
-		if (portletIds.length > 0) {
-			portletLocalService.deletePortlets(
-				themeDisplay.getCompanyId(), portletIds, selPlid);
-		}
 	}
 
 	public void editLayout(
@@ -1185,13 +1158,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		this.portletLocalService = portletLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setPortletPreferencesLocalService(
 		PortletPreferencesLocalService portletPreferencesLocalService) {
 
@@ -1475,7 +1441,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	@Reference
 	protected Portal portal;
 
-	protected PortletLocalService portletLocalService;
 	protected PortletPreferencesLocalService portletPreferencesLocalService;
 
 	@Reference
