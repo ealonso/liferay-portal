@@ -68,30 +68,6 @@ public class AssetEntryMBMessageLocalServiceWrapper
 	}
 
 	@Override
-	public MBMessage addMessage(
-			long userId, String userName, long groupId, long categoryId,
-			long threadId, long parentMessageId, String subject, String body,
-			String format,
-			List<ObjectValuePair<String, InputStream>> inputStreamOVPs,
-			boolean anonymous, double priority, boolean allowPingbacks,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		MBMessage message = super.addMessage(
-			userId, userName, groupId, categoryId, threadId, parentMessageId,
-			subject, body, format, inputStreamOVPs, anonymous, priority,
-			allowPingbacks, serviceContext);
-
-		updateAsset(
-			userId, message, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames(),
-			serviceContext.getAssetLinkEntryIds(),
-			serviceContext.isAssetEntryVisible());
-
-		return message;
-	}
-
-	@Override
 	public MBMessage deleteMessage(MBMessage message) throws PortalException {
 		_assetEntryLocalService.deleteEntry(
 			message.getWorkflowClassName(), message.getMessageId());
