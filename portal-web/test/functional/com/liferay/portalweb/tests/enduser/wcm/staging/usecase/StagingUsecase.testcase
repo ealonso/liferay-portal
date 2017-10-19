@@ -76,10 +76,20 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Page#add">
-			<var name="pageName" value="Delete Live Page" />
-			<var name="pageStaging" value="true" />
+		<execute macro="ProductMenu#gotoSite">
 			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Delete Live Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedSitePage">
@@ -131,10 +141,20 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Page#add">
-			<var name="pageName" value="Page Name 2" />
-			<var name="pageStaging" value="true" />
+		<execute macro="ProductMenu#gotoSite">
 			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Page Name 2" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedSitePage">
@@ -855,10 +875,20 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Page#add">
+		<execute macro="ProductMenu#gotoSite">
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Page 1" />
-			<var name="pageStaging" value="true" />
-			<var name="siteName" value="Site Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -867,10 +897,20 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Page#add">
+		<execute macro="ProductMenu#gotoSite">
+			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Page 2" />
-			<var name="pageStaging" value="true" />
-			<var name="siteName" value="Site Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -879,10 +919,20 @@
 			<var name="portlet" value="Sites" />
 		</execute>
 
-		<execute macro="Page#add">
-			<var name="pageName" value="Page 3" />
-			<var name="pageStaging" value="true" />
+		<execute macro="ProductMenu#gotoSite">
 			<var name="siteName" value="Site Name" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Page 3" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">

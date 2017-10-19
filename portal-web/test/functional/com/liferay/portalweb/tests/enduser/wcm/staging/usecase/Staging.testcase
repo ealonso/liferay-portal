@@ -1964,10 +1964,20 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="Page#add">
-			<var name="pageName" value="Test Page Name" />
-			<var name="pageStaging" value="true" />
+		<execute macro="ProductMenu#gotoSite">
 			<var name="siteScopeSelected" value="true" />
+		</execute>
+
+		<execute macro="Navigator#gotoStagedView" />
+
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Test Page Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedSitePage">
