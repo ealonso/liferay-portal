@@ -612,6 +612,11 @@
 			<var name="pageName" value="Blog and Message Board Page" />
 		</execute>
 
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="Blogs" />
 		</execute>
@@ -867,6 +872,11 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Blog and Message Board Page" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<execute macro="Portlet#addPG">
@@ -1135,6 +1145,11 @@
 
 		<execute macro="SitePages#addPublicPage">
 			<var name="pageName" value="Blog and Message Board Page" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="pageName" value="Blog and Message Board Page" />
+			<var name="siteName" value="${siteName}" />
 		</execute>
 
 		<execute macro="Portlet#addPG">

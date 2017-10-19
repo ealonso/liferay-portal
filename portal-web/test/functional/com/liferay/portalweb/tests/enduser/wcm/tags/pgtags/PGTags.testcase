@@ -879,6 +879,11 @@
 			<var name="pageName" value="Page Name" />
 		</execute>
 
+		<execute macro="Navigator#gotoSitePage">
+			<var name="site" value="Site Name" />
+			<var name="pageName" value="Page Name" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="Blogs" />
 		</execute>

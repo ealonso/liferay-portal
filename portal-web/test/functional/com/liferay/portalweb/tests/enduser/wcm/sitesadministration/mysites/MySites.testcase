@@ -61,6 +61,11 @@
 			<var name="pageName" value="Test Page" />
 		</execute>
 
+		<execute macro="Navigator#gotoSitePage">
+			<var name="site" value="${siteName}" />
+			<var name="pageName" value="Test Page" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="My Sites" />
 		</execute>
@@ -554,6 +559,11 @@
 			<var name="pageName" value="Test Page" />
 		</execute>
 
+		<execute macro="Navigator#gotoSitePage">
+			<var name="site" value="${siteName}" />
+			<var name="pageName" value="Test Page" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="My Sites" />
 		</execute>
@@ -739,6 +749,11 @@
 		</execute>
 
 		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Test Page" />
+		</execute>
+
+		<execute macro="Navigator#gotoSitePage">
+			<var name="site" value="${siteName}" />
 			<var name="pageName" value="Test Page" />
 		</execute>
 

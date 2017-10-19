@@ -198,6 +198,10 @@
 			<var name="pageName" value="Polls Page" />
 		</execute>
 
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Polls Page" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="pageName" value="Form Page" />
 			<var name="portletName" value="Polls Display" />

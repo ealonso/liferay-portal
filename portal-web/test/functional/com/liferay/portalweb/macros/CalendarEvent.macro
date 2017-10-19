@@ -1684,6 +1684,10 @@
 					<var name="pageName" value="Marketplace Calendar Testing" />
 				</execute>
 
+				<execute macro="Navigator#gotoPage">
+					<var name="pageName" value="Marketplace Calendar Testing" />
+				</execute>
+
 				<execute macro="Portlet#addPG">
 					<var name="i" value="${i}" />
 					<var name="pageName" value="Marketplace Calendar Testing" />
