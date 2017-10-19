@@ -1526,6 +1526,14 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public void updateAsset(
+			long userId, MBMessage message, long[] assetCategoryIds,
+			String[] assetTagNames, long[] assetLinkEntryIds,
+			boolean assetEntryVisible)
+		throws PortalException {
+	}
+
+	@Override
 	public MBMessage updateDiscussionMessage(
 			long userId, long messageId, String className, long classPK,
 			String subject, String body, ServiceContext serviceContext)
@@ -1979,13 +1987,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			message.getCompanyId(), message.getGroupId(), userId,
 			message.getWorkflowClassName(), message.getMessageId(), message,
 			serviceContext, workflowContext);
-	}
-
-	protected void updateAsset(
-			long userId, MBMessage message, long[] assetCategoryIds,
-			String[] assetTagNames, long[] assetLinkEntryIds,
-			boolean assetEntryVisible)
-		throws PortalException {
 	}
 
 	protected void updatePriorities(long threadId, double priority) {
