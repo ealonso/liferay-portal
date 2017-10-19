@@ -115,6 +115,37 @@ public class AssetEntryMBMessageLocalServiceWrapper
 	}
 
 	@Override
+	public void updateAsset(
+			long userId, MBMessage message, long[] assetCategoryIds,
+			String[] assetTagNames, long[] assetLinkEntryIds,
+			boolean assetEntryVisible)
+		throws PortalException {
+
+		boolean visible = false;
+		Date publishDate = null;
+
+		if (assetEntryVisible && message.isApproved() &&
+			((message.getClassNameId() == 0) ||
+			 (message.getParentMessageId() != 0))) {
+
+			visible = true;
+			publishDate = message.getModifiedDate();
+		}
+
+		AssetEntry assetEntry = _assetEntryLocalService.updateEntry(
+			userId, message.getGroupId(), message.getCreateDate(),
+			message.getModifiedDate(), message.getWorkflowClassName(),
+			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
+			assetTagNames, true, visible, null, null, publishDate, null,
+			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
+			null, 0, 0, message.getPriority());
+
+		_assetLinkLocalService.updateLinks(
+			userId, assetEntry.getEntryId(), assetLinkEntryIds,
+			AssetLinkConstants.TYPE_RELATED);
+	}
+
+	@Override
 	public MBMessage updateMessage(
 			long userId, long messageId, String subject, String body,
 			List<ObjectValuePair<String, InputStream>> inputStreamOVPs,
@@ -265,36 +296,6 @@ public class AssetEntryMBMessageLocalServiceWrapper
 		}
 
 		return message;
-	}
-
-	protected void updateAsset(
-			long userId, MBMessage message, long[] assetCategoryIds,
-			String[] assetTagNames, long[] assetLinkEntryIds,
-			boolean assetEntryVisible)
-		throws PortalException {
-
-		boolean visible = false;
-		Date publishDate = null;
-
-		if (assetEntryVisible && message.isApproved() &&
-			((message.getClassNameId() == 0) ||
-			 (message.getParentMessageId() != 0))) {
-
-			visible = true;
-			publishDate = message.getModifiedDate();
-		}
-
-		AssetEntry assetEntry = _assetEntryLocalService.updateEntry(
-			userId, message.getGroupId(), message.getCreateDate(),
-			message.getModifiedDate(), message.getWorkflowClassName(),
-			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
-			assetTagNames, true, visible, null, null, publishDate, null,
-			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
-			null, 0, 0, message.getPriority());
-
-		_assetLinkLocalService.updateLinks(
-			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
 	}
 
 	@Reference
