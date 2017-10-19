@@ -14,18 +14,30 @@
 
 package com.liferay.site.navigation.admin.web.internal.type;
 
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.navigation.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
+import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalService;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemTypeRegistry;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -44,7 +56,24 @@ public class URLSiteNavigationMenuItemType
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws Exception {
 
-		return null;
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		JSONObject context = JSONFactoryUtil.createJSONObject();
+
+		context.put("fields", _getFieldsJSONArray(themeDisplay));
+		context.put("icon", getIcon());
+		context.put("namespace", portletDisplay.getNamespace());
+		context.put("type", getType());
+
+		jsonObject.put("context", context);
+
+		jsonObject.put("displayStyle", "fieldset");
+
+		return jsonObject;
 	}
 
 	@Override
@@ -68,7 +97,106 @@ public class URLSiteNavigationMenuItemType
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws Exception {
 
-		return null;
+		JSONObject jsonObject = _getSiteNavigationMenuItemJSONObject(
+			request, response, siteNavigationMenuItem);
+
+		return jsonObject;
 	}
+
+	private JSONArray _getFieldsJSONArray(ThemeDisplay themeDisplay) {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		ResourceBundle siteNavigationMenuItemTypeResourceBundle =
+			ResourceBundleUtil.getBundle(
+				"content.Language", themeDisplay.getLocale(), getClass());
+
+		jsonObject.put("description", "http://www.liferay.com");
+		jsonObject.put(
+			"label",
+			LanguageUtil.get(siteNavigationMenuItemTypeResourceBundle, "url"));
+		jsonObject.put("name", "url");
+		jsonObject.put("value", "");
+
+		jsonArray.put(jsonObject);
+
+		return jsonArray;
+	}
+
+	private JSONObject _getSiteNavigationMenuItemJSONObject(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		ResourceBundle siteNavigationMenuItemTypeResourceBundle =
+			ResourceBundleUtil.getBundle(
+				"content.Language", themeDisplay.getLocale(), getClass());
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		UnicodeProperties properties = new UnicodeProperties(true);
+
+		properties.load(siteNavigationMenuItem.getTypeSettings());
+
+		JSONArray value = JSONFactoryUtil.createJSONArray(
+			properties.getProperty("value"));
+
+		jsonObject.put(
+			"children",
+			_getSiteNavigationMenuItemsJSONArray(
+				request, response, siteNavigationMenuItem));
+
+		jsonObject.put("icon", getIcon());
+		jsonObject.put("id", properties.getProperty("id"));
+		jsonObject.put("name", properties.getProperty("name"));
+		jsonObject.put("type", getType());
+		jsonObject.put(
+			"typeLabel",
+			LanguageUtil.get(
+				siteNavigationMenuItemTypeResourceBundle,
+				"site.navigation.menu.item.types." + getType()));
+		jsonObject.put("value", value);
+
+		return jsonObject;
+	}
+
+	private JSONArray _getSiteNavigationMenuItemsJSONArray(
+			HttpServletRequest request, HttpServletResponse response,
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<SiteNavigationMenuItem> siteNavigationMenuItems =
+			_siteNavigationMenuItemLocalService.getChildSiteNavigationMenuItems(
+				siteNavigationMenuItem.getSiteNavigationMenuItemId());
+
+		for (SiteNavigationMenuItem childSiteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			SiteNavigationMenuItemType siteNavigationMenuItemType =
+				_siteNavigationMenuItemTypeRegistry.
+					getSiteNavigationMenuItemType(
+						childSiteNavigationMenuItem.getType());
+
+			jsonArray.put(
+				siteNavigationMenuItemType.getViewContext(
+					request, response, childSiteNavigationMenuItem));
+		}
+
+		return jsonArray;
+	}
+
+	@Reference
+	private SiteNavigationMenuItemLocalService
+		_siteNavigationMenuItemLocalService;
+
+	@Reference
+	private SiteNavigationMenuItemTypeRegistry
+		_siteNavigationMenuItemTypeRegistry;
 
 }
