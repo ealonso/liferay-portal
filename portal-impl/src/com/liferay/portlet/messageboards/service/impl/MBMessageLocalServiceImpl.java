@@ -397,6 +397,14 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 				folder.getFolderId(), inputStreamOVPs);
 		}
 
+		// Asset
+
+		mbMessageLocalService.updateAsset(
+			userId, message, serviceContext.getAssetCategoryIds(),
+			serviceContext.getAssetTagNames(),
+			serviceContext.getAssetLinkEntryIds(),
+			serviceContext.isAssetEntryVisible());
+
 		// Workflow
 
 		startWorkflowInstance(userId, message, serviceContext);
