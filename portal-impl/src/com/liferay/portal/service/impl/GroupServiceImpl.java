@@ -14,9 +14,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
@@ -56,8 +53,6 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.service.base.GroupServiceBaseImpl;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.ratings.kernel.transformer.RatingsDataTransformerUtil;
-
-import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -931,38 +926,10 @@ public class GroupServiceImpl extends GroupServiceBaseImpl {
 			}
 		}
 
-		if (group.isSite()) {
-			Group oldGroup = group;
-
-			List<AssetCategory> oldAssetCategories =
-				assetCategoryLocalService.getCategories(
-					Group.class.getName(), groupId);
-
-			List<AssetTag> oldAssetTags = assetTagLocalService.getTags(
-				Group.class.getName(), groupId);
-
-			ExpandoBridge oldExpandoBridge = oldGroup.getExpandoBridge();
-
-			Map<String, Serializable> oldExpandoAttributes =
-				oldExpandoBridge.getAttributes();
-
-			group = groupLocalService.updateGroup(
-				groupId, parentGroupId, nameMap, descriptionMap, type,
-				manualMembership, membershipRestriction, friendlyURL,
-				inheritContent, active, serviceContext);
-
-			SiteMembershipPolicyUtil.verifyPolicy(
-				group, oldGroup, oldAssetCategories, oldAssetTags,
-				oldExpandoAttributes, null);
-
-			return group;
-		}
-		else {
-			return groupLocalService.updateGroup(
-				groupId, parentGroupId, nameMap, descriptionMap, type,
-				manualMembership, membershipRestriction, friendlyURL,
-				inheritContent, active, serviceContext);
-		}
+		return groupLocalService.updateGroup(
+			groupId, parentGroupId, nameMap, descriptionMap, type,
+			manualMembership, membershipRestriction, friendlyURL,
+			inheritContent, active, serviceContext);
 	}
 
 	/**
