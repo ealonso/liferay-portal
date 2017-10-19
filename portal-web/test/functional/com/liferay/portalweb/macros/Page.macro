@@ -221,8 +221,15 @@
 	</command>
 
 	<command name="addJavaScript">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${pageName}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${pageName}" />
 		</execute>
 
 		<execute macro="Navigator#gotoNavTab">
@@ -289,8 +296,15 @@
 	</command>
 
 	<command name="addPageTranslations">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<var name="key_pageTranslation" value="${pageTranslation}" />
@@ -321,9 +335,15 @@
 	<command name="assertCannotDeleteOnlyPage">
 		<var name="key_page" value="${pageName}" />
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${pageName}" />
-			<var name="sitePagePrivacy" value="${sitePagePrivacy}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${pageName}" />
 		</execute>
 
 		<execute function="Click" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
@@ -346,8 +366,15 @@
 	</command>
 
 	<command name="changeCurrentTheme">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<execute function="Click" locator1="SitePagesEditPage#CHANGE_CURRENT_THEME_BUTTON" />
@@ -368,8 +395,15 @@
 	</command>
 
 	<command name="changeLogoViaPageCP">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<if>
@@ -445,8 +479,15 @@
 	</command>
 
 	<command name="deleteLogoPG">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<if>
@@ -547,8 +588,15 @@
 	</command>
 
 	<command name="editSelectPageType">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<execute function="Select" locator1="SitePagesEditPage#PAGE_TYPE_LAYOUT" value1="${pageType}">
@@ -586,8 +634,15 @@
 	</command>
 
 	<command name="firstPageCanNotBeOfTypeLinkToURL">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${pageName}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${pageName}" />
 		</execute>
 
 		<execute function="AssertElementPresent" locator1="Icon#HEADER_VERTICAL_ELLIPSIS" />
@@ -867,8 +922,15 @@
 	</command>
 
 	<command name="viewCurrentTheme">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<execute function="AssertTextPresent" locator1="SitePagesEditPage#VIEW_THEME" value1="${themeName}" />
@@ -933,8 +995,15 @@
 	</command>
 
 	<command name="viewFriendlyURL">
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${pageName}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${pageName}" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="SitePages#DETAILS_FRIENDLY_BASE_URL" value1="http://localhost:8080/web${siteFriendlyURL}" />
@@ -1164,8 +1233,15 @@
 			<var name="category" value="Navigation" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${page}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<execute function="AssertTextEquals" locator1="Message#ERROR_3" value1="Some page settings are unavailable because Inherit Changes is enabled. To change these settings, disable Inherit Changes under the General section." />
@@ -1200,8 +1276,15 @@
 	<command name="viewPanelPortletListCP">
 		<execute macro="ProductMenuHelper#openProductMenu" />
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="${pageName}" />
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Navigation" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="Site Pages" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="Configure" />
+			<var name="rowEntry" value="${pageName}" />
 		</execute>
 
 		<var name="key_componentName" value="${componentName}" />

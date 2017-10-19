@@ -46,12 +46,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -342,12 +341,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -396,12 +394,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -480,12 +477,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -539,12 +535,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -565,12 +560,11 @@
 			<var name="pageName" value="Message Boards Page 2" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page 2" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page 2" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -603,12 +597,11 @@
 			<var name="pageName" value="Message Boards Page 3" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page 3" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page 3" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1200,12 +1193,11 @@
 			<var name="pageName" value="Site Page Name" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Site Page Name" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Site Page Name" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -1350,12 +1342,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1473,12 +1464,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1657,12 +1647,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1778,12 +1767,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1820,12 +1808,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1863,12 +1850,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -1975,12 +1961,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -2065,12 +2050,11 @@
 			<var name="pageName" value="Message Boards Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Message Boards Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Message Boards Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">

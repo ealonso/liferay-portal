@@ -359,12 +359,11 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Documents and Media Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
@@ -523,12 +522,11 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Documents and Media Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
@@ -2063,12 +2061,11 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoEditPage">
-			<var name="page" value="Documents and Media Page" />
-		</execute>
-
-		<execute macro="Page#editPageLayoutColumn">
+		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
+			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoSitePage">
