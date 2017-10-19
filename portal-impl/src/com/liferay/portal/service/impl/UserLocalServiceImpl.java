@@ -1173,14 +1173,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			companyId, 0, creatorUserId, User.class.getName(), user.getUserId(),
 			false, false, false);
 
-		// Asset
-
-		if (serviceContext != null) {
-			updateAsset(
-				creatorUserId, user, serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames());
-		}
-
 		// Indexer
 
 		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
@@ -1911,11 +1903,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		// Announcements
 
 		announcementsDeliveryLocalService.deleteDeliveries(user.getUserId());
-
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			User.class.getName(), user.getUserId());
 
 		// Expando
 
@@ -4216,20 +4203,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			long userId, User user, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
-
-		User owner = userPersistence.findByPrimaryKey(userId);
-
-		Company company = companyPersistence.findByPrimaryKey(
-			owner.getCompanyId());
-
-		Group companyGroup = company.getGroup();
-
-		assetEntryLocalService.updateEntry(
-			userId, companyGroup.getGroupId(), user.getCreateDate(),
-			user.getModifiedDate(), User.class.getName(), user.getUserId(),
-			user.getUuid(), 0, assetCategoryIds, assetTagNames, true, false,
-			null, null, null, null, null, user.getFullName(), null, null, null,
-			null, 0, 0, null);
 	}
 
 	/**
@@ -5427,14 +5400,6 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 		// Announcements
 
 		announcementsDeliveryLocalService.getUserDeliveries(user.getUserId());
-
-		// Asset
-
-		if (serviceContext != null) {
-			updateAsset(
-				userId, user, serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames());
-		}
 
 		// Message boards
 
