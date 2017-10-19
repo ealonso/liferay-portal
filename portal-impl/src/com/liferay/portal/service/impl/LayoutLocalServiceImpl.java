@@ -55,7 +55,6 @@ import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntry;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -338,12 +337,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		layout.setLayoutSet(null);
 
-		// Asset
-
-		updateAsset(
-			userId, layout, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames());
-
 		return layoutLocalService.getLayout(layout.getPlid());
 	}
 
@@ -486,11 +479,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 
 		portletPreferencesLocalService.deletePortletPreferencesByPlid(
 			layout.getPlid());
-
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			Layout.class.getName(), layout.getPlid());
 
 		// Ratings
 
@@ -2370,14 +2358,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			long userId, Layout layout, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
-
-		assetEntryLocalService.updateEntry(
-			userId, layout.getGroupId(), layout.getCreateDate(),
-			layout.getModifiedDate(), Layout.class.getName(), layout.getPlid(),
-			layout.getUuid(), 0, assetCategoryIds, assetTagNames, true, false,
-			null, null, null, null, ContentTypes.TEXT_HTML,
-			layout.getName(LocaleUtil.getDefault()), null, null, null, null, 0,
-			0, null);
 	}
 
 	/**
@@ -2596,13 +2576,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			serviceContext.getUserId(), layout.getCompanyId(),
 			layout.getGroupId(), layout.getPlid(), layout.isPrivateLayout(),
 			friendlyURLMap, serviceContext);
-
-		// Asset
-
-		updateAsset(
-			serviceContext.getUserId(), layout,
-			serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames());
 
 		return layout;
 	}
