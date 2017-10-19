@@ -1,0 +1,123 @@
+{namespace NavigationMenuContainer}
+
+/**
+ * This renders the main element of NavigationMenuContainer.
+ */
+{template .render}
+	{@param? items: list<?>}
+	{@param? pathThemeImages: string}
+	{@param? selectedId: string}
+
+	<div class="navigation-menu-container">
+		{if $items and length($items) > 0}
+			{foreach $item in $items}
+				{call .menuItem}
+					{param item: $item /}
+					{param indent: 0 /}
+					{param pathThemeImages: $pathThemeImages /}
+					{param selectedId: $selectedId /}
+				{/call}
+			{/foreach}
+		{else}
+			<div class="text-center">
+				<h3>
+					<span class="d-block mt-xl-3">
+						{msg desc=""}this-menu-is-empty{/msg}
+					</span>
+
+					<span class="d-block mt-xl-3">
+						{msg desc=""}please-add-elements-like-pages-categories-urls{/msg}
+					</span>
+				</h3>
+			</div>
+		{/if}
+	</div>
+{/template}
+
+/**
+ * Renders a single menu item.
+ */
+{template .menuItem}
+	{@param item: ?}
+	{@param indent: number}
+	{@param? pathThemeImages: string}
+	{@param? selectedId: string}
+
+	{let $itemClasses kind="text"}
+		container-item
+		{if $indent > 0}
+			{sp}card-indent
+		{/if}
+	{/let}
+
+	<div class="{$itemClasses}">
+
+		{let $cardClasses kind="text"}
+			card card-horizonal
+			{if $selectedId == $item.id}
+				{sp}selected
+			{/if}
+		{/let}
+
+		<div class="{$cardClasses}">
+
+			{let $linkAttributes kind="attributes"}
+				class="card-focus-link"
+				data-onfocus="_handleFocus"
+				data-onkeyup="_handleKeyUp"
+				data-id="{$item.id}"
+				href="#1"
+			{/let}
+
+			<a {$linkAttributes}>
+				<div class="card-row card-row-padded">
+					{if $item.icon}
+						<div class="card-col-field">
+							<div class="sticker sticker-default sticker-lg sticker-static">
+								<svg class="lexicon-icon lexicon-icon-{$item.icon}" role="img" title="{$item.name}">
+									<use xlink:href="{$pathThemeImages}{$item.icon}"></use>
+								</svg>
+							</div>
+						</div>
+					{/if}
+
+					<div class="card-col-content card-col-gutters draggable">
+						<span class="lfr-card-title-text text-default treeview-node-name truncate-text">
+							{$item.name}
+						</span>
+						<div>
+							<span class="lfr-card-title-text text-muted treeview-node-name truncate-text">
+								{$item.typeLabel}
+							</span>
+						</div>
+					</div>
+
+					{let $trashAttributes kind="attributes"}
+						class="card-col-field delete-item-icon"
+						data-id="{$item.id}"
+						data-onclick="_handleDeleteItem"
+					{/let}
+
+					<div {$trashAttributes}>
+						<a href="#1">
+							<svg class="lexicon-icon lexicon-icon-trash" role="img">
+								<use xlink:href="{$pathThemeImages}trash"></use>
+							</svg>
+						</a>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		{if $item.children and length($item.children) > 0}
+			{foreach $child in $item.children}
+				{call .menuItem}
+					{param item: $child /}
+					{param indent: $indent + 1 /}
+					{param pathThemeImages: $pathThemeImages /}
+				{/call}
+			{/foreach}
+		{/if}
+	</div>
+
+{/template}

@@ -43,10 +43,12 @@ public class SiteNavigationMenuLocalServiceUtil {
 	 */
 	public static com.liferay.site.navigation.model.SiteNavigationMenu addSiteNavigationMenu(
 		long userId, long groupId, java.lang.String name,
+		java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addSiteNavigationMenu(userId, groupId, name, serviceContext);
+				   .addSiteNavigationMenu(userId, groupId, name,
+			serializedMenuItems, serviceContext);
 	}
 
 	/**
@@ -282,11 +284,12 @@ public class SiteNavigationMenuLocalServiceUtil {
 
 	public static com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
 		long userId, long siteNavigationMenuId, java.lang.String name,
+		java.lang.String serializedMenuItems,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateSiteNavigationMenu(userId, siteNavigationMenuId,
-			name, serviceContext);
+			name, serializedMenuItems, serviceContext);
 	}
 
 	/**

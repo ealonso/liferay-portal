@@ -1,0 +1,45 @@
+{namespace NavigationMenuBuilder}
+
+/**
+ * This renders the main element of NavigationMenuBuilder.
+ */
+{template .render}
+	{@param selectedItemType: ?}
+	{@param? availableItemTypes: list<?>}
+	{@param? _handleItemDeleted: any}
+	{@param? _handleItemMoved: any}
+	{@param? _handleItemSelected: any}
+	{@param? _handleItemTypeSelected: any}
+	{@param? menuItems: list<?>}
+	{@param? pathThemeImages: string}
+
+	<div class="card navigation-menu-builder">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col col-md">
+					{call NavigationMenuContainer.render}
+						{param events: [
+							'itemDeleted': $_handleItemDeleted,
+							'itemMoved': $_handleItemMoved
+						] /}
+						{param items: $menuItems /}
+						{param pathThemeImages: $pathThemeImages /}
+					{/call}
+				</div>
+
+				<div class="col col-md-4">
+					{call NavigationMenuToolbox.render}
+						{param availableItemTypes: $availableItemTypes /}
+						{param events: [
+							'itemSelected': $_handleItemSelected,
+							'itemTypeSelected': $_handleItemTypeSelected
+						] /}
+						{param pathThemeImages: $pathThemeImages /}
+						{param ref: 'toolbox' /}
+						{param selectedItemType: $selectedItemType /}
+					{/call}
+				</div>
+			</div>
+		</div>
+	</div>
+{/template}
