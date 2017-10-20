@@ -1,0 +1,128 @@
+{namespace NavigationMenuToolbox}
+
+/**
+ * This renders the main element of NavigationMenuToolbox.
+ */
+{template .render}
+	{@param selectedItemType: ?}
+	{@param? _handleContextChanged: any}
+	{@param? _handleItemSelected: any}
+	{@param? _handleItemTypeChanged: any}
+	{@param? availableItemTypes: list<?>}
+	{@param? pathThemeImages: string}
+
+	<div class="navigation-menu-toolbox sidebar sidebar-light sidebar-light-bg">
+		<div class="sidebar-header">
+			{call Dropdown.render}
+				{param header kind="html"}
+					<div class="card-horizontal" data-onclick="toggle">
+						<div class="card-col-content card-col-gutters">
+							<span class="lfr-card-title-text text-default treeview-node-name truncate-text" data-type="{$selectedItemType.type}">
+								{$selectedItemType.label}
+							</span>
+						</div>
+
+						<div class="card-col-field">
+							<a class="btn icon-monospaced" href="javascript:;">
+								<svg class="lexicon-icon">
+									<use xlink:href="{$pathThemeImages}caret-double"></use>
+								</svg>
+							</a>
+						</div>
+					</div>
+				{/param}
+				{param body kind="html"}
+					{if $availableItemTypes}
+						{foreach $availableItemType in $availableItemTypes}
+							<li data-onclick="toggle">
+								<a data-onclick="{$_handleItemTypeChanged}" data-type="{$availableItemType.type}" href="javascript:;">
+									<span class="icon-monospaced">
+										<svg class="lexicon-icon">
+											<use xlink:href="{$pathThemeImages}{$availableItemType.icon}"></use>
+										</svg>
+									</span>
+									<span>{$availableItemType.label}</span>
+								</a>
+							</li>
+						{/foreach}
+					{/if}
+				{/param}
+				{param ref: 'itemType' /}
+			{/call}
+		</div>
+
+		<div class="item-selector">
+			{delcall NavigationMenuToolbox.tool variant="$selectedItemType.displayStyle"}
+				{param fields: not $selectedItemType.context.fields ? [] : $selectedItemType.context.fields /}
+				{param followURLOnTitleClick: not $selectedItemType.context.followURLOnTitleClick ? false : $selectedItemType.context.followURLOnTitleClick /}
+				{param itemSelectorSaveEvent: not $selectedItemType.context.itemSelectorSaveEvent ? '' : $selectedItemType.context.itemSelectorSaveEvent /}
+				{param multiSelection: not $selectedItemType.context.multiSelection ? false : $selectedItemType.context.multiSelection /}
+				{param name: not $selectedItemType.context.name ? '' : $selectedItemType.context.name /}
+				{param namespace: not $selectedItemType.context.namespace ? '' : $selectedItemType.context.namespace /}
+				{param nodes: not $selectedItemType.context.nodes ? [] : $selectedItemType.context.nodes /}
+				{param pathThemeImages: not $selectedItemType.context.pathThemeImages ? '' : $selectedItemType.context.pathThemeImages /}
+				{param type: not $selectedItemType.context.type ? '' : $selectedItemType.context.type /}
+				{param _handleContextChanged: $_handleContextChanged /}
+				{param _handleItemSelected: $_handleItemSelected /}
+			{/delcall}
+
+		</div>
+	</div>
+{/template}
+
+/**
+ * This renders tree tool for navigation menu builder toolbox
+ */
+{deltemplate NavigationMenuToolbox.tool variant="'tree'"}
+	{@param fields: list<?>}
+	{@param followURLOnTitleClick: bool}
+	{@param itemSelectorSaveEvent: string}
+	{@param multiSelection: bool}
+	{@param name: string}
+	{@param namespace: string}
+	{@param nodes: list<?>}
+	{@param type: string}
+	{@param pathThemeImages: string}
+	{@param? _handleContextChanged: any}
+	{@param? _handleItemSelected: any}
+
+	{call NavigationMenuTree.render}
+		{param events: [ 'itemSelected': $_handleItemSelected ] /}
+		{param followURLOnTitleClick: $followURLOnTitleClick /}
+		{param itemSelectorSaveEvent: $itemSelectorSaveEvent /}
+		{param multiSelection: $multiSelection /}
+		{param namespace: $namespace /}
+		{param nodes: $nodes /}
+		{param pathThemeImages: $pathThemeImages /}
+		{param ref: 'tree' /}
+	{/call}
+{/deltemplate}
+
+/**
+ * This renders fieldset tool for navigation menu builder toolbox
+ */
+{deltemplate NavigationMenuToolbox.tool variant="'fieldset'"}
+	{@param fields: list<?>}
+	{@param followURLOnTitleClick: bool}
+	{@param itemSelectorSaveEvent: string}
+	{@param multiSelection: bool}
+	{@param name: string}
+	{@param namespace: string}
+	{@param nodes: list<?>}
+	{@param type: string}
+	{@param pathThemeImages: string}
+	{@param? _handleContextChanged: any}
+	{@param? _handleItemSelected: any}
+
+	{call NavigationMenuFieldset.render}
+		{param events: [
+				'itemSelected': $_handleItemSelected,
+				'contextChanged': $_handleContextChanged
+				] /}
+		{param fields: $fields /}
+		{param name: not $name ? '' : $name /}
+		{param namespace: $namespace /}
+		{param type: $type /}
+		{param ref: 'fieldset' /}
+	{/call}
+{/deltemplate}
