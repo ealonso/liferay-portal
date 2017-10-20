@@ -104,16 +104,6 @@ public class DLFileShortcutLocalServiceImpl
 				folderId, fileShortcut.getModifiedDate());
 		}
 
-		// Asset
-
-		FileEntry fileEntry = dlAppLocalService.getFileEntry(toFileEntryId);
-
-		copyAssetTags(fileEntry, serviceContext);
-
-		updateAsset(
-			userId, fileShortcut, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames());
-
 		return fileShortcut;
 	}
 
@@ -179,12 +169,6 @@ public class DLFileShortcutLocalServiceImpl
 		resourceLocalService.deleteResource(
 			fileShortcut.getCompanyId(), DLFileShortcutConstants.getClassName(),
 			ResourceConstants.SCOPE_INDIVIDUAL,
-			fileShortcut.getFileShortcutId());
-
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			DLFileShortcutConstants.getClassName(),
 			fileShortcut.getFileShortcutId());
 
 		// Trash
@@ -366,19 +350,6 @@ public class DLFileShortcutLocalServiceImpl
 			long userId, DLFileShortcut fileShortcut, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
-
-		FileEntry fileEntry = dlAppLocalService.getFileEntry(
-			fileShortcut.getToFileEntryId());
-
-		assetEntryLocalService.updateEntry(
-			userId, fileShortcut.getGroupId(), fileShortcut.getCreateDate(),
-			fileShortcut.getModifiedDate(),
-			DLFileShortcutConstants.getClassName(),
-			fileShortcut.getFileShortcutId(), fileShortcut.getUuid(), 0,
-			assetCategoryIds, assetTagNames, true, false, null, null,
-			fileShortcut.getCreateDate(), null, fileEntry.getMimeType(),
-			fileEntry.getTitle(), fileEntry.getDescription(), null, null, null,
-			0, 0, null);
 	}
 
 	@Override
@@ -408,16 +379,6 @@ public class DLFileShortcutLocalServiceImpl
 			dlFolderLocalService.updateLastPostDate(
 				folderId, fileShortcut.getModifiedDate());
 		}
-
-		// Asset
-
-		FileEntry fileEntry = dlAppLocalService.getFileEntry(toFileEntryId);
-
-		copyAssetTags(fileEntry, serviceContext);
-
-		updateAsset(
-			userId, fileShortcut, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames());
 
 		return fileShortcut;
 	}
@@ -470,15 +431,6 @@ public class DLFileShortcutLocalServiceImpl
 	protected void copyAssetTags(
 			FileEntry fileEntry, ServiceContext serviceContext)
 		throws PortalException {
-
-		String[] assetTagNames = assetTagLocalService.getTagNames(
-			FileEntry.class.getName(), fileEntry.getFileEntryId());
-
-		assetTagLocalService.checkTags(
-			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
-			assetTagNames);
-
-		serviceContext.setAssetTagNames(assetTagNames);
 	}
 
 	protected long getFolderId(long companyId, long folderId) {

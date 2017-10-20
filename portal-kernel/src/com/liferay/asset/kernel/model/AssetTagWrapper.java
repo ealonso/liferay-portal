@@ -37,8 +37,11 @@ import java.util.Objects;
  *
  * @author Brian Wing Shun Chan
  * @see AssetTag
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetTagWrapper implements AssetTag, ModelWrapper<AssetTag> {
 	public AssetTagWrapper(AssetTag assetTag) {

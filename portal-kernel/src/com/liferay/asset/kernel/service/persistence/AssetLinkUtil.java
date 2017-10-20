@@ -36,8 +36,11 @@ import java.util.List;
  * @author Brian Wing Shun Chan
  * @see AssetLinkPersistence
  * @see com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkUtil {
 	/*

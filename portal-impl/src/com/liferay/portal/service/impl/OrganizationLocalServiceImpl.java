@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.exception.OrganizationTypeException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.RequiredOrganizationException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
@@ -238,14 +237,6 @@ public class OrganizationLocalServiceImpl
 
 		addOrganizationResources(userId, organization);
 
-		// Asset
-
-		if (serviceContext != null) {
-			updateAsset(
-				userId, organization, serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames());
-		}
-
 		// Indexer
 
 		if ((serviceContext == null) || serviceContext.isIndexingEnabled()) {
@@ -348,11 +339,6 @@ public class OrganizationLocalServiceImpl
 				throw new RequiredOrganizationException();
 			}
 		}
-
-		// Asset
-
-		assetEntryLocalService.deleteEntry(
-			Organization.class.getName(), organization.getOrganizationId());
 
 		// Addresses
 
@@ -1710,20 +1696,6 @@ public class OrganizationLocalServiceImpl
 			long userId, Organization organization, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
-
-		User user = userPersistence.findByPrimaryKey(userId);
-
-		Company company = companyPersistence.findByPrimaryKey(
-			user.getCompanyId());
-
-		Group companyGroup = company.getGroup();
-
-		assetEntryLocalService.updateEntry(
-			userId, companyGroup.getGroupId(), null, null,
-			Organization.class.getName(), organization.getOrganizationId(),
-			organization.getUuid(), 0, assetCategoryIds, assetTagNames, true,
-			false, null, null, null, null, null, organization.getName(),
-			StringPool.BLANK, null, null, null, 0, 0, null);
 	}
 
 	/**
@@ -1861,15 +1833,6 @@ public class OrganizationLocalServiceImpl
 					groupLocalService.updateGroup(childGroup);
 				}
 			}
-		}
-
-		// Asset
-
-		if (serviceContext != null) {
-			updateAsset(
-				serviceContext.getUserId(), organization,
-				serviceContext.getAssetCategoryIds(),
-				serviceContext.getAssetTagNames());
 		}
 
 		// Indexer

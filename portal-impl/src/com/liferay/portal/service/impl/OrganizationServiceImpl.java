@@ -14,9 +14,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.EmailAddress;
@@ -39,10 +36,7 @@ import com.liferay.portal.kernel.service.permission.UserPermissionUtil;
 import com.liferay.portal.service.base.OrganizationServiceBaseImpl;
 import com.liferay.users.admin.kernel.util.UsersAdminUtil;
 
-import java.io.Serializable;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides the remote service for accessing, adding, deleting, and updating
@@ -556,30 +550,10 @@ public class OrganizationServiceImpl extends OrganizationServiceBaseImpl {
 
 		User user = getUser();
 
-		Organization oldOrganization = organization;
-
-		List<AssetCategory> oldAssetCategories =
-			assetCategoryLocalService.getCategories(
-				Organization.class.getName(), organizationId);
-
-		List<AssetTag> oldAssetTags = assetTagLocalService.getTags(
-			Organization.class.getName(), organizationId);
-
-		ExpandoBridge oldExpandoBridge = oldOrganization.getExpandoBridge();
-
-		Map<String, Serializable> oldExpandoAttributes =
-			oldExpandoBridge.getAttributes();
-
-		organization = organizationLocalService.updateOrganization(
+		return organizationLocalService.updateOrganization(
 			user.getCompanyId(), organizationId, parentOrganizationId, name,
 			type, regionId, countryId, statusId, comments, logo, logoBytes,
 			site, serviceContext);
-
-		OrganizationMembershipPolicyUtil.verifyPolicy(
-			organization, oldOrganization, oldAssetCategories, oldAssetTags,
-			oldExpandoAttributes);
-
-		return organization;
 	}
 
 	/**

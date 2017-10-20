@@ -683,6 +683,13 @@ public class DLFileEntryLocalServiceWrapper implements DLFileEntryLocalService,
 	}
 
 	@Override
+	public java.util.List<com.liferay.document.library.kernel.model.DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, java.lang.String treePath) {
+		return _dlFileEntryLocalService.getFileEntriesByClassNameIdAndTreePath(classNameId,
+			treePath);
+	}
+
+	@Override
 	public int getFileEntriesCount() {
 		return _dlFileEntryLocalService.getFileEntriesCount();
 	}

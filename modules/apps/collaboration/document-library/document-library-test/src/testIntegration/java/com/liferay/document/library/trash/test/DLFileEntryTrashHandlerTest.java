@@ -15,7 +15,6 @@
 package com.liferay.document.library.trash.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.model.DLFileVersion;
 import com.liferay.document.library.kernel.model.DLFolder;
@@ -126,13 +125,6 @@ public class DLFileEntryTrashHandlerTest
 
 		return addBaseModelWithWorkflow(
 			dlFolder.getGroupId(), dlFolder.getFolderId(), false);
-	}
-
-	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
-		throws Exception {
-
-		return _whenIsAssetable.fetchAssetEntry(classedModel);
 	}
 
 	@Override
