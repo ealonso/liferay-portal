@@ -77,7 +77,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Site Name" />
+			<var name="site" value="Site Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedView" />
@@ -148,7 +148,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Site Name" />
+			<var name="site" value="Site Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedView" />
@@ -882,7 +882,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Site Name" />
+			<var name="site" value="Site Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedView" />
@@ -904,7 +904,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Site Name" />
+			<var name="site" value="Site Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedView" />
@@ -926,7 +926,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Site Name" />
+			<var name="site" value="Site Name" />
 		</execute>
 
 		<execute macro="Navigator#gotoStagedView" />

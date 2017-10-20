@@ -1612,7 +1612,7 @@
 		</execute>
 
 		<execute macro="ProductMenu#gotoSite">
-			<var name="siteName" value="Page Type Test Site Name" />
+			<var name="site" value="Page Type Test Site Name" />
 		</execute>
 
 		<execute macro="ProductMenu#gotoPortlet">
