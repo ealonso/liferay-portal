@@ -361,7 +361,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="pageName" value="Documents and Media Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -524,7 +524,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="pageName" value="Documents and Media Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2063,7 +2063,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Documents and Media Page" />
+			<var name="pageName" value="Documents and Media Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>

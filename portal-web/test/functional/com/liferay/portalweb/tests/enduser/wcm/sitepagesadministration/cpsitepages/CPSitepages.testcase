@@ -543,7 +543,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -564,7 +564,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1-2-1 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -589,7 +589,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="Freeform" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -610,7 +610,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="2 Columns (50/50)" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -631,7 +631,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="2 Columns (70/30)" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -652,7 +652,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="3 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -673,7 +673,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1-2 Columns (30/70)" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -698,7 +698,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1-2 Columns (70/30)" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -719,7 +719,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="2-2 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -740,7 +740,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1-3-1 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -761,7 +761,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1-3-2 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -782,7 +782,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="2-1-2 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -803,7 +803,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="3-2-3 Columns" />
-			<var name="pgaeName" value="Site Page Name" />
+			<var name="pageName" value="Site Page Name" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>

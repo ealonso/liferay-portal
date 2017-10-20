@@ -1127,7 +1127,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Staging Test Page" />
+			<var name="pageName" value="Staging Test Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>

@@ -45,7 +45,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -129,7 +129,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -233,7 +233,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -341,7 +341,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -366,7 +366,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Article Page" />
+			<var name="pageName" value="Knowledge Base Article Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -391,7 +391,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Search Page" />
+			<var name="pageName" value="Knowledge Base Search Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -416,7 +416,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Section Page" />
+			<var name="pageName" value="Knowledge Base Section Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -596,7 +596,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -687,7 +687,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -816,7 +816,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -972,7 +972,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1130,7 +1130,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Page" />
+			<var name="pageName" value="Knowledge Base Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1194,7 +1194,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1271,7 +1271,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1323,7 +1323,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1405,7 +1405,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1477,7 +1477,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1560,7 +1560,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1642,7 +1642,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display" />
+			<var name="pageName" value="Knowledge Base Display" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1756,7 +1756,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="KB Page" />
+			<var name="pageName" value="KB Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -1864,7 +1864,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2015,7 +2015,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page 1" />
+			<var name="pageName" value="Knowledge Base Display Page 1" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2052,7 +2052,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page 2" />
+			<var name="pageName" value="Knowledge Base Display Page 2" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2141,7 +2141,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2213,7 +2213,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2342,7 +2342,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2509,7 +2509,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2694,7 +2694,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2859,7 +2859,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -2992,7 +2992,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -3258,7 +3258,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
@@ -3389,7 +3389,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>

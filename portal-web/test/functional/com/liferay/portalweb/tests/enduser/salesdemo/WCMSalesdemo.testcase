@@ -102,7 +102,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="2 Columns (50/50)" />
-			<var name="pgaeName" value="Welcome" />
+			<var name="pageName" value="Welcome" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>

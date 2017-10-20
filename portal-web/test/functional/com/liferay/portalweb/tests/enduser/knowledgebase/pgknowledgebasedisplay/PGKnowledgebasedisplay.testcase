@@ -24,7 +24,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="columnName" value="1 Column" />
-			<var name="pgaeName" value="Knowledge Base Display Page" />
+			<var name="pageName" value="Knowledge Base Display Page" />
 			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Empty Page" />
 		</execute>
