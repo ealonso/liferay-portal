@@ -25,6 +25,7 @@
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Wiki Test Page" />
 			<var name="privacy" value="Public" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoPage">
@@ -131,6 +132,7 @@
 			<var name="columnName" value="1 Column" />
 			<var name="pageName" value="Wiki Test Page" />
 			<var name="privacy" value="Private" />
+			<var name="sitePageType" value="Empty Page" />
 		</execute>
 
 		<execute macro="Navigator#gotoSpecificURLPage">

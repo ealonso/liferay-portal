@@ -1331,6 +1331,7 @@
 			<var name="componentName" value="Collaboration" />
 			<var name="pageName" value="Panel Test Page" />
 			<var name="portletNameList" value="Blogs,Message Boards" />
+			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Panel" />
 		</execute>
 
@@ -1443,6 +1444,7 @@
 		<execute macro="SitePages#configurePage">
 			<var name="pageName" value="Link to URL Page" />
 			<var name="pageTypeURL" value="https://www.google.com/" />
+			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Link to URL" />
 		</execute>
 
@@ -1473,6 +1475,7 @@
 		<execute macro="SitePages#configurePage">
 			<var name="pageName" value="Embedded Page" />
 			<var name="pageTypeURL" value="http://iscaliforniaonfire.com/" />
+			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Embedded" />
 		</execute>
 
@@ -1483,6 +1486,7 @@
 		<execute macro="SitePages#configurePage">
 			<var name="componentName" value="Community" />
 			<var name="pageName" value="Panel Page" />
+			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Panel" />
 		</execute>
 
@@ -1627,6 +1631,7 @@
 
 		<execute macro="SitePages#configurePage">
 			<var name="pageName" value="Page Set Page" />
+			<var name="privacy" value="Public" />
 			<var name="sitePageType" value="Page Set" />
 		</execute>
 
