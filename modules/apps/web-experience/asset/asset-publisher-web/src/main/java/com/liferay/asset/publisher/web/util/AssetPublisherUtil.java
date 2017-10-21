@@ -660,30 +660,7 @@ public class AssetPublisherUtil {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		AssetEntryQuery assetEntryQuery =
-			assetPublisherDisplayContext.getAssetEntryQuery();
-
-		Layout layout = assetPublisherDisplayContext.getLayout();
-
-		String portletName = assetPublisherDisplayContext.getPortletName();
-
-		Locale locale = assetPublisherDisplayContext.getLocale();
-
-		TimeZone timeZone = assetPublisherDisplayContext.getTimeZone();
-
-		long companyId = assetPublisherDisplayContext.getCompanyId();
-		long scopeGroupId = assetPublisherDisplayContext.getScopeGroupId();
-		long userId = assetPublisherDisplayContext.getUserId();
-
-		long[] classNameIds = assetPublisherDisplayContext.getClassNameIds();
-
-		Map<String, Serializable> attributes =
-			assetPublisherDisplayContext.getAttributes();
-
-		return getAssetEntryResults(
-			searchContainer, assetEntryQuery, layout, portletPreferences,
-			portletName, locale, timeZone, companyId, scopeGroupId, userId,
-			classNameIds, attributes);
+		return null;
 	}
 
 	public static List<AssetEntryResult> getAssetEntryResults(

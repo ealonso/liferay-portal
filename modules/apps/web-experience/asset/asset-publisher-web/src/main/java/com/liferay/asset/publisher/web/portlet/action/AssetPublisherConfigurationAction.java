@@ -14,11 +14,11 @@
 
 package com.liferay.asset.publisher.web.portlet.action;
 
+import com.liferay.asset.exception.AssetTagException;
+import com.liferay.asset.exception.DuplicateQueryRuleException;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.exception.DuplicateQueryRuleException;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherPortletInstanceConfiguration;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
@@ -26,8 +26,10 @@ import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizerRegistry;
-import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.asset.publisher.web.util.AssetQueryRule;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.util.AssetHelper;
+import com.liferay.asset.util.AssetWebKeys;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.item.selector.ItemSelector;
@@ -130,6 +132,13 @@ public class AssetPublisherConfigurationAction
 		request.setAttribute(
 			AssetPublisherWebKeys.ASSET_PUBLISHER_CUSTOMIZER,
 			assetPublisherCustomizer);
+
+		request.setAttribute(AssetWebKeys.ASSET_HELPER, assetHelper);
+
+		request.setAttribute(
+			com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+				ASSET_PUBLISHER_HELPER,
+			assetPublisherHelper);
 
 		request.setAttribute(
 			AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_CONFIGURATION,
@@ -313,7 +322,7 @@ public class AssetPublisherConfigurationAction
 		String[] scopeIds = preferences.getValues(
 			"scopeIds",
 			new String[] {
-				AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX +
+				AssetPublisherHelper.SCOPE_ID_GROUP_PREFIX +
 					GroupConstants.DEFAULT
 			});
 
@@ -321,7 +330,7 @@ public class AssetPublisherConfigurationAction
 
 		Group selectedGroup = groupLocalService.fetchGroup(groupId);
 
-		String scopeId = AssetPublisherUtil.getScopeId(
+		String scopeId = assetPublisherHelper.getScopeId(
 			selectedGroup, themeDisplay.getScopeGroupId());
 
 		checkPermission(actionRequest, scopeId);
@@ -509,7 +518,7 @@ public class AssetPublisherConfigurationAction
 		String[] scopeIds = preferences.getValues(
 			"scopeIds",
 			new String[] {
-				AssetPublisherUtil.SCOPE_ID_GROUP_PREFIX +
+				AssetPublisherHelper.SCOPE_ID_GROUP_PREFIX +
 					GroupConstants.DEFAULT
 			});
 
@@ -518,7 +527,7 @@ public class AssetPublisherConfigurationAction
 		scopeIds = ArrayUtil.remove(scopeIds, scopeId);
 
 		if (scopeId.startsWith(
-				AssetPublisherUtil.SCOPE_ID_PARENT_GROUP_PREFIX)) {
+				AssetPublisherHelper.SCOPE_ID_PARENT_GROUP_PREFIX)) {
 
 			scopeId = scopeId.substring("Parent".length());
 
@@ -792,7 +801,13 @@ public class AssetPublisherConfigurationAction
 	}
 
 	@Reference
+	protected AssetHelper assetHelper;
+
+	@Reference
 	protected AssetPublisherCustomizerRegistry assetPublisherCustomizerRegistry;
+
+	@Reference
+	protected AssetPublisherHelper assetPublisherHelper;
 
 	protected AssetPublisherWebConfiguration assetPublisherWebConfiguration;
 
