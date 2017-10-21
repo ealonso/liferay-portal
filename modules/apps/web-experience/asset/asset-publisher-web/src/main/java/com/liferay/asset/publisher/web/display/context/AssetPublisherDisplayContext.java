@@ -17,20 +17,16 @@ package com.liferay.asset.publisher.web.display.context;
 import com.liferay.asset.constants.AssetWebKeys;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.action.AssetEntryAction;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeField;
 import com.liferay.asset.kernel.model.ClassTypeReader;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.model.AssetVocabulary;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherPortletInstanceConfiguration;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
@@ -38,7 +34,11 @@ import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
 import com.liferay.asset.publisher.web.internal.action.AssetEntryActionRegistry;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizer;
-import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.asset.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.service.AssetEntryServiceUtil;
+import com.liferay.asset.service.AssetVocabularyServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.asset.util.impl.AssetPublisherAddItemHolder;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
@@ -129,6 +129,10 @@ public class AssetPublisherDisplayContext {
 				AssetPublisherWebKeys.ASSET_ENTRY_ACTION_REGISTRY);
 		_assetHelper = (AssetHelper)portletRequest.getAttribute(
 			AssetWebKeys.ASSET_HELPER);
+		_assetPublisherHelper =
+			(AssetPublisherHelper)portletRequest.getAttribute(
+				com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+					ASSET_PUBLISHER_HELPER);
 		_assetPublisherWebUtil =
 			(AssetPublisherWebUtil)portletRequest.getAttribute(
 				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_UTIL);
@@ -182,7 +186,7 @@ public class AssetPublisherDisplayContext {
 		String selectionStyle = getSelectionStyle();
 
 		if (selectionStyle.equals("dynamic")) {
-			_allAssetCategoryIds = AssetPublisherUtil.getAssetCategoryIds(
+			_allAssetCategoryIds = _assetPublisherHelper.getAssetCategoryIds(
 				_portletPreferences);
 		}
 
@@ -208,7 +212,7 @@ public class AssetPublisherDisplayContext {
 		String selectionStyle = getSelectionStyle();
 
 		if (selectionStyle.equals("dynamic")) {
-			_allAssetTagNames = AssetPublisherUtil.getAssetTagNames(
+			_allAssetTagNames = _assetPublisherHelper.getAssetTagNames(
 				_portletPreferences);
 		}
 
@@ -242,7 +246,7 @@ public class AssetPublisherDisplayContext {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		_assetEntryQuery = AssetPublisherUtil.getAssetEntryQuery(
+		_assetEntryQuery = _assetPublisherHelper.getAssetEntryQuery(
 			_portletPreferences, themeDisplay.getScopeGroupId(),
 			themeDisplay.getLayout(), getAllAssetCategoryIds(),
 			getAllAssetTagNames());
@@ -448,7 +452,7 @@ public class AssetPublisherDisplayContext {
 			return _classNameIds;
 		}
 
-		_classNameIds = AssetPublisherUtil.getClassNameIds(
+		_classNameIds = _assetPublisherHelper.getClassNameIds(
 			_portletPreferences, getAvailableClassNameIds());
 
 		return _classNameIds;
@@ -604,7 +608,7 @@ public class AssetPublisherDisplayContext {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		_groupIds = AssetPublisherUtil.getGroupIds(
+		_groupIds = _assetPublisherHelper.getGroupIds(
 			_portletPreferences, themeDisplay.getScopeGroupId(),
 			themeDisplay.getLayout());
 
@@ -1565,6 +1569,7 @@ public class AssetPublisherDisplayContext {
 	private AssetHelper _assetHelper;
 	private String _assetLinkBehavior;
 	private final AssetPublisherCustomizer _assetPublisherCustomizer;
+	private final AssetPublisherHelper _assetPublisherHelper;
 	private final AssetPublisherPortletInstanceConfiguration
 		_assetPublisherPortletInstanceConfiguration;
 	private final AssetPublisherWebConfiguration

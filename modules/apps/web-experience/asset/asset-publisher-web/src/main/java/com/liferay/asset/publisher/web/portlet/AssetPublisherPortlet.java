@@ -15,6 +15,7 @@
 package com.liferay.asset.publisher.web.portlet;
 
 import com.liferay.asset.constants.AssetWebKeys;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherPortletInstanceConfiguration;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
@@ -238,6 +239,11 @@ public class AssetPublisherPortlet extends MVCPortlet {
 				assetPublisherCustomizer);
 
 			resourceRequest.setAttribute(
+				com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+					ASSET_PUBLISHER_HELPER,
+				assetPublisherHelper);
+
+			resourceRequest.setAttribute(
 				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_UTIL,
 				assetPublisherWebUtil);
 
@@ -340,6 +346,11 @@ public class AssetPublisherPortlet extends MVCPortlet {
 				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_CONFIGURATION,
 				assetPublisherWebConfiguration);
 
+			renderRequest.setAttribute(
+				com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+					ASSET_PUBLISHER_HELPER,
+				assetPublisherHelper);
+
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
@@ -393,6 +404,9 @@ public class AssetPublisherPortlet extends MVCPortlet {
 
 	@Reference
 	protected AssetPublisherCustomizerRegistry assetPublisherCustomizerRegistry;
+
+	@Reference
+	protected AssetPublisherHelper assetPublisherHelper;
 
 	protected AssetPublisherWebConfiguration assetPublisherWebConfiguration;
 

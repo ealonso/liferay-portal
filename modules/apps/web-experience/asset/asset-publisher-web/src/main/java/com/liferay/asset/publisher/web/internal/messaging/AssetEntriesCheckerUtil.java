@@ -16,12 +16,13 @@ package com.liferay.asset.publisher.web.internal.messaging;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
-import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
+import com.liferay.asset.service.permission.AssetEntryPermission;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -52,7 +53,6 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.SubscriptionSender;
 import com.liferay.portal.kernel.util.TimeZoneThreadLocal;
-import com.liferay.portlet.asset.service.permission.AssetEntryPermission;
 import com.liferay.portlet.configuration.kernel.util.PortletConfigurationUtil;
 import com.liferay.subscription.model.Subscription;
 import com.liferay.subscription.service.SubscriptionLocalService;
@@ -373,8 +373,9 @@ public class AssetEntriesCheckerUtil {
 			_configurationProvider.getCompanyConfiguration(
 				AssetPublisherWebConfiguration.class, layout.getCompanyId());
 
-		AssetEntryQuery assetEntryQuery = AssetPublisherUtil.getAssetEntryQuery(
-			portletPreferences, layout.getGroupId(), layout, null, null);
+		AssetEntryQuery assetEntryQuery =
+			_assetPublisherHelper.getAssetEntryQuery(
+				portletPreferences, layout.getGroupId(), layout, null, null);
 
 		assetEntryQuery.setEnd(
 			assetPublisherWebConfiguration.dynamicSubscriptionLimit());
@@ -429,6 +430,9 @@ public class AssetEntriesCheckerUtil {
 
 	@Reference
 	private AssetHelper _assetHelper;
+
+	@Reference
+	private AssetPublisherHelper _assetPublisherHelper;
 
 	@Reference
 	private ConfigurationProvider _configurationProvider;

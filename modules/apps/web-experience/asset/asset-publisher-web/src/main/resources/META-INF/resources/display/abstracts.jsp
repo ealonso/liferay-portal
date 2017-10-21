@@ -31,7 +31,7 @@ if (Validator.isNull(title)) {
 
 boolean viewInContext = ((Boolean)request.getAttribute("view.jsp-viewInContext")).booleanValue();
 
-String viewURL = AssetPublisherHelper.getAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, viewInContext);
+String viewURL = assetPublisherHelper.getAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, viewInContext);
 %>
 
 <div class="asset-abstract <%= assetPublisherWebUtil.isDefaultAssetPublisher(layout, portletDisplay.getId(), assetPublisherDisplayContext.getPortletResource()) ? "default-asset-publisher" : StringPool.BLANK %>">
@@ -55,9 +55,10 @@ String viewURL = AssetPublisherHelper.getAssetViewURL(liferayPortletRequest, lif
 		<div class="asset-summary">
 			<liferay-asset:asset-display
 				abstractLength="<%= assetPublisherDisplayContext.getAbstractLength() %>"
-				assetEntry="<%= assetEntry %>"
 				assetRenderer="<%= assetRenderer %>"
 				assetRendererFactory="<%= assetRendererFactory %>"
+				className="<%= assetEntry.getClassName() %>"
+				classPK="<%= assetEntry.getClassPK() %>"
 				template="<%= AssetRenderer.TEMPLATE_ABSTRACT %>"
 				viewURL="<%= viewURL %>"
 			/>
