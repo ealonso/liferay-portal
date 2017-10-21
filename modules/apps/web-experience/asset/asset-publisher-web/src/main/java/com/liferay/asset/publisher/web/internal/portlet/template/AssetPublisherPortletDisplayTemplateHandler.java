@@ -14,18 +14,18 @@
 
 package com.liferay.asset.publisher.web.internal.portlet.template;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetCategoryService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryService;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
-import com.liferay.asset.kernel.service.AssetTagService;
-import com.liferay.asset.kernel.service.AssetTagStatsLocalService;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
-import com.liferay.asset.kernel.service.AssetVocabularyService;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
-import com.liferay.asset.publisher.web.util.AssetPublisherHelper;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetCategoryService;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetEntryService;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.AssetTagService;
+import com.liferay.asset.service.AssetTagStatsLocalService;
+import com.liferay.asset.service.AssetVocabularyLocalService;
+import com.liferay.asset.service.AssetVocabularyService;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portletdisplaytemplate.BasePortletDisplayTemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandler;
@@ -66,7 +66,7 @@ public class AssetPublisherPortletDisplayTemplateHandler
 	public Map<String, Object> getCustomContextObjects() {
 		Map<String, Object> contextObjects = new HashMap<>(1);
 
-		contextObjects.put("assetPublisherHelper", new AssetPublisherHelper());
+		contextObjects.put("assetPublisherHelper", assetPublisherHelper);
 
 		return contextObjects;
 	}
@@ -146,6 +146,9 @@ public class AssetPublisherPortletDisplayTemplateHandler
 		return "com/liferay/asset/publisher/web/portlet/template/dependencies" +
 			"/portlet-display-templates.xml";
 	}
+
+	@Reference
+	protected AssetPublisherHelper assetPublisherHelper;
 
 	@Reference
 	protected Portal portal;

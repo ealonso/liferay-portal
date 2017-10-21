@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.web.internal.exportimport.portlet.preferences.processor;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
