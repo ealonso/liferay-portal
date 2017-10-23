@@ -1,4 +1,5 @@
 import {Config} from 'metal-state';
+import {Drag} from 'metal-drag-drop';
 import {dom} from 'metal-dom';
 import Soy from 'metal-soy';
 
@@ -15,6 +16,10 @@ class NavigationMenuTree extends SelectLayout {
 	 * @inheritDoc
 	 */
 	attached() {
+		const drag = new Drag({
+			sources: '.navigation-menu-tree .card'
+		});
+
 		dom.on(
 			'.navigation-menu-tree .card', 'keyup',
 			this._handleNodeKeyUp.bind(this));
