@@ -55,6 +55,59 @@ Layout curLayout = (Layout)row.getObject();
 		/>
 	</c:if>
 
+	<%
+	Group selGroup = layoutsAdminDisplayContext.getSelGroup();
+	%>
+
+	<c:if test="<%= !selGroup.isLayoutPrototype() && LayoutPermissionUtil.contains(themeDisplay.getPermissionChecker(), curLayout, ActionKeys.PERMISSIONS) %>">
+		<liferay-security:permissionsURL
+			modelResource="<%= Layout.class.getName() %>"
+			modelResourceDescription="<%= HtmlUtil.escape(curLayout.getName(themeDisplay.getLocale())) %>"
+			resourcePrimKey="<%= String.valueOf(curLayout.getPlid()) %>"
+			var="permissionsURL"
+			windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+		/>
+
+		<liferay-ui:icon
+			message="permissions"
+			method="get"
+			url="<%= permissionsURL %>"
+			useDialog="<%= true %>"
+		/>
+	</c:if>
+
+	<c:if test="<%= layoutsAdminDisplayContext.showCopyApplicationsAction(curLayout) %>">
+		<portlet:renderURL var="copyApplicationsURL">
+			<portlet:param name="mvcPath" value="/copy_applications.jsp" />
+			<portlet:param name="backURL" value="<%= currentURL %>" />
+			<portlet:param name="groupId" value="<%= String.valueOf(curLayout.getGroupId()) %>" />
+			<portlet:param name="selPlid" value="<%= String.valueOf(curLayout.getPlid()) %>" />
+			<portlet:param name="privateLayout" value="<%= String.valueOf(curLayout.isPrivateLayout()) %>" />
+		</portlet:renderURL>
+
+		<liferay-ui:icon
+			message="copy-applications"
+			url="<%= copyApplicationsURL %>"
+		/>
+	</c:if>
+
+	<%
+	OrphanPortletsDisplayContext orphanPortletsDisplayContext = new OrphanPortletsDisplayContext(renderRequest);
+	%>
+
+	<c:if test="<%= curLayout.isSupportsEmbeddedPortlets() && ListUtil.isNotEmpty(orphanPortletsDisplayContext.getOrphanPortlets(curLayout)) %>">
+		<portlet:renderURL var="orphanPortletsURL">
+			<portlet:param name="mvcPath" value="/orphan_portlets.jsp" />
+			<portlet:param name="backURL" value="<%= currentURL %>" />
+			<portlet:param name="selPlid" value="<%= String.valueOf(curLayout.getPlid()) %>" />
+		</portlet:renderURL>
+
+		<liferay-ui:icon
+			message="orphan-portlets"
+			url="<%= orphanPortletsURL %>"
+		/>
+	</c:if>
+
 	<liferay-ui:icon
 		message="view-page"
 		target="_blank"
