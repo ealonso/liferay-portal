@@ -1115,9 +1115,15 @@
 			</then>
 		</if>
 
-		<execute macro="ProductMenu#gotoLocalizedEditPage">
+		<execute macro="ProductMenu#gotoPortlet">
 			<var name="category" value="${category}" />
-			<var name="page" value="${page}" />
+			<var name="panel" value="Site Administration" />
+			<var name="portlet" value="${portlet}" />
+		</execute>
+
+		<execute macro="LexiconEntry#gotoEntryMenuItem">
+			<var name="menuItem" value="${menuItem}" />
+			<var name="rowEntry" value="${page}" />
 		</execute>
 
 		<var name="key_defaultSiteLanguageKey" value="${defaultSiteLanguageKey}" />
