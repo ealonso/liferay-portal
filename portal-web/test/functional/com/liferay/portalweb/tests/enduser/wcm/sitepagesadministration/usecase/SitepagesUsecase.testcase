@@ -180,12 +180,9 @@
 			<var name="siteName" value="Site Name" />
 		</execute>
 
-		<execute macro="SitePageNavigator#gotoPages">
-			<var name="page" value="Public Pages" />
-		</execute>
-
-		<execute macro="Page#viewChildPage">
+		<execute macro="Page#view">
 			<var name="pageName" value="Child Page Name" />
+			<var name="privacy" value="Public" />
 		</execute>
 	</command>
 
