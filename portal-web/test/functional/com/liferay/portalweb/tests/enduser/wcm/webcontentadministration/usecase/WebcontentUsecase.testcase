@@ -978,6 +978,10 @@
 			<var name="pageName" value="Test Page Name" />
 		</execute>
 
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Test Page Name" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="Web Content Display" />
 		</execute>
@@ -3608,6 +3612,10 @@
 			<var name="pageName" value="Web Content Display Page" />
 		</execute>
 
+		<execute macro="Navigator#gotoPage">
+			<var name="pageName" value="Web Content Display Page" />
+		</execute>
+
 		<execute macro="Portlet#addPG">
 			<var name="portletName" value="Web Content Display" />
 		</execute>
@@ -3664,6 +3672,10 @@
 		</execute>
 
 		<execute macro="SitePages#addPublicPage">
+			<var name="pageName" value="Web Content Display Page" />
+		</execute>
+
+		<execute macro="Navigator#gotoPage">
 			<var name="pageName" value="Web Content Display Page" />
 		</execute>
 
