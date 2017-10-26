@@ -91,12 +91,17 @@ public class LayoutsAdminDisplayContext extends BaseLayoutDisplayContext {
 			return _displayStyle;
 		}
 
-		PortalPreferences portalPreferences =
-			PortletPreferencesFactoryUtil.getPortalPreferences(
-				liferayPortletRequest);
+		_displayStyle = ParamUtil.getString(
+			liferayPortletRequest, "displayStyle");
 
-		_displayStyle = portalPreferences.getValue(
-			LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "icon");
+		if (Validator.isNull(_displayStyle)) {
+			PortalPreferences portalPreferences =
+				PortletPreferencesFactoryUtil.getPortalPreferences(
+					liferayPortletRequest);
+
+			_displayStyle = portalPreferences.getValue(
+				LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "icon");
+		}
 
 		return _displayStyle;
 	}
@@ -131,12 +136,6 @@ public class LayoutsAdminDisplayContext extends BaseLayoutDisplayContext {
 
 		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
 			getGroupId(), isPrivateLayout(), activeLayoutId);
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)liferayPortletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		Locale locale = themeDisplay.getLocale();
 
 		if (selectedLayout != null) {
 			layoutBlocksList.add(
@@ -326,7 +325,7 @@ public class LayoutsAdminDisplayContext extends BaseLayoutDisplayContext {
 	public PortletURL getPortletURL() throws PortalException {
 		PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
-		portletURL.setParameter("millerColumns", String.valueOf(Boolean.TRUE));
+		portletURL.setParameter("displayStyle", getDisplayStyle());
 		portletURL.setParameter("navigation", getNavigation());
 		portletURL.setParameter("orderByCol", getOrderByCol());
 		portletURL.setParameter("orderByType", getOrderByType());

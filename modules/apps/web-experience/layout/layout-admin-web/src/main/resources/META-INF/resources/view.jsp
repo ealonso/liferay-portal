@@ -30,7 +30,7 @@ String targetNode = null;
 
 <c:choose>
 	<c:when test="<%= layoutsAdminDisplayContext.isMillerColumnsEnabled() %>">
-		<%@ include file="/view_miller_columns.jsp" %>
+		<liferay-util:include page="/view_miller_columns.jsp" servletContext="<%= application %>" />
 	</c:when>
 	<c:otherwise>
 		<div class="container-fluid-1280">

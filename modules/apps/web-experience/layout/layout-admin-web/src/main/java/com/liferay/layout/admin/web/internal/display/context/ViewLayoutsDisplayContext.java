@@ -59,12 +59,17 @@ public class ViewLayoutsDisplayContext extends BaseLayoutDisplayContext {
 			return _displayStyle;
 		}
 
-		PortalPreferences portalPreferences =
-			PortletPreferencesFactoryUtil.getPortalPreferences(
-				liferayPortletRequest);
+		_displayStyle = ParamUtil.getString(
+			liferayPortletRequest, "displayStyle");
 
-		_displayStyle = portalPreferences.getValue(
-			LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "list");
+		if (Validator.isNull(_displayStyle)) {
+			PortalPreferences portalPreferences =
+				PortletPreferencesFactoryUtil.getPortalPreferences(
+					liferayPortletRequest);
+
+			_displayStyle = portalPreferences.getValue(
+				LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "list");
+		}
 
 		return _displayStyle;
 	}
@@ -185,6 +190,7 @@ public class ViewLayoutsDisplayContext extends BaseLayoutDisplayContext {
 		PortletURL portletURL = liferayPortletResponse.createRenderURL();
 
 		portletURL.setParameter("mvcPath", "/view_layouts.jsp");
+		portletURL.setParameter("displayStyle", getDisplayStyle());
 		portletURL.setParameter("navigation", getNavigation());
 		portletURL.setParameter("orderByCol", getOrderByCol());
 		portletURL.setParameter("orderByType", getOrderByType());
