@@ -137,12 +137,6 @@ public class LayoutsAdminDisplayContext extends BaseLayoutDisplayContext {
 		Layout selectedLayout = LayoutLocalServiceUtil.fetchLayout(
 			getGroupId(), isPrivateLayout(), activeLayoutId);
 
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)liferayPortletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		Locale locale = themeDisplay.getLocale();
-
 		if (selectedLayout != null) {
 			layoutBlocksList.add(
 				getLayoutsJSONArray(selectedLayout.getLayoutId()));
