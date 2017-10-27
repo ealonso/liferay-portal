@@ -18,10 +18,10 @@ import com.liferay.application.list.GroupProvider;
 import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
+import com.liferay.layout.admin.web.internal.portlet.action.ActionUtil;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
 import com.liferay.mobile.device.rules.model.MDRAction;
@@ -47,38 +47,21 @@ import com.liferay.portal.kernel.exception.SitemapIncludeException;
 import com.liferay.portal.kernel.exception.SitemapPagePriorityException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ColorScheme;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutPrototype;
-import com.liferay.portal.kernel.model.LayoutRevision;
-import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
-import com.liferay.portal.kernel.model.Theme;
-import com.liferay.portal.kernel.model.ThemeSetting;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.GroupLocalService;
-import com.liferay.portal.kernel.service.GroupService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
-import com.liferay.portal.kernel.service.LayoutPrototypeLocalService;
 import com.liferay.portal.kernel.service.LayoutPrototypeService;
-import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
 import com.liferay.portal.kernel.service.LayoutService;
-import com.liferay.portal.kernel.service.LayoutSetBranchLocalService;
-import com.liferay.portal.kernel.service.LayoutSetLocalService;
-import com.liferay.portal.kernel.service.LayoutSetService;
-import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.service.ThemeLocalService;
-import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.servlet.MultiSessionMessages;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -98,21 +81,15 @@ import com.liferay.portal.kernel.util.ThemeFactoryUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.impl.ThemeSettingImpl;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.sites.action.ActionUtil;
 import com.liferay.sites.kernel.util.SitesUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -123,7 +100,6 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
@@ -231,7 +207,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 			inheritMobileRuleGroups(layout, serviceContext);
 
 			if (parentLayout.isTypePortlet()) {
-				ActionUtil.copyPreferences(actionRequest, layout, parentLayout);
+				com.liferay.portlet.sites.action.ActionUtil.copyPreferences(
+					actionRequest, layout, parentLayout);
 
 				SitesUtil.copyLookAndFeel(layout, parentLayout);
 			}
@@ -304,7 +281,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 				layout.getTypeSettings());
 
 			if ((copyLayout != null) && copyLayout.isTypePortlet()) {
-				ActionUtil.copyPreferences(actionRequest, layout, copyLayout);
+				com.liferay.portlet.sites.action.ActionUtil.copyPreferences(
+					actionRequest, layout, copyLayout);
 
 				SitesUtil.copyLookAndFeel(layout, copyLayout);
 			}
@@ -335,49 +313,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
-	public void copyApplications(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		boolean privateLayout = ParamUtil.getBoolean(
-			actionRequest, "privateLayout");
-		long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
-
-		Layout layout = layoutLocalService.getLayout(
-			groupId, privateLayout, layoutId);
-
-		if (!layout.getType().equals(LayoutConstants.TYPE_PORTLET)) {
-			return;
-		}
-
-		long copyLayoutId = ParamUtil.getLong(actionRequest, "copyLayoutId");
-
-		if ((copyLayoutId == 0) || (copyLayoutId == layout.getLayoutId())) {
-			return;
-		}
-
-		Layout copyLayout = layoutLocalService.fetchLayout(
-			groupId, privateLayout, copyLayoutId);
-
-		if ((copyLayout == null) || !copyLayout.isTypePortlet()) {
-			return;
-		}
-
-		UnicodeProperties sourceLayoutTypeSettingsProperties =
-			copyLayout.getTypeSettingsProperties();
-
-		ActionUtil.removePortletIds(actionRequest, layout);
-
-		ActionUtil.copyPreferences(actionRequest, layout, copyLayout);
-
-		SitesUtil.copyLookAndFeel(layout, copyLayout);
-
-		layoutService.updateLayout(
-			groupId, privateLayout, layoutId,
-			sourceLayoutTypeSettingsProperties.toString());
-	}
-
 	public void deleteLayout(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -405,32 +340,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		MultiSessionMessages.add(actionRequest, "layoutDeleted", selPlid);
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
-	}
-
-	public void deleteOrphanPortlets(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
-
-		String[] portletIds = null;
-
-		String portletId = ParamUtil.getString(actionRequest, "portletId");
-
-		if (Validator.isNotNull(portletId)) {
-			portletIds = new String[] {portletId};
-		}
-		else {
-			portletIds = ParamUtil.getStringValues(actionRequest, "rowIds");
-		}
-
-		if (portletIds.length > 0) {
-			portletLocalService.deletePortlets(
-				themeDisplay.getCompanyId(), portletIds, selPlid);
-		}
 	}
 
 	public void editLayout(
@@ -575,224 +484,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
-	public void editLayoutSet(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		long layoutSetId = ParamUtil.getLong(actionRequest, "layoutSetId");
-
-		long liveGroupId = ParamUtil.getLong(actionRequest, "liveGroupId");
-		long stagingGroupId = ParamUtil.getLong(
-			actionRequest, "stagingGroupId");
-		boolean privateLayout = ParamUtil.getBoolean(
-			actionRequest, "privateLayout");
-
-		LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(layoutSetId);
-
-		updateLogo(actionRequest, liveGroupId, stagingGroupId, privateLayout);
-
-		updateLookAndFeel(
-			actionRequest, themeDisplay.getCompanyId(), liveGroupId,
-			stagingGroupId, privateLayout, layoutSet.getSettingsProperties());
-
-		updateMergePages(actionRequest, liveGroupId);
-
-		updateRobots(actionRequest, liveGroupId, privateLayout);
-
-		updateSettings(
-			actionRequest, liveGroupId, stagingGroupId, privateLayout,
-			layoutSet.getSettingsProperties());
-	}
-
-	public void enableLayout(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long incompleteLayoutRevisionId = ParamUtil.getLong(
-			actionRequest, "incompleteLayoutRevisionId");
-
-		LayoutRevision incompleteLayoutRevision =
-			layoutRevisionLocalService.getLayoutRevision(
-				incompleteLayoutRevisionId);
-
-		long layoutBranchId = ParamUtil.getLong(
-			actionRequest, "layoutBranchId",
-			incompleteLayoutRevision.getLayoutBranchId());
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_SAVE_DRAFT);
-
-		layoutRevisionLocalService.updateLayoutRevision(
-			serviceContext.getUserId(),
-			incompleteLayoutRevision.getLayoutRevisionId(), layoutBranchId,
-			incompleteLayoutRevision.getName(),
-			incompleteLayoutRevision.getTitle(),
-			incompleteLayoutRevision.getDescription(),
-			incompleteLayoutRevision.getKeywords(),
-			incompleteLayoutRevision.getRobots(),
-			incompleteLayoutRevision.getTypeSettings(),
-			incompleteLayoutRevision.getIconImage(),
-			incompleteLayoutRevision.getIconImageId(),
-			incompleteLayoutRevision.getThemeId(),
-			incompleteLayoutRevision.getColorSchemeId(),
-			incompleteLayoutRevision.getCss(), serviceContext);
-	}
-
-	public void resetCustomizationView(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		if (!LayoutPermissionUtil.contains(
-				themeDisplay.getPermissionChecker(), themeDisplay.getLayout(),
-				ActionKeys.CUSTOMIZE)) {
-
-			throw new PrincipalException();
-		}
-
-		LayoutTypePortlet layoutTypePortlet =
-			themeDisplay.getLayoutTypePortlet();
-
-		if ((layoutTypePortlet != null) && layoutTypePortlet.isCustomizable() &&
-			layoutTypePortlet.isCustomizedView()) {
-
-			layoutTypePortlet.resetUserPreferences();
-		}
-
-		MultiSessionMessages.add(
-			actionRequest,
-			portal.getPortletId(actionRequest) + "requestProcessed");
-
-		Layout layout = themeDisplay.getLayout();
-
-		actionResponse.sendRedirect(
-			layout.getRegularURL(portal.getHttpServletRequest(actionRequest)));
-	}
-
-	/**
-	 * Resets the number of failed merge attempts for the page template, which
-	 * is accessed from the action request's <code>layoutPrototypeId</code>
-	 * param. Once the counter is reset, the modified page template is merged
-	 * back into its linked page, which is accessed from the action request's
-	 * <code>selPlid</code> param.
-	 *
-	 * <p>
-	 * If the number of failed merge attempts is not equal to zero after the
-	 * merge, an error key is submitted into the {@link SessionErrors}.
-	 * </p>
-	 *
-	 * @param  actionRequest the action request
-	 * @throws Exception if an exception occurred
-	 */
-	public void resetMergeFailCountAndMerge(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long layoutPrototypeId = ParamUtil.getLong(
-			actionRequest, "layoutPrototypeId");
-
-		LayoutPrototype layoutPrototype =
-			layoutPrototypeLocalService.getLayoutPrototype(layoutPrototypeId);
-
-		SitesUtil.setMergeFailCount(layoutPrototype, 0);
-
-		long selPlid = ParamUtil.getLong(actionRequest, "selPlid");
-
-		Layout selLayout = layoutLocalService.getLayout(selPlid);
-
-		SitesUtil.resetPrototype(selLayout);
-
-		SitesUtil.mergeLayoutPrototypeLayout(selLayout.getGroup(), selLayout);
-
-		layoutPrototype = layoutPrototypeService.getLayoutPrototype(
-			layoutPrototypeId);
-
-		int mergeFailCountAfterMerge = SitesUtil.getMergeFailCount(
-			layoutPrototype);
-
-		if (mergeFailCountAfterMerge > 0) {
-			SessionErrors.add(actionRequest, "resetMergeFailCountAndMerge");
-		}
-	}
-
-	public void resetPrototype(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		SitesUtil.resetPrototype(themeDisplay.getLayout());
-
-		MultiSessionMessages.add(
-			actionRequest,
-			portal.getPortletId(actionRequest) + "requestProcessed");
-	}
-
-	public void selectLayoutSetBranch(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		HttpServletRequest request = portal.getHttpServletRequest(
-			actionRequest);
-
-		long groupId = ParamUtil.getLong(actionRequest, "groupId");
-		boolean privateLayout = ParamUtil.getBoolean(
-			actionRequest, "privateLayout");
-
-		LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
-			groupId, privateLayout);
-
-		long layoutSetBranchId = ParamUtil.getLong(
-			actionRequest, "layoutSetBranchId");
-
-		LayoutSetBranch layoutSetBranch =
-			layoutSetBranchLocalService.getLayoutSetBranch(layoutSetBranchId);
-
-		staging.setRecentLayoutSetBranchId(
-			request, layoutSet.getLayoutSetId(),
-			layoutSetBranch.getLayoutSetBranchId());
-
-		hideDefaultSuccessMessage(actionRequest);
-	}
-
-	public void toggleCustomizedView(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		actionRequest.setAttribute(
-			WebKeys.REDIRECT,
-			portal.getLayoutURL(themeDisplay.getLayout(), themeDisplay));
-	}
-
-	protected void deleteThemeSettingsProperties(
-		UnicodeProperties typeSettingsProperties, String device) {
-
-		String keyPrefix = ThemeSettingImpl.namespaceProperty(device);
-
-		Set<String> keys = typeSettingsProperties.keySet();
-
-		Iterator<String> itr = keys.iterator();
-
-		while (itr.hasNext()) {
-			String key = itr.next();
-
-			if (key.startsWith(keyPrefix)) {
-				itr.remove();
-			}
-		}
-	}
-
 	@Override
 	protected void doDispatch(
 			RenderRequest renderRequest, RenderResponse renderResponse)
@@ -860,26 +551,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	protected String getColorSchemeId(
-			long companyId, String themeId, String colorSchemeId)
-		throws Exception {
-
-		Theme theme = themeLocalService.getTheme(companyId, themeId);
-
-		if (!theme.hasColorSchemes()) {
-			colorSchemeId = StringPool.BLANK;
-		}
-
-		if (Validator.isNull(colorSchemeId)) {
-			ColorScheme colorScheme = themeLocalService.getColorScheme(
-				companyId, themeId, colorSchemeId);
-
-			colorSchemeId = colorScheme.getColorSchemeId();
-		}
-
-		return colorSchemeId;
-	}
-
 	protected String getEmptyLayoutSetURL(
 		PortletRequest portletRequest, long groupId, boolean privateLayout) {
 
@@ -898,7 +569,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	protected Group getGroup(PortletRequest portletRequest) throws Exception {
-		return ActionUtil.getGroup(portletRequest);
+		return com.liferay.portlet.sites.action.ActionUtil.getGroup(
+			portletRequest);
 	}
 
 	protected byte[] getIconBytes(
@@ -1091,18 +763,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setGroupLocalService(GroupLocalService groupLocalService) {
-		this.groupLocalService = groupLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setGroupProvider(GroupProvider groupProvider) {
 		this.groupProvider = groupProvider;
-	}
-
-	@Reference(unbind = "-")
-	protected void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
 	}
 
 	@Reference(unbind = "-")
@@ -1113,13 +775,6 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setLayoutPrototypeLocalService(
-		LayoutPrototypeLocalService layoutPrototypeLocalService) {
-
-		this.layoutPrototypeLocalService = layoutPrototypeLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setLayoutPrototypeService(
 		LayoutPrototypeService layoutPrototypeService) {
 
@@ -1127,34 +782,8 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setLayoutRevisionLocalService(
-		LayoutRevisionLocalService layoutRevisionLocalService) {
-
-		this.layoutRevisionLocalService = layoutRevisionLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setLayoutService(LayoutService layoutService) {
 		this.layoutService = layoutService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLayoutSetBranchLocalService(
-		LayoutSetBranchLocalService layoutSetBranchLocalService) {
-
-		this.layoutSetBranchLocalService = layoutSetBranchLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLayoutSetLocalService(
-		LayoutSetLocalService layoutSetLocalService) {
-
-		this.layoutSetLocalService = layoutSetLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setLayoutSetService(LayoutSetService layoutSetService) {
-		this.layoutSetService = layoutSetService;
 	}
 
 	@Reference(unbind = "-")
@@ -1185,91 +814,10 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setPortletLocalService(
-		PortletLocalService portletLocalService) {
-
-		this.portletLocalService = portletLocalService;
-	}
-
-	@Reference(unbind = "-")
 	protected void setPortletPreferencesLocalService(
 		PortletPreferencesLocalService portletPreferencesLocalService) {
 
 		this.portletPreferencesLocalService = portletPreferencesLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setThemeLocalService(ThemeLocalService themeLocalService) {
-		this.themeLocalService = themeLocalService;
-	}
-
-	protected void setThemeSettingProperties(
-			ActionRequest actionRequest,
-			UnicodeProperties typeSettingsProperties,
-			Map<String, ThemeSetting> themeSettings, String device,
-			boolean isLayout)
-		throws PortalException {
-
-		Layout layout = null;
-
-		if (isLayout) {
-			long groupId = ParamUtil.getLong(actionRequest, "groupId");
-			boolean privateLayout = ParamUtil.getBoolean(
-				actionRequest, "privateLayout");
-			long layoutId = ParamUtil.getLong(actionRequest, "layoutId");
-
-			layout = layoutLocalService.getLayout(
-				groupId, privateLayout, layoutId);
-		}
-
-		for (Map.Entry<String, ThemeSetting> entry : themeSettings.entrySet()) {
-			String key = entry.getKey();
-			ThemeSetting themeSetting = entry.getValue();
-
-			String property =
-				device + "ThemeSettingsProperties--" + key +
-					StringPool.DOUBLE_DASH;
-
-			String value = ParamUtil.getString(
-				actionRequest, property, themeSetting.getValue());
-
-			if ((isLayout &&
-				 !Objects.equals(
-					 value,
-					 layout.getDefaultThemeSetting(key, device, false))) ||
-				(!isLayout && !value.equals(themeSetting.getValue()))) {
-
-				typeSettingsProperties.setProperty(
-					ThemeSettingImpl.namespaceProperty(device, key), value);
-			}
-		}
-	}
-
-	protected void updateLogo(
-			ActionRequest actionRequest, long liveGroupId, long stagingGroupId,
-			boolean privateLayout)
-		throws Exception {
-
-		boolean deleteLogo = ParamUtil.getBoolean(actionRequest, "deleteLogo");
-
-		byte[] logoBytes = null;
-
-		long fileEntryId = ParamUtil.getLong(actionRequest, "fileEntryId");
-
-		if (fileEntryId > 0) {
-			FileEntry fileEntry = dlAppLocalService.getFileEntry(fileEntryId);
-
-			logoBytes = FileUtil.getBytes(fileEntry.getContentStream());
-		}
-
-		long groupId = liveGroupId;
-
-		if (stagingGroupId > 0) {
-			groupId = stagingGroupId;
-		}
-
-		layoutSetService.updateLogo(
-			groupId, privateLayout, !deleteLogo, logoBytes);
 	}
 
 	protected void updateLookAndFeel(
@@ -1297,13 +845,14 @@ public class LayoutAdminPortlet extends MVCPortlet {
 					companyId);
 				deviceColorSchemeId = StringPool.BLANK;
 
-				deleteThemeSettingsProperties(typeSettingsProperties, device);
+				actionUtil.deleteThemeSettingsProperties(
+					typeSettingsProperties, device);
 			}
 			else if (Validator.isNotNull(deviceThemeId)) {
-				deviceColorSchemeId = getColorSchemeId(
+				deviceColorSchemeId = actionUtil.getColorSchemeId(
 					companyId, deviceThemeId, deviceColorSchemeId);
 
-				updateThemeSettingsProperties(
+				actionUtil.updateThemeSettingsProperties(
 					actionRequest, companyId, typeSettingsProperties, device,
 					deviceThemeId, true);
 			}
@@ -1324,149 +873,18 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		}
 	}
 
-	protected void updateLookAndFeel(
-			ActionRequest actionRequest, long companyId, long liveGroupId,
-			long stagingGroupId, boolean privateLayout,
-			UnicodeProperties typeSettingsProperties)
-		throws Exception {
-
-		String[] devices = StringUtil.split(
-			ParamUtil.getString(actionRequest, "devices"));
-
-		for (String device : devices) {
-			String deviceThemeId = ParamUtil.getString(
-				actionRequest, device + "ThemeId");
-			String deviceColorSchemeId = ParamUtil.getString(
-				actionRequest, device + "ColorSchemeId");
-			String deviceCss = ParamUtil.getString(
-				actionRequest, device + "Css");
-
-			if (Validator.isNotNull(deviceThemeId)) {
-				deviceColorSchemeId = getColorSchemeId(
-					companyId, deviceThemeId, deviceColorSchemeId);
-
-				updateThemeSettingsProperties(
-					actionRequest, companyId, typeSettingsProperties, device,
-					deviceThemeId, false);
-			}
-
-			long groupId = liveGroupId;
-
-			if (stagingGroupId > 0) {
-				groupId = stagingGroupId;
-			}
-
-			layoutSetService.updateLookAndFeel(
-				groupId, privateLayout, deviceThemeId, deviceColorSchemeId,
-				deviceCss);
-		}
-	}
-
-	protected void updateMergePages(
-			ActionRequest actionRequest, long liveGroupId)
-		throws Exception {
-
-		boolean mergeGuestPublicPages = ParamUtil.getBoolean(
-			actionRequest, "mergeGuestPublicPages");
-
-		Group liveGroup = groupLocalService.getGroup(liveGroupId);
-
-		UnicodeProperties typeSettingsProperties =
-			liveGroup.getTypeSettingsProperties();
-
-		typeSettingsProperties.setProperty(
-			"mergeGuestPublicPages", String.valueOf(mergeGuestPublicPages));
-
-		groupService.updateGroup(liveGroupId, liveGroup.getTypeSettings());
-	}
-
-	protected void updateRobots(
-			ActionRequest actionRequest, long liveGroupId,
-			boolean privateLayout)
-		throws Exception {
-
-		Group liveGroup = groupLocalService.getGroup(liveGroupId);
-
-		UnicodeProperties typeSettingsProperties =
-			liveGroup.getTypeSettingsProperties();
-
-		String propertyName = "false-robots.txt";
-
-		if (privateLayout) {
-			propertyName = "true-robots.txt";
-		}
-
-		String robots = ParamUtil.getString(
-			actionRequest, "robots",
-			liveGroup.getTypeSettingsProperty(propertyName));
-
-		typeSettingsProperties.setProperty(propertyName, robots);
-
-		groupService.updateGroup(
-			liveGroup.getGroupId(), typeSettingsProperties.toString());
-	}
-
-	protected void updateSettings(
-			ActionRequest actionRequest, long liveGroupId, long stagingGroupId,
-			boolean privateLayout, UnicodeProperties settingsProperties)
-		throws Exception {
-
-		UnicodeProperties typeSettingsProperties =
-			PropertiesParamUtil.getProperties(
-				actionRequest, "TypeSettingsProperties--");
-
-		settingsProperties.putAll(typeSettingsProperties);
-
-		long groupId = liveGroupId;
-
-		if (stagingGroupId > 0) {
-			groupId = stagingGroupId;
-		}
-
-		layoutSetService.updateSettings(
-			groupId, privateLayout, settingsProperties.toString());
-	}
-
-	protected UnicodeProperties updateThemeSettingsProperties(
-			ActionRequest actionRequest, long companyId,
-			UnicodeProperties typeSettingsProperties, String device,
-			String deviceThemeId, boolean layout)
-		throws Exception {
-
-		Theme theme = themeLocalService.getTheme(companyId, deviceThemeId);
-
-		deleteThemeSettingsProperties(typeSettingsProperties, device);
-
-		Map<String, ThemeSetting> themeSettings =
-			theme.getConfigurableSettings();
-
-		if (themeSettings.isEmpty()) {
-			return typeSettingsProperties;
-		}
-
-		setThemeSettingProperties(
-			actionRequest, typeSettingsProperties, themeSettings, device,
-			layout);
-
-		return typeSettingsProperties;
-	}
+	@Reference
+	protected ActionUtil actionUtil;
 
 	protected DLAppLocalService dlAppLocalService;
-	protected GroupLocalService groupLocalService;
 	protected GroupProvider groupProvider;
-	protected GroupService groupService;
 
 	@Reference
 	protected ItemSelector itemSelector;
 
 	protected LayoutLocalService layoutLocalService;
-	protected LayoutPrototypeLocalService layoutPrototypeLocalService;
 	protected LayoutPrototypeService layoutPrototypeService;
-	protected LayoutRevisionLocalService layoutRevisionLocalService;
 	protected LayoutService layoutService;
-	protected LayoutSetBranchLocalService layoutSetBranchLocalService;
-	protected LayoutSetLocalService layoutSetLocalService;
-	protected LayoutSetService layoutSetService;
 	protected MDRActionLocalService mdrActionLocalService;
 	protected MDRActionService mdrActionService;
 	protected MDRRuleGroupInstanceLocalService mdrRuleGroupInstanceLocalService;
@@ -1475,13 +893,7 @@ public class LayoutAdminPortlet extends MVCPortlet {
 	@Reference
 	protected Portal portal;
 
-	protected PortletLocalService portletLocalService;
 	protected PortletPreferencesLocalService portletPreferencesLocalService;
-
-	@Reference
-	protected Staging staging;
-
-	protected ThemeLocalService themeLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutAdminPortlet.class);
