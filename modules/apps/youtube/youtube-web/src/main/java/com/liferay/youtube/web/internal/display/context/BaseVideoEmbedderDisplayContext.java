@@ -41,6 +41,7 @@ public class BaseVideoEmbedderDisplayContext
 
 		this.request = request;
 		this.portletPreferences = portletPreferences;
+
 		id = StringPool.BLANK;
 		siteName = StringPool.BLANK;
 
@@ -75,9 +76,9 @@ public class BaseVideoEmbedderDisplayContext
 			height = portletPreferences.getValue("height", "16");
 		}
 		else {
-			String presetRaio = getPresetRatio();
+			String presetRatio = getPresetRatio();
 
-			String[] ratio = presetRaio.split(":");
+			String[] ratio = presetRatio.split(":");
 
 			height = ratio[1];
 		}
@@ -89,7 +90,9 @@ public class BaseVideoEmbedderDisplayContext
 	public String getPresetRatio() {
 		if (presetRatio != null) {
 			return presetRatio;
-		} presetRatio = portletPreferences.getValue("presetRatio", "16:9");
+		}
+
+		presetRatio = portletPreferences.getValue("presetRatio", "16:9");
 
 		return presetRatio;
 	}
