@@ -1,0 +1,19 @@
+.navigation-menu-toolbox {
+	.sidebar-header {
+		padding: 0;
+
+		.card-horizontal {
+			margin-bottom: 2px;
+			padding: 10px;
+		}
+
+		.dropdown-menu {
+			max-width: 100%;
+			width: 100%;
+
+			li a {
+				display: inline-flex;
+			}
+		}
+	}
+}

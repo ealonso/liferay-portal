@@ -24,7 +24,9 @@ SiteNavigationMenu siteNavigationMenu = siteNavigationAdminDisplayContext.getSit
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
-renderResponse.setTitle(siteNavigationMenu.getName());
+renderResponse.setTitle(((siteNavigationMenu == null) ? LanguageUtil.get(request, "add-new-menu") : siteNavigationMenu.getName()));
+
+String[] types = siteNavigationMenuItemTypeRegistry.getTypes();
 %>
 
 <portlet:actionURL name="/navigation_menu/edit_site_navigation_menu" var="editSitaNavigationMenuURL">
@@ -35,13 +37,80 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 <aui:form action="<%= editSitaNavigationMenuURL %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationAdminDisplayContext.getSiteNavigationMenuId() %>" />
+	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= false %>" />
+	<aui:input name="selectedItemType" type="hidden" value="" />
+	<aui:input name="menuItems" type="hidden" value="" />
 
 	<aui:model-context bean="<%= siteNavigationMenu %>" model="<%= SiteNavigationMenu.class %>" />
 
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>
-			<aui:input autoFocus="<%= true %>" label="name" name="name" placeholder="name" />
+			<aui:input autoFocus="<%= true %>" label="name" name="name" placeholder="name">
+				<aui:validator name="required" />
+			</aui:input>
 		</aui:fieldset>
+
+		<c:choose>
+			<c:when test="<%= siteNavigationMenu != null %>">
+
+				<%
+				Map<String, Object> context = new HashMap<>();
+
+				context.put("availableItemTypes", siteNavigationAdminDisplayContext.getAvailableItemsJSONArray());
+				context.put("locale", locale);
+				context.put("menuItems", siteNavigationAdminDisplayContext.getMenuItemsJSONArray());
+				context.put("menuItemsInput", liferayPortletResponse.getNamespace() + "menuItems");
+				context.put("pathThemeImages", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg#");
+				context.put("selectedItemType", siteNavigationAdminDisplayContext.getSelectedItemTypeJSONObject());
+				%>
+
+				<soy:template-renderer
+					context="<%= context %>"
+					module="site-navigation-admin-web/js/NavigationMenuBuilder.es"
+					templateNamespace="NavigationMenuBuilder.render"
+				/>
+			</c:when>
+			<c:otherwise>
+				<aui:fieldset>
+					<div class="d-flex" id="<portlet:namespace/>ItemTypes">
+
+						<%
+						for (String type : types) {
+							SiteNavigationMenuItemType siteNavigationMenuItemType = siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(type);
+
+							ResourceBundle siteNavigationMenuItemTypeResourceBundle = ResourceBundleUtil.getBundle("content.Language", locale, siteNavigationMenuItemType.getClass());
+						%>
+
+							<div class="card col-md-2 item-type pt-xl-3 text-center" data-type="<%= type %>">
+								<liferay-ui:icon
+									icon="<%= siteNavigationMenuItemType.getIcon() %>"
+									markupView="lexicon"
+								/>
+
+								<h5 class="mt-xl-3">
+									<%= LanguageUtil.get(request, siteNavigationMenuItemTypeResourceBundle, "site.navigation.menu.item.types." + type) %>
+								</h5>
+							</div>
+
+						<%
+						}
+						%>
+
+					</div>
+
+					<div class="text-center">
+						<h3>
+							<span class="d-block mt-xl-3">
+								<liferay-ui:message key="this-menu-is-empty" />
+							</span>
+							<span class="d-block mt-xl-3">
+								<liferay-ui:message key="please-select-a-menu-item-to-continue" />
+							</span>
+						</h3>
+					</div>
+				</aui:fieldset>
+			</c:otherwise>
+		</c:choose>
 	</aui:fieldset-group>
 
 	<aui:button-row>
@@ -50,3 +119,19 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 		<aui:button cssClass="btn-lg" href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
+
+<c:if test="<%= siteNavigationMenu == null %>">
+	<aui:script use="aui-base">
+		A.one('#<portlet:namespace/>ItemTypes').delegate(
+			'click',
+			function(event) {
+				var type = event.currentTarget.getData().type;
+
+				document.getElementById('<portlet:namespace/>hideDefaultSuccessMessage').value = 'true';
+				document.getElementById('<portlet:namespace/>selectedItemType').value = type;
+				submitForm(document.<portlet:namespace/>fm);
+			},
+			'.item-type'
+		);
+	</aui:script>
+</c:if>
