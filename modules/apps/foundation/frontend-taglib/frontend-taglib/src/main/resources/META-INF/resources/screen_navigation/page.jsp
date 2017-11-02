@@ -22,6 +22,7 @@ ScreenNavigationCategory selectedScreenNavigationCategory = (ScreenNavigationCat
 ScreenNavigationEntry selectedScreenNavigationEntry = (ScreenNavigationEntry)request.getAttribute("liferay-frontend:screen-navigation:selectedScreenNavigationEntry");
 List<ScreenNavigationCategory> screenNavigationCategories = (List<ScreenNavigationCategory>)request.getAttribute("liferay-frontend:screen-navigation:screenNavigationCategories");
 List<ScreenNavigationEntry> screenNavigationEntries = (List<ScreenNavigationEntry>)request.getAttribute("liferay-frontend:screen-navigation:screenNavigationEntries");
+int sidebarColumns = (Integer)request.getAttribute("liferay-frontend:screen-navigation:sidebarColumns");
 %>
 
 <c:if test="<%= (screenNavigationCategories.size() > 1) || (screenNavigationEntries.size() > 1) %>">
@@ -47,7 +48,7 @@ List<ScreenNavigationEntry> screenNavigationEntries = (List<ScreenNavigationEntr
 
 <div class="row">
 	<c:if test="<%= screenNavigationEntries.size() > 1 %>">
-		<div class="col-md-3">
+		<div class="col-md-<%= sidebarColumns %>">
 			<ul class="main-content-nav nav nav-nested">
 
 				<%
@@ -70,7 +71,14 @@ List<ScreenNavigationEntry> screenNavigationEntries = (List<ScreenNavigationEntr
 		</div>
 	</c:if>
 
-	<div class="<%= (screenNavigationEntries.size() > 1) ? "col-md-9" : "col-md-12" %>">
+	<%
+	int fullSizeRenderColumns = selectedScreenNavigationEntry.getFullSizeRenderColumns();
+
+	String fullSizeRenderColumnsCSS = "col-md-" + fullSizeRenderColumns;
+	String sidebarRenderColumnsCSS = "col-md-" + (fullSizeRenderColumns - sidebarColumns);
+	%>
+
+	<div class="<%= (screenNavigationEntries.size() > 1) ? sidebarRenderColumnsCSS : fullSizeRenderColumnsCSS %>">
 
 		<%
 		selectedScreenNavigationEntry.render(request, response);
