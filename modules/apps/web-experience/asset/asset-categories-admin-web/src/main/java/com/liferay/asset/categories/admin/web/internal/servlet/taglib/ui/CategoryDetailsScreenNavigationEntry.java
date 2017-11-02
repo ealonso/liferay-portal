@@ -60,6 +60,11 @@ public class CategoryDetailsScreenNavigationEntry
 	}
 
 	@Override
+	public int getFullSizeRenderColumns() {
+		return 12;
+	}
+
+	@Override
 	public String getScreenNavigationKey() {
 		return AssetCategoriesConstants.CATEGORY_KEY_GENERAL;
 	}
