@@ -41,7 +41,7 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = PanelApp.class
 )
-public class GroupPagesPanelApp extends BaseJSPPanelApp {
+public class GroupPagesTreePanelApp extends BaseJSPPanelApp {
 
 	@Override
 	public String getJspPath() {
