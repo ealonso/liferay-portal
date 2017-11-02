@@ -25,7 +25,7 @@ List<ScreenNavigationEntry> screenNavigationEntries = (List<ScreenNavigationEntr
 int sidebarColumns = (Integer)request.getAttribute("liferay-frontend:screen-navigation:sidebarColumns");
 %>
 
-<c:if test="<%= (screenNavigationCategories.size() > 1) || (screenNavigationEntries.size() > 1) %>">
+<c:if test="<%= (screenNavigationCategories.size() > 1) %>">
 	<aui:nav-bar markupView="lexicon">
 		<aui:nav cssClass="navbar-nav">
 
