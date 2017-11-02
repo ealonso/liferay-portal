@@ -10,6 +10,7 @@
 	{@param? id: string}
 	{@param? fragments: list<?>}
 	{@param? _handleFragmentCollectionEntryClick: any}
+	{@param? _handleFragmentRemoveButtonClick: any}
 
 	<div class="row mr-0" id="{$id}">
 		<div class="col-lg-9 col-md-8 fragment-panel-target">
@@ -17,7 +18,10 @@
 				{foreach $fragment in $fragments}
 					<div class="fragment-panel-item-instance" data-position="{index($fragment)}">
 						{call LayoutPageTemplateFragment.render}
+							{param events: [ 'fragmentRemoveButtonClick': $_handleFragmentRemoveButtonClick ] /}
+							{param index: index($fragment) /}
 							{param name: $fragment.name /}
+							{param spritemap: $spritemap /}
 						{/call}
 					</div>
 				{/foreach}
