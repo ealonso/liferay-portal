@@ -32,6 +32,8 @@ public interface ScreenNavigationEntry<T> {
 
 	public String getEntryKey();
 
+	public int getFullSizeRenderColumns();
+
 	public String getLabel(Locale locale);
 
 	public String getScreenNavigationKey();

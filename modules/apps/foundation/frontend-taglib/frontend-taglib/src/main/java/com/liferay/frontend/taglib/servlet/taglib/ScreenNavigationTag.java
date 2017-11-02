@@ -91,12 +91,17 @@ public class ScreenNavigationTag extends IncludeTag {
 		_portletURL = portletURL;
 	}
 
+	public void setSidebarColumns(int sidebarColumns) {
+		_sidebarColumns = sidebarColumns;
+	}
+
 	@Override
 	protected void cleanUp() {
 		_context = null;
 		_key = null;
 		_modelBean = null;
 		_portletURL = null;
+		_sidebarColumns = 3;
 	}
 
 	@Override
@@ -126,6 +131,9 @@ public class ScreenNavigationTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-frontend:screen-navigation:selectedScreenNavigationEntry",
 			_getSelectedScreenNavigationEntry());
+		request.setAttribute(
+			"liferay-frontend:screen-navigation:sidebarColumns",
+			_sidebarColumns);
 	}
 
 	private String _getDefaultScreenNavigationCategoryKey() {
@@ -210,5 +218,6 @@ public class ScreenNavigationTag extends IncludeTag {
 	private Object _modelBean;
 	private PortletURL _portletURL;
 	private List<ScreenNavigationCategory> _screenNavigationCategories;
+	private int _sidebarColumns = 3;
 
 }
