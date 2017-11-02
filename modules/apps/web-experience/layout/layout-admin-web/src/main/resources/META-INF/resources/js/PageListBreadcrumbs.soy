@@ -1,0 +1,56 @@
+{namespace PageListBreadcrumbs}
+
+/**
+ * PageListBreadcrumbs
+ */
+{template .render}
+	{@param layoutBlocks: list<?>}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
+
+	<ol class="breadcrumb mt-3">
+		{call .breadcrumbItem}
+			{param portletNamespace: $portletNamespace /}
+			{param portletURL: $portletURL /}
+		{/call}
+		{foreach $layoutBlock in $layoutBlocks}
+			{foreach $layout in $layoutBlock}
+				{if $layout.active}
+					{call .breadcrumbItem}
+						{param layout: $layout /}
+						{param portletNamespace: $portletNamespace /}
+						{param portletURL: $portletURL /}
+					{/call}
+				{/if}
+			{/foreach}
+		{/foreach}
+	</ol>
+{/template}
+
+/**
+ *	Breadcrumb item
+ */
+{template .breadcrumbItem}
+	{@param portletNamespace: string}
+	{@param portletURL: string}
+	{@param? layout: ?}
+
+	{let $breadcrumbItemHref kind="text"}
+		{$portletURL}&{$portletNamespace}selectedLayoutId=
+		{if $layout}
+			{$layout.layoutId}
+		{else}
+			0
+		{/if}
+	{/let}
+
+	<li class="breadcrumb-item">
+		<a class="breadcrumb-link" href="{$breadcrumbItemHref}">
+			{if $layout}
+				{$layout.title}
+			{else}
+				{msg desc=""}home{/msg}
+			{/if}
+		</a>
+	</li>
+{/template}

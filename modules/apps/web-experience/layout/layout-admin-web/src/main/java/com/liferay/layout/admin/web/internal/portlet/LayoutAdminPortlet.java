@@ -322,15 +322,13 @@ public class LayoutAdminPortlet extends MVCPortlet {
 		MultiSessionMessages.add(
 			actionRequest, portletResource + "layoutAdded", layout);
 
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
+		String redirect = ParamUtil.getString(
+			actionRequest, "redirect",
+			portal.getLayoutFullURL(layout, themeDisplay));
 
-		if (Validator.isNull(redirect)) {
-			redirect = portal.getLayoutFullURL(layout, themeDisplay);
-
-			if (layout.isTypeURL()) {
-				redirect = portal.getGroupFriendlyURL(
-					layout.getLayoutSet(), themeDisplay);
-			}
+		if (layout.isTypeURL()) {
+			redirect = portal.getGroupFriendlyURL(
+				layout.getLayoutSet(), themeDisplay);
 		}
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
