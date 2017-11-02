@@ -30,17 +30,28 @@ boolean privateLayout = layoutsAdminDisplayContext.isPrivateLayout();
 long parentPlid = LayoutConstants.DEFAULT_PLID;
 long parentLayoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
 
+String selThemeId = null;
+
 if (layout.isTypeControlPanel()) {
 	if (layoutsAdminDisplayContext.getSelPlid() != 0) {
 		selLayout = LayoutLocalServiceUtil.getLayout(layoutsAdminDisplayContext.getSelPlid());
+
+		selThemeId = selLayout.getThemeId();
 
 		privateLayout = selLayout.isPrivateLayout();
 		parentPlid = selLayout.getPlid();
 		parentLayoutId = selLayout.getLayoutId();
 	}
+	else {
+		LayoutSet selLayoutSet = layoutsAdminDisplayContext.getSelLayoutSet();
+
+		selThemeId = selLayoutSet.getThemeId();
+	}
 }
 else {
 	selLayout = layout;
+
+	selThemeId = layout.getThemeId();
 
 	privateLayout = layout.isPrivateLayout();
 	parentPlid = layout.getParentPlid();
@@ -62,12 +73,12 @@ renderResponse.setTitle(LanguageUtil.get(request, "add-new-page"));
 </portlet:actionURL>
 
 <aui:form action="<%= addLayoutURL %>" cssClass="container-fluid-1280" data-senna-off="true" enctype="multipart/form-data" method="post" name="addPageFm">
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="groupId" type="hidden" value="<%= String.valueOf(groupId) %>" />
 	<aui:input name="privateLayout" type="hidden" value="<%= privateLayout %>" />
 	<aui:input name="parentPlid" type="hidden" value="<%= parentPlid %>" />
 	<aui:input name="parentLayoutId" type="hidden" value="<%= parentLayoutId %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
+	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="type" type="hidden" value="portlet" />
 	<aui:input name="layoutPrototypeId" type="hidden" value="" />
 	<aui:input name="explicitCreation" type="hidden" value="<%= true %>" />
