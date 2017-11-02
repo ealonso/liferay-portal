@@ -46,43 +46,45 @@ int sidebarColumns = (Integer)request.getAttribute("liferay-frontend:screen-navi
 	</aui:nav-bar>
 </c:if>
 
-<div class="row">
-	<c:if test="<%= screenNavigationEntries.size() > 1 %>">
-		<div class="col-md-<%= sidebarColumns %>">
-			<ul class="main-content-nav nav nav-nested">
+<div class="container">
+	<div class="row">
+		<c:if test="<%= screenNavigationEntries.size() > 1 %>">
+			<div class="col-md-<%= sidebarColumns %>">
+				<ul class="main-content-nav nav nav-nested">
 
-				<%
-				for (ScreenNavigationEntry screenNavigationEntry : screenNavigationEntries) {
-					PortletURL screenNavigationEntryURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
+					<%
+					for (ScreenNavigationEntry screenNavigationEntry : screenNavigationEntries) {
+						PortletURL screenNavigationEntryURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
 
-					screenNavigationEntryURL.setParameter("screenNavigationCategoryKey", screenNavigationEntry.getCategoryKey());
-					screenNavigationEntryURL.setParameter("screenNavigationEntryKey", screenNavigationEntry.getEntryKey());
-				%>
+						screenNavigationEntryURL.setParameter("screenNavigationCategoryKey", screenNavigationEntry.getCategoryKey());
+						screenNavigationEntryURL.setParameter("screenNavigationEntryKey", screenNavigationEntry.getEntryKey());
+					%>
 
-					<li class="<%= Objects.equals(selectedScreenNavigationEntry.getEntryKey(), screenNavigationEntry.getEntryKey()) ? "active" : StringPool.BLANK %>">
-						<a href="<%= screenNavigationEntryURL %>"><%= screenNavigationEntry.getLabel(themeDisplay.getLocale()) %></a>
-					</li>
+						<li class="<%= Objects.equals(selectedScreenNavigationEntry.getEntryKey(), screenNavigationEntry.getEntryKey()) ? "active" : StringPool.BLANK %>">
+							<a href="<%= screenNavigationEntryURL %>"><%= screenNavigationEntry.getLabel(themeDisplay.getLocale()) %></a>
+						</li>
 
-				<%
-				}
-				%>
+					<%
+					}
+					%>
 
-			</ul>
-		</div>
-	</c:if>
-
-	<%
-	int fullSizeRenderColumns = selectedScreenNavigationEntry.getFullSizeRenderColumns();
-
-	String fullSizeRenderColumnsCSS = "col-md-" + fullSizeRenderColumns;
-	String sidebarRenderColumnsCSS = "col-md-" + (fullSizeRenderColumns - sidebarColumns);
-	%>
-
-	<div class="<%= (screenNavigationEntries.size() > 1) ? sidebarRenderColumnsCSS : fullSizeRenderColumnsCSS %>">
+				</ul>
+			</div>
+		</c:if>
 
 		<%
-		selectedScreenNavigationEntry.render(request, response);
+		int fullSizeRenderColumns = selectedScreenNavigationEntry.getFullSizeRenderColumns();
+
+		String fullSizeRenderColumnsCSS = "col-md-" + fullSizeRenderColumns;
+		String sidebarRenderColumnsCSS = "col-md-" + (fullSizeRenderColumns - sidebarColumns);
 		%>
 
+		<div class="<%= (screenNavigationEntries.size() > 1) ? sidebarRenderColumnsCSS : fullSizeRenderColumnsCSS %>">
+
+			<%
+			selectedScreenNavigationEntry.render(request, response);
+			%>
+
+		</div>
 	</div>
 </div>
