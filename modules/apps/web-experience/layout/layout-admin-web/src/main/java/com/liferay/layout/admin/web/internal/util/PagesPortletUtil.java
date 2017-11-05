@@ -16,6 +16,8 @@ package com.liferay.layout.admin.web.internal.util;
 
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -23,11 +25,14 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletRequest;
@@ -185,6 +190,51 @@ public class PagesPortletUtil {
 		}
 
 		return orderByComparator;
+	}
+
+	public static JSONArray getLayoutsJSONArray(
+			long groupId, boolean privateLayout, long parentLayoutId,
+			long selectedLayoutId, OrderByComparator orderByComparator,
+			PortletRequest portletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			groupId, privateLayout, parentLayoutId, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, orderByComparator);
+
+		for (Layout layout : layouts) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			JSONObject actionsJSONObject = getActionsJSONObject(
+				layout, portletRequest);
+
+			if (actionsJSONObject.length() > 0) {
+				jsonObject.put("actions", actionsJSONObject);
+			}
+
+			jsonObject.put("active", layout.getLayoutId() == selectedLayoutId);
+
+			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+				themeDisplay.getScopeGroup(), privateLayout,
+				layout.getLayoutId());
+
+			jsonObject.put("hasChild", childLayoutsCount > 0);
+
+			jsonObject.put("icon", "page");
+			jsonObject.put("layoutId", layout.getLayoutId());
+			jsonObject.put("parentLayoutId", layout.getParentLayoutId());
+			jsonObject.put("selected", jsonObject.getBoolean("active"));
+			jsonObject.put("title", layout.getName(themeDisplay.getLocale()));
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 }
