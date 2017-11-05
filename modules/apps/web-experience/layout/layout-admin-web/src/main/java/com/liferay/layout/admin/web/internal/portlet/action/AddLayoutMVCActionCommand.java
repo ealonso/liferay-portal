@@ -234,11 +234,9 @@ public class AddLayoutMVCActionCommand extends BaseMVCActionCommand {
 		MultiSessionMessages.add(
 			actionRequest, portletResource + "layoutAdded", layout);
 
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
-
-		if (Validator.isNull(redirect)) {
-			redirect = _portal.getLayoutFullURL(layout, themeDisplay);
-		}
+		String redirect = ParamUtil.getString(
+			actionRequest, "redirect",
+			_portal.getLayoutFullURL(layout, themeDisplay));
 
 		if (layout.isTypeURL()) {
 			redirect = _portal.getGroupFriendlyURL(
