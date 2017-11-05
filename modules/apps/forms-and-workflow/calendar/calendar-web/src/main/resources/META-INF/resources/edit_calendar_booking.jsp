@@ -207,6 +207,8 @@ while (manageableCalendarsIterator.hasNext()) {
 		manageableCalendarsIterator.remove();
 	}
 }
+
+String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 %>
 
 <aui:script use="liferay-calendar-container,liferay-calendar-remote-services,liferay-component">
@@ -284,6 +286,7 @@ while (manageableCalendarsIterator.hasNext()) {
 	<aui:input name="reinvitableCalendarIds" type="hidden" />
 	<aui:input name="allFollowing" type="hidden" />
 	<aui:input name="updateCalendarBookingInstance" type="hidden" />
+	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
 
 	<div class="lfr-form-content">

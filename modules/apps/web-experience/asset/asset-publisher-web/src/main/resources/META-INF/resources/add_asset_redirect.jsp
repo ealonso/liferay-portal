@@ -19,6 +19,8 @@
 <%
 String redirect = request.getParameter("redirect");
 
+boolean closeDialog = ParamUtil.getBoolean(request, "closeDialog", true);
+
 redirect = PortalUtil.escapeRedirect(redirect);
 
 Portlet selPortlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), portletDisplay.getId());
@@ -31,21 +33,32 @@ if (Validator.isNotNull(className) && (classPK > 0)) {
 }
 %>
 
-<aui:script>
-	Liferay.fire(
-		'closeWindow',
-		{
-			id: '<portlet:namespace />editAsset',
-			portletAjaxable: <%= selPortlet.isAjaxable() %>,
+<c:choose>
+	<c:when test="<%= closeDialog %>">
+		<aui:script>
+			Liferay.fire(
+				'closeWindow',
+				{
+					id: '<portlet:namespace />editAsset',
+					portletAjaxable: <%= selPortlet.isAjaxable() %>,
 
-			<c:choose>
-				<c:when test="<%= redirect != null %>">
-					redirect: '<%= HtmlUtil.escapeJS(redirect) %>'
-				</c:when>
-				<c:otherwise>
-					refresh: '<%= portletDisplay.getId() %>'
-				</c:otherwise>
-			</c:choose>
-		}
-	);
-</aui:script>
+					<c:choose>
+						<c:when test="<%= redirect != null %>">
+							redirect: '<%= HtmlUtil.escapeJS(redirect) %>'
+						</c:when>
+						<c:otherwise>
+							refresh: '<%= portletDisplay.getId() %>'
+						</c:otherwise>
+					</c:choose>
+				}
+			);
+		</aui:script>
+	</c:when>
+	<c:otherwise>
+		<aui:script>
+			var dialog = Liferay.Util.getTop().Liferay.Util.Window.getById('<portlet:namespace />editAsset');
+
+			dialog.iframe.set('uri', '<%= redirect %>');
+		</aui:script>
+	</c:otherwise>
+</c:choose>

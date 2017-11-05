@@ -71,6 +71,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
+import com.liferay.portal.kernel.model.PortletConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
@@ -89,6 +90,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -141,6 +143,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import org.osgi.service.component.annotations.Component;
@@ -541,9 +544,8 @@ public class CalendarPortlet extends MVCPortlet {
 
 		String redirect = getRedirect(actionRequest, actionResponse);
 
-		redirect = _http.setParameter(
-			redirect, actionResponse.getNamespace() + "calendarBookingId",
-			calendarBooking.getCalendarBookingId());
+		redirect = addEditCalendarBookingRedirectParameters(
+			redirect, calendarBooking, actionRequest);
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
@@ -661,6 +663,57 @@ public class CalendarPortlet extends MVCPortlet {
 
 			calendarsSet.add(calendar);
 		}
+	}
+
+	protected String addEditCalendarBookingRedirectParameters(
+			String redirect, CalendarBooking calendarBooking,
+			ActionRequest actionRequest)
+		throws WindowStateException {
+
+		String referringPortletResource = ParamUtil.getString(
+			actionRequest, "referringPortletResource");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		if (Validator.isNull(referringPortletResource)) {
+			referringPortletResource = portletDisplay.getId();
+		}
+
+		String namespace = _portal.getPortletNamespace(
+			referringPortletResource);
+
+		redirect = addReferringPortletParameters(
+			redirect, calendarBooking, themeDisplay, namespace,
+			referringPortletResource);
+
+		redirect = _http.setParameter(
+			redirect, namespace + "calendarBookingId",
+			calendarBooking.getCalendarBookingId());
+
+		return redirect;
+	}
+
+	protected String addReferringPortletParameters(
+			String redirect, CalendarBooking calendarBooking,
+			ThemeDisplay themeDisplay, String namespace,
+			String referringPortletResource)
+		throws WindowStateException {
+
+		String rootPortletId = PortletConstants.getRootPortletId(
+			referringPortletResource);
+
+		if ((calendarBooking.getStatus() ==
+				CalendarBookingWorkflowConstants.STATUS_DRAFT) &&
+			!rootPortletId.equals(CalendarPortletKeys.CALENDAR)) {
+
+			redirect = preventDraftClosingOnReferringPortlet(
+				redirect, calendarBooking, themeDisplay, namespace);
+		}
+
+		return redirect;
 	}
 
 	@Override
@@ -1120,6 +1173,33 @@ public class CalendarPortlet extends MVCPortlet {
 		}
 
 		return false;
+	}
+
+	protected String preventDraftClosingOnReferringPortlet(
+			String redirect, CalendarBooking calendarBooking,
+			ThemeDisplay themeDisplay, String namespace)
+		throws WindowStateException {
+
+		String state = _http.getParameter(redirect, "p_p_state", false);
+
+		PortletURL draftURL = _portal.getControlPanelPortletURL(
+			themeDisplay.getRequest(), themeDisplay.getScopeGroup(),
+			getPortletName(), 0, 0, PortletRequest.RENDER_PHASE);
+
+		draftURL.setParameter("mvcPath", "/edit_calendar_booking.jsp");
+		draftURL.setParameter(
+			"calendarBookingId",
+			String.valueOf(calendarBooking.getCalendarBookingId()));
+		draftURL.setParameter("redirect", redirect);
+		draftURL.setWindowState(new WindowState(state));
+
+		redirect = _http.setParameter(
+			redirect, namespace + "closeDialog", Boolean.FALSE);
+		redirect = _http.removeParameter(redirect, namespace + "redirect");
+		redirect = _http.setParameter(
+			redirect, namespace + "redirect", draftURL.toString());
+
+		return redirect;
 	}
 
 	protected Hits search(ThemeDisplay themeDisplay, String keywords)
