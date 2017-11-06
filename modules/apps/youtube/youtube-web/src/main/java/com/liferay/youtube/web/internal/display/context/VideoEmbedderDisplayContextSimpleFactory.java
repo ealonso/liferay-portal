@@ -27,20 +27,17 @@ import javax.servlet.http.HttpServletRequest;
 public class VideoEmbedderDisplayContextSimpleFactory {
 
 	public static VideoEmbedderDisplayContext create(
-		HttpServletRequest request, PortletPreferences portletPreferences,
-		VideoEmbedderConfiguration configuration) {
+		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		String url = portletPreferences.getValue("url", StringPool.BLANK);
 
 		if (url.contains(VideoEmbedderConfiguration.YOUTUBE) ||
 			url.contains(VideoEmbedderConfiguration.YOUTUBE_2)) {
 
-			return new YouTubeDisplayContext(
-				request, portletPreferences, configuration);
+			return new YouTubeDisplayContext(request, portletPreferences);
 		}
 
-		return new BaseVideoEmbedderDisplayContext(
-			request, portletPreferences, configuration);
+		return new BaseVideoEmbedderDisplayContext(request, portletPreferences);
 	}
 
 }

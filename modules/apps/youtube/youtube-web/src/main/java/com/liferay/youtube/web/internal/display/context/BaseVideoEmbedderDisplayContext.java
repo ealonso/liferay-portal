@@ -36,8 +36,7 @@ public class BaseVideoEmbedderDisplayContext
 	implements VideoEmbedderDisplayContext {
 
 	public BaseVideoEmbedderDisplayContext(
-		HttpServletRequest request, PortletPreferences portletPreferences,
-		VideoEmbedderConfiguration configuration) {
+		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		this.request = request;
 		this.portletPreferences = portletPreferences;
@@ -45,7 +44,7 @@ public class BaseVideoEmbedderDisplayContext
 		id = StringPool.BLANK;
 		siteName = StringPool.BLANK;
 
-		_init(configuration);
+		_initSystemSettings();
 	}
 
 	@Override
@@ -183,16 +182,20 @@ public class BaseVideoEmbedderDisplayContext
 		return systemSettings.get(siteName)[1];
 	}
 
-	private void _init(VideoEmbedderConfiguration configuration) {
+	private void _initSystemSettings() {
 
 		//When this class is instantiated for configuration page,
 		//this configuration is not passed in and will be null
 
-		if (configuration == null) {
+		VideoEmbedderConfiguration videoEmbedderConfiguration =
+			(VideoEmbedderConfiguration)request.getAttribute(
+				VideoEmbedderConfiguration.class.getName());
+
+		if (videoEmbedderConfiguration == null) {
 			return;
 		}
 
-		String[] values = configuration.iframeURLs();
+		String[] values = videoEmbedderConfiguration.iframeURLs();
 
 		for (String val : values) {
 			String[] parts = val.split(VideoEmbedderConfiguration.DLM);

@@ -74,9 +74,8 @@ public class VideoEmbedderPortlet extends MVCPortlet {
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
-		_configuration =
-			ConfigurableUtil.createConfigurable(
-				VideoEmbedderConfiguration.class, properties);
+		_configuration = ConfigurableUtil.createConfigurable(
+			VideoEmbedderConfiguration.class, properties);
 	}
 
 	@Reference(
