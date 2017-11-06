@@ -18,12 +18,10 @@
 
 <%
 long categoryId = ParamUtil.getLong(request, "categoryId");
-
-AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
 %>
 
 <liferay-frontend:screen-navigation
-	context="<%= category %>"
+	context="<%= com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil.fetchCategory(categoryId) %>"
 	key="<%= AssetCategoriesConstants.CATEGORY_KEY_GENERAL %>"
 	portletURL="<%= currentURLObj %>"
 />
