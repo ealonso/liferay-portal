@@ -18,7 +18,7 @@
 
 <c:choose>
 	<c:when test="<%= Validator.isNotNull(displayContext.getURL()) %>">
-		<iframe allowfullscreen frameborder="0" src="<%= displayContext.getEmbedURL() %>" width="100%" wmode="Opaque" onload="resizeIFrame()"/></iframe>
+		<iframe allowfullscreen frameborder="0" src="<%= displayContext.getEmbedURL() %>" width="100%" wmode="Opaque" onload="javascript:resizeIFrame()"/></iframe>
 	</c:when>
 	<c:otherwise>
 		<liferay-util:include page="/html/portal/portlet_not_setup.jsp" />
@@ -31,12 +31,11 @@
 	var frame = container.querySelector('iframe');
 
 	function resizeIFrame() {
-		frame.width = frame.height = 0;
-
 		var width = container.offsetWidth;
-		frame.width = width;
 		var aspectRatioHeight = <%= displayContext.getHeight() %>;
 		var aspectRatioWidth = <%= displayContext.getWidth() %>;
+
+		frame.width = width;
 		frame.height = width * (aspectRatioHeight / aspectRatioWidth);
 	}
 

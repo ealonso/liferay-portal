@@ -27,7 +27,8 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys" %><%@
 page import="com.liferay.youtube.web.internal.display.context.VideoEmbedderDisplayContext" %><%@
-page import="com.liferay.youtube.web.internal.display.context.VideoEmbedderDisplayContextSimpleFactory" %>
+page import="com.liferay.youtube.web.internal.display.context.VideoEmbedderDisplayContextSimpleFactory" %><%@
+page import="com.liferay.youtube.web.internal.display.context.YouTubeDisplayContext" %>
 
 <%@ page import="java.util.Objects" %>
 
