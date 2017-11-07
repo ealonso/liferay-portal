@@ -14,8 +14,8 @@
 
 package com.liferay.wiki.importer.impl.mediawiki;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.asset.util.impl.AssetUtil;
 import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.CharPool;

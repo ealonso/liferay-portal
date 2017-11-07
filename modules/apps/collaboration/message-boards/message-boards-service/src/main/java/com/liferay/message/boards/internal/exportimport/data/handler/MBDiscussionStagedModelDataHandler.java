@@ -14,8 +14,8 @@
 
 package com.liferay.message.boards.internal.exportimport.data.handler;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;

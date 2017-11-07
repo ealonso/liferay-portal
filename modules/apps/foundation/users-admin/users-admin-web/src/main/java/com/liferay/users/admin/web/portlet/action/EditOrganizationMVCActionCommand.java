@@ -14,8 +14,8 @@
 
 package com.liferay.users.admin.web.portlet.action;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.asset.exception.AssetCategoryException;
+import com.liferay.asset.exception.AssetTagException;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.exception.AddressCityException;
 import com.liferay.portal.kernel.exception.AddressStreetException;

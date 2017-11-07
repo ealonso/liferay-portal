@@ -14,7 +14,7 @@
 
 package com.liferay.document.library.repository.cmis.internal;
 
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.document.library.kernel.service.DLAppHelperLocalService;
 import com.liferay.document.library.kernel.service.DLFolderLocalService;
 import com.liferay.document.library.repository.cmis.configuration.CMISRepositoryConfiguration;

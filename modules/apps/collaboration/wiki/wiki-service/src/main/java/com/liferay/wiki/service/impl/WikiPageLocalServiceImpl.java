@@ -14,9 +14,13 @@
 
 package com.liferay.wiki.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetLink;
+import com.liferay.asset.model.AssetLinkConstants;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetLinkLocalService;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeUtil;
@@ -3250,6 +3254,18 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		validate(nodeId, content, format);
 	}
+
+	@ServiceReference(type = AssetCategoryLocalService.class)
+	protected AssetCategoryLocalService assetCategoryLocalService;
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
+
+	@ServiceReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
+
+	@ServiceReference(type = AssetTagLocalService.class)
+	protected AssetTagLocalService assetTagLocalService;
 
 	@ServiceReference(type = ConfigurationProvider.class)
 	protected ConfigurationProvider configurationProvider;

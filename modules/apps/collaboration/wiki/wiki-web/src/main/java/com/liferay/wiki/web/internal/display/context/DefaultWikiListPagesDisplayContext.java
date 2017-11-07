@@ -14,9 +14,9 @@
 
 package com.liferay.wiki.web.internal.display.context;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;

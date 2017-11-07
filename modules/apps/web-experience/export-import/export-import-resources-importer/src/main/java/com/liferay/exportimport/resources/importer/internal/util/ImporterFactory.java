@@ -14,7 +14,7 @@
 
 package com.liferay.exportimport.resources.importer.internal.util;
 
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.service.DLFolderLocalService;

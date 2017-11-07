@@ -14,8 +14,8 @@
 
 package com.liferay.layout.admin.web.internal.upgrade.v_1_0_1;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
