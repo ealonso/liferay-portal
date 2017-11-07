@@ -16,9 +16,6 @@ package com.liferay.blogs.service.base;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryPersistence;
-import com.liferay.asset.kernel.service.persistence.AssetLinkPersistence;
-
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalService;
 import com.liferay.blogs.service.persistence.BlogsEntryFinder;
@@ -856,82 +853,6 @@ public abstract class BlogsEntryLocalServiceBaseImpl
 	}
 
 	/**
-	 * Returns the asset entry local service.
-	 *
-	 * @return the asset entry local service
-	 */
-	public com.liferay.asset.kernel.service.AssetEntryLocalService getAssetEntryLocalService() {
-		return assetEntryLocalService;
-	}
-
-	/**
-	 * Sets the asset entry local service.
-	 *
-	 * @param assetEntryLocalService the asset entry local service
-	 */
-	public void setAssetEntryLocalService(
-		com.liferay.asset.kernel.service.AssetEntryLocalService assetEntryLocalService) {
-		this.assetEntryLocalService = assetEntryLocalService;
-	}
-
-	/**
-	 * Returns the asset entry persistence.
-	 *
-	 * @return the asset entry persistence
-	 */
-	public AssetEntryPersistence getAssetEntryPersistence() {
-		return assetEntryPersistence;
-	}
-
-	/**
-	 * Sets the asset entry persistence.
-	 *
-	 * @param assetEntryPersistence the asset entry persistence
-	 */
-	public void setAssetEntryPersistence(
-		AssetEntryPersistence assetEntryPersistence) {
-		this.assetEntryPersistence = assetEntryPersistence;
-	}
-
-	/**
-	 * Returns the asset link local service.
-	 *
-	 * @return the asset link local service
-	 */
-	public com.liferay.asset.kernel.service.AssetLinkLocalService getAssetLinkLocalService() {
-		return assetLinkLocalService;
-	}
-
-	/**
-	 * Sets the asset link local service.
-	 *
-	 * @param assetLinkLocalService the asset link local service
-	 */
-	public void setAssetLinkLocalService(
-		com.liferay.asset.kernel.service.AssetLinkLocalService assetLinkLocalService) {
-		this.assetLinkLocalService = assetLinkLocalService;
-	}
-
-	/**
-	 * Returns the asset link persistence.
-	 *
-	 * @return the asset link persistence
-	 */
-	public AssetLinkPersistence getAssetLinkPersistence() {
-		return assetLinkPersistence;
-	}
-
-	/**
-	 * Sets the asset link persistence.
-	 *
-	 * @param assetLinkPersistence the asset link persistence
-	 */
-	public void setAssetLinkPersistence(
-		AssetLinkPersistence assetLinkPersistence) {
-		this.assetLinkPersistence = assetLinkPersistence;
-	}
-
-	/**
 	 * Returns the expando row local service.
 	 *
 	 * @return the expando row local service
@@ -1154,14 +1075,6 @@ public abstract class BlogsEntryLocalServiceBaseImpl
 	protected com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService workflowInstanceLinkLocalService;
 	@ServiceReference(type = WorkflowInstanceLinkPersistence.class)
 	protected WorkflowInstanceLinkPersistence workflowInstanceLinkPersistence;
-	@ServiceReference(type = com.liferay.asset.kernel.service.AssetEntryLocalService.class)
-	protected com.liferay.asset.kernel.service.AssetEntryLocalService assetEntryLocalService;
-	@ServiceReference(type = AssetEntryPersistence.class)
-	protected AssetEntryPersistence assetEntryPersistence;
-	@ServiceReference(type = com.liferay.asset.kernel.service.AssetLinkLocalService.class)
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService assetLinkLocalService;
-	@ServiceReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
 	@ServiceReference(type = com.liferay.expando.kernel.service.ExpandoRowLocalService.class)
 	protected com.liferay.expando.kernel.service.ExpandoRowLocalService expandoRowLocalService;
 	@ServiceReference(type = ExpandoRowPersistence.class)
