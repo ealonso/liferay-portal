@@ -17,6 +17,7 @@ package com.liferay.microblogs.service.impl;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.microblogs.constants.MicroblogsPortletKeys;
 import com.liferay.microblogs.exception.UnsupportedMicroblogsEntryException;
 import com.liferay.microblogs.internal.social.MicroblogsActivityKeys;
@@ -679,6 +680,9 @@ public class MicroblogsEntryLocalServiceImpl
 			throw new UnsupportedMicroblogsEntryException();
 		}
 	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 	@ServiceReference(type = SubscriptionLocalService.class)
 	protected SubscriptionLocalService subscriptionLocalService;

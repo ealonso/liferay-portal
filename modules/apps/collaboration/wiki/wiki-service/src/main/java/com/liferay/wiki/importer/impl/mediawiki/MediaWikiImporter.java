@@ -14,8 +14,8 @@
 
 package com.liferay.wiki.importer.impl.mediawiki;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.document.library.kernel.store.DLStoreUtil;
 import com.liferay.petra.string.CharPool;
@@ -704,6 +704,15 @@ public class MediaWikiImporter implements WikiImporter {
 		AssetTagLocalService assetTagLocalService) {
 
 		_assetTagLocalService = assetTagLocalService;
+	}
+
+	/**
+	 * @deprecated As of 1.2.0
+	 */
+	@Deprecated
+	protected void setAssetTagLocalService(
+		com.liferay.asset.kernel.service.AssetTagLocalService
+			assetTagLocalService) {
 	}
 
 	@Reference(unbind = "-")

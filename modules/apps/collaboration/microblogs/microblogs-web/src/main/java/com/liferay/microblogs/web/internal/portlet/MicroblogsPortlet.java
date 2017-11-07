@@ -14,7 +14,7 @@
 
 package com.liferay.microblogs.web.internal.portlet;
 
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.microblogs.constants.MicroblogsPortletKeys;
 import com.liferay.microblogs.model.MicroblogsEntry;
 import com.liferay.microblogs.service.MicroblogsEntryLocalService;

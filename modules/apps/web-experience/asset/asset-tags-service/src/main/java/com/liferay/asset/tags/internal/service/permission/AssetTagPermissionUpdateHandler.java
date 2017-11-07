@@ -14,8 +14,8 @@
 
 package com.liferay.asset.tags.internal.service.permission;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.portal.kernel.security.permission.PermissionUpdateHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 
