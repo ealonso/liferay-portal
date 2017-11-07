@@ -93,7 +93,7 @@ Hits hits = searchDisplayContext.getHits();
 				<%
 				com.liferay.portal.search.web.internal.result.display.builder.SearchResultSummaryDisplayBuilder searchResultSummaryDisplayBuilder = new com.liferay.portal.search.web.internal.result.display.builder.SearchResultSummaryDisplayBuilder();
 
-				searchResultSummaryDisplayBuilder.setAssetEntryLocalService(com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil.getService());
+				searchResultSummaryDisplayBuilder.setAssetEntryLocalService(com.liferay.asset.service.AssetEntryLocalServiceUtil.getService());
 				searchResultSummaryDisplayBuilder.setCurrentURL(currentURL);
 				searchResultSummaryDisplayBuilder.setDocument(document);
 				searchResultSummaryDisplayBuilder.setHighlightEnabled(searchDisplayContext.isHighlightEnabled());

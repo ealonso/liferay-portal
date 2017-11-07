@@ -14,7 +14,8 @@
 
 package com.liferay.subscription.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.model.ClassName;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.subscription.model.Subscription;
 import com.liferay.subscription.model.SubscriptionConstants;
@@ -454,5 +456,8 @@ public class SubscriptionLocalServiceImpl
 			return false;
 		}
 	}
+
+	@ServiceReference(type = AssetEntryLocalService.class)
+	protected AssetEntryLocalService assetEntryLocalService;
 
 }

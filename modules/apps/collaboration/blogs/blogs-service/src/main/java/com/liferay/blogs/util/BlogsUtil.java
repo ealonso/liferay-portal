@@ -14,9 +14,9 @@
 
 package com.liferay.blogs.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.util.comparator.EntryDisplayDateComparator;
 import com.liferay.blogs.util.comparator.EntryTitleComparator;

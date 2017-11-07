@@ -22,7 +22,7 @@ String type = ParamUtil.getString(request, "type");
 
 AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByType(type);
 
-AssetEntry assetEntry = assetRendererFactory.getAssetEntry(assetEntryId);
+com.liferay.asset.kernel.model.AssetEntry assetEntry = assetRendererFactory.getAssetEntry(assetEntryId);
 
 AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
 %>
@@ -65,7 +65,6 @@ AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
 	</c:if>
 
 	<liferay-asset:asset-display
-		assetEntry="<%= assetEntry %>"
 		assetRenderer="<%= assetRenderer %>"
 		assetRendererFactory="<%= assetRendererFactory %>"
 	/>
