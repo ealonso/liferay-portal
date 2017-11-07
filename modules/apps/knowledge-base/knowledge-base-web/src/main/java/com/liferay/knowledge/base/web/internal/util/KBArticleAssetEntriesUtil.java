@@ -14,14 +14,14 @@
 
 package com.liferay.knowledge.base.web.internal.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetTagServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetEntryServiceUtil;
+import com.liferay.asset.service.AssetTagLocalServiceUtil;
+import com.liferay.asset.service.AssetTagServiceUtil;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
