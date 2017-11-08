@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -195,6 +196,10 @@ public class BaseVideoEmbedderDisplayContext
 			return;
 		}
 
+		if (systemSettings == null) {
+			systemSettings = new HashMap<>();
+		}
+
 		String[] values = videoEmbedderConfiguration.iframeURLs();
 
 		for (String val : values) {
@@ -205,16 +210,7 @@ public class BaseVideoEmbedderDisplayContext
 					"Invalid configuration format, check system settings");
 			}
 
-			String[] copy = new String[2];
-
-			copy[0] = parts[0];
-			copy[1] = parts[1];
-
-			if (systemSettings == null) {
-				systemSettings = new HashMap<>();
-			}
-
-			systemSettings.put(parts[2], copy);
+			systemSettings.put(parts[2], Arrays.copyOf(parts, 2));
 		}
 	}
 
