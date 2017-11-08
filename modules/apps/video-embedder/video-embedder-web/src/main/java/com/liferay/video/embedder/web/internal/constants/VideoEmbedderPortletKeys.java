@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.constants;
+package com.liferay.video.embedder.web.internal.constants;
 
 /**
  * @author Peter Fellwock

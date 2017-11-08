@@ -12,22 +12,24 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.portlet.action;
+package com.liferay.video.embedder.web.internal.upgrade.v1_0_0;
 
-import com.liferay.portal.kernel.portlet.ConfigurationAction;
-import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
-import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
-
-import org.osgi.service.component.annotations.Component;
+import com.liferay.portal.kernel.upgrade.BaseUpgradePortletId;
+import com.liferay.video.embedder.web.internal.constants.VideoEmbedderPortletKeys;
 
 /**
  * @author Peter Fellwock
  */
-@Component(
-	immediate = true,
-	property = {"javax.portlet.name=" + VideoEmbedderPortletKeys.VideoEmbedder},
-	service = ConfigurationAction.class
-)
-public class VideoEmbedderConfigurationAction
-	extends DefaultConfigurationAction {
+public class UpgradePortletId extends BaseUpgradePortletId {
+
+	@Override
+	protected String[][] getRenamePortletIdsArray() {
+		return new String[][] {
+			new String[] {
+				"1_WAR_videoembedderportlet",
+				VideoEmbedderPortletKeys.VideoEmbedder
+			}
+		};
+	}
+
 }

@@ -12,13 +12,13 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.portlet;
+package com.liferay.video.embedder.web.internal.portlet;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
-import com.liferay.youtube.web.internal.constants.VideoEmbedderPortletKeys;
+import com.liferay.video.embedder.web.configuration.VideoEmbedderConfiguration;
+import com.liferay.video.embedder.web.internal.constants.VideoEmbedderPortletKeys;
 
 import java.io.IOException;
 
@@ -39,8 +39,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author arthurchan35
  */
 @Component(
-	configurationPid = "com.liferay.youtube.web.configuration.VideoEmbedderConfiguration",
-	immediate = true,
+	configurationPid = "VideoEmbedderConfiguration", immediate = true,
 	property = {
 		"com.liferay.portlet.css-class-wrapper=videoembedder-portlet",
 		"com.liferay.portlet.display-category=category.entertainment",

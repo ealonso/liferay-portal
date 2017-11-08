@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.display.context;
+package com.liferay.video.embedder.web.internal.display.context;
 
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.youtube.web.configuration.VideoEmbedderConfiguration;
+import com.liferay.video.embedder.web.configuration.VideoEmbedderConfiguration;
 
 import javax.portlet.PortletPreferences;
 

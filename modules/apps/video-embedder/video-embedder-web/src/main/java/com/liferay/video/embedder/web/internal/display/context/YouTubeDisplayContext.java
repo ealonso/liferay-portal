@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.youtube.web.internal.display.context;
+package com.liferay.video.embedder.web.internal.display.context;
 
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;

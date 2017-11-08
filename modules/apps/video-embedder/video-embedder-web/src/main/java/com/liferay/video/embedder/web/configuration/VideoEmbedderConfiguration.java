@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.youtube.web.configuration;
+package com.liferay.video.embedder.web.configuration;
 
 import aQute.bnd.annotation.metatype.Meta;
 
@@ -23,8 +23,8 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  */
 @ExtendedObjectClassDefinition(category = "other")
 @Meta.OCD(
-	id = "com.liferay.youtube.web.configuration.VideoEmbedderConfiguration",
-	localization = "content/Language", name = "videoembedder-configuration-name"
+	id = "VideoEmbedderConfiguration", localization = "content/Language",
+	name = "videoembedder-configuration-name"
 )
 public interface VideoEmbedderConfiguration {
 
