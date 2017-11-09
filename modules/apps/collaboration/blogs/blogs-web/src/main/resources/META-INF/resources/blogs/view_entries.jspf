@@ -110,7 +110,7 @@ List<BlogsEntry> blogsEntries = _convertToBlogEntries(results);
 		if (result instanceof AssetEntry) {
 			assetEntry = (AssetEntry)result;
 
-			AssetUtil.addLayoutTags(request, AssetTagLocalServiceUtil.getEntryTags(assetEntry.getEntryId()));
+			AssetUtil.addLayoutTags(request, com.liferay.asset.kernel.service.AssetTagLocalServiceUtil.getEntryTags(assetEntry.getEntryId()));
 		}
 
 		index++;
