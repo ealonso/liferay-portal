@@ -6,6 +6,26 @@
 	<short-name>liferay-fragment</short-name>
 	<uri>http://liferay.com/tld/fragment</uri>
 	<tag>
+		<name>fragment-entry-preview</name>
+		<tag-class>com.liferay.fragment.taglib.servlet.taglib.FragmentEntryPreviewTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>fragmentEntryId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>width</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<name>fragment-entry-renderer</name>
 		<tag-class>com.liferay.fragment.taglib.servlet.taglib.FragmentEntryRendererTag</tag-class>
 		<body-content>JSP</body-content>
