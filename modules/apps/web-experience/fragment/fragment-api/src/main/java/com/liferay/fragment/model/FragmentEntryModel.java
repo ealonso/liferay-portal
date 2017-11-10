@@ -266,6 +266,21 @@ public interface FragmentEntryModel extends BaseModel<FragmentEntry>,
 	 */
 	public void setJs(String js);
 
+	/**
+	 * Returns the preview image url of this fragment entry.
+	 *
+	 * @return the preview image url of this fragment entry
+	 */
+	@AutoEscape
+	public String getPreviewImageUrl();
+
+	/**
+	 * Sets the preview image url of this fragment entry.
+	 *
+	 * @param previewImageUrl the preview image url of this fragment entry
+	 */
+	public void setPreviewImageUrl(String previewImageUrl);
+
 	@Override
 	public boolean isNew();
 
