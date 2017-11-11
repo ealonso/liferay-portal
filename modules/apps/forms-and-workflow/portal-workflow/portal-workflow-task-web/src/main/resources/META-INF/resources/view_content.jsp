@@ -43,7 +43,6 @@ renderResponse.setTitle(title);
 	</div>
 
 	<liferay-asset:asset-display
-		assetEntry="<%= assetEntry %>"
 		assetRenderer="<%= assetRenderer %>"
 		assetRendererFactory="<%= assetRendererFactory %>"
 	/>
