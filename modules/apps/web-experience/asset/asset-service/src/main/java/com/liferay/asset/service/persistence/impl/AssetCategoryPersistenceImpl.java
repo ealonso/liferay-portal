@@ -23,8 +23,6 @@ import com.liferay.asset.model.impl.AssetCategoryModelImpl;
 import com.liferay.asset.service.persistence.AssetCategoryPersistence;
 import com.liferay.asset.service.persistence.AssetEntryPersistence;
 
-import com.liferay.petra.string.CharPool;
-
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
@@ -7681,9 +7679,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 				for (AssetCategory assetCategory : list) {
 					if ((groupId != assetCategory.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								assetCategory.getName(), name,
-								CharPool.UNDERLINE, CharPool.PERCENT,
-								CharPool.BACK_SLASH, false) ||
+								assetCategory.getName(), name, '_', '%', '\\',
+								false) ||
 							(vocabularyId != assetCategory.getVocabularyId())) {
 						list = null;
 
@@ -8745,9 +8742,8 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 				for (AssetCategory assetCategory : list) {
 					if ((groupId != assetCategory.getGroupId()) ||
 							!StringUtil.wildcardMatches(
-								assetCategory.getName(), name,
-								CharPool.UNDERLINE, CharPool.PERCENT,
-								CharPool.BACK_SLASH, false) ||
+								assetCategory.getName(), name, '_', '%', '\\',
+								false) ||
 							!ArrayUtil.contains(vocabularyIds,
 								assetCategory.getVocabularyId())) {
 						list = null;
