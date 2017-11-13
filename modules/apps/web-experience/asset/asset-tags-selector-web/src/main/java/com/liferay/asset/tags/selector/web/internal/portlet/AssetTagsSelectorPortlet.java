@@ -14,12 +14,20 @@
 
 package com.liferay.asset.tags.selector.web.internal.portlet;
 
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.tags.selector.web.internal.contants.AssetTagsSelectorPortletKeys;
+import com.liferay.asset.tags.selector.web.internal.contants.AssetTagsSelectorWebKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
+import java.io.IOException;
+
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -45,4 +53,20 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class AssetTagsSelectorPortlet extends MVCPortlet {
+
+	@Override
+	protected void doDispatch(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		renderRequest.setAttribute(
+			AssetTagsSelectorWebKeys.ASSET_PUBLISHER_HELPER,
+			_assetPublisherHelper);
+
+		super.doDispatch(renderRequest, renderResponse);
+	}
+
+	@Reference
+	private AssetPublisherHelper _assetPublisherHelper;
+
 }
