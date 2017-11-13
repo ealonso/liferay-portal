@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.video.embedder.web.internal.upgrade.v1_0_0;
+package com.liferay.video.embedder.web.internal.upgrade.v1_1_0;
 
 import com.liferay.portal.kernel.upgrade.BaseUpgradePortletId;
 import com.liferay.video.embedder.web.internal.constants.VideoEmbedderPortletKeys;
@@ -26,7 +26,8 @@ public class UpgradePortletId extends BaseUpgradePortletId {
 	protected String[][] getRenamePortletIdsArray() {
 		return new String[][] {
 			new String[] {
-				"1_WAR_youtubeportlet", VideoEmbedderPortletKeys.YOUTUBE
+				VideoEmbedderPortletKeys.YOUTUBE,
+				VideoEmbedderPortletKeys.VideoEmbedder
 			}
 		};
 	}

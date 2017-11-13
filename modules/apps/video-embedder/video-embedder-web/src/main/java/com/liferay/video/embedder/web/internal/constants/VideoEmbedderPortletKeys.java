@@ -20,6 +20,9 @@ package com.liferay.video.embedder.web.internal.constants;
  */
 public class VideoEmbedderPortletKeys {
 
+	public static final String YOUTUBE =
+		"com_liferay_youtube_web_portlet_YouTubePortlet";
+
 	public static final String VideoEmbedder =
 		"com_liferay_video_embedder_web_portlet_VideoEmbedderPortlet";
 

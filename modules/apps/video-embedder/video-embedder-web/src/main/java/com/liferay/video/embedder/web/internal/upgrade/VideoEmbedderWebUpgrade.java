@@ -42,7 +42,7 @@ public class VideoEmbedderWebUpgrade implements UpgradeStepRegistrator {
 
 				@Override
 				protected String[] getPortletIds() {
-					return new String[] {"1_WAR_videoembedderportlet"};
+					return new String[] {"1_WAR_youtubeportlet"};
 				}
 
 			};
@@ -61,6 +61,11 @@ public class VideoEmbedderWebUpgrade implements UpgradeStepRegistrator {
 		registry.register(
 			"com.liferay.youtube.web", "0.0.1", "1.0.0",
 			new UpgradePortletId());
+
+		registry.register(
+			"com.liferay.youtube.web", "1.0.0", "1.1.0",
+			new com.liferay.video.embedder.web.internal.upgrade.v1_1_0.
+				UpgradePortletId());
 	}
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
