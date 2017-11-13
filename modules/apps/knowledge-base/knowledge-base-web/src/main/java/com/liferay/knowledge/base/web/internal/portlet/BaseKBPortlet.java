@@ -14,8 +14,8 @@
 
 package com.liferay.knowledge.base.web.internal.portlet;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.asset.exception.AssetCategoryException;
+import com.liferay.asset.exception.AssetTagException;
 import com.liferay.document.library.display.context.DLMimeTypeDisplayContext;
 import com.liferay.document.library.kernel.exception.DuplicateFileException;
 import com.liferay.document.library.kernel.exception.FileNameException;

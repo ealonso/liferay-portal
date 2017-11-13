@@ -27,8 +27,11 @@ import com.liferay.portal.kernel.util.Accessor;
  * @see AssetTagModel
  * @see com.liferay.portlet.asset.model.impl.AssetTagImpl
  * @see com.liferay.portlet.asset.model.impl.AssetTagModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.tags.model.impl.AssetTagImpl}
  * @generated
  */
+@Deprecated
 @ImplementationClassName("com.liferay.portlet.asset.model.impl.AssetTagImpl")
 @ProviderType
 public interface AssetTag extends AssetTagModel, PersistedModel {

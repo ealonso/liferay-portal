@@ -30,7 +30,10 @@ import java.util.Locale;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.model.impl.AssetCategoryImpl}
  */
+@Deprecated
 public class AssetCategoryImpl extends AssetCategoryBaseImpl {
 
 	@Override

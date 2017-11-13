@@ -14,10 +14,10 @@
 
 package com.liferay.asset.entry.query.processor.custom.user.attributes.internal;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetCategory;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetEntryQueryProcessor;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -62,6 +62,17 @@ public class CustomUserAttributesAssetEntryQueryProcessor
 
 		_addUserAttributes(
 			user, StringUtil.split(customUserAttributes), assetEntryQuery);
+	}
+
+	@Override
+	public void processAssetEntryQuery(
+			User user, PortletPreferences preferences,
+			com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+				assetEntryQuery)
+		throws Exception {
+
+		processAssetEntryQuery(
+			user, preferences, new AssetEntryQuery(assetEntryQuery));
 	}
 
 	private void _addUserAttributes(

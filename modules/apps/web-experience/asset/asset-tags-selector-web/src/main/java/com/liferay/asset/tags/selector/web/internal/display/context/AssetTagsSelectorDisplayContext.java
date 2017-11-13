@@ -14,8 +14,8 @@
 
 package com.liferay.asset.tags.selector.web.internal.display.context;
 
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagServiceUtil;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.AssetTagServiceUtil;
 import com.liferay.asset.tags.selector.web.internal.search.EntriesChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;

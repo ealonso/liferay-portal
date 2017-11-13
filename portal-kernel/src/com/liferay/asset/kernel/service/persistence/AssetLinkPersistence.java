@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.service.persistence.BasePersistence;
  * @author Brian Wing Shun Chan
  * @see com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl
  * @see AssetLinkUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetLinkPersistence extends BasePersistence<AssetLink> {
 	/*

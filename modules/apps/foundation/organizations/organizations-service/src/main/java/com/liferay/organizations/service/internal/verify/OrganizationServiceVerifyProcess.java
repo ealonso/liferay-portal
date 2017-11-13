@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.util.LoggingTimer;
@@ -73,6 +74,13 @@ public class OrganizationServiceVerifyProcess extends VerifyProcess {
 		}
 
 		return null;
+	}
+
+	@Reference(
+		target = "(&(release.bundle.symbolic.name=com.liferay.asset.service)(release.schema.version=1.0.0))",
+		unbind = "-"
+	)
+	protected void setRelease(Release release) {
 	}
 
 	protected Void updateOrganizationAssetEntries() throws Exception {

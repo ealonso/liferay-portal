@@ -39,8 +39,11 @@ import java.util.Date;
  * @see AssetLink
  * @see com.liferay.portlet.asset.model.impl.AssetLinkImpl
  * @see com.liferay.portlet.asset.model.impl.AssetLinkModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetLinkModel extends BaseModel<AssetLink>, ShardedModel {
 	/*

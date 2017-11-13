@@ -15,9 +15,9 @@
 package com.liferay.asset.categories.selector.web.portlet;
 
 import com.liferay.asset.categories.selector.web.contants.AssetCategoriesSelectorPortletKeys;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.service.AssetCategoryService;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetCategoryConstants;
+import com.liferay.asset.service.AssetCategoryService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;

@@ -27,8 +27,11 @@ import com.liferay.portal.kernel.util.Accessor;
  * @see AssetVocabularyModel
  * @see com.liferay.portlet.asset.model.impl.AssetVocabularyImpl
  * @see com.liferay.portlet.asset.model.impl.AssetVocabularyModelImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.model.impl.AssetVocabularyImpl}
  * @generated
  */
+@Deprecated
 @ImplementationClassName("com.liferay.portlet.asset.model.impl.AssetVocabularyImpl")
 @ProviderType
 public interface AssetVocabulary extends AssetVocabularyModel, PersistedModel {

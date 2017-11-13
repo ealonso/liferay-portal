@@ -15,10 +15,10 @@
 package com.liferay.asset.publisher.web.util;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.publisher.util.AssetEntryResult;
 import com.liferay.asset.publisher.web.constants.AssetPublisherWebKeys;
-import com.liferay.asset.publisher.web.display.context.AssetEntryResult;
 import com.liferay.asset.publisher.web.display.context.AssetPublisherDisplayContext;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -216,10 +216,26 @@ public class AssetRSSUtil {
 
 		searchContainer.setDelta(assetPublisherDisplayContext.getRSSDelta());
 
+		com.liferay.asset.publisher.util.AssetPublisherHelper
+			assetPublisherHelper =
+				(com.liferay.asset.publisher.util.AssetPublisherHelper)
+					portletRequest.getAttribute(
+						com.liferay.asset.publisher.constants.
+							AssetPublisherWebKeys.ASSET_PUBLISHER_HELPER);
+
 		List<AssetEntryResult> assetEntryResults =
-			AssetPublisherUtil.getAssetEntryResults(
-				assetPublisherDisplayContext, searchContainer,
-				portletPreferences);
+			assetPublisherHelper.getAssetEntryResults(
+				searchContainer,
+				assetPublisherDisplayContext.getAssetEntryQuery(),
+				assetPublisherDisplayContext.getLayout(), portletPreferences,
+				assetPublisherDisplayContext.getPortletName(),
+				assetPublisherDisplayContext.getLocale(),
+				assetPublisherDisplayContext.getTimeZone(),
+				assetPublisherDisplayContext.getCompanyId(),
+				assetPublisherDisplayContext.getScopeGroupId(),
+				assetPublisherDisplayContext.getUserId(),
+				assetPublisherDisplayContext.getClassNameIds(),
+				assetPublisherDisplayContext.getAttributes());
 
 		for (AssetEntryResult assetEntryResult : assetEntryResults) {
 			assetEntries.addAll(assetEntryResult.getAssetEntries());
@@ -297,7 +313,14 @@ public class AssetRSSUtil {
 			AssetEntry assetEntry)
 		throws Exception {
 
-		String assetViewURL = AssetPublisherHelper.getAssetViewURL(
+		com.liferay.asset.publisher.util.AssetPublisherHelper
+			assetPublisherHelper =
+				(com.liferay.asset.publisher.util.AssetPublisherHelper)
+					portletRequest.getAttribute(
+						com.liferay.asset.publisher.constants.
+							AssetPublisherWebKeys.ASSET_PUBLISHER_HELPER);
+
+		String assetViewURL = assetPublisherHelper.getAssetViewURL(
 			PortalUtil.getLiferayPortletRequest(portletRequest),
 			PortalUtil.getLiferayPortletResponse(portletResponse), assetEntry,
 			true);

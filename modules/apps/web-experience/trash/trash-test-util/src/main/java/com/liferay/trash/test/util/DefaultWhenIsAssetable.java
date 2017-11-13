@@ -14,8 +14,9 @@
 
 package com.liferay.trash.test.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.petra.model.adapter.util.ModelAdapterUtil;
 import com.liferay.portal.kernel.model.ClassedModel;
 
 /**
@@ -23,14 +24,18 @@ import com.liferay.portal.kernel.model.ClassedModel;
  */
 public class DefaultWhenIsAssetable implements WhenIsAssetable {
 
+	/**
+	 * @deprecated As of 1.1.0, replaced by {@link #fetchEntry(ClassedModel)}
+	 */
+	@Deprecated
 	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
+	public com.liferay.asset.kernel.model.AssetEntry fetchAssetEntry(
+			ClassedModel classedModel)
 		throws Exception {
 
-		Class<?> modelClass = classedModel.getModelClass();
-
-		return AssetEntryLocalServiceUtil.fetchEntry(
-			modelClass.getName(), (Long)classedModel.getPrimaryKeyObj());
+		return ModelAdapterUtil.adapt(
+			com.liferay.asset.kernel.model.AssetEntry.class,
+			fetchEntry(classedModel));
 	}
 
 	@Override

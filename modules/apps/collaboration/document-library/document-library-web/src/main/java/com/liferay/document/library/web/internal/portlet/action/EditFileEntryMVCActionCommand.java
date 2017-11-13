@@ -14,9 +14,9 @@
 
 package com.liferay.document.library.web.internal.portlet.action;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.exception.AssetCategoryException;
+import com.liferay.asset.exception.AssetTagException;
+import com.liferay.asset.model.AssetVocabulary;
 import com.liferay.document.library.configuration.DLConfiguration;
 import com.liferay.document.library.kernel.antivirus.AntivirusScannerException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;

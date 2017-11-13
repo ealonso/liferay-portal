@@ -14,7 +14,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationConstants;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationSettingsMapFactory;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -407,14 +406,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			userLocalService.addGroupUsers(
 				group.getGroupId(), new long[] {userId});
-
-			// Asset
-
-			if (serviceContext != null) {
-				updateAsset(
-					userId, group, serviceContext.getAssetCategoryIds(),
-					serviceContext.getAssetTagNames());
-			}
 		}
 
 		addPortletDefaultData(group);
@@ -774,19 +765,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			// Portlet data
 
 			deletePortletData(group);
-
-			// Asset
-
-			if (group.isRegularSite()) {
-				assetEntryLocalService.deleteEntry(
-					Group.class.getName(), group.getGroupId());
-			}
-
-			assetEntryLocalService.deleteGroupEntries(group.getGroupId());
-
-			assetTagLocalService.deleteGroupTags(group.getGroupId());
-
-			assetVocabularyLocalService.deleteVocabularies(group.getGroupId());
 
 			// Expando
 
@@ -3122,20 +3100,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			long userId, Group group, long[] assetCategoryIds,
 			String[] assetTagNames)
 		throws PortalException {
-
-		User user = userPersistence.findByPrimaryKey(userId);
-
-		Company company = companyPersistence.findByPrimaryKey(
-			user.getCompanyId());
-
-		Group companyGroup = company.getGroup();
-
-		assetEntryLocalService.updateEntry(
-			userId, companyGroup.getGroupId(), null, null,
-			Group.class.getName(), group.getGroupId(), null, 0,
-			assetCategoryIds, assetTagNames, true, false, null, null, null,
-			null, null, group.getDescriptiveName(), group.getDescription(),
-			null, null, null, 0, 0, null);
 	}
 
 	/**
@@ -3272,29 +3236,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 
 			groupPersistence.update(stagingGroup);
 		}
-
-		// Asset
-
-		if ((serviceContext == null) || !group.isSite()) {
-			return group;
-		}
-
-		User user = null;
-
-		user = userPersistence.fetchByPrimaryKey(group.getCreatorUserId());
-
-		if (user == null) {
-			user = userPersistence.fetchByPrimaryKey(
-				serviceContext.getUserId());
-		}
-
-		if (user == null) {
-			user = userLocalService.getDefaultUser(group.getCompanyId());
-		}
-
-		updateAsset(
-			user.getUserId(), group, serviceContext.getAssetCategoryIds(),
-			serviceContext.getAssetTagNames());
 
 		return group;
 	}
@@ -3681,15 +3622,6 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 			}
 
 			boolean containsName = matches(group.getNameCurrentValue(), names);
-
-			if (!containsName) {
-				AssetEntry assetEntry = assetEntryPersistence.fetchByC_C(
-					group.getClassNameId(), group.getGroupId());
-
-				if (assetEntry != null) {
-					containsName = matches(assetEntry.getTitle(), names);
-				}
-			}
 
 			boolean containsDescription = matches(
 				group.getDescriptionCurrentValue(), descriptions);

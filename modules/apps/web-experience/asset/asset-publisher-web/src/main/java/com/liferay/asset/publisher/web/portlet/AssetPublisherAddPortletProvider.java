@@ -14,10 +14,10 @@
 
 package com.liferay.asset.publisher.web.portlet;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.AddPortletProvider;
@@ -40,7 +40,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {"model.class.name=com.liferay.asset.kernel.model.AssetEntry"},
+	property = {
+		"model.class.name=com.liferay.asset.kernel.model.AssetEntry",
+		"model.class.name=com.liferay.asset.model.AssetEntry"
+	},
 	service = {AddPortletProvider.class, ViewPortletProvider.class}
 )
 public class AssetPublisherAddPortletProvider
@@ -103,13 +106,17 @@ public class AssetPublisherAddPortletProvider
 		return themeDisplay.getPlid();
 	}
 
+	/**
+	 * @deprecated As of 1.2.0
+	 */
+	@Deprecated
 	@Reference(unbind = "-")
 	protected void setAssetEntryLocalService(
-		AssetEntryLocalService assetEntryLocalService) {
-
-		_assetEntryLocalService = assetEntryLocalService;
+		com.liferay.asset.kernel.service.AssetEntryLocalService
+			assetEntryLocalService) {
 	}
 
+	@Reference
 	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference

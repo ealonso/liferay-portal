@@ -14,6 +14,7 @@
 
 package com.liferay.asset.publisher.web.portlet;
 
+import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherPortletInstanceConfiguration;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
@@ -23,6 +24,8 @@ import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.util.AssetPublisherCustomizerRegistry;
 import com.liferay.asset.publisher.web.util.AssetRSSUtil;
+import com.liferay.asset.util.AssetHelper;
+import com.liferay.asset.util.AssetWebKeys;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
@@ -236,6 +239,11 @@ public class AssetPublisherPortlet extends MVCPortlet {
 				assetPublisherCustomizer);
 
 			resourceRequest.setAttribute(
+				com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+					ASSET_PUBLISHER_HELPER,
+				assetPublisherHelper);
+
+			resourceRequest.setAttribute(
 				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_UTIL,
 				assetPublisherWebUtil);
 
@@ -321,6 +329,8 @@ public class AssetPublisherPortlet extends MVCPortlet {
 				AssetPublisherWebKeys.ASSET_ENTRY_ACTION_REGISTRY,
 				assetEntryActionRegistry);
 
+			renderRequest.setAttribute(AssetWebKeys.ASSET_HELPER, assetHelper);
+
 			String rootPortletId = PortletIdCodec.decodePortletName(
 				portal.getPortletId(renderRequest));
 
@@ -335,6 +345,11 @@ public class AssetPublisherPortlet extends MVCPortlet {
 			renderRequest.setAttribute(
 				AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_CONFIGURATION,
 				assetPublisherWebConfiguration);
+
+			renderRequest.setAttribute(
+				com.liferay.asset.publisher.constants.AssetPublisherWebKeys.
+					ASSET_PUBLISHER_HELPER,
+				assetPublisherHelper);
 
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
@@ -385,7 +400,13 @@ public class AssetPublisherPortlet extends MVCPortlet {
 	protected AssetEntryActionRegistry assetEntryActionRegistry;
 
 	@Reference
+	protected AssetHelper assetHelper;
+
+	@Reference
 	protected AssetPublisherCustomizerRegistry assetPublisherCustomizerRegistry;
+
+	@Reference
+	protected AssetPublisherHelper assetPublisherHelper;
 
 	protected AssetPublisherWebConfiguration assetPublisherWebConfiguration;
 
