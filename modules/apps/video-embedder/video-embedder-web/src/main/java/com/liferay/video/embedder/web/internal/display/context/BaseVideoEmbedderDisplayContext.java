@@ -16,6 +16,7 @@ package com.liferay.video.embedder.web.internal.display.context;
 
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -44,8 +45,6 @@ public class BaseVideoEmbedderDisplayContext
 
 		id = StringPool.BLANK;
 		siteName = StringPool.BLANK;
-
-		_init();
 	}
 
 	@Override
@@ -159,11 +158,16 @@ public class BaseVideoEmbedderDisplayContext
 	protected String presetRatio;
 	protected final HttpServletRequest request;
 	protected String siteName;
-	protected Map<String, String[]> systemSettings;
 	protected String url;
 	protected String width;
 
 	private String _getIFramePrefix(String siteName) {
+		Map<String, String[]> systemSettings = _getSystemSettings();
+
+		if (MapUtil.isEmpty(systemSettings)) {
+			return StringPool.BLANK;
+		}
+
 		return systemSettings.get(siteName)[0];
 	}
 
@@ -171,6 +175,8 @@ public class BaseVideoEmbedderDisplayContext
 		if (Validator.isNotNull(siteName)) {
 			return siteName;
 		}
+
+		Map<String, String[]> systemSettings = _getSystemSettings();
 
 		for (String key : systemSettings.keySet()) {
 			if (url.contains(key)) {
@@ -181,12 +187,12 @@ public class BaseVideoEmbedderDisplayContext
 		return StringPool.BLANK;
 	}
 
-	private String _getVideoPattern(String siteName) {
-		return systemSettings.get(siteName)[1];
-	}
+	private Map<String, String[]> _getSystemSettings() {
+		if (_systemSettings != null) {
+			return _systemSettings;
+		}
 
-	private void _init() {
-		systemSettings = new HashMap<>();
+		_systemSettings = new HashMap<>();
 
 		// When this class is instantiated for configuration page, this
 		// configuration is not passed in and will be null
@@ -197,7 +203,7 @@ public class BaseVideoEmbedderDisplayContext
 					VideoEmbedderConfiguration.class.getName()));
 
 		if (configuration == null) {
-			return;
+			return _systemSettings;
 		}
 
 		String[] values = configuration.iframeURLs();
@@ -215,8 +221,22 @@ public class BaseVideoEmbedderDisplayContext
 			copy[0] = parts[0];
 			copy[1] = parts[1];
 
-			systemSettings.put(parts[2], copy);
+			_systemSettings.put(parts[2], copy);
 		}
+
+		return _systemSettings;
 	}
+
+	private String _getVideoPattern(String siteName) {
+		Map<String, String[]> systemSettings = _getSystemSettings();
+
+		if (MapUtil.isEmpty(systemSettings)) {
+			return StringPool.BLANK;
+		}
+
+		return systemSettings.get(siteName)[1];
+	}
+
+	private Map<String, String[]> _systemSettings;
 
 }
