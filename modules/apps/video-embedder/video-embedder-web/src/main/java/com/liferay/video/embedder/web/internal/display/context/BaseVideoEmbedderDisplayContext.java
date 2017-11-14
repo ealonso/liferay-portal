@@ -14,6 +14,7 @@
 
 package com.liferay.video.embedder.web.internal.display.context;
 
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
@@ -36,8 +37,7 @@ public class BaseVideoEmbedderDisplayContext
 	implements VideoEmbedderDisplayContext {
 
 	public BaseVideoEmbedderDisplayContext(
-		HttpServletRequest request, PortletPreferences portletPreferences,
-		VideoEmbedderConfiguration configuration) {
+		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		this.request = request;
 		this.portletPreferences = portletPreferences;
@@ -45,7 +45,7 @@ public class BaseVideoEmbedderDisplayContext
 		id = StringPool.BLANK;
 		siteName = StringPool.BLANK;
 
-		_init(configuration);
+		_init();
 	}
 
 	@Override
@@ -183,10 +183,15 @@ public class BaseVideoEmbedderDisplayContext
 		return systemSettings.get(siteName)[1];
 	}
 
-	private void _init(VideoEmbedderConfiguration configuration) {
+	private void _init() {
 
 		// When this class is instantiated for configuration page, this
 		// configuration is not passed in and will be null
+
+		VideoEmbedderConfiguration configuration =
+			(VideoEmbedderConfiguration)GetterUtil.getObject(
+				request.getAttribute(
+					VideoEmbedderConfiguration.class.getName()));
 
 		if (configuration == null) {
 			return;

@@ -23,10 +23,8 @@ taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page import="com.liferay.portal.kernel.util.Constants" %><%@
-page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
-page import="com.liferay.video.embedder.web.configuration.VideoEmbedderConfiguration" %><%@
 page import="com.liferay.video.embedder.web.internal.constants.VideoEmbedderPortletKeys" %><%@
 page import="com.liferay.video.embedder.web.internal.display.context.VideoEmbedderDisplayContext" %><%@
 page import="com.liferay.video.embedder.web.internal.display.context.VideoEmbedderDisplayContextSimpleFactory" %><%@
@@ -37,6 +35,5 @@ page import="com.liferay.video.embedder.web.internal.display.context.YouTubeDisp
 <portlet:defineObjects />
 
 <%
-VideoEmbedderConfiguration configuration = (VideoEmbedderConfiguration)GetterUtil.getObject(request.getAttribute(VideoEmbedderConfiguration.class.getName()));
-VideoEmbedderDisplayContext displayContext = VideoEmbedderDisplayContextSimpleFactory.create(request, portletPreferences, configuration);
+VideoEmbedderDisplayContext displayContext = VideoEmbedderDisplayContextSimpleFactory.create(request, portletPreferences);
 %>
