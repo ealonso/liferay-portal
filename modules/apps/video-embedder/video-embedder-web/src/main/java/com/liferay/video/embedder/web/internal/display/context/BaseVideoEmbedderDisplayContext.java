@@ -17,7 +17,11 @@ package com.liferay.video.embedder.web.internal.display.context;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.video.embedder.web.configuration.VideoEmbedderConfiguration;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
@@ -26,23 +30,38 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
+ * @author arthurchan35
  */
 public class BaseVideoEmbedderDisplayContext
 	implements VideoEmbedderDisplayContext {
 
 	public BaseVideoEmbedderDisplayContext(
-		HttpServletRequest request, PortletPreferences portletPreferences) {
+		HttpServletRequest request, PortletPreferences portletPreferences,
+		VideoEmbedderConfiguration configuration) {
 
 		this.request = request;
 		this.portletPreferences = portletPreferences;
+
+		id = StringPool.BLANK;
+		siteName = StringPool.BLANK;
+
+		_init(configuration);
 	}
 
 	@Override
 	public String getEmbedURL() {
+		getURL();
+
+		if (url == null) {
+			return "";
+		}
+
 		StringBundler sb = new StringBundler(13);
 
 		sb.append(HttpUtil.getProtocol(request));
-		sb.append("stub for now");
+		sb.append("://");
+		sb.append(_getIFramePrefix(_getSiteName()));
+		sb.append(getId());
 
 		return sb.toString();
 	}
@@ -68,13 +87,13 @@ public class BaseVideoEmbedderDisplayContext
 	}
 
 	public String getId() {
-		if (id != null) {
+		if (Validator.isNotNull(id)) {
 			return id;
 		}
 
-		String url = getURL();
+		String regex = _getVideoPattern(_getSiteName());
 
-		id = url.replaceAll("^.*?v=([a-zA-Z0-9_-]+).*$", "$1");
+		id = getURL().replaceAll(regex, "$1");
 
 		return id;
 	}
@@ -137,7 +156,63 @@ public class BaseVideoEmbedderDisplayContext
 	protected final PortletPreferences portletPreferences;
 	protected String presetSize;
 	protected final HttpServletRequest request;
+	protected String siteName;
+	protected Map<String, String[]> systemSettings;
 	protected String url;
 	protected String width;
+
+	private String _getIFramePrefix(String siteName) {
+		return systemSettings.get(siteName)[0];
+	}
+
+	private String _getSiteName() {
+		if (Validator.isNotNull(siteName)) {
+			return siteName;
+		}
+
+		for (String key : systemSettings.keySet()) {
+			if (url.contains(key)) {
+				return key;
+			}
+		}
+
+		return StringPool.BLANK;
+	}
+
+	private String _getVideoPattern(String siteName) {
+		return systemSettings.get(siteName)[1];
+	}
+
+	private void _init(VideoEmbedderConfiguration configuration) {
+
+		// When this class is instantiated for configuration page, this
+		// configuration is not passed in and will be null
+
+		if (configuration == null) {
+			return;
+		}
+
+		String[] values = configuration.iframeURLs();
+
+		for (String val : values) {
+			String[] parts = val.split(VideoEmbedderConfiguration.DLM);
+
+			if (parts.length != 3) {
+				throw new IllegalArgumentException(
+					"Invalid configuration format, check system settings");
+			}
+
+			String[] copy = new String[2];
+
+			copy[0] = parts[0];
+			copy[1] = parts[1];
+
+			if (systemSettings == null) {
+				systemSettings = new HashMap<>();
+			}
+
+			systemSettings.put(parts[2], copy);
+		}
+	}
 
 }
