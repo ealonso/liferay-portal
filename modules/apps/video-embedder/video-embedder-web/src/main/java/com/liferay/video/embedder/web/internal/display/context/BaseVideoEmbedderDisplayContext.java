@@ -29,9 +29,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Eudaldo Alonso
  */
-public class YouTubeDisplayContext {
+public class BaseVideoEmbedderDisplayContext {
 
-	public YouTubeDisplayContext(
+	public BaseVideoEmbedderDisplayContext(
 		HttpServletRequest request, PortletPreferences portletPreferences) {
 
 		_request = request;
