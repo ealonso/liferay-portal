@@ -23,12 +23,12 @@ public interface VideoEmbedderDisplayContext {
 
 	public String getHeight();
 
-	public String getPresetSize();
+	public String getPresetRatio();
 
 	public String getURL();
 
 	public String getWidth();
 
-	public boolean isCustomSize();
+	public boolean isCustomRatio();
 
 }

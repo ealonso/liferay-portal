@@ -27,6 +27,7 @@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.video.embedder.web.configuration.VideoEmbedderConfiguration" %><%@
+page import="com.liferay.video.embedder.web.internal.constants.VideoEmbedderPortletKeys" %><%@
 page import="com.liferay.video.embedder.web.internal.display.context.VideoEmbedderDisplayContext" %><%@
 page import="com.liferay.video.embedder.web.internal.display.context.VideoEmbedderDisplayContextSimpleFactory" %><%@
 page import="com.liferay.video.embedder.web.internal.display.context.YouTubeDisplayContext" %>

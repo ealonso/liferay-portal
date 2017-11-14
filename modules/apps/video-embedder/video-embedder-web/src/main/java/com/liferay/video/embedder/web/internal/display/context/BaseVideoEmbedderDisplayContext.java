@@ -72,15 +72,15 @@ public class BaseVideoEmbedderDisplayContext
 			return height;
 		}
 
-		if (isCustomSize()) {
-			height = portletPreferences.getValue("height", "360");
+		if (isCustomRatio()) {
+			height = portletPreferences.getValue("height", "16");
 		}
 		else {
-			String presetSize = getPresetSize();
+			String presetRatio = getPresetRatio();
 
-			String[] dimensions = presetSize.split("x");
+			String[] ratio = presetRatio.split(":");
 
-			height = dimensions[1];
+			height = ratio[1];
 		}
 
 		return height;
@@ -99,14 +99,14 @@ public class BaseVideoEmbedderDisplayContext
 	}
 
 	@Override
-	public String getPresetSize() {
-		if (presetSize != null) {
-			return presetSize;
+	public String getPresetRatio() {
+		if (presetRatio != null) {
+			return presetRatio;
 		}
 
-		presetSize = portletPreferences.getValue("presetSize", "480x360");
+		presetRatio = portletPreferences.getValue("presetRatio", "16:9");
 
-		return presetSize;
+		return presetRatio;
 	}
 
 	@Override
@@ -126,23 +126,23 @@ public class BaseVideoEmbedderDisplayContext
 			return width;
 		}
 
-		if (isCustomSize()) {
+		if (isCustomRatio()) {
 			width = portletPreferences.getValue("width", "480");
 		}
 		else {
-			String presetSize = getPresetSize();
+			String presetRatio = getPresetRatio();
 
-			String[] dimensions = presetSize.split("x");
+			String[] ratio = presetRatio.split(":");
 
-			width = dimensions[0];
+			width = ratio[0];
 		}
 
 		return width;
 	}
 
 	@Override
-	public boolean isCustomSize() {
-		String presetSize = getPresetSize();
+	public boolean isCustomRatio() {
+		String presetSize = getPresetRatio();
 
 		if (Objects.equals(presetSize, "custom")) {
 			return true;
@@ -154,7 +154,7 @@ public class BaseVideoEmbedderDisplayContext
 	protected String height;
 	protected String id;
 	protected final PortletPreferences portletPreferences;
-	protected String presetSize;
+	protected String presetRatio;
 	protected final HttpServletRequest request;
 	protected String siteName;
 	protected Map<String, String[]> systemSettings;
