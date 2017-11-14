@@ -53,14 +53,16 @@ public class BaseVideoEmbedderDisplayContext
 		getURL();
 
 		if (url == null) {
-			return "";
+			return StringPool.BLANK;
 		}
+
+		String iFramePrefix = _getIFramePrefix(_getSiteName());
 
 		StringBundler sb = new StringBundler(13);
 
 		sb.append(HttpUtil.getProtocol(request));
 		sb.append("://");
-		sb.append(_getIFramePrefix(_getSiteName()));
+		sb.append(iFramePrefix);
 		sb.append(getId());
 
 		return sb.toString();
@@ -91,9 +93,9 @@ public class BaseVideoEmbedderDisplayContext
 			return id;
 		}
 
-		String regex = _getVideoPattern(_getSiteName());
+		String videoPattern = _getVideoPattern(_getSiteName());
 
-		id = getURL().replaceAll(regex, "$1");
+		id = getURL().replaceAll(videoPattern, "$1");
 
 		return id;
 	}
@@ -184,6 +186,7 @@ public class BaseVideoEmbedderDisplayContext
 	}
 
 	private void _init() {
+		systemSettings = new HashMap<>();
 
 		// When this class is instantiated for configuration page, this
 		// configuration is not passed in and will be null
@@ -211,10 +214,6 @@ public class BaseVideoEmbedderDisplayContext
 
 			copy[0] = parts[0];
 			copy[1] = parts[1];
-
-			if (systemSettings == null) {
-				systemSettings = new HashMap<>();
-			}
 
 			systemSettings.put(parts[2], copy);
 		}
