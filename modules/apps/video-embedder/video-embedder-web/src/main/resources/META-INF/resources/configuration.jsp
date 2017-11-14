@@ -32,6 +32,8 @@ String advancedConfigPath = "/advancedConfigs/" + displayContextClass + ".jsp";
 
 	<div class="portlet-configuration-body-content">
 		<div class="container-fluid-1280">
+			<liferay-ui:error key="embeddedVideoURLInvalid" message="the-url-is-invalid" />
+
 			<aui:fieldset-group markupView="lexicon">
 				<aui:fieldset>
 					<aui:input label="video-url" name="preferences--url--" placeholder="https://youtu.be/3_VCoBfrt9c" value="<%= displayContext.getURL() %>" />
