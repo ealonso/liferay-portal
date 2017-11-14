@@ -17,15 +17,15 @@
 <%@ include file="/init.jsp" %>
 
 <c:choose>
-	<c:when test="<%= Validator.isNotNull(youTubeDisplayContext.getURL()) %>">
+	<c:when test="<%= Validator.isNotNull(displayContext.getURL()) %>">
 		<c:choose>
-			<c:when test="<%= youTubeDisplayContext.isShowThumbnail() %>">
-				<aui:a href="<%= youTubeDisplayContext.getWatchURL() %>" rel="external" title='<%= HtmlUtil.escapeAttribute(LanguageUtil.get(request, "watch-this-video-at-youtube")) %>'>
-					<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="youtube-video" />" height="<%= youTubeDisplayContext.getHeight() %>" src="<%= youTubeDisplayContext.getImageURL() %>" width="<%= youTubeDisplayContext.getWidth() %>" />
+			<c:when test="<%= displayContext.isShowThumbnail() %>">
+				<aui:a href="<%= displayContext.getWatchURL() %>" rel="external" title='<%= HtmlUtil.escapeAttribute(LanguageUtil.get(request, "watch-this-video-at-youtube")) %>'>
+					<img alt="<liferay-ui:message escapeAttribute="<%= true %>" key="youtube-video" />" height="<%= displayContext.getHeight() %>" src="<%= displayContext.getImageURL() %>" width="<%= displayContext.getWidth() %>" />
 				</aui:a>
 			</c:when>
 			<c:otherwise>
-				<iframe allowfullscreen frameborder="0" height="<%= youTubeDisplayContext.getHeight() %>" src="<%= youTubeDisplayContext.getEmbedURL() %>" width="<%= youTubeDisplayContext.getWidth() %>" wmode="Opaque" /></iframe>
+				<iframe allowfullscreen frameborder="0" height="<%= displayContext.getHeight() %>" src="<%= displayContext.getEmbedURL() %>" width="<%= displayContext.getWidth() %>" wmode="Opaque" /></iframe>
 			</c:otherwise>
 		</c:choose>
 	</c:when>
