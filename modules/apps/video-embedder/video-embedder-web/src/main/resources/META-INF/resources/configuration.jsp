@@ -115,5 +115,4 @@ String advancedConfigPath = "/advancedConfigs/" + displayContextClass + ".jsp";
 		}
 	}
 
-	Liferay.Util.toggleBoxes('<portlet:namespace />showThumbnail','<portlet:namespace />videoPreferences','<%= displayContext.isShowThumbnail() %>');
 </aui:script>

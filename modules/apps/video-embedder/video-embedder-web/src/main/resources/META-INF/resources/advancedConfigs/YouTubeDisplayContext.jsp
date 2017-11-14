@@ -21,21 +21,17 @@ YouTubeDisplayContext youTubeDisplayContext = (YouTubeDisplayContext)displayCont
 %>
 
 <aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="advanced-options">
-	<aui:input name="preferences--showThumbnail--" type="toggle-switch" value="<%= youTubeDisplayContext.isShowThumbnail() %>" />
+	<aui:input inlineField="<%= true %>" label="auto-play" name="preferences--autoplay--" type="toggle-switch" value="<%= youTubeDisplayContext.isAutoPlay() %>" />
 
-	<div class="<%= youTubeDisplayContext.isShowThumbnail() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />videoPreferences">
-		<aui:input inlineField="<%= true %>" label="auto-play" name="preferences--autoplay--" type="toggle-switch" value="<%= youTubeDisplayContext.isAutoPlay() %>" />
+	<aui:input inlineField="<%= true %>" name="preferences--loop--" type="toggle-switch" value="<%= youTubeDisplayContext.isLoop() %>" />
 
-		<aui:input inlineField="<%= true %>" name="preferences--loop--" type="toggle-switch" value="<%= youTubeDisplayContext.isLoop() %>" />
+	<aui:input inlineField="<%= true %>" name="preferences--enableKeyboardControls--" type="toggle-switch" value="<%= youTubeDisplayContext.isEnableKeyboardControls() %>" />
 
-		<aui:input inlineField="<%= true %>" name="preferences--enableKeyboardControls--" type="toggle-switch" value="<%= youTubeDisplayContext.isEnableKeyboardControls() %>" />
+	<aui:input inlineField="<%= true %>" name="preferences--annotations--" type="toggle-switch" value="<%= youTubeDisplayContext.isAnnotations() %>" />
 
-		<aui:input inlineField="<%= true %>" name="preferences--annotations--" type="toggle-switch" value="<%= youTubeDisplayContext.isAnnotations() %>" />
+	<aui:input inlineField="<%= true %>" name="preferences--closedCaptioning--" type="toggle-switch" value="<%= youTubeDisplayContext.isClosedCaptioning() %>" />
 
-		<aui:input inlineField="<%= true %>" name="preferences--closedCaptioning--" type="toggle-switch" value="<%= youTubeDisplayContext.isClosedCaptioning() %>" />
-
-		<aui:input name="preferences--startTime--" value="<%= youTubeDisplayContext.getStartTime() %>">
-			<aui:validator name="digits" />
-		</aui:input>
-	</div>
+	<aui:input name="preferences--startTime--" value="<%= youTubeDisplayContext.getStartTime() %>">
+		<aui:validator name="digits" />
+	</aui:input>
 </aui:fieldset>
