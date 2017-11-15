@@ -165,10 +165,11 @@ public class AssetPublisherDisplayContext {
 	public int getAbstractLength() {
 		if (_abstractLength != null) {
 			return _abstractLength;
-		}_abstractLength = GetterUtil.getInteger(
-				_portletPreferences.getValue("abstractLength", null),
-				AssetHelper.ASSET_ENTRY_ABSTRACT_LENGTH);
+		}
 
+		_abstractLength = GetterUtil.getInteger(
+			_portletPreferences.getValue("abstractLength", null),
+			AssetHelper.ASSET_ENTRY_ABSTRACT_LENGTH);
 
 		return _abstractLength;
 	}

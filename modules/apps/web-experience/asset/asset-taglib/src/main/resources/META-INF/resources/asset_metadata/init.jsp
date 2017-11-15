@@ -25,9 +25,9 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.asset.model.AssetCategory" %><%@
+<%@ page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
+page import="com.liferay.asset.model.AssetCategory" %><%@
 page import="com.liferay.asset.model.AssetEntry" %><%@
-page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
 page import="com.liferay.asset.model.AssetTag" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.model.User" %><%@

@@ -15,11 +15,11 @@
 package com.liferay.asset.taglib.internal.display.context;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.model.AssetEntry;
-import com.liferay.asset.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetLink;
 import com.liferay.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.service.AssetEntryServiceUtil;
 import com.liferay.asset.service.AssetLinkLocalServiceUtil;

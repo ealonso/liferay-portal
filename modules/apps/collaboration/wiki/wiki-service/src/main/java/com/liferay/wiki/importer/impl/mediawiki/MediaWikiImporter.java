@@ -706,6 +706,15 @@ public class MediaWikiImporter implements WikiImporter {
 		_assetTagLocalService = assetTagLocalService;
 	}
 
+	/**
+	 * @deprecated As of 1.2.0
+	 */
+	@Deprecated
+	protected void setAssetTagLocalService(
+		com.liferay.asset.kernel.service.AssetTagLocalService
+			assetTagLocalService) {
+	}
+
 	@Reference(unbind = "-")
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
