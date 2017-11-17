@@ -14,20 +14,37 @@
 
 package com.liferay.fragment.service.impl;
 
+import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.fragment.exception.DuplicateFragmentEntryException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.base.FragmentEntryLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.awt.image.BufferedImage;
+
+import java.io.File;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import org.xhtmlrenderer.swing.Java2DRenderer;
+import org.xhtmlrenderer.util.FSImageWriter;
 
 /**
  * @author Jürgen Kappler
@@ -64,6 +81,9 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setPreviewImageUrl(
+			_getPreviewImageURL(
+				userId, groupId, fragmentEntry, serviceContext));
 
 		fragmentEntryPersistence.update(fragmentEntry);
 
@@ -152,15 +172,17 @@ public class FragmentEntryLocalServiceImpl
 		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
 			fragmentEntryId);
 
-		return updateFragmentEntry(
-			fragmentEntryId, name, fragmentEntry.getCss(),
-			fragmentEntry.getHtml(), fragmentEntry.getJs());
+		fragmentEntry.setName(name);
+
+		fragmentEntryPersistence.update(fragmentEntry);
+
+		return fragmentEntry;
 	}
 
 	@Override
 	public FragmentEntry updateFragmentEntry(
 			long fragmentEntryId, String name, String css, String html,
-			String js)
+			String js, ServiceContext serviceContext)
 		throws PortalException {
 
 		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
@@ -170,11 +192,16 @@ public class FragmentEntryLocalServiceImpl
 			validate(fragmentEntry.getGroupId(), name);
 		}
 
-		fragmentEntry.setModifiedDate(new Date());
+		fragmentEntry.setModifiedDate(
+			serviceContext.getModifiedDate(new Date()));
 		fragmentEntry.setName(name);
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setPreviewImageUrl(
+			_getPreviewImageURL(
+				fragmentEntry.getUserId(), fragmentEntry.getGroupId(),
+				fragmentEntry, serviceContext));
 
 		fragmentEntryPersistence.update(fragmentEntry);
 
@@ -194,5 +221,63 @@ public class FragmentEntryLocalServiceImpl
 			throw new DuplicateFragmentEntryException(name);
 		}
 	}
+
+	private String _getPreviewImageURL(
+			long userId, long groupId, FragmentEntry fragmentEntry,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append("<html><head>");
+		sb.append("<style>");
+		sb.append(fragmentEntry.getCss());
+		sb.append("</style><script>");
+		sb.append(fragmentEntry.getJs());
+		sb.append("</script></head><body>");
+		sb.append(fragmentEntry.getHtml());
+		sb.append("</body></html>");
+
+		File fragmentFile = FileUtil.createTempFile();
+
+		String previewUrl = StringPool.BLANK;
+
+		try {
+			FileUtil.write(fragmentFile, sb.toString());
+
+			Java2DRenderer renderer = new Java2DRenderer(fragmentFile, 1024);
+
+			renderer.setBufferedImageType(BufferedImage.TYPE_INT_RGB);
+
+			BufferedImage image = renderer.getImage();
+
+			FSImageWriter imageWriter = new FSImageWriter();
+
+			File outputFile = FileUtil.createTempFile("png");
+
+			imageWriter.write(image, outputFile.getAbsolutePath());
+
+			FileEntry fileEntry = TempFileEntryUtil.addTempFileEntry(
+				groupId, userId, _TEMP_FOLDER_NAME, outputFile.getName(),
+				outputFile, ContentTypes.IMAGE_PNG);
+
+			ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
+			previewUrl = DLUtil.getImagePreviewURL(fileEntry, themeDisplay);
+		}
+		catch (Exception e) {
+			_log.error("Unable to generate fragment entry preview", e);
+
+			throw new PortalException(e);
+		}
+
+		return previewUrl;
+	}
+
+	private static final String _TEMP_FOLDER_NAME =
+		FragmentEntry.class.getName();
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		FragmentEntryLocalServiceImpl.class);
 
 }

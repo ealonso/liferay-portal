@@ -147,6 +147,8 @@ public class FragmentEntryPersistenceTest {
 
 		newFragmentEntry.setJs(RandomTestUtil.randomString());
 
+		newFragmentEntry.setPreviewImageUrl(RandomTestUtil.randomString());
+
 		_fragmentEntries.add(_persistence.update(newFragmentEntry));
 
 		FragmentEntry existingFragmentEntry = _persistence.findByPrimaryKey(newFragmentEntry.getPrimaryKey());
@@ -177,6 +179,8 @@ public class FragmentEntryPersistenceTest {
 			newFragmentEntry.getHtml());
 		Assert.assertEquals(existingFragmentEntry.getJs(),
 			newFragmentEntry.getJs());
+		Assert.assertEquals(existingFragmentEntry.getPreviewImageUrl(),
+			newFragmentEntry.getPreviewImageUrl());
 	}
 
 	@Test
@@ -253,7 +257,7 @@ public class FragmentEntryPersistenceTest {
 			"fragmentEntryId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "fragmentCollectionId", true, "name", true,
-			"css", true, "html", true, "js", true);
+			"css", true, "html", true, "js", true, "previewImageUrl", true);
 	}
 
 	@Test
@@ -492,6 +496,8 @@ public class FragmentEntryPersistenceTest {
 		fragmentEntry.setHtml(RandomTestUtil.randomString());
 
 		fragmentEntry.setJs(RandomTestUtil.randomString());
+
+		fragmentEntry.setPreviewImageUrl(RandomTestUtil.randomString());
 
 		_fragmentEntries.add(_persistence.update(fragmentEntry));
 

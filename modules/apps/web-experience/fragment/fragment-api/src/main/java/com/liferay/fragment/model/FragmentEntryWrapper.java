@@ -70,6 +70,7 @@ public class FragmentEntryWrapper implements FragmentEntry,
 		attributes.put("css", getCss());
 		attributes.put("html", getHtml());
 		attributes.put("js", getJs());
+		attributes.put("previewImageUrl", getPreviewImageUrl());
 
 		return attributes;
 	}
@@ -146,6 +147,12 @@ public class FragmentEntryWrapper implements FragmentEntry,
 
 		if (js != null) {
 			setJs(js);
+		}
+
+		String previewImageUrl = (String)attributes.get("previewImageUrl");
+
+		if (previewImageUrl != null) {
+			setPreviewImageUrl(previewImageUrl);
 		}
 	}
 
@@ -262,6 +269,16 @@ public class FragmentEntryWrapper implements FragmentEntry,
 	@Override
 	public java.lang.String getName() {
 		return _fragmentEntry.getName();
+	}
+
+	/**
+	* Returns the preview image url of this fragment entry.
+	*
+	* @return the preview image url of this fragment entry
+	*/
+	@Override
+	public java.lang.String getPreviewImageUrl() {
+		return _fragmentEntry.getPreviewImageUrl();
 	}
 
 	/**
@@ -458,6 +475,16 @@ public class FragmentEntryWrapper implements FragmentEntry,
 	@Override
 	public void setNew(boolean n) {
 		_fragmentEntry.setNew(n);
+	}
+
+	/**
+	* Sets the preview image url of this fragment entry.
+	*
+	* @param previewImageUrl the preview image url of this fragment entry
+	*/
+	@Override
+	public void setPreviewImageUrl(java.lang.String previewImageUrl) {
+		_fragmentEntry.setPreviewImageUrl(previewImageUrl);
 	}
 
 	/**
