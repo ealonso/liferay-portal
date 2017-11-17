@@ -62,9 +62,15 @@ FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 		<%
 		Map<String, Object> updateFragmentEntryData = new HashMap<String, Object>();
 
-		updateFragmentEntryData.put("fragment-entry-id", fragmentEntry.getFragmentEntryId());
-		updateFragmentEntryData.put("fragment-entry-name", fragmentEntry.getName());
-		updateFragmentEntryData.put("update-url", updateFragmentEntryURL);
+		updateFragmentEntryData.put("simple-input-modal-dialog-title", LanguageUtil.get(request, "rename-fragment"));
+		updateFragmentEntryData.put("simple-input-modal-form-submit-url", updateFragmentEntryURL.toString());
+		updateFragmentEntryData.put("simple-input-modal-id-field-value", fragmentEntry.getFragmentEntryId());
+		updateFragmentEntryData.put("simple-input-modal-main-field-label", "Name");
+		updateFragmentEntryData.put("simple-input-modal-main-field-name", "name");
+		updateFragmentEntryData.put("simple-input-modal-main-field-placeholder", "Name");
+		updateFragmentEntryData.put("simple-input-modal-main-field-value", fragmentEntry.getName());
+		updateFragmentEntryData.put("simple-input-modal-namespace", renderResponse.getNamespace());
+		updateFragmentEntryData.put("simple-input-modal-spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
 		%>
 
 		<liferay-ui:icon
