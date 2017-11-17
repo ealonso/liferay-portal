@@ -17,6 +17,7 @@ package com.liferay.site.navigation.service.impl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemOrderException;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.service.base.SiteNavigationMenuItemLocalServiceBaseImpl;
 
@@ -92,6 +93,54 @@ public class SiteNavigationMenuItemLocalServiceImpl
 
 		return siteNavigationMenuItemPersistence.findBySiteNavigationMenuId(
 			siteNavigationMenuId);
+	}
+
+	@Override
+	public SiteNavigationMenuItem updateSiteNavigationMenuItem(
+			long siteNavigationMenuItemId, long parentSiteNavigationMenuItemId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		SiteNavigationMenuItem siteNavigationMenuItem =
+			siteNavigationMenuItemPersistence.fetchByPrimaryKey(
+				siteNavigationMenuItemId);
+
+		if (siteNavigationMenuItem == null) {
+			return null;
+		}
+
+		List<SiteNavigationMenuItem> children = getChildSiteNavigationMenuItems(
+			siteNavigationMenuItemId);
+
+		validate(children, parentSiteNavigationMenuItemId);
+
+		siteNavigationMenuItem.setParentSiteNavigationMenuItemId(
+			parentSiteNavigationMenuItemId);
+
+		return siteNavigationMenuItemPersistence.update(siteNavigationMenuItem);
+	}
+
+	protected void validate(
+			List<SiteNavigationMenuItem> siteNavigationMenuItems,
+			long parentSiteNavigationMenuItemId)
+		throws PortalException {
+
+		for (SiteNavigationMenuItem siteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			if (siteNavigationMenuItem.getSiteNavigationMenuItemId() ==
+					parentSiteNavigationMenuItemId) {
+
+				throw new InvalidSiteNavigationMenuItemOrderException();
+			}
+
+			List<SiteNavigationMenuItem> childSiteNavigationMenuItems =
+				getChildSiteNavigationMenuItems(
+					siteNavigationMenuItem.getSiteNavigationMenuItemId());
+
+			validate(
+				childSiteNavigationMenuItems, parentSiteNavigationMenuItemId);
+		}
 	}
 
 }
