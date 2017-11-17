@@ -128,5 +128,23 @@ public class SiteNavigationMenuItemServiceSoap {
 		}
 	}
 
+	public static com.liferay.site.navigation.model.SiteNavigationMenuItemSoap updateSiteNavigationMenuItem(
+		long siteNavigationMenuItemId, long parentSiteNavigationMenuItemId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.site.navigation.model.SiteNavigationMenuItem returnValue =
+				SiteNavigationMenuItemServiceUtil.updateSiteNavigationMenuItem(siteNavigationMenuItemId,
+					parentSiteNavigationMenuItemId, serviceContext);
+
+			return com.liferay.site.navigation.model.SiteNavigationMenuItemSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(SiteNavigationMenuItemServiceSoap.class);
 }
