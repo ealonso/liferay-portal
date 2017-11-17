@@ -1,0 +1,113 @@
+{namespace SimpleInputModal}
+
+/**
+ * SimpleInputModal
+ */
+{template .render}
+    {@param dialogTitle: string}
+	{@param formSubmitURL: string}
+    {@param mainFieldLabel: string}
+    {@param mainFieldName: string}
+	{@param namespace: string}
+	{@param spritemap: string}
+	{@param? _errorMessage: string}
+	{@param? _handleModalVisibleChanged: any}
+	{@param? _handleCancelButtonClick: any}
+	{@param? _handleFormSubmit: any}
+    {@param? checkboxFieldLabel: string}
+    {@param? checkboxFieldName: string}
+	{@param? checkboxFieldValue: bool}
+	{@param? id: string}
+	{@param? idFieldName: string}
+	{@param? idFieldValue: string}
+    {@param? mainFieldPlaceholder: string}
+    {@param? mainFieldValue: string}
+
+	<div id="{$id ?: ''}">
+	    {call Modal.render}
+	        {param body kind="html"}
+	            <form action="{$formSubmitURL}" method="post" data-onsubmit="{$_handleFormSubmit}">
+	                {if $idFieldName}
+	                    <input
+	                        name="{$namespace}{$idFieldName}"
+	                        type="hidden"
+	                        value="{$idFieldValue ?: ''}"
+	                    />
+	                {/if}
+
+	                {let $mainFieldClasses kind="text"}
+	                    form-group
+	                    {if $_errorMessage}
+	                        {sp}has-error
+	                    {/if}
+	                {/let}
+
+	                <div class="{$mainFieldClasses}">
+	                    <label>
+	                        {$mainFieldLabel}
+	                        <span class="reference-mark">
+	                            <svg class="lexicon-icon">
+									<use xlink:href="{$spritemap}#asterisk"></use>
+	                            </svg>
+	                        </span>
+                        </label>
+                        <input
+                            class="form-control"
+                            name="{$namespace}{$mainFieldName}"
+                            placeholder="{$mainFieldPlaceholder ?: ''}"
+                            type="text"
+                            value="{$mainFieldValue ?: ''}"
+                        />
+	                </div>
+
+	                {if $_errorMessage}
+	                    <form class="form-feedback-item">
+	                        <span class="form-feedback-indicator">
+	                            <svg class="lexicon-icon">
+									<use xlink:href="{$spritemap}#exclamation-full"></use>
+	                            </svg>
+	                        </span>
+	                        {$_errorMessage}
+	                    </form>
+	                {/if}
+
+	                {if $checkboxFieldName and $checkboxFieldLabel}
+	                    <div class="form-check">
+                            <label class="form-check-label">
+                                <input
+                                    class="form-check-input"
+                                    name="{$namespace}{$checkboxFieldName}"
+                                    type="checkbox"
+                                    checked="{if $checkboxFieldValue}true{else}false{/if}"
+                                >
+                                <span class="form-check-description">
+                                    {$checkboxFieldLabel}
+                                </span>
+                            </label>
+                        </div>
+	                {/if}
+
+                    <button
+                    	class="btn"
+                    	data-onclick="{$_handleCancelButtonClick}"
+                    	type="button"
+					>
+                        {msg desc=""}cancel{/msg}
+                    </button>
+
+	                <button class="btn btn-primary" type="submit">
+	                    {msg desc=""}submit{/msg}
+	                </button>
+	            </form>
+	        {/param}
+
+			{param events: [
+				'visibleChanged': $_handleModalVisibleChanged
+			] /}
+
+	        {param header kind="html"}
+	            {$dialogTitle}
+	        {/param}
+	    {/call}
+	</div>
+{/template}
