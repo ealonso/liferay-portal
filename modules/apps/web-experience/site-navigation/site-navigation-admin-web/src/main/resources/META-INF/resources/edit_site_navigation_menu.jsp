@@ -21,7 +21,9 @@ String redirect = ParamUtil.getString(request, "redirect");
 
 SiteNavigationMenu siteNavigationMenu = siteNavigationAdminDisplayContext.getSiteNavigationMenu();
 
-List<SiteNavigationMenuItem> siteNavigationMenuItems = SiteNavigationMenuItemLocalServiceUtil.getSiteNavigationMenuItems(siteNavigationMenu.getSiteNavigationMenuId());
+List<SiteNavigationMenuItem> siteNavigationMenuItems = SiteNavigationMenuItemLocalServiceUtil.getSiteNavigationMenuItems(siteNavigationMenu.getSiteNavigationMenuId(), 0);
+
+long selectedSiteNavigationMenuItemId = ParamUtil.getLong(request, "selectedSiteNavigationMenuItemId");
 
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
@@ -34,6 +36,8 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 	<portlet:param name="groupId" value="<%= String.valueOf(scopeGroupId) %>" />
 </portlet:actionURL>
 
+<liferay-ui:error key="<%= InvalidSiteNavigationMenuItemOrderException.class.getName() %>" message="invalid-site-navigation-menu-items-order" />
+
 <aui:form action="<%= editSitaNavigationMenuURL %>" cssClass="container-fluid-1280" name="fm">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationAdminDisplayContext.getSiteNavigationMenuId() %>" />
@@ -41,7 +45,7 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 	<aui:model-context bean="<%= siteNavigationMenu %>" model="<%= SiteNavigationMenu.class %>" />
 
 	<aui:fieldset-group markupView="lexicon">
-		<aui:fieldset>
+		<aui:fieldset cssClass="site-navigation-menu-container">
 			<c:choose>
 				<c:when test="<%= siteNavigationMenuItems.isEmpty() %>">
 					<div class="text-center">
@@ -100,24 +104,12 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 
 					<%
 					for (SiteNavigationMenuItem siteNavigationMenuItem : siteNavigationMenuItems) {
-						SiteNavigationMenuItemType siteNavigationMenuItemType = siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(siteNavigationMenuItem.getType());
-
-						request.setAttribute("edit_site_navigation_menu.jsp-siteNavigationMenuItemId", siteNavigationMenuItem.getSiteNavigationMenuItemId());
 					%>
 
-						<div class="col-md-3">
-							<liferay-frontend:horizontal-card
-								actionJsp="/site_navigation_menu_item_action.jsp"
-								actionJspServletContext="<%= application %>"
-								text="<%= siteNavigationMenuItemType.getTitle(siteNavigationMenuItem, locale) %>"
-							>
-								<liferay-frontend:horizontal-card-col>
-									<liferay-frontend:horizontal-card-icon
-										icon="<%= siteNavigationMenuItemType.getIcon() %>"
-									/>
-								</liferay-frontend:horizontal-card-col>
-							</liferay-frontend:horizontal-card>
-						</div>
+						<liferay-util:include page="/view_site_navigation_menu_item.jsp" servletContext="<%= application %>">
+							<liferay-util:param name="siteNavigationMenuItemId" value="<%= String.valueOf(siteNavigationMenuItem.getSiteNavigationMenuItemId()) %>" />
+							<liferay-util:param name="selectedSiteNavigationMenuItemId" value="<%= String.valueOf(selectedSiteNavigationMenuItemId) %>" />
+						</liferay-util:include>
 
 					<%
 					}
@@ -149,4 +141,22 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 		%>
 
 	</liferay-frontend:add-menu>
+
+	<liferay-portlet:actionURL name="/navigation_menu/edit_site_navigation_menu_item_parent" var="editSiteNavigationMenuItemParentURL">
+		<liferay-portlet:param name="hideDefaultSuccessMessage" value="<%= Boolean.TRUE.toString() %>" />
+		<liferay-portlet:param name="redirect" value="<%= currentURL %>" />
+	</liferay-portlet:actionURL>
+
+	<aui:script require="site-navigation-menu-web/js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule">
+		var siteNavigationMenuEditor = siteNavigationMenuEditorModule.default;
+
+		new siteNavigationMenuEditor(
+			{
+				editSiteNavigationMenuItemParentURL: '<%= editSiteNavigationMenuItemParentURL %>',
+				menuContainerSelector: '.site-navigation-menu-container',
+				menuItemSelector: '.site-navigation-menu-item',
+				namespace: '<portlet:namespace />'
+			}
+		);
+	</aui:script>
 </c:if>
