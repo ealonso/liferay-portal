@@ -14,14 +14,9 @@
 
 package com.liferay.asset.publisher.web.util;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.util.AssetEntryQueryProcessor;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
-
-import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -96,22 +91,6 @@ public class RecentContentAssetPublisherCustomizer
 	@Override
 	public boolean isShowSubtypeFieldsFilter(HttpServletRequest request) {
 		return true;
-	}
-
-	@Override
-	public void setAssetEntryQueryOptions(
-		AssetEntryQuery assetEntryQuery, HttpServletRequest request) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		PortletPreferences portletPreferences = getPortletPreferences(request);
-
-		long[] groupIds = AssetPublisherUtil.getGroupIds(
-			portletPreferences, themeDisplay.getScopeGroupId(),
-			themeDisplay.getLayout());
-
-		assetEntryQuery.setGroupIds(groupIds);
 	}
 
 }

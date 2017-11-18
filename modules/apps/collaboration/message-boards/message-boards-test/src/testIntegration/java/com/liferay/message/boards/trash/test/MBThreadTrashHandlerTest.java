@@ -15,7 +15,6 @@
 package com.liferay.message.boards.trash.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.message.boards.kernel.model.MBCategory;
 import com.liferay.message.boards.kernel.model.MBCategoryConstants;
 import com.liferay.message.boards.kernel.model.MBMessage;
@@ -88,13 +87,6 @@ public class MBThreadTrashHandlerTest
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			SynchronousDestinationTestRule.INSTANCE);
-
-	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
-		throws Exception {
-
-		return _whenIsAssetable.fetchAssetEntry(classedModel);
-	}
 
 	@Override
 	public int getMineBaseModelsCount(long groupId, long userId)

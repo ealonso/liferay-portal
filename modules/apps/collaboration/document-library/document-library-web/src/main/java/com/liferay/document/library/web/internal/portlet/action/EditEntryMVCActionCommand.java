@@ -14,8 +14,8 @@
 
 package com.liferay.document.library.web.internal.portlet.action;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.asset.exception.AssetCategoryException;
+import com.liferay.asset.exception.AssetTagException;
 import com.liferay.document.library.kernel.exception.DuplicateFileEntryException;
 import com.liferay.document.library.kernel.exception.DuplicateFolderNameException;
 import com.liferay.document.library.kernel.exception.InvalidFolderException;

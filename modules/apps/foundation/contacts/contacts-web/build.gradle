@@ -15,5 +15,6 @@ dependencies {
 	provided project(":apps:foundation:contacts:contacts-api")
 	provided project(":apps:foundation:text-localizer:text-localizer-taglib")
 	provided project(":apps:foundation:users-admin:users-admin-api")
+	provided project(":apps:web-experience:asset:asset-api")
 	provided project(":apps:web-experience:asset:asset-taglib")
 }

@@ -10,6 +10,7 @@
 		/>
 
 		<path id="sample.sql.builder.classpath">
+			<fileset dir="${sdk.dir}/dist" includes="com.liferay.asset.*.jar" />
 			<fileset dir="${sdk.dir}/dist" includes="com.liferay.blogs.*.jar" />
 			<fileset dir="${sdk.dir}/dist" includes="com.liferay.dynamic.data.*.jar" />
 			<fileset dir="${sdk.dir}/dist" includes="com.liferay.friendly.url.*.jar" />

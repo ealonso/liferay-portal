@@ -626,6 +626,12 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().getFileEntries(folderId, name);
 	}
 
+	public static java.util.List<com.liferay.document.library.kernel.model.DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, java.lang.String treePath) {
+		return getService()
+				   .getFileEntriesByClassNameIdAndTreePath(classNameId, treePath);
+	}
+
 	public static int getFileEntriesCount() {
 		return getService().getFileEntriesCount();
 	}

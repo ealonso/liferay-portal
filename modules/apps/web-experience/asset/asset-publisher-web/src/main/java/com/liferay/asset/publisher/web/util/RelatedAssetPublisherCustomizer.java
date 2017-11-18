@@ -14,9 +14,9 @@
 
 package com.liferay.asset.publisher.web.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetEntryQueryProcessor;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -94,6 +94,16 @@ public class RelatedAssetPublisherCustomizer
 			assetEntryQuery.setLinkedAssetEntryId(
 				layoutAssetEntry.getEntryId());
 		}
+	}
+
+	@Override
+	public void setAssetEntryQueryOptions(
+		com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+			assetEntryQuery,
+		HttpServletRequest request) {
+
+		setAssetEntryQueryOptions(
+			new AssetEntryQuery(assetEntryQuery), request);
 	}
 
 }

@@ -14,8 +14,8 @@
 
 package com.liferay.bookmarks.web.internal.portlet.action;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.exception.AssetTagException;
+import com.liferay.asset.exception.AssetCategoryException;
+import com.liferay.asset.exception.AssetTagException;
 import com.liferay.bookmarks.constants.BookmarksPortletKeys;
 import com.liferay.bookmarks.exception.EntryURLException;
 import com.liferay.bookmarks.exception.NoSuchEntryException;

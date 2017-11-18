@@ -520,6 +520,11 @@ public class DLFolderLocalServiceUtil {
 		return getService().getFolders(groupId, parentFolderId, start, end, obc);
 	}
 
+	public static java.util.List<com.liferay.document.library.kernel.model.DLFolder> getFolders(
+		long classNameId, java.lang.String treePath) {
+		return getService().getFolders(classNameId, treePath);
+	}
+
 	public static java.util.List<java.lang.Object> getFoldersAndFileEntriesAndFileShortcuts(
 		long groupId, long folderId, java.lang.String[] mimeTypes,
 		boolean includeMountFolders,

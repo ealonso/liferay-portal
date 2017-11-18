@@ -23,8 +23,11 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
  *
  * @author Brian Wing Shun Chan
  * @see AssetVocabularyLocalService
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.categories.service.impl.AssetVocabularyLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetVocabularyLocalServiceWrapper
 	implements AssetVocabularyLocalService,

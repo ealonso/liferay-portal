@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+AssetHelper assetHelper = (AssetHelper)request.getAttribute(AssetWebKeys.ASSET_HELPER);
+
 int deltaDefault = GetterUtil.getInteger(SessionClicks.get(request, "com.liferay.product.navigation.control.menu.web_addPanelNumItems", "10"));
 
 int delta = ParamUtil.getInteger(request, "delta", deltaDefault);
@@ -139,7 +141,7 @@ if (Validator.isNotNull(keywords)) {
 				assetEntryQuery.setOrderByType2("ASC");
 				assetEntryQuery.setStart(0);
 
-				BaseModelSearchResult<AssetEntry> baseModelSearchResult = AssetUtil.searchAssetEntries(request, assetEntryQuery, 0, delta);
+				BaseModelSearchResult<AssetEntry> baseModelSearchResult = assetHelper.searchAssetEntries(request, assetEntryQuery, 0, delta);
 
 				for (AssetEntry assetEntry : baseModelSearchResult.getBaseModels()) {
 					String className = PortalUtil.getClassName(assetEntry.getClassNameId());

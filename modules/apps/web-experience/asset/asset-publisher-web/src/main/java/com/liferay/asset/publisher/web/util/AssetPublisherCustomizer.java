@@ -14,7 +14,7 @@
 
 package com.liferay.asset.publisher.web.util;
 
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetEntryQueryProcessor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,5 +49,10 @@ public interface AssetPublisherCustomizer {
 
 	public void setAssetEntryQueryOptions(
 		AssetEntryQuery assetEntryQuery, HttpServletRequest request);
+
+	public void setAssetEntryQueryOptions(
+		com.liferay.asset.kernel.service.persistence.AssetEntryQuery
+			assetEntryQuery,
+		HttpServletRequest request);
 
 }

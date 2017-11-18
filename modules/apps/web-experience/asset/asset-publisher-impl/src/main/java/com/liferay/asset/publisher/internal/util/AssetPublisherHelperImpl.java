@@ -15,21 +15,21 @@
 package com.liferay.asset.publisher.internal.util;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryService;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetCategory;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.publisher.util.AssetEntryResult;
 import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
-import com.liferay.asset.util.impl.AssetUtil;
+import com.liferay.asset.service.AssetCategoryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetEntryService;
+import com.liferay.asset.service.AssetTagLocalService;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
+import com.liferay.asset.util.AssetHelper;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -136,7 +136,7 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 		throws Exception {
 
 		if (_isSearchWithIndex(portletName, assetEntryQuery)) {
-			return AssetUtil.searchAssetEntries(
+			return _assetHelper.searchAssetEntries(
 				assetEntryQuery, getAssetCategoryIds(portletPreferences),
 				getAssetTagNames(portletPreferences), attributes, companyId,
 				assetEntryQuery.getKeywords(), layout, locale, scopeGroupId,
@@ -1189,6 +1189,9 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 	@Reference
 	private AssetEntryService _assetEntryService;
+
+	@Reference
+	private AssetHelper _assetHelper;
 
 	private AssetPublisherWebConfiguration _assetPublisherWebConfiguration;
 

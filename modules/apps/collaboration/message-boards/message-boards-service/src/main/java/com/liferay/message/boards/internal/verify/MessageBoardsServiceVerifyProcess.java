@@ -14,7 +14,7 @@
 
 package com.liferay.message.boards.internal.verify;
 
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.service.AssetEntryLocalService;
 import com.liferay.message.boards.internal.verify.model.MBBanVerifiableModel;
 import com.liferay.message.boards.internal.verify.model.MBThreadFlagVerifiableModel;
 import com.liferay.message.boards.kernel.model.MBMessage;

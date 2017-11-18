@@ -84,8 +84,11 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @see AssetCategoryPersistence
  * @see com.liferay.asset.kernel.service.persistence.AssetCategoryUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetCategoryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCategory>
 	implements AssetCategoryPersistence {
@@ -12332,9 +12335,6 @@ public class AssetCategoryPersistenceImpl extends BasePersistenceImpl<AssetCateg
 	 * Initializes the asset category persistence.
 	 */
 	public void afterPropertiesSet() {
-		assetCategoryToAssetEntryTableMapper = TableMapperFactory.getTableMapper("AssetEntries_AssetCategories",
-				"companyId", "categoryId", "entryId", this,
-				assetEntryPersistence);
 	}
 
 	public void destroy() {

@@ -14,7 +14,7 @@
 
 package com.liferay.asset.tags.selector.web.internal.search;
 
-import com.liferay.asset.kernel.model.AssetTag;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;

@@ -15,7 +15,6 @@
 package com.liferay.blogs.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.blogs.test.util.BlogsTestUtil;
@@ -69,13 +68,6 @@ public class BlogsEntryTrashHandlerTest
 		return BlogsTestUtil.addEntryWithWorkflow(
 			TestPropsValues.getUserId(), getSearchKeywords(), false,
 			serviceContext);
-	}
-
-	@Override
-	public AssetEntry fetchAssetEntry(ClassedModel classedModel)
-		throws Exception {
-
-		return _whenIsAssetable.fetchAssetEntry(classedModel);
 	}
 
 	@Override

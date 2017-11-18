@@ -40,8 +40,11 @@ import java.util.List;
  * @see AssetEntryServiceUtil
  * @see com.liferay.portlet.asset.service.base.AssetEntryServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetEntryServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.model.impl.AssetEntryServiceImpl}
  * @generated
  */
+@Deprecated
 @AccessControlled
 @JSONWebService
 @ProviderType

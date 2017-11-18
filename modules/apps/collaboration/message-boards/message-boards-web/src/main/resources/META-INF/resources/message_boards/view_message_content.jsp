@@ -232,7 +232,7 @@ if (portletTitleBasedNavigation) {
 	<%
 	MBTreeWalker treeWalker = messageDisplay.getTreeWalker();
 
-	AssetUtil.addLayoutTags(request, AssetTagLocalServiceUtil.getTags(MBMessage.class.getName(), thread.getRootMessageId()));
+	AssetUtil.addLayoutTags(request, com.liferay.asset.kernel.service.AssetTagLocalServiceUtil.getTags(MBMessage.class.getName(), thread.getRootMessageId()));
 	%>
 
 	<div class="message-scroll" id="<portlet:namespace />message_0"></div>

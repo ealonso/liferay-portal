@@ -16,9 +16,9 @@ package com.liferay.asset.publisher.web.portlet;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.AssetTagLocalService;
+import com.liferay.asset.model.AssetTag;
 import com.liferay.asset.publisher.web.constants.AssetPublisherPortletKeys;
+import com.liferay.asset.service.AssetTagLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
@@ -194,11 +194,14 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 			journalArticle.getLayoutUuid(), groupId, privateLayout);
 	}
 
+	/**
+	 * @deprecated As of 1.2.0
+	 */
+	@Deprecated
 	@Reference(unbind = "-")
 	protected void setAssetTagLocalService(
-		AssetTagLocalService assetTagLocalService) {
-
-		_assetTagLocalService = assetTagLocalService;
+		com.liferay.asset.kernel.service.AssetTagLocalService
+			assetTagLocalService) {
 	}
 
 	@Reference(unbind = "-")
@@ -215,6 +218,7 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 		_layoutLocalService = layoutLocalService;
 	}
 
+	@Reference
 	private AssetTagLocalService _assetTagLocalService;
 
 	@Reference

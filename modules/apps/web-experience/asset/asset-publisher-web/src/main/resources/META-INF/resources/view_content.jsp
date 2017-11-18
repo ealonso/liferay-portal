@@ -40,10 +40,10 @@ AssetRenderer<?> assetRenderer = null;
 if (Validator.isNotNull(urlTitle)) {
 	assetRenderer = assetRendererFactory.getAssetRenderer(groupId, urlTitle);
 
-	assetEntry = assetRendererFactory.getAssetEntry(assetRendererFactory.getClassName(), assetRenderer.getClassPK());
+	assetEntry = ModelAdapterUtil.adapt(AssetEntry.class, assetRendererFactory.getAssetEntry(assetRendererFactory.getClassName(), assetRenderer.getClassPK()));
 }
 else {
-	assetEntry = assetRendererFactory.getAssetEntry(assetEntryId);
+	assetEntry = ModelAdapterUtil.adapt(AssetEntry.class, assetRendererFactory.getAssetEntry(assetEntryId));
 
 	assetRenderer = assetRendererFactory.getAssetRenderer(assetEntry.getClassPK());
 }

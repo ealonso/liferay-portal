@@ -14,9 +14,9 @@
 
 package com.liferay.asset.util;
 
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.model.AssetEntry;
+import com.liferay.asset.model.AssetTag;
+import com.liferay.asset.service.persistence.AssetEntryQuery;
 import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;

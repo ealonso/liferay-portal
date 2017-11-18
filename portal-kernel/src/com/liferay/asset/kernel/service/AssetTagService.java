@@ -42,8 +42,11 @@ import java.util.List;
  * @see AssetTagServiceUtil
  * @see com.liferay.portlet.asset.service.base.AssetTagServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetTagServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.tags.model.impl.AssetTagServiceImpl}
  * @generated
  */
+@Deprecated
 @AccessControlled
 @JSONWebService
 @ProviderType
