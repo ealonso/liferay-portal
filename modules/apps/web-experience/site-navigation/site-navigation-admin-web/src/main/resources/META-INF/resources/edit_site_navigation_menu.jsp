@@ -148,15 +148,22 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 	</liferay-portlet:actionURL>
 
 	<aui:script require="site-navigation-menu-web/js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule">
-		var siteNavigationMenuEditor = siteNavigationMenuEditorModule.default;
+		var siteNavigationMenuEditor = new siteNavigationMenuEditorModule.default({
+			editSiteNavigationMenuItemParentURL: '<%= editSiteNavigationMenuItemParentURL %>',
+			menuContainerSelector: '.site-navigation-menu-container',
+			menuItemSelector: '.site-navigation-menu-item',
+			namespace: '<portlet:namespace />'
+		});
 
-		new siteNavigationMenuEditor(
-			{
-				editSiteNavigationMenuItemParentURL: '<%= editSiteNavigationMenuItemParentURL %>',
-				menuContainerSelector: '.site-navigation-menu-container',
-				menuItemSelector: '.site-navigation-menu-item',
-				namespace: '<portlet:namespace />'
+		function handlePortletDestroy() {
+			if (siteNavigationMenuEditor) {
+				siteNavigationMenuEditor.dispose();
+				siteNavigationMenuEditor = null;
 			}
-		);
+
+			Liferay.detach('destroyPortlet', handlePortletDestroy);
+		}
+
+		Liferay.on('destroyPortlet', handlePortletDestroy);
 	</aui:script>
 </c:if>
