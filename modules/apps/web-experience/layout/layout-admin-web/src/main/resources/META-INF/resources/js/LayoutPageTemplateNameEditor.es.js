@@ -38,14 +38,19 @@ class LayoutPageTemplateNameEditor extends Component {
 			credentials: 'include',
 			method: 'POST',
 		})
-			.then(response => response.json())
-			.then(jsonResponse => {
-				if (jsonResponse.redirectURL) {
-					this._redirect(jsonResponse.redirectURL);
-				} else if (jsonResponse.error) {
-					this.error = jsonResponse.error;
+			.then(
+				response => response.json()
+			)
+			.then(
+				jsonResponse => {
+					if (jsonResponse.redirectURL) {
+						this._redirect(jsonResponse.redirectURL);
+					}
+					else if (jsonResponse.error) {
+						this.error = jsonResponse.error;
+					}
 				}
-			});
+			);
 	}
 
 	/**
@@ -58,7 +63,8 @@ class LayoutPageTemplateNameEditor extends Component {
 			this.dispose();
 
 			Liferay.SPA.app.navigate(uri);
-		} else {
+		}
+		else {
 			location.href = uri;
 		}
 	}
