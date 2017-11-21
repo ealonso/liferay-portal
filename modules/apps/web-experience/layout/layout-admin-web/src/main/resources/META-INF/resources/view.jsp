@@ -16,4 +16,15 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-util:include page="/view_layouts.jsp" servletContext="<%= application %>" />
+<%
+String tabs1 = layoutsAdminDisplayContext.getTabs1();
+%>
+
+<c:choose>
+	<c:when test='<%= tabs1.equals("pages") %>'>
+		<liferay-util:include page="/view_layouts.jsp" servletContext="<%= application %>" />
+	</c:when>
+	<c:when test='<%= tabs1.equals("page-templates") %>'>
+		<liferay-util:include page="/view_layout_page_template_collections.jsp" servletContext="<%= application %>" />
+	</c:when>
+</c:choose>
