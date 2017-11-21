@@ -17,5 +17,22 @@
 <%@ include file="/init.jsp" %>
 
 <aui:nav cssClass="navbar-nav">
-	<aui:nav-item label="pages" selected="<%= true %>" />
+
+	<%
+	PortletURL pagesURL = layoutsAdminDisplayContext.getPortletURL();
+
+	pagesURL.setParameter("tabs1", "pages");
+
+	String tabs1 = layoutsAdminDisplayContext.getTabs1();
+	%>
+
+	<aui:nav-item href="<%= pagesURL.toString() %>" label="pages" selected='<%= StringUtil.equals(tabs1, "pages") %>' />
+
+	<%
+	PortletURL pageTemplatesURL = layoutsAdminDisplayContext.getPortletURL();
+
+	pageTemplatesURL.setParameter("tabs1", "page-templates");
+	%>
+
+	<aui:nav-item href="<%= pageTemplatesURL.toString() %>" label="page-templates" selected='<%= StringUtil.equals(tabs1, "page-templates") %>' />
 </aui:nav>
