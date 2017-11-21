@@ -80,21 +80,25 @@ class LayoutPageTemplateEditor extends Component {
 			this.layoutPageTemplateEntryId
 		);
 
-		this.fragments.forEach(fragment => {
-			body.append(
-				`${this.portletNamespace}fragmentIds`,
-				fragment.fragmentEntryId
-			);
-		});
+		this.fragments.forEach(
+			fragment => {
+				body.append(
+					`${this.portletNamespace}fragmentIds`,
+					fragment.fragmentEntryId
+				);
+			}
+		);
 
 		fetch(this.updatePageTemplateURL, {
 			body,
 			credentials: 'include',
 			method: 'POST',
-		}).then(() => {
-			this._lastSaveDate = new Date().toLocaleTimeString();
-			this._dirty = false;
-		});
+		}).then(
+			() => {
+				this._lastSaveDate = new Date().toLocaleTimeString();
+				this._dirty = false;
+			}
+		);
 	}
 }
 
