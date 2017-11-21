@@ -30,6 +30,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "page-templates"));
 	<c:if test="<%= layoutPageTemplateDisplayContext.isShowLayoutPageTemplateCollectionsSearch() %>">
 		<portlet:renderURL var="portletURL">
 			<portlet:param name="mvcPath" value="/view_layout_page_template_collections.jsp" />
+			<portlet:param name="tabs1" value="page-templates" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="displayStyle" value="<%= layoutPageTemplateDisplayContext.getDisplayStyle() %>" />
 		</portlet:renderURL>
