@@ -1266,9 +1266,34 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	public List<Layout> getLayouts(
 		long groupId, boolean privateLayout, long parentLayoutId) {
 
-		return getLayouts(
-			groupId, privateLayout, parentLayoutId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+		if (MergeLayoutPrototypesThreadLocal.isInProgress()) {
+			return layoutPersistence.findByG_P_P(
+				groupId, privateLayout, parentLayoutId);
+		}
+
+		try {
+			Group group = groupLocalService.getGroup(groupId);
+
+			LayoutSet layoutSet = layoutSetLocalService.getLayoutSet(
+				groupId, privateLayout);
+
+			if (layoutSet.isLayoutSetPrototypeLinkActive() &&
+				!_mergeLayouts(
+					group, layoutSet, groupId, privateLayout, parentLayoutId)) {
+
+				return layoutPersistence.findByG_P_P(
+					groupId, privateLayout, parentLayoutId);
+			}
+
+			List<Layout> layouts = layoutPersistence.findByG_P_P(
+				groupId, privateLayout, parentLayoutId);
+
+			return _injectVirtualLayouts(
+				group, layoutSet, layouts, parentLayoutId);
+		}
+		catch (PortalException pe) {
+			throw new SystemException(pe);
+		}
 	}
 
 	/**
@@ -1299,7 +1324,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		boolean incomplete, int start, int end) {
 
 		return getLayouts(
-			groupId, privateLayout, parentLayoutId, start, end, null);
+			groupId, privateLayout, parentLayoutId, incomplete, start, end,
+			null);
 	}
 
 	/**
@@ -1326,8 +1352,8 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 */
 	@Override
 	public List<Layout> getLayouts(
-		long groupId, boolean privateLayout, long parentLayoutId, int start,
-		int end, OrderByComparator<Layout> obc) {
+		long groupId, boolean privateLayout, long parentLayoutId,
+		boolean incomplete, int start, int end, OrderByComparator<Layout> obc) {
 
 		if (MergeLayoutPrototypesThreadLocal.isInProgress()) {
 			return layoutPersistence.findByG_P_P(
