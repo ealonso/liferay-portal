@@ -960,12 +960,12 @@ public class LayoutLocalServiceUtil {
 	found
 	*/
 	public static java.util.List<com.liferay.portal.kernel.model.Layout> getLayouts(
-		long groupId, boolean privateLayout, long parentLayoutId, int start,
-		int end,
+		long groupId, boolean privateLayout, long parentLayoutId,
+		boolean incomplete, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.portal.kernel.model.Layout> obc) {
 		return getService()
-				   .getLayouts(groupId, privateLayout, parentLayoutId, start,
-			end, obc);
+				   .getLayouts(groupId, privateLayout, parentLayoutId,
+			incomplete, start, end, obc);
 	}
 
 	/**

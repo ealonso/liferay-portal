@@ -814,7 +814,8 @@ public interface LayoutLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Layout> getLayouts(long groupId, boolean privateLayout,
-		long parentLayoutId, int start, int end, OrderByComparator<Layout> obc);
+		long parentLayoutId, boolean incomplete, int start, int end,
+		OrderByComparator<Layout> obc);
 
 	/**
 	* Returns all the layouts that match the layout IDs and belong to the
