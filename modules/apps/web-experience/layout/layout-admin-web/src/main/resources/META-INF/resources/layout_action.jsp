@@ -23,6 +23,12 @@ Layout curLayout = (Layout)row.getObject();
 %>
 
 <liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
+	<liferay-ui:icon
+		message="edit"
+		target="_blank"
+		url="<%= PortalUtil.getLayoutFullURL(curLayout, themeDisplay) %>"
+	/>
+
 	<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.UPDATE) %>">
 		<portlet:renderURL var="configureLayoutURL">
 			<portlet:param name="mvcPath" value="/edit_layout.jsp" />
@@ -107,12 +113,6 @@ Layout curLayout = (Layout)row.getObject();
 			url="<%= orphanPortletsURL %>"
 		/>
 	</c:if>
-
-	<liferay-ui:icon
-		message="view-page"
-		target="_blank"
-		url="<%= PortalUtil.getLayoutFullURL(curLayout, themeDisplay) %>"
-	/>
 
 	<%
 	boolean isDeletable = true;
