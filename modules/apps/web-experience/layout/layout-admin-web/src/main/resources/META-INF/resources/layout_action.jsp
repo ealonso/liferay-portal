@@ -24,7 +24,7 @@ Layout curLayout = (Layout)row.getObject();
 
 <liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
 	<c:if test="<%= LayoutPermissionUtil.contains(permissionChecker, curLayout, ActionKeys.UPDATE) %>">
-		<portlet:renderURL var="editLayoutURL">
+		<portlet:renderURL var="configureLayoutURL">
 			<portlet:param name="mvcPath" value="/edit_layout.jsp" />
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 			<portlet:param name="backURL" value="<%= currentURL %>" />
@@ -35,7 +35,7 @@ Layout curLayout = (Layout)row.getObject();
 
 		<liferay-ui:icon
 			message="configure"
-			url="<%= editLayoutURL %>"
+			url="<%= configureLayoutURL %>"
 		/>
 	</c:if>
 
