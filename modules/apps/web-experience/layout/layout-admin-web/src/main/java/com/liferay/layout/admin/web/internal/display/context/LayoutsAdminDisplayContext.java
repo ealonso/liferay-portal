@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
+import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -94,10 +95,13 @@ public class LayoutsAdminDisplayContext {
 	public String getAddLayoutURL(long selPlid, Boolean privateLayout) {
 		PortletURL addLayoutURL = _liferayPortletResponse.createRenderURL();
 
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
 		addLayoutURL.setParameter("mvcPath", "/add_layout.jsp");
 		addLayoutURL.setParameter("redirect", _themeDisplay.getURLCurrent());
 		addLayoutURL.setParameter("backURL", _themeDisplay.getURLCurrent());
 		addLayoutURL.setParameter("groupId", String.valueOf(getSelGroupId()));
+		addLayoutURL.setParameter("portletResource", portletDisplay.getId());
 
 		if (selPlid >= LayoutConstants.DEFAULT_PLID) {
 			addLayoutURL.setParameter("selPlid", String.valueOf(selPlid));
@@ -198,6 +202,8 @@ public class LayoutsAdminDisplayContext {
 	public String getEditLayoutURL(Layout layout) {
 		PortletURL editLayoutURL = _liferayPortletResponse.createRenderURL();
 
+		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
+
 		editLayoutURL.setParameter("mvcPath", "/edit_layout.jsp");
 		editLayoutURL.setParameter("redirect", _themeDisplay.getURLCurrent());
 		editLayoutURL.setParameter("backURL", _themeDisplay.getURLCurrent());
@@ -206,6 +212,7 @@ public class LayoutsAdminDisplayContext {
 		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
 		editLayoutURL.setParameter(
 			"privateLayout", String.valueOf(layout.isPrivateLayout()));
+		editLayoutURL.setParameter("portletResource", portletDisplay.getId());
 
 		return editLayoutURL.toString();
 	}
