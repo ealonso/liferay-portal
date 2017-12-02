@@ -16,6 +16,7 @@ package com.liferay.asset.link.service.persistence.impl;
 
 import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.service.persistence.AssetLinkFinder;
+import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.SQLQuery;
@@ -24,7 +25,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.asset.model.impl.AssetLinkImpl;
-import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -57,7 +57,7 @@ public class AssetLinkFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_G_C);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_G_C);
 
 			sql = StringUtil.replace(
 				sql, "[$CREATE_DATE_COMPARATOR$]",
@@ -97,7 +97,7 @@ public class AssetLinkFinderImpl
 		try {
 			session = openSession();
 
-			String sql = CustomSQLUtil.get(FIND_BY_C_C);
+			String sql = CustomSQLUtil.get(getClass(), FIND_BY_C_C);
 
 			SQLQuery q = session.createSynchronizedSQLQuery(sql);
 
