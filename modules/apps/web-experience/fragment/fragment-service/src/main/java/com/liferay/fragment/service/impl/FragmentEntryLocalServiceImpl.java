@@ -15,8 +15,10 @@
 package com.liferay.fragment.service.impl;
 
 import com.liferay.fragment.exception.DuplicateFragmentEntryException;
+import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.processor.FragmentEntryProcessorUtil;
 import com.liferay.fragment.service.base.FragmentEntryLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ResourceConstants;
@@ -24,10 +26,10 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Jürgen Kappler
@@ -45,7 +47,7 @@ public class FragmentEntryLocalServiceImpl
 
 		User user = userLocalService.getUser(userId);
 
-		validate(groupId, name);
+		validate(groupId, 0, name, html);
 
 		long fragmentEntryId = counterLocalService.increment();
 
@@ -166,9 +168,7 @@ public class FragmentEntryLocalServiceImpl
 		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
 			fragmentEntryId);
 
-		if (!Objects.equals(fragmentEntry.getName(), name)) {
-			validate(fragmentEntry.getGroupId(), name);
-		}
+		validate(fragmentEntry.getGroupId(), fragmentEntryId, name, html);
 
 		fragmentEntry.setModifiedDate(new Date());
 		fragmentEntry.setName(name);
@@ -181,7 +181,10 @@ public class FragmentEntryLocalServiceImpl
 		return fragmentEntry;
 	}
 
-	protected void validate(long groupId, String name) throws PortalException {
+	protected void validate(
+			long groupId, long fragmentEntryId, String name, String html)
+		throws PortalException {
+
 		if (Validator.isNull(name)) {
 			throw new FragmentEntryNameException(
 				"Name must not be null for group " + groupId);
@@ -190,9 +193,18 @@ public class FragmentEntryLocalServiceImpl
 		FragmentEntry fragmentEntry = fragmentEntryPersistence.fetchByG_N(
 			groupId, name);
 
-		if (fragmentEntry != null) {
+		if ((fragmentEntry != null) &&
+			(fragmentEntry.getFragmentEntryId() != fragmentEntryId)) {
+
 			throw new DuplicateFragmentEntryException(name);
 		}
+
+		if (!_fragmentEntryProcessorUtil.validateFragmentEntryHtml(html)) {
+			throw new FragmentEntryContentException("invalid-fragment-html");
+		}
 	}
+
+	@ServiceReference(type = FragmentEntryProcessorUtil.class)
+	private FragmentEntryProcessorUtil _fragmentEntryProcessorUtil;
 
 }
