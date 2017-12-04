@@ -80,7 +80,7 @@ public class EditableUniqueIdFragmentEntryProcessor
 		List<String> nonUniqueIds = idStream.collect(Collectors.toList());
 
 		if (!nonUniqueIds.isEmpty()) {
-			throw new FragmentEntryContentException("invalid-fragment-html");
+			return false;
 		}
 
 		return editableNodes.stream().allMatch(
