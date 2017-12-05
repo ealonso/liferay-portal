@@ -561,6 +561,16 @@ public class LayoutsAdminDisplayContext {
 		return _selLayout;
 	}
 
+	public String getSelLayoutName() {
+		Layout layout = getSelLayout();
+
+		if (Validator.isNull(layout)) {
+			return StringPool.BLANK;
+		}
+
+		return layout.getName(_themeDisplay.getLocale());
+	}
+
 	public LayoutSet getSelLayoutSet() throws PortalException {
 		if (_selLayoutSet != null) {
 			return _selLayoutSet;
