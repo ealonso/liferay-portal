@@ -199,8 +199,22 @@ public class AssetPublisherConfigurationAction
 		}
 		else if (cmd.equals(Constants.UPDATE)) {
 			try {
-				validateEmail(actionRequest, "emailAssetEntryAdded");
-				validateEmailFrom(actionRequest);
+				HttpServletRequest request = portal.getHttpServletRequest(
+					actionRequest);
+
+				AssetPublisherPortletInstanceConfiguration
+					assetPublisherPortletInstanceConfiguration =
+						_getAssetPublisherPortletInstanceConfiguration(request);
+
+				boolean emailSubscriptionEnabled = GetterUtil.getBoolean(
+					getParameter(actionRequest, "emailAssetEntryAddedEnabled"),
+					assetPublisherPortletInstanceConfiguration.
+						emailAssetEntryAddedEnabled());
+
+				if (emailSubscriptionEnabled) {
+					validateEmail(actionRequest, "emailAssetEntryAdded");
+					validateEmailFrom(actionRequest);
+				}
 
 				updateDisplaySettings(actionRequest);
 
@@ -801,8 +815,9 @@ public class AssetPublisherConfigurationAction
 	@Reference
 	protected Staging staging;
 
-	private AssetPublisherPortletInstanceConfiguration _getAssetPublisherPortletInstanceConfiguration(
-			HttpServletRequest request)
+	private AssetPublisherPortletInstanceConfiguration
+			_getAssetPublisherPortletInstanceConfiguration(
+				HttpServletRequest request)
 		throws ConfigurationException {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
