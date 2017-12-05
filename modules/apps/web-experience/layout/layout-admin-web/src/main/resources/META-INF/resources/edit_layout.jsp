@@ -87,10 +87,18 @@ if (Validator.isNotNull(backURL)) {
 	portletDisplay.setURLBack(backURL);
 }
 
-renderResponse.setTitle(selLayout.getName(locale));
+renderResponse.setTitle(layoutsAdminDisplayContext.getSelLayoutName());
 %>
 
 <c:choose>
+	<c:when test="<%= Validator.isNull(selLayout) %>">
+
+		<%
+		SessionErrors.add(renderRequest, NoSuchLayoutException.class.getName());
+		%>
+
+		<liferay-util:include page="/error.jsp" servletContext="<%= application %>" />
+	</c:when>
 	<c:when test="<%= incomplete %>">
 		<liferay-ui:message arguments="<%= new Object[] {HtmlUtil.escape(selLayout.getName(locale)), HtmlUtil.escape(layoutSetBranchName)} %>" key="the-page-x-is-not-enabled-in-x,-but-is-available-in-other-pages-variations" translateArguments="<%= false %>" />
 
