@@ -209,8 +209,14 @@ public class AssetPublisherConfigurationAction
 		}
 		else if (cmd.equals(Constants.UPDATE)) {
 			try {
-				validateEmail(actionRequest, "emailAssetEntryAdded");
-				validateEmailFrom(actionRequest);
+				boolean emailSubscriptionEnabled = GetterUtil.getBoolean(
+					getParameter(actionRequest, "emailAssetEntryAddedEnabled"),
+					true);
+
+				if (emailSubscriptionEnabled) {
+					validateEmail(actionRequest, "emailAssetEntryAdded");
+					validateEmailFrom(actionRequest);
+				}
 
 				updateDisplaySettings(actionRequest);
 
