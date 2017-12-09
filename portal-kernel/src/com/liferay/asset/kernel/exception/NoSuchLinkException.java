@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.exception.NoSuchModelException;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *             com.liferay.asset.exception.NoSuchLinkException}
  */
+@Deprecated
 public class NoSuchLinkException extends NoSuchModelException {
 
 	public NoSuchLinkException() {

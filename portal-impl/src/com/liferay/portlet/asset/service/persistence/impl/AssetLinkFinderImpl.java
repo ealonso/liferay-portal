@@ -31,7 +31,10 @@ import java.util.List;
 
 /**
  * @author Zoltan Csaszi
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *             com.liferay.asset.link.service.persistence.impl.AssetLinkFinderImpl}
  */
+@Deprecated
 public class AssetLinkFinderImpl
 	extends AssetLinkFinderBaseImpl implements AssetLinkFinder {
 

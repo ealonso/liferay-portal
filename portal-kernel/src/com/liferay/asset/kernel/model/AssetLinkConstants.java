@@ -17,7 +17,10 @@ package com.liferay.asset.kernel.model;
 /**
  * @author Jorge Ferrer
  * @author Juan Fernández
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *            com.liferay.asset.link.model.AssetLinkConstants}
  */
+@Deprecated
 public class AssetLinkConstants {
 
 	public static final int TYPE_CHILD = 1;

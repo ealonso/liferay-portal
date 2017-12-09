@@ -16,6 +16,9 @@ package com.liferay.portlet.asset.model.impl;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *             com.liferay.asset.link.model.impl.AssetLinkImpl}
  */
+@Deprecated
 public class AssetLinkImpl extends AssetLinkBaseImpl {
 }
