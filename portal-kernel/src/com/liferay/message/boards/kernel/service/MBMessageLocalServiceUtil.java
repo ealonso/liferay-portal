@@ -792,6 +792,16 @@ public class MBMessageLocalServiceUtil {
 			assetLinkEntryIds);
 	}
 
+	public static com.liferay.asset.kernel.model.AssetEntry updateAsset(
+		long userId, com.liferay.message.boards.kernel.model.MBMessage message,
+		long[] assetCategoryIds, java.lang.String[] assetTagNames,
+		long[] assetLinkEntryIds, boolean assetEntryVisible)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateAsset(userId, message, assetCategoryIds,
+			assetTagNames, assetLinkEntryIds, assetEntryVisible);
+	}
+
 	public static com.liferay.message.boards.kernel.model.MBMessage updateDiscussionMessage(
 		long userId, long messageId, java.lang.String className, long classPK,
 		java.lang.String subject, java.lang.String body,
