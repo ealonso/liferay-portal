@@ -14,8 +14,9 @@
 
 package com.liferay.asset.link.service.persistence.impl;
 
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.service.persistence.AssetLinkFinder;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.impl.AssetLinkImpl;
+import com.liferay.asset.link.service.persistence.AssetLinkFinder;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -24,7 +25,6 @@ import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portlet.asset.model.impl.AssetLinkImpl;
 
 import java.util.Date;
 import java.util.List;
