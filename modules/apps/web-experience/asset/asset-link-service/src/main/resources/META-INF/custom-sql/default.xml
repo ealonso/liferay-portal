@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <custom-sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetLinkFinder.findByG_C">
+	<sql id="com.liferay.asset.link.service.persistence.AssetLinkFinder.findByG_C">
 		<![CDATA[
 			SELECT
 				AssetLink.*
@@ -25,7 +25,7 @@
 				[$CREATE_DATE_COMPARATOR$]
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetLinkFinder.findByC_C">
+	<sql id="com.liferay.asset.link.service.persistence.AssetLinkFinder.findByC_C">
 		<![CDATA[
 			(
 				SELECT
