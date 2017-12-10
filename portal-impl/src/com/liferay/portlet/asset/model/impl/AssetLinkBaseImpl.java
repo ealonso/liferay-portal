@@ -29,8 +29,11 @@ import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
  * @author Brian Wing Shun Chan
  * @see AssetLinkImpl
  * @see AssetLink
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.link.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public abstract class AssetLinkBaseImpl extends AssetLinkModelImpl
 	implements AssetLink {

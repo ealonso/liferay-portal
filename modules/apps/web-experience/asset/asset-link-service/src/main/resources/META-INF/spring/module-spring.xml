@@ -3,4 +3,5 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<bean class="com.liferay.asset.link.service.impl.AssetLinkLocalServiceImpl" id="com.liferay.asset.link.service.AssetLinkLocalService" />
 	<bean class="com.liferay.asset.link.service.persistence.impl.AssetLinkPersistenceImpl" id="com.liferay.asset.link.service.persistence.AssetLinkPersistence" parent="basePersistence" />
+	<bean class="com.liferay.asset.link.service.persistence.impl.AssetLinkFinderImpl" id="com.liferay.asset.link.service.persistence.AssetLinkFinder" parent="basePersistence" />
 </beans>
