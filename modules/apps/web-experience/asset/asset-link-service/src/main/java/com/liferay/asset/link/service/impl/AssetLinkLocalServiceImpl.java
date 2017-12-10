@@ -14,11 +14,12 @@
 
 package com.liferay.asset.link.service.impl;
 
-import com.liferay.asset.kernel.exception.NoSuchLinkException;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.exception.NoSuchLinkException;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.AssetLinkConstants;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.service.base.AssetLinkLocalServiceBaseImpl;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.petra.string.StringPool;
@@ -31,7 +32,6 @@ import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.adapter.ModelAdapterUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portlet.asset.service.base.AssetLinkLocalServiceBaseImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
