@@ -64,8 +64,11 @@ import java.util.Set;
  * @author Brian Wing Shun Chan
  * @see AssetLinkPersistence
  * @see com.liferay.asset.kernel.service.persistence.AssetLinkUtil
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.link.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkPersistenceImpl extends BasePersistenceImpl<AssetLink>
 	implements AssetLinkPersistence {

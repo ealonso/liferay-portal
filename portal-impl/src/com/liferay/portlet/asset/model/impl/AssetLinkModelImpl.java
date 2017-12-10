@@ -52,8 +52,11 @@ import java.util.Map;
  * @see AssetLinkImpl
  * @see AssetLink
  * @see AssetLinkModel
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.link.model.impl.AssetLinkImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetLinkModelImpl extends BaseModelImpl<AssetLink>
 	implements AssetLinkModel {
