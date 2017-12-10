@@ -551,7 +551,7 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		List<AssetLink> filteredAssetLinks = new ArrayList<>(assetLinks.size());
 
 		for (AssetLink assetLink : assetLinks) {
-			AssetEntry assetEntry = assetEntryPersistence.fetchByPrimaryKey(
+			AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
 				assetLink.getEntryId2());
 
 			if ((assetEntry != null) && assetEntry.isVisible()) {
