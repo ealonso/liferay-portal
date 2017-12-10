@@ -16,10 +16,10 @@ package com.liferay.asset.link.lar.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.service.AssetLinkLocalServiceUtil;
 import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.bookmarks.util.test.BookmarksTestUtil;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationParameterMapFactory;

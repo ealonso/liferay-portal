@@ -15,11 +15,11 @@
 package com.liferay.asset.link.internal.exportimport.staged.model.repository;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetRenderer;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetLinkLocalService;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.exportimport.staged.model.repository.base.BaseStagedModelRepository;
@@ -59,7 +59,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"model.class.name=com.liferay.asset.kernel.model.adapter.StagedAssetLink"
+		"model.class.name=com.liferay.asset.link.model.adapter.StagedAssetLink"
 	},
 	service = {
 		StagedAssetLinkStagedModelRepository.class, StagedModelRepository.class
