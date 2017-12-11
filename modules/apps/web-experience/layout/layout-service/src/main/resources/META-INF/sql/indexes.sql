@@ -1,0 +1,1 @@
+create index IX_BFD04CD8 on LayoutFragment (groupId, plid, fragmentEntryId);
