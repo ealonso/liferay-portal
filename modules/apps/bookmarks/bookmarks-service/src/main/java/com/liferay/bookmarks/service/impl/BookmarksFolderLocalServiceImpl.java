@@ -15,7 +15,8 @@
 package com.liferay.bookmarks.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.link.model.AssetLinkConstants;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.bookmarks.exception.FolderNameException;
 import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.bookmarks.model.BookmarksFolder;
@@ -45,6 +46,7 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.subscription.service.SubscriptionLocalService;
 import com.liferay.trash.exception.RestoreEntryException;
@@ -1022,6 +1024,9 @@ public class BookmarksFolderLocalServiceImpl
 			throw new FolderNameException();
 		}
 	}
+
+	@ServiceReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
 
 	@Reference
 	private BookmarksEntryLocalService _blogsEntryLocalService;

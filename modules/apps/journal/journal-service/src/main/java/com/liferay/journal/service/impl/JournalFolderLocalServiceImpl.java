@@ -15,7 +15,8 @@
 package com.liferay.journal.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.link.model.AssetLinkConstants;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLink;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLinkLocalService;
@@ -56,6 +57,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.validation.ModelValidator;
 import com.liferay.portal.validation.ModelValidatorRegistryUtil;
@@ -1463,6 +1465,9 @@ public class JournalFolderLocalServiceImpl
 		_getModelValidator().validateFolder(
 			folderId, groupId, parentFolderId, name);
 	}
+
+	@ServiceReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
 
 	/**
 	 * @deprecated As of Judson (7.1.x), with no direct replacement

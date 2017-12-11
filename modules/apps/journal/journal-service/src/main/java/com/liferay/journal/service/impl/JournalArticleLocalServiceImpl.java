@@ -16,10 +16,11 @@ package com.liferay.journal.service.impl;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.AssetLinkConstants;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.document.library.util.DLURLHelper;
@@ -165,6 +166,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.kernel.xml.XPath;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.portal.validation.ModelValidator;
 import com.liferay.portal.validation.ModelValidatorRegistryUtil;
 import com.liferay.social.kernel.model.SocialActivityConstants;
@@ -8862,6 +8864,9 @@ public class JournalArticleLocalServiceImpl
 			groupId, ddmStructureKey, ddmTemplateKey, layoutUuid, smallImage,
 			smallImageURL, smallImageBytes, 0, content);
 	}
+
+	@ServiceReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
 
 	@Reference
 	protected ConfigurationProvider configurationProvider;
