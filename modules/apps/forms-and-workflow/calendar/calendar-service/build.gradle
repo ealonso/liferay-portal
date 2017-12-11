@@ -35,6 +35,7 @@ dependencies {
 	provided project(":apps:collaboration:message-boards:message-boards-api")
 	provided project(":apps:forms-and-workflow:calendar:calendar-api")
 	provided project(":apps:foundation:portal:portal-instance-lifecycle-api")
+    provided project(":apps:web-experience:asset:asset-link-api")
 	provided project(":apps:web-experience:export-import:export-import-api")
 	provided project(":apps:web-experience:rss:rss-api")
 
