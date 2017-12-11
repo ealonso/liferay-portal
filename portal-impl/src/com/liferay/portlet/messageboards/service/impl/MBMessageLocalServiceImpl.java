@@ -1550,6 +1550,39 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 	}
 
 	@Override
+	public AssetEntry updateAsset(
+			long userId, MBMessage message, long[] assetCategoryIds,
+			String[] assetTagNames, long[] assetLinkEntryIds,
+			boolean assetEntryVisible)
+		throws PortalException {
+
+		boolean visible = false;
+		Date publishDate = null;
+
+		if (assetEntryVisible && message.isApproved() &&
+			((message.getClassNameId() == 0) ||
+			 (message.getParentMessageId() != 0))) {
+
+			visible = true;
+			publishDate = message.getModifiedDate();
+		}
+
+		AssetEntry assetEntry = assetEntryLocalService.updateEntry(
+			userId, message.getGroupId(), message.getCreateDate(),
+			message.getModifiedDate(), message.getWorkflowClassName(),
+			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
+			assetTagNames, true, visible, null, null, publishDate, null,
+			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
+			null, 0, 0, message.getPriority());
+
+		assetLinkLocalService.updateLinks(
+			userId, assetEntry.getEntryId(), assetLinkEntryIds,
+			AssetLinkConstants.TYPE_RELATED);
+
+		return assetEntry;
+	}
+
+	@Override
 	public MBMessage updateDiscussionMessage(
 			long userId, long messageId, String className, long classPK,
 			String subject, String body, ServiceContext serviceContext)
@@ -2120,36 +2153,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			message.getCompanyId(), message.getGroupId(), userId,
 			message.getWorkflowClassName(), message.getMessageId(), message,
 			serviceContext, workflowContext);
-	}
-
-	protected void updateAsset(
-			long userId, MBMessage message, long[] assetCategoryIds,
-			String[] assetTagNames, long[] assetLinkEntryIds,
-			boolean assetEntryVisible)
-		throws PortalException {
-
-		boolean visible = false;
-		Date publishDate = null;
-
-		if (assetEntryVisible && message.isApproved() &&
-			((message.getClassNameId() == 0) ||
-			 (message.getParentMessageId() != 0))) {
-
-			visible = true;
-			publishDate = message.getModifiedDate();
-		}
-
-		AssetEntry assetEntry = assetEntryLocalService.updateEntry(
-			userId, message.getGroupId(), message.getCreateDate(),
-			message.getModifiedDate(), message.getWorkflowClassName(),
-			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
-			assetTagNames, true, visible, null, null, publishDate, null,
-			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
-			null, 0, 0, message.getPriority());
-
-		assetLinkLocalService.updateLinks(
-			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
 	}
 
 	protected void updatePriorities(long threadId, double priority) {
