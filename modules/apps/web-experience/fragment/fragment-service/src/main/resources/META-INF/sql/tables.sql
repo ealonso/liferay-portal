@@ -24,3 +24,10 @@ create table FragmentEntry (
 	html STRING null,
 	js STRING null
 );
+
+create table FragmentLayoutTemplateLink (
+	fragmentLayoutTemplateLinkId LONG not null primary key,
+	groupId LONG,
+	fragmentEntryId LONG,
+	layoutPageTemplateEntryId LONG
+);
