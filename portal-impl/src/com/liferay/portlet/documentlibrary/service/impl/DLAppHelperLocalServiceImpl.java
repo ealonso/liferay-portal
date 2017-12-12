@@ -99,7 +99,7 @@ public class DLAppHelperLocalServiceImpl
 			return;
 		}
 
-		updateAsset(
+		dlAppHelperLocalService.updateAsset(
 			userId, folder, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds());
@@ -929,7 +929,7 @@ public class DLAppHelperLocalServiceImpl
 		}
 
 		if (updateAsset) {
-			updateAsset(
+			dlAppHelperLocalService.updateAsset(
 				userId, fileEntry, destinationFileVersion, assetClassPK);
 		}
 	}
@@ -957,7 +957,7 @@ public class DLAppHelperLocalServiceImpl
 				ArrayUtil.toLongArray(assetCategoryIds));
 		}
 
-		updateAsset(
+		dlAppHelperLocalService.updateAsset(
 			userId, fileEntry, destinationFileVersion,
 			serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
@@ -969,7 +969,7 @@ public class DLAppHelperLocalServiceImpl
 			long userId, Folder folder, ServiceContext serviceContext)
 		throws PortalException {
 
-		updateAsset(
+		dlAppHelperLocalService.updateAsset(
 			userId, folder, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds());
