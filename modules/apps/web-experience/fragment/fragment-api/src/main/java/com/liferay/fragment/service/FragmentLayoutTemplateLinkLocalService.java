@@ -71,6 +71,10 @@ public interface FragmentLayoutTemplateLinkLocalService extends BaseLocalService
 	public FragmentLayoutTemplateLink addFragmentLayoutTemplateLink(
 		FragmentLayoutTemplateLink fragmentLayoutTemplateLink);
 
+	public FragmentLayoutTemplateLink addFragmentLayoutTemplateLink(
+		long groupId, long fragmentEntryId, long layoutPageTemplateEntryId)
+		throws PortalException;
+
 	/**
 	* Creates a new fragment layout template link with the primary key. Does not add the fragment layout template link to the database.
 	*
@@ -100,6 +104,9 @@ public interface FragmentLayoutTemplateLinkLocalService extends BaseLocalService
 	@Indexable(type = IndexableType.DELETE)
 	public FragmentLayoutTemplateLink deleteFragmentLayoutTemplateLink(
 		long fragmentLayoutTemplateLinkId) throws PortalException;
+
+	public List<FragmentLayoutTemplateLink> deleteFragmentLayoutTemplateLinks(
+		long groupId, long layoutPageTemplateEntryId) throws PortalException;
 
 	/**
 	* @throws PortalException
