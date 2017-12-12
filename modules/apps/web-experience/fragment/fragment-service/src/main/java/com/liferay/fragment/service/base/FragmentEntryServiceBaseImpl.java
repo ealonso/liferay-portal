@@ -17,6 +17,7 @@ package com.liferay.fragment.service.base;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryService;
 import com.liferay.fragment.service.persistence.FragmentCollectionPersistence;
+import com.liferay.fragment.service.persistence.FragmentEntryLayoutTemplateLinkPersistence;
 import com.liferay.fragment.service.persistence.FragmentEntryPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -261,6 +262,44 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 		this.userPersistence = userPersistence;
 	}
 
+	/**
+	 * Returns the fragment entry layout template link local service.
+	 *
+	 * @return the fragment entry layout template link local service
+	 */
+	public com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService getFragmentEntryLayoutTemplateLinkLocalService() {
+		return fragmentEntryLayoutTemplateLinkLocalService;
+	}
+
+	/**
+	 * Sets the fragment entry layout template link local service.
+	 *
+	 * @param fragmentEntryLayoutTemplateLinkLocalService the fragment entry layout template link local service
+	 */
+	public void setFragmentEntryLayoutTemplateLinkLocalService(
+		com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService fragmentEntryLayoutTemplateLinkLocalService) {
+		this.fragmentEntryLayoutTemplateLinkLocalService = fragmentEntryLayoutTemplateLinkLocalService;
+	}
+
+	/**
+	 * Returns the fragment entry layout template link persistence.
+	 *
+	 * @return the fragment entry layout template link persistence
+	 */
+	public FragmentEntryLayoutTemplateLinkPersistence getFragmentEntryLayoutTemplateLinkPersistence() {
+		return fragmentEntryLayoutTemplateLinkPersistence;
+	}
+
+	/**
+	 * Sets the fragment entry layout template link persistence.
+	 *
+	 * @param fragmentEntryLayoutTemplateLinkPersistence the fragment entry layout template link persistence
+	 */
+	public void setFragmentEntryLayoutTemplateLinkPersistence(
+		FragmentEntryLayoutTemplateLinkPersistence fragmentEntryLayoutTemplateLinkPersistence) {
+		this.fragmentEntryLayoutTemplateLinkPersistence = fragmentEntryLayoutTemplateLinkPersistence;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -331,4 +370,8 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.portal.kernel.service.UserService userService;
 	@ServiceReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
+	@BeanReference(type = com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService.class)
+	protected com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService fragmentEntryLayoutTemplateLinkLocalService;
+	@BeanReference(type = FragmentEntryLayoutTemplateLinkPersistence.class)
+	protected FragmentEntryLayoutTemplateLinkPersistence fragmentEntryLayoutTemplateLinkPersistence;
 }
