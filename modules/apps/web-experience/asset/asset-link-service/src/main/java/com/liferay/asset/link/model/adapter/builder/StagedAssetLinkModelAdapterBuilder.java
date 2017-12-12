@@ -19,9 +19,12 @@ import com.liferay.asset.link.model.adapter.StagedAssetLink;
 import com.liferay.asset.link.model.adapter.impl.StagedAssetLinkImpl;
 import com.liferay.portal.kernel.model.adapter.builder.ModelAdapterBuilder;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Mate Thurzo
  */
+@Component(immediate = true, service = ModelAdapterBuilder.class)
 public class StagedAssetLinkModelAdapterBuilder
 	implements ModelAdapterBuilder<AssetLink, StagedAssetLink> {
 
