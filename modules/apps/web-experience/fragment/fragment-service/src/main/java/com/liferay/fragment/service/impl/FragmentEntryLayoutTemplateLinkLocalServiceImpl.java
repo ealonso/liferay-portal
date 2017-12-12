@@ -14,28 +14,66 @@
 
 package com.liferay.fragment.service.impl;
 
+import com.liferay.fragment.model.FragmentEntryLayoutTemplateLink;
 import com.liferay.fragment.service.base.FragmentEntryLayoutTemplateLinkLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The implementation of the fragment entry layout template link local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see FragmentEntryLayoutTemplateLinkLocalServiceBaseImpl
- * @see com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class FragmentEntryLayoutTemplateLinkLocalServiceImpl
 	extends FragmentEntryLayoutTemplateLinkLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalServiceUtil} to access the fragment entry layout template link local service.
-	 */
+	@Override
+	public FragmentEntryLayoutTemplateLink addFragmentEntryLayoutTemplateLink(
+			long groupId, long fragmentEntryId, long layoutPageTemplateEntryId)
+		throws PortalException {
+
+		long fragmentEntryLayoutTemplateLinkId =
+			counterLocalService.increment();
+
+		FragmentEntryLayoutTemplateLink fragmentEntryLayoutTemplateLink =
+			fragmentEntryLayoutTemplateLinkPersistence.create(
+				fragmentEntryLayoutTemplateLinkId);
+
+		fragmentEntryLayoutTemplateLink.setGroupId(groupId);
+		fragmentEntryLayoutTemplateLink.setFragmentEntryId(fragmentEntryId);
+		fragmentEntryLayoutTemplateLink.setLayoutPageTemplateEntryId(
+			layoutPageTemplateEntryId);
+
+		fragmentEntryLayoutTemplateLinkPersistence.update(
+			fragmentEntryLayoutTemplateLink);
+
+		return fragmentEntryLayoutTemplateLink;
+	}
+
+	@Override
+	public List<FragmentEntryLayoutTemplateLink>
+			deleteFragmentEntryLayoutTemplateLinks(
+				long groupId, long layoutPageTemplateEntryId)
+		throws PortalException {
+
+		List<FragmentEntryLayoutTemplateLink>
+			deletedFragmentEntryLayoutPageTemplateLinks = new ArrayList<>();
+
+		List<FragmentEntryLayoutTemplateLink> fragmentEntryLayoutTemplateLinks =
+			fragmentEntryLayoutTemplateLinkPersistence.findByG_L(
+				groupId, layoutPageTemplateEntryId);
+
+		for (FragmentEntryLayoutTemplateLink fragmentEntryLayoutTemplateLink :
+				fragmentEntryLayoutTemplateLinks) {
+
+			fragmentEntryLayoutTemplateLinkPersistence.remove(
+				fragmentEntryLayoutTemplateLink);
+
+			deletedFragmentEntryLayoutPageTemplateLinks.add(
+				fragmentEntryLayoutTemplateLink);
+		}
+
+		return deletedFragmentEntryLayoutPageTemplateLinks;
+	}
+
 }
