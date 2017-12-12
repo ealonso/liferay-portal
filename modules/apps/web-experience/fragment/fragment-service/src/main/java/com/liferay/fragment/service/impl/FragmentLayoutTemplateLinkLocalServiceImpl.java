@@ -14,28 +14,64 @@
 
 package com.liferay.fragment.service.impl;
 
+import com.liferay.fragment.model.FragmentLayoutTemplateLink;
 import com.liferay.fragment.service.base.FragmentLayoutTemplateLinkLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * The implementation of the fragment layout template link local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.fragment.service.FragmentLayoutTemplateLinkLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see FragmentLayoutTemplateLinkLocalServiceBaseImpl
- * @see com.liferay.fragment.service.FragmentLayoutTemplateLinkLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class FragmentLayoutTemplateLinkLocalServiceImpl
 	extends FragmentLayoutTemplateLinkLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.fragment.service.FragmentLayoutTemplateLinkLocalServiceUtil} to access the fragment layout template link local service.
-	 */
+	@Override
+	public FragmentLayoutTemplateLink addFragmentLayoutTemplateLink(
+			long groupId, long fragmentEntryId, long layoutPageTemplateEntryId)
+		throws PortalException {
+
+		long fragmentLayoutTemplateLinkId = counterLocalService.increment();
+
+		FragmentLayoutTemplateLink fragmentLayoutTemplateLink =
+			fragmentLayoutTemplateLinkPersistence.create(
+				fragmentLayoutTemplateLinkId);
+
+		fragmentLayoutTemplateLink.setGroupId(groupId);
+		fragmentLayoutTemplateLink.setFragmentEntryId(fragmentEntryId);
+		fragmentLayoutTemplateLink.setLayoutPageTemplateEntryId(
+			layoutPageTemplateEntryId);
+
+		fragmentLayoutTemplateLinkPersistence.update(
+			fragmentLayoutTemplateLink);
+
+		return fragmentLayoutTemplateLink;
+	}
+
+	@Override
+	public List<FragmentLayoutTemplateLink> deleteFragmentLayoutTemplateLinks(
+			long groupId, long layoutPageTemplateEntryId)
+		throws PortalException {
+
+		List<FragmentLayoutTemplateLink>
+			deletedFragmentLayoutPageTemplateLinks = new ArrayList<>();
+
+		List<FragmentLayoutTemplateLink> fragmentLayoutTemplateLinks =
+			fragmentLayoutTemplateLinkPersistence.findByG_L(
+				groupId, layoutPageTemplateEntryId);
+
+		for (FragmentLayoutTemplateLink fragmentLayoutTemplateLink :
+				fragmentLayoutTemplateLinks) {
+
+			fragmentLayoutTemplateLinkPersistence.remove(
+				fragmentLayoutTemplateLink);
+
+			deletedFragmentLayoutPageTemplateLinks.add(
+				fragmentLayoutTemplateLink);
+		}
+
+		return deletedFragmentLayoutPageTemplateLinks;
+	}
+
 }
