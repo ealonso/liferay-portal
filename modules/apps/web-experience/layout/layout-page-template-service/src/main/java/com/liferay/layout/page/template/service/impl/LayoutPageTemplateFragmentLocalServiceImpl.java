@@ -16,6 +16,7 @@ package com.liferay.layout.page.template.service.impl;
 
 import com.liferay.fragment.exception.NoSuchEntryException;
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.service.FragmentEntryLayoutTemplateLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.layout.page.template.exception.NoSuchPageTemplateEntryException;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -49,6 +50,8 @@ public class LayoutPageTemplateFragmentLocalServiceImpl
 		validateLayoutPageTemplateEntry(layoutPageTemplateEntryId);
 		validateFragmentEntry(fragmentEntryId);
 
+		// Layout Page Template Fragment
+
 		long layoutPageTemplateFragmentId = counterLocalService.increment();
 
 		LayoutPageTemplateFragment layoutPageTemplateFragment =
@@ -71,6 +74,12 @@ public class LayoutPageTemplateFragmentLocalServiceImpl
 		layoutPageTemplateFragmentPersistence.update(
 			layoutPageTemplateFragment);
 
+		// Fragment Links
+
+		_fragmentEntryLayoutTemplateLinkLocalService.
+			addFragmentEntryLayoutTemplateLink(
+				groupId, fragmentEntryId, layoutPageTemplateEntryId);
+
 		return layoutPageTemplateFragment;
 	}
 
@@ -90,6 +99,8 @@ public class LayoutPageTemplateFragmentLocalServiceImpl
 			return Collections.emptyList();
 		}
 
+		// Fragments
+
 		for (LayoutPageTemplateFragment layoutPageTemplateFragment :
 				layoutPageTemplateFragments) {
 
@@ -98,6 +109,12 @@ public class LayoutPageTemplateFragmentLocalServiceImpl
 
 			deletedLayoutPageTemplateFragments.add(layoutPageTemplateFragment);
 		}
+
+		// Fragment Links
+
+		_fragmentEntryLayoutTemplateLinkLocalService.
+			deleteFragmentEntryLayoutTemplateLinks(
+				groupId, layoutPageTemplateEntryId);
 
 		return deletedLayoutPageTemplateFragments;
 	}
@@ -144,6 +161,10 @@ public class LayoutPageTemplateFragmentLocalServiceImpl
 			throw new NoSuchPageTemplateEntryException();
 		}
 	}
+
+	@ServiceReference(type = FragmentEntryLayoutTemplateLinkLocalService.class)
+	private FragmentEntryLayoutTemplateLinkLocalService
+		_fragmentEntryLayoutTemplateLinkLocalService;
 
 	@ServiceReference(type = FragmentEntryLocalService.class)
 	private FragmentEntryLocalService _fragmentEntryLocalService;
