@@ -100,7 +100,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 	public void deleteEntry(long entryId) throws PortalException {
 		AssetEntry entry = assetEntryPersistence.findByPrimaryKey(entryId);
 
-		deleteEntry(entry);
+		assetEntryLocalService.deleteEntry(entry);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			classNameId, classPK);
 
 		if (entry != null) {
-			deleteEntry(entry);
+			assetEntryLocalService.deleteEntry(entry);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		List<AssetEntry> assetEntries = getGroupEntries(groupId);
 
 		for (AssetEntry assetEntry : assetEntries) {
-			deleteEntry(assetEntry);
+			assetEntryLocalService.deleteEntry(assetEntry);
 		}
 	}
 
@@ -156,12 +156,13 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		List<AssetEntry> entries = new ArrayList<>();
 
-		AssetEntry parentEntry = getParentEntry(entryId);
+		AssetEntry parentEntry = assetEntryLocalService.getParentEntry(entryId);
 
 		while (parentEntry != null) {
 			entries.add(parentEntry);
 
-			parentEntry = getParentEntry(parentEntry.getEntryId());
+			parentEntry = assetEntryLocalService.getParentEntry(
+				parentEntry.getEntryId());
 		}
 
 		return entries;
