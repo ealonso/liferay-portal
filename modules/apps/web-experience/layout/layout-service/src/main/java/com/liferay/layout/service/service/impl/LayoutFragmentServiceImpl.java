@@ -14,27 +14,100 @@
 
 package com.liferay.layout.service.service.impl;
 
+import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.service.FragmentEntryServiceUtil;
+import com.liferay.layout.page.template.model.LayoutPageTemplateFragment;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateFragmentLocalService;
+import com.liferay.layout.service.model.LayoutFragment;
 import com.liferay.layout.service.service.base.LayoutFragmentServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.spring.extender.service.ServiceReference;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
- * The implementation of the layout fragment remote service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.layout.service.service.LayoutFragmentService} interface.
- *
- * <p>
- * This is a remote service. Methods of this service are expected to have security checks based on the propagated JAAS credentials because this service can be accessed remotely.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see LayoutFragmentServiceBaseImpl
- * @see com.liferay.layout.service.service.LayoutFragmentServiceUtil
+ * @author Jürgen Kappler
  */
 public class LayoutFragmentServiceImpl extends LayoutFragmentServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.layout.service.service.LayoutFragmentServiceUtil} to access the layout fragment remote service.
-	 */
+	@Override
+	public Layout addContentLayout(
+			long groupId, boolean privateLayout, long parentLayoutId,
+			long layoutPageTemplateEntryId, Map<Locale, String> localeNamesMap,
+			Map<Locale, String> localeTitlesMap,
+			Map<Locale, String> descriptionMap, Map<Locale, String> keywordsMap,
+			Map<Locale, String> robotsMap, String type,
+			Map<Locale, String> friendlyURLMap, ServiceContext serviceContext)
+		throws PortalException {
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties(true);
+
+		typeSettingsProperties.setProperty(
+			"layoutPageTemplateId", String.valueOf(layoutPageTemplateEntryId));
+
+		Layout layout = _layoutService.addLayout(
+			groupId, privateLayout, parentLayoutId, localeNamesMap,
+			localeTitlesMap, descriptionMap, keywordsMap, robotsMap, type,
+			typeSettingsProperties.toString(), false, friendlyURLMap,
+			serviceContext);
+
+		List<LayoutPageTemplateFragment> layoutPageTemplateFragments =
+			_layoutPageTemplateFragmentLocalService.
+				getLayoutPageTemplateFragmentsByPageTemplate(
+					groupId, layoutPageTemplateEntryId);
+
+		int position = 0;
+
+		for (LayoutPageTemplateFragment layoutPageTemplateFragment :
+				layoutPageTemplateFragments) {
+
+			FragmentEntry fragmentEntry =
+				FragmentEntryServiceUtil.fetchFragmentEntry(
+					layoutPageTemplateFragment.getFragmentEntryId());
+
+			layoutFragmentLocalService.addLayoutFragment(
+				getUserId(), groupId, layout.getPlid(), fragmentEntry,
+				position++, serviceContext);
+		}
+
+		return layout;
+	}
+
+	@Override
+	public void deleteContentLayout(
+			long groupId, long plid, ServiceContext serviceContext)
+		throws PortalException {
+
+		_layoutService.deleteLayout(plid, serviceContext);
+
+		List<LayoutFragment> layoutFragments = getLayoutFragments(
+			groupId, plid);
+
+		for (LayoutFragment layoutFragment : layoutFragments) {
+			layoutFragmentLocalService.deleteLayoutFragment(layoutFragment);
+		}
+	}
+
+	@Override
+	public List<LayoutFragment> getLayoutFragments(long groupId, long plid) {
+		return layoutFragmentPersistence.findByG_P(groupId, plid);
+	}
+
+	@ServiceReference(type = LayoutPageTemplateEntryService.class)
+	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
+
+	@ServiceReference(type = LayoutPageTemplateFragmentLocalService.class)
+	private LayoutPageTemplateFragmentLocalService
+		_layoutPageTemplateFragmentLocalService;
+
+	@ServiceReference(type = LayoutService.class)
+	private LayoutService _layoutService;
+
 }
