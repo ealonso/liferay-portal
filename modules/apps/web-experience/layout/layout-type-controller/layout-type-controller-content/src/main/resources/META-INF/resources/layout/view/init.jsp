@@ -13,3 +13,20 @@
  * details.
  */
 --%>
+
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
+taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+
+<%@ page import="com.liferay.layout.service.model.LayoutFragment" %><%@
+page import="com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys" %><%@
+page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringPool" %>
+
+<%@ page import="java.util.List" %>
+
+<liferay-theme:defineObjects />
+
+<%
+List<LayoutFragment> layoutFragments = (List<LayoutFragment>)request.getAttribute(ContentLayoutTypeControllerWebKeys.LAYOUT_FRAGMENTS);
+%>

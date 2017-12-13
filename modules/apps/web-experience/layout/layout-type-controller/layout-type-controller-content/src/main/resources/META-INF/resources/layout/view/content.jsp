@@ -15,3 +15,33 @@
 --%>
 
 <%@ include file="/layout/view/init.jsp" %>
+
+<%
+String randomNamespace = PortalUtil.generateRandomKey(request, "layout_type_controller_content_page") + StringPool.UNDERLINE;
+int position = 0;
+
+for (LayoutFragment layoutFragment : layoutFragments) {
+	String fragmentNamespace = randomNamespace + position++;
+%>
+
+	<liferay-util:html-top outputKey="<%= fragmentNamespace %>">
+		<style type="text/css">
+			<%= layoutFragment.getCss() %>
+		</style>
+	</liferay-util:html-top>
+
+	<div id="<%= fragmentNamespace %>">
+		<%= layoutFragment.getHtml() %>
+	</div>
+
+	<aui:script>
+		(function() {
+		var fragment = document.getElementById("<%= fragmentNamespace %>");
+
+		<%= layoutFragment.getJs() %>
+		}());
+	</aui:script>
+
+<%
+}
+%>

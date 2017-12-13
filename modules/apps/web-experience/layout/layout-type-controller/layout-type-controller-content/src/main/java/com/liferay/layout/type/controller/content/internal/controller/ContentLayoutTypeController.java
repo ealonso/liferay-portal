@@ -14,9 +14,12 @@
 
 package com.liferay.layout.type.controller.content.internal.controller;
 
+import com.liferay.layout.service.model.LayoutFragment;
 import com.liferay.layout.service.service.LayoutFragmentService;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerConstants;
+import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
@@ -24,8 +27,11 @@ import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
@@ -49,6 +55,25 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 	@Override
 	public String getURL() {
 		return _URL;
+	}
+
+	@Override
+	public boolean includeLayoutContent(
+			HttpServletRequest request, HttpServletResponse response,
+			Layout layout)
+		throws Exception {
+
+		long groupId = _portal.getScopeGroupId(request);
+
+		List<LayoutFragment> layoutFragments =
+			_layoutFragmentService.getLayoutFragments(
+				groupId, layout.getPlid());
+
+		request.setAttribute(
+			ContentLayoutTypeControllerWebKeys.LAYOUT_FRAGMENTS,
+			layoutFragments);
+
+		return super.includeLayoutContent(request, response, layout);
 	}
 
 	@Override
