@@ -41,6 +41,35 @@ public class LayoutFragmentServiceUtil {
 	 *
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.layout.service.service.impl.LayoutFragmentServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
+	public static com.liferay.portal.kernel.model.Layout addContentLayout(
+		long groupId, boolean privateLayout, long parentLayoutId,
+		long layoutPageTemplateEntryId,
+		java.util.Map<java.util.Locale, java.lang.String> localeNamesMap,
+		java.util.Map<java.util.Locale, java.lang.String> localeTitlesMap,
+		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
+		java.util.Map<java.util.Locale, java.lang.String> keywordsMap,
+		java.util.Map<java.util.Locale, java.lang.String> robotsMap,
+		java.lang.String type,
+		java.util.Map<java.util.Locale, java.lang.String> friendlyURLMap,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addContentLayout(groupId, privateLayout, parentLayoutId,
+			layoutPageTemplateEntryId, localeNamesMap, localeTitlesMap,
+			descriptionMap, keywordsMap, robotsMap, type, friendlyURLMap,
+			serviceContext);
+	}
+
+	public static void deleteContentLayout(long groupId, long plid,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().deleteContentLayout(groupId, plid, serviceContext);
+	}
+
+	public static java.util.List<com.liferay.layout.service.model.LayoutFragment> getLayoutFragments(
+		long groupId, long plid) {
+		return getService().getLayoutFragments(groupId, plid);
+	}
 
 	/**
 	* Returns the OSGi service identifier.

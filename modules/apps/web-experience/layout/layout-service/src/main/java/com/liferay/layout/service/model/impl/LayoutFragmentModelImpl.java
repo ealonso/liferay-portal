@@ -103,7 +103,7 @@ public class LayoutFragmentModelImpl extends BaseModelImpl<LayoutFragment>
 		TABLE_COLUMNS_MAP.put("typeSettings", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table LayoutFragment (layoutFragmentId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,plid LONG,fragmentEntryId LONG,css VARCHAR(75) null,html VARCHAR(75) null,js VARCHAR(75) null,position INTEGER,typeSettings VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table LayoutFragment (layoutFragmentId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,plid LONG,fragmentEntryId LONG,css STRING null,html STRING null,js STRING null,position INTEGER,typeSettings VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table LayoutFragment";
 	public static final String ORDER_BY_JPQL = " ORDER BY layoutFragment.position ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY LayoutFragment.position ASC";
