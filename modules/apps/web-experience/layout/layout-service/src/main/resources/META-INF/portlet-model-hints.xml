@@ -11,9 +11,15 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="plid" type="long" />
 		<field name="fragmentEntryId" type="long" />
-		<field name="css" type="String" />
-		<field name="html" type="String" />
-		<field name="js" type="String" />
+		<field name="css" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="html" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="js" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
 		<field name="position" type="int" />
 		<field name="typeSettings" type="String" />
 	</model>
