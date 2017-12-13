@@ -2,6 +2,10 @@ Bundle-Name: Liferay Layout API
 Bundle-SymbolicName: com.liferay.layout.api
 Bundle-Version: 1.0.0
 Export-Package:\
+	com.liferay.layout.service.exception,\
+	com.liferay.layout.service.model,\
+	com.liferay.layout.service.service,\
+	com.liferay.layout.service.service.persistence,\
 	com.liferay.layout.set.model.adapter,\
 	com.liferay.layout.util.comparator
 Liferay-Releng-Module-Group-Description:
