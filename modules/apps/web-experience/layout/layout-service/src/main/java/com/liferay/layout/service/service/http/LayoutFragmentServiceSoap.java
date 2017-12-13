@@ -16,9 +16,20 @@ package com.liferay.layout.service.service.http;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.layout.service.service.LayoutFragmentServiceUtil;
+
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+
+import java.rmi.RemoteException;
+
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * Provides the SOAP utility for the
- * {@link com.liferay.layout.service.service.LayoutFragmentServiceUtil} service utility. The
+ * {@link LayoutFragmentServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it is difficult for SOAP to
  * support certain types.
@@ -53,9 +64,84 @@ import aQute.bnd.annotation.ProviderType;
  * @author Brian Wing Shun Chan
  * @see LayoutFragmentServiceHttp
  * @see com.liferay.layout.service.model.LayoutFragmentSoap
- * @see com.liferay.layout.service.service.LayoutFragmentServiceUtil
+ * @see LayoutFragmentServiceUtil
  * @generated
  */
 @ProviderType
 public class LayoutFragmentServiceSoap {
+	public static com.liferay.portal.kernel.model.Layout addContentLayout(
+		long groupId, boolean privateLayout, long parentLayoutId,
+		long layoutPageTemplateEntryId,
+		java.lang.String[] localeNamesMapLanguageIds,
+		java.lang.String[] localeNamesMapValues,
+		java.lang.String[] localeTitlesMapLanguageIds,
+		java.lang.String[] localeTitlesMapValues,
+		java.lang.String[] descriptionMapLanguageIds,
+		java.lang.String[] descriptionMapValues,
+		java.lang.String[] keywordsMapLanguageIds,
+		java.lang.String[] keywordsMapValues,
+		java.lang.String[] robotsMapLanguageIds,
+		java.lang.String[] robotsMapValues, java.lang.String type,
+		java.lang.String[] friendlyURLMapLanguageIds,
+		java.lang.String[] friendlyURLMapValues,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			Map<Locale, String> localeNamesMap = LocalizationUtil.getLocalizationMap(localeNamesMapLanguageIds,
+					localeNamesMapValues);
+			Map<Locale, String> localeTitlesMap = LocalizationUtil.getLocalizationMap(localeTitlesMapLanguageIds,
+					localeTitlesMapValues);
+			Map<Locale, String> descriptionMap = LocalizationUtil.getLocalizationMap(descriptionMapLanguageIds,
+					descriptionMapValues);
+			Map<Locale, String> keywordsMap = LocalizationUtil.getLocalizationMap(keywordsMapLanguageIds,
+					keywordsMapValues);
+			Map<Locale, String> robotsMap = LocalizationUtil.getLocalizationMap(robotsMapLanguageIds,
+					robotsMapValues);
+			Map<Locale, String> friendlyURLMap = LocalizationUtil.getLocalizationMap(friendlyURLMapLanguageIds,
+					friendlyURLMapValues);
+
+			com.liferay.portal.kernel.model.Layout returnValue = LayoutFragmentServiceUtil.addContentLayout(groupId,
+					privateLayout, parentLayoutId, layoutPageTemplateEntryId,
+					localeNamesMap, localeTitlesMap, descriptionMap,
+					keywordsMap, robotsMap, type, friendlyURLMap, serviceContext);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void deleteContentLayout(long groupId, long plid,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			LayoutFragmentServiceUtil.deleteContentLayout(groupId, plid,
+				serviceContext);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.layout.service.model.LayoutFragmentSoap[] getLayoutFragments(
+		long groupId, long plid) throws RemoteException {
+		try {
+			java.util.List<com.liferay.layout.service.model.LayoutFragment> returnValue =
+				LayoutFragmentServiceUtil.getLayoutFragments(groupId, plid);
+
+			return com.liferay.layout.service.model.LayoutFragmentSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(LayoutFragmentServiceSoap.class);
 }

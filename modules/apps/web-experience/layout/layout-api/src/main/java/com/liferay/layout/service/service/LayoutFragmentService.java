@@ -16,14 +16,23 @@ package com.liferay.layout.service.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.layout.service.model.LayoutFragment;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Provides the remote service interface for LayoutFragment. Methods of this
@@ -49,6 +58,21 @@ public interface LayoutFragmentService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link LayoutFragmentServiceUtil} to access the layout fragment remote service. Add custom service methods to {@link com.liferay.layout.service.service.impl.LayoutFragmentServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public Layout addContentLayout(long groupId, boolean privateLayout,
+		long parentLayoutId, long layoutPageTemplateEntryId,
+		Map<Locale, java.lang.String> localeNamesMap,
+		Map<Locale, java.lang.String> localeTitlesMap,
+		Map<Locale, java.lang.String> descriptionMap,
+		Map<Locale, java.lang.String> keywordsMap,
+		Map<Locale, java.lang.String> robotsMap, java.lang.String type,
+		Map<Locale, java.lang.String> friendlyURLMap,
+		ServiceContext serviceContext) throws PortalException;
+
+	public void deleteContentLayout(long groupId, long plid,
+		ServiceContext serviceContext) throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutFragment> getLayoutFragments(long groupId, long plid);
 
 	/**
 	* Returns the OSGi service identifier.

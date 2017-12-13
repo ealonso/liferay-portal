@@ -8,9 +8,9 @@ create table LayoutFragment (
 	modifiedDate DATE null,
 	plid LONG,
 	fragmentEntryId LONG,
-	css VARCHAR(75) null,
-	html VARCHAR(75) null,
-	js VARCHAR(75) null,
+	css STRING null,
+	html STRING null,
+	js STRING null,
 	position INTEGER,
 	typeSettings VARCHAR(75) null
 );
