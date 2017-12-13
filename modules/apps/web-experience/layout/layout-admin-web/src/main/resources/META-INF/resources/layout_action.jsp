@@ -23,17 +23,19 @@ Layout curLayout = (Layout)row.getObject();
 %>
 
 <liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
-	<liferay-ui:icon
-		message="edit"
-		target="_blank"
-		url="<%= layoutsAdminDisplayContext.getEditLayoutURL(curLayout) %>"
-	/>
-
-	<c:if test="<%= layoutsAdminDisplayContext.showConfigureAction(curLayout) %>">
+	<c:if test='<%= !Objects.equals(curLayout.getType(), "content") %>'>
 		<liferay-ui:icon
-			message="configure"
-			url="<%= layoutsAdminDisplayContext.getConfigureLayoutURL(curLayout) %>"
+			message="edit"
+			target="_blank"
+			url="<%= layoutsAdminDisplayContext.getEditLayoutURL(curLayout) %>"
 		/>
+
+		<c:if test="<%= layoutsAdminDisplayContext.showConfigureAction(curLayout) %>">
+			<liferay-ui:icon
+				message="configure"
+				url="<%= layoutsAdminDisplayContext.getConfigureLayoutURL(curLayout) %>"
+			/>
+		</c:if>
 	</c:if>
 
 	<c:if test="<%= layoutsAdminDisplayContext.showAddChildPageAction(curLayout) %>">
