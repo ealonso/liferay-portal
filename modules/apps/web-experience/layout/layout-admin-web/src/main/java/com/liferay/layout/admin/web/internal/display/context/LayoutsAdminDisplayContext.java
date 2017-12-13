@@ -67,6 +67,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import javax.portlet.ActionRequest;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 /**
@@ -89,6 +90,38 @@ public class LayoutsAdminDisplayContext {
 
 		_liferayPortletRequest.setAttribute(
 			WebKeys.LAYOUT_DESCRIPTIONS, getLayoutDescriptions());
+	}
+
+	public String getAddContentPageURL() {
+		return getAddContentPageURL(0);
+	}
+
+	public String getAddContentPageURL(long layoutPageTemplateCollectionId) {
+		PortletURL addContentPageURL = PortalUtil.getControlPanelPortletURL(
+			_liferayPortletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
+			PortletRequest.RENDER_PHASE);
+
+		addContentPageURL.setParameter(
+			"mvcPath", "/select_layout_page_template_entry.jsp");
+
+		addContentPageURL.setParameter(
+			"redirect", _themeDisplay.getURLCurrent());
+		addContentPageURL.setParameter(
+			"backURL", _themeDisplay.getURLCurrent());
+		addContentPageURL.setParameter(
+			"groupId", String.valueOf(getSelGroupId()));
+		addContentPageURL.setParameter(
+			"selPlid", String.valueOf(LayoutConstants.DEFAULT_PLID));
+		addContentPageURL.setParameter(
+			"privateLayout", String.valueOf(isPrivatePages()));
+
+		if (layoutPageTemplateCollectionId > 0) {
+			addContentPageURL.setParameter(
+				"layoutPageTemplateCollectionId",
+				String.valueOf(layoutPageTemplateCollectionId));
+		}
+
+		return addContentPageURL.toString();
 	}
 
 	public String getAddLayoutURL() {
