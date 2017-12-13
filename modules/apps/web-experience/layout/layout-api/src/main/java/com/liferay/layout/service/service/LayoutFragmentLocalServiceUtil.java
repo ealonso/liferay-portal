@@ -53,6 +53,16 @@ public class LayoutFragmentLocalServiceUtil {
 		return getService().addLayoutFragment(layoutFragment);
 	}
 
+	public static com.liferay.layout.service.model.LayoutFragment addLayoutFragment(
+		long userId, long groupId, long plid,
+		com.liferay.fragment.model.FragmentEntry fragmentEntry, int position,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addLayoutFragment(userId, groupId, plid, fragmentEntry,
+			position, serviceContext);
+	}
+
 	/**
 	* Creates a new layout fragment with the primary key. Does not add the layout fragment to the database.
 	*

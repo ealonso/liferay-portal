@@ -16,6 +16,8 @@ package com.liferay.layout.service.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.fragment.model.FragmentEntry;
+
 import com.liferay.layout.service.model.LayoutFragment;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -29,6 +31,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -69,6 +72,10 @@ public interface LayoutFragmentLocalService extends BaseLocalService,
 	*/
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutFragment addLayoutFragment(LayoutFragment layoutFragment);
+
+	public LayoutFragment addLayoutFragment(long userId, long groupId,
+		long plid, FragmentEntry fragmentEntry, int position,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Creates a new layout fragment with the primary key. Does not add the layout fragment to the database.
