@@ -14,28 +14,67 @@
 
 package com.liferay.layout.service.service.impl;
 
+import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.layout.service.model.LayoutFragment;
 import com.liferay.layout.service.service.base.LayoutFragmentLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+
+import java.util.Date;
 
 /**
- * The implementation of the layout fragment local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.layout.service.service.LayoutFragmentLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see LayoutFragmentLocalServiceBaseImpl
- * @see com.liferay.layout.service.service.LayoutFragmentLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class LayoutFragmentLocalServiceImpl
 	extends LayoutFragmentLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.layout.service.service.LayoutFragmentLocalServiceUtil} to access the layout fragment local service.
-	 */
+	@Override
+	public LayoutFragment addLayoutFragment(
+			long userId, long groupId, long plid, FragmentEntry fragmentEntry,
+			int position, ServiceContext serviceContext)
+		throws PortalException {
+
+		User user = userLocalService.getUser(userId);
+
+		long layoutFragmentId = counterLocalService.increment();
+
+		LayoutFragment layoutFragment = layoutFragmentPersistence.create(
+			layoutFragmentId);
+
+		layoutFragment.setGroupId(groupId);
+		layoutFragment.setCompanyId(user.getCompanyId());
+		layoutFragment.setUserId(user.getUserId());
+		layoutFragment.setUserName(user.getFullName());
+		layoutFragment.setCreateDate(serviceContext.getCreateDate(new Date()));
+		layoutFragment.setModifiedDate(
+			serviceContext.getModifiedDate(new Date()));
+		layoutFragment.setPlid(plid);
+		layoutFragment.setFragmentEntryId(fragmentEntry.getFragmentEntryId());
+		layoutFragment.setCss(fragmentEntry.getCss());
+		layoutFragment.setHtml(fragmentEntry.getHtml());
+		layoutFragment.setJs(fragmentEntry.getJs());
+		layoutFragment.setPosition(position);
+
+		layoutFragmentPersistence.update(layoutFragment);
+
+		return layoutFragment;
+	}
+
+	@Override
+	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment) {
+		layoutFragmentPersistence.remove(layoutFragment);
+
+		return layoutFragment;
+	}
+
+	@Override
+	public LayoutFragment deleteLayoutFragment(long layoutFragmentId)
+		throws PortalException {
+
+		LayoutFragment layoutFragment = getLayoutFragment(layoutFragmentId);
+
+		return deleteLayoutFragment(layoutFragment);
+	}
+
 }
