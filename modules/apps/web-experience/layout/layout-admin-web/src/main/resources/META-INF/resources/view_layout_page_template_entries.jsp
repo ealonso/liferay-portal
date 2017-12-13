@@ -133,25 +133,48 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateCo
 	<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionId()) %>" />
 </portlet:actionURL>
 
-<aui:script>
+<aui:script require="metal-dom/src/all/dom as dom">
 	function handleAddLayoutPageTemplateEntryMenuItemClick(event) {
 		event.preventDefault();
 
-		Liferay.Util.openSimpleInputModal(
-			{
-				dialogTitle: '<liferay-ui:message key="add-page-template" />',
-				formSubmitURL: '<%= addLayoutPageTemplateEntryURL %>',
-				mainFieldLabel: '<liferay-ui:message key="name" />',
+		Liferay.Util.openSimpleInputModal({
+			dialogTitle: '<liferay-ui:message key="add-page-template" />',
+			formSubmitURL: '<%= addLayoutPageTemplateEntryURL %>',
+			mainFieldLabel: '<liferay-ui:message key="name" />',
+			mainFieldName: 'name',
+			mainFieldPlaceholder: '<liferay-ui:message key="name" />',
+			namespace: '<portlet:namespace />',
+			spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+		});
+	}
+
+	var updateLayoutPageTemplateEntryMenuItemClickHandler = dom.delegate(
+		document.body,
+		'click',
+		'.<portlet:namespace />update-layout-page-template-action-option > a',
+		function(event) {
+			var data = event.delegateTarget.dataset;
+
+			event.preventDefault();
+
+			Liferay.Util.openSimpleInputModal({
+				dialogTitle: '<%= LanguageUtil.get(request, "rename-layout-page-template") %>',
+				formSubmitURL: data.formSubmitUrl,
+				idFieldName: 'layoutPageTemplateEntryId',
+				idFieldValue: data.idFieldValue,
+				mainFieldLabel: '<%= LanguageUtil.get(request, "name") %>',
 				mainFieldName: 'name',
-				mainFieldPlaceholder: '<liferay-ui:message key="name" />',
+				mainFieldPlaceholder: '<%= LanguageUtil.get(request, "name") %>',
+				mainFieldValue: data.mainFieldValue,
 				namespace: '<portlet:namespace />',
 				spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
-			}
-		);
-	}
+			});
+		}
+	);
 
 	function handleDestroyPortlet() {
 		addLayoutPageTemplateEntryMenuItem.removeEventListener('click', handleAddLayoutPageTemplateEntryMenuItemClick);
+		updateLayoutPageTemplateEntryMenuItemClickHandler.removeListener();
 
 		Liferay.detach('destroyPortlet', handleDestroyPortlet);
 	}
