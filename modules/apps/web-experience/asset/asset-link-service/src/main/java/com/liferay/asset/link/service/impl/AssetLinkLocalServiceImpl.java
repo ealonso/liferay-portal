@@ -19,12 +19,10 @@ import com.liferay.asset.link.exception.NoSuchLinkException;
 import com.liferay.asset.link.model.AssetLink;
 import com.liferay.asset.link.model.AssetLinkConstants;
 import com.liferay.asset.link.model.adapter.StagedAssetLink;
-import com.liferay.asset.link.model.impl.AssetLinkImpl;
 import com.liferay.asset.link.service.base.AssetLinkLocalServiceBaseImpl;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
-import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.Disjunction;
@@ -34,10 +32,8 @@ import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.QueryPos;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.SQLQuery;
-import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -45,7 +41,6 @@ import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.adapter.ModelAdapterUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.util.ArrayList;
@@ -143,35 +138,11 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 
 	@Override
 	public void deleteGroupLinks(long groupId) {
-		Session session = assetLinkPersistence.openSession();
+		List<AssetLink> assetLinks = assetLinkFinder.findByAssetEntryGroupId(
+			groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-		try {
-			String sql = CustomSQLUtil.get(
-				getClass(), _FIND_BY_ASSET_ENTRY_GROUP_ID);
-
-			SQLQuery sqlQuery = session.createSynchronizedSQLQuery(sql);
-
-			sqlQuery.addEntity("AssetLink", AssetLinkImpl.class);
-
-			QueryPos qPos = QueryPos.getInstance(sqlQuery);
-
-			qPos.add(groupId);
-			qPos.add(groupId);
-
-			List<AssetLink> assetLinks = sqlQuery.list();
-
-			if (ListUtil.isEmpty(assetLinks)) {
-				return;
-			}
-
-			for (AssetLink assetLink : assetLinks) {
-				deleteAssetLink(assetLink);
-			}
-		}
-		finally {
-			assetLinkPersistence.closeSession(session);
-
-			assetLinkPersistence.clearCache();
+		for (AssetLink assetLink : assetLinks) {
+			deleteAssetLink(assetLink);
 		}
 	}
 
@@ -563,9 +534,6 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 
 		return assetLinks;
 	}
-
-	private static final String _FIND_BY_ASSET_ENTRY_GROUP_ID =
-		AssetLinkLocalServiceImpl.class.getName() + ".findByAssetEntryGroupId";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetLinkLocalServiceImpl.class);
