@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <custom-sql>
-	<sql id="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
+	<sql id="com.liferay.asset.link.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
 		<![CDATA[
 			SELECT
 				AssetLink.*
