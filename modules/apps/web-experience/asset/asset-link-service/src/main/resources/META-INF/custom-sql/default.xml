@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<custom-sql>
+	<sql id="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl.findByAssetEntryGroupId">
+		<![CDATA[
+			SELECT
+				AssetLink.*
+			FROM
+				AssetLink
+			WHERE
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							AssetEntry AssetEntry1, AssetEntry AssetEntry2
+						WHERE
+							(AssetLink.entryId1 = AssetEntry1.entryId) AND
+							(AssetLink.entryId2 = AssetEntry2.entryId) AND
+							(
+								(AssetEntry1.groupId = ?) OR
+								(AssetEntry2.groupId = ?)
+							)
+					)
+		]]>
+	</sql>
+</custom-sql>
