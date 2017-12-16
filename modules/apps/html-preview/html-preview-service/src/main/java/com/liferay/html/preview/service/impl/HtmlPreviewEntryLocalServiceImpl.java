@@ -20,6 +20,7 @@ import com.liferay.html.preview.service.base.HtmlPreviewEntryLocalServiceBaseImp
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -60,6 +61,15 @@ public class HtmlPreviewEntryLocalServiceImpl
 
 		htmlPreviewEntryPersistence.update(htmlPreviewEntry);
 
+		Repository repository =
+			PortletFileRepositoryUtil.fetchPortletRepository(
+				groupId, HtmlPreviewEntry.class.getName());
+
+		if (repository == null) {
+			PortletFileRepositoryUtil.addPortletRepository(
+				groupId, HtmlPreviewEntry.class.getName(), serviceContext);
+		}
+
 		_sendMessage(userId, groupId, htmlPreviewEntryId, content, mimeType);
 
 		return htmlPreviewEntry;
@@ -72,8 +82,10 @@ public class HtmlPreviewEntryLocalServiceImpl
 
 		htmlPreviewEntryPersistence.remove(htmlPreviewEntry);
 
-		PortletFileRepositoryUtil.deletePortletFileEntry(
-			htmlPreviewEntry.getFileEntryId());
+		if (htmlPreviewEntry.getFileEntryId() > 0) {
+			PortletFileRepositoryUtil.deletePortletFileEntry(
+				htmlPreviewEntry.getFileEntryId());
+		}
 
 		return htmlPreviewEntry;
 	}
