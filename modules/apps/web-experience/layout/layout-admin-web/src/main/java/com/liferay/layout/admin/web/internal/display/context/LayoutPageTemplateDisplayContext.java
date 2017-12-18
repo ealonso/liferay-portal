@@ -62,10 +62,10 @@ public class LayoutPageTemplateDisplayContext {
 			HttpServletRequest request)
 		throws PortalException {
 
-		_renderRequest = renderRequest;
-		_renderResponse = renderResponse;
+		this.renderRequest = renderRequest;
+		this.renderResponse = renderResponse;
 
-		_request = request;
+		this.request = request;
 	}
 
 	public String getDisplayStyle() {
@@ -74,7 +74,7 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		PortalPreferences portalPreferences =
-			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+			PortletPreferencesFactoryUtil.getPortalPreferences(request);
 
 		_displayStyle = portalPreferences.getValue(
 			LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "icon");
@@ -85,7 +85,7 @@ public class LayoutPageTemplateDisplayContext {
 	public String getEditLayoutPageTemplateEntryRedirect()
 		throws PortalException {
 
-		PortletURL portletURL = _renderResponse.createRenderURL();
+		PortletURL portletURL = renderResponse.createRenderURL();
 
 		portletURL.setParameter(
 			"mvcPath", "/view_layout_page_template_entries.jsp");
@@ -104,7 +104,7 @@ public class LayoutPageTemplateDisplayContext {
 		JSONArray fragmentCollectionsJSONArray =
 			JSONFactoryUtil.createJSONArray();
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		List<FragmentCollection> fragmentCollections =
@@ -158,7 +158,7 @@ public class LayoutPageTemplateDisplayContext {
 			return _keywords;
 		}
 
-		_keywords = ParamUtil.getString(_request, "keywords");
+		_keywords = ParamUtil.getString(request, "keywords");
 
 		return _keywords;
 	}
@@ -179,23 +179,23 @@ public class LayoutPageTemplateDisplayContext {
 	}
 
 	public long getLayoutPageTemplateCollectionId() {
-		if (Validator.isNotNull(_layoutPageTemplateCollectionId)) {
-			return _layoutPageTemplateCollectionId;
+		if (Validator.isNotNull(layoutPageTemplateCollectionId)) {
+			return layoutPageTemplateCollectionId;
 		}
 
-		_layoutPageTemplateCollectionId = ParamUtil.getLong(
-			_request, "layoutPageTemplateCollectionId");
+		layoutPageTemplateCollectionId = ParamUtil.getLong(
+			request, "layoutPageTemplateCollectionId");
 
-		return _layoutPageTemplateCollectionId;
+		return layoutPageTemplateCollectionId;
 	}
 
 	public String getLayoutPageTemplateCollectionRedirect()
 		throws PortalException {
 
-		String redirect = ParamUtil.getString(_request, "redirect");
+		String redirect = ParamUtil.getString(request, "redirect");
 
 		if (Validator.isNull(redirect)) {
-			PortletURL backURL = _renderResponse.createRenderURL();
+			PortletURL backURL = renderResponse.createRenderURL();
 
 			backURL.setParameter(
 				"mvcPath", "/view_layout_page_template_collections.jsp");
@@ -214,12 +214,12 @@ public class LayoutPageTemplateDisplayContext {
 			return _layoutPageTemplateCollectionsSearchContainer;
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		SearchContainer layoutPageTemplateCollectionsSearchContainer =
 			new SearchContainer(
-				_renderRequest, _renderResponse.createRenderURL(), null,
+				renderRequest, renderResponse.createRenderURL(), null,
 				"there-are-no-collections");
 
 		if (!isSearch()) {
@@ -236,7 +236,7 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		layoutPageTemplateCollectionsSearchContainer.setRowChecker(
-			new EmptyOnClickRowChecker(_renderResponse));
+			new EmptyOnClickRowChecker(renderResponse));
 
 		layoutPageTemplateCollectionsSearchContainer.setOrderByCol(
 			getOrderByCol());
@@ -252,7 +252,7 @@ public class LayoutPageTemplateDisplayContext {
 		layoutPageTemplateCollectionsSearchContainer.setOrderByType(
 			getOrderByType());
 		layoutPageTemplateCollectionsSearchContainer.setRowChecker(
-			new EmptyOnClickRowChecker(_renderResponse));
+			new EmptyOnClickRowChecker(renderResponse));
 
 		List<LayoutPageTemplateCollection> layoutPageTemplateCollections = null;
 		int layoutPageTemplateCollectionsCount = 0;
@@ -305,7 +305,7 @@ public class LayoutPageTemplateDisplayContext {
 			getLayoutPageTemplateCollection();
 
 		if (layoutPageTemplateCollection == null) {
-			return LanguageUtil.get(_request, "add-collection");
+			return LanguageUtil.get(request, "add-collection");
 		}
 
 		return layoutPageTemplateCollection.getName();
@@ -314,16 +314,16 @@ public class LayoutPageTemplateDisplayContext {
 	public SearchContainer getLayoutPageTemplateEntriesSearchContainer()
 		throws PortalException {
 
-		if (_layoutPageTemplateEntriesSearchContainer != null) {
-			return _layoutPageTemplateEntriesSearchContainer;
+		if (this.layoutPageTemplateEntriesSearchContainer != null) {
+			return this.layoutPageTemplateEntriesSearchContainer;
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		SearchContainer layoutPageTemplateEntriesSearchContainer =
 			new SearchContainer(
-				_renderRequest, _renderResponse.createRenderURL(), null,
+				renderRequest, renderResponse.createRenderURL(), null,
 				"there-are-no-page-templates");
 
 		if (!isSearch()) {
@@ -339,7 +339,7 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		layoutPageTemplateEntriesSearchContainer.setRowChecker(
-			new EmptyOnClickRowChecker(_renderResponse));
+			new EmptyOnClickRowChecker(renderResponse));
 
 		layoutPageTemplateEntriesSearchContainer.setOrderByCol(getOrderByCol());
 
@@ -395,10 +395,10 @@ public class LayoutPageTemplateDisplayContext {
 		layoutPageTemplateEntriesSearchContainer.setTotal(
 			layoutPageTemplateEntriesCount);
 
-		_layoutPageTemplateEntriesSearchContainer =
+		this.layoutPageTemplateEntriesSearchContainer =
 			layoutPageTemplateEntriesSearchContainer;
 
-		return _layoutPageTemplateEntriesSearchContainer;
+		return this.layoutPageTemplateEntriesSearchContainer;
 	}
 
 	public LayoutPageTemplateEntry getLayoutPageTemplateEntry()
@@ -421,7 +421,7 @@ public class LayoutPageTemplateDisplayContext {
 		}
 
 		_layoutPageTemplateEntryId = ParamUtil.getLong(
-			_request, "layoutPageTemplateEntryId");
+			request, "layoutPageTemplateEntryId");
 
 		return _layoutPageTemplateEntryId;
 	}
@@ -431,7 +431,7 @@ public class LayoutPageTemplateDisplayContext {
 			getLayoutPageTemplateEntry();
 
 		if (layoutPageTemplateEntry == null) {
-			return LanguageUtil.get(_request, "add-page-template");
+			return LanguageUtil.get(request, "add-page-template");
 		}
 
 		return layoutPageTemplateEntry.getName();
@@ -440,7 +440,7 @@ public class LayoutPageTemplateDisplayContext {
 	public JSONArray getLayoutPageTemplateFragmentsJSONArray()
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		LayoutPageTemplateEntry layoutPageTemplateEntry =
@@ -478,8 +478,7 @@ public class LayoutPageTemplateDisplayContext {
 			return _orderByCol;
 		}
 
-		_orderByCol = ParamUtil.getString(
-			_request, "orderByCol", "create-date");
+		_orderByCol = ParamUtil.getString(request, "orderByCol", "create-date");
 
 		return _orderByCol;
 	}
@@ -489,7 +488,7 @@ public class LayoutPageTemplateDisplayContext {
 			return _orderByType;
 		}
 
-		_orderByType = ParamUtil.getString(_request, "orderByType", "asc");
+		_orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
 		return _orderByType;
 	}
@@ -531,7 +530,7 @@ public class LayoutPageTemplateDisplayContext {
 	}
 
 	public boolean isShowAddButton(String actionId) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		if (LayoutPageTemplatePermission.contains(
@@ -570,6 +569,12 @@ public class LayoutPageTemplateDisplayContext {
 		return false;
 	}
 
+	protected Long layoutPageTemplateCollectionId;
+	protected SearchContainer layoutPageTemplateEntriesSearchContainer;
+	protected final RenderRequest renderRequest;
+	protected final RenderResponse renderResponse;
+	protected final HttpServletRequest request;
+
 	private boolean _hasLayoutPageTemplateCollectionsResults()
 		throws PortalException {
 
@@ -599,15 +604,10 @@ public class LayoutPageTemplateDisplayContext {
 	private String _displayStyle;
 	private String _keywords;
 	private LayoutPageTemplateCollection _layoutPageTemplateCollection;
-	private Long _layoutPageTemplateCollectionId;
 	private SearchContainer _layoutPageTemplateCollectionsSearchContainer;
-	private SearchContainer _layoutPageTemplateEntriesSearchContainer;
 	private LayoutPageTemplateEntry _layoutPageTemplateEntry;
 	private Long _layoutPageTemplateEntryId;
 	private String _orderByCol;
 	private String _orderByType;
-	private final RenderRequest _renderRequest;
-	private final RenderResponse _renderResponse;
-	private final HttpServletRequest _request;
 
 }
