@@ -46,6 +46,14 @@ public class FragmentLayoutTemplateLinkLocalServiceWrapper
 		return _fragmentLayoutTemplateLinkLocalService.addFragmentLayoutTemplateLink(fragmentLayoutTemplateLink);
 	}
 
+	@Override
+	public com.liferay.fragment.model.FragmentLayoutTemplateLink addFragmentLayoutTemplateLink(
+		long groupId, long fragmentEntryId, long layoutPageTemplateEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _fragmentLayoutTemplateLinkLocalService.addFragmentLayoutTemplateLink(groupId,
+			fragmentEntryId, layoutPageTemplateEntryId);
+	}
+
 	/**
 	* Creates a new fragment layout template link with the primary key. Does not add the fragment layout template link to the database.
 	*
@@ -82,6 +90,14 @@ public class FragmentLayoutTemplateLinkLocalServiceWrapper
 		long fragmentLayoutTemplateLinkId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _fragmentLayoutTemplateLinkLocalService.deleteFragmentLayoutTemplateLink(fragmentLayoutTemplateLinkId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.fragment.model.FragmentLayoutTemplateLink> deleteFragmentLayoutTemplateLinks(
+		long groupId, long layoutPageTemplateEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _fragmentLayoutTemplateLinkLocalService.deleteFragmentLayoutTemplateLinks(groupId,
+			layoutPageTemplateEntryId);
 	}
 
 	/**
