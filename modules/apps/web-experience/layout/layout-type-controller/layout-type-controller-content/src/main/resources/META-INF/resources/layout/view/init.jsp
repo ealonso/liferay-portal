@@ -17,5 +17,5 @@
 <%@ include file="/init.jsp" %>
 
 <%
-List<FragmentEntryInstanceLink> fragmentEntryInstanceLinks = (List<FragmentEntryInstanceLink>)request.getAttribute(ContentLayoutTypeControllerWebKeys.LAYOUT_FRAGMENTS);
+List<LayoutFragment> layoutFragments = (List<LayoutFragment>)request.getAttribute(ContentLayoutTypeControllerWebKeys.LAYOUT_FRAGMENTS);
 %>

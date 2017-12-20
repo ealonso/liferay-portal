@@ -19,25 +19,25 @@
 <%
 String randomNamespace = PortalUtil.generateRandomKey(request, "layout_type_controller_content_page") + StringPool.UNDERLINE;
 
-for (FragmentEntryInstanceLink fragmentEntryInstanceLink : fragmentEntryInstanceLinks) {
-	String fragmentEntryInstanceLinkNamespace = randomNamespace + fragmentEntryInstanceLink.getPosition();
+for (LayoutFragment layoutFragment : layoutFragments) {
+	String layoutPageTemplateFragmentNamespace = randomNamespace + layoutFragment.getPosition();
 %>
 
-	<liferay-util:html-top outputKey="<%= fragmentEntryInstanceLinkNamespace %>">
+	<liferay-util:html-top outputKey="<%= layoutPageTemplateFragmentNamespace %>">
 		<style type="text/css">
-			<%= fragmentEntryInstanceLink.getCss() %>
+			<%= layoutFragment.getCss() %>
 		</style>
 	</liferay-util:html-top>
 
-	<div id="<%= fragmentEntryInstanceLinkNamespace %>">
-		<%= fragmentEntryInstanceLink.getHtml() %>
+	<div id="<%= layoutPageTemplateFragmentNamespace %>">
+		<%= layoutFragment.getHtml() %>
 	</div>
 
 	<aui:script>
 		(function() {
-		var fragment = document.getElementById("<%= fragmentEntryInstanceLinkNamespace %>");
+		var fragment = document.getElementById("<%= layoutPageTemplateFragmentNamespace %>");
 
-		<%= fragmentEntryInstanceLink.getJs() %>
+		<%= layoutFragment.getJs() %>
 		}());
 	</aui:script>
 
