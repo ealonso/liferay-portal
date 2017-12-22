@@ -16,20 +16,24 @@
 
 <%@ include file="/init.jsp" %>
 
-<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden">
+<%
+Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
+%>
+
+<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden" value="<%= selLayout.getUuid() %>">
 	<aui:validator name="required" />
 </aui:input>
 
-<aui:input id="privateLayout" name="TypeSettingsProperties--privateLayout--" type="hidden">
+<aui:input id="privateLayout" name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= selLayout.isPrivateLayout() %>">
 	<aui:validator name="required" />
 </aui:input>
 
 <p class="text-default">
-	<span class="hide" id="<portlet:namespace />layoutItemRemove" role="button">
+	<span id="<portlet:namespace />layoutItemRemove" role="button">
 		<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
 	</span>
 	<span id="<portlet:namespace />layoutNameInput">
-		<span class="text-muted"><liferay-ui:message key="none" /></span>
+		<span class="text-muted"><%= selLayout.getName(locale) %></span>
 	</span>
 </p>
 
@@ -49,6 +53,8 @@ desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
 layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
 
 PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(renderRequest), eventName, layoutItemSelectorCriterion);
+
+itemSelectorURL.setParameter("layoutUuid", selLayout.getUuid());
 %>
 
 <aui:script use="liferay-item-selector-dialog">
