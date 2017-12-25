@@ -252,6 +252,13 @@ public class FragmentEntryLocalServiceWrapper
 			fragmentCollectionId, name, start, end, orderByComparator);
 	}
 
+	@Override
+	public java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
+		long[] fragmentEntryIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _fragmentEntryLocalService.getFragmentEntries(fragmentEntryIds);
+	}
+
 	/**
 	* Returns the number of fragment entries.
 	*

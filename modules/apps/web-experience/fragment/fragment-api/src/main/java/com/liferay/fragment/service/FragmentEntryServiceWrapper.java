@@ -111,6 +111,13 @@ public class FragmentEntryServiceWrapper implements FragmentEntryService,
 			fragmentCollectionId, name, start, end, orderByComparator);
 	}
 
+	@Override
+	public java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
+		long[] fragmentEntryIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _fragmentEntryService.getFragmentEntries(fragmentEntryIds);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*

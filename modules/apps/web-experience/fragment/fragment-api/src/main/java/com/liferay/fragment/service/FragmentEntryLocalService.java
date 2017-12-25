@@ -210,6 +210,10 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 		long fragmentCollectionId, java.lang.String name, int start, int end,
 		OrderByComparator<FragmentEntry> orderByComparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long[] fragmentEntryIds)
+		throws PortalException;
+
 	/**
 	* Returns the number of fragment entries.
 	*

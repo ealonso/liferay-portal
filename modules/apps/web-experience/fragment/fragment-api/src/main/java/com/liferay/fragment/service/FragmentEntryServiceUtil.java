@@ -113,6 +113,12 @@ public class FragmentEntryServiceUtil {
 			start, end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.fragment.model.FragmentEntry> getFragmentEntries(
+		long[] fragmentEntryIds)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getFragmentEntries(fragmentEntryIds);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*

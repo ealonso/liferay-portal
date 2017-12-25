@@ -99,6 +99,10 @@ public interface FragmentEntryService extends BaseService {
 		long fragmentCollectionId, java.lang.String name, int start, int end,
 		OrderByComparator<FragmentEntry> orderByComparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntry> getFragmentEntries(long[] fragmentEntryIds)
+		throws PortalException;
+
 	/**
 	* Returns the OSGi service identifier.
 	*

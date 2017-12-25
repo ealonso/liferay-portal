@@ -85,4 +85,16 @@ FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 			url="<%= deleteFragmentEntryURL %>"
 		/>
 	</c:if>
+
+	<liferay-portlet:resourceURL id="exportFragmentEntries" var="exportFragmentEntryURL" copyCurrentRenderParameters="<%= false %>">
+		<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+	</liferay-portlet:resourceURL>
+
+	<liferay-ui:icon
+		iconCssClass="download"
+		label="<%= true %>"
+		message="export"
+		method="get"
+		url="<%= exportFragmentEntryURL %>"
+	/>
 </liferay-ui:icon-menu>

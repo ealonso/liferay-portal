@@ -26,12 +26,16 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author Jürgen Kappler
@@ -127,6 +131,19 @@ public class FragmentEntryLocalServiceImpl
 	@Override
 	public FragmentEntry fetchFragmentEntry(long fragmentEntryId) {
 		return fragmentEntryPersistence.fetchByPrimaryKey(fragmentEntryId);
+	}
+
+	@Override
+	public List<FragmentEntry> getFragmentEntries(long[] fragmentEntryIds)
+		throws PortalException{
+
+		List<FragmentEntry> fragmentEntries = new ArrayList<>();
+
+		for (long fragmentEntryId : fragmentEntryIds) {
+			fragmentEntries.add(getFragmentEntry(fragmentEntryId));
+		}
+
+		return fragmentEntries;
 	}
 
 	@Override
