@@ -59,4 +59,10 @@ public interface SiteNavigationMenuPortletInstanceConfiguration {
 	@Meta.AD(name = "root-layout-uuid", required = false)
 	public String rootLayoutUuid();
 
+	@Meta.AD(name = "site-navigation-menu-id", required = false)
+	public long siteNavigationMenuId();
+
+	@Meta.AD(deflt = "layouts", name = "menu-type", required = false)
+	public String menuType();
+
 }

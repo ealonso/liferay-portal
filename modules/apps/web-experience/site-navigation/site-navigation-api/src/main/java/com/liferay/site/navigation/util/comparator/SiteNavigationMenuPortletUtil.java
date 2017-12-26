@@ -12,12 +12,10 @@
  * details.
  */
 
-package com.liferay.site.navigation.admin.web.internal.util;
+package com.liferay.site.navigation.util.comparator;
 
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
-import com.liferay.site.navigation.util.comparator.SiteNavigationMenuCreateDateComparator;
-import com.liferay.site.navigation.util.comparator.SiteNavigationMenuNameComparator;
 
 /**
  * @author Pavel Savinov

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.site.navigation.admin.web.internal.constants;
+package com.liferay.site.navigation.constants;
 
 /**
  * @author Pavel Savinov

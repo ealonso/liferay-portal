@@ -18,6 +18,7 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
@@ -31,8 +32,11 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.site.navigation.item.selector.criterion.SiteNavigationItemSelectorCriterion;
 import com.liferay.site.navigation.menu.web.configuration.SiteNavigationMenuPortletInstanceConfiguration;
 import com.liferay.site.navigation.menu.web.internal.constants.SiteNavigationMenuWebKeys;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -270,6 +274,77 @@ public class SiteNavigationMenuDisplayContext {
 		return _rootLayoutUuid;
 	}
 
+	public SiteNavigationMenu getSiteNavigationMenu() throws PortalException {
+		if (_siteNavigationMenu != null) {
+			return _siteNavigationMenu;
+		}
+
+		_siteNavigationMenu =
+			SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+				getSiteNavigationMenuId());
+
+		return _siteNavigationMenu;
+	}
+
+	public String getSiteNavigationMenuEventName() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		return portletDisplay.getNamespace() + "selectSiteNavigationMenu";
+	}
+
+	public long getSiteNavigationMenuId() {
+		if (_siteNavigationMenuId != null) {
+			return _siteNavigationMenuId;
+		}
+
+		_siteNavigationMenuId = ParamUtil.getLong(
+			_request, "siteNavigationMenuId",
+			_siteNavigationMenuPortletInstanceConfiguration.
+				siteNavigationMenuId());
+
+		return _siteNavigationMenuId;
+	}
+
+	public String getSiteNavigationMenuItemSelectorURL() {
+		String eventName = getSiteNavigationMenuEventName();
+
+		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
+			SiteNavigationMenuWebKeys.ITEM_SELECTOR);
+
+		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
+			new ArrayList<>();
+
+		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
+
+		SiteNavigationItemSelectorCriterion
+			siteNavigationItemSelectorCriterion =
+				new SiteNavigationItemSelectorCriterion();
+
+		siteNavigationItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			desiredItemSelectorReturnTypes);
+
+		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
+			RequestBackedPortletURLFactoryUtil.create(_request), eventName,
+			siteNavigationItemSelectorCriterion);
+
+		return itemSelectorURL.toString();
+	}
+
+	public boolean isLayoutsMenu() {
+		if (_menuType != null) {
+			return _menuType.equals("layouts");
+		}
+
+		_menuType = ParamUtil.getString(
+			_request, "menuType",
+			_siteNavigationMenuPortletInstanceConfiguration.menuType());
+
+		return _menuType.equals("layouts");
+	}
+
 	public boolean isPreview() {
 		if (_preview != null) {
 			return _preview;
@@ -287,11 +362,14 @@ public class SiteNavigationMenuDisplayContext {
 	private String _displayStyle;
 	private long _displayStyleGroupId;
 	private String _includedLayouts;
+	private String _menuType;
 	private Boolean _preview;
 	private final HttpServletRequest _request;
 	private Integer _rootLayoutLevel;
 	private String _rootLayoutType;
 	private String _rootLayoutUuid;
+	private SiteNavigationMenu _siteNavigationMenu;
+	private Long _siteNavigationMenuId;
 	private final SiteNavigationMenuPortletInstanceConfiguration
 		_siteNavigationMenuPortletInstanceConfiguration;
 
