@@ -105,6 +105,20 @@ public class SiteNavigationItemSelectorViewDisplayContext {
 		return _displayViews;
 	}
 
+	public String getItemSelectedEventName() {
+		return _itemSelectedEventName;
+	}
+
+	public String getKeywords() {
+		if (Validator.isNotNull(_keywords)) {
+			return _keywords;
+		}
+
+		_keywords = ParamUtil.getString(_request, "keywords");
+
+		return _keywords;
+	}
+
 	public String getOrderByCol() throws Exception {
 		if (_orderByCol != null) {
 			return _orderByCol;
@@ -176,6 +190,66 @@ public class SiteNavigationItemSelectorViewDisplayContext {
 		return _portletURL;
 	}
 
+	public SearchContainer getSearchContainer() throws Exception {
+		if (_searchContainer != null) {
+			return _searchContainer;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		SearchContainer searchContainer = new SearchContainer(
+			_liferayPortletRequest, getPortletURL(), null,
+			"there-are-no-navigation-menus");
+
+		if (Validator.isNotNull(getKeywords())) {
+			searchContainer.setSearch(true);
+		}
+
+		OrderByComparator<SiteNavigationMenu> orderByComparator =
+			SiteNavigationMenuPortletUtil.getOrderByComparator(
+				getOrderByCol(), getOrderByType());
+
+		searchContainer.setOrderByCol(getOrderByCol());
+		searchContainer.setOrderByComparator(orderByComparator);
+		searchContainer.setOrderByType(getOrderByType());
+
+		EmptyOnClickRowChecker emptyOnClickRowChecker =
+			new EmptyOnClickRowChecker(_liferayPortletResponse);
+
+		searchContainer.setRowChecker(emptyOnClickRowChecker);
+
+		List<SiteNavigationMenu> menus = null;
+		int menusCount = 0;
+
+		if (Validator.isNotNull(getKeywords())) {
+			menus = SiteNavigationMenuServiceUtil.getSiteNavigationMenus(
+				themeDisplay.getScopeGroupId(), getKeywords(),
+				searchContainer.getStart(), searchContainer.getEnd(),
+				orderByComparator);
+
+			menusCount =
+				SiteNavigationMenuServiceUtil.getSiteNavigationMenusCount(
+					themeDisplay.getScopeGroupId(), getKeywords());
+		}
+		else {
+			menus = SiteNavigationMenuServiceUtil.getSiteNavigationMenus(
+				themeDisplay.getScopeGroupId(), searchContainer.getStart(),
+				searchContainer.getEnd(), orderByComparator);
+
+			menusCount =
+				SiteNavigationMenuServiceUtil.getSiteNavigationMenusCount(
+					themeDisplay.getScopeGroupId());
+		}
+
+		searchContainer.setResults(menus);
+		searchContainer.setTotal(menusCount);
+
+		_searchContainer = searchContainer;
+
+		return _searchContainer;
+	}
+
 	private String _displayStyle;
 	private String[] _displayViews;
 	private final String _itemSelectedEventName;
@@ -187,5 +261,6 @@ public class SiteNavigationItemSelectorViewDisplayContext {
 	private final PortletPreferences _portletPreferences;
 	private final PortletURL _portletURL;
 	private final HttpServletRequest _request;
+	private SearchContainer _searchContainer;
 
 }
