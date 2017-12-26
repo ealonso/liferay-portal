@@ -12,15 +12,13 @@
  * details.
  */
 
-package com.liferay.site.navigation.admin.web.internal.constants;
+package com.liferay.site.navigation.item.selector.criterion;
+
+import com.liferay.item.selector.BaseItemSelectorCriterion;
 
 /**
  * @author Pavel Savinov
  */
-public class SiteNavigationAdminPortletKeys {
-
-	public static final String SITE_NAVIGATION_ADMIN =
-		"com_liferay_site_navigation_admin_web_portlet_" +
-			"SiteNavigationAdminPortlet";
-
+public class SiteNavigationItemSelectorCriterion
+	extends BaseItemSelectorCriterion {
 }
