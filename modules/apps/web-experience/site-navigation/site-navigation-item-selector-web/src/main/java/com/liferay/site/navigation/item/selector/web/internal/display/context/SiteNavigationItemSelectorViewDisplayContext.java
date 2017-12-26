@@ -64,9 +64,126 @@ public class SiteNavigationItemSelectorViewDisplayContext {
 				request, SiteNavigationAdminPortletKeys.SITE_NAVIGATION_ADMIN);
 	}
 
+	public String getDisplayStyle() {
+		if (_displayStyle != null) {
+			return _displayStyle;
+		}
+
+		String[] displayViews = getDisplayViews();
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(_request);
+
+		_displayStyle = ParamUtil.getString(_request, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				SiteNavigationAdminPortletKeys.SITE_NAVIGATION_ADMIN,
+				"display-style", "list");
+		}
+		else if (ArrayUtil.contains(displayViews, _displayStyle)) {
+			portalPreferences.setValue(
+				SiteNavigationAdminPortletKeys.SITE_NAVIGATION_ADMIN,
+				"display-style", _displayStyle);
+		}
+
+		if (!ArrayUtil.contains(displayViews, _displayStyle)) {
+			_displayStyle = displayViews[0];
+		}
+
+		return _displayStyle;
+	}
+
+	public String[] getDisplayViews() {
+		if (_displayViews == null) {
+			_displayViews = StringUtil.split(
+				PrefsParamUtil.getString(
+					_portletPreferences, _request, "displayViews",
+					"list,icon,descriptive"));
+		}
+
+		return _displayViews;
+	}
+
+	public String getOrderByCol() throws Exception {
+		if (_orderByCol != null) {
+			return _orderByCol;
+		}
+
+		_orderByCol = ParamUtil.getString(_request, "orderByCol");
+
+		if (Validator.isNull(_orderByCol)) {
+			_orderByCol = _portletPreferences.getValue(
+				"order-by-col", "create-date");
+		}
+		else {
+			boolean saveOrderBy = ParamUtil.getBoolean(_request, "saveOrderBy");
+
+			if (saveOrderBy) {
+				_portletPreferences.setValue("order-by-col", _orderByCol);
+			}
+		}
+
+		return _orderByCol;
+	}
+
+	public String getOrderByType() throws Exception {
+		if (_orderByType != null) {
+			return _orderByType;
+		}
+
+		_orderByType = ParamUtil.getString(_request, "orderByType");
+
+		if (Validator.isNull(_orderByType)) {
+			_orderByType = _portletPreferences.getValue("order-by-type", "asc");
+		}
+		else {
+			boolean saveOrderBy = ParamUtil.getBoolean(_request, "saveOrderBy");
+
+			if (saveOrderBy) {
+				_portletPreferences.setValue("order-by-type", _orderByType);
+			}
+		}
+
+		return _orderByType;
+	}
+
+	public String[] getOrderColumns() {
+		String[] orderColumns = {"create-date", "name"};
+
+		return orderColumns;
+	}
+
+	public PortletURL getPortletURL() throws Exception {
+		String displayStyle = ParamUtil.getString(_request, "displayStyle");
+
+		if (Validator.isNotNull(displayStyle)) {
+			_portletURL.setParameter("displayStyle", getDisplayStyle());
+		}
+
+		String orderByCol = getOrderByCol();
+
+		if (Validator.isNotNull(orderByCol)) {
+			_portletURL.setParameter("orderByCol", orderByCol);
+		}
+
+		String orderByType = getOrderByType();
+
+		if (Validator.isNotNull(orderByType)) {
+			_portletURL.setParameter("orderByType", orderByType);
+		}
+
+		return _portletURL;
+	}
+
+	private String _displayStyle;
+	private String[] _displayViews;
 	private final String _itemSelectedEventName;
+	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private String _orderByCol;
+	private String _orderByType;
 	private final PortletPreferences _portletPreferences;
 	private final PortletURL _portletURL;
 	private final HttpServletRequest _request;
