@@ -19,6 +19,7 @@ import com.liferay.asset.categories.exception.DuplicateCategoryException;
 import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.service.base.AssetCategoryLocalServiceBaseImpl;
+import com.liferay.asset.categories.service.permission.AssetCategoryPermission;
 import com.liferay.asset.categories.util.comparator.AssetCategoryLeftCategoryIdComparator;
 import com.liferay.asset.entry.rel.model.AssetEntryAssetCategoryRel;
 import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalService;
@@ -42,10 +43,14 @@ import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.ModelPermissions;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -184,6 +189,33 @@ public class AssetCategoryLocalServiceImpl
 			category.getCompanyId(), category.getGroupId(),
 			category.getUserId(), AssetCategory.class.getName(),
 			category.getCategoryId(), modelPermissions);
+	}
+
+	@Override
+	public long[] checkCategories(
+			String className, long classPK, long[] categoryIds)
+		throws PortalException {
+
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		if (permissionChecker == null) {
+			return categoryIds;
+		}
+
+		List<AssetCategory> oldCategories = getCategories(className, classPK);
+
+		for (AssetCategory category : oldCategories) {
+			if (!ArrayUtil.contains(categoryIds, category.getCategoryId()) &&
+				!AssetCategoryPermission.contains(
+					permissionChecker, category, ActionKeys.VIEW)) {
+
+				categoryIds = ArrayUtil.append(
+					categoryIds, category.getCategoryId());
+			}
+		}
+
+		return categoryIds;
 	}
 
 	@Override
