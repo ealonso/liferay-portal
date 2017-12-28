@@ -37,7 +37,7 @@ navigationItems.add(navigationItem);
 List<LayoutPageTemplateCollection> layoutPageTemplateCollections = LayoutPageTemplateCollectionServiceUtil.getLayoutPageTemplateCollections(themeDisplay.getScopeGroupId());
 
 for (LayoutPageTemplateCollection layoutPageTemplateCollection : layoutPageTemplateCollections) {
-	String selectLayoutPageTemplateEntryURL = layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(layoutPageTemplateCollection.getLayoutPageTemplateCollectionId());
+	String selectLayoutPageTemplateEntryURL = layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(layoutPageTemplateCollection.getLayoutPageTemplateCollectionId(), layoutsAdminDisplayContext.getSelPlid());
 
 	navigationItem = new NavigationItem();
 
