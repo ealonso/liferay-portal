@@ -16,6 +16,8 @@ package com.liferay.message.boards.kernel.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.kernel.model.AssetEntry;
+
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 
 import com.liferay.message.boards.kernel.model.MBDiscussion;
@@ -571,6 +573,11 @@ public interface MBMessageLocalService extends BaseLocalService,
 	public void updateAsset(long userId, MBMessage message,
 		long[] assetCategoryIds, java.lang.String[] assetTagNames,
 		long[] assetLinkEntryIds) throws PortalException;
+
+	public AssetEntry updateAsset(long userId, MBMessage message,
+		long[] assetCategoryIds, java.lang.String[] assetTagNames,
+		long[] assetLinkEntryIds, boolean assetEntryVisible)
+		throws PortalException;
 
 	public MBMessage updateDiscussionMessage(long userId, long messageId,
 		java.lang.String className, long classPK, java.lang.String subject,

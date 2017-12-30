@@ -22,7 +22,7 @@ import static com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleCon
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
 import com.liferay.exportimport.constants.ExportImportConstants;
 import com.liferay.exportimport.kernel.controller.ExportImportController;
 import com.liferay.exportimport.kernel.controller.ImportController;

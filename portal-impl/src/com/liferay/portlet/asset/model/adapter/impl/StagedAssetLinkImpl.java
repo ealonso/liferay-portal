@@ -33,7 +33,10 @@ import java.util.Map;
 
 /**
  * @author Mate Thurzo
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.link.model.adapter.impl.StagedAssetLinkImpl}
  */
+@Deprecated
 public class StagedAssetLinkImpl implements StagedAssetLink {
 
 	public StagedAssetLinkImpl() {
