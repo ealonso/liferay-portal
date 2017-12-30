@@ -135,7 +135,8 @@ renderResponse.setTitle(LanguageUtil.get(request, "pages"));
 
 <c:if test="<%= layoutsAdminDisplayContext.isShowAddRootLayoutButton() %>">
 	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "page") %>' url="<%= layoutsAdminDisplayContext.getAddLayoutURL() %>" />
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "content-page") %>' url="<%= layoutsAdminDisplayContext.getAddContentPageURL() %>" />
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "portlet-page") %>' url="<%= layoutsAdminDisplayContext.getAddLayoutURL() %>" />
 	</liferay-frontend:add-menu>
 </c:if>
 
