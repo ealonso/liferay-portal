@@ -1,5 +1,11 @@
 Bundle-Name: Liferay Asset Categories API
 Bundle-SymbolicName: com.liferay.asset.categories.api
 Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.asset.categories.exception,\
+	com.liferay.asset.categories.model,\
+	com.liferay.asset.categories.service,\
+	com.liferay.asset.categories.service.persistence,\
+	com.liferay.asset.categories.util.comparator
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Asset
