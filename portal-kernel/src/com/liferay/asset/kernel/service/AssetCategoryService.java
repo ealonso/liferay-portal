@@ -45,8 +45,11 @@ import java.util.Map;
  * @see AssetCategoryServiceUtil
  * @see com.liferay.portlet.asset.service.base.AssetCategoryServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetCategoryServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.service.impl.AssetCategoryServiceImpl}
  * @generated
  */
+@Deprecated
 @AccessControlled
 @JSONWebService
 @ProviderType

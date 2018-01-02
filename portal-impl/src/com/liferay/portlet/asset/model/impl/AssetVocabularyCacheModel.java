@@ -34,8 +34,11 @@ import java.util.Date;
  *
  * @author Brian Wing Shun Chan
  * @see AssetVocabulary
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.model.impl.AssetVocabularyImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetVocabularyCacheModel implements CacheModel<AssetVocabulary>,
 	Externalizable {

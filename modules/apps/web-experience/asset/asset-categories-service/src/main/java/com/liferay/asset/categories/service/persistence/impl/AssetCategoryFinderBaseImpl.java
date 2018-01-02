@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.portlet.asset.service.persistence.impl;
+package com.liferay.asset.categories.service.persistence.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.persistence.AssetCategoryPersistence;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.service.persistence.AssetCategoryPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.log.Log;
@@ -30,11 +30,8 @@ import java.util.Set;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link
-            com.liferay.asset.categories.service.persistence.AssetCategoryFinderImpl}
  * @generated
  */
-@Deprecated
 public class AssetCategoryFinderBaseImpl extends BasePersistenceImpl<AssetCategory> {
 	public AssetCategoryFinderBaseImpl() {
 		setModelClass(AssetCategory.class);

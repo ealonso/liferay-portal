@@ -31,8 +31,11 @@ import com.liferay.portal.kernel.util.ReferenceRegistry;
  * @see AssetVocabularyLocalService
  * @see com.liferay.portlet.asset.service.base.AssetVocabularyLocalServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetVocabularyLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+com.liferay.asset.categories.service.impl.AssetVocabularyLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetVocabularyLocalServiceUtil {
 	/*

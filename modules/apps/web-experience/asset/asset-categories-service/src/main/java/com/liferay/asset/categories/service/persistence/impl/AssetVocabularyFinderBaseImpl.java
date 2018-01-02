@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.portlet.asset.service.persistence.impl;
+package com.liferay.asset.categories.service.persistence.impl;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.persistence.AssetCategoryPersistence;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.persistence.AssetVocabularyPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.log.Log;
@@ -30,14 +30,11 @@ import java.util.Set;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link
-            com.liferay.asset.categories.service.persistence.AssetCategoryFinderImpl}
  * @generated
  */
-@Deprecated
-public class AssetCategoryFinderBaseImpl extends BasePersistenceImpl<AssetCategory> {
-	public AssetCategoryFinderBaseImpl() {
-		setModelClass(AssetCategory.class);
+public class AssetVocabularyFinderBaseImpl extends BasePersistenceImpl<AssetVocabulary> {
+	public AssetVocabularyFinderBaseImpl() {
+		setModelClass(AssetVocabulary.class);
 
 		try {
 			Field field = BasePersistenceImpl.class.getDeclaredField(
@@ -48,6 +45,7 @@ public class AssetCategoryFinderBaseImpl extends BasePersistenceImpl<AssetCatego
 			Map<String, String> dbColumnNames = new HashMap<String, String>();
 
 			dbColumnNames.put("uuid", "uuid_");
+			dbColumnNames.put("settings", "settings_");
 
 			field.set(this, dbColumnNames);
 		}
@@ -60,29 +58,29 @@ public class AssetCategoryFinderBaseImpl extends BasePersistenceImpl<AssetCatego
 
 	@Override
 	public Set<String> getBadColumnNames() {
-		return getAssetCategoryPersistence().getBadColumnNames();
+		return getAssetVocabularyPersistence().getBadColumnNames();
 	}
 
 	/**
-	 * Returns the asset category persistence.
+	 * Returns the asset vocabulary persistence.
 	 *
-	 * @return the asset category persistence
+	 * @return the asset vocabulary persistence
 	 */
-	public AssetCategoryPersistence getAssetCategoryPersistence() {
-		return assetCategoryPersistence;
+	public AssetVocabularyPersistence getAssetVocabularyPersistence() {
+		return assetVocabularyPersistence;
 	}
 
 	/**
-	 * Sets the asset category persistence.
+	 * Sets the asset vocabulary persistence.
 	 *
-	 * @param assetCategoryPersistence the asset category persistence
+	 * @param assetVocabularyPersistence the asset vocabulary persistence
 	 */
-	public void setAssetCategoryPersistence(
-		AssetCategoryPersistence assetCategoryPersistence) {
-		this.assetCategoryPersistence = assetCategoryPersistence;
+	public void setAssetVocabularyPersistence(
+		AssetVocabularyPersistence assetVocabularyPersistence) {
+		this.assetVocabularyPersistence = assetVocabularyPersistence;
 	}
 
-	@BeanReference(type = AssetCategoryPersistence.class)
-	protected AssetCategoryPersistence assetCategoryPersistence;
-	private static final Log _log = LogFactoryUtil.getLog(AssetCategoryFinderBaseImpl.class);
+	@BeanReference(type = AssetVocabularyPersistence.class)
+	protected AssetVocabularyPersistence assetVocabularyPersistence;
+	private static final Log _log = LogFactoryUtil.getLog(AssetVocabularyFinderBaseImpl.class);
 }

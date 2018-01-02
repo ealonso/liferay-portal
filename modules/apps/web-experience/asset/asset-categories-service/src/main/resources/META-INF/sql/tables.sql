@@ -29,6 +29,6 @@ create table AssetVocabulary (
 	name VARCHAR(75) null,
 	title STRING null,
 	description STRING null,
-	settings_ VARCHAR(75) null,
+	settings_ STRING null,
 	lastPublishDate DATE null
 );

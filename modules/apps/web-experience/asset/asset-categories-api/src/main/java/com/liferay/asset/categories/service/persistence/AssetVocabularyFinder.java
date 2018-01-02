@@ -12,28 +12,25 @@
  * details.
  */
 
-package com.liferay.asset.kernel.service.persistence;
+package com.liferay.asset.categories.service.persistence;
 
 import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link
-            com.liferay.asset.categories.service.persistence.AssetVocabularyFinderImpl}
  * @generated
  */
-@Deprecated
 @ProviderType
 public interface AssetVocabularyFinder {
 	public int countByG_N(long groupId, java.lang.String name);
 
 	public int filterCountByG_N(long groupId, java.lang.String name);
 
-	public java.util.List<com.liferay.asset.kernel.model.AssetVocabulary> filterFindByG_N(
+	public java.util.List<com.liferay.asset.categories.model.AssetVocabulary> filterFindByG_N(
 		long groupId, java.lang.String name, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetVocabulary> obc);
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.categories.model.AssetVocabulary> obc);
 
-	public java.util.List<com.liferay.asset.kernel.model.AssetVocabulary> findByG_N(
+	public java.util.List<com.liferay.asset.categories.model.AssetVocabulary> findByG_N(
 		long groupId, java.lang.String name, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.kernel.model.AssetVocabulary> obc);
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.categories.model.AssetVocabulary> obc);
 }

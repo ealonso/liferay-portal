@@ -12,17 +12,14 @@
  * details.
  */
 
-package com.liferay.asset.kernel.service.persistence;
+package com.liferay.asset.categories.service.persistence;
 
 import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
- * @deprecated As of 7.0.0, replaced by {@link
-            com.liferay.asset.categories.service.persistence.AssetCategoryFinderImpl}
  * @generated
  */
-@Deprecated
 @ProviderType
 public interface AssetCategoryFinder {
 	public int countByG_C_N(long groupId, long classNameId,
@@ -31,18 +28,18 @@ public interface AssetCategoryFinder {
 	public int countByG_N_P(long groupId, java.lang.String name,
 		java.lang.String[] categoryProperties);
 
-	public com.liferay.asset.kernel.model.AssetCategory findByG_N(
+	public com.liferay.asset.categories.model.AssetCategory findByG_N(
 		long groupId, java.lang.String name)
-		throws com.liferay.asset.kernel.exception.NoSuchCategoryException;
+		throws com.liferay.asset.categories.exception.NoSuchCategoryException;
 
-	public java.util.List<com.liferay.asset.kernel.model.AssetCategory> findByC_C(
+	public java.util.List<com.liferay.asset.categories.model.AssetCategory> findByC_C(
 		long classNameId, long classPK);
 
-	public java.util.List<com.liferay.asset.kernel.model.AssetCategory> findByG_N_P(
+	public java.util.List<com.liferay.asset.categories.model.AssetCategory> findByG_N_P(
 		long groupId, java.lang.String name,
 		java.lang.String[] categoryProperties);
 
-	public java.util.List<com.liferay.asset.kernel.model.AssetCategory> findByG_N_P(
+	public java.util.List<com.liferay.asset.categories.model.AssetCategory> findByG_N_P(
 		long groupId, java.lang.String name,
 		java.lang.String[] categoryProperties, int start, int end);
 }

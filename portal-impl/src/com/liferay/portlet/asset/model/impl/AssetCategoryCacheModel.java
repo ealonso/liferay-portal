@@ -34,8 +34,11 @@ import java.util.Date;
  *
  * @author Brian Wing Shun Chan
  * @see AssetCategory
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.model.impl.AssetCategoryImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public class AssetCategoryCacheModel implements CacheModel<AssetCategory>,
 	Externalizable {

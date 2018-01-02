@@ -60,8 +60,11 @@ import java.util.Map;
  * @see AssetVocabularyLocalServiceUtil
  * @see com.liferay.portlet.asset.service.base.AssetVocabularyLocalServiceBaseImpl
  * @see com.liferay.portlet.asset.service.impl.AssetVocabularyLocalServiceImpl
+ * @deprecated As of 7.0.0, replaced by {@link
+            com.liferay.asset.categories.service.impl.AssetVocabularyLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 @Transactional(isolation = Isolation.PORTAL, rollbackFor =  {
 	PortalException.class, SystemException.class})

@@ -173,6 +173,16 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 		return _assetVocabulary.getAvailableLanguageIds();
 	}
 
+	@Override
+	public java.util.List<AssetCategory> getCategories() {
+		return _assetVocabulary.getCategories();
+	}
+
+	@Override
+	public int getCategoriesCount() {
+		return _assetVocabulary.getCategoriesCount();
+	}
+
 	/**
 	* Returns the company ID of this asset vocabulary.
 	*
@@ -336,6 +346,21 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 		return _assetVocabulary.getPrimaryKeyObj();
 	}
 
+	@Override
+	public long[] getRequiredClassNameIds() {
+		return _assetVocabulary.getRequiredClassNameIds();
+	}
+
+	@Override
+	public long[] getSelectedClassNameIds() {
+		return _assetVocabulary.getSelectedClassNameIds();
+	}
+
+	@Override
+	public long[] getSelectedClassTypePKs() {
+		return _assetVocabulary.getSelectedClassTypePKs();
+	}
+
 	/**
 	* Returns the settings of this asset vocabulary.
 	*
@@ -344,6 +369,15 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	@Override
 	public java.lang.String getSettings() {
 		return _assetVocabulary.getSettings();
+	}
+
+	/**
+	* @deprecated As of 1.1.0, with no direct replacement
+	*/
+	@Deprecated
+	@Override
+	public com.liferay.portal.kernel.util.UnicodeProperties getSettingsProperties() {
+		return _assetVocabulary.getSettingsProperties();
 	}
 
 	/**
@@ -423,6 +457,15 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 		return _assetVocabulary.getTitleMap();
 	}
 
+	@Override
+	public java.lang.String getUnambiguousTitle(
+		java.util.List<AssetVocabulary> vocabularies, long groupId,
+		java.util.Locale locale)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetVocabulary.getUnambiguousTitle(vocabularies, groupId,
+			locale);
+	}
+
 	/**
 	* Returns the user ID of this asset vocabulary.
 	*
@@ -479,6 +522,23 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	}
 
 	@Override
+	public boolean hasMoreThanOneCategorySelected(long[] categoryIds) {
+		return _assetVocabulary.hasMoreThanOneCategorySelected(categoryIds);
+	}
+
+	@Override
+	public boolean isAssociatedToClassNameId(long classNameId) {
+		return _assetVocabulary.isAssociatedToClassNameId(classNameId);
+	}
+
+	@Override
+	public boolean isAssociatedToClassNameIdAndClassTypePK(long classNameId,
+		long classTypePK) {
+		return _assetVocabulary.isAssociatedToClassNameIdAndClassTypePK(classNameId,
+			classTypePK);
+	}
+
+	@Override
 	public boolean isCachedModel() {
 		return _assetVocabulary.isCachedModel();
 	}
@@ -489,8 +549,34 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	}
 
 	@Override
+	public boolean isMissingRequiredCategory(long classNameId,
+		long classTypePK, long[] categoryIds) {
+		return _assetVocabulary.isMissingRequiredCategory(classNameId,
+			classTypePK, categoryIds);
+	}
+
+	@Override
+	public boolean isMultiValued() {
+		return _assetVocabulary.isMultiValued();
+	}
+
+	@Override
 	public boolean isNew() {
 		return _assetVocabulary.isNew();
+	}
+
+	/**
+	* @deprecated As of 1.1.0, replaced by {@link #isRequired(long, long)}
+	*/
+	@Deprecated
+	@Override
+	public boolean isRequired(long classNameId) {
+		return _assetVocabulary.isRequired(classNameId);
+	}
+
+	@Override
+	public boolean isRequired(long classNameId, long classTypePK) {
+		return _assetVocabulary.isRequired(classNameId, classTypePK);
 	}
 
 	@Override
@@ -684,6 +770,16 @@ public class AssetVocabularyWrapper implements AssetVocabulary,
 	@Override
 	public void setSettings(java.lang.String settings) {
 		_assetVocabulary.setSettings(settings);
+	}
+
+	/**
+	* @deprecated As of 1.1.0, with no direct replacement
+	*/
+	@Deprecated
+	@Override
+	public void setSettingsProperties(
+		com.liferay.portal.kernel.util.UnicodeProperties settingsProperties) {
+		_assetVocabulary.setSettingsProperties(settingsProperties);
 	}
 
 	/**
