@@ -14,7 +14,7 @@
 
 package com.liferay.asset.categories.util.comparator;
 
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 /**

@@ -14,10 +14,11 @@
 
 package com.liferay.asset.categories.service.persistence.impl;
 
-import com.liferay.asset.kernel.exception.NoSuchCategoryException;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.service.persistence.AssetCategoryFinder;
+import com.liferay.asset.categories.exception.NoSuchCategoryException;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.model.impl.AssetCategoryImpl;
+import com.liferay.asset.categories.service.persistence.AssetCategoryFinder;
 import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -29,8 +30,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portlet.asset.model.impl.AssetCategoryImpl;
-import com.liferay.portlet.asset.service.persistence.impl.AssetCategoryFinderBaseImpl;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.util.Iterator;

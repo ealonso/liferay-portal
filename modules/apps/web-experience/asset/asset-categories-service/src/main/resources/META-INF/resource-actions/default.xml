@@ -3,7 +3,7 @@
 
 <resource-action-mapping>
 	<model-resource>
-		<model-name>com.liferay.asset.kernel.model.AssetCategory</model-name>
+		<model-name>com.liferay.asset.categories.model.AssetCategory</model-name>
 		<portlet-ref>
 			<portlet-name>com_liferay_asset_categories_admin_web_portlet_AssetCategoriesAdminPortlet</portlet-name>
 		</portlet-ref>
@@ -30,7 +30,7 @@
 		</permissions>
 	</model-resource>
 	<model-resource>
-		<model-name>com.liferay.asset.kernel.model.AssetVocabulary</model-name>
+		<model-name>com.liferay.asset.categories.model.AssetVocabulary</model-name>
 		<portlet-ref>
 			<portlet-name>com_liferay_asset_categories_admin_web_portlet_AssetCategoriesAdminPortlet</portlet-name>
 		</portlet-ref>

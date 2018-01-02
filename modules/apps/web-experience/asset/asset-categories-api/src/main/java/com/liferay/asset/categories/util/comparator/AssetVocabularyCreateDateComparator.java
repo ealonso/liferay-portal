@@ -14,7 +14,7 @@
 
 package com.liferay.asset.categories.util.comparator;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 

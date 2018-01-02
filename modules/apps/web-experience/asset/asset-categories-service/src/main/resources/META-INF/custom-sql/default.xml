@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <custom-sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.countByG_C_N">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.countByG_C_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetEntries_AssetCategories.entryId) AS COUNT_VALUE
@@ -30,7 +30,7 @@
 				)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.countByG_N_P">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.countByG_N_P">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetCategory.categoryId) AS COUNT_VALUE
@@ -45,7 +45,7 @@
 				)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByG_N">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.findByG_N">
 		<![CDATA[
 			SELECT
 				{AssetCategory.*}
@@ -56,7 +56,7 @@
 				(lower(AssetCategory.name) = ?)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByC_C">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.findByC_C">
 		<![CDATA[
 			SELECT
 				{AssetCategory.*}
@@ -73,7 +73,7 @@
 				(AssetEntry.classPK =  ?)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetCategoryFinder.findByG_N_P">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.findByG_N_P">
 		<![CDATA[
 			SELECT
 				{AssetCategory.*}
@@ -90,7 +90,7 @@
 				AssetCategory.name ASC
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetVocabularyFinder.countByG_N">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetVocabularyFinder.countByG_N">
 		<![CDATA[
 			SELECT
 				COUNT(DISTINCT AssetVocabulary.vocabularyId) AS COUNT_VALUE
@@ -104,7 +104,7 @@
 				)
 		]]>
 	</sql>
-	<sql id="com.liferay.asset.kernel.service.persistence.AssetVocabularyFinder.findByG_N">
+	<sql id="com.liferay.asset.categories.service.persistence.AssetVocabularyFinder.findByG_N">
 		<![CDATA[
 			SELECT
 				{AssetVocabulary.*}

@@ -14,7 +14,7 @@
 
 package com.liferay.asset.categories.internal.util;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PredicateFilter;

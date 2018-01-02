@@ -14,10 +14,12 @@
 
 package com.liferay.asset.categories.service.impl;
 
-import com.liferay.asset.kernel.exception.AssetCategoryNameException;
-import com.liferay.asset.kernel.exception.DuplicateCategoryException;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
+import com.liferay.asset.categories.exception.AssetCategoryNameException;
+import com.liferay.asset.categories.exception.DuplicateCategoryException;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.service.base.AssetCategoryLocalServiceBaseImpl;
+import com.liferay.asset.categories.util.comparator.AssetCategoryLeftCategoryIdComparator;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -49,8 +51,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.base.AssetCategoryLocalServiceBaseImpl;
-import com.liferay.portlet.asset.util.comparator.AssetCategoryLeftCategoryIdComparator;
 
 import java.io.Serializable;
 
