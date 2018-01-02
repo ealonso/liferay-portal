@@ -32,10 +32,6 @@
 		<column name="vocabularyId" type="long" />
 		<column name="lastPublishDate" type="Date" />
 
-		<!-- Relationships -->
-
-		<column entity="AssetEntry" mapping-table="AssetEntries_AssetCategories" name="entries" type="Collection" />
-
 		<!-- Order -->
 
 		<order by="asc">
