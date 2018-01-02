@@ -19,7 +19,7 @@
 <%
 long categoryId = ParamUtil.getLong(request, "categoryId");
 
-AssetCategory category = AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
+com.liferay.asset.kernel.model.AssetCategory category = com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil.fetchCategory(categoryId);
 %>
 
 <liferay-frontend:screen-navigation
