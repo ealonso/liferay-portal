@@ -16,6 +16,7 @@ package com.liferay.asset.categories.service.impl;
 
 import com.liferay.asset.categories.exception.DuplicateVocabularyException;
 import com.liferay.asset.categories.exception.VocabularyNameException;
+import com.liferay.asset.categories.internal.util.AssetCategoriesServiceUtil;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.asset.categories.service.base.AssetVocabularyLocalServiceBaseImpl;
@@ -45,7 +46,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.asset.util.AssetUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -271,7 +271,7 @@ public class AssetVocabularyLocalServiceImpl
 			return vocabularies;
 		}
 
-		return AssetUtil.filterVocabularies(
+		return AssetCategoriesServiceUtil.filterVocabularies(
 			vocabularies, className, classTypePK);
 	}
 
