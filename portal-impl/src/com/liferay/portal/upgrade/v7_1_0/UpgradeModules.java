@@ -31,6 +31,7 @@ public class UpgradeModules
 	}
 
 	private static final String[] _BUNDLE_SYMBOLIC_NAMES = {
+		"com.liferay.asset.categories.service",
 		"com.liferay.asset.category.property.service",
 		"com.liferay.asset.tag.stats.service", "com.liferay.blogs.service",
 		"com.liferay.document.library.content.service",
