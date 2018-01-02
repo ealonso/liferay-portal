@@ -287,6 +287,12 @@ public class AssetCategoryLocalServiceImpl
 			category.getCompanyId(), AssetCategory.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL, category.getCategoryId());
 
+		// Asset entry asset category rel
+
+		_assetEntryAssetCategoryRelLocalService.
+			deleteAssetEntryAssetCategoryRelByCategoryId(
+				category.getCategoryId());
+
 		// Indexer
 
 		assetEntryLocalService.reindex(entries);
