@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.util.StringPool;
 
 /**
  * @author Jorge Ferrer
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.model.AssetCategoryConstants}
  */
+@Deprecated
 public class AssetCategoryConstants {
 
 	public static final long ALL_CLASS_NAME_ID = 0;

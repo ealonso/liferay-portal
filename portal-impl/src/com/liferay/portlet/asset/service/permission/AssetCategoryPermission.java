@@ -25,7 +25,10 @@ import com.liferay.portal.util.PropsValues;
 
 /**
  * @author Eduardo Lundgren
+ * @deprecated As of 7.0.0, replaced by {@link
+ *             com.liferay.asset.categories.service.permission.AssetCategoryPermission}
  */
+@Deprecated
 public class AssetCategoryPermission {
 
 	public static void check(
