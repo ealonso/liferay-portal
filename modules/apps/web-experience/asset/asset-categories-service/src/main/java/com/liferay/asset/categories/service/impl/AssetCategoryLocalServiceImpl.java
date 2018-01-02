@@ -20,6 +20,8 @@ import com.liferay.asset.categories.model.AssetCategory;
 import com.liferay.asset.categories.model.AssetCategoryConstants;
 import com.liferay.asset.categories.service.base.AssetCategoryLocalServiceBaseImpl;
 import com.liferay.asset.categories.util.comparator.AssetCategoryLeftCategoryIdComparator;
+import com.liferay.asset.entry.rel.model.AssetEntryAssetCategoryRel;
+import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalService;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -51,6 +53,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.io.Serializable;
 
@@ -271,7 +274,7 @@ public class AssetCategoryLocalServiceImpl
 
 		// Entries
 
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
+		List<AssetEntry> entries = _getAssetEntriesByCategoryId(
 			category.getCategoryId());
 
 		// Category
@@ -435,7 +438,7 @@ public class AssetCategoryLocalServiceImpl
 
 	@Override
 	public List<AssetCategory> getEntryCategories(long entryId) {
-		return assetEntryPersistence.getAssetCategories(entryId);
+		return _getAssetCategoriesByEntryId(entryId);
 	}
 
 	@Override
@@ -496,10 +499,17 @@ public class AssetCategoryLocalServiceImpl
 	public AssetCategory mergeCategories(long fromCategoryId, long toCategoryId)
 		throws PortalException {
 
-		List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
-			fromCategoryId);
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			_assetEntryAssetCategoryRelLocalService.
+				getAssetEntryAssetCategoryRelsByCategoryId(fromCategoryId);
 
-		assetCategoryPersistence.addAssetEntries(toCategoryId, entries);
+		for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
+				assetEntryAssetCategoryRels) {
+
+			_assetEntryAssetCategoryRelLocalService.
+				addAssetEntryAssetCategoryRel(
+					toCategoryId, assetEntryAssetCategoryRel.getEntryId());
+		}
 
 		assetCategoryLocalService.deleteCategory(fromCategoryId);
 
@@ -654,7 +664,7 @@ public class AssetCategoryLocalServiceImpl
 		// Indexer
 
 		if (!oldName.equals(name)) {
-			List<AssetEntry> entries = assetCategoryPersistence.getAssetEntries(
+			List<AssetEntry> entries = _getAssetEntriesByCategoryId(
 				category.getCategoryId());
 
 			assetEntryLocalService.reindex(entries);
@@ -777,5 +787,51 @@ public class AssetCategoryLocalServiceImpl
 			throw new DuplicateCategoryException(sb.toString());
 		}
 	}
+
+	private List<AssetCategory> _getAssetCategoriesByEntryId(long entryId) {
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			_assetEntryAssetCategoryRelLocalService.
+				getAssetEntryAssetCategoryRelsByEntryId(entryId);
+
+		List<AssetCategory> categories = new ArrayList<>();
+
+		for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
+				assetEntryAssetCategoryRels) {
+
+			AssetCategory category = fetchAssetCategory(
+				assetEntryAssetCategoryRel.getCategoryId());
+
+			if (category != null) {
+				categories.add(category);
+			}
+		}
+
+		return categories;
+	}
+
+	private List<AssetEntry> _getAssetEntriesByCategoryId(long categoryId) {
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			_assetEntryAssetCategoryRelLocalService.
+				getAssetEntryAssetCategoryRelsByCategoryId(categoryId);
+
+		List<AssetEntry> entries = new ArrayList<>();
+
+		for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
+				assetEntryAssetCategoryRels) {
+
+			AssetEntry entry = assetEntryLocalService.fetchEntry(
+				assetEntryAssetCategoryRel.getEntryId());
+
+			if (entry != null) {
+				entries.add(entry);
+			}
+		}
+
+		return entries;
+	}
+
+	@ServiceReference(type = AssetEntryAssetCategoryRelLocalService.class)
+	private AssetEntryAssetCategoryRelLocalService
+		_assetEntryAssetCategoryRelLocalService;
 
 }
