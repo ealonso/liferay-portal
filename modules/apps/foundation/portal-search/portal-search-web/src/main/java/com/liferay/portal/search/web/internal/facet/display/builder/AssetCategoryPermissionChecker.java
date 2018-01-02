@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.web.internal.facet.display.builder;
 
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategory;
 
 /**
  * @author André de Oliveira

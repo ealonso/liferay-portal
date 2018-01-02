@@ -31,14 +31,14 @@ taglib uri="http://liferay.com/tld/trash" prefix="liferay-trash" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
+<%@ page import="com.liferay.asset.categories.model.AssetVocabulary" %><%@
+page import="com.liferay.asset.categories.service.AssetVocabularyServiceUtil" %><%@
+page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
 page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
 page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryServiceUtil" %><%@
-page import="com.liferay.asset.kernel.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.asset.kernel.service.persistence.AssetEntryQuery" %><%@
 page import="com.liferay.asset.util.AssetHelper" %><%@
 page import="com.liferay.document.library.display.context.DLEditFileEntryDisplayContext" %><%@

@@ -15,12 +15,12 @@
 package com.liferay.asset.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.categories.service.AssetCategoryServiceUtil;
+import com.liferay.asset.categories.service.AssetVocabularyServiceUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;

@@ -14,13 +14,13 @@
 
 package com.liferay.asset.categories.admin.web.internal.exportimport.data.handler;
 
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategoryConstants;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.service.AssetVocabularyLocalService;
 import com.liferay.asset.category.property.model.AssetCategoryProperty;
 import com.liferay.asset.category.property.service.AssetCategoryPropertyLocalService;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetCategoryConstants;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;

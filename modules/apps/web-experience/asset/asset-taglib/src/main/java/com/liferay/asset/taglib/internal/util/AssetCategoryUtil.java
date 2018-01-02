@@ -14,8 +14,8 @@
 
 package com.liferay.asset.taglib.internal.util;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;

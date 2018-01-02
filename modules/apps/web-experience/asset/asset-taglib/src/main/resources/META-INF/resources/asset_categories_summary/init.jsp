@@ -18,12 +18,12 @@
 
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@ page import="com.liferay.asset.kernel.model.AssetCategory" %><%@
+<%@ page import="com.liferay.asset.categories.model.AssetCategory" %><%@
+page import="com.liferay.asset.categories.model.AssetVocabulary" %><%@
+page import="com.liferay.asset.categories.service.AssetCategoryServiceUtil" %><%@
+page import="com.liferay.asset.categories.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
-page import="com.liferay.asset.kernel.service.AssetCategoryServiceUtil" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil" %><%@
-page import="com.liferay.asset.kernel.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.portal.kernel.exception.PortalException" %><%@
 page import="com.liferay.portal.kernel.exception.SystemException" %><%@
 page import="com.liferay.portal.kernel.theme.ThemeDisplay" %><%@

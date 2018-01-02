@@ -10,6 +10,7 @@ dependencies {
 	testIntegrationCompile project(":apps:collaboration:wiki:wiki-api")
 	testIntegrationCompile project(":apps:collaboration:wiki:wiki-service")
 	testIntegrationCompile project(":apps:foundation:portal-search:portal-search-test-util")
+	testIntegrationCompile project(":apps:web-experience:asset:asset-categories-api")
 	testIntegrationCompile project(":apps:web-experience:asset:asset-test-util")
 	testIntegrationCompile project(":apps:web-experience:export-import:export-import-test-util")
 	testIntegrationCompile project(":apps:web-experience:trash:trash-api")

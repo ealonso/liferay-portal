@@ -15,17 +15,17 @@
 package com.liferay.wiki.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.exception.AssetCategoryException;
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.categories.exception.AssetCategoryException;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.categories.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.test.util.AssetTestUtil;
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.model.ExpandoColumn;

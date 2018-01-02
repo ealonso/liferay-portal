@@ -15,10 +15,10 @@
 package com.liferay.staging.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.categories.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.exportimport.kernel.configuration.ExportImportConfigurationParameterMapFactory;
 import com.liferay.exportimport.kernel.lar.ExportImportDateUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;

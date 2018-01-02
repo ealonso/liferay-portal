@@ -14,13 +14,13 @@
 
 package com.liferay.asset.test.util;
 
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil;
+import com.liferay.asset.categories.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;

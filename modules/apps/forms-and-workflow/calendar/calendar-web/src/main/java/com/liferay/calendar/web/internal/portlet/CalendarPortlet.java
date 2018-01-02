@@ -14,9 +14,9 @@
 
 package com.liferay.calendar.web.internal.portlet;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.categories.exception.AssetCategoryException;
+import com.liferay.asset.categories.model.AssetVocabulary;
 import com.liferay.asset.kernel.exception.AssetTagException;
-import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.calendar.constants.CalendarPortletKeys;
 import com.liferay.calendar.exception.CalendarBookingDurationException;
 import com.liferay.calendar.exception.CalendarBookingRecurrenceException;

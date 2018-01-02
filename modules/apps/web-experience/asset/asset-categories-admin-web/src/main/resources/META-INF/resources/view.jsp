@@ -91,7 +91,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "vocabul
 		searchContainer="<%= assetCategoriesDisplayContext.getVocabulariesSearchContainer() %>"
 	>
 		<liferay-ui:search-container-row
-			className="com.liferay.asset.kernel.model.AssetVocabulary"
+			className="com.liferay.asset.categories.model.AssetVocabulary"
 			keyProperty="vocabularyId"
 			modelVar="vocabulary"
 		>

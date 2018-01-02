@@ -18,7 +18,7 @@ import com.liferay.admin.kernel.util.PortalMyAccountApplicationType;
 import com.liferay.announcements.kernel.model.AnnouncementsDelivery;
 import com.liferay.announcements.kernel.model.AnnouncementsEntryConstants;
 import com.liferay.announcements.kernel.service.AnnouncementsDeliveryLocalService;
-import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.categories.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.petra.string.CharPool;

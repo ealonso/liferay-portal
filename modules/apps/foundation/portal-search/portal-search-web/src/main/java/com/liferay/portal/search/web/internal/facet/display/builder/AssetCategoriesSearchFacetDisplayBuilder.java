@@ -14,8 +14,8 @@
 
 package com.liferay.portal.search.web.internal.facet.display.builder;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;

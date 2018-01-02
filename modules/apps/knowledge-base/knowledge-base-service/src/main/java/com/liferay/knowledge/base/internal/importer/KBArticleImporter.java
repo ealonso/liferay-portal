@@ -14,7 +14,7 @@
 
 package com.liferay.knowledge.base.internal.importer;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.categories.exception.AssetCategoryException;
 import com.liferay.knowledge.base.constants.KBArticleConstants;
 import com.liferay.knowledge.base.constants.KBFolderConstants;
 import com.liferay.knowledge.base.exception.KBArticleImportException;

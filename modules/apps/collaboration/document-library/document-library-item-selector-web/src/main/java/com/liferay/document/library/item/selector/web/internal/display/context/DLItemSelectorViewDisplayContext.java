@@ -14,8 +14,8 @@
 
 package com.liferay.document.library.item.selector.web.internal.display.context;
 
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetVocabularyService;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetVocabularyService;
 import com.liferay.document.library.item.selector.web.internal.DLItemSelectorView;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFileEntryTypeConstants;

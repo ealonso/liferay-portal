@@ -31,20 +31,20 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.asset.constants.AssetWebKeys" %><%@
+<%@ page import="com.liferay.asset.categories.model.AssetCategory" %><%@
+page import="com.liferay.asset.categories.model.AssetVocabulary" %><%@
+page import="com.liferay.asset.categories.service.AssetCategoryLocalServiceUtil" %><%@
+page import="com.liferay.asset.categories.service.AssetVocabularyLocalServiceUtil" %><%@
+page import="com.liferay.asset.constants.AssetWebKeys" %><%@
 page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.asset.kernel.action.AssetEntryAction" %><%@
 page import="com.liferay.asset.kernel.exception.DuplicateQueryRuleException" %><%@
-page import="com.liferay.asset.kernel.model.AssetCategory" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
 page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
 page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
 page import="com.liferay.asset.kernel.model.ClassType" %><%@
 page import="com.liferay.asset.kernel.model.ClassTypeField" %><%@
 page import="com.liferay.asset.kernel.model.ClassTypeReader" %><%@
-page import="com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil" %><%@
-page import="com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil" %><%@
 page import="com.liferay.asset.publisher.web.configuration.AssetPublisherPortletInstanceConfiguration" %><%@
 page import="com.liferay.asset.publisher.web.configuration.AssetPublisherWebConfiguration" %><%@
 page import="com.liferay.asset.publisher.web.constants.AssetPublisherConstants" %><%@

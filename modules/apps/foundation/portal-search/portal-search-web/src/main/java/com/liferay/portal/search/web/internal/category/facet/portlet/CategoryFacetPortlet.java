@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.web.internal.category.facet.portlet;
 
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;

@@ -14,8 +14,9 @@
 
 package com.liferay.asset.categories.internal.search;
 
-import com.liferay.asset.kernel.model.AssetCategory;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.service.permission.AssetCategoryPermission;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -37,13 +38,17 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -165,7 +170,7 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 
 		categories.add(assetCategory);
 
-		addSearchAssetCategoryTitles(
+		_addSearchAssetCategoryTitles(
 			document, Field.ASSET_CATEGORY_TITLE, categories);
 
 		document.addKeyword(
@@ -261,6 +266,54 @@ public class AssetCategoryIndexer extends BaseIndexer<AssetCategory> {
 		indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
 
 		indexableActionableDynamicQuery.performActions();
+	}
+
+	private void _addSearchAssetCategoryTitles(
+		Document document, String field, List<AssetCategory> assetCategories) {
+
+		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
+
+		Locale defaultLocale = LocaleUtil.getDefault();
+
+		for (AssetCategory assetCategory : assetCategories) {
+			Map<Locale, String> titleMap = assetCategory.getTitleMap();
+
+			for (Map.Entry<Locale, String> entry : titleMap.entrySet()) {
+				Locale locale = entry.getKey();
+				String title = entry.getValue();
+
+				if (Validator.isNull(title)) {
+					continue;
+				}
+
+				List<String> titles = assetCategoryTitles.get(locale);
+
+				if (titles == null) {
+					titles = new ArrayList<>();
+
+					assetCategoryTitles.put(locale, titles);
+				}
+
+				titles.add(StringUtil.toLowerCase(title));
+			}
+		}
+
+		for (Map.Entry<Locale, List<String>> entry :
+				assetCategoryTitles.entrySet()) {
+
+			Locale locale = entry.getKey();
+			List<String> titles = entry.getValue();
+
+			String[] titlesArray = titles.toArray(new String[titles.size()]);
+
+			if (locale.equals(defaultLocale)) {
+				document.addText(field, titlesArray);
+			}
+
+			document.addText(
+				field.concat(StringPool.UNDERLINE).concat(locale.toString()),
+				titlesArray);
+		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

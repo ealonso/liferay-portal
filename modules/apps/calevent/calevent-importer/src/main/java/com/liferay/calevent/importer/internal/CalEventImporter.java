@@ -14,16 +14,16 @@
 
 package com.liferay.calevent.importer.internal;
 
-import com.liferay.asset.kernel.exception.NoSuchVocabularyException;
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.categories.exception.NoSuchVocabularyException;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetVocabulary;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.service.AssetVocabularyLocalService;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetLink;
 import com.liferay.asset.kernel.model.AssetTag;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.kernel.service.AssetLinkLocalService;
-import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.calendar.exception.NoSuchBookingException;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarResource;

@@ -14,7 +14,7 @@
 
 package com.liferay.asset.categories.internal.verify;
 
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.categories.service.AssetCategoryLocalService;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.verify.VerifyProcess;
 

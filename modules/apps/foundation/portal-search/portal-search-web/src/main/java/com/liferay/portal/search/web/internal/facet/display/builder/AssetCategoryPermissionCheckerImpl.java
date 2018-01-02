@@ -14,11 +14,11 @@
 
 package com.liferay.portal.search.web.internal.facet.display.builder;
 
-import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.categories.model.AssetCategory;
+import com.liferay.asset.categories.service.permission.AssetCategoryPermission;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 
 /**
  * @author André de Oliveira

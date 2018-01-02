@@ -14,7 +14,7 @@
 
 package com.liferay.wiki.web.internal.portlet.action;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.categories.exception.AssetCategoryException;
 import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.TrashedModel;

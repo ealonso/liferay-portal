@@ -20,10 +20,10 @@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.asset.kernel.model.AssetCategory" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
-page import="com.liferay.asset.kernel.service.AssetCategoryServiceUtil" %><%@
-page import="com.liferay.asset.kernel.service.AssetVocabularyServiceUtil" %><%@
+<%@ page import="com.liferay.asset.categories.model.AssetCategory" %><%@
+page import="com.liferay.asset.categories.model.AssetVocabulary" %><%@
+page import="com.liferay.asset.categories.service.AssetCategoryServiceUtil" %><%@
+page import="com.liferay.asset.categories.service.AssetVocabularyServiceUtil" %><%@
 page import="com.liferay.asset.taglib.internal.util.AssetCategoryUtil" %><%@
 page import="com.liferay.portal.kernel.dao.orm.QueryUtil" %><%@
 page import="com.liferay.portal.kernel.exception.PortalException" %><%@

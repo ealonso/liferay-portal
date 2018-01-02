@@ -16,7 +16,7 @@ package com.liferay.knowledge.base.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.categories.exception.AssetCategoryException;
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**
@@ -43,6 +43,12 @@ public class KBArticleImportException extends PortalException {
 	public static class MustHaveACategory extends KBArticleImportException {
 
 		public MustHaveACategory(AssetCategoryException cause) {
+			super(cause);
+		}
+
+		public MustHaveACategory(
+			com.liferay.asset.kernel.exception.AssetCategoryException cause) {
+
 			super(cause);
 		}
 

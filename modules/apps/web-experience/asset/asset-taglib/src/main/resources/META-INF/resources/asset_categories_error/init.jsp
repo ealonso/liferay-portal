@@ -17,8 +17,8 @@
 <%@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.asset.kernel.exception.AssetCategoryException" %><%@
-page import="com.liferay.asset.kernel.model.AssetVocabulary" %><%@
+<%@ page import="com.liferay.asset.categories.exception.AssetCategoryException" %><%@
+page import="com.liferay.asset.categories.model.AssetVocabulary" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %>
 
 <liferay-theme:defineObjects />
