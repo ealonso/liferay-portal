@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.liferay.asset.categories.service.impl.AssetCategoryLocalServiceImpl" id="com.liferay.asset.categories.service.AssetCategoryLocalService" />
+	<bean class="com.liferay.asset.categories.service.impl.AssetCategoryServiceImpl" id="com.liferay.asset.categories.service.AssetCategoryService" />
+	<bean class="com.liferay.asset.categories.service.persistence.impl.AssetCategoryPersistenceImpl" id="com.liferay.asset.categories.service.persistence.AssetCategoryPersistence" parent="basePersistence" />
+	<bean class="com.liferay.asset.categories.service.impl.AssetVocabularyLocalServiceImpl" id="com.liferay.asset.categories.service.AssetVocabularyLocalService" />
+	<bean class="com.liferay.asset.categories.service.impl.AssetVocabularyServiceImpl" id="com.liferay.asset.categories.service.AssetVocabularyService" />
+	<bean class="com.liferay.asset.categories.service.persistence.impl.AssetVocabularyPersistenceImpl" id="com.liferay.asset.categories.service.persistence.AssetVocabularyPersistence" parent="basePersistence" />
+</beans>

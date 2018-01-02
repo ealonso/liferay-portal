@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.liferay.asset.categories.model.AssetCategory">
+		<field name="uuid" type="String" />
+		<field name="categoryId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="parentCategoryId" type="long" />
+		<field name="leftCategoryId" type="long" />
+		<field name="rightCategoryId" type="long" />
+		<field name="name" type="String" />
+		<field localized="true" name="title" type="String" />
+		<field localized="true" name="description" type="String" />
+		<field name="vocabularyId" type="long" />
+		<field name="lastPublishDate" type="Date" />
+	</model>
+	<model name="com.liferay.asset.categories.model.AssetVocabulary">
+		<field name="uuid" type="String" />
+		<field name="vocabularyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String" />
+		<field localized="true" name="title" type="String" />
+		<field localized="true" name="description" type="String" />
+		<field name="settings" type="String" />
+		<field name="lastPublishDate" type="Date" />
+	</model>
+</model-hints>
