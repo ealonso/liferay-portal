@@ -162,7 +162,8 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
 		List<AssetCategory> assetCategories =
-			importedAssetEntry.getCategories();
+			AssetCategoryLocalServiceUtil.getEntryCategories(
+				importedAssetEntry.getEntryId());
 
 		Assert.assertFalse(
 			assetCategories.toString(), assetCategories.isEmpty());
@@ -197,7 +198,8 @@ public abstract class BaseStagedModelDataHandlerTestCase {
 
 		Assert.assertFalse(assetTags.toString(), assetTags.isEmpty());
 
-		assetCategories = importedAssetEntry.getCategories();
+		assetCategories = AssetCategoryLocalServiceUtil.getEntryCategories(
+			importedAssetEntry.getEntryId());
 
 		Assert.assertFalse(
 			assetCategories.toString(), assetCategories.isEmpty());
