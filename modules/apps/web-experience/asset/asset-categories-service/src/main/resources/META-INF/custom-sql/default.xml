@@ -4,15 +4,15 @@
 	<sql id="com.liferay.asset.categories.service.persistence.AssetCategoryFinder.countByG_C_N">
 		<![CDATA[
 			SELECT
-				COUNT(DISTINCT AssetEntries_AssetCategories.entryId) AS COUNT_VALUE
+				COUNT(DISTINCT AssetEntryAssetCategoryRel.entryId) AS COUNT_VALUE
 			FROM
 				AssetCategory
 			INNER JOIN
-				AssetEntries_AssetCategories ON
-					AssetEntries_AssetCategories.categoryId = AssetCategory.categoryId
+				AssetEntryAssetCategoryRel ON
+					AssetEntryAssetCategoryRel.categoryId = AssetCategory.categoryId
 			WHERE
 				(
-					AssetEntries_AssetCategories.entryId IN
+					AssetEntryAssetCategoryRel.entryId IN
 						(
 							SELECT
 								entryId
@@ -63,11 +63,11 @@
 			FROM
 				AssetEntry
 			INNER JOIN
-				AssetEntries_AssetCategories ON
-					AssetEntries_AssetCategories.entryId = AssetEntry.entryId
+				AssetEntryAssetCategoryRel ON
+					AssetEntryAssetCategoryRel.entryId = AssetEntry.entryId
 			INNER JOIN
 				AssetCategory ON
-					AssetCategory.categoryId = AssetEntries_AssetCategories.categoryId
+					AssetCategory.categoryId = AssetEntryAssetCategoryRel.categoryId
 			WHERE
 				(AssetEntry.classNameId = ?) AND
 				(AssetEntry.classPK =  ?)
