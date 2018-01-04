@@ -15,6 +15,7 @@
 package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.service.service.LayoutFragmentService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -26,7 +27,6 @@ import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -95,12 +95,12 @@ public class AddContentLayoutMVCActionCommand extends BaseMVCActionCommand {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		try {
-			_layoutService.addLayout(
-				groupId, privateLayout, parentLayoutId, nameMap,
+			_layoutFragmentService.addContentLayout(
+				groupId, privateLayout, parentLayoutId,
+				layoutPageTemplateEntryId, nameMap,
 				new HashMap<Locale, String>(), new HashMap<Locale, String>(),
 				new HashMap<Locale, String>(), new HashMap<Locale, String>(),
-				"content", typeSettingsProperties.toString(), false,
-				new HashMap<Locale, String>(), serviceContext);
+				"content", new HashMap<Locale, String>(), serviceContext);
 
 			jsonObject.put("redirectURL", getRedirectURL(actionResponse));
 
@@ -141,7 +141,7 @@ public class AddContentLayoutMVCActionCommand extends BaseMVCActionCommand {
 		AddContentLayoutMVCActionCommand.class);
 
 	@Reference
-	private LayoutService _layoutService;
+	private LayoutFragmentService _layoutFragmentService;
 
 	@Reference
 	private Portal _portal;
