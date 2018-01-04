@@ -18,13 +18,23 @@
 
 <liferay-ui:success key='<%= portletDisplay.getPortletName() + "layoutAdded" %>' message='<%= LanguageUtil.get(resourceBundle, "the-page-was-created-succesfully") %>' targetNode="#controlMenuAlertsContainer" />
 
-<liferay-site-navigation:navigation
-	ddmTemplateGroupId="<%= siteNavigationMenuDisplayContext.getDisplayStyleGroupId() %>"
-	ddmTemplateKey="<%= siteNavigationMenuDisplayContext.getDDMTemplateKey() %>"
-	displayDepth="<%= siteNavigationMenuDisplayContext.getDisplayDepth() %>"
-	includedLayouts="<%= siteNavigationMenuDisplayContext.getIncludedLayouts() %>"
-	preview="<%= siteNavigationMenuDisplayContext.isPreview() %>"
-	rootLayoutLevel="<%= siteNavigationMenuDisplayContext.getRootLayoutLevel() %>"
-	rootLayoutType="<%= siteNavigationMenuDisplayContext.getRootLayoutType() %>"
-	rootLayoutUuid="<%= siteNavigationMenuDisplayContext.getRootLayoutUuid() %>"
-/>
+<c:choose>
+	<c:when test="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() > 0 %>">
+		<liferay-site-navigation:navigation-menu
+			ddmTemplateGroupId="<%= siteNavigationMenuDisplayContext.getDisplayStyleGroupId() %>"
+			ddmTemplateKey="<%= siteNavigationMenuDisplayContext.getDDMTemplateKey() %>"
+			displayDepth="<%= siteNavigationMenuDisplayContext.getDisplayDepth() %>"
+			expandedLevels="<%= siteNavigationMenuDisplayContext.getExpandedLevels() %>"
+			preview="<%= siteNavigationMenuDisplayContext.isPreview() %>"
+			rootItemId="<%= siteNavigationMenuDisplayContext.getRootItemId() %>"
+			rootItemLevel="<%= siteNavigationMenuDisplayContext.getRootItemLevel() %>"
+			rootItemType="<%= siteNavigationMenuDisplayContext.getRootItemType() %>"
+			siteNavigationMenuId="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>"
+		/>
+	</c:when>
+	<c:otherwise>
+		<div class="p-3 pl-5 pr-5 text-center">
+			<aui:a href="javascript:;" onClick="<%= portletDisplay.getURLConfigurationJS() %>"><liferay-ui:message key="configure" /></aui:a>
+		</div>
+	</c:otherwise>
+</c:choose>
