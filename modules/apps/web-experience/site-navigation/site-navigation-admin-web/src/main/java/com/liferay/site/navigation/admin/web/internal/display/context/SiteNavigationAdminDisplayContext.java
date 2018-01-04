@@ -392,6 +392,17 @@ public class SiteNavigationAdminDisplayContext {
 		return false;
 	}
 
+	public boolean isShowAddMenuItemButton() {
+		if (_showAddMenuItemButton != null) {
+			return _showAddMenuItemButton;
+		}
+
+		_showAddMenuItemButton = ParamUtil.getBoolean(
+			_request, "showAddMenuItemButton", true);
+
+		return _showAddMenuItemButton;
+	}
+
 	private String _getFirstSiteNavigationMenuItem() {
 		String[] types = _siteNavigationMenuItemTypeRegistry.getTypes();
 
@@ -415,6 +426,7 @@ public class SiteNavigationAdminDisplayContext {
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
 	private JSONObject _selectedItemTypeJSONObject;
+	private Boolean _showAddMenuItemButton;
 	private Long _siteNavigationMenuId;
 	private final SiteNavigationMenuItemTypeRegistry
 		_siteNavigationMenuItemTypeRegistry;
