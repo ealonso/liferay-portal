@@ -32,7 +32,7 @@ if (metadataField.equals("author")) {
 	value = "author";
 }
 else if (metadataField.equals("categories")) {
-	List<AssetCategory> assetCategories = assetEntry.getCategories();
+	List<AssetCategory> assetCategories = AssetCategoryLocalServiceUtil.getEntryCategories(assetEntry.getEntryId());
 
 	showLabel = false;
 
