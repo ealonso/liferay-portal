@@ -16,6 +16,7 @@ package com.liferay.fragment.processor;
 
 import com.liferay.portal.kernel.exception.PortalException;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -39,6 +40,9 @@ public class FragmentEntryProcessorRegistry {
 		FragmentEntryProcessor fragmentEntryProcessor) {
 
 		_fragmentEntryProcessors.add(fragmentEntryProcessor);
+
+		_fragmentEntryProcessors.sort(
+			Comparator.comparing(FragmentEntryProcessor::getPriority));
 	}
 
 	public void unregisterFragmentEntryProcessor(
