@@ -32,6 +32,11 @@ import org.osgi.service.component.annotations.Component;
 public class NullableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Override
+	public int getPriority() {
+		return 0;
+	}
+
+	@Override
 	public void validateFragmentEntryHTML(String html) throws PortalException {
 		if (Validator.isNull(html)) {
 			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
