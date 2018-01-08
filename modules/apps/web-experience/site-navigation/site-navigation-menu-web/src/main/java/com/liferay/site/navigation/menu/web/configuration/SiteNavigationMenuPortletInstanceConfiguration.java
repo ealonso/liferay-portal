@@ -44,19 +44,25 @@ public interface SiteNavigationMenuPortletInstanceConfiguration {
 	@Meta.AD(deflt = "0", name = "display-style-group-id", required = false)
 	public long displayStyleGroupId();
 
-	@Meta.AD(deflt = "current", name = "included-layouts", required = false)
-	public String includedLayouts();
+	@Meta.AD(deflt = "auto", name = "expanded-levels", required = false)
+	public String expandedLevels();
 
 	@Meta.AD(deflt = "preview", name = "preview", required = false)
 	public boolean preview();
 
-	@Meta.AD(deflt = "0", name = "root-layout-level", required = false)
-	public int rootLayoutLevel();
+	@Meta.AD(deflt = "0", name = "root-item-level", required = false)
+	public int rootItemLevel();
 
-	@Meta.AD(deflt = "absolute", name = "root-layout-type", required = false)
-	public String rootLayoutType();
+	@Meta.AD(deflt = "absolute", name = "root-item-type", required = false)
+	public String rootItemType();
 
-	@Meta.AD(name = "root-layout-uuid", required = false)
-	public String rootLayoutUuid();
+	@Meta.AD(name = "root-item-id", required = false)
+	public long rootItemId();
+
+	@Meta.AD(name = "site-navigation-menu-id", required = false)
+	public long siteNavigationMenuId();
+
+	@Meta.AD(deflt = "layouts", name = "menu-type", required = false)
+	public String menuType();
 
 }
