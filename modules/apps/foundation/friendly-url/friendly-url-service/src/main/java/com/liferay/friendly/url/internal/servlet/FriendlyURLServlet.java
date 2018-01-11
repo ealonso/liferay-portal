@@ -133,7 +133,9 @@ public class FriendlyURLServlet extends HttpServlet {
 			siteFriendlyURLLocalService.fetchSiteFriendlyURL(
 				companyId, group.getGroupId(), LocaleUtil.toLanguageId(locale));
 
-		if (siteFriendlyURL == null) {
+		if ((siteFriendlyURL == null) ||
+			Validator.isNull(siteFriendlyURL.getFriendlyURL())) {
+
 			siteFriendlyURL =
 				siteFriendlyURLLocalService.fetchSiteFriendlyURLByFriendlyURL(
 					companyId, friendlyURL);
