@@ -305,7 +305,7 @@ public class AssetBrowserDisplayContext {
 
 		long selectedGroupId = ParamUtil.getLong(_request, "selectedGroupId");
 
-		long[] selectedGroupIds = PortalUtil.getSharedContentSiteGroupIds(
+		long[] selectedGroupIds = PortalUtil.getSharedContentScopeGroupIds(
 			themeDisplay.getCompanyId(), selectedGroupId,
 			themeDisplay.getUserId());
 
@@ -430,7 +430,7 @@ public class AssetBrowserDisplayContext {
 
 		long selectedGroupId = ParamUtil.getLong(_request, "selectedGroupId");
 
-		return PortalUtil.getSharedContentSiteGroupIds(
+		return PortalUtil.getSharedContentScopeGroupIds(
 			themeDisplay.getCompanyId(), selectedGroupId,
 			themeDisplay.getUserId());
 	}
