@@ -25,18 +25,53 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * A service which provides a capability to configure, validate and render
+ * a portlet from a fragment entry HTML using custom tags.
+ *
  * @author Pavel Savinov
  */
 public interface PortletInvocationProvider {
 
+	/**
+	 * Portlet invocation tag prefix to be used it fragment HMTL content.
+	 */
 	public static final String INVOCATION_TAG_PREFIX = "lfr-portlet-";
 
+	/**
+	 * Returns target portlet configuration URL.
+	 *
+	 * @return Configuration portlet URL.
+	 * @throws PortalException
+	 */
 	public PortletURL getConfigurationPortletURL() throws PortalException;
 
+	/**
+	 * Returns portlet invocation alias to be used in fragment HTML content,
+	 * for example, with alias "navigation":
+	 *
+	 * <code>&lt;lfr-portlet-navigation /&gt;</code>
+	 *
+	 * @return Fragment portlet invocation alias.
+	 */
 	public String getFragmentInvocationAlias();
 
+	/**
+	 * Returns required attributes array.
+	 *
+	 * @return Required attributes array.
+	 */
 	public String[] getRequiredAttributes();
 
+	/**
+	 * Renders target portlet in the fragment HTML using specific portlet
+	 * preferences.
+	 *
+	 * @param request the servlet request to render target portlet with.
+	 * @param response the servlet response to render target portlet with.
+	 * @param portletPreferences the portlet preferences to render target
+	 *                           portlet with.
+	 * @throws IOException
+	 */
 	public void render(
 			HttpServletRequest request, HttpServletResponse response,
 			PortletPreferences portletPreferences)
