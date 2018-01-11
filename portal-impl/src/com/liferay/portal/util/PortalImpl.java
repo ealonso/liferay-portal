@@ -8640,6 +8640,10 @@ public class PortalImpl implements Portal {
 		if (sitesContentSharingWithChildrenEnabled !=
 				Sites.CONTENT_SHARING_WITH_CHILDREN_DISABLED) {
 
+			if (!curGroup.isRoot()) {
+				groups.add(curGroup.getParentGroup());
+			}
+
 			groups.addAll(doGetAncestorSiteGroups(curGroup.getGroupId(), true));
 		}
 
