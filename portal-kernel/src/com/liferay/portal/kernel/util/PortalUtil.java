@@ -1714,6 +1714,14 @@ public class PortalUtil {
 		return getPortal().getServletContextName();
 	}
 
+	public static long[] getSharedContentScopeGroupIds(
+			long companyId, long groupId, long userId)
+		throws PortalException {
+
+		return getPortal().getSharedContentScopeGroupIds(
+			companyId, groupId, userId);
+	}
+
 	public static long[] getSharedContentSiteGroupIds(
 			long companyId, long groupId, long userId)
 		throws PortalException {

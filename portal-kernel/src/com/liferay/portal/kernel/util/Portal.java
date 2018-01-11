@@ -1058,6 +1058,10 @@ public interface Portal {
 
 	public String getServletContextName();
 
+	public long[] getSharedContentScopeGroupIds(
+			long companyId, long groupId, long userId)
+		throws PortalException;
+
 	public long[] getSharedContentSiteGroupIds(
 			long companyId, long groupId, long userId)
 		throws PortalException;
