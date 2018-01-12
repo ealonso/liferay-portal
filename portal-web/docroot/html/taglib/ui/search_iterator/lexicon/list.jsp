@@ -38,7 +38,7 @@ if (!resultRowSplitterEntries.isEmpty()) {
 %>
 
 <div class="table-responsive">
-	<table class="table table-autofit table-heading-nowrap table-list">
+	<table class="table table-autofit table-bordered table-heading-nowrap table-list">
 		<c:if test="<%= ListUtil.isNotNull(headerNames) %>">
 			<thead>
 				<tr>
@@ -112,9 +112,72 @@ if (!resultRowSplitterEntries.isEmpty()) {
 								}
 							}
 						}
+
+						String orderKey = null;
+						String orderByType = null;
+						boolean orderCurrentHeader = false;
+
+						if (orderableHeaders != null) {
+							orderKey = (String)orderableHeaders.get(headerName);
+
+							if (orderKey != null) {
+								orderByType = searchContainer.getOrderByType();
+
+								if (orderKey.equals(searchContainer.getOrderByCol())) {
+									orderCurrentHeader = true;
+								}
+							}
+						}
+
+						if (orderCurrentHeader) {
+							cssClass += " table-sorted";
+
+							if (HtmlUtil.escapeAttribute(orderByType).equals("desc")) {
+								cssClass += " table-sorted-desc";
+							}
+						}
+
+						if (Objects.equals(orderByType, "asc")) {
+							orderByType = "desc";
+						}
+						else {
+							orderByType = "asc";
+						}
 					%>
 
 						<th class="<%= cssClass %>" id="<%= namespace + id %>_col-<%= normalizedHeaderName %>">
+							<c:if test="<%= orderKey != null %>">
+								<div class="table-sort-liner">
+
+									<%
+									String orderByJS = searchContainer.getOrderByJS();
+									%>
+
+									<c:choose>
+										<c:when test="<%= Validator.isNull(orderByJS) %>">
+
+											<%
+											String url = StringPool.BLANK;
+
+											PortletURL iteratorURL = searchContainer.getIteratorURL();
+
+											if (iteratorURL != null) {
+												url = iteratorURL.toString();
+												url = HttpUtil.removeParameter(url, namespace + searchContainer.getOrderByColParam());
+												url = HttpUtil.removeParameter(url, namespace + searchContainer.getOrderByTypeParam());
+											}
+
+											url = HttpUtil.setParameter(url, namespace + searchContainer.getOrderByColParam(), orderKey);
+											url = HttpUtil.setParameter(url, namespace + searchContainer.getOrderByTypeParam(), orderByType);
+											%>
+
+											<a href="<%= url %>">
+										</c:when>
+										<c:otherwise>
+											<a href="<%= StringUtil.replace(orderByJS, new String[] {"orderKey", "orderByType"}, new String[] {orderKey, orderByType}) %>">
+										</c:otherwise>
+									</c:choose>
+							</c:if>
 
 							<%
 							String headerNameValue = null;
@@ -141,6 +204,12 @@ if (!resultRowSplitterEntries.isEmpty()) {
 									<%= headerNameValue %>
 								</c:otherwise>
 							</c:choose>
+
+							<c:if test="<%= orderKey != null %>">
+										<span class="table-sort-indicator"></span>
+									</a>
+								</div>
+							</c:if>
 						</th>
 
 					<%
