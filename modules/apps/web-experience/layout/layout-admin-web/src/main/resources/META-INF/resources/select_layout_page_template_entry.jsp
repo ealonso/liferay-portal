@@ -33,7 +33,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-template"));
 		List<LayoutPageTemplateCollection> layoutPageTemplateCollections = LayoutPageTemplateCollectionServiceUtil.getLayoutPageTemplateCollections(themeDisplay.getScopeGroupId());
 
 		for (LayoutPageTemplateCollection layoutPageTemplateCollection : layoutPageTemplateCollections) {
-			String selectLayoutPageTemplateEntryURL = layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(layoutPageTemplateCollection.getLayoutPageTemplateCollectionId());
+			String selectLayoutPageTemplateEntryURL = layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(layoutPageTemplateCollection.getLayoutPageTemplateCollectionId(), layoutsAdminDisplayContext.getSelPlid());
 		%>
 
 			<aui:nav-item href="<%= selectLayoutPageTemplateEntryURL %>" label="<%= layoutPageTemplateCollection.getName() %>" selected="<%= layoutPageTemplateCollectionId == layoutPageTemplateCollection.getLayoutPageTemplateCollectionId() %>" />
