@@ -62,6 +62,7 @@ import com.liferay.registry.collections.ServiceTrackerMap;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -206,7 +207,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 	@Override
 	public List<AssetEntry> getEntries(AssetEntryQuery entryQuery) {
-		return assetEntryFinder.findEntries(entryQuery);
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -227,7 +228,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 	@Override
 	public int getEntriesCount(AssetEntryQuery entryQuery) {
-		return assetEntryFinder.countEntries(entryQuery);
+		return 0;
 	}
 
 	@Override
