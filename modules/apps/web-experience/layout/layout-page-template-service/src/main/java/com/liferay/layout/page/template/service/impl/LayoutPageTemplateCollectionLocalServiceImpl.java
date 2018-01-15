@@ -14,7 +14,9 @@
 
 package com.liferay.layout.page.template.service.impl;
 
+import com.liferay.layout.page.template.constants.LayoutPageTemplateCollectionTypeConstants;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
+import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionTypeException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -39,7 +41,7 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 	@Override
 	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 			long userId, long groupId, String name, String description,
-			ServiceContext serviceContext)
+			int type, ServiceContext serviceContext)
 		throws PortalException {
 
 		// Layout page template collection
@@ -47,6 +49,10 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 		User user = userLocalService.getUser(userId);
 
 		validate(groupId, name);
+
+		if (type != LayoutPageTemplateCollectionTypeConstants.TYPE_BASIC) {
+			validateType(groupId, type);
+		}
 
 		long layoutPageTemplateId = counterLocalService.increment();
 
@@ -64,6 +70,7 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			serviceContext.getModifiedDate(new Date()));
 		layoutPageTemplateCollection.setName(name);
 		layoutPageTemplateCollection.setDescription(description);
+		layoutPageTemplateCollection.setType(type);
 
 		layoutPageTemplateCollectionPersistence.update(
 			layoutPageTemplateCollection);
@@ -74,6 +81,18 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			layoutPageTemplateCollection, serviceContext);
 
 		return layoutPageTemplateCollection;
+	}
+
+	@Override
+	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+			long userId, long groupId, String name, String description,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addLayoutPageTemplateCollection(
+			userId, groupId, name, description,
+			LayoutPageTemplateCollectionTypeConstants.TYPE_BASIC,
+			serviceContext);
 	}
 
 	@Override
@@ -199,6 +218,16 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 
 		if (layoutPageTemplateCollection != null) {
 			throw new DuplicateLayoutPageTemplateCollectionException(name);
+		}
+	}
+
+	protected void validateType(long groupId, int type) throws PortalException {
+		int layoutPageTemplateCollectionCount =
+			layoutPageTemplateCollectionPersistence.countByG_T(groupId, type);
+
+		if (layoutPageTemplateCollectionCount > 0) {
+			throw new DuplicateLayoutPageTemplateCollectionTypeException(
+				"A collection of the specified type already exists");
 		}
 	}
 
