@@ -355,7 +355,7 @@ public class LayoutPageTemplateCollectionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateCollectionServiceUtil.class,
 					"getLayoutPageTemplateCollectionsCount",
-					_getLayoutPageTemplateCollectionsCountParameterTypes9);
+					_getLayoutPageTemplateCollectionsCountParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, groupId,
 					name);
@@ -385,7 +385,7 @@ public class LayoutPageTemplateCollectionServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(LayoutPageTemplateCollectionServiceUtil.class,
 					"updateLayoutPageTemplateCollection",
-					_updateLayoutPageTemplateCollectionParameterTypes10);
+					_updateLayoutPageTemplateCollectionParameterTypes11);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					layoutPageTemplateCollectionId, name, description);
@@ -440,8 +440,8 @@ public class LayoutPageTemplateCollectionServiceHttp {
 		};
 	private static final Class<?>[] _getLayoutPageTemplateCollectionsCountParameterTypes8 =
 		new Class[] { long.class };
-	private static final Class<?>[] _getLayoutPageTemplateCollectionsCountParameterTypes9 =
+	private static final Class<?>[] _getLayoutPageTemplateCollectionsCountParameterTypes10 =
 		new Class[] { long.class, java.lang.String.class };
-	private static final Class<?>[] _updateLayoutPageTemplateCollectionParameterTypes10 =
+	private static final Class<?>[] _updateLayoutPageTemplateCollectionParameterTypes11 =
 		new Class[] { long.class, java.lang.String.class, java.lang.String.class };
 }
