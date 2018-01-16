@@ -15,7 +15,8 @@
 package com.liferay.blogs.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
+import com.liferay.asset.link.model.AssetLinkConstants;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.blogs.constants.BlogsConstants;
 import com.liferay.blogs.exception.EntryContentException;
 import com.liferay.blogs.exception.EntryCoverImageCropException;
@@ -2322,6 +2323,9 @@ public class BlogsEntryLocalServiceImpl extends BlogsEntryLocalServiceBaseImpl {
 				"Content has more than " + contentMaxLength + " characters");
 		}
 	}
+
+	@ServiceReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
 
 	@ServiceReference(type = ClassNameLocalService.class)
 	protected ClassNameLocalService classNameLocalService;

@@ -22,9 +22,9 @@ import static com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleCon
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetLinkLocalService;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.expando.kernel.exception.NoSuchTableException;
 import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoTable;
@@ -1268,6 +1268,11 @@ public class PortletImportController implements ImportController {
 		AssetLinkLocalService assetLinkLocalService) {
 
 		_assetLinkLocalService = assetLinkLocalService;
+	}
+
+	protected void setAssetLinkLocalService(
+		com.liferay.asset.kernel.service.AssetLinkLocalService
+			assetLinkLocalService) {
 	}
 
 	@Reference(unbind = "-")

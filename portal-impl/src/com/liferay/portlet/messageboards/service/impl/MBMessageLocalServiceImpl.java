@@ -15,7 +15,6 @@
 package com.liferay.portlet.messageboards.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetLinkConstants;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.message.boards.kernel.constants.MBConstants;
 import com.liferay.message.boards.kernel.exception.DiscussionMaxCommentsException;
@@ -334,7 +333,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 		// Asset
 
-		updateAsset(
+		mbMessageLocalService.updateAsset(
 			userId, message, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds(),
@@ -1383,9 +1382,36 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			String[] assetTagNames, long[] assetLinkEntryIds)
 		throws PortalException {
 
-		updateAsset(
+		mbMessageLocalService.updateAsset(
 			userId, message, assetCategoryIds, assetTagNames, assetLinkEntryIds,
 			true);
+	}
+
+	@Override
+	public AssetEntry updateAsset(
+			long userId, MBMessage message, long[] assetCategoryIds,
+			String[] assetTagNames, long[] assetLinkEntryIds,
+			boolean assetEntryVisible)
+		throws PortalException {
+
+		boolean visible = false;
+		Date publishDate = null;
+
+		if (assetEntryVisible && message.isApproved() &&
+			((message.getClassNameId() == 0) ||
+			 (message.getParentMessageId() != 0))) {
+
+			visible = true;
+			publishDate = message.getModifiedDate();
+		}
+
+		return assetEntryLocalService.updateEntry(
+			userId, message.getGroupId(), message.getCreateDate(),
+			message.getModifiedDate(), message.getWorkflowClassName(),
+			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
+			assetTagNames, true, visible, null, null, publishDate, null,
+			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
+			null, 0, 0, message.getPriority());
 	}
 
 	@Override
@@ -1563,7 +1589,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 
 		// Asset
 
-		updateAsset(
+		mbMessageLocalService.updateAsset(
 			userId, message, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames(),
 			serviceContext.getAssetLinkEntryIds());
@@ -1959,36 +1985,6 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 			message.getCompanyId(), message.getGroupId(), userId,
 			message.getWorkflowClassName(), message.getMessageId(), message,
 			serviceContext, workflowContext);
-	}
-
-	protected void updateAsset(
-			long userId, MBMessage message, long[] assetCategoryIds,
-			String[] assetTagNames, long[] assetLinkEntryIds,
-			boolean assetEntryVisible)
-		throws PortalException {
-
-		boolean visible = false;
-		Date publishDate = null;
-
-		if (assetEntryVisible && message.isApproved() &&
-			((message.getClassNameId() == 0) ||
-			 (message.getParentMessageId() != 0))) {
-
-			visible = true;
-			publishDate = message.getModifiedDate();
-		}
-
-		AssetEntry assetEntry = assetEntryLocalService.updateEntry(
-			userId, message.getGroupId(), message.getCreateDate(),
-			message.getModifiedDate(), message.getWorkflowClassName(),
-			message.getMessageId(), message.getUuid(), 0, assetCategoryIds,
-			assetTagNames, true, visible, null, null, publishDate, null,
-			ContentTypes.TEXT_HTML, message.getSubject(), null, null, null,
-			null, 0, 0, message.getPriority());
-
-		assetLinkLocalService.updateLinks(
-			userId, assetEntry.getEntryId(), assetLinkEntryIds,
-			AssetLinkConstants.TYPE_RELATED);
 	}
 
 	protected void updatePriorities(long threadId, double priority) {

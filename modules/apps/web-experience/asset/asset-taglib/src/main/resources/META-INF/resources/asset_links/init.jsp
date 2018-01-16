@@ -21,10 +21,10 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
-page import="com.liferay.asset.kernel.model.AssetLink" %><%@
 page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
 page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil" %><%@
+page import="com.liferay.asset.link.model.AssetLink" %><%@
 page import="com.liferay.portal.kernel.log.Log" %><%@
 page import="com.liferay.portal.kernel.log.LogFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.model.Group" %><%@

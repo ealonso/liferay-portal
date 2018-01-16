@@ -15,7 +15,6 @@
 package com.liferay.calendar.service.base;
 
 import com.liferay.asset.kernel.service.persistence.AssetEntryPersistence;
-import com.liferay.asset.kernel.service.persistence.AssetLinkPersistence;
 
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.service.CalendarBookingService;
@@ -733,44 +732,6 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	}
 
 	/**
-	 * Returns the asset link local service.
-	 *
-	 * @return the asset link local service
-	 */
-	public com.liferay.asset.kernel.service.AssetLinkLocalService getAssetLinkLocalService() {
-		return assetLinkLocalService;
-	}
-
-	/**
-	 * Sets the asset link local service.
-	 *
-	 * @param assetLinkLocalService the asset link local service
-	 */
-	public void setAssetLinkLocalService(
-		com.liferay.asset.kernel.service.AssetLinkLocalService assetLinkLocalService) {
-		this.assetLinkLocalService = assetLinkLocalService;
-	}
-
-	/**
-	 * Returns the asset link persistence.
-	 *
-	 * @return the asset link persistence
-	 */
-	public AssetLinkPersistence getAssetLinkPersistence() {
-		return assetLinkPersistence;
-	}
-
-	/**
-	 * Sets the asset link persistence.
-	 *
-	 * @param assetLinkPersistence the asset link persistence
-	 */
-	public void setAssetLinkPersistence(
-		AssetLinkPersistence assetLinkPersistence) {
-		this.assetLinkPersistence = assetLinkPersistence;
-	}
-
-	/**
 	 * Returns the message-boards message local service.
 	 *
 	 * @return the message-boards message local service
@@ -1078,10 +1039,6 @@ public abstract class CalendarBookingServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.asset.kernel.service.AssetEntryService assetEntryService;
 	@ServiceReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
-	@ServiceReference(type = com.liferay.asset.kernel.service.AssetLinkLocalService.class)
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService assetLinkLocalService;
-	@ServiceReference(type = AssetLinkPersistence.class)
-	protected AssetLinkPersistence assetLinkPersistence;
 	@ServiceReference(type = com.liferay.message.boards.kernel.service.MBMessageLocalService.class)
 	protected com.liferay.message.boards.kernel.service.MBMessageLocalService mbMessageLocalService;
 	@ServiceReference(type = com.liferay.message.boards.kernel.service.MBMessageService.class)

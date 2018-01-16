@@ -11,6 +11,8 @@
 	<bean class="com.liferay.portlet.asset.service.impl.AssetCategoryPropertyServiceImpl" id="com.liferay.asset.kernel.service.AssetCategoryPropertyService" />
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetCategoryPropertyPersistenceImpl" id="com.liferay.asset.kernel.service.persistence.AssetCategoryPropertyPersistence" parent="basePersistence" />
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetCategoryPropertyFinderImpl" id="com.liferay.asset.kernel.service.persistence.AssetCategoryPropertyFinder" parent="basePersistence" />
+	<bean class="com.liferay.portlet.asset.service.impl.AssetLinkLocalServiceImpl" id="com.liferay.asset.kernel.service.AssetLinkLocalService" />
+	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetLinkPersistenceImpl" id="com.liferay.asset.kernel.service.persistence.AssetLinkPersistence" parent="basePersistence" />
 	<bean class="com.liferay.portlet.asset.service.impl.AssetTagStatsLocalServiceImpl" id="com.liferay.asset.kernel.service.AssetTagStatsLocalService" />
 	<bean class="com.liferay.portlet.asset.service.persistence.impl.AssetTagStatsPersistenceImpl" id="com.liferay.asset.kernel.service.persistence.AssetTagStatsPersistence" parent="basePersistence" />
 	<bean class="com.liferay.portlet.messageboards.service.impl.MBDiscussionLocalServiceImpl" id="com.liferay.message.boards.kernel.service.MBDiscussionLocalService" />

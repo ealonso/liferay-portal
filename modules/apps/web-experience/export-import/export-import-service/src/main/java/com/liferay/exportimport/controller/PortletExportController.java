@@ -22,10 +22,10 @@ import static com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleCon
 
 import aQute.bnd.annotation.ProviderType;
 
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.model.adapter.StagedAssetLink;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.kernel.service.AssetLinkLocalService;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.model.adapter.StagedAssetLink;
+import com.liferay.asset.link.service.AssetLinkLocalService;
 import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.exportimport.constants.ExportImportConstants;
 import com.liferay.exportimport.kernel.controller.ExportController;
@@ -54,7 +54,7 @@ import com.liferay.exportimport.portlet.preferences.processor.ExportImportPortle
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.xml.DocUtil;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.NoSuchPortletPreferencesException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -851,16 +851,13 @@ public class PortletExportController implements ExportController {
 		try {
 			portletDataContext.setExportDataRootElement(rootElement);
 
-			ActionableDynamicQuery linkActionableDynamicQuery =
-				_assetLinkLocalService.getExportActionbleDynamicQuery(
-					portletDataContext);
+			List<AssetLink> assetLinks = _assetLinkLocalService.getLinks(
+				portletDataContext.getGroupId(),
+				portletDataContext.getStartDate(),
+				portletDataContext.getEndDate(), QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
 
-			linkActionableDynamicQuery.performActions();
-
-			for (long linkId : portletDataContext.getAssetLinkIds()) {
-				AssetLink assetLink = _assetLinkLocalService.getAssetLink(
-					linkId);
-
+			for (AssetLink assetLink : assetLinks) {
 				StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
 					assetLink, AssetLink.class, StagedAssetLink.class);
 
@@ -1330,6 +1327,11 @@ public class PortletExportController implements ExportController {
 		AssetLinkLocalService assetLinkLocalService) {
 
 		_assetLinkLocalService = assetLinkLocalService;
+	}
+
+	protected void setAssetLinkLocalService(
+		com.liferay.asset.kernel.service.AssetLinkLocalService
+			assetLinkLocalService) {
 	}
 
 	@Reference(unbind = "-")
