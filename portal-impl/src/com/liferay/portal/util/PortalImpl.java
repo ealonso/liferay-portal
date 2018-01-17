@@ -4880,72 +4880,23 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
+	public long[] getSharedContentScopeGroupIds(
+			long companyId, long groupId, long userId)
+		throws PortalException {
+
+		Group scopeGroup = GroupLocalServiceUtil.fetchGroup(groupId);
+
+		return _getSharedContentGroupIds(companyId, scopeGroup, userId);
+	}
+
+	@Override
 	public long[] getSharedContentSiteGroupIds(
 			long companyId, long groupId, long userId)
 		throws PortalException {
 
-		Set<Group> groups = new LinkedHashSet<>();
-
 		Group siteGroup = doGetCurrentSiteGroup(groupId);
 
-		if (siteGroup != null) {
-
-			// Current site
-
-			groups.add(siteGroup);
-
-			// Descendant sites
-
-			groups.addAll(siteGroup.getDescendants(true));
-
-			// Layout scopes
-
-			groups.addAll(
-				GroupLocalServiceUtil.getGroups(
-					siteGroup.getCompanyId(), Layout.class.getName(),
-					siteGroup.getGroupId()));
-		}
-
-		// Administered sites
-
-		if (PrefsPropsUtil.getBoolean(
-				companyId,
-				PropsKeys.
-					SITES_CONTENT_SHARING_THROUGH_ADMINISTRATORS_ENABLED)) {
-
-			groups.addAll(GroupLocalServiceUtil.getUserSitesGroups(userId));
-		}
-
-		// Ancestor sites and global site
-
-		int sitesContentSharingWithChildrenEnabled = PrefsPropsUtil.getInteger(
-			companyId, PropsKeys.SITES_CONTENT_SHARING_WITH_CHILDREN_ENABLED);
-
-		if (sitesContentSharingWithChildrenEnabled !=
-				Sites.CONTENT_SHARING_WITH_CHILDREN_DISABLED) {
-
-			groups.addAll(doGetAncestorSiteGroups(groupId, true));
-		}
-
-		Iterator<Group> iterator = groups.iterator();
-
-		while (iterator.hasNext()) {
-			Group group = iterator.next();
-
-			if (!StagingUtil.isGroupAccessible(group, siteGroup)) {
-				iterator.remove();
-			}
-		}
-
-		long[] groupIds = new long[groups.size()];
-
-		int i = 0;
-
-		for (Group group : groups) {
-			groupIds[i++] = group.getGroupId();
-		}
-
-		return groupIds;
+		return _getSharedContentGroupIds(companyId, siteGroup, userId);
 	}
 
 	/**
@@ -8673,6 +8624,75 @@ public class PortalImpl implements Portal {
 		catch (Exception e) {
 			return layout.getGroupId();
 		}
+	}
+
+	private long[] _getSharedContentGroupIds(
+		long companyId, Group curGroup, long userId) throws PortalException {
+
+		Set<Group> groups = new LinkedHashSet<>();
+
+		if (curGroup != null) {
+
+			// Current site
+
+			groups.add(curGroup);
+
+			// Descendant sites
+
+			groups.addAll(curGroup.getDescendants(true));
+
+			// Layout scopes
+
+			groups.addAll(
+				GroupLocalServiceUtil.getGroups(
+					curGroup.getCompanyId(), Layout.class.getName(),
+					curGroup.getGroupId()));
+		}
+
+		// Administered sites
+
+		if (PrefsPropsUtil.getBoolean(
+				companyId,
+				PropsKeys.
+					SITES_CONTENT_SHARING_THROUGH_ADMINISTRATORS_ENABLED)) {
+
+			groups.addAll(GroupLocalServiceUtil.getUserSitesGroups(userId));
+		}
+
+		// Ancestor sites and global site
+
+		int sitesContentSharingWithChildrenEnabled = PrefsPropsUtil.getInteger(
+			companyId, PropsKeys.SITES_CONTENT_SHARING_WITH_CHILDREN_ENABLED);
+
+		if (sitesContentSharingWithChildrenEnabled !=
+				Sites.CONTENT_SHARING_WITH_CHILDREN_DISABLED) {
+
+			if (!curGroup.isRoot()) {
+				groups.add(curGroup.getParentGroup());
+			}
+
+			groups.addAll(doGetAncestorSiteGroups(curGroup.getGroupId(), true));
+		}
+
+		Iterator<Group> iterator = groups.iterator();
+
+		while (iterator.hasNext()) {
+			Group group = iterator.next();
+
+			if (!StagingUtil.isGroupAccessible(group, curGroup)) {
+				iterator.remove();
+			}
+		}
+
+		long[] groupIds = new long[groups.size()];
+
+		int i = 0;
+
+		for (Group group : groups) {
+			groupIds[i++] = group.getGroupId();
+		}
+
+		return groupIds;
 	}
 
 	private String _getSiteAdminURL(
