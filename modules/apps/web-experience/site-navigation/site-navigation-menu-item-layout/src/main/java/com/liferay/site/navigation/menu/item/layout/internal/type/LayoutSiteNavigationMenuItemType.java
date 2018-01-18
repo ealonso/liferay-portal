@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys;
@@ -66,6 +67,17 @@ public class LayoutSiteNavigationMenuItemType
 	public String getTitle(
 		SiteNavigationMenuItem siteNavigationMenuItem, Locale locale) {
 
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		String label = typeSettingsProperties.getProperty("title");
+
+		if (Validator.isNotNull(label)) {
+			return label;
+		}
+
 		Layout layout = getLayout(siteNavigationMenuItem);
 
 		if (layout != null) {
@@ -104,7 +116,7 @@ public class LayoutSiteNavigationMenuItemType
 			_itemSelector);
 
 		_jspRenderer.renderJSP(
-			_servletContext, request, response, "/edit_layout.jsp");
+			_servletContext, request, response, "/add_layout.jsp");
 	}
 
 	@Override
@@ -119,7 +131,13 @@ public class LayoutSiteNavigationMenuItemType
 
 		Layout layout = getLayout(siteNavigationMenuItem);
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		request.setAttribute(WebKeys.SEL_LAYOUT, layout);
+		request.setAttribute(
+			WebKeys.TITLE,
+			getTitle(siteNavigationMenuItem, themeDisplay.getLocale()));
 
 		_jspRenderer.renderJSP(
 			_servletContext, request, response, "/edit_layout.jsp");
