@@ -6,6 +6,7 @@
 {template .render}
 	{@param nodes: list<?>}
 	{@param pathThemeImages: string}
+	{@param? multiSelection: bool}
 	{@param? namespace: string}
 	{@param? selectedNodeChange_: any}
 	{@param? viewType: string}
@@ -40,6 +41,7 @@
 						{param events: [
 							'selectedNodesChanged': $selectedNodeChange_
 						] /}
+						{param multiSelection: $multiSelection /}
 						{param nodes: $nodes /}
 						{param pathThemeImages: $pathThemeImages /}
 						{param viewType: $viewType /}
