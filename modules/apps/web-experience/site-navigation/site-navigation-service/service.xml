@@ -27,6 +27,7 @@
 		<column name="primary" type="boolean" />
 		<column name="secondary" type="boolean" />
 		<column name="social" type="boolean" />
+		<column name="addNewPages" type="boolean" />
 
 		<!-- Finder methods -->
 
