@@ -239,6 +239,16 @@ public class SiteNavigationMenuDisplayContext {
 			SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
 				getSiteNavigationMenuId());
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (_siteNavigationMenu == null) {
+			_siteNavigationMenu =
+				SiteNavigationMenuLocalServiceUtil.
+					fetchPrimarySiteNavigationMenu(
+						themeDisplay.getScopeGroupId());
+		}
+
 		return _siteNavigationMenu;
 	}
 
