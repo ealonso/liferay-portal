@@ -144,129 +144,161 @@ renderResponse.setTitle(siteNavigationMenu.getName());
 			</div>
 		</div>
 
-		<liferay-frontend:add-menu>
+		<c:choose>
+			<c:when test="<%= siteNavigationAdminDisplayContext.isShowAddMenuItemButton() %>">
+				<liferay-frontend:add-menu>
 
-			<%
-			for (SiteNavigationMenuItemType siteNavigationMenuItemType : siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemTypes()) {
-				PortletURL addSiteNavigationMenuItemTypeURL = renderResponse.createRenderURL();
+					<%
+					for (SiteNavigationMenuItemType siteNavigationMenuItemType : siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemTypes()) {
+						PortletURL addSiteNavigationMenuItemTypeURL = renderResponse.createRenderURL();
 
-				addSiteNavigationMenuItemTypeURL.setParameter("mvcPath", "/add_site_navigation_menu_item.jsp");
-				addSiteNavigationMenuItemTypeURL.setParameter("redirect", currentURL);
-				addSiteNavigationMenuItemTypeURL.setParameter("siteNavigationMenuId", String.valueOf(siteNavigationMenu.getSiteNavigationMenuId()));
-				addSiteNavigationMenuItemTypeURL.setParameter("type", siteNavigationMenuItemType.getType());
-			%>
+						addSiteNavigationMenuItemTypeURL.setParameter("mvcPath", "/add_site_navigation_menu_item.jsp");
+						addSiteNavigationMenuItemTypeURL.setParameter("redirect", currentURL);
+						addSiteNavigationMenuItemTypeURL.setParameter("siteNavigationMenuId", String.valueOf(siteNavigationMenu.getSiteNavigationMenuId()));
+						addSiteNavigationMenuItemTypeURL.setParameter("type", siteNavigationMenuItemType.getType());
+					%>
 
-				<liferay-frontend:add-menu-item title="<%= siteNavigationMenuItemType.getLabel(locale) %>" url="<%= addSiteNavigationMenuItemTypeURL.toString() %>" />
+						<liferay-frontend:add-menu-item title="<%= siteNavigationMenuItemType.getLabel(locale) %>" url="<%= addSiteNavigationMenuItemTypeURL.toString() %>" />
 
-			<%
-			}
-			%>
+					<%
+					}
+					%>
 
-		</liferay-frontend:add-menu>
+				</liferay-frontend:add-menu>
 
-		<aui:script require="site-navigation-menu-web/js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule">
-			var siteNavigationMenuEditor = new siteNavigationMenuEditorModule.default(
-				{
-					editSiteNavigationMenuItemParentURL: '<portlet:actionURL name="/navigation_menu/edit_site_navigation_menu_item_parent"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>',
-					menuContainerSelector: '.site-navigation-menu-container',
-					menuItemSelector: '.site-navigation-menu-item',
-					namespace: '<portlet:namespace />'
-				}
-			);
-
-			function handlePortletDestroy() {
-				if (siteNavigationMenuEditor) {
-					siteNavigationMenuEditor.dispose();
-
-					siteNavigationMenuEditor = null;
-				}
-
-				Liferay.detach('destroyPortlet', handlePortletDestroy);
-			}
-
-			Liferay.on('destroyPortlet', handlePortletDestroy);
-		</aui:script>
-
-		<aui:script use="aui-base,aui-parse-content">
-			var sidebar = A.one('#<portlet:namespace />sidebar');
-			var sidebarBody = A.one('#<portlet:namespace />sidebarBody');
-			var sidebarTitle = A.one('#<portlet:namespace />sidebarTitle');
-
-			A.one('.site-navigation-menu-container').delegate(
-				'click',
-				function(event) {
-					var currentTarget = event.currentTarget;
-
-					var data = Liferay.Util.ns(
-						'<portlet:namespace />',
+				<aui:script require="site-navigation-menu-web/js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule">
+					var siteNavigationMenuEditor = new siteNavigationMenuEditorModule.default(
 						{
-							redirect: '<%= currentURL %>',
-							siteNavigationMenuItemId: currentTarget.attr('data-site-navigation-menu-item-id')
+							editSiteNavigationMenuItemParentURL: '<portlet:actionURL name="/navigation_menu/edit_site_navigation_menu_item_parent"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>',
+							menuContainerSelector: '.site-navigation-menu-container',
+							menuItemSelector: '.site-navigation-menu-item',
+							namespace: '<portlet:namespace />'
 						}
 					);
 
-					A.io.request(
-						'<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/edit_site_navigation_menu_item.jsp" /></portlet:renderURL>',
-						{
-							data: data,
-							on: {
-								success: function(event, id, obj) {
-									var responseData = this.get('responseData');
+					function handlePortletDestroy() {
+						if (siteNavigationMenuEditor) {
+							siteNavigationMenuEditor.dispose();
 
-									sidebarBody.plug(A.Plugin.ParseContent);
+							siteNavigationMenuEditor = null;
+						}
 
-									sidebarBody.setContent(responseData);
+						Liferay.detach('destroyPortlet', handlePortletDestroy);
+					}
 
-									sidebarTitle.text(currentTarget.attr('data-title'));
+					Liferay.on('destroyPortlet', handlePortletDestroy);
+				</aui:script>
 
-									sidebar.removeClass('hide');
+				<aui:script use="aui-base,aui-parse-content">
+					var sidebar = A.one('#<portlet:namespace />sidebar');
+					var sidebarBody = A.one('#<portlet:namespace />sidebarBody');
+					var sidebarTitle = A.one('#<portlet:namespace />sidebarTitle');
+
+					A.one('.site-navigation-menu-container').delegate(
+						'click',
+						function(event) {
+							var currentTarget = event.currentTarget;
+
+							var data = Liferay.Util.ns(
+								'<portlet:namespace />',
+								{
+									redirect: '<%= currentURL %>',
+									siteNavigationMenuItemId: currentTarget.attr('data-site-navigation-menu-item-id')
 								}
-							}
-						}
-					);
-				},
-				'.site-navigation-menu-item'
-			);
+							);
 
-			A.one('#<portlet:namespace />sidebarClose').on(
-				'click',
-				function(event) {
-					sidebar.addClass('hide');
-				}
-			);
+							A.io.request(
+								'<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/edit_site_navigation_menu_item.jsp" /></portlet:renderURL>',
+								{
+									data: data,
+									on: {
+										success: function(event, id, obj) {
+											var responseData = this.get('responseData');
 
-			A.one('#<portlet:namespace />showSiteNavigationMenuSettings').on(
-				'click',
-				function() {
-					var data = Liferay.Util.ns(
-						'<portlet:namespace />',
-						{
-							redirect: '<%= currentURL %>',
-							siteNavigationMenuId: <%= siteNavigationMenu.getSiteNavigationMenuId() %>
-						}
-					);
+											sidebarBody.plug(A.Plugin.ParseContent);
 
-					A.io.request(
-						'<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/site_navigation_menu_settings.jsp" /></portlet:renderURL>',
-						{
-							data: data,
-							on: {
-								success: function(event, id, obj) {
-									var responseData = this.get('responseData');
+											sidebarBody.setContent(responseData);
 
-									sidebarBody.plug(A.Plugin.ParseContent);
+											sidebarTitle.text(currentTarget.attr('data-title'));
 
-									sidebarBody.setContent(responseData);
-
-									sidebarTitle.text('<%= siteNavigationMenu.getName() %>');
-
-									sidebar.removeClass('hide');
+											sidebar.removeClass('hide');
+										}
+									}
 								}
-							}
+							);
+						},
+						'.site-navigation-menu-item'
+					);
+
+					A.one('#<portlet:namespace />sidebarClose').on(
+						'click',
+						function(event) {
+							sidebar.addClass('hide');
 						}
 					);
-				}
-			);
-		</aui:script>
+
+					A.one('#<portlet:namespace />showSiteNavigationMenuSettings').on(
+						'click',
+						function() {
+							var data = Liferay.Util.ns(
+								'<portlet:namespace />',
+								{
+									redirect: '<%= currentURL %>',
+									siteNavigationMenuId: <%= siteNavigationMenu.getSiteNavigationMenuId() %>
+								}
+							);
+
+							A.io.request(
+								'<portlet:renderURL windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>"><portlet:param name="mvcPath" value="/site_navigation_menu_settings.jsp" /></portlet:renderURL>',
+								{
+									data: data,
+									on: {
+										success: function(event, id, obj) {
+											var responseData = this.get('responseData');
+
+											sidebarBody.plug(A.Plugin.ParseContent);
+
+											sidebarBody.setContent(responseData);
+
+											sidebarTitle.text('<%= siteNavigationMenu.getName() %>');
+
+											sidebar.removeClass('hide');
+										}
+									}
+								}
+							);
+						}
+					);
+				</aui:script>
+			</c:when>
+			<c:otherwise>
+				<aui:script use="aui-base">
+
+					<%
+					String eventName = ParamUtil.getString(request, "eventName");
+					%>
+
+					A.one('.site-navigation-menu-container').delegate(
+						'click',
+						function(event) {
+							var currentTarget = event.currentTarget;
+
+							A.all('.site-navigation-menu-item.selected').removeClass('selected');
+
+							currentTarget.addClass('selected');
+
+							Liferay.Util.getOpener().Liferay.fire(
+								'<%= HtmlUtil.escape(eventName) %>',
+								{
+									data: currentTarget.getData()
+								}
+							);
+
+						},
+						'.site-navigation-menu-item'
+					);
+				</aui:script>
+			</c:otherwise>
+		</c:choose>
 	</c:otherwise>
 </c:choose>
