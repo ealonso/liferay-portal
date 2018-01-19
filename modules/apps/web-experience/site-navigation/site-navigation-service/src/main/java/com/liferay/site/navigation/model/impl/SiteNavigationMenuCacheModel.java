@@ -65,7 +65,7 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{siteNavigationMenuId=");
 		sb.append(siteNavigationMenuId);
@@ -85,6 +85,12 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 		sb.append(name);
 		sb.append(", primary=");
 		sb.append(primary);
+		sb.append(", secondary=");
+		sb.append(secondary);
+		sb.append(", social=");
+		sb.append(social);
+		sb.append(", addNewPages=");
+		sb.append(addNewPages);
 		sb.append("}");
 
 		return sb.toString();
@@ -128,6 +134,9 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 		}
 
 		siteNavigationMenuImpl.setPrimary(primary);
+		siteNavigationMenuImpl.setSecondary(secondary);
+		siteNavigationMenuImpl.setSocial(social);
+		siteNavigationMenuImpl.setAddNewPages(addNewPages);
 
 		siteNavigationMenuImpl.resetOriginalValues();
 
@@ -149,6 +158,12 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 		name = objectInput.readUTF();
 
 		primary = objectInput.readBoolean();
+
+		secondary = objectInput.readBoolean();
+
+		social = objectInput.readBoolean();
+
+		addNewPages = objectInput.readBoolean();
 	}
 
 	@Override
@@ -180,6 +195,12 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 		}
 
 		objectOutput.writeBoolean(primary);
+
+		objectOutput.writeBoolean(secondary);
+
+		objectOutput.writeBoolean(social);
+
+		objectOutput.writeBoolean(addNewPages);
 	}
 
 	public long siteNavigationMenuId;
@@ -191,4 +212,7 @@ public class SiteNavigationMenuCacheModel implements CacheModel<SiteNavigationMe
 	public long modifiedDate;
 	public String name;
 	public boolean primary;
+	public boolean secondary;
+	public boolean social;
+	public boolean addNewPages;
 }
