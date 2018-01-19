@@ -158,7 +158,8 @@ public class SiteNavigationMenuLocalServiceImpl
 	@Override
 	public SiteNavigationMenu updateSiteNavigationMenu(
 			long userId, long siteNavigationMenuId, boolean primary,
-			boolean secondary, boolean social, ServiceContext serviceContext)
+			boolean secondary, boolean social, boolean addNewPages,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		SiteNavigationMenu siteNavigationMenu = getSiteNavigationMenu(
@@ -221,6 +222,7 @@ public class SiteNavigationMenuLocalServiceImpl
 		siteNavigationMenu.setPrimary(primary);
 		siteNavigationMenu.setSecondary(secondary);
 		siteNavigationMenu.setSocial(social);
+		siteNavigationMenu.setAddNewPages(addNewPages);
 
 		return siteNavigationMenuPersistence.update(siteNavigationMenu);
 	}
