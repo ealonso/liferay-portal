@@ -43,6 +43,9 @@ public class SiteNavigationMenuSoap implements Serializable {
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setName(model.getName());
 		soapModel.setPrimary(model.getPrimary());
+		soapModel.setSecondary(model.getSecondary());
+		soapModel.setSocial(model.getSocial());
+		soapModel.setAddNewPages(model.getAddNewPages());
 
 		return soapModel;
 	}
@@ -174,6 +177,42 @@ public class SiteNavigationMenuSoap implements Serializable {
 		_primary = primary;
 	}
 
+	public boolean getSecondary() {
+		return _secondary;
+	}
+
+	public boolean isSecondary() {
+		return _secondary;
+	}
+
+	public void setSecondary(boolean secondary) {
+		_secondary = secondary;
+	}
+
+	public boolean getSocial() {
+		return _social;
+	}
+
+	public boolean isSocial() {
+		return _social;
+	}
+
+	public void setSocial(boolean social) {
+		_social = social;
+	}
+
+	public boolean getAddNewPages() {
+		return _addNewPages;
+	}
+
+	public boolean isAddNewPages() {
+		return _addNewPages;
+	}
+
+	public void setAddNewPages(boolean addNewPages) {
+		_addNewPages = addNewPages;
+	}
+
 	private long _siteNavigationMenuId;
 	private long _groupId;
 	private long _companyId;
@@ -183,4 +222,7 @@ public class SiteNavigationMenuSoap implements Serializable {
 	private Date _modifiedDate;
 	private String _name;
 	private boolean _primary;
+	private boolean _secondary;
+	private boolean _social;
+	private boolean _addNewPages;
 }
