@@ -596,7 +596,9 @@ public class PortletContainerImpl implements PortletContainer {
 
 					String[] values = entry.getValue();
 
-					if (publicRenderParameter.getIdentifier().equals("tag") &&
+					String identifier = publicRenderParameter.getIdentifier();
+
+					if (identifier.equals("tag") &&
 						Validator.isNotNull(values[0]) &&
 						!AssetTagLocalServiceUtil.hasTag(
 							layout.getGroupId(), values[0])) {
