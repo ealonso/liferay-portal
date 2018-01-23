@@ -103,11 +103,12 @@ public class SiteNavigationMenuServiceWrapper
 
 	@Override
 	public com.liferay.site.navigation.model.SiteNavigationMenu updateSiteNavigationMenu(
-		long siteNavigationMenuId, boolean primary,
+		long siteNavigationMenuId, boolean primary, boolean secondary,
+		boolean social, boolean addNewPages,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _siteNavigationMenuService.updateSiteNavigationMenu(siteNavigationMenuId,
-			primary, serviceContext);
+			primary, secondary, social, addNewPages, serviceContext);
 	}
 
 	@Override

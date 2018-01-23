@@ -228,6 +228,69 @@ public interface SiteNavigationMenuModel extends BaseModel<SiteNavigationMenu>,
 	 */
 	public void setPrimary(boolean primary);
 
+	/**
+	 * Returns the secondary of this site navigation menu.
+	 *
+	 * @return the secondary of this site navigation menu
+	 */
+	public boolean getSecondary();
+
+	/**
+	 * Returns <code>true</code> if this site navigation menu is secondary.
+	 *
+	 * @return <code>true</code> if this site navigation menu is secondary; <code>false</code> otherwise
+	 */
+	public boolean isSecondary();
+
+	/**
+	 * Sets whether this site navigation menu is secondary.
+	 *
+	 * @param secondary the secondary of this site navigation menu
+	 */
+	public void setSecondary(boolean secondary);
+
+	/**
+	 * Returns the social of this site navigation menu.
+	 *
+	 * @return the social of this site navigation menu
+	 */
+	public boolean getSocial();
+
+	/**
+	 * Returns <code>true</code> if this site navigation menu is social.
+	 *
+	 * @return <code>true</code> if this site navigation menu is social; <code>false</code> otherwise
+	 */
+	public boolean isSocial();
+
+	/**
+	 * Sets whether this site navigation menu is social.
+	 *
+	 * @param social the social of this site navigation menu
+	 */
+	public void setSocial(boolean social);
+
+	/**
+	 * Returns the add new pages of this site navigation menu.
+	 *
+	 * @return the add new pages of this site navigation menu
+	 */
+	public boolean getAddNewPages();
+
+	/**
+	 * Returns <code>true</code> if this site navigation menu is add new pages.
+	 *
+	 * @return <code>true</code> if this site navigation menu is add new pages; <code>false</code> otherwise
+	 */
+	public boolean isAddNewPages();
+
+	/**
+	 * Sets whether this site navigation menu is add new pages.
+	 *
+	 * @param addNewPages the add new pages of this site navigation menu
+	 */
+	public void setAddNewPages(boolean addNewPages);
+
 	@Override
 	public boolean isNew();
 
