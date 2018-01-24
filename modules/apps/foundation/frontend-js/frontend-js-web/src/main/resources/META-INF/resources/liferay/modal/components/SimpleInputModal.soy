@@ -96,17 +96,6 @@
 						</div>
 					{/if}
 
-					{let $cancelButtonAttributes kind="attributes"}
-						{if $_loadingResponse}disabled{/if}
-						class="btn btn-secondary"
-						data-onclick="{$_handleCancelButtonClick}"
-						type="button"
-					{/let}
-
-					<button {$cancelButtonAttributes}>
-						{msg desc=""}cancel{/msg}
-					</button>
-
 					{let $submitButtonCssClasses kind="text"}
 						btn btn-primary
 
@@ -124,6 +113,17 @@
 					<button {$submitButtonAttributes}>
 						<span class="loading-icon linear"></span>
 						{msg desc=""}submit{/msg}
+					</button>
+
+					{let $cancelButtonAttributes kind="attributes"}
+						{if $_loadingResponse}disabled{/if}
+						class="btn btn-secondary"
+						data-onclick="{$_handleCancelButtonClick}"
+						type="button"
+					{/let}
+
+					<button {$cancelButtonAttributes}>
+						{msg desc=""}cancel{/msg}
 					</button>
 				</form>
 			{/param}
