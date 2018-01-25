@@ -1,0 +1,60 @@
+<%--
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%
+String navigationItem = ParamUtil.getString(request, "navigationItem", "view-site-templates");
+%>
+
+<portlet:renderURL var="siteTemplatesURL">
+	<portlet:param name="jspPage" value="/site_templates.jsp" />
+	<portlet:param name="redirect" value="<%= redirect %>" />
+	<portlet:param name="backURL" value="<%= backURL %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
+	<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
+	<portlet:param name="navigationItem" value="view-site-templates" />
+</portlet:renderURL>
+
+<portlet:renderURL var="starterKitsURL">
+	<portlet:param name="jspPage" value="/starter_kits.jsp" />
+	<portlet:param name="redirect" value="<%= redirect %>" />
+	<portlet:param name="backURL" value="<%= backURL %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
+	<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
+	<portlet:param name="navigationItem" value="view-starter-kits" />
+</portlet:renderURL>
+
+<%
+List<NavigationItem> navigationItems = new ArrayList<>();
+
+NavigationItem siteTemplatesNavigationItem = new NavigationItem();
+NavigationItem starterKitsNavigationItem = new NavigationItem();
+
+siteTemplatesNavigationItem.setActive(navigationItem.equals("view-site-templates"));
+siteTemplatesNavigationItem.setHref(siteTemplatesURL.toString());
+siteTemplatesNavigationItem.setLabel(LanguageUtil.get(request, "site-templates"));
+
+starterKitsNavigationItem.setActive(navigationItem.equals("view-starter-kits"));
+starterKitsNavigationItem.setHref(starterKitsURL.toString());
+starterKitsNavigationItem.setLabel(LanguageUtil.get(request, "starter-kits"));
+
+navigationItems.add(siteTemplatesNavigationItem);
+navigationItems.add(starterKitsNavigationItem);
+%>
+
+<clay:navigation-bar
+	inverted="<%= true %>"
+	items="<%= navigationItems %>"
+/>
