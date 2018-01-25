@@ -47,15 +47,16 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 
 <liferay-ui:icon-menu direction="left-side" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
 	<c:if test="<%= hasUpdatePermission %>">
-		<portlet:renderURL var="editURL">
-			<portlet:param name="mvcPath" value="/edit_site.jsp" />
+		<liferay-portlet:renderURL varImpl="editURL">
+			<portlet:param name="jspPage" value="/site_templates.jsp" />
 			<portlet:param name="groupId" value="<%= String.valueOf(group.getGroupId()) %>" />
-		</portlet:renderURL>
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+		</liferay-portlet:renderURL>
 
 		<liferay-ui:icon
 			label="<%= true %>"
 			message="edit"
-			url="<%= editURL %>"
+			url="<%= editURL.toString() %>"
 		/>
 
 		<%
@@ -75,15 +76,16 @@ boolean hasUpdatePermission = GroupPermissionUtil.contains(permissionChecker, gr
 		</c:if>
 
 		<c:if test="<%= siteAdminDisplayContext.hasAddChildSitePermission(group) %>">
-			<liferay-portlet:renderURL varImpl="addSiteURL">
-				<portlet:param name="mvcPath" value="/edit_site.jsp" />
+			<liferay-portlet:renderURL varImpl="addChildSiteURL">
+				<portlet:param name="jspPage" value="/site_templates.jsp" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(group.getGroupId()) %>" />
 			</liferay-portlet:renderURL>
 
 			<liferay-ui:icon
 				message="add-child-site"
 				method="get"
-				url="<%= addSiteURL.toString() %>"
+				url="<%= addChildSiteURL.toString() %>"
 			/>
 		</c:if>
 	</c:if>
