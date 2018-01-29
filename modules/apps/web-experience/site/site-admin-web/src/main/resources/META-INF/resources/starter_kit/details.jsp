@@ -16,12 +16,12 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-siteAdminDisplayContext.renderPreview(ParamUtil.getString(request, "groupStarterKitKey"));
-%>
+<img src="<%= siteAdminDisplayContext.getGroupStarterKitThumbnailSrc() %>" />
+
+<p><%= HtmlUtil.escape(siteAdminDisplayContext.getGroupStarterKitDescription()) %></p>
 
 <aui:button-row>
-	<aui:button cssClass="btn-lg" name="applyButton" value="apply" />
+	<aui:button cssClass="btn-lg" name="applyButton" primary="<%= true %>" value="apply" />
 
 	<aui:button cssClass="btn-lg" name="cancelButton" type="cancel" />
 </aui:button-row>
