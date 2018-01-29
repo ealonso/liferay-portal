@@ -57,7 +57,7 @@ import com.liferay.site.admin.web.internal.constants.SiteAdminConstants;
 import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
 import com.liferay.site.constants.SiteWebKeys;
 import com.liferay.site.util.GroupCreationStep;
-import com.liferay.site.util.GroupCreationStepServicesTracker;
+import com.liferay.site.util.GroupCreationStepRegistry;
 import com.liferay.site.util.GroupSearchProvider;
 import com.liferay.site.util.GroupStarterKit;
 import com.liferay.site.util.GroupStarterKitRegistry;
@@ -88,8 +88,8 @@ public class SiteAdminDisplayContext {
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
-		_groupCreationStepServicesTracker =
-			(GroupCreationStepServicesTracker)request.getAttribute(
+		_groupCreationStepRegistry =
+			(GroupCreationStepRegistry)request.getAttribute(
 				SiteWebKeys.GROUP_CREATION_STEP_SERVICES_TRACKER);
 
 		_groupSearchProvider = (GroupSearchProvider)request.getAttribute(
@@ -103,12 +103,11 @@ public class SiteAdminDisplayContext {
 			liferayPortletRequest, "creationStepName");
 
 		GroupCreationStep groupCreationStep =
-			_groupCreationStepServicesTracker.getGroupCreationStep(
-				creationStepName);
+			_groupCreationStepRegistry.getGroupCreationStep(creationStepName);
 
 		if (groupCreationStep == null) {
 			List<GroupCreationStep> groupCreationSteps =
-				_groupCreationStepServicesTracker.getGroupCreationSteps(
+				_groupCreationStepRegistry.getGroupCreationSteps(
 					request, response);
 
 			groupCreationStep = groupCreationSteps.get(0);
@@ -146,7 +145,7 @@ public class SiteAdminDisplayContext {
 			}
 		}
 		else {
-			portletURL.setParameter("mvcPath", "/edit_site.jsp");
+			portletURL.setParameter("jspPage", "/site_creation_wizard.jsp");
 
 			String redirect = ParamUtil.getString(_request, "redirect");
 
@@ -221,7 +220,7 @@ public class SiteAdminDisplayContext {
 	}
 
 	public List<GroupCreationStep> getGroupCreationSteps() throws Exception {
-		return _groupCreationStepServicesTracker.getGroupCreationSteps(
+		return _groupCreationStepRegistry.getGroupCreationSteps(
 			_request, _response);
 	}
 
@@ -234,8 +233,39 @@ public class SiteAdminDisplayContext {
 		return _groupId;
 	}
 
+	public String getGroupStarterKitDescription() {
+		String groupStarterKitKey = ParamUtil.getString(
+			_request, "groupStarterKitKey");
+
+		GroupStarterKit groupStarterKit =
+			_groupStarterKitRegistry.getGroupStarterKit(groupStarterKitKey);
+
+		if (groupStarterKit == null) {
+			return StringPool.BLANK;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return groupStarterKit.getDescription(themeDisplay.getLocale());
+	}
+
 	public List<GroupStarterKit> getGroupStarterKits() {
 		return _groupStarterKitRegistry.getGroupStarterKits(true, _request);
+	}
+
+	public String getGroupStarterKitThumbnailSrc() {
+		String groupStarterKitKey = ParamUtil.getString(
+			_request, "groupStarterKitKey");
+
+		GroupStarterKit groupStarterKit =
+			_groupStarterKitRegistry.getGroupStarterKit(groupStarterKitKey);
+
+		if (groupStarterKit == null) {
+			return StringPool.BLANK;
+		}
+
+		return groupStarterKit.getThumbnailSrc();
 	}
 
 	public String getKeywords() {
@@ -342,7 +372,7 @@ public class SiteAdminDisplayContext {
 
 	public String getPreviousCreationStepName() throws Exception {
 		GroupCreationStep groupCreationStep =
-			_groupCreationStepServicesTracker.getPreviousGroupCreationStep(
+			_groupCreationStepRegistry.getPreviousGroupCreationStep(
 				_groupCreationStep.getName(), _request, _response);
 
 		if (groupCreationStep == null) {
@@ -517,28 +547,13 @@ public class SiteAdminDisplayContext {
 		return true;
 	}
 
-	public boolean isSennaDisabled() {
-		return _groupCreationStep.isSennaDisabled();
-	}
-
 	public void renderCurrentCreationStep() throws Exception {
 		_groupCreationStep.render(_request, _response);
 	}
 
-	public void renderPreview(String groupStarterKitKey) throws Exception {
-		GroupStarterKit groupStarterKit =
-			_groupStarterKitRegistry.getGroupStarterKit(groupStarterKitKey);
-
-		groupStarterKit.renderPreview(_request, _response);
-	}
-
-	public boolean showCreationStepControls() {
-		return _groupCreationStep.showControls(_request, _response);
-	}
-
 	protected String getNextCreationStepName() throws Exception {
 		GroupCreationStep groupCreationStep =
-			_groupCreationStepServicesTracker.getNextGroupCreationStep(
+			_groupCreationStepRegistry.getNextGroupCreationStep(
 				_groupCreationStep.getName(), _request, _response);
 
 		if (groupCreationStep == null) {
@@ -565,8 +580,7 @@ public class SiteAdminDisplayContext {
 	private String _displayStyle;
 	private Group _group;
 	private final GroupCreationStep _groupCreationStep;
-	private final GroupCreationStepServicesTracker
-		_groupCreationStepServicesTracker;
+	private final GroupCreationStepRegistry _groupCreationStepRegistry;
 	private long _groupId;
 	private final GroupSearchProvider _groupSearchProvider;
 	private final GroupStarterKitRegistry _groupStarterKitRegistry;
