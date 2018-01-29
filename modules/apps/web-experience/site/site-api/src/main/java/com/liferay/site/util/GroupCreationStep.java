@@ -14,6 +14,8 @@
 
 package com.liferay.site.util;
 
+import aQute.bnd.annotation.ConsumerType;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Alessio Antonio Rendina
  */
+@ConsumerType
 public interface GroupCreationStep {
 
 	public String getLabel(HttpServletRequest httpServletRequest);
@@ -30,13 +33,6 @@ public interface GroupCreationStep {
 	public String getName();
 
 	public boolean isActive(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse)
-		throws Exception;
-
-	public boolean isSennaDisabled();
-
-	public boolean isVisible(
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse)
 		throws Exception;
@@ -49,9 +45,5 @@ public interface GroupCreationStep {
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse)
 		throws Exception;
-
-	public boolean showControls(
-		HttpServletRequest httpServletRequest,
-		HttpServletResponse httpServletResponse);
 
 }
