@@ -24,7 +24,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.site.internal.util.comparator.GroupCreationStepServiceWrapperOrderComparator;
 import com.liferay.site.util.GroupCreationStep;
-import com.liferay.site.util.GroupCreationStepServicesTracker;
+import com.liferay.site.util.GroupCreationStepRegistry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,8 +43,8 @@ import org.osgi.service.component.annotations.Deactivate;
  * @author Alessio Antonio Rendina
  */
 @Component(immediate = true)
-public class GroupCreationStepServicesTrackerImpl
-	implements GroupCreationStepServicesTracker {
+public class GroupCreationStepRegistryImpl
+	implements GroupCreationStepRegistry {
 
 	@Override
 	public GroupCreationStep getGroupCreationStep(
@@ -173,7 +173,7 @@ public class GroupCreationStepServicesTrackerImpl
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		GroupCreationStepServicesTrackerImpl.class);
+		GroupCreationStepRegistryImpl.class);
 
 	private ServiceTrackerMap<String, ServiceWrapper<GroupCreationStep>>
 		_groupCreationStepServiceTrackerMap;

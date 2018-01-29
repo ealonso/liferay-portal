@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Alessio Antonio Rendina
  */
 @ProviderType
-public interface GroupCreationStepServicesTracker {
+public interface GroupCreationStepRegistry {
 
 	public GroupCreationStep getGroupCreationStep(String groupCreationStepName);
 

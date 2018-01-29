@@ -93,7 +93,7 @@ import com.liferay.portal.liveusers.LiveUsers;
 import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
 import com.liferay.site.constants.SiteWebKeys;
 import com.liferay.site.util.GroupCreationStep;
-import com.liferay.site.util.GroupCreationStepServicesTracker;
+import com.liferay.site.util.GroupCreationStepRegistry;
 import com.liferay.site.util.GroupSearchProvider;
 import com.liferay.site.util.GroupStarterKitRegistry;
 import com.liferay.site.util.GroupURLProvider;
@@ -328,8 +328,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 			actionRequest, "creationStepName");
 
 		GroupCreationStep groupCreationStep =
-			groupCreationStepServicesTracker.getGroupCreationStep(
-				creationStepName);
+			groupCreationStepRegistry.getGroupCreationStep(creationStepName);
 
 		groupCreationStep.processAction(actionRequest, actionResponse);
 
@@ -577,7 +576,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 	protected void setRenderAttributes(RenderRequest renderRequest) {
 		renderRequest.setAttribute(
 			SiteWebKeys.GROUP_CREATION_STEP_SERVICES_TRACKER,
-			groupCreationStepServicesTracker);
+			groupCreationStepRegistry);
 
 		renderRequest.setAttribute(
 			SiteWebKeys.GROUP_SEARCH_PROVIDER, groupSearchProvider);
@@ -974,7 +973,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 	protected BackgroundTaskManager backgroundTaskManager;
 
 	@Reference
-	protected GroupCreationStepServicesTracker groupCreationStepServicesTracker;
+	protected GroupCreationStepRegistry groupCreationStepRegistry;
 
 	protected GroupLocalService groupLocalService;
 	protected GroupSearchProvider groupSearchProvider;
