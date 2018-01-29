@@ -70,8 +70,6 @@ if (group != null) {
 			<aui:form action="<%= deleteGroupsURL %>" name="fm">
 				<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
 
-				<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
-
 				<liferay-ui:error exception="<%= NoSuchLayoutSetException.class %>">
 
 					<%
@@ -111,13 +109,13 @@ if (group != null) {
 </div>
 
 <c:if test="<%= PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_COMMUNITY) %>">
-	<liferay-portlet:renderURL varImpl="siteTemplatesURL">
-		<portlet:param name="jspPage" value="/site_templates.jsp" />
+	<liferay-portlet:renderURL varImpl="addSiteURL">
+		<portlet:param name="jspPage" value="/site_wizard/view_layout_set_prototypes.jsp" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
 	</liferay-portlet:renderURL>
 
 	<liferay-frontend:add-menu>
-		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add") %>' url="<%= siteTemplatesURL.toString() %>" />
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add") %>' url="<%= addSiteURL.toString() %>" />
 	</liferay-frontend:add-menu>
 </c:if>
 
