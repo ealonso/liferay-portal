@@ -15,20 +15,20 @@
 --%>
 
 <%
-String navigationItem = ParamUtil.getString(request, "navigationItem", "view-site-templates");
+String navigationItem = ParamUtil.getString(request, "navigationItem", "view-layout-set-prototypes");
 %>
 
-<portlet:renderURL var="siteTemplatesURL">
-	<portlet:param name="jspPage" value="/site_templates.jsp" />
+<portlet:renderURL var="viewLayoutSetPrototypesURL">
+	<portlet:param name="jspPage" value="/site_wizard/view_layout_set_prototypes.jsp" />
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="backURL" value="<%= backURL %>" />
 	<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
 	<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
-	<portlet:param name="navigationItem" value="view-site-templates" />
+	<portlet:param name="navigationItem" value="view-layout-set-prototypes" />
 </portlet:renderURL>
 
-<portlet:renderURL var="starterKitsURL">
-	<portlet:param name="jspPage" value="/starter_kits.jsp" />
+<portlet:renderURL var="viewStarterKitsURL">
+	<portlet:param name="jspPage" value="/site_wizard/view_starter_kits.jsp" />
 	<portlet:param name="redirect" value="<%= redirect %>" />
 	<portlet:param name="backURL" value="<%= backURL %>" />
 	<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
@@ -42,12 +42,12 @@ List<NavigationItem> navigationItems = new ArrayList<>();
 NavigationItem siteTemplatesNavigationItem = new NavigationItem();
 NavigationItem starterKitsNavigationItem = new NavigationItem();
 
-siteTemplatesNavigationItem.setActive(navigationItem.equals("view-site-templates"));
-siteTemplatesNavigationItem.setHref(siteTemplatesURL.toString());
+siteTemplatesNavigationItem.setActive(navigationItem.equals("view-layout-set-prototypes"));
+siteTemplatesNavigationItem.setHref(viewLayoutSetPrototypesURL.toString());
 siteTemplatesNavigationItem.setLabel(LanguageUtil.get(request, "site-templates"));
 
 starterKitsNavigationItem.setActive(navigationItem.equals("view-starter-kits"));
-starterKitsNavigationItem.setHref(starterKitsURL.toString());
+starterKitsNavigationItem.setHref(viewStarterKitsURL.toString());
 starterKitsNavigationItem.setLabel(LanguageUtil.get(request, "starter-kits"));
 
 navigationItems.add(siteTemplatesNavigationItem);

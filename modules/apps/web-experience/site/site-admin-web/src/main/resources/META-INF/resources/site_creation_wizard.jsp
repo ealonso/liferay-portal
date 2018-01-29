@@ -29,6 +29,8 @@ long layoutSetPrototypeId = ParamUtil.getLong(request, "layoutSetPrototypeId");
 
 long parentGroupSearchContainerPrimaryKeys = ParamUtil.getLong(request, "parentGroupSearchContainerPrimaryKeys");
 
+List<GroupCreationStep> groupCreationSteps = siteAdminDisplayContext.getGroupCreationSteps();
+
 String currentCreationStepName = siteAdminDisplayContext.getCurrentCreationStepName();
 
 String creationTypeLabel = StringPool.BLANK;
@@ -47,21 +49,28 @@ PortalUtil.addPortletBreadcrumbEntry(request, creationTypeLabel, backURL);
 String currentCreationStepLabel = siteAdminDisplayContext.getCurrentCreationStepLabel();
 
 PortalUtil.addPortletBreadcrumbEntry(request, currentCreationStepLabel, StringPool.BLANK);
+
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(backURL.toString());
 %>
 
 <portlet:actionURL name="saveCreationStep" var="saveCreationStepURL" />
 
-<div class="container-fluid-1280">
-	<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+<div class="breadcrumb-container">
+	<div class="container-fluid-1280">
+		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+	</div>
+</div>
 
-	<%@ include file="/creation_steps_progress_bar.jspf" %>
+<div class="container-fluid-1280">
+	<%@ include file="/site_wizard/wizard_steps.jspf" %>
 
 	<div class="col-md-8 offset-md-2 site-creation-container">
 		<div class="site-creation-header">
 			<%= HtmlUtil.escape(currentCreationStepLabel) %>
 		</div>
 
-		<aui:form action="<%= saveCreationStepURL %>" data-senna-off="<%= siteAdminDisplayContext.isSennaDisabled() %>" method="post" name="fm">
+		<aui:form action="<%= saveCreationStepURL %>" method="post" name="fm">
 			<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 			<aui:input name="creationStepName" type="hidden" value="<%= currentCreationStepName %>" />
 			<aui:input name="creationType" type="hidden" value="<%= creationType %>" />
@@ -91,42 +100,58 @@ PortalUtil.addPortletBreadcrumbEntry(request, currentCreationStepLabel, StringPo
 			siteAdminDisplayContext.renderCurrentCreationStep();
 			%>
 
-			<c:if test="<%= siteAdminDisplayContext.showCreationStepControls() %>">
-				<aui:button-row>
-					<c:choose>
-						<c:when test="<%= Validator.isNotNull(siteAdminDisplayContext.getPreviousCreationStepName()) %>">
-							<portlet:renderURL var="previousCreationStepURL">
-								<portlet:param name="jspPage" value="/edit_site.jsp" />
-								<portlet:param name="redirect" value="<%= redirect %>" />
-								<portlet:param name="backURL" value="<%= backURL %>" />
-								<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
-								<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
-								<portlet:param name="creationStepName" value="<%= siteAdminDisplayContext.getPreviousCreationStepName() %>" />
-								<portlet:param name="creationType" value="creationType" />
-							</portlet:renderURL>
+			<aui:button-row>
+				<c:choose>
+					<c:when test="<%= (groupCreationSteps.size() == 1) %>">
+						<aui:button cssClass="btn-lg btn-primary" name="nextCreationStepButton" primary="<%= true %>" value="apply" />
 
-							<aui:button cssClass="btn-lg btn-primary" href="<%= previousCreationStepURL %>" type="cancel" value="previous" />
-						</c:when>
-						<c:otherwise>
-							<aui:button cssClass="btn-lg btn-primary" href="<%= backURL %>" type="cancel" value="cancel" />
-						</c:otherwise>
-					</c:choose>
+						<aui:button cssClass="btn-lg" href="<%= backURL %>" type="cancel" value="cancel" />
+					</c:when>
+					<c:when test="<%= Validator.isNotNull(siteAdminDisplayContext.getPreviousCreationStepName()) %>">
+						<portlet:renderURL var="previousCreationStepURL">
+							<portlet:param name="jspPage" value="/site_creation_wizard.jsp" />
+							<portlet:param name="redirect" value="<%= redirect %>" />
+							<portlet:param name="backURL" value="<%= backURL %>" />
+							<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
+							<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
+							<portlet:param name="creationStepName" value="<%= siteAdminDisplayContext.getPreviousCreationStepName() %>" />
+							<portlet:param name="creationType" value="creationType" />
+						</portlet:renderURL>
 
-					<aui:button cssClass="btn-lg btn-next-creation-step" name="nextCreationStepButton" primary="<%= false %>" value="next" />
-				</aui:button-row>
-			</c:if>
+						<aui:button cssClass="btn-lg" href="<%= previousCreationStepURL %>" type="cancel" value="previous" />
+
+						<aui:button cssClass="btn-lg btn-next-creation-step" name="nextCreationStepButton" primary="<%= siteAdminDisplayContext.isLastGroupCreationStep() %>" value='<%= (siteAdminDisplayContext.isLastGroupCreationStep()) ? "apply" : "next" %>' />
+					</c:when>
+					<c:otherwise>
+						<aui:button cssClass="btn-lg" href="<%= backURL %>" type="cancel" value="cancel" />
+
+						<aui:button cssClass="btn-lg btn-next-creation-step" name="nextCreationStepButton" primary="<%= siteAdminDisplayContext.isLastGroupCreationStep() %>" value='<%= (siteAdminDisplayContext.isLastGroupCreationStep()) ? "apply" : "next" %>' />
+					</c:otherwise>
+				</c:choose>
+			</aui:button-row>
 		</aui:form>
 	</div>
 </div>
 
-<aui:script use="aui-base">
+<aui:script use="aui-base, aui-loading-mask-deprecated">
 	A.one('#<portlet:namespace/>nextCreationStepButton').on(
 		'click',
 		function(event) {
+			event.preventDefault();
+
 			var lastGroupCreationStep = <%= siteAdminDisplayContext.isLastGroupCreationStep() %>
 
 			if (lastGroupCreationStep) {
 				if (confirm('<%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-continue-all-contents-will-be-deleted") %>')) {
+					var loadingMask = new A.LoadingMask(
+						{
+							'strings.loading' : '<%= UnicodeLanguageUtil.get(request, "this-may-take-several-minutes") %>',
+							target : A.getBody()
+						}
+					);
+
+					loadingMask.show();
+
 					submitForm(document.<portlet:namespace />fm);
 				}
 			}

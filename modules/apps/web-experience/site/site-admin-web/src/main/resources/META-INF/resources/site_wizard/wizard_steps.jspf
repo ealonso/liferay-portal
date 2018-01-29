@@ -14,10 +14,6 @@
  */
 --%>
 
-<%
-List<GroupCreationStep> groupCreationSteps = siteAdminDisplayContext.getGroupCreationSteps();
-%>
-
 <c:if test="<%= groupCreationSteps.size() > 1 %>">
 	<ul class="multi-step-progress-bar multi-step-progress-bar-collapse my-4">
 
@@ -28,7 +24,7 @@ List<GroupCreationStep> groupCreationSteps = siteAdminDisplayContext.getGroupCre
 		for (GroupCreationStep groupCreationStep : groupCreationSteps) {
 			String name = groupCreationStep.getName();
 
-			if (!currentCreationStepName.equals(name) && !groupCreationStep.isVisible(request, response)) {
+			if (!currentCreationStepName.equals(name)) {
 				continue;
 			}
 

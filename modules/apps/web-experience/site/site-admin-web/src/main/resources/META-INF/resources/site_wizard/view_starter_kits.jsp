@@ -44,65 +44,68 @@ portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
 %>
 
-<%@ include file="/site_type_navigation.jspf" %>
+<%@ include file="/site_wizard/navigation.jspf" %>
 
 <c:if test="<%= PortalPermissionUtil.contains(permissionChecker, ActionKeys.ADD_COMMUNITY) %>">
-	<div class="container-fluid-1280">
-		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+	<div class="breadcrumb-container">
+		<div class="container-fluid-1280">
+			<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+		</div>
+	</div>
 
-		<div class="row site-type-container">
-			<liferay-ui:search-container
-				searchContainer="<%= groupStarterKitSearchContainer %>"
+	<div class="container-fluid-1280">
+		<liferay-ui:search-container
+			searchContainer="<%= groupStarterKitSearchContainer %>"
+		>
+			<liferay-ui:search-container-row
+				className="com.liferay.site.util.GroupStarterKit"
+				escapedModel="<%= true %>"
+				keyProperty="key"
+				modelVar="groupStarterKit"
 			>
-				<liferay-ui:search-container-row
-					className="com.liferay.site.util.GroupStarterKit"
-					escapedModel="<%= true %>"
-					keyProperty="key"
-					modelVar="groupStarterKit"
-				>
-					<liferay-portlet:renderURL varImpl="addSiteURL">
-						<portlet:param name="mvcPath" value="/edit_site.jsp" />
-						<portlet:param name="redirect" value="<%= currentURL %>" />
-						<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
-						<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
+				<liferay-portlet:renderURL varImpl="addSiteURL">
+					<portlet:param name="jspPath" value="/site_creation_wizard.jsp" />
+					<portlet:param name="redirect" value="<%= currentURL %>" />
+					<portlet:param name="groupId" value="<%= String.valueOf(siteAdminDisplayContext.getGroupId()) %>" />
+					<portlet:param name="parentGroupSearchContainerPrimaryKeys" value="<%= String.valueOf(parentGroupSearchContainerPrimaryKeys) %>" />
+					<portlet:param name="groupStarterKitKey" value="<%= groupStarterKit.getKey() %>" />
+					<portlet:param name="creationType" value="<%= SiteAdminConstants.CREATION_TYPE_STARTER_KIT %>" />
+				</liferay-portlet:renderURL>
+
+				<%
+				row.setCssClass("entry-card lfr-asset-item starter-kit-card");
+
+				String thumbnailSrc = groupStarterKit.getThumbnailSrc();
+
+				if (Validator.isNull(thumbnailSrc)) {
+					thumbnailSrc = "sites";
+				}
+				%>
+
+				<liferay-ui:search-container-column-text>
+					<liferay-frontend:icon-vertical-card
+						cssClass="entry-display-style"
+						icon="<%= thumbnailSrc %>"
+						resultRow="<%= row %>"
+						title="<%= groupStarterKit.getName(locale) %>"
+					/>
+
+					<aui:button cssClass="hide starter-kit-apply-button" href="<%= addSiteURL.toString() %>" value="apply" />
+
+					<liferay-portlet:renderURL var="renderPreviewURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+						<portlet:param name="jspPage" value="/starter_kit/details.jsp" />
 						<portlet:param name="groupStarterKitKey" value="<%= groupStarterKit.getKey() %>" />
-						<portlet:param name="creationType" value="<%= SiteAdminConstants.CREATION_TYPE_STARTER_KIT %>" />
+						<portlet:param name="addSiteURL" value="<%= addSiteURL.toString() %>" />
 					</liferay-portlet:renderURL>
 
-					<div class="col-md-3 entry-card lfr-asset-item starter-kit-card">
+					<a class="btn btn-default hide starter-kit-details-button" href="<%= siteAdminDisplayContext.getRenderPreviewURL("renderPreview", groupStarterKit.getName(locale), renderPreviewURL) %>">
+						<liferay-ui:message key="details" />
+					</a>
+				</liferay-ui:search-container-column-text>
+			</liferay-ui:search-container-row>
 
-						<%
-						String thumbnailSrc = groupStarterKit.getThumbnailSrc();
-
-						if (Validator.isNull(thumbnailSrc)) {
-							thumbnailSrc = "sites";
-						}
-						%>
-
-						<liferay-frontend:icon-vertical-card
-							icon="<%= thumbnailSrc %>"
-							title="<%= groupStarterKit.getName(locale) %>"
-						/>
-
-						<aui:button cssClass="hide starter-kit-apply-button" href="<%= addSiteURL.toString() %>" value="apply" />
-
-						<liferay-portlet:renderURL var="renderPreviewURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-							<portlet:param name="jspPage" value="/starter_kit/details.jsp" />
-							<portlet:param name="groupStarterKitKey" value="<%= groupStarterKit.getKey() %>" />
-							<portlet:param name="addSiteURL" value="<%= addSiteURL.toString() %>" />
-						</liferay-portlet:renderURL>
-
-						<a class="btn btn-default hide starter-kit-details-button" href="<%= siteAdminDisplayContext.getRenderPreviewURL("renderPreview", groupStarterKit.getName(locale), renderPreviewURL) %>">
-							<liferay-ui:message key="details" />
-						</a>
-					</div>
-				</liferay-ui:search-container-row>
-
-				<div class="col-md-12">
-					<liferay-ui:search-iterator markupView="lexicon" searchContainer="<%= groupStarterKitSearchContainer %>" />
-				</div>
-			</liferay-ui:search-container>
-		</div>
+			<liferay-ui:search-iterator displayStyle="icon" markupView="lexicon" searchContainer="<%= groupStarterKitSearchContainer %>" />
+		</liferay-ui:search-container>
 	</div>
 
 	<aui:script use="aui-base">
