@@ -14,8 +14,6 @@
 
 package com.liferay.site.util;
 
-import aQute.bnd.annotation.ConsumerType;
-
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
@@ -25,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Alessio Antonio Rendina
  */
-@ConsumerType
 public interface GroupCreationStep {
 
 	public String getLabel(HttpServletRequest httpServletRequest);
