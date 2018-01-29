@@ -17,7 +17,6 @@ package com.liferay.site.util;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Alessio Antonio Rendina
@@ -35,10 +34,5 @@ public interface GroupStarterKit {
 	public String getThumbnailSrc();
 
 	public boolean isActive(HttpServletRequest httpServletRequest);
-
-	public void renderPreview(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse)
-		throws Exception;
 
 }
