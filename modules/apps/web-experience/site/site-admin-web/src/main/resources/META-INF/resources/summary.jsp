@@ -36,9 +36,13 @@ portletDisplay.setURLBack(String.valueOf(renderResponse.createRenderURL()));
 
 <liferay-ui:success key='<%= SiteAdminPortletKeys.SITE_ADMIN + "requestProcessed" %>' message="<%= siteAdminDisplayContext.getSummarySuccessMessage(viewSiteSettingsURL.toString()) %>" />
 
-<div class="container-fluid-1280">
-	<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+<div class="breadcrumb-container">
+	<div class="container-fluid-1280">
+		<liferay-ui:breadcrumb showCurrentGroup="<%= false %>" showGuestGroup="<%= false %>" showLayout="<%= false %>" showPortletBreadcrumb="<%= true %>" />
+	</div>
+</div>
 
+<div class="container-fluid-1280">
 	<div class="col-md-8 offset-md-2 site-creation-container">
 		<div class="site-creation-header">
 			<liferay-ui:message key="summary" />
