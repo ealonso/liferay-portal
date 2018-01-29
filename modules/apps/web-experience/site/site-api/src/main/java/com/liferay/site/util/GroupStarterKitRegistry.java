@@ -14,6 +14,8 @@
 
 package com.liferay.site.util;
 
+import aQute.bnd.annotation.ProviderType;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Alessio Antonio Rendina
  */
+@ProviderType
 public interface GroupStarterKitRegistry {
 
 	public GroupStarterKit getGroupStarterKit(String key);
