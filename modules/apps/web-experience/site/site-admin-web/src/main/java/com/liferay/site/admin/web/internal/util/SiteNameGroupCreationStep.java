@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.exception.GroupInheritContentException;
 import com.liferay.portal.kernel.exception.GroupKeyException;
 import com.liferay.portal.kernel.exception.GroupParentException;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.site.admin.web.internal.constants.SiteAdminConstants;
 import com.liferay.site.constants.SiteWebKeys;
-import com.liferay.site.util.BaseGroupCreationStep;
 import com.liferay.site.util.GroupCreationStep;
 import com.liferay.site.util.GroupStarterKit;
 import com.liferay.site.util.GroupStarterKitRegistry;
@@ -65,13 +65,27 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = GroupCreationStep.class
 )
-public class SiteNameGroupCreationStep extends BaseGroupCreationStep {
+public class SiteNameGroupCreationStep implements GroupCreationStep {
 
 	public static final String NAME = "site-name";
 
 	@Override
+	public String getLabel(HttpServletRequest httpServletRequest) {
+		return LanguageUtil.get(httpServletRequest, getName());
+	}
+
+	@Override
 	public String getName() {
 		return NAME;
+	}
+
+	@Override
+	public boolean isActive(
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
+		throws Exception {
+
+		return true;
 	}
 
 	@Override
@@ -124,7 +138,7 @@ public class SiteNameGroupCreationStep extends BaseGroupCreationStep {
 
 		_jspRenderer.renderJSP(
 			httpServletRequest, httpServletResponse,
-			"/creation_step/site_name.jsp");
+			"/site_wizard/site_name.jsp");
 	}
 
 	protected void setSessionAttribute(

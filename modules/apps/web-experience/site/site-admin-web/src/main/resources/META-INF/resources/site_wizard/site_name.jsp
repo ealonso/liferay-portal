@@ -26,7 +26,7 @@ if (groupId > 0) {
 }
 %>
 
-<aui:fieldset>
+<aui:fieldset cssClass="site-name-fieldset">
 	<aui:model-context bean="<%= group %>" model="<%= Group.class %>" />
 
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
