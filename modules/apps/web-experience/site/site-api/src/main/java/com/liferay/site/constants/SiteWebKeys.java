@@ -16,11 +16,23 @@ package com.liferay.site.constants;
 
 /**
  * @author Julio Camarero
+ * @author Alessio Antonio Rendina
  */
 public class SiteWebKeys {
 
+	public static final String GROUP_CREATION_STEP_REGISTRY =
+		"GROUP_CREATION_STEP_REGISTRY";
+
+	public static final String GROUP_ID = "GROUP_ID";
+
 	public static final String GROUP_SEARCH_PROVIDER = "GROUP_SEARCH_PROVIDER";
 
+	public static final String GROUP_STARTER_KIT_REGISTRY =
+		"GROUP_STARTER_KIT_REGISTRY";
+
 	public static final String GROUP_URL_PROVIDER = "GROUP_URL_PROVIDER";
+
+	public static final String HTML_PREVIEW_ENTRY_LOCAL_SERVICE =
+		"HTML_PREVIEW_ENTRY_LOCAL_SERVICE";
 
 }
