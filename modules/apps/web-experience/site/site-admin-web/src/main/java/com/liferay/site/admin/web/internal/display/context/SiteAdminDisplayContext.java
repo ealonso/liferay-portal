@@ -419,19 +419,19 @@ public class SiteAdminDisplayContext {
 	}
 
 	public String getSummarySuccessMessage(String url) {
-		StringBundler successMessageSB = new StringBundler(3);
+		StringBundler sb = new StringBundler(3);
 
-		successMessageSB.append(
+		sb.append(
 			LanguageUtil.get(
 				_request, "congratulations-your-site-has-been-created"));
-		successMessageSB.append(StringPool.NEW_LINE);
-		successMessageSB.append(
+		sb.append(StringPool.NEW_LINE);
+		sb.append(
 			LanguageUtil.format(
 				_request,
 				"you-can-finish-it-by-configuring-its-x-when-you-are-ready",
 				_getSummarySuccessMessageArgument(url)));
 
-		return successMessageSB.toString();
+		return sb.toString();
 	}
 
 	public int getUserGroupsCount(Group group) {
