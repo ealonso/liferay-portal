@@ -29,7 +29,7 @@ if (Validator.isNull(redirect)) {
 
 String backURL = ParamUtil.getString(request, "backURL", redirect);
 
-long groupId = ParamUtil.getLong(request, "groupId", portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS) ? themeDisplay.getSiteGroupId() : 0);
+long groupId = ParamUtil.getLong(request, "groupId", themeDisplay.getSiteGroupId());
 
 Group group = null;
 
@@ -80,62 +80,50 @@ long layoutSetPrototypeId = ParamUtil.getLong(request, "layoutSetPrototypeId");
 if (layoutSetPrototypeId > 0) {
 	layoutSetPrototype = LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 }
-
-if (!portletName.equals(SiteAdminPortletKeys.SITE_SETTINGS)) {
-	portletDisplay.setShowBackIcon(true);
-	portletDisplay.setURLBack(backURL.toString());
-}
 %>
 
-<c:choose>
-	<c:when test="<%= portletName.equals(SiteAdminPortletKeys.SITE_ADMIN) %>">
-		<liferay-util:include page="/creation_steps.jsp" servletContext="<%= application %>" />
-	</c:when>
-	<c:otherwise>
-		<liferay-ui:success key='<%= SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed" %>' message="site-was-added" />
+<liferay-ui:success key='<%= SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed" %>' message="site-was-added" />
 
-		<portlet:actionURL name="editGroup" var="editGroupURL">
-			<portlet:param name="mvcPath" value="/edit_site.jsp" />
-		</portlet:actionURL>
+<portlet:actionURL name="editGroup" var="editGroupURL">
+	<portlet:param name="mvcPath" value="/edit_site.jsp" />
+</portlet:actionURL>
 
-		<aui:form action="<%= editGroupURL %>" cssClass="container-fluid-1280" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveGroup();" %>'>
-			<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
-			<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
-			<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
-			<aui:input name="liveGroupId" type="hidden" value="<%= liveGroupId %>" />
-			<aui:input name="stagingGroupId" type="hidden" value="<%= stagingGroupId %>" />
+<aui:form action="<%= editGroupURL %>" cssClass="container-fluid-1280" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveGroup();" %>'>
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
+	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="liveGroupId" type="hidden" value="<%= liveGroupId %>" />
+	<aui:input name="stagingGroupId" type="hidden" value="<%= stagingGroupId %>" />
 
-			<%
-			request.setAttribute("site.group", group);
-			request.setAttribute("site.layoutSetPrototype", layoutSetPrototype);
-			request.setAttribute("site.liveGroup", liveGroup);
-			request.setAttribute("site.liveGroupId", Long.valueOf(liveGroupId));
-			request.setAttribute("site.liveGroupTypeSettings", liveGroupTypeSettings);
-			request.setAttribute("site.stagingGroup", stagingGroup);
-			request.setAttribute("site.stagingGroupId", Long.valueOf(stagingGroupId));
-			%>
+	<%
+	request.setAttribute("site.group", group);
+	request.setAttribute("site.layoutSetPrototype", layoutSetPrototype);
+	request.setAttribute("site.liveGroup", liveGroup);
+	request.setAttribute("site.liveGroupId", Long.valueOf(liveGroupId));
+	request.setAttribute("site.liveGroupTypeSettings", liveGroupTypeSettings);
+	request.setAttribute("site.stagingGroup", stagingGroup);
+	request.setAttribute("site.stagingGroupId", Long.valueOf(stagingGroupId));
+	%>
 
-			<liferay-ui:form-navigator
-				backURL="<%= backURL %>"
-				formModelBean="<%= group %>"
-				id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_SITES %>"
-				markupView="lexicon"
-				showButtons="<%= true %>"
-			/>
-		</aui:form>
+	<liferay-ui:form-navigator
+		backURL="<%= backURL %>"
+		formModelBean="<%= group %>"
+		id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_SITES %>"
+		markupView="lexicon"
+		showButtons="<%= true %>"
+	/>
+</aui:form>
 
-		<aui:script>
-			function <portlet:namespace />saveGroup(forceDisable) {
-				var $ = AUI.$;
+<aui:script>
+	function <portlet:namespace />saveGroup(forceDisable) {
+		var $ = AUI.$;
 
-				var form = $(document.<portlet:namespace />fm);
+		var form = $(document.<portlet:namespace />fm);
 
-				<c:if test="<%= (group != null) && !group.isCompany() %>">
-					<portlet:namespace />saveLocales();
-				</c:if>
+		<c:if test="<%= (group != null) && !group.isCompany() %>">
+			<portlet:namespace />saveLocales();
+		</c:if>
 
-				submitForm(form);
-			}
-		</aui:script>
-	</c:otherwise>
-</c:choose>
+		submitForm(form);
+	}
+</aui:script>
