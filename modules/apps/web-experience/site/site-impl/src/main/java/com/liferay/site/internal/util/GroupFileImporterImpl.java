@@ -84,6 +84,8 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 	public static final String IMG_TAG =
 		"<img alt='' src='%s' data-fileentryid='%s' />";
 
+	public static final String LOCALE_PLACEHOLDER = "[$LOCALE$]";
+
 	@Override
 	public void cleanLayouts(ServiceContext serviceContext)
 		throws PortalException {
@@ -98,8 +100,7 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 	@Override
 	public void createJournalArticles(
 			JSONArray journalArticleJSONArray, ClassLoader classLoader,
-			String dependenciesFilePath, ServiceContext serviceContext,
-			ThemeDisplay themeDisplay)
+			String dependenciesFilePath, ServiceContext serviceContext)
 		throws Exception {
 
 		for (int i = 0; i < journalArticleJSONArray.length(); i++) {
@@ -108,7 +109,7 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 
 			createJournalArticle(
 				journalArticleJSONObject, classLoader, dependenciesFilePath,
-				serviceContext, themeDisplay);
+				serviceContext);
 		}
 	}
 
@@ -190,8 +191,7 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 
 	protected JournalArticle createJournalArticle(
 			JSONObject jsonObject, ClassLoader classLoader,
-			String dependenciesFilePath, ServiceContext serviceContext,
-			ThemeDisplay themeDisplay)
+			String dependenciesFilePath, ServiceContext serviceContext)
 		throws Exception {
 
 		String articleId = jsonObject.getString("articleId");
@@ -217,17 +217,16 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 		fetchOrAddDDMStructure(
 			ddmStructureKey, classLoader, ddmStructureFileName, serviceContext);
 
-		Locale locale = themeDisplay.getSiteDefaultLocale();
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		Map<Locale, String> titleMap = new HashMap<>();
 		Map<Locale, String> descriptionMap = new HashMap<>();
 
-		titleMap.put(locale, title);
-		descriptionMap.put(locale, description);
+		titleMap.put(themeDisplay.getSiteDefaultLocale(), title);
+		descriptionMap.put(themeDisplay.getSiteDefaultLocale(), description);
 
 		content = getNormalizedContent(
-			content, classLoader, dependenciesFilePath, serviceContext,
-			themeDisplay);
+			content, classLoader, dependenciesFilePath, serviceContext);
 
 		Calendar displayCalendar = CalendarFactoryUtil.getCalendar(
 			serviceContext.getTimeZone());
@@ -426,9 +425,10 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 
 	protected String getNormalizedContent(
 			String content, ClassLoader classLoader,
-			String dependenciesFilePath, ServiceContext serviceContext,
-			ThemeDisplay themeDisplay)
+			String dependenciesFilePath, ServiceContext serviceContext)
 		throws Exception {
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		Set<String> placeHolders = new HashSet<>();
 
@@ -455,6 +455,10 @@ public class GroupFileImporterImpl implements GroupFileImporter {
 
 			content = content.replace(placeHolder, imgHtmlTag);
 		}
+
+		content = content.replace(
+			LOCALE_PLACEHOLDER,
+			String.valueOf(themeDisplay.getSiteDefaultLocale()));
 
 		return content;
 	}
