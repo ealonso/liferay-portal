@@ -20,8 +20,8 @@ package com.liferay.site.constants;
  */
 public class SiteWebKeys {
 
-	public static final String GROUP_CREATION_STEP_SERVICES_TRACKER =
-		"GROUP_CREATION_STEP_SERVICES_TRACKER";
+	public static final String GROUP_CREATION_STEP_REGISTRY =
+		"GROUP_CREATION_STEP_REGISTRY";
 
 	public static final String GROUP_ID = "GROUP_ID";
 

@@ -575,7 +575,7 @@ public class SiteAdminPortlet extends MVCPortlet {
 
 	protected void setRenderAttributes(RenderRequest renderRequest) {
 		renderRequest.setAttribute(
-			SiteWebKeys.GROUP_CREATION_STEP_SERVICES_TRACKER,
+			SiteWebKeys.GROUP_CREATION_STEP_REGISTRY,
 			groupCreationStepRegistry);
 
 		renderRequest.setAttribute(

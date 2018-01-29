@@ -90,7 +90,7 @@ public class SiteAdminDisplayContext {
 
 		_groupCreationStepRegistry =
 			(GroupCreationStepRegistry)request.getAttribute(
-				SiteWebKeys.GROUP_CREATION_STEP_SERVICES_TRACKER);
+				SiteWebKeys.GROUP_CREATION_STEP_REGISTRY);
 
 		_groupSearchProvider = (GroupSearchProvider)request.getAttribute(
 			SiteWebKeys.GROUP_SEARCH_PROVIDER);
