@@ -34,7 +34,5 @@
 		var form = AUI.$(document.<portlet:namespace />fm);
 
 		form.fm('<%= Constants.CMD %>').val('selection-style');
-
-		submitForm(form);
 	}
 </aui:script>
