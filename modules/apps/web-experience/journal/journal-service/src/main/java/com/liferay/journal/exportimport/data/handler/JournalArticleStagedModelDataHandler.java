@@ -306,50 +306,39 @@ public class JournalArticleStagedModelDataHandler
 				PortletDataContext.REFERENCE_TYPE_DEPENDENCY, true);
 		}
 
-		if (article.isSmallImage()) {
-			if (Validator.isNotNull(article.getSmallImageURL())) {
-				String smallImageURL =
-					_journalArticleExportImportContentProcessor.
-						replaceExportContentReferences(
-							portletDataContext, article,
-							article.getSmallImageURL() + StringPool.SPACE, true,
-							false);
+		if (article.isSmallImage() &&
+			Validator.isNull(article.getSmallImageURL())) {
 
-				article.setSmallImageURL(smallImageURL);
+			Image smallImage = _imageLocalService.fetchImage(
+				article.getSmallImageId());
+
+			if ((smallImage != null) && (smallImage.getTextObj() != null)) {
+				String smallImagePath = ExportImportPathUtil.getModelPath(
+					article,
+					smallImage.getImageId() + StringPool.PERIOD +
+						smallImage.getType());
+
+				articleElement.addAttribute("small-image-path", smallImagePath);
+
+				article.setSmallImageType(smallImage.getType());
+
+				portletDataContext.addZipEntry(
+					smallImagePath, smallImage.getTextObj());
 			}
 			else {
-				Image smallImage = _imageLocalService.fetchImage(
-					article.getSmallImageId());
+				if (_log.isWarnEnabled()) {
+					StringBundler sb = new StringBundler(4);
 
-				if ((smallImage != null) && (smallImage.getTextObj() != null)) {
-					String smallImagePath = ExportImportPathUtil.getModelPath(
-						article,
-						smallImage.getImageId() + StringPool.PERIOD +
-							smallImage.getType());
+					sb.append("Unable to export small image ");
+					sb.append(article.getSmallImageId());
+					sb.append(" to article ");
+					sb.append(article.getArticleId());
 
-					articleElement.addAttribute(
-						"small-image-path", smallImagePath);
-
-					article.setSmallImageType(smallImage.getType());
-
-					portletDataContext.addZipEntry(
-						smallImagePath, smallImage.getTextObj());
+					_log.warn(sb.toString());
 				}
-				else {
-					if (_log.isWarnEnabled()) {
-						StringBundler sb = new StringBundler(4);
 
-						sb.append("Unable to export small image ");
-						sb.append(article.getSmallImageId());
-						sb.append(" to article ");
-						sb.append(article.getArticleId());
-
-						_log.warn(sb.toString());
-					}
-
-					article.setSmallImage(false);
-					article.setSmallImageId(0);
-				}
+				article.setSmallImage(false);
+				article.setSmallImageId(0);
 			}
 		}
 
@@ -619,16 +608,7 @@ public class JournalArticleStagedModelDataHandler
 				String smallImagePath = articleElement.attributeValue(
 					"small-image-path");
 
-				if (Validator.isNotNull(article.getSmallImageURL())) {
-					String smallImageURL =
-						_journalArticleExportImportContentProcessor.
-							replaceImportContentReferences(
-								portletDataContext, article,
-								article.getSmallImageURL());
-
-					article.setSmallImageURL(smallImageURL);
-				}
-				else if (Validator.isNotNull(smallImagePath)) {
+				if (Validator.isNotNull(smallImagePath)) {
 					byte[] bytes = portletDataContext.getZipEntryAsByteArray(
 						smallImagePath);
 
