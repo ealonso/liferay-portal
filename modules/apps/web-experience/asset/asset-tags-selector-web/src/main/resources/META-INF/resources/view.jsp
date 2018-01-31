@@ -85,6 +85,14 @@
 <aui:script use="liferay-search-container">
 	var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />tags');
 
+	var selectedTags = <%= JSONFactoryUtil.serialize(assetTagsSelectorDisplayContext.getSelectedTags()) %>;
+
+	var searchContainerData = searchContainer.getData(true);
+
+	selectedTags = selectedTags.filter(function(tag) {
+		return searchContainerData.indexOf(tag) === -1;
+	});
+
 	searchContainer.on(
 		'rowToggled',
 		function(event) {
@@ -93,7 +101,7 @@
 			var selectedItems = event.elements.allSelectedElements;
 
 			if (selectedItems.size() > 0) {
-				items = selectedItems.attr('value').join(',');
+				items = selectedTags.concat(selectedItems.attr('value')).join(',');
 			}
 
 			Liferay.Util.getOpener().Liferay.fire(
