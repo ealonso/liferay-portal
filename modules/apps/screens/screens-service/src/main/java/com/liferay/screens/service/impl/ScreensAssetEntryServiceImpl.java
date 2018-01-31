@@ -16,7 +16,7 @@ package com.liferay.screens.service.impl;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
-import com.liferay.asset.publisher.util.AssetPublisherHelper;
+import com.liferay.asset.publisher.web.util.AssetPublisherHelper;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryService;
 import com.liferay.document.library.kernel.model.DLFileEntry;
@@ -121,7 +121,8 @@ public class ScreensAssetEntryServiceImpl
 			if (!layouts.isEmpty()) {
 				Layout layout = layouts.get(0);
 
-				List<AssetEntry> assetEntries = new ArrayList<>();
+				List<AssetEntry> assetEntries = getAssetEntries(
+					portletPreferences, layout, groupId, max);
 
 				assetEntries = filterAssetEntries(assetEntries);
 
@@ -152,6 +153,81 @@ public class ScreensAssetEntryServiceImpl
 				throw new PortalException(e);
 			}
 		}
+	}
+
+	public static List<AssetEntry> getAssetEntries(
+			PortletPreferences portletPreferences, Layout layout,
+			long scopeGroupId, int max)
+		throws PortalException {
+
+		long[] groupIds = getGroupIds(portletPreferences, scopeGroupId, layout);
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
+			portletPreferences, groupIds, null, null);
+
+		assetEntryQuery.setGroupIds(groupIds);
+
+		boolean anyAssetType = GetterUtil.getBoolean(
+			portletPreferences.getValue("anyAssetType", null), true);
+
+		if (!anyAssetType) {
+			long[] availableClassNameIds =
+				AssetRendererFactoryRegistryUtil.getClassNameIds(
+					layout.getCompanyId());
+
+			long[] classNameIds = getClassNameIds(
+				portletPreferences, availableClassNameIds);
+
+			assetEntryQuery.setClassNameIds(classNameIds);
+		}
+
+		long[] classTypeIds = GetterUtil.getLongValues(
+			portletPreferences.getValues("classTypeIds", null));
+
+		assetEntryQuery.setClassTypeIds(classTypeIds);
+
+		boolean enablePermissions = GetterUtil.getBoolean(
+			portletPreferences.getValue("enablePermissions", null));
+
+		assetEntryQuery.setEnablePermissions(enablePermissions);
+
+		assetEntryQuery.setEnd(max);
+
+		boolean excludeZeroViewCount = GetterUtil.getBoolean(
+			portletPreferences.getValue("excludeZeroViewCount", null));
+
+		assetEntryQuery.setExcludeZeroViewCount(excludeZeroViewCount);
+
+		boolean showOnlyLayoutAssets = GetterUtil.getBoolean(
+			portletPreferences.getValue("showOnlyLayoutAssets", null));
+
+		if (showOnlyLayoutAssets) {
+			assetEntryQuery.setLayout(layout);
+		}
+
+		String orderByColumn1 = GetterUtil.getString(
+			portletPreferences.getValue("orderByColumn1", "modifiedDate"));
+
+		assetEntryQuery.setOrderByCol1(orderByColumn1);
+
+		String orderByColumn2 = GetterUtil.getString(
+			portletPreferences.getValue("orderByColumn2", "title"));
+
+		assetEntryQuery.setOrderByCol2(orderByColumn2);
+
+		String orderByType1 = GetterUtil.getString(
+			portletPreferences.getValue("orderByType1", "DESC"));
+
+		assetEntryQuery.setOrderByType1(orderByType1);
+
+		String orderByType2 = GetterUtil.getString(
+			portletPreferences.getValue("orderByType2", "ASC"));
+
+		assetEntryQuery.setOrderByType2(orderByType2);
+
+		assetEntryQuery.setStart(0);
+
+		return _assetEntryLocalService.getEntries(assetEntryQuery);
 	}
 
 	@Override
