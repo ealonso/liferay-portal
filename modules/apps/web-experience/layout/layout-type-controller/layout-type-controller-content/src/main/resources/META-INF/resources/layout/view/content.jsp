@@ -17,10 +17,10 @@
 <%@ include file="/layout/view/init.jsp" %>
 
 <%
-for (FragmentEntryInstanceLink fragmentEntryInstanceLink : fragmentEntryInstanceLinks) {
+for (LayoutFragment layoutFragment : layoutFragments) {
 %>
 
-	<%= FragmentEntryRenderUtil.renderFragmentEntry(fragmentEntryInstanceLink.getFragmentEntryId(), fragmentEntryInstanceLink.getPosition()) %>
+	<%= FragmentEntryRenderUtil.renderLayoutFragment(layoutFragment.getLayoutFragmentId(), layoutFragment.getPosition()) %>
 
 <%
 }
