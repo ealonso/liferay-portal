@@ -2,12 +2,12 @@ import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
-import templates from './LayoutPageTemplateFragment.soy';
+import templates from './Fragment.soy';
 
 /**
- * LayoutPageTemplateFragment
+ * Fragment
  */
-class LayoutPageTemplateFragment extends Component {
+class Fragment extends Component {
 	/**
 	 * @inheritDoc
 	 */
@@ -101,12 +101,12 @@ class LayoutPageTemplateFragment extends Component {
  * @type {!Object}
  * @static
  */
-LayoutPageTemplateFragment.STATE = {
+Fragment.STATE = {
 	/**
 	 * Fragment entry ID
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
 	 * @type {!string}
 	 */
 	fragmentEntryId: Config.string().required(),
@@ -115,7 +115,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * Fragment index
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @type {!number}
 	 */
 	index: Config.number().required(),
@@ -124,7 +124,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * Fragment name
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @type {!string}
 	 */
 	name: Config.string().required(),
@@ -133,7 +133,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * Portlet namespace needed for prefixing form inputs
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -142,7 +142,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * URL for getting a fragment render result.
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
 	 * @type {!string}
 	 */
 	renderFragmentEntryURL: Config.string().required(),
@@ -152,7 +152,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * topper element.
 	 * @default false
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
 	 * @review
 	 * @type {bool}
 	 */
@@ -163,7 +163,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * Fragment spritemap
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
@@ -172,7 +172,7 @@ LayoutPageTemplateFragment.STATE = {
 	 * Fragment content to be rendered
 	 * @default function(){}
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @private
 	 * @type {function}
 	 */
@@ -184,14 +184,14 @@ LayoutPageTemplateFragment.STATE = {
 	 * Flag indicating that fragment information is being loaded
 	 * @default false
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @private
 	 * @type {boolean}
 	 */
 	_loading: Config.bool().value(false),
 };
 
-Soy.register(LayoutPageTemplateFragment, templates);
+Soy.register(Fragment, templates);
 
-export {LayoutPageTemplateFragment};
-export default LayoutPageTemplateFragment;
+export {Fragment};
+export default Fragment;
