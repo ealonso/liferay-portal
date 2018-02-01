@@ -9,4 +9,6 @@
 	<bean class="com.liferay.fragment.service.persistence.impl.FragmentEntryPersistenceImpl" id="com.liferay.fragment.service.persistence.FragmentEntryPersistence" parent="basePersistence" />
 	<bean class="com.liferay.fragment.service.impl.FragmentEntryInstanceLinkLocalServiceImpl" id="com.liferay.fragment.service.FragmentEntryInstanceLinkLocalService" />
 	<bean class="com.liferay.fragment.service.persistence.impl.FragmentEntryInstanceLinkPersistenceImpl" id="com.liferay.fragment.service.persistence.FragmentEntryInstanceLinkPersistence" parent="basePersistence" />
+	<bean class="com.liferay.fragment.service.impl.LayoutFragmentLocalServiceImpl" id="com.liferay.fragment.service.LayoutFragmentLocalService" />
+	<bean class="com.liferay.fragment.service.persistence.impl.LayoutFragmentPersistenceImpl" id="com.liferay.fragment.service.persistence.LayoutFragmentPersistence" parent="basePersistence" />
 </beans>
