@@ -82,7 +82,7 @@ public class LayoutFragmentModelImpl extends BaseModelImpl<LayoutFragment>
 		TABLE_COLUMNS_MAP.put("position", Types.INTEGER);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table LayoutFragment (layoutFragmentId LONG not null primary key,groupId LONG,plid LONG,fragmentEntryId LONG,css VARCHAR(75) null,html VARCHAR(75) null,js VARCHAR(75) null,position INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table LayoutFragment (layoutFragmentId LONG not null primary key,groupId LONG,plid LONG,fragmentEntryId LONG,css STRING null,html STRING null,js STRING null,position INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table LayoutFragment";
 	public static final String ORDER_BY_JPQL = " ORDER BY layoutFragment.position ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY LayoutFragment.position ASC";

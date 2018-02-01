@@ -43,8 +43,8 @@ create table LayoutFragment (
 	groupId LONG,
 	plid LONG,
 	fragmentEntryId LONG,
-	css VARCHAR(75) null,
-	html VARCHAR(75) null,
-	js VARCHAR(75) null,
+	css STRING null,
+	html STRING null,
+	js STRING null,
 	position INTEGER
 );

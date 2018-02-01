@@ -118,10 +118,12 @@ public abstract class LayoutFragmentLocalServiceBaseImpl
 	 *
 	 * @param layoutFragment the layout fragment
 	 * @return the layout fragment that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment) {
+	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment)
+		throws PortalException {
 		return layoutFragmentPersistence.remove(layoutFragment);
 	}
 

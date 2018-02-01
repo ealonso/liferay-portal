@@ -16,6 +16,7 @@ package com.liferay.fragment.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.LayoutFragment;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -70,6 +71,13 @@ public interface LayoutFragmentLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutFragment addLayoutFragment(LayoutFragment layoutFragment);
 
+	public LayoutFragment addLayoutFragment(long groupId, long plid,
+		long fragmentEntryId, java.lang.String css, java.lang.String html,
+		java.lang.String js, int position) throws PortalException;
+
+	public void addLayoutFragments(long groupId, long plid,
+		List<FragmentEntry> fragmentEntries) throws PortalException;
+
 	/**
 	* Creates a new layout fragment with the primary key. Does not add the layout fragment to the database.
 	*
@@ -83,9 +91,11 @@ public interface LayoutFragmentLocalService extends BaseLocalService,
 	*
 	* @param layoutFragment the layout fragment
 	* @return the layout fragment that was removed
+	* @throws PortalException
 	*/
 	@Indexable(type = IndexableType.DELETE)
-	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment);
+	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment)
+		throws PortalException;
 
 	/**
 	* Deletes the layout fragment with the primary key from the database. Also notifies the appropriate model listeners.

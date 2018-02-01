@@ -53,6 +53,21 @@ public class LayoutFragmentLocalServiceUtil {
 		return getService().addLayoutFragment(layoutFragment);
 	}
 
+	public static com.liferay.fragment.model.LayoutFragment addLayoutFragment(
+		long groupId, long plid, long fragmentEntryId, java.lang.String css,
+		java.lang.String html, java.lang.String js, int position)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addLayoutFragment(groupId, plid, fragmentEntryId, css,
+			html, js, position);
+	}
+
+	public static void addLayoutFragments(long groupId, long plid,
+		java.util.List<com.liferay.fragment.model.FragmentEntry> fragmentEntries)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService().addLayoutFragments(groupId, plid, fragmentEntries);
+	}
+
 	/**
 	* Creates a new layout fragment with the primary key. Does not add the layout fragment to the database.
 	*
@@ -69,9 +84,11 @@ public class LayoutFragmentLocalServiceUtil {
 	*
 	* @param layoutFragment the layout fragment
 	* @return the layout fragment that was removed
+	* @throws PortalException
 	*/
 	public static com.liferay.fragment.model.LayoutFragment deleteLayoutFragment(
-		com.liferay.fragment.model.LayoutFragment layoutFragment) {
+		com.liferay.fragment.model.LayoutFragment layoutFragment)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().deleteLayoutFragment(layoutFragment);
 	}
 
