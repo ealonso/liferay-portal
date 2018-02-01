@@ -22,10 +22,13 @@ import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.StringBundler;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Pablo Molina
@@ -54,17 +57,22 @@ public class FragmentEntryRenderUtil {
 		String html, String js) {
 
 		try {
-			StringBundler sb = new StringBundler(14);
+			StringBundler sb = new StringBundler(12);
 
-			sb.append("<div class=\"fragment-");
-			sb.append(fragmentEntryId);
-			sb.append("\" id=\"fragment-");
-			sb.append(fragmentEntryId);
-			sb.append("-");
-			sb.append(fragmentEntryInstanceId);
+			String fragmentEntryClassName = String.join(
+				"-", "fragment", String.valueOf(fragmentEntryId));
+
+			String fragmentEntryInstanceClassName = String.join(
+				"-", "fragment", String.valueOf(fragmentEntryId),
+				String.valueOf(fragmentEntryInstanceId));
+
+			sb.append("<div class=\"");
+			sb.append(fragmentEntryClassName);
+			sb.append(CharPool.SPACE);
+			sb.append(fragmentEntryInstanceClassName);
 			sb.append("\">");
 			sb.append("<style>");
-			sb.append(css);
+			sb.append(_getNamespacedCss(fragmentEntryClassName, css));
 			sb.append("</style>");
 
 			Optional<ServiceContext> serviceContextOptional =
@@ -98,5 +106,14 @@ public class FragmentEntryRenderUtil {
 
 		return renderFragmentEntry(fragmentEntryId, 0, css, html, js);
 	}
+
+	private static String _getNamespacedCss(String namespace, String css) {
+		Matcher matcher = _cssPattern.matcher(css);
+
+		return matcher.replaceAll(CharPool.PERIOD + namespace + " $1");
+	}
+
+	private static final Pattern _cssPattern = Pattern.compile(
+		"^([^\\{]+[^\\}]+\\})");
 
 }
