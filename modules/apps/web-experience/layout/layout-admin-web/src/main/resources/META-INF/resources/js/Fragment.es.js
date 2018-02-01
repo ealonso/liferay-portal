@@ -42,12 +42,12 @@ class Fragment extends Component {
 			const fragmentEntryId = changes.fragmentEntryId
 				? changes.fragmentEntryId.newVal
 				: this.fragmentEntryId;
-			const fragmentEntryInstanceId = changes.index
+			const position = changes.index
 				? changes.index.newVal
 				: this.index;
 
 			this._fetchFragmentContent(
-				fragmentEntryId, fragmentEntryInstanceId);
+				fragmentEntryId, position);
 		}
 	}
 
@@ -55,10 +55,10 @@ class Fragment extends Component {
 	 * Fetches a fragment entry from the given ID, and stores the HTML,
 	 * CSS and JS result into component properties.
 	 * @param {!string} fragmentEntryId
-	 * @param {!string} fragmentEntryInstanceId
+	 * @param {!string} position
 	 * @private
 	 */
-	_fetchFragmentContent(fragmentEntryId, fragmentEntryInstanceId) {
+	_fetchFragmentContent(fragmentEntryId, position) {
 		const formData = new FormData();
 
 		formData.append(
@@ -66,8 +66,8 @@ class Fragment extends Component {
 			fragmentEntryId
 		);
 		formData.append(
-			`${this.portletNamespace}fragmentEntryInstanceId`,
-			fragmentEntryInstanceId
+			`${this.portletNamespace}position`,
+			position
 		);
 
 		this._loading = true;
@@ -122,12 +122,13 @@ Fragment.STATE = {
 
 	/**
 	 * Fragment name
-	 * @default undefined
+	 * @default ''
 	 * @instance
 	 * @memberOf Fragment
 	 * @type {!string}
 	 */
-	name: Config.string().required(),
+	name: Config.string()
+		.value(''),
 
 	/**
 	 * Portlet namespace needed for prefixing form inputs

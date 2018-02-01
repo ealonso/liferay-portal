@@ -49,7 +49,7 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		long fragmentEntryId = ParamUtil.getLong(
 			actionRequest, "fragmentEntryId");
 		long fragmentEntryInstanceId = ParamUtil.getLong(
-			actionRequest, "fragmentEntryInstanceId");
+			actionRequest, "position");
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
