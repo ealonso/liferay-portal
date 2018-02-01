@@ -9,23 +9,26 @@
 	{@param? _handleFragmentRemoveButtonClick: any}
 	{@param? _content: html}
 	{@param? _loading: bool}
+	{@param? showFragmentControls: bool}
 
 	<div class="layout-page-template-fragment-wrapper">
-		<div class="layout-page-template-fragment-control subnav subnav-primary">
-			<div class="container">
-				<span class="subnav-item">
-					{$name}
-				</span>
+		{if $showFragmentControls}
+			<div class="layout-page-template-fragment-control subnav subnav-primary">
+				<div class="container">
+					<span class="subnav-item">
+						{$name}
+					</span>
 
-				<span class="subnav-item">
-					<button class="btn btn-small btn-unstyled" data-onclick="{$_handleFragmentRemoveButtonClick}">
-						<svg class="lexicon-icon collapse-icon-open">
-							<use xlink:href="{$spritemap}#times"></use>
-						</svg>
-					</button>
-				</span>
+					<span class="subnav-item">
+						<button class="btn btn-small btn-unstyled" data-onclick="{$_handleFragmentRemoveButtonClick}">
+							<svg class="lexicon-icon collapse-icon-open">
+								<use xlink:href="{$spritemap}#times"></use>
+							</svg>
+						</button>
+					</span>
+				</div>
 			</div>
-		</div>
+		{/if}
 
 		{if $_loading}
 			<div class="loading-icon linear loading-icon-lg"></div>

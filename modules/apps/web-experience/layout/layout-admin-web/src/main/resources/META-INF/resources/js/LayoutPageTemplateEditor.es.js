@@ -222,6 +222,18 @@ LayoutPageTemplateEditor.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * When true, it will show the controls that are displayed in the fragment
+	 * topper element.
+	 * @default true
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @review
+	 * @type {boolean}
+	 */
+	showFragmentControls: Config.bool()
+		.value(true),
+
+	/**
 	 * Path of the available icons.
 	 * @default undefined
 	 * @instance

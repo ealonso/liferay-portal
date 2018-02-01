@@ -20,6 +20,7 @@
 	{@param? _sidebarSelectedTab: string}
 	{@param? fragments: list<?>}
 	{@param? id: string}
+	{@param? showFragmentControls: bool}
 
 	<div id="{$id}">
 		<div class="management-bar management-bar-light navbar navbar-expand-md">
@@ -61,6 +62,7 @@
 									{param name: $fragment.name /}
 									{param portletNamespace: $portletNamespace /}
 									{param renderFragmentEntryURL: $renderFragmentEntryURL /}
+									{param showFragmentControls: $showFragmentControls /}
 									{param spritemap: $spritemap /}
 								{/call}
 							</div>

@@ -148,6 +148,18 @@ LayoutPageTemplateFragment.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * When true, it will hide the controls that are displayed in the fragment
+	 * topper element.
+	 * @default false
+	 * @instance
+	 * @memberOf LayoutPageTemplateEditor
+	 * @review
+	 * @type {bool}
+	 */
+	showFragmentControls: Config.bool()
+		.value(false),
+
+	/**
 	 * Fragment spritemap
 	 * @default undefined
 	 * @instance
