@@ -232,7 +232,17 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public String getEditLayoutURL(Layout layout) throws PortalException {
-		return PortalUtil.getLayoutFullURL(layout, _themeDisplay);
+		if (!Objects.equals(layout.getType(), "content")) {
+			return PortalUtil.getLayoutFullURL(layout, _themeDisplay);
+		}
+
+		PortletURL editLayoutURL = _liferayPortletResponse.createActionURL();
+
+		editLayoutURL.setParameter("mvcPath", "/edit_content_layout.jsp");
+		editLayoutURL.setParameter("redirect", _themeDisplay.getURLCurrent());
+		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
+
+		return editLayoutURL.toString();
 	}
 
 	public Group getGroup() {
