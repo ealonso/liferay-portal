@@ -15,3 +15,23 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<portlet:actionURL name="/layout/render_layout_fragment" var="renderLayoutFragmentURL" />
+
+<%
+ContentLayoutDisplayContext contentLayoutDisplayContext = new ContentLayoutDisplayContext(request);
+
+Map<String, Object> layoutPageTemplateEditorContext = new HashMap<>();
+
+layoutPageTemplateEditorContext.put("fragments", contentLayoutDisplayContext.getLayoutFragmentsJSONArray());
+layoutPageTemplateEditorContext.put("id", String.valueOf(contentLayoutDisplayContext.getSelPlid()));
+layoutPageTemplateEditorContext.put("portletNamespace", renderResponse.getNamespace());
+layoutPageTemplateEditorContext.put("renderFragmentEntryURL", renderLayoutFragmentURL);
+layoutPageTemplateEditorContext.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
+%>
+
+<soy:template-renderer
+	context="<%= layoutPageTemplateEditorContext %>"
+	module="layout-admin-web/js/ContentLayoutEditor.es"
+	templateNamespace="ContentLayoutEditor.render"
+/>

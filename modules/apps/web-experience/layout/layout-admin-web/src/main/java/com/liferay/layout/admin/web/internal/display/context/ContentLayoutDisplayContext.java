@@ -14,10 +14,17 @@
 
 package com.liferay.layout.admin.web.internal.display.context;
 
+import com.liferay.fragment.model.LayoutFragment;
+import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -26,19 +33,45 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ContentLayoutDisplayContext {
 
-	public ContentLayoutDisplayContext(
-			RenderRequest renderRequest, RenderResponse renderResponse,
-			HttpServletRequest request)
+	public ContentLayoutDisplayContext(HttpServletRequest request)
 		throws PortalException {
-
-		_renderRequest = renderRequest;
-		_renderResponse = renderResponse;
 
 		_request = request;
 	}
 
-	private final RenderRequest _renderRequest;
-	private final RenderResponse _renderResponse;
+	public JSONArray getLayoutFragmentsJSONArray() throws PortalException {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		List<LayoutFragment> layoutFragments =
+			FragmentEntryServiceUtil.getLayoutFragments(
+				themeDisplay.getScopeGroupId(), getSelPlid());
+
+		for (LayoutFragment layoutFragment : layoutFragments) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put(
+				"fragmentEntryId", layoutFragment.getLayoutFragmentId());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
+	}
+
+	public long getSelPlid() {
+		if (_selPlid != null) {
+			return _selPlid;
+		}
+
+		_selPlid = ParamUtil.getLong(_request, "selPlid");
+
+		return _selPlid;
+	}
+
 	private final HttpServletRequest _request;
+	private Long _selPlid;
 
 }
