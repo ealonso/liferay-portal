@@ -94,4 +94,14 @@ FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 			url="<%= deleteFragmentEntryURL %>"
 		/>
 	</c:if>
+
+	<portlet:renderURL var="renderFragmentURL">
+		<portlet:param name="mvcRenderCommandName" value="renderFragment" />
+		<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+	</portlet:renderURL>
+
+	<liferay-ui:icon
+		message="render"
+		url="<%= renderFragmentURL %>"
+	/>
 </liferay-ui:icon-menu>
