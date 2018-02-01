@@ -14,29 +14,76 @@
 
 package com.liferay.fragment.service.impl;
 
+import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.model.LayoutFragment;
 import com.liferay.fragment.service.base.LayoutFragmentLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+
+import java.util.List;
 
 /**
- * The implementation of the layout fragment local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.fragment.service.LayoutFragmentLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see LayoutFragmentLocalServiceBaseImpl
- * @see com.liferay.fragment.service.LayoutFragmentLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class LayoutFragmentLocalServiceImpl
 	extends LayoutFragmentLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.fragment.service.LayoutFragmentLocalServiceUtil} to access the layout fragment local service.
-	 */
+	@Override
+	public LayoutFragment addLayoutFragment(
+			long groupId, long plid, long fragmentEntryId, String css,
+			String html, String js, int position)
+		throws PortalException {
+
+		// Layout Fragment entry
+
+		long layoutFragmentEntryId = counterLocalService.increment();
+
+		LayoutFragment layoutFragment = layoutFragmentPersistence.create(
+			layoutFragmentEntryId);
+
+		layoutFragment.setGroupId(groupId);
+		layoutFragment.setPlid(plid);
+		layoutFragment.setFragmentEntryId(fragmentEntryId);
+		layoutFragment.setCss(css);
+		layoutFragment.setHtml(html);
+		layoutFragment.setJs(js);
+		layoutFragment.setPosition(position);
+
+		layoutFragmentPersistence.update(layoutFragment);
+
+		return layoutFragment;
+	}
+
+	@Override
+	public void addLayoutFragments(
+			long groupId, long plid, List<FragmentEntry> fragmentEntries)
+		throws PortalException {
+
+		int position = 0;
+
+		for (FragmentEntry fragmentEntry : fragmentEntries) {
+			addLayoutFragment(
+				groupId, plid, fragmentEntry.getFragmentEntryId(),
+				fragmentEntry.getCss(), fragmentEntry.getHtml(),
+				fragmentEntry.getJs(), position++);
+		}
+	}
+
+	@Override
+	public LayoutFragment deleteLayoutFragment(LayoutFragment layoutFragment)
+		throws PortalException {
+
+		layoutFragmentPersistence.remove(layoutFragment);
+
+		return layoutFragment;
+	}
+
+	@Override
+	public LayoutFragment deleteLayoutFragment(long layoutFragmentId)
+		throws PortalException {
+
+		LayoutFragment layoutFragment = getLayoutFragment(layoutFragmentId);
+
+		return deleteLayoutFragment(layoutFragment);
+	}
 
 }
