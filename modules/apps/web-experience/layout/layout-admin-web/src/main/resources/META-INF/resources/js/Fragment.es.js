@@ -155,7 +155,7 @@ Fragment.STATE = {
 	 * @instance
 	 * @memberOf Fragment
 	 * @review
-	 * @type {bool}
+	 * @type {boolean}
 	 */
 	showFragmentControls: Config.bool()
 		.value(false),
