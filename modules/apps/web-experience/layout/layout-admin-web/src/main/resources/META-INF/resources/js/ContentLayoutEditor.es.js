@@ -34,7 +34,6 @@ class ContentLayoutEditor extends Component {
 	_handleToggleContextualSidebarButtonClick() {
 		this._contextualSidebarVisible = !this._contextualSidebarVisible;
 	}
-
 }
 
 /**

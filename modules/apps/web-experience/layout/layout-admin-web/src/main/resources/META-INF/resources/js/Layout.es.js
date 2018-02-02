@@ -54,7 +54,8 @@ class Layout extends Component {
 	 */
 	rendered() {
 		requestAnimationFrame(() => {
-			this.refs.layoutColumns.scrollLeft = this.refs.layoutColumns.scrollWidth;
+			this.refs.layoutColumns.scrollLeft =
+				this.refs.layoutColumns.scrollWidth;
 		});
 	}
 }

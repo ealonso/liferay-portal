@@ -230,8 +230,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @review
 	 * @type {boolean}
 	 */
-	showFragmentControls: Config.bool()
-		.value(true),
+	showFragmentControls: Config.bool().value(true),
 
 	/**
 	 * Path of the available icons.

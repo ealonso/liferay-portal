@@ -42,12 +42,9 @@ class Fragment extends Component {
 			const fragmentEntryId = changes.fragmentEntryId
 				? changes.fragmentEntryId.newVal
 				: this.fragmentEntryId;
-			const position = changes.index
-				? changes.index.newVal
-				: this.index;
+			const position = changes.index ? changes.index.newVal : this.index;
 
-			this._fetchFragmentContent(
-				fragmentEntryId, position);
+			this._fetchFragmentContent(fragmentEntryId, position);
 		}
 	}
 
@@ -65,10 +62,7 @@ class Fragment extends Component {
 			`${this.portletNamespace}fragmentEntryId`,
 			fragmentEntryId
 		);
-		formData.append(
-			`${this.portletNamespace}position`,
-			position
-		);
+		formData.append(`${this.portletNamespace}position`, position);
 
 		this._loading = true;
 
@@ -127,8 +121,7 @@ Fragment.STATE = {
 	 * @memberOf Fragment
 	 * @type {string}
 	 */
-	name: Config.string()
-		.value(''),
+	name: Config.string().value(''),
 
 	/**
 	 * Portlet namespace needed for prefixing form inputs
@@ -157,8 +150,7 @@ Fragment.STATE = {
 	 * @review
 	 * @type {boolean}
 	 */
-	showFragmentControls: Config.bool()
-		.value(false),
+	showFragmentControls: Config.bool().value(false),
 
 	/**
 	 * Fragment spritemap
