@@ -8,11 +8,13 @@ import templates from './ContentLayoutEditor.soy';
 
 /**
  * Component that allows editing Content Layouts
+ * @review
  */
 class ContentLayoutEditor extends Component {
 	/**
 	 * Callback executed when the sidebar should be hidden
 	 * @private
+	 * @review
 	 */
 	_handleHideContextualSidebar() {
 		this._contextualSidebarVisible = false;
@@ -20,8 +22,9 @@ class ContentLayoutEditor extends Component {
 
 	/**
 	 * Updates _sidebarSelectedTab according to the clicked element
-	 * @param {Event} event
+	 * @param {!Event} event
 	 * @private
+	 * @review
 	 */
 	_handleSidebarTabClick(event) {
 		this._sidebarSelectedTab = event.delegateTarget.dataset.tabName;
@@ -30,6 +33,7 @@ class ContentLayoutEditor extends Component {
 	/**
 	 * Callback executed when the sidebar visible state should be toggled
 	 * @private
+	 * @review
 	 */
 	_handleToggleContextualSidebarButtonClick() {
 		this._contextualSidebarVisible = !this._contextualSidebarVisible;
@@ -38,6 +42,7 @@ class ContentLayoutEditor extends Component {
 
 /**
  * Tabs that can appear inside the sidebar
+ * @review
  * @see ContentLayoutEditor._sidebarTabs
  */
 const SIDEBAR_TABS = [
@@ -50,8 +55,9 @@ const SIDEBAR_TABS = [
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 ContentLayoutEditor.STATE = {
 	/**
@@ -59,6 +65,7 @@ ContentLayoutEditor.STATE = {
 	 * @default ''
 	 * @instance
 	 * @memberOf ContentLayoutEditor
+	 * @review
 	 * @type {string}
 	 */
 	id: Config.string().value(''),
@@ -69,6 +76,7 @@ ContentLayoutEditor.STATE = {
 	 * @default []
 	 * @instance
 	 * @memberOf ContentLayoutEditor
+	 * @review
 	 * @type {Array<string>}
 	 */
 	fragments: Config.arrayOf(
@@ -83,6 +91,7 @@ ContentLayoutEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf ContentLayoutEditor
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -92,6 +101,7 @@ ContentLayoutEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf ContentLayoutEditor
+	 * @review
 	 * @type {!string}
 	 */
 	renderFragmentEntryURL: Config.string().required(),
@@ -101,6 +111,7 @@ ContentLayoutEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf ContentLayoutEditor
+	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
@@ -111,6 +122,7 @@ ContentLayoutEditor.STATE = {
 	 * @instance
 	 * @memberOf ContentLayoutEditor
 	 * @private
+	 * @review
 	 * @type {boolean}
 	 */
 	_contextualSidebarVisible: Config.bool()
@@ -123,6 +135,7 @@ ContentLayoutEditor.STATE = {
 	 * @instance
 	 * @memberOf ContentLayoutEditor
 	 * @private
+	 * @review
 	 * @type {Array<{
 	 * 	 id:string,
 	 * 	 name:string,
@@ -145,6 +158,7 @@ ContentLayoutEditor.STATE = {
 	 * @instance
 	 * @memberOf ContentLayoutEditor
 	 * @private
+	 * @review
 	 * @type {string}
 	 */
 	_sidebarSelectedTab: Config.oneOf(SIDEBAR_TABS.map(tab => tab.id))

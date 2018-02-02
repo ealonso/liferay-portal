@@ -6,20 +6,23 @@ import templates from './LayoutBreadcrumbs.soy';
 
 /**
  * LayoutBreadcrumbs
+ * @review
  */
 class LayoutBreadcrumbs extends Component {}
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 LayoutBreadcrumbs.STATE = {
 	/**
 	 * Breadcrumb entries
 	 * @default undefined
 	 * @instance
-	 * @memberof LayoutBreadcrumbs
+	 * @memberOf LayoutBreadcrumbs
+	 * @review
 	 * @type {!Array}
 	 */
 	breadcrumbEntries: Config.arrayOf(

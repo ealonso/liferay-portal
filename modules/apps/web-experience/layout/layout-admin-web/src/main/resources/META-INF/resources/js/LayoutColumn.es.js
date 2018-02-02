@@ -6,6 +6,7 @@ import templates from './LayoutColumn.soy';
 
 /**
  * LayoutColumn
+ * @review
  */
 class LayoutColumn extends Component {
 	/**
@@ -13,6 +14,7 @@ class LayoutColumn extends Component {
 	 * in a dialog.
 	 * @param {Event} event
 	 * @private
+	 * @review
 	 */
 	_handlePermissionLinkClick(event) {
 		Liferay.Util.openInDialog(event, {
@@ -31,6 +33,7 @@ class LayoutColumn extends Component {
 	 * alert.
 	 * @param {Event} event
 	 * @private
+	 * @review
 	 */
 	_handleDeleteItemClick(event) {
 		if (
@@ -53,7 +56,8 @@ LayoutColumn.STATE = {
 	 * List of layouts in the current column
 	 * @default undefined
 	 * @instance
-	 * @memberof LayoutColumn
+	 * @memberOf LayoutColumn
+	 * @review
 	 * @type {!Array}
 	 */
 	layoutColumn: Config.arrayOf(
@@ -71,7 +75,8 @@ LayoutColumn.STATE = {
 	 * URL for using icons
 	 * @default undefined
 	 * @instance
-	 * @memberof LayoutColumn
+	 * @memberOf LayoutColumn
+	 * @review
 	 * @type {!string}
 	 */
 	pathThemeImages: Config.string().required(),
@@ -80,7 +85,8 @@ LayoutColumn.STATE = {
 	 * Namespace of portlet to prefix parameters names
 	 * @default undefined
 	 * @instance
-	 * @memberof LayoutColumn
+	 * @memberOf LayoutColumn
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),

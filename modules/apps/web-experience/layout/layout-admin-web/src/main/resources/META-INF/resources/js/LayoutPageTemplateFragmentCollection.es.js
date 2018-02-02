@@ -6,6 +6,7 @@ import templates from './LayoutPageTemplateFragmentCollection.soy';
 
 /**
  * LayoutPageTemplateFragmentCollection
+ * @review
  */
 class LayoutPageTemplateFragmentCollection extends Component {
 	/**
@@ -13,6 +14,7 @@ class LayoutPageTemplateFragmentCollection extends Component {
 	 * It propagates a collectionEntryClick event with the fragment information.
 	 * @param {Event} event
 	 * @private
+	 * @review
 	 */
 	_handleEntryClick(event) {
 		const fragmentEntryId = event.delegateTarget.dataset.fragmentEntryId;
@@ -29,8 +31,9 @@ class LayoutPageTemplateFragmentCollection extends Component {
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 LayoutPageTemplateFragmentCollection.STATE = {
 	/**
@@ -39,6 +42,7 @@ LayoutPageTemplateFragmentCollection.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateFragmentCollection
+	 * @review
 	 * @type {!Array<object>}
 	 */
 	fragmentCollection: Config.shapeOf({
@@ -58,6 +62,7 @@ LayoutPageTemplateFragmentCollection.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateFragmentCollection
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -67,6 +72,7 @@ LayoutPageTemplateFragmentCollection.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateFragmentCollection
+	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),

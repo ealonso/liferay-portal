@@ -11,10 +11,12 @@ import templates from './Layout.soy';
  * Component that allows to show layouts tree in form of three dependent
  * columns. It integrates three <LayoutColumn /> components for N-th, N-th + 2
  * and N-th + 3 levels of layouts tree.
+ * @review
  */
 class Layout extends Component {
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
 	attached() {
 		const A = new AUI();
@@ -51,6 +53,7 @@ class Layout extends Component {
 
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
 	rendered() {
 		requestAnimationFrame(() => {
@@ -62,14 +65,17 @@ class Layout extends Component {
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 Layout.STATE = {
 	/**
 	 * Breadcrumb Entries
+	 * @default undefined
 	 * @instance
-	 * @memberof Layout
+	 * @memberOf Layout
+	 * @review
 	 * @type {!Array}
 	 */
 	breadcrumbEntries: Config.arrayOf(
@@ -81,8 +87,10 @@ Layout.STATE = {
 
 	/**
 	 * Layout blocks
+	 * @default undefined
 	 * @instance
-	 * @memberof Layout
+	 * @memberOf Layout
+	 * @review
 	 * @type {!Array}
 	 */
 	layoutColumns: Config.arrayOf(
@@ -100,16 +108,20 @@ Layout.STATE = {
 
 	/**
 	 * URL for using icons
+	 * @default undefined
 	 * @instance
-	 * @memberof Layout
+	 * @memberOf Layout
+	 * @review
 	 * @type {!string}
 	 */
 	pathThemeImages: Config.string().required(),
 
 	/**
 	 * Namespace of portlet to prefix parameters names
+	 * @default undefined
 	 * @instance
-	 * @memberof Layout
+	 * @memberOf Layout
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),

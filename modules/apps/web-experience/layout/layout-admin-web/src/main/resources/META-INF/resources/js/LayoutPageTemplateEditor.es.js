@@ -11,10 +11,12 @@ import templates from './LayoutPageTemplateEditor.soy';
 
 /**
  * Component that allows creating/editing Layout Page Templates
+ * @review
  */
 class LayoutPageTemplateEditor extends Component {
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
 	created() {
 		this._updatePageTemplate = this._updatePageTemplate.bind(this);
@@ -22,9 +24,11 @@ class LayoutPageTemplateEditor extends Component {
 	}
 
 	/**
-	 * @inheritDoc
 	 * If there are changes on any fragment, it sets the _dirty property
 	 * to true and queues an update.
+	 * @inheritDoc
+	 * @param {!Object} changes
+	 * @review
 	 */
 	shouldUpdate(changes) {
 		if (changes.fragments) {
@@ -38,8 +42,9 @@ class LayoutPageTemplateEditor extends Component {
 	/**
 	 * Callback executed when a fragment entry of a collection is clicked.
 	 * It receives fragmentEntryId and fragmentName as event data.
-	 * @param {Event} event
+	 * @param {!Event} event
 	 * @private
+	 * @review
 	 */
 	_handleFragmentCollectionEntryClick(event) {
 		this.fragments = [
@@ -55,8 +60,9 @@ class LayoutPageTemplateEditor extends Component {
 	/**
 	 * Removes a fragment from the fragment list. The fragment to
 	 * be removed should be specified inside the event as fragmentIndex
-	 * @param {Event} event
+	 * @param {!Event} event
 	 * @private
+	 * @review
 	 */
 	_handleFragmentRemoveButtonClick(event) {
 		const index = event.fragmentIndex;
@@ -70,6 +76,7 @@ class LayoutPageTemplateEditor extends Component {
 	/**
 	 * Callback executed when the sidebar should be hidden
 	 * @private
+	 * @review
 	 */
 	_handleHideContextualSidebar() {
 		this._contextualSidebarVisible = false;
@@ -77,8 +84,9 @@ class LayoutPageTemplateEditor extends Component {
 
 	/**
 	 * Updates _sidebarSelectedTab according to the clicked element
-	 * @param {Event} event
+	 * @param {!Event} event
 	 * @private
+	 * @review
 	 */
 	_handleSidebarTabClick(event) {
 		this._sidebarSelectedTab = event.delegateTarget.dataset.tabName;
@@ -87,6 +95,7 @@ class LayoutPageTemplateEditor extends Component {
 	/**
 	 * Callback executed when the sidebar visible state should be toggled
 	 * @private
+	 * @review
 	 */
 	_handleToggleContextualSidebarButtonClick() {
 		this._contextualSidebarVisible = !this._contextualSidebarVisible;
@@ -96,6 +105,7 @@ class LayoutPageTemplateEditor extends Component {
 	 * Sends the page template accumulated changes to the server and, if
 	 * success, sets the _dirty property to false.
 	 * @private
+	 * @review
 	 */
 	_updatePageTemplate() {
 		this._dirty = false;
@@ -127,6 +137,7 @@ class LayoutPageTemplateEditor extends Component {
 
 /**
  * Tabs that can appear inside the sidebar
+ * @review
  * @see LayoutPageTemplateEditor._sidebarTabs
  */
 const SIDEBAR_TABS = [
@@ -144,8 +155,9 @@ const SIDEBAR_TABS = [
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
 LayoutPageTemplateEditor.STATE = {
 	/**
@@ -154,6 +166,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!Array<object>}
 	 */
 	fragmentCollections: Config.arrayOf(
@@ -174,6 +187,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default ''
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {string}
 	 */
 	id: Config.string().value(''),
@@ -184,6 +198,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default []
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {Array<string>}
 	 */
 	fragments: Config.arrayOf(
@@ -199,6 +214,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!string}
 	 */
 	layoutPageTemplateEntryId: Config.string().required(),
@@ -208,6 +224,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -217,6 +234,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!string}
 	 */
 	renderFragmentEntryURL: Config.string().required(),
@@ -237,6 +255,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
@@ -246,6 +265,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
+	 * @review
 	 * @type {!string}
 	 */
 	updatePageTemplateURL: Config.string().required(),
@@ -256,6 +276,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
 	 * @private
+	 * @review
 	 * @type {boolean}
 	 */
 	_contextualSidebarVisible: Config.bool()
@@ -268,7 +289,8 @@ LayoutPageTemplateEditor.STATE = {
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
 	 * @private
-	 * @type {bool}
+	 * @review
+	 * @type {boolean}
 	 */
 	_dirty: Config.bool()
 		.internal()
@@ -292,6 +314,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
 	 * @private
+	 * @review
 	 * @type {Array<{
 	 * 	 id:string,
 	 * 	 name:string,
@@ -314,6 +337,7 @@ LayoutPageTemplateEditor.STATE = {
 	 * @instance
 	 * @memberOf LayoutPageTemplateEditor
 	 * @private
+	 * @review
 	 * @type {string}
 	 */
 	_sidebarSelectedTab: Config.oneOf(SIDEBAR_TABS.map(tab => tab.id))
