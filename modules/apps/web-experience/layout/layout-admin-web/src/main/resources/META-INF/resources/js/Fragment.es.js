@@ -125,7 +125,7 @@ Fragment.STATE = {
 	 * @default ''
 	 * @instance
 	 * @memberOf Fragment
-	 * @type {!string}
+	 * @type {string}
 	 */
 	name: Config.string()
 		.value(''),
