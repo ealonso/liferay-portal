@@ -67,6 +67,7 @@ public class JournalPermissionsPortletConfigurationIcon
 
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
+
 		JournalArticle article = journalContentDisplayContext.getArticle();
 
 		if (article == null) {

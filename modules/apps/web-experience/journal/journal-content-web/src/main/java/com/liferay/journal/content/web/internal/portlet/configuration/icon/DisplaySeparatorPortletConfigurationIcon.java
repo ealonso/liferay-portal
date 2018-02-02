@@ -77,6 +77,7 @@ public class DisplaySeparatorPortletConfigurationIcon
 
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
+
 		JournalArticle article = journalContentDisplayContext.getArticle();
 
 		if (article == null) {
