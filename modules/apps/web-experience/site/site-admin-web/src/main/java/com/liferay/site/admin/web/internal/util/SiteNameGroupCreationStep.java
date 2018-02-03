@@ -198,7 +198,7 @@ public class SiteNameGroupCreationStep implements GroupCreationStep {
 			GroupStarterKit groupStarterKit =
 				_groupStarterKitRegistry.getGroupStarterKit(groupStarterKitKey);
 
-			groupStarterKit.create(httpServletRequest);
+			groupStarterKit.initialize(group.getGroupId());
 		}
 
 		if (creationType.equals(

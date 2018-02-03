@@ -251,7 +251,8 @@ public class SiteAdminDisplayContext {
 	}
 
 	public List<GroupStarterKit> getGroupStarterKits() {
-		return _groupStarterKitRegistry.getGroupStarterKits(true, _request);
+		return _groupStarterKitRegistry.getGroupStarterKits(
+			_group.getCompanyId(), true);
 	}
 
 	public String getGroupStarterKitThumbnailSrc() {
