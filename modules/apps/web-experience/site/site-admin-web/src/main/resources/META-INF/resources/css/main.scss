@@ -26,6 +26,11 @@
 			float: right;
 		}
 
+		.button-holder {
+			margin: 0;
+			padding: 40px 0;
+		}
+
 		.site-creation-header {
 			border-bottom: 1px solid grey;
 			margin-bottom: 30px;
@@ -35,7 +40,7 @@
 	}
 
 	.site-name-fieldset {
-		padding-bottom: 180px;
+		padding-bottom: 140px;
 	}
 
 	.site-template-card {
