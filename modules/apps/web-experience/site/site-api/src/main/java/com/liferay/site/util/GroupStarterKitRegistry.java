@@ -18,8 +18,6 @@ import aQute.bnd.annotation.ProviderType;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Alessio Antonio Rendina
  */
@@ -28,18 +26,15 @@ public interface GroupStarterKitRegistry {
 
 	public GroupStarterKit getGroupStarterKit(String key);
 
-	public List<GroupStarterKit> getGroupStarterKits(
-		boolean active, HttpServletRequest httpServletRequest);
+	public List<GroupStarterKit> getGroupStarterKits(long companyId);
 
 	public List<GroupStarterKit> getGroupStarterKits(
-		HttpServletRequest httpServletRequest);
+		long companyId, boolean active);
 
 	public GroupStarterKit getNextGroupStarterKit(
-		String groupStarterKitKey, boolean active,
-		HttpServletRequest httpServletRequest);
+		long companyId, String groupStarterKitKey, boolean active);
 
 	public GroupStarterKit getPreviousGroupStarterKit(
-		String groupStarterKitKey, boolean active,
-		HttpServletRequest httpServletRequest);
+		long companyId, String groupStarterKitKey, boolean active);
 
 }

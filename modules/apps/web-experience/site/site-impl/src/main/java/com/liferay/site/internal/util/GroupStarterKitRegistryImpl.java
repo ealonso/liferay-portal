@@ -31,8 +31,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -65,8 +63,13 @@ public class GroupStarterKitRegistryImpl implements GroupStarterKitRegistry {
 	}
 
 	@Override
+	public List<GroupStarterKit> getGroupStarterKits(long companyId) {
+		return getGroupStarterKits(companyId, false);
+	}
+
+	@Override
 	public List<GroupStarterKit> getGroupStarterKits(
-		boolean active, HttpServletRequest httpServletRequest) {
+		long companyId, boolean active) {
 
 		List<GroupStarterKit> groupStarterKits = new ArrayList<>();
 
@@ -83,9 +86,7 @@ public class GroupStarterKitRegistryImpl implements GroupStarterKitRegistry {
 			GroupStarterKit groupStarterKit =
 				groupStarterKitServiceWrapper.getService();
 
-			if (!active ||
-				(active && groupStarterKit.isActive(httpServletRequest))) {
-
+			if (!active || (active && groupStarterKit.isActive(companyId))) {
 				groupStarterKits.add(groupStarterKit);
 			}
 		}
@@ -94,23 +95,15 @@ public class GroupStarterKitRegistryImpl implements GroupStarterKitRegistry {
 	}
 
 	@Override
-	public List<GroupStarterKit> getGroupStarterKits(
-		HttpServletRequest httpServletRequest) {
-
-		return getGroupStarterKits(false, httpServletRequest);
-	}
-
-	@Override
 	public GroupStarterKit getNextGroupStarterKit(
-		String groupStarterKitkey, boolean active,
-		HttpServletRequest httpServletRequest) {
+		long companyId, String groupStarterKitkey, boolean active) {
 
 		if (Validator.isNull(groupStarterKitkey)) {
 			return null;
 		}
 
 		List<GroupStarterKit> groupStarterKits = getGroupStarterKits(
-			active, httpServletRequest);
+			companyId, active);
 
 		GroupStarterKit groupStarterKit = getGroupStarterKit(
 			groupStarterKitkey);
@@ -130,15 +123,14 @@ public class GroupStarterKitRegistryImpl implements GroupStarterKitRegistry {
 
 	@Override
 	public GroupStarterKit getPreviousGroupStarterKit(
-		String groupStarterKitkey, boolean active,
-		HttpServletRequest httpServletRequest) {
+		long companyId, String groupStarterKitkey, boolean active) {
 
 		if (Validator.isNull(groupStarterKitkey)) {
 			return null;
 		}
 
 		List<GroupStarterKit> groupStarterKits = getGroupStarterKits(
-			active, httpServletRequest);
+			companyId, active);
 
 		GroupStarterKit groupStarterKit = getGroupStarterKit(
 			groupStarterKitkey);

@@ -16,14 +16,10 @@ package com.liferay.site.util;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Alessio Antonio Rendina
  */
 public interface GroupStarterKit {
-
-	public void create(HttpServletRequest httpServletRequest) throws Exception;
 
 	public String getDescription(Locale locale);
 
@@ -33,6 +29,8 @@ public interface GroupStarterKit {
 
 	public String getThumbnailSrc();
 
-	public boolean isActive(HttpServletRequest httpServletRequest);
+	public void initialize(long groupId) throws Exception;
+
+	public boolean isActive(long companyId);
 
 }
