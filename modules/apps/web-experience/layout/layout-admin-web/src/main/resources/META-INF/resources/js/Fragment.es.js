@@ -2,14 +2,16 @@ import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
-import templates from './LayoutPageTemplateFragment.soy';
+import templates from './Fragment.soy';
 
 /**
- * LayoutPageTemplateFragment
+ * Fragment
+ * @review
  */
-class LayoutPageTemplateFragment extends Component {
+class Fragment extends Component {
 	/**
 	 * @inheritDoc
+	 * @review
 	 */
 	created() {
 		this._fetchFragmentContent(this.fragmentEntryId, this.index);
@@ -19,6 +21,7 @@ class LayoutPageTemplateFragment extends Component {
 	 * After each render, script tags need to be reapended to the DOM
 	 * in order to trigger an execution (content changes do not trigger it).
 	 * @inheritDoc
+	 * @review
 	 */
 	rendered() {
 		if (this.refs.content) {
@@ -35,19 +38,17 @@ class LayoutPageTemplateFragment extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @param {object} changes
+	 * @param {!Object} changes
+	 * @review
 	 */
 	willUpdate(changes) {
 		if (changes.fragmentEntryId || changes.index) {
 			const fragmentEntryId = changes.fragmentEntryId
 				? changes.fragmentEntryId.newVal
 				: this.fragmentEntryId;
-			const fragmentEntryInstanceId = changes.index
-				? changes.index.newVal
-				: this.index;
+			const position = changes.index ? changes.index.newVal : this.index;
 
-			this._fetchFragmentContent(
-				fragmentEntryId, fragmentEntryInstanceId);
+			this._fetchFragmentContent(fragmentEntryId, position);
 		}
 	}
 
@@ -55,20 +56,18 @@ class LayoutPageTemplateFragment extends Component {
 	 * Fetches a fragment entry from the given ID, and stores the HTML,
 	 * CSS and JS result into component properties.
 	 * @param {!string} fragmentEntryId
-	 * @param {!string} fragmentEntryInstanceId
+	 * @param {!string} position
 	 * @private
+	 * @review
 	 */
-	_fetchFragmentContent(fragmentEntryId, fragmentEntryInstanceId) {
+	_fetchFragmentContent(fragmentEntryId, position) {
 		const formData = new FormData();
 
 		formData.append(
 			`${this.portletNamespace}fragmentEntryId`,
 			fragmentEntryId
 		);
-		formData.append(
-			`${this.portletNamespace}fragmentEntryInstanceId`,
-			fragmentEntryInstanceId
-		);
+		formData.append(`${this.portletNamespace}position`, position);
 
 		this._loading = true;
 
@@ -88,6 +87,7 @@ class LayoutPageTemplateFragment extends Component {
 	 * Callback executed when the fragment remove button is clicked.
 	 * It emits a 'fragmentRemoveButtonClick' event with the fragment index.
 	 * @private
+	 * @review
 	 */
 	_handleFragmentRemoveButtonClick() {
 		this.emit('fragmentRemoveButtonClick', {
@@ -98,15 +98,17 @@ class LayoutPageTemplateFragment extends Component {
 
 /**
  * State definition.
- * @type {!Object}
+ * @review
  * @static
+ * @type {!Object}
  */
-LayoutPageTemplateFragment.STATE = {
+Fragment.STATE = {
 	/**
 	 * Fragment entry ID
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
+	 * @review
 	 * @type {!string}
 	 */
 	fragmentEntryId: Config.string().required(),
@@ -115,25 +117,28 @@ LayoutPageTemplateFragment.STATE = {
 	 * Fragment index
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
+	 * @review
 	 * @type {!number}
 	 */
 	index: Config.number().required(),
 
 	/**
 	 * Fragment name
-	 * @default undefined
+	 * @default ''
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
-	 * @type {!string}
+	 * @memberOf Fragment
+	 * @review
+	 * @type {string}
 	 */
-	name: Config.string().required(),
+	name: Config.string().value(''),
 
 	/**
 	 * Portlet namespace needed for prefixing form inputs
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
+	 * @review
 	 * @type {!string}
 	 */
 	portletNamespace: Config.string().required(),
@@ -142,26 +147,40 @@ LayoutPageTemplateFragment.STATE = {
 	 * URL for getting a fragment render result.
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateEditor
+	 * @memberOf Fragment
+	 * @review
 	 * @type {!string}
 	 */
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * When true, it will show the controls that are displayed in the fragment
+	 * topper element.
+	 * @default true
+	 * @instance
+	 * @memberOf Fragment
+	 * @review
+	 * @type {boolean}
+	 */
+	showFragmentControls: Config.bool().value(true),
+
+	/**
 	 * Fragment spritemap
 	 * @default undefined
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
+	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
 
 	/**
 	 * Fragment content to be rendered
-	 * @default function(){}
+	 * @default Soy.toIncDom('')
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @private
+	 * @review
 	 * @type {function}
 	 */
 	_content: Config.func()
@@ -172,14 +191,15 @@ LayoutPageTemplateFragment.STATE = {
 	 * Flag indicating that fragment information is being loaded
 	 * @default false
 	 * @instance
-	 * @memberOf LayoutPageTemplateFragment
+	 * @memberOf Fragment
 	 * @private
+	 * @review
 	 * @type {boolean}
 	 */
 	_loading: Config.bool().value(false),
 };
 
-Soy.register(LayoutPageTemplateFragment, templates);
+Soy.register(Fragment, templates);
 
-export {LayoutPageTemplateFragment};
-export default LayoutPageTemplateFragment;
+export {Fragment};
+export default Fragment;

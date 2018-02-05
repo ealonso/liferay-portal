@@ -35,28 +35,27 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES,
-		"mvc.command.name=/layout/render_fragment_entry"
+		"mvc.command.name=/layout/render_layout_fragment"
 	},
 	service = MVCActionCommand.class
 )
-public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
+public class RenderLayoutFragmentMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long fragmentEntryId = ParamUtil.getLong(
+		long layoutFragmentId = ParamUtil.getLong(
 			actionRequest, "fragmentEntryId");
-		long fragmentEntryInstanceId = ParamUtil.getLong(
-			actionRequest, "position");
+		long position = ParamUtil.getLong(actionRequest, "position");
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		jsonObject.put(
 			"content",
-			FragmentEntryRenderUtil.renderFragmentEntry(
-				fragmentEntryId, fragmentEntryInstanceId));
+			FragmentEntryRenderUtil.renderLayoutFragment(
+				layoutFragmentId, position));
 
 		JSONPortletResponseUtil.writeJSON(
 			actionRequest, actionResponse, jsonObject);

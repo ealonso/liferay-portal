@@ -5,3 +5,5 @@ create unique index IX_18F9DFE on FragmentEntry (groupId, fragmentCollectionId, 
 
 create index IX_CC38473A on FragmentEntryInstanceLink (groupId, fragmentEntryId);
 create index IX_2B2B7AB7 on FragmentEntryInstanceLink (groupId, layoutPageTemplateEntryId);
+
+create index IX_2FC89A75 on LayoutFragment (groupId, plid);

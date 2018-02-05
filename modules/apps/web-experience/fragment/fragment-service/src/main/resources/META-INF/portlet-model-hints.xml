@@ -50,4 +50,20 @@
 		<field name="layoutPageTemplateEntryId" type="long" />
 		<field name="position" type="int" />
 	</model>
+	<model name="com.liferay.fragment.model.LayoutFragment">
+		<field name="layoutFragmentId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="plid" type="long" />
+		<field name="fragmentEntryId" type="long" />
+		<field name="css" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="html" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="js" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
+		<field name="position" type="int" />
+	</model>
 </model-hints>

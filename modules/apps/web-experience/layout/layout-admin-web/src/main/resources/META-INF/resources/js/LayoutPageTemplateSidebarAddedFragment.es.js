@@ -6,12 +6,14 @@ import templates from './LayoutPageTemplateSidebarAddedFragment.soy';
 
 /**
  * LayoutPageTemplateSidebarAddedFragment
+ * @review
  */
 class LayoutPageTemplateSidebarAddedFragment extends Component {
 	/**
 	 * Callback executed when the fragment remove button is clicked.
 	 * It emits a 'fragmentRemoveButtonClick' event with the fragment index.
 	 * @private
+	 * @review
 	 */
 	_handleFragmentRemoveButtonClick() {
 		this.emit('fragmentRemoveButtonClick', {
@@ -32,6 +34,7 @@ LayoutPageTemplateSidebarAddedFragment.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateSidebarAddedFragment
+	 * @review
 	 * @type {!number}
 	 */
 	index: Config.number().required(),
@@ -41,6 +44,7 @@ LayoutPageTemplateSidebarAddedFragment.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateSidebarAddedFragment
+	 * @review
 	 * @type {!string}
 	 */
 	name: Config.string().required(),
@@ -50,6 +54,7 @@ LayoutPageTemplateSidebarAddedFragment.STATE = {
 	 * @default undefined
 	 * @instance
 	 * @memberOf LayoutPageTemplateSidebarAddedFragment
+	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
