@@ -154,15 +154,15 @@ Fragment.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
-	 * When true, it will hide the controls that are displayed in the fragment
+	 * When true, it will show the controls that are displayed in the fragment
 	 * topper element.
-	 * @default false
+	 * @default true
 	 * @instance
 	 * @memberOf Fragment
 	 * @review
 	 * @type {boolean}
 	 */
-	showFragmentControls: Config.bool().value(false),
+	showFragmentControls: Config.bool().value(true),
 
 	/**
 	 * Fragment spritemap
