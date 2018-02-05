@@ -35,5 +35,18 @@ create table FragmentEntryInstanceLink (
 	groupId LONG,
 	fragmentEntryId LONG,
 	layoutPageTemplateEntryId LONG,
+	editableValues STRING null,
+	position INTEGER
+);
+
+create table LayoutFragment (
+	layoutFragmentId LONG not null primary key,
+	groupId LONG,
+	plid LONG,
+	fragmentEntryId LONG,
+	css STRING null,
+	html STRING null,
+	js STRING null,
+	editableValues STRING null,
 	position INTEGER
 );

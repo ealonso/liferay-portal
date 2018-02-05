@@ -28,24 +28,25 @@ import java.util.List;
  * @generated
  */
 @ProviderType
-public class FragmentEntryInstanceLinkSoap implements Serializable {
-	public static FragmentEntryInstanceLinkSoap toSoapModel(
-		FragmentEntryInstanceLink model) {
-		FragmentEntryInstanceLinkSoap soapModel = new FragmentEntryInstanceLinkSoap();
+public class LayoutFragmentSoap implements Serializable {
+	public static LayoutFragmentSoap toSoapModel(LayoutFragment model) {
+		LayoutFragmentSoap soapModel = new LayoutFragmentSoap();
 
-		soapModel.setFragmentEntryInstanceLinkId(model.getFragmentEntryInstanceLinkId());
+		soapModel.setLayoutFragmentId(model.getLayoutFragmentId());
 		soapModel.setGroupId(model.getGroupId());
+		soapModel.setPlid(model.getPlid());
 		soapModel.setFragmentEntryId(model.getFragmentEntryId());
-		soapModel.setLayoutPageTemplateEntryId(model.getLayoutPageTemplateEntryId());
+		soapModel.setCss(model.getCss());
+		soapModel.setHtml(model.getHtml());
+		soapModel.setJs(model.getJs());
 		soapModel.setEditableValues(model.getEditableValues());
 		soapModel.setPosition(model.getPosition());
 
 		return soapModel;
 	}
 
-	public static FragmentEntryInstanceLinkSoap[] toSoapModels(
-		FragmentEntryInstanceLink[] models) {
-		FragmentEntryInstanceLinkSoap[] soapModels = new FragmentEntryInstanceLinkSoap[models.length];
+	public static LayoutFragmentSoap[] toSoapModels(LayoutFragment[] models) {
+		LayoutFragmentSoap[] soapModels = new LayoutFragmentSoap[models.length];
 
 		for (int i = 0; i < models.length; i++) {
 			soapModels[i] = toSoapModel(models[i]);
@@ -54,15 +55,14 @@ public class FragmentEntryInstanceLinkSoap implements Serializable {
 		return soapModels;
 	}
 
-	public static FragmentEntryInstanceLinkSoap[][] toSoapModels(
-		FragmentEntryInstanceLink[][] models) {
-		FragmentEntryInstanceLinkSoap[][] soapModels = null;
+	public static LayoutFragmentSoap[][] toSoapModels(LayoutFragment[][] models) {
+		LayoutFragmentSoap[][] soapModels = null;
 
 		if (models.length > 0) {
-			soapModels = new FragmentEntryInstanceLinkSoap[models.length][models[0].length];
+			soapModels = new LayoutFragmentSoap[models.length][models[0].length];
 		}
 		else {
-			soapModels = new FragmentEntryInstanceLinkSoap[0][0];
+			soapModels = new LayoutFragmentSoap[0][0];
 		}
 
 		for (int i = 0; i < models.length; i++) {
@@ -72,34 +72,33 @@ public class FragmentEntryInstanceLinkSoap implements Serializable {
 		return soapModels;
 	}
 
-	public static FragmentEntryInstanceLinkSoap[] toSoapModels(
-		List<FragmentEntryInstanceLink> models) {
-		List<FragmentEntryInstanceLinkSoap> soapModels = new ArrayList<FragmentEntryInstanceLinkSoap>(models.size());
+	public static LayoutFragmentSoap[] toSoapModels(List<LayoutFragment> models) {
+		List<LayoutFragmentSoap> soapModels = new ArrayList<LayoutFragmentSoap>(models.size());
 
-		for (FragmentEntryInstanceLink model : models) {
+		for (LayoutFragment model : models) {
 			soapModels.add(toSoapModel(model));
 		}
 
-		return soapModels.toArray(new FragmentEntryInstanceLinkSoap[soapModels.size()]);
+		return soapModels.toArray(new LayoutFragmentSoap[soapModels.size()]);
 	}
 
-	public FragmentEntryInstanceLinkSoap() {
+	public LayoutFragmentSoap() {
 	}
 
 	public long getPrimaryKey() {
-		return _fragmentEntryInstanceLinkId;
+		return _layoutFragmentId;
 	}
 
 	public void setPrimaryKey(long pk) {
-		setFragmentEntryInstanceLinkId(pk);
+		setLayoutFragmentId(pk);
 	}
 
-	public long getFragmentEntryInstanceLinkId() {
-		return _fragmentEntryInstanceLinkId;
+	public long getLayoutFragmentId() {
+		return _layoutFragmentId;
 	}
 
-	public void setFragmentEntryInstanceLinkId(long fragmentEntryInstanceLinkId) {
-		_fragmentEntryInstanceLinkId = fragmentEntryInstanceLinkId;
+	public void setLayoutFragmentId(long layoutFragmentId) {
+		_layoutFragmentId = layoutFragmentId;
 	}
 
 	public long getGroupId() {
@@ -110,6 +109,14 @@ public class FragmentEntryInstanceLinkSoap implements Serializable {
 		_groupId = groupId;
 	}
 
+	public long getPlid() {
+		return _plid;
+	}
+
+	public void setPlid(long plid) {
+		_plid = plid;
+	}
+
 	public long getFragmentEntryId() {
 		return _fragmentEntryId;
 	}
@@ -118,12 +125,28 @@ public class FragmentEntryInstanceLinkSoap implements Serializable {
 		_fragmentEntryId = fragmentEntryId;
 	}
 
-	public long getLayoutPageTemplateEntryId() {
-		return _layoutPageTemplateEntryId;
+	public String getCss() {
+		return _css;
 	}
 
-	public void setLayoutPageTemplateEntryId(long layoutPageTemplateEntryId) {
-		_layoutPageTemplateEntryId = layoutPageTemplateEntryId;
+	public void setCss(String css) {
+		_css = css;
+	}
+
+	public String getHtml() {
+		return _html;
+	}
+
+	public void setHtml(String html) {
+		_html = html;
+	}
+
+	public String getJs() {
+		return _js;
+	}
+
+	public void setJs(String js) {
+		_js = js;
 	}
 
 	public String getEditableValues() {
@@ -142,10 +165,13 @@ public class FragmentEntryInstanceLinkSoap implements Serializable {
 		_position = position;
 	}
 
-	private long _fragmentEntryInstanceLinkId;
+	private long _layoutFragmentId;
 	private long _groupId;
+	private long _plid;
 	private long _fragmentEntryId;
-	private long _layoutPageTemplateEntryId;
+	private String _css;
+	private String _html;
+	private String _js;
 	private String _editableValues;
 	private int _position;
 }

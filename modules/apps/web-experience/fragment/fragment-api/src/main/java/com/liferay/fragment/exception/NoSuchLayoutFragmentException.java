@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,16 +11,32 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/layout/view/init.jsp" %>
+package com.liferay.fragment.exception;
 
-<%
-for (LayoutFragment layoutFragment : layoutFragments) {
-%>
+import aQute.bnd.annotation.ProviderType;
 
-	<%= FragmentEntryRenderUtil.renderLayoutFragment(layoutFragment.getLayoutFragmentId(), layoutFragment.getPosition()) %>
+import com.liferay.portal.kernel.exception.NoSuchModelException;
 
-<%
+/**
+ * @author Brian Wing Shun Chan
+ */
+@ProviderType
+public class NoSuchLayoutFragmentException extends NoSuchModelException {
+
+	public NoSuchLayoutFragmentException() {
+	}
+
+	public NoSuchLayoutFragmentException(String msg) {
+		super(msg);
+	}
+
+	public NoSuchLayoutFragmentException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public NoSuchLayoutFragmentException(Throwable cause) {
+		super(cause);
+	}
+
 }
-%>
