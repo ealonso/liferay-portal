@@ -16,9 +16,15 @@ package com.liferay.fragment.util;
 
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.osgi.util.ServiceTrackerFactory;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.sanitizer.Sanitizer;
 import com.liferay.portal.kernel.sanitizer.SanitizerException;
 import com.liferay.portal.kernel.sanitizer.SanitizerUtil;
@@ -28,10 +34,16 @@ import com.liferay.portal.kernel.util.StringPool;
 
 import org.jsoup.nodes.Element;
 
+import org.osgi.util.tracker.ServiceTracker;
+
 /**
  * @author Pablo Molina
  */
 public class FragmentEntryRenderUtil {
+
+	public static FragmentEntryProcessorRegistry getService() {
+		return _serviceTracker.getService();
+	}
 
 	public static String renderFragmentEntry(FragmentEntry fragmentEntry) {
 		return renderFragmentEntry(
@@ -96,9 +108,23 @@ public class FragmentEntryRenderUtil {
 			FragmentEntryLinkLocalServiceUtil.fetchFragmentEntryLink(
 				fragmentEntryLinkId);
 
+		String html = fragmentEntryLink.getHtml();
+
+		try {
+			html = getService().processFragmentEntryHTML(
+				html,
+				JSONFactoryUtil.createJSONObject(
+					fragmentEntryLink.getEditableValues()));
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+		}
+
 		return renderFragmentEntry(
-			fragmentEntryLinkId, position, fragmentEntryLink.getCss(),
-			fragmentEntryLink.getHtml(), fragmentEntryLink.getJs());
+			fragmentEntryLinkId, position, fragmentEntryLink.getCss(), html,
+			fragmentEntryLink.getJs());
 	}
 
 	private static String _sanitize(long fragmentEntryId, String html)
@@ -117,5 +143,13 @@ public class FragmentEntryRenderUtil {
 			fragmentEntryId, ContentTypes.TEXT_HTML, Sanitizer.MODE_ALL, html,
 			null);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		FragmentEntryRenderUtil.class);
+
+	private static final ServiceTracker
+		<FragmentEntryProcessorRegistry, FragmentEntryProcessorRegistry>
+			_serviceTracker = ServiceTrackerFactory.open(
+				FragmentEntryProcessorRegistry.class);
 
 }
