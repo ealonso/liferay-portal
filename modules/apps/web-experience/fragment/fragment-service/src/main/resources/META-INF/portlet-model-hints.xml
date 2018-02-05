@@ -48,6 +48,18 @@
 		<field name="groupId" type="long" />
 		<field name="fragmentEntryId" type="long" />
 		<field name="layoutPageTemplateEntryId" type="long" />
+		<field name="editableValues" type="String" />
+		<field name="position" type="int" />
+	</model>
+	<model name="com.liferay.fragment.model.LayoutFragment">
+		<field name="layoutFragmentId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="plid" type="long" />
+		<field name="fragmentEntryId" type="long" />
+		<field name="css" type="String" />
+		<field name="html" type="String" />
+		<field name="js" type="String" />
+		<field name="editableValues" type="String" />
 		<field name="position" type="int" />
 	</model>
 </model-hints>
