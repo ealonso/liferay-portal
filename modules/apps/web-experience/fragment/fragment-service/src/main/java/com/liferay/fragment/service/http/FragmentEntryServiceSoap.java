@@ -259,6 +259,21 @@ public class FragmentEntryServiceSoap {
 		}
 	}
 
+	public static com.liferay.fragment.model.LayoutFragmentSoap[] getLayoutFragments(
+		long groupId, long plid) throws RemoteException {
+		try {
+			java.util.List<com.liferay.fragment.model.LayoutFragment> returnValue =
+				FragmentEntryServiceUtil.getLayoutFragments(groupId, plid);
+
+			return com.liferay.fragment.model.LayoutFragmentSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.fragment.model.FragmentEntrySoap updateFragmentEntry(
 		long fragmentEntryId, java.lang.String name) throws RemoteException {
 		try {

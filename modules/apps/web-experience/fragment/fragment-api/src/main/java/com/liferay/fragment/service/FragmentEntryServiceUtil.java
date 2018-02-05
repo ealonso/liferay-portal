@@ -128,6 +128,12 @@ public class FragmentEntryServiceUtil {
 			start, end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.fragment.model.LayoutFragment> getLayoutFragments(
+		long groupId, long plid)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getLayoutFragments(groupId, plid);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
