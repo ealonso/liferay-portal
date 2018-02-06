@@ -17,6 +17,7 @@ package com.liferay.fragment.service.impl;
 import com.liferay.fragment.constants.FragmentActionKeys;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.model.LayoutFragment;
 import com.liferay.fragment.service.base.FragmentEntryServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -161,6 +162,13 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 
 		return fragmentEntryPersistence.filterFindByG_FCI_LikeN(
 			groupId, fragmentCollectionId, name, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<LayoutFragment> getLayoutFragments(long groupId, long plid)
+		throws PortalException {
+
+		return layoutFragmentPersistence.findByG_P(groupId, plid);
 	}
 
 	@Override

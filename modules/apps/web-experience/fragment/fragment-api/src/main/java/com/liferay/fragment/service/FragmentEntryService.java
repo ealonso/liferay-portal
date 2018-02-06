@@ -17,6 +17,7 @@ package com.liferay.fragment.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.model.LayoutFragment;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -106,6 +107,10 @@ public interface FragmentEntryService extends BaseService {
 	public List<FragmentEntry> getFragmentEntries(long groupId,
 		long fragmentCollectionId, java.lang.String name, int start, int end,
 		OrderByComparator<FragmentEntry> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutFragment> getLayoutFragments(long groupId, long plid)
+		throws PortalException;
 
 	/**
 	* Returns the OSGi service identifier.

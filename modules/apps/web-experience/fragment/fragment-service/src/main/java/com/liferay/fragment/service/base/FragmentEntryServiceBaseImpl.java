@@ -19,6 +19,7 @@ import com.liferay.fragment.service.FragmentEntryService;
 import com.liferay.fragment.service.persistence.FragmentCollectionPersistence;
 import com.liferay.fragment.service.persistence.FragmentEntryInstanceLinkPersistence;
 import com.liferay.fragment.service.persistence.FragmentEntryPersistence;
+import com.liferay.fragment.service.persistence.LayoutFragmentPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.db.DB;
@@ -358,6 +359,44 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 		this.fragmentEntryInstanceLinkPersistence = fragmentEntryInstanceLinkPersistence;
 	}
 
+	/**
+	 * Returns the layout fragment local service.
+	 *
+	 * @return the layout fragment local service
+	 */
+	public com.liferay.fragment.service.LayoutFragmentLocalService getLayoutFragmentLocalService() {
+		return layoutFragmentLocalService;
+	}
+
+	/**
+	 * Sets the layout fragment local service.
+	 *
+	 * @param layoutFragmentLocalService the layout fragment local service
+	 */
+	public void setLayoutFragmentLocalService(
+		com.liferay.fragment.service.LayoutFragmentLocalService layoutFragmentLocalService) {
+		this.layoutFragmentLocalService = layoutFragmentLocalService;
+	}
+
+	/**
+	 * Returns the layout fragment persistence.
+	 *
+	 * @return the layout fragment persistence
+	 */
+	public LayoutFragmentPersistence getLayoutFragmentPersistence() {
+		return layoutFragmentPersistence;
+	}
+
+	/**
+	 * Sets the layout fragment persistence.
+	 *
+	 * @param layoutFragmentPersistence the layout fragment persistence
+	 */
+	public void setLayoutFragmentPersistence(
+		LayoutFragmentPersistence layoutFragmentPersistence) {
+		this.layoutFragmentPersistence = layoutFragmentPersistence;
+	}
+
 	public void afterPropertiesSet() {
 	}
 
@@ -438,4 +477,8 @@ public abstract class FragmentEntryServiceBaseImpl extends BaseServiceImpl
 	protected com.liferay.fragment.service.FragmentEntryInstanceLinkLocalService fragmentEntryInstanceLinkLocalService;
 	@BeanReference(type = FragmentEntryInstanceLinkPersistence.class)
 	protected FragmentEntryInstanceLinkPersistence fragmentEntryInstanceLinkPersistence;
+	@BeanReference(type = com.liferay.fragment.service.LayoutFragmentLocalService.class)
+	protected com.liferay.fragment.service.LayoutFragmentLocalService layoutFragmentLocalService;
+	@BeanReference(type = LayoutFragmentPersistence.class)
+	protected LayoutFragmentPersistence layoutFragmentPersistence;
 }

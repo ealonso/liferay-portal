@@ -120,6 +120,7 @@
 
 		<reference entity="FragmentCollection" package-path="com.liferay.fragment" />
 		<reference entity="FragmentEntryInstanceLink" package-path="com.liferay.fragment" />
+		<reference entity="LayoutFragment" package-path="com.liferay.fragment" />
 		<reference entity="ClassName" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
@@ -138,6 +139,7 @@
 
 		<column name="fragmentEntryId" type="long" />
 		<column name="layoutPageTemplateEntryId" type="long" />
+		<column name="editableValues" type="String" />
 		<column name="position" type="int" />
 
 		<!-- Finder methods -->
@@ -157,6 +159,49 @@
 		<!-- References -->
 
 		<reference entity="FragmentEntry" package-path="com.liferay.fragment" />
+		<reference entity="Resource" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+	</entity>
+	<entity local-service="true" name="LayoutFragment" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column name="layoutFragmentId" primary="true" type="long" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Other fields -->
+
+		<column name="plid" type="long" />
+		<column name="fragmentEntryId" type="long" />
+		<column name="css" type="String" />
+		<column name="html" type="String" />
+		<column name="js" type="String" />
+		<column name="editableValues" type="String" />
+		<column name="position" type="int" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="position" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="G_P" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="plid" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="FragmentEntry" package-path="com.liferay.fragment" />
+		<reference entity="Layout" package-path="com.liferay.portal" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
