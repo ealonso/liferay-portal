@@ -16,8 +16,8 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:icon
-	cssClass="portlet-content"
-	id="WebContentSeparatorIcon"
-	message="web-content"
-/>
+<li class="dropdown-divider" role="presentation"></li>
+
+<li class="dropdown-subheader" role="presentation">
+	<liferay-ui:message key="web-content" />
+</li>
