@@ -78,12 +78,12 @@ boolean urlIsNotNull = Validator.isNotNull(url);
 		<li class="<%= cssClass %>" role="presentation">
 			<c:choose>
 				<c:when test="<%= urlIsNotNull %>">
-					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
+					<aui:a ariaRole="menuitem" cssClass='<%= linkCssClass + " dropdown-item taglib-icon" %>' data="<%= data %>" href="<%= url %>" id="<%= id %>" lang="<%= lang %>" onClick="<%= onClick %>" target="<%= target %>">
 						<%= linkContent %>
 					</aui:a>
 				</c:when>
 				<c:otherwise>
-					<span class="taglib-icon"><%= linkContent %></span>
+					<span class="dropdown-item taglib-icon"><%= linkContent %></span>
 				</c:otherwise>
 			</c:choose>
 		</li>
