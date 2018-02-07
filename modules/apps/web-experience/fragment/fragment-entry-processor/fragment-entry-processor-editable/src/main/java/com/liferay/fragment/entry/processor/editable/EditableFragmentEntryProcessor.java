@@ -72,6 +72,10 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			String id = element.attributeValue("id");
 
+			if (!jsonObject.has(id)) {
+				continue;
+			}
+
 			editableElementParser.replace(element, jsonObject.getString(id));
 		}
 
