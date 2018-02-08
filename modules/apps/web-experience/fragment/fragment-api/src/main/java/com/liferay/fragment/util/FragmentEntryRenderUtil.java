@@ -123,8 +123,8 @@ public class FragmentEntryRenderUtil {
 		}
 
 		return renderFragmentEntry(
-			fragmentEntryLinkId, position, fragmentEntryLink.getCss(), html,
-			fragmentEntryLink.getJs());
+			fragmentEntryLink.getFragmentEntryId(), position,
+			fragmentEntryLink.getCss(), html, fragmentEntryLink.getJs());
 	}
 
 	private static String _sanitize(long fragmentEntryId, String html)
