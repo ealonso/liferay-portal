@@ -16,23 +16,23 @@
 
 <%@ include file="/init.jsp" %>
 
-<c:if test="<%= journalContentDisplayContext.isShowEditTemplateIcon() %>">
+<%
+JournalArticle article = journalContentDisplayContext.getArticle();
+%>
 
-	<%
-	DDMTemplate ddmTemplate = journalContentDisplayContext.getDDMTemplate();
-
-	Map<String, Object> data = new HashMap<String, Object>();
-
-	data.put("destroyOnHide", true);
-	data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
-	data.put("title", HtmlUtil.escape(ddmTemplate.getName(locale)));
-	%>
+<c:if test="<%= JournalArticlePermission.contains(permissionChecker, article, ActionKeys.PERMISSIONS) %>">
+	<liferay-security:permissionsURL
+		modelResource="<%= JournalArticle.class.getName() %>"
+		modelResourceDescription="<%= HtmlUtil.escape(article.getTitle(locale)) %>"
+		resourcePrimKey="<%= String.valueOf(article.getResourcePrimKey()) %>"
+		var="permissionsURL"
+		windowState="<%= LiferayWindowState.POP_UP.toString() %>"
+	/>
 
 	<liferay-ui:icon
-		data="<%= data %>"
-		id="editTemplateIcon"
-		message="edit-template"
-		url="<%= journalContentDisplayContext.getURLEditTemplate() %>"
+		message="permissions"
+		method="get"
+		url="<%= permissionsURL %>"
 		useDialog="<%= true %>"
 	/>
 </c:if>

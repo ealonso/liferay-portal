@@ -16,23 +16,8 @@
 
 <%@ include file="/init.jsp" %>
 
-<c:if test="<%= journalContentDisplayContext.isShowEditTemplateIcon() %>">
+<li class="dropdown-divider" role="presentation"></li>
 
-	<%
-	DDMTemplate ddmTemplate = journalContentDisplayContext.getDDMTemplate();
-
-	Map<String, Object> data = new HashMap<String, Object>();
-
-	data.put("destroyOnHide", true);
-	data.put("id", HtmlUtil.escape(portletDisplay.getNamespace()) + "editAsset");
-	data.put("title", HtmlUtil.escape(ddmTemplate.getName(locale)));
-	%>
-
-	<liferay-ui:icon
-		data="<%= data %>"
-		id="editTemplateIcon"
-		message="edit-template"
-		url="<%= journalContentDisplayContext.getURLEditTemplate() %>"
-		useDialog="<%= true %>"
-	/>
-</c:if>
+<li class="dropdown-subheader" role="presentation">
+	<liferay-ui:message key="web-content" />
+</li>
