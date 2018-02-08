@@ -181,23 +181,23 @@ class FragmentsEditor extends Component {
 		const formData = new FormData();
 
 		formData.append(
-			`${this.portletNamespace}layoutPageTemplateEntryId`,
-			this.layoutPageTemplateEntryId
+			`${this.portletNamespace}classPK`,
+			this.classPK
 		);
 
-		const editableList = {};
+		const editableValues = {};
 
 		this._editables.forEach(editable => {
-			editableList[editable.fragmentIndex] =
-				editableList[editable.fragmentIndex] || {};
+			editableValues[editable.fragmentIndex] =
+				editableValues[editable.fragmentIndex] || {};
 
-			editableList[editable.fragmentIndex][editable.editableId] =
+			editableValues[editable.fragmentIndex][editable.editableId] =
 				editable.value;
 		});
 
 		formData.append(
-			`${this.portletNamespace}editable`,
-			JSON.stringify(editableList)
+			`${this.portletNamespace}editableValues`,
+			JSON.stringify(editableValues)
 		);
 
 		this.fragments.forEach(fragment => {
@@ -207,7 +207,7 @@ class FragmentsEditor extends Component {
 			);
 		});
 
-		fetch(this.updatePageTemplateURL, {
+		fetch(this.updateURL, {
 			body: formData,
 			credentials: 'include',
 			method: 'POST',
@@ -243,6 +243,16 @@ const SIDEBAR_TABS = [
  * @type {!Object}
  */
 FragmentsEditor.STATE = {
+	/**
+	 * Class primary key used for storing changes.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+	classPK: Config.string().required(),
+
 	/**
 	 * Available entries that can be used, organized by collections.
 	 * @default undefined
@@ -293,16 +303,6 @@ FragmentsEditor.STATE = {
 	).value([]),
 
 	/**
-	 * Model id used for storing changes.
-	 * @default undefined
-	 * @instance
-	 * @memberOf FragmentsEditor
-	 * @review
-	 * @type {!string}
-	 */
-	layoutPageTemplateEntryId: Config.string().required(),
-
-	/**
 	 * Portlet namespace needed for prefixing form inputs
 	 * @default undefined
 	 * @instance
@@ -333,14 +333,14 @@ FragmentsEditor.STATE = {
 	spritemap: Config.string().required(),
 
 	/**
-	 * URL for updating the layout page template.
+	 * URL for updating accumulated changes.
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @review
 	 * @type {!string}
 	 */
-	updatePageTemplateURL: Config.string().required(),
+	updateURL: Config.string().required(),
 
 	/**
 	 * Allow opening/closing contextual sidebar
