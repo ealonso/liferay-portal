@@ -4,13 +4,13 @@ import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
-import templates from './Fragment.soy';
+import templates from './FragmentEntryLink.soy';
 
 /**
- * Fragment
+ * FragmentEntryLink
  * @review
  */
-class Fragment extends Component {
+class FragmentEntryLink extends Component {
 	/**
 	 * @inheritDoc
 	 * @review
@@ -220,13 +220,13 @@ class Fragment extends Component {
  * @static
  * @type {!Object}
  */
-Fragment.STATE = {
+FragmentEntryLink.STATE = {
 	/**
 	 * Editable values that should be used instead of the default ones
 	 * inside editable fields.
 	 * @default {}
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!Object}
 	 */
@@ -236,7 +236,7 @@ Fragment.STATE = {
 	 * Fragment entry ID
 	 * @default undefined
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!string}
 	 */
@@ -246,7 +246,7 @@ Fragment.STATE = {
 	 * Fragment index
 	 * @default undefined
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!number}
 	 */
@@ -256,7 +256,7 @@ Fragment.STATE = {
 	 * Fragment name
 	 * @default ''
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {string}
 	 */
@@ -266,7 +266,7 @@ Fragment.STATE = {
 	 * Portlet namespace needed for prefixing form inputs
 	 * @default undefined
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!string}
 	 */
@@ -276,7 +276,7 @@ Fragment.STATE = {
 	 * URL for getting a fragment render result.
 	 * @default undefined
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!string}
 	 */
@@ -286,7 +286,7 @@ Fragment.STATE = {
 	 * Fragment spritemap
 	 * @default undefined
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @review
 	 * @type {!string}
 	 */
@@ -296,7 +296,7 @@ Fragment.STATE = {
 	 * Fragment content to be rendered
 	 * @default Soy.toIncDom('')
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @private
 	 * @review
 	 * @type {function}
@@ -322,7 +322,7 @@ Fragment.STATE = {
 	 * Flag indicating that fragment information is being loaded
 	 * @default false
 	 * @instance
-	 * @memberOf Fragment
+	 * @memberOf FragmentEntryLink
 	 * @private
 	 * @review
 	 * @type {boolean}
@@ -330,7 +330,7 @@ Fragment.STATE = {
 	_loading: Config.bool().value(false),
 };
 
-Soy.register(Fragment, templates);
+Soy.register(FragmentEntryLink, templates);
 
-export {Fragment};
-export default Fragment;
+export {FragmentEntryLink};
+export default FragmentEntryLink;

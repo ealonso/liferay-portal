@@ -4,7 +4,7 @@ import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
 import '../contextual_sidebar/ContextualSidebar.es';
-import './Fragment.es';
+import './FragmentEntryLink.es';
 import './sidebar/SidebarAddedFragment.es';
 import './sidebar/SidebarFragmentCollection.es';
 import templates from './FragmentsEditor.soy';

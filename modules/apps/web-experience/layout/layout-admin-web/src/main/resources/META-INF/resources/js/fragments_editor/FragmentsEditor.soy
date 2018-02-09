@@ -54,7 +54,7 @@
 				{if $fragments and (length($fragments) > 0)}
 					{foreach $fragment in $fragments}
 						<div class="fragment-panel-item-instance" data-position="{index($fragment)}">
-							{call Fragment.render}
+							{call FragmentEntryLink.render}
 								{param editableValues: $fragment.editableValues /}
 								{param events: [
 									'editableChanged': $_handleEditableChanged,
