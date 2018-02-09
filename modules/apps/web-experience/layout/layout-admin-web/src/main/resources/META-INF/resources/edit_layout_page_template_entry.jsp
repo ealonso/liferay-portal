@@ -75,8 +75,8 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateEn
 Map<String, Object> layoutPageTemplateEditorContext = new HashMap<>();
 
 layoutPageTemplateEditorContext.put("classPK", layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId());
-layoutPageTemplateEditorContext.put("fragments", layoutPageTemplateDisplayContext.getFragmentEntryLinksJSONArray());
 layoutPageTemplateEditorContext.put("fragmentCollections", layoutPageTemplateDisplayContext.getFragmentCollectionsJSONArray());
+layoutPageTemplateEditorContext.put("fragmentEntryLinks", layoutPageTemplateDisplayContext.getFragmentEntryLinksJSONArray());
 layoutPageTemplateEditorContext.put("portletNamespace", renderResponse.getNamespace());
 layoutPageTemplateEditorContext.put("renderFragmentEntryURL", renderFragmentEntryURL);
 layoutPageTemplateEditorContext.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
