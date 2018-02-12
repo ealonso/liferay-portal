@@ -73,11 +73,11 @@ public class FragmentEntryRenderUtil {
 			sb.append("</style>");
 		}
 
-        if (Validator.isNotNull(js)) {
-            sb.append("<script>(function() {");
-            sb.append(js);
-            sb.append(";}());</script>");
-        }
+		if (Validator.isNotNull(js)) {
+			sb.append("<script>(function() {");
+			sb.append(js);
+			sb.append(";}());</script>");
+		}
 
 		return sb.toString();
 	}
