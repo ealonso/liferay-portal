@@ -77,6 +77,8 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			Element runtimeHTMLTag = new Element("@liferay_portlet.runtime");
 
+			runtimeHTMLTag.attr(
+				"instanceId", jsonObject.getString("instanceId"));
 			runtimeHTMLTag.attr("portletName", portletName);
 
 			element.replaceWith(runtimeHTMLTag);
