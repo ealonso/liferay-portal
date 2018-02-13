@@ -75,11 +75,14 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 						"there-is-no-portlet-available-for-alias-x", alias));
 			}
 
-			Element runtimeHTMLTag = new Element("@liferay_portlet.runtime");
+			Element runtimeHTMLTagElement = new Element(
+				"@liferay_portlet.runtime");
 
-			runtimeHTMLTag.attr("portletName", portletName);
+			runtimeHTMLTagElement.attr(
+				"instanceId", jsonObject.getString("instanceId"));
+			runtimeHTMLTagElement.attr("portletName", portletName);
 
-			element.replaceWith(runtimeHTMLTag);
+			element.replaceWith(runtimeHTMLTagElement);
 		}
 
 		Element bodyElement = document.body();

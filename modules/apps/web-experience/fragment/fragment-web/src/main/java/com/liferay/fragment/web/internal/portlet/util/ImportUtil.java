@@ -102,12 +102,14 @@ public class ImportUtil {
 
 		Element rootElement = document.getRootElement();
 
-		for (Element fragmentEntry : rootElement.elements("fragment-entry")) {
+		for (Element fragmentEntryElement :
+				rootElement.elements("fragment-entry")) {
+
 			StringBundler sb = new StringBundler(4);
 
 			sb.append(path);
 			sb.append("/fragment_entries/");
-			sb.append(fragmentEntry.getText());
+			sb.append(fragmentEntryElement.getText());
 			sb.append("/definition.xml");
 
 			String fragmentEntryDefinition = zipReader.getEntryAsString(
