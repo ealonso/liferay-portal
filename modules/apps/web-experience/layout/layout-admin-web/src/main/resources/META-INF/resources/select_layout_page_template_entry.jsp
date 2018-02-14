@@ -29,7 +29,7 @@ List<NavigationItem> navigationItems = new ArrayList<>();
 NavigationItem navigationItem = new NavigationItem();
 
 navigationItem.setActive(layoutPageTemplateCollectionId == 0);
-navigationItem.setHref(layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL());
+navigationItem.setHref(layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(0, layoutsAdminDisplayContext.getSelPlid()));
 navigationItem.setLabel(LanguageUtil.get(request, "special-pages"));
 
 navigationItems.add(navigationItem);

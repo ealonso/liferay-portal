@@ -534,6 +534,13 @@ public class LayoutsAdminDisplayContext {
 	public String getSelectLayoutPageTemplateEntryURL(
 		long layoutPageTemplateCollectionId) {
 
+		return getSelectLayoutPageTemplateEntryURL(
+			layoutPageTemplateCollectionId, LayoutConstants.DEFAULT_PLID);
+	}
+
+	public String getSelectLayoutPageTemplateEntryURL(
+		long layoutPageTemplateCollectionId, long selPlid) {
+
 		PortletURL selectLayoutPageTemplateEntryURL =
 			_liferayPortletResponse.createRenderURL();
 
@@ -546,7 +553,7 @@ public class LayoutsAdminDisplayContext {
 		selectLayoutPageTemplateEntryURL.setParameter(
 			"groupId", String.valueOf(getSelGroupId()));
 		selectLayoutPageTemplateEntryURL.setParameter(
-			"selPlid", String.valueOf(getSelPlid()));
+			"selPlid", String.valueOf(selPlid));
 		selectLayoutPageTemplateEntryURL.setParameter(
 			"privateLayout", String.valueOf(isPrivatePages()));
 
@@ -846,7 +853,7 @@ public class LayoutsAdminDisplayContext {
 		if (showAddChildPageAction(layout)) {
 			jsonObject.put(
 				"addURL",
-				getSelectLayoutPageTemplateEntryURL(layout.getPlid()));
+				getSelectLayoutPageTemplateEntryURL(0, layout.getPlid()));
 		}
 
 		if (showConfigureAction(layout)) {
