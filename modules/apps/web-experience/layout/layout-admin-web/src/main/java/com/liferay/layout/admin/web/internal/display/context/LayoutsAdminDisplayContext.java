@@ -454,6 +454,22 @@ public class LayoutsAdminDisplayContext {
 		return _pagesName;
 	}
 
+	public long getParentLayoutId() {
+		if (_parentLayoutId != null) {
+			return _parentLayoutId;
+		}
+
+		_parentLayoutId = Long.valueOf(0);
+
+		Layout layout = getSelLayout();
+
+		if (layout != null) {
+			_parentLayoutId = layout.getLayoutId();
+		}
+
+		return _parentLayoutId;
+	}
+
 	public String getPath(Layout layout, Locale locale) throws PortalException {
 		List<Layout> layouts = layout.getAncestors();
 
@@ -1019,6 +1035,7 @@ public class LayoutsAdminDisplayContext {
 	private String _orderByCol;
 	private String _orderByType;
 	private String _pagesName;
+	private Long _parentLayoutId;
 	private Boolean _privateLayout;
 	private String _redirect;
 	private String _rootNodeName;
