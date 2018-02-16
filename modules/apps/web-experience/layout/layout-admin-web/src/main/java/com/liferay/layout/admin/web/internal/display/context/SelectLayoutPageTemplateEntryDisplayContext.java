@@ -36,6 +36,7 @@ import com.liferay.portal.util.LayoutTypeControllerTracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -94,15 +95,17 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 	public List<NavigationItem> getNavigationItems() throws PortalException {
 		List<NavigationItem> navigationItems = new ArrayList<>();
 
-		NavigationItem navigationItem = new NavigationItem();
+		//Basic Pages
 
-		navigationItem.setActive(getLayoutPageTemplateCollectionId() == 0);
-		navigationItem.setHref(
-			_layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(
-				0, _layoutsAdminDisplayContext.getSelPlid()));
-		navigationItem.setLabel(LanguageUtil.get(_request, "basic-pages"));
+		navigationItems.add(_getBasicNavigationItem("basic-pages"));
 
-		navigationItems.add(navigationItem);
+		//Global Templates
+
+		navigationItems.add(_getBasicNavigationItem("global-templates"));
+
+		// Layout Page Template Collections
+
+		NavigationItem navigationItem = null;
 
 		List<LayoutPageTemplateCollection> layoutPageTemplateCollections =
 			LayoutPageTemplateCollectionServiceUtil.
@@ -134,6 +137,17 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 		return navigationItems;
 	}
 
+	public String getSelectedTab() {
+		if (_selectedTab != null) {
+			return _selectedTab;
+		}
+
+		_selectedTab = ParamUtil.getString(
+			_request, "selectedTab", "basic-pages");
+
+		return _selectedTab;
+	}
+
 	public List<String> getTypes() {
 		return ListUtil.filter(
 			ListUtil.fromArray(LayoutTypeControllerTracker.getTypes()),
@@ -151,17 +165,32 @@ public class SelectLayoutPageTemplateEntryDisplayContext {
 			});
 	}
 
-	public boolean isBasicPages() {
-		if (getLayoutPageTemplateCollectionId() == 0) {
+	public boolean isSelectedTab(String tab) {
+		if ((getLayoutPageTemplateCollectionId() == 0) &&
+			Objects.equals(getSelectedTab(), tab)) {
+
 			return true;
 		}
 
 		return false;
 	}
 
+	private NavigationItem _getBasicNavigationItem(String tab) {
+		NavigationItem navigationItem = new NavigationItem();
+
+		navigationItem.setActive(isSelectedTab(tab));
+		navigationItem.setHref(
+			_layoutsAdminDisplayContext.getSelectLayoutPageTemplateEntryURL(
+				0, _layoutsAdminDisplayContext.getSelPlid(), tab));
+		navigationItem.setLabel(LanguageUtil.get(_request, tab));
+
+		return navigationItem;
+	}
+
 	private Long _layoutPageTemplateCollectionId;
 	private final LayoutsAdminDisplayContext _layoutsAdminDisplayContext;
 	private final HttpServletRequest _request;
+	private String _selectedTab;
 	private final ThemeDisplay _themeDisplay;
 
 }

@@ -32,8 +32,11 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-template"));
 
 <aui:form cssClass="container-fluid-1280" name="fm">
 	<c:choose>
-		<c:when test="<%= selectLayoutPageTemplateEntryDisplayContext.isBasicPages() %>">
+		<c:when test='<%= selectLayoutPageTemplateEntryDisplayContext.isSelectedTab("basic-pages") %>'>
 			<liferay-util:include page="/select_basic_pages.jsp" servletContext="<%= application %>" />
+		</c:when>
+		<c:when test='<%= selectLayoutPageTemplateEntryDisplayContext.isSelectedTab("global-templates") %>'>
+			<liferay-util:include page="/select_global_templates.jsp" servletContext="<%= application %>" />
 		</c:when>
 		<c:otherwise>
 			<liferay-ui:search-container
