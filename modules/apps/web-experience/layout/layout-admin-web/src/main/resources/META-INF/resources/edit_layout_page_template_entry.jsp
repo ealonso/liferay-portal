@@ -71,11 +71,14 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateEn
 <portlet:actionURL name="/layout/render_fragment_entry" var="renderFragmentEntryURL" />
 
 <%
+long classNameId = PortalUtil.getClassNameId(LayoutPageTemplateEntry.class.getName());
+long classPK = layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId();
+
 Map<String, Object> layoutPageTemplateEditorContext = new HashMap<>();
 
-layoutPageTemplateEditorContext.put("classPK", layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId());
+layoutPageTemplateEditorContext.put("classPK", classPK);
 layoutPageTemplateEditorContext.put("fragmentCollections", layoutPageTemplateDisplayContext.getFragmentCollectionsJSONArray());
-layoutPageTemplateEditorContext.put("fragmentEntryLinks", layoutPageTemplateDisplayContext.getFragmentEntryLinksJSONArray());
+layoutPageTemplateEditorContext.put("fragmentEntryLinks", layoutPageTemplateDisplayContext.getFragmentEntryLinksJSONArray(classNameId, classPK));
 layoutPageTemplateEditorContext.put("portletNamespace", renderResponse.getNamespace());
 layoutPageTemplateEditorContext.put("renderFragmentEntryURL", renderFragmentEntryURL);
 layoutPageTemplateEditorContext.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");

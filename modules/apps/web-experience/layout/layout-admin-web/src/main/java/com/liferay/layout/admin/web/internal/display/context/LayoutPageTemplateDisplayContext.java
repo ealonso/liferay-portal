@@ -44,7 +44,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -190,21 +189,18 @@ public class LayoutPageTemplateDisplayContext {
 		return fragmentCollectionsJSONArray;
 	}
 
-	public JSONArray getFragmentEntryLinksJSONArray() throws PortalException {
+	public JSONArray getFragmentEntryLinksJSONArray(
+			long classNameId, long classPK)
+		throws PortalException {
+
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			getLayoutPageTemplateEntry();
-
 		List<FragmentEntryLink> fragmentEntryLinks =
 			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-				themeDisplay.getScopeGroupId(),
-				PortalUtil.getClassNameId(
-					LayoutPageTemplateEntry.class.getName()),
-				layoutPageTemplateEntry.getLayoutPageTemplateEntryId());
+				themeDisplay.getScopeGroupId(), classNameId, classPK);
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 			FragmentEntry fragmentEntry =
