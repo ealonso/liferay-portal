@@ -19,12 +19,7 @@
 <%
 LayoutPageTemplateDisplayContext layoutPageTemplateDisplayContext = new LayoutPageTemplateDisplayContext(renderRequest, renderResponse, request);
 
-String redirect = String.valueOf(renderResponse.createRenderURL());
-
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
-
-portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(selLayout.getName(locale));
 %>
