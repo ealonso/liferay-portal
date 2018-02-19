@@ -126,6 +126,22 @@ public class FullPageApplicationSiteNavigationMenuItemType
 	}
 
 	@Override
+	public void processBeforeDelete(
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		long plid = GetterUtil.getLong(
+			typeSettingsProperties.getProperty("plid"));
+
+		_layoutLocalService.deleteLayout(plid);
+	}
+
+	@Override
 	public void processBeforeUpdate(
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws PortalException {
