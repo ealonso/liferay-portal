@@ -53,6 +53,11 @@ public interface SiteNavigationMenuItemType {
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws PortalException;
 
+	public default void processBeforeUpdate(
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+	}
+
 	public default void renderAddPage(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
