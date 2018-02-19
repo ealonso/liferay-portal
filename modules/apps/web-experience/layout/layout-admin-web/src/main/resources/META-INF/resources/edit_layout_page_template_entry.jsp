@@ -76,6 +76,7 @@ long classPK = layoutPageTemplateDisplayContext.getLayoutPageTemplateEntryId();
 
 Map<String, Object> layoutPageTemplateEditorContext = new HashMap<>();
 
+layoutPageTemplateEditorContext.put("classNameId", classNameId);
 layoutPageTemplateEditorContext.put("classPK", classPK);
 layoutPageTemplateEditorContext.put("fragmentCollections", layoutPageTemplateDisplayContext.getFragmentCollectionsJSONArray());
 layoutPageTemplateEditorContext.put("fragmentEntryLinks", layoutPageTemplateDisplayContext.getFragmentEntryLinksJSONArray(classNameId, classPK));
