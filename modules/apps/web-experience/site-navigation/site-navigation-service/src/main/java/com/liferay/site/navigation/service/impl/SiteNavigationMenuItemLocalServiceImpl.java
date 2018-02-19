@@ -99,13 +99,42 @@ public class SiteNavigationMenuItemLocalServiceImpl
 			long siteNavigationMenuItemId)
 		throws PortalException {
 
-		return siteNavigationMenuItemPersistence.remove(
-			siteNavigationMenuItemId);
+		SiteNavigationMenuItem siteNavigationMenuItem =
+			getSiteNavigationMenuItem(siteNavigationMenuItemId);
+
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				siteNavigationMenuItem.getType());
+
+		if (siteNavigationMenuItemType != null) {
+			siteNavigationMenuItemType.processBeforeDelete(
+				siteNavigationMenuItem);
+		}
+
+		return deleteSiteNavigationMenuItem(siteNavigationMenuItem);
 	}
 
 	@Override
 	public void deleteSiteNavigationMenuItems(long siteNavigationMenuId)
 		throws PortalException {
+
+		List<SiteNavigationMenuItem> siteNavigationMenuItems =
+			siteNavigationMenuItemPersistence.findBySiteNavigationMenuId(
+				siteNavigationMenuId);
+
+		for (SiteNavigationMenuItem siteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			SiteNavigationMenuItemType siteNavigationMenuItemType =
+				_siteNavigationMenuItemTypeRegistry.
+					getSiteNavigationMenuItemType(
+						siteNavigationMenuItem.getType());
+
+			if (siteNavigationMenuItemType != null) {
+				siteNavigationMenuItemType.processBeforeDelete(
+					siteNavigationMenuItem);
+			}
+		}
 
 		siteNavigationMenuItemPersistence.removeBySiteNavigationMenuId(
 			siteNavigationMenuId);
