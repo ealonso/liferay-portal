@@ -28,6 +28,8 @@ public interface LayoutTypeController extends Serializable {
 
 	public String[] getConfigurationActionUpdate();
 
+	public String getEditURL(HttpServletRequest request, Layout layout);
+
 	public String getType();
 
 	public String getURL();

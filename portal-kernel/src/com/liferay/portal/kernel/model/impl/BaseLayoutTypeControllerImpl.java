@@ -49,6 +49,11 @@ public abstract class BaseLayoutTypeControllerImpl
 	}
 
 	@Override
+	public String getEditURL(HttpServletRequest request, Layout layout) {
+		return null;
+	}
+
+	@Override
 	public String getType() {
 		return StringPool.BLANK;
 	}
