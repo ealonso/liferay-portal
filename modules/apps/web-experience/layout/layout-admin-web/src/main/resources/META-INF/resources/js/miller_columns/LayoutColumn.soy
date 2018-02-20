@@ -105,8 +105,8 @@
 				</button>
 
 				<div class="dropdown-menu">
-					<a class="dropdown-item" href="{$layoutColumnItem.actionURLs['editLayoutURL']}" rel="noopener" target="_blank">
-						{msg desc=""}edit{/msg}
+					<a class="dropdown-item" href="{$layoutColumnItem.actionURLs['viewLayoutURL']}" rel="noopener" target="_blank">
+						{msg desc=""}view{/msg}
 
 						<span class="inline-item inline-item-after">
 							{call .lexiconIcon}
@@ -115,6 +115,12 @@
 							{/call}
 						</span>
 					</a>
+
+					{if $layoutColumnItem.actionURLs['editLayoutURL']}
+						<a class="dropdown-item" href="{$layoutColumnItem.actionURLs['editLayoutURL']}">
+							{msg desc=""}edit{/msg}
+						</a>
+					{/if}
 
 					{if $layoutColumnItem.actionURLs['configureURL']}
 						<a class="dropdown-item" href="{$layoutColumnItem.actionURLs['configureURL']}">
