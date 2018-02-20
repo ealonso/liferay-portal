@@ -26,7 +26,7 @@ Layout curLayout = (Layout)row.getObject();
 	<liferay-ui:icon
 		message="edit"
 		target="_blank"
-		url="<%= layoutsAdminDisplayContext.getEditLayoutURL(curLayout) %>"
+		url="<%= layoutsAdminDisplayContext.getViewLayoutURL(curLayout) %>"
 	/>
 
 	<c:if test="<%= layoutsAdminDisplayContext.showConfigureAction(curLayout) %>">
