@@ -16,6 +16,7 @@ package com.liferay.layout.type.controller.content.internal.controller;
 
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerConstants;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
@@ -23,11 +24,15 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
 import java.util.List;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletResponse;
@@ -46,6 +51,25 @@ import org.osgi.service.component.annotations.Reference;
 	service = LayoutTypeController.class
 )
 public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
+
+	@Override
+	public String getEditURL(HttpServletRequest request, Layout layout) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletURL editLayoutURL = _portal.getControlPanelPortletURL(
+			request, LayoutAdminPortletKeys.GROUP_PAGES,
+			PortletRequest.RENDER_PHASE);
+
+		editLayoutURL.setParameter("mvcPath", "/edit_content_layout.jsp");
+		editLayoutURL.setParameter("backURL", themeDisplay.getURLCurrent());
+
+		editLayoutURL.setParameter(
+			"groupId", String.valueOf(layout.getGroupId()));
+		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
+
+		return editLayoutURL.toString();
+	}
 
 	@Override
 	public String getType() {
