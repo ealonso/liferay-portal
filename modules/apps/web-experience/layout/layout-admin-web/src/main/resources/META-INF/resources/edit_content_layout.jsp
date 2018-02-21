@@ -26,6 +26,13 @@ FragmentsEditorContext fragmentsEditorContext = new FragmentsEditorContext(reque
 
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
+String backURL = ParamUtil.getString(request, "backURL");
+
+if (Validator.isNotNull(backURL)) {
+	portletDisplay.setShowBackIcon(true);
+	portletDisplay.setURLBack(backURL);
+}
+
 renderResponse.setTitle(selLayout.getName(locale));
 %>
 
