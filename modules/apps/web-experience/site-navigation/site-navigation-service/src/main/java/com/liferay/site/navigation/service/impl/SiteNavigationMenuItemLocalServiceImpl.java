@@ -18,9 +18,12 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.spring.extender.service.ServiceReference;
 import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemOrderException;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.service.base.SiteNavigationMenuItemLocalServiceBaseImpl;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemTypeRegistry;
 import com.liferay.site.navigation.util.comparator.SiteNavigationMenuItemOrderComparator;
 
 import java.util.Date;
@@ -59,6 +62,15 @@ public class SiteNavigationMenuItemLocalServiceImpl
 		siteNavigationMenuItem.setTypeSettings(typeSettings);
 		siteNavigationMenuItem.setOrder(order);
 
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				type);
+
+		if (siteNavigationMenuItemType != null) {
+			siteNavigationMenuItemType.processBeforeUpdate(
+				siteNavigationMenuItem);
+		}
+
 		siteNavigationMenuItemPersistence.update(siteNavigationMenuItem);
 
 		return siteNavigationMenuItem;
@@ -87,13 +99,42 @@ public class SiteNavigationMenuItemLocalServiceImpl
 			long siteNavigationMenuItemId)
 		throws PortalException {
 
-		return siteNavigationMenuItemPersistence.remove(
-			siteNavigationMenuItemId);
+		SiteNavigationMenuItem siteNavigationMenuItem =
+			getSiteNavigationMenuItem(siteNavigationMenuItemId);
+
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				siteNavigationMenuItem.getType());
+
+		if (siteNavigationMenuItemType != null) {
+			siteNavigationMenuItemType.processBeforeDelete(
+				siteNavigationMenuItem);
+		}
+
+		return deleteSiteNavigationMenuItem(siteNavigationMenuItem);
 	}
 
 	@Override
 	public void deleteSiteNavigationMenuItems(long siteNavigationMenuId)
 		throws PortalException {
+
+		List<SiteNavigationMenuItem> siteNavigationMenuItems =
+			siteNavigationMenuItemPersistence.findBySiteNavigationMenuId(
+				siteNavigationMenuId);
+
+		for (SiteNavigationMenuItem siteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			SiteNavigationMenuItemType siteNavigationMenuItemType =
+				_siteNavigationMenuItemTypeRegistry.
+					getSiteNavigationMenuItemType(
+						siteNavigationMenuItem.getType());
+
+			if (siteNavigationMenuItemType != null) {
+				siteNavigationMenuItemType.processBeforeDelete(
+					siteNavigationMenuItem);
+			}
+		}
 
 		siteNavigationMenuItemPersistence.removeBySiteNavigationMenuId(
 			siteNavigationMenuId);
@@ -214,6 +255,15 @@ public class SiteNavigationMenuItemLocalServiceImpl
 		siteNavigationMenuItem.setUserName(user.getFullName());
 		siteNavigationMenuItem.setTypeSettings(typeSettings);
 
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				siteNavigationMenuItem.getType());
+
+		if (siteNavigationMenuItemType != null) {
+			siteNavigationMenuItemType.processBeforeUpdate(
+				siteNavigationMenuItem);
+		}
+
 		siteNavigationMenuItemPersistence.update(siteNavigationMenuItem);
 
 		return siteNavigationMenuItem;
@@ -239,5 +289,9 @@ public class SiteNavigationMenuItemLocalServiceImpl
 			validate(siteNavigationMenuItemId, parentSiteNavigationMenuItemId);
 		}
 	}
+
+	@ServiceReference(type = SiteNavigationMenuItemTypeRegistry.class)
+	private SiteNavigationMenuItemTypeRegistry
+		_siteNavigationMenuItemTypeRegistry;
 
 }

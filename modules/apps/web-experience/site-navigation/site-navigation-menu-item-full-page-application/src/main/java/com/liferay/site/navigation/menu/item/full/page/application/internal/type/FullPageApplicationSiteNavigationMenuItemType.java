@@ -15,15 +15,24 @@
 package com.liferay.site.navigation.menu.item.full.page.application.internal.type;
 
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.PortletLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
 import com.liferay.site.navigation.menu.item.full.page.application.internal.constants.SiteNavigationMenuItemTypeFullPageApplicationConstants;
 import com.liferay.site.navigation.menu.item.full.page.application.internal.constants.SiteNavigationMenuItemTypeFullPageApplicationWebKeys;
@@ -33,8 +42,10 @@ import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 import java.io.IOException;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
@@ -98,7 +109,85 @@ public class FullPageApplicationSiteNavigationMenuItemType
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws PortalException {
 
-		return StringPool.BLANK;
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long plid = GetterUtil.getLong(
+			typeSettingsProperties.getProperty("plid"));
+
+		Layout layout = _layoutLocalService.getLayout(plid);
+
+		return _portal.getLayoutFullURL(layout, themeDisplay, true);
+	}
+
+	@Override
+	public void processBeforeDelete(
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		long plid = GetterUtil.getLong(
+			typeSettingsProperties.getProperty("plid"));
+
+		_layoutLocalService.deleteLayout(plid);
+	}
+
+	@Override
+	public void processBeforeUpdate(
+			SiteNavigationMenuItem siteNavigationMenuItem)
+		throws PortalException {
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		typeSettingsProperties.fastLoad(
+			siteNavigationMenuItem.getTypeSettings());
+
+		long plid = GetterUtil.getLong(
+			typeSettingsProperties.getProperty("plid"));
+
+		Layout layout = _layoutLocalService.fetchLayout(plid);
+
+		if (layout == null) {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			Map<Locale, String> nameMap = new HashMap<>();
+
+			Locale defaultLocale = LocaleUtil.getDefault();
+
+			nameMap.put(
+				defaultLocale, getTitle(siteNavigationMenuItem, defaultLocale));
+
+			layout = _layoutLocalService.addLayout(
+				siteNavigationMenuItem.getUserId(),
+				siteNavigationMenuItem.getGroupId(), false,
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, nameMap, nameMap,
+				null, null, null,
+				SiteNavigationMenuItemTypeFullPageApplicationConstants.
+					FULL_PAGE_APPLICATION,
+				siteNavigationMenuItem.getTypeSettings(), true,
+				Collections.<Locale, String>emptyMap(), serviceContext);
+
+			typeSettingsProperties.setProperty(
+				"plid", String.valueOf(layout.getPlid()));
+
+			siteNavigationMenuItem.setTypeSettings(
+				typeSettingsProperties.toString());
+		}
+		else {
+			_layoutLocalService.updateLayout(
+				layout.getGroupId(), layout.isPrivateLayout(),
+				layout.getLayoutId(), siteNavigationMenuItem.getTypeSettings());
+		}
 	}
 
 	@Override
@@ -159,6 +248,12 @@ public class FullPageApplicationSiteNavigationMenuItemType
 
 	@Reference
 	private JSPRenderer _jspRenderer;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortletLocalService _portletLocalService;
