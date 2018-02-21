@@ -93,6 +93,11 @@ public class LayoutTypeControllerImpl implements LayoutTypeController {
 	}
 
 	@Override
+	public String getEditURL(HttpServletRequest request, Layout layout) {
+		return null;
+	}
+
+	@Override
 	public String getType() {
 		return _type;
 	}
