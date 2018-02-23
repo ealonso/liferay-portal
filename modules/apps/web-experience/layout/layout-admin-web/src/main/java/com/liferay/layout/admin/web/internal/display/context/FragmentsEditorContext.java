@@ -22,18 +22,16 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.template.soy.utils.SoyContext;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
@@ -57,11 +55,11 @@ public class FragmentsEditorContext {
 		_classNameId = PortalUtil.getClassNameId(className);
 	}
 
-	public Map<String, Object> getEditorContext() throws PortalException {
+	public SoyContext getEditorContext() throws PortalException {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Map<String, Object> editorContext = new HashMap<>();
+		SoyContext editorContext = new SoyContext();
 
 		editorContext.put(
 			"addFragmentEntryLinkURL",
@@ -92,9 +90,8 @@ public class FragmentsEditorContext {
 		return editorContext;
 	}
 
-	private JSONArray _getFragmentCollectionsJSONArray() {
-		JSONArray fragmentCollectionsJSONArray =
-			JSONFactoryUtil.createJSONArray();
+	private List<SoyContext> _getFragmentCollectionsJSONArray() {
+		List<SoyContext> fragmentCollectionsJSONArray = new ArrayList();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -113,19 +110,16 @@ public class FragmentsEditorContext {
 				continue;
 			}
 
-			JSONObject fragmentCollectionJSONObject =
-				JSONFactoryUtil.createJSONObject();
+			SoyContext fragmentCollectionJSONObject = new SoyContext();
 
 			fragmentCollectionJSONObject.put(
 				"fragmentCollectionId",
 				fragmentCollection.getFragmentCollectionId());
 
-			JSONArray fragmentEntriesJSONArray =
-				JSONFactoryUtil.createJSONArray();
+			List<SoyContext> fragmentEntriesJSONArray = new ArrayList<>();
 
 			for (FragmentEntry fragmentEntry : fragmentEntries) {
-				JSONObject fragmentEntryJSONObject =
-					JSONFactoryUtil.createJSONObject();
+				SoyContext fragmentEntryJSONObject = new SoyContext();
 
 				fragmentEntryJSONObject.put(
 					"fragmentEntryId", fragmentEntry.getFragmentEntryId());
@@ -134,7 +128,7 @@ public class FragmentsEditorContext {
 					fragmentEntry.getImagePreviewURL(themeDisplay));
 				fragmentEntryJSONObject.put("name", fragmentEntry.getName());
 
-				fragmentEntriesJSONArray.put(fragmentEntryJSONObject);
+				fragmentEntriesJSONArray.add(fragmentEntryJSONObject);
 			}
 
 			fragmentCollectionJSONObject.put(
@@ -143,7 +137,7 @@ public class FragmentsEditorContext {
 			fragmentCollectionJSONObject.put(
 				"name", fragmentCollection.getName());
 
-			fragmentCollectionsJSONArray.put(fragmentCollectionJSONObject);
+			fragmentCollectionsJSONArray.add(fragmentCollectionJSONObject);
 		}
 
 		return fragmentCollectionsJSONArray;
@@ -157,8 +151,10 @@ public class FragmentsEditorContext {
 		return renderFragmentEntryURL.toString();
 	}
 
-	private JSONArray _getFragmentEntryLinksJSONArray() throws PortalException {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+	private List<SoyContext> _getFragmentEntryLinksJSONArray()
+		throws PortalException {
+
+		List<SoyContext> jsonArray = new ArrayList<>();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -172,9 +168,9 @@ public class FragmentsEditorContext {
 				FragmentEntryServiceUtil.fetchFragmentEntry(
 					fragmentEntryLink.getFragmentEntryId());
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			SoyContext jsonObject = new SoyContext();
 
-			jsonObject.put(
+			jsonObject.putHTML(
 				"content",
 				FragmentEntryRenderUtil.renderFragmentEntryLink(
 					fragmentEntryLink));
@@ -190,7 +186,7 @@ public class FragmentsEditorContext {
 			jsonObject.put("name", fragmentEntry.getName());
 			jsonObject.put("position", fragmentEntryLink.getPosition());
 
-			jsonArray.put(jsonObject);
+			jsonArray.add(jsonObject);
 		}
 
 		return jsonArray;
