@@ -35,6 +35,36 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
+	 * Sends message to delete a single fragment entry link to the server and,
+	 * if success, sets the _dirty property to false.
+	 * @private
+	 * @review
+	 */
+
+	_deleteFragmentEntryLink(fragmentEntryLinkId) {
+		if (!this._dirty) {
+			this._dirty = true;
+
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLinkId
+			);
+
+			fetch(this.deleteFragmentEntryLinkURL, {
+				body: formData,
+				credentials: 'include',
+				method: 'POST',
+			}).then(() => {
+				this._lastSaveDate = new Date().toLocaleTimeString();
+
+				this._dirty = false;
+			});
+		}
+	}
+
+	/**
 	 * Fetches a FragmentEntryLink content from the fragment ID and
 	 * fragmentEntryLink ID, returns a promise that resolves into it's content.
 	 * @param {!string} fragmentEntryId
@@ -110,6 +140,24 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
+	 * Gets a new FragmentEntryLink position.
+	 * @returns {number}
+	 * @private
+	 * @review
+	 */
+
+	_getNewFragmentEntryLinkPosition() {
+		const position = Math.max(
+			0,
+			...this.fragmentEntryLinks.map(
+				fragmentEntryLink => fragmentEntryLink.position
+			)
+		);
+
+		return position + 1;
+	}
+
+	/**
 	 * Callback executed everytime an editable field has been changed
 	 * @param {{
 	 *   editableId: !string,
@@ -131,7 +179,7 @@ class FragmentsEditor extends Component {
 			fragmentEntryLink.editableValues[data.editableId] = data.value;
 		}
 
-		this._updatePageTemplate();
+		this._updateFragmentEntryLink(fragmentEntryLink);
 	}
 
 	/**
@@ -143,19 +191,75 @@ class FragmentsEditor extends Component {
 	 */
 
 	_handleFragmentCollectionEntryClick(event) {
-		this.fragmentEntryLinks = [
-			...this.fragmentEntryLinks,
-			{
-				config: {},
-				content: '',
-				editableValues: {},
-				fragmentEntryId: event.fragmentEntryId,
-				fragmentEntryLinkId: getUid().toString(),
-				name: event.fragmentName
-			}
-		];
+		if (!this._dirty) {
+			this._dirty = true;
 
-		this._updatePageTemplate();
+			const formData = new FormData();
+			const position = this._getNewFragmentEntryLinkPosition();
+
+			formData.append(
+				`${this.portletNamespace}classNameId`,
+				this.classNameId
+			);
+
+			formData.append(
+				`${this.portletNamespace}classPK`,
+				this.classPK
+			);
+
+			formData.append(
+				`${this.portletNamespace}fragmentId`,
+				event.fragmentEntryId
+			);
+
+			formData.append(
+				`${this.portletNamespace}position`,
+				position
+			);
+
+			fetch(
+				this.addFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST',
+				}
+			)
+			.then(
+				response => {
+					return response.json();
+				}
+			)
+			.then(
+				response => {
+					if (!response.fragmentEntryLinkId) {
+						throw new Error();
+					}
+
+					this.fragmentEntryLinks = [
+						...this.fragmentEntryLinks,
+						{
+							config: {},
+							content: '',
+							editableValues: {},
+							fragmentEntryId: event.fragmentEntryId,
+							fragmentEntryLinkId: response.fragmentEntryLinkId,
+							name: event.fragmentName,
+							position
+						}
+					];
+
+					return this._fetchFragmentsContent();
+				}
+			)
+			.finally(
+				() => {
+					this._lastSaveDate = new Date().toLocaleTimeString();
+
+					this._dirty = false;
+				}
+			);
+		}
 	}
 
 	/**
@@ -212,7 +316,7 @@ class FragmentsEditor extends Component {
 				...this.fragmentEntryLinks.slice(index + 1)
 			];
 
-			this._updatePageTemplate();
+			this._deleteFragmentEntryLink(data.fragmentEntryLinkId);
 		}
 	}
 
@@ -264,6 +368,41 @@ class FragmentsEditor extends Component {
 		this.fragmentEntryLinks = fragmentEntryLinks;
 
 		this._updatePageTemplate();
+	}
+
+	/**
+	 * Sends the change of a single fragment entry link to the server and, if
+	 * success, sets the _dirty property to false.
+	 * @private
+	 * @review
+	 */
+
+	_updateFragmentEntryLink(fragmentEntryLink) {
+		if (!this._dirty) {
+			this._dirty = true;
+
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLink.fragmentEntryLinkId
+			);
+
+			formData.append(
+				`${this.portletNamespace}editableValues`,
+				JSON.stringify(fragmentEntryLink.editableValues)
+			);
+
+			fetch(this.editFragmentEntryLinkURL, {
+				body: formData,
+				credentials: 'include',
+				method: 'POST',
+			}).then(() => {
+				this._lastSaveDate = new Date().toLocaleTimeString();
+
+				this._dirty = false;
+			});
+		}
 	}
 
 	/**
@@ -325,11 +464,7 @@ class FragmentsEditor extends Component {
 				() => {
 					this._lastSaveDate = new Date().toLocaleTimeString();
 
-					this._fetchFragmentsContent().then(
-						() => {
-							this._dirty = false;
-						}
-					);
+					this._dirty = false;
 				}
 			);
 		}
