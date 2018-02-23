@@ -59,16 +59,32 @@ public class AddSiteNavigationMenuItemMVCActionCommand
 
 		String type = ParamUtil.getString(actionRequest, "type");
 
-		UnicodeProperties typeSettingsProperties =
-			PropertiesParamUtil.getProperties(
-				actionRequest, "TypeSettingsProperties--");
+		int valuesLength = ParamUtil.getInteger(
+			actionRequest, "valuesLength", 1);
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
-		_siteNavigationMenuItemService.addSiteNavigationMenuItem(
-			themeDisplay.getScopeGroupId(), siteNavigationMenuId, 0, type,
-			typeSettingsProperties.toString(), serviceContext);
+		if (valuesLength > 1) {
+			for (int k = 0; k < valuesLength; k++) {
+				UnicodeProperties typeSettingsProperties =
+					PropertiesParamUtil.getProperties(
+						actionRequest, k + "-TypeSettingsProperties--");
+
+				_siteNavigationMenuItemService.addSiteNavigationMenuItem(
+					themeDisplay.getScopeGroupId(), siteNavigationMenuId, 0,
+					type, typeSettingsProperties.toString(), serviceContext);
+			}
+		}
+		else {
+			UnicodeProperties typeSettingsProperties =
+				PropertiesParamUtil.getProperties(
+					actionRequest, "TypeSettingsProperties--");
+
+			_siteNavigationMenuItemService.addSiteNavigationMenuItem(
+				themeDisplay.getScopeGroupId(), siteNavigationMenuId, 0, type,
+				typeSettingsProperties.toString(), serviceContext);
+		}
 	}
 
 	@Reference
