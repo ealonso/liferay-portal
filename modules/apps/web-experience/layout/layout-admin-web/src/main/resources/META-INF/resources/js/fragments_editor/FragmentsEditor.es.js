@@ -73,16 +73,11 @@ class FragmentsEditor extends Component {
 	 * @review
 	 */
 
-	_fetchFragmentContent(fragmentEntryId, fragmentEntryLinkId) {
+	_fetchFragmentContent(fragmentEntryLinkId) {
 		const formData = new FormData();
 
 		formData.append(
-			`${this.portletNamespace}fragmentEntryId`,
-			fragmentEntryId
-		);
-
-		formData.append(
-			`${this.portletNamespace}position`,
+			`${this.portletNamespace}fragmentEntryLinkId`,
 			fragmentEntryLinkId
 		);
 
@@ -116,25 +111,20 @@ class FragmentsEditor extends Component {
 						fragmentEntryLink.fragmentEntryLinkId &&
 						!fragmentEntryLink.content
 				)
-				.map(
-					fragmentEntryLink => {
-						return this._fetchFragmentContent(
-							fragmentEntryLink.fragmentEntryId,
-							fragmentEntryLink.fragmentEntryLinkId
-						).then(
-							content => {
-								const index = this.fragmentEntryLinks.findIndex(
-									_fragmentEntryLink =>
-										_fragmentEntryLink.fragmentEntryLinkId ===
-										fragmentEntryLink.fragmentEntryLinkId
-								);
-
-								if (index !== -1) {
-									this.fragmentEntryLinks[index].content = content;
-								}
-							}
+				.map(fragmentEntryLink =>
+					this._fetchFragmentContent(
+						fragmentEntryLink.fragmentEntryLinkId
+					).then(content => {
+						const index = this.fragmentEntryLinks.findIndex(
+							_fragmentEntryLink =>
+								_fragmentEntryLink.fragmentEntryLinkId ===
+								fragmentEntryLink.fragmentEntryLinkId
 						);
-					}
+
+						if (index !== -1) {
+							this.fragmentEntryLinks[index].content = content;
+						}
+					})
 				)
 		);
 	}
