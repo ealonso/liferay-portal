@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder auto-import-default-references="false" auto-namespace-tables="false" package-path="com.liferay.asset.link">
+	<namespace>Asset</namespace>
+	<entity local-service="true" name="AssetLink" remote-service="false">
+
+		<!-- PK fields -->
+
+		<column accessor="true" name="linkId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="entryId1" type="long" />
+		<column accessor="true" name="entryId2" type="long" />
+		<column name="type" type="int" />
+		<column name="weight" type="int" />
+
+		<!-- Order -->
+
+		<order by="asc">
+			<order-column name="weight" />
+		</order>
+
+		<!-- Finder methods -->
+
+		<finder name="E1" return-type="Collection">
+			<finder-column name="entryId1" />
+		</finder>
+		<finder name="E2" return-type="Collection">
+			<finder-column name="entryId2" />
+		</finder>
+		<finder name="E_E" return-type="Collection">
+			<finder-column name="entryId1" />
+			<finder-column name="entryId2" />
+		</finder>
+		<finder name="E1_T" return-type="Collection">
+			<finder-column name="entryId1" />
+			<finder-column name="type" />
+		</finder>
+		<finder name="E2_T" return-type="Collection">
+			<finder-column name="entryId2" />
+			<finder-column name="type" />
+		</finder>
+		<finder name="E_E_T" return-type="AssetLink" unique="true">
+			<finder-column name="entryId1" />
+			<finder-column name="entryId2" />
+			<finder-column name="type" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="SystemEvent" package-path="com.liferay.portal" />
+		<reference entity="User" package-path="com.liferay.portal" />
+		<reference entity="AssetEntry" package-path="com.liferay.portlet.asset" />
+	</entity>
+	<exceptions>
+		<exception>AssetLink</exception>
+	</exceptions>
+</service-builder>

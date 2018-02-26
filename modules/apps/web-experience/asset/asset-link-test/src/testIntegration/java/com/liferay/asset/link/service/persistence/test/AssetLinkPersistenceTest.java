@@ -12,13 +12,15 @@
  * details.
  */
 
-package com.liferay.portlet.asset.service.persistence.test;
+package com.liferay.asset.link.service.persistence.test;
 
-import com.liferay.asset.kernel.exception.NoSuchLinkException;
-import com.liferay.asset.kernel.model.AssetLink;
-import com.liferay.asset.kernel.service.AssetLinkLocalServiceUtil;
-import com.liferay.asset.kernel.service.persistence.AssetLinkPersistence;
-import com.liferay.asset.kernel.service.persistence.AssetLinkUtil;
+import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+
+import com.liferay.asset.link.exception.NoSuchLinkException;
+import com.liferay.asset.link.model.AssetLink;
+import com.liferay.asset.link.service.AssetLinkLocalServiceUtil;
+import com.liferay.asset.link.service.persistence.AssetLinkPersistence;
+import com.liferay.asset.link.service.persistence.AssetLinkUtil;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -45,6 +47,8 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
+import org.junit.runner.RunWith;
+
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -57,12 +61,14 @@ import java.util.Set;
 /**
  * @generated
  */
+@RunWith(Arquillian.class)
 public class AssetLinkPersistenceTest {
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule = new AggregateTestRule(new LiferayIntegrationTestRule(),
 			PersistenceTestRule.INSTANCE,
-			new TransactionalTestRule(Propagation.REQUIRED));
+			new TransactionalTestRule(Propagation.REQUIRED,
+				"com.liferay.asset.link.service"));
 
 	@Before
 	public void setUp() {
