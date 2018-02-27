@@ -474,7 +474,8 @@ FragmentsEditor.STATE = {
 				editableValues: Config.object().value({}),
 				fragmentEntryId: Config.string().required(),
 				fragmentEntryLinkId: Config.string().required(),
-				name: Config.string().required()
+				name: Config.string().required(),
+				position: Config.number().required()
 			}
 		)
 	).value([]),
