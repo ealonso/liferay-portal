@@ -16,13 +16,13 @@ package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
-import com.liferay.fragment.util.FragmentEntryRenderUtil;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.portlet.ActionRequest;
@@ -32,41 +32,47 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pablo Molina
+ * @author Jürgen Kappler
  */
 @Component(
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES,
-		"mvc.command.name=/layout/render_fragment_entry"
+		"mvc.command.name=/layout/swap_fragment_entry_links"
 	},
 	service = MVCActionCommand.class
 )
-public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
+public class SwapFragmentEntryLinksMVCActionCommand
+	extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long fragmentEntryLinkId = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId");
+		long fragmentEntryLinkId1 = ParamUtil.getLong(
+			actionRequest, "fragmentEntryLinkId1");
 
-		FragmentEntryLink fragmentEntryLink =
+		long fragmentEntryLinkId2 = ParamUtil.getLong(
+			actionRequest, "fragmentEntryLinkId2");
+
+		FragmentEntryLink fragmentEntryLink1 =
 			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
-				fragmentEntryLinkId);
+				fragmentEntryLinkId1);
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		FragmentEntryLink fragmentEntryLink2 =
+			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
+				fragmentEntryLinkId2);
 
-		if (fragmentEntryLink != null) {
-			jsonObject.put(
-				"content",
-				FragmentEntryRenderUtil.renderFragmentEntryLink(
-					fragmentEntryLink));
+		if ((fragmentEntryLink1 != null) && (fragmentEntryLink2 != null)) {
+			_fragmentEntryLinkLocalService.swapFragmentEntryLinksPositions(
+				fragmentEntryLink1, fragmentEntryLink2);
 		}
 
+		hideDefaultSuccessMessage(actionRequest);
+
 		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, jsonObject);
+			actionRequest, actionResponse, JSONFactoryUtil.createJSONObject());
 	}
 
 	@Reference

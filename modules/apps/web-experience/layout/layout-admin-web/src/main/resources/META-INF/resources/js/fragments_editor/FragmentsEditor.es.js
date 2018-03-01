@@ -1,13 +1,11 @@
 import 'frontend-taglib/contextual_sidebar/ContextualSidebar.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import debounce from 'metal-debounce';
 import {Config} from 'metal-state';
-import {getUid} from 'metal';
 
-import './FragmentEntryLink.es';
 import './sidebar/SidebarAddedFragment.es';
 import './sidebar/SidebarFragmentCollection.es';
+import FragmentEntryLink from './FragmentEntryLink.es';
 import templates from './FragmentsEditor.soy';
 
 /**
@@ -18,20 +16,39 @@ import templates from './FragmentsEditor.soy';
 class FragmentsEditor extends Component {
 
 	/**
-	 * @inheritDoc
+	 * Sends message to delete a single fragment entry link to the server and,
+	 * if success, sets the _dirty property to false.
+	 * @private
 	 * @review
 	 */
 
-	created() {
-		this._updatePageTemplate = this._updatePageTemplate.bind(this);
-		this._updatePageTemplate = debounce(this._updatePageTemplate, 300);
+	_deleteFragmentEntryLink(fragmentEntryLinkId) {
+		if (!this._dirty) {
+			this._dirty = true;
 
-		this._dirty = true;
-		this._fetchFragmentsContent().then(
-			() => {
-				this._dirty = false;
-			}
-		);
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLinkId
+			);
+
+			fetch(
+				this.deleteFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			)
+				.then(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
+
+						this._dirty = false;
+					}
+				);
+		}
 	}
 
 	/**
@@ -43,16 +60,11 @@ class FragmentsEditor extends Component {
 	 * @review
 	 */
 
-	_fetchFragmentContent(fragmentEntryId, fragmentEntryLinkId) {
+	_fetchFragmentContent(fragmentEntryLinkId) {
 		const formData = new FormData();
 
 		formData.append(
-			`${this.portletNamespace}fragmentEntryId`,
-			fragmentEntryId
-		);
-
-		formData.append(
-			`${this.portletNamespace}position`,
+			`${this.portletNamespace}fragmentEntryLinkId`,
 			fragmentEntryLinkId
 		);
 
@@ -69,44 +81,21 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
-	 * Fetchs all missing fragments contents.
-	 * It returns a promise that is resolved when every fragment
-	 * has been fetched.
-	 * @return {Promise<>}
-	 * @review
+	 * Gets a new FragmentEntryLink position.
+	 * @returns {number}
 	 * @private
+	 * @review
 	 */
 
-	_fetchFragmentsContent() {
-		return Promise.all(
-			this.fragmentEntryLinks
-				.filter(
-					fragmentEntryLink =>
-						fragmentEntryLink.fragmentEntryId &&
-						fragmentEntryLink.fragmentEntryLinkId &&
-						!fragmentEntryLink.content
-				)
-				.map(
-					fragmentEntryLink => {
-						return this._fetchFragmentContent(
-							fragmentEntryLink.fragmentEntryId,
-							fragmentEntryLink.fragmentEntryLinkId
-						).then(
-							content => {
-								const index = this.fragmentEntryLinks.findIndex(
-									_fragmentEntryLink =>
-										_fragmentEntryLink.fragmentEntryLinkId ===
-										fragmentEntryLink.fragmentEntryLinkId
-								);
-
-								if (index !== -1) {
-									this.fragmentEntryLinks[index].content = content;
-								}
-							}
-						);
-					}
-				)
+	_getNewFragmentEntryLinkPosition() {
+		const position = Math.max(
+			0,
+			...this.fragmentEntryLinks.map(
+				fragmentEntryLink => fragmentEntryLink.position
+			)
 		);
+
+		return position + 1;
 	}
 
 	/**
@@ -131,7 +120,7 @@ class FragmentsEditor extends Component {
 			fragmentEntryLink.editableValues[data.editableId] = data.value;
 		}
 
-		this._updatePageTemplate();
+		this._updateFragmentEntryLink(fragmentEntryLink);
 	}
 
 	/**
@@ -143,19 +132,122 @@ class FragmentsEditor extends Component {
 	 */
 
 	_handleFragmentCollectionEntryClick(event) {
-		this.fragmentEntryLinks = [
-			...this.fragmentEntryLinks,
-			{
-				config: {},
-				content: '',
-				editableValues: {},
-				fragmentEntryId: event.fragmentEntryId,
-				fragmentEntryLinkId: getUid().toString(),
-				name: event.fragmentName
-			}
-		];
+		if (!this._dirty) {
+			this._dirty = true;
 
-		this._updatePageTemplate();
+			const formData = new FormData();
+			const position = this._getNewFragmentEntryLinkPosition();
+
+			formData.append(
+				`${this.portletNamespace}classNameId`,
+				this.classNameId
+			);
+
+			formData.append(
+				`${this.portletNamespace}classPK`,
+				this.classPK
+			);
+
+			formData.append(
+				`${this.portletNamespace}fragmentId`,
+				event.fragmentEntryId
+			);
+
+			formData.append(
+				`${this.portletNamespace}position`,
+				position
+			);
+
+			fetch(
+				this.addFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			)
+				.then(
+					response => {
+						return response.json();
+					}
+				)
+				.then(
+					response => {
+						if (!response.fragmentEntryLinkId) {
+							throw new Error();
+						}
+
+						this.fragmentEntryLinks = [
+							...this.fragmentEntryLinks,
+							{
+								config: {},
+								content: '',
+								editableValues: {},
+								fragmentEntryId: event.fragmentEntryId,
+								fragmentEntryLinkId: response.fragmentEntryLinkId,
+								name: event.fragmentName,
+								position
+							}
+						];
+
+						return this._fetchFragmentContent(
+							response.fragmentEntryLinkId
+						)
+							.then(
+								content => {
+									const index = this.fragmentEntryLinks.findIndex(
+										_fragmentEntryLink => {
+											return _fragmentEntryLink.fragmentEntryLinkId === response.fragmentEntryLinkId;
+										}
+									);
+
+									if (index !== -1) {
+										this.fragmentEntryLinks[index].content = content;
+									}
+								}
+							);
+					}
+				)
+				.finally(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
+
+						this._dirty = false;
+					}
+				);
+		}
+	}
+
+	/**
+	 * Moves a fragment one position onto the specified direction.
+	 * @param {!{
+	 *   direction: !string,
+	 *   fragmentEntryLinkId: !string
+	 * }} data
+	 * @private
+	 * @review
+	 */
+
+	_handleFragmentMove(data) {
+		const direction = data.direction;
+		const index = this.fragmentEntryLinks.findIndex(
+			fragmentEntryLink =>
+				fragmentEntryLink.fragmentEntryLinkId ===
+				data.fragmentEntryLinkId
+		);
+
+		if (
+			direction === FragmentEntryLink.MOVE_DIRECTIONS.down &&
+			index < this.fragmentEntryLinks.length - 1
+		) {
+			this._swapFragmentEntryLinks(index, index + 1);
+		}
+		else if (
+			direction === FragmentEntryLink.MOVE_DIRECTIONS.up &&
+			index > 0
+		) {
+			this._swapFragmentEntryLinks(index, index - 1);
+		}
 	}
 
 	/**
@@ -168,7 +260,7 @@ class FragmentsEditor extends Component {
 	 * @review
 	 */
 
-	_handleFragmentRemoveButtonClick(data) {
+	_handleFragmentRemove(data) {
 		const index = this.fragmentEntryLinks.findIndex(
 			fragmentEntryLink =>
 				fragmentEntryLink.fragmentEntryLinkId ===
@@ -181,7 +273,7 @@ class FragmentsEditor extends Component {
 				...this.fragmentEntryLinks.slice(index + 1)
 			];
 
-			this._updatePageTemplate();
+			this._deleteFragmentEntryLink(data.fragmentEntryLinkId);
 		}
 	}
 
@@ -217,71 +309,90 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
-	 * Sends all the accumulated changes to the server and, if
+	 * Swap the positions of two fragmentEntryLinks
+	 * @param {number} positionA
+	 * @param {number} positionB
+	 * @private
+	 */
+
+	_swapFragmentEntryLinks(positionA, positionB) {
+		if (!this._dirty) {
+			this._dirty = true;
+
+			const fragmentEntryLinks = [].concat(this.fragmentEntryLinks);
+			const temporaryFragmentEntryLink = fragmentEntryLinks[positionA];
+
+			fragmentEntryLinks[positionA] = fragmentEntryLinks[positionB];
+			fragmentEntryLinks[positionB] = temporaryFragmentEntryLink;
+
+			this.fragmentEntryLinks = fragmentEntryLinks;
+
+			const formData = new FormData();
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId1`,
+				this.fragmentEntryLinks[positionA].fragmentEntryLinkId
+			);
+
+			formData.append(
+				`${this.portletNamespace}fragmentEntryLinkId2`,
+				this.fragmentEntryLinks[positionB].fragmentEntryLinkId
+			);
+
+			fetch(
+				this.swapFragmentEntryLinksURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			)
+				.then(
+					() => {
+						this._dirty = false;
+					}
+				);
+		}
+	}
+
+	/**
+	 * Sends the change of a single fragment entry link to the server and, if
 	 * success, sets the _dirty property to false.
 	 * @private
 	 * @review
 	 */
 
-	_updatePageTemplate() {
+	_updateFragmentEntryLink(fragmentEntryLink) {
 		if (!this._dirty) {
 			this._dirty = true;
 
 			const formData = new FormData();
 
 			formData.append(
-				`${this.portletNamespace}classNameId`,
-				this.classNameId
-			);
-
-			formData.append(`${this.portletNamespace}classPK`, this.classPK);
-
-			const editableValues = {};
-
-			this.fragmentEntryLinks.forEach(
-				(fragmentEntryLink, index) => {
-					Object.keys(fragmentEntryLink.editableValues).forEach(
-						editableId => {
-							editableValues[index] = editableValues[index] || {};
-
-							editableValues[index][editableId] = fragmentEntryLink.editableValues[editableId];
-						}
-					);
-				}
+				`${this.portletNamespace}fragmentEntryLinkId`,
+				fragmentEntryLink.fragmentEntryLinkId
 			);
 
 			formData.append(
 				`${this.portletNamespace}editableValues`,
-				JSON.stringify(editableValues)
-			);
-
-			this.fragmentEntryLinks.forEach(
-				fragment => {
-					formData.append(
-						`${this.portletNamespace}fragmentIds`,
-						fragment.fragmentEntryId
-					);
-				}
+				JSON.stringify(fragmentEntryLink.editableValues)
 			);
 
 			fetch(
-				this.updateURL,
+				this.editFragmentEntryLinkURL,
 				{
 					body: formData,
 					credentials: 'include',
 					method: 'POST'
 				}
-			).then(
-				() => {
-					this._lastSaveDate = new Date().toLocaleTimeString();
+			)
+				.then(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
 
-					this._fetchFragmentsContent().then(
-						() => {
-							this._dirty = false;
-						}
-					);
-				}
-			);
+						this._dirty = false;
+					}
+				);
 		}
 	}
 }
@@ -315,6 +426,17 @@ const SIDEBAR_TABS = [
 FragmentsEditor.STATE = {
 
 	/**
+	 * URL for associating fragment entries to the underlying model.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	addFragmentEntryLinkURL: Config.string().required(),
+
+	/**
 	 * Class name id used for storing changes.
 	 * @default undefined
 	 * @instance
@@ -335,6 +457,28 @@ FragmentsEditor.STATE = {
 	 */
 
 	classPK: Config.string().required(),
+
+	/**
+	 * URL for removing fragment entries of the underlying model.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	deleteFragmentEntryLinkURL: Config.string().required(),
+
+	/**
+	 * URL for updating a distinct fragment entries of the editor.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	editFragmentEntryLinkURL: Config.string().required(),
 
 	/**
 	 * Available entries that can be used, organized by collections.
@@ -387,11 +531,12 @@ FragmentsEditor.STATE = {
 		Config.shapeOf(
 			{
 				config: Config.object().value({}),
-				content: Config.string().value(''),
+				content: Config.any().value(''),
 				editableValues: Config.object().value({}),
 				fragmentEntryId: Config.string().required(),
 				fragmentEntryLinkId: Config.string().required(),
-				name: Config.string().required()
+				name: Config.string().required(),
+				position: Config.number().required()
 			}
 		)
 	).value([]),
@@ -419,6 +564,17 @@ FragmentsEditor.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * URL for swapping to fragmentEntryLinks.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	swapFragmentEntryLinksURL: Config.string().required(),
+
+	/**
 	 * Path of the available icons.
 	 * @default undefined
 	 * @instance
@@ -428,17 +584,6 @@ FragmentsEditor.STATE = {
 	 */
 
 	spritemap: Config.string().required(),
-
-	/**
-	 * URL for updating accumulated changes.
-	 * @default undefined
-	 * @instance
-	 * @memberOf FragmentsEditor
-	 * @review
-	 * @type {!string}
-	 */
-
-	updateURL: Config.string().required(),
 
 	/**
 	 * Allow opening/closing contextual sidebar
