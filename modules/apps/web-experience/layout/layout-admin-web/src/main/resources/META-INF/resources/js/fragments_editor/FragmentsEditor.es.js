@@ -1,13 +1,11 @@
 import 'frontend-taglib/contextual_sidebar/ContextualSidebar.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import debounce from 'metal-debounce';
 import {Config} from 'metal-state';
-import {getUid} from 'metal';
 
 import './sidebar/SidebarAddedFragment.es';
 import './sidebar/SidebarFragmentCollection.es';
-import FragmentEntryLink from "./FragmentEntryLink.es";
+import FragmentEntryLink from './FragmentEntryLink.es';
 import templates from './FragmentsEditor.soy';
 
 /**
@@ -35,15 +33,21 @@ class FragmentsEditor extends Component {
 				fragmentEntryLinkId
 			);
 
-			fetch(this.deleteFragmentEntryLinkURL, {
-				body: formData,
-				credentials: 'include',
-				method: 'POST',
-			}).then(() => {
-				this._lastSaveDate = new Date().toLocaleTimeString();
+			fetch(
+				this.deleteFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			)
+				.then(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
 
-				this._dirty = false;
-			});
+						this._dirty = false;
+					}
+				);
 		}
 	}
 
@@ -159,58 +163,58 @@ class FragmentsEditor extends Component {
 				{
 					body: formData,
 					credentials: 'include',
-					method: 'POST',
+					method: 'POST'
 				}
 			)
-			.then(
-				response => {
-					return response.json();
-				}
-			)
-			.then(
-				response => {
-					if (!response.fragmentEntryLinkId) {
-						throw new Error();
+				.then(
+					response => {
+						return response.json();
 					}
-
-					this.fragmentEntryLinks = [
-						...this.fragmentEntryLinks,
-						{
-							config: {},
-							content: '',
-							editableValues: {},
-							fragmentEntryId: event.fragmentEntryId,
-							fragmentEntryLinkId: response.fragmentEntryLinkId,
-							name: event.fragmentName,
-							position
+				)
+				.then(
+					response => {
+						if (!response.fragmentEntryLinkId) {
+							throw new Error();
 						}
-					];
 
-					return this._fetchFragmentContent(
-						response.fragmentEntryLinkId
-					)
-					.then(
-						content => {
-							const index = this.fragmentEntryLinks.findIndex(
-								_fragmentEntryLink => {
-									return _fragmentEntryLink.fragmentEntryLinkId === response.fragmentEntryLinkId;
+						this.fragmentEntryLinks = [
+							...this.fragmentEntryLinks,
+							{
+								config: {},
+								content: '',
+								editableValues: {},
+								fragmentEntryId: event.fragmentEntryId,
+								fragmentEntryLinkId: response.fragmentEntryLinkId,
+								name: event.fragmentName,
+								position
+							}
+						];
+
+						return this._fetchFragmentContent(
+							response.fragmentEntryLinkId
+						)
+							.then(
+								content => {
+									const index = this.fragmentEntryLinks.findIndex(
+										_fragmentEntryLink => {
+											return _fragmentEntryLink.fragmentEntryLinkId === response.fragmentEntryLinkId;
+										}
+									);
+
+									if (index !== -1) {
+										this.fragmentEntryLinks[index].content = content;
+									}
 								}
 							);
+					}
+				)
+				.finally(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
 
-							if (index !== -1) {
-								this.fragmentEntryLinks[index].content = content;
-							}
-						}
-					)
-				}
-			)
-			.finally(
-				() => {
-					this._lastSaveDate = new Date().toLocaleTimeString();
-
-					this._dirty = false;
-				}
-			);
+						this._dirty = false;
+					}
+				);
 		}
 	}
 
@@ -237,7 +241,8 @@ class FragmentsEditor extends Component {
 			index < this.fragmentEntryLinks.length - 1
 		) {
 			this._swapFragmentEntryLinks(index, index + 1);
-		} else if (
+		}
+		else if (
 			direction === FragmentEntryLink.MOVE_DIRECTIONS.up &&
 			index > 0
 		) {
@@ -373,15 +378,21 @@ class FragmentsEditor extends Component {
 				JSON.stringify(fragmentEntryLink.editableValues)
 			);
 
-			fetch(this.editFragmentEntryLinkURL, {
-				body: formData,
-				credentials: 'include',
-				method: 'POST',
-			}).then(() => {
-				this._lastSaveDate = new Date().toLocaleTimeString();
+			fetch(
+				this.editFragmentEntryLinkURL,
+				{
+					body: formData,
+					credentials: 'include',
+					method: 'POST'
+				}
+			)
+				.then(
+					() => {
+						this._lastSaveDate = new Date().toLocaleTimeString();
 
-				this._dirty = false;
-			});
+						this._dirty = false;
+					}
+				);
 		}
 	}
 }

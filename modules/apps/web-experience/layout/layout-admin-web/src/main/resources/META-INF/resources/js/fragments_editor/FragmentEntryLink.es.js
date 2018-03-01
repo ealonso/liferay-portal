@@ -281,6 +281,7 @@ class FragmentEntryLink extends Component {
  * @static
  * @type {!object}
  */
+
 FragmentEntryLink.MOVE_DIRECTIONS = {
 	down: 'down',
 	up: 'up'
