@@ -89,28 +89,16 @@ class FragmentEntryLink extends Component {
 	}
 
 	/**
-	 * Emits a moveDown event with the fragmentEntryLinkId.
+	 * Emits a move event with the fragmentEntryLinkId and the direction.
+	 * @param {string} direction
 	 * @private
 	 */
 
-	_emitMoveDownEvent() {
+	_emitMoveEvent(direction) {
 		this.emit(
-			'moveDown',
+			'move',
 			{
-				fragmentEntryLinkId: this.fragmentEntryLinkId
-			}
-		);
-	}
-
-	/**
-	 * Emits a moveDown event with the fragmentEntryLinkId.
-	 * @private
-	 */
-
-	_emitMoveUpEvent() {
-		this.emit(
-			'moveUp',
-			{
+				direction,
 				fragmentEntryLinkId: this.fragmentEntryLinkId
 			}
 		);
@@ -236,10 +224,10 @@ class FragmentEntryLink extends Component {
 		if (document.activeElement === this.refs.fragmentWrapper) {
 			switch (event.which) {
 			case ARROW_DOWN_KEYCODE:
-				this._emitMoveDownEvent();
+				this._emitMoveEvent(FragmentEntryLink.MOVE_DIRECTIONS.down);
 				break;
 			case ARROW_UP_KEYCODE:
-				this._emitMoveUpEvent();
+				this._emitMoveEvent(FragmentEntryLink.MOVE_DIRECTIONS.up);
 				break;
 			}
 		}
@@ -254,7 +242,7 @@ class FragmentEntryLink extends Component {
 	 */
 
 	_handleFragmentMoveDownButtonClick() {
-		this._emitMoveDownEvent();
+		this._emitMoveEvent(FragmentEntryLink.MOVE_DIRECTIONS.down);
 	}
 
 	/**
@@ -266,7 +254,7 @@ class FragmentEntryLink extends Component {
 	 */
 
 	_handleFragmentMoveUpButtonClick() {
-		this._emitMoveUpEvent();
+		this._emitMoveEvent(FragmentEntryLink.MOVE_DIRECTIONS.up);
 	}
 
 	/**
@@ -285,6 +273,17 @@ class FragmentEntryLink extends Component {
 		);
 	}
 }
+
+/**
+ * Directions where a fragment can be moved to
+ * @review
+ * @static
+ * @type {!object}
+ */
+FragmentEntryLink.MOVE_DIRECTIONS = {
+	down: 'down',
+	up: 'up'
+};
 
 /**
  * State definition.
