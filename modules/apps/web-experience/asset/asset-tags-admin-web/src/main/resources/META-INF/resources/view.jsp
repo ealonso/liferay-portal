@@ -23,18 +23,19 @@
 <portlet:renderURL var="editTagURL">
 	<portlet:param name="mvcPath" value="/edit_tag.jsp" />
 </portlet:renderURL>
-	
+
 <clay:navigation-bar
 	inverted="<%= true %>"
 	items="<%= assetTagsDisplayContext.getNavigationItems() %>"
 />
 
 <%
-JSPDropdownItemList orderByDropdownItemList =	new JSPDropdownItemList(pageContext) {
+JSPDropdownItemList orderByDropdownItemList = new JSPDropdownItemList(pageContext) {
 	{
 		add(
 			dropdownItem -> {
 				PortletURL nameURL = renderResponse.createRenderURL();
+
 				nameURL.setParameter("keywords", assetTagsDisplayContext.getKeywords());
 				nameURL.setParameter("orderByType", assetTagsDisplayContext.getOrderByType());
 				nameURL.setParameter("orderByCol", "name");
@@ -47,6 +48,7 @@ JSPDropdownItemList orderByDropdownItemList =	new JSPDropdownItemList(pageContex
 		add(
 			dropdownItem -> {
 				PortletURL usagesURL = renderResponse.createRenderURL();
+
 				usagesURL.setParameter("keywords", assetTagsDisplayContext.getKeywords());
 				usagesURL.setParameter("orderByType", assetTagsDisplayContext.getOrderByType());
 				usagesURL.setParameter("orderByCol", "usages");
