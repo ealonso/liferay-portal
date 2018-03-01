@@ -3,6 +3,17 @@ import {addClasses, dom, hasClass, removeClasses} from 'metal-dom';
 import {Drag, DragDrop} from 'metal-drag-drop';
 import position from 'metal-position';
 
+const KEYS = {
+	ARROW_DOWN: 40,
+	ARROW_LEFT: 37,
+	ARROW_RIGHT: 39,
+	ARROW_UP: 38,
+	ENTER: 13,
+	HOME: 36,
+	SELECT: 41,
+	SPACEBAR: 32
+};
+
 /**
  *	Site navigation menu editor component.
  */
@@ -193,7 +204,7 @@ class SiteNavigationMenuEditor extends State {
 	_handleItemKeypUp(event) {
 		const menuItem = event.delegateTarget.querySelector('.site-navigation-menu-item');
 
-		if (event.which === 13 || event.which === 32) {
+		if (event.which === KEYS.ENTER || event.which === KEYS.SPACEBAR) {
 			menuItem.click();
 		}
 
@@ -219,7 +230,7 @@ class SiteNavigationMenuEditor extends State {
 		let newIndex = -1;
 		let parentItems = [];
 
-		if (event.which === 37) {
+		if (event.which === KEYS.ARROW_LEFT) {
 			if (menuItem.dataset.parentSiteNavigationMenuItemId > 0) {
 				parentItem.parentNode.parentNode.insertBefore(
 					menuItem.parentNode, parentItem.parentNode.nextSibling);
@@ -244,7 +255,7 @@ class SiteNavigationMenuEditor extends State {
 				menuItem.dataset.order = parentItems.indexOf(menuItem);
 			}
 		}
-		else if (event.which === 38) {
+		else if (event.which === KEYS.ARROW_UP) {
 			newIndex = menuItems.indexOf(menuItem) - 1;
 
 			if (newIndex < 0) {
@@ -256,7 +267,7 @@ class SiteNavigationMenuEditor extends State {
 
 			menuItem.dataset.order = newIndex;
 		}
-		else if (event.which === 39) {
+		else if (event.which === KEYS.ARROW_RIGHT) {
 			newIndex = menuItems.indexOf(menuItem) - 1;
 
 			if (newIndex < 0) {
@@ -282,7 +293,7 @@ class SiteNavigationMenuEditor extends State {
 
 			menuItem.dataset.order = parentItems.indexOf(menuItem);
 		}
-		else if (event.which === 40) {
+		else if (event.which === KEYS.ARROW_DOWN) {
 			newIndex = menuItems.indexOf(menuItem) + 1;
 
 			if (newIndex < menuItems.length - 1) {
@@ -297,7 +308,7 @@ class SiteNavigationMenuEditor extends State {
 			menuItem.dataset.order = newIndex;
 		}
 
-		if ((event.which > 36) && (event.which < 41)) {
+		if ((event.which > KEYS.HOME) && (event.which < KEYS.SELECT)) {
 			this._updateParentAndOrder(
 				{
 					dragOrder: menuItem.dataset.order,
