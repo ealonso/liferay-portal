@@ -14,8 +14,7 @@
 
 package com.liferay.asset.publisher.web.upgrade.v1_1_1;
 
-import javax.portlet.PortletPreferences;
-
+import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.upgrade.BaseUpgradePortletPreferences;
@@ -24,7 +23,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReader;
-import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
+
+import javax.portlet.PortletPreferences;
 
 /**
  * @author Cristina Rodriguez
@@ -80,6 +80,7 @@ public class UpgradePortletPreferences extends BaseUpgradePortletPreferences {
 			}
 
 			String assetEntryType = assetEntryTypeElement.getText();
+
 			String newAssetEntryType = assetEntryType;
 
 			for (String[] classNames : _CLASS_NAMES) {
@@ -139,4 +140,5 @@ public class UpgradePortletPreferences extends BaseUpgradePortletPreferences {
 	};
 
 	private final SAXReader _saxReader;
+
 }
