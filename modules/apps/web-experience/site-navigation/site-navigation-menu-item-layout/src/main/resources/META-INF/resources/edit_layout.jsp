@@ -24,17 +24,31 @@ String title = GetterUtil.getString(request.getAttribute(WebKeys.TITLE));
 
 <aui:input label="title" name="TypeSettingsProperties--title--" type="text" value="<%= title %>" />
 
-<aui:input id="groupId" name="TypeSettingsProperties--groupId--" type="hidden" value="<%= (selLayout != null) ? selLayout.getGroupId() : StringPool.BLANK %>">
-	<aui:validator name="required" />
-</aui:input>
+<%
+if (selLayout != null) {
+%>
 
-<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden" value="<%= (selLayout != null) ? selLayout.getUuid() : StringPool.BLANK %>">
-	<aui:validator name="required" />
-</aui:input>
+	<aui:input id="groupId" name="TypeSettingsProperties--groupId--" type="hidden" value="<%= selLayout.getGroupId() %>">
+	</aui:input>
 
-<aui:input id="privateLayout" name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= (selLayout != null) ? selLayout.isPrivateLayout() : StringPool.BLANK %>">
-	<aui:validator name="required" />
-</aui:input>
+	<aui:input id="layoutUuid" name="TypeSettingsProperties--layoutUuid--" type="hidden" value="<%= selLayout.getUuid() %>">
+	</aui:input>
+
+	<aui:input id="privateLayout" name="TypeSettingsProperties--privateLayout--" type="hidden" value="<%= selLayout.isPrivateLayout() %>">
+	</aui:input>
+
+<%
+}
+else {
+%>
+
+	<aui:input id="groupId" name="TypeSettingsProperties--groupId--" type="hidden" value="<%= StringPool.BLANK %>">
+		<aui:validator name="required" />
+	</aui:input>
+
+<%
+}
+%>
 
 <p class="text-default">
 	<span id="<portlet:namespace />layoutItemRemove" role="button">
