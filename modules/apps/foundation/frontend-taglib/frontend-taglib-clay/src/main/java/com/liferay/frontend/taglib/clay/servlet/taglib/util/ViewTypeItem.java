@@ -17,56 +17,16 @@ package com.liferay.frontend.taglib.clay.servlet.taglib.util;
 /**
  * @author Carlos Lancha
  */
-public class DropdownItem extends NavigationItem {
-
-	public DropdownItem() {
-		this("item");
-	}
-
-	public DropdownItem(String type) {
-		_type = type;
-	}
+public class ViewTypeItem extends NavigationItem {
 
 	public String getIcon() {
 		return _icon;
-	}
-
-	public String getId() {
-		return _id;
-	}
-
-	public String getType() {
-		return _type;
-	}
-
-	public boolean isQuickAction() {
-		return _quickAction;
-	}
-
-	public boolean isSeparator() {
-		return _separator;
 	}
 
 	public void setIcon(String icon) {
 		_icon = icon;
 	}
 
-	public void setId(String id) {
-		_id = id;
-	}
-
-	public void setQuickAction(boolean quickAction) {
-		_quickAction = quickAction;
-	}
-
-	public void setSeparator(boolean separator) {
-		_separator = separator;
-	}
-
 	private String _icon;
-	private String _id;
-	private boolean _quickAction;
-	private boolean _separator;
-	private String _type;
 
 }
