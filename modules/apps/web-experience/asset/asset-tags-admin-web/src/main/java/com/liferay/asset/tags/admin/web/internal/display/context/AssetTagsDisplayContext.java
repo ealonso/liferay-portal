@@ -21,6 +21,7 @@ import com.liferay.asset.kernel.service.AssetTagServiceUtil;
 import com.liferay.asset.tags.constants.AssetTagsAdminPortletKeys;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPDropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPViewTypeItemList;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.ManagementToolbar;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -60,7 +61,7 @@ import javax.servlet.jsp.PageContext;
 /**
  * @author Juergen Kappler
  */
-public class AssetTagsDisplayContext {
+public class AssetTagsDisplayContext implements ManagementToolbar {
 
 	public AssetTagsDisplayContext(
 		RenderRequest renderRequest, RenderResponse renderResponse,
