@@ -1,5 +1,5 @@
 import State, {Config} from 'metal-state';
-import {addClasses, closest, dom, hasClass, match, next, removeClasses} from 'metal-dom';
+import {addClasses, closest, dom, match, next, removeClasses} from 'metal-dom';
 import {Drag, DragDrop} from 'metal-drag-drop';
 import position from 'metal-position';
 
@@ -51,7 +51,7 @@ class SiteNavigationMenuEditor extends State {
 		dom.on(
 			`${this.menuContainerSelector} ${this.menuItemContainerSelector}`,
 			'keyup',
-			this._handleItemKeypUp.bind(this)
+			this._handleItemKeyUp.bind(this)
 		);
 	}
 
@@ -243,7 +243,7 @@ class SiteNavigationMenuEditor extends State {
 	 * @private
 	 */
 
-	_handleItemKeypUp(event) {
+	_handleItemKeyUp(event) {
 		const container = document.querySelector(this.menuContainerSelector);
 		const menuItem = event.delegateTarget.querySelector(this.menuItemSelector);
 		const menuItemContainer = this._getMenuItemContainer(menuItem);
@@ -261,12 +261,7 @@ class SiteNavigationMenuEditor extends State {
 		if (event.which === KEYS.ENTER || event.which === KEYS.SPACEBAR) {
 			menuItem.click();
 		}
-
-		if (!hasClass(menuItem, 'selected')) {
-			return;
-		}
-
-		if (
+		else if (
 			(event.which === KEYS.ARROW_LEFT) &&
 			(parentItemId > 0)
 		) {
@@ -374,9 +369,10 @@ class SiteNavigationMenuEditor extends State {
 					siteNavigationMenuItemId: menuItem.dataset.siteNavigationMenuItemId
 				}
 			);
-		}
 
-		menuItemContainer.focus();
+			menuItem.click();
+			menuItemContainer.focus();
+		}
 	}
 
 	/**
