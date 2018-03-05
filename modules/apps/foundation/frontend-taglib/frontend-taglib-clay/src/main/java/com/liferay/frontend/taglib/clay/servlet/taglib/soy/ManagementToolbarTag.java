@@ -18,6 +18,10 @@ import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
+
+import java.util.Map;
 
 /**
  * @author Carlos Lancha
@@ -26,6 +30,35 @@ public class ManagementToolbarTag extends BaseClayTag {
 
 	public ManagementToolbarTag() {
 		super("management-toolbar", "ClayManagementToolbar", true);
+	}
+
+	@Override
+	public int doStartTag() {
+		Map<String, Object> context = getContext();
+
+		Boolean hideFiltersDoneButton = (Boolean)context.get(
+			"hideFiltersDoneButton");
+
+		if (hideFiltersDoneButton == null) {
+			setHideFiltersDoneButton(true);
+		}
+
+		String searchInputName = (String)context.get("searchInputName");
+		String searchValue = (String)context.get("searchValue");
+
+		if (Validator.isNull(searchValue) &&
+			Validator.isNotNull(searchInputName)) {
+
+			setSearchValue(ParamUtil.getString(request, searchInputName));
+		}
+
+		Boolean selectable = (Boolean)context.get("selectable");
+
+		if (selectable == null) {
+			setSelectable(true);
+		}
+
+		return super.doStartTag();
 	}
 
 	@Override
@@ -76,6 +109,10 @@ public class ManagementToolbarTag extends BaseClayTag {
 		putValue("searchInputName", searchInputName);
 	}
 
+	public void setSearchValue(String searchValue) {
+		putValue("searchValue", searchValue);
+	}
+
 	public void setSelectable(Boolean selectable) {
 		putValue("selectable", selectable);
 	}
@@ -103,5 +140,13 @@ public class ManagementToolbarTag extends BaseClayTag {
 	public void setViewTypes(Object viewTypes) {
 		putValue("viewTypes", viewTypes);
 	}
+
+	@Override
+	protected String[] getNamespacedParams() {
+		return _NAMESPACED_PARAMS;
+	}
+
+	private static final String[] _NAMESPACED_PARAMS =
+		{"searchContainerId", "searchFormName", "searchInputName"};
 
 }
