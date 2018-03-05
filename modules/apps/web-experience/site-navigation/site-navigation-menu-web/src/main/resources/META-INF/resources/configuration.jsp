@@ -42,31 +42,50 @@ if (siteNavigationMenu != null) {
 				<aui:col width="<%= 50 %>">
 					<aui:fieldset-group markupView="lexicon">
 						<aui:fieldset cssClass="p-3" label="navigation-menu">
-							<aui:input id="siteNavigationMenuId" name="preferences--siteNavigationMenuId--" type="hidden" value="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>" />
-
-							<div class="card card-horizontal taglib-horizontal-card">
-								<div class="card-row card-row-padded ">
-									<div class="card-col-field">
-										<div class="sticker sticker-secondary sticker-static">
-											<aui:icon image="blogs" markupView="lexicon" />
-										</div>
-									</div>
-
-									<div class="card-col-content card-col-gutters">
-										<span class="lfr-card-title-text truncate-text" id="<portlet:namespace />siteNavigationMenuName">
-											<%= siteNavigationMenuName %>
-										</span>
-									</div>
-								</div>
-							</div>
 
 							<%
 							int siteNavitaionMenuCount = SiteNavigationMenuLocalServiceUtil.getSiteNavigationMenusCount(scopeGroupId);
 							%>
 
-							<c:if test="<%= siteNavitaionMenuCount > 0 %>">
-								<aui:button name="chooseSiteNavigationMenu" value="choose" />
-							</c:if>
+							<aui:input id="siteNavigationMenuType" name="preferences--navigationMenuType--" type="hidden" value="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() %>" />
+
+							<c:choose>
+								<c:when test="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1 %>">
+									<aui:input id="siteNavigationMenuId" name="preferences--siteNavigationMenuId--" type="hidden" value="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>" />
+
+									<div class="d-inline-flex">
+										<div class="card card-horizontal taglib-horizontal-card">
+											<div class="card-row card-row-padded ">
+												<div class="card-col-field">
+													<div class="sticker sticker-secondary sticker-static">
+														<aui:icon image="blogs" markupView="lexicon" />
+													</div>
+												</div>
+
+												<div class="card-col-content card-col-gutters">
+													<span class="lfr-card-title-text truncate-text" id="<portlet:namespace />siteNavigationMenuName">
+														<%= siteNavigationMenuName %>
+													</span>
+												</div>
+											</div>
+										</div>
+
+										<span class="mt-3" id="<portlet:namespace />removeSiteNavigationMenu" role="button">
+											<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
+										</span>
+									</div>
+
+									<c:if test="<%= siteNavitaionMenuCount > 0 %>">
+										<aui:button name="chooseSiteNavigationMenu" value="choose" />
+									</c:if>
+								</c:when>
+								<c:otherwise>
+									<clay:dropdown-menu
+										items="<%= siteNavigationMenuDisplayContext.getSelectNavigationMenuDropdownItems() %>"
+										label="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuTypeLabel() %>"
+									/>
+								</c:otherwise>
+							</c:choose>
 
 							<div class="display-template mt-4">
 								<liferay-ddm:template-selector
@@ -214,6 +233,7 @@ if (siteNavigationMenu != null) {
 		var selectRootMenuItemType = form.fm('rootMenuItemType');
 		var selectRootMenuItemId = form.fm('rootMenuItemId');
 		var selectSiteNavigationMenuId = form.fm('siteNavigationMenuId');
+		var selectSiteNavigationMenuType = form.fm('siteNavigationMenuType');
 
 		var data = {
 			displayStyle: selectDisplayStyle.val(),
@@ -226,11 +246,34 @@ if (siteNavigationMenu != null) {
 		data.rootMenuItemType = selectRootMenuItemType.val();
 		data.rootMenuItemId = selectRootMenuItemId.val();
 		data.siteNavigationMenuId = selectSiteNavigationMenuId.val();
+		data.siteNavigationMenuType = selectSiteNavigationMenuType.val();
 
 		data = Liferay.Util.ns('_<%= HtmlUtil.escapeJS(portletResource) %>_', data);
 
 		Liferay.Portlet.refresh(curPortletBoundaryId, data);
 	}
+
+	<portlet:namespace/>resetPreview();
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace/>switchNavigationType',
+		function(type) {
+			$('#<portlet:namespace />siteNavigationMenuType').val(type);
+
+			if (type === -1) {
+				<portlet:namespace />choooseSiteNavigationMenu();
+			}
+			else {
+				var uri = '<%= configurationRenderURL %>';
+
+				uri = Liferay.Util.addParams('<portlet:namespace />siteNavigationMenuType=' + type, uri);
+				uri = Liferay.Util.addParams('<portlet:namespace />siteNavigationMenuId=-1', uri);
+
+				location.href = uri;
+			}
+		}
+	);
 
 	var chooseRootMenuItem = $('#<portlet:namespace />chooseRootMenuItem');
 
@@ -271,9 +314,19 @@ if (siteNavigationMenu != null) {
 		}
 	);
 
-	$('#<portlet:namespace />chooseSiteNavigationMenu').on(
+	var removeSiteNavigationMenu = $('#<portlet:namespace />removeSiteNavigationMenu');
+
+	removeSiteNavigationMenu.on(
 		'click',
 		function(event) {
+			<portlet:namespace/>switchNavigationType(0);
+		}
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace/>choooseSiteNavigationMenu',
+		function() {
 			Liferay.Util.selectEntity(
 				{
 					dialog: {
@@ -288,18 +341,25 @@ if (siteNavigationMenu != null) {
 				},
 				function(selectedItem) {
 					if (selectedItem.id) {
-						$('#<portlet:namespace />siteNavigationMenuId').val(selectedItem.id);
+						var type = $('#<portlet:namespace />siteNavigationMenuType').val();
 
-						$('#<portlet:namespace />siteNavigationMenuName').text(selectedItem.name);
+						var uri = '<%= configurationRenderURL %>';
 
-						$('#<portlet:namespace />rootMenuItemId').val('0');
+						uri = Liferay.Util.addParams('<portlet:namespace />siteNavigationMenuId=' + selectedItem.id, uri);
+						uri = Liferay.Util.addParams('<portlet:namespace />siteNavigationMenuType=' + type, uri);
+						uri = Liferay.Util.addParams('<portlet:namespace />rootMenuItemId=0', uri);
 
-						$('#<portlet:namespace />rootMenuItemName').text(selectedItem.name);
-
-						<portlet:namespace/>resetPreview();
+						location.href = uri;
 					}
 				}
 			);
+		}
+	);
+
+	$('#<portlet:namespace />chooseSiteNavigationMenu').on(
+		'click',
+		function(event) {
+			<portlet:namespace/>choooseSiteNavigationMenu();
 		}
 	);
 
