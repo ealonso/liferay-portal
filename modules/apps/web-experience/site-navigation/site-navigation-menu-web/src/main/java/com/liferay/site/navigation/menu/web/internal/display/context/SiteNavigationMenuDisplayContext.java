@@ -14,17 +14,21 @@
 
 package com.liferay.site.navigation.menu.web.internal.display.context;
 
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.site.navigation.constants.SiteNavigationConstants;
 import com.liferay.site.navigation.item.selector.criterion.SiteNavigationMenuItemItemSelectorCriterion;
 import com.liferay.site.navigation.item.selector.criterion.SiteNavigationMenuItemSelectorCriterion;
 import com.liferay.site.navigation.menu.web.configuration.SiteNavigationMenuPortletInstanceConfiguration;
@@ -236,6 +240,105 @@ public class SiteNavigationMenuDisplayContext {
 		return _rootMenuItemType;
 	}
 
+	public DropdownItemList getSelectNavigationMenuDropdownItems() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		final DropdownItemList navigationTypeDropdownGroup =
+			new DropdownItemList() {
+
+				{
+					StringBundler primarySB = new StringBundler(5);
+
+					primarySB.append("javascript:");
+					primarySB.append(portletDisplay.getNamespace());
+					primarySB.append("switchNavigationType(");
+					primarySB.append(SiteNavigationConstants.TYPE_PRIMARY);
+					primarySB.append(");");
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(primarySB.toString());
+							dropdownItem.setLabel(
+								LanguageUtil.get(
+									_request, "primary-navigation"));
+						});
+
+					StringBundler secondarySB = new StringBundler(5);
+
+					secondarySB.append("javascript:");
+					secondarySB.append(portletDisplay.getNamespace());
+					secondarySB.append("switchNavigationType(");
+					secondarySB.append(SiteNavigationConstants.TYPE_SECONDARY);
+					secondarySB.append(");");
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(secondarySB.toString());
+							dropdownItem.setLabel(
+								LanguageUtil.get(
+									_request, "secondary-navigation"));
+						});
+
+					StringBundler socialSB = new StringBundler(5);
+
+					socialSB.append("javascript:");
+					socialSB.append(portletDisplay.getNamespace());
+					socialSB.append("switchNavigationType(");
+					socialSB.append(SiteNavigationConstants.TYPE_SOCIAL);
+					socialSB.append(");");
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(socialSB.toString());
+							dropdownItem.setLabel(
+								LanguageUtil.get(
+									_request, "social-navigation"));
+						});
+				}
+
+			};
+
+		final DropdownItemList chooseButtonDropdownGroup =
+			new DropdownItemList() {
+
+				{
+					StringBundler chooseSB = new StringBundler(3);
+
+					chooseSB.append("javascript:");
+					chooseSB.append(portletDisplay.getNamespace());
+					chooseSB.append("switchNavigationType(-1);");
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(chooseSB.toString());
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "choose"));
+						});
+				}
+
+			};
+
+		return new DropdownItemList() {
+			{
+				addGroup(
+					dropdownGroupItem -> {
+						dropdownGroupItem.setDropdownItems(
+							navigationTypeDropdownGroup);
+						dropdownGroupItem.setSeparator(true);
+					});
+
+				addGroup(
+					dropdownRadioGroupItem -> {
+						dropdownRadioGroupItem.setDropdownItems(
+							chooseButtonDropdownGroup);
+					});
+			}
+		};
+	}
+
 	public SiteNavigationMenu getSiteNavigationMenu() {
 		if (_siteNavigationMenu != null) {
 			return _siteNavigationMenu;
@@ -262,27 +365,32 @@ public class SiteNavigationMenuDisplayContext {
 			return _siteNavigationMenuId;
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		SiteNavigationMenu siteNavigationMenu = null;
+
+		if (getSiteNavigationMenuType() > 0) {
+			siteNavigationMenu =
+				SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+					themeDisplay.getScopeGroupId(),
+					getSiteNavigationMenuType());
+
+			if (siteNavigationMenu != null) {
+				_siteNavigationMenuId =
+					siteNavigationMenu.getSiteNavigationMenuId();
+
+				return _siteNavigationMenuId;
+			}
+			else {
+				return 0;
+			}
+		}
+
 		_siteNavigationMenuId = ParamUtil.getLong(
 			_request, "siteNavigationMenuId",
 			_siteNavigationMenuPortletInstanceConfiguration.
 				siteNavigationMenuId());
-
-		if (_siteNavigationMenuId > 0) {
-			return _siteNavigationMenuId;
-		}
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		SiteNavigationMenu siteNavigationMenu =
-			SiteNavigationMenuLocalServiceUtil.fetchPrimarySiteNavigationMenu(
-				themeDisplay.getScopeGroupId());
-
-		if (siteNavigationMenu == null) {
-			return 0;
-		}
-
-		_siteNavigationMenuId = siteNavigationMenu.getSiteNavigationMenuId();
 
 		return _siteNavigationMenuId;
 	}
@@ -312,6 +420,31 @@ public class SiteNavigationMenuDisplayContext {
 		return itemSelectorURL.toString();
 	}
 
+	public int getSiteNavigationMenuType() {
+		_navigationMenuType = ParamUtil.getInteger(
+			_request, "siteNavigationMenuType",
+			_siteNavigationMenuPortletInstanceConfiguration.
+				navigationMenuType());
+
+		return _navigationMenuType;
+	}
+
+	public String getSiteNavigationMenuTypeLabel() {
+		int type = getSiteNavigationMenuType();
+
+		if (type == SiteNavigationConstants.TYPE_PRIMARY) {
+			return LanguageUtil.get(_request, "primary-navigation");
+		}
+		else if (type == SiteNavigationConstants.TYPE_SECONDARY) {
+			return LanguageUtil.get(_request, "secondary-navigation");
+		}
+		else if (type == SiteNavigationConstants.TYPE_SOCIAL) {
+			return LanguageUtil.get(_request, "social-navigation");
+		}
+
+		return LanguageUtil.get(_request, "select");
+	}
+
 	public boolean isPreview() {
 		if (_preview != null) {
 			return _preview;
@@ -329,6 +462,7 @@ public class SiteNavigationMenuDisplayContext {
 	private String _displayStyle;
 	private long _displayStyleGroupId;
 	private String _expandedLevels;
+	private int _navigationMenuType = -1;
 	private Boolean _preview;
 	private final HttpServletRequest _request;
 	private String _rootMenuItemId;
