@@ -78,8 +78,8 @@ public abstract class BaseUADEntityDisplay implements UADEntityDisplay {
 		StringBundler sb = new StringBundler(
 			(entityTypeNonanonymizableFieldNamesList.size() * 2) - 1);
 
-		for (String field : entityTypeNonanonymizableFieldNamesList) {
-			sb.append(field);
+		for (String fieldName : entityTypeNonanonymizableFieldNamesList) {
+			sb.append(fieldName);
 			sb.append(StringPool.COMMA);
 		}
 

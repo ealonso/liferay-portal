@@ -2,6 +2,7 @@ package ${packagePath}.uad.entity;
 
 import ${apiPackagePath}.model.${entity.name};
 import ${packagePath}.uad.constants.${portletShortName}UADConstants;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.user.associated.data.entity.BaseUADEntity;

@@ -4,6 +4,7 @@ import ${apiPackagePath}.model.${entity.name};
 import ${apiPackagePath}.service.${entity.name}LocalService;
 import ${packagePath}.uad.constants.${portletShortName}UADConstants;
 import ${packagePath}.uad.entity.${entity.name}UADEntity;
+
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -30,6 +31,11 @@ import org.osgi.service.component.annotations.Reference;
 	service = UADEntityAggregator.class
 )
 public class ${entity.name}UADEntityAggregator extends BaseUADEntityAggregator {
+
+	@Override
+	public int count(long userId) {
+		return (int)_${entity.varName}LocalService.dynamicQueryCount(_getDynamicQuery(userId));
+	}
 
 	@Override
 	public List<UADEntity> getUADEntities(long userId, int start, int end) {

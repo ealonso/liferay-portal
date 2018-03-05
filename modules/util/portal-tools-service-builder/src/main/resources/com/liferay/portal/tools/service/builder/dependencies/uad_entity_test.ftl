@@ -2,6 +2,7 @@ package ${packagePath}.uad.entity;
 
 import ${apiPackagePath}.model.${entity.name};
 import ${packagePath}.uad.constants.${portletShortName}UADConstants;
+
 import com.liferay.user.associated.data.entity.UADEntity;
 import com.liferay.user.associated.data.test.util.BaseUADEntityTestCase;
 
