@@ -60,6 +60,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import java.util.ArrayList;
@@ -507,6 +509,11 @@ public class LayoutsAdminDisplayContext {
 		portletURL.setParameter("orderByType", getOrderByType());
 
 		return portletURL;
+	}
+
+	public SiteNavigationMenu getPrimarySiteNavigationMenu() {
+		return SiteNavigationMenuLocalServiceUtil.
+			fetchPrimarySiteNavigationMenu(_themeDisplay.getScopeGroupId());
 	}
 
 	public String getRedirect() {
