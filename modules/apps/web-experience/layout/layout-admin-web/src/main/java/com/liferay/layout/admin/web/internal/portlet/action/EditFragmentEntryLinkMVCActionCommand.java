@@ -14,14 +14,12 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.portlet.ActionRequest;
@@ -37,11 +35,11 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES,
-		"mvc.command.name=/layout/edit_layout_page_template_fragments"
+		"mvc.command.name=/layout/edit_fragment_entry_link"
 	},
 	service = MVCActionCommand.class
 )
-public class EditLayoutPageTemplateFragmentsMVCActionCommand
+public class EditFragmentEntryLinkMVCActionCommand
 	extends BaseMVCActionCommand {
 
 	@Override
@@ -49,20 +47,14 @@ public class EditLayoutPageTemplateFragmentsMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long layoutPageTemplateEntryId = ParamUtil.getLong(
-			actionRequest, "classPK");
+		long fragmentEntryLinkId = ParamUtil.getLong(
+			actionRequest, "fragmentEntryLinkId");
 
-		long[] fragmentIds = ParamUtil.getLongValues(
-			actionRequest, "fragmentIds");
 		String editableValues = ParamUtil.getString(
 			actionRequest, "editableValues");
 
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		_layoutPageTemplateEntryService.updateLayoutPageTemplateEntry(
-			layoutPageTemplateEntryId, fragmentIds, editableValues,
-			serviceContext);
+		_fragmentEntryLinkLocalService.updateFragmentEntryLinkEditableValues(
+			fragmentEntryLinkId, editableValues);
 
 		hideDefaultSuccessMessage(actionRequest);
 
@@ -71,6 +63,6 @@ public class EditLayoutPageTemplateFragmentsMVCActionCommand
 	}
 
 	@Reference
-	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
 }

@@ -20,19 +20,18 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
+import com.liferay.fragment.util.FragmentEntryRenderUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.template.soy.utils.SoyContext;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
@@ -47,42 +46,60 @@ public class FragmentsEditorContext {
 
 	public FragmentsEditorContext(
 		HttpServletRequest request, RenderResponse renderResponse,
-		String className, long classPK, String updateURL) {
+		String className, long classPK) {
 
 		_request = request;
 		_renderResponse = renderResponse;
 		_classPK = classPK;
-		_updateURL = updateURL;
 
 		_classNameId = PortalUtil.getClassNameId(className);
 	}
 
-	public Map<String, Object> getEditorContext() throws PortalException {
+	public SoyContext getEditorContext() throws PortalException {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Map<String, Object> editorContext = new HashMap<>();
+		SoyContext editorContext = new SoyContext();
 
+		editorContext.put(
+			"addFragmentEntryLinkURL",
+			_getFragmentEntryActionURL("/layout/add_fragment_entry_link"));
 		editorContext.put("classNameId", _classNameId);
 		editorContext.put("classPK", _classPK);
 		editorContext.put(
-			"fragmentCollections", _getFragmentCollectionsJSONArray());
+			"deleteFragmentEntryLinkURL",
+			_getFragmentEntryActionURL("/layout/delete_fragment_entry_link"));
 		editorContext.put(
-			"fragmentEntryLinks", _getFragmentEntryLinksJSONArray());
+			"editFragmentEntryLinkURL",
+			_getFragmentEntryActionURL("/layout/edit_fragment_entry_link"));
+		editorContext.put(
+			"fragmentCollections", _getSoyContextFragmentCollections());
+		editorContext.put(
+			"fragmentEntryLinks", _getSoyContextFragmentEntryLinks());
 		editorContext.put("portletNamespace", _renderResponse.getNamespace());
 		editorContext.put(
-			"renderFragmentEntryURL", _getRenderFragmentEntryURL());
+			"renderFragmentEntryURL",
+			_getFragmentEntryActionURL("/layout/render_fragment_entry"));
 		editorContext.put(
 			"spritemap",
 			themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
-		editorContext.put("updateURL", _updateURL);
+		editorContext.put(
+			"swapFragmentEntryLinksURL",
+			_getFragmentEntryActionURL("/layout/swap_fragment_entry_links"));
 
 		return editorContext;
 	}
 
-	private JSONArray _getFragmentCollectionsJSONArray() {
-		JSONArray fragmentCollectionsJSONArray =
-			JSONFactoryUtil.createJSONArray();
+	private String _getFragmentEntryActionURL(String action) {
+		PortletURL actionURL = _renderResponse.createActionURL();
+
+		actionURL.setParameter(ActionRequest.ACTION_NAME, action);
+
+		return actionURL.toString();
+	}
+
+	private List<SoyContext> _getSoyContextFragmentCollections() {
+		List<SoyContext> soyContextFragmentCollections = new ArrayList();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -101,44 +118,43 @@ public class FragmentsEditorContext {
 				continue;
 			}
 
-			JSONObject fragmentCollectionJSONObject =
-				JSONFactoryUtil.createJSONObject();
+			SoyContext fragmentCollectionSoyContext = new SoyContext();
 
-			fragmentCollectionJSONObject.put(
+			fragmentCollectionSoyContext.put(
 				"fragmentCollectionId",
 				fragmentCollection.getFragmentCollectionId());
 
-			JSONArray fragmentEntriesJSONArray =
-				JSONFactoryUtil.createJSONArray();
+			List<SoyContext> soyContextFragmentEntries = new ArrayList<>();
 
 			for (FragmentEntry fragmentEntry : fragmentEntries) {
-				JSONObject fragmentEntryJSONObject =
-					JSONFactoryUtil.createJSONObject();
+				SoyContext fragmentEntrySoyContext = new SoyContext();
 
-				fragmentEntryJSONObject.put(
+				fragmentEntrySoyContext.put(
 					"fragmentEntryId", fragmentEntry.getFragmentEntryId());
-				fragmentEntryJSONObject.put(
+				fragmentEntrySoyContext.put(
 					"imagePreviewURL",
 					fragmentEntry.getImagePreviewURL(themeDisplay));
-				fragmentEntryJSONObject.put("name", fragmentEntry.getName());
+				fragmentEntrySoyContext.put("name", fragmentEntry.getName());
 
-				fragmentEntriesJSONArray.put(fragmentEntryJSONObject);
+				soyContextFragmentEntries.add(fragmentEntrySoyContext);
 			}
 
-			fragmentCollectionJSONObject.put(
-				"fragmentEntries", fragmentEntriesJSONArray);
+			fragmentCollectionSoyContext.put(
+				"fragmentEntries", soyContextFragmentEntries);
 
-			fragmentCollectionJSONObject.put(
+			fragmentCollectionSoyContext.put(
 				"name", fragmentCollection.getName());
 
-			fragmentCollectionsJSONArray.put(fragmentCollectionJSONObject);
+			soyContextFragmentCollections.add(fragmentCollectionSoyContext);
 		}
 
-		return fragmentCollectionsJSONArray;
+		return soyContextFragmentCollections;
 	}
 
-	private JSONArray _getFragmentEntryLinksJSONArray() throws PortalException {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+	private List<SoyContext> _getSoyContextFragmentEntryLinks()
+		throws PortalException {
+
+		List<SoyContext> soyContextFragmentEntryLinks = new ArrayList<>();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -152,41 +168,33 @@ public class FragmentsEditorContext {
 				FragmentEntryServiceUtil.fetchFragmentEntry(
 					fragmentEntryLink.getFragmentEntryId());
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			SoyContext soyContext = new SoyContext();
 
-			jsonObject.put(
+			soyContext.putHTML(
+				"content",
+				FragmentEntryRenderUtil.renderFragmentEntryLink(
+					fragmentEntryLink));
+			soyContext.put(
 				"editableValues",
 				JSONFactoryUtil.createJSONObject(
 					fragmentEntryLink.getEditableValues()));
-			jsonObject.put(
+			soyContext.put(
 				"fragmentEntryId", fragmentEntry.getFragmentEntryId());
-			jsonObject.put(
+			soyContext.put(
 				"fragmentEntryLinkId",
 				fragmentEntryLink.getFragmentEntryLinkId());
-			jsonObject.put(
-				"imagePreviewURL",
-				fragmentEntry.getImagePreviewURL(themeDisplay));
-			jsonObject.put("name", fragmentEntry.getName());
+			soyContext.put("name", fragmentEntry.getName());
+			soyContext.put("position", fragmentEntryLink.getPosition());
 
-			jsonArray.put(jsonObject);
+			soyContextFragmentEntryLinks.add(soyContext);
 		}
 
-		return jsonArray;
-	}
-
-	private String _getRenderFragmentEntryURL() {
-		PortletURL renderFragmentEntryURL = _renderResponse.createActionURL();
-
-		renderFragmentEntryURL.setParameter(
-			ActionRequest.ACTION_NAME, "/layout/render_fragment_entry");
-
-		return renderFragmentEntryURL.toString();
+		return soyContextFragmentEntryLinks;
 	}
 
 	private final long _classNameId;
 	private final long _classPK;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
-	private final String _updateURL;
 
 }
