@@ -14,21 +14,26 @@
  */
 --%>
 
-<%@ include file="/journal_article/init.jsp" %>
-
-<liferay-util:dynamic-include key="com.liferay.journal.taglib#/journal_article/page.jsp#pre" />
+<%@ include file="/com.liferay.journal.analytics/journal_article/init.jsp" %>
 
 <%
 JournalArticleDisplay articleDisplay = (JournalArticleDisplay)request.getAttribute("liferay-journal:journal-article:articleDisplay");
-boolean showTitle = GetterUtil.getBoolean((String)request.getAttribute("liferay-journal:journal-article:showTitle"));
 %>
 
-<div class="journal-content-article">
-	<c:if test="<%= showTitle %>">
-		<%= articleDisplay.getTitle() %>
-	</c:if>
-
-	<%= articleDisplay.getContent() %>
-</div>
-
-<liferay-util:dynamic-include key="com.liferay.journal.taglib#/journal_article/page.jsp#post" />
+<c:if test="<%= articleDisplay != null %>">
+	<aui:script use="aui-base">
+		AUI().ready(
+			function() {
+				if (window.Analytics) {
+					Analytics.send(
+						'VIEW',
+						'Journal',
+						{
+							articleId: '<%= articleDisplay.getArticleId() %>'
+						}
+					);
+				}
+			}
+		);
+	</aui:script>
+</c:if>
