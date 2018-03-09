@@ -82,7 +82,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 			<liferay-frontend:management-bar-filter-item active="<%= journalDisplayContext.isNavigationStructure() %>" id="structures" label="structures" url="javascript:;" />
 		</liferay-frontend:management-bar-navigation>
 
-		<c:if test="<%= !journalDisplayContext.isSearch() && !journalDisplayContext.isNavigationRecent() %>">
+		<c:if test="<%= !journalDisplayContext.isNavigationRecent() && !journalDisplayContext.isSearch() %>">
 			<liferay-frontend:management-bar-filter
 				label="status"
 				managementBarFilterItems="<%= journalDisplayContext.getManagementBarStatusFilterItems() %>"
