@@ -20,9 +20,11 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.FolderIndexer;
@@ -35,6 +37,8 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.trash.TrashHelper;
 
@@ -57,10 +61,15 @@ public class JournalFolderIndexer
 
 	public JournalFolderIndexer() {
 		setDefaultSelectedFieldNames(
-			Field.COMPANY_ID, Field.DESCRIPTION, Field.ENTRY_CLASS_NAME,
-			Field.ENTRY_CLASS_PK, Field.TITLE, Field.UID);
+			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME,
+			Field.ENTRY_CLASS_PK, Field.UID);
+
+		setDefaultSelectedLocalizedFieldNames(
+			Field.DESCRIPTION, Field.TITLE);
+
 		setFilterSearch(true);
 		setPermissionAware(true);
+		setSelectAllLocales(true);
 	}
 
 	@Override
@@ -92,6 +101,18 @@ public class JournalFolderIndexer
 	}
 
 	@Override
+	public void postProcessSearchQuery(
+		BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
+		SearchContext searchContext)
+		throws Exception {
+
+		addSearchLocalizedTerm(
+			searchQuery, searchContext, Field.DESCRIPTION, false);
+		addSearchLocalizedTerm(
+			searchQuery, searchContext, Field.TITLE, false);
+	}
+
+	@Override
 	protected void doDelete(JournalFolder journalFolder) throws Exception {
 		deleteDocument(
 			journalFolder.getCompanyId(), journalFolder.getFolderId());
@@ -107,8 +128,11 @@ public class JournalFolderIndexer
 
 		Document document = getBaseModelDocument(CLASS_NAME, journalFolder);
 
-		document.addText(Field.DESCRIPTION, journalFolder.getDescription());
 		document.addKeyword(Field.FOLDER_ID, journalFolder.getParentFolderId());
+
+		String[] languageIds =
+			LocaleUtil.toLanguageIds(
+				LanguageUtil.getSupportedLocales());
 
 		String title = journalFolder.getName();
 
@@ -116,7 +140,14 @@ public class JournalFolderIndexer
 			title = _trashHelper.getOriginalTitle(title);
 		}
 
-		document.addText(Field.TITLE, title);
+		for (String languageId : languageIds) {
+			document.addText(
+				LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
+				title);
+			document.addText(
+				LocalizationUtil.getLocalizedName(Field.DESCRIPTION, languageId),
+				journalFolder.getDescription());
+		}
 
 		document.addKeyword(
 			Field.TREE_PATH,
