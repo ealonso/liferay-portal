@@ -348,6 +348,17 @@ FragmentEntryLink.STATE = {
 	name: Config.string().value(''),
 
 	/**
+	 * Shows FragmentEntryLink control toolbar
+	 * @default true
+	 * @instance
+	 * @memberOf FragmentEntryLink
+	 * @review
+	 * @type {!bool}
+	 */
+
+	showControlBar: Config.bool().value(true),
+
+	/**
 	 * Fragment spritemap
 	 * @default undefined
 	 * @instance
