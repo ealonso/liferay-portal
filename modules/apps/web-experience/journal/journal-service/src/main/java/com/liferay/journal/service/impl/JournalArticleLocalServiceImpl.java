@@ -5528,6 +5528,8 @@ public class JournalArticleLocalServiceImpl
 			article.setVersion(version);
 			article.setSmallImageId(latestArticle.getSmallImageId());
 
+			serviceContext.setAttribute("version", version);
+
 			_addArticleLocalizedFields(
 				article.getCompanyId(), article.getId(), titleMap,
 				descriptionMap);
