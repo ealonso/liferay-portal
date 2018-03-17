@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 	<td>ENTRY_COVER_IMAGE</td>
-	<td>//div[contains(@class,'cover-image-container') and contains(@style,'${key_uploadFileName}')] | //div[contains(@class,'cover-image')]//img[contains(@src,'${key_uploadFileName}')]</td>
+	<td>//div[contains(@class,'cover-image') and contains(@style,'${key_uploadFileName}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -206,6 +206,16 @@
 <tr>
 	<td>WORKFLOW_STATUS</td>
 	<td>//span[contains(@class,'workflow-status')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>REPLY_VERTICAL_ELLIPSES</td>
+	<td>//div[(@class='card-row') and contains(.,'${key_entryComment}')]//div[contains(@class,'dropdown')]/a</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
 	<td></td>
 </tr>
 <!--SPECIFIC_ENTRY_YOUR_RATING-->
