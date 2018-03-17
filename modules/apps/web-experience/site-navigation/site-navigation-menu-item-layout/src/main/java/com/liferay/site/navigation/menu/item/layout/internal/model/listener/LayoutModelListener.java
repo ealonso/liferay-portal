@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.site.navigation.constants.SiteNavigationConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
@@ -47,22 +48,26 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
 	public void onAfterCreate(Layout layout) throws ModelListenerException {
-		SiteNavigationMenu siteNavigationMenu =
-			_siteNavigationMenuLocalService.fetchAutoSiteNavigationMenu(
-				layout.getGroupId());
-
-		if ((siteNavigationMenu == null) || layout.isHidden()) {
-			return;
-		}
-
-		_addSiteNavigationMenuItem(siteNavigationMenu, layout);
-
 		boolean addToPrimaryMenu = GetterUtil.getBoolean(
 			layout.getTypeSettingsProperty("addToPrimaryMenu"));
 
 		if (!addToPrimaryMenu) {
 			return;
 		}
+
+		SiteNavigationMenu siteNavigationMenu =
+			_siteNavigationMenuLocalService.fetchAutoSiteNavigationMenu(
+				layout.getGroupId());
+
+		if ((siteNavigationMenu == null) || layout.isHidden() ||
+			((siteNavigationMenu.getType() ==
+				SiteNavigationConstants.TYPE_PRIMARY) &&
+			 !addToPrimaryMenu)) {
+
+			return;
+		}
+
+		_addSiteNavigationMenuItem(siteNavigationMenu, layout);
 
 		SiteNavigationMenu primarySiteNavigationMenu =
 			_siteNavigationMenuLocalService.fetchPrimarySiteNavigationMenu(
