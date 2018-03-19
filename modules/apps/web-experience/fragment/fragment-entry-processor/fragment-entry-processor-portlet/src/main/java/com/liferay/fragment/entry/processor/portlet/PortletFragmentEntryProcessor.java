@@ -23,19 +23,30 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortletProvider;
+import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.configuration.kernel.util.PortletConfigurationApplicationType;
 
 import java.util.ResourceBundle;
 
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -148,6 +159,50 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 						"there-is-no-portlet-available-for-alias-x", alias));
 			}
 		}
+	}
+
+	private String _getConfigurationURL(String portletId) throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		HttpServletRequest request = serviceContext.getRequest();
+
+		PortletURL configurationURL = PortletProviderUtil.getPortletURL(
+			request,
+			PortletConfigurationApplicationType.PortletConfiguration.CLASS_NAME,
+			PortletProvider.Action.VIEW);
+
+		configurationURL.setWindowState(LiferayWindowState.POP_UP);
+
+		configurationURL.setParameter("mvcPath", "/edit_configuration.jsp");
+		configurationURL.setParameter("settingsScope", "portletInstance");
+
+		String currentURL = _portal.getCurrentURL(request);
+		String portletPrimaryKey = PortletPermissionUtil.getPrimaryKey(
+			serviceContext.getPlid(), portletId);
+
+		configurationURL.setParameter("redirect", currentURL);
+		configurationURL.setParameter("returnToFullPageURL", currentURL);
+		configurationURL.setParameter(
+			"portletConfiguration", Boolean.TRUE.toString());
+		configurationURL.setParameter("portletResource", portletId);
+		configurationURL.setParameter("resourcePrimKey", portletPrimaryKey);
+
+		StringBundler jsConfigurationURLSB = new StringBundler(11);
+
+		jsConfigurationURLSB.append("Liferay.Portlet.openWindow({");
+		jsConfigurationURLSB.append("bodyCssClass:'dialog-with-footer', ");
+		jsConfigurationURLSB.append("destroyOnHide: true, portlet: '#p_p_id_");
+		jsConfigurationURLSB.append(portletId);
+		jsConfigurationURLSB.append("_', portletId: '");
+		jsConfigurationURLSB.append(portletId);
+		jsConfigurationURLSB.append("', title: '");
+		jsConfigurationURLSB.append(LanguageUtil.get(request, "configuration"));
+		jsConfigurationURLSB.append("', uri: '");
+		jsConfigurationURLSB.append(configurationURL.toString());
+		jsConfigurationURLSB.append("'}); return false;");
+
+		return jsConfigurationURLSB.toString();
 	}
 
 	private Document _getDocument(String html) {
