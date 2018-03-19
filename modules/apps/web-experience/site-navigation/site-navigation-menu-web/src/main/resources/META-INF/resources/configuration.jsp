@@ -44,29 +44,70 @@ if (siteNavigationMenu != null) {
 						<aui:fieldset cssClass="p-3" label="navigation-menu">
 							<aui:input id="siteNavigationMenuId" name="preferences--siteNavigationMenuId--" type="hidden" value="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>" />
 
-							<div class="card card-horizontal taglib-horizontal-card">
-								<div class="card-row card-row-padded ">
-									<div class="card-col-field">
-										<div class="sticker sticker-secondary sticker-static">
-											<aui:icon image="blogs" markupView="lexicon" />
-										</div>
-									</div>
-
-									<div class="card-col-content card-col-gutters">
-										<span class="lfr-card-title-text truncate-text" id="<portlet:namespace />siteNavigationMenuName">
-											<%= siteNavigationMenuName %>
-										</span>
-									</div>
-								</div>
-							</div>
-
 							<%
 							int siteNavitaionMenuCount = SiteNavigationMenuLocalServiceUtil.getSiteNavigationMenusCount(scopeGroupId);
+
+							String onChange = renderResponse.getNamespace() + "toggleDisabledControls();";
 							%>
 
-							<c:if test="<%= siteNavitaionMenuCount > 0 %>">
-								<aui:button name="chooseSiteNavigationMenu" value="choose" />
-							</c:if>
+							<aui:row>
+								<aui:col width="50">
+									<aui:input
+										checked="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() != -1 %>"
+										first="<%= true %>"
+										id="selectNavigationType"
+										label="select-navigation"
+										name="selectNavigation"
+										onChange="<%= onChange %>"
+										type="radio"
+										value="0"
+									/>
+
+									<aui:select disabled="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1 %>" id="siteNavigationMenuType" label="" name="preferences--siteNavigationMenuType--" value="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() %>">
+										<aui:option label="" selected="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1 %>" value="-1" />
+										<aui:option label="primary-navigation" selected="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == SiteNavigationConstants.TYPE_PRIMARY %>" value="<%= SiteNavigationConstants.TYPE_PRIMARY %>" />
+										<aui:option label="secondary-navigation" selected="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == SiteNavigationConstants.TYPE_SECONDARY %>" value="<%= SiteNavigationConstants.TYPE_SECONDARY %>" />
+										<aui:option label="social-navigation" selected="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == SiteNavigationConstants.TYPE_SOCIAL %>" value="<%= SiteNavigationConstants.TYPE_SOCIAL %>" />
+									</aui:select>
+								</aui:col>
+
+								<aui:col width="50">
+
+									<%
+									String chooseMenuLabel = LanguageUtil.get(request, "choose-menu");
+
+									if ((siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1) && Validator.isNotNull(siteNavigationMenuName)) {
+										chooseMenuLabel += "<span class=\"navigation-menu-name\">:&nbsp;<span class=\"d-inline text-muted\">" + siteNavigationMenuName + "</span></span>";
+									}
+									%>
+
+									<div class="d-flex">
+										<aui:input
+											checked="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1 %>"
+											cssClass="text-truncate"
+											first="<%= false %>"
+											id="selectNavigationMenu"
+											label="<%= chooseMenuLabel %>"
+											name="selectNavigation"
+											onChange="<%= onChange %>"
+											type="radio"
+											value="-1"
+										/>
+
+										<c:if test="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuId() > 0 %>">
+											<span class="mt-1" id="<portlet:namespace />removeSiteNavigationMenu" role="button">
+												<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
+											</span>
+										</c:if>
+									</div>
+
+									<div class="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() == -1 ? "" : "disabled " %>" id="<portlet:namespace />chooseSiteNavigationMenuPanel">
+										<c:if test="<%= siteNavitaionMenuCount > 0 %>">
+											<aui:button disabled="<%= siteNavigationMenuDisplayContext.getSiteNavigationMenuType() != -1 %>" name="chooseSiteNavigationMenu" value="select" />
+										</c:if>
+									</div>
+								</aui:col>
+							</aui:row>
 
 							<div class="display-template mt-4">
 								<liferay-ddm:template-selector
@@ -214,6 +255,7 @@ if (siteNavigationMenu != null) {
 		var selectRootMenuItemType = form.fm('rootMenuItemType');
 		var selectRootMenuItemId = form.fm('rootMenuItemId');
 		var selectSiteNavigationMenuId = form.fm('siteNavigationMenuId');
+		var selectSiteNavigationMenuType = form.fm('siteNavigationMenuType');
 
 		var data = {
 			displayStyle: selectDisplayStyle.val(),
@@ -226,6 +268,7 @@ if (siteNavigationMenu != null) {
 		data.rootMenuItemType = selectRootMenuItemType.val();
 		data.rootMenuItemId = selectRootMenuItemId.val();
 		data.siteNavigationMenuId = selectSiteNavigationMenuId.val();
+		data.siteNavigationMenuType = selectSiteNavigationMenuType.val();
 
 		data = Liferay.Util.ns('_<%= HtmlUtil.escapeJS(portletResource) %>_', data);
 
@@ -290,16 +333,32 @@ if (siteNavigationMenu != null) {
 					if (selectedItem.id) {
 						$('#<portlet:namespace />siteNavigationMenuId').val(selectedItem.id);
 
-						$('#<portlet:namespace />siteNavigationMenuName').text(selectedItem.name);
+						$('.navigation-menu-name').html(':&nbsp;<span class="d-inline text-muted">' + Liferay.Util.escapeHTML(selectedItem.name) + '</span>');
 
 						$('#<portlet:namespace />rootMenuItemId').val('0');
 
-						$('#<portlet:namespace />rootMenuItemName').text(selectedItem.name);
+						$('#<portlet:namespace />rootMenuItemName').text('');
+
+						$('#<portlet:namespace />removeSiteNavigationMenu').toggleClass('hide');
 
 						<portlet:namespace/>resetPreview();
 					}
 				}
 			);
+		}
+	);
+
+	$('#<portlet:namespace />removeSiteNavigationMenu').on(
+		'click',
+		function(event) {
+			$('#<portlet:namespace />siteNavigationMenuId').val('0');
+			$('#<portlet:namespace />rootMenuItemId').val('0');
+
+			$('.navigation-menu-name').text('');
+
+			$('#<portlet:namespace />removeSiteNavigationMenu').toggleClass('hide');
+
+			<portlet:namespace/>resetPreview();
 		}
 	);
 
@@ -311,5 +370,28 @@ if (siteNavigationMenu != null) {
 			return currentValue === 'absolute' || currentValue === 'relative';
 		},
 		'<portlet:namespace />rootMenuItemLevel'
+	);
+
+	Liferay.provide(
+		window,
+		'<portlet:namespace />toggleDisabledControls',
+		function() {
+			var chooseSiteNavigationMenu = $('#<portlet:namespace />chooseSiteNavigationMenu');
+			var siteNavigationMenuType = $('#<portlet:namespace />siteNavigationMenuType');
+
+			var state = siteNavigationMenuType.prop('disabled');
+
+			chooseSiteNavigationMenu.prop('disabled', state);
+			siteNavigationMenuType.prop('disabled', !state);
+
+			if (!state) {
+				siteNavigationMenuType.val(-1);
+			}
+			else {
+				siteNavigationMenuType.val(<%= SiteNavigationConstants.TYPE_PRIMARY %>);
+			}
+
+			<portlet:namespace/>resetPreview();
+		}
 	);
 </aui:script>
