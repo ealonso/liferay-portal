@@ -16,6 +16,8 @@ package com.liferay.journal.web.internal.portlet.configuration.icon;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.journal.web.configuration.JournalWebConfiguration;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.User;
@@ -30,17 +32,22 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webdav.WebDAVUtil;
 
+import java.util.Map;
+
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
  */
 @Component(
+	configurationPid = "com.liferay.journal.web.configuration.JournalWebConfiguration",
 	immediate = true,
 	property = {"javax.portlet.name=" + JournalPortletKeys.JOURNAL},
 	service = PortletConfigurationIcon.class
@@ -80,7 +87,10 @@ public class StructuresPortletConfigurationIcon
 			"refererPortletName", JournalPortletKeys.JOURNAL);
 		portletURL.setParameter(
 			"refererWebDAVToken", WebDAVUtil.getStorageToken(portlet));
-		portletURL.setParameter("showAncestorScopes", Boolean.TRUE.toString());
+		portletURL.setParameter(
+			"showAncestorScopes",
+			String.valueOf(_journalWebConfiguration.
+				showAncestorScopesByDefault()));
 		portletURL.setParameter("showCacheableInput", Boolean.TRUE.toString());
 		portletURL.setParameter("showManageTemplates", Boolean.TRUE.toString());
 
@@ -111,6 +121,13 @@ public class StructuresPortletConfigurationIcon
 		return false;
 	}
 
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_journalWebConfiguration = ConfigurableUtil.createConfigurable(
+			JournalWebConfiguration.class, properties);
+	}
+
 	@Reference(unbind = "-")
 	protected void setPortletLocalService(
 		PortletLocalService portletLocalService) {
@@ -118,6 +135,7 @@ public class StructuresPortletConfigurationIcon
 		_portletLocalService = portletLocalService;
 	}
 
+	private volatile JournalWebConfiguration _journalWebConfiguration;
 	private PortletLocalService _portletLocalService;
 
 }
