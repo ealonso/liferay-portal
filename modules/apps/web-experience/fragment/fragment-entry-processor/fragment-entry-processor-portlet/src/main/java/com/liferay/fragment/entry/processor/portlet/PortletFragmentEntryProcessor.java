@@ -23,16 +23,20 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -130,7 +134,30 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 			runtimeTagElement.attr("portletName", portletName);
 			runtimeTagElement.attr("persistSettings=false", true);
 
-			element.replaceWith(runtimeTagElement);
+			Element portletElement = new Element("div");
+
+			portletElement.attr("class", "portlet");
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
+			Layout layout = themeDisplay.getLayout();
+
+			if (PortletPermissionUtil.contains(
+					themeDisplay.getPermissionChecker(),
+					fragmentEntryLink.getGroupId(), portletName,
+					ActionKeys.CONFIGURATION) &&
+				layout.isTypeControlPanel()) {
+
+				portletElement.appendChild(
+					_getPortletTopperElement(portletName, instanceId));
+			}
+
+			portletElement.appendChild(runtimeTagElement);
+
+			element.replaceWith(portletElement);
 		}
 
 		Element bodyElement = document.body();
@@ -247,6 +274,37 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 		menuElement.appendChild(iconElement);
 
 		return menuElement;
+	}
+
+	private Element _getPortletTopperElement(
+			String portletName, String instanceId)
+		throws PortalException {
+
+		Element portletTopperElement = new Element("header");
+
+		portletTopperElement.attr("class", "portlet-topper");
+
+		Element portletTitleElement = new Element("div");
+
+		portletTitleElement.attr("class", "portlet-title-default");
+
+		Element portletNameElement = new Element("span");
+
+		String portletTitle = _portal.getPortletTitle(
+			portletName, LocaleThreadLocal.getThemeDisplayLocale());
+
+		portletNameElement.text(portletTitle);
+
+		portletNameElement.attr("class", "portlet-name-text");
+
+		portletTitleElement.appendChild(portletNameElement);
+
+		portletTopperElement.appendChild(portletTitleElement);
+
+		portletTopperElement.appendChild(
+			_getPortletMenuElement(portletName, instanceId));
+
+		return portletTopperElement;
 	}
 
 	@Reference
