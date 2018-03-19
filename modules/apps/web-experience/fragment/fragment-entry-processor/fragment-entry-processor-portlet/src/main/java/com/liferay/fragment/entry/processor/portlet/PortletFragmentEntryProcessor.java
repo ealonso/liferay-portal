@@ -217,6 +217,38 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 		return document;
 	}
 
+	private Element _getPortletMenuElement(
+			String portletName, String instanceId)
+		throws PortalException {
+
+		String portletId = PortletIdCodec.encode(
+			PortletIdCodec.decodePortletName(portletName),
+			PortletIdCodec.decodeUserId(portletName), instanceId);
+
+		Element menuElement = new Element("menu");
+
+		menuElement.attr("class", "portlet-topper-toolbar");
+		menuElement.attr("id", "portlet-topper-toolbar_" + portletId);
+		menuElement.attr("type", "toolbar");
+
+		Element iconElement = new Element("@liferay_ui.icon");
+
+		iconElement.attr("icon", "cog");
+		iconElement.attr("markupView", "lexicon");
+		iconElement.attr("url", "javascript:;");
+
+		try {
+			iconElement.attr("onClick", _getConfigurationURL(portletId));
+		}
+		catch (Exception e) {
+			throw new PortalException(e);
+		}
+
+		menuElement.appendChild(iconElement);
+
+		return menuElement;
+	}
+
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
