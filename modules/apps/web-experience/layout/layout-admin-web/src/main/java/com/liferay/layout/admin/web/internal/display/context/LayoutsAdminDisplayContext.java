@@ -63,6 +63,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.taglib.security.PermissionsURLTag;
 
 import java.util.ArrayList;
@@ -70,6 +72,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
@@ -94,6 +98,18 @@ public class LayoutsAdminDisplayContext {
 
 		_liferayPortletRequest.setAttribute(
 			WebKeys.LAYOUT_DESCRIPTIONS, getLayoutDescriptions());
+	}
+
+	public String getAutoSiteNavigationMenuNames() {
+		List<SiteNavigationMenu> siteNavigationMenus =
+			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
+				_themeDisplay.getScopeGroupId());
+
+		Stream<SiteNavigationMenu> menuStream = siteNavigationMenus.stream();
+
+		Stream<String> nameStream = menuStream.map(SiteNavigationMenu::getName);
+
+		return String.join(", ", nameStream.collect(Collectors.toList()));
 	}
 
 	public JSONArray getBreadcrumbEntriesJSONArray() throws PortalException {
