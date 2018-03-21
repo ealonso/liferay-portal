@@ -15,6 +15,7 @@
 		name: string
 	]>}
 	{@param portletNamespace: string}
+	{@param sidebarTabs: list<[id:string, label:string]>}
 	{@param spritemap: string}
 	{@param? _contextualSidebarVisible: bool}
 	{@param? _dirty: bool}
@@ -26,7 +27,6 @@
 	{@param? _handleToggleContextualSidebarButtonClick: any}
 	{@param? _handleSidebarTabClick: any}
 	{@param? _lastSaveDate: string}
-	{@param? _sidebarTabs: list<[id:string, name:string, visible:bool]>}
 	{@param? _sidebarSelectedTab: string}
 	{@param? fragmentEntryLinks: list<[
 		content: html|null,
@@ -114,23 +114,19 @@
 
 				{param header kind="html"}
 					<div class="sidebar-section">
-						{if $_sidebarTabs}
-							<nav class="navbar navbar-expand-md navbar-underline">
-								<ul class="navbar-nav">
-									{foreach $sidebarTab in $_sidebarTabs}
-										{if $sidebarTab.visible}
-											{call .sidebarTab}
-												{param active: $sidebarTab.id == $_sidebarSelectedTab /}
-												{param id: $sidebarTab.id /}
-												{param key: $sidebarTab.id /}
-												{param handleTabClick: $_handleSidebarTabClick /}
-												{param name: $sidebarTab.name /}
-											{/call}
-										{/if}
-									{/foreach}
-								</ul>
-							</nav>
-						{/if}
+						<nav class="navbar navbar-expand-md navbar-underline">
+							<ul class="navbar-nav">
+								{foreach $sidebarTab in $sidebarTabs}
+									{call .sidebarTab}
+										{param active: $sidebarTab.id == $_sidebarSelectedTab /}
+										{param id: $sidebarTab.id /}
+										{param key: $sidebarTab.id /}
+										{param handleTabClick: $_handleSidebarTabClick /}
+										{param label: $sidebarTab.label /}
+									{/call}
+								{/foreach}
+							</ul>
+						</nav>
 					</div>
 				{/param}
 
@@ -160,7 +156,7 @@
 	{@param id: string}
 	{@param handleTabClick: any}
 	{@param active: bool}
-	{@param name: string}
+	{@param label: string}
 
 	<li class="nav-item">
 		{let $navLinkClasses kind="text"}
@@ -177,7 +173,7 @@
 			href="javascript:;"
 		>
 			<span class="text-truncate">
-				{$name}
+				{$label}
 			</span>
 		</a>
 	</li>
