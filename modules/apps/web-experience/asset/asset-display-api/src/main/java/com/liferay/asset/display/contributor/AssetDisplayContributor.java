@@ -16,7 +16,9 @@ package com.liferay.asset.display.contributor;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.ObjectValuePair;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +29,8 @@ import java.util.Set;
 public interface AssetDisplayContributor {
 
 	public Set<AssetDisplayField> getAssetEntryFields(Locale locale);
+
+	public List<ObjectValuePair> getAssetSubtypes(long groupId, Locale locale);
 
 	public String getClassName();
 
