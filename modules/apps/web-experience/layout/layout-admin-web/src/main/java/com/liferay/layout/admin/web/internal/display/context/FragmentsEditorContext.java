@@ -101,6 +101,13 @@ public class FragmentsEditorContext {
 			"fragmentCollections", _getSoyContextFragmentCollections());
 		soyContext.put(
 			"fragmentEntryLinks", _getSoyContextFragmentEntryLinks());
+		soyContext.put(
+			"getAssetDisplayContributorsURL",
+			_getFragmentEntryActionURL(
+				"/layout/get_asset_display_contributors"));
+		soyContext.put(
+			"getAssetClassTypesURL",
+			_getFragmentEntryActionURL("/layout/get_asset_class_types"));
 		soyContext.put("portletNamespace", _renderResponse.getNamespace());
 		soyContext.put(
 			"renderFragmentEntryURL",
@@ -112,6 +119,10 @@ public class FragmentsEditorContext {
 		soyContext.put(
 			"updateFragmentEntryLinksURL",
 			_getFragmentEntryActionURL("/layout/update_fragment_entry_links"));
+		soyContext.put(
+			"updateLayoutPageTemplateEntryAssetTypeURL",
+			_getFragmentEntryActionURL(
+				"/layout/update_layout_page_template_entry_asset_type"));
 
 		return soyContext;
 	}
