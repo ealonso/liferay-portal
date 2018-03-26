@@ -84,10 +84,11 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		// Fragment entry instance links
 
 		_fragmentEntryLinkLocalService.updateFragmentEntryLinks(
-			layoutPageTemplateEntry.getGroupId(),
+			userId, layoutPageTemplateEntry.getGroupId(),
 			classNameLocalService.getClassNameId(
 				LayoutPageTemplateEntry.class.getName()),
-			layoutPageTemplateEntryId, fragmentEntryIds, StringPool.BLANK);
+			layoutPageTemplateEntryId, fragmentEntryIds, StringPool.BLANK,
+			serviceContext);
 
 		// Resources
 
@@ -243,10 +244,11 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		// Fragment entry instance links
 
 		_fragmentEntryLinkLocalService.updateFragmentEntryLinks(
-			layoutPageTemplateEntry.getGroupId(),
+			serviceContext.getUserId(), layoutPageTemplateEntry.getGroupId(),
 			classNameLocalService.getClassNameId(
 				LayoutPageTemplateEntry.class.getName()),
-			layoutPageTemplateEntryId, fragmentEntryIds, editableValues);
+			layoutPageTemplateEntryId, fragmentEntryIds, editableValues,
+			serviceContext);
 
 		// HTML preview
 
