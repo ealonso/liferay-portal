@@ -43,6 +43,7 @@ import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,17 +54,19 @@ import javax.servlet.http.HttpServletRequest;
 public class FragmentsEditorContext {
 
 	public FragmentsEditorContext(
-		HttpServletRequest request, RenderResponse renderResponse,
+		RenderRequest renderRequest, RenderResponse renderResponse,
 		String className, long classPK, boolean showMapping) {
 
-		_request = request;
+		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_classPK = classPK;
 		_showMapping = showMapping;
 
 		_classNameId = PortalUtil.getClassNameId(className);
 
-		_themeDisplay = (ThemeDisplay)request.getAttribute(
+		_request = PortalUtil.getHttpServletRequest(renderRequest);
+
+		_themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
 
@@ -262,6 +265,7 @@ public class FragmentsEditorContext {
 
 	private final long _classNameId;
 	private final long _classPK;
+	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
 	private final boolean _showMapping;
