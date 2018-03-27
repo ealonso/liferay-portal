@@ -14,6 +14,12 @@
 
 package com.liferay.layout.admin.web.internal.display.context;
 
+import com.liferay.asset.display.contributor.AssetDisplayContributor;
+import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.model.ClassType;
+import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
@@ -21,11 +27,15 @@ import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
+import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.editor.configuration.EditorConfiguration;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigurationFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
@@ -42,6 +52,7 @@ import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,14 +63,20 @@ import javax.servlet.http.HttpServletRequest;
 public class FragmentsEditorContext {
 
 	public FragmentsEditorContext(
-		HttpServletRequest request, RenderResponse renderResponse,
-		String className, long classPK) {
+		RenderRequest renderRequest, RenderResponse renderResponse,
+		String className, long classPK, boolean showMapping) {
 
-		_request = request;
+		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_classPK = classPK;
+		_showMapping = showMapping;
 
 		_classNameId = PortalUtil.getClassNameId(className);
+
+		_request = PortalUtil.getHttpServletRequest(renderRequest);
+
+		_themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	public SoyContext getEditorContext() throws PortalException {
@@ -96,16 +113,34 @@ public class FragmentsEditorContext {
 			"fragmentCollections", _getSoyContextFragmentCollections());
 		soyContext.put(
 			"fragmentEntryLinks", _getSoyContextFragmentEntryLinks());
+		soyContext.put(
+			"getAssetDisplayContributorsURL",
+			_getFragmentEntryActionURL(
+				"/layout/get_asset_display_contributors"));
+		soyContext.put(
+			"getAssetClassTypesURL",
+			_getFragmentEntryActionURL("/layout/get_asset_class_types"));
+
+		if (_showMapping) {
+			soyContext.put(
+				"selectedMappingTypeLabel", _getSelectedMappingTypeLabel());
+		}
+
 		soyContext.put("portletNamespace", _renderResponse.getNamespace());
 		soyContext.put(
 			"renderFragmentEntryURL",
 			_getFragmentEntryActionURL("/layout/render_fragment_entry"));
+		soyContext.put("sidebarTabs", _getSidebarTabs());
 		soyContext.put(
 			"spritemap",
 			themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
 		soyContext.put(
 			"updateFragmentEntryLinksURL",
 			_getFragmentEntryActionURL("/layout/update_fragment_entry_links"));
+		soyContext.put(
+			"updateLayoutPageTemplateEntryAssetTypeURL",
+			_getFragmentEntryActionURL(
+				"/layout/update_layout_page_template_entry_asset_type"));
 
 		return soyContext;
 	}
@@ -140,6 +175,109 @@ public class FragmentsEditorContext {
 		actionURL.setParameter(ActionRequest.ACTION_NAME, action);
 
 		return actionURL.toString();
+	}
+
+	private LayoutPageTemplateEntry _getLayoutPageTemplateEntry()
+		throws PortalException {
+
+		if (_layoutPageTemplateEntry != null) {
+			return _layoutPageTemplateEntry;
+		}
+
+		_layoutPageTemplateEntry =
+			LayoutPageTemplateEntryServiceUtil.fetchLayoutPageTemplateEntry(
+				_classPK);
+
+		return _layoutPageTemplateEntry;
+	}
+
+	private String _getMappingSubtypeLabel(String className, long classTypeId)
+		throws PortalException {
+
+		String mappingSubtypeLabel = null;
+
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				className);
+
+		if (assetRendererFactory != null) {
+			ClassTypeReader classTypeReader =
+				assetRendererFactory.getClassTypeReader();
+
+			ClassType classType = classTypeReader.getClassType(
+				classTypeId, _themeDisplay.getLocale());
+
+			mappingSubtypeLabel = classType.getName();
+		}
+
+		return mappingSubtypeLabel;
+	}
+
+	private String _getMappingTypeLabel(String className) {
+		String mappingTypeLabel = null;
+
+		AssetDisplayContributorTracker assetDisplayContributorTracker =
+			(AssetDisplayContributorTracker)_renderRequest.getAttribute(
+				LayoutAdminWebKeys.ASSET_DISPLAY_CONTRIBUTOR_TRACKER);
+
+		AssetDisplayContributor assetDisplayContributor =
+			assetDisplayContributorTracker.getAssetDisplayContributor(
+				className);
+
+		if (assetDisplayContributor != null) {
+			mappingTypeLabel = assetDisplayContributor.getLabel(
+				_themeDisplay.getLocale());
+		}
+
+		return mappingTypeLabel;
+	}
+
+	private SoyContext _getSelectedMappingTypeLabel() throws PortalException {
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_getLayoutPageTemplateEntry();
+
+		SoyContext soyContext = new SoyContext();
+
+		if ((layoutPageTemplateEntry != null) &&
+			(layoutPageTemplateEntry.getClassNameId() > 0)) {
+
+			String className = PortalUtil.getClassName(
+				layoutPageTemplateEntry.getClassNameId());
+
+			soyContext.put("type", _getMappingTypeLabel(className));
+
+			if (layoutPageTemplateEntry.getClassTypeId() > 0) {
+				soyContext.put(
+					"subtype",
+					_getMappingSubtypeLabel(
+						className, layoutPageTemplateEntry.getClassTypeId()));
+			}
+		}
+
+		return soyContext;
+	}
+
+	private SoyContext _getSidebarTab(String label) {
+		SoyContext soyContext = new SoyContext();
+
+		soyContext.put("id", label);
+		soyContext.put(
+			"label", LanguageUtil.get(_themeDisplay.getLocale(), label));
+
+		return soyContext;
+	}
+
+	private List<SoyContext> _getSidebarTabs() {
+		List<SoyContext> soyContexts = new ArrayList<>();
+
+		soyContexts.add(_getSidebarTab("fragments"));
+		soyContexts.add(_getSidebarTab("added"));
+
+		if (_showMapping) {
+			soyContexts.add(_getSidebarTab("mapping"));
+		}
+
+		return soyContexts;
 	}
 
 	private List<SoyContext> _getSoyContextFragmentCollections() {
@@ -222,7 +360,11 @@ public class FragmentsEditorContext {
 
 	private final long _classNameId;
 	private final long _classPK;
+	private LayoutPageTemplateEntry _layoutPageTemplateEntry;
+	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private final boolean _showMapping;
+	private final ThemeDisplay _themeDisplay;
 
 }

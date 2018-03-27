@@ -3,8 +3,10 @@ import Component from 'metal-component';
 import Soy from 'metal-soy';
 import {Config} from 'metal-state';
 
+import './dialogs/SelectMappingTypeDialog.es';
 import './sidebar/SidebarAddedFragments.es';
 import './sidebar/SidebarFragmentCollections.es';
+import './sidebar/SidebarMapping.es';
 import FragmentEntryLink from './FragmentEntryLink.es';
 import templates from './FragmentsEditor.soy';
 
@@ -304,6 +306,37 @@ class FragmentsEditor extends Component {
 	}
 
 	/**
+	 * Callback executed when a mapping type hsa been selected
+	 * @param {{ labels: Array<string> }} event
+	 * @private
+	 * @review
+	 */
+
+	_handleMappingTypeSelected(event) {
+		this.selectedMappingTypeLabel = event.label;
+	}
+
+	/**
+	 * Callback executed when the SelectMappingTypeDialog should be shown
+	 * @review
+	 */
+
+	_handleSelectAssetTypeButtonClick() {
+		this._selectMappingTypeDialogVisible = true;
+	}
+
+	/**
+	 * Callback executed when the SelectMappingTypeDialog visibility changes
+	 * @param {{ newVal: boolean }} change
+	 * @private
+	 * @review
+	 */
+
+	_handleSelectMappingTypeDialogVisibleChanged(change) {
+		this._selectMappingTypeDialogVisible = change.newVal;
+	}
+
+	/**
 	 * Updates _sidebarSelectedTab according to the clicked element
 	 * @param {!Event} event
 	 * @private
@@ -378,25 +411,6 @@ class FragmentsEditor extends Component {
 		}
 	}
 }
-
-/**
- * Tabs that can appear inside the sidebar
- * @review
- * @see FragmentsEditor._sidebarTabs
- */
-
-const SIDEBAR_TABS = [
-	{
-		id: 'fragments',
-		name: Liferay.Language.get('fragments'),
-		visible: true
-	},
-	{
-		id: 'added',
-		name: Liferay.Language.get('added'),
-		visible: true
-	}
-];
 
 /**
  * State definition.
@@ -500,6 +514,30 @@ FragmentsEditor.STATE = {
 	).required(),
 
 	/**
+	 * URL for obtaining the class types of an asset
+	 * created.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	getAssetClassTypesURL: Config.string().required(),
+
+	/**
+	 * URL for obtaining the asset types for which asset display pages can be
+	 * created.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	getAssetDisplayContributorsURL: Config.string().required(),
+
+	/**
 	 * Optional ID provided by the template system.
 	 * @default ''
 	 * @instance
@@ -557,6 +595,48 @@ FragmentsEditor.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * Selected mapping type label
+	 * @default {}
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {{
+	 *   subtype: string,
+	 *   type: string
+	 * }}
+	 */
+
+	selectedMappingTypeLabel: Config
+		.shapeOf(
+			{
+				subtype: Config.string().value(''),
+				type: Config.string().value('')
+			}
+		)
+		.value({}),
+
+	/**
+	 * Tabs being shown in sidebar
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!Array<{
+	 * 	 id: string,
+	 * 	 label: string
+	 * }>}
+	 */
+
+	sidebarTabs: Config.arrayOf(
+		Config.shapeOf(
+			{
+				id: Config.string().required(),
+				label: Config.string().required()
+			}
+		)
+	).required(),
+
+	/**
 	 * Path of the available icons.
 	 * @default undefined
 	 * @instance
@@ -577,6 +657,17 @@ FragmentsEditor.STATE = {
      */
 
 	updateFragmentEntryLinksURL: Config.string().required(),
+
+	/**
+	 * URL for updating the asset type associated to a template.
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	updateLayoutPageTemplateEntryAssetTypeURL: Config.string().required(),
 
 	/**
 	 * Allow opening/closing contextual sidebar
@@ -620,34 +711,23 @@ FragmentsEditor.STATE = {
 		.value(''),
 
 	/**
-	 * Tabs being shown in sidebar
-	 * @default SIDEBAR_TABS
+	 * Flag indicating if the SelectMappingTypeDialog should be shown
+	 * @default false
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @private
 	 * @review
-	 * @type {Array<{
-	 * 	 id:string,
-	 * 	 name:string,
-	 * 	 visible:boolean
-	 * }>}
+	 * @type {boolean}
 	 */
 
-	_sidebarTabs: Config.arrayOf(
-		Config.shapeOf(
-			{
-				id: Config.string(),
-				name: Config.string(),
-				visible: Config.bool()
-			}
-		)
-	)
+	_selectMappingTypeDialogVisible: Config
+		.bool()
 		.internal()
-		.value(SIDEBAR_TABS),
+		.value(false),
 
 	/**
 	 * Tab selected inside sidebar
-	 * @default SIDEBAR_TABS[0].id
+	 * @default 'fragments'
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @private
@@ -655,11 +735,10 @@ FragmentsEditor.STATE = {
 	 * @type {string}
 	 */
 
-	_sidebarSelectedTab: Config.oneOf(
-		SIDEBAR_TABS.map(tab => tab.id)
-	)
+	_sidebarSelectedTab: Config
+		.string()
 		.internal()
-		.value(SIDEBAR_TABS[0].id)
+		.value('fragments')
 };
 
 Soy.register(FragmentsEditor, templates);
