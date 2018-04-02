@@ -511,6 +511,17 @@ FragmentsEditor.STATE = {
 	id: Config.string().value(''),
 
 	/**
+	 * Image selector url
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	imageSelectorURL: Config.string().required(),
+
+	/**
 	 * List of fragment instances being used, the order
 	 * of the elements in this array defines their position.
 	 * @default []
