@@ -12,56 +12,50 @@
  * details.
  */
 
-package com.liferay.fragment.web.internal.portlet.action;
+package com.liferay.user.associated.data.web.internal.portlet.action;
 
-import com.liferay.fragment.constants.FragmentPortletKeys;
-import com.liferay.fragment.util.FragmentEntryRenderUtil;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.user.associated.data.constants.UserAssociatedDataPortletKeys;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pablo Molina
+ * @author Pei-Jung Lan
  */
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + FragmentPortletKeys.FRAGMENT,
-		"mvc.command.name=/fragment/render_fragment_entry"
+		"javax.portlet.name=" + UserAssociatedDataPortletKeys.USER_ASSOCIATED_DATA,
+		"mvc.command.name=/delete_uad_export_background_task"
 	},
 	service = MVCActionCommand.class
 )
-public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
+public class DeleteUADExportBackgroundTaskMVCActionCommand
+	extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long fragmentEntryId = ParamUtil.getLong(
-			actionRequest, "fragmentEntryId");
+		long backgroundTaskId = ParamUtil.getLong(
+			actionRequest, "backgroundTaskId");
 
-		String css = ParamUtil.getString(actionRequest, "css");
-		String html = ParamUtil.getString(actionRequest, "html");
-		String js = ParamUtil.getString(actionRequest, "js");
+		_backgroundTaskManager.deleteBackgroundTask(backgroundTaskId);
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
-		jsonObject.put(
-			"content",
-			FragmentEntryRenderUtil.renderFragmentEntry(
-				fragmentEntryId, css, html, js));
-
-		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, jsonObject);
+		sendRedirect(actionRequest, actionResponse, redirect);
 	}
+
+	@Reference
+	private BackgroundTaskManager _backgroundTaskManager;
 
 }
