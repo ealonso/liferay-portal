@@ -63,9 +63,7 @@ public class JournalFolderIndexer
 		setDefaultSelectedFieldNames(
 			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
 			Field.UID);
-
 		setDefaultSelectedLocalizedFieldNames(Field.DESCRIPTION, Field.TITLE);
-
 		setFilterSearch(true);
 		setPermissionAware(true);
 		setSelectAllLocales(true);
@@ -126,8 +124,6 @@ public class JournalFolderIndexer
 
 		Document document = getBaseModelDocument(CLASS_NAME, journalFolder);
 
-		document.addKeyword(Field.FOLDER_ID, journalFolder.getParentFolderId());
-
 		String[] languageIds = LocaleUtil.toLanguageIds(
 			LanguageUtil.getSupportedLocales());
 
@@ -139,14 +135,15 @@ public class JournalFolderIndexer
 
 		for (String languageId : languageIds) {
 			document.addText(
-				LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
-				title);
-			document.addText(
 				LocalizationUtil.getLocalizedName(
 					Field.DESCRIPTION, languageId),
 				journalFolder.getDescription());
+			document.addText(
+				LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
+				title);
 		}
 
+		document.addKeyword(Field.FOLDER_ID, journalFolder.getParentFolderId());
 		document.addKeyword(
 			Field.TREE_PATH,
 			StringUtil.split(journalFolder.getTreePath(), CharPool.SLASH));
