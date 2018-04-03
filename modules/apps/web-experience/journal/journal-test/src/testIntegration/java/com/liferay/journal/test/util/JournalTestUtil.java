@@ -676,8 +676,8 @@ public class JournalTestUtil {
 	}
 
 	public static JournalFolder addFolder(
-		long parentFolderId, String name, String description,
-		ServiceContext serviceContext)
+			long parentFolderId, String name, String description,
+			ServiceContext serviceContext)
 		throws Exception {
 
 		JournalFolder folder = JournalFolderLocalServiceUtil.fetchFolder(
@@ -689,7 +689,7 @@ public class JournalTestUtil {
 
 		return JournalFolderLocalServiceUtil.addFolder(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
-			parentFolderId, name, description , serviceContext);
+			parentFolderId, name, description, serviceContext);
 	}
 
 	public static Element addMetadataElement(

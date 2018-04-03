@@ -61,11 +61,10 @@ public class JournalFolderIndexer
 
 	public JournalFolderIndexer() {
 		setDefaultSelectedFieldNames(
-			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME,
-			Field.ENTRY_CLASS_PK, Field.UID);
+			Field.COMPANY_ID, Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK,
+			Field.UID);
 
-		setDefaultSelectedLocalizedFieldNames(
-			Field.DESCRIPTION, Field.TITLE);
+		setDefaultSelectedLocalizedFieldNames(Field.DESCRIPTION, Field.TITLE);
 
 		setFilterSearch(true);
 		setPermissionAware(true);
@@ -102,14 +101,13 @@ public class JournalFolderIndexer
 
 	@Override
 	public void postProcessSearchQuery(
-		BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
-		SearchContext searchContext)
+			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
+			SearchContext searchContext)
 		throws Exception {
 
 		addSearchLocalizedTerm(
 			searchQuery, searchContext, Field.DESCRIPTION, false);
-		addSearchLocalizedTerm(
-			searchQuery, searchContext, Field.TITLE, false);
+		addSearchLocalizedTerm(searchQuery, searchContext, Field.TITLE, false);
 	}
 
 	@Override
@@ -130,9 +128,8 @@ public class JournalFolderIndexer
 
 		document.addKeyword(Field.FOLDER_ID, journalFolder.getParentFolderId());
 
-		String[] languageIds =
-			LocaleUtil.toLanguageIds(
-				LanguageUtil.getSupportedLocales());
+		String[] languageIds = LocaleUtil.toLanguageIds(
+			LanguageUtil.getSupportedLocales());
 
 		String title = journalFolder.getName();
 
@@ -145,7 +142,8 @@ public class JournalFolderIndexer
 				LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
 				title);
 			document.addText(
-				LocalizationUtil.getLocalizedName(Field.DESCRIPTION, languageId),
+				LocalizationUtil.getLocalizedName(
+					Field.DESCRIPTION, languageId),
 				journalFolder.getDescription());
 		}
 
