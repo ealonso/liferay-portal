@@ -17,9 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
+
 JournalArticle article = journalDisplayContext.getArticle();
 
-DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
+DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 
 boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 %>

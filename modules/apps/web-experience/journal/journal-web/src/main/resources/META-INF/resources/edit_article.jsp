@@ -38,52 +38,7 @@ String articleId = BeanParamUtil.getString(article, request, "articleId");
 
 double version = BeanParamUtil.getDouble(article, request, "version", JournalArticleConstants.VERSION_DEFAULT);
 
-String ddmStructureKey = ParamUtil.getString(request, "ddmStructureKey");
-
-if (Validator.isNull(ddmStructureKey) && (article != null)) {
-	ddmStructureKey = article.getDDMStructureKey();
-}
-
-DDMStructure ddmStructure = null;
-
-long ddmStructureId = ParamUtil.getLong(request, "ddmStructureId");
-
-if (ddmStructureId > 0) {
-	ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(ddmStructureId);
-}
-else if (Validator.isNotNull(ddmStructureKey)) {
-	ddmStructure = DDMStructureLocalServiceUtil.fetchStructure((article != null) ? article.getGroupId() : themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(JournalArticle.class), ddmStructureKey, true);
-}
-
-String ddmTemplateKey = ParamUtil.getString(request, "ddmTemplateKey");
-
-if (Validator.isNull(ddmTemplateKey) && (article != null) && Objects.equals(article.getDDMStructureKey(), ddmStructureKey)) {
-	ddmTemplateKey = article.getDDMTemplateKey();
-}
-
-DDMTemplate ddmTemplate = null;
-
-long ddmTemplateId = ParamUtil.getLong(request, "ddmTemplateId");
-
-if (ddmTemplateId > 0) {
-	ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(ddmTemplateId);
-}
-else if (Validator.isNotNull(ddmTemplateKey)) {
-	ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate((article != null) ? article.getGroupId() : themeDisplay.getSiteGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmTemplateKey, true);
-}
-
-if (ddmTemplate == null) {
-	List<DDMTemplate> ddmTemplates = DDMTemplateServiceUtil.getTemplates(company.getCompanyId(), ddmStructure.getGroupId(), PortalUtil.getClassNameId(DDMStructure.class), ddmStructure.getStructureId(), PortalUtil.getClassNameId(JournalArticle.class), true, WorkflowConstants.STATUS_APPROVED);
-
-	if (!ddmTemplates.isEmpty()) {
-		ddmTemplate = ddmTemplates.get(0);
-	}
-}
-
 boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(request, "hideDefaultSuccessMessage", false);
-
-request.setAttribute("edit_article.jsp-structure", ddmStructure);
-request.setAttribute("edit_article.jsp-template", ddmTemplate);
 
 request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 %>
@@ -92,7 +47,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 <portlet:actionURL var="editArticleActionURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
 	<portlet:param name="mvcPath" value="/edit_article.jsp" />
-	<portlet:param name="ddmStructureKey" value="<%= ddmStructureKey %>" />
+	<portlet:param name="ddmStructureKey" value="<%= editJournalDisplayContext.getDDMStructureKey() %>" />
 </portlet:actionURL>
 
 <portlet:renderURL var="editArticleRenderURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
@@ -167,6 +122,8 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 				hasInheritedWorkflowDefinitionLink = true;
 			}
 		}
+
+		DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 
 		boolean workflowEnabled = hasInheritedWorkflowDefinitionLink || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
 
@@ -249,6 +206,11 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<portlet:param name="mvcPath" value="/preview_article_content.jsp" />
 
 	<c:if test="<%= article != null %>">
+
+		<%
+		DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
+		%>
+
 		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
 		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
 		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />

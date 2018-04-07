@@ -17,13 +17,15 @@
 <%@ include file="/init.jsp" %>
 
 <%
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
+
 JournalArticle article = journalDisplayContext.getArticle();
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 long classNameId = ParamUtil.getLong(request, "classNameId");
 
-DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
-DDMTemplate ddmTemplate = (DDMTemplate)request.getAttribute("edit_article.jsp-template");
+DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
+DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
 %>
 
 <aui:input name="groupId" type="hidden" value="<%= groupId %>" />

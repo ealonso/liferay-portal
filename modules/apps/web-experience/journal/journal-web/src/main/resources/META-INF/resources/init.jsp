@@ -53,7 +53,6 @@ page import="com.liferay.dynamic.data.mapping.model.DDMTemplate" %><%@
 page import="com.liferay.dynamic.data.mapping.model.LocalizedValue" %><%@
 page import="com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil" %><%@
 page import="com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil" %><%@
-page import="com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil" %><%@
 page import="com.liferay.dynamic.data.mapping.service.permission.DDMStructurePermission" %><%@
 page import="com.liferay.dynamic.data.mapping.service.permission.DDMTemplatePermission" %><%@
 page import="com.liferay.dynamic.data.mapping.util.DDMNavigationHelper" %><%@

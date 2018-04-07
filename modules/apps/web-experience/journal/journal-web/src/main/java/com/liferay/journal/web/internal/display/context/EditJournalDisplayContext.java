@@ -14,18 +14,29 @@
 
 package com.liferay.journal.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+
+import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
@@ -70,6 +81,111 @@ public class EditJournalDisplayContext {
 		_classNameId = BeanParamUtil.getLong(_article, _request, "classNameId");
 
 		return _classNameId;
+	}
+
+	public DDMStructure getDDMStructure() {
+		if (_ddmStructure != null) {
+			return _ddmStructure;
+		}
+
+		long ddmStructureId = ParamUtil.getLong(_request, "ddmStructureId");
+
+		if (ddmStructureId > 0) {
+			_ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
+				ddmStructureId);
+		}
+		else if (Validator.isNotNull(getDDMStructureKey())) {
+			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+			long groupId = themeDisplay.getSiteGroupId();
+
+			if (_article != null) {
+				groupId = _article.getGroupId();
+			}
+
+			_ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
+				groupId, PortalUtil.getClassNameId(JournalArticle.class),
+				getDDMStructureKey(), true);
+		}
+
+		return _ddmStructure;
+	}
+
+	public String getDDMStructureKey() {
+		if (_ddmStructureKey != null) {
+			return _ddmStructureKey;
+		}
+
+		_ddmStructureKey = ParamUtil.getString(_request, "ddmStructureKey");
+
+		if (Validator.isNull(_ddmStructureKey) && (_article != null)) {
+			_ddmStructureKey = _article.getDDMStructureKey();
+		}
+
+		return _ddmStructureKey;
+	}
+
+	public DDMTemplate getDDMTemplate() throws PortalException {
+		if (_ddmTemplate != null) {
+			return _ddmTemplate;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long ddmTemplateId = ParamUtil.getLong(_request, "ddmTemplateId");
+
+		if (ddmTemplateId > 0) {
+			_ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(
+				ddmTemplateId);
+		}
+		else if (Validator.isNotNull(getDDMTemplateKey())) {
+			long groupId = themeDisplay.getSiteGroupId();
+
+			if (_article != null) {
+				groupId = _article.getGroupId();
+			}
+
+			_ddmTemplate = DDMTemplateLocalServiceUtil.fetchTemplate(
+				groupId, PortalUtil.getClassNameId(DDMStructure.class),
+				getDDMTemplateKey(), true);
+		}
+
+		if (_ddmTemplate == null) {
+			DDMStructure ddmStructure = getDDMStructure();
+
+			List<DDMTemplate> ddmTemplates =
+				DDMTemplateServiceUtil.getTemplates(
+					themeDisplay.getCompanyId(), ddmStructure.getGroupId(),
+					PortalUtil.getClassNameId(DDMStructure.class),
+					ddmStructure.getStructureId(),
+					PortalUtil.getClassNameId(JournalArticle.class), true,
+					WorkflowConstants.STATUS_APPROVED);
+
+			if (!ddmTemplates.isEmpty()) {
+				_ddmTemplate = ddmTemplates.get(0);
+			}
+		}
+
+		return _ddmTemplate;
+	}
+
+	public String getDDMTemplateKey() {
+		if (_ddmTemplateKey != null) {
+			return _ddmTemplateKey;
+		}
+
+		_ddmTemplateKey = ParamUtil.getString(_request, "ddmTemplateKey");
+
+		if (Validator.isNull(_ddmTemplateKey) && (_article != null) &&
+			Objects.equals(
+				_article.getDDMStructureKey(), getDDMStructureKey())) {
+
+			_ddmTemplateKey = _article.getDDMTemplateKey();
+		}
+
+		return _ddmTemplateKey;
 	}
 
 	public String getDefaultLanguageId() {
@@ -137,6 +253,10 @@ public class EditJournalDisplayContext {
 
 	private final JournalArticle _article;
 	private Long _classNameId;
+	private DDMStructure _ddmStructure;
+	private String _ddmStructureKey;
+	private DDMTemplate _ddmTemplate;
+	private String _ddmTemplateKey;
 	private String _redirect;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
