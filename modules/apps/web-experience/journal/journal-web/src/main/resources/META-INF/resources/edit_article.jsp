@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, journalDisplayContext.getArticle());
+
 String redirect = ParamUtil.getString(request, "redirect");
 
 String portletResource = ParamUtil.getString(request, "portletResource");
@@ -32,7 +34,6 @@ long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 
 long folderId = BeanParamUtil.getLong(article, request, "folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
-long classNameId = BeanParamUtil.getLong(article, request, "classNameId");
 long classPK = BeanParamUtil.getLong(article, request, "classPK");
 
 String articleId = BeanParamUtil.getString(article, request, "articleId");
@@ -109,7 +110,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	if (Validator.isNotNull(redirect)) {
 		portletDisplay.setURLBack(redirect);
 	}
-	else if ((classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) && (article != null)) {
+	else if (!editJournalDisplayContext.isEditDefaultValues() && (article != null)) {
 		PortletURL backURL = liferayPortletResponse.createRenderURL();
 
 		backURL.setParameter("groupId", String.valueOf(article.getGroupId()));
@@ -120,7 +121,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 	String title = StringPool.BLANK;
 
-	if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+	if (editJournalDisplayContext.isEditDefaultValues()) {
 		title = LanguageUtil.get(request, "structure-default-values");
 	}
 	else if ((article != null) && !article.isNew()) {
@@ -154,7 +155,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	onSubmit="event.preventDefault();"
 >
 	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
-	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= hideDefaultSuccessMessage || (classNameId == PortalUtil.getClassNameId(DDMStructure.class)) %>" />
+	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= hideDefaultSuccessMessage || (editJournalDisplayContext.getClassNameId() == PortalUtil.getClassNameId(DDMStructure.class)) %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 	<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
@@ -162,7 +163,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
 	<aui:input name="privateLayout" type="hidden" value="<%= layout.isPrivateLayout() %>" />
 	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
-	<aui:input name="classNameId" type="hidden" value="<%= classNameId %>" />
+	<aui:input name="classNameId" type="hidden" value="<%= editJournalDisplayContext.getClassNameId() %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
 	<aui:input name="articleId" type="hidden" value="<%= articleId %>" />
 	<aui:input name="articleIds" type="hidden" value="<%= articleId + JournalPortlet.VERSION_SEPARATOR + version %>" />
@@ -191,7 +192,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(LiferayFileItem.THRESHOLD_SIZE, locale) %>" key="please-enter-valid-content-with-valid-content-size-no-larger-than-x" translateArguments="<%= false %>" />
 		</liferay-ui:error>
 
-		<c:if test="<%= (article != null) && !article.isNew() && (classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+		<c:if test="<%= (article != null) && !article.isNew() && !editJournalDisplayContext.isEditDefaultValues() %>">
 			<liferay-frontend:info-bar>
 				<aui:workflow-status id="<%= String.valueOf(article.getArticleId()) %>" markupView="lexicon" showHelpMessage="<%= false %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= article.getStatus() %>" version="<%= String.valueOf(article.getVersion()) %>" />
 			</liferay-frontend:info-bar>
@@ -226,7 +227,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 		}
 		%>
 
-		<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+		<c:if test="<%= !editJournalDisplayContext.isEditDefaultValues() %>">
 			<c:if test="<%= approved %>">
 				<div class="alert alert-info">
 					<liferay-ui:message key="a-new-version-is-created-automatically-if-this-content-is-modified" />
@@ -274,7 +275,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 				publishButtonLabel = "submit-for-publication";
 			}
 
-			if (classNameId > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
+			if (editJournalDisplayContext.isEditDefaultValues()) {
 				publishButtonLabel = "save";
 			}
 			%>
@@ -282,7 +283,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 			<c:if test="<%= hasSavePermission %>">
 				<aui:button data-actionname="<%= Constants.PUBLISH %>" disabled="<%= pending %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
 
-				<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+				<c:if test="<%= !editJournalDisplayContext.isEditDefaultValues() %>">
 					<aui:button data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
 				</c:if>
 			</c:if>
