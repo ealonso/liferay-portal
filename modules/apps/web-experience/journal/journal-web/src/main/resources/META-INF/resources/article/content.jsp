@@ -23,8 +23,6 @@ JournalArticle article = journalDisplayContext.getArticle();
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 
-long classNameId = ParamUtil.getLong(request, "classNameId");
-
 String newArticleId = ParamUtil.getString(request, "newArticleId");
 
 DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
@@ -110,14 +108,14 @@ if (!searchRestriction) {
 
 <aui:fieldset>
 	<aui:input autoFocus="<%= true %>" label="title" localized="<%= true %>" name="titleMapAsXML" type="text" wrapperCssClass="article-content-title">
-		<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+		<c:if test="<%= !editJournalDisplayContext.isEditDefaultValues() %>">
 			<aui:validator name="required" />
 		</c:if>
 	</aui:input>
 
 	<c:if test="<%= (article == null) || article.isNew() %>">
 		<c:choose>
-			<c:when test="<%= journalWebConfiguration.journalArticleForceAutogenerateId() || (classNameId != JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
+			<c:when test="<%= journalWebConfiguration.journalArticleForceAutogenerateId() || editJournalDisplayContext.isEditDefaultValues() %>">
 				<aui:input name="newArticleId" type="hidden" />
 				<aui:input name="autoArticleId" type="hidden" value="<%= true %>" />
 			</c:when>
@@ -144,7 +142,7 @@ if (!searchRestriction) {
 
 	<div class="article-content-content">
 		<liferay-ddm:html
-			checkRequired="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>"
+			checkRequired="<%= !editJournalDisplayContext.isEditDefaultValues() %>"
 			classNameId="<%= PortalUtil.getClassNameId(DDMStructure.class) %>"
 			classPK="<%= ddmStructure.getStructureId() %>"
 			ddmFormValues="<%= journalDisplayContext.getDDMFormValues(ddmStructure) %>"
@@ -174,7 +172,7 @@ if (!searchRestriction) {
 	<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 	<portlet:param name="refererPortletName" value="<%= JournalPortletKeys.JOURNAL %>" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-	<portlet:param name="classNameId" value="<%= String.valueOf(classNameId) %>" />
+	<portlet:param name="classNameId" value="<%= String.valueOf(editJournalDisplayContext.getClassNameId()) %>" />
 	<portlet:param name="templateId" value="<%= (ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : StringPool.BLANK %>" />
 	<portlet:param name="showCacheableInput" value="<%= Boolean.TRUE.toString() %>" />
 </liferay-portlet:renderURL>

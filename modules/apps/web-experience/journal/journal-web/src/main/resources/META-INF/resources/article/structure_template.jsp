@@ -22,7 +22,6 @@ EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayCont
 JournalArticle article = journalDisplayContext.getArticle();
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
-long classNameId = ParamUtil.getLong(request, "classNameId");
 
 DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
@@ -46,7 +45,7 @@ DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
 		</c:choose>
 	</span>
 
-	<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
+	<c:if test="<%= !editJournalDisplayContext.isEditDefaultValues() %>">
 		<div class="button-holder">
 			<aui:button id="selectStructure" value="select" />
 		</div>
