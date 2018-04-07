@@ -17,9 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, journalDisplayContext.getArticle());
-
-String redirect = ParamUtil.getString(request, "redirect");
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
 
 String portletResource = ParamUtil.getString(request, "portletResource");
 
@@ -82,51 +80,13 @@ if (ddmTemplate == null) {
 	}
 }
 
-boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
-
 boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(request, "hideDefaultSuccessMessage", false);
-
-request.setAttribute("edit_article.jsp-redirect", redirect);
 
 request.setAttribute("edit_article.jsp-structure", ddmStructure);
 request.setAttribute("edit_article.jsp-template", ddmTemplate);
 
 request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 %>
-
-<c:if test="<%= showHeader %>">
-
-	<%
-	portletDisplay.setShowBackIcon(true);
-
-	if (Validator.isNotNull(redirect)) {
-		portletDisplay.setURLBack(redirect);
-	}
-	else if (!editJournalDisplayContext.isEditDefaultValues() && (article != null)) {
-		PortletURL backURL = liferayPortletResponse.createRenderURL();
-
-		backURL.setParameter("groupId", String.valueOf(article.getGroupId()));
-		backURL.setParameter("folderId", String.valueOf(article.getFolderId()));
-
-		portletDisplay.setURLBack(backURL.toString());
-	}
-
-	String title = StringPool.BLANK;
-
-	if (editJournalDisplayContext.isEditDefaultValues()) {
-		title = LanguageUtil.get(request, "structure-default-values");
-	}
-	else if ((article != null) && !article.isNew()) {
-		title = article.getTitle(locale);
-	}
-	else {
-		title = LanguageUtil.get(request, "new-web-content");
-	}
-
-	renderResponse.setTitle(title);
-	%>
-
-</c:if>
 
 <aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
 
@@ -148,7 +108,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 >
 	<aui:input name="<%= ActionRequest.ACTION_NAME %>" type="hidden" />
 	<aui:input name="hideDefaultSuccessMessage" type="hidden" value="<%= hideDefaultSuccessMessage || (editJournalDisplayContext.getClassNameId() == PortalUtil.getClassNameId(DDMStructure.class)) %>" />
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
+	<aui:input name="redirect" type="hidden" value="<%= editJournalDisplayContext.getRedirect() %>" />
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 	<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
@@ -280,7 +240,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 				</c:if>
 			</c:if>
 
-			<aui:button href="<%= redirect %>" type="cancel" />
+			<aui:button href="<%= editJournalDisplayContext.getRedirect() %>" type="cancel" />
 		</liferay-frontend:button-row>
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
@@ -297,7 +257,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 </liferay-portlet:renderURL>
 
 <portlet:renderURL var="editArticleURL">
-	<portlet:param name="redirect" value="<%= redirect %>" />
+	<portlet:param name="redirect" value="<%= editJournalDisplayContext.getRedirect() %>" />
 	<portlet:param name="mvcPath" value="/edit_article.jsp" />
 	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 	<portlet:param name="articleId" value="<%= articleId %>" />
