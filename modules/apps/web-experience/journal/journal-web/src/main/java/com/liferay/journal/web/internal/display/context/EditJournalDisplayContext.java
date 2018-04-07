@@ -19,12 +19,17 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
+import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
+import com.liferay.journal.web.util.JournalUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -38,8 +43,10 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import java.util.List;
 import java.util.Objects;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,6 +78,16 @@ public class EditJournalDisplayContext {
 		portletDisplay.setURLBack(_getBackURL());
 
 		_renderResponse.setTitle(_getTitle());
+	}
+
+	public String getArticleId() {
+		if (_articleId != null) {
+			return _articleId;
+		}
+
+		_articleId = BeanParamUtil.getString(_article, _request, "articleId");
+
+		return _articleId;
 	}
 
 	public long getClassNameId() {
@@ -200,6 +217,93 @@ public class EditJournalDisplayContext {
 			_article.getContent(), LocaleUtil.getSiteDefault());
 	}
 
+	public String getEditArticleActionURL() throws Exception {
+		PortletURL editArticleActionURL = _renderResponse.createActionURL();
+
+		editArticleActionURL.setParameter("mvcPath", "/edit_article.jsp");
+		editArticleActionURL.setParameter(
+			"ddmStructureKey", getDDMStructureKey());
+
+		editArticleActionURL.setWindowState(WindowState.MAXIMIZED);
+
+		return editArticleActionURL.toString();
+	}
+
+	public String getEditArticleRenderURL() throws Exception {
+		PortletURL editArticleActionURL = _renderResponse.createRenderURL();
+
+		editArticleActionURL.setParameter("mvcPath", "/edit_article.jsp");
+
+		editArticleActionURL.setWindowState(WindowState.MAXIMIZED);
+
+		return editArticleActionURL.toString();
+	}
+
+	public String getEditArticleURL() {
+		PortletURL editArticleURL = _renderResponse.createRenderURL();
+
+		editArticleURL.setParameter("redirect", getRedirect());
+		editArticleURL.setParameter("mvcPath", "/edit_article.jsp");
+		editArticleURL.setParameter("groupId", String.valueOf(getGroupId()));
+		editArticleURL.setParameter("articleId", getArticleId());
+		editArticleURL.setParameter("version", String.valueOf(getVersion()));
+
+		return editArticleURL.toString();
+	}
+
+	public long getGroupId() {
+		if (_groupId != null) {
+			return _groupId;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		_groupId = BeanParamUtil.getLong(
+			_article, _request, "groupId", themeDisplay.getScopeGroupId());
+
+		return _groupId;
+	}
+
+	public String getPreviewArticleContentURL() throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		LiferayPortletURL previewArticleContentURL =
+			PortletURLFactoryUtil.create(
+				_request, JournalPortletKeys.JOURNAL,
+				PortletRequest.RENDER_PHASE);
+
+		previewArticleContentURL.setParameter(
+			"mvcPath", "/preview_article_content.jsp");
+
+		if (_article != null) {
+			DDMTemplate ddmTemplate = getDDMTemplate();
+
+			previewArticleContentURL.setParameter(
+				"groupId", String.valueOf(getGroupId()));
+			previewArticleContentURL.setParameter("articleId", getArticleId());
+			previewArticleContentURL.setParameter(
+				"version", String.valueOf(getVersion()));
+
+			if (ddmTemplate != null) {
+				previewArticleContentURL.setParameter(
+					"ddmTemplateKey", ddmTemplate.getTemplateKey());
+			}
+			else {
+				previewArticleContentURL.setParameter(
+					"ddmTemplateKey", _article.getDDMTemplateKey());
+			}
+		}
+
+		previewArticleContentURL.setWindowState(LiferayWindowState.POP_UP);
+
+		previewArticleContentURL.setPlid(
+			JournalUtil.getPreviewPlid(_article, themeDisplay));
+
+		return previewArticleContentURL.toString();
+	}
+
 	public String getRedirect() {
 		if (_redirect != null) {
 			return _redirect;
@@ -208,6 +312,18 @@ public class EditJournalDisplayContext {
 		_redirect = ParamUtil.getString(_request, "redirect");
 
 		return _redirect;
+	}
+
+	public double getVersion() {
+		if (_version != null) {
+			return _version;
+		}
+
+		_version = BeanParamUtil.getDouble(
+			_article, _request, "version",
+			JournalArticleConstants.VERSION_DEFAULT);
+
+		return _version;
 	}
 
 	public boolean isEditDefaultValues() {
@@ -252,13 +368,16 @@ public class EditJournalDisplayContext {
 	}
 
 	private final JournalArticle _article;
+	private String _articleId;
 	private Long _classNameId;
 	private DDMStructure _ddmStructure;
 	private String _ddmStructureKey;
 	private DDMTemplate _ddmTemplate;
 	private String _ddmTemplateKey;
+	private Long _groupId;
 	private String _redirect;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private Double _version;
 
 }

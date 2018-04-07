@@ -28,15 +28,9 @@ boolean changeStructure = GetterUtil.getBoolean(ParamUtil.getString(request, "ch
 
 JournalArticle article = journalDisplayContext.getArticle();
 
-long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
-
 long folderId = BeanParamUtil.getLong(article, request, "folderId", JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 long classPK = BeanParamUtil.getLong(article, request, "classPK");
-
-String articleId = BeanParamUtil.getString(article, request, "articleId");
-
-double version = BeanParamUtil.getDouble(article, request, "version", JournalArticleConstants.VERSION_DEFAULT);
 
 boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(request, "hideDefaultSuccessMessage", false);
 
@@ -45,17 +39,8 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 <aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />
 
-<portlet:actionURL var="editArticleActionURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
-	<portlet:param name="mvcPath" value="/edit_article.jsp" />
-	<portlet:param name="ddmStructureKey" value="<%= editJournalDisplayContext.getDDMStructureKey() %>" />
-</portlet:actionURL>
-
-<portlet:renderURL var="editArticleRenderURL" windowState="<%= WindowState.MAXIMIZED.toString() %>">
-	<portlet:param name="mvcPath" value="/edit_article.jsp" />
-</portlet:renderURL>
-
 <liferay-frontend:edit-form
-	action="<%= editArticleActionURL %>"
+	action="<%= editJournalDisplayContext.getEditArticleActionURL() %>"
 	enctype="multipart/form-data"
 	method="post"
 	name="fm1"
@@ -67,15 +52,15 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<aui:input name="portletResource" type="hidden" value="<%= portletResource %>" />
 	<aui:input name="referringPlid" type="hidden" value="<%= referringPlid %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
-	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="groupId" type="hidden" value="<%= editJournalDisplayContext.getGroupId() %>" />
 	<aui:input name="privateLayout" type="hidden" value="<%= layout.isPrivateLayout() %>" />
 	<aui:input name="folderId" type="hidden" value="<%= folderId %>" />
 	<aui:input name="classNameId" type="hidden" value="<%= editJournalDisplayContext.getClassNameId() %>" />
 	<aui:input name="classPK" type="hidden" value="<%= classPK %>" />
-	<aui:input name="articleId" type="hidden" value="<%= articleId %>" />
-	<aui:input name="articleIds" type="hidden" value="<%= articleId + JournalPortlet.VERSION_SEPARATOR + version %>" />
-	<aui:input name="version" type="hidden" value="<%= ((article == null) || article.isNew()) ? version : article.getVersion() %>" />
-	<aui:input name="articleURL" type="hidden" value="<%= editArticleRenderURL %>" />
+	<aui:input name="articleId" type="hidden" value="<%= editJournalDisplayContext.getArticleId() %>" />
+	<aui:input name="articleIds" type="hidden" value="<%= editJournalDisplayContext.getArticleId() + JournalPortlet.VERSION_SEPARATOR + editJournalDisplayContext.getVersion() %>" />
+	<aui:input name="version" type="hidden" value="<%= ((article == null) || article.isNew()) ? editJournalDisplayContext.getVersion() : article.getVersion() %>" />
+	<aui:input name="articleURL" type="hidden" value="<%= editJournalDisplayContext.getEditArticleRenderURL() %>" />
 	<aui:input name="changeStructure" type="hidden" />
 	<aui:input name="ddmStructureId" type="hidden" />
 	<aui:input name="ddmTemplateId" type="hidden" />
@@ -111,7 +96,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 		long inheritedWorkflowDDMStructuresFolderId = JournalFolderLocalServiceUtil.getInheritedWorkflowFolderId(folderId);
 
-		boolean hasInheritedWorkflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalArticle.class.getName());
+		boolean hasInheritedWorkflowDefinitionLink = WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), editJournalDisplayContext.getGroupId(), JournalArticle.class.getName());
 
 		if (inheritedWorkflowDDMStructuresFolderId > 0) {
 			JournalFolder inheritedWorkflowDDMStructuresFolder = JournalFolderLocalServiceUtil.getFolder(inheritedWorkflowDDMStructuresFolderId);
@@ -125,9 +110,9 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 
 		DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 
-		boolean workflowEnabled = hasInheritedWorkflowDefinitionLink || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), groupId, JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
+		boolean workflowEnabled = hasInheritedWorkflowDefinitionLink || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), editJournalDisplayContext.getGroupId(), JournalFolder.class.getName(), folderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), editJournalDisplayContext.getGroupId(), JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, ddmStructure.getStructureId()) || WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(themeDisplay.getCompanyId(), editJournalDisplayContext.getGroupId(), JournalFolder.class.getName(), inheritedWorkflowDDMStructuresFolderId, JournalArticleConstants.DDM_STRUCTURE_ID_ALL);
 
-		if ((article != null) && (version > 0)) {
+		if ((article != null) && (editJournalDisplayContext.getVersion() > 0)) {
 			approved = article.isApproved();
 
 			if (workflowEnabled) {
@@ -169,7 +154,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 				hasSavePermission = JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE);
 			}
 			else {
-				hasSavePermission = JournalFolderPermission.contains(permissionChecker, groupId, folderId, ActionKeys.ADD_ARTICLE);
+				hasSavePermission = JournalFolderPermission.contains(permissionChecker, editJournalDisplayContext.getGroupId(), folderId, ActionKeys.ADD_ARTICLE);
 			}
 
 			String saveButtonLabel = "save";
@@ -202,39 +187,15 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<liferay-portlet:renderURL plid="<%= JournalUtil.getPreviewPlid(article, themeDisplay) %>" var="previewArticleContentURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-	<portlet:param name="mvcPath" value="/preview_article_content.jsp" />
-
-	<c:if test="<%= article != null %>">
-
-		<%
-		DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
-		%>
-
-		<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
-		<portlet:param name="articleId" value="<%= article.getArticleId() %>" />
-		<portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" />
-		<portlet:param name="ddmTemplateKey" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : article.getDDMTemplateKey() %>" />
-	</c:if>
-</liferay-portlet:renderURL>
-
-<portlet:renderURL var="editArticleURL">
-	<portlet:param name="redirect" value="<%= editJournalDisplayContext.getRedirect() %>" />
-	<portlet:param name="mvcPath" value="/edit_article.jsp" />
-	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
-	<portlet:param name="articleId" value="<%= articleId %>" />
-	<portlet:param name="version" value="<%= String.valueOf(version) %>" />
-</portlet:renderURL>
-
 <aui:script use="liferay-portlet-journal">
 	new Liferay.Portlet.Journal(
 		{
 			article: {
-				editUrl: '<%= editArticleURL %>',
-				id: '<%= (article != null) ? HtmlUtil.escape(articleId) : StringPool.BLANK %>',
+				editUrl: '<%= editJournalDisplayContext.getEditArticleURL() %>',
+				id: '<%= (article != null) ? HtmlUtil.escape(editJournalDisplayContext.getArticleId()) : StringPool.BLANK %>',
 
 				<c:if test="<%= (article != null) && !article.isNew() %>">
-					previewUrl: '<%= HtmlUtil.escapeJS(previewArticleContentURL.toString()) %>',
+					previewUrl: '<%= HtmlUtil.escapeJS(editJournalDisplayContext.getPreviewArticleContentURL()) %>',
 				</c:if>
 
 				title: '<%= (article != null) ? HtmlUtil.escapeJS(article.getTitle(locale)) : StringPool.BLANK %>'
