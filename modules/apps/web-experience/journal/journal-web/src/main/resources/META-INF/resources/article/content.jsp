@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, journalDisplayContext.getArticle());
+
 JournalArticle article = journalDisplayContext.getArticle();
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
@@ -28,8 +30,6 @@ String newArticleId = ParamUtil.getString(request, "newArticleId");
 DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
 
 DDMTemplate ddmTemplate = (DDMTemplate)request.getAttribute("edit_article.jsp-template");
-
-String defaultLanguageId = (String)request.getAttribute("edit_article.jsp-defaultLanguageId");
 
 boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 
@@ -53,7 +53,7 @@ if (!searchRestriction) {
 	value="content"
 />
 
-<aui:model-context bean="<%= article %>" defaultLanguageId="<%= defaultLanguageId %>" model="<%= JournalArticle.class %>" />
+<aui:model-context bean="<%= article %>" defaultLanguageId="<%= editJournalDisplayContext.getDefaultLanguageId() %>" model="<%= JournalArticle.class %>" />
 
 <liferay-ui:error exception="<%= ArticleContentException.class %>" message="please-enter-valid-content" />
 <liferay-ui:error exception="<%= ArticleIdException.class %>" message="please-enter-a-valid-id" />
@@ -149,7 +149,7 @@ if (!searchRestriction) {
 			classPK="<%= ddmStructure.getStructureId() %>"
 			ddmFormValues="<%= journalDisplayContext.getDDMFormValues(ddmStructure) %>"
 			ignoreRequestValue="<%= changeStructure %>"
-			requestedLocale="<%= LocaleUtil.fromLanguageId(defaultLanguageId) %>"
+			requestedLocale="<%= LocaleUtil.fromLanguageId(editJournalDisplayContext.getDefaultLanguageId()) %>"
 		/>
 	</div>
 

@@ -17,6 +17,8 @@ package com.liferay.journal.web.internal.display.context;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,6 +42,18 @@ public class EditJournalDisplayContext {
 		_classNameId = BeanParamUtil.getLong(_article, _request, "classNameId");
 
 		return _classNameId;
+	}
+
+	public String getDefaultLanguageId() {
+		String defaultLanguageId = LocaleUtil.toLanguageId(
+			LocaleUtil.getSiteDefault());
+
+		if (_article == null) {
+			return defaultLanguageId;
+		}
+
+		return LocalizationUtil.getDefaultLanguageId(
+			_article.getContent(), LocaleUtil.getSiteDefault());
 	}
 
 	public boolean isEditDefaultValues() {

@@ -82,12 +82,6 @@ if (ddmTemplate == null) {
 	}
 }
 
-String defaultLanguageId = LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault());
-
-if (article != null) {
-	defaultLanguageId = LocalizationUtil.getDefaultLanguageId(article.getContent(), LocaleUtil.getSiteDefault());
-}
-
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
 boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(request, "hideDefaultSuccessMessage", false);
@@ -96,8 +90,6 @@ request.setAttribute("edit_article.jsp-redirect", redirect);
 
 request.setAttribute("edit_article.jsp-structure", ddmStructure);
 request.setAttribute("edit_article.jsp-template", ddmTemplate);
-
-request.setAttribute("edit_article.jsp-defaultLanguageId", defaultLanguageId);
 
 request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 %>
