@@ -20,8 +20,6 @@
 EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
 
 Group group = GroupLocalServiceUtil.fetchGroup(editJournalDisplayContext.getGroupId());
-
-boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 %>
 
 <c:choose>
@@ -37,7 +35,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
 
-		if (changeStructure && (article != null)) {
+		if (editJournalDisplayContext.getChangeStructure() && (article != null)) {
 			layoutUuid = article.getLayoutUuid();
 		}
 

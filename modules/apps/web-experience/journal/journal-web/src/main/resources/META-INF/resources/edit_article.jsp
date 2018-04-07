@@ -24,15 +24,11 @@ String portletResource = ParamUtil.getString(request, "portletResource");
 long referringPlid = ParamUtil.getLong(request, "referringPlid");
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 
-boolean changeStructure = GetterUtil.getBoolean(ParamUtil.getString(request, "changeStructure"));
-
 JournalArticle article = journalDisplayContext.getArticle();
 
 long classPK = BeanParamUtil.getLong(article, request, "classPK");
 
 boolean hideDefaultSuccessMessage = ParamUtil.getBoolean(request, "hideDefaultSuccessMessage", false);
-
-request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 %>
 
 <aui:model-context bean="<%= article %>" model="<%= JournalArticle.class %>" />

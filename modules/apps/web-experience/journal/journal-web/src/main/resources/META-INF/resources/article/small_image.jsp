@@ -17,11 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
+EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
+
 JournalArticle article = journalDisplayContext.getArticle();
 
 boolean smallImage = BeanParamUtil.getBoolean(article, request, "smallImage");
-
-boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 %>
 
 <liferay-ui:error-marker
@@ -58,15 +58,15 @@ JournalFileUploadsConfiguration journalFileUploadsConfiguration = (JournalFileUp
 
 			<aui:col width="<%= (smallImage && (article != null)) ? 50 : 100 %>">
 				<aui:fieldset>
-					<aui:input cssClass="lfr-journal-small-image-type" ignoreRequestValue="<%= changeStructure %>" inlineField="<%= true %>" label="small-image-url" name="smallImageType" type="radio" />
+					<aui:input cssClass="lfr-journal-small-image-type" ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>" inlineField="<%= true %>" label="small-image-url" name="smallImageType" type="radio" />
 
-					<aui:input cssClass="lfr-journal-small-image-value" ignoreRequestValue="<%= changeStructure %>" inlineField="<%= true %>" label="" name="smallImageURL" title="small-image-url" />
+					<aui:input cssClass="lfr-journal-small-image-value" ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>" inlineField="<%= true %>" label="" name="smallImageURL" title="small-image-url" />
 				</aui:fieldset>
 
 				<aui:fieldset>
-					<aui:input cssClass="lfr-journal-small-image-type" ignoreRequestValue="<%= changeStructure %>" inlineField="<%= true %>" label="small-image" name="smallImageType" type="radio" />
+					<aui:input cssClass="lfr-journal-small-image-type" ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>" inlineField="<%= true %>" label="small-image" name="smallImageType" type="radio" />
 
-					<aui:input cssClass="lfr-journal-small-image-value" ignoreRequestValue="<%= changeStructure %>" inlineField="<%= true %>" label="" name="smallFile" type="file" />
+					<aui:input cssClass="lfr-journal-small-image-value" ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>" inlineField="<%= true %>" label="" name="smallFile" type="file" />
 				</aui:fieldset>
 			</aui:col>
 		</aui:row>

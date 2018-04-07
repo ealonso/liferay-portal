@@ -97,6 +97,16 @@ public class EditJournalDisplayContext {
 		return _articleId;
 	}
 
+	public boolean getChangeStructure() {
+		if (_changeStructure != null) {
+			return _changeStructure;
+		}
+
+		_changeStructure = ParamUtil.getBoolean(_request, "changeStructure");
+
+		return _changeStructure;
+	}
+
 	public long getClassNameId() {
 		if (_classNameId != null) {
 			return _classNameId;
@@ -511,6 +521,7 @@ public class EditJournalDisplayContext {
 
 	private final JournalArticle _article;
 	private String _articleId;
+	private Boolean _changeStructure;
 	private Long _classNameId;
 	private DDMStructure _ddmStructure;
 	private String _ddmStructureKey;

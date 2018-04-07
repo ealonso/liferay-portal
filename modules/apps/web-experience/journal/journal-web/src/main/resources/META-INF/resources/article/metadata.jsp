@@ -22,8 +22,6 @@ EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayCont
 JournalArticle article = journalDisplayContext.getArticle();
 
 DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
-
-boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
 %>
 
 <liferay-ui:error-marker
@@ -68,7 +66,7 @@ if (article != null) {
 			className="<%= JournalArticle.class.getName() %>"
 			classPK="<%= classPK %>"
 			classTypePK="<%= ddmStructure.getStructureId() %>"
-			ignoreRequestValue="<%= changeStructure %>"
+			ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>"
 		/>
 	</aui:field-wrapper>
 
@@ -76,7 +74,7 @@ if (article != null) {
 		<liferay-asset:asset-tags-selector
 			className="<%= JournalArticle.class.getName() %>"
 			classPK="<%= classPK %>"
-			ignoreRequestValue="<%= changeStructure %>"
+			ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>"
 		/>
 	</aui:field-wrapper>
 

@@ -27,8 +27,6 @@ DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 
 DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
 
-boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_article.jsp-changeStructure"));
-
 long folderId = journalDisplayContext.getFolderId();
 
 boolean searchRestriction = false;
@@ -130,7 +128,7 @@ if (!searchRestriction) {
 			cssClass="form-control"
 			editorName="alloyeditor"
 			formName="fm"
-			ignoreRequestValue="<%= changeStructure %>"
+			ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>"
 			name="descriptionMapAsXML"
 			placeholder="description"
 			type="editor"
@@ -144,7 +142,7 @@ if (!searchRestriction) {
 			classNameId="<%= PortalUtil.getClassNameId(DDMStructure.class) %>"
 			classPK="<%= ddmStructure.getStructureId() %>"
 			ddmFormValues="<%= journalDisplayContext.getDDMFormValues(ddmStructure) %>"
-			ignoreRequestValue="<%= changeStructure %>"
+			ignoreRequestValue="<%= editJournalDisplayContext.getChangeStructure() %>"
 			requestedLocale="<%= LocaleUtil.fromLanguageId(editJournalDisplayContext.getDefaultLanguageId()) %>"
 		/>
 	</div>
