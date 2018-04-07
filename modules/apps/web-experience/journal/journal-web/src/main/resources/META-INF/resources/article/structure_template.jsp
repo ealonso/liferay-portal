@@ -19,15 +19,11 @@
 <%
 EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayContext(request, renderResponse, journalDisplayContext.getArticle());
 
-JournalArticle article = journalDisplayContext.getArticle();
-
-long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
-
 DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
 DDMTemplate ddmTemplate = editJournalDisplayContext.getDDMTemplate();
 %>
 
-<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+<aui:input name="groupId" type="hidden" value="<%= editJournalDisplayContext.getGroupId() %>" />
 <aui:input name="ddmStructureKey" type="hidden" value="<%= ddmStructure.getStructureKey() %>" />
 <aui:input name="ddmTemplateKey" type="hidden" value="<%= (ddmTemplate != null) ? ddmTemplate.getTemplateKey() : StringPool.BLANK %>" />
 

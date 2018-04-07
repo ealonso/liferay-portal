@@ -21,8 +21,6 @@ EditJournalDisplayContext editJournalDisplayContext = new EditJournalDisplayCont
 
 JournalArticle article = journalDisplayContext.getArticle();
 
-long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
-
 String newArticleId = ParamUtil.getString(request, "newArticleId");
 
 DDMStructure ddmStructure = editJournalDisplayContext.getDDMStructure();
@@ -160,7 +158,7 @@ if (!searchRestriction) {
 	<portlet:param name="closeRedirect" value="<%= currentURL %>" />
 	<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 	<portlet:param name="refererPortletName" value="<%= JournalPortletKeys.JOURNAL %>" />
-	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(editJournalDisplayContext.getGroupId()) %>" />
 	<portlet:param name="classNameId" value="<%= String.valueOf(PortalUtil.getClassNameId(DDMStructure.class)) %>" />
 	<portlet:param name="classPK" value="<%= String.valueOf(ddmStructure.getStructureId()) %>" />
 </liferay-portlet:renderURL>
@@ -171,7 +169,7 @@ if (!searchRestriction) {
 	<portlet:param name="closeRedirect" value="<%= currentURL %>" />
 	<portlet:param name="showBackURL" value="<%= Boolean.FALSE.toString() %>" />
 	<portlet:param name="refererPortletName" value="<%= JournalPortletKeys.JOURNAL %>" />
-	<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
+	<portlet:param name="groupId" value="<%= String.valueOf(editJournalDisplayContext.getGroupId()) %>" />
 	<portlet:param name="classNameId" value="<%= String.valueOf(editJournalDisplayContext.getClassNameId()) %>" />
 	<portlet:param name="templateId" value="<%= (ddmTemplate != null) ? String.valueOf(ddmTemplate.getTemplateId()) : StringPool.BLANK %>" />
 	<portlet:param name="showCacheableInput" value="<%= Boolean.TRUE.toString() %>" />
@@ -183,7 +181,7 @@ if (!searchRestriction) {
 			'ddm.basePortletURL': '<%= PortletURLFactoryUtil.create(request, PortletProviderUtil.getPortletId(DDMStructure.class.getName(), PortletProvider.Action.VIEW), PortletRequest.RENDER_PHASE) %>',
 			'ddm.classNameId': '<%= PortalUtil.getClassNameId(DDMStructure.class) %>',
 			'ddm.classPK': <%= ddmStructure.getPrimaryKey() %>,
-			'ddm.groupId': <%= groupId %>,
+			'ddm.groupId': <%= editJournalDisplayContext.getGroupId() %>,
 			'ddm.refererPortletName': '<%= JournalPortletKeys.JOURNAL + ".selectStructure" %>',
 			'ddm.resourceClassNameId': '<%= ddmStructure.getClassNameId() %>',
 			'ddm.searchRestriction': <%= searchRestriction %>,
