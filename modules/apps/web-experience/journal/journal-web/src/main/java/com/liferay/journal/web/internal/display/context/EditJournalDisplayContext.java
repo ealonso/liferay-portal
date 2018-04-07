@@ -22,6 +22,9 @@ import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
+import com.liferay.journal.model.JournalFolder;
+import com.liferay.journal.model.JournalFolderConstants;
+import com.liferay.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.journal.web.util.JournalUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
@@ -30,6 +33,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -251,6 +255,18 @@ public class EditJournalDisplayContext {
 		return editArticleURL.toString();
 	}
 
+	public long getFolderId() {
+		if (_folderId != null) {
+			return _folderId;
+		}
+
+		_folderId = BeanParamUtil.getLong(
+			_article, _request, "folderId",
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		return _folderId;
+	}
+
 	public long getGroupId() {
 		if (_groupId != null) {
 			return _groupId;
@@ -326,12 +342,98 @@ public class EditJournalDisplayContext {
 		return _version;
 	}
 
+	public boolean isApproved() {
+		boolean approved = false;
+
+		if ((_article != null) && (getVersion() > 0)) {
+			approved = _article.isApproved();
+		}
+
+		return approved;
+	}
+
 	public boolean isEditDefaultValues() {
 		if (getClassNameId() > JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public boolean isPending() throws PortalException {
+		boolean pending = false;
+
+		if ((_article != null) && (getVersion() > 0) && isWorkflowEnabled()) {
+			pending = _article.isPending();
+		}
+
+		return pending;
+	}
+
+	public boolean isWorkflowEnabled() throws PortalException {
+		if (_workflowEnabled != null) {
+			return _workflowEnabled;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long inheritedWorkflowDDMStructuresFolderId =
+			JournalFolderLocalServiceUtil.getInheritedWorkflowFolderId(
+				getFolderId());
+
+		boolean hasInheritedWorkflowDefinitionLink =
+			WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+				themeDisplay.getCompanyId(), getGroupId(),
+				JournalArticle.class.getName());
+
+		if (inheritedWorkflowDDMStructuresFolderId > 0) {
+			JournalFolder inheritedWorkflowDDMStructuresFolder =
+				JournalFolderLocalServiceUtil.getFolder(
+					inheritedWorkflowDDMStructuresFolderId);
+
+			hasInheritedWorkflowDefinitionLink = false;
+
+			if (inheritedWorkflowDDMStructuresFolder.getRestrictionType() ==
+					JournalFolderConstants.RESTRICTION_TYPE_INHERIT) {
+
+				hasInheritedWorkflowDefinitionLink = true;
+			}
+		}
+
+		DDMStructure ddmStructure = getDDMStructure();
+
+		if (hasInheritedWorkflowDefinitionLink) {
+			_workflowEnabled = true;
+		}
+
+		if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+				themeDisplay.getCompanyId(), getGroupId(),
+				JournalFolder.class.getName(), getFolderId(),
+				ddmStructure.getStructureId())) {
+
+			_workflowEnabled = true;
+		}
+
+		if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+				themeDisplay.getCompanyId(), getGroupId(),
+				JournalFolder.class.getName(),
+				inheritedWorkflowDDMStructuresFolderId,
+				ddmStructure.getStructureId())) {
+
+			_workflowEnabled = true;
+		}
+
+		if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+				themeDisplay.getCompanyId(), getGroupId(),
+				JournalFolder.class.getName(),
+				inheritedWorkflowDDMStructuresFolderId,
+				JournalArticleConstants.DDM_STRUCTURE_ID_ALL)) {
+
+			_workflowEnabled = true;
+		}
+
+		return _workflowEnabled;
 	}
 
 	private String _getBackURL() {
@@ -374,10 +476,12 @@ public class EditJournalDisplayContext {
 	private String _ddmStructureKey;
 	private DDMTemplate _ddmTemplate;
 	private String _ddmTemplateKey;
+	private Long _folderId;
 	private Long _groupId;
 	private String _redirect;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
 	private Double _version;
+	private Boolean _workflowEnabled;
 
 }
