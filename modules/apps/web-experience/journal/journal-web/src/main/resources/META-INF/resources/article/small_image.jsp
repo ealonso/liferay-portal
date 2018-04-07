@@ -36,21 +36,11 @@ JournalFileUploadsConfiguration journalFileUploadsConfiguration = (JournalFileUp
 %>
 
 <liferay-ui:error exception="<%= ArticleSmallImageNameException.class %>">
-
-	<%
-	String[] imageExtensions = journalFileUploadsConfiguration.imageExtensions();
-	%>
-
-	<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /> <%= HtmlUtil.escape(StringUtil.merge(imageExtensions, ", ")) %>.
+	<liferay-ui:message key="image-names-must-end-with-one-of-the-following-extensions" /> <%= HtmlUtil.escape(StringUtil.merge(journalFileUploadsConfiguration.imageExtensions(), ", ")) %>.
 </liferay-ui:error>
 
 <liferay-ui:error exception="<%= ArticleSmallImageSizeException.class %>">
-
-	<%
-	long imageMaxSize = journalFileUploadsConfiguration.smallImageMaxSize();
-	%>
-
-	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(imageMaxSize, locale) %>" key="please-enter-a-small-image-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+	<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(journalFileUploadsConfiguration.smallImageMaxSize(), locale) %>" key="please-enter-a-small-image-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
 </liferay-ui:error>
 
 <div id="<portlet:namespace />smallImageContainer">

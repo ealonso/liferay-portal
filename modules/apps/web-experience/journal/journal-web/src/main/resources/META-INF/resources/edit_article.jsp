@@ -70,12 +70,7 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 		<liferay-ui:error exception="<%= DuplicateFileEntryException.class %>" message="a-file-with-that-name-already-exists" />
 
 		<liferay-ui:error exception="<%= FileSizeException.class %>">
-
-			<%
-			long fileMaxSize = DLValidatorUtil.getMaxAllowableSize();
-			%>
-
-			<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(fileMaxSize, locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
+			<liferay-ui:message arguments="<%= TextFormatter.formatStorageSize(DLValidatorUtil.getMaxAllowableSize(), locale) %>" key="please-enter-a-file-with-a-valid-file-size-no-larger-than-x" translateArguments="<%= false %>" />
 		</liferay-ui:error>
 
 		<liferay-ui:error exception="<%= LiferayFileItemException.class %>">
