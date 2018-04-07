@@ -25,6 +25,8 @@ import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
+import com.liferay.journal.web.internal.security.permission.resource.JournalArticlePermission;
+import com.liferay.journal.web.internal.security.permission.resource.JournalFolderPermission;
 import com.liferay.journal.web.util.JournalUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
@@ -33,6 +35,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -320,6 +323,18 @@ public class EditJournalDisplayContext {
 		return previewArticleContentURL.toString();
 	}
 
+	public String getPublishButtonLabel() throws PortalException {
+		if (isWorkflowEnabled()) {
+			return "submit-for-publication";
+		}
+
+		if (isEditDefaultValues()) {
+			return "save";
+		}
+
+		return "publish";
+	}
+
 	public String getRedirect() {
 		if (_redirect != null) {
 			return _redirect;
@@ -328,6 +343,16 @@ public class EditJournalDisplayContext {
 		_redirect = ParamUtil.getString(_request, "redirect");
 
 		return _redirect;
+	}
+
+	public String getSaveButtonLabel() {
+		if ((_article == null) || _article.isApproved() || _article.isDraft() ||
+			_article.isExpired() || _article.isScheduled()) {
+
+			return "save-as-draft";
+		}
+
+		return "save";
 	}
 
 	public double getVersion() {
@@ -340,6 +365,21 @@ public class EditJournalDisplayContext {
 			JournalArticleConstants.VERSION_DEFAULT);
 
 		return _version;
+	}
+
+	public boolean hasSavePermission() throws PortalException {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if ((_article != null) && !_article.isNew()) {
+			return JournalArticlePermission.contains(
+				themeDisplay.getPermissionChecker(), _article,
+				ActionKeys.UPDATE);
+		}
+
+		return JournalFolderPermission.contains(
+			themeDisplay.getPermissionChecker(), getGroupId(), getFolderId(),
+			ActionKeys.ADD_ARTICLE);
 	}
 
 	public boolean isApproved() {

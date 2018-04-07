@@ -113,39 +113,11 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 		<liferay-frontend:button-row
 			cssClass="journal-article-button-row"
 		>
-
-			<%
-			boolean hasSavePermission = false;
-
-			if ((article != null) && !article.isNew()) {
-				hasSavePermission = JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE);
-			}
-			else {
-				hasSavePermission = JournalFolderPermission.contains(permissionChecker, editJournalDisplayContext.getGroupId(), editJournalDisplayContext.getFolderId(), ActionKeys.ADD_ARTICLE);
-			}
-
-			String saveButtonLabel = "save";
-
-			if ((article == null) || article.isApproved() || article.isDraft() || article.isExpired() || article.isScheduled()) {
-				saveButtonLabel = "save-as-draft";
-			}
-
-			String publishButtonLabel = "publish";
-
-			if (editJournalDisplayContext.isWorkflowEnabled()) {
-				publishButtonLabel = "submit-for-publication";
-			}
-
-			if (editJournalDisplayContext.isEditDefaultValues()) {
-				publishButtonLabel = "save";
-			}
-			%>
-
-			<c:if test="<%= hasSavePermission %>">
-				<aui:button data-actionname="<%= Constants.PUBLISH %>" disabled="<%= editJournalDisplayContext.isPending() %>" name="publishButton" type="submit" value="<%= publishButtonLabel %>" />
+			<c:if test="<%= editJournalDisplayContext.hasSavePermission() %>">
+				<aui:button data-actionname="<%= Constants.PUBLISH %>" disabled="<%= editJournalDisplayContext.isPending() %>" name="publishButton" type="submit" value="<%= editJournalDisplayContext.getPublishButtonLabel() %>" />
 
 				<c:if test="<%= !editJournalDisplayContext.isEditDefaultValues() %>">
-					<aui:button data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= saveButtonLabel %>" />
+					<aui:button data-actionname='<%= ((article == null) || Validator.isNull(article.getArticleId())) ? "addArticle" : "updateArticle" %>' name="saveButton" primary="<%= false %>" type="submit" value="<%= editJournalDisplayContext.getSaveButtonLabel() %>" />
 				</c:if>
 			</c:if>
 
