@@ -83,16 +83,8 @@ if (ddmTemplate == null) {
 
 String defaultLanguageId = LocaleUtil.toLanguageId(LocaleUtil.getSiteDefault());
 
-boolean changeableDefaultLanguage = journalWebConfiguration.changeableDefaultLanguage();
-
 if (article != null) {
-	String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(article.getContent(), LocaleUtil.getSiteDefault());
-
-	if (!Objects.equals(defaultLanguageId, articleDefaultLanguageId)) {
-		changeableDefaultLanguage = true;
-	}
-
-	defaultLanguageId = articleDefaultLanguageId;
+	defaultLanguageId = LocalizationUtil.getDefaultLanguageId(article.getContent(), LocaleUtil.getSiteDefault());
 }
 
 boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
@@ -180,21 +172,6 @@ request.setAttribute("edit_article.jsp-changeStructure", changeStructure);
 	<aui:input name="ddmStructureId" type="hidden" />
 	<aui:input name="ddmTemplateId" type="hidden" />
 	<aui:input name="workflowAction" type="hidden" value="<%= String.valueOf(WorkflowConstants.ACTION_SAVE_DRAFT) %>" />
-
-	<%
-	DDMFormValues ddmFormValues = journalDisplayContext.getDDMFormValues(ddmStructure);
-
-	Set<Locale> availableLocalesSet = new HashSet<>();
-
-	availableLocalesSet.add(LocaleUtil.fromLanguageId(defaultLanguageId));
-	availableLocalesSet.addAll(journalDisplayContext.getAvailableArticleLocales());
-
-	if (ddmFormValues != null) {
-		availableLocalesSet.addAll(ddmFormValues.getAvailableLocales());
-	}
-
-	Locale[] availableLocales = availableLocalesSet.toArray(new Locale[availableLocalesSet.size()]);
-	%>
 
 	<liferay-frontend:edit-form-content>
 		<liferay-ui:error exception="<%= ArticleContentSizeException.class %>" message="you-have-exceeded-the-maximum-web-content-size-allowed" />
