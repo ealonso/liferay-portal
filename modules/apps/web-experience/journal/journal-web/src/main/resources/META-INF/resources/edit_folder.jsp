@@ -263,7 +263,7 @@ renderResponse.setTitle(title);
 												}
 											%>
 
-												<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+												<aui:option label="<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) %>" selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 											<%
 											}
@@ -325,7 +325,7 @@ renderResponse.setTitle(title);
 								}
 							%>
 
-								<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+								<aui:option label="<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) %>" selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 							<%
 							}
@@ -364,7 +364,7 @@ renderResponse.setTitle(title);
 			for (WorkflowDefinition workflowDefinition : workflowDefinitions) {
 			%>
 
-				<aui:option label='<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) + " (" + LanguageUtil.format(request, "version-x", workflowDefinition.getVersion(), false) + ")" %>' selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
+				<aui:option label="<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) %>" selected="<% selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
 
 			<%
 			}
