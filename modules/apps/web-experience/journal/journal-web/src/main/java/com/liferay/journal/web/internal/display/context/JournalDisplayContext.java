@@ -23,10 +23,8 @@ import com.liferay.dynamic.data.mapping.util.DDMNavigationHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
 import com.liferay.frontend.taglib.servlet.taglib.ManagementBarFilterItem;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
@@ -207,7 +205,7 @@ public class JournalDisplayContext {
 								"editEntry', {action: 'moveEntries']);",
 								"void(0);"));
 						dropdownItem.setIcon("change");
-						dropdownItem.setLabel( "move");
+						dropdownItem.setLabel("move");
 						dropdownItem.setQuickAction(true);
 					});
 			}
@@ -410,22 +408,18 @@ public class JournalDisplayContext {
 					List<DDMStructure> ddmStructures = getDDMStructures();
 
 					for (DDMStructure ddmStructure : ddmStructures) {
-						Consumer<DropdownItem> consumer =
-							SafeConsumer.ignore(
-								dropdownItem -> {
-									dropdownItem.setHref(
-										_liferayPortletResponse.
-											createRenderURL(),
-										"mvcPath", "/edit_article.jsp",
-										"redirect",
-										PortalUtil.getCurrentURL(_request),
-										"groupId",
-										String.valueOf(
-											themeDisplay.getScopeGroupId()),
-										"folderId",
-										String.valueOf(getFolderId()),
-										"ddmStructureKey",
-										ddmStructure.getStructureKey());
+						Consumer<DropdownItem> consumer = SafeConsumer.ignore(
+							dropdownItem -> {
+								dropdownItem.setHref(
+									_liferayPortletResponse.createRenderURL(),
+									"mvcPath", "/edit_article.jsp", "redirect",
+									PortalUtil.getCurrentURL(_request),
+									"groupId",
+									String.valueOf(
+										themeDisplay.getScopeGroupId()),
+									"folderId", String.valueOf(getFolderId()),
+									"ddmStructureKey",
+									ddmStructure.getStructureKey());
 
 									dropdownItem.setLabel(
 										ddmStructure.getUnambiguousName(

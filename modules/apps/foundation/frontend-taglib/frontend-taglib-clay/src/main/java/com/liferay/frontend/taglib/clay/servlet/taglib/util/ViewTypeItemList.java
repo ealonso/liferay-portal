@@ -79,7 +79,8 @@ public class ViewTypeItemList extends ArrayList<ViewTypeItem> {
 		ViewTypeItem viewTypeItem = new ViewTypeItem(_request);
 
 		if (Validator.isNotNull(_selectedType)) {
-			viewTypeItem.setActive(Objects.equals(_selectedType, "descriptive"));
+			viewTypeItem.setActive(
+				Objects.equals(_selectedType, "descriptive"));
 		}
 
 		if (Validator.isNotNull(_portletURL)) {
@@ -102,8 +103,7 @@ public class ViewTypeItemList extends ArrayList<ViewTypeItem> {
 		ViewTypeItem viewTypeItem = new ViewTypeItem(_request);
 
 		if (Validator.isNotNull(_selectedType)) {
-			viewTypeItem.setActive(
-				Objects.equals(_selectedType, "list"));
+			viewTypeItem.setActive(Objects.equals(_selectedType, "list"));
 		}
 
 		if (Validator.isNotNull(_portletURL)) {

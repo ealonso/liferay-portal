@@ -182,6 +182,9 @@ public class ManagementToolbarTag extends BaseClayTag {
 	}
 
 	private static final String[] _NAMESPACED_PARAMS =
-		{"infoPanelId", "searchContainerId", "searchFormName", "searchInputName"};
+		{
+			"infoPanelId", "searchContainerId", "searchFormName",
+			"searchInputName"
+		};
 
 }
