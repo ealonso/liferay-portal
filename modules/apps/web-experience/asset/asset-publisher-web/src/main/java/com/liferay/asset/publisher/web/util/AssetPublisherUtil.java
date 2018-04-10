@@ -358,7 +358,7 @@ public class AssetPublisherUtil {
 			int end)
 		throws Exception {
 
-		List<AssetEntry> temp = null;
+		List<AssetEntry> assetEntries = null;
 
 		if (isSearchWithIndex(portletName, assetEntryQuery)) {
 			BaseModelSearchResult<AssetEntry> baseModelSearchResult =
@@ -368,18 +368,18 @@ public class AssetPublisherUtil {
 					assetEntryQuery.getKeywords(), layout, locale, scopeGroupId,
 					timeZone, userId, start, end);
 
-			temp = baseModelSearchResult.getBaseModels();
+			assetEntries = baseModelSearchResult.getBaseModels();
 		}
 		else {
 			assetEntryQuery.setEnd(end);
 			assetEntryQuery.setStart(start);
 
-			temp = _assetEntryService.getEntries(assetEntryQuery);
+			assetEntries = _assetEntryService.getEntries(assetEntryQuery);
 		}
 
 		List<AssetEntry> results = new ArrayList<>();
 
-		for (AssetEntry assetEntry : temp) {
+		for (AssetEntry assetEntry : assetEntries) {
 			AssetRendererFactory<?> assetRendererFactory =
 				AssetRendererFactoryRegistryUtil.
 					getAssetRendererFactoryByClassName(
