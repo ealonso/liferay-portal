@@ -18,6 +18,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
@@ -35,7 +36,6 @@ import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -75,7 +75,7 @@ public class JournalFolderIndexerLocalizedTest {
 	}
 
 	@Test
-	public void testJapaneseSearchSimilarTexts() throws Exception {
+	public void testJapaneseSearchWithSimilarTexts() throws Exception {
 		GroupTestUtil.updateDisplaySettings(
 			_group.getGroupId(), null, LocaleUtil.JAPAN);
 
@@ -97,13 +97,13 @@ public class JournalFolderIndexerLocalizedTest {
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title2,
 			description2, serviceContext);
 
-		String word1 = "東京";
+		String searchTerm = "東京";
 
-		Document document1 = _search(word1, LocaleUtil.JAPAN);
+		Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-		List<String> fields1 = _getFieldValues("title", document1);
+		List<String> fields = _getFieldValues("title", document);
 
-		Assert.assertTrue(fields1.contains("title_ja_JP"));
+		Assert.assertTrue(fields.contains("title_ja_JP"));
 	}
 
 	@Test
@@ -122,16 +122,17 @@ public class JournalFolderIndexerLocalizedTest {
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, description,
 			serviceContext);
 
-		String word1 = "平家";
-		String word2 = "諸行";
+		String searchTerm1 = "平家";
 
-		Document document1 = _search(word1, LocaleUtil.JAPAN);
+		Document document1 = _search(searchTerm1, LocaleUtil.JAPAN);
 
 		List<String> fields1 = _getFieldValues("title", document1);
 
 		Assert.assertTrue(fields1.contains("title_ja_JP"));
 
-		Document document2 = _search(word2, LocaleUtil.JAPAN);
+		String searchTerm2 = "諸行";
+
+		Document document2 = _search(searchTerm2, LocaleUtil.JAPAN);
 
 		List<String> fields2 = _getFieldValues("description", document2);
 
@@ -154,14 +155,14 @@ public class JournalFolderIndexerLocalizedTest {
 		return filteredFields;
 	}
 
-	private SearchContext _getSearchContext(
-			String searchTerm, Locale locale, long groupId)
+	private SearchContext _getSearchContext(String searchTerm, Locale locale)
 		throws Exception {
 
 		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
-			groupId);
+			_group.getGroupId());
 
 		searchContext.setKeywords(searchTerm);
+
 		searchContext.setLocale(locale);
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
@@ -182,13 +183,8 @@ public class JournalFolderIndexerLocalizedTest {
 	}
 
 	private Document _search(String searchTerm, Locale locale) {
-		return _search(searchTerm, locale, _group.getGroupId());
-	}
-
-	private Document _search(String searchTerm, Locale locale, long groupId) {
 		try {
-			SearchContext searchContext = _getSearchContext(
-				searchTerm, locale, groupId);
+			SearchContext searchContext = _getSearchContext(searchTerm, locale);
 
 			Hits hits = _indexer.search(searchContext);
 
