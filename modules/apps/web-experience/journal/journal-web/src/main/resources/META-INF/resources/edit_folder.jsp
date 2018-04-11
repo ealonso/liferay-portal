@@ -288,7 +288,6 @@ renderResponse.setTitle(title);
 												%>
 
 												<aui:option label="<%= HtmlUtil.escape(workflowDefinition.getTitle(languageId)) %>" selected="<%= selected %>" value="<%= HtmlUtil.escapeAttribute(workflowDefinition.getName()) + StringPool.AT + workflowDefinition.getVersion() %>" />
-
 											</aui:select>
 										</liferay-ui:search-container-column-text>
 									</c:if>
