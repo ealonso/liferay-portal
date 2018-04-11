@@ -121,16 +121,17 @@ public class JournalFolderIndexer
 
 		Document document = getBaseModelDocument(CLASS_NAME, folder);
 
-		String[] languageIds = LocaleUtil.toLanguageIds(
-			LanguageUtil.getSupportedLocales());
-
 		String title = folder.getName();
 
 		if (folder.isInTrash()) {
 			title = _trashHelper.getOriginalTitle(title);
 		}
 
-		for (String languageId : languageIds) {
+		for (Locale locale :
+				LanguageUtil.getAvailableLocales(folder.getGroupId())) {
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
 			document.addText(
 				LocalizationUtil.getLocalizedName(
 					Field.DESCRIPTION, languageId),
