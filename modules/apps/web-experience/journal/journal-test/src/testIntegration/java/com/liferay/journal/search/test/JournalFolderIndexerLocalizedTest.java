@@ -17,11 +17,11 @@ package com.liferay.journal.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.model.JournalFolderConstants;
+import com.liferay.journal.test.util.FieldValuesAssert;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
@@ -40,12 +40,12 @@ import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -76,8 +76,11 @@ public class JournalFolderIndexerLocalizedTest {
 
 	@Test
 	public void testJapaneseDescription() throws Exception {
+		List<Locale> availableLocales = Collections.singletonList(
+			LocaleUtil.JAPAN);
+
 		GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), null, LocaleUtil.JAPAN);
+			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
@@ -94,15 +97,23 @@ public class JournalFolderIndexerLocalizedTest {
 
 		Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-		List<String> fields = _getFieldValues("description", document);
+		Map<String, String> titleStrings = new HashMap<String, String>() {
+			{
+				put("description_ja_JP", "諸行無常");
+			}
+		};
 
-		Assert.assertTrue(fields.contains("description_ja_JP"));
+		FieldValuesAssert.assertFieldValues(
+			titleStrings, "description_ja_JP", document, searchTerm);
 	}
 
 	@Test
 	public void testJapaneseSearchWithSimilarTexts() throws Exception {
+		List<Locale> availableLocales = Collections.singletonList(
+			LocaleUtil.JAPAN);
+
 		GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), null, LocaleUtil.JAPAN);
+			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
@@ -126,15 +137,23 @@ public class JournalFolderIndexerLocalizedTest {
 
 		Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-		List<String> fields = _getFieldValues("title", document);
+		Map<String, String> titleStrings = new HashMap<String, String>() {
+			{
+				put("title_ja_JP", "東京都");
+			}
+		};
 
-		Assert.assertTrue(fields.contains("title_ja_JP"));
+		FieldValuesAssert.assertFieldValues(
+			titleStrings, "title", document, searchTerm);
 	}
 
 	@Test
 	public void testJapaneseTitle() throws Exception {
+		List<Locale> availableLocales = Collections.singletonList(
+			LocaleUtil.JAPAN);
+
 		GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), null, LocaleUtil.JAPAN);
+			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
@@ -151,25 +170,14 @@ public class JournalFolderIndexerLocalizedTest {
 
 		Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-		List<String> fields = _getFieldValues("title", document);
-
-		Assert.assertTrue(fields.contains("title_ja_JP"));
-	}
-
-	private static List<String> _getFieldValues(
-		String prefix, Document document) {
-
-		List<String> filteredFields = new ArrayList<>();
-
-		Map<String, Field> fields = document.getFields();
-
-		for (String field : fields.keySet()) {
-			if (field.contains(prefix)) {
-				filteredFields.add(field);
+		Map<String, String> titleStrings = new HashMap<String, String>() {
+			{
+				put("title_ja_JP", "平家物語");
 			}
-		}
+		};
 
-		return filteredFields;
+		FieldValuesAssert.assertFieldValues(
+			titleStrings, "title", document, searchTerm);
 	}
 
 	private SearchContext _getSearchContext(String searchTerm, Locale locale)
