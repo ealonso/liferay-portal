@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
@@ -449,22 +450,33 @@ public class JournalArticleIndexer
 			return Collections.emptyMap();
 		}
 
-		String localizedField = Field.getLocalizedName(
-			searchContext.getLocale(), field);
+		Set<Locale> availableLocales = new HashSet<>();
+
+		long[] groupIds = searchContext.getGroupIds();
+
+		if (groupIds == null) {
+			availableLocales = LanguageUtil.getAvailableLocales();
+		}
+		else {
+			for (long groupId : groupIds) {
+				availableLocales.addAll(
+					LanguageUtil.getAvailableLocales(groupId));
+			}
+		}
 
 		Map<String, Query> queries = new HashMap<>();
 
 		if (Validator.isNull(searchContext.getKeywords())) {
 			BooleanQuery localizedQuery = new BooleanQueryImpl();
 
-			Query query = localizedQuery.addTerm(field, value, like);
+			for (Locale locale : availableLocales) {
+				String localizedField = Field.getLocalizedName(locale, field);
 
-			queries.put(field, query);
+				Query localizedFieldQuery = localizedQuery.addTerm(
+					localizedField, value, like);
 
-			Query localizedFieldQuery = localizedQuery.addTerm(
-				localizedField, value, like);
-
-			queries.put(field, localizedFieldQuery);
+				queries.put(localizedField, localizedFieldQuery);
+			}
 
 			BooleanClauseOccur booleanClauseOccur = BooleanClauseOccur.SHOULD;
 
@@ -475,9 +487,13 @@ public class JournalArticleIndexer
 			searchQuery.add(localizedQuery, booleanClauseOccur);
 		}
 		else {
-			Query query = searchQuery.addTerm(localizedField, value, like);
+			for (Locale locale : availableLocales) {
+				String localizedField = Field.getLocalizedName(locale, field);
 
-			queries.put(field, query);
+				Query query = searchQuery.addTerm(localizedField, value, like);
+
+				queries.put(field, query);
+			}
 		}
 
 		return queries;
