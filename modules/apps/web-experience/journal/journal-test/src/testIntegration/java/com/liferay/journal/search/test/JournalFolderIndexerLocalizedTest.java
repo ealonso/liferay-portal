@@ -72,16 +72,16 @@ public class JournalFolderIndexerLocalizedTest {
 		ServiceTestUtil.setUser(TestPropsValues.getUser());
 
 		CompanyThreadLocal.setCompanyId(TestPropsValues.getCompanyId());
-	}
 
-	@Test
-	public void testJapaneseDescription() throws Exception {
 		List<Locale> availableLocales = Collections.singletonList(
 			LocaleUtil.JAPAN);
 
 		GroupTestUtil.updateDisplaySettings(
 			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
+	}
 
+	@Test
+	public void testJapaneseDescription() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
@@ -109,12 +109,6 @@ public class JournalFolderIndexerLocalizedTest {
 
 	@Test
 	public void testJapaneseSearchWithSimilarTexts() throws Exception {
-		List<Locale> availableLocales = Collections.singletonList(
-			LocaleUtil.JAPAN);
-
-		GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
-
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
@@ -149,12 +143,6 @@ public class JournalFolderIndexerLocalizedTest {
 
 	@Test
 	public void testJapaneseTitle() throws Exception {
-		List<Locale> availableLocales = Collections.singletonList(
-			LocaleUtil.JAPAN);
-
-		GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), availableLocales, LocaleUtil.JAPAN);
-
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
