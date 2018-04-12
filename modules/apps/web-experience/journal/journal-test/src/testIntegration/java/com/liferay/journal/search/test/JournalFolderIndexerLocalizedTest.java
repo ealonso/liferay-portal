@@ -75,6 +75,31 @@ public class JournalFolderIndexerLocalizedTest {
 	}
 
 	@Test
+	public void testJapaneseDescription() throws Exception {
+		GroupTestUtil.updateDisplaySettings(
+			_group.getGroupId(), null, LocaleUtil.JAPAN);
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String title = "平家物語";
+		String description = "諸行無常";
+
+		JournalTestUtil.addFolder(
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, description,
+			serviceContext);
+
+		String searchTerm = "諸行";
+
+		Document document = _search(searchTerm, LocaleUtil.JAPAN);
+
+		List<String> fields = _getFieldValues("description", document);
+
+		Assert.assertTrue(fields.contains("description_ja_JP"));
+	}
+
+	@Test
 	public void testJapaneseSearchWithSimilarTexts() throws Exception {
 		GroupTestUtil.updateDisplaySettings(
 			_group.getGroupId(), null, LocaleUtil.JAPAN);
@@ -107,7 +132,7 @@ public class JournalFolderIndexerLocalizedTest {
 	}
 
 	@Test
-	public void testJapaneseTitleDescription() throws Exception {
+	public void testJapaneseTitle() throws Exception {
 		GroupTestUtil.updateDisplaySettings(
 			_group.getGroupId(), null, LocaleUtil.JAPAN);
 
@@ -122,21 +147,13 @@ public class JournalFolderIndexerLocalizedTest {
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, title, description,
 			serviceContext);
 
-		String searchTerm1 = "平家";
+		String searchTerm = "平家";
 
-		Document document1 = _search(searchTerm1, LocaleUtil.JAPAN);
+		Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
-		List<String> fields1 = _getFieldValues("title", document1);
+		List<String> fields = _getFieldValues("title", document);
 
-		Assert.assertTrue(fields1.contains("title_ja_JP"));
-
-		String searchTerm2 = "諸行";
-
-		Document document2 = _search(searchTerm2, LocaleUtil.JAPAN);
-
-		List<String> fields2 = _getFieldValues("description", document2);
-
-		Assert.assertTrue(fields2.contains("description_ja_JP"));
+		Assert.assertTrue(fields.contains("title_ja_JP"));
 	}
 
 	private static List<String> _getFieldValues(
