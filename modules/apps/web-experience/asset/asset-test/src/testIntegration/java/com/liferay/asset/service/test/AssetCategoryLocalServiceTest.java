@@ -16,6 +16,7 @@ package com.liferay.asset.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryLocalServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalServiceUtil;
@@ -35,12 +36,14 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portlet.asset.util.test.AssetTestUtil;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -118,6 +121,35 @@ public class AssetCategoryLocalServiceTest {
 		IndexerRegistryUtil.register(testAssetIndexer);
 
 		AssetCategoryLocalServiceUtil.deleteCategory(assetCategory, true);
+	}
+
+	@Test
+	public void testGetAssetEntryAssetCategories() throws Exception {
+		AssetEntry assetEntry = AssetTestUtil.addAssetEntry(
+			_group.getGroupId());
+
+		AssetVocabulary assetVocabulary = AssetTestUtil.addVocabulary(
+			_group.getGroupId());
+
+		AssetCategory assetCategory = AssetTestUtil.addCategory(
+			_group.getGroupId(), assetVocabulary.getVocabularyId());
+
+		AssetCategoryLocalServiceUtil.addAssetEntryAssetCategory(
+			assetEntry.getEntryId(), assetCategory.getCategoryId());
+
+		// This one works
+
+		Assert.assertEquals(
+			"Wrong categories count ", 1,
+			AssetCategoryLocalServiceUtil.getAssetEntryAssetCategoriesCount(
+				assetEntry.getEntryId()));
+
+		long[] categoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(
+			assetEntry.getClassName(), assetEntry.getClassPK());
+
+		// This one fails
+
+		Assert.assertEquals("Wrong categories count ", 1, categoryIds.length);
 	}
 
 	@DeleteAfterTestRun
