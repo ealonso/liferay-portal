@@ -12,28 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.verify;
+package com.liferay.portal.upgrade.v7_1_0;
 
-import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.verify.test.BaseVerifyProcessTestCase;
-
-import org.junit.ClassRule;
-import org.junit.Rule;
+import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.upgrade.v7_1_0.util.CounterTable;
 
 /**
- * @author Manuel de la Peña
+ * @author Preston Crary
  */
-public class VerifySQLServerTest extends BaseVerifyProcessTestCase {
-
-	@ClassRule
-	@Rule
-	public static final AggregateTestRule aggregateTestRule =
-		new LiferayIntegrationTestRule();
+public class UpgradeCounter extends UpgradeProcess {
 
 	@Override
-	protected VerifyProcess getVerifyProcess() {
-		return new VerifySQLServer();
+	protected void doUpgrade() throws Exception {
+		alter(
+			CounterTable.class,
+			new AlterColumnType("name", "VARCHAR(150) not null"));
 	}
 
 }

@@ -233,7 +233,6 @@ if (!inTrash) {
 											<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#thumbs-up" />
 										</svg>
 									</span>
-
 									<span class="votes"><%= positiveVotes %></span>
 								</a>
 
@@ -244,7 +243,6 @@ if (!inTrash) {
 												<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#thumbs-down" />
 											</svg>
 										</span>
-
 										<span class="votes"><%= negativeVotes %></span>
 									</a>
 								</c:if>
