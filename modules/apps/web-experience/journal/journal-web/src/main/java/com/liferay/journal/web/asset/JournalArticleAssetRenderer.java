@@ -54,6 +54,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -226,7 +227,8 @@ public class JournalArticleAssetRenderer
 					_article, null, null, LanguageUtil.getLanguageId(locale), 1,
 					portletRequestModel, themeDisplay);
 
-			summary = HtmlUtil.stripHtml(articleDisplay.getContent());
+			summary = StringUtil.shorten(
+				HtmlUtil.extractText(articleDisplay.getContent()), 200);
 		}
 		catch (Exception e) {
 		}
