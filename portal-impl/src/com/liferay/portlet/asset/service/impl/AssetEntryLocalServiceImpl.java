@@ -633,7 +633,7 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 				description, assetCategoryIds, assetTagNames, showNonindexable,
 				statuses, andSearch, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
-			if ((description == title) && (description == userName)) {
+			if (description.equals(title) && description.equals(userName)) {
 				searchContext.setKeywords(description);
 			}
 
