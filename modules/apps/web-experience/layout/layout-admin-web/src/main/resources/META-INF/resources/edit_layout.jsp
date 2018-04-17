@@ -82,11 +82,6 @@ if (layoutRevision != null) {
 	}
 }
 
-if (Validator.isNotNull(backURL)) {
-	portletDisplay.setShowBackIcon(true);
-	portletDisplay.setURLBack(backURL);
-}
-
 renderResponse.setTitle(selLayout.getName(locale));
 %>
 
@@ -133,6 +128,13 @@ renderResponse.setTitle(selLayout.getName(locale));
 		</aui:button-row>
 	</c:when>
 	<c:otherwise>
+		<liferay-ui:tabs
+			names="content,properties"
+			type="tabs nav-tabs-default"
+			urls="<%= new String[] {PortalUtil.getLayoutFullURL(selLayout, themeDisplay), themeDisplay.getURLCurrent()} %>"
+			value="properties"
+		/>
+
 		<portlet:actionURL name="/layout/edit_layout" var="editLayoutURL">
 			<portlet:param name="mvcRenderCommandName" value="/layout/edit_layout" />
 		</portlet:actionURL>
