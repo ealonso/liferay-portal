@@ -540,6 +540,8 @@ public class JournalArticleIndexer
 		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
 			journalArticle.getDocument());
 
+		document.addText("defaultLanguageId", articleDefaultLanguageId);
+
 		String[] languageIds = LocalizationUtil.getAvailableLanguageIds(
 			journalArticle.getDocument());
 
@@ -549,12 +551,6 @@ public class JournalArticleIndexer
 			String description = journalArticle.getDescription(languageId);
 
 			String title = journalArticle.getTitle(languageId);
-
-			if (languageId.equals(articleDefaultLanguageId)) {
-				document.addText(Field.CONTENT, content);
-				document.addText(Field.DESCRIPTION, description);
-				document.addText("defaultLanguageId", languageId);
-			}
 
 			document.addText(
 				LocalizationUtil.getLocalizedName(Field.CONTENT, languageId),
