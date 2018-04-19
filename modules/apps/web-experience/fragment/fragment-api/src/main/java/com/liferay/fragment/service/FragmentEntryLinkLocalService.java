@@ -346,4 +346,8 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 		long classNameId, long classPK, long[] fragmentEntryIds,
 		java.lang.String editableValues, ServiceContext serviceContext)
 		throws PortalException;
+
+	public void updateFragmentEntryLinks(long[] fragmentEntryLinkIds,
+		long fragmentEntryId, ServiceContext serviceContext)
+		throws PortalException;
 }
