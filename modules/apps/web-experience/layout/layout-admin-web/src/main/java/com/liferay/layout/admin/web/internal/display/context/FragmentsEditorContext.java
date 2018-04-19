@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -155,6 +156,24 @@ public class FragmentsEditorContext {
 			"updateLayoutPageTemplateEntryAssetTypeURL",
 			_getFragmentEntryActionURL(
 				"/layout/update_layout_page_template_entry_asset_type"));
+
+		soyContext.put(
+			"defaultLanguageId",
+			_themeDisplay.getLanguageId().replace('_', '-').toLowerCase());
+		soyContext.put(
+			"languageId",
+			_themeDisplay.getLanguageId().replace('_', '-').toLowerCase());
+
+		String[] langIds = LocaleUtil.toLanguageIds(
+			LanguageUtil.getAvailableLocales(_themeDisplay.getSiteGroupId()));
+
+		List<String> languageIds = new ArrayList<>();
+
+		for (String langId : langIds) {
+			languageIds.add(langId.replace('_', '-').toLowerCase());
+		}
+
+		soyContext.put("languageIds", languageIds);
 
 		return soyContext;
 	}

@@ -2,11 +2,13 @@ import 'frontend-taglib/contextual_sidebar/ContextualSidebar.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import {Config} from 'metal-state';
+import core from 'metal';
 
 import './dialogs/SelectMappingTypeDialog.es';
 import './sidebar/SidebarAddedFragments.es';
 import './sidebar/SidebarAvailableFragments.es';
 import './sidebar/SidebarMapping.es';
+import './translation/TranslationStatus.es';
 import FragmentEntryLink from './FragmentEntryLink.es';
 import templates from './FragmentsEditor.soy';
 
@@ -168,10 +170,21 @@ class FragmentsEditor extends Component {
 		);
 
 		if (fragmentEntryLink) {
-			fragmentEntryLink.editableValues[data.editableId] = data.value;
-		}
+			if (!fragmentEntryLink.editableValues[data.editableId]) {
+				fragmentEntryLink.editableValues[data.editableId] = {};
+			}
+			else if (core.isString(fragmentEntryLink.editableValues[data.editableId])) {
+				fragmentEntryLink.editableValues[data.editableId] = {
+					[this.defaultLanguageId]: fragmentEntryLink.editableValues[data.editableId]
+				};
+			}
 
-		this._updateFragmentEntryLink(fragmentEntryLink);
+			if (fragmentEntryLink.editableValues[data.editableId][this.defaultLanguageId] !== data.value) {
+				fragmentEntryLink.editableValues[data.editableId][this.languageId] = data.value;
+
+				this._updateFragmentEntryLink(fragmentEntryLink);
+			}
+		}
 	}
 
 	/**
@@ -371,6 +384,23 @@ class FragmentsEditor extends Component {
 
 	_handleHideContextualSidebar() {
 		this._contextualSidebarVisible = false;
+	}
+
+	/**
+	 * Callback executed when the locale has changed
+	 * @private
+	 * @param {string} locale
+	 * @review
+	 */
+
+	_handleLocaleChanged(locale) {
+		this.languageId = locale;
+
+		Object.keys(this.refs).filter(
+			key => key.startsWith('fragmentEntryLink_')
+		).forEach(
+			key => this.refs[key].updateEditableValues(locale, this.defaultLanguageId)
+		);
 	}
 
 	/**
@@ -613,6 +643,8 @@ FragmentsEditor.STATE = {
 	 */
 
 	getAssetDisplayContributorsURL: Config.string().required(),
+
+	defaultLanguageId: {},
 
 	/**
 	 * Optional ID provided by the template system.
