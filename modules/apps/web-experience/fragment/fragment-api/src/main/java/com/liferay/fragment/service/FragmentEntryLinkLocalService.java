@@ -260,6 +260,12 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntryLink> getFragmentEntryLinks(long groupId,
+		long fragmentEntryId, long classNameId, int layoutPageTemplateType,
+		int start, int end,
+		OrderByComparator<FragmentEntryLink> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<FragmentEntryLink> getFragmentEntryLinks(long groupId,
 		long fragmentEntryId, long classNameId, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator);
 
@@ -305,6 +311,10 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 		long classNameId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getFragmentEntryLinksCount(long groupId, long fragmentEntryId,
+		long classNameId, int layoutPageTemplateType);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	/**
@@ -345,5 +355,9 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 	public void updateFragmentEntryLinks(long userId, long groupId,
 		long classNameId, long classPK, long[] fragmentEntryIds,
 		java.lang.String editableValues, ServiceContext serviceContext)
+		throws PortalException;
+
+	public void updateFragmentEntryLinks(long[] fragmentEntryLinkIds,
+		long fragmentEntryId, ServiceContext serviceContext)
 		throws PortalException;
 }
