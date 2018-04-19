@@ -49,16 +49,25 @@
 	]}
 	{@param? updateLayoutPageTemplateEntryAssetTypeURL: any}
 
+	{@param defaultLanguageId: string}
+	{@param languageId: string}
+	{@param languageIds: list<string>}
+	{@param? _handleLocaleChanged: any}
+
 	<div id="{$id}">
 		{call .managementBar}
+			{param defaultLanguageId: $defaultLanguageId /}
+			{param languageId: $languageId /}
+			{param languageIds: $languageIds /}
 			{param spritemap: $spritemap /}
 			{param dirty: $_dirty /}
+			{param handleLocaleChanged: $_handleLocaleChanged /}
 			{param handleToggleContextualSidebarButtonClick: $_handleToggleContextualSidebarButtonClick /}
 			{param lastSaveDate: $_lastSaveDate /}
 		{/call}
 
 		<div class="container-fluid-1280 contextual-sidebar-content">
-			<div class="fragments-editor__fragment-entry-links" ref="fragmentEntryLinks">
+			<div class="fragments-editor__fragment-entry-links {$languageId != $defaultLanguageId ? 'translating' : ''}" ref="fragmentEntryLinks">
 				{if $fragmentEntryLinks and (length($fragmentEntryLinks) > 0)}
 					{foreach $fragmentEntryLink in $fragmentEntryLinks}
 						<div data-position="{index($fragmentEntryLink)}" key="{$fragmentEntryLink.fragmentEntryLinkId}">
@@ -71,10 +80,13 @@
 									'move': $_handleFragmentMove,
 									'remove': $_handleFragmentRemove
 								] /}
+								{param defaultLanguageId: $defaultLanguageId /}
+								{param languageId: $languageId /}
 								{param fragmentEntryLinkId: $fragmentEntryLink.fragmentEntryLinkId /}
 								{param imageSelectorURL: $imageSelectorURL /}
 								{param name: $fragmentEntryLink.name /}
 								{param portletNamespace: $portletNamespace /}
+								{param ref: 'fragmentEntryLink_' + $fragmentEntryLink.fragmentEntryLinkId /}
 								{param spritemap: $spritemap /}
 							{/call}
 						</div>
@@ -192,7 +204,11 @@
  * Management bar
  */
 {template .managementBar}
+	{@param defaultLanguageId: string}
+	{@param languageId: string}
+	{@param languageIds: list<string>}
 	{@param spritemap: string}
+	{@param? handleLocaleChanged: any}
 	{@param? dirty: bool}
 	{@param? handleToggleContextualSidebarButtonClick: any}
 	{@param? lastSaveDate: string}
@@ -200,6 +216,20 @@
 	<div class="management-bar management-bar-light navbar navbar-expand-md">
 		<div class="container">
 			<ul class="navbar-nav">
+				<li class="nav-item">
+					{call com.liferay.layout.admin.web.TranslationStatus.render}
+						{param availableLocales: $languageIds /}
+						{param defaultLocale: $defaultLanguageId /}
+
+						{param events: [
+							'localeChanged': $handleLocaleChanged
+						] /}
+
+						{param selectedLocale: $languageId /}
+						{param spritemap: $spritemap /}
+					{/call}
+				</li>
+
 				<li class="nav-item">
 					<span class="navbar-text">
 						{if $dirty}

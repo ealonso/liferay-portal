@@ -75,7 +75,16 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 				continue;
 			}
 
-			editableElementParser.replace(element, jsonObject.getString(id));
+			String value = jsonObject.getString(id);
+
+			if (value.startsWith("{")) {
+				JSONObject editableMultiValue =
+					JSONFactoryUtil.createJSONObject(value);
+
+				value = editableMultiValue.getString("en-us");
+			}
+
+			editableElementParser.replace(element, value);
 		}
 
 		Element bodyElement = document.body();
