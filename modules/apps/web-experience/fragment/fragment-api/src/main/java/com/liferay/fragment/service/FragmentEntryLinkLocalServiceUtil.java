@@ -421,6 +421,15 @@ public class FragmentEntryLinkLocalServiceUtil {
 			fragmentEntryIds, editableValues, serviceContext);
 	}
 
+	public static void updateFragmentEntryLinks(long[] fragmentEntryLinkIds,
+		long fragmentEntryId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.updateFragmentEntryLinks(fragmentEntryLinkIds, fragmentEntryId,
+			serviceContext);
+	}
+
 	public static FragmentEntryLinkLocalService getService() {
 		return _serviceTracker.getService();
 	}
