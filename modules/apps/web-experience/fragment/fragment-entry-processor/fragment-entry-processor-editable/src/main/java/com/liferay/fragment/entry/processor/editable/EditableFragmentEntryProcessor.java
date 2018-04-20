@@ -23,10 +23,13 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -91,11 +94,23 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			String id = element.attr("id");
 
-			if (!jsonObject.has(id)) {
+			Class<?> clazz = getClass();
+
+			JSONObject editableValuesJSONObject = jsonObject.getJSONObject(
+				clazz.getName());
+
+			if (!editableValuesJSONObject.has(id)) {
 				continue;
 			}
 
-			editableElementParser.replace(element, jsonObject.getString(id));
+			Locale locale = LocaleUtil.getMostRelevantLocale();
+
+			String value = GetterUtil.getString(
+				editableValuesJSONObject.getString(
+					LanguageUtil.getLanguageId(locale)),
+				editableValuesJSONObject.getString("defaultValue"));
+
+			editableElementParser.replace(element, value);
 		}
 
 		Element bodyElement = document.body();
