@@ -122,10 +122,10 @@ public class LayoutPageTemplateEntryServiceImpl
 
 	@Override
 	public LayoutPageTemplateEntry fetchDefaultLayoutPageTemplateEntry(
-		long groupId, long classNameId) {
+		long groupId, long classNameId, long classTypeId) {
 
-		return layoutPageTemplateEntryPersistence.fetchByG_C_D_First(
-			groupId, classNameId, true, null);
+		return layoutPageTemplateEntryPersistence.fetchByG_C_C_D_First(
+			groupId, classNameId, classTypeId, true, null);
 	}
 
 	@Override
@@ -245,6 +245,30 @@ public class LayoutPageTemplateEntryServiceImpl
 
 		return layoutPageTemplateEntryPersistence.filterCountByG_T_LikeN(
 			groupId, _customSQL.keywords(name, WildcardMode.SURROUND)[0], type);
+	}
+
+	@Override
+	public void setDefaultLayoutPageTemplateEntry(
+			LayoutPageTemplateEntry layoutPageTemplateEntry)
+		throws PortalException {
+
+		LayoutPageTemplateEntry defaultLayoutPageTemplateEntry =
+			fetchDefaultLayoutPageTemplateEntry(
+				layoutPageTemplateEntry.getGroupId(),
+				layoutPageTemplateEntry.getClassNameId(),
+				layoutPageTemplateEntry.getClassTypeId());
+
+		if (defaultLayoutPageTemplateEntry != null) {
+			defaultLayoutPageTemplateEntry.setDefaultTemplate(false);
+
+			layoutPageTemplateEntryLocalService.updateLayoutPageTemplateEntry(
+				defaultLayoutPageTemplateEntry);
+		}
+
+		layoutPageTemplateEntry.setDefaultTemplate(true);
+
+		layoutPageTemplateEntryLocalService.updateLayoutPageTemplateEntry(
+			layoutPageTemplateEntry);
 	}
 
 	@Override
