@@ -142,8 +142,8 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkPersistence.findByG_F(
-			groupId, fragmentEntryId, start, end, orderByComparator);
+		return fragmentEntryLinkPersistence.findByG_F_P(
+			groupId, fragmentEntryId, 1, start, end, orderByComparator);
 	}
 
 	@Override
@@ -170,23 +170,23 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, long classNameId, int start,
 		int end, OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkPersistence.findByG_F_C(
-			groupId, fragmentEntryId, classNameId, start, end,
+		return fragmentEntryLinkPersistence.findByG_F_C_P(
+			groupId, fragmentEntryId, classNameId, 1, start, end,
 			orderByComparator);
 	}
 
 	@Override
 	public int getFragmentEntryLinksCount(long groupId, long fragmentEntryId) {
-		return fragmentEntryLinkPersistence.countByG_F(
-			groupId, fragmentEntryId);
+		return fragmentEntryLinkPersistence.countByG_F_P(
+			groupId, fragmentEntryId, 1);
 	}
 
 	@Override
 	public int getFragmentEntryLinksCount(
 		long groupId, long fragmentEntryId, long classNameId) {
 
-		return fragmentEntryLinkPersistence.countByG_F_C(
-			groupId, fragmentEntryId, classNameId);
+		return fragmentEntryLinkPersistence.countByG_F_C_P(
+			groupId, fragmentEntryId, classNameId, 1);
 	}
 
 	@Override
