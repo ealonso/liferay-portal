@@ -89,6 +89,39 @@ class FragmentEntryLink extends Component {
 	}
 
 	/**
+	 *
+	 * @param {string} locale
+	 */
+
+	updateEditableValues(locale, defaultLocale) {
+		Object.keys(this.editableValues).forEach(
+			editableId => {
+				const localeEditableValue = this.editableValues[editableId][locale];
+				const defaultEditableValue = this.editableValues[editableId][defaultLocale] || this.editableValues[editableId]['defaultValue'];
+
+				let element = this.element.querySelector(`[data-lfr-editable-id="${editableId}"]`);
+
+				if (!element) {
+					element = this.element.querySelector(`lfr-editable[id="${editableId}"]`);
+				}
+
+				element.classList.remove('translated', 'untranslated');
+				element.classList.add(localeEditableValue ? 'translated' : 'untranslated');
+
+				this._processors.forEach(
+					processor => {
+						const editor = processor.findEditor(editableId);
+
+						if (editor) {
+							editor.setData(localeEditableValue || defaultEditableValue);
+						}
+					}
+				);
+			}
+		);
+	}
+
+	/**
 	 * @inheritDoc
 	 * @review
 	 */
@@ -235,7 +268,7 @@ FragmentEntryLink.STATE = {
 	 * @type {!Object}
 	 */
 
-	editableValues: Config.object().value({}),
+	editableValues: {},
 
 	/**
 	 * FragmentEntryLink id

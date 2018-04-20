@@ -36,6 +36,19 @@ class EditableTextFragmentProcessor {
 	}
 
 	/**
+	 *
+	 * @param {string} editableId
+	 * @return
+	 * @review
+	 */
+
+	findEditor(editableId) {
+		return this._editors.find(
+			editor => editor._editableId === editableId
+		);
+	}
+
+	/**
 	 * @inheritDoc
 	 * @review
 	 */
@@ -76,6 +89,9 @@ class EditableTextFragmentProcessor {
 		nativeEditor.name = `${this.fragmentEntryLink.portletNamespace}fragmentEntryLink_`;
 		nativeEditor.on('change', this._handleEditorChange);
 		nativeEditor.on('selectionChange', this._handleEditorChange);
+
+		editor._editableId = editableId;
+		editor.setData = nativeEditor.setData.bind(nativeEditor);
 
 		return editor;
 	}

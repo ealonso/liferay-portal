@@ -1,0 +1,76 @@
+{namespace com.liferay.layout.admin.web.TranslationStatus}
+
+/**
+ * TranslationStatus
+ */
+{template .render}
+    {@param availableLocales: list<string>}
+    {@param defaultLocale: string}
+    {@param selectedLocale: string}
+    {@param spritemap: string}
+
+    <div class="dropdown lfr-icon-menu">
+        <button class="btn btn-link p-1" data-toggle="dropdown" type="button">
+            <span class="inline-item">
+                {call .lexiconIcon}
+                    {param name: $selectedLocale /}
+                    {param spritemap: $spritemap /}
+                {/call}
+            </span>
+            <span class="btn-section">{$selectedLocale}</span>
+        </button>
+
+        <div class="dropdown-menu">
+            {call .localeItem}
+                {param isDefault: true /}
+                {param locale: $defaultLocale /}
+                {param spritemap: $spritemap /}
+            {/call}
+
+            {foreach $locale in $availableLocales}
+                {if $locale != $defaultLocale}
+                    {call .localeItem}
+                        {param isDefault: false /}
+                        {param locale: $locale /}
+                        {param spritemap: $spritemap /}
+                    {/call}
+                {/if}
+            {/foreach}
+        </div>
+    </div>
+{/template}
+
+/**
+ * Locale item
+ */
+{template .localeItem}
+    {@param isDefault: bool}
+    {@param locale: string}
+    {@param spritemap: string}
+
+    <a class="dropdown-item" data-locale="{$locale}" data-onclick="_handleLocaleClick">
+        <span class="inline-item inline-item-before">
+            {call .lexiconIcon}
+                {param name: $locale /}
+                {param spritemap: $spritemap /}
+            {/call}
+        </span>
+
+        <span>
+            {$locale}{sp}
+            <span class="label label-{$isDefault ? 'info' : 'warning'}">{$isDefault ? 'Default' : 'Untranslated'}</span>
+        </span>
+    </a>
+{/template}
+
+/**
+ * Lexicon icon
+ */
+{template .lexiconIcon}
+	{@param name: string}
+	{@param spritemap: string}
+
+	<svg aria-hidden="true" class="lexicon-icon lexicon-icon-{$name}">
+		<use xlink:href="{$spritemap}#{$name}" />
+	</svg>
+{/template}

@@ -30,6 +30,28 @@ class EditableImageFragmentProcessor {
 	}
 
 	/**
+	 *
+	 * @param {string} editableId
+	 */
+
+	/**
+	 *
+	 * @param {string} editableId
+	 * @return
+	 * @review
+	 */
+
+	findEditor(editableId) {
+		const editableElement = this.fragmentEntryLink.element.querySelector(`lfr-editable[type="image"][id="${editableId}"] img`);
+
+		return editableElement ? {
+			setData: url => {
+				editableElement.src = url;
+			}
+		} : null;
+	}
+
+	/**
 	 * @inheritDoc
 	 * @review
 	 */
