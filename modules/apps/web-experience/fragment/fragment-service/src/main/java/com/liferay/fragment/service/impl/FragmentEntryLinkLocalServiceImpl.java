@@ -156,6 +156,17 @@ public class FragmentEntryLinkLocalServiceImpl
 
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinks(
+		long groupId, long fragmentEntryId, long classNameId,
+		int layoutPageTemplateType, int start, int end,
+		OrderByComparator<FragmentEntryLink> orderByComparator) {
+
+		return fragmentEntryLinkFinder.findByG_F_C_L(
+			groupId, fragmentEntryId, classNameId, layoutPageTemplateType,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long fragmentEntryId, long classNameId, int start,
 		int end, OrderByComparator<FragmentEntryLink> orderByComparator) {
 
@@ -176,6 +187,15 @@ public class FragmentEntryLinkLocalServiceImpl
 
 		return fragmentEntryLinkPersistence.countByG_F_C(
 			groupId, fragmentEntryId, classNameId);
+	}
+
+	@Override
+	public int getFragmentEntryLinksCount(
+		long groupId, long fragmentEntryId, long classNameId,
+		int layoutPageTemplateType) {
+
+		return fragmentEntryLinkFinder.countByG_F_C_L(
+			groupId, fragmentEntryId, classNameId, layoutPageTemplateType);
 	}
 
 	@Override
@@ -267,6 +287,30 @@ public class FragmentEntryLinkLocalServiceImpl
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
 				jsonObject.getString(String.valueOf(position)), position++,
 				serviceContext);
+		}
+	}
+
+	@Override
+	public void updateFragmentEntryLinks(
+			long[] fragmentEntryLinkIds, long fragmentEntryId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
+			fragmentEntryId);
+
+		for (long fragmentEntryLinkId : fragmentEntryLinkIds) {
+			FragmentEntryLink fragmentEntryLink =
+				fragmentEntryLinkPersistence.findByPrimaryKey(
+					fragmentEntryLinkId);
+
+			fragmentEntryLink.setCss(fragmentEntry.getCss());
+			fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+			fragmentEntryLink.setJs(fragmentEntry.getJs());
+			fragmentEntryLink.setLastPropagationDate(
+				serviceContext.getModifiedDate(new Date()));
+
+			fragmentEntryLinkPersistence.update(fragmentEntryLink);
 		}
 	}
 
