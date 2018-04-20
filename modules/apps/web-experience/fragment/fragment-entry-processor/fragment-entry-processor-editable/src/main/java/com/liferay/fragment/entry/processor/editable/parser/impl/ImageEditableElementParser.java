@@ -19,6 +19,7 @@ import com.liferay.fragment.entry.processor.editable.parser.EditableElementParse
 import java.util.List;
 import java.util.Objects;
 
+import com.liferay.petra.string.StringPool;
 import org.jsoup.nodes.Element;
 
 import org.osgi.service.component.annotations.Component;
@@ -47,6 +48,23 @@ public class ImageEditableElementParser implements EditableElementParser {
 		}
 
 		replaceableElement.attr("src", value);
+	}
+
+	@Override
+	public String getValue(Element element) {
+		List<Element> elements = element.getElementsByTag("img");
+
+		if (elements.size() != 1) {
+			return StringPool.BLANK;
+		}
+
+		Element replaceableElement = elements.get(0);
+
+		if (!Objects.equals(replaceableElement.nodeName(), "img")) {
+			return StringPool.BLANK;
+		}
+
+		return replaceableElement.attr("src");
 	}
 
 }
