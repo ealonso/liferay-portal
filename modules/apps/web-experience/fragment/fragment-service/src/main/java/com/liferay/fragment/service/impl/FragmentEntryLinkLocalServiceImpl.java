@@ -142,8 +142,8 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkPersistence.findByG_F(
-			groupId, fragmentEntryId, start, end, orderByComparator);
+		return fragmentEntryLinkPersistence.findByG_F_P(
+			groupId, fragmentEntryId, 1, start, end, orderByComparator);
 	}
 
 	@Override
@@ -156,26 +156,46 @@ public class FragmentEntryLinkLocalServiceImpl
 
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinks(
+		long groupId, long fragmentEntryId, long classNameId,
+		int layoutPageTemplateType, int start, int end,
+		OrderByComparator<FragmentEntryLink> orderByComparator) {
+
+		return fragmentEntryLinkFinder.findByG_F_C_L(
+			groupId, fragmentEntryId, classNameId, layoutPageTemplateType,
+			start, end, orderByComparator);
+	}
+
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long fragmentEntryId, long classNameId, int start,
 		int end, OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkPersistence.findByG_F_C(
-			groupId, fragmentEntryId, classNameId, start, end,
+		return fragmentEntryLinkPersistence.findByG_F_C_P(
+			groupId, fragmentEntryId, classNameId, 1, start, end,
 			orderByComparator);
 	}
 
 	@Override
 	public int getFragmentEntryLinksCount(long groupId, long fragmentEntryId) {
-		return fragmentEntryLinkPersistence.countByG_F(
-			groupId, fragmentEntryId);
+		return fragmentEntryLinkPersistence.countByG_F_P(
+			groupId, fragmentEntryId, 1);
 	}
 
 	@Override
 	public int getFragmentEntryLinksCount(
 		long groupId, long fragmentEntryId, long classNameId) {
 
-		return fragmentEntryLinkPersistence.countByG_F_C(
-			groupId, fragmentEntryId, classNameId);
+		return fragmentEntryLinkPersistence.countByG_F_C_P(
+			groupId, fragmentEntryId, classNameId, 1);
+	}
+
+	@Override
+	public int getFragmentEntryLinksCount(
+		long groupId, long fragmentEntryId, long classNameId,
+		int layoutPageTemplateType) {
+
+		return fragmentEntryLinkFinder.countByG_F_C_L(
+			groupId, fragmentEntryId, classNameId, layoutPageTemplateType);
 	}
 
 	@Override
@@ -267,6 +287,30 @@ public class FragmentEntryLinkLocalServiceImpl
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
 				jsonObject.getString(String.valueOf(position)), position++,
 				serviceContext);
+		}
+	}
+
+	@Override
+	public void updateFragmentEntryLinks(
+			long[] fragmentEntryLinkIds, long fragmentEntryId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
+			fragmentEntryId);
+
+		for (long fragmentEntryLinkId : fragmentEntryLinkIds) {
+			FragmentEntryLink fragmentEntryLink =
+				fragmentEntryLinkPersistence.findByPrimaryKey(
+					fragmentEntryLinkId);
+
+			fragmentEntryLink.setCss(fragmentEntry.getCss());
+			fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+			fragmentEntryLink.setJs(fragmentEntry.getJs());
+			fragmentEntryLink.setLastPropagationDate(
+				serviceContext.getModifiedDate(new Date()));
+
+			fragmentEntryLinkPersistence.update(fragmentEntryLink);
 		}
 	}
 
