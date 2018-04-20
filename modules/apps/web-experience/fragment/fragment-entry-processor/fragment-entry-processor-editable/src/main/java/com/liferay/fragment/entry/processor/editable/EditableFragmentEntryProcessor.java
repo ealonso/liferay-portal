@@ -52,6 +52,26 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Override
+	public JSONObject getDefaultEditableValues(String html) {
+		JSONObject defaultEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		Document document = _getDocument(html);
+
+		for (Element element : document.select("lfr-editable")) {
+			JSONObject defaultValueJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			defaultValueJSONObject.put("defaultValue", element.html());
+
+			defaultEditableValuesJSONObject.put(
+				element.attr("id"), defaultValueJSONObject);
+		}
+
+		return defaultEditableValuesJSONObject;
+	}
+
+	@Override
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink, String html, String mode)
 		throws PortalException {
