@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
@@ -45,6 +46,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.configuration.kernel.util.PortletConfigurationApplicationType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -77,6 +80,8 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 		Document document = _getDocument(html);
 
+		Map<String, Integer> instanceIds = new HashMap<>();
+
 		for (Element element : document.select("*")) {
 			String tagName = element.tagName();
 
@@ -104,20 +109,36 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			String portletPreferences = StringPool.BLANK;
 
+			int postfix = GetterUtil.getInteger(instanceIds.get(alias));
+
+			StringBundler instanceIdSB = new StringBundler(3);
+
+			instanceIdSB.append(fragmentEntryLink.getFragmentEntryLinkId());
+			instanceIdSB.append("_");
+			instanceIdSB.append(postfix);
+
 			if (originalFragmentEntryLink != null) {
+				StringBundler originalInstanceIdSB = new StringBundler(3);
+
+				originalInstanceIdSB.append(
+					originalFragmentEntryLink.getFragmentEntryLinkId());
+				originalInstanceIdSB.append("_");
+				originalInstanceIdSB.append(postfix);
+
 				String defaultPreferences = _getPreferences(
-					portletName, originalFragmentEntryLink, StringPool.BLANK);
+					portletName, originalFragmentEntryLink,
+					originalInstanceIdSB.toString(), StringPool.BLANK);
 
 				portletPreferences = _getPreferences(
-					portletName, fragmentEntryLink, defaultPreferences);
+					portletName, fragmentEntryLink, instanceIdSB.toString(),
+					defaultPreferences);
 			}
+
+			instanceIds.put(alias, ++postfix);
 
 			runtimeTagElement.attr("defaultPreferences", portletPreferences);
 
-			String instanceId = String.valueOf(
-				fragmentEntryLink.getFragmentEntryLinkId());
-
-			runtimeTagElement.attr("instanceId", instanceId);
+			runtimeTagElement.attr("instanceId", instanceIdSB.toString());
 
 			runtimeTagElement.attr("persistSettings=false", true);
 			runtimeTagElement.attr("portletName", portletName);
@@ -141,7 +162,8 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 				Objects.equals(mode, PortletMode.EDIT.toString())) {
 
 				portletElement.appendChild(
-					_getPortletTopperElement(portletName, instanceId));
+					_getPortletTopperElement(
+						portletName, instanceIdSB.toString()));
 			}
 
 			portletElement.appendChild(runtimeTagElement);
@@ -304,7 +326,7 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	private String _getPreferences(
 			String portletName, FragmentEntryLink fragmentEntryLink,
-			String defaultPreferences)
+			String instanceId, String defaultPreferences)
 		throws PortalException {
 
 		Group group = _groupLocalService.getGroup(
@@ -314,8 +336,7 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 		String portletId = PortletIdCodec.encode(
 			PortletIdCodec.decodePortletName(portletName),
-			PortletIdCodec.decodeUserId(portletName),
-			String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()));
+			PortletIdCodec.decodeUserId(portletName), instanceId);
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesFactoryUtil.getLayoutPortletSetup(
