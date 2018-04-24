@@ -115,6 +115,21 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		ItemSelector itemSelector = (ItemSelector)request.getAttribute(JournalWebKeys.ITEM_SELECTOR);
 
+		DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
+
+		long displayPageClassNameId = PortalUtil.getClassNameId(JournalArticle.class.getName());
+
+		DisplayPageSelectorCriterion displayPageSelectorCriterion = new DisplayPageSelectorCriterion();
+
+		displayPageSelectorCriterion.setClassNameId(displayPageClassNameId);
+		displayPageSelectorCriterion.setClassTypeId(ddmStructure.getStructureId());
+
+		List<ItemSelectorReturnType> desiredDisplayPageItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
+
+		desiredDisplayPageItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
+
+		displayPageSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredDisplayPageItemSelectorReturnTypes);
+
 		LayoutItemSelectorCriterion layoutItemSelectorCriterion = new LayoutItemSelectorCriterion();
 
 		layoutItemSelectorCriterion.setCheckDisplayPage(true);
@@ -125,7 +140,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
 
-		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(liferayPortletRequest), eventName, layoutItemSelectorCriterion);
+		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(liferayPortletRequest), eventName, displayPageSelectorCriterion, layoutItemSelectorCriterion);
 
 		itemSelectorURL.setParameter("layoutUuid", layoutUuid);
 		%>
