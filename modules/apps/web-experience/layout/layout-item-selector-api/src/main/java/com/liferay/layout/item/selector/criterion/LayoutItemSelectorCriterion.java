@@ -24,6 +24,7 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 	public LayoutItemSelectorCriterion() {
 		_showPrivatePages = true;
 		_showPublicPages = true;
+		_showDisplayPages = false;
 	}
 
 	public boolean isCheckDisplayPage() {
@@ -44,6 +45,10 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 
 	public boolean isShowActionsMenu() {
 		return _showActionsMenu;
+	}
+
+	public boolean isShowDisplayPages() {
+		return _showDisplayPages;
 	}
 
 	public boolean isShowPrivatePages() {
@@ -74,6 +79,10 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 		_showActionsMenu = showActionsMenu;
 	}
 
+	public void setShowDisplayPages(boolean showDisplayPages) {
+		_showDisplayPages = showDisplayPages;
+	}
+
 	public void setShowPrivatePages(boolean showPrivatePages) {
 		_showPrivatePages = showPrivatePages;
 	}
@@ -87,6 +96,7 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 	private boolean _followURLOnTitleClick;
 	private boolean _multiSelection;
 	private boolean _showActionsMenu;
+	private boolean _showDisplayPages;
 	private boolean _showPrivatePages;
 	private boolean _showPublicPages;
 
