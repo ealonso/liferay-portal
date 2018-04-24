@@ -42,6 +42,22 @@ if (themeDisplay.isStatePopUp() || themeDisplay.isWidget() || layoutTypePortlet.
 	}
 }
 else {
+	PortletURL editPageURL = PortalUtil.getControlPanelPortletURL(request, PortletProviderUtil.getPortletId(Layout.class.getName(), PortletProvider.Action.EDIT), PortletRequest.RENDER_PHASE);
+
+	editPageURL.setParameter("mvcRenderCommandName", "/layout/edit_layout");
+	editPageURL.setParameter("backURL", PortalUtil.getCurrentURL(request));
+	editPageURL.setParameter("groupId", String.valueOf(layout.getGroupId()));
+	editPageURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
+	editPageURL.setParameter("privateLayout", String.valueOf(layout.isPrivateLayout()));
+%>
+
+	<liferay-ui:tabs
+		names="content,properties"
+		type="tabs nav-tabs-default"
+		urls="<%= new String[] {themeDisplay.getURLCurrent(), editPageURL.toString()} %>"
+	/>
+
+<%
 	String themeId = theme.getThemeId();
 
 	String layoutTemplateId = layoutTypePortlet.getLayoutTemplateId();
