@@ -19,6 +19,12 @@ package com.liferay.layout.item.selector.web.internal.constants;
  */
 public class LayoutsItemSelectorWebKeys {
 
+	public static final String
+		DISPLAY_PAGES_ITEM_SELECTOR_VIEW_DISPLAY_CONTEXT =
+			"DISPLAY_PAGES_ITEM_SELECTOR_VIEW_DISPLAY_CONTEXT";
+
+	public static final String LAYOUT_ITEM_SELECTOR = "LAYOUT_ITEM_SELECTOR";
+
 	public static final String LAYOUT_ITEM_SELECTOR_VIEW_DISPLAY_CONTEXT =
 		"LAYOUT_ITEM_SELECTOR_VIEW_DISPLAY_CONTEXT";
 
