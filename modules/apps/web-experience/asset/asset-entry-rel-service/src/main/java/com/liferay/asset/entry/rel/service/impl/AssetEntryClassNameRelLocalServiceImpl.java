@@ -14,29 +14,54 @@
 
 package com.liferay.asset.entry.rel.service.impl;
 
+import com.liferay.asset.entry.rel.exception.NoSuchEntryClassNameRelException;
+import com.liferay.asset.entry.rel.model.AssetEntryClassNameRel;
 import com.liferay.asset.entry.rel.service.base.AssetEntryClassNameRelLocalServiceBaseImpl;
 
 /**
- * The implementation of the asset entry class name rel local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.asset.entry.rel.service.AssetEntryClassNameRelLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see AssetEntryClassNameRelLocalServiceBaseImpl
- * @see com.liferay.asset.entry.rel.service.AssetEntryClassNameRelLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class AssetEntryClassNameRelLocalServiceImpl
 	extends AssetEntryClassNameRelLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.asset.entry.rel.service.AssetEntryClassNameRelLocalServiceUtil} to access the asset entry class name rel local service.
-	 */
+	@Override
+	public AssetEntryClassNameRel addAssetEntryClassNameRel(
+		long assetEntryId, long classNameId, long classPK) {
+
+		long assetEntryClassNameRelId = counterLocalService.increment();
+
+		AssetEntryClassNameRel assetEntryClassNameRel =
+			assetEntryClassNameRelPersistence.create(assetEntryClassNameRelId);
+
+		assetEntryClassNameRel.setAssetEntryId(assetEntryId);
+		assetEntryClassNameRel.setClassNameId(classNameId);
+		assetEntryClassNameRel.setClassPK(classPK);
+
+		assetEntryClassNameRelPersistence.update(assetEntryClassNameRel);
+
+		return assetEntryClassNameRel;
+	}
+
+	@Override
+	public void deleteAssetEntryClassNameRel(
+			long assetEntryId, long classNameId)
+		throws NoSuchEntryClassNameRelException {
+
+		assetEntryClassNameRelPersistence.removeByA_C(
+			assetEntryId, classNameId);
+	}
+
+	@Override
+	public void deleteAssetEntryClassNameRelByAssetEntryId(long assetEntryId) {
+		assetEntryClassNameRelPersistence.removeByAssetEntry(assetEntryId);
+	}
+
+	@Override
+	public AssetEntryClassNameRel fetchAssetEntryClassNameRel(
+		long assetEntryId, long classNameId) {
+
+		return assetEntryClassNameRelPersistence.fetchByA_C(
+			assetEntryId, classNameId);
+	}
 
 }
