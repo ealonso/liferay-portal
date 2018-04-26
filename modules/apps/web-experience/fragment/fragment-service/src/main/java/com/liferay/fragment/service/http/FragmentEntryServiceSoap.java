@@ -326,12 +326,10 @@ public class FragmentEntryServiceSoap {
 
 	public static com.liferay.fragment.model.FragmentEntrySoap updateFragmentEntry(
 		long fragmentEntryId, String name, String css, String html, String js,
-		int status,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
+		int status) throws RemoteException {
 		try {
 			com.liferay.fragment.model.FragmentEntry returnValue = FragmentEntryServiceUtil.updateFragmentEntry(fragmentEntryId,
-					name, css, html, js, status, serviceContext);
+					name, css, html, js, status);
 
 			return com.liferay.fragment.model.FragmentEntrySoap.toSoapModel(returnValue);
 		}

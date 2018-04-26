@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import java.io.File;
 import java.io.Serializable;
 
 import java.util.List;
@@ -73,7 +74,7 @@ public interface HtmlPreviewEntryLocalService extends BaseLocalService,
 		HtmlPreviewEntry htmlPreviewEntry);
 
 	public HtmlPreviewEntry addHtmlPreviewEntry(long userId, long groupId,
-		long classNameId, long classPK, String content, String mimeType,
+		long classNameId, long classPK, File htmlPreviewFile,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**
@@ -238,6 +239,6 @@ public interface HtmlPreviewEntryLocalService extends BaseLocalService,
 		HtmlPreviewEntry htmlPreviewEntry);
 
 	public HtmlPreviewEntry updateHtmlPreviewEntry(long htmlPreviewEntryId,
-		String content, String mimeType, ServiceContext serviceContext)
+		File htmlPreviewFile, ServiceContext serviceContext)
 		throws PortalException;
 }

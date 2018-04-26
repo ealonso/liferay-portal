@@ -344,13 +344,21 @@ public class FragmentEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
-		long userId, long fragmentEntryId, String name, String css,
-		String html, String js, int status,
+		long fragmentEntryId, java.io.File htmlPreviewFile,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
+				   .updateFragmentEntry(fragmentEntryId, htmlPreviewFile,
+			serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+		long userId, long fragmentEntryId, String name, String css,
+		String html, String js, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
 				   .updateFragmentEntry(userId, fragmentEntryId, name, css,
-			html, js, status, serviceContext);
+			html, js, status);
 	}
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(

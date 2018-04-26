@@ -56,12 +56,12 @@ public class HtmlPreviewEntryLocalServiceUtil {
 
 	public static com.liferay.html.preview.model.HtmlPreviewEntry addHtmlPreviewEntry(
 		long userId, long groupId, long classNameId, long classPK,
-		String content, String mimeType,
+		java.io.File htmlPreviewFile,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addHtmlPreviewEntry(userId, groupId, classNameId, classPK,
-			content, mimeType, serviceContext);
+			htmlPreviewFile, serviceContext);
 	}
 
 	/**
@@ -266,12 +266,12 @@ public class HtmlPreviewEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.html.preview.model.HtmlPreviewEntry updateHtmlPreviewEntry(
-		long htmlPreviewEntryId, String content, String mimeType,
+		long htmlPreviewEntryId, java.io.File htmlPreviewFile,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .updateHtmlPreviewEntry(htmlPreviewEntryId, content,
-			mimeType, serviceContext);
+				   .updateHtmlPreviewEntry(htmlPreviewEntryId, htmlPreviewFile,
+			serviceContext);
 	}
 
 	public static HtmlPreviewEntryLocalService getService() {

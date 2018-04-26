@@ -159,6 +159,15 @@ public class FragmentEntryServiceUtil {
 	}
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+		long fragmentEntryId, java.io.File htmlImagePreview,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateFragmentEntry(fragmentEntryId, htmlImagePreview,
+			serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, String name)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().updateFragmentEntry(fragmentEntryId, name);
@@ -166,12 +175,10 @@ public class FragmentEntryServiceUtil {
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, String name, String css, String html, String js,
-		int status,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		int status) throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .updateFragmentEntry(fragmentEntryId, name, css, html, js,
-			status, serviceContext);
+			status);
 	}
 
 	public static FragmentEntryService getService() {

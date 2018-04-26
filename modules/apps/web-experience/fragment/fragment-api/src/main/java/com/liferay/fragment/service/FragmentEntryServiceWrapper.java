@@ -162,6 +162,15 @@ public class FragmentEntryServiceWrapper implements FragmentEntryService,
 
 	@Override
 	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+		long fragmentEntryId, java.io.File htmlImagePreview,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _fragmentEntryService.updateFragmentEntry(fragmentEntryId,
+			htmlImagePreview, serviceContext);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, String name)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _fragmentEntryService.updateFragmentEntry(fragmentEntryId, name);
@@ -170,11 +179,9 @@ public class FragmentEntryServiceWrapper implements FragmentEntryService,
 	@Override
 	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		long fragmentEntryId, String name, String css, String html, String js,
-		int status,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		int status) throws com.liferay.portal.kernel.exception.PortalException {
 		return _fragmentEntryService.updateFragmentEntry(fragmentEntryId, name,
-			css, html, js, status, serviceContext);
+			css, html, js, status);
 	}
 
 	@Override

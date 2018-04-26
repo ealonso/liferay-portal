@@ -30,6 +30,8 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import java.io.File;
+
 import java.util.List;
 
 /**
@@ -124,10 +126,14 @@ public interface FragmentEntryService extends BaseService {
 	public String[] getTempFileNames(long groupId, String folderName)
 		throws PortalException;
 
+	public FragmentEntry updateFragmentEntry(long fragmentEntryId,
+		File htmlImagePreview, ServiceContext serviceContext)
+		throws PortalException;
+
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId, String name)
 		throws PortalException;
 
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId, String name,
-		String css, String html, String js, int status,
-		ServiceContext serviceContext) throws PortalException;
+		String css, String html, String js, int status)
+		throws PortalException;
 }

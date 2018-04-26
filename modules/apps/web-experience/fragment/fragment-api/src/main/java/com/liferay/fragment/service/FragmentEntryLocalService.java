@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
+import java.io.File;
 import java.io.Serializable;
 
 import java.util.List;
@@ -281,9 +282,13 @@ public interface FragmentEntryLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentEntry updateFragmentEntry(FragmentEntry fragmentEntry);
 
+	public FragmentEntry updateFragmentEntry(long fragmentEntryId,
+		File htmlPreviewFile, ServiceContext serviceContext)
+		throws PortalException;
+
 	public FragmentEntry updateFragmentEntry(long userId, long fragmentEntryId,
-		String name, String css, String html, String js, int status,
-		ServiceContext serviceContext) throws PortalException;
+		String name, String css, String html, String js, int status)
+		throws PortalException;
 
 	public FragmentEntry updateFragmentEntry(long fragmentEntryId, String name)
 		throws PortalException;

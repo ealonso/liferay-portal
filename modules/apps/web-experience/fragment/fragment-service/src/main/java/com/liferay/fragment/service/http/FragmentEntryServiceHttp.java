@@ -550,15 +550,48 @@ public class FragmentEntryServiceHttp {
 
 	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
 		HttpPrincipal httpPrincipal, long fragmentEntryId, String name,
-		String css, String html, String js, int status,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		String css, String html, String js, int status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(FragmentEntryServiceUtil.class,
 					"updateFragmentEntry", _updateFragmentEntryParameterTypes16);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					fragmentEntryId, name, css, html, js, status, serviceContext);
+					fragmentEntryId, name, css, html, js, status);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof com.liferay.portal.kernel.exception.PortalException) {
+					throw (com.liferay.portal.kernel.exception.PortalException)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.fragment.model.FragmentEntry)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+		HttpPrincipal httpPrincipal, long fragmentEntryId,
+		java.io.File htmlImagePreview,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		try {
+			MethodKey methodKey = new MethodKey(FragmentEntryServiceUtil.class,
+					"updateFragmentEntry", _updateFragmentEntryParameterTypes17);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					fragmentEntryId, htmlImagePreview, serviceContext);
 
 			Object returnObj = null;
 
@@ -641,6 +674,10 @@ public class FragmentEntryServiceHttp {
 		};
 	private static final Class<?>[] _updateFragmentEntryParameterTypes16 = new Class[] {
 			long.class, String.class, String.class, String.class, String.class,
-			int.class, com.liferay.portal.kernel.service.ServiceContext.class
+			int.class
+		};
+	private static final Class<?>[] _updateFragmentEntryParameterTypes17 = new Class[] {
+			long.class, java.io.File.class,
+			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 }
