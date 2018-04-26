@@ -46,6 +46,13 @@ public class AssetEntryRelLocalServiceWrapper
 		return _assetEntryRelLocalService.addAssetEntryRel(assetEntryRel);
 	}
 
+	@Override
+	public com.liferay.asset.entry.rel.model.AssetEntryRel addAssetEntryRel(
+		long assetEntryId, long classNameId, long classPK) {
+		return _assetEntryRelLocalService.addAssetEntryRel(assetEntryId,
+			classNameId, classPK);
+	}
+
 	/**
 	* Creates a new asset entry rel with the primary key. Does not add the asset entry rel to the database.
 	*
@@ -82,6 +89,17 @@ public class AssetEntryRelLocalServiceWrapper
 		long assetEntryRelId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _assetEntryRelLocalService.deleteAssetEntryRel(assetEntryRelId);
+	}
+
+	@Override
+	public void deleteAssetEntryRel(long assetEntryId, long classNameId)
+		throws com.liferay.asset.entry.rel.exception.NoSuchEntryRelException {
+		_assetEntryRelLocalService.deleteAssetEntryRel(assetEntryId, classNameId);
+	}
+
+	@Override
+	public void deleteAssetEntryRelByAssetEntryId(long assetEntryId) {
+		_assetEntryRelLocalService.deleteAssetEntryRelByAssetEntryId(assetEntryId);
 	}
 
 	/**
@@ -183,6 +201,13 @@ public class AssetEntryRelLocalServiceWrapper
 	public com.liferay.asset.entry.rel.model.AssetEntryRel fetchAssetEntryRel(
 		long assetEntryRelId) {
 		return _assetEntryRelLocalService.fetchAssetEntryRel(assetEntryRelId);
+	}
+
+	@Override
+	public com.liferay.asset.entry.rel.model.AssetEntryRel fetchAssetEntryRel(
+		long assetEntryId, long classNameId) {
+		return _assetEntryRelLocalService.fetchAssetEntryRel(assetEntryId,
+			classNameId);
 	}
 
 	@Override

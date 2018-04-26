@@ -16,6 +16,7 @@ package com.liferay.asset.entry.rel.service;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.asset.entry.rel.exception.NoSuchEntryRelException;
 import com.liferay.asset.entry.rel.model.AssetEntryRel;
 
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -70,6 +71,9 @@ public interface AssetEntryRelLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public AssetEntryRel addAssetEntryRel(AssetEntryRel assetEntryRel);
 
+	public AssetEntryRel addAssetEntryRel(long assetEntryId, long classNameId,
+		long classPK);
+
 	/**
 	* Creates a new asset entry rel with the primary key. Does not add the asset entry rel to the database.
 	*
@@ -98,6 +102,11 @@ public interface AssetEntryRelLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public AssetEntryRel deleteAssetEntryRel(long assetEntryRelId)
 		throws PortalException;
+
+	public void deleteAssetEntryRel(long assetEntryId, long classNameId)
+		throws NoSuchEntryRelException;
+
+	public void deleteAssetEntryRelByAssetEntryId(long assetEntryId);
 
 	/**
 	* @throws PortalException
@@ -167,6 +176,9 @@ public interface AssetEntryRelLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public AssetEntryRel fetchAssetEntryRel(long assetEntryRelId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public AssetEntryRel fetchAssetEntryRel(long assetEntryId, long classNameId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
