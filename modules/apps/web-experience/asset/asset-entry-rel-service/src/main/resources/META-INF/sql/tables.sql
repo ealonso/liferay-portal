@@ -4,3 +4,10 @@ create table AssetEntryAssetCategoryRel (
 	assetCategoryId LONG,
 	priority INTEGER
 );
+
+create table AssetEntryRel (
+	assetEntryRelId LONG not null primary key,
+	assetEntryId LONG,
+	classNameId LONG,
+	classPK LONG
+);
