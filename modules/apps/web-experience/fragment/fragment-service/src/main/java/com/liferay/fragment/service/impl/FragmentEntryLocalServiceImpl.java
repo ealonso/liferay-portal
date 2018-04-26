@@ -31,13 +31,13 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TempFileEntryUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -175,12 +175,6 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setStatusByUserName(user.getFullName());
 		fragmentEntry.setStatusDate(new Date());
 
-		HtmlPreviewEntry htmlPreviewEntry = _updateHtmlPreviewEntry(
-			fragmentEntry, serviceContext);
-
-		fragmentEntry.setHtmlPreviewEntryId(
-			htmlPreviewEntry.getHtmlPreviewEntryId());
-
 		fragmentEntryPersistence.update(fragmentEntry);
 
 		// Resources
@@ -306,7 +300,7 @@ public class FragmentEntryLocalServiceImpl
 	@Override
 	public FragmentEntry updateFragmentEntry(
 			long userId, long fragmentEntryId, String name, String css,
-			String html, String js, int status, ServiceContext serviceContext)
+			String html, String js, int status)
 		throws PortalException {
 
 		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
@@ -332,8 +326,22 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setStatusByUserName(user.getFullName());
 		fragmentEntry.setStatusDate(new Date());
 
+		fragmentEntryPersistence.update(fragmentEntry);
+
+		return fragmentEntry;
+	}
+
+	@Override
+	public FragmentEntry updateFragmentEntry(
+		    long fragmentEntryId,  File htmlPreviewFile,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
+			fragmentEntryId);
+
 		HtmlPreviewEntry htmlPreviewEntry = _updateHtmlPreviewEntry(
-			fragmentEntry, serviceContext);
+			fragmentEntry, htmlPreviewFile, serviceContext);
 
 		fragmentEntry.setHtmlPreviewEntryId(
 			htmlPreviewEntry.getHtmlPreviewEntryId());
@@ -393,20 +401,6 @@ public class FragmentEntryLocalServiceImpl
 		}
 	}
 
-	private String _getContent(FragmentEntry fragmentEntry) {
-		StringBundler sb = new StringBundler(7);
-
-		sb.append("<html><head><style>");
-		sb.append(fragmentEntry.getCss());
-		sb.append("</style><script>");
-		sb.append(fragmentEntry.getJs());
-		sb.append("</script></head><body>");
-		sb.append(fragmentEntry.getHtml());
-		sb.append("</body></html>");
-
-		return sb.toString();
-	}
-
 	private String _getFragmentEntryKey(String fragmentEntryKey) {
 		if (fragmentEntryKey != null) {
 			fragmentEntryKey = fragmentEntryKey.trim();
@@ -440,7 +434,8 @@ public class FragmentEntryLocalServiceImpl
 	}
 
 	private HtmlPreviewEntry _updateHtmlPreviewEntry(
-			FragmentEntry fragmentEntry, ServiceContext serviceContext)
+			FragmentEntry fragmentEntry, File htmlPreviewFile,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		HtmlPreviewEntry htmlPreviewEntry =
@@ -449,16 +444,15 @@ public class FragmentEntryLocalServiceImpl
 
 		if (htmlPreviewEntry != null) {
 			return _htmlPreviewEntryLocalService.updateHtmlPreviewEntry(
-				htmlPreviewEntry.getHtmlPreviewEntryId(),
-				fragmentEntry.getContent(), ContentTypes.IMAGE_PNG,
+				htmlPreviewEntry.getHtmlPreviewEntryId(), htmlPreviewFile,
 				serviceContext);
 		}
 
 		return _htmlPreviewEntryLocalService.addHtmlPreviewEntry(
 			fragmentEntry.getUserId(), fragmentEntry.getGroupId(),
 			classNameLocalService.getClassNameId(FragmentEntry.class),
-			fragmentEntry.getFragmentEntryId(), _getContent(fragmentEntry),
-			ContentTypes.IMAGE_PNG, serviceContext);
+			fragmentEntry.getFragmentEntryId(), htmlPreviewFile,
+			serviceContext);
 	}
 
 	@ServiceReference(type = FragmentEntryProcessorRegistry.class)

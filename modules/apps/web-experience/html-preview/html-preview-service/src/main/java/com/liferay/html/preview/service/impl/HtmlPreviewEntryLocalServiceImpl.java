@@ -15,10 +15,7 @@
 package com.liferay.html.preview.service.impl;
 
 import com.liferay.document.library.kernel.model.DLFolderConstants;
-import com.liferay.html.preview.exception.InvalidHtmlPreviewEntryMimeTypeException;
 import com.liferay.html.preview.model.HtmlPreviewEntry;
-import com.liferay.html.preview.processor.HtmlPreviewProcessor;
-import com.liferay.html.preview.processor.HtmlPreviewProcessorTracker;
 import com.liferay.html.preview.service.base.HtmlPreviewEntryLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Repository;
@@ -26,7 +23,8 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.spring.extender.service.ServiceReference;
+import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 
 import java.io.File;
 
@@ -41,7 +39,7 @@ public class HtmlPreviewEntryLocalServiceImpl
 	@Override
 	public HtmlPreviewEntry addHtmlPreviewEntry(
 			long userId, long groupId, long classNameId, long classPK,
-			String content, String mimeType, ServiceContext serviceContext)
+			File htmlPreviewFile, ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userLocalService.getUser(userId);
@@ -64,7 +62,7 @@ public class HtmlPreviewEntryLocalServiceImpl
 
 		FileEntry fileEntry = _getFileEntry(
 			htmlPreviewEntry.getUserId(), htmlPreviewEntry.getGroupId(),
-			htmlPreviewEntryId, content, mimeType);
+			htmlPreviewEntryId, htmlPreviewFile);
 
 		if (fileEntry != null) {
 			htmlPreviewEntry.setFileEntryId(fileEntry.getFileEntryId());
@@ -102,7 +100,7 @@ public class HtmlPreviewEntryLocalServiceImpl
 
 	@Override
 	public HtmlPreviewEntry updateHtmlPreviewEntry(
-			long htmlPreviewEntryId, String content, String mimeType,
+			long htmlPreviewEntryId, File htmlPreviewFile,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -114,7 +112,7 @@ public class HtmlPreviewEntryLocalServiceImpl
 
 		FileEntry fileEntry = _getFileEntry(
 			htmlPreviewEntry.getUserId(), htmlPreviewEntry.getGroupId(),
-			htmlPreviewEntryId, content, mimeType);
+			htmlPreviewEntryId, htmlPreviewFile);
 
 		if (fileEntry != null) {
 			htmlPreviewEntry.setFileEntryId(fileEntry.getFileEntryId());
@@ -126,22 +124,11 @@ public class HtmlPreviewEntryLocalServiceImpl
 	}
 
 	private FileEntry _getFileEntry(
-			long userId, long groupId, long htmlPreviewEntryId, String content,
-			String mimeType)
+			long userId, long groupId, long htmlPreviewEntryId,
+			File htmlPreviewFile)
 		throws PortalException {
 
-		HtmlPreviewProcessor htmlPreviewProcessor =
-			_htmlPreviewProcessorTracker.getHtmlPreviewProcessor(mimeType);
-
-		if (htmlPreviewProcessor == null) {
-			throw new InvalidHtmlPreviewEntryMimeTypeException(
-				"No HTML preview processor available for MIME type " +
-					mimeType);
-		}
-
-		File file = htmlPreviewProcessor.generateContentHtmlPreview(content);
-
-		if (file == null) {
+		if (htmlPreviewFile == null) {
 			return null;
 		}
 
@@ -162,14 +149,16 @@ public class HtmlPreviewEntryLocalServiceImpl
 			}
 		}
 
+		String extension = FileUtil.getExtension(htmlPreviewFile.getName());
+
+		String mimeType = MimeTypesUtil.getExtensionContentType(
+			extension);
+
 		return PortletFileRepositoryUtil.addPortletFileEntry(
 			groupId, userId, HtmlPreviewEntry.class.getName(),
 			htmlPreviewEntryId, HtmlPreviewEntry.class.getName(),
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, file,
+			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, htmlPreviewFile,
 			String.valueOf(htmlPreviewEntryId), mimeType, false);
 	}
-
-	@ServiceReference(type = HtmlPreviewProcessorTracker.class)
-	private HtmlPreviewProcessorTracker _htmlPreviewProcessorTracker;
 
 }

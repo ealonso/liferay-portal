@@ -18,22 +18,37 @@ import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryService;
+import com.liferay.html.preview.exception.InvalidHtmlPreviewEntryMimeTypeException;
+import com.liferay.html.preview.processor.HtmlPreviewProcessor;
+import com.liferay.html.preview.processor.HtmlPreviewProcessorTracker;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.WindowStateException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import java.io.File;
 
 /**
  * @author Jürgen Kappler
@@ -62,14 +77,30 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		String html = ParamUtil.getString(actionRequest, "htmlContent");
 		int status = ParamUtil.getInteger(actionRequest, "status");
 
+		HtmlPreviewProcessor htmlPreviewProcessor =
+			_htmlPreviewProcessorTracker.getHtmlPreviewProcessor(
+				ContentTypes.IMAGE_PNG);
+
+		if (htmlPreviewProcessor == null) {
+			throw new InvalidHtmlPreviewEntryMimeTypeException(
+				"No HTML preview processor available for MIME type " +
+					ContentTypes.IMAGE_PNG);
+		}
+
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
 		try {
 			FragmentEntry fragmentEntry =
 				_fragmentEntryService.updateFragmentEntry(
-					fragmentEntryId, name, css, html, js, status,
-					serviceContext);
+					fragmentEntryId, name, css, html, js, status);
+
+			File file = htmlPreviewProcessor.generateURLHtmlPreview(
+				_getHTMLPreviewURL(
+					actionRequest, fragmentEntry.getFragmentEntryId()));
+
+			fragmentEntry = _fragmentEntryService.updateFragmentEntry(
+				fragmentEntryId, file, serviceContext);
 
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
 
@@ -95,6 +126,52 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		}
 	}
 
+	private String _getHTMLPreviewURL(
+			ActionRequest actionRequest, long fragmentEntryId)
+		throws WindowStateException {
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			actionRequest);
+
+		long plid = _getRenderLayoutPlid(actionRequest);
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, FragmentPortletKeys.FRAGMENT, plid,
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter(
+			"mvcRenderCommandName", "/fragment/render_fragment_entry");
+		portletURL.setParameter(
+			"fragmentEntryId", String.valueOf(fragmentEntryId));
+
+		portletURL.setWindowState(LiferayWindowState.POP_UP);
+
+		return portletURL.toString();
+	}
+
+	private long _getRenderLayoutPlid(ActionRequest actionRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout renderLayout = LayoutLocalServiceUtil.fetchFirstLayout(
+			themeDisplay.getScopeGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+		if (renderLayout != null) {
+			return renderLayout.getPlid();
+		}
+
+		renderLayout = LayoutLocalServiceUtil.fetchFirstLayout(
+			themeDisplay.getScopeGroupId(), true,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+
+		if (renderLayout != null) {
+			return renderLayout.getPlid();
+		}
+
+		return themeDisplay.getPlid();
+	}
+
 	private String _getSaveAndContinueRedirect(
 			ActionRequest actionRequest, FragmentEntry fragmentEntry)
 		throws Exception {
@@ -114,6 +191,9 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		return portletURL.toString();
 	}
+
+	@Reference
+	private HtmlPreviewProcessorTracker _htmlPreviewProcessorTracker;
 
 	@Reference
 	private FragmentEntryService _fragmentEntryService;

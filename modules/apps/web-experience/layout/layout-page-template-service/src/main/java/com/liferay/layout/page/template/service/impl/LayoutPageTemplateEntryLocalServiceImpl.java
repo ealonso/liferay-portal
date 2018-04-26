@@ -74,14 +74,6 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		layoutPageTemplateEntry.setName(name);
 		layoutPageTemplateEntry.setType(type);
 
-		// HTML preview
-
-		HtmlPreviewEntry htmlPreviewEntry = _updateHtmlPreviewEntry(
-			layoutPageTemplateEntry, serviceContext);
-
-		layoutPageTemplateEntry.setHtmlPreviewEntryId(
-			htmlPreviewEntry.getHtmlPreviewEntryId());
-
 		layoutPageTemplateEntryPersistence.update(layoutPageTemplateEntry);
 
 		// Fragment entry instance links
@@ -316,10 +308,6 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 			layoutPageTemplateEntryId, fragmentEntryIds, editableValues,
 			serviceContext);
 
-		// HTML preview
-
-		_updateHtmlPreviewEntry(layoutPageTemplateEntry, serviceContext);
-
 		return layoutPageTemplateEntry;
 	}
 
@@ -353,14 +341,12 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 				classNameLocalService.getClassNameId(
 					LayoutPageTemplateEntry.class),
 				layoutPageTemplateEntry.getLayoutPageTemplateEntryId(),
-				layoutPageTemplateEntry.getContent(), ContentTypes.IMAGE_PNG,
-				serviceContext);
+				null, serviceContext);
 		}
 
 		return _htmlPreviewEntryLocalService.updateHtmlPreviewEntry(
 			layoutPageTemplateEntry.getHtmlPreviewEntryId(),
-			layoutPageTemplateEntry.getContent(), ContentTypes.IMAGE_PNG,
-			serviceContext);
+			null, serviceContext);
 	}
 
 	@ServiceReference(type = FragmentEntryLinkLocalService.class)

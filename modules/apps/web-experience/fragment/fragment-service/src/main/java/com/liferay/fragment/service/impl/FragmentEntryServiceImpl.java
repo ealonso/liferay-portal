@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.spring.extender.service.ServiceReference;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -220,15 +221,27 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 	@Override
 	public FragmentEntry updateFragmentEntry(
 			long fragmentEntryId, String name, String css, String html,
-			String js, int status, ServiceContext serviceContext)
+			String js, int status)
 		throws PortalException {
 
 		_fragmentEntryModelResourcePermission.check(
 			getPermissionChecker(), fragmentEntryId, ActionKeys.UPDATE);
 
 		return fragmentEntryLocalService.updateFragmentEntry(
-			getUserId(), fragmentEntryId, name, css, html, js, status,
-			serviceContext);
+			getUserId(), fragmentEntryId, name, css, html, js, status);
+	}
+
+	@Override
+	public FragmentEntry updateFragmentEntry(
+			long fragmentEntryId, File htmlImagePreview,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		_fragmentEntryModelResourcePermission.check(
+			getPermissionChecker(), fragmentEntryId, ActionKeys.UPDATE);
+
+		return fragmentEntryLocalService.updateFragmentEntry(
+			fragmentEntryId, htmlImagePreview, serviceContext);
 	}
 
 	private static volatile ModelResourcePermission<FragmentEntry>
