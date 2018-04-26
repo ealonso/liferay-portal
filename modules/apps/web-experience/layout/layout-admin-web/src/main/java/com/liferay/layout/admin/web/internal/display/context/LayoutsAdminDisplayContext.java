@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -241,7 +242,9 @@ public class LayoutsAdminDisplayContext {
 
 	public String getEditLayoutURL(Layout layout) throws PortalException {
 		if (!Objects.equals(layout.getType(), "content")) {
-			return PortalUtil.getLayoutFullURL(layout, _themeDisplay);
+			return HttpUtil.setParameter(
+				PortalUtil.getLayoutFullURL(layout, _themeDisplay), "p_p_edit",
+				Boolean.TRUE.toString());
 		}
 
 		PortletURL editLayoutURL = _liferayPortletResponse.createRenderURL();
@@ -257,7 +260,8 @@ public class LayoutsAdminDisplayContext {
 			"groupId", String.valueOf(layout.getGroupId()));
 		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
 
-		return editLayoutURL.toString();
+		return HttpUtil.setParameter(
+			editLayoutURL.toString(), "p_p_edit", Boolean.TRUE.toString());
 	}
 
 	public long getFirstLayoutPageTemplateCollectionId()
