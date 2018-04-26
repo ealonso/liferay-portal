@@ -50,7 +50,9 @@ import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.template.soy.utils.SoyContext;
@@ -156,6 +158,34 @@ public class FragmentsEditorContext {
 			"updateLayoutPageTemplateEntryAssetTypeURL",
 			_getFragmentEntryActionURL(
 				"/layout/update_layout_page_template_entry_asset_type"));
+
+		String languageId = _themeDisplay.getLanguageId();
+
+		soyContext.put("defaultLanguageId", languageId);
+		soyContext.put("languageId", languageId);
+
+		String[] languageIds = LocaleUtil.toLanguageIds(
+			LanguageUtil.getAvailableLocales(_themeDisplay.getSiteGroupId()));
+
+		SoyContext availableLanguages =
+			SoyContextFactoryUtil.createSoyContext();
+
+		for (String curLanguageId : languageIds) {
+			SoyContext curLanguage = SoyContextFactoryUtil.createSoyContext();
+
+			String curLanguageIcon = StringUtil.toLowerCase(
+				curLanguageId.replace(StringPool.UNDERLINE, StringPool.DASH));
+
+			String curLanguageLabel = curLanguageId.replace(
+				StringPool.UNDERLINE, StringPool.DASH);
+
+			curLanguage.put("languageIcon", curLanguageIcon);
+			curLanguage.put("languageLabel", curLanguageLabel);
+
+			availableLanguages.put(curLanguageId, curLanguage);
+		}
+
+		soyContext.put("availableLanguages", availableLanguages);
 
 		return soyContext;
 	}

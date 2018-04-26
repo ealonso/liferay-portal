@@ -44,4 +44,9 @@ public class TextEditableElementParser implements EditableElementParser {
 		element.html(document.html());
 	}
 
+	@Override
+	public String getValue(Element element) {
+		return element.html();
+	}
+
 }

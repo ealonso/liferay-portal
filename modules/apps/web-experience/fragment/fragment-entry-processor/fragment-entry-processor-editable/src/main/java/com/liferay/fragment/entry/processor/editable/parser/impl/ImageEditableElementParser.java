@@ -45,6 +45,15 @@ public class ImageEditableElementParser implements EditableElementParser {
 	}
 
 	@Override
+	public String getValue(Element element) {
+		List<Element> elements = element.getElementsByTag("img");
+
+		Element replaceableElement = elements.get(0);
+
+		return replaceableElement.attr("src");
+	}
+
+	@Override
 	public void validate(Element element) throws FragmentEntryContentException {
 		List<Element> elements = element.getElementsByTag("img");
 
