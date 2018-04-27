@@ -147,6 +147,39 @@ public class JournalArticleLocalServiceUtil {
 		java.util.Map<java.util.Locale, String> titleMap,
 		java.util.Map<java.util.Locale, String> descriptionMap,
 		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
+		String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		java.io.File smallImageFile, java.util.Map<String, byte[]> images,
+		String articleURL,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addArticle(userId, groupId, folderId, classNameId, classPK,
+			articleId, autoArticleId, version, titleMap, descriptionMap,
+			friendlyURLMap, content, ddmStructureKey, ddmTemplateKey,
+			assetEntryRelClassNameId, assetEntryRelClassPK, layoutUuid,
+			displayDateMonth, displayDateDay, displayDateYear, displayDateHour,
+			displayDateMinute, expirationDateMonth, expirationDateDay,
+			expirationDateYear, expirationDateHour, expirationDateMinute,
+			neverExpire, reviewDateMonth, reviewDateDay, reviewDateYear,
+			reviewDateHour, reviewDateMinute, neverReview, indexable,
+			smallImage, smallImageURL, smallImageFile, images, articleURL,
+			serviceContext);
+	}
+
+	public static com.liferay.journal.model.JournalArticle addArticle(
+		long userId, long groupId, long folderId, long classNameId,
+		long classPK, String articleId, boolean autoArticleId, double version,
+		java.util.Map<java.util.Locale, String> titleMap,
+		java.util.Map<java.util.Locale, String> descriptionMap,
+		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
 		String ddmStructureKey, String ddmTemplateKey, String layoutUuid,
 		int displayDateMonth, int displayDateDay, int displayDateYear,
 		int displayDateHour, int displayDateMinute, int expirationDateMonth,
@@ -3622,6 +3655,37 @@ public class JournalArticleLocalServiceUtil {
 		double version, java.util.Map<java.util.Locale, String> titleMap,
 		java.util.Map<java.util.Locale, String> descriptionMap,
 		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
+		String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		java.io.File smallImageFile, java.util.Map<String, byte[]> images,
+		String articleURL,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .updateArticle(userId, groupId, folderId, articleId,
+			version, titleMap, descriptionMap, friendlyURLMap, content,
+			ddmStructureKey, ddmTemplateKey, assetEntryRelClassNameId,
+			assetEntryRelClassPK, layoutUuid, displayDateMonth, displayDateDay,
+			displayDateYear, displayDateHour, displayDateMinute,
+			expirationDateMonth, expirationDateDay, expirationDateYear,
+			expirationDateHour, expirationDateMinute, neverExpire,
+			reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
+			reviewDateMinute, neverReview, indexable, smallImage,
+			smallImageURL, smallImageFile, images, articleURL, serviceContext);
+	}
+
+	public static com.liferay.journal.model.JournalArticle updateArticle(
+		long userId, long groupId, long folderId, String articleId,
+		double version, java.util.Map<java.util.Locale, String> titleMap,
+		java.util.Map<java.util.Locale, String> descriptionMap,
+		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
 		String ddmStructureKey, String ddmTemplateKey, String layoutUuid,
 		int displayDateMonth, int displayDateDay, int displayDateYear,
 		int displayDateHour, int displayDateMinute, int expirationDateMonth,
@@ -3893,6 +3957,16 @@ public class JournalArticleLocalServiceUtil {
 			assetLinkEntryIds);
 	}
 
+	public static void updateAsset(long userId,
+		com.liferay.journal.model.JournalArticle article,
+		long[] assetCategoryIds, String[] assetTagNames,
+		long[] assetLinkEntryIds, Double priority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		getService()
+			.updateAsset(userId, article, assetCategoryIds, assetTagNames,
+			assetLinkEntryIds, priority);
+	}
+
 	/**
 	* Updates the web content article's asset with the new asset categories,
 	* tag names, and link entries, removing and adding them as necessary.
@@ -3908,11 +3982,13 @@ public class JournalArticleLocalServiceUtil {
 	public static void updateAsset(long userId,
 		com.liferay.journal.model.JournalArticle article,
 		long[] assetCategoryIds, String[] assetTagNames,
-		long[] assetLinkEntryIds, Double priority)
+		long[] assetLinkEntryIds, long assetEntryRelClassNameId,
+		long assetEntryRelClassPK, Double priority)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		getService()
 			.updateAsset(userId, article, assetCategoryIds, assetTagNames,
-			assetLinkEntryIds, priority);
+			assetLinkEntryIds, assetEntryRelClassNameId, assetEntryRelClassPK,
+			priority);
 	}
 
 	/**

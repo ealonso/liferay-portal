@@ -33,6 +33,39 @@ public class JournalArticleServiceWrapper implements JournalArticleService,
 		_journalArticleService = journalArticleService;
 	}
 
+	@Override
+	public com.liferay.journal.model.JournalArticle addArticle(long groupId,
+		long folderId, long classNameId, long classPK, String articleId,
+		boolean autoArticleId,
+		java.util.Map<java.util.Locale, String> titleMap,
+		java.util.Map<java.util.Locale, String> descriptionMap,
+		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
+		String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		java.io.File smallFile, java.util.Map<String, byte[]> images,
+		String articleURL,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticleService.addArticle(groupId, folderId,
+			classNameId, classPK, articleId, autoArticleId, titleMap,
+			descriptionMap, friendlyURLMap, content, ddmStructureKey,
+			ddmTemplateKey, assetEntryRelClassNameId, assetEntryRelClassPK,
+			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
+			displayDateHour, displayDateMinute, expirationDateMonth,
+			expirationDateDay, expirationDateYear, expirationDateHour,
+			expirationDateMinute, neverExpire, reviewDateMonth, reviewDateDay,
+			reviewDateYear, reviewDateHour, reviewDateMinute, neverReview,
+			indexable, smallImage, smallImageURL, smallFile, images,
+			articleURL, serviceContext);
+	}
+
 	/**
 	* Adds a web content article with additional parameters. All scheduling
 	* parameters (display date, expiration date, and review date) use the
@@ -1900,6 +1933,37 @@ public class JournalArticleServiceWrapper implements JournalArticleService,
 		return _journalArticleService.updateArticle(userId, groupId, folderId,
 			articleId, version, titleMap, descriptionMap, content, layoutUuid,
 			serviceContext);
+	}
+
+	@Override
+	public com.liferay.journal.model.JournalArticle updateArticle(
+		long groupId, long folderId, String articleId, double version,
+		java.util.Map<java.util.Locale, String> titleMap,
+		java.util.Map<java.util.Locale, String> descriptionMap,
+		java.util.Map<java.util.Locale, String> friendlyURLMap, String content,
+		String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		java.io.File smallFile, java.util.Map<String, byte[]> images,
+		String articleURL,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _journalArticleService.updateArticle(groupId, folderId,
+			articleId, version, titleMap, descriptionMap, friendlyURLMap,
+			content, ddmStructureKey, ddmTemplateKey, assetEntryRelClassNameId,
+			assetEntryRelClassPK, layoutUuid, displayDateMonth, displayDateDay,
+			displayDateYear, displayDateHour, displayDateMinute,
+			expirationDateMonth, expirationDateDay, expirationDateYear,
+			expirationDateHour, expirationDateMinute, neverExpire,
+			reviewDateMonth, reviewDateDay, reviewDateYear, reviewDateHour,
+			reviewDateMinute, neverReview, indexable, smallImage,
+			smallImageURL, smallFile, images, articleURL, serviceContext);
 	}
 
 	/**

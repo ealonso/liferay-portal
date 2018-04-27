@@ -185,6 +185,22 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		boolean autoArticleId, double version, Map<Locale, String> titleMap,
 		Map<Locale, String> descriptionMap, Map<Locale, String> friendlyURLMap,
 		String content, String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		File smallImageFile, Map<String, byte[]> images, String articleURL,
+		ServiceContext serviceContext) throws PortalException;
+
+	public JournalArticle addArticle(long userId, long groupId, long folderId,
+		long classNameId, long classPK, String articleId,
+		boolean autoArticleId, double version, Map<Locale, String> titleMap,
+		Map<Locale, String> descriptionMap, Map<Locale, String> friendlyURLMap,
+		String content, String ddmStructureKey, String ddmTemplateKey,
 		String layoutUuid, int displayDateMonth, int displayDateDay,
 		int displayDateYear, int displayDateHour, int displayDateMinute,
 		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
@@ -3180,6 +3196,22 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		long folderId, String articleId, double version,
 		Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 		Map<Locale, String> friendlyURLMap, String content,
+		String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		File smallImageFile, Map<String, byte[]> images, String articleURL,
+		ServiceContext serviceContext) throws PortalException;
+
+	public JournalArticle updateArticle(long userId, long groupId,
+		long folderId, String articleId, double version,
+		Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+		Map<Locale, String> friendlyURLMap, String content,
 		String ddmStructureKey, String ddmTemplateKey, String layoutUuid,
 		int displayDateMonth, int displayDateDay, int displayDateYear,
 		int displayDateHour, int displayDateMinute, int expirationDateMonth,
@@ -3402,6 +3434,10 @@ public interface JournalArticleLocalService extends BaseLocalService,
 		long[] assetCategoryIds, String[] assetTagNames,
 		long[] assetLinkEntryIds) throws PortalException;
 
+	public void updateAsset(long userId, JournalArticle article,
+		long[] assetCategoryIds, String[] assetTagNames,
+		long[] assetLinkEntryIds, Double priority) throws PortalException;
+
 	/**
 	* Updates the web content article's asset with the new asset categories,
 	* tag names, and link entries, removing and adding them as necessary.
@@ -3416,7 +3452,8 @@ public interface JournalArticleLocalService extends BaseLocalService,
 	*/
 	public void updateAsset(long userId, JournalArticle article,
 		long[] assetCategoryIds, String[] assetTagNames,
-		long[] assetLinkEntryIds, Double priority) throws PortalException;
+		long[] assetLinkEntryIds, long assetEntryRelClassNameId,
+		long assetEntryRelClassPK, Double priority) throws PortalException;
 
 	/**
 	* Updates the web content article matching the group, article ID, and
