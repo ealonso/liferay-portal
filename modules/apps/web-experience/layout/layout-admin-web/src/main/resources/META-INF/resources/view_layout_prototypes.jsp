@@ -43,7 +43,7 @@
 	</liferay-frontend:management-bar-filters>
 
 	<liferay-frontend:management-bar-buttons>
-		<liferay-portlet:actionURL name="changeDisplayStyle" varImpl="changeDisplayStyleURL">
+		<liferay-portlet:actionURL name="/layout_prototype/change_display_style" varImpl="changeDisplayStyleURL">
 			<portlet:param name="redirect" value="<%= currentURL %>" />
 		</liferay-portlet:actionURL>
 
