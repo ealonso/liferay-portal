@@ -45,10 +45,15 @@ import javax.portlet.PortletURL;
 import javax.portlet.WindowStateException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Jürgen Kappler
@@ -77,16 +82,6 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		String html = ParamUtil.getString(actionRequest, "htmlContent");
 		int status = ParamUtil.getInteger(actionRequest, "status");
 
-		HtmlPreviewProcessor htmlPreviewProcessor =
-			_htmlPreviewProcessorTracker.getHtmlPreviewProcessor(
-				ContentTypes.IMAGE_PNG);
-
-		if (htmlPreviewProcessor == null) {
-			throw new InvalidHtmlPreviewEntryMimeTypeException(
-				"No HTML preview processor available for MIME type " +
-					ContentTypes.IMAGE_PNG);
-		}
-
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
@@ -95,7 +90,7 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 				_fragmentEntryService.updateFragmentEntry(
 					fragmentEntryId, name, css, html, js, status);
 
-			File file = htmlPreviewProcessor.generateURLHtmlPreview(
+			File file = _previewImage(
 				_getHTMLPreviewURL(
 					actionRequest, fragmentEntry.getFragmentEntryId()));
 
@@ -192,8 +187,25 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		return portletURL.toString();
 	}
 
-	@Reference
-	private HtmlPreviewProcessorTracker _htmlPreviewProcessorTracker;
+	private File _previewImage(String url) {
+		String chromeDriverPath = "/your/chromedriver/path" ;
+
+		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+
+		ChromeOptions options = new ChromeOptions();
+
+		options.addArguments(
+			"--headless", "--disable-gpu", "--window-size=1920,1200",
+			"--ignore-certificate-errors", "--silent");
+
+		WebDriver driver = new ChromeDriver(options);
+
+		driver.get(url);
+
+		TakesScreenshot takesScreenshot = (TakesScreenshot)driver;
+
+		return takesScreenshot.getScreenshotAs(OutputType.FILE);
+	}
 
 	@Reference
 	private FragmentEntryService _fragmentEntryService;
