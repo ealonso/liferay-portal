@@ -18,7 +18,12 @@ import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.web.internal.portlet.PageTemplatesControlPanelEntry;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.portlet.ControlPanelEntry;
+
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -37,6 +42,11 @@ import org.osgi.service.component.annotations.Reference;
 public class PageTemplatesPanelApp extends BasePanelApp {
 
 	@Override
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "page-templates");
+	}
+
+	@Override
 	public String getPortletId() {
 		return LayoutAdminPortletKeys.GROUP_PAGES;
 	}
@@ -49,5 +59,13 @@ public class PageTemplatesPanelApp extends BasePanelApp {
 	public void setPortlet(Portlet portlet) {
 		super.setPortlet(portlet);
 	}
+
+	@Override
+	protected ControlPanelEntry getControlPanelEntry() {
+		return _pageTemplatesControlPanelEntry;
+	}
+
+	@Reference
+	private PageTemplatesControlPanelEntry _pageTemplatesControlPanelEntry;
 
 }
