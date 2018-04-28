@@ -16,12 +16,11 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:error exception="<%= RequiredLayoutPrototypeException.class %>" message="you-cannot-delete-page-templates-that-are-used-by-a-page" />
+<%
+renderResponse.setTitle(LanguageUtil.get(request, "page-templates"));
+%>
 
-<clay:navigation-bar
-	inverted="<%= true %>"
-	items="<%= layoutPrototypeDisplayContext.getNavigationItems() %>"
-/>
+<liferay-ui:error exception="<%= RequiredLayoutPrototypeException.class %>" message="you-cannot-delete-page-templates-that-are-used-by-a-page" />
 
 <liferay-frontend:management-bar
 	disabled="<%= layoutPrototypeDisplayContext.isDisabledManagementBar() %>"
