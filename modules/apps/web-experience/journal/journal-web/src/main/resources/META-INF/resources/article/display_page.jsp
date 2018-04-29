@@ -37,25 +37,9 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 	<c:otherwise>
 
 		<%
-		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
+		String layoutUuid = journalDisplayContext.getLayoutUuid();
 
-		if (changeStructure && (article != null)) {
-			layoutUuid = article.getLayoutUuid();
-		}
-
-		String layoutBreadcrumb = StringPool.BLANK;
-
-		if (Validator.isNotNull(layoutUuid)) {
-			Layout selLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layoutUuid, themeDisplay.getSiteGroupId(), false);
-
-			if (selLayout == null) {
-				selLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(layoutUuid, themeDisplay.getSiteGroupId(), true);
-			}
-
-			if (selLayout != null) {
-				layoutBreadcrumb = journalDisplayContext.getLayoutBreadcrumb(selLayout);
-			}
-		}
+		String layoutBreadcrumb = journalDisplayContext.getLayoutBreadcrumb();
 		%>
 
 		<liferay-ui:error-marker
@@ -120,37 +104,6 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<%
 		String eventName = liferayPortletResponse.getNamespace() + "selectDisplayPage";
-
-		ItemSelector itemSelector = (ItemSelector)request.getAttribute(JournalWebKeys.ITEM_SELECTOR);
-
-		DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
-
-		long journalArticleClassNameId = PortalUtil.getClassNameId(JournalArticle.class.getName());
-
-		DisplayPageSelectorCriterion displayPageSelectorCriterion = new DisplayPageSelectorCriterion();
-
-		displayPageSelectorCriterion.setClassNameId(journalArticleClassNameId);
-		displayPageSelectorCriterion.setClassTypeId(ddmStructure.getStructureId());
-
-		List<ItemSelectorReturnType> desiredDisplayPageItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
-
-		desiredDisplayPageItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-		displayPageSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredDisplayPageItemSelectorReturnTypes);
-
-		LayoutItemSelectorCriterion layoutItemSelectorCriterion = new LayoutItemSelectorCriterion();
-
-		layoutItemSelectorCriterion.setCheckDisplayPage(true);
-
-		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
-
-		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
-
-		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(liferayPortletRequest), eventName, displayPageSelectorCriterion, layoutItemSelectorCriterion);
-
-		itemSelectorURL.setParameter("layoutUuid", layoutUuid);
 		%>
 
 		<aui:script use="liferay-item-selector-dialog">
@@ -190,7 +143,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 							},
 							'strings.add': '<liferay-ui:message key="done" />',
 							title: '<liferay-ui:message key="select-page" />',
-							url: '<%= itemSelectorURL.toString() %>'
+							url: '<%= journalDisplayContext.getDisplayPageItemSelectorURL() %>'
 						}
 					);
 
