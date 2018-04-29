@@ -65,6 +65,14 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<aui:input id="pagesContainerInput" ignoreRequestValue="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
+		<%
+		long displayPageClassNameId = PortalUtil.getClassNameId(LayoutPageTemplateEntry.class.getName());
+		%>
+
+		<aui:input id="displayPageClassNameIdInput" ignoreRequestValue="<%= true %>" name="displayPageClassNameId" type="hidden" value="<%= String.valueOf(displayPageClassNameId) %>" />
+
+		<aui:input id="displayPageClassPKInput" ignoreRequestValue="<%= true %>" name="displayPageClassPK" type="hidden" value="" />
+
 		<p class="text-muted">
 			<liferay-ui:message key="default-display-page-help" />
 		</p>
@@ -117,11 +125,11 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
 
-		long displayPageClassNameId = PortalUtil.getClassNameId(JournalArticle.class.getName());
+		long journalArticleClassNameId = PortalUtil.getClassNameId(JournalArticle.class.getName());
 
 		DisplayPageSelectorCriterion displayPageSelectorCriterion = new DisplayPageSelectorCriterion();
 
-		displayPageSelectorCriterion.setClassNameId(displayPageClassNameId);
+		displayPageSelectorCriterion.setClassNameId(journalArticleClassNameId);
 		displayPageSelectorCriterion.setClassTypeId(ddmStructure.getStructureId());
 
 		List<ItemSelectorReturnType> desiredDisplayPageItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
@@ -146,6 +154,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 		%>
 
 		<aui:script use="liferay-item-selector-dialog">
+			var displayPageClassPKInput = $('#<portlet:namespace />displayPageClassPKInput');
 			var displayPageItemContainer = $('#<portlet:namespace />displayPageItemContainer');
 			var displayPageItemRemove = $('#<portlet:namespace />displayPageItemRemove');
 			var displayPageNameInput = $('#<portlet:namespace />displayPageNameInput');
@@ -159,10 +168,19 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 							eventName: '<%= eventName %>',
 							on: {
 								selectedItemChange: function(event) {
+									debugger;
 									var selectedItem = event.newVal;
 
+									displayPageClassPKInput.val('');
+									pagesContainerInput.val('');
+
 									if (selectedItem) {
-										pagesContainerInput.val(selectedItem.id);
+										if (selectedItem.type === "display-page") {
+											displayPageClassPKInput.val(selectedItem.id);
+										}
+										else {
+											pagesContainerInput.val(selectedItem.id);
+										}
 
 										displayPageNameInput.html(selectedItem.name);
 

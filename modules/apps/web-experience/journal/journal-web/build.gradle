@@ -32,6 +32,7 @@ dependencies {
 	compileOnly project(":apps:web-experience:export-import:export-import-changeset-taglib")
 	compileOnly project(":apps:web-experience:journal:journal-api")
 	compileOnly project(":apps:web-experience:layout:layout-item-selector-api")
+	compileOnly project(":apps:web-experience:layout:layout-page-template-api")
 	compileOnly project(":apps:web-experience:rss:rss-api")
 	compileOnly project(":apps:web-experience:staging:staging-api")
 	compileOnly project(":apps:web-experience:trash:trash-api")
