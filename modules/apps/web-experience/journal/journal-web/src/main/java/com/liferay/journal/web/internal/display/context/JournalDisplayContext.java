@@ -14,6 +14,10 @@
 
 package com.liferay.journal.web.internal.display.context;
 
+import com.liferay.asset.entry.rel.model.AssetEntryRel;
+import com.liferay.asset.entry.rel.service.AssetEntryRelLocalServiceUtil;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
@@ -57,6 +61,8 @@ import com.liferay.journal.web.internal.security.permission.resource.JournalFold
 import com.liferay.journal.web.util.JournalPortletUtil;
 import com.liferay.layout.item.selector.criterion.DisplayPageSelectorCriterion;
 import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
@@ -583,6 +589,37 @@ public class JournalDisplayContext {
 		return _ddmTemplateKey;
 	}
 
+	public long getDisplayPageClassPK() throws PortalException {
+		if (_displayPageClassPK > 0) {
+			return _displayPageClassPK;
+		}
+
+		_displayPageClassPK = 0;
+
+		JournalArticle journalArticle = getArticle();
+
+		if (journalArticle == null) {
+			return _displayPageClassPK;
+		}
+
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(
+			journalArticle.getGroupId(),
+			journalArticle.getArticleResourceUuid());
+
+		long displayPageClassNameId = PortalUtil.getClassNameId(
+			LayoutPageTemplateEntry.class.getName());
+
+		AssetEntryRel assetEntryRel =
+			AssetEntryRelLocalServiceUtil.fetchAssetEntryRel(
+				assetEntry.getEntryId(), displayPageClassNameId);
+
+		if (assetEntryRel != null) {
+			_displayPageClassPK = assetEntryRel.getClassPK();
+		}
+
+		return _displayPageClassPK;
+	}
+
 	public String getDisplayPageItemSelectorURL() throws PortalException {
 		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
 			JournalWebKeys.ITEM_SELECTOR);
@@ -633,6 +670,24 @@ public class JournalDisplayContext {
 		itemSelectorURL.setParameter("layoutUuid", getLayoutUuid());
 
 		return itemSelectorURL.toString();
+	}
+
+	public String getDisplayPageName() throws PortalException {
+		long displayPageClassPK = getDisplayPageClassPK();
+
+		if (displayPageClassPK == 0) {
+			return StringPool.BLANK;
+		}
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			LayoutPageTemplateEntryLocalServiceUtil.
+				fetchLayoutPageTemplateEntry(displayPageClassPK);
+
+		if (layoutPageTemplateEntry == null) {
+			return StringPool.BLANK;
+		}
+
+		return layoutPageTemplateEntry.getName();
 	}
 
 	public String getDisplayStyle() {
@@ -830,7 +885,7 @@ public class JournalDisplayContext {
 
 		Layout layout = null;
 
-		if (Validator.isNotNull(layoutUuid)) {
+		if (Validator.isNull(layoutUuid)) {
 			layout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
 				layoutUuid, themeDisplay.getSiteGroupId(), false);
 
@@ -1941,6 +1996,7 @@ public class JournalDisplayContext {
 	private String _ddmStructureName;
 	private List<DDMStructure> _ddmStructures;
 	private String _ddmTemplateKey;
+	private long _displayPageClassPK;
 	private String _displayStyle;
 	private String[] _displayViews;
 	private JournalFolder _folder;

@@ -27,6 +27,7 @@ dependencies {
 	compileOnly project(":apps:static:portal-configuration:portal-configuration-metatype-api")
 	compileOnly project(":apps:web-experience:application-list:application-list-api")
 	compileOnly project(":apps:web-experience:asset:asset-display-api")
+	compileOnly project(":apps:web-experience:asset:asset-entry-rel-api")
 	compileOnly project(":apps:web-experience:asset:asset-taglib")
 	compileOnly project(":apps:web-experience:export-import:export-import-changeset-api")
 	compileOnly project(":apps:web-experience:export-import:export-import-changeset-taglib")
