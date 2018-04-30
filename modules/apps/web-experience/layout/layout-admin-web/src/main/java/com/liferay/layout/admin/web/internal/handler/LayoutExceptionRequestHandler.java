@@ -14,20 +14,29 @@
 
 package com.liferay.layout.admin.web.internal.handler;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.LayoutNameException;
+import com.liferay.portal.kernel.exception.LayoutTypeException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.util.LayoutTypeControllerTracker;
 
 import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -46,28 +55,99 @@ public class LayoutExceptionRequestHandler {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		ResourceBundle resourceBundle =
+			_resourceBundleLoader.loadResourceBundle(themeDisplay.getLocale());
+
+		JSONObject jsonObject = null;
 
 		if (pe instanceof LayoutNameException) {
-			ResourceBundle resourceBundle =
-				_resourceBundleLoader.loadResourceBundle(
-					themeDisplay.getLocale());
-
-			jsonObject.put(
-				"error",
-				LanguageUtil.get(
-					resourceBundle, "please-enter-a-valid-name-for-the-page"));
+			jsonObject = _handleLayoutNameException(resourceBundle);
+		}
+		else if (pe instanceof LayoutTypeException) {
+			jsonObject = _handleLayoutTypeException(
+				actionRequest, (LayoutTypeException)pe, themeDisplay,
+				resourceBundle);
 		}
 		else {
-			jsonObject.put(
-				"error",
-				LanguageUtil.get(
-					themeDisplay.getLocale(), "an-unexpected-error-occurred"));
+			jsonObject = _handleUnexpectedException(themeDisplay);
 		}
 
 		JSONPortletResponseUtil.writeJSON(
 			actionRequest, actionResponse, jsonObject);
 	}
+
+	private JSONObject _handleLayoutNameException(
+		ResourceBundle resourceBundle) {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put(
+			"error",
+			LanguageUtil.get(
+				resourceBundle, "please-enter-a-valid-name-for-the-page"));
+
+		return jsonObject;
+	}
+
+	private JSONObject _handleLayoutTypeException(
+		ActionRequest actionRequest, LayoutTypeException lte,
+		ThemeDisplay themeDisplay, ResourceBundle resourceBundle) {
+
+		if (!((lte.getType() == LayoutTypeException.FIRST_LAYOUT) ||
+			  (lte.getType() == LayoutTypeException.NOT_INSTANCEABLE))) {
+
+			return _handleUnexpectedException(themeDisplay);
+		}
+
+		String errorMessage = StringPool.BLANK;
+
+		if (lte.getType() == LayoutTypeException.FIRST_LAYOUT) {
+			errorMessage = "the-first-page-cannot-be-of-type-x";
+		}
+		else if (lte.getType() == LayoutTypeException.NOT_INSTANCEABLE) {
+			errorMessage = "pages-of-type-x-cannot-be-selected";
+		}
+
+		HttpServletRequest request = _portal.getHttpServletRequest(
+			actionRequest);
+
+		String type = ParamUtil.getString(actionRequest, "type");
+
+		LayoutTypeController layoutTypeController =
+			LayoutTypeControllerTracker.getLayoutTypeController(type);
+
+		ResourceBundle layoutTypeResourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", themeDisplay.getLocale(),
+			layoutTypeController.getClass());
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put(
+			"error",
+			LanguageUtil.format(
+				resourceBundle, errorMessage,
+				new String[] {
+					LanguageUtil.get(
+						request, layoutTypeResourceBundle,
+						"layout.types." + type)
+				}));
+
+		return jsonObject;
+	}
+
+	private JSONObject _handleUnexpectedException(ThemeDisplay themeDisplay) {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put(
+			"error",
+			LanguageUtil.get(
+				themeDisplay.getLocale(), "an-unexpected-error-occurred"));
+
+		return jsonObject;
+	}
+
+	@Reference
+	private Portal _portal;
 
 	@Reference(
 		target = "(bundle.symbolic.name=com.liferay.layout.admin.web)",
