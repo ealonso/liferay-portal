@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.kernel.portlet.ControlPanelEntry;
+import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -34,7 +35,9 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.io.IOException;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
@@ -66,10 +69,36 @@ public abstract class BasePanelApp implements PanelApp {
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(
-			locale,
+		PortletConfig portletConfig = PortletConfigFactoryUtil.get(
+			getPortletId());
+
+		ResourceBundle resourceBundle = portletConfig.getResourceBundle(locale);
+
+		Portlet portlet = getPortlet();
+
+		String key =
 			JavaConstants.JAVAX_PORTLET_TITLE + StringPool.PERIOD +
-				getPortletId());
+				portlet.getPortletName();
+
+		String value = LanguageUtil.get(resourceBundle, key);
+
+		if (!key.equals(value)) {
+			return value;
+		}
+
+		value = LanguageUtil.get(locale, key);
+
+		if (!key.equals(value)) {
+			return value;
+		}
+
+		String displayName = portlet.getDisplayName();
+
+		if (!displayName.equals(portlet.getPortletName())) {
+			return displayName;
+		}
+
+		return StringPool.BLANK;
 	}
 
 	@Override
