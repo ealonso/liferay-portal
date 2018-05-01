@@ -734,13 +734,19 @@ public class JournalPortlet extends MVCPortlet {
 
 		String ddmTemplateKey = ParamUtil.getString(
 			uploadPortletRequest, "ddmTemplateKey");
+
+		long assetEntryRelClassId = ParamUtil.getLong(
+			uploadPortletRequest, "displayPageClassNameId");
+		long assetEntryRelClassPK = ParamUtil.getLong(
+			uploadPortletRequest, "displayPageClassPK");
+
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
 		Layout targetLayout = _journalHelper.getArticleLayout(
 			layoutUuid, groupId);
 
-		if (targetLayout == null) {
+		if ((targetLayout == null) || (assetEntryRelClassPK == 0)) {
 			layoutUuid = null;
 		}
 
@@ -830,14 +836,15 @@ public class JournalPortlet extends MVCPortlet {
 			article = _journalArticleService.addArticle(
 				groupId, folderId, classNameId, classPK, articleId,
 				autoArticleId, titleMap, descriptionMap, friendlyURLMap,
-				content, ddmStructureKey, ddmTemplateKey, layoutUuid,
-				displayDateMonth, displayDateDay, displayDateYear,
-				displayDateHour, displayDateMinute, expirationDateMonth,
-				expirationDateDay, expirationDateYear, expirationDateHour,
-				expirationDateMinute, neverExpire, reviewDateMonth,
-				reviewDateDay, reviewDateYear, reviewDateHour, reviewDateMinute,
-				neverReview, indexable, smallImage, smallImageURL, smallFile,
-				null, articleURL, serviceContext);
+				content, ddmStructureKey, ddmTemplateKey, assetEntryRelClassId,
+				assetEntryRelClassPK, layoutUuid, displayDateMonth,
+				displayDateDay, displayDateYear, displayDateHour,
+				displayDateMinute, expirationDateMonth, expirationDateDay,
+				expirationDateYear, expirationDateHour, expirationDateMinute,
+				neverExpire, reviewDateMonth, reviewDateDay, reviewDateYear,
+				reviewDateHour, reviewDateMinute, neverReview, indexable,
+				smallImage, smallImageURL, smallFile, null, articleURL,
+				serviceContext);
 		}
 		else {
 
@@ -852,14 +859,15 @@ public class JournalPortlet extends MVCPortlet {
 				article = _journalArticleService.updateArticle(
 					groupId, folderId, articleId, version, titleMap,
 					descriptionMap, friendlyURLMap, content, ddmStructureKey,
-					ddmTemplateKey, layoutUuid, displayDateMonth,
-					displayDateDay, displayDateYear, displayDateHour,
-					displayDateMinute, expirationDateMonth, expirationDateDay,
-					expirationDateYear, expirationDateHour,
-					expirationDateMinute, neverExpire, reviewDateMonth,
-					reviewDateDay, reviewDateYear, reviewDateHour,
-					reviewDateMinute, neverReview, indexable, smallImage,
-					smallImageURL, smallFile, null, articleURL, serviceContext);
+					ddmTemplateKey, assetEntryRelClassId, assetEntryRelClassPK,
+					layoutUuid, displayDateMonth, displayDateDay,
+					displayDateYear, displayDateHour, displayDateMinute,
+					expirationDateMonth, expirationDateDay, expirationDateYear,
+					expirationDateHour, expirationDateMinute, neverExpire,
+					reviewDateMonth, reviewDateDay, reviewDateYear,
+					reviewDateHour, reviewDateMinute, neverReview, indexable,
+					smallImage, smallImageURL, smallFile, null, articleURL,
+					serviceContext);
 			}
 
 			if (!tempOldUrlTitle.equals(article.getUrlTitle())) {

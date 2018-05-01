@@ -58,6 +58,44 @@ import java.util.Map;
  */
 public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 
+	@Override
+	public JournalArticle addArticle(
+			long groupId, long folderId, long classNameId, long classPK,
+			String articleId, boolean autoArticleId,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			Map<Locale, String> friendlyURLMap, String content,
+			String ddmStructureKey, String ddmTemplateKey,
+			long assetEntryRelClassNameId, long assetEntryRelClassPK,
+			String layoutUuid, int displayDateMonth, int displayDateDay,
+			int displayDateYear, int displayDateHour, int displayDateMinute,
+			int expirationDateMonth, int expirationDateDay,
+			int expirationDateYear, int expirationDateHour,
+			int expirationDateMinute, boolean neverExpire, int reviewDateMonth,
+			int reviewDateDay, int reviewDateYear, int reviewDateHour,
+			int reviewDateMinute, boolean neverReview, boolean indexable,
+			boolean smallImage, String smallImageURL, File smallFile,
+			Map<String, byte[]> images, String articleURL,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		ModelResourcePermissionHelper.check(
+			_journalFolderModelResourcePermission, getPermissionChecker(),
+			groupId, folderId, ActionKeys.ADD_ARTICLE);
+
+		return journalArticleLocalService.addArticle(
+			getUserId(), groupId, folderId, classNameId, classPK, articleId,
+			autoArticleId, JournalArticleConstants.VERSION_DEFAULT, titleMap,
+			descriptionMap, friendlyURLMap, content, ddmStructureKey,
+			ddmTemplateKey, assetEntryRelClassNameId, assetEntryRelClassPK,
+			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
+			displayDateHour, displayDateMinute, expirationDateMonth,
+			expirationDateDay, expirationDateYear, expirationDateHour,
+			expirationDateMinute, neverExpire, reviewDateMonth, reviewDateDay,
+			reviewDateYear, reviewDateHour, reviewDateMinute, neverReview,
+			indexable, smallImage, smallImageURL, smallFile, images, articleURL,
+			serviceContext);
+	}
+
 	/**
 	 * Adds a web content article with additional parameters. All scheduling
 	 * parameters (display date, expiration date, and review date) use the
@@ -2223,6 +2261,44 @@ public class JournalArticleServiceImpl extends JournalArticleServiceBaseImpl {
 		return journalArticleLocalService.updateArticle(
 			userId, groupId, folderId, articleId, version, titleMap,
 			descriptionMap, content, layoutUuid, serviceContext);
+	}
+
+	@Override
+	public JournalArticle updateArticle(
+			long groupId, long folderId, String articleId, double version,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			Map<Locale, String> friendlyURLMap, String content,
+			String ddmStructureKey, String ddmTemplateKey,
+			long assetEntryRelClassNameId, long assetEntryRelClassPK,
+			String layoutUuid, int displayDateMonth, int displayDateDay,
+			int displayDateYear, int displayDateHour, int displayDateMinute,
+			int expirationDateMonth, int expirationDateDay,
+			int expirationDateYear, int expirationDateHour,
+			int expirationDateMinute, boolean neverExpire, int reviewDateMonth,
+			int reviewDateDay, int reviewDateYear, int reviewDateHour,
+			int reviewDateMinute, boolean neverReview, boolean indexable,
+			boolean smallImage, String smallImageURL, File smallFile,
+			Map<String, byte[]> images, String articleURL,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		JournalArticle article = journalArticlePersistence.findByG_A_V(
+			groupId, articleId, version);
+
+		_journalArticleModelResourcePermission.check(
+			getPermissionChecker(), article, ActionKeys.UPDATE);
+
+		return journalArticleLocalService.updateArticle(
+			getUserId(), groupId, folderId, articleId, version, titleMap,
+			descriptionMap, friendlyURLMap, content, ddmStructureKey,
+			ddmTemplateKey, assetEntryRelClassNameId, assetEntryRelClassPK,
+			layoutUuid, displayDateMonth, displayDateDay, displayDateYear,
+			displayDateHour, displayDateMinute, expirationDateMonth,
+			expirationDateDay, expirationDateYear, expirationDateHour,
+			expirationDateMinute, neverExpire, reviewDateMonth, reviewDateDay,
+			reviewDateYear, reviewDateHour, reviewDateMinute, neverReview,
+			indexable, smallImage, smallImageURL, smallFile, images, articleURL,
+			serviceContext);
 	}
 
 	/**

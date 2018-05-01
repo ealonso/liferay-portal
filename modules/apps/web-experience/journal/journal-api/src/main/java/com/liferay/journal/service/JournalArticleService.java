@@ -64,6 +64,21 @@ public interface JournalArticleService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link JournalArticleServiceUtil} to access the journal article remote service. Add custom service methods to {@link com.liferay.journal.service.impl.JournalArticleServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public JournalArticle addArticle(long groupId, long folderId,
+		long classNameId, long classPK, String articleId,
+		boolean autoArticleId, Map<Locale, String> titleMap,
+		Map<Locale, String> descriptionMap, Map<Locale, String> friendlyURLMap,
+		String content, String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		File smallFile, Map<String, byte[]> images, String articleURL,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Adds a web content article with additional parameters. All scheduling
@@ -1645,6 +1660,21 @@ public interface JournalArticleService extends BaseService {
 		Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 		String content, String layoutUuid, ServiceContext serviceContext)
 		throws PortalException;
+
+	public JournalArticle updateArticle(long groupId, long folderId,
+		String articleId, double version, Map<Locale, String> titleMap,
+		Map<Locale, String> descriptionMap, Map<Locale, String> friendlyURLMap,
+		String content, String ddmStructureKey, String ddmTemplateKey,
+		long assetEntryRelClassNameId, long assetEntryRelClassPK,
+		String layoutUuid, int displayDateMonth, int displayDateDay,
+		int displayDateYear, int displayDateHour, int displayDateMinute,
+		int expirationDateMonth, int expirationDateDay, int expirationDateYear,
+		int expirationDateHour, int expirationDateMinute, boolean neverExpire,
+		int reviewDateMonth, int reviewDateDay, int reviewDateYear,
+		int reviewDateHour, int reviewDateMinute, boolean neverReview,
+		boolean indexable, boolean smallImage, String smallImageURL,
+		File smallFile, Map<String, byte[]> images, String articleURL,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Updates the web content article with additional parameters. All

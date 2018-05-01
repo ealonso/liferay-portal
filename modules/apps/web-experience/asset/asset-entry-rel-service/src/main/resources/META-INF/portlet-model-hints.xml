@@ -7,4 +7,10 @@
 		<field name="assetCategoryId" type="long" />
 		<field name="priority" type="int" />
 	</model>
+	<model name="com.liferay.asset.entry.rel.model.AssetEntryRel">
+		<field name="assetEntryRelId" type="long" />
+		<field name="assetEntryId" type="long" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+	</model>
 </model-hints>
