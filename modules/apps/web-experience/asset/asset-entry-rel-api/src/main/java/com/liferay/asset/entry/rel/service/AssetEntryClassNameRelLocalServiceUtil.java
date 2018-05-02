@@ -54,6 +54,12 @@ public class AssetEntryClassNameRelLocalServiceUtil {
 		return getService().addAssetEntryClassNameRel(assetEntryClassNameRel);
 	}
 
+	public static com.liferay.asset.entry.rel.model.AssetEntryClassNameRel addAssetEntryClassNameRel(
+		long assetEntryId, long classNameId, long classPK) {
+		return getService()
+				   .addAssetEntryClassNameRel(assetEntryId, classNameId, classPK);
+	}
+
 	/**
 	* Creates a new asset entry class name rel with the primary key. Does not add the asset entry class name rel to the database.
 	*
@@ -89,6 +95,17 @@ public class AssetEntryClassNameRelLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .deleteAssetEntryClassNameRel(assetEntryClassNameRelId);
+	}
+
+	public static void deleteAssetEntryClassNameRel(long assetEntryId,
+		long classNameId)
+		throws com.liferay.asset.entry.rel.exception.NoSuchEntryClassNameRelException {
+		getService().deleteAssetEntryClassNameRel(assetEntryId, classNameId);
+	}
+
+	public static void deleteAssetEntryClassNameRelByAssetEntryId(
+		long assetEntryId) {
+		getService().deleteAssetEntryClassNameRelByAssetEntryId(assetEntryId);
 	}
 
 	/**
@@ -181,6 +198,12 @@ public class AssetEntryClassNameRelLocalServiceUtil {
 	public static com.liferay.asset.entry.rel.model.AssetEntryClassNameRel fetchAssetEntryClassNameRel(
 		long assetEntryClassNameRelId) {
 		return getService().fetchAssetEntryClassNameRel(assetEntryClassNameRelId);
+	}
+
+	public static com.liferay.asset.entry.rel.model.AssetEntryClassNameRel fetchAssetEntryClassNameRel(
+		long assetEntryId, long classNameId) {
+		return getService()
+				   .fetchAssetEntryClassNameRel(assetEntryId, classNameId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
