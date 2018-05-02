@@ -25,7 +25,9 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.PortletResponse;
@@ -166,8 +168,10 @@ public class ScreenNavigationTag extends IncludeTag {
 				request, ScreenNavigationTag.class.getName());
 		}
 
+		request.setAttribute(
+			"liferay-frontend:screen-navigation:categoryDefaultEntryKeyMap",
+			_getCategoryDefaultEntryKeyMap());
 		request.setAttribute("liferay-frontend:screen-navigation:id", id);
-
 		request.setAttribute(
 			"liferay-frontend:screen-navigation:navCssClass", _navCssClass);
 		request.setAttribute(
@@ -185,6 +189,26 @@ public class ScreenNavigationTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-frontend:screen-navigation:selectedScreenNavigationEntry",
 			_getSelectedScreenNavigationEntry());
+	}
+
+	private Map<String, String> _getCategoryDefaultEntryKeyMap() {
+		Map<String, String> categoryDefaultEntryKeyMap = new HashMap<>();
+
+		for (ScreenNavigationCategory screenNavigationCategory :
+				_screenNavigationCategories) {
+
+			List<ScreenNavigationEntry> screenNavigationEntries =
+				_getScreenNavigationEntries(screenNavigationCategory);
+
+			ScreenNavigationEntry defaultScreenNavigationEntry =
+				screenNavigationEntries.get(0);
+
+			categoryDefaultEntryKeyMap.put(
+				screenNavigationCategory.getCategoryKey(),
+				defaultScreenNavigationEntry.getEntryKey());
+		}
+
+		return categoryDefaultEntryKeyMap;
 	}
 
 	private String _getDefaultScreenNavigationCategoryKey() {
@@ -205,17 +229,23 @@ public class ScreenNavigationTag extends IncludeTag {
 	}
 
 	private List<ScreenNavigationEntry> _getScreenNavigationEntries() {
+		ScreenNavigationCategory selectedScreenNavigationCategory =
+			_getSelectedScreenNavigationCategory();
+
+		return _getScreenNavigationEntries(selectedScreenNavigationCategory);
+	}
+
+	private List<ScreenNavigationEntry> _getScreenNavigationEntries(
+		ScreenNavigationCategory screenNavigationCategory) {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		ScreenNavigationRegistry screenNavigationRegistry =
 			ServletContextUtil.getScreenNavigationRegistry();
 
-		ScreenNavigationCategory selectedScreenNavigationCategory =
-			_getSelectedScreenNavigationCategory();
-
 		return screenNavigationRegistry.getScreenNavigationEntries(
-			selectedScreenNavigationCategory, themeDisplay.getUser(),
+			screenNavigationCategory, themeDisplay.getUser(),
 			getModelContext());
 	}
 
