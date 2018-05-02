@@ -18,6 +18,7 @@
 
 <%
 String containerCssClass = (String)request.getAttribute("liferay-frontend:screen-navigation:containerCssClass");
+	Map<String, String> categoryDefaultEntryKeyMap = (Map<String, String>)request.getAttribute("liferay-frontend:screen-navigation:categoryDefaultEntryKeyMap");
 String fullContainerCssClass = (String)request.getAttribute("liferay-frontend:screen-navigation:fullContainerCssClass");
 String id = (String)request.getAttribute("liferay-frontend:screen-navigation:id");
 String navCssClass = (String)request.getAttribute("liferay-frontend:screen-navigation:navCssClass");
@@ -38,8 +39,10 @@ List<ScreenNavigationEntry> screenNavigationEntries = (List<ScreenNavigationEntr
 					for (ScreenNavigationCategory screenNavigationCategory : screenNavigationCategories) {
 						PortletURL screenNavigationCategoryURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
 
-						screenNavigationCategoryURL.setParameter("screenNavigationCategoryKey", screenNavigationCategory.getCategoryKey());
-						screenNavigationCategoryURL.setParameter("screenNavigationEntryKey", StringPool.BLANK);
+						String categoryKey = screenNavigationCategory.getCategoryKey();
+
+						screenNavigationCategoryURL.setParameter("screenNavigationCategoryKey", categoryKey);
+						screenNavigationCategoryURL.setParameter("screenNavigationEntryKey", categoryDefaultEntryKeyMap.get(categoryKey));
 					%>
 
 						<li class="nav-item">
