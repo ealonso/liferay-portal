@@ -74,7 +74,7 @@ public class DisplayPagesItemSelectorView
 
 	@Override
 	public boolean isVisible(ThemeDisplay themeDisplay) {
-		return true;
+		return false;
 	}
 
 	@Override
