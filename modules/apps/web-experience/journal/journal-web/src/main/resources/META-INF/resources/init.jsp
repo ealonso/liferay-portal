@@ -126,6 +126,7 @@ page import="com.liferay.journal.web.internal.security.permission.resource.Journ
 page import="com.liferay.journal.web.internal.util.JournalHelperUtil" %><%@
 page import="com.liferay.journal.web.util.JournalPortletUtil" %><%@
 page import="com.liferay.journal.web.util.JournalUtil" %><%@
+page import="com.liferay.layout.item.selector.criterion.DisplayPageSelectorCriterion" %><%@
 page import="com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
