@@ -20,14 +20,19 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.servlet.DynamicServletRequest;
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.portlet.PortletMode;
 
@@ -125,6 +130,14 @@ public class FragmentEntryRenderUtil {
 		TemplateManager templateManager =
 			TemplateManagerUtil.getTemplateManager(
 				TemplateConstants.LANG_TYPE_FTL);
+
+		Map<String, String[]> parameters = new HashMap<>();
+
+		MapUtil.copy(request.getParameterMap(), parameters);
+
+		parameters.remove("portletResource");
+
+		request = new DynamicServletRequest(request, parameters, false);
 
 		templateManager.addTaglibSupport(template, request, response);
 		templateManager.addTaglibTheme(
