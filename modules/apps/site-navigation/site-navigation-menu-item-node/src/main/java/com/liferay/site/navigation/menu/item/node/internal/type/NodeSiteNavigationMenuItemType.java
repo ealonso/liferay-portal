@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
+import com.liferay.site.navigation.menu.item.type.BaseSiteNavigationMenuItemType;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
@@ -44,7 +45,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = SiteNavigationMenuItemType.class
 )
 public class NodeSiteNavigationMenuItemType
-	implements SiteNavigationMenuItemType {
+	extends BaseSiteNavigationMenuItemType {
 
 	@Override
 	public String getIcon() {

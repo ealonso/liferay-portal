@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys;
+import com.liferay.site.navigation.menu.item.type.BaseSiteNavigationMenuItemType;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
@@ -61,7 +62,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = SiteNavigationMenuItemType.class
 )
 public class LayoutSiteNavigationMenuItemType
-	implements SiteNavigationMenuItemType {
+	extends BaseSiteNavigationMenuItemType {
 
 	@Override
 	public PortletURL getAddURL(
