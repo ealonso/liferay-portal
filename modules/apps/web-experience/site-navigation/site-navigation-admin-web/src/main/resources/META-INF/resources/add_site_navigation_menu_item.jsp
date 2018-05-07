@@ -39,6 +39,15 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(LanguageUtil.format(request, "add-x", siteNavigationMenuItemType.getLabel(locale)));
 %>
 
+<liferay-ui:error key="<%= InvalidSiteNavigationMenuItemSettingsException.class.getName() %>">
+
+	<%
+	InvalidSiteNavigationMenuItemSettingsException ismnise = (InvalidSiteNavigationMenuItemSettingsException)errorException;
+	%>
+
+	<liferay-ui:message key="<%= ismnise.getMessage() %>" />
+</liferay-ui:error>
+
 <aui:form action="<%= addURL.toString() %>" cssClass="container-fluid-1280">
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="siteNavigationMenuId" type="hidden" value="<%= siteNavigationMenuId %>" />
