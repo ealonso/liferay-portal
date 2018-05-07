@@ -36,7 +36,7 @@ public abstract class BaseSiteNavigationMenuItemType
 
 		properties.fastLoad(typeSettings);
 
-		if (properties.containsKey(
+		if (!properties.containsKey(
 				SiteNavigationMenuItemTypeConstants.NAME_FIELD)) {
 
 			return;
