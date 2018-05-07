@@ -1,5 +1,6 @@
 Bundle-Name: Liferay Site Navigation Menu Item API
 Bundle-SymbolicName: com.liferay.site.navigation.menu.item.api
 Bundle-Version: 1.0.0
+Export-Package: com.liferay.site.navigation.menu.item.type
 Liferay-Releng-Module-Group-Description:
 Liferay-Releng-Module-Group-Title: Site Navigation

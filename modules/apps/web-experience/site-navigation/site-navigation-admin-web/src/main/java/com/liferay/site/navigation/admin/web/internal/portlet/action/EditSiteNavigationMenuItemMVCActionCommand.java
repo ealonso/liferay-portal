@@ -18,10 +18,12 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropertiesParamUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.site.navigation.admin.constants.SiteNavigationAdminPortletKeys;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemSettingsException;
 import com.liferay.site.navigation.service.SiteNavigationMenuItemService;
 
 import javax.portlet.ActionRequest;
@@ -49,8 +51,8 @@ public class EditSiteNavigationMenuItemMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long siteNavigationMenuId = ParamUtil.getLong(
-			actionRequest, "siteNavigationMenuId");
+		long siteNavigationMenuItemId = ParamUtil.getLong(
+			actionRequest, "siteNavigationMenuItemId");
 
 		UnicodeProperties typeSettingsProperties =
 			PropertiesParamUtil.getProperties(
@@ -59,9 +61,16 @@ public class EditSiteNavigationMenuItemMVCActionCommand
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
-		_siteNavigationMenuItemService.updateSiteNavigationMenuItem(
-			siteNavigationMenuId, typeSettingsProperties.toString(),
-			serviceContext);
+		try {
+			_siteNavigationMenuItemService.updateSiteNavigationMenuItem(
+				siteNavigationMenuItemId, typeSettingsProperties.toString(),
+				serviceContext);
+		}
+		catch (InvalidSiteNavigationMenuItemSettingsException isnmise) {
+			SessionErrors.add(actionRequest, isnmise.getClass(), isnmise);
+
+			sendRedirect(actionRequest, actionResponse);
+		}
 	}
 
 	@Reference
