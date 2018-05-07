@@ -18,6 +18,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemSettingsException;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 
 import java.io.IOException;
@@ -140,5 +141,8 @@ public interface SiteNavigationMenuItemType {
 			SiteNavigationMenuItem siteNavigationMenuItem)
 		throws IOException {
 	}
+
+	public void validate(String typeSettings)
+		throws InvalidSiteNavigationMenuItemSettingsException;
 
 }
