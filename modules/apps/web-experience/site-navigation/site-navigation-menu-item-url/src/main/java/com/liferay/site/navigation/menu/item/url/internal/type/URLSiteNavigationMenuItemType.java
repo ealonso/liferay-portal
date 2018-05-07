@@ -17,8 +17,11 @@ package com.liferay.site.navigation.menu.item.url.internal.type;
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemSettingsException;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
+import com.liferay.site.navigation.menu.item.type.BaseSiteNavigationMenuItemType;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
@@ -42,7 +45,7 @@ import org.osgi.service.component.annotations.Reference;
 	service = SiteNavigationMenuItemType.class
 )
 public class URLSiteNavigationMenuItemType
-	implements SiteNavigationMenuItemType {
+	extends BaseSiteNavigationMenuItemType {
 
 	@Override
 	public String getIcon() {
@@ -110,6 +113,24 @@ public class URLSiteNavigationMenuItemType
 
 		_jspRenderer.renderJSP(
 			_servletContext, request, response, "/edit_url.jsp");
+	}
+
+	@Override
+	public void validate(String typeSettings)
+		throws InvalidSiteNavigationMenuItemSettingsException {
+
+		UnicodeProperties properties = new UnicodeProperties();
+
+		properties.fastLoad(typeSettings);
+
+		String url = properties.get("url");
+
+		if (!Validator.isUrl(url)) {
+			throw new InvalidSiteNavigationMenuItemSettingsException(
+				"invalid-url");
+		}
+
+		super.validate(typeSettings);
 	}
 
 	@Reference
