@@ -345,6 +345,12 @@ if (portletDecorateObj != null) {
 	request.removeAttribute(WebKeys.PORTLET_DECORATE);
 }
 
+String layoutMode = ParamUtil.getString(request, "p_l_mode", Constants.VIEW);
+
+if (!layoutMode.equals(Constants.EDIT)) {
+	portletDecorate = false;
+}
+
 portletDisplay.recycle();
 
 portletDisplay.setActive(portlet.isActive());
@@ -852,6 +858,10 @@ if (portlet.isActive() && portlet.isReady() && supportsMimeType && (invokerPortl
 
 		if (portletVisibility != null) {
 			request.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, portletVisibility);
+
+			if (portletVisibility && layoutMode.equals(Constants.VIEW)) {
+				bufferCacheServletResponse.setCharBuffer(null);
+			}
 		}
 
 		renderResponseImpl.transferHeaders(bufferCacheServletResponse);
