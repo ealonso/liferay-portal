@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.internal.display.context;
 
+import com.liferay.asset.display.page.item.selector.criterion.AssetDisplayPageSelectorCriterion;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
@@ -28,6 +29,9 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
+import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.ItemSelectorReturnType;
+import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.constants.JournalWebKeys;
@@ -52,6 +56,7 @@ import com.liferay.journal.web.internal.search.EntriesMover;
 import com.liferay.journal.web.internal.search.JournalSearcher;
 import com.liferay.journal.web.internal.security.permission.resource.JournalFolderPermission;
 import com.liferay.journal.web.util.JournalPortletUtil;
+import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
@@ -74,6 +79,7 @@ import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
@@ -576,6 +582,59 @@ public class JournalDisplayContext {
 		return _ddmTemplateKey;
 	}
 
+	public String getDisplayPageItemSelectorURL() throws PortalException {
+		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
+			JournalWebKeys.ITEM_SELECTOR);
+
+		DDMStructure ddmStructure = (DDMStructure)_request.getAttribute(
+			"edit_article.jsp-structure");
+
+		long displayPageClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class.getName());
+
+		AssetDisplayPageSelectorCriterion assetDisplayPageSelectorCriterion =
+			new AssetDisplayPageSelectorCriterion();
+
+		assetDisplayPageSelectorCriterion.setClassNameId(
+			displayPageClassNameId);
+		assetDisplayPageSelectorCriterion.setClassTypeId(
+			ddmStructure.getStructureId());
+
+		List<ItemSelectorReturnType>
+			desiredAssetDisplayPageItemSelectorReturnTypes = new ArrayList<>();
+
+		desiredAssetDisplayPageItemSelectorReturnTypes.add(
+			new UUIDItemSelectorReturnType());
+
+		assetDisplayPageSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			desiredAssetDisplayPageItemSelectorReturnTypes);
+
+		LayoutItemSelectorCriterion layoutItemSelectorCriterion =
+			new LayoutItemSelectorCriterion();
+
+		layoutItemSelectorCriterion.setCheckDisplayPage(true);
+
+		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
+			new ArrayList<>();
+
+		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
+
+		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			desiredItemSelectorReturnTypes);
+
+		String eventName =
+			_liferayPortletResponse.getNamespace() + "selectDisplayPage";
+
+		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
+			RequestBackedPortletURLFactoryUtil.create(_liferayPortletRequest),
+			eventName, assetDisplayPageSelectorCriterion,
+			layoutItemSelectorCriterion);
+
+		itemSelectorURL.setParameter("layoutUuid", getLayoutUuid());
+
+		return itemSelectorURL.toString();
+	}
+
 	public String getDisplayStyle() {
 		if (_displayStyle != null) {
 			return _displayStyle;
@@ -796,6 +855,22 @@ public class JournalDisplayContext {
 		sb.append(HtmlUtil.escape(layout.getName(locale)));
 
 		return sb.toString();
+	}
+
+	public String getLayoutUuid() throws PortalException {
+		JournalArticle article = getArticle();
+
+		String layoutUuid = BeanParamUtil.getString(
+			getArticle(), _request, "layoutUuid");
+
+		boolean changeStructure = GetterUtil.getBoolean(
+			_request.getAttribute("edit_article.jsp-changeStructure"));
+
+		if (changeStructure && (article != null)) {
+			layoutUuid = article.getLayoutUuid();
+		}
+
+		return layoutUuid;
 	}
 
 	public int getMaxAddMenuItems() {
