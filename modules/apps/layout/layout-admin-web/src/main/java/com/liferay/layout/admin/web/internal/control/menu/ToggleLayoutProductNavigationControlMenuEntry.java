@@ -18,10 +18,15 @@ import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.portlet.PortletProvider;
+import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Html;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -37,6 +42,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,11 +99,13 @@ public class ToggleLayoutProductNavigationControlMenuEntry
 			"namespace",
 			_portal.getPortletNamespace(LayoutAdminPortletKeys.GROUP_PAGES));
 
-		boolean editMode = ParamUtil.getBoolean(request, "p_p_edit");
+		String mode = ParamUtil.getString(request, "p_l_mode", Constants.VIEW);
 
-		String redirect = themeDisplay.getURLCurrent();
+		String redirect = _http.setParameter(
+			themeDisplay.getURLCurrent(), "p_l_mode",
+			mode.equals(Constants.EDIT) ? Constants.VIEW : Constants.EDIT);
 
-		if (editMode) {
+		if (mode.equals(Constants.EDIT)) {
 			try {
 				long selPlid = ParamUtil.getLong(request, "p_r_p_selPlid");
 
@@ -110,9 +120,36 @@ public class ToggleLayoutProductNavigationControlMenuEntry
 				throw new IOException(pe);
 			}
 		}
+		else {
+			Layout layout = themeDisplay.getLayout();
 
-		values.put("checked", editMode ? "checked" : "");
-		values.put("editMode", String.valueOf(!editMode));
+			long layoutPageTemplateEntryId = GetterUtil.getLong(
+				layout.getTypeSettingsProperty("layoutPageTemplateEntryId"));
+
+			if (layoutPageTemplateEntryId > 0) {
+				PortletURL editLayoutURL = _portal.getControlPanelPortletURL(
+					request,
+					PortletProviderUtil.getPortletId(
+						Layout.class.getName(), PortletProvider.Action.EDIT),
+					PortletRequest.RENDER_PHASE);
+
+				editLayoutURL.setParameter(
+					"mvcPath", "/edit_content_layout.jsp");
+				editLayoutURL.setParameter(
+					"backURL", themeDisplay.getURLCurrent());
+				editLayoutURL.setParameter(
+					"groupId", String.valueOf(themeDisplay.getScopeGroupId()));
+				editLayoutURL.setParameter(
+					"selPlid", String.valueOf(layout.getPlid()));
+				editLayoutURL.setParameter(
+					"privateLayout", String.valueOf(layout.isPrivateLayout()));
+
+				redirect = _http.setParameter(
+					editLayoutURL.toString(), "p_l_mode", Constants.EDIT);
+			}
+		}
+
+		values.put("checked", mode.equals(Constants.EDIT) ? "checked" : "");
 		values.put("redirect", redirect);
 
 		Writer writer = response.getWriter();
@@ -158,6 +195,13 @@ public class ToggleLayoutProductNavigationControlMenuEntry
 			return true;
 		}
 
+		path = ParamUtil.getString(
+			request, portletDisplay.getNamespace() + "mvcPath");
+
+		if (Objects.equals(path, "/edit_content_layout.jsp")) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -168,6 +212,9 @@ public class ToggleLayoutProductNavigationControlMenuEntry
 
 	@Reference
 	private Html _html;
+
+	@Reference
+	private Http _http;
 
 	@Reference
 	private Language _language;

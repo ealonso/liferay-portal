@@ -1,20 +1,17 @@
-<form action="${redirect}" id="${namespace}modeFm" method="GET">
-	<label class="align-text-top toggle-switch">
-		<input ${checked} class="toggle-switch-check" onchange="submitForm('#${namespace}modeFm');" type="checkbox" />
-		<input name="p_p_edit" type="hidden" value="${editMode}" />
-		<span aria-hidden="true" class="toggle-switch-bar">
-			<span class="toggle-switch-handle" data-label-off="" data-label-on="">
-				<span class="button-icon button-icon-on toggle-switch-icon">
-					<svg class="lexicon-icon">
-						<use xlink:href="${iconEdit}"></use>
-					</svg>
-				</span>
-				<span class="button-icon button-icon-off toggle-switch-icon">
-					<svg class="lexicon-icon">
-						<use xlink:href="${iconView}"></use>
-					</svg>
-				</span>
+<label class="align-text-top toggle-switch">
+	<input ${checked} class="toggle-switch-check" onchange="Liferay.SPA ? Liferay.SPA.app.navigate('${redirect}') : location.href='${redirect}';" type="checkbox" />
+	<span aria-hidden="true" class="toggle-switch-bar">
+		<span class="toggle-switch-handle" data-label-off="" data-label-on="">
+			<span class="button-icon button-icon-on toggle-switch-icon">
+				<svg class="lexicon-icon">
+					<use xlink:href="${iconEdit}"></use>
+				</svg>
+			</span>
+			<span class="button-icon button-icon-off toggle-switch-icon">
+				<svg class="lexicon-icon">
+					<use xlink:href="${iconView}"></use>
+				</svg>
 			</span>
 		</span>
-	</label>
-</form>
+	</span>
+</label>
