@@ -135,7 +135,10 @@ public class ViewUADEntitiesMVCRenderCommand implements MVCRenderCommand {
 		Map<String, Object> columnFieldValues = uadDisplay.getFieldValues(
 			entity, uadDisplay.getColumnFieldNames());
 
-		columnFieldValues.forEach(uadEntity::addColumnEntry);
+		for (String columnFieldName : uadDisplay.getColumnFieldNames()) {
+			uadEntity.addColumnEntry(
+				columnFieldName, columnFieldValues.get(columnFieldName));
+		}
 
 		return uadEntity;
 	}
@@ -190,10 +193,13 @@ public class ViewUADEntitiesMVCRenderCommand implements MVCRenderCommand {
 
 			navigationItemList.add(
 				navigationItem -> {
+					Class<?> uadClass = uadDisplay.getTypeClass();
+
 					navigationItem.setActive(
-						uadRegistryKey.equals(uadDisplay.getKey()));
+						uadRegistryKey.equals(uadClass.getName()));
 					navigationItem.setHref(
-						tabPortletURL, "uadRegistryKey", uadDisplay.getKey());
+						tabPortletURL, "uadRegistryKey", uadClass.getName());
+
 					navigationItem.setLabel(uadDisplay.getTypeName(locale));
 				});
 		}
