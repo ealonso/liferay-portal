@@ -37,11 +37,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 	<c:otherwise>
 
 		<%
-		String layoutUuid = BeanParamUtil.getString(article, request, "layoutUuid");
-
-		if (changeStructure && (article != null)) {
-			layoutUuid = article.getLayoutUuid();
-		}
+		String layoutUuid = journalDisplayContext.getLayoutUuid();
 
 		String layoutBreadcrumb = StringPool.BLANK;
 
@@ -65,21 +61,32 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<aui:input id="pagesContainerInput" ignoreRequestValue="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
+		<%
+		long displayPageId = journalDisplayContext.getDisplayPageId();
+
+		String displayPageName = journalDisplayContext.getDisplayPageName();
+		%>
+
+		<aui:input id="displayPageIdInput" ignoreRequestValue="<%= true %>" name="displayPageId" type="hidden" value="<%= String.valueOf(displayPageId) %>" />
+
 		<p class="text-muted">
 			<liferay-ui:message key="default-display-page-help" />
 		</p>
 
 		<p class="text-default">
-			<span class="<%= Validator.isNull(layoutBreadcrumb) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
+			<span class="<%= (Validator.isNull(layoutBreadcrumb) && Validator.isNull(displayPageName)) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
 				<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
 			</span>
 			<span id="<portlet:namespace />displayPageNameInput">
 				<c:choose>
-					<c:when test="<%= Validator.isNull(layoutBreadcrumb) %>">
-						<span class="text-muted"><liferay-ui:message key="none" /></span>
+					<c:when test="<%= Validator.isNotNull(displayPageName) %>">
+						<%= displayPageName %>
+					</c:when>
+					<c:when test="<%= Validator.isNotNull(layoutBreadcrumb) %>">
+						<%= layoutBreadcrumb %>
 					</c:when>
 					<c:otherwise>
-						<%= layoutBreadcrumb %>
+						<span class="text-muted"><liferay-ui:message key="none" /></span>
 					</c:otherwise>
 				</c:choose>
 			</span>
@@ -112,40 +119,10 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<%
 		String eventName = liferayPortletResponse.getNamespace() + "selectDisplayPage";
-
-		ItemSelector itemSelector = (ItemSelector)request.getAttribute(JournalWebKeys.ITEM_SELECTOR);
-
-		DDMStructure ddmStructure = (DDMStructure)request.getAttribute("edit_article.jsp-structure");
-
-		long displayPageClassNameId = PortalUtil.getClassNameId(JournalArticle.class.getName());
-
-		AssetDisplayPageSelectorCriterion assetDisplayPageSelectorCriterion = new AssetDisplayPageSelectorCriterion();
-
-		assetDisplayPageSelectorCriterion.setClassNameId(displayPageClassNameId);
-		assetDisplayPageSelectorCriterion.setClassTypeId(ddmStructure.getStructureId());
-
-		List<ItemSelectorReturnType> desiredAssetDisplayPageItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
-
-		desiredAssetDisplayPageItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-		assetDisplayPageSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredAssetDisplayPageItemSelectorReturnTypes);
-
-		LayoutItemSelectorCriterion layoutItemSelectorCriterion = new LayoutItemSelectorCriterion();
-
-		layoutItemSelectorCriterion.setCheckDisplayPage(true);
-
-		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
-
-		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
-
-		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(liferayPortletRequest), eventName, assetDisplayPageSelectorCriterion, layoutItemSelectorCriterion);
-
-		itemSelectorURL.setParameter("layoutUuid", layoutUuid);
 		%>
 
 		<aui:script use="liferay-item-selector-dialog">
+			var displayPageIdInput = $('#<portlet:namespace />displayPageIdInput');
 			var displayPageItemContainer = $('#<portlet:namespace />displayPageItemContainer');
 			var displayPageItemRemove = $('#<portlet:namespace />displayPageItemRemove');
 			var displayPageNameInput = $('#<portlet:namespace />displayPageNameInput');
@@ -161,8 +138,17 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 								selectedItemChange: function(event) {
 									var selectedItem = event.newVal;
 
+									displayPageIdInput.val('');
+
+									pagesContainerInput.val('');
+
 									if (selectedItem) {
-										pagesContainerInput.val(selectedItem.id);
+										if (selectedItem.type === "display-page") {
+											displayPageIdInput.val(selectedItem.id);
+										}
+										else {
+											pagesContainerInput.val(selectedItem.id);
+										}
 
 										displayPageNameInput.html(selectedItem.name);
 
@@ -172,7 +158,7 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 							},
 							'strings.add': '<liferay-ui:message key="done" />',
 							title: '<liferay-ui:message key="select-page" />',
-							url: '<%= itemSelectorURL.toString() %>'
+							url: '<%= journalDisplayContext.getDisplayPageItemSelectorURL() %>'
 						}
 					);
 
