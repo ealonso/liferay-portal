@@ -16,7 +16,6 @@ package com.liferay.message.boards.uad.display;
 
 import com.liferay.message.boards.constants.MBPortletKeys;
 import com.liferay.message.boards.model.MBMessage;
-import com.liferay.message.boards.uad.constants.MBUADConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.Portal;
@@ -31,11 +30,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Brian Wing Shun Chan
  */
-@Component(
-	immediate = true,
-	property = "model.class.name=" + MBUADConstants.CLASS_NAME_MB_MESSAGE,
-	service = UADDisplay.class
-)
+@Component(immediate = true, service = UADDisplay.class)
 public class MBMessageUADDisplay extends BaseMBMessageUADDisplay {
 
 	@Override
@@ -48,7 +43,8 @@ public class MBMessageUADDisplay extends BaseMBMessageUADDisplay {
 			portal.getControlPanelPlid(liferayPortletRequest),
 			MBPortletKeys.MESSAGE_BOARDS, PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter("mvcRenderCommandName", "/wiki/edit_message");
+		portletURL.setParameter(
+			"mvcRenderCommandName", "/message_boards/edit_message");
 		portletURL.setParameter(
 			"redirect", portal.getCurrentURL(liferayPortletRequest));
 		portletURL.setParameter(

@@ -24,8 +24,13 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemOrderException;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemSettingsException;
+import com.liferay.site.navigation.exception.InvalidSiteNavigationMenuItemTypeException;
+import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalServiceUtil;
@@ -74,20 +79,75 @@ public class SiteNavigationMenuItemServiceTest {
 		SiteNavigationMenuItem siteNavigationMenuItem =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-				StringPool.BLANK, serviceContext);
+				_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItemLocalServiceUtil.updateSiteNavigationMenuItem(
 			siteNavigationMenuItem.getSiteNavigationMenuItemId(),
 			childSiteNavigationMenuItem.getSiteNavigationMenuItemId(),
 			siteNavigationMenuItem.getOrder());
+	}
+
+	@Test(expected = InvalidSiteNavigationMenuItemSettingsException.class)
+	public void testInvalidSiteNavigationMenuItemName() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		UnicodeProperties properties = new UnicodeProperties();
+
+		properties.put(
+			"name",
+			StringUtil.randomString(
+				SiteNavigationMenuItemTypeConstants.
+					SITE_NAVIGATION_MENU_ITEM_NAME_MAX_LENGTH + 1));
+
+		SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+			SiteNavigationMenuItemTypeConstants.LAYOUT, properties.toString(),
+			serviceContext);
+	}
+
+	@Test(expected = InvalidSiteNavigationMenuItemTypeException.class)
+	public void testInvalidSiteNavigationMenuItemType() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		UnicodeProperties properties = new UnicodeProperties();
+
+		SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+			"invalidMenuItemType", properties.toString(), serviceContext);
+	}
+
+	@Test(expected = InvalidSiteNavigationMenuItemSettingsException.class)
+	public void testInvalidSiteNavigationMenuItemUrl() throws PortalException {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		UnicodeProperties properties = new UnicodeProperties();
+
+		properties.put("name", StringUtil.randomString(100));
+		properties.put("url", StringUtil.randomString(50));
+
+		SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+			SiteNavigationMenuItemTypeConstants.URL, properties.toString(),
+			serviceContext);
 	}
 
 	@Test
@@ -98,14 +158,16 @@ public class SiteNavigationMenuItemServiceTest {
 
 		SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 			TestPropsValues.getUserId(), _group.getGroupId(),
-			_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-			StringPool.BLANK, serviceContext);
+			_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+			SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+			serviceContext);
 
 		SiteNavigationMenuItem siteNavigationMenuItem =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-				StringPool.BLANK, serviceContext);
+				_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		Assert.assertEquals(1, siteNavigationMenuItem.getOrder());
 	}
@@ -119,22 +181,25 @@ public class SiteNavigationMenuItemServiceTest {
 		SiteNavigationMenuItem siteNavigationMenuItem =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-				StringPool.BLANK, serviceContext);
+				_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem1 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem2 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItemLocalServiceUtil.updateSiteNavigationMenuItem(
 			childSiteNavigationMenuItem2.getSiteNavigationMenuItemId(),
@@ -158,35 +223,40 @@ public class SiteNavigationMenuItemServiceTest {
 		SiteNavigationMenuItem siteNavigationMenuItem1 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-				StringPool.BLANK, serviceContext);
+				_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem11 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem1.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem1.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem12 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem1.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem1.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem siteNavigationMenuItem2 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				_siteNavigationMenu.getSiteNavigationMenuId(), 0, "test",
-				StringPool.BLANK, serviceContext);
+				_siteNavigationMenu.getSiteNavigationMenuId(), 0,
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItem childSiteNavigationMenuItem21 =
 			SiteNavigationMenuItemLocalServiceUtil.addSiteNavigationMenuItem(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_siteNavigationMenu.getSiteNavigationMenuId(),
-				siteNavigationMenuItem2.getSiteNavigationMenuItemId(), "test",
-				StringPool.BLANK, serviceContext);
+				siteNavigationMenuItem2.getSiteNavigationMenuItemId(),
+				SiteNavigationMenuItemTypeConstants.LAYOUT, StringPool.BLANK,
+				serviceContext);
 
 		SiteNavigationMenuItemLocalServiceUtil.updateSiteNavigationMenuItem(
 			childSiteNavigationMenuItem11.getSiteNavigationMenuItemId(),

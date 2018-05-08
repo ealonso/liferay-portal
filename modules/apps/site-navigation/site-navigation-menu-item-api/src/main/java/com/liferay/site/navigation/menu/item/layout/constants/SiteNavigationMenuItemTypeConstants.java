@@ -21,7 +21,11 @@ public class SiteNavigationMenuItemTypeConstants {
 
 	public static final String LAYOUT = "layout";
 
+	public static final String NAME_FIELD = "name";
+
 	public static final String NODE = "node";
+
+	public static final int SITE_NAVIGATION_MENU_ITEM_NAME_MAX_LENGTH = 255;
 
 	public static final String URL = "url";
 
