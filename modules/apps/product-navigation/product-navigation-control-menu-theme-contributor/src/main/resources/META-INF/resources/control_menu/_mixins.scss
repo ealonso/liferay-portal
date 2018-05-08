@@ -1,0 +1,21 @@
+@mixin wrapper-margin-top($margin-mobile, $margin-desktop) {
+	margin-top: ($margin-mobile);
+
+	.portlet-boundary > span:first-child {
+		display: block;
+		position: relative;
+		top: -($margin-mobile);
+		visibility: hidden;
+	}
+
+	@include sm() {
+		margin-top: ($margin-desktop);
+
+		.portlet-boundary > span:first-child {
+			display: block;
+			position: relative;
+			top: -($margin-desktop);
+			visibility: hidden;
+		}
+	}
+}
