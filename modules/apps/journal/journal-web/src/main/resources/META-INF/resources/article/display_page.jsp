@@ -61,23 +61,32 @@ boolean changeStructure = GetterUtil.getBoolean(request.getAttribute("edit_artic
 
 		<aui:input id="pagesContainerInput" ignoreRequestValue="<%= true %>" name="layoutUuid" type="hidden" value="<%= layoutUuid %>" />
 
-		<aui:input id="displayPageId" ignoreRequestValue="<%= true %>" name="displayPageId" type="hidden" value="" />
+		<%
+		long displayPageId = journalDisplayContext.getDisplayPageId();
+
+		String displayPageName = journalDisplayContext.getDisplayPageName();
+		%>
+
+		<aui:input id="displayPageIdInput" ignoreRequestValue="<%= true %>" name="displayPageId" type="hidden" value="<%= String.valueOf(displayPageId) %>" />
 
 		<p class="text-muted">
 			<liferay-ui:message key="default-display-page-help" />
 		</p>
 
 		<p class="text-default">
-			<span class="<%= Validator.isNull(layoutBreadcrumb) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
+			<span class="<%= (Validator.isNull(layoutBreadcrumb) && Validator.isNull(displayPageName)) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
 				<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
 			</span>
 			<span id="<portlet:namespace />displayPageNameInput">
 				<c:choose>
-					<c:when test="<%= Validator.isNull(layoutBreadcrumb) %>">
-						<span class="text-muted"><liferay-ui:message key="none" /></span>
+					<c:when test="<%= Validator.isNotNull(displayPageName) %>">
+						<%= displayPageName %>
+					</c:when>
+					<c:when test="<%= Validator.isNotNull(layoutBreadcrumb) %>">
+						<%= layoutBreadcrumb %>
 					</c:when>
 					<c:otherwise>
-						<%= layoutBreadcrumb %>
+						<span class="text-muted"><liferay-ui:message key="none" /></span>
 					</c:otherwise>
 				</c:choose>
 			</span>
