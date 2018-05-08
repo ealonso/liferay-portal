@@ -858,6 +858,10 @@ if (portlet.isActive() && portlet.isReady() && supportsMimeType && (invokerPortl
 
 		if (portletVisibility != null) {
 			request.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, portletVisibility);
+
+			if (portletVisibility && layoutMode.equals(Constants.VIEW)) {
+				bufferCacheServletResponse.setCharBuffer(null);
+			}
 		}
 
 		renderResponseImpl.transferHeaders(bufferCacheServletResponse);
