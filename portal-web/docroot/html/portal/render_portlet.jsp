@@ -345,6 +345,12 @@ if (portletDecorateObj != null) {
 	request.removeAttribute(WebKeys.PORTLET_DECORATE);
 }
 
+String layoutMode = ParamUtil.getString(request, "p_l_mode", Constants.VIEW);
+
+if (!layoutMode.equals(Constants.EDIT)) {
+	portletDecorate = false;
+}
+
 portletDisplay.recycle();
 
 portletDisplay.setActive(portlet.isActive());
