@@ -14,11 +14,18 @@
 
 package com.liferay.layout.admin.web.internal.control.menu;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -57,8 +64,27 @@ public class ToggleEditLayoutModeProductNavigationControlMenuEntry
 	}
 
 	@Override
-	public boolean isShow(HttpServletRequest request) {
-		return true;
+	public boolean isShow(HttpServletRequest request) throws PortalException {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		if (_isConfiguration(request, themeDisplay)) {
+			return true;
+		}
+
+		Layout layout = themeDisplay.getLayout();
+
+		if (layout.isTypeControlPanel()) {
+			return false;
+		}
+
+		if (!(themeDisplay.isShowLayoutTemplatesIcon() ||
+			  themeDisplay.isShowPageSettingsIcon())) {
+
+			return false;
+		}
+
+		return super.isShow(request);
 	}
 
 	@Override
@@ -68,6 +94,30 @@ public class ToggleEditLayoutModeProductNavigationControlMenuEntry
 	)
 	public void setServletContext(ServletContext servletContext) {
 		super.setServletContext(servletContext);
+	}
+
+	private boolean _isConfiguration(
+		HttpServletRequest request, ThemeDisplay themeDisplay) {
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		String path = ParamUtil.getString(
+			request, portletDisplay.getNamespace() + "mvcRenderCommandName");
+
+		if (Objects.equals(path, "/layout/edit_layout")) {
+			return true;
+		}
+
+		path = ParamUtil.getString(
+			request, portletDisplay.getNamespace() + "mvcPath");
+
+		long selPlid = ParamUtil.getLong(request, "p_r_p_selPlid");
+
+		if ((selPlid > 0) && Objects.equals(path, "/edit_content_layout.jsp")) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
