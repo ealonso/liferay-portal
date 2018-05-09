@@ -19,10 +19,13 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.model.Layout" %><%@
+page import="com.liferay.portal.kernel.model.LayoutType" %><%@
+page import="com.liferay.portal.kernel.model.LayoutTypeController" %><%@
 page import="com.liferay.portal.kernel.model.Portlet" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletProvider" %><%@
 page import="com.liferay.portal.kernel.portlet.PortletProviderUtil" %><%@
 page import="com.liferay.portal.kernel.service.PortletLocalServiceUtil" %><%@
+page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HttpUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
@@ -44,13 +47,19 @@ Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(),
 <link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/css/main.css", portlet.getTimestamp()) %>" rel="stylesheet" type="text/css" />
 
 <%
-PortletURL editLayoutURL = PortalUtil.getControlPanelPortletURL(request, PortletProviderUtil.getPortletId(Layout.class.getName(), PortletProvider.Action.EDIT), PortletRequest.RENDER_PHASE);
+PortletURL propertiesURL = PortalUtil.getControlPanelPortletURL(request, PortletProviderUtil.getPortletId(Layout.class.getName(), PortletProvider.Action.EDIT), PortletRequest.RENDER_PHASE);
 
-editLayoutURL.setParameter("mvcRenderCommandName", "/layout/edit_layout");
-editLayoutURL.setParameter("backURL", PortalUtil.getCurrentURL(request));
-editLayoutURL.setParameter("groupId", String.valueOf(layout.getGroupId()));
-editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
-editLayoutURL.setParameter("privateLayout", String.valueOf(layout.isPrivateLayout()));
+Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
+
+if (selLayout == null) {
+	selLayout = layout;
+}
+
+propertiesURL.setParameter("mvcRenderCommandName", "/layout/edit_layout");
+propertiesURL.setParameter("backURL", PortalUtil.getCurrentURL(request));
+propertiesURL.setParameter("groupId", String.valueOf(selLayout.getGroupId()));
+propertiesURL.setParameter("selPlid", String.valueOf(selLayout.getPlid()));
+propertiesURL.setParameter("privateLayout", String.valueOf(selLayout.isPrivateLayout()));
 
 String path = ParamUtil.getString(request, portletDisplay.getNamespace() + "mvcRenderCommandName");
 
@@ -60,11 +69,9 @@ if (Objects.equals(path, "/layout/edit_layout")) {
 	activeTab = "properties";
 }
 
-Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
+LayoutType layoutType = selLayout.getLayoutType();
 
-if (selLayout == null) {
-	selLayout = layout;
-}
+LayoutTypeController layoutTypeController = layoutType.getLayoutTypeController();
 %>
 
 <div class="layout-edit-mode">
@@ -72,7 +79,7 @@ if (selLayout == null) {
 		<liferay-ui:tabs
 			names="content,properties"
 			type="tabs nav-tabs-default"
-			urls='<%= new String[] {HttpUtil.addParameter(PortalUtil.getLayoutFullURL(selLayout, themeDisplay), "p_p_edit", Boolean.TRUE.toString()), HttpUtil.addParameter(editLayoutURL.toString(), "p_p_edit", Boolean.TRUE.toString())} %>'
+			urls='<%= new String[] {layoutTypeController.getEditLayoutModePortletURL(request, selLayout), HttpUtil.addParameter(propertiesURL.toString(), "p_l_mode", Constants.EDIT)} %>'
 			value="<%= activeTab %>"
 		/>
 	</div>

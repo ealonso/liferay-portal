@@ -21,9 +21,14 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
 <%@ page import="com.liferay.petra.string.StringPool" %><%@
+page import="com.liferay.portal.kernel.model.Layout" %><%@
+page import="com.liferay.portal.kernel.model.LayoutType" %><%@
+page import="com.liferay.portal.kernel.model.LayoutTypeController" %><%@
+page import="com.liferay.portal.kernel.service.LayoutLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HttpUtil" %><%@
-page import="com.liferay.portal.kernel.util.ParamUtil" %>
+page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.PortalUtil" %>
 
 <%@ page import="java.util.Objects" %>
 
@@ -32,13 +37,30 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <liferay-theme:defineObjects />
 
 <%
-String mode = ParamUtil.getString(request, "p_l_mode", Constants.VIEW);
+String layoutMode = ParamUtil.getString(request, "p_l_mode", Constants.VIEW);
 
-String redirect = HttpUtil.setParameter(themeDisplay.getURLCurrent(), "p_l_mode", Objects.equals(mode, Constants.EDIT) ? Constants.VIEW : Constants.EDIT);
+String redirect = HttpUtil.setParameter(themeDisplay.getURLCurrent(), "p_l_mode", Objects.equals(layoutMode, Constants.EDIT) ? Constants.VIEW : Constants.EDIT);
+
+if (layoutMode.equals(Constants.EDIT)) {
+	long selPlid = ParamUtil.getLong(request, "p_r_p_selPlid");
+
+	if (selPlid > 0) {
+		Layout selLayout = LayoutLocalServiceUtil.getLayout(ParamUtil.getLong(request, "p_r_p_selPlid"));
+
+		redirect = PortalUtil.getLayoutFullURL(selLayout, themeDisplay);
+	}
+}
+else {
+	LayoutType layoutType = layout.getLayoutType();
+
+	LayoutTypeController layoutTypeController = layoutType.getLayoutTypeController();
+
+	redirect = layoutTypeController.getEditLayoutModePortletURL(request, layout);
+}
 %>
 
 <label class="align-text-top toggle-switch">
-	<input <%= Objects.equals(mode, Constants.EDIT) ? "checked=\"checked\"" : StringPool.BLANK %> class="toggle-switch-check" id="<portlet:namespace />mode" type="checkbox" />
+	<input <%= Objects.equals(layoutMode, Constants.EDIT) ? "checked=\"checked\"" : StringPool.BLANK %> class="toggle-switch-check" id="<portlet:namespace />mode" type="checkbox" />
 
 	<span aria-hidden="true" class="toggle-switch-bar">
 		<span class="toggle-switch-handle" data-label-off="" data-label-on="">
