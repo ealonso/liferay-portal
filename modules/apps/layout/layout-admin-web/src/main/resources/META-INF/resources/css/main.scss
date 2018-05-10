@@ -31,3 +31,25 @@
 		}
 	}
 }
+
+.layout-edit-mode {
+	background-color: #393A4A;
+	margin-top: 10px;
+
+	.nav-tabs {
+		margin-bottom: 0px;
+
+		li a {
+			color: #CDCED9;
+
+			&:hover {
+				color: #F7F8F9;
+			}
+		}
+
+		li.active a {
+			color: white;
+			font-weight: bold;
+		}
+	}
+}

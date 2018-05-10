@@ -18,16 +18,24 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerConstants;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.portal.kernel.portlet.PortletProvider;
+import com.liferay.portal.kernel.portlet.PortletProviderUtil;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
 import java.util.List;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletResponse;
@@ -46,6 +54,28 @@ import org.osgi.service.component.annotations.Reference;
 	service = LayoutTypeController.class
 )
 public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
+
+	@Override
+	public String getEditLayoutModePortletURL(
+			HttpServletRequest request, Layout layout)
+		throws PortalException {
+
+		PortletURL portletURL = _portal.getControlPanelPortletURL(
+			request,
+			PortletProviderUtil.getPortletId(
+				Layout.class.getName(), PortletProvider.Action.EDIT),
+			PortletRequest.RENDER_PHASE);
+
+		portletURL.setParameter("mvcPath", "/edit_content_layout.jsp");
+		portletURL.setParameter("backURL", _portal.getCurrentURL(request));
+		portletURL.setParameter("groupId", String.valueOf(layout.getGroupId()));
+		portletURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
+		portletURL.setParameter(
+			"privateLayout", String.valueOf(layout.isPrivateLayout()));
+
+		return _http.addParameter(
+			portletURL.toString(), "p_l_mode", Constants.EDIT);
+	}
 
 	@Override
 	public String getType() {
@@ -141,6 +171,9 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private Http _http;
 
 	@Reference
 	private Portal _portal;

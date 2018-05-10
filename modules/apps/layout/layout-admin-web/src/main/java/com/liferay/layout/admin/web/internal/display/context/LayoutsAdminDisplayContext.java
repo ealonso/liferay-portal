@@ -56,7 +56,9 @@ import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -171,32 +173,6 @@ public class LayoutsAdminDisplayContext {
 		return breadcrumbEntriesJSONArray;
 	}
 
-	public String getConfigureLayoutURL(Layout layout) {
-		PortletURL configureLayoutURL =
-			_liferayPortletResponse.createRenderURL();
-
-		configureLayoutURL.setParameter(
-			"mvcRenderCommandName", "/layout/edit_layout");
-		configureLayoutURL.setParameter(
-			"redirect", _themeDisplay.getURLCurrent());
-		configureLayoutURL.setParameter(
-			"backURL", _themeDisplay.getURLCurrent());
-
-		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
-
-		configureLayoutURL.setParameter(
-			"portletResource", portletDisplay.getId());
-
-		configureLayoutURL.setParameter(
-			"groupId", String.valueOf(layout.getGroupId()));
-		configureLayoutURL.setParameter(
-			"selPlid", String.valueOf(layout.getPlid()));
-		configureLayoutURL.setParameter(
-			"privateLayout", String.valueOf(layout.isPrivateLayout()));
-
-		return configureLayoutURL.toString();
-	}
-
 	public String getCopyLayoutURL(Layout layout) {
 		PortletURL copyLayoutURL = _liferayPortletResponse.createActionURL();
 
@@ -255,6 +231,25 @@ public class LayoutsAdminDisplayContext {
 			LayoutAdminPortletKeys.GROUP_PAGES, "display-style", "list");
 
 		return _displayStyle;
+	}
+
+	public String getEditLayoutURL(Layout layout) throws PortalException {
+		if (!Objects.equals(layout.getType(), "content")) {
+			return HttpUtil.addParameter(
+				PortalUtil.getLayoutFullURL(layout, _themeDisplay), "p_l_mode",
+				Constants.EDIT);
+		}
+
+		PortletURL editLayoutURL = _liferayPortletResponse.createRenderURL();
+
+		editLayoutURL.setParameter("mvcPath", "/edit_content_layout.jsp");
+		editLayoutURL.setParameter("backURL", _themeDisplay.getURLCurrent());
+		editLayoutURL.setParameter(
+			"groupId", String.valueOf(layout.getGroupId()));
+		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
+
+		return HttpUtil.addParameter(
+			editLayoutURL.toString(), "p_l_mode", Constants.EDIT);
 	}
 
 	public List<DropdownItem> getFilterDropdownItems() {
@@ -743,19 +738,9 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public String getViewLayoutURL(Layout layout) throws PortalException {
-		if (!Objects.equals(layout.getType(), "content")) {
-			return PortalUtil.getLayoutFullURL(layout, _themeDisplay);
-		}
-
-		PortletURL editLayoutURL = _liferayPortletResponse.createRenderURL();
-
-		editLayoutURL.setParameter("mvcPath", "/edit_content_layout.jsp");
-		editLayoutURL.setParameter("backURL", _themeDisplay.getURLCurrent());
-		editLayoutURL.setParameter(
-			"groupId", String.valueOf(layout.getGroupId()));
-		editLayoutURL.setParameter("selPlid", String.valueOf(layout.getPlid()));
-
-		return editLayoutURL.toString();
+		return HttpUtil.addParameter(
+			PortalUtil.getLayoutFullURL(layout, _themeDisplay), "p_l_mode",
+			Constants.VIEW);
 	}
 
 	public List<ViewTypeItem> getViewTypeItems() {
@@ -966,16 +951,16 @@ public class LayoutsAdminDisplayContext {
 					layout.getPlid()));
 		}
 
-		if (showConfigureAction(layout)) {
-			jsonObject.put("configureURL", getConfigureLayoutURL(layout));
-		}
-
 		if (showCopyLayoutAction(layout)) {
 			jsonObject.put("copyLayoutURL", getCopyLayoutURL(layout));
 		}
 
 		if (showDeleteAction(layout)) {
 			jsonObject.put("deleteURL", getDeleteLayoutURL(layout));
+		}
+
+		if (showConfigureAction(layout)) {
+			jsonObject.put("editLayoutURL", getEditLayoutURL(layout));
 		}
 
 		if (showOrphanPortletsAction(layout)) {
