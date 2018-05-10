@@ -36,8 +36,8 @@ Layout curLayout = (Layout)row.getObject();
 
 	<c:if test="<%= layoutsAdminDisplayContext.showConfigureAction(curLayout) %>">
 		<liferay-ui:icon
-			message="configure"
-			url="<%= layoutsAdminDisplayContext.getConfigureLayoutURL(curLayout) %>"
+			message="edit"
+			url="<%= layoutsAdminDisplayContext.getEditLayoutURL(curLayout) %>"
 		/>
 	</c:if>
 
