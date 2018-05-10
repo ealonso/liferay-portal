@@ -14,6 +14,10 @@
 
 package com.liferay.journal.web.asset;
 
+import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
+import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalServiceUtil;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.asset.kernel.model.DDMFormValuesReader;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
@@ -368,7 +372,18 @@ public class JournalArticleAssetRenderer
 		String linkToLayoutUuid = GetterUtil.getString(
 			portletSetup.getValue("portletSetupLinkToLayoutUuid", null));
 
-		if (Validator.isNotNull(_article.getLayoutUuid()) &&
+		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
+
+		AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
+			JournalArticle.class.getName(), getClassPK());
+
+		AssetDisplayPageEntry assetDisplayPageEntry =
+			AssetDisplayPageEntryLocalServiceUtil.
+				fetchAssetDisplayPageEntryByAssetEntryId(
+					assetEntry.getEntryId());
+
+		if ((Validator.isNotNull(_article.getLayoutUuid()) ||
+			 (assetDisplayPageEntry != null)) &&
 			Validator.isNull(linkToLayoutUuid)) {
 
 			Group group = themeDisplay.getScopeGroup();
