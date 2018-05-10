@@ -19,6 +19,8 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerConstants;
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayLayoutTypeControllerWebKeys;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -49,6 +51,14 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class AssetDisplayLayoutTypeController
 	extends BaseLayoutTypeControllerImpl {
+
+	@Override
+	public String getEditLayoutModePortletURL(
+			HttpServletRequest request, Layout layout)
+		throws PortalException {
+
+		return StringPool.BLANK;
+	}
 
 	@Override
 	public String getType() {

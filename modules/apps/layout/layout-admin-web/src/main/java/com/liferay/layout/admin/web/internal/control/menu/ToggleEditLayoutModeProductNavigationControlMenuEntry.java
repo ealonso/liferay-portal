@@ -16,9 +16,12 @@ package com.liferay.layout.admin.web.internal.control.menu;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutType;
+import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
@@ -73,6 +76,18 @@ public class ToggleEditLayoutModeProductNavigationControlMenuEntry
 		}
 
 		Layout layout = themeDisplay.getLayout();
+
+		LayoutType layoutType = layout.getLayoutType();
+
+		LayoutTypeController layoutTypeController =
+			layoutType.getLayoutTypeController();
+
+		if (Validator.isNull(
+				layoutTypeController.getEditLayoutModePortletURL(
+					request, layout))) {
+
+			return false;
+		}
 
 		if (layout.isTypeControlPanel()) {
 			return false;
