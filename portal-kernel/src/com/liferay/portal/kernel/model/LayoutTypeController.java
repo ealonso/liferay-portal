@@ -14,6 +14,15 @@
 
 package com.liferay.portal.kernel.model;
 
+import aQute.bnd.annotation.ProviderType;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+
 import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +31,24 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Raymond Augé
  */
+@ProviderType
 public interface LayoutTypeController extends Serializable {
 
 	public String[] getConfigurationActionDelete();
 
 	public String[] getConfigurationActionUpdate();
+
+	public default String getEditLayoutModePortletURL(
+			HttpServletRequest request, Layout layout)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return HttpUtil.addParameter(
+			PortalUtil.getLayoutFullURL(layout, themeDisplay), "p_l_mode",
+			Constants.EDIT);
+	}
 
 	public String getType();
 
