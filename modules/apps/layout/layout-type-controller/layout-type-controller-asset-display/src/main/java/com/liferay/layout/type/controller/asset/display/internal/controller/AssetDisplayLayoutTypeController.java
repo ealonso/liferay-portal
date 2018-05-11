@@ -98,7 +98,7 @@ public class AssetDisplayLayoutTypeController
 
 	@Override
 	public boolean isFullPageDisplayable() {
-		return true;
+		return false;
 	}
 
 	@Override
