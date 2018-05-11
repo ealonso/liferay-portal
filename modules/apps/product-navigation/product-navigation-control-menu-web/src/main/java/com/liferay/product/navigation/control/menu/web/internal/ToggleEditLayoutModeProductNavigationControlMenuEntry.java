@@ -64,7 +64,7 @@ public class ToggleEditLayoutModeProductNavigationControlMenuEntry
 			return false;
 		}
 
-		return false;
+		return super.isShow(request);
 	}
 
 	@Override
