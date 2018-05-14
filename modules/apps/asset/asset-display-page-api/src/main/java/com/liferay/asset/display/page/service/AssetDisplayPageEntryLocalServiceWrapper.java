@@ -238,6 +238,11 @@ public class AssetDisplayPageEntryLocalServiceWrapper
 		return _assetDisplayPageEntryLocalService.getAssetDisplayPageEntriesCount();
 	}
 
+	@Override
+	public int getAssetDisplayPageEntriesCount(long layoutId) {
+		return _assetDisplayPageEntryLocalService.getAssetDisplayPageEntriesCount(layoutId);
+	}
+
 	/**
 	* Returns the asset display page entry with the primary key.
 	*

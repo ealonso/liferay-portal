@@ -227,6 +227,10 @@ public class AssetDisplayPageEntryLocalServiceUtil {
 		return getService().getAssetDisplayPageEntriesCount();
 	}
 
+	public static int getAssetDisplayPageEntriesCount(long layoutId) {
+		return getService().getAssetDisplayPageEntriesCount(layoutId);
+	}
+
 	/**
 	* Returns the asset display page entry with the primary key.
 	*
