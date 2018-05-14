@@ -98,6 +98,8 @@
 	</entity>
 	<exceptions>
 		<exception>InvalidSiteNavigationMenuItemOrder</exception>
+		<exception>InvalidSiteNavigationMenuItemSettings</exception>
+		<exception>InvalidSiteNavigationMenuItemType</exception>
 		<exception>SiteNavigationMenuName</exception>
 	</exceptions>
 </service-builder>
