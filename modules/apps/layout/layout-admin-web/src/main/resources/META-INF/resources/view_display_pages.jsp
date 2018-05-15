@@ -20,6 +20,17 @@
 DisplayPageDisplayContext displayPageDisplayContext = new DisplayPageDisplayContext(renderRequest, renderResponse, request);
 %>
 
+<liferay-ui:error key="<%= RequiredLayoutPageTemplateEntryException.class.getName() %>">
+
+	<%
+	RequiredLayoutPageTemplateEntryException rlptee = (RequiredLayoutPageTemplateEntryException)errorException;
+
+	String layoutPageTemplateEntriesInUse = ListUtil.toString(rlptee.getLayoutPageTemplateEntries(), LayoutPageTemplateEntry.NAME_ACCESSOR, StringPool.COMMA_AND_SPACE);
+	%>
+
+	<liferay-ui:message arguments="<%= layoutPageTemplateEntriesInUse %>" key="cannot-delete-asset-display-pages-which-are-presently-used-x" />
+</liferay-ui:error>
+
 <clay:navigation-bar
 	inverted="<%= true %>"
 	navigationItems="<%= layoutsAdminDisplayContext.getNavigationItems() %>"

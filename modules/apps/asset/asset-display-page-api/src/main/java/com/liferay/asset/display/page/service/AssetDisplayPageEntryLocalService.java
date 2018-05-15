@@ -208,6 +208,9 @@ public interface AssetDisplayPageEntryLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssetDisplayPageEntriesCount();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getAssetDisplayPageEntriesCount(long layoutId);
+
 	/**
 	* Returns the asset display page entry with the primary key.
 	*

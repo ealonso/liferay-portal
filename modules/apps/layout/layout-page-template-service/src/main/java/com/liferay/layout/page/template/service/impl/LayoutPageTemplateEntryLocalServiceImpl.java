@@ -14,12 +14,14 @@
 
 package com.liferay.layout.page.template.service.impl;
 
+import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalService;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.html.preview.model.HtmlPreviewEntry;
 import com.liferay.html.preview.service.HtmlPreviewEntryLocalService;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateEntryException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateEntryNameException;
+import com.liferay.layout.page.template.exception.RequiredLayoutPageTemplateEntryException;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateEntryLocalServiceBaseImpl;
 import com.liferay.petra.string.StringPool;
@@ -148,6 +150,14 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 	public LayoutPageTemplateEntry deleteLayoutPageTemplateEntry(
 			LayoutPageTemplateEntry layoutPageTemplateEntry)
 		throws PortalException {
+
+		int assetDisplayPageEntriesCount =
+			_assetDisplayPageEntryLocalService.getAssetDisplayPageEntriesCount(
+				layoutPageTemplateEntry.getLayoutPageTemplateEntryId());
+
+		if (assetDisplayPageEntriesCount > 0) {
+			throw new RequiredLayoutPageTemplateEntryException();
+		}
 
 		// Layout page template entry
 
@@ -486,6 +496,10 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 			layoutPageTemplateEntry.getContent(), ContentTypes.IMAGE_PNG,
 			serviceContext);
 	}
+
+	@ServiceReference(type = AssetDisplayPageEntryLocalService.class)
+	private AssetDisplayPageEntryLocalService
+		_assetDisplayPageEntryLocalService;
 
 	@ServiceReference(type = FragmentEntryLinkLocalService.class)
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
