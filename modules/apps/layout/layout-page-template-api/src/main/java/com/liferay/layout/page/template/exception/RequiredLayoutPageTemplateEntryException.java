@@ -11,11 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.layout.page.template.exception;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.portal.kernel.exception.PortalException;
+
+import java.util.List;
 
 /**
  * @author Brian Wing Shun Chan
@@ -26,16 +30,30 @@ public class RequiredLayoutPageTemplateEntryException extends PortalException {
 	public RequiredLayoutPageTemplateEntryException() {
 	}
 
+	public RequiredLayoutPageTemplateEntryException(
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries) {
+
+		_layoutPageTemplateEntries = layoutPageTemplateEntries;
+	}
+
 	public RequiredLayoutPageTemplateEntryException(String msg) {
 		super(msg);
 	}
 
-	public RequiredLayoutPageTemplateEntryException(String msg, Throwable cause) {
+	public RequiredLayoutPageTemplateEntryException(
+		String msg, Throwable cause) {
+
 		super(msg, cause);
 	}
 
 	public RequiredLayoutPageTemplateEntryException(Throwable cause) {
 		super(cause);
 	}
+
+	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries() {
+		return _layoutPageTemplateEntries;
+	}
+
+	private List<LayoutPageTemplateEntry> _layoutPageTemplateEntries;
 
 }
