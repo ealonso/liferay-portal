@@ -43,13 +43,13 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			boolean system, ServiceContext serviceContext)
 		throws PortalException {
 
-		LayoutPageTemplateCollection systemLayoutPageTemplateCollection = null;
+		if (system) {
+			LayoutPageTemplateCollection systemLayoutPageTemplateCollection =
+				fetchSystemLayoutPageTemplateCollection(groupId);
 
-		if (system &&
-			((systemLayoutPageTemplateCollection =
-				fetchSystemLayoutPageTemplateCollection(groupId)) != null)) {
-
-			return systemLayoutPageTemplateCollection;
+			if (systemLayoutPageTemplateCollection != null) {
+				return systemLayoutPageTemplateCollection;
+			}
 		}
 
 		// Layout page template collection
