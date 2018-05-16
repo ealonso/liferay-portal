@@ -20,6 +20,7 @@
 		<column name="userName" type="String" />
 		<column name="createDate" type="Date" />
 		<column name="modifiedDate" type="Date" />
+		<column name="system" type="boolean" />
 
 		<!-- Other fields -->
 
@@ -36,6 +37,10 @@
 
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
+		</finder>
+		<finder name="G_S" return-type="LayoutPageTemplateCollection" unique="true">
+			<finder-column name="groupId" />
+			<finder-column name="system" />
 		</finder>
 		<finder name="G_N" return-type="LayoutPageTemplateCollection" unique="true">
 			<finder-column name="groupId" />
