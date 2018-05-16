@@ -71,6 +71,14 @@ public class VarPoshiElement extends PoshiElement {
 
 	@Override
 	public void parseReadableSyntax(String readableSyntax) {
+		if (readableSyntax.startsWith("static")) {
+			addAttribute("static", "true");
+
+			readableSyntax = readableSyntax.replaceFirst("static", "");
+
+			readableSyntax = readableSyntax.trim();
+		}
+
 		String name = getNameFromAssignment(readableSyntax);
 
 		addAttribute("name", name);
@@ -108,6 +116,12 @@ public class VarPoshiElement extends PoshiElement {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("\n\t");
+
+		String staticAttribute = attributeValue("static");
+
+		if (staticAttribute != null) {
+			sb.append("static ");
+		}
 
 		PoshiElement parentElement = (PoshiElement)getParent();
 
@@ -238,7 +252,9 @@ public class VarPoshiElement extends PoshiElement {
 			return false;
 		}
 
-		if (!readableSyntax.startsWith("var ")) {
+		if (!readableSyntax.startsWith("static var") &&
+			!readableSyntax.startsWith("var ")) {
+
 			return false;
 		}
 

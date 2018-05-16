@@ -141,6 +141,9 @@ implementations.
 The uad-package-path value specifies the package path for the generated UAD
 classes.
 
+If the versioned value is true, then the service will generate a version table,
+columns, and methods to version the entity.
+
 The deprecated value specifies whether the entity's services are deprecated.
 -->
 <!ATTLIST entity
@@ -164,6 +167,7 @@ The deprecated value specifies whether the entity's services are deprecated.
 	uad-auto-delete CDATA #IMPLIED
 	uad-dir-path CDATA #IMPLIED
 	uad-package-path CDATA #IMPLIED
+	versioned CDATA #IMPLIED
 	deprecated CDATA #IMPLIED
 >
 
@@ -371,6 +375,19 @@ true. A defaultLanguageId column is generated for the entity table and several
 columns, finders, and update methods are generated for the localized entity.
 -->
 <!ELEMENT localized-entity (column*, localized-column+, order?, finder*)>
+
+<!--
+The name value specifies the name of the localized entity. If this value is not
+set, then the parent entity's name is used with "Localization" appended.
+
+The table value specifies the name of the table that this localized entity maps
+to in the database. If this value is not set, then the name of the table is the
+same as the name of the localized entity.
+-->
+<!ATTLIST localized-entity
+	name CDATA #IMPLIED
+	table CDATA #IMPLIED
+>
 
 <!--
 The localized-column element represents a column in the localization table.

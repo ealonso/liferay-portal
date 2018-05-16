@@ -10,7 +10,7 @@ definition {
 	/*This is a multiline
 		comment.*/
 
-	var userPassword = "password";
+	static var userPassword = "password";
 	var userScreenName = "joeblogs";
 
 	setUp {
@@ -206,6 +206,8 @@ definition {
 		Click(locator1 = "Home#PAGE");
 
 		Refresh();
+
+		Refresh.refresh();
 
 		Type(value1 = "Welcome");
 
