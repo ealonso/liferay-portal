@@ -40,8 +40,17 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 	@Override
 	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 			long userId, long groupId, String name, String description,
-			ServiceContext serviceContext)
+			boolean system, ServiceContext serviceContext)
 		throws PortalException {
+
+		LayoutPageTemplateCollection systemLayoutPageTemplateCollection = null;
+
+		if (system &&
+			((systemLayoutPageTemplateCollection =
+				fetchSystemLayoutPageTemplateCollection(groupId)) != null)) {
+
+			return systemLayoutPageTemplateCollection;
+		}
 
 		// Layout page template collection
 
@@ -65,6 +74,7 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			serviceContext.getModifiedDate(new Date()));
 		layoutPageTemplateCollection.setName(name);
 		layoutPageTemplateCollection.setDescription(description);
+		layoutPageTemplateCollection.setSystem(system);
 
 		layoutPageTemplateCollectionPersistence.update(
 			layoutPageTemplateCollection);
@@ -75,6 +85,16 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			layoutPageTemplateCollection, serviceContext);
 
 		return layoutPageTemplateCollection;
+	}
+
+	@Override
+	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+			long userId, long groupId, String name, String description,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addLayoutPageTemplateCollection(
+			userId, groupId, name, description, false, serviceContext);
 	}
 
 	@Override
@@ -130,6 +150,14 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 
 		return layoutPageTemplateCollectionPersistence.fetchByPrimaryKey(
 			layoutPageTemplateCollectionId);
+	}
+
+	@Override
+	public LayoutPageTemplateCollection fetchSystemLayoutPageTemplateCollection(
+		long groupId) {
+
+		return layoutPageTemplateCollectionPersistence.fetchByG_S(
+			groupId, true);
 	}
 
 	@Override
