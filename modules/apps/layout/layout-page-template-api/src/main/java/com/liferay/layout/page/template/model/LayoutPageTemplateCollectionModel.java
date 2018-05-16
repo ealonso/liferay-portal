@@ -194,6 +194,27 @@ public interface LayoutPageTemplateCollectionModel extends BaseModel<LayoutPageT
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the system of this layout page template collection.
+	 *
+	 * @return the system of this layout page template collection
+	 */
+	public boolean getSystem();
+
+	/**
+	 * Returns <code>true</code> if this layout page template collection is system.
+	 *
+	 * @return <code>true</code> if this layout page template collection is system; <code>false</code> otherwise
+	 */
+	public boolean isSystem();
+
+	/**
+	 * Sets whether this layout page template collection is system.
+	 *
+	 * @param system the system of this layout page template collection
+	 */
+	public void setSystem(boolean system);
+
+	/**
 	 * Returns the name of this layout page template collection.
 	 *
 	 * @return the name of this layout page template collection

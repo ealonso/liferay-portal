@@ -57,6 +57,16 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 
 	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 		long userId, long groupId, String name, String description,
+		boolean system,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addLayoutPageTemplateCollection(userId, groupId, name,
+			description, system, serviceContext);
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long userId, long groupId, String name, String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
@@ -195,6 +205,11 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 		long layoutPageTemplateCollectionId) {
 		return getService()
 				   .fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	public static com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchSystemLayoutPageTemplateCollection(
+		long groupId) {
+		return getService().fetchSystemLayoutPageTemplateCollection(groupId);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {

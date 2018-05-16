@@ -238,6 +238,56 @@ public interface LayoutPageTemplateCollectionPersistence extends BasePersistence
 	public int filterCountByGroupId(long groupId);
 
 	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or throws a {@link NoSuchPageTemplateCollectionException} if it could not be found.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the matching layout page template collection
+	* @throws NoSuchPageTemplateCollectionException if a matching layout page template collection could not be found
+	*/
+	public LayoutPageTemplateCollection findByG_S(long groupId, boolean system)
+		throws NoSuchPageTemplateCollectionException;
+
+	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	*/
+	public LayoutPageTemplateCollection fetchByG_S(long groupId, boolean system);
+
+	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	*/
+	public LayoutPageTemplateCollection fetchByG_S(long groupId,
+		boolean system, boolean retrieveFromCache);
+
+	/**
+	* Removes the layout page template collection where groupId = &#63; and system = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the layout page template collection that was removed
+	*/
+	public LayoutPageTemplateCollection removeByG_S(long groupId, boolean system)
+		throws NoSuchPageTemplateCollectionException;
+
+	/**
+	* Returns the number of layout page template collections where groupId = &#63; and system = &#63;.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the number of matching layout page template collections
+	*/
+	public int countByG_S(long groupId, boolean system);
+
+	/**
 	* Returns the layout page template collection where groupId = &#63; and name = &#63; or throws a {@link NoSuchPageTemplateCollectionException} if it could not be found.
 	*
 	* @param groupId the group ID

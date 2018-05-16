@@ -68,6 +68,7 @@ public class LayoutPageTemplateCollectionWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("system", isSystem());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 
@@ -117,6 +118,12 @@ public class LayoutPageTemplateCollectionWrapper
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		Boolean system = (Boolean)attributes.get("system");
+
+		if (system != null) {
+			setSystem(system);
 		}
 
 		String name = (String)attributes.get("name");
@@ -234,6 +241,16 @@ public class LayoutPageTemplateCollectionWrapper
 	}
 
 	/**
+	* Returns the system of this layout page template collection.
+	*
+	* @return the system of this layout page template collection
+	*/
+	@Override
+	public boolean getSystem() {
+		return _layoutPageTemplateCollection.getSystem();
+	}
+
+	/**
 	* Returns the user ID of this layout page template collection.
 	*
 	* @return the user ID of this layout page template collection
@@ -281,6 +298,16 @@ public class LayoutPageTemplateCollectionWrapper
 	@Override
 	public boolean isNew() {
 		return _layoutPageTemplateCollection.isNew();
+	}
+
+	/**
+	* Returns <code>true</code> if this layout page template collection is system.
+	*
+	* @return <code>true</code> if this layout page template collection is system; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isSystem() {
+		return _layoutPageTemplateCollection.isSystem();
 	}
 
 	@Override
@@ -398,6 +425,16 @@ public class LayoutPageTemplateCollectionWrapper
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_layoutPageTemplateCollection.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets whether this layout page template collection is system.
+	*
+	* @param system the system of this layout page template collection
+	*/
+	@Override
+	public void setSystem(boolean system) {
+		_layoutPageTemplateCollection.setSystem(system);
 	}
 
 	/**

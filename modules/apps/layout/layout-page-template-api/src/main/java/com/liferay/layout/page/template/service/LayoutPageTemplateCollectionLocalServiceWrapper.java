@@ -49,6 +49,16 @@ public class LayoutPageTemplateCollectionLocalServiceWrapper
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 		long userId, long groupId, String name, String description,
+		boolean system,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateCollectionLocalService.addLayoutPageTemplateCollection(userId,
+			groupId, name, description, system, serviceContext);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long userId, long groupId, String name, String description,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateCollectionLocalService.addLayoutPageTemplateCollection(userId,
@@ -195,6 +205,12 @@ public class LayoutPageTemplateCollectionLocalServiceWrapper
 	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchLayoutPageTemplateCollection(
 		long layoutPageTemplateCollectionId) {
 		return _layoutPageTemplateCollectionLocalService.fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateCollection fetchSystemLayoutPageTemplateCollection(
+		long groupId) {
+		return _layoutPageTemplateCollectionLocalService.fetchSystemLayoutPageTemplateCollection(groupId);
 	}
 
 	@Override

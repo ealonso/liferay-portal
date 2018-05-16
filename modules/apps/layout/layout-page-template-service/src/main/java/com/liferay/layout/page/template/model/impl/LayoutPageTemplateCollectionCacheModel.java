@@ -66,7 +66,7 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{layoutPageTemplateCollectionId=");
 		sb.append(layoutPageTemplateCollectionId);
@@ -82,6 +82,8 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", system=");
+		sb.append(system);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", description=");
@@ -122,6 +124,8 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 					modifiedDate));
 		}
 
+		layoutPageTemplateCollectionImpl.setSystem(system);
+
 		if (name == null) {
 			layoutPageTemplateCollectionImpl.setName("");
 		}
@@ -153,6 +157,8 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+
+		system = objectInput.readBoolean();
 		name = objectInput.readUTF();
 		description = objectInput.readUTF();
 	}
@@ -178,6 +184,8 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
+		objectOutput.writeBoolean(system);
+
 		if (name == null) {
 			objectOutput.writeUTF("");
 		}
@@ -200,6 +208,7 @@ public class LayoutPageTemplateCollectionCacheModel implements CacheModel<Layout
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public boolean system;
 	public String name;
 	public String description;
 }

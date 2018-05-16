@@ -356,6 +356,69 @@ public class LayoutPageTemplateCollectionUtil {
 	}
 
 	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or throws a {@link NoSuchPageTemplateCollectionException} if it could not be found.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the matching layout page template collection
+	* @throws NoSuchPageTemplateCollectionException if a matching layout page template collection could not be found
+	*/
+	public static LayoutPageTemplateCollection findByG_S(long groupId,
+		boolean system)
+		throws com.liferay.layout.page.template.exception.NoSuchPageTemplateCollectionException {
+		return getPersistence().findByG_S(groupId, system);
+	}
+
+	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	*/
+	public static LayoutPageTemplateCollection fetchByG_S(long groupId,
+		boolean system) {
+		return getPersistence().fetchByG_S(groupId, system);
+	}
+
+	/**
+	* Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	*/
+	public static LayoutPageTemplateCollection fetchByG_S(long groupId,
+		boolean system, boolean retrieveFromCache) {
+		return getPersistence().fetchByG_S(groupId, system, retrieveFromCache);
+	}
+
+	/**
+	* Removes the layout page template collection where groupId = &#63; and system = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the layout page template collection that was removed
+	*/
+	public static LayoutPageTemplateCollection removeByG_S(long groupId,
+		boolean system)
+		throws com.liferay.layout.page.template.exception.NoSuchPageTemplateCollectionException {
+		return getPersistence().removeByG_S(groupId, system);
+	}
+
+	/**
+	* Returns the number of layout page template collections where groupId = &#63; and system = &#63;.
+	*
+	* @param groupId the group ID
+	* @param system the system
+	* @return the number of matching layout page template collections
+	*/
+	public static int countByG_S(long groupId, boolean system) {
+		return getPersistence().countByG_S(groupId, system);
+	}
+
+	/**
 	* Returns the layout page template collection where groupId = &#63; and name = &#63; or throws a {@link NoSuchPageTemplateCollectionException} if it could not be found.
 	*
 	* @param groupId the group ID
