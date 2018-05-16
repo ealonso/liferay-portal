@@ -77,6 +77,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
+			{ "system", Types.BOOLEAN },
 			{ "name", Types.VARCHAR },
 			{ "description", Types.VARCHAR }
 		};
@@ -90,11 +91,12 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("system", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("description", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table LayoutPageTemplateCollection (layoutPageTemplateCollectionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name VARCHAR(75) null,description STRING null)";
+	public static final String TABLE_SQL_CREATE = "create table LayoutPageTemplateCollection (layoutPageTemplateCollectionId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,system BOOLEAN,name VARCHAR(75) null,description STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table LayoutPageTemplateCollection";
 	public static final String ORDER_BY_JPQL = " ORDER BY layoutPageTemplateCollection.name ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY LayoutPageTemplateCollection.name ASC";
@@ -112,6 +114,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 			true);
 	public static final long GROUPID_COLUMN_BITMASK = 1L;
 	public static final long NAME_COLUMN_BITMASK = 2L;
+	public static final long SYSTEM_COLUMN_BITMASK = 4L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -134,6 +137,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setSystem(soapModel.isSystem());
 		model.setName(soapModel.getName());
 		model.setDescription(soapModel.getDescription());
 
@@ -209,6 +213,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("system", isSystem());
 		attributes.put("name", getName());
 		attributes.put("description", getDescription());
 
@@ -261,6 +266,12 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		Boolean system = (Boolean)attributes.get("system");
+
+		if (system != null) {
+			setSystem(system);
 		}
 
 		String name = (String)attributes.get("name");
@@ -395,6 +406,35 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 
 	@JSON
 	@Override
+	public boolean getSystem() {
+		return _system;
+	}
+
+	@JSON
+	@Override
+	public boolean isSystem() {
+		return _system;
+	}
+
+	@Override
+	public void setSystem(boolean system) {
+		_columnBitmask |= SYSTEM_COLUMN_BITMASK;
+
+		if (!_setOriginalSystem) {
+			_setOriginalSystem = true;
+
+			_originalSystem = _system;
+		}
+
+		_system = system;
+	}
+
+	public boolean getOriginalSystem() {
+		return _originalSystem;
+	}
+
+	@JSON
+	@Override
 	public String getName() {
 		if (_name == null) {
 			return "";
@@ -473,6 +513,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		layoutPageTemplateCollectionImpl.setUserName(getUserName());
 		layoutPageTemplateCollectionImpl.setCreateDate(getCreateDate());
 		layoutPageTemplateCollectionImpl.setModifiedDate(getModifiedDate());
+		layoutPageTemplateCollectionImpl.setSystem(isSystem());
 		layoutPageTemplateCollectionImpl.setName(getName());
 		layoutPageTemplateCollectionImpl.setDescription(getDescription());
 
@@ -543,6 +584,10 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 
 		layoutPageTemplateCollectionModelImpl._setModifiedDate = false;
 
+		layoutPageTemplateCollectionModelImpl._originalSystem = layoutPageTemplateCollectionModelImpl._system;
+
+		layoutPageTemplateCollectionModelImpl._setOriginalSystem = false;
+
 		layoutPageTemplateCollectionModelImpl._originalName = layoutPageTemplateCollectionModelImpl._name;
 
 		layoutPageTemplateCollectionModelImpl._columnBitmask = 0;
@@ -587,6 +632,8 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 			layoutPageTemplateCollectionCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		layoutPageTemplateCollectionCacheModel.system = isSystem();
+
 		layoutPageTemplateCollectionCacheModel.name = getName();
 
 		String name = layoutPageTemplateCollectionCacheModel.name;
@@ -608,7 +655,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{layoutPageTemplateCollectionId=");
 		sb.append(getLayoutPageTemplateCollectionId());
@@ -624,6 +671,8 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", system=");
+		sb.append(isSystem());
 		sb.append(", name=");
 		sb.append(getName());
 		sb.append(", description=");
@@ -635,7 +684,7 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("<model><model-name>");
 		sb.append(
@@ -671,6 +720,10 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>system</column-name><column-value><![CDATA[");
+		sb.append(isSystem());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>name</column-name><column-value><![CDATA[");
 		sb.append(getName());
 		sb.append("]]></column-value></column>");
@@ -698,6 +751,9 @@ public class LayoutPageTemplateCollectionModelImpl extends BaseModelImpl<LayoutP
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private boolean _system;
+	private boolean _originalSystem;
+	private boolean _setOriginalSystem;
 	private String _name;
 	private String _originalName;
 	private String _description;

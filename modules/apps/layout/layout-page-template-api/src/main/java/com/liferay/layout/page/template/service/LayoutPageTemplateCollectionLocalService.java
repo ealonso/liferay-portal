@@ -74,6 +74,11 @@ public interface LayoutPageTemplateCollectionLocalService
 
 	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
 		long userId, long groupId, String name, String description,
+		boolean system, ServiceContext serviceContext)
+		throws PortalException;
+
+	public LayoutPageTemplateCollection addLayoutPageTemplateCollection(
+		long userId, long groupId, String name, String description,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**
@@ -178,6 +183,10 @@ public interface LayoutPageTemplateCollectionLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutPageTemplateCollection fetchLayoutPageTemplateCollection(
 		long layoutPageTemplateCollectionId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public LayoutPageTemplateCollection fetchSystemLayoutPageTemplateCollection(
+		long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

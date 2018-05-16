@@ -981,6 +981,233 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 	}
 
 	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 = "layoutPageTemplateCollection.groupId = ?";
+	public static final FinderPath FINDER_PATH_FETCH_BY_G_S = new FinderPath(LayoutPageTemplateCollectionModelImpl.ENTITY_CACHE_ENABLED,
+			LayoutPageTemplateCollectionModelImpl.FINDER_CACHE_ENABLED,
+			LayoutPageTemplateCollectionImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByG_S",
+			new String[] { Long.class.getName(), Boolean.class.getName() },
+			LayoutPageTemplateCollectionModelImpl.GROUPID_COLUMN_BITMASK |
+			LayoutPageTemplateCollectionModelImpl.SYSTEM_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_G_S = new FinderPath(LayoutPageTemplateCollectionModelImpl.ENTITY_CACHE_ENABLED,
+			LayoutPageTemplateCollectionModelImpl.FINDER_CACHE_ENABLED,
+			Long.class, FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByG_S",
+			new String[] { Long.class.getName(), Boolean.class.getName() });
+
+	/**
+	 * Returns the layout page template collection where groupId = &#63; and system = &#63; or throws a {@link NoSuchPageTemplateCollectionException} if it could not be found.
+	 *
+	 * @param groupId the group ID
+	 * @param system the system
+	 * @return the matching layout page template collection
+	 * @throws NoSuchPageTemplateCollectionException if a matching layout page template collection could not be found
+	 */
+	@Override
+	public LayoutPageTemplateCollection findByG_S(long groupId, boolean system)
+		throws NoSuchPageTemplateCollectionException {
+		LayoutPageTemplateCollection layoutPageTemplateCollection = fetchByG_S(groupId,
+				system);
+
+		if (layoutPageTemplateCollection == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("groupId=");
+			msg.append(groupId);
+
+			msg.append(", system=");
+			msg.append(system);
+
+			msg.append("}");
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchPageTemplateCollectionException(msg.toString());
+		}
+
+		return layoutPageTemplateCollection;
+	}
+
+	/**
+	 * Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param groupId the group ID
+	 * @param system the system
+	 * @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	 */
+	@Override
+	public LayoutPageTemplateCollection fetchByG_S(long groupId, boolean system) {
+		return fetchByG_S(groupId, system, true);
+	}
+
+	/**
+	 * Returns the layout page template collection where groupId = &#63; and system = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param groupId the group ID
+	 * @param system the system
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching layout page template collection, or <code>null</code> if a matching layout page template collection could not be found
+	 */
+	@Override
+	public LayoutPageTemplateCollection fetchByG_S(long groupId,
+		boolean system, boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { groupId, system };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_G_S,
+					finderArgs, this);
+		}
+
+		if (result instanceof LayoutPageTemplateCollection) {
+			LayoutPageTemplateCollection layoutPageTemplateCollection = (LayoutPageTemplateCollection)result;
+
+			if ((groupId != layoutPageTemplateCollection.getGroupId()) ||
+					(system != layoutPageTemplateCollection.isSystem())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_LAYOUTPAGETEMPLATECOLLECTION_WHERE);
+
+			query.append(_FINDER_COLUMN_G_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_S_SYSTEM_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(system);
+
+				List<LayoutPageTemplateCollection> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_G_S, finderArgs,
+						list);
+				}
+				else {
+					LayoutPageTemplateCollection layoutPageTemplateCollection = list.get(0);
+
+					result = layoutPageTemplateCollection;
+
+					cacheResult(layoutPageTemplateCollection);
+
+					if ((layoutPageTemplateCollection.getGroupId() != groupId) ||
+							(layoutPageTemplateCollection.isSystem() != system)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_G_S,
+							finderArgs, layoutPageTemplateCollection);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_G_S, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (LayoutPageTemplateCollection)result;
+		}
+	}
+
+	/**
+	 * Removes the layout page template collection where groupId = &#63; and system = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param system the system
+	 * @return the layout page template collection that was removed
+	 */
+	@Override
+	public LayoutPageTemplateCollection removeByG_S(long groupId, boolean system)
+		throws NoSuchPageTemplateCollectionException {
+		LayoutPageTemplateCollection layoutPageTemplateCollection = findByG_S(groupId,
+				system);
+
+		return remove(layoutPageTemplateCollection);
+	}
+
+	/**
+	 * Returns the number of layout page template collections where groupId = &#63; and system = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param system the system
+	 * @return the number of matching layout page template collections
+	 */
+	@Override
+	public int countByG_S(long groupId, boolean system) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_G_S;
+
+		Object[] finderArgs = new Object[] { groupId, system };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_LAYOUTPAGETEMPLATECOLLECTION_WHERE);
+
+			query.append(_FINDER_COLUMN_G_S_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_G_S_SYSTEM_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(system);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_G_S_GROUPID_2 = "layoutPageTemplateCollection.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_G_S_SYSTEM_2 = "layoutPageTemplateCollection.system = ?";
 	public static final FinderPath FINDER_PATH_FETCH_BY_G_N = new FinderPath(LayoutPageTemplateCollectionModelImpl.ENTITY_CACHE_ENABLED,
 			LayoutPageTemplateCollectionModelImpl.FINDER_CACHE_ENABLED,
 			LayoutPageTemplateCollectionImpl.class, FINDER_CLASS_NAME_ENTITY,
@@ -2270,6 +2497,12 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 			layoutPageTemplateCollection.getPrimaryKey(),
 			layoutPageTemplateCollection);
 
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_S,
+			new Object[] {
+				layoutPageTemplateCollection.getGroupId(),
+				layoutPageTemplateCollection.isSystem()
+			}, layoutPageTemplateCollection);
+
 		finderCache.putResult(FINDER_PATH_FETCH_BY_G_N,
 			new Object[] {
 				layoutPageTemplateCollection.getGroupId(),
@@ -2357,6 +2590,16 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 		LayoutPageTemplateCollectionModelImpl layoutPageTemplateCollectionModelImpl) {
 		Object[] args = new Object[] {
 				layoutPageTemplateCollectionModelImpl.getGroupId(),
+				layoutPageTemplateCollectionModelImpl.isSystem()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_G_S, args, Long.valueOf(1),
+			false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_G_S, args,
+			layoutPageTemplateCollectionModelImpl, false);
+
+		args = new Object[] {
+				layoutPageTemplateCollectionModelImpl.getGroupId(),
 				layoutPageTemplateCollectionModelImpl.getName()
 			};
 
@@ -2369,6 +2612,27 @@ public class LayoutPageTemplateCollectionPersistenceImpl
 	protected void clearUniqueFindersCache(
 		LayoutPageTemplateCollectionModelImpl layoutPageTemplateCollectionModelImpl,
 		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					layoutPageTemplateCollectionModelImpl.getGroupId(),
+					layoutPageTemplateCollectionModelImpl.isSystem()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_S, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_S, args);
+		}
+
+		if ((layoutPageTemplateCollectionModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_G_S.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					layoutPageTemplateCollectionModelImpl.getOriginalGroupId(),
+					layoutPageTemplateCollectionModelImpl.getOriginalSystem()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_G_S, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_G_S, args);
+		}
+
 		if (clearCurrent) {
 			Object[] args = new Object[] {
 					layoutPageTemplateCollectionModelImpl.getGroupId(),

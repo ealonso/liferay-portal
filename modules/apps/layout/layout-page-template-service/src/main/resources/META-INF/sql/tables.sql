@@ -6,6 +6,7 @@ create table LayoutPageTemplateCollection (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	system BOOLEAN,
 	name VARCHAR(75) null,
 	description STRING null
 );
@@ -28,5 +29,6 @@ create table LayoutPageTemplateEntry (
 	status INTEGER,
 	statusByUserId LONG,
 	statusByUserName VARCHAR(75) null,
-	statusDate DATE null
+	statusDate DATE null,
+	layoutPrototypeId LONG
 );
