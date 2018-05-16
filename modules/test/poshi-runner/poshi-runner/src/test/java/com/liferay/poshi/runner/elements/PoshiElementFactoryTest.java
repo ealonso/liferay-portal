@@ -14,6 +14,7 @@
 
 package com.liferay.poshi.runner.elements;
 
+import com.liferay.poshi.runner.PoshiRunnerContext;
 import com.liferay.poshi.runner.util.Dom4JUtil;
 import com.liferay.poshi.runner.util.FileUtil;
 
@@ -23,12 +24,24 @@ import org.dom4j.Node;
 import org.dom4j.Text;
 import org.dom4j.util.NodeComparator;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * @author Kenji Heigel
  */
 public class PoshiElementFactoryTest {
+
+	@BeforeClass
+	public static void setUpClass() throws Exception {
+		String[] poshiFileNames = {"**/*.function"};
+
+		String poshiFileDir =
+			"../poshi-runner-resources/src/main/resources/default" +
+				"/testFunctional/functions";
+
+		PoshiRunnerContext.readFiles(poshiFileNames, poshiFileDir);
+	}
 
 	@Test
 	public void testPoshiMacroToReadable() throws Exception {
@@ -84,6 +97,17 @@ public class PoshiElementFactoryTest {
 	}
 
 	@Test
+	public void testReadableMacroFormat() throws Exception {
+		PoshiElement actualElement = _getPoshiElement(
+			"FormattedReadableSyntax.macro");
+		Element expectedElement = _getDom4JElement("PoshiSyntax.macro");
+
+		_assertEqualElements(
+			actualElement, expectedElement,
+			"Readable syntax does not translate to XML.");
+	}
+
+	@Test
 	public void testReadableMacroToXML() throws Exception {
 		PoshiElement actualElement = _getPoshiElement("ReadableSyntax.macro");
 		Element expectedElement = _getDom4JElement("PoshiSyntax.macro");
@@ -116,7 +140,7 @@ public class PoshiElementFactoryTest {
 			String actual = Dom4JUtil.format(actualElement);
 			String expected = Dom4JUtil.format(expectedElement);
 
-			_getErrorMessage(actual, expected, errorMessage);
+			errorMessage = _getErrorMessage(actual, expected, errorMessage);
 
 			throw new Exception(errorMessage);
 		}

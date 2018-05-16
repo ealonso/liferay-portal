@@ -1,0 +1,20 @@
+var alertContainer = document.getElementById('alertContainer');
+
+if (!alertContainer) {
+    alertContainer = document.createElement('div');
+    alertContainer.id = 'alertContainer';
+
+    dom.addClasses(alertContainer, 'alert-notifications alert-notifications-fixed');
+    dom.enterDocument(alertContainer);
+}
+
+new ClayToast.default(
+    {
+        destroyOnHide: true,
+        message: '#message#',
+        spritemap: '#pathThemeImages#/lexicon/icons.svg',
+        style: 'success',
+        title: '#title#'
+    },
+    alertContainer
+);
