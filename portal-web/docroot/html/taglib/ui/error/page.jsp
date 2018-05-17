@@ -17,83 +17,14 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-String key = (String)request.getAttribute("liferay-ui:error:key");
-String message = (String)request.getAttribute("liferay-ui:error:message");
+String alertMessage = (String)request.getAttribute("liferay-ui:error:alertMessage");
+String alertIcon = (String)request.getAttribute("liferay-ui:error:alertIcon");
+String alertStyle = (String)request.getAttribute("liferay-ui:error:alertStyle");
+String alertTitle = (String)request.getAttribute("liferay-ui:error:alertTitle");
 String rowBreak = (String)request.getAttribute("liferay-ui:error:rowBreak");
-String targetNode = GetterUtil.getString((String)request.getAttribute("liferay-ui:error:targetNode"));
+boolean showAlert = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:showAlert"));
 boolean toast = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:toast"));
-boolean translateMessage = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:translateMessage"));
-
-String bodyContentString = StringPool.BLANK;
-
-Object bodyContent = request.getAttribute("liferay-ui:error:bodyContent");
-
-if (bodyContent != null) {
-	bodyContentString = bodyContent.toString();
-}
-
-boolean showAlert = false;
-
-String alertIcon = "exclamation-full";
-String alertMessage = bodyContentString;
-String alertStyle = "danger";
-String alertTitle = LanguageUtil.get(resourceBundle, "error");
 %>
-
-<c:choose>
-	<c:when test="<%= (key != null) && Validator.isNull(message) %>">
-		<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-			<c:if test="<%= Validator.isNotNull(bodyContentString) %>">
-
-				<%
-				showAlert = true;
-				%>
-
-			</c:if>
-		</c:if>
-	</c:when>
-	<c:when test='<%= SessionErrors.contains(portletRequest, "warning") %>'>
-		<liferay-util:buffer
-			var="alertMessageContent"
-		>
-			<c:choose>
-				<c:when test="<%= message != null %>">
-					<liferay-ui:message key="<%= message %>" localizeKey="<%= translateMessage %>" />
-				</c:when>
-				<c:otherwise>
-					<liferay-ui:message key='<%= (String)SessionErrors.get(portletRequest, "warning") %>' localizeKey="<%= translateMessage %>" />
-				</c:otherwise>
-			</c:choose>
-		</liferay-util:buffer>
-
-		<%
-		alertIcon = "warning-full";
-		alertMessage = alertMessageContent;
-		alertStyle = "warning";
-		alertTitle = LanguageUtil.get(resourceBundle, "warning");
-		showAlert = true;
-		%>
-
-	</c:when>
-	<c:when test="<%= key == null %>">
-
-		<%
-		alertMessage = LanguageUtil.get(resourceBundle, "your-request-failed-to-complete");
-		showAlert = true;
-		%>
-
-	</c:when>
-	<c:otherwise>
-		<c:if test="<%= SessionErrors.contains(portletRequest, key) %>">
-
-			<%
-			alertMessage = translateMessage ? LanguageUtil.get(resourceBundle, message) : message;
-			showAlert = true;
-			%>
-
-		</c:if>
-	</c:otherwise>
-</c:choose>
 
 <c:if test="<%= showAlert %>">
 	<c:choose>

@@ -15,6 +15,7 @@
 package com.liferay.taglib.ui;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
@@ -148,14 +149,72 @@ public class ErrorTag extends IncludeTag implements BodyTag {
 		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
 
-		request.setAttribute("liferay-ui:error:key", _key);
-		request.setAttribute("liferay-ui:error:message", _message);
+		String bodyContentString = StringPool.BLANK;
+
+		Object bodyContent = request.getAttribute(
+			"liferay-ui:error:bodyContent");
+
+		if (bodyContent != null) {
+			bodyContentString = bodyContent.toString();
+		}
+
+		boolean showAlert = false;
+
+		String alertIcon = "exclamation-full";
+		String alertMessage = bodyContentString;
+		String alertStyle = "danger";
+		String alertTitle = LanguageUtil.get(request, "error");
+
+		if ((_key != null) && Validator.isNull(_message)) {
+			if (SessionErrors.contains(portletRequest, _key) &&
+				Validator.isNotNull(bodyContentString)) {
+
+				showAlert = true;
+			}
+		}
+		else if (SessionErrors.contains(portletRequest, "warning")) {
+			String alertMessageContent = _message;
+
+			if (_message == null) {
+				alertMessageContent = (String)SessionErrors.get(
+					portletRequest, "warning");
+			}
+
+			if (_translateMessage) {
+				alertMessageContent = LanguageUtil.get(
+					request, alertMessageContent);
+			}
+
+			alertIcon = "warning-full";
+			alertMessage = alertMessageContent;
+			alertStyle = "warning";
+			alertTitle = LanguageUtil.get(request, "warning");
+			showAlert = true;
+		}
+		else if (_key == null) {
+			alertMessage = LanguageUtil.get(
+				request, "your-request-failed-to-complete");
+
+			showAlert = true;
+		}
+		else if (SessionErrors.contains(portletRequest, _key)) {
+			alertMessage = _message;
+
+			if (_translateMessage) {
+				alertMessage = LanguageUtil.get(request, _message);
+			}
+
+			showAlert = true;
+		}
+
+		request.setAttribute("liferay-ui:error:alertIcon", alertIcon);
+		request.setAttribute("liferay-ui:error:alertMessage", alertMessage);
+		request.setAttribute("liferay-ui:error:alertStyle", alertStyle);
+		request.setAttribute("liferay-ui:error:alertTitle", alertTitle);
 		request.setAttribute("liferay-ui:error:rowBreak", _rowBreak);
-		request.setAttribute("liferay-ui:error:targetNode", _targetNode);
-		request.setAttribute("liferay-ui:error:toast", String.valueOf(_toast));
 		request.setAttribute(
-			"liferay-ui:error:translateMessage",
-			String.valueOf(_translateMessage));
+			"liferay-ui:error:showAlert", String.valueOf(showAlert));
+		request.setAttribute("liferay-ui:error:toast", String.valueOf(_toast));
 
 		if (SessionErrors.contains(portletRequest, _key)) {
 			String errorMarkerKey = (String)request.getAttribute(
