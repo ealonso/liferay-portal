@@ -22,48 +22,45 @@ String alertIcon = (String)request.getAttribute("liferay-ui:error:alertIcon");
 String alertStyle = (String)request.getAttribute("liferay-ui:error:alertStyle");
 String alertTitle = (String)request.getAttribute("liferay-ui:error:alertTitle");
 String rowBreak = (String)request.getAttribute("liferay-ui:error:rowBreak");
-boolean showAlert = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:showAlert"));
 boolean toast = GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:error:toast"));
 %>
 
-<c:if test="<%= showAlert %>">
-	<c:choose>
-		<c:when test="<%= toast %>">
-			<aui:script require="metal-dom/src/all/dom as dom,clay-alert@2.0.2/lib/ClayToast as ClayToast">
-				var alertContainer = document.getElementById('alertContainer');
+<c:choose>
+	<c:when test="<%= toast %>">
+		<aui:script require="metal-dom/src/all/dom as dom,clay-alert@2.0.2/lib/ClayToast as ClayToast">
+			var alertContainer = document.getElementById('alertContainer');
 
-				if (!alertContainer) {
-					alertContainer = document.createElement('div');
-					alertContainer.id = 'alertContainer';
+			if (!alertContainer) {
+				alertContainer = document.createElement('div');
+				alertContainer.id = 'alertContainer';
 
-					dom.addClasses(alertContainer, 'alert-notifications alert-notifications-fixed');
-					dom.enterDocument(alertContainer);
-				}
+				dom.addClasses(alertContainer, 'alert-notifications alert-notifications-fixed');
+				dom.enterDocument(alertContainer);
+			}
 
-				new ClayToast.default(
-					{
-						destroyOnHide: true,
-						message: '<%= alertMessage %>',
-						spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg',
-						style: '<%= alertStyle %>',
-						title: '<%= alertTitle %>'
-					},
-					alertContainer
-				);
-			</aui:script>
-		</c:when>
-		<c:otherwise>
-			<div class="alert alert-<%= alertStyle %>" role="alert">
-				<span class="alert-indicator">
-					<svg aria-hidden="true" class="lexicon-icon lexicon-icon-<%= alertIcon %>">
-						<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#<%= alertIcon %>"></use>
-					</svg>
-				</span>
+			new ClayToast.default(
+				{
+					destroyOnHide: true,
+					message: '<%= alertMessage %>',
+					spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg',
+					style: '<%= alertStyle %>',
+					title: '<%= alertTitle %>'
+				},
+				alertContainer
+			);
+		</aui:script>
+	</c:when>
+	<c:otherwise>
+		<div class="alert alert-<%= alertStyle %>" role="alert">
+			<span class="alert-indicator">
+				<svg aria-hidden="true" class="lexicon-icon lexicon-icon-<%= alertIcon %>">
+					<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#<%= alertIcon %>"></use>
+				</svg>
+			</span>
 
-				<strong class="lead"><%= alertTitle %>:</strong><%= alertMessage %>
-			</div>
+			<strong class="lead"><%= alertTitle %>:</strong><%= alertMessage %>
+		</div>
 
-			<%= rowBreak %>
-		</c:otherwise>
-	</c:choose>
-</c:if>
+		<%= rowBreak %>
+	</c:otherwise>
+</c:choose>
