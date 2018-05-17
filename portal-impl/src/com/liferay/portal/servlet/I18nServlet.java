@@ -98,9 +98,19 @@ public class I18nServlet extends HttpServlet {
 			if ((i18nData == null) ||
 				!PortalUtil.isValidResourceId(i18nData.getPath())) {
 
-				PortalUtil.sendError(
-					HttpServletResponse.SC_NOT_FOUND,
-					new NoSuchLayoutException(), request, response);
+				if (PropsValues.LOCALE_USE_DEFAULT_IF_NOT_AVAILABLE) {
+					StringBuilder redirect = new StringBuilder(2);
+
+					redirect.append(PortalUtil.getPortalURL(request));
+					redirect.append(request.getPathInfo());
+
+					response.sendRedirect(redirect.toString());
+				}
+				else {
+					PortalUtil.sendError(
+						HttpServletResponse.SC_NOT_FOUND,
+						new NoSuchLayoutException(), request, response);
+				}
 			}
 			else {
 				request.setAttribute(
