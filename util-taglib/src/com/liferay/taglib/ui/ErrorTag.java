@@ -153,47 +153,11 @@ public class ErrorTag extends IncludeTag implements BodyTag {
 		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
 
-		String alertIcon = "exclamation-full";
-		String alertMessage = _getBodyContentString();
-		String alertStyle = "danger";
-		String alertTitle = LanguageUtil.get(request, "error");
-
-		if ((_key != null) && Validator.isNull(_message)) {
-		}
-		else if (SessionErrors.contains(portletRequest, "warning")) {
-			String alertMessageContent = _message;
-
-			if (_message == null) {
-				alertMessageContent = (String)SessionErrors.get(
-					portletRequest, "warning");
-			}
-
-			if (_translateMessage) {
-				alertMessageContent = LanguageUtil.get(
-					request, alertMessageContent);
-			}
-
-			alertIcon = "warning-full";
-			alertMessage = alertMessageContent;
-			alertStyle = "warning";
-			alertTitle = LanguageUtil.get(request, "warning");
-		}
-		else if (_key == null) {
-			alertMessage = LanguageUtil.get(
-				request, "your-request-failed-to-complete");
-		}
-		else if (SessionErrors.contains(portletRequest, _key)) {
-			alertMessage = _message;
-
-			if (_translateMessage) {
-				alertMessage = LanguageUtil.get(request, _message);
-			}
-		}
-
-		request.setAttribute("liferay-ui:error:alertIcon", alertIcon);
-		request.setAttribute("liferay-ui:error:alertMessage", alertMessage);
-		request.setAttribute("liferay-ui:error:alertStyle", alertStyle);
-		request.setAttribute("liferay-ui:error:alertTitle", alertTitle);
+		request.setAttribute("liferay-ui:error:alertIcon", _getAlertIcon());
+		request.setAttribute(
+			"liferay-ui:error:alertMessage", _getAlertMessage());
+		request.setAttribute("liferay-ui:error:alertStyle", _getAlertStyle());
+		request.setAttribute("liferay-ui:error:alertTitle", _getAlertTitle());
 		request.setAttribute("liferay-ui:error:rowBreak", _rowBreak);
 		request.setAttribute("liferay-ui:error:toast", String.valueOf(_toast));
 
@@ -219,6 +183,91 @@ public class ErrorTag extends IncludeTag implements BodyTag {
 					"liferay-ui:error:focusField", _focusField);
 			}
 		}
+	}
+
+	private String _getAlertIcon() {
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		if ((_key != null) && Validator.isNull(_message)) {
+			return "exclamation-full";
+		}
+
+		if (SessionErrors.contains(portletRequest, "warning")) {
+			return "warning-full";
+		}
+
+		return "exclamation-full";
+	}
+
+	private String _getAlertMessage() {
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		if ((_key != null) && Validator.isNull(_message)) {
+			return _getBodyContentString();
+		}
+
+		if (SessionErrors.contains(portletRequest, "warning")) {
+			String alertMessage = _message;
+
+			if (_message == null) {
+				alertMessage = (String)SessionErrors.get(
+					portletRequest, "warning");
+			}
+
+			if (_translateMessage) {
+				alertMessage = LanguageUtil.get(request, alertMessage);
+			}
+
+			return alertMessage;
+		}
+
+		if (_key == null) {
+			return LanguageUtil.get(request, "your-request-failed-to-complete");
+		}
+
+		if (SessionErrors.contains(portletRequest, _key)) {
+			String alertMessage = _message;
+
+			if (_translateMessage) {
+				alertMessage = LanguageUtil.get(request, _message);
+			}
+
+			return alertMessage;
+		}
+
+		return _getBodyContentString();
+	}
+
+	private String _getAlertStyle() {
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		if ((_key != null) && Validator.isNull(_message)) {
+			return "danger";
+		}
+
+		if (SessionErrors.contains(portletRequest, "warning")) {
+			return "warning";
+		}
+
+		return "danger";
+	}
+
+	private String _getAlertTitle() {
+		PortletRequest portletRequest = (PortletRequest)request.getAttribute(
+			JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		if ((_key != null) && Validator.isNull(_message)) {
+			return LanguageUtil.get(request, "error");
+		}
+
+		if (SessionErrors.contains(portletRequest, "warning")) {
+			return LanguageUtil.get(request, "warning");
+		}
+
+		return LanguageUtil.get(request, "error");
 	}
 
 	private String _getBodyContentString() {
