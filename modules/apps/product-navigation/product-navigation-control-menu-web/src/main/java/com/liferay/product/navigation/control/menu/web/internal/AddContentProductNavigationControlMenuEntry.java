@@ -15,6 +15,8 @@
 package com.liferay.product.navigation.control.menu.web.internal;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
@@ -54,6 +56,13 @@ public class AddContentProductNavigationControlMenuEntry
 	@Override
 	public boolean isShow(HttpServletRequest request) throws PortalException {
 		if (!ProductNavigationControlMenuUtil.isEditEnabled(request)) {
+			return false;
+		}
+
+		String layoutMode = ParamUtil.getString(
+			request, "p_l_mode", Constants.VIEW);
+
+		if (layoutMode.equals(Constants.VIEW)) {
 			return false;
 		}
 
