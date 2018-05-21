@@ -87,23 +87,18 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 		JournalArticle journalArticle =
 			_journalArticleLocalService.getArticleByUrlTitle(groupId, urlTitle);
 
+		if (Validator.isNotNull(journalArticle.getLayoutUuid())) {
+			return _getBasicLayoutURL(
+				groupId, privateLayout, mainPath, friendlyURL, params,
+				requestContext, urlTitle, journalArticle);
+		}
+
 		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			JournalArticle.class.getName(),
 			journalArticle.getResourcePrimKey());
 
-		AssetDisplayPageEntry assetDisplayPageEntry = _getAssetDisplayPageEntry(
-			assetEntry);
-
-		if (assetDisplayPageEntry != null) {
-			return _getDisplayPageURL(
-				assetEntry, groupId, mainPath, requestContext);
-		}
-
-		String layoutActualURL = _getBasicLayoutURL(
-			groupId, privateLayout, mainPath, friendlyURL, params,
-			requestContext, urlTitle, journalArticle);
-
-		return layoutActualURL;
+		return _getDisplayPageURL(
+			assetEntry, groupId, mainPath, requestContext);
 	}
 
 	@Override
@@ -134,26 +129,12 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 		JournalArticle journalArticle =
 			_journalArticleLocalService.getArticleByUrlTitle(groupId, urlTitle);
 
-		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
-			JournalArticle.class.getName(),
-			journalArticle.getResourcePrimKey());
-
-		try {
-			Layout layout = _getAssetDisplayPageEntryLayout(
-				assetEntry, groupId);
-
-			if (layout != null) {
-				return layout;
-			}
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(pe, pe);
-			}
+		if (Validator.isNotNull(journalArticle.getLayoutUuid())) {
+			return _layoutLocalService.getLayoutByUuidAndGroupId(
+				journalArticle.getLayoutUuid(), groupId, privateLayout);
 		}
 
-		return _layoutLocalService.getLayoutByUuidAndGroupId(
-			journalArticle.getLayoutUuid(), groupId, privateLayout);
+		return _getAssetDisplayLayout(groupId);
 	}
 
 	@Reference(unbind = "-")
@@ -371,7 +352,7 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 		_portal.addPageSubtitle(assetEntry.getTitle(locale), request);
 		_portal.addPageDescription(assetEntry.getDescription(locale), request);
 
-		Layout layout = _getAssetDisplayPageEntryLayout(assetEntry, groupId);
+		Layout layout = _getAssetDisplayLayout(groupId);
 
 		return _portal.getLayoutActualURL(layout, mainPath);
 	}
