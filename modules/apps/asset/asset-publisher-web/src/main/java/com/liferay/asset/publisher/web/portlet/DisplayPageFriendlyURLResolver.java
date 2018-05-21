@@ -17,7 +17,6 @@ package com.liferay.asset.publisher.web.portlet;
 import com.liferay.asset.display.contributor.AssetDisplayContributor;
 import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
 import com.liferay.asset.display.contributor.constants.AssetDisplayWebKeys;
-import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
 import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalService;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
@@ -33,8 +32,6 @@ import com.liferay.journal.model.JournalArticleConstants;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutFriendlyURLComposite;
@@ -188,24 +185,6 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 		return _createAssetDisplayLayout(groupId);
 	}
 
-	private AssetDisplayPageEntry _getAssetDisplayPageEntry(
-		AssetEntry assetEntry) {
-
-		return _assetDisplayPageEntryLocalService.
-			fetchAssetDisplayPageEntryByAssetEntryId(assetEntry.getEntryId());
-	}
-
-	private Layout _getAssetDisplayPageEntryLayout(
-			AssetEntry assetEntry, long groupId)
-		throws PortalException {
-
-		if (_getAssetDisplayPageEntry(assetEntry) != null) {
-			return _getAssetDisplayLayout(groupId);
-		}
-
-		return null;
-	}
-
 	private String _getBasicLayoutURL(
 			long groupId, boolean privateLayout, String mainPath,
 			String friendlyURL, Map<String, String[]> params,
@@ -356,9 +335,6 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 
 		return _portal.getLayoutActualURL(layout, mainPath);
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		DisplayPageFriendlyURLResolver.class);
 
 	@Reference
 	private AssetDisplayContributorTracker _assetDisplayContributorTracker;
