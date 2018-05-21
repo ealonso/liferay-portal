@@ -14,10 +14,6 @@
 
 package com.liferay.journal.web.asset;
 
-import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
-import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalServiceUtil;
-import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.asset.kernel.model.DDMFormValuesReader;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
@@ -41,7 +37,6 @@ import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -64,9 +59,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
@@ -362,57 +355,22 @@ public class JournalArticleAssetRenderer
 			layout = themeDisplay.getLayout();
 		}
 
-		String portletId = (String)liferayPortletRequest.getAttribute(
-			WebKeys.PORTLET_ID);
+		Group group = themeDisplay.getScopeGroup();
 
-		PortletPreferences portletSetup =
-			PortletPreferencesFactoryUtil.getStrictLayoutPortletSetup(
-				layout, portletId);
-
-		String linkToLayoutUuid = GetterUtil.getString(
-			portletSetup.getValue("portletSetupLinkToLayoutUuid", null));
-
-		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
-
-		AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
-			JournalArticle.class.getName(), getClassPK());
-
-		AssetDisplayPageEntry assetDisplayPageEntry =
-			AssetDisplayPageEntryLocalServiceUtil.
-				fetchAssetDisplayPageEntryByAssetEntryId(
-					assetEntry.getEntryId());
-
-		if ((Validator.isNotNull(_article.getLayoutUuid()) ||
-			 (assetDisplayPageEntry != null)) &&
-			Validator.isNull(linkToLayoutUuid)) {
-
-			Group group = themeDisplay.getScopeGroup();
-
-			if (group.getGroupId() != _article.getGroupId()) {
-				group = GroupLocalServiceUtil.getGroup(_article.getGroupId());
-			}
-
-			String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
-				LayoutSetLocalServiceUtil.getLayoutSet(
-					group.getGroupId(), layout.isPrivateLayout()),
-				themeDisplay);
-
-			return PortalUtil.addPreservedParameters(
-				themeDisplay,
-				groupFriendlyURL.concat(
-					JournalArticleConstants.CANONICAL_URL_SEPARATOR).concat(
-						_article.getUrlTitle()));
+		if (group.getGroupId() != _article.getGroupId()) {
+			group = GroupLocalServiceUtil.getGroup(_article.getGroupId());
 		}
 
-		String hitLayoutURL = getHitLayoutURL(
-			layout.isPrivateLayout(), noSuchEntryRedirect, themeDisplay);
+		String groupFriendlyURL = PortalUtil.getGroupFriendlyURL(
+			LayoutSetLocalServiceUtil.getLayoutSet(
+				group.getGroupId(), layout.isPrivateLayout()),
+			themeDisplay);
 
-		if (Objects.equals(hitLayoutURL, noSuchEntryRedirect)) {
-			hitLayoutURL = getHitLayoutURL(
-				!layout.isPrivateLayout(), noSuchEntryRedirect, themeDisplay);
-		}
-
-		return hitLayoutURL;
+		return PortalUtil.addPreservedParameters(
+			themeDisplay,
+			groupFriendlyURL.concat(
+				JournalArticleConstants.CANONICAL_URL_SEPARATOR).concat(
+					_article.getUrlTitle()));
 	}
 
 	@Override
