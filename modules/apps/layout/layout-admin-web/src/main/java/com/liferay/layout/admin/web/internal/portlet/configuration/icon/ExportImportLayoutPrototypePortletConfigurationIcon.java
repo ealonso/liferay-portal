@@ -14,10 +14,13 @@
 
 package com.liferay.layout.admin.web.internal.portlet.configuration.icon;
 
+import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.prototype.constants.LayoutPrototypePortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -25,6 +28,7 @@ import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -32,11 +36,18 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
  */
-@Component(immediate = true, service = PortletConfigurationIcon.class)
+@Component(
+	immediate = true,
+	property = {
+		"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES, "path=-"
+	},
+	service = PortletConfigurationIcon.class
+)
 public class ExportImportLayoutPrototypePortletConfigurationIcon
 	extends BasePortletConfigurationIcon {
 
@@ -70,12 +81,14 @@ public class ExportImportLayoutPrototypePortletConfigurationIcon
 
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-		sb.append(portletDisplay.getNamespace());
+		sb.append(
+			_portal.getPortletNamespace(
+				LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE));
 
 		sb.append("', portlet: '#p_p_id_");
-		sb.append(portletDisplay.getId());
+		sb.append(LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE);
 		sb.append("_', portletId: '");
-		sb.append(portletDisplay.getId());
+		sb.append(LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE);
 		sb.append("', title: '");
 		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "export-import"));
 		sb.append("', uri: '");
@@ -107,9 +120,9 @@ public class ExportImportLayoutPrototypePortletConfigurationIcon
 		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+		Group group = themeDisplay.getScopeGroup();
 
-		if (!portletDisplay.isShowExportImportIcon()) {
+		if (!group.isCompany()) {
 			return false;
 		}
 
@@ -120,9 +133,6 @@ public class ExportImportLayoutPrototypePortletConfigurationIcon
 				ActionKeys.EXPORT_IMPORT_PORTLET_INFO);
 		}
 		catch (PortalException pe) {
-
-			// LPS-52675
-
 			if (_log.isDebugEnabled()) {
 				_log.debug(pe, pe);
 			}
@@ -138,5 +148,8 @@ public class ExportImportLayoutPrototypePortletConfigurationIcon
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ExportImportLayoutPrototypePortletConfigurationIcon.class);
+
+	@Reference
+	private Portal _portal;
 
 }
