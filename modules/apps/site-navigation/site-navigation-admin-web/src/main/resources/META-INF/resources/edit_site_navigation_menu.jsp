@@ -25,6 +25,8 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(siteNavigationAdminDisplayContext.getSiteNavigationMenuName());
 %>
 
+<liferay-ui:success key='<%= portletName + "requestProcessed" %>' message="your-request-completed-successfully" />
+
 <nav class="management-bar management-bar-light navbar navbar-expand-md">
 	<div class="container">
 		<ul class="navbar-nav"></ul>
