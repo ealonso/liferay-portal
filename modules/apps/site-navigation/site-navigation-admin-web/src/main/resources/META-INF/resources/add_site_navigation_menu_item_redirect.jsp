@@ -22,13 +22,17 @@ String portletResource = ParamUtil.getString(request, "portletResource");
 Portlet selPortlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), portletResource);
 %>
 
+<portlet:renderURL var="redirectURL">
+	<portlet:param name="mvcRenderCommandName" value="/navigation_menu/add_site_navigation_menu_item_redirect" />
+	<portlet:param name="siteNavigationMenuId" value="<%= String.valueOf(siteNavigationAdminDisplayContext.getSiteNavigationMenuId()) %>" />
+</portlet:renderURL>
+
 <aui:script>
 	Liferay.fire(
 		'closeWindow',
 		{
 			id: '_<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>_addMenuItem',
-			portletAjaxable: <%= selPortlet.isAjaxable() %>,
-			refresh: '<%= HtmlUtil.escapeJS(selPortlet.getPortletId()) %>'
+			redirect: '<%= redirectURL %>'
 		}
 	);
 </aui:script>
