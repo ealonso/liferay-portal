@@ -393,6 +393,8 @@ public class SiteNavigationAdminDisplayContext {
 			"mvcPath", "/add_site_navigation_menu_item_redirect.jsp");
 		addSiteNavigationMenuItemRedirectURL.setParameter(
 			"portletResource", portletDisplay.getId());
+		addSiteNavigationMenuItemRedirectURL.setParameter(
+			"siteNavigationMenuId", String.valueOf(getSiteNavigationMenuId()));
 
 		addURL.setParameter(
 			"redirect", addSiteNavigationMenuItemRedirectURL.toString());
