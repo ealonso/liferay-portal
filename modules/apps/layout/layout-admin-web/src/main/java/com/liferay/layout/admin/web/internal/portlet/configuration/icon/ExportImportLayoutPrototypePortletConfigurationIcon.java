@@ -21,6 +21,9 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -29,11 +32,13 @@ import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.WindowStateException;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -81,18 +86,36 @@ public class ExportImportLayoutPrototypePortletConfigurationIcon
 
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
+		LiferayPortletURL urlExportImport = PortletURLFactoryUtil.create(
+			portletRequest, PortletKeys.EXPORT_IMPORT,
+			PortletRequest.RENDER_PHASE);
+
+		urlExportImport.setParameter("mvcRenderCommandName", "exportImport");
+		urlExportImport.setParameter("redirect", themeDisplay.getURLCurrent());
+		urlExportImport.setParameter(
+			"returnToFullPageURL", themeDisplay.getURLCurrent());
+		urlExportImport.setParameter(
+			"portletResource", LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE);
+
+		try {
+			urlExportImport.setWindowState(LiferayWindowState.POP_UP);
+		}
+		catch (WindowStateException wse) {
+			_log.error("Unable to set window state", wse);
+		}
+
 		sb.append(
 			_portal.getPortletNamespace(
 				LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE));
 
 		sb.append("', portlet: '#p_p_id_");
-		sb.append(LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE);
+		sb.append(portletDisplay.getId());
 		sb.append("_', portletId: '");
 		sb.append(LayoutPrototypePortletKeys.LAYOUT_PROTOTYPE);
 		sb.append("', title: '");
 		sb.append(LanguageUtil.get(themeDisplay.getLocale(), "export-import"));
 		sb.append("', uri: '");
-		sb.append(HtmlUtil.escapeJS(portletDisplay.getURLExportImport()));
+		sb.append(HtmlUtil.escapeJS(urlExportImport.toString()));
 		sb.append("'}); return false;");
 
 		return sb.toString();
