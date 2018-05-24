@@ -434,6 +434,8 @@ public class FragmentsEditorContext {
 			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
 				_themeDisplay.getScopeGroupId(), _classNameId, _classPK);
 
+		_themeDisplay.setIsolated(true);
+
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 			FragmentEntry fragmentEntry =
 				FragmentEntryServiceUtil.fetchFragmentEntry(
@@ -460,6 +462,8 @@ public class FragmentsEditorContext {
 
 			soyContexts.add(soyContext);
 		}
+
+		_themeDisplay.setIsolated(false);
 
 		return soyContexts;
 	}
