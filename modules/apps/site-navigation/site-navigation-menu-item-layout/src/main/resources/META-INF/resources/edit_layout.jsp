@@ -22,7 +22,9 @@ Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
 String title = GetterUtil.getString(request.getAttribute(WebKeys.TITLE));
 %>
 
-<aui:input label="title" maxlength='<%= ModelHintsUtil.getMaxLength(SiteNavigationMenuItem.class.getName(), "name") %>' name="TypeSettingsProperties--name--" type="text" value="<%= title %>" />
+<aui:input label="title" name="TypeSettingsProperties--name--" type="text" value="<%= title %>">
+	<aui:validator name="maxLength"><%= ModelHintsUtil.getMaxLength(SiteNavigationMenuItem.class.getName(), "name") %></aui:validator>
+</aui:input>
 
 <aui:input id="groupId" name="TypeSettingsProperties--groupId--" type="hidden" value="<%= (selLayout != null) ? selLayout.getGroupId() : StringPool.BLANK %>">
 	<aui:validator name="required" />
