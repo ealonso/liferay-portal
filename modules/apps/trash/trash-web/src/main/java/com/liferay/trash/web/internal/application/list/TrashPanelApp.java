@@ -17,8 +17,14 @@ package com.liferay.trash.web.internal.application.list;
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.trash.web.internal.constants.TrashPortletKeys;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -43,6 +49,20 @@ public class TrashPanelApp extends BasePanelApp {
 	@Override
 	public String getPortletId() {
 		return TrashPortletKeys.TRASH;
+	}
+
+	@Override
+	public PortletURL getPortletURL(HttpServletRequest request)
+		throws PortalException {
+
+		Group group = groupProvider.getGroup(request);
+
+		PortletURL portletURL = super.getPortletURL(request);
+
+		portletURL.setParameter(
+			"p_v_l_s_g_id", String.valueOf(group.getGroupId()));
+
+		return portletURL;
 	}
 
 	@Override
