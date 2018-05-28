@@ -17,19 +17,24 @@ package com.liferay.layout.admin.web.internal.display.context;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
+import com.liferay.layout.admin.web.internal.util.LayoutPageTemplatePortletUtil;
+import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.LayoutPrototype;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutPrototypeLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutPrototypeServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortalPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.util.comparator.LayoutPrototypeCreateDateComparator;
 
 import java.util.List;
 import java.util.Objects;
@@ -122,6 +127,14 @@ public class LayoutPrototypeDisplayContext {
 		};
 	}
 
+	public LayoutPrototype getLayoutPrototype(
+			LayoutPageTemplateEntry layoutPageTemplateEntry)
+		throws PortalException {
+
+		return LayoutPrototypeServiceUtil.getLayoutPrototype(
+			layoutPageTemplateEntry.getLayoutPrototypeId());
+	}
+
 	public String getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -171,37 +184,49 @@ public class LayoutPrototypeDisplayContext {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		SearchContainer searchContainer = new SearchContainer(
-			_renderRequest, _renderResponse.createRenderURL(), null,
-			"there-are-no-page-templates");
+		SearchContainer layoutPageTemplateEntriesSearchContainer =
+			new SearchContainer(
+				_renderRequest, _renderResponse.createRenderURL(), null,
+				"there-are-no-page-templates");
 
-		searchContainer.setId("layoutPrototype");
-		searchContainer.setRowChecker(
+		layoutPageTemplateEntriesSearchContainer.setId("layoutPrototype");
+		layoutPageTemplateEntriesSearchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(_renderResponse));
 
-		boolean orderByAsc = false;
+		layoutPageTemplateEntriesSearchContainer.setOrderByCol(getOrderByCol());
 
-		if (getOrderByType().equals("asc")) {
-			orderByAsc = true;
-		}
+		OrderByComparator<LayoutPageTemplateEntry> orderByComparator =
+			LayoutPageTemplatePortletUtil.
+				getLayoutPageTemplateEntryOrderByComparator(
+					getOrderByCol(), getOrderByType());
 
-		OrderByComparator<LayoutPrototype> orderByComparator =
-			new LayoutPrototypeCreateDateComparator(orderByAsc);
+		layoutPageTemplateEntriesSearchContainer.setOrderByComparator(
+			orderByComparator);
 
-		searchContainer.setOrderByCol(getOrderByCol());
-		searchContainer.setOrderByComparator(orderByComparator);
-		searchContainer.setOrderByType(getOrderByType());
+		layoutPageTemplateEntriesSearchContainer.setOrderByType(
+			getOrderByType());
 
-		searchContainer.setTotal(getTotal());
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
+			LayoutPageTemplateEntryServiceUtil.
+				getLayoutPageTemplateEntriesByType(
+					themeDisplay.getScopeGroupId(), 0,
+					LayoutPageTemplateEntryTypeConstants.TYPE_WIDGET_PAGE,
+					layoutPageTemplateEntriesSearchContainer.getStart(),
+					layoutPageTemplateEntriesSearchContainer.getEnd(),
+					orderByComparator);
 
-		List results = LayoutPrototypeLocalServiceUtil.search(
-			themeDisplay.getCompanyId(), getActive(),
-			searchContainer.getStart(), searchContainer.getEnd(),
-			searchContainer.getOrderByComparator());
+		int layoutPageTemplateEntriesCount =
+			LayoutPageTemplateEntryServiceUtil.
+				getLayoutPageTemplateEntriesCountByType(
+					themeDisplay.getScopeGroupId(), 0,
+					LayoutPageTemplateEntryTypeConstants.TYPE_WIDGET_PAGE);
 
-		searchContainer.setResults(results);
+		layoutPageTemplateEntriesSearchContainer.setResults(
+			layoutPageTemplateEntries);
+		layoutPageTemplateEntriesSearchContainer.setTotal(
+			layoutPageTemplateEntriesCount);
 
-		return searchContainer;
+		return layoutPageTemplateEntriesSearchContainer;
 	}
 
 	public String getSortingURL() {
