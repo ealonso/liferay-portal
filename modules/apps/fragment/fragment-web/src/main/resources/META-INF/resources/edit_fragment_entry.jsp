@@ -104,6 +104,10 @@ renderResponse.setTitle(title);
 	<portlet:param name="mvcRenderCommandName" value="/fragment/preview_fragment_entry" />
 </liferay-portlet:renderURL>
 
+<liferay-portlet:renderURL var="fragmentEntryThumbnailURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/fragment_entry_thumbnail" />
+</liferay-portlet:renderURL>
+
 <aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor, metal-dom/src/all/dom as dom, frontend-js-web/liferay/toast/commands/OpenToast.es as toastCommands">
 	var cssInput = document.getElementById('<portlet:namespace />cssContent');
 	var htmlInput = document.getElementById('<portlet:namespace />htmlContent');
@@ -150,6 +154,17 @@ renderResponse.setTitle(title);
 
 				return;
 			}
+
+			Liferay.Util.openWindow(
+				{
+					dialog: {
+						destroyOnHide: true
+					},
+					id: '<portlet:namespace />fragmentEntryThumbnail',
+					title: '<liferay-ui:message key="fragment-thumbnail" />',
+					uri: '<%= fragmentEntryThumbnailURL %>'
+				}
+			);
 
 			submitForm(document.querySelector('#<portlet:namespace />fm'));
 		}
