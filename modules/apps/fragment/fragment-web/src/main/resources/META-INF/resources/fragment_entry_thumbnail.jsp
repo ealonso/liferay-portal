@@ -16,6 +16,10 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
+%>
+
 <div class="fragment-thumbnail">
 	<div class="thumbnail-container">
 		<div class="aspect-ratio-item-center-middle aspect-ratio-item-fluid thumbnail-wrapper">
@@ -24,11 +28,13 @@
 	</div>
 
 	<div class="autofit-float autofit-row button-row">
-		<div class="autofit-col">
-			<button class="btn btn-default" id="<portlet:namespace/>changeThumbnailButton">
-				<liferay-ui:message key="change" />
-			</button>
-		</div>
+		<c:if test="<%= showChangeButton %>">
+			<div class="autofit-col">
+				<button class="btn btn-default" id="<portlet:namespace/>changeThumbnailButton">
+					<liferay-ui:message key="change" />
+				</button>
+			</div>
+		</c:if>
 
 		<div class="autofit-col autofit-col-end">
 			<button class="btn btn-default" id="<portlet:namespace/>cancelButton">
@@ -41,6 +47,12 @@
 		</div>
 	</div>
 </div>
+
+<input class="hide" id="<portlet:namespace/>fileInput" type="file" />
+
+<portlet:actionURL name="/fragment/upload_fragment_entry_thumbnail" var="uploadFragmentEntryThumbnailURL">
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+</portlet:actionURL>
 
 <aui:script require="metal-dom/src/all/dom as dom">
 	Liferay.Util.getTop().Liferay.on(
@@ -73,9 +85,9 @@
 			'click',
 			'#<portlet:namespace/>cancelButton',
 			function(event) {
-				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').hide();
-
 				removeHandlers();
+
+				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').destroy();
 			}
 		)
 	);
@@ -86,14 +98,81 @@
 			'click',
 			'#<portlet:namespace/>saveThumbnailButton',
 			function(event) {
-				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').hide();
+				var thumbnailWrapperContent = document.querySelector('.thumbnail-container .wrapper-content');
 
-				Liferay.fire(
-					'<portlet:namespace/>:updateFragmentEntrySettings',
-					{}
+				Liferay.Util.getTop().Liferay.fire(
+					'<portlet:namespace/>:updateFragmentEntryThumbnail',
+					{
+						fileEntryId: thumbnailWrapperContent.dataset.fileEntryId,
+						src: thumbnailWrapperContent.getAttribute('src'),
+						submit: <%= !showChangeButton %>
+					}
 				);
 
 				removeHandlers();
+
+				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').destroy();
+			}
+		)
+	);
+
+	eventHandlers.push(
+		dom.delegate(
+			document.body,
+			'click',
+			'#<portlet:namespace/>changeThumbnailButton',
+			function(event) {
+				var thumbnailWrapper = document.querySelector('.thumbnail-container div');
+
+				var fileInput = document.querySelector('#<portlet:namespace/>fileInput');
+
+				fileInput.click();
+			}
+		)
+	);
+
+	eventHandlers.push(
+		dom.delegate(
+			document.body,
+			'change',
+			'#<portlet:namespace/>fileInput',
+			function(event) {
+				var fileInput = document.querySelector('#<portlet:namespace/>fileInput');
+
+				var uploadUrl = '<%= uploadFragmentEntryThumbnailURL %>&<portlet:namespace/>fileName=' + event.target.files[0].name;
+
+				var thumbnailWrapper = document.querySelector('.thumbnail-container div');
+
+				var loading = document.createElement('div');
+
+				loading.setAttribute('class', 'loading-animation wrapper-content');
+
+				thumbnailWrapper.replaceChild(loading, thumbnailWrapper.querySelector('.wrapper-content'));
+
+				fetch(
+					uploadUrl,
+					{
+						body: fileInput.files[0],
+						credentials: 'include',
+						method: 'POST'
+					}
+				).then(
+					function(response) {
+						return response.json();
+					}
+				).then(
+					function(response) {
+						if (response.fileEntryId) {
+							var image = document.createElement('img');
+
+							image.setAttribute('class', 'wrapper-content');
+							image.setAttribute('data-file-entry-id', response.fileEntryId);
+							image.setAttribute('src', response.imageUrl);
+
+							thumbnailWrapper.replaceChild(image, thumbnailWrapper.querySelector('.wrapper-content'));
+						}
+					}
+				);
 			}
 		)
 	);
