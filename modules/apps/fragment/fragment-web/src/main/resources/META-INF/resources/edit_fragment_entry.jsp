@@ -163,6 +163,28 @@ renderResponse.setTitle(title);
 					id: '<portlet:namespace />fragmentEntryThumbnail',
 					title: '<liferay-ui:message key="fragment-thumbnail" />',
 					uri: '<%= fragmentEntryThumbnailURL %>'
+				},
+				function(dialog) {
+					dialog.iframe.on(
+						'load',
+						function() {
+							html2canvas(
+								document.querySelector('.fragment-preview__wrapper'),
+								{
+									useCORS: true
+								}
+							).then(
+								function(canvas) {
+									Liferay.fire(
+										'<portlet:namespace/>:setThumbnailImage',
+										{
+											thumbnailImageSrc: canvas.toDataURL('image/png')
+										}
+									);
+								}
+							);
+						}
+					)
 				}
 			);
 
