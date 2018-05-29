@@ -17,25 +17,84 @@
 <%@ include file="/init.jsp" %>
 
 <div class="fragment-thumbnail">
-	<div class="aspect-ratio-item-center-middle aspect-ratio-item-fluid thumbnail-container">
-		<div class="loading-animation"></div>
+	<div class="thumbnail-container">
+		<div class="aspect-ratio-item-center-middle aspect-ratio-item-fluid thumbnail-wrapper">
+			<div class="loading-animation wrapper-content"></div>
+		</div>
 	</div>
 
 	<div class="autofit-float autofit-row button-row">
 		<div class="autofit-col">
-			<button class="btn btn-default">
+			<button class="btn btn-default" id="<portlet:namespace/>changeThumbnailButton">
 				<liferay-ui:message key="change" />
 			</button>
 		</div>
 
 		<div class="autofit-col autofit-col-end">
-			<button class="btn btn-default">
+			<button class="btn btn-default" id="<portlet:namespace/>cancelButton">
 				<liferay-ui:message key="cancel" />
 			</button>
 
-			<button class="btn btn-primary">
+			<button class="btn btn-primary" id="<portlet:namespace/>saveThumbnailButton">
 				<liferay-ui:message key="ok" />
 			</button>
 		</div>
 	</div>
 </div>
+
+<aui:script require="metal-dom/src/all/dom as dom">
+	Liferay.Util.getTop().Liferay.on(
+		'<portlet:namespace/>:setThumbnailImage',
+		function(data) {
+			var thumbnailWrapper = document.querySelector('.thumbnail-container div');
+
+			var defaultImage = document.createElement('img');
+
+			defaultImage.setAttribute('class', 'wrapper-content');
+			defaultImage.setAttribute('src', data.thumbnailImageSrc);
+
+			thumbnailWrapper.replaceChild(defaultImage, thumbnailWrapper.querySelector('.wrapper-content'));
+		}
+	);
+
+	var eventHandlers = [];
+
+	var removeHandlers = function() {
+		eventHandlers.forEach(
+			function(eventHandler) {
+				eventHandler.removeListener();
+			}
+		);
+	};
+
+	eventHandlers.push(
+		dom.delegate(
+			document.body,
+			'click',
+			'#<portlet:namespace/>cancelButton',
+			function(event) {
+				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').hide();
+
+				removeHandlers();
+			}
+		)
+	);
+
+	eventHandlers.push(
+		dom.delegate(
+			document.body,
+			'click',
+			'#<portlet:namespace/>saveThumbnailButton',
+			function(event) {
+				Liferay.Util.getWindow('<portlet:namespace />fragmentEntryThumbnail').hide();
+
+				Liferay.fire(
+					'<portlet:namespace/>:updateFragmentEntrySettings',
+					{}
+				);
+
+				removeHandlers();
+			}
+		)
+	);
+</aui:script>
