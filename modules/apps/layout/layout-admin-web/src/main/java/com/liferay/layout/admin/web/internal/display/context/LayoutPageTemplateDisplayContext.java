@@ -61,6 +61,9 @@ public class LayoutPageTemplateDisplayContext {
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_request = request;
+
+		_themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	public List<DropdownItem> geLayoutPageTemplateEntriesActionDropdownItems() {
@@ -80,9 +83,6 @@ public class LayoutPageTemplateDisplayContext {
 	}
 
 	public List<DropdownItem> getActionDropdownItems() {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		return new DropdownItemList() {
 			{
 				add(
@@ -91,7 +91,7 @@ public class LayoutPageTemplateDisplayContext {
 							_renderResponse.createRenderURL(),
 							"mvcRenderCommandName",
 							"/layout/edit_layout_page_template_collection",
-							"redirect", themeDisplay.getURLCurrent());
+							"redirect", _themeDisplay.getURLCurrent());
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "new"));
 					});
@@ -140,9 +140,6 @@ public class LayoutPageTemplateDisplayContext {
 			LayoutPageTemplateEntry layoutPageTemplateEntry)
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		if (Objects.equals(
 				layoutPageTemplateEntry.getType(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_WIDGET_PAGE)) {
@@ -156,14 +153,14 @@ public class LayoutPageTemplateDisplayContext {
 
 			Group layoutPrototypeGroup = layoutPrototype.getGroup();
 
-			return layoutPrototypeGroup.getDisplayURL(themeDisplay, true);
+			return layoutPrototypeGroup.getDisplayURL(_themeDisplay, true);
 		}
 
 		PortletURL portletURL = _renderResponse.createRenderURL();
 
 		portletURL.setParameter(
 			"mvcRenderCommandName", "/layout/edit_layout_page_template_entry");
-		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		portletURL.setParameter("redirect", _themeDisplay.getURLCurrent());
 		portletURL.setParameter(
 			"layoutPageTemplateEntryId",
 			String.valueOf(
@@ -256,13 +253,10 @@ public class LayoutPageTemplateDisplayContext {
 			return _layoutPageTemplateCollections;
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		_layoutPageTemplateCollections =
 			LayoutPageTemplateCollectionServiceUtil.
 				getLayoutPageTemplateCollections(
-					themeDisplay.getScopeGroupId());
+					_themeDisplay.getScopeGroupId());
 
 		return _layoutPageTemplateCollections;
 	}
@@ -271,9 +265,6 @@ public class LayoutPageTemplateDisplayContext {
 		if (_layoutPageTemplateEntriesSearchContainer != null) {
 			return _layoutPageTemplateEntriesSearchContainer;
 		}
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		SearchContainer layoutPageTemplateEntriesSearchContainer =
 			new SearchContainer(
@@ -302,7 +293,7 @@ public class LayoutPageTemplateDisplayContext {
 		if (isSearch()) {
 			layoutPageTemplateEntries =
 				LayoutPageTemplateEntryServiceUtil.getLayoutPageTemplateEntries(
-					themeDisplay.getScopeGroupId(),
+					_themeDisplay.getScopeGroupId(),
 					getLayoutPageTemplateCollectionId(), getKeywords(),
 					layoutPageTemplateEntriesSearchContainer.getStart(),
 					layoutPageTemplateEntriesSearchContainer.getEnd(),
@@ -311,13 +302,13 @@ public class LayoutPageTemplateDisplayContext {
 			layoutPageTemplateEntriesCount =
 				LayoutPageTemplateEntryServiceUtil.
 					getLayoutPageTemplateEntriesCount(
-						themeDisplay.getScopeGroupId(),
+						_themeDisplay.getScopeGroupId(),
 						getLayoutPageTemplateCollectionId(), getKeywords());
 		}
 		else {
 			layoutPageTemplateEntries =
 				LayoutPageTemplateEntryServiceUtil.getLayoutPageTemplateEntries(
-					themeDisplay.getScopeGroupId(),
+					_themeDisplay.getScopeGroupId(),
 					getLayoutPageTemplateCollectionId(),
 					layoutPageTemplateEntriesSearchContainer.getStart(),
 					layoutPageTemplateEntriesSearchContainer.getEnd(),
@@ -326,7 +317,7 @@ public class LayoutPageTemplateDisplayContext {
 			layoutPageTemplateEntriesCount =
 				LayoutPageTemplateEntryServiceUtil.
 					getLayoutPageTemplateEntriesCount(
-						themeDisplay.getScopeGroupId(),
+						_themeDisplay.getScopeGroupId(),
 						getLayoutPageTemplateCollectionId());
 		}
 
@@ -407,14 +398,11 @@ public class LayoutPageTemplateDisplayContext {
 	}
 
 	public PortletURL getPortletURL() {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		PortletURL portletURL = _renderResponse.createRenderURL();
 
 		portletURL.setParameter("mvcRenderCommandName", "/layout/view");
 		portletURL.setParameter("tabs1", "page-templates");
-		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		portletURL.setParameter("redirect", _themeDisplay.getURLCurrent());
 
 		long layoutPageTemplateCollectionId =
 			getLayoutPageTemplateCollectionId();
@@ -500,12 +488,9 @@ public class LayoutPageTemplateDisplayContext {
 	}
 
 	public boolean isShowAddButton(String actionId) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		if (LayoutPageTemplatePermission.contains(
-				themeDisplay.getPermissionChecker(),
-				themeDisplay.getSiteGroupId(), actionId)) {
+				_themeDisplay.getPermissionChecker(),
+				_themeDisplay.getSiteGroupId(), actionId)) {
 
 			return true;
 		}
@@ -619,5 +604,6 @@ public class LayoutPageTemplateDisplayContext {
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private final ThemeDisplay _themeDisplay;
 
 }
