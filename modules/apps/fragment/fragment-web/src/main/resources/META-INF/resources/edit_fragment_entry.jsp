@@ -87,6 +87,8 @@ renderResponse.setTitle(title);
 	<aui:input name="htmlContent" type="hidden" value="" />
 	<aui:input name="jsContent" type="hidden" value="" />
 	<aui:input name="status" type="hidden" value="<%= fragmentEntry.getStatus() %>" />
+	<aui:input name="previewBase64" type="hidden" value="" />
+	<aui:input name="previewFileEntryId" type="hidden" value="" />
 
 	<aui:model-context bean="<%= fragmentEntry %>" model="<%= FragmentEntry.class %>" />
 
@@ -106,6 +108,8 @@ renderResponse.setTitle(title);
 
 <liferay-portlet:renderURL var="fragmentEntryThumbnailURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="mvcRenderCommandName" value="/fragment/fragment_entry_thumbnail" />
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+	<portlet:param name="showChangeButton" value="<%= Boolean.FALSE.toString() %>" />
 </liferay-portlet:renderURL>
 
 <aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor, metal-dom/src/all/dom as dom, frontend-js-web/liferay/toast/commands/OpenToast.es as toastCommands">
@@ -168,6 +172,9 @@ renderResponse.setTitle(title);
 					dialog.iframe.on(
 						'load',
 						function() {
+							var previewFileEntryId = document.querySelector('#<portlet:namespace/>previewFileEntryId');
+							var previewBase64 = document.querySelector('#<portlet:namespace/>previewBase64');
+
 							html2canvas(
 								document.querySelector('.fragment-preview__wrapper'),
 								{
@@ -175,18 +182,40 @@ renderResponse.setTitle(title);
 								}
 							).then(
 								function(canvas) {
-									Liferay.fire(
-										'<portlet:namespace/>:setThumbnailImage',
-										{
-											thumbnailImageSrc: canvas.toDataURL('image/png')
-										}
-									);
+									previewBase64.value = canvas.toDataURL('image/png').replace('data:image/png;base64,', '');
+
+									if (previewFileEntryId.dataset.src) {
+										Liferay.fire(
+											'<portlet:namespace/>:setThumbnailImage',
+											{
+												thumbnailImageSrc: previewFileEntryId.dataset.src
+											}
+										);
+									}
+									else {
+										Liferay.fire(
+											'<portlet:namespace/>:setThumbnailImage',
+											{
+												thumbnailImageSrc: canvas.toDataURL('image/png')
+											}
+										);
+									}
 								}
 							);
 						}
 					)
 				}
 			);
+		}
+	);
+
+	Liferay.on(
+		'<portlet:namespace/>:updateFragmentEntryThumbnail',
+		function(data) {
+			var previewFileEntryId = document.querySelector('#<portlet:namespace/>previewFileEntryId');
+
+			previewFileEntryId.value = data.fileEntryId;
+			previewFileEntryId.setAttribute('data-src', data.src);
 
 			submitForm(document.querySelector('#<portlet:namespace />fm'));
 		}
