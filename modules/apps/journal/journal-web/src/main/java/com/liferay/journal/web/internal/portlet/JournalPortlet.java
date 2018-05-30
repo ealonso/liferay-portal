@@ -68,6 +68,7 @@ import com.liferay.journal.util.JournalConverter;
 import com.liferay.journal.util.JournalHelper;
 import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
 import com.liferay.journal.web.configuration.JournalWebConfiguration;
+import com.liferay.journal.web.internal.constants.JournalDisplayPageTypeConstants;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.journal.web.util.JournalPortletUtil;
 import com.liferay.journal.web.util.JournalUtil;
@@ -738,14 +739,31 @@ public class JournalPortlet extends MVCPortlet {
 			uploadPortletRequest, "ddmTemplateKey");
 		long assetDisplayPageId = ParamUtil.getLong(
 			uploadPortletRequest, "assetDisplayPageId");
+		String displayPageType = ParamUtil.getString(
+			uploadPortletRequest, "displayPageType");
 		String layoutUuid = ParamUtil.getString(
 			uploadPortletRequest, "layoutUuid");
 
 		Layout targetLayout = _journalHelper.getArticleLayout(
 			layoutUuid, groupId);
 
-		if ((assetDisplayPageId != 0) || (targetLayout == null)) {
+		if (Objects.equals(
+				displayPageType, JournalDisplayPageTypeConstants.TYPE_NONE)) {
+
+			assetDisplayPageId = 0;
 			layoutUuid = null;
+		}
+		else if (Objects.equals(
+					displayPageType,
+					JournalDisplayPageTypeConstants.TYPE_DEFAULT)) {
+
+			assetDisplayPageId = -1;
+			layoutUuid = null;
+		}
+		else {
+			if ((assetDisplayPageId != 0) || (targetLayout == null)) {
+				layoutUuid = null;
+			}
 		}
 
 		int displayDateMonth = ParamUtil.getInteger(
@@ -1479,7 +1497,7 @@ public class JournalPortlet extends MVCPortlet {
 					assetEntry.getEntryId());
 		}
 
-		if (assetDisplayPageId > 0) {
+		if (assetDisplayPageId != 0) {
 			_assetDisplayPageEntryLocalService.addAssetDisplayPageEntry(
 				assetEntry.getEntryId(), assetDisplayPageId);
 		}
