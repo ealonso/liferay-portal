@@ -188,7 +188,9 @@ renderResponse.setTitle(title);
 										Liferay.fire(
 											'<portlet:namespace/>:setThumbnailImage',
 											{
-												thumbnailImageSrc: previewFileEntryId.dataset.src
+												thumbnailImageSrc: previewFileEntryId.dataset.src,
+												defaultImageSrc: canvas.toDataURL('image/png'),
+												showRemoveIcon: true
 											}
 										);
 									}
@@ -196,7 +198,8 @@ renderResponse.setTitle(title);
 										Liferay.fire(
 											'<portlet:namespace/>:setThumbnailImage',
 											{
-												thumbnailImageSrc: canvas.toDataURL('image/png')
+												thumbnailImageSrc: canvas.toDataURL('image/png'),
+												defaultImageSrc: canvas.toDataURL('image/png')
 											}
 										);
 									}
