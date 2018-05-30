@@ -106,10 +106,15 @@ renderResponse.setTitle(title);
 	<portlet:param name="mvcRenderCommandName" value="/fragment/preview_fragment_entry" />
 </liferay-portlet:renderURL>
 
+<liferay-portlet:renderURL var="fragmentEntryInitialThumbnailURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<portlet:param name="mvcRenderCommandName" value="/fragment/fragment_entry_thumbnail" />
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+</liferay-portlet:renderURL>
+
 <liferay-portlet:renderURL var="fragmentEntryThumbnailURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<portlet:param name="mvcRenderCommandName" value="/fragment/fragment_entry_thumbnail" />
 	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
-	<portlet:param name="showChangeButton" value="<%= Boolean.FALSE.toString() %>" />
+	<portlet:param name="showChangeButton" value="<%= Boolean.TRUE.toString() %>" />
 </liferay-portlet:renderURL>
 
 <aui:script require="fragment-web/js/FragmentEditor.es as FragmentEditor, metal-dom/src/all/dom as dom, frontend-js-web/liferay/toast/commands/OpenToast.es as toastCommands">
@@ -117,6 +122,48 @@ renderResponse.setTitle(title);
 	var htmlInput = document.getElementById('<portlet:namespace />htmlContent');
 	var jsInput = document.getElementById('<portlet:namespace />jsContent');
 	var wrapper = document.getElementById('<portlet:namespace />fragmentEditor');
+
+	var <portlet:namespace/>generateThumbnail = function(doSubmit) {
+		Liferay.Util.openWindow(
+			{
+				dialog: {
+					destroyOnHide: true,
+					height: 600,
+					width: 800
+				},
+				id: '<portlet:namespace />fragmentEntryThumbnail',
+				title: '<liferay-ui:message key="fragment-thumbnail" />',
+				uri: !(doSubmit instanceof Event) && doSubmit ? '<%= fragmentEntryInitialThumbnailURL %>' : '<%= fragmentEntryThumbnailURL %>'
+			},
+			function(dialog) {
+				dialog.iframe.on(
+					'load',
+					function() {
+						var previewBase64 = document.querySelector('#<portlet:namespace/>previewBase64');
+
+						html2canvas(
+							document.querySelector('.fragment-preview__wrapper'),
+							{
+								useCORS: true
+							}
+						).then(
+							function(canvas) {
+								previewBase64.value = canvas.toDataURL('image/png').replace('data:image/png;base64,', '');
+
+								Liferay.fire(
+									'<portlet:namespace/>:setThumbnailImage',
+									{
+										thumbnailImageSrc: canvas.toDataURL('image/png'),
+										defaultImageSrc: canvas.toDataURL('image/png')
+									}
+								);
+							}
+						);
+					}
+				)
+			}
+		);
+	};
 
 	var fragmentEditor = new FragmentEditor.default(
 		{
@@ -127,6 +174,7 @@ renderResponse.setTitle(title);
 					jsInput.value = event.js;
 				}
 			},
+			generateThumbnailFunction: <portlet:namespace/>generateThumbnail,
 			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
@@ -159,56 +207,14 @@ renderResponse.setTitle(title);
 				return;
 			}
 
-			Liferay.Util.openWindow(
-				{
-					dialog: {
-						destroyOnHide: true
-					},
-					id: '<portlet:namespace />fragmentEntryThumbnail',
-					title: '<liferay-ui:message key="fragment-thumbnail" />',
-					uri: '<%= fragmentEntryThumbnailURL %>'
-				},
-				function(dialog) {
-					dialog.iframe.on(
-						'load',
-						function() {
-							var previewFileEntryId = document.querySelector('#<portlet:namespace/>previewFileEntryId');
-							var previewBase64 = document.querySelector('#<portlet:namespace/>previewBase64');
-
-							html2canvas(
-								document.querySelector('.fragment-preview__wrapper'),
-								{
-									useCORS: true
-								}
-							).then(
-								function(canvas) {
-									previewBase64.value = canvas.toDataURL('image/png').replace('data:image/png;base64,', '');
-
-									if (previewFileEntryId.dataset.src) {
-										Liferay.fire(
-											'<portlet:namespace/>:setThumbnailImage',
-											{
-												thumbnailImageSrc: previewFileEntryId.dataset.src,
-												defaultImageSrc: canvas.toDataURL('image/png'),
-												showRemoveIcon: true
-											}
-										);
-									}
-									else {
-										Liferay.fire(
-											'<portlet:namespace/>:setThumbnailImage',
-											{
-												thumbnailImageSrc: canvas.toDataURL('image/png'),
-												defaultImageSrc: canvas.toDataURL('image/png')
-											}
-										);
-									}
-								}
-							);
-						}
-					)
-				}
-			);
+			<c:choose>
+				<c:when test="<%= fragmentEntry.getPreviewFileEntryId() > 0 %>">
+					submitForm(document.querySelector('#<portlet:namespace />fm'));
+				</c:when>
+				<c:otherwise>
+					<portlet:namespace/>generateThumbnail(true);
+				</c:otherwise>
+			</c:choose>
 		}
 	);
 
@@ -220,7 +226,9 @@ renderResponse.setTitle(title);
 			previewFileEntryId.value = data.fileEntryId;
 			previewFileEntryId.setAttribute('data-src', data.src);
 
-			submitForm(document.querySelector('#<portlet:namespace />fm'));
+			if (data.submit) {
+				submitForm(document.querySelector('#<portlet:namespace />fm'));
+			}
 		}
 	);
 
