@@ -18,12 +18,22 @@
 
 <%
 boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
+String thumbnailURL = ParamUtil.getString(request, "thumbnailURL");
+
+FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 %>
 
 <div class="fragment-thumbnail">
 	<div class="thumbnail-container">
 		<div class="aspect-ratio-item-center-middle aspect-ratio-item-fluid thumbnail-wrapper">
-			<div class="loading-animation wrapper-content"></div>
+			<c:choose>
+				<c:when test="<%= Validator.isNotNull(thumbnailURL) %>">
+					<img class="wrapper-content" src="<%= thumbnailURL %>" />
+				</c:when>
+				<c:otherwise>
+					<div class="loading-animation wrapper-content"></div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 
@@ -37,9 +47,11 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 		</c:if>
 
 		<div class="autofit-col autofit-col-end">
-			<button class="btn btn-default" id="<portlet:namespace/>cancelButton">
-				<liferay-ui:message key="cancel" />
-			</button>
+			<c:if test="<%= Validator.isNull(thumbnailURL) %>">
+				<button class="btn btn-default" id="<portlet:namespace/>cancelButton">
+					<liferay-ui:message key="cancel" />
+				</button>
+			</c:if>
 
 			<button class="btn btn-primary" id="<portlet:namespace/>saveThumbnailButton">
 				<liferay-ui:message key="ok" />
@@ -53,6 +65,17 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 
 <portlet:actionURL name="/fragment/upload_fragment_entry_thumbnail" var="uploadFragmentEntryThumbnailURL">
 	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
+</portlet:actionURL>
+
+<portlet:actionURL name="/fragment/edit_fragment_entry" var="editFragmentEntryURL">
+	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+	<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentEntry.getFragmentCollectionId()) %>" />
+	<portlet:param name="name" value="<%= fragmentEntry.getName() %>" />
+	<portlet:param name="cssContent" value="<%= fragmentEntry.getCss() %>" />
+	<portlet:param name="htmlContent" value="<%= fragmentEntry.getHtml() %>" />
+	<portlet:param name="jsContent" value="<%= fragmentEntry.getJs() %>" />
+	<portlet:param name="status" value="<%= String.valueOf(fragmentEntry.getStatus()) %>" />
+	<portlet:param name="previewBase64" value="" />
 </portlet:actionURL>
 
 <aui:script require="metal-dom/src/all/dom as dom">
@@ -95,9 +118,11 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 				defaultImage.value = data.defaultImageSrc;
 			}
 
-			if (data.showRemoveIcon) {
-				addRemoveImageIcon(thumbnailWrapper);
-			}
+			<c:if test="<%= Validator.isNull(thumbnailURL) %>">
+				if (data.showRemoveIcon) {
+					addRemoveImageIcon(thumbnailWrapper);
+				}
+			</c:if>
 
 			thumbnailWrapper.replaceChild(image, thumbnailWrapper.querySelector('.wrapper-content'));
 		}
@@ -139,7 +164,8 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 					{
 						fileEntryId: thumbnailWrapperContent.dataset.fileEntryId,
 						src: thumbnailWrapperContent.getAttribute('src'),
-						submit: <%= !showChangeButton %>
+						submit: <%= !showChangeButton || Validator.isNotNull(thumbnailURL) %>,
+						submitUrl: '<%= editFragmentEntryURL %>'
 					}
 				);
 
@@ -207,7 +233,9 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 
 							thumbnailWrapper.replaceChild(image, wrapperContent);
 
-							addRemoveImageIcon(thumbnailWrapper);
+							<c:if test="<%= Validator.isNull(thumbnailURL) %>">
+								addRemoveImageIcon(thumbnailWrapper);
+							</c:if>
 						}
 					}
 				);
