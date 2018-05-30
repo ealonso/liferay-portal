@@ -63,6 +63,28 @@ FragmentEntry fragmentEntry = (FragmentEntry)row.getObject();
 		/>
 	</c:if>
 
+	<c:if test="<%= FragmentPermission.contains(permissionChecker, scopeGroupId, FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES) && (fragmentEntry.getPreviewFileEntryId() > 0) %>">
+		<liferay-portlet:renderURL var="fragmentEntryThumbnailURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<portlet:param name="mvcRenderCommandName" value="/fragment/fragment_entry_thumbnail" />
+			<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
+			<portlet:param name="showChangeButton" value="<%= Boolean.TRUE.toString() %>" />
+			<portlet:param name="thumbnailURL" value="<%= DLUtil.getImagePreviewURL(PortletFileRepositoryUtil.getPortletFileEntry(fragmentEntry.getPreviewFileEntryId()), themeDisplay) %>" />
+		</liferay-portlet:renderURL>
+
+		<%
+		Map<String, Object> updateFragmentEntryThumbnailData = new HashMap<>();
+
+		updateFragmentEntryThumbnailData.put("fragment-entry-thumbnail-url", fragmentEntryThumbnailURL);
+		%>
+
+		<liferay-ui:icon
+			cssClass='<%= renderResponse.getNamespace() + "update-fragment-thumbnail-action-option" %>'
+			data="<%= updateFragmentEntryThumbnailData %>"
+			message="change-thumbnail"
+			url="javascript:;"
+		/>
+	</c:if>
+
 	<portlet:resourceURL id="/fragment/export_fragment_entries" var="exportFragmentEntriesURL">
 		<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentEntry.getFragmentEntryId()) %>" />
 	</portlet:resourceURL>
