@@ -29,10 +29,12 @@ import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleConstants;
+import com.liferay.journal.web.internal.constants.JournalDisplayPageTypeConstants;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -122,6 +124,39 @@ public class EditArticleDisplayPageDisplayContext {
 		return _assetDisplayPageId;
 	}
 
+	public String getDefaultAssetDisplayPageName() throws PortalException {
+		if (_defaultAssetDisplayPageName != null) {
+			return _defaultAssetDisplayPageName;
+		}
+
+		String defaultLayoutPageTemplateEntryName = LanguageUtil.get(
+			_request, "none");
+
+		AssetEntry assetEntry = _getAssetEntry();
+
+		if (assetEntry == null) {
+			_defaultAssetDisplayPageName = defaultLayoutPageTemplateEntryName;
+
+			return _defaultAssetDisplayPageName;
+		}
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			LayoutPageTemplateEntryServiceUtil.
+				fetchDefaultLayoutPageTemplateEntry(
+					assetEntry.getGroupId(), assetEntry.getClassNameId(),
+					assetEntry.getClassTypeId());
+
+		if (layoutPageTemplateEntry == null) {
+			_defaultAssetDisplayPageName = defaultLayoutPageTemplateEntryName;
+
+			return _defaultAssetDisplayPageName;
+		}
+
+		_defaultAssetDisplayPageName = layoutPageTemplateEntry.getName();
+
+		return _defaultAssetDisplayPageName;
+	}
+
 	public String getDisplayPageItemSelectorURL() throws PortalException {
 		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
 			JournalWebKeys.ITEM_SELECTOR);
@@ -206,6 +241,36 @@ public class EditArticleDisplayPageDisplayContext {
 		return StringPool.BLANK;
 	}
 
+	public String getDisplayPageType() throws PortalException {
+		if (Validator.isNotNull(_displayPageType)) {
+			return _displayPageType;
+		}
+
+		String articleId = ParamUtil.getString(_request, "articleId");
+
+		if (Validator.isNull(articleId)) {
+			_displayPageType = JournalDisplayPageTypeConstants.TYPE_DEFAULT;
+
+			return _displayPageType;
+		}
+
+		long assetDisplayPageId = getAssetDisplayPageId();
+
+		String displayPageType = JournalDisplayPageTypeConstants.TYPE_NONE;
+
+		if ((assetDisplayPageId > 0) || Validator.isNotNull(getLayoutUuid())) {
+			displayPageType = JournalDisplayPageTypeConstants.TYPE_SPECIFIC;
+		}
+
+		if (assetDisplayPageId < 0) {
+			displayPageType = JournalDisplayPageTypeConstants.TYPE_DEFAULT;
+		}
+
+		_displayPageType = displayPageType;
+
+		return _displayPageType;
+	}
+
 	public String getLayoutUuid() throws PortalException {
 		JournalArticle article = getArticle();
 
@@ -286,6 +351,24 @@ public class EditArticleDisplayPageDisplayContext {
 		return layoutPageTemplateEntry.getName();
 	}
 
+	private AssetEntry _getAssetEntry() throws PortalException {
+		if (_assetEntry != null) {
+			return _assetEntry;
+		}
+
+		JournalArticle journalArticle = getArticle();
+
+		if (journalArticle == null) {
+			return _assetEntry;
+		}
+
+		_assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
+			journalArticle.getGroupId(),
+			journalArticle.getArticleResourceUuid());
+
+		return _assetEntry;
+	}
+
 	private String _getLayoutBreadcrumb(Layout layout) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -323,6 +406,9 @@ public class EditArticleDisplayPageDisplayContext {
 
 	private JournalArticle _article;
 	private long _assetDisplayPageId;
+	private AssetEntry _assetEntry;
+	private String _defaultAssetDisplayPageName;
+	private String _displayPageType;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private final HttpServletRequest _request;
