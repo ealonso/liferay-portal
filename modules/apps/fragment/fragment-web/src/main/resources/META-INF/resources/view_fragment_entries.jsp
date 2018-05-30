@@ -166,8 +166,64 @@
 			}
 		);
 
+		var updateFragmentEntryThumbnailMenuItemClickHandler = dom.delegate(
+			document.body,
+			'click',
+			'.<portlet:namespace />update-fragment-thumbnail-action-option > a',
+			function(event) {
+				var data = event.delegateTarget.dataset;
+
+				event.preventDefault();
+
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							destroyOnHide: true,
+							height: 600,
+							width: 800
+						},
+						id: '<portlet:namespace />fragmentEntryThumbnail',
+						title: '<liferay-ui:message key="fragment-thumbnail" />',
+						uri: data.fragmentEntryThumbnailUrl
+					}
+				);
+			}
+		);
+
+		Liferay.on(
+			'<portlet:namespace/>:updateFragmentEntryThumbnail',
+			function(data) {
+				if (!data.submit) {
+					return;
+				}
+
+				var formData = new FormData();
+
+				formData.append( '<portlet:namespace/>previewFileEntryId', data.fileEntryId);
+
+				fetch(
+					data.submitUrl,
+					{
+						body: formData,
+						credentials: 'include',
+						method: 'POST'
+					}
+				).then(
+					function() {
+						if (Liferay.SPA) {
+							Liferay.SPA.app.navigate('<%= currentURL %>');
+						}
+						else {
+							location.href = '<%= currentURL %>';
+						}
+					}
+				);
+			}
+		);
+
 		function handleDestroyPortlet () {
 			updateFragmentEntryMenuItemClickHandler.removeListener();
+			updateFragmentEntryThumbnailMenuItemClickHandler.removeListener();
 
 			Liferay.detach('destroyPortlet', handleDestroyPortlet);
 		}
