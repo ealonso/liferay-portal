@@ -123,6 +123,16 @@ FragmentEditor.STATE = {
 	).value([]),
 
 	/**
+	 * Thumbnail generation window provider
+	 * @instance
+	 * @memberOf FragmentEditor
+	 * @review
+	 * @type function
+	 */
+
+	generateThumbnailFunction: Config.func().required(),
+
+	/**
 	 * Toolbar items for HTML editor.
 	 * @default []
 	 * @instance
