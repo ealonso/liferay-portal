@@ -49,23 +49,57 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 </div>
 
 <input class="hide" id="<portlet:namespace/>fileInput" type="file" />
+<input class="hide" id="<portlet:namespace/>defaultImage" type="text" />
 
 <portlet:actionURL name="/fragment/upload_fragment_entry_thumbnail" var="uploadFragmentEntryThumbnailURL">
 	<portlet:param name="fragmentEntryId" value="<%= String.valueOf(fragmentDisplayContext.getFragmentEntryId()) %>" />
 </portlet:actionURL>
 
 <aui:script require="metal-dom/src/all/dom as dom">
+	var addRemoveImageIcon = function(container) {
+		var removeImageButton = document.createElement('span');
+		removeImageButton.setAttribute('class', 'remove-image-icon');
+		removeImageButton.innerHTML = '<svg class="icon-monospaced lexicon-icon"><use xlink:href="<%= themeDisplay.getPathThemeImages() + "/lexicon/icons.svg" %>#times-circle"></use></svg>';
+
+		container.appendChild(removeImageButton);
+
+		dom.delegate(
+			container,
+			'click',
+			'.remove-image-icon',
+			function(event) {
+				var image = document.querySelector('.thumbnail-container div img');
+				var defaultImage = document.querySelector('#<portlet:namespace/>defaultImage');
+
+				image.src = defaultImage.value;
+				image.setAttribute('data-file-entry-id', '');
+
+				event.delegateTarget.remove();
+			}
+		);
+	};
+
 	Liferay.Util.getTop().Liferay.on(
 		'<portlet:namespace/>:setThumbnailImage',
 		function(data) {
 			var thumbnailWrapper = document.querySelector('.thumbnail-container div');
 
-			var defaultImage = document.createElement('img');
+			var image = document.createElement('img');
 
-			defaultImage.setAttribute('class', 'wrapper-content');
-			defaultImage.setAttribute('src', data.thumbnailImageSrc);
+			image.setAttribute('class', 'wrapper-content');
+			image.setAttribute('src', data.thumbnailImageSrc);
 
-			thumbnailWrapper.replaceChild(defaultImage, thumbnailWrapper.querySelector('.wrapper-content'));
+			if (data.defaultImageSrc) {
+				var defaultImage = document.querySelector('#<portlet:namespace/>defaultImage');
+
+				defaultImage.value = data.defaultImageSrc;
+			}
+
+			if (data.showRemoveIcon) {
+				addRemoveImageIcon(thumbnailWrapper);
+			}
+
+			thumbnailWrapper.replaceChild(image, thumbnailWrapper.querySelector('.wrapper-content'));
 		}
 	);
 
@@ -165,11 +199,15 @@ boolean showChangeButton = ParamUtil.getBoolean(request, "showChangeButton");
 						if (response.fileEntryId) {
 							var image = document.createElement('img');
 
+							var wrapperContent = thumbnailWrapper.querySelector('.wrapper-content');
+
 							image.setAttribute('class', 'wrapper-content');
 							image.setAttribute('data-file-entry-id', response.fileEntryId);
 							image.setAttribute('src', response.imageUrl);
 
-							thumbnailWrapper.replaceChild(image, thumbnailWrapper.querySelector('.wrapper-content'));
+							thumbnailWrapper.replaceChild(image, wrapperContent);
+
+							addRemoveImageIcon(thumbnailWrapper);
 						}
 					}
 				);
