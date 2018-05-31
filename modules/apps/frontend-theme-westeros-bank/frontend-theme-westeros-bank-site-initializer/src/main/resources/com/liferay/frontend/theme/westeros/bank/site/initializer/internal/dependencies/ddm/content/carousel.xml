@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root available-locales="en_US" default-locale="en_US">
+	<dynamic-element name="ItemHeading" type="text" index-type="keyword">
+		<dynamic-element name="OpeningShortText" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[Sprucing up your space]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemImage" type="image" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemParagraph" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[Car buying can be a stressful experience. But getting a car loan shouldn’t be. Skip the dealership financing by finding out how much you could borrow from us, before taking that test drive.]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemLinkText" type="text" index-type="keyword">
+			<dynamic-element name="ItemLinkURL" type="text" index-type="keyword">
+				<dynamic-content language-id="en_US"><![CDATA[javascript:;]]></dynamic-content>
+			</dynamic-element>
+			<dynamic-content language-id="en_US"><![CDATA[More information]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-content language-id="en_US"><![CDATA[Your dream car, a few steps away]]></dynamic-content>
+	</dynamic-element>
+
+	<dynamic-element name="ItemHeading" type="text" index-type="keyword">
+		<dynamic-element name="OpeningShortText" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[Find out your personal rate]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemImage" type="image" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemParagraph" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[Wondering if the APR you see in an advertisement is the one you’ll get? We’ve made it possible for you to find out your personal loan rate, before you apply. What’s more, there’s no effect on your credit rating. Early settlement fees apply.]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemLinkText" type="text" index-type="keyword">
+			<dynamic-element name="ItemLinkURL" type="text" index-type="keyword">
+				<dynamic-content language-id="en_US"><![CDATA[javascript:;]]></dynamic-content>
+			</dynamic-element>
+			<dynamic-content language-id="en_US"><![CDATA[More information]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-content language-id="en_US"><![CDATA[A personal loan for you]]></dynamic-content>
+	</dynamic-element>
+
+	<dynamic-element name="ItemHeading" type="text" index-type="keyword">
+		<dynamic-element name="OpeningShortText" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[Debt consolidation]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemImage" type="image" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemParagraph" type="text" index-type="keyword">
+			<dynamic-content language-id="en_US"><![CDATA[If you’re paying off several loans or credit cards each month, all with different interest rates, a debt consolidation loan could help you get on top of your finances.]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-element name="ItemLinkText" type="text" index-type="keyword">
+			<dynamic-element name="ItemLinkURL" type="text" index-type="keyword">
+				<dynamic-content language-id="en_US"><![CDATA[javascript:;]]></dynamic-content>
+			</dynamic-element>
+			<dynamic-content language-id="en_US"><![CDATA[More information]]></dynamic-content>
+		</dynamic-element>
+		<dynamic-content language-id="en_US"><![CDATA[Take control of your finances]]></dynamic-content>
+	</dynamic-element>
+</root>
