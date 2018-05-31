@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.portlet.PortletURL;
 
@@ -303,6 +304,39 @@ public class EditArticleDisplayPageDisplayContext {
 		return assetRenderer.getURLViewInContext(
 			_liferayPortletRequest, _liferayPortletResponse,
 			themeDisplay.getURLCurrent());
+	}
+
+	public boolean isJournalDisplayPageTypeDefault() throws PortalException {
+		if (Objects.equals(
+				getDisplayPageType(),
+				JournalDisplayPageTypeConstants.TYPE_DEFAULT)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isJournalDisplayPageTypeNone() throws PortalException {
+		if (Objects.equals(
+				getDisplayPageType(),
+				JournalDisplayPageTypeConstants.TYPE_NONE)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isJournalDisplayPageTypeSpecific() throws PortalException {
+		if (Objects.equals(
+				getDisplayPageType(),
+				JournalDisplayPageTypeConstants.TYPE_SPECIFIC)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isURLViewInContext() throws Exception {

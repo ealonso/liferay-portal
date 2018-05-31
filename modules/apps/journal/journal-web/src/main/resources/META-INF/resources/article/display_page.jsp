@@ -43,11 +43,11 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 		<aui:input id="assetDisplayPageIdInput" ignoreRequestValue="<%= true %>" name="assetDisplayPageId" type="hidden" value="<%= editArticleDisplayPageDisplayContext.getAssetDisplayPageId() %>" />
 
 		<span class="field-row">
-			<aui:input checked="<%= Objects.equals(editArticleDisplayPageDisplayContext.getDisplayPageType(), JournalDisplayPageTypeConstants.TYPE_DEFAULT) %>" id="displayPageTypeDefault" label='<%= LanguageUtil.format(request, "use-default-display-page-for-x-x", new Object[] {journalDisplayContext.getDDMStructureName(), editArticleDisplayPageDisplayContext.getDefaultAssetDisplayPageName()}, false) %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_DEFAULT %>" />
+			<aui:input checked="<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeDefault() %>" id="displayPageTypeDefault" label='<%= LanguageUtil.format(request, "use-default-display-page-for-x-x", new Object[] {journalDisplayContext.getDDMStructureName(), editArticleDisplayPageDisplayContext.getDefaultAssetDisplayPageName()}, false) %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_DEFAULT %>" />
 
-			<aui:input checked="<%= Objects.equals(editArticleDisplayPageDisplayContext.getDisplayPageType(), JournalDisplayPageTypeConstants.TYPE_SPECIFIC) %>" id="displayPageTypeSpecific" label='<%= LanguageUtil.get(request, "use-a-specific-display-page-for-the-web-content") %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_SPECIFIC %>" />
+			<aui:input checked="<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeSpecific() %>" id="displayPageTypeSpecific" label='<%= LanguageUtil.get(request, "use-a-specific-display-page-for-the-web-content") %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_SPECIFIC %>" />
 
-			<aui:input checked="<%= Objects.equals(editArticleDisplayPageDisplayContext.getDisplayPageType(), JournalDisplayPageTypeConstants.TYPE_NONE) %>" id="displayPageTypeNone" label='<%= LanguageUtil.get(request, "no-display-page") %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_NONE %>" />
+			<aui:input checked="<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeNone() %>" id="displayPageTypeNone" label='<%= LanguageUtil.get(request, "no-display-page") %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_NONE %>" />
 		</span>
 
 		<p class="text-default">
