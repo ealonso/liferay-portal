@@ -61,7 +61,7 @@ public class FragmentDisplayContext {
 		_request = request;
 	}
 
-	public List<DropdownItem>  getActionDropdownItems() {
+	public List<DropdownItem> getActionDropdownItems() {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 

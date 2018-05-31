@@ -1,4 +1,4 @@
-<%@ page import="java.util.HashMap" %><%--
+<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -50,11 +50,11 @@
 						%>
 
 						<c:choose>
-							<c:when test="<%= Validator.isNotNull(actionDropdownItem.get("href"))%>">
+							<c:when test='<%= Validator.isNotNull(actionDropdownItem.get("href")) %>'>
 								<clay:link
 									buttonStyle="secondary"
 									componentId="<%= componentId %>"
-									data='<%= (HashMap) actionDropdownItem.get("data") %>'
+									data='<%= (HashMap)actionDropdownItem.get("data") %>'
 									href='<%= String.valueOf(actionDropdownItem.get("href")) %>'
 									label='<%= String.valueOf(actionDropdownItem.get("label")) %>'
 								/>
@@ -62,7 +62,7 @@
 							<c:otherwise>
 								<clay:button
 									componentId="<%= componentId %>"
-									data='<%= (HashMap) actionDropdownItem.get("data") %>'
+									data='<%= (HashMap)actionDropdownItem.get("data") %>'
 									label='<%= String.valueOf(actionDropdownItem.get("label")) %>'
 									style="secondary"
 								/>
