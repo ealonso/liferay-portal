@@ -4,10 +4,10 @@
  * Renders a FragmentPreview
  */
 {template .render}
-	{@param generateThumbnailFunction: any}
 	{@param previewFragmentEntryURL: string}
 	{@param spritemap: string}
 	{@param? _currentPreviewSize: string}
+	{@param? _handleGenerateThumbnailButtonClick: any}
 	{@param? _handlePreviewSizeButtonClick: any}
 	{@param? _loading: bool}
 	{@param? _previewSizes: list<string>}
@@ -61,7 +61,7 @@
 
 			<button
 				class="btn btn-sm btn-thumbnail"
-				data-onclick="{$generateThumbnailFunction}"
+				data-onclick="{$_handleGenerateThumbnailButtonClick}"
 				type="button"
 			>
 				<span class="sr-only">preview</span>

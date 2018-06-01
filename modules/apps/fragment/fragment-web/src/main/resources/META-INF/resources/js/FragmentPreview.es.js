@@ -89,6 +89,15 @@ class FragmentPreview extends Component {
 	}
 
 	/**
+	 * @private
+	 * @review
+	 */
+
+	_handleGenerateThumbnailButtonClick() {
+		this.emit('generateThumbnailButtonClick');
+	}
+
+	/**
 	 * Changes the preview size
 	 * @param {Event} event
 	 * @protected
@@ -197,16 +206,6 @@ FragmentPreview.STATE = {
 	 */
 
 	css: Config.string().required(),
-
-	/**
-	 * Thumbnail generation window provider
-	 * @instance
-	 * @memberOf FragmentPreview
-	 * @review
-	 * @type function
-	 */
-
-	generateThumbnailFunction: Config.func().required(),
 
 	/**
 	 * HTML content of the preview

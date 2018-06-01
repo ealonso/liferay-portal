@@ -172,9 +172,12 @@ renderResponse.setTitle(title);
 					cssInput.value = event.css;
 					htmlInput.value = event.html;
 					jsInput.value = event.js;
+				},
+
+				generateThumbnailButtonClick: function() {
+					generateThumbnail(false);
 				}
 			},
-			generateThumbnailFunction: generateThumbnail,
 			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
