@@ -3,9 +3,9 @@
 .portlet-fragment-web {
 	.fragment-thumbnail {
 		.button-row {
-			background-color: white;
+			background-color: #FFF;
 			border-top: 1px solid #DEE2E6 !important;
-			bottom: 0px;
+			bottom: 0;
 			padding: 0.5rem;
 			position: absolute;
 
@@ -16,7 +16,7 @@
 
 		.thumbnail-container {
 			background-image: linear-gradient(45deg, #E7E7ED 25%, transparent 25%), linear-gradient(-45deg, #E7E7ED 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #E7E7ED 75%), linear-gradient(-45deg, transparent 75%, #E7E7ED 75%);
-			background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+			background-position: 0 0, 0 10px, 10px -10px, -10px 0;
 			background-size: 20px 20px;
 			height: 100%;
 			position: absolute;
@@ -27,7 +27,7 @@
 			}
 
 			.remove-image-icon {
-				position:absolute;
+				position: absolute;
 				right: 3px;
 				top: 3px;
 			}

@@ -81,6 +81,7 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 <aui:script require="metal-dom/src/all/dom as dom">
 	function addRemoveImageIcon(container) {
 		var removeImageButton = document.createElement('span');
+
 		removeImageButton.setAttribute('class', 'remove-image-icon');
 		removeImageButton.innerHTML = '<svg class="icon-monospaced lexicon-icon"><use xlink:href="<%= themeDisplay.getPathThemeImages() + "/lexicon/icons.svg" %>#times-circle"></use></svg>';
 
@@ -91,8 +92,8 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 			'click',
 			'.remove-image-icon',
 			function(event) {
-				var image = document.querySelector('.thumbnail-container div img');
 				var defaultImage = document.querySelector('#<portlet:namespace/>defaultImage');
+				var image = document.querySelector('.thumbnail-container div img');
 
 				image.src = defaultImage.value;
 				image.setAttribute('data-file-entry-id', '');
@@ -182,8 +183,6 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 			'click',
 			'#<portlet:namespace/>changeThumbnailButton',
 			function(event) {
-				var thumbnailWrapper = document.querySelector('.thumbnail-container div');
-
 				var fileInput = document.querySelector('#<portlet:namespace/>fileInput');
 
 				fileInput.click();
