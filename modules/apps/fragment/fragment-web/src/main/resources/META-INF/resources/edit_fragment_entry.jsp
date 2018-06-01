@@ -123,7 +123,7 @@ renderResponse.setTitle(title);
 	var jsInput = document.getElementById('<portlet:namespace />jsContent');
 	var wrapper = document.getElementById('<portlet:namespace />fragmentEditor');
 
-	var <portlet:namespace/>generateThumbnail = function(doSubmit) {
+	var generateThumbnail = function(doSubmit) {
 		Liferay.Util.openWindow(
 			{
 				dialog: {
@@ -174,7 +174,7 @@ renderResponse.setTitle(title);
 					jsInput.value = event.js;
 				}
 			},
-			generateThumbnailFunction: <portlet:namespace/>generateThumbnail,
+			generateThumbnailFunction: generateThumbnail,
 			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
@@ -212,7 +212,7 @@ renderResponse.setTitle(title);
 					submitForm(document.querySelector('#<portlet:namespace />fm'));
 				</c:when>
 				<c:otherwise>
-					<portlet:namespace/>generateThumbnail(true);
+					generateThumbnail(true);
 				</c:otherwise>
 			</c:choose>
 		}
