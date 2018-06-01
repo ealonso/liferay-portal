@@ -49,21 +49,21 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 
 			<aui:input checked="<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeSpecific() %>" id="displayPageTypeSpecific" label='<%= LanguageUtil.get(request, "use-a-specific-display-page-for-the-web-content") %>' name="displayPageType" type="radio" value="<%= JournalDisplayPageTypeConstants.TYPE_SPECIFIC %>" />
 
-			<div id='<%= renderResponse.getNamespace() + "displayPageContainer" %>' class='<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeSpecific() ? "" : "hide" %>'>
+			<div class="<%= editArticleDisplayPageDisplayContext.isJournalDisplayPageTypeSpecific() ? "" : "hide" %>" id="<%= renderResponse.getNamespace() + "displayPageContainer" %>">
 				<p class="text-default">
-				<span class="<%= Validator.isNull(editArticleDisplayPageDisplayContext.getDisplayPageName()) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
-					<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
-				</span>
+					<span class="<%= Validator.isNull(editArticleDisplayPageDisplayContext.getDisplayPageName()) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
+						<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
+					</span>
 					<span id="<portlet:namespace />displayPageNameInput">
-					<c:choose>
-						<c:when test="<%= Validator.isNull(editArticleDisplayPageDisplayContext.getDisplayPageName()) %>">
-							<span class="text-muted"><liferay-ui:message key="none" /></span>
-						</c:when>
-						<c:otherwise>
-							<%= editArticleDisplayPageDisplayContext.getDisplayPageName() %>
-						</c:otherwise>
-					</c:choose>
-				</span>
+						<c:choose>
+							<c:when test="<%= Validator.isNull(editArticleDisplayPageDisplayContext.getDisplayPageName()) %>">
+								<span class="text-muted"><liferay-ui:message key="none" /></span>
+							</c:when>
+							<c:otherwise>
+								<%= editArticleDisplayPageDisplayContext.getDisplayPageName() %>
+							</c:otherwise>
+						</c:choose>
+					</span>
 				</p>
 
 				<aui:button name="chooseDisplayPage" value="choose" />
@@ -71,11 +71,11 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 				<c:if test="<%= editArticleDisplayPageDisplayContext.isURLViewInContext() %>">
 
 					<%
-						Layout defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(editArticleDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), false);
+					Layout defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(editArticleDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), false);
 
-						if (defaultDisplayLayout == null) {
-							defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(editArticleDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), true);
-						}
+					if (defaultDisplayLayout == null) {
+						defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(editArticleDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), true);
+					}
 					%>
 
 					<aui:a href="<%= editArticleDisplayPageDisplayContext.getURLViewInContext() %>" target="blank">
@@ -151,7 +151,7 @@ Group group = GroupLocalServiceUtil.fetchGroup(groupId);
 				function(event) {
 					var target = event.target;
 
-					if(target && target.value === 'TYPE_SPECIFIC') {
+					if (target && target.value === 'TYPE_SPECIFIC') {
 						displayPageContainer.removeClass('hide');
 					}
 					else {
