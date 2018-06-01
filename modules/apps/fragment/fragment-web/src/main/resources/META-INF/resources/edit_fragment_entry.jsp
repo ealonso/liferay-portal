@@ -153,14 +153,14 @@ renderResponse.setTitle(title);
 								Liferay.fire(
 									'<portlet:namespace/>:setThumbnailImage',
 									{
-										thumbnailImageSrc: canvas.toDataURL('image/png'),
-										defaultImageSrc: canvas.toDataURL('image/png')
+										defaultImageSrc: canvas.toDataURL('image/png'),
+										thumbnailImageSrc: canvas.toDataURL('image/png')
 									}
 								);
 							}
 						);
 					}
-				)
+				);
 			}
 		);
 	};
@@ -235,7 +235,7 @@ renderResponse.setTitle(title);
 		}
 	);
 
-	function destroyFragmentEditor () {
+	function destroyFragmentEditor() {
 		fragmentEditor.dispose();
 		publishButtonClickHandler.removeListener();
 
