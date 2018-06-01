@@ -79,7 +79,7 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 </portlet:actionURL>
 
 <aui:script require="metal-dom/src/all/dom as dom">
-	var addRemoveImageIcon = function(container) {
+	function addRemoveImageIcon(container) {
 		var removeImageButton = document.createElement('span');
 		removeImageButton.setAttribute('class', 'remove-image-icon');
 		removeImageButton.innerHTML = '<svg class="icon-monospaced lexicon-icon"><use xlink:href="<%= themeDisplay.getPathThemeImages() + "/lexicon/icons.svg" %>#times-circle"></use></svg>';
@@ -100,7 +100,7 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 				event.delegateTarget.remove();
 			}
 		);
-	};
+	}
 
 	Liferay.Util.getTop().Liferay.on(
 		'<portlet:namespace/>:setThumbnailImage',
@@ -130,13 +130,13 @@ FragmentEntry fragmentEntry = fragmentDisplayContext.getFragmentEntry();
 
 	var eventHandlers = [];
 
-	var removeHandlers = function() {
+	function removeHandlers() {
 		eventHandlers.forEach(
 			function(eventHandler) {
 				eventHandler.removeListener();
 			}
 		);
-	};
+	}
 
 	eventHandlers.push(
 		dom.delegate(
