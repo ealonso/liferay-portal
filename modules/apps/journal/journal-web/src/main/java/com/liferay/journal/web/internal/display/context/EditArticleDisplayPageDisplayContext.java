@@ -305,6 +305,36 @@ public class EditArticleDisplayPageDisplayContext {
 			themeDisplay.getURLCurrent());
 	}
 
+	public boolean isAssetDisplayPageTypeDefault() throws PortalException {
+		if (getAssetDisplayPageType() ==
+				AssetDisplayPageTypeConstants.TYPE_DEFAULT) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isAssetDisplayPageTypeNone() throws PortalException {
+		if (getAssetDisplayPageType() ==
+				AssetDisplayPageTypeConstants.TYPE_NONE) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isAssetDisplayPageTypeSpecific() throws PortalException {
+		if (getAssetDisplayPageType() ==
+				AssetDisplayPageTypeConstants.TYPE_SPECIFIC) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isURLViewInContext() throws Exception {
 		if (getArticle() == null) {
 			return false;
