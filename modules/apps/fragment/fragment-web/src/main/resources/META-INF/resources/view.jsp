@@ -242,7 +242,7 @@ List<FragmentCollection> fragmentCollections = FragmentCollectionServiceUtil.get
 <aui:script require="metal-dom/src/all/dom as dom">
 	window.<portlet:namespace />exportSelectedFragmentCollections = function() {
 		submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:resourceURL id="/fragment/export_fragment_collections" />');
-	}
+	};
 
 	<portlet:renderURL var="importFragmentEntriesURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="mvcPath" value="/view_import_fragment_entries.jsp" />
@@ -253,7 +253,6 @@ List<FragmentCollection> fragmentCollections = FragmentCollectionServiceUtil.get
 		'click',
 		'.<portlet:namespace />import-fragment-entries-action-option > a',
 		function(event) {
-			debugger;
 			var data = event.delegateTarget.dataset;
 
 			event.preventDefault();
