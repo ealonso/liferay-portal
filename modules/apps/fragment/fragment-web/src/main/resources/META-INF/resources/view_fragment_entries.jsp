@@ -190,7 +190,7 @@
 			}
 		);
 
-		Liferay.on(
+		var updateFragmentEntryThumbnailHandler = Liferay.on(
 			'<portlet:namespace/>:updateFragmentEntryThumbnail',
 			function(data) {
 				if (!data.submit) {
@@ -224,6 +224,11 @@
 		function handleDestroyPortlet () {
 			updateFragmentEntryMenuItemClickHandler.removeListener();
 			updateFragmentEntryThumbnailMenuItemClickHandler.removeListener();
+
+			if (updateFragmentEntryThumbnailHandler) {
+				updateFragmentEntryThumbnailHandler.detach();
+				updateFragmentEntryThumbnailHandler = null;
+			}
 
 			Liferay.detach('destroyPortlet', handleDestroyPortlet);
 		}
