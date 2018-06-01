@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -222,6 +223,49 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		FieldValuesAssert.assertFieldValues(
 			ddmContentStrings, "ddm__text", document, searchTerm);
+	}
+
+	@Test
+	public void testIndexedFieldsWithUnindexedTranslation() throws Exception {
+		String title = "entity title";
+
+		setTitle(
+			new JournalArticleTitle() {
+				{
+					put(LocaleUtil.US, title);
+				}
+			});
+
+		String content = "entity content";
+
+		setContent(
+			new JournalArticleContent() {
+				{
+					name = "content";
+					defaultLocale = LocaleUtil.US;
+
+					put(LocaleUtil.US, content);
+				}
+			});
+
+		addArticle();
+
+		String searchTerm = "title";
+
+		SearchContext searchContext = _getSearchContext(
+			searchTerm, LocaleUtil.HUNGARY);
+
+		Hits hits = _indexer.search(searchContext);
+
+		Assert.assertEquals(hits.toString(), 1, hits.getLength());
+
+		searchTerm = "content";
+
+		searchContext = _getSearchContext(searchTerm, LocaleUtil.HUNGARY);
+
+		hits = _indexer.search(searchContext);
+
+		Assert.assertEquals(hits.toString(), 1, hits.getLength());
 	}
 
 	@Test
