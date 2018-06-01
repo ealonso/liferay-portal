@@ -151,18 +151,20 @@
 
 				event.preventDefault();
 
-				modalCommands.openSimpleInputModal({
-					dialogTitle: '<liferay-ui:message key="rename-fragment" />',
-					formSubmitURL: data.formSubmitUrl,
-					idFieldName: 'id',
-					idFieldValue: data.idFieldValue,
-					mainFieldLabel: '<liferay-ui:message key="name" />',
-					mainFieldName: 'name',
-					mainFieldPlaceholder: '<liferay-ui:message key="name" />',
-					mainFieldValue: data.mainFieldValue,
-					namespace: '<portlet:namespace />',
-					spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
-				});
+				modalCommands.openSimpleInputModal(
+					{
+						dialogTitle: '<liferay-ui:message key="rename-fragment" />',
+						formSubmitURL: data.formSubmitUrl,
+						idFieldName: 'id',
+						idFieldValue: data.idFieldValue,
+						mainFieldLabel: '<liferay-ui:message key="name" />',
+						mainFieldName: 'name',
+						mainFieldPlaceholder: '<liferay-ui:message key="name" />',
+						mainFieldValue: data.mainFieldValue,
+						namespace: '<portlet:namespace />',
+						spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+					}
+				);
 			}
 		);
 
@@ -199,7 +201,7 @@
 
 				var formData = new FormData();
 
-				formData.append( '<portlet:namespace/>previewFileEntryId', data.fileEntryId);
+				formData.append('<portlet:namespace/>previewFileEntryId', data.fileEntryId);
 
 				fetch(
 					data.submitUrl,
@@ -221,7 +223,7 @@
 			}
 		);
 
-		function handleDestroyPortlet () {
+		function handleDestroyPortlet() {
 			updateFragmentEntryMenuItemClickHandler.removeListener();
 			updateFragmentEntryThumbnailMenuItemClickHandler.removeListener();
 
@@ -244,13 +246,13 @@
 </c:if>
 
 <aui:script>
-	var deleteSelectedFragmentEntries = function() {
+	function deleteSelectedFragmentEntries() {
 		if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
 			submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:actionURL name="/fragment/delete_fragment_entries"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
 		}
 	}
 
-	var exportSelectedFragmentEntries = function() {
+	function exportSelectedFragmentEntries() {
 		submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:resourceURL id="/fragment/export_fragment_entries" />');
 	}
 

@@ -153,14 +153,14 @@ renderResponse.setTitle(title);
 								Liferay.fire(
 									'<portlet:namespace/>:setThumbnailImage',
 									{
-										thumbnailImageSrc: canvas.toDataURL('image/png'),
-										defaultImageSrc: canvas.toDataURL('image/png')
+										defaultImageSrc: canvas.toDataURL('image/png'),
+										thumbnailImageSrc: canvas.toDataURL('image/png')
 									}
 								);
 							}
 						);
 					}
-				)
+				);
 			}
 		);
 	};
@@ -199,20 +199,23 @@ renderResponse.setTitle(title);
 			dom.toElement('#<portlet:namespace />status').value = '<%= WorkflowConstants.STATUS_APPROVED %>';
 
 			if (!fragmentEditor.isHtmlValid()) {
-				AUI().use('liferay-alert', () => {
-					new Liferay.Alert(
-						{
-							delay: {
-								hide: 500,
-								show: 0
-							},
-							duration: 500,
-							icon: 'exclamation-circle',
-							message: '<liferay-ui:message key="fragment-html-is-invalid" />',
-							type: 'danger'
-						}
-					).render();
-				});
+				AUI().use(
+					'liferay-alert',
+					() => {
+						new Liferay.Alert(
+							{
+								delay: {
+									hide: 500,
+									show: 0
+								},
+								duration: 500,
+								icon: 'exclamation-circle',
+								message: '<liferay-ui:message key="fragment-html-is-invalid" />',
+								type: 'danger'
+							}
+						).render();
+					}
+				);
 
 				return;
 			}
@@ -242,7 +245,7 @@ renderResponse.setTitle(title);
 		}
 	);
 
-	function destroyFragmentEditor () {
+	function destroyFragmentEditor() {
 		fragmentEditor.dispose();
 		publishButtonClickHandler.removeListener();
 
