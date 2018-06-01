@@ -228,7 +228,7 @@ renderResponse.setTitle(title);
 		}
 	);
 
-	Liferay.on(
+	var updateFragmentEntryThumbnailHandler = Liferay.on(
 		'<portlet:namespace/>:updateFragmentEntryThumbnail',
 		function(data) {
 			var previewFileEntryId = document.querySelector('#<portlet:namespace/>previewFileEntryId');
@@ -245,6 +245,11 @@ renderResponse.setTitle(title);
 	function destroyFragmentEditor () {
 		fragmentEditor.dispose();
 		publishButtonClickHandler.removeListener();
+
+		if (updateFragmentEntryThumbnailHandler) {
+			updateFragmentEntryThumbnailHandler.detach();
+			updateFragmentEntryThumbnailHandler = null;
+		}
 
 		Liferay.detach('destroyPortlet', destroyFragmentEditor);
 	}
