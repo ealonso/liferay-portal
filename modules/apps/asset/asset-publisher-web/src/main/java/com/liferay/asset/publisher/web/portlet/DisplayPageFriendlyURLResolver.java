@@ -371,7 +371,13 @@ public class DisplayPageFriendlyURLResolver implements FriendlyURLResolver {
 				fetchAssetDisplayPageEntryByAssetEntryId(
 					assetEntry.getEntryId());
 
-		if (assetDisplayPageEntry != null) {
+		if ((assetDisplayPageEntry == null) ||
+			(assetDisplayPageEntry.getLayoutPageTemplateEntryId() == 0)) {
+
+			return false;
+		}
+
+		if (assetDisplayPageEntry.getLayoutPageTemplateEntryId() > 0) {
 			return true;
 		}
 
