@@ -157,7 +157,13 @@ public class AssetDisplayLayoutTypeController
 				fetchAssetDisplayPageEntryByAssetEntryId(
 					assetEntry.getEntryId());
 
-		if (assetDisplayPageEntry != null) {
+		if ((assetDisplayPageEntry == null) ||
+			(assetDisplayPageEntry.getLayoutPageTemplateEntryId() == 0)) {
+
+			return 0;
+		}
+
+		if (assetDisplayPageEntry.getLayoutPageTemplateEntryId() > 0) {
 			return assetDisplayPageEntry.getLayoutPageTemplateEntryId();
 		}
 
