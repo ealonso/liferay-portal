@@ -38,7 +38,10 @@ import javax.portlet.PortletPreferences;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of 7.0.0, replaced by {@link
+ * 		   com.liferay.layout.prototype.util.DefaultLayoutPrototypesUtil}
  */
+@Deprecated
 public class DefaultLayoutPrototypesUtil {
 
 	public static Layout addLayout(
