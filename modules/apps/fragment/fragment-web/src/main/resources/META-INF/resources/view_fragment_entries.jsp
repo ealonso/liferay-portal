@@ -151,23 +151,86 @@
 
 				event.preventDefault();
 
-				modalCommands.openSimpleInputModal({
-					dialogTitle: '<liferay-ui:message key="rename-fragment" />',
-					formSubmitURL: data.formSubmitUrl,
-					idFieldName: 'id',
-					idFieldValue: data.idFieldValue,
-					mainFieldLabel: '<liferay-ui:message key="name" />',
-					mainFieldName: 'name',
-					mainFieldPlaceholder: '<liferay-ui:message key="name" />',
-					mainFieldValue: data.mainFieldValue,
-					namespace: '<portlet:namespace />',
-					spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
-				});
+				modalCommands.openSimpleInputModal(
+					{
+						dialogTitle: '<liferay-ui:message key="rename-fragment" />',
+						formSubmitURL: data.formSubmitUrl,
+						idFieldName: 'id',
+						idFieldValue: data.idFieldValue,
+						mainFieldLabel: '<liferay-ui:message key="name" />',
+						mainFieldName: 'name',
+						mainFieldPlaceholder: '<liferay-ui:message key="name" />',
+						mainFieldValue: data.mainFieldValue,
+						namespace: '<portlet:namespace />',
+						spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+					}
+				);
 			}
 		);
 
-		function handleDestroyPortlet () {
+		var updateFragmentEntryThumbnailMenuItemClickHandler = dom.delegate(
+			document.body,
+			'click',
+			'.<portlet:namespace />update-fragment-thumbnail-action-option > a',
+			function(event) {
+				var data = event.delegateTarget.dataset;
+
+				event.preventDefault();
+
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							destroyOnHide: true,
+							height: 600,
+							width: 800
+						},
+						id: '<portlet:namespace />fragmentEntryThumbnail',
+						title: '<liferay-ui:message key="fragment-thumbnail" />',
+						uri: data.fragmentEntryThumbnailUrl
+					}
+				);
+			}
+		);
+
+		var updateFragmentEntryThumbnailHandler = Liferay.on(
+			'<portlet:namespace/>:updateFragmentEntryThumbnail',
+			function(data) {
+				if (!data.submit) {
+					return;
+				}
+
+				var formData = new FormData();
+
+				formData.append('<portlet:namespace/>previewFileEntryId', data.fileEntryId);
+
+				fetch(
+					data.submitUrl,
+					{
+						body: formData,
+						credentials: 'include',
+						method: 'POST'
+					}
+				).then(
+					function() {
+						if (Liferay.SPA) {
+							Liferay.SPA.app.navigate('<%= currentURL %>');
+						}
+						else {
+							location.href = '<%= currentURL %>';
+						}
+					}
+				);
+			}
+		);
+
+		function handleDestroyPortlet() {
 			updateFragmentEntryMenuItemClickHandler.removeListener();
+			updateFragmentEntryThumbnailMenuItemClickHandler.removeListener();
+
+			if (updateFragmentEntryThumbnailHandler) {
+				updateFragmentEntryThumbnailHandler.detach();
+				updateFragmentEntryThumbnailHandler = null;
+			}
 
 			Liferay.detach('destroyPortlet', handleDestroyPortlet);
 		}
@@ -183,13 +246,13 @@
 </c:if>
 
 <aui:script>
-	var deleteSelectedFragmentEntries = function() {
+	function deleteSelectedFragmentEntries() {
 		if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
 			submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:actionURL name="/fragment/delete_fragment_entries"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
 		}
 	}
 
-	var exportSelectedFragmentEntries = function() {
+	function exportSelectedFragmentEntries() {
 		submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:resourceURL id="/fragment/export_fragment_entries" />');
 	}
 
