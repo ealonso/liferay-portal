@@ -14,8 +14,13 @@
 
 package com.liferay.layout.page.template.util;
 
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -98,6 +103,8 @@ public class DefaultLayoutPrototypesUtil {
 				defaultUserId, companyId, nameMap, descriptionMap, true,
 				new ServiceContext());
 
+		_addLayoutPageTemplateEntry(layoutPrototype);
+
 		Layout layout = layoutPrototype.getLayout();
 
 		LayoutTypePortlet layoutTypePortlet =
@@ -161,5 +168,31 @@ public class DefaultLayoutPrototypesUtil {
 			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
 			layout.getTypeSettings());
 	}
+
+	private static void _addLayoutPageTemplateEntry(
+		LayoutPrototype layoutPrototype) {
+
+		try {
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				LayoutPageTemplateEntryLocalServiceUtil.
+					fetchFirstLayoutPageTemplateEntry(
+						layoutPrototype.getLayoutPrototypeId());
+
+			if (layoutPageTemplateEntry != null) {
+				return;
+			}
+
+			LayoutPageTemplateEntryLocalServiceUtil.addLayoutPageTemplateEntry(
+				layoutPrototype);
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(pe, pe);
+			}
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DefaultLayoutPrototypesUtil.class);
 
 }
