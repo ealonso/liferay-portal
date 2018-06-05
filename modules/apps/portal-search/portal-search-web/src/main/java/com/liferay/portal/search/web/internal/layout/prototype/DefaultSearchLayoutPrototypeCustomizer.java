@@ -31,10 +31,15 @@ import com.liferay.portal.search.web.layout.prototype.SearchLayoutPrototypeCusto
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author André de Oliveira
  * @author Lino Alves
  */
+@Component(
+	immediate = true, service = DefaultSearchLayoutPrototypeCustomizer.class
+)
 public class DefaultSearchLayoutPrototypeCustomizer
 	implements SearchLayoutPrototypeCustomizer {
 

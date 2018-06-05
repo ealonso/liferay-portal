@@ -277,8 +277,8 @@ public class SearchLayoutFactoryImpl implements SearchLayoutFactory {
 	private static final Log _log = LogFactoryUtil.getLog(
 		SearchLayoutFactoryImpl.class);
 
-	private final SearchLayoutPrototypeCustomizer
-		_defaultSearchLayoutPrototypeCustomizer =
-			new DefaultSearchLayoutPrototypeCustomizer();
+	@Reference
+	private DefaultSearchLayoutPrototypeCustomizer
+		_defaultSearchLayoutPrototypeCustomizer;
 
 }
