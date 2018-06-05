@@ -18,6 +18,7 @@ import com.liferay.asset.tags.navigation.constants.AssetTagsNavigationPortletKey
 import com.liferay.blogs.constants.BlogsPortletKeys;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.recent.bloggers.constants.RecentBloggersPortletKeys;
+import com.liferay.layout.page.template.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -29,7 +30,6 @@ import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.service.LayoutPrototypeLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
-import com.liferay.portal.kernel.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -80,7 +80,7 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 		Map<Locale, String> nameMap = ResourceBundleUtil.getLocalizationMap(
 			resourceBundleLoader, "layout-prototype-blog-title");
 
-		Layout layout = DefaultLayoutPrototypesUtil.addLayoutPrototype(
+		Layout layout = _defaultLayoutPrototypesUtil.addLayoutPrototype(
 			companyId, defaultUserId, nameMap, descriptionMap, "2_columns_iii",
 			layoutPrototypes);
 
@@ -88,10 +88,10 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 			return;
 		}
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			layout, BlogsPortletKeys.BLOGS, "column-1");
 
-		String portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		String portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			layout, AssetTagsNavigationPortletKeys.ASSET_TAGS_CLOUD,
 			"column-2");
 
@@ -102,10 +102,10 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 			String.valueOf(_portal.getClassNameId(BlogsEntry.class)));
 		preferences.put("showAssetCount", Boolean.TRUE.toString());
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			layout, portletId, preferences);
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			layout, RecentBloggersPortletKeys.RECENT_BLOGGERS, "column-2");
 	}
 
@@ -146,6 +146,9 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
+
+	@Reference
+	private DefaultLayoutPrototypesUtil _defaultLayoutPrototypesUtil;
 
 	private LayoutPrototypeLocalService _layoutPrototypeLocalService;
 

@@ -14,8 +14,8 @@
 
 package com.liferay.portal.search.web.internal.layout.prototype;
 
+import com.liferay.layout.page.template.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.search.web.internal.category.facet.constants.CategoryFacetPortletKeys;
 import com.liferay.portal.search.web.internal.folder.facet.constants.FolderFacetPortletKeys;
 import com.liferay.portal.search.web.internal.modified.facet.constants.ModifiedFacetPortletKeys;
@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author André de Oliveira
@@ -84,15 +85,18 @@ public class DefaultSearchLayoutPrototypeCustomizer
 			Layout layout, String portletKey, String columnId)
 		throws Exception {
 
-		String portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		String portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			layout, portletKey, columnId);
 
 		Map<String, String> preferences = new HashMap<>();
 
 		preferences.put("portletSetupPortletDecoratorId", "barebone");
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			layout, portletId, preferences);
 	}
+
+	@Reference
+	private DefaultLayoutPrototypesUtil _defaultLayoutPrototypesUtil;
 
 }

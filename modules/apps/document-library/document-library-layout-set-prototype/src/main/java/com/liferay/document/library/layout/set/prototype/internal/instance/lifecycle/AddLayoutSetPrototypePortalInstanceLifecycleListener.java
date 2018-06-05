@@ -16,6 +16,7 @@ package com.liferay.document.library.layout.set.prototype.internal.instance.life
 
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.document.library.constants.DLPortletKeys;
+import com.liferay.layout.page.template.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -27,7 +28,6 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.kernel.util.DefaultLayoutSetPrototypesUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.rss.constants.RSSPortletKeys;
@@ -80,19 +80,19 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 
 		// Home layout
 
-		Layout homeLayout = DefaultLayoutPrototypesUtil.addLayout(
+		Layout homeLayout = _defaultLayoutPrototypesUtil.addLayout(
 			layoutSet, "home", "/home", "2_columns_i");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout, SocialActivitiesPortletKeys.SOCIAL_ACTIVITIES,
 			"column-1");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout,
 			SiteNavigationLanguagePortletKeys.SITE_NAVIGATION_LANGUAGE,
 			"column-2");
 
-		String portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		String portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout, AssetPublisherPortletKeys.ASSET_PUBLISHER, "column-2");
 
 		Map<String, String> preferences = new HashMap<>();
@@ -101,30 +101,30 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 			"portletSetupTitle_" + LocaleUtil.getDefault(), "Recent Content");
 		preferences.put("portletSetupUseCustomTitle", Boolean.TRUE.toString());
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			homeLayout, portletId, preferences);
 
 		// Documents layout
 
-		Layout documentsLayout = DefaultLayoutPrototypesUtil.addLayout(
+		Layout documentsLayout = _defaultLayoutPrototypesUtil.addLayout(
 			layoutSet, "documents-and-media", "/documents", "1_column");
 
-		portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			documentsLayout, DLPortletKeys.DOCUMENT_LIBRARY, "column-1");
 
 		preferences = new HashMap<>();
 
 		preferences.put("portletSetupPortletDecoratorId", "borderless");
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			documentsLayout, portletId, preferences);
 
 		// News layout
 
-		Layout newsLayout = DefaultLayoutPrototypesUtil.addLayout(
+		Layout newsLayout = _defaultLayoutPrototypesUtil.addLayout(
 			layoutSet, "News", "/news", "2_columns_iii");
 
-		portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			newsLayout, RSSPortletKeys.RSS, "column-1");
 
 		preferences = new HashMap<>();
@@ -137,10 +137,10 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 			"urls",
 			"http://www.nytimes.com/services/xml/rss/userland/Technology.xml");
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			newsLayout, portletId, preferences);
 
-		portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			newsLayout, RSSPortletKeys.RSS, "column-2");
 
 		preferences = new HashMap<>();
@@ -155,7 +155,7 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 			"https://www.liferay.com/about-us/newsroom/press-releases/-" +
 				"/asset_publisher/2oZC/rss");
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			newsLayout, portletId, preferences);
 	}
 
@@ -209,6 +209,9 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 	protected void setUserLocalService(UserLocalService userLocalService) {
 		_userLocalService = userLocalService;
 	}
+
+	@Reference
+	private DefaultLayoutPrototypesUtil _defaultLayoutPrototypesUtil;
 
 	private LayoutSetPrototypeLocalService _layoutSetPrototypeLocalService;
 	private UserLocalService _userLocalService;
