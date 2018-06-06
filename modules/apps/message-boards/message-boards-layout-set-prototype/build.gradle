@@ -6,6 +6,7 @@ dependencies {
 	compileOnly project(":apps:asset:asset-categories-navigation-api")
 	compileOnly project(":apps:asset:asset-publisher-api")
 	compileOnly project(":apps:asset:asset-tags-navigation-api")
+	compileOnly project(":apps:layout:layout-page-template-api")
 	compileOnly project(":apps:layout:layout-set-prototype-api")
 	compileOnly project(":apps:message-boards:message-boards-api")
 	compileOnly project(":apps:polls:polls-api")

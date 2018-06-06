@@ -16,6 +16,7 @@ package com.liferay.wiki.layout.prototype.internal.instance.lifecycle;
 
 import com.liferay.asset.categories.navigation.constants.AssetCategoriesNavigationPortletKeys;
 import com.liferay.asset.tags.navigation.constants.AssetTagsNavigationPortletKeys;
+import com.liferay.layout.page.template.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -27,7 +28,6 @@ import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.service.LayoutPrototypeLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
-import com.liferay.portal.kernel.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -81,7 +81,7 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 			ResourceBundleUtil.getLocalizationMap(
 				resourceBundleLoader, "layout-prototype-wiki-description");
 
-		Layout layout = DefaultLayoutPrototypesUtil.addLayoutPrototype(
+		Layout layout = _defaultLayoutPrototypesUtil.addLayoutPrototype(
 			companyId, defaultUserId, nameMap, descriptionMap, "2_columns_iii",
 			layoutPrototypes);
 
@@ -89,15 +89,15 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 			return;
 		}
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			layout, WikiPortletKeys.WIKI, "column-1");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			layout,
 			AssetCategoriesNavigationPortletKeys.ASSET_CATEGORIES_NAVIGATION,
 			"column-2");
 
-		String portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		String portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			layout, AssetTagsNavigationPortletKeys.ASSET_TAGS_NAVIGATION,
 			"column-2");
 
@@ -108,7 +108,7 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 			String.valueOf(_portal.getClassNameId(WikiPage.class)));
 		preferences.put("showAssetCount", Boolean.TRUE.toString());
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			layout, portletId, preferences);
 	}
 
@@ -149,6 +149,9 @@ public class AddLayoutPrototypePortalInstanceLifecycleListener
 	)
 	protected void setWikiPortlet(Portlet portlet) {
 	}
+
+	@Reference
+	private DefaultLayoutPrototypesUtil _defaultLayoutPrototypesUtil;
 
 	private LayoutPrototypeLocalService _layoutPrototypeLocalService;
 

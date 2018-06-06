@@ -17,6 +17,7 @@ package com.liferay.message.boards.layout.set.prototype.internal.instance.lifecy
 import com.liferay.asset.categories.navigation.constants.AssetCategoriesNavigationPortletKeys;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.tags.navigation.constants.AssetTagsNavigationPortletKeys;
+import com.liferay.layout.page.template.util.DefaultLayoutPrototypesUtil;
 import com.liferay.layout.set.prototype.constants.LayoutSetPrototypePortletKeys;
 import com.liferay.message.boards.constants.MBPortletKeys;
 import com.liferay.message.boards.model.MBMessage;
@@ -34,7 +35,6 @@ import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.DefaultLayoutPrototypesUtil;
 import com.liferay.portal.kernel.util.DefaultLayoutSetPrototypesUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.wiki.constants.WikiPortletKeys;
@@ -85,18 +85,18 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 
 		// Home layout
 
-		Layout homeLayout = DefaultLayoutPrototypesUtil.addLayout(
+		Layout homeLayout = _defaultLayoutPrototypesUtil.addLayout(
 			layoutSet, "home", "/home", "2_columns_iii");
 		String portletId = PortletProviderUtil.getPortletId(
 			MBMessage.class.getName(), PortletProvider.Action.EDIT);
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout, portletId, "column-1");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout, PollsPortletKeys.POLLS_DISPLAY, "column-2");
 
-		portletId = DefaultLayoutPrototypesUtil.addPortletId(
+		portletId = _defaultLayoutPrototypesUtil.addPortletId(
 			homeLayout, AssetPublisherPortletKeys.ASSET_PUBLISHER, "column-2");
 
 		Map<String, String> preferences = new HashMap<>();
@@ -106,23 +106,23 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 			"portletSetupTitle_" + LocaleUtil.getDefault(), "Recent Content");
 		preferences.put("portletSetupUseCustomTitle", Boolean.TRUE.toString());
 
-		DefaultLayoutPrototypesUtil.updatePortletSetup(
+		_defaultLayoutPrototypesUtil.updatePortletSetup(
 			homeLayout, portletId, preferences);
 
 		// Wiki layout
 
-		Layout wikiLayout = DefaultLayoutPrototypesUtil.addLayout(
+		Layout wikiLayout = _defaultLayoutPrototypesUtil.addLayout(
 			layoutSet, "wiki", "/wiki", "2_columns_iii");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			wikiLayout, WikiPortletKeys.WIKI, "column-1");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			wikiLayout,
 			AssetCategoriesNavigationPortletKeys.ASSET_CATEGORIES_NAVIGATION,
 			"column-2");
 
-		DefaultLayoutPrototypesUtil.addPortletId(
+		_defaultLayoutPrototypesUtil.addPortletId(
 			wikiLayout, AssetTagsNavigationPortletKeys.ASSET_TAGS_CLOUD,
 			"column-2");
 	}
@@ -192,6 +192,9 @@ public class AddLayoutSetPrototypePortalInstanceLifecycleListener
 	)
 	protected void setWikiPortlet(Portlet portlet) {
 	}
+
+	@Reference
+	private DefaultLayoutPrototypesUtil _defaultLayoutPrototypesUtil;
 
 	private LayoutSetPrototypeLocalService _layoutSetPrototypeLocalService;
 	private UserLocalService _userLocalService;
