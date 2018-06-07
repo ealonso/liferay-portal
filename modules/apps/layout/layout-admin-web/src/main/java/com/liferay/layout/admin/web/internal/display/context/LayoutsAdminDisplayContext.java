@@ -123,6 +123,30 @@ public class LayoutsAdminDisplayContext {
 		};
 	}
 
+	public List<DropdownItem> getAddLayoutDropdownItems() {
+		return new DropdownItemList() {
+			{
+				add(
+					SafeConsumer.ignore(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								getSelectLayoutPageTemplateEntryURL(false));
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "public-page"));
+						}));
+
+				add(
+					SafeConsumer.ignore(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								getSelectLayoutPageTemplateEntryURL(true));
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "private-page"));
+						}));
+			}
+		};
+	}
+
 	public String getAutoSiteNavigationMenuNames() {
 		List<SiteNavigationMenu> siteNavigationMenus =
 			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
@@ -788,6 +812,20 @@ public class LayoutsAdminDisplayContext {
 
 	public String getViewLayoutURL(Layout layout) throws PortalException {
 		return PortalUtil.getLayoutFullURL(layout, _themeDisplay);
+	}
+
+	public boolean hasLayouts() {
+		int privatePagesCount = LayoutLocalServiceUtil.getLayoutsCount(
+			getSelGroup(), true, 0);
+
+		int publicPagesCount = LayoutLocalServiceUtil.getLayoutsCount(
+			getSelGroup(), false, 0);
+
+		if ((privatePagesCount + publicPagesCount) > 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isMillerColumnsEnabled() {
