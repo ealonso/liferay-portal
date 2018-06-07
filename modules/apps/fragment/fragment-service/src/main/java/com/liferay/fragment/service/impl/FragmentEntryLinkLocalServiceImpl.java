@@ -314,8 +314,9 @@ public class FragmentEntryLinkLocalServiceImpl
 			oldFragmentEntryLink.getFragmentEntryId());
 
 		List<FragmentEntryLink> fragmentEntryLinks =
-			fragmentEntryLinkPersistence.findByG_C_C(
+			fragmentEntryLinkPersistence.findByG_F_C_C(
 				oldFragmentEntryLink.getGroupId(),
+				oldFragmentEntryLink.getFragmentEntryId(),
 				oldFragmentEntryLink.getClassNameId(),
 				oldFragmentEntryLink.getClassPK());
 
