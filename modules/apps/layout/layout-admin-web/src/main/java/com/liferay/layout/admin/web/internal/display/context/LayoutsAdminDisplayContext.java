@@ -1059,7 +1059,62 @@ public class LayoutsAdminDisplayContext {
 	private JSONArray _getLayoutColumnsJSONArray() throws Exception {
 		JSONArray layoutColumnsJSONArray = JSONFactoryUtil.createJSONArray();
 
-		layoutColumnsJSONArray.put(_getLayoutsJSONArray(0));
+		JSONArray firstColumnJSONArray = JSONFactoryUtil.createJSONArray();
+
+		boolean publicPages = ParamUtil.getBoolean(_request, "publicPages");
+		boolean privatePages = ParamUtil.getBoolean(_request, "privatePages");
+
+		int publicPagesCount = LayoutLocalServiceUtil.getLayoutsCount(
+			getSelGroup(), false, 0);
+
+		if (publicPagesCount > 0) {
+			JSONObject publicPagesJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			PortletURL publicPagesURL = getPortletURL();
+
+			publicPagesURL.setParameter("publicPages", Boolean.TRUE.toString());
+
+			publicPagesJSONObject.put("active", publicPages);
+			publicPagesJSONObject.put("hasChild", true);
+			publicPagesJSONObject.put("plid", LayoutConstants.DEFAULT_PLID);
+			publicPagesJSONObject.put(
+				"title", LanguageUtil.get(_request, "public-pages"));
+			publicPagesJSONObject.put("url", publicPagesURL.toString());
+
+			firstColumnJSONArray.put(publicPagesJSONObject);
+		}
+
+		int privatePagesCount = LayoutLocalServiceUtil.getLayoutsCount(
+			getSelGroup(), true, 0);
+
+		if (privatePagesCount > 0) {
+			JSONObject privatePagesJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			PortletURL privatePagesURL = getPortletURL();
+
+			privatePagesURL.setParameter(
+				"privatePages", Boolean.TRUE.toString());
+
+			privatePagesJSONObject.put("active", privatePages);
+			privatePagesJSONObject.put("hasChild", true);
+			privatePagesJSONObject.put("plid", LayoutConstants.DEFAULT_PLID);
+			privatePagesJSONObject.put(
+				"title", LanguageUtil.get(_request, "private-pages"));
+			privatePagesJSONObject.put("url", privatePagesURL.toString());
+
+			firstColumnJSONArray.put(privatePagesJSONObject);
+		}
+
+		layoutColumnsJSONArray.put(firstColumnJSONArray);
+
+		if (publicPages) {
+			layoutColumnsJSONArray.put(_getLayoutsJSONArray(0, false));
+		}
+		else if (privatePages) {
+			layoutColumnsJSONArray.put(_getLayoutsJSONArray(0, true));
+		}
 
 		if (getSelPlid() == LayoutConstants.DEFAULT_PLID) {
 			return layoutColumnsJSONArray;
@@ -1077,22 +1132,25 @@ public class LayoutsAdminDisplayContext {
 
 		for (Layout layout : layouts) {
 			layoutColumnsJSONArray.put(
-				_getLayoutsJSONArray(layout.getLayoutId()));
+				_getLayoutsJSONArray(
+					layout.getLayoutId(), selLayout.isPrivateLayout()));
 		}
 
 		layoutColumnsJSONArray.put(
-			_getLayoutsJSONArray(selLayout.getLayoutId()));
+			_getLayoutsJSONArray(
+				selLayout.getLayoutId(), selLayout.isPrivateLayout()));
 
 		return layoutColumnsJSONArray;
 	}
 
-	private JSONArray _getLayoutsJSONArray(long parentLayoutId)
+	private JSONArray _getLayoutsJSONArray(
+			long parentLayoutId, boolean privateLayout)
 		throws Exception {
 
 		JSONArray layoutsJSONArray = JSONFactoryUtil.createJSONArray();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			getSelGroupId(), isPrivatePages(), parentLayoutId, false,
+			getSelGroupId(), privateLayout, parentLayoutId, false,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, _getOrderByComparator());
 
 		for (Layout layout : layouts) {
