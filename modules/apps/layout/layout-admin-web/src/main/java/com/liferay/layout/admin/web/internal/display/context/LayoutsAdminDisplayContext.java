@@ -222,9 +222,18 @@ public class LayoutsAdminDisplayContext {
 					SafeConsumer.ignore(
 						dropdownItem -> {
 							dropdownItem.setHref(
-								getSelectLayoutPageTemplateEntryURL());
+								getSelectLayoutPageTemplateEntryURL(false));
 							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "add-page"));
+								LanguageUtil.get(_request, "public-page"));
+						}));
+
+				addPrimaryDropdownItem(
+					SafeConsumer.ignore(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								getSelectLayoutPageTemplateEntryURL(true));
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "private-page"));
 						}));
 			}
 		};
@@ -626,27 +635,33 @@ public class LayoutsAdminDisplayContext {
 			privateLayout, _themeDisplay.getLocale());
 	}
 
-	public String getSelectLayoutPageTemplateEntryURL() throws PortalException {
+	public String getSelectLayoutPageTemplateEntryURL(boolean privateLayout)
+		throws PortalException {
+
 		return getSelectLayoutPageTemplateEntryURL(
-			getFirstLayoutPageTemplateCollectionId());
+			getFirstLayoutPageTemplateCollectionId(), privateLayout);
 	}
 
 	public String getSelectLayoutPageTemplateEntryURL(
-		long layoutPageTemplateCollectionId) {
+		long layoutPageTemplateCollectionId, boolean privateLayout) {
 
 		return getSelectLayoutPageTemplateEntryURL(
-			layoutPageTemplateCollectionId, LayoutConstants.DEFAULT_PLID);
+			layoutPageTemplateCollectionId, LayoutConstants.DEFAULT_PLID,
+			privateLayout);
 	}
 
 	public String getSelectLayoutPageTemplateEntryURL(
-		long layoutPageTemplateCollectionId, long selPlid) {
+		long layoutPageTemplateCollectionId, long selPlid,
+		boolean privateLayout) {
 
 		return getSelectLayoutPageTemplateEntryURL(
-			layoutPageTemplateCollectionId, selPlid, "basic-pages");
+			layoutPageTemplateCollectionId, selPlid, "basic-pages",
+			privateLayout);
 	}
 
 	public String getSelectLayoutPageTemplateEntryURL(
-		long layoutPageTemplateCollectionId, long selPlid, String selectedTab) {
+		long layoutPageTemplateCollectionId, long selPlid, String selectedTab,
+		boolean privateLayout) {
 
 		PortletURL selectLayoutPageTemplateEntryURL =
 			_liferayPortletResponse.createRenderURL();
@@ -664,7 +679,7 @@ public class LayoutsAdminDisplayContext {
 		selectLayoutPageTemplateEntryURL.setParameter(
 			"selPlid", String.valueOf(selPlid));
 		selectLayoutPageTemplateEntryURL.setParameter(
-			"privateLayout", String.valueOf(isPrivatePages()));
+			"privateLayout", String.valueOf(privateLayout));
 
 		if (layoutPageTemplateCollectionId > 0) {
 			selectLayoutPageTemplateEntryURL.setParameter(
@@ -971,8 +986,8 @@ public class LayoutsAdminDisplayContext {
 			jsonObject.put(
 				"addURL",
 				getSelectLayoutPageTemplateEntryURL(
-					getFirstLayoutPageTemplateCollectionId(),
-					layout.getPlid()));
+					getFirstLayoutPageTemplateCollectionId(), layout.getPlid(),
+					layout.isPrivateLayout()));
 		}
 
 		if (showConfigureAction(layout)) {
