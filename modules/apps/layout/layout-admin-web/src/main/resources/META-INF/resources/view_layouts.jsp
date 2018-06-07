@@ -57,23 +57,34 @@
 <aui:form action="<%= deleteLayoutURL %>" cssClass="container-fluid-1280" name="fm">
 	<c:choose>
 		<c:when test="<%= layoutsAdminDisplayContext.isMillerColumnsEnabled() %>">
+			<c:choose>
+				<c:when test="<%= layoutsAdminDisplayContext.hasLayouts() %>">
 
-			<%
-			Map<String, Object> context = new HashMap<>();
+					<%
+					Map<String, Object> context = new HashMap<>();
 
-			context.put("breadcrumbEntries", layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray());
-			context.put("layoutColumns", layoutsAdminDisplayContext.getLayoutColumnsJSONArray());
-			context.put("pathThemeImages", themeDisplay.getPathThemeImages());
-			context.put("portletNamespace", renderResponse.getNamespace());
-			context.put("searchContainerId", "pages");
-			context.put("siteNavigationMenuNames", layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames());
-			%>
+					context.put("breadcrumbEntries", layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray());
+					context.put("layoutColumns", layoutsAdminDisplayContext.getLayoutColumnsJSONArray());
+					context.put("pathThemeImages", themeDisplay.getPathThemeImages());
+					context.put("portletNamespace", renderResponse.getNamespace());
+					context.put("searchContainerId", "pages");
+					context.put("siteNavigationMenuNames", layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames());
+					%>
 
-			<soy:component-renderer
-				context="<%= context %>"
-				module="layout-admin-web/js/miller_columns/Layout.es"
-				templateNamespace="com.liferay.layout.admin.web.Layout.render"
-			/>
+					<soy:component-renderer
+						context="<%= context %>"
+						module="layout-admin-web/js/miller_columns/Layout.es"
+						templateNamespace="com.liferay.layout.admin.web.Layout.render"
+					/>
+				</c:when>
+				<c:otherwise>
+					<liferay-frontend:empty-result-message
+						actionDropdownItems="<%= layoutsAdminDisplayContext.getAddLayoutDropdownItems() %>"
+						description='<%= LanguageUtil.get(request, "fortunately-it-is-very-easy-to-add-new-ones") %>'
+						elementType="pages"
+					/>
+				</c:otherwise>
+			</c:choose>
 		</c:when>
 		<c:otherwise>
 			<liferay-ui:search-container
