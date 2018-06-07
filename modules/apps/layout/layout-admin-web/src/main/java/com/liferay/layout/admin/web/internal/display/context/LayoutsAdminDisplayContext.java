@@ -297,14 +297,6 @@ public class LayoutsAdminDisplayContext {
 				addGroup(
 					dropdownGroupItem -> {
 						dropdownGroupItem.setDropdownItems(
-							_getFilterNavigationDropdownItems());
-						dropdownGroupItem.setLabel(
-							LanguageUtil.get(_request, "filter-by-navigation"));
-					});
-
-				addGroup(
-					dropdownGroupItem -> {
-						dropdownGroupItem.setDropdownItems(
 							_getOrderByDropdownItems());
 						dropdownGroupItem.setLabel(
 							LanguageUtil.get(_request, "order-by"));
@@ -1068,30 +1060,6 @@ public class LayoutsAdminDisplayContext {
 		breadcrumbEntryJSONObject.put("url", portletURL.toString());
 
 		return breadcrumbEntryJSONObject;
-	}
-
-	private List<DropdownItem> _getFilterNavigationDropdownItems() {
-		return new DropdownItemList() {
-			{
-				add(
-					dropdownItem -> {
-						dropdownItem.setActive(isPublicPages());
-						dropdownItem.setHref(
-							getPortletURL(), "navigation", "public-pages");
-						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "public-pages"));
-					});
-
-				add(
-					dropdownItem -> {
-						dropdownItem.setActive(isPrivatePages());
-						dropdownItem.setHref(
-							getPortletURL(), "navigation", "private-pages");
-						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "private-pages"));
-					});
-			}
-		};
 	}
 
 	private JSONArray _getLayoutColumnsJSONArray() throws Exception {
