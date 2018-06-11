@@ -7,6 +7,7 @@
 	{@param previewFragmentEntryURL: string}
 	{@param spritemap: string}
 	{@param? _currentPreviewSize: string}
+	{@param? _handleGenerateThumbnailButtonClick: any}
 	{@param? _handlePreviewSizeButtonClick: any}
 	{@param? _loading: bool}
 	{@param? _previewSizes: list<string>}
@@ -57,6 +58,27 @@
 					<use xlink:href="{$spritemap}#full-size"></use>
 				</svg>
 			</button>
+
+			<button
+				class="btn btn-sm btn-thumbnail"
+				data-onclick="{$_handleGenerateThumbnailButtonClick}"
+				type="button"
+			>
+				<span class="sr-only">preview</span>
+
+				<svg class="lexicon-icon">
+					<use xlink:href="{$spritemap}#camera"></use>
+				</svg>
+			</button>
+
+			{call liferay.frontend.Tooltip.render}
+				{param position: 3 /}
+				{param selector: '.btn-thumbnail' /}
+				{param title kind="html"}
+					{msg desc=""}generate-thumbnail{/msg}
+				{/param}
+				{param visible: false /}
+			{/call}
 		</div>
 
 		{let $previewClasses kind="text"}

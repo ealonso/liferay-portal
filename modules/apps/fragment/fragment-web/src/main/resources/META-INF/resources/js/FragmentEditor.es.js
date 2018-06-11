@@ -64,6 +64,15 @@ class FragmentEditor extends Component {
 	}
 
 	/**
+	 * @private
+	 * @review
+	 */
+
+	_handleGenerateThumbnailButtonClick() {
+		this.emit('generateThumbnailButtonClick');
+	}
+
+	/**
 	 * Callback executed when the html editor changes
 	 * @param {!Event} event
 	 * @private

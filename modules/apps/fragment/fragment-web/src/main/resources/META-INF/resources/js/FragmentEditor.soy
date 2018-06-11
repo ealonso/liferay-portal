@@ -28,6 +28,7 @@
 	{@param spritemap: string}
 	{@param? _css: string}
 	{@param? _handleCSSChanged: any}
+	{@param? _handleGenerateThumbnailButtonClick: any}
 	{@param? _handleHTMLChanged: any}
 	{@param? _handleJSChanged: any}
 	{@param? _html: string}
@@ -69,6 +70,9 @@
 
 		{call com.liferay.fragment.web.FragmentPreview.render}
 			{param css: $_css /}
+			{param events: [
+				'generateThumbnailButtonClick': $_handleGenerateThumbnailButtonClick
+			] /}
 			{param html: $_html /}
 			{param js: $_js /}
 			{param namespace: $namespace /}
