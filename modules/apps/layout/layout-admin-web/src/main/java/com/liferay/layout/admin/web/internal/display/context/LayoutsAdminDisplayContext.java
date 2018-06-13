@@ -14,6 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.display.context;
 
+import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
@@ -37,13 +38,16 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
@@ -262,7 +266,7 @@ public class LayoutsAdminDisplayContext {
 		};
 	}
 
-	public String getDeleteLayoutURL(Layout layout) {
+	public String getDeleteLayoutURL(Layout layout) throws PortalException {
 		PortletURL deleteLayoutURL = _liferayPortletResponse.createActionURL();
 
 		deleteLayoutURL.setParameter(
@@ -270,6 +274,8 @@ public class LayoutsAdminDisplayContext {
 		deleteLayoutURL.setParameter("redirect", _themeDisplay.getURLCurrent());
 		deleteLayoutURL.setParameter(
 			"selPlid", String.valueOf(layout.getPlid()));
+		deleteLayoutURL.setParameter(
+			"layoutSetBranchId", String.valueOf(_getActiveLayoutSetBranchId()));
 
 		return deleteLayoutURL.toString();
 	}
@@ -942,6 +948,67 @@ public class LayoutsAdminDisplayContext {
 			ActionKeys.PERMISSIONS);
 	}
 
+	private void _addLayoutColumns(
+			JSONArray layoutsJSONArray, List<Layout> layouts,
+			long layoutSetBranchId)
+		throws Exception {
+
+		for (Layout layout : layouts) {
+			JSONObject layoutJSONObject = JSONFactoryUtil.createJSONObject();
+
+			if (layoutSetBranchId > 0) {
+				LayoutRevision layoutRevision =
+					LayoutStagingUtil.getLayoutRevision(layout);
+
+				if (layoutRevision.isIncomplete()) {
+					continue;
+				}
+			}
+
+			layoutJSONObject.put(
+				"actionURLs", _getActionURLsJSONObject(layout));
+			layoutJSONObject.put("active", _isActive(layout.getPlid()));
+
+			LayoutTypeController layoutTypeController =
+				LayoutTypeControllerTracker.getLayoutTypeController(
+					layout.getType());
+
+			ResourceBundle layoutTypeResourceBundle =
+				ResourceBundleUtil.getBundle(
+					"content.Language", _themeDisplay.getLocale(),
+					layoutTypeController.getClass());
+
+			layoutJSONObject.put(
+				"description",
+				LanguageUtil.get(
+					_request, layoutTypeResourceBundle,
+					"layout.types." + layout.getType()));
+
+			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+				getSelGroup(), isPrivatePages(), layout.getLayoutId());
+
+			layoutJSONObject.put("hasChild", childLayoutsCount > 0);
+
+			layoutJSONObject.put("plid", layout.getPlid());
+
+			if (childLayoutsCount > 0) {
+				PortletURL portletURL = getPortletURL();
+
+				portletURL.setParameter(
+					"selPlid", String.valueOf(layout.getPlid()));
+				portletURL.setParameter(
+					"layoutSetBranchId", String.valueOf(layoutSetBranchId));
+
+				layoutJSONObject.put("url", portletURL.toString());
+			}
+
+			layoutJSONObject.put(
+				"title", layout.getName(_themeDisplay.getLocale()));
+
+			layoutsJSONArray.put(layoutJSONObject);
+		}
+	}
+
 	private JSONObject _getActionURLsJSONObject(Layout layout)
 		throws Exception {
 
@@ -982,6 +1049,36 @@ public class LayoutsAdminDisplayContext {
 		jsonObject.put("viewLayoutURL", getViewLayoutURL(layout));
 
 		return jsonObject;
+	}
+
+	private long _getActiveLayoutSetBranchId() throws PortalException {
+		List<LayoutSetBranch> layoutSetBranches =
+			LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(
+				_themeDisplay.getScopeGroupId(), isPrivatePages());
+
+		Layout layout = getSelLayout();
+
+		long activeLayoutSetBranchId = ParamUtil.getLong(
+			_request, "layoutSetBranchId");
+
+		if (layout != null) {
+			LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
+				layout);
+
+			if (layoutRevision != null) {
+				activeLayoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+			}
+		}
+
+		if ((activeLayoutSetBranchId == 0) && !layoutSetBranches.isEmpty()) {
+			LayoutSetBranch layoutSetBranch =
+				LayoutSetBranchLocalServiceUtil.getMasterLayoutSetBranch(
+					_themeDisplay.getScopeGroupId(), isPrivateLayout());
+
+			activeLayoutSetBranchId = layoutSetBranch.getLayoutSetBranchId();
+		}
+
+		return activeLayoutSetBranchId;
 	}
 
 	private JSONObject _getBreadcrumbEntryJSONObject(long plid, String title) {
@@ -1069,6 +1166,12 @@ public class LayoutsAdminDisplayContext {
 
 		layoutColumnsJSONArray.put(firstColumnJSONArray);
 
+		JSONArray layoutSetBranchesJSONArray = _getLayoutSetBranchesJSONArray();
+
+		if (layoutSetBranchesJSONArray.length() > 0) {
+			layoutColumnsJSONArray.put(layoutSetBranchesJSONArray);
+		}
+
 		layoutColumnsJSONArray.put(_getLayoutsJSONArray(0, isPrivatePages()));
 
 		if (getSelPlid() == LayoutConstants.DEFAULT_PLID) {
@@ -1098,59 +1201,55 @@ public class LayoutsAdminDisplayContext {
 		return layoutColumnsJSONArray;
 	}
 
+	private JSONArray _getLayoutSetBranchesJSONArray() throws PortalException {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<LayoutSetBranch> layoutSetBranches =
+			LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(
+				_themeDisplay.getScopeGroupId(), isPrivatePages());
+
+		long activeLayoutSetBranchId = _getActiveLayoutSetBranchId();
+
+		for (LayoutSetBranch layoutSetBranch : layoutSetBranches) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			PortletURL portletURL = getPortletURL();
+
+			portletURL.setParameter(
+				"layoutSetBranchId",
+				String.valueOf(layoutSetBranch.getLayoutSetBranchId()));
+
+			jsonObject.put(
+				"active",
+				layoutSetBranch.getLayoutSetBranchId() ==
+					activeLayoutSetBranchId);
+
+			jsonObject.put("hasChild", true);
+			jsonObject.put("plid", LayoutConstants.DEFAULT_PLID);
+			jsonObject.put(
+				"title", LanguageUtil.get(_request, layoutSetBranch.getName()));
+			jsonObject.put("url", portletURL.toString());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
+	}
+
 	private JSONArray _getLayoutsJSONArray(
 			long parentLayoutId, boolean privateLayout)
 		throws Exception {
 
 		JSONArray layoutsJSONArray = JSONFactoryUtil.createJSONArray();
 
+		long layoutSetBranchId = ParamUtil.getLong(
+			_request, "layoutSetBranchId", _getActiveLayoutSetBranchId());
+
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			getSelGroupId(), privateLayout, parentLayoutId, false,
+			getSelGroupId(), privateLayout, parentLayoutId, true,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, _getOrderByComparator());
 
-		for (Layout layout : layouts) {
-			JSONObject layoutJSONObject = JSONFactoryUtil.createJSONObject();
-
-			layoutJSONObject.put(
-				"actionURLs", _getActionURLsJSONObject(layout));
-			layoutJSONObject.put("active", _isActive(layout.getPlid()));
-
-			LayoutTypeController layoutTypeController =
-				LayoutTypeControllerTracker.getLayoutTypeController(
-					layout.getType());
-
-			ResourceBundle layoutTypeResourceBundle =
-				ResourceBundleUtil.getBundle(
-					"content.Language", _themeDisplay.getLocale(),
-					layoutTypeController.getClass());
-
-			layoutJSONObject.put(
-				"description",
-				LanguageUtil.get(
-					_request, layoutTypeResourceBundle,
-					"layout.types." + layout.getType()));
-
-			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				getSelGroup(), isPrivatePages(), layout.getLayoutId());
-
-			layoutJSONObject.put("hasChild", childLayoutsCount > 0);
-
-			layoutJSONObject.put("plid", layout.getPlid());
-
-			if (childLayoutsCount > 0) {
-				PortletURL portletURL = getPortletURL();
-
-				portletURL.setParameter(
-					"selPlid", String.valueOf(layout.getPlid()));
-
-				layoutJSONObject.put("url", portletURL.toString());
-			}
-
-			layoutJSONObject.put(
-				"title", layout.getName(_themeDisplay.getLocale()));
-
-			layoutsJSONArray.put(layoutJSONObject);
-		}
+		_addLayoutColumns(layoutsJSONArray, layouts, layoutSetBranchId);
 
 		return layoutsJSONArray;
 	}
