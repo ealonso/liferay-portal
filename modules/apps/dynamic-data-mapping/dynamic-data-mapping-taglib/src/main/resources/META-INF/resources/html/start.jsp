@@ -120,7 +120,7 @@
 
 		<aui:input name="<%= HtmlUtil.getAUICompatibleId(ddmFormValuesInputName) %>" type="hidden" />
 
-		<aui:script use="liferay-ddm-form">
+		<aui:script use="aui-base, liferay-ddm-form">
 			var liferayDDMForm = new Liferay.DDM.Form(
 				{
 					container: '#<%= randomNamespace %>',
@@ -140,22 +140,7 @@
 				}
 			);
 
-			var onDestroyPortlet = function(event) {
-				if (event.portletId === '<%= portletDisplay.getId() %>') {
-					liferayDDMForm.destroy();
-
-					Liferay.detach('destroyPortlet', onDestroyPortlet);
-				}
-			};
-
-			Liferay.on('destroyPortlet', onDestroyPortlet);
-		</aui:script>
-	</c:if>
-
-	<aui:script use="aui-base">
-		Liferay.on(
-			'inputLocalized:localeChanged',
-			function(event) {
+			var onLocaleChange = function(event) {
 				var languageId = event.item.getAttribute('data-value');
 
 				languageId = languageId.replace('_', '-');
@@ -171,15 +156,28 @@
 				var trigger = A.one('#<portlet:namespace /><%= fieldsNamespace %>Menu');
 
 				trigger.setHTML(triggerContent);
-			}
-		);
+			};
 
-		window.fireLocaleChanged = function(event) {
-			Liferay.fire(
-				'inputLocalized:localeChanged',
-				{
-					item: event.target
+			Liferay.on('inputLocalized:localeChanged', onLocaleChange);
+
+			window.fireLocaleChanged = function(event) {
+				Liferay.fire(
+					'inputLocalized:localeChanged',
+					{
+						item: event.target
+					}
+				);
+			};
+
+			var onDestroyPortlet = function(event) {
+				if (event.portletId === '<%= portletDisplay.getId() %>') {
+					liferayDDMForm.destroy();
+
+					Liferay.detach('inputLocalized:localeChanged', onLocaleChange);
+					Liferay.detach('destroyPortlet', onDestroyPortlet);
 				}
-			);
-		};
-	</aui:script>
+			};
+
+			Liferay.on('destroyPortlet', onDestroyPortlet);
+		</aui:script>
+	</c:if>
