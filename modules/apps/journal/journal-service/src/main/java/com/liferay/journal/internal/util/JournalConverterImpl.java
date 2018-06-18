@@ -602,12 +602,11 @@ public class JournalConverterImpl implements JournalConverter {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 					dynamicContentElement.getText());
 
-				Long resourcePrimKey = jsonObject.getLong("classPK");
+				Long classPK = jsonObject.getLong("classPK");
 
-				if (Validator.isNotNull(resourcePrimKey)) {
+				if (Validator.isNotNull(classPK)) {
 					JournalArticle journalArticle =
-						_journalArticleLocalService.fetchLatestArticle(
-							resourcePrimKey);
+						_journalArticleLocalService.fetchLatestArticle(classPK);
 
 					String title = journalArticle.getTitle(defaultLocale);
 

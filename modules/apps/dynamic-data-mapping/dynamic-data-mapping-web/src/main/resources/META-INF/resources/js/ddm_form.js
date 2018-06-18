@@ -353,23 +353,6 @@ AUI.add(
 						Liferay.on('inputLocalized:localeChanged', A.bind('_onLocaleChanged', instance));
 					},
 
-					_onLocaleChanged: function(event) {
-						var instance = this;
-
-						var currentLocale = instance.get('displayLocale');
-						var displayLocale = event.item.getAttribute('data-value');
-						var inputName = instance.getInputName();
-						var inputNode = instance.getInputNode();
-
-						instance.updateLocalizationMap(currentLocale);
-						instance.addLocaleToLocalizationMap(displayLocale);
-
-						instance.set('displayLocale', displayLocale);
-
-						instance.syncValueUI();
-						instance.syncReadOnlyUI();
-					},
-
 					renderUI: function() {
 						var instance = this;
 
@@ -533,7 +516,7 @@ AUI.add(
 								predefinedValue = field.predefinedValue[locale];
 							}
 
-							if (type == 'select' && predefinedValue == '[""]') {
+							if ((type === 'select') && (predefinedValue === '[""]')) {
 								predefinedValue = '';
 							}
 						}
@@ -842,6 +825,21 @@ AUI.add(
 						event.stopPropagation();
 					},
 
+					_onLocaleChanged: function(event) {
+						var instance = this;
+
+						var currentLocale = instance.get('displayLocale');
+						var displayLocale = event.item.getAttribute('data-value');
+
+						instance.updateLocalizationMap(currentLocale);
+						instance.addLocaleToLocalizationMap(displayLocale);
+
+						instance.set('displayLocale', displayLocale);
+
+						instance.syncValueUI();
+						instance.syncReadOnlyUI();
+					},
+
 					_removeFieldValidation: function(field) {
 						var instance = this;
 
@@ -1023,17 +1021,19 @@ AUI.add(
 
 						var datePicker = instance.getDatePicker();
 
-						if (!datePicker) {
-							return '';
+						var value = '';
+
+						if (datePicker) {
+							var selectedDate = datePicker.getDate();
+
+							var formattedDate = A.DataType.Date.format(selectedDate);
+
+							var inputNode = instance.getInputNode();
+
+							value = inputNode.val() ? formattedDate : '';
 						}
 
-						var selectedDate = datePicker.getDate();
-
-						var formattedDate = A.DataType.Date.format(selectedDate);
-
-						var inputNode = instance.getInputNode();
-
-						return inputNode.val() ? formattedDate : '';
+						return value;
 					},
 
 					repeat: function() {
@@ -3103,9 +3103,9 @@ AUI.add(
 
 										var dragNode = event.drag.get('node');
 
-										var dragNodeAncestor =  dragNode.ancestor();
+										var dragNodeAncestor = dragNode.ancestor();
 
-										if (dropNodeAncestor.get('id') != dragNodeAncestor.get('id')) {
+										if (dropNodeAncestor.get('id') !== dragNodeAncestor.get('id')) {
 											return false;
 										}
 

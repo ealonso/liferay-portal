@@ -121,6 +121,8 @@
 		<aui:input name="<%= HtmlUtil.getAUICompatibleId(ddmFormValuesInputName) %>" type="hidden" />
 
 		<aui:script use="aui-base, liferay-ddm-form">
+			var Lang = A.Lang;
+
 			var liferayDDMForm = new Liferay.DDM.Form(
 				{
 					container: '#<%= randomNamespace %>',
@@ -145,7 +147,7 @@
 
 				languageId = languageId.replace('_', '-');
 
-				var triggerContent = AUI().Lang.sub(
+				var triggerContent = Lang.sub(
 					'<span class="inline-item">{flag}</span><span class="btn-section">{languageId}</span>',
 					{
 						flag: Liferay.Util.getLexiconIconTpl(languageId.toLowerCase()),
