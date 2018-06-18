@@ -18,7 +18,7 @@
 
 <div class="lfr-ddm-container" id="<%= randomNamespace %>">
 	<c:if test="<%= ddmForm != null %>">
-		<div class="input-group-item input-group-item-shrink input-localized-content" role="menu" style="justify-content: flex-end;">
+		<div class="input-group-item input-group-item-shrink input-localized-content <%= hideClass %>" role="menu" style="justify-content: flex-end;">
 
 			<%
 			List<String> languageIds = new ArrayList<String>();
@@ -37,7 +37,7 @@
 			<liferay-ui:icon-menu
 				direction="left-side"
 				icon="<%= StringUtil.toLowerCase(normalizedDefaultLanguageId) %>"
-				id="Menu"
+				id="<%= fieldsNamespace + \"Menu\" %>"
 				markupView="lexicon"
 				message="<%= StringPool.BLANK %>"
 				showWhenSingleIcon="<%= true %>"
@@ -45,8 +45,8 @@
 				triggerLabel="<%= normalizedDefaultLanguageId %>"
 				triggerType="button"
 			>
-				<div id="<portlet:namespace />PaletteBoundingBox">
-					<div class="input-localized-palette-container palette-container" id="<portlet:namespace />PaletteContentBox">
+				<div id="<portlet:namespace /><%= fieldsNamespace %>PaletteBoundingBox">
+					<div class="input-localized-palette-container palette-container" id="<portlet:namespace /><%= fieldsNamespace %>PaletteContentBox">
 
 						<%
 						LinkedHashSet<String> uniqueLanguageIds = new LinkedHashSet<String>();
@@ -168,7 +168,7 @@
 					}
 				);
 
-				var trigger = A.one('#<portlet:namespace />Menu');
+				var trigger = A.one('#<portlet:namespace /><%= fieldsNamespace %>Menu');
 
 				trigger.setHTML(triggerContent);
 			}
