@@ -18,7 +18,7 @@
 
 <div class="lfr-ddm-container" id="<%= randomNamespace %>">
 	<c:if test="<%= ddmForm != null %>">
-		<div class="input-group-item input-group-item-shrink input-localized-content" role="menu" style="border-top: solid 1px #ccc; justify-content: flex-end; margin-top: 24px; padding-top: 8px;">
+		<div class="input-group-item input-group-item-shrink input-localized-content" role="menu" style="justify-content: flex-end;">
 
 			<%
 			List<String> languageIds = new ArrayList<String>();
