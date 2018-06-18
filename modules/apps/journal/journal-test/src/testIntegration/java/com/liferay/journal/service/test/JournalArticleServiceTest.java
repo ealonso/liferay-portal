@@ -39,20 +39,26 @@ import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.ClassName;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.RoleConstants;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameServiceUtil;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.spring.aop.AdvisedSupport;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.context.ContextUserReplace;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
@@ -546,6 +552,72 @@ public class JournalArticleServiceTest {
 	}
 
 	@Test
+	public void testSearchArticlesWithInlineSQLHelper() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext();
+
+		serviceContext.setCommand(Constants.ADD);
+		serviceContext.setLayoutFullURL("http://localhost");
+
+		String[] viewPermission = {"VIEW"};
+
+		serviceContext.setAddGuestPermissions(true);
+		serviceContext.setGuestPermissions(viewPermission);
+
+		String publicArticleTitle = RandomTestUtil.randomString();
+
+		JournalArticle publicJournal = JournalTestUtil.addArticle(
+			_group.getGroupId(), publicArticleTitle, publicArticleTitle,
+			serviceContext);
+
+		serviceContext.setAddGuestPermissions(false);
+		serviceContext.setGroupPermissions(viewPermission);
+		serviceContext.setGuestPermissions(new String[0]);
+
+		String siteMemberArticleTitle = RandomTestUtil.randomString();
+
+		JournalArticle siteMemberJournal = JournalTestUtil.addArticle(
+			_group.getGroupId(), siteMemberArticleTitle, siteMemberArticleTitle,
+			serviceContext);
+
+		User guestUser = _userLocalService.getDefaultUser(
+			_group.getCompanyId());
+
+		try (ContextUserReplace contextUserReplace = new ContextUserReplace(
+				guestUser)) {
+
+			List<JournalArticle> articles1 =
+				searchArticlesByKeywordWithInlineSQLHelper(
+					publicArticleTitle, WorkflowConstants.STATUS_ANY);
+
+			List<JournalArticle> articles2 =
+				searchArticlesByKeywordWithInlineSQLHelper(
+					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
+
+			Assert.assertEquals(publicJournal, articles1.get(0));
+			Assert.assertTrue(articles2.isEmpty());
+		}
+
+		User siteMemberUser = UserTestUtil.addGroupUser(
+			_group, RoleConstants.SITE_MEMBER);
+
+		try (ContextUserReplace contextUserReplace = new ContextUserReplace(
+				siteMemberUser)) {
+
+			List<JournalArticle> articles1 =
+				searchArticlesByKeywordWithInlineSQLHelper(
+					publicArticleTitle, WorkflowConstants.STATUS_ANY);
+
+			List<JournalArticle> articles2 =
+				searchArticlesByKeywordWithInlineSQLHelper(
+					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
+
+			Assert.assertEquals(publicJournal, articles1.get(0));
+			Assert.assertEquals(siteMemberJournal, articles2.get(0));
+		}
+	}
+
+	@Test
 	public void testUpdateArticle() throws Exception {
 		_article.setDisplayDate(new Date());
 
@@ -673,6 +745,21 @@ public class JournalArticleServiceTest {
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
+	protected List<JournalArticle> searchArticlesByKeywordWithInlineSQLHelper(
+			String keyword, int status)
+		throws Exception {
+
+		List<Long> folderIds = new ArrayList<>(1);
+
+		folderIds.add(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		return JournalArticleServiceUtil.search(
+			TestPropsValues.getCompanyId(), _group.getGroupId(), folderIds,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
+			null, keyword, "", "", null, null, status, null, false,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
 	protected void setUpDDMFormXSDDeserializer() {
 		Registry registry = RegistryUtil.getRegistry();
 
@@ -752,6 +839,9 @@ public class JournalArticleServiceTest {
 	private static JournalArticleLocalService _journalArticleLocalService;
 
 	private static Object _journalArticleLocalServiceImplInstance;
+
+	@Inject
+	private static UserLocalService _userLocalService;
 
 	private JournalArticle _article;
 	private DDMFormXSDDeserializer _ddmFormXSDDeserializer;
