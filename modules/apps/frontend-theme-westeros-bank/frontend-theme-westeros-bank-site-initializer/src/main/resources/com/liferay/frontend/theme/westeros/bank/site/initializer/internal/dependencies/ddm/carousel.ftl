@@ -32,9 +32,9 @@
 
 				<#list ItemHeading.getSiblings() as cur_ItemHeading>
 					<#if cur_ItemHeading?counter == 1>
-		    			<div class="active item">
+		    			<div class="active item carousel-item">
 		    		<#else>
-		    			<div class="item item-carousel">
+		    			<div class="item carousel-item">
 		    		</#if>
 						<div class="item-wrapper">
 							<div class="col-sm-5 item-wrapper-image" style="background-image: url(${cur_ItemHeading.ItemImage.getData()})"></div>
