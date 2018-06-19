@@ -1,0 +1,18 @@
+<portlet-preferences>
+    <preference>
+        <name>articleId</name>
+        <value>$articleId$</value>
+    </preference>
+    <preference>
+        <name>assetEntryId</name>
+        <value>$assetEntryId$</value>
+    </preference>
+    <preference>
+        <name>groupId</name>
+        <value>$groupId$</value>
+    </preference>
+    <preference>
+        <name>portletSetupPortletDecoratorId</name>
+        <value>barebone</value>
+    </preference>
+</portlet-preferences>

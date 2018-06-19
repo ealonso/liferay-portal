@@ -14,15 +14,20 @@
 
 package com.liferay.frontend.theme.westeros.bank.site.initializer.internal;
 
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.dynamic.data.mapping.util.DefaultDDMStructureHelper;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.model.FragmentEntryModel;
 import com.liferay.fragment.service.FragmentCollectionLocalService;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
+import com.liferay.journal.constants.JournalContentPortletKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
@@ -33,6 +38,7 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServ
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -40,6 +46,8 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.portlet.PortletIdCodec;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
@@ -52,6 +60,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
@@ -70,6 +79,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 
@@ -115,6 +125,7 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 		try {
 			ServiceContext serviceContext = _createServiceContext(groupId);
 
+			_updateLogo(serviceContext);
 			_updateLookAndFeel(serviceContext);
 
 			Folder folder = _dlAppLocalService.addFolder(
@@ -125,8 +136,13 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			List<FileEntry> fileEntries = _addFileEntries(
 				folder.getFolderId(), serviceContext);
 
-			Map<String, String> fileEntriesMap = _getFileEntriesMap(
+			Map<String, String> fileEntriesPathMap = _getFileEntriesPathMap(
 				fileEntries);
+
+			_addCarouselDDMStructure(serviceContext);
+
+			JournalArticle carouselJournalArticle = _addCarouselJournalArticle(
+				_getFileEntriesMap(fileEntries), serviceContext);
 
 			FragmentCollection fragmentCollection = _addFragmentCollection(
 				serviceContext);
@@ -134,113 +150,73 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			LayoutPageTemplateCollection layoutPageTemplateCollection =
 				_addLayoutPageTemplateCollection(serviceContext);
 
+			List<FragmentEntry> fragmentEntries = _addFragmentEntries(
+				fragmentCollection.getFragmentCollectionId(),
+				fileEntriesPathMap, serviceContext);
+
+			Map<String, FragmentEntry> fragmentEntriesMap =
+				_getFragmentEntriesMap(fragmentEntries);
+
 			List<FragmentEntry> personalFragmentEntries = new ArrayList<>();
 
-			FragmentEntry carouselFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments/personal", "carousel.html",
-				serviceContext);
+			personalFragmentEntries.add(fragmentEntriesMap.get("carousel"));
+			personalFragmentEntries.add(fragmentEntriesMap.get("features"));
+			personalFragmentEntries.add(fragmentEntriesMap.get("news"));
+			personalFragmentEntries.add(fragmentEntriesMap.get("offerings"));
+			personalFragmentEntries.add(fragmentEntriesMap.get("links"));
 
-			personalFragmentEntries.add(carouselFragmentEntry);
-
-			FragmentEntry featuresFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments/personal", "features.html",
-				serviceContext);
-
-			personalFragmentEntries.add(featuresFragmentEntry);
-
-			FragmentEntry newsFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments/personal", "news.html",
-				serviceContext);
-
-			personalFragmentEntries.add(newsFragmentEntry);
-
-			FragmentEntry offeringsFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments/personal", "offerings.html",
-				serviceContext);
-
-			personalFragmentEntries.add(offeringsFragmentEntry);
-
-			FragmentEntry linksFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments", "links.html",
-				serviceContext);
-
-			personalFragmentEntries.add(linksFragmentEntry);
-
-			Class<?> clazz = getClass();
-
-			_defaultDDMStructureHelper.addDDMStructures(
-				serviceContext.getUserId(), groupId,
-				_portal.getClassNameId(JournalArticle.class),
-				clazz.getClassLoader(), "com/liferay/frontend/theme/westeros" +
-										"/bank/site/initializer/internal/dependencies/ddm" +
-										"/carousel.xml",
-				serviceContext);
-
-			URL carouselContentURL = _bundle.getEntry(_PATH + "/ddm/content/carousel.xml");
-
-			String content = StringUtil.replace(
-				StringUtil.read(carouselContentURL.openStream()), StringPool.DOLLAR,
-				StringPool.DOLLAR, fileEntriesMap);
-
-			JournalArticle article = _journalArticleLocalService.addArticle(
-				serviceContext.getUserId(), groupId, 0,
-				Collections.singletonMap(LocaleUtil.US, "Carousel"), null, content,
-				"CAROUSEL", "CAROUSEL", serviceContext);
-
-
-			LayoutPageTemplateEntry personalLayoutPageTemplate = _addLayoutPageTemplateEntry(
-				layoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId(),
-				"For You", personalFragmentEntries, _PATH + "/fragments" +
-					"/personal/thumbnail.jpg",	serviceContext);
+			LayoutPageTemplateEntry personalLayoutPageTemplate =
+				_addLayoutPageTemplateEntry(layoutPageTemplateCollection,
+				"For You", personalFragmentEntries, _PATH + "/page_templates",
+					"personal.png", serviceContext);
 
 			Layout personalLayout = _addLayout("For You",
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 				personalLayoutPageTemplate.getLayoutPageTemplateEntryId(),
 				serviceContext);
 
-			_addLayout("Checking and Credit Cards", personalLayout.getLayoutId(), serviceContext);
-			_addLayout("Savings and Investments", personalLayout.getLayoutId(), serviceContext);
-			_addLayout("Loans and Mortgages", personalLayout.getLayoutId(), serviceContext);
-			_addLayout("Assurance", personalLayout.getLayoutId(), serviceContext);
+			_configureFragmentEntryArticle(
+				fragmentEntriesMap.get("carousel"), carouselJournalArticle,
+				personalLayout);
 
+			List<Layout> personalLayoutChildren = _addLayouts(
+				personalLayout, LAYOUT_CHILDREN_PERSONAL, fragmentEntriesMap,
+				serviceContext);
 
+			List<Layout> checkingLayoutChildren = _addLayouts(
+				personalLayoutChildren.get(0), LAYOUT_CHILDREN_CHECKING,
+				fragmentEntriesMap, serviceContext);
 
+			List<Layout> savingsLayoutChildren = _addLayouts(
+				personalLayoutChildren.get(1), LAYOUT_CHILDREN_SAVINGS,
+				fragmentEntriesMap, serviceContext);
 
+			List<Layout> loansLayoutChildren = _addLayouts(
+				personalLayoutChildren.get(2), LAYOUT_CHILDREN_LOANS,
+				fragmentEntriesMap, serviceContext);
 
-
+			List<Layout> assuranceLayoutChildren = _addLayouts(
+				personalLayoutChildren.get(3), LAYOUT_CHILDREN_ASSURANCE,
+				fragmentEntriesMap, serviceContext);
 
 			List<FragmentEntry> businessFragmentEntries = new ArrayList<>();
 
-			FragmentEntry videoFragmentEntry = _addFragmentEntry(
-				fragmentCollection.getFragmentCollectionId(), fileEntriesMap,
-				_PATH + "/fragments/business", "video.html",
-				serviceContext);
+			businessFragmentEntries.add(fragmentEntriesMap.get("video"));
+			businessFragmentEntries.add(fragmentEntriesMap.get("links"));
 
-			businessFragmentEntries.add(videoFragmentEntry);
-
-			businessFragmentEntries.add(linksFragmentEntry);
-
-			LayoutPageTemplateEntry businessLayoutPageTemplate = _addLayoutPageTemplateEntry(
-				layoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId(),
+			LayoutPageTemplateEntry businessLayoutPageTemplate =
+				_addLayoutPageTemplateEntry(layoutPageTemplateCollection,
 				"For Your Business", businessFragmentEntries, _PATH +
-					"/fragments/business/thumbnail.jpg", serviceContext);
+					"/page_templates", "business.png", serviceContext);
 
 			Layout businessLayout = _addLayout("For Your Business",
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 				businessLayoutPageTemplate.getLayoutPageTemplateEntryId(),
 				serviceContext);
 
-			_addLayout("Credit Cards for Business", businessLayout.getLayoutId(), serviceContext);
-			_addLayout("Assurance for Business", businessLayout.getLayoutId(), serviceContext);
-
-
+			List<Layout> businessLayoutChildren = _addLayouts(
+				businessLayout, LAYOUT_CHILDREN_BUSINESS, fragmentEntriesMap,
+				serviceContext);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -257,6 +233,39 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundle = bundleContext.getBundle();
+	}
+
+	private void _addCarouselDDMStructure(ServiceContext serviceContext)
+		throws Exception{
+
+		Class<?> clazz = getClass();
+
+		_defaultDDMStructureHelper.addDDMStructures(
+			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
+			_portal.getClassNameId(JournalArticle.class),
+			clazz.getClassLoader(), "com/liferay/frontend/theme/westeros" +
+				"/bank/site/initializer/internal/dependencies/ddm/carousel.xml",
+			serviceContext);
+	}
+
+	private JournalArticle _addCarouselJournalArticle(
+			Map<String, String> fileEntriesMap,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		URL carouselContentURL = _bundle.getEntry(
+			_PATH + "/ddm/content/carousel.xml");
+
+		String content = StringUtil.replace(
+			StringUtil.read(carouselContentURL.openStream()), StringPool.DOLLAR,
+			StringPool.DOLLAR, fileEntriesMap);
+
+		JournalArticle article = _journalArticleLocalService.addArticle(
+			serviceContext.getUserId(), serviceContext.getScopeGroupId(), 0,
+			Collections.singletonMap(LocaleUtil.US, "Carousel"), null, content,
+			"CAROUSEL", "CAROUSEL", serviceContext);
+
+		return article;
 	}
 
 	private List<FileEntry> _addFileEntries(
@@ -299,8 +308,34 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			_THEME_NAME, null, serviceContext);
 	}
 
+	private List<FragmentEntry> _addFragmentEntries(
+			long fragmentCollectionId, Map<String, String> fileEntriesPathMap,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		List<FragmentEntry> fragmentEntries = new ArrayList<>();
+
+		Enumeration<URL> urls = _bundle.findEntries(
+			_PATH + "/fragments", "*.html", false);
+
+		while (urls.hasMoreElements()) {
+			URL url = urls.nextElement();
+
+			String fileName = FileUtil.getShortFileName(url.getPath());
+			String filePath = FileUtil.getPath(url.getPath());
+
+			FragmentEntry fragmentEntry = _addFragmentEntry(
+				fragmentCollectionId, fileEntriesPathMap, filePath, fileName,
+				serviceContext);
+
+			fragmentEntries.add(fragmentEntry);
+		}
+
+		return fragmentEntries;
+	}
+
 	private FragmentEntry _addFragmentEntry(
-			long fragmentCollectionId, Map<String, String> fileEntriesMap,
+			long fragmentCollectionId, Map<String, String> fileEntriesPathMap,
 			String path, String fileName, ServiceContext serviceContext)
 		throws Exception {
 
@@ -308,25 +343,29 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 
 		String html = StringUtil.replace(
 			StringUtil.read(url.openStream()), StringPool.DOLLAR,
-			StringPool.DOLLAR, fileEntriesMap);
+			StringPool.DOLLAR, fileEntriesPathMap);
 
 		String shortFileName = FileUtil.getShortFileName(url.getPath());
-
-		long previewFileEntryId = _getPreviewFileEntryId(
-			path, shortFileName, serviceContext);
 
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.addFragmentEntry(
 				serviceContext.getUserId(),
 				serviceContext.getScopeGroupId(), fragmentCollectionId,
-				FileUtil.getShortFileName(url.getPath()), StringPool.BLANK,
-				html, StringPool.BLANK, previewFileEntryId,
+				StringUtil.upperCaseFirstLetter(
+					FileUtil.stripExtension(shortFileName)), StringPool.BLANK,
+				html, StringPool.BLANK, _getPreviewFileEntryId(
+					path, shortFileName, serviceContext),
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		return fragmentEntry;
 	}
 
-	private Layout _addLayout(String name, long parentLayoutId, Long layoutPageTemplateEntryId, UnicodeProperties typeSettingsProperties, ServiceContext serviceContext) throws Exception {
+	private Layout _addLayout(
+			String name, long parentLayoutId, Long layoutPageTemplateEntryId,
+			UnicodeProperties typeSettingsProperties, Long fragmentEntryId,
+			ServiceContext serviceContext)
+		throws Exception {
+
 		Map<Locale, String> nameMap = new HashMap<>();
 
 		nameMap.put(LocaleUtil.getSiteDefault(), name);
@@ -337,39 +376,59 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 				String.valueOf(layoutPageTemplateEntryId));
 		}
 
-		return _layoutLocalService.addLayout(
+		Layout layout = _layoutLocalService.addLayout(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(), false,
 			parentLayoutId, nameMap, new HashMap<>(),
 			new HashMap<>(), new HashMap<>(), new HashMap<>(), "content",
 			typeSettingsProperties.toString(), false, new HashMap<>(),
 			serviceContext);
+
+		if (fragmentEntryId != null) {
+			_fragmentEntryLinkLocalService.updateFragmentEntryLinks(
+				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
+				_portal.getClassNameId(Layout.class), layout.getPlid(),
+				new long[]{fragmentEntryId}, StringPool.BLANK, serviceContext);
+		}
+
+		return layout;
 	}
 
-	private Layout _addLayout(String name, long parentLayoutId, Long layoutPageTemplateEntryId, ServiceContext serviceContext) throws Exception {
+	private Layout _addLayout(
+			String name, long parentLayoutId, Long layoutPageTemplateEntryId,
+			ServiceContext serviceContext)
+		throws Exception {
+
 		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
 
-		return _addLayout(name, parentLayoutId, layoutPageTemplateEntryId, typeSettingsProperties, serviceContext);
+		return _addLayout(
+			name, parentLayoutId, layoutPageTemplateEntryId,
+			typeSettingsProperties, null, serviceContext);
 	}
 
-	private Layout _addLayout(String name, long parentLayoutId, ServiceContext serviceContext) throws Exception {
+	private Layout _addLayout(
+			String name, long parentLayoutId, ServiceContext serviceContext)
+		throws Exception {
+
 		return _addLayout(name, parentLayoutId, null, serviceContext);
 	}
 
 	private LayoutPageTemplateEntry _addLayoutPageTemplateEntry(
-		long layoutPageTemplateCollectionId, String name,
-		List<FragmentEntry> fragmentEntries, String thumbnailPath,
-		ServiceContext serviceContext) throws Exception {
+			LayoutPageTemplateCollection layoutPageTemplateCollection,
+			String name, List<FragmentEntry> fragmentEntries,
+			String thumbnailPath, String thumbnailFileName,
+			ServiceContext serviceContext)
+		throws Exception {
 
 		long previewFileEntryId = _getPreviewFileEntryId(
-			thumbnailPath, "thumbnail.jpg",
-			serviceContext);
+			thumbnailPath, thumbnailFileName, serviceContext);
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry = _layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
-			serviceContext.getUserId(), serviceContext.getScopeGroupId(),
-			layoutPageTemplateCollectionId, name,
-			LayoutPageTemplateEntryTypeConstants.TYPE_BASIC, 0,
-			previewFileEntryId, WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
+				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
+				layoutPageTemplateCollection.getLayoutPageTemplateCollectionId(),
+				name, LayoutPageTemplateEntryTypeConstants.TYPE_BASIC, 0,
+				previewFileEntryId, WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		long[] fragmentEntryIds = ListUtil.toLongArray(
 			fragmentEntries, FragmentEntryModel::getFragmentEntryId);
@@ -387,6 +446,86 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			addLayoutPageTemplateCollection(
 				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 				_THEME_NAME, _THEME_NAME, serviceContext);
+	}
+
+	private List<Layout> _addLayouts(
+			Layout parentLayout, String[] layoutNames,
+			Map<String, FragmentEntry> fragmentEntriesMap,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		List<Layout> layouts = new ArrayList<>();
+
+		for (String layoutName : layoutNames) {
+			String[] fragmentKeys = new String []{"features", "links", "news", "offerings", "video"};
+
+			String fragmentKey = fragmentKeys[new Random().nextInt(fragmentKeys.length)];
+
+			FragmentEntry fragmentEntry = fragmentEntriesMap.get(fragmentKey);
+
+			Layout layout = _addLayout(
+				layoutName, parentLayout.getLayoutId(), null,
+				new UnicodeProperties(), fragmentEntry.getFragmentEntryId(),
+				serviceContext);
+
+			layouts.add(layout);
+		}
+
+		return layouts;
+	}
+
+	private void _configureFragmentEntryArticle(
+		FragmentEntry fragmentEntry, JournalArticle journalArticle,
+		Layout layout) throws Exception {
+
+		List<FragmentEntryLink> fragmentEntryLinks =
+			_fragmentEntryLinkLocalService.getFragmentEntryLinks(
+				layout.getGroupId(), _portal.getClassNameId(Layout.class),
+				layout.getPlid());
+
+		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			if (fragmentEntryLink.getFragmentEntryId() ==
+				fragmentEntry.getFragmentEntryId()) {
+
+				AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
+					_portal.getClassNameId(JournalArticle.class),
+					journalArticle.getResourcePrimKey());
+
+				Map<String, String> preferencesMap = new HashMap<>();
+
+				preferencesMap.put(
+					"articleId", journalArticle.getArticleId());
+
+				preferencesMap.put(
+					"assetEntryId",
+					String.valueOf(assetEntry.getEntryId()));
+
+				preferencesMap.put(
+					"groupId", String.valueOf(journalArticle.getGroupId()));
+
+				URL carouselPreferencesURL =
+					_bundle.getEntry(_PATH + "/ddm/content" +
+						"/preferences.xml");
+
+				String defaultPreferences = StringUtil.replace(
+					StringUtil.read(
+						carouselPreferencesURL.openStream()),
+					StringPool.DOLLAR, StringPool.DOLLAR, preferencesMap);
+
+				String portletId = PortletIdCodec.encode(
+					PortletIdCodec.decodePortletName(
+						JournalContentPortletKeys.JOURNAL_CONTENT),
+					PortletIdCodec.decodeUserId(
+						JournalContentPortletKeys.JOURNAL_CONTENT),
+					fragmentEntryLink.getNamespace());
+
+				PortletPreferencesFactoryUtil.getLayoutPortletSetup(
+					layout.getCompanyId(), 0,
+					PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+					layout.getPlid(), portletId,
+					defaultPreferences);
+			}
+		}
 	}
 
 	private ServiceContext _createServiceContext(long groupId)
@@ -410,32 +549,60 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 		return serviceContext;
 	}
 
-	private Map<String, String> _getFileEntriesMap(List<FileEntry> fileEntries)
+	private Map<String, String> _getFileEntriesMap(
+			List<FileEntry> fileEntries)
 		throws PortalException {
 
 		Map<String, String> fileEntriesMap = new HashMap<>();
+
+		for (FileEntry fileEntry : fileEntries) {
+			fileEntriesMap.put(
+				fileEntry.getFileName(),
+				JSONFactoryUtil.looseSerialize(fileEntry));
+		}
+
+		return fileEntriesMap;
+	}
+
+	private Map<String, String> _getFileEntriesPathMap(List<FileEntry> fileEntries)
+		throws PortalException {
+
+		Map<String, String> fileEntriesPathMap = new HashMap<>();
 
 		for (FileEntry fileEntry : fileEntries) {
 			String fileEntryURL = DLUtil.getPreviewURL(
 				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
 				false, false);
 
-			fileEntriesMap.put(fileEntry.getFileName(), fileEntryURL);
+			fileEntriesPathMap.put(fileEntry.getFileName(), fileEntryURL);
 		}
 
-		return fileEntriesMap;
+		return fileEntriesPathMap;
+	}
+
+	private Map<String, FragmentEntry> _getFragmentEntriesMap(
+		List<FragmentEntry> fragmentEntries)
+			throws PortalException {
+
+		Map<String, FragmentEntry> fragmentEntriesMap = new HashMap<>();
+
+		for (FragmentEntry fragmentEntry : fragmentEntries) {
+			fragmentEntriesMap.put(
+				StringUtil.toLowerCase(fragmentEntry.getName()), fragmentEntry);
+		}
+
+		return fragmentEntriesMap;
 	}
 
 	private long _getPreviewFileEntryId(
 			String path, String fileName, ServiceContext serviceContext)
 		throws Exception {
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(3);
 
 		sb.append(path);
 		sb.append(StringPool.SLASH);
-		sb.append(StringUtil.split(fileName, StringPool.PERIOD)[0]);
-		sb.append(".jpg");
+		sb.append(fileName);
 
 		URL url = _bundle.getEntry(sb.toString());
 
@@ -461,6 +628,19 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 		return fileEntry.getFileEntryId();
 	}
 
+	private void _updateLogo(ServiceContext serviceContext) throws Exception {
+		URL url = _bundle.getEntry(_PATH + "/images/logo.png");
+
+		byte[] bytes = null;
+
+		try (InputStream is = url.openStream()) {
+			bytes = FileUtil.getBytes(is);
+		}
+
+		_layoutSetLocalService.updateLogo(
+			serviceContext.getScopeGroupId(), false, true, bytes);
+	}
+
 	private void _updateLookAndFeel(ServiceContext serviceContext)
 		throws PortalException {
 
@@ -480,6 +660,33 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			StringPool.BLANK, StringPool.BLANK);
 	}
 
+	public static final String[] LAYOUT_CHILDREN_ASSURANCE = {
+		"Travel Insurance", "Home insurance", "Life insurance"
+	};
+
+	public static final String[] LAYOUT_CHILDREN_BUSINESS = {
+		"Credit Cards for Business", "Assurance for Business"
+	};
+
+	public static final String[] LAYOUT_CHILDREN_CHECKING = {
+		"All credit cards", "Check your eligibility",
+		"Balance-transfer credit cards", "Purchase credit card"
+	};
+
+	public static final String[] LAYOUT_CHILDREN_LOANS = {
+		"Mortgages", "All mortgage products", "Mortgate rates and charges"
+	};
+
+	public static final String[] LAYOUT_CHILDREN_PERSONAL = {
+		"Checking and Credit Cards", "Savings and Investments",
+		"Loans and Mortgages", "Assurance"
+	};
+
+	public static final String[] LAYOUT_CHILDREN_SAVINGS = {
+		"Compare Savings accounts", "Everyday Saver",
+		"Children's Instant Saver", "All interest rates"
+	};
+
 	private static final String _PATH =
 		"com/liferay/frontend/theme/westeros/bank/site/initializer/internal" +
 			"/dependencies";
@@ -495,6 +702,9 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 	private Bundle _bundle;
 
 	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
 	private DefaultDDMStructureHelper _defaultDDMStructureHelper;
 
 	@Reference
@@ -502,6 +712,9 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 
 	@Reference
 	private FragmentCollectionLocalService _fragmentCollectionLocalService;
+
+	@Reference
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
