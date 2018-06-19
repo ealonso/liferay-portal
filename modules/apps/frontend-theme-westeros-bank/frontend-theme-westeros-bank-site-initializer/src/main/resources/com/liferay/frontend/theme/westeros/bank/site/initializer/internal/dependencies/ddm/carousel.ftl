@@ -13,7 +13,7 @@
 	}
 </style>
 
-<section class="container-fluid container-max-xl main-carousel-wrapper" id="<@portlet.namespace />">
+<section class="container-fluid container-fluid-max-xl main-carousel-wrapper" id="<@portlet.namespace />">
 	<div class="carousel slide" data-ride="carousel" id="main-carousel">
 
 	    <#if ItemHeading.getSiblings()?has_content>
