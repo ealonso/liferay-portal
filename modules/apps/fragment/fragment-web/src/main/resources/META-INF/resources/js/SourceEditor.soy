@@ -11,6 +11,7 @@
 	{@param? codeHeader: string}
 	{@param? codeHeaderHelp: html|string}
 	{@param? codeFooter: string}
+	{@param? snippets: string}
 	{@param? _handleContentChanged: any}
 
 	<div class="source-editor">
@@ -32,6 +33,7 @@
 			{param initialContent: $initialContent /}
 			{param modulePath: $modulePath /}
 			{param syntax: $syntax /}
+			{param snippets: $snippets /}
 		{/call}
 
 		{if $codeFooter}
