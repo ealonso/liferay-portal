@@ -168,7 +168,7 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			LayoutPageTemplateEntry personalLayoutPageTemplate =
 				_addLayoutPageTemplateEntry(layoutPageTemplateCollection,
 				"For You", personalFragmentEntries, _PATH + "/page_templates",
-					"personal.png", serviceContext);
+					"personal.jpg", serviceContext);
 
 			Layout personalLayout = _addLayout("For You",
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
@@ -207,7 +207,7 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 			LayoutPageTemplateEntry businessLayoutPageTemplate =
 				_addLayoutPageTemplateEntry(layoutPageTemplateCollection,
 				"For Your Business", businessFragmentEntries, _PATH +
-					"/page_templates", "business.png", serviceContext);
+					"/page_templates", "business.jpg", serviceContext);
 
 			Layout businessLayout = _addLayout("For Your Business",
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
@@ -354,7 +354,8 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 				StringUtil.upperCaseFirstLetter(
 					FileUtil.stripExtension(shortFileName)), StringPool.BLANK,
 				html, StringPool.BLANK, _getPreviewFileEntryId(
-					path, shortFileName, serviceContext),
+					path, FileUtil.stripExtension(shortFileName) + ".jpg",
+					serviceContext),
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		return fragmentEntry;
