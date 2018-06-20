@@ -172,6 +172,32 @@ FragmentEditor.STATE = {
 	renderFragmentEntryURL: Config.string().required(),
 
 	/**
+	 * Snippets added to the editor if any
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentEditor
+	 * @review
+	 * @see https://cloud9-sdk.readme.io/docs/snippets
+	 * @type {Array<{
+	 *   content: !string,
+	 *   name: !string,
+	 *   scope: !string
+	 * }>}
+	 */
+
+	snippets: Config
+		.arrayOf(
+			Config.shapeOf(
+				{
+					content: Config.string().required(),
+					name: Config.string().required(),
+					scope: Config.string().required()
+				}
+			)
+		)
+		.value([]),
+
+	/**
 	 * Path of the available icons.
 	 * @default undefined
 	 * @instance

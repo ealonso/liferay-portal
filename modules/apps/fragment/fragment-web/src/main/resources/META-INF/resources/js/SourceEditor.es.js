@@ -65,6 +65,32 @@ SourceEditor.STATE = {
 	modulePath: Config.string().required(),
 
 	/**
+	 * Snippets added to the editor if any
+	 * @default []
+	 * @instance
+	 * @memberOf SourceEditor
+	 * @review
+	 * @see https://cloud9-sdk.readme.io/docs/snippets
+	 * @type {Array<{
+	 *   content: !string,
+	 *   name: !string,
+	 *   scope: !string
+	 * }>}
+	 */
+
+	snippets: Config
+		.arrayOf(
+			Config.shapeOf(
+				{
+					content: Config.string().required(),
+					name: Config.string().required(),
+					scope: Config.string().required()
+				}
+			)
+		)
+		.value([]),
+
+	/**
 	 * Path to images.
 	 * @default undefined
 	 * @instance

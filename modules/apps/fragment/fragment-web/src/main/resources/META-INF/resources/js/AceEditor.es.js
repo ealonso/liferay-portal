@@ -5,6 +5,18 @@ import {Config} from 'metal-state';
 import templates from './AceEditor.soy';
 
 /**
+ * Constants snippets added to the editor
+ * @review
+ * @type {!string}
+ */
+
+const EDITOR_SNIPPETS = `
+scope javascript
+snippet fragmentElement
+	fragmentElement$0
+`;
+
+/**
  * Component that creates an instance of Ace editor
  * to allow code editing.
  * @review
@@ -23,7 +35,8 @@ class AceEditor extends Component {
 
 		this._loadAceEditor()
 			.then(this._loadAceEditorPlugins)
-			.then(this._initializeAceEditor);
+			.then(this._initializeAceEditor)
+			.then(this._loadAceEditorSnippets);
 	}
 
 	/**
@@ -35,6 +48,7 @@ class AceEditor extends Component {
 		this._initializeAceEditor = this._initializeAceEditor.bind(this);
 		this._loadAceEditor = this._loadAceEditor.bind(this);
 		this._loadAceEditorPlugins = this._loadAceEditorPlugins.bind(this);
+		this._loadAceEditorSnippets = this._loadAceEditorSnippets.bind(this);
 	}
 
 	/**
@@ -153,6 +167,26 @@ class AceEditor extends Component {
 	}
 
 	/**
+	 * Add snippets to the existing editor
+	 * @private
+	 * @review
+	 */
+
+	_loadAceEditorSnippets() {
+		const snippetManager = ace.require('ace/snippets').snippetManager;
+
+		snippetManager.register(
+			snippetManager.parseSnippetFile(
+				EDITOR_SNIPPETS
+			)
+		);
+
+		if (this.snippets) {
+			snippetManager.register(this.snippets);
+		}
+	}
+
+	/**
 	 * Override AceEditor's session setAnnotations method to avoid showing
 	 * misleading messages.
 	 * @param {Object} session AceEditor session
@@ -214,6 +248,32 @@ AceEditor.STATE = {
 	 */
 
 	modulePath: Config.string().required(),
+
+	/**
+	 * Snippets added to the editor if any
+	 * @default []
+	 * @instance
+	 * @memberOf AceEditor
+	 * @review
+	 * @see https://cloud9-sdk.readme.io/docs/snippets
+	 * @type {Array<{
+	 *   content: !string,
+	 *   name: !string,
+	 *   scope: !string
+	 * }>}
+	 */
+
+	snippets: Config
+		.arrayOf(
+			Config.shapeOf(
+				{
+					content: Config.string().required(),
+					name: Config.string().required(),
+					scope: Config.string().required()
+				}
+			)
+		)
+		.value([]),
 
 	/**
 	 * Syntax used for the editor.
