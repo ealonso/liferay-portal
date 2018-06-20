@@ -12,6 +12,7 @@
 	{@param namespace: string}
 	{@param renderFragmentEntryURL: string}
 	{@param spritemap: string}
+	{@param? snippets: string}
 	{@param? _css: string}
 	{@param? _handleCSSChanged: any}
 	{@param? _handleHTMLChanged: any}
@@ -24,6 +25,7 @@
 			{param events: ['contentChanged': $_handleHTMLChanged] /}
 			{param initialContent: $initialHTML /}
 			{param modulePath: $modulePath /}
+			{param snippets: $snippets /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'html' /}
 		{/call}
@@ -32,6 +34,7 @@
 			{param events: ['contentChanged': $_handleCSSChanged] /}
 			{param initialContent: $initialCSS /}
 			{param modulePath: $modulePath /}
+			{param snippets: $snippets /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'css' /}
 		{/call}
@@ -49,6 +52,7 @@
 			{param events: ['contentChanged': $_handleJSChanged] /}
 			{param initialContent: $initialJS /}
 			{param modulePath: $modulePath /}
+			{param snippets: $snippets /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'javascript' /}
 		{/call}
