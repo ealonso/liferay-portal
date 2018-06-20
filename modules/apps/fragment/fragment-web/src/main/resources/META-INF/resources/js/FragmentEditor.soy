@@ -7,6 +7,7 @@
 	{@param initialCSS: string}
 	{@param initialHTML: string}
 	{@param initialJS: string}
+	{@param modulePath: string}
 	{@param previewFragmentEntryURL: string}
 	{@param namespace: string}
 	{@param renderFragmentEntryURL: string}
@@ -22,6 +23,7 @@
 		{call com.liferay.fragment.web.SourceEditor.render}
 			{param events: ['contentChanged': $_handleHTMLChanged] /}
 			{param initialContent: $initialHTML /}
+			{param modulePath: $modulePath /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'html' /}
 		{/call}
@@ -29,6 +31,7 @@
 		{call com.liferay.fragment.web.SourceEditor.render}
 			{param events: ['contentChanged': $_handleCSSChanged] /}
 			{param initialContent: $initialCSS /}
+			{param modulePath: $modulePath /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'css' /}
 		{/call}
@@ -45,6 +48,7 @@
 			{param codeFooter: '}' /}
 			{param events: ['contentChanged': $_handleJSChanged] /}
 			{param initialContent: $initialJS /}
+			{param modulePath: $modulePath /}
 			{param spritemap: $spritemap /}
 			{param syntax: 'javascript' /}
 		{/call}

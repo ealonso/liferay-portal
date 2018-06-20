@@ -5,6 +5,7 @@
  */
 {template .render}
 	{@param initialContent: string}
+	{@param modulePath: string}
 	{@param spritemap: string}
 	{@param syntax: string}
 	{@param? codeHeader: string}
@@ -29,6 +30,7 @@
 		{call com.liferay.fragment.web.AceEditor.render}
 			{param events: ['contentChanged': $_handleContentChanged] /}
 			{param initialContent: $initialContent /}
+			{param modulePath: $modulePath /}
 			{param syntax: $syntax /}
 		{/call}
 

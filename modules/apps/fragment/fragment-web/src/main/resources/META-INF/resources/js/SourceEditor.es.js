@@ -54,6 +54,17 @@ SourceEditor.STATE = {
 	initialContent: Config.string().required(),
 
 	/**
+	 * Module path for dynamic loading extra JS files
+	 * @default undefined
+	 * @instance
+	 * @memberOf SourceEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	modulePath: Config.string().required(),
+
+	/**
 	 * Path to images.
 	 * @default undefined
 	 * @instance

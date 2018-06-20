@@ -21,34 +21,20 @@ class AceEditor extends Component {
 		this._editorDocument = null;
 		this._handleDocumentChanged = this._handleDocumentChanged.bind(this);
 
-		AUI().use(
-			'aui-ace-editor',
-			A => {
-				const editor = new A.AceEditor(
-					{
-						boundingBox: this.refs.wrapper,
-						highlightActiveLine: false,
-						mode: this.syntax,
-						tabSize: 2
-					}
-				);
+		this._loadAceEditor()
+			.then(this._loadAceEditorPlugins)
+			.then(this._initializeAceEditor);
+	}
 
-				this._overrideSetAnnotations(editor.getSession());
-				this._editorSession = editor.getSession();
-				this._editorDocument = editor.getSession().getDocument();
+	/**
+	 * @inheritDoc
+	 * @review
+	 */
 
-				this.refs.wrapper.style.height = '';
-				this.refs.wrapper.style.width = '';
-
-				this._editorDocument.on('change', this._handleDocumentChanged);
-
-				editor.getSession().on('changeAnnotation', this._handleDocumentChanged);
-
-				if (this.initialContent) {
-					this._editorDocument.setValue(this.initialContent);
-				}
-			}
-		);
+	created() {
+		this._initializeAceEditor = this._initializeAceEditor.bind(this);
+		this._loadAceEditor = this._loadAceEditor.bind(this);
+		this._loadAceEditorPlugins = this._loadAceEditorPlugins.bind(this);
 	}
 
 	/**
@@ -81,6 +67,87 @@ class AceEditor extends Component {
 			{
 				content: this._editorDocument.getValue(),
 				valid: valid
+			}
+		);
+	}
+
+	/**
+	 * Create AceEditor instance
+	 * @param {AUI} A
+	 * @private
+	 * @review
+	 */
+
+	_initializeAceEditor(A) {
+		const editor = new A.AceEditor(
+			{
+				boundingBox: this.refs.wrapper,
+				highlightActiveLine: false,
+				mode: this.syntax,
+				tabSize: 2
+			}
+		);
+
+		editor.getEditor().setOptions(
+			{
+				enableBasicAutocompletion: true,
+				enableLiveAutocompletion: true
+			}
+		);
+
+		this._overrideSetAnnotations(editor.getSession());
+		this._editorSession = editor.getSession();
+		this._editorDocument = editor.getSession().getDocument();
+
+		this.refs.wrapper.style.height = '';
+		this.refs.wrapper.style.width = '';
+
+		this._editorDocument.on('change', this._handleDocumentChanged);
+
+		editor.getSession().on('changeAnnotation', this._handleDocumentChanged);
+
+		if (this.initialContent) {
+			this._editorDocument.setValue(this.initialContent);
+		}
+	}
+
+	/**
+	 * Load AceEditor AUI dependency
+	 * @private
+	 * @return {Promise<AUI>}
+	 * @review
+	 */
+
+	_loadAceEditor() {
+		return new Promise(
+			resolve => AUI().use('aui-ace-editor', resolve)
+		);
+	}
+
+	/**
+	 * Load all necessary AceEditor plugins
+	 * @param {AUI} A
+	 * @private
+	 * @return {Promise<AUI>}
+	 * @review
+	 */
+
+	_loadAceEditorPlugins(A) {
+		return new Promise(
+			resolve => {
+				const script = document.createElement('script');
+
+				script.src = `${this.modulePath}/frontend-js-web/aui/aui-ace-editor/ace/ext-language_tools.js`;
+
+				script.addEventListener(
+					'load',
+					() => {
+						ace.require('ace/ext/language_tools');
+						resolve(A);
+					}
+				);
+
+				document.body.appendChild(script);
 			}
 		);
 	}
@@ -136,6 +203,17 @@ AceEditor.STATE = {
 	 */
 
 	initialContent: Config.string().value(''),
+
+	/**
+	 * Module path for dynamic loading extra JS files
+	 * @default undefined
+	 * @instance
+	 * @memberOf AceEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	modulePath: Config.string().required(),
 
 	/**
 	 * Syntax used for the editor.

@@ -127,6 +127,17 @@ FragmentEditor.STATE = {
 	initialJS: Config.string().required(),
 
 	/**
+	 * Module path for dynamic loading extra JS files
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	modulePath: Config.string().required(),
+
+	/**
 	 * Namespace of the portlet being used.
 	 * Necesary for getting the real inputs which interact with the server.
 	 * @default undefined
