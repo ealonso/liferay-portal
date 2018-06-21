@@ -17,6 +17,7 @@ package com.liferay.fragment.processor;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 
 /**
@@ -25,6 +26,10 @@ import com.liferay.portal.kernel.json.JSONObject;
 public interface FragmentEntryProcessor {
 
 	public default JSONObject getDefaultEditableValuesJSONObject(String html) {
+		return null;
+	}
+
+	public default JSONArray getSnippet() {
 		return null;
 	}
 
