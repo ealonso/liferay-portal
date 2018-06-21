@@ -122,7 +122,7 @@ renderResponse.setTitle(title);
 			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
-			modulePath: '/o',
+			modulePath: '<%= PortalUtil.getPathProxy() + request.getContextPath() %>',
 			namespace: '<portlet:namespace />',
 			previewFragmentEntryURL: '<%= previewFragmentEntryURL %>',
 			renderFragmentEntryURL: '<%= renderFragmentEntryURL %>',
