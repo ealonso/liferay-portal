@@ -22,8 +22,10 @@ import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.StringBundler;
 
 import java.util.Collections;
 
@@ -59,6 +61,23 @@ public class FragmentEntryProcessorRegistryImpl
 		}
 
 		return jsonObject;
+	}
+
+	@Override
+	public String getSnippets() {
+		StringBundler sb = new StringBundler(_serviceTrackerList.size());
+
+		for (FragmentEntryProcessor fragmentEntryProcessor :
+				_serviceTrackerList) {
+
+			JSONArray jsonArray = fragmentEntryProcessor.getSnippet();
+
+			if (jsonArray != null) {
+				sb.append(jsonArray.toString());
+			}
+		}
+
+		return sb.toString();
 	}
 
 	@Override
