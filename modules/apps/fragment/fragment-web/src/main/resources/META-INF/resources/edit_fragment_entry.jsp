@@ -126,7 +126,7 @@ renderResponse.setTitle(title);
 			namespace: '<portlet:namespace />',
 			previewFragmentEntryURL: '<%= previewFragmentEntryURL %>',
 			renderFragmentEntryURL: '<%= renderFragmentEntryURL %>',
-			snippets: '',
+			snippets: '<%= fragmentDisplayContext.getSnippets() %>',
 			spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
 		},
 		wrapper
