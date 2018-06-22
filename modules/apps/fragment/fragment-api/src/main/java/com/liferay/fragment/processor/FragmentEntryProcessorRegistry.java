@@ -25,6 +25,8 @@ public interface FragmentEntryProcessorRegistry {
 
 	public JSONObject getDefaultEditableValuesJSONObject(String html);
 
+	public String getSnippets();
+
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink)
 		throws PortalException;

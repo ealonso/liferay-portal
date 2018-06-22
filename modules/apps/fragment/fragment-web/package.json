@@ -1,4 +1,15 @@
 {
+	"csfConfig": {
+		"path:**/*.js": {
+			"js": {
+				"lint": {
+					"globals": {
+						"ace": true
+					}
+				}
+			}
+		}
+	},
 	"dependencies": {
 		"html2canvas": "^1.0.0-alpha.12",
 		"metal": "^2.13.2",

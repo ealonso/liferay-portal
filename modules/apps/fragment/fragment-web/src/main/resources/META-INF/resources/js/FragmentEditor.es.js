@@ -127,6 +127,17 @@ FragmentEditor.STATE = {
 	initialJS: Config.string().required(),
 
 	/**
+	 * Module path for dynamic loading extra JS files
+	 * @default undefined
+	 * @instance
+	 * @memberOf FragmentEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	modulePath: Config.string().required(),
+
+	/**
 	 * Namespace of the portlet being used.
 	 * Necesary for getting the real inputs which interact with the server.
 	 * @default undefined
@@ -159,6 +170,32 @@ FragmentEditor.STATE = {
 	 */
 
 	renderFragmentEntryURL: Config.string().required(),
+
+	/**
+	 * Snippets added to the editor if any
+	 * @default ''
+	 * @instance
+	 * @memberOf FragmentEditor
+	 * @review
+	 * @see https://cloud9-sdk.readme.io/docs/snippets
+	 * @type {Array<{
+	 *   content: !string,
+	 *   name: !string,
+	 *   scope: !string
+	 * }>}
+	 */
+
+	snippets: Config
+		.arrayOf(
+			Config.shapeOf(
+				{
+					content: Config.string().required(),
+					name: Config.string().required(),
+					scope: Config.string().required()
+				}
+			)
+		)
+		.value([]),
 
 	/**
 	 * Path of the available icons.

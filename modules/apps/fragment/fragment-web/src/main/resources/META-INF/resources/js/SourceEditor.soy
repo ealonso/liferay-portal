@@ -5,11 +5,17 @@
  */
 {template .render}
 	{@param initialContent: string}
+	{@param modulePath: string}
 	{@param spritemap: string}
 	{@param syntax: string}
 	{@param? codeHeader: string}
 	{@param? codeHeaderHelp: html|string}
 	{@param? codeFooter: string}
+	{@param? snippets: list<[
+		content: string,
+		name: string,
+		scope: string
+	]>}
 	{@param? _handleContentChanged: any}
 
 	<div class="source-editor">
@@ -29,7 +35,9 @@
 		{call com.liferay.fragment.web.AceEditor.render}
 			{param events: ['contentChanged': $_handleContentChanged] /}
 			{param initialContent: $initialContent /}
+			{param modulePath: $modulePath /}
 			{param syntax: $syntax /}
+			{param snippets: $snippets /}
 		{/call}
 
 		{if $codeFooter}
