@@ -181,7 +181,7 @@ FragmentEditor.STATE = {
 	 * @type {string}
 	 */
 
-	snippets: Config.string().value(''),
+	snippets: Config.array().value(''),
 
 	/**
 	 * Path of the available icons.

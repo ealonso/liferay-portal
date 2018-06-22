@@ -74,7 +74,7 @@ SourceEditor.STATE = {
 	 * @type {string}
 	 */
 
-	snippets: Config.string().value(''),
+	snippets: Config.array().value(''),
 
 	/**
 	 * Path to images.

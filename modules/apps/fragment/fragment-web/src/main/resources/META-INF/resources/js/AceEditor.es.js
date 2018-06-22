@@ -182,11 +182,7 @@ class AceEditor extends Component {
 		);
 
 		if (this.snippets) {
-			snippetManager.register(
-				snippetManager.parseSnippetFile(
-					this.snippets
-				)
-			);
+			snippetManager.register(this.snippets);
 		}
 	}
 
@@ -263,7 +259,7 @@ AceEditor.STATE = {
 	 * @type {string}
 	 */
 
-	snippets: Config.string().value(''),
+	snippets: Config.array().value(''),
 
 	/**
 	 * Syntax used for the editor.
