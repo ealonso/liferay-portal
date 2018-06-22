@@ -122,11 +122,11 @@ renderResponse.setTitle(title);
 			initialCSS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getCssContent()) %>',
 			initialHTML: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getHtmlContent()) %>',
 			initialJS: '<%= HtmlUtil.escapeJS(fragmentDisplayContext.getJsContent()) %>',
-			modulePath: '<%= PortalUtil.getPathProxy() + request.getContextPath() %>',
+			modulePath: '/o',
 			namespace: '<portlet:namespace />',
 			previewFragmentEntryURL: '<%= previewFragmentEntryURL %>',
 			renderFragmentEntryURL: '<%= renderFragmentEntryURL %>',
-			snippets: '<%= fragmentDisplayContext.getSnippets() %>',
+			snippets: <%= fragmentDisplayContext.getSnippets() %>,
 			spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
 		},
 		wrapper
