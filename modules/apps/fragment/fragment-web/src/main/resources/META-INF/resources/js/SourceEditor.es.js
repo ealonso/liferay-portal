@@ -54,6 +54,29 @@ SourceEditor.STATE = {
 	initialContent: Config.string().required(),
 
 	/**
+	 * Module path for dynamic loading extra JS files
+	 * @default undefined
+	 * @instance
+	 * @memberOf SourceEditor
+	 * @review
+	 * @type {!string}
+	 */
+
+	modulePath: Config.string().required(),
+
+	/**
+	 * Snippets added to the editor if any
+	 * @default ''
+	 * @instance
+	 * @memberOf SourceEditor
+	 * @review
+	 * @see https://cloud9-sdk.readme.io/docs/snippets
+	 * @type {string}
+	 */
+
+	snippets: Config.string().value(''),
+
+	/**
 	 * Path to images.
 	 * @default undefined
 	 * @instance
