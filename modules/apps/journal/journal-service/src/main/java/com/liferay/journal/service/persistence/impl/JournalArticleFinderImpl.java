@@ -31,9 +31,11 @@ import com.liferay.portal.kernel.dao.orm.Type;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelperUtil;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -46,6 +48,7 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.sql.Timestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -1404,9 +1407,30 @@ public class JournalArticleFinderImpl
 				sql, queryDefinition.getOrderByComparator());
 
 			if (inlineSQLHelper) {
-				sql = InlineSQLHelperUtil.replacePermissionCheck(
-					sql, JournalArticle.class.getName(),
-					"JournalArticle.resourcePrimKey", groupId);
+				List<Long> groupIds = null;
+
+				if (groupId == 0) {
+					List<Group> groups = _groupLocalService.getActiveGroups(
+						companyId, true);
+
+					groupIds = new ArrayList<>(groups.size());
+
+					for (Group group : groups) {
+						groupIds.add(group.getGroupId());
+					}
+				}
+				else {
+					groupIds = new ArrayList<>(1);
+
+					groupIds.add(groupId);
+				}
+
+				int whereIndex = sql.lastIndexOf("WHERE ");
+
+				sql =
+					sql.substring(0, whereIndex) +
+						getPermissionCheckWhereClause(
+							sql, whereIndex, ArrayUtil.toLongArray(groupIds));
 
 				sql = StringUtil.replace(
 					sql, "(companyId", "(JournalArticle.companyId");
@@ -1538,6 +1562,20 @@ public class JournalArticleFinderImpl
 		return articles.get(0);
 	}
 
+	protected String getPermissionCheckWhereClause(
+		String sql, int whereIndex, long[] groupIds) {
+
+		String select = "select * from JournalArticle ";
+
+		String whereClause = select + sql.substring(whereIndex);
+
+		whereClause = InlineSQLHelperUtil.replacePermissionCheck(
+			whereClause, JournalArticle.class.getName(),
+			"JournalArticle.resourcePrimKey", groupIds);
+
+		return whereClause.substring(select.length());
+	}
+
 	protected boolean isdatabaseContentKeywordSearchEnabled(long companyId) {
 		JournalServiceConfiguration journalServiceConfiguration = null;
 
@@ -1662,5 +1700,8 @@ public class JournalArticleFinderImpl
 
 	@ServiceReference(type = CustomSQL.class)
 	private CustomSQL _customSQL;
+
+	@ServiceReference(type = GroupLocalService.class)
+	private GroupLocalService _groupLocalService;
 
 }
