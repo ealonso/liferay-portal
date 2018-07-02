@@ -1107,13 +1107,28 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 
 		queries.put(field, query);
 
-		String localizedFieldName = Field.getLocalizedName(
-			searchContext.getLocale(), field);
+		Set<Locale> availableLocales = new HashSet<>();
 
-		Query localizedQuery = addSearchTerm(
-			searchQuery, searchContext, localizedFieldName, like);
+		long[] groupIds = searchContext.getGroupIds();
 
-		queries.put(localizedFieldName, localizedQuery);
+		if (groupIds == null) {
+			availableLocales = LanguageUtil.getAvailableLocales();
+		}
+		else {
+			for (long groupId : groupIds) {
+				availableLocales.addAll(
+					LanguageUtil.getAvailableLocales(groupId));
+			}
+		}
+
+		for (Locale locale : availableLocales) {
+			String localizedFieldName = Field.getLocalizedName(locale, field);
+
+			Query localizedQuery = addSearchTerm(
+				searchQuery, searchContext, localizedFieldName, like);
+
+			queries.put(localizedFieldName, localizedQuery);
+		}
 
 		return queries;
 	}

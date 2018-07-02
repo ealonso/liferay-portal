@@ -51,6 +51,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -121,7 +122,6 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Map<String, String> contentStrings = new HashMap<String, String>() {
 			{
-				put("content", originalContent);
 				put("content_en_US", originalContent);
 				put("content_hu_HU", translatedContent);
 			}
@@ -226,6 +226,49 @@ public class JournalArticleIndexerLocalizedContentTest {
 	}
 
 	@Test
+	public void testIndexedFieldsWithUnindexedTranslation() throws Exception {
+		String title = "entity title";
+
+		setTitle(
+			new JournalArticleTitle() {
+				{
+					put(LocaleUtil.US, title);
+				}
+			});
+
+		String content = "entity content";
+
+		setContent(
+			new JournalArticleContent() {
+				{
+					name = "content";
+					defaultLocale = LocaleUtil.US;
+
+					put(LocaleUtil.US, content);
+				}
+			});
+
+		addArticle();
+
+		String searchTerm = "title";
+
+		SearchContext searchContext = _getSearchContext(
+			searchTerm, LocaleUtil.HUNGARY);
+
+		Hits hits = _indexer.search(searchContext);
+
+		Assert.assertEquals(hits.toString(), 1, hits.getLength());
+
+		searchTerm = "content";
+
+		searchContext = _getSearchContext(searchTerm, LocaleUtil.HUNGARY);
+
+		hits = _indexer.search(searchContext);
+
+		Assert.assertEquals(hits.toString(), 1, hits.getLength());
+	}
+
+	@Test
 	public void testJapaneseTitle() throws Exception {
 		String title = "新規作成";
 
@@ -258,7 +301,6 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Map<String, String> contentStrings = new HashMap<String, String>() {
 			{
-				put("content", content);
 				put("content_ja_JP", content);
 			}
 		};
