@@ -452,13 +452,11 @@ public class JournalArticleIndexer
 
 		Set<Locale> availableLocales = new HashSet<>();
 
-		long[] groupIds = searchContext.getGroupIds();
-
-		if (groupIds == null) {
+		if (searchContext.getGroupIds() == null) {
 			availableLocales = LanguageUtil.getAvailableLocales();
 		}
 		else {
-			for (long groupId : groupIds) {
+			for (long groupId : searchContext.getGroupIds()) {
 				availableLocales.addAll(
 					LanguageUtil.getAvailableLocales(groupId));
 			}

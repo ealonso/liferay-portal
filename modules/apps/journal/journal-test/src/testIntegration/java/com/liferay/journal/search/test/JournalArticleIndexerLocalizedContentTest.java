@@ -227,16 +227,12 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 	@Test
 	public void testIndexedFieldsWithUnindexedTranslation() throws Exception {
-		String title = "entity title";
-
 		setTitle(
 			new JournalArticleTitle() {
 				{
-					put(LocaleUtil.US, title);
+					put(LocaleUtil.US, "entity title");
 				}
 			});
-
-		String content = "entity content";
 
 		setContent(
 			new JournalArticleContent() {
@@ -244,24 +240,20 @@ public class JournalArticleIndexerLocalizedContentTest {
 					name = "content";
 					defaultLocale = LocaleUtil.US;
 
-					put(LocaleUtil.US, content);
+					put(LocaleUtil.US, "entity content");
 				}
 			});
 
 		addArticle();
 
-		String searchTerm = "title";
-
 		SearchContext searchContext = _getSearchContext(
-			searchTerm, LocaleUtil.HUNGARY);
+			"title", LocaleUtil.HUNGARY);
 
 		Hits hits = _indexer.search(searchContext);
 
 		Assert.assertEquals(hits.toString(), 1, hits.getLength());
 
-		searchTerm = "content";
-
-		searchContext = _getSearchContext(searchTerm, LocaleUtil.HUNGARY);
+		searchContext = _getSearchContext("content", LocaleUtil.HUNGARY);
 
 		hits = _indexer.search(searchContext);
 
