@@ -551,11 +551,6 @@ public class JournalArticleIndexer
 
 		document.addUID(CLASS_NAME, classPK);
 
-		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
-			journalArticle.getDocument());
-
-		document.addText("defaultLanguageId", articleDefaultLanguageId);
-
 		String[] languageIds = LocalizationUtil.getAvailableLanguageIds(
 			journalArticle.getDocument());
 
@@ -598,6 +593,12 @@ public class JournalArticleIndexer
 			"ddmStructureKey", journalArticle.getDDMStructureKey());
 		document.addKeyword(
 			"ddmTemplateKey", journalArticle.getDDMTemplateKey());
+
+		String articleDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
+			journalArticle.getDocument());
+
+		document.addText("defaultLanguageId", articleDefaultLanguageId);
+
 		document.addDate("displayDate", journalArticle.getDisplayDate());
 		document.addKeyword("head", JournalUtil.isHead(journalArticle));
 
