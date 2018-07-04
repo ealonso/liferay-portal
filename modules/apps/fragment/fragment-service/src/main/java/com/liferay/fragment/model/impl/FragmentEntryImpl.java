@@ -14,16 +14,17 @@
 
 package com.liferay.fragment.model.impl;
 
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.fragment.constants.FragmentExportImportConstants;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.zip.ZipWriter;
@@ -40,19 +41,14 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 
 	@Override
 	public String getImagePreviewURL(ThemeDisplay themeDisplay) {
-		if (getPreviewFileEntryId() <= 0) {
+		FileEntry previewFileEntry = _getPreviewFileEntry();
+
+		if (previewFileEntry == null) {
 			return StringPool.BLANK;
 		}
 
 		try {
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-				getPreviewFileEntryId());
-
-			if (fileEntry == null) {
-				return StringPool.BLANK;
-			}
-
-			return DLUtil.getImagePreviewURL(fileEntry, themeDisplay);
+			return DLUtil.getImagePreviewURL(previewFileEntry, themeDisplay);
 		}
 		catch (Exception e) {
 			_log.error("Unable to get preview entry image URL", e);
@@ -88,6 +84,24 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 		zipWriter.addEntry(path + "/src/index.css", getCss());
 		zipWriter.addEntry(path + "/src/index.js", getJs());
 		zipWriter.addEntry(path + "/src/index.html", getHtml());
+	}
+
+	private FileEntry _getPreviewFileEntry() {
+		if (getPreviewFileEntryId() <= 0) {
+			return null;
+		}
+
+		try {
+			return PortletFileRepositoryUtil.getPortletFileEntry(
+				getPreviewFileEntryId());
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Unable to get preview entry image ", pe);
+			}
+		}
+
+		return null;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
