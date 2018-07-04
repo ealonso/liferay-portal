@@ -74,6 +74,15 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 		jsonObject.put("cssPath", "src/index.css");
 		jsonObject.put("htmlPath", "src/index.html");
 		jsonObject.put("jsPath", "src/index.js");
+
+		FileEntry previewFileEntry = _getPreviewFileEntry();
+
+		if (previewFileEntry != null) {
+			jsonObject.put(
+				"thumbnailPath",
+				"src/thumbnail." + previewFileEntry.getExtension());
+		}
+
 		jsonObject.put("name", getName());
 
 		zipWriter.addEntry(
@@ -84,6 +93,12 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 		zipWriter.addEntry(path + "/src/index.css", getCss());
 		zipWriter.addEntry(path + "/src/index.js", getJs());
 		zipWriter.addEntry(path + "/src/index.html", getHtml());
+
+		if (previewFileEntry != null) {
+			zipWriter.addEntry(
+				path + "/src/thumbnail." + previewFileEntry.getExtension(),
+				previewFileEntry.getContentStream());
+		}
 	}
 
 	private FileEntry _getPreviewFileEntry() {
