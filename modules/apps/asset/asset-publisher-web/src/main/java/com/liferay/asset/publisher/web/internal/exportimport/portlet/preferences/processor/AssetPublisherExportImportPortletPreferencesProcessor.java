@@ -268,6 +268,26 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 		}
 	}
 
+	protected DDMStructure fetchDDMStructureByUuidAndGroupIdWithParentGroups(
+		String uuid, long groupId) {
+
+		Group group = _groupLocalService.fetchGroup(groupId);
+
+		while (group != null) {
+			DDMStructure existingStructure =
+				_ddmStructureLocalService.fetchDDMStructureByUuidAndGroupId(
+					uuid, group.getGroupId());
+
+			if (existingStructure != null) {
+				return existingStructure;
+			}
+
+			group = group.getParentGroup();
+		}
+
+		return null;
+	}
+
 	protected AssetEntryQuery getAssetEntryQuery(
 			Layout layout, long companyId, long groupId,
 			PortletPreferences portletPreferences)
@@ -438,7 +458,7 @@ public class AssetPublisherExportImportPortletPreferencesProcessor
 		}
 		else if (className.equals(DDMStructure.class.getName())) {
 			DDMStructure ddmStructure =
-				_ddmStructureLocalService.fetchDDMStructureByUuidAndGroupId(
+				fetchDDMStructureByUuidAndGroupIdWithParentGroups(
 					uuid, groupId);
 
 			if (ddmStructure == null) {
