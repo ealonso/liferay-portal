@@ -72,7 +72,9 @@ import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portlet.asset.service.permission.AssetVocabularyPermission;
 import com.liferay.portlet.asset.util.comparator.AssetCategoryCreateDateComparator;
 import com.liferay.portlet.asset.util.comparator.AssetCategoryLeftCategoryIdComparator;
+import com.liferay.portlet.asset.util.comparator.AssetCategoryNameComparator;
 import com.liferay.portlet.asset.util.comparator.AssetVocabularyCreateDateComparator;
+import com.liferay.portlet.asset.util.comparator.AssetVocabularyNameComparator;
 
 import java.util.List;
 import java.util.Locale;
@@ -365,7 +367,9 @@ public class AssetCategoriesDisplayContext {
 		SearchContainer categoriesSearchContainer = new SearchContainer(
 			_renderRequest, _getIteratorURL(), null, "there-are-no-categories");
 
-		categoriesSearchContainer.setOrderByCol(_getOrderByCol());
+		String orderByCol = _getOrderByCol();
+
+		categoriesSearchContainer.setOrderByCol(orderByCol);
 
 		boolean orderByAsc = false;
 
@@ -375,8 +379,15 @@ public class AssetCategoriesDisplayContext {
 			orderByAsc = true;
 		}
 
-		OrderByComparator<AssetCategory> orderByComparator =
-			new AssetCategoryCreateDateComparator(orderByAsc);
+		OrderByComparator<AssetCategory> orderByComparator = null;
+
+		if (orderByCol.equals("create-date")) {
+			orderByComparator = new AssetCategoryCreateDateComparator(
+				orderByAsc);
+		}
+		else if (orderByCol.equals("name")) {
+			orderByComparator = new AssetCategoryNameComparator(orderByAsc);
+		}
 
 		categoriesSearchContainer.setOrderByComparator(orderByComparator);
 
@@ -484,6 +495,7 @@ public class AssetCategoriesDisplayContext {
 	public String getCategoriesSortingURL() {
 		PortletURL sortingURL = _getIteratorURL();
 
+		sortingURL.setParameter("orderByCol", _getOrderByCol());
 		sortingURL.setParameter(
 			"orderByType",
 			Objects.equals(getOrderByType(), "asc") ? "desc" : "asc");
@@ -724,7 +736,9 @@ public class AssetCategoriesDisplayContext {
 			_renderRequest, _renderResponse.createRenderURL(), null,
 			"there-are-no-vocabularies");
 
-		vocabulariesSearchContainer.setOrderByCol(_getOrderByCol());
+		String orderByCol = _getOrderByCol();
+
+		vocabulariesSearchContainer.setOrderByCol(orderByCol);
 
 		String orderByType = getOrderByType();
 
@@ -734,8 +748,15 @@ public class AssetCategoriesDisplayContext {
 			orderByAsc = true;
 		}
 
-		OrderByComparator<AssetVocabulary> orderByComparator =
-			new AssetVocabularyCreateDateComparator(orderByAsc);
+		OrderByComparator<AssetVocabulary> orderByComparator = null;
+
+		if (orderByCol.equals("create-date")) {
+			orderByComparator = new AssetVocabularyCreateDateComparator(
+				orderByAsc);
+		}
+		else if (orderByCol.equals("name")) {
+			orderByComparator = new AssetVocabularyNameComparator(orderByAsc);
+		}
 
 		vocabulariesSearchContainer.setOrderByComparator(orderByComparator);
 
@@ -812,6 +833,7 @@ public class AssetCategoriesDisplayContext {
 	public String getVocabulariesSortingURL() {
 		PortletURL sortingURL = _renderResponse.createRenderURL();
 
+		sortingURL.setParameter("orderByCol", _getOrderByCol());
 		sortingURL.setParameter(
 			"orderByType",
 			Objects.equals(getOrderByType(), "asc") ? "desc" : "asc");
@@ -1039,9 +1061,21 @@ public class AssetCategoriesDisplayContext {
 								Objects.equals(
 									_getOrderByCol(), "create-date"));
 							dropdownItem.setHref(
-								_getIteratorURL(), "orderByCol", "create-date");
+								_getIteratorURL(), "orderByCol", "create-date",
+								"orderByType", getOrderByType());
 							dropdownItem.setLabel(
 								LanguageUtil.get(_request, "create-date"));
+						});
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setActive(
+								Objects.equals(_getOrderByCol(), "name"));
+							dropdownItem.setHref(
+								_getIteratorURL(), "orderByCol", "name",
+								"orderByType", getOrderByType());
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "name"));
 						});
 				}
 			}
@@ -1112,10 +1146,24 @@ public class AssetCategoriesDisplayContext {
 			{
 				add(
 					dropdownItem -> {
-						dropdownItem.setActive(true);
-						dropdownItem.setHref(_renderResponse.createRenderURL());
+						dropdownItem.setActive(
+							Objects.equals(_getOrderByCol(), "create-date"));
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(), "orderByCol",
+							"create-date", "orderByType", getOrderByType());
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "create-date"));
+					});
+
+				add(
+					dropdownItem -> {
+						dropdownItem.setActive(
+							Objects.equals(_getOrderByCol(), "name"));
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(), "orderByCol",
+							"name", "orderByType", getOrderByType());
+						dropdownItem.setLabel(
+							LanguageUtil.get(_request, "name"));
 					});
 			}
 		};
