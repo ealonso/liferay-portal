@@ -60,6 +60,20 @@ public class SiteNavigationMenuLocalServiceImpl
 		SiteNavigationMenu publicSiteNavigationMenu = fetchSiteNavigationMenu(
 			groupId, SiteNavigationConstants.TYPE_PRIMARY);
 
+		SiteNavigationMenu defaultSiteNavigationMenu = fetchSiteNavigationMenu(
+			groupId, SiteNavigationConstants.TYPE_DEFAULT);
+
+		if ((publicSiteNavigationMenu == null) &&
+			(defaultSiteNavigationMenu != null)) {
+
+			defaultSiteNavigationMenu.setType(
+				SiteNavigationConstants.TYPE_PRIMARY);
+
+			siteNavigationMenuPersistence.update(defaultSiteNavigationMenu);
+
+			publicSiteNavigationMenu = defaultSiteNavigationMenu;
+		}
+
 		if ((privateSiteNavigationMenu != null) &&
 			(publicSiteNavigationMenu != null)) {
 
