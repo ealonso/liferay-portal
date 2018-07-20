@@ -48,7 +48,6 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 
 import java.sql.Timestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -1056,30 +1055,12 @@ public class JournalArticleFinderImpl
 			sql = _customSQL.replaceAndOperator(sql, andOperator);
 
 			if (inlineSQLHelper) {
-				List<Long> groupIds = null;
-
-				if (groupId == 0) {
-					List<Group> groups = _groupLocalService.getActiveGroups(
-						companyId, true);
-
-					groupIds = new ArrayList<>(groups.size());
-
-					for (Group group : groups) {
-						groupIds.add(group.getGroupId());
-					}
-				}
-				else {
-					groupIds = new ArrayList<>(1);
-
-					groupIds.add(groupId);
-				}
-
 				int whereIndex = sql.lastIndexOf("WHERE ");
 
 				sql =
 					sql.substring(0, whereIndex) +
 						getPermissionCheckWhereClause(
-							sql, whereIndex, ArrayUtil.toLongArray(groupIds));
+							sql, whereIndex, getGroupIds(companyId, groupId));
 
 				sql = StringUtil.replace(
 					sql, "(companyId", "(JournalArticle.companyId");
@@ -1428,30 +1409,12 @@ public class JournalArticleFinderImpl
 				sql, queryDefinition.getOrderByComparator());
 
 			if (inlineSQLHelper) {
-				List<Long> groupIds = null;
-
-				if (groupId == 0) {
-					List<Group> groups = _groupLocalService.getActiveGroups(
-						companyId, true);
-
-					groupIds = new ArrayList<>(groups.size());
-
-					for (Group group : groups) {
-						groupIds.add(group.getGroupId());
-					}
-				}
-				else {
-					groupIds = new ArrayList<>(1);
-
-					groupIds.add(groupId);
-				}
-
 				int whereIndex = sql.lastIndexOf("WHERE ");
 
 				sql =
 					sql.substring(0, whereIndex) +
 						getPermissionCheckWhereClause(
-							sql, whereIndex, ArrayUtil.toLongArray(groupIds));
+							sql, whereIndex, getGroupIds(companyId, groupId));
 
 				sql = StringUtil.replace(
 					sql, "(companyId", "(JournalArticle.companyId");
@@ -1561,6 +1524,25 @@ public class JournalArticleFinderImpl
 		sb.append(StringPool.CLOSE_PARENTHESIS);
 
 		return sb.toString();
+	}
+
+	protected long[] getGroupIds(long companyId, long groupId) {
+		if (groupId == 0) {
+			List<Group> groups = _groupLocalService.getActiveGroups(
+				companyId, true);
+
+			long[] groupIds = new long[groups.size()];
+
+			int index = 0;
+
+			for (Group group : groups) {
+				groupIds[index++] = group.getGroupId();
+			}
+
+			return groupIds;
+		}
+
+		return new long[] {groupId};
 	}
 
 	protected JournalArticle getLatestArticle(
