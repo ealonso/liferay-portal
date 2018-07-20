@@ -590,12 +590,22 @@ public class JournalArticleServiceTest {
 				searchArticlesByKeywordWithInlineSQLHelper(
 					publicArticleTitle, WorkflowConstants.STATUS_ANY);
 
+			int countArticles1 =
+				searchCountArticlesByKeywordWithInlineSQLHelper(
+					publicArticleTitle, WorkflowConstants.STATUS_ANY);
+
 			List<JournalArticle> articles2 =
 				searchArticlesByKeywordWithInlineSQLHelper(
 					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
 
+			int countArticles2 =
+				searchCountArticlesByKeywordWithInlineSQLHelper(
+					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
+
 			Assert.assertEquals(publicJournal, articles1.get(0));
+			Assert.assertEquals(1, countArticles1);
 			Assert.assertTrue(articles2.isEmpty());
+			Assert.assertEquals(0, countArticles2);
 		}
 
 		User siteMemberUser = UserTestUtil.addGroupUser(
@@ -608,12 +618,22 @@ public class JournalArticleServiceTest {
 				searchArticlesByKeywordWithInlineSQLHelper(
 					publicArticleTitle, WorkflowConstants.STATUS_ANY);
 
+			int countArticles1 =
+				searchCountArticlesByKeywordWithInlineSQLHelper(
+					publicArticleTitle, WorkflowConstants.STATUS_ANY);
+
 			List<JournalArticle> articles2 =
 				searchArticlesByKeywordWithInlineSQLHelper(
 					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
 
+			int countArticles2 =
+				searchCountArticlesByKeywordWithInlineSQLHelper(
+					siteMemberArticleTitle, WorkflowConstants.STATUS_ANY);
+
 			Assert.assertEquals(publicJournal, articles1.get(0));
+			Assert.assertEquals(1, countArticles1);
 			Assert.assertEquals(siteMemberJournal, articles2.get(0));
+			Assert.assertEquals(1, countArticles2);
 		}
 	}
 
@@ -758,6 +778,20 @@ public class JournalArticleServiceTest {
 			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
 			null, keyword, "", "", null, null, status, null, false,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	protected int searchCountArticlesByKeywordWithInlineSQLHelper(
+			String keyword, int status)
+		throws Exception {
+
+		List<Long> folderIds = new ArrayList<>(1);
+
+		folderIds.add(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		return JournalArticleServiceUtil.searchCount(
+			TestPropsValues.getCompanyId(), _group.getGroupId(), folderIds,
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, null, null, null,
+			null, keyword, "", "", null, null, status, null, false);
 	}
 
 	protected void setUpDDMFormXSDDeserializer() {
