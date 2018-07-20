@@ -1056,9 +1056,30 @@ public class JournalArticleFinderImpl
 			sql = _customSQL.replaceAndOperator(sql, andOperator);
 
 			if (inlineSQLHelper) {
-				sql = InlineSQLHelperUtil.replacePermissionCheck(
-					sql, JournalArticle.class.getName(),
-					"JournalArticle.resourcePrimKey", groupId);
+				List<Long> groupIds = null;
+
+				if (groupId == 0) {
+					List<Group> groups = _groupLocalService.getActiveGroups(
+						companyId, true);
+
+					groupIds = new ArrayList<>(groups.size());
+
+					for (Group group : groups) {
+						groupIds.add(group.getGroupId());
+					}
+				}
+				else {
+					groupIds = new ArrayList<>(1);
+
+					groupIds.add(groupId);
+				}
+
+				int whereIndex = sql.lastIndexOf("WHERE ");
+
+				sql =
+					sql.substring(0, whereIndex) +
+						getPermissionCheckWhereClause(
+							sql, whereIndex, ArrayUtil.toLongArray(groupIds));
 
 				sql = StringUtil.replace(
 					sql, "(companyId", "(JournalArticle.companyId");
