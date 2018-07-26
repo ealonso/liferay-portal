@@ -126,8 +126,8 @@ public class SiteNavigationSiteMapDisplayContext {
 
 	public List<SiteNavigationMenuItem> getRootItems() {
 		SiteNavigationMenu primarySiteNavigationMenu =
-			SiteNavigationMenuLocalServiceUtil.fetchPrimarySiteNavigationMenu(
-				_themeDisplay.getScopeGroupId());
+			SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+				getSelectSiteNavigationMenuId());
 
 		if (primarySiteNavigationMenu == null) {
 			return Collections.emptyList();
