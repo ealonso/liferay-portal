@@ -193,6 +193,15 @@ public class SiteNavigationMenuItemLocalServiceImpl
 	}
 
 	@Override
+	public SiteNavigationMenuItemType getSiteNavigationMenuItemType(
+		SiteNavigationMenuItem siteNavigationMenuItem) {
+
+		return
+			_siteNavigationMenuItemTypeRegistry.getSiteNavigationMenuItemType(
+				siteNavigationMenuItem.getType());
+	}
+
+	@Override
 	public SiteNavigationMenuItem updateSiteNavigationMenuItem(
 			long siteNavigationMenuItemId, long parentSiteNavigationMenuItemId,
 			int order)
