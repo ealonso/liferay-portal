@@ -38,21 +38,50 @@ public interface SiteNavigationSiteMapPortletInstanceConfiguration {
 	@Meta.AD(name = "display-style", required = false)
 	public String displayStyle();
 
+	@Meta.AD(deflt = "0", name = "root-item-id", required = false)
+	public long rootItemId();
+
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(name = "root-layout-uuid", required = false)
 	public String rootLayoutUuid();
 
 	@Meta.AD(deflt = "0", name = "display-depth", required = false)
 	public int displayDepth();
 
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "false", name = "include-root-in-tree", required = false)
 	public boolean includeRootInTree();
 
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "false", name = "show-current-page", required = false)
 	public boolean showCurrentPage();
 
+	@Meta.AD(name = "site-navigation-menu-id", required = false)
+	public long siteNavigationMenuId();
+
+	@Meta.AD(deflt = "1", name = "site-navigation-menu-type", required = false)
+	public int siteNavigationMenuType();
+
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "false", name = "use-html-title", required = false)
 	public boolean useHtmlTitle();
 
+	/**
+	 * @deprecated As of Judson (7.1.x), with no direct replacement
+	 */
+	@Deprecated
 	@Meta.AD(deflt = "false", name = "show-hidden-pages", required = false)
 	public boolean showHiddenPages();
 
