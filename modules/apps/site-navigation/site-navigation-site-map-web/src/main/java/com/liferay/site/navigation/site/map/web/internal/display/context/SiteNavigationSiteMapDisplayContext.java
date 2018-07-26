@@ -17,24 +17,26 @@ package com.liferay.site.navigation.site.map.web.internal.display.context;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
-import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
-import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.model.SiteNavigationMenuItem;
+import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalServiceUtil;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.site.navigation.site.map.web.configuration.SiteNavigationSiteMapPortletInstanceConfiguration;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,14 +65,8 @@ public class SiteNavigationSiteMapDisplayContext {
 		StringBundler sb = new StringBundler();
 
 		_buildSiteMap(
-			_themeDisplay.getLayout(), getRootLayouts(), getRootLayout(),
-			isIncludeRootInTree(),
+			_themeDisplay.getLayout(), getRootItems(),
 			_siteNavigationSiteMapPortletInstanceConfiguration.displayDepth(),
-			_siteNavigationSiteMapPortletInstanceConfiguration.
-				showCurrentPage(),
-			_siteNavigationSiteMapPortletInstanceConfiguration.useHtmlTitle(),
-			_siteNavigationSiteMapPortletInstanceConfiguration.
-				showHiddenPages(),
 			1, _themeDisplay, sb);
 
 		return sb.toString();
@@ -105,51 +101,30 @@ public class SiteNavigationSiteMapDisplayContext {
 			_themeDisplay.getLocale());
 	}
 
-	public Layout getRootLayout() {
-		if (_rootLayout != null) {
-			return _rootLayout;
+	public long getRootItemId() {
+		if (_rootItemId != null) {
+			return _rootItemId;
 		}
 
-		String rootLayoutUuid =
-			_siteNavigationSiteMapPortletInstanceConfiguration.rootLayoutUuid();
+		_rootItemId =
+			_siteNavigationSiteMapPortletInstanceConfiguration.rootItemId();
 
-		if (Validator.isNotNull(rootLayoutUuid)) {
-			Layout layout = _themeDisplay.getLayout();
-
-			_rootLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
-				rootLayoutUuid, _themeDisplay.getScopeGroupId(),
-				layout.isPrivateLayout());
-		}
-
-		return _rootLayout;
+		return _rootItemId;
 	}
 
-	public long getRootLayoutId() {
-		if (_rootLayoutId != null) {
-			return _rootLayoutId;
+	public List<SiteNavigationMenuItem> getRootItems() {
+		SiteNavigationMenu primarySiteNavigationMenu =
+			SiteNavigationMenuLocalServiceUtil.fetchPrimarySiteNavigationMenu(
+				_themeDisplay.getScopeGroupId());
+
+		if (primarySiteNavigationMenu == null) {
+			return Collections.emptyList();
 		}
 
-		Layout rootLayout = getRootLayout();
-
-		if (Validator.isNotNull(
-				_siteNavigationSiteMapPortletInstanceConfiguration.
-					rootLayoutUuid()) &&
-			(rootLayout != null)) {
-
-			_rootLayoutId = rootLayout.getLayoutId();
-		}
-		else {
-			_rootLayoutId = LayoutConstants.DEFAULT_PARENT_LAYOUT_ID;
-		}
-
-		return _rootLayoutId;
-	}
-
-	public List<Layout> getRootLayouts() {
-		Layout layout = _themeDisplay.getLayout();
-
-		return LayoutLocalServiceUtil.getLayouts(
-			layout.getGroupId(), layout.isPrivateLayout(), getRootLayoutId());
+		return
+			SiteNavigationMenuItemLocalServiceUtil.getSiteNavigationMenuItems(
+				primarySiteNavigationMenu.getSiteNavigationMenuId(),
+				getRootItemId());
 	}
 
 	public SiteNavigationSiteMapPortletInstanceConfiguration
@@ -158,43 +133,90 @@ public class SiteNavigationSiteMapDisplayContext {
 		return _siteNavigationSiteMapPortletInstanceConfiguration;
 	}
 
-	public Boolean isIncludeRootInTree() {
-		if (_includeRootInTree != null) {
-			return _includeRootInTree;
+	private void _buildSiteMap(
+			Layout layout, List<SiteNavigationMenuItem> siteNavigationMenuItems,
+			int displayDepth, int curDepth, ThemeDisplay themeDisplay,
+			StringBundler sb)
+		throws Exception {
+
+		if (siteNavigationMenuItems.isEmpty()) {
+			return;
 		}
 
-		_includeRootInTree =
-			_siteNavigationSiteMapPortletInstanceConfiguration.
-				includeRootInTree();
+		SiteNavigationMenuItem rootItem =
+			SiteNavigationMenuItemLocalServiceUtil.fetchSiteNavigationMenuItem(
+				getRootItemId());
 
-		if (Validator.isNull(
-				_siteNavigationSiteMapPortletInstanceConfiguration.
-					rootLayoutUuid()) ||
-			(getRootLayoutId() == LayoutConstants.DEFAULT_PARENT_LAYOUT_ID)) {
+		if (rootItem != null) {
+			SiteNavigationMenuItemType siteNavigationMenuItemType =
+				rootItem.getSiteNavigationMenuItemType();
 
-			_includeRootInTree = false;
+			if (!siteNavigationMenuItemType.hasPermission(
+					_themeDisplay.getPermissionChecker(), rootItem)) {
+
+				return;
+			}
 		}
 
-		return _includeRootInTree;
+		sb.append("<ul>");
+
+		for (SiteNavigationMenuItem siteNavigationMenuItem :
+				siteNavigationMenuItems) {
+
+			SiteNavigationMenuItemType siteNavigationMenuItemType =
+				siteNavigationMenuItem.getSiteNavigationMenuItemType();
+
+			if (siteNavigationMenuItemType.hasPermission(
+					_themeDisplay.getPermissionChecker(),
+					siteNavigationMenuItem)) {
+
+				sb.append("<li>");
+
+				String cssClass = StringPool.BLANK;
+
+				Layout siteNavigationMenuItemLayout = _fetchLayout(
+					siteNavigationMenuItem);
+
+				if ((siteNavigationMenuItemLayout != null) &&
+					(siteNavigationMenuItemLayout.getPlid() ==
+						layout.getPlid())) {
+
+					cssClass = "current";
+				}
+
+				_buildSiteNavigationMenuItemView(
+					siteNavigationMenuItem, cssClass, themeDisplay, sb);
+
+				if ((displayDepth == 0) || (displayDepth > curDepth)) {
+					_buildSiteMap(
+						layout, siteNavigationMenuItem.getChildren(),
+						displayDepth, curDepth + 1, themeDisplay, sb);
+				}
+
+				sb.append("</li>");
+			}
+		}
+
+		sb.append("</ul>");
 	}
 
-	private void _buildLayoutView(
-			Layout layout, String cssClass, boolean useHtmlTitle,
+	private void _buildSiteNavigationMenuItemView(
+			SiteNavigationMenuItem siteNavigationMenuItem, String cssClass,
 			ThemeDisplay themeDisplay, StringBundler sb)
 		throws Exception {
 
-		String layoutURL = PortalUtil.getLayoutURL(layout, themeDisplay);
-		String target = PortalUtil.getLayoutTarget(layout);
+		SiteNavigationMenuItemType siteNavigationMenuItemType =
+			siteNavigationMenuItem.getSiteNavigationMenuItemType();
+
+		String url = siteNavigationMenuItemType.getRegularURL(
+			_request, siteNavigationMenuItem);
 
 		sb.append("<a");
 
-		LayoutType layoutType = layout.getLayoutType();
-
-		if (layoutType.isBrowsable()) {
+		if (siteNavigationMenuItemType.isBrowsable(siteNavigationMenuItem)) {
 			sb.append(" href=\"");
-			sb.append(layoutURL);
+			sb.append(url);
 			sb.append("\" ");
-			sb.append(target);
 		}
 
 		if (Validator.isNotNull(cssClass)) {
@@ -205,109 +227,35 @@ public class SiteNavigationSiteMapDisplayContext {
 
 		sb.append("> ");
 
-		String layoutName = HtmlUtil.escape(
-			layout.getName(themeDisplay.getLocale()));
+		String title = siteNavigationMenuItemType.getTitle(
+			siteNavigationMenuItem, themeDisplay.getLocale());
 
-		if (useHtmlTitle) {
-			layoutName = HtmlUtil.escape(
-				layout.getHTMLTitle(themeDisplay.getLocale()));
-		}
+		sb.append(title);
 
-		sb.append(layoutName);
 		sb.append("</a>");
 	}
 
-	private void _buildSiteMap(
-			Layout layout, List<Layout> layouts, Layout rootLayout,
-			boolean includeRootInTree, int displayDepth,
-			boolean showCurrentPage, boolean useHtmlTitle,
-			boolean showHiddenPages, int curDepth, ThemeDisplay themeDisplay,
-			StringBundler sb)
-		throws Exception {
+	private Layout _fetchLayout(SiteNavigationMenuItem siteNavigationMenuItem) {
+		UnicodeProperties properties = new UnicodeProperties();
 
-		if (layouts.isEmpty()) {
-			return;
+		properties.fastLoad(siteNavigationMenuItem.getTypeSettings());
+
+		String layoutUuid = properties.get("layoutUuid");
+
+		boolean privateLayout = GetterUtil.getBoolean(
+			properties.get("privateLayout"));
+
+		if (Validator.isNull(layoutUuid)) {
+			return null;
 		}
 
-		if ((rootLayout != null) &&
-			!LayoutPermissionUtil.contains(
-				themeDisplay.getPermissionChecker(), rootLayout,
-				ActionKeys.VIEW)) {
-
-			return;
-		}
-
-		sb.append("<ul>");
-
-		if (includeRootInTree && (rootLayout != null) && (curDepth == 1)) {
-			sb.append("<li>");
-
-			String cssClass = "root";
-
-			if (rootLayout.getPlid() == layout.getPlid()) {
-				cssClass += " current";
-			}
-
-			_buildLayoutView(
-				rootLayout, cssClass, useHtmlTitle, themeDisplay, sb);
-
-			_buildSiteMap(
-				layout, layouts, rootLayout, includeRootInTree, displayDepth,
-				showCurrentPage, useHtmlTitle, showHiddenPages, curDepth + 1,
-				themeDisplay, sb);
-
-			sb.append("</li>");
-		}
-		else {
-			for (Layout curLayout : layouts) {
-				if ((showHiddenPages || !curLayout.isHidden()) &&
-					LayoutPermissionUtil.contains(
-						themeDisplay.getPermissionChecker(), curLayout,
-						ActionKeys.VIEW)) {
-
-					sb.append("<li>");
-
-					String cssClass = StringPool.BLANK;
-
-					if (curLayout.getPlid() == layout.getPlid()) {
-						cssClass = "current";
-					}
-
-					_buildLayoutView(
-						curLayout, cssClass, useHtmlTitle, themeDisplay, sb);
-
-					if ((displayDepth == 0) || (displayDepth > curDepth)) {
-						if (showHiddenPages) {
-							_buildSiteMap(
-								layout, curLayout.getChildren(), rootLayout,
-								includeRootInTree, displayDepth,
-								showCurrentPage, useHtmlTitle, showHiddenPages,
-								curDepth + 1, themeDisplay, sb);
-						}
-						else {
-							_buildSiteMap(
-								layout,
-								curLayout.getChildren(
-									themeDisplay.getPermissionChecker()),
-								rootLayout, includeRootInTree, displayDepth,
-								showCurrentPage, useHtmlTitle, showHiddenPages,
-								curDepth + 1, themeDisplay, sb);
-						}
-					}
-
-					sb.append("</li>");
-				}
-			}
-		}
-
-		sb.append("</ul>");
+		return LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(
+			layoutUuid, siteNavigationMenuItem.getGroupId(), privateLayout);
 	}
 
 	private Long _displayStyleGroupId;
-	private Boolean _includeRootInTree;
 	private final HttpServletRequest _request;
-	private Layout _rootLayout;
-	private Long _rootLayoutId;
+	private Long _rootItemId;
 	private final SiteNavigationSiteMapPortletInstanceConfiguration
 		_siteNavigationSiteMapPortletInstanceConfiguration;
 	private final ThemeDisplay _themeDisplay;
