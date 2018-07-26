@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
 import java.io.Serializable;
 
@@ -302,6 +303,10 @@ public interface SiteNavigationMenuItemLocalService extends BaseLocalService,
 	*/
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getSiteNavigationMenuItemsCount();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public SiteNavigationMenuItemType getSiteNavigationMenuItemType(
+		SiteNavigationMenuItem siteNavigationMenuItem);
 
 	public SiteNavigationMenuItem updateSiteNavigationMenuItem(
 		long siteNavigationMenuItemId, long parentSiteNavigationMenuItemId,
