@@ -22,20 +22,13 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@ page import="com.liferay.petra.string.StringPool" %><%@
-page import="com.liferay.portal.kernel.model.Layout" %><%@
-page import="com.liferay.portal.kernel.model.LayoutSet" %><%@
-page import="com.liferay.portal.kernel.service.LayoutLocalServiceUtil" %><%@
+<%@ page import="com.liferay.portal.kernel.model.LayoutSet" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
-page import="com.liferay.portal.kernel.util.Validator" %><%@
-page import="com.liferay.portal.util.LayoutDescription" %><%@
 page import="com.liferay.site.navigation.site.map.web.configuration.SiteNavigationSiteMapPortletInstanceConfiguration" %><%@
 page import="com.liferay.site.navigation.site.map.web.internal.display.context.SiteNavigationSiteMapDisplayContext" %>
 
 <%@ page import="java.util.HashMap" %><%@
-page import="java.util.List" %><%@
-page import="java.util.Map" %><%@
-page import="java.util.Objects" %>
+page import="java.util.Map" %>
 
 <liferay-theme:defineObjects />
 

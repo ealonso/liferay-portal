@@ -6,46 +6,46 @@
 					<h3>
 						<a
 
-						<#assign layoutType = entry.getLayoutType() />
+						<#assign siteNavigationMenuItemType = entry.getSiteNavigationMenuItemType() />
 
-						<#if layoutType.isBrowsable()>
-							href="${portalUtil.getLayoutURL(entry, themeDisplay)}"
+						<#if siteNavigationMenuItemType.isBrowsable(entry)>
+							href="${siteNavigationMenuItemType.getRegularURL(request, entry)}"
 						</#if>
 
-						>${entry.getName(locale)}</a>
+						>${siteNavigationMenuItemType.getTitle(entry, locale)}</a>
 					</h3>
 				</div>
 
-				<@displayPages
+				<@displayMenuItems
 					depth=1
-					pages=entry.getChildren()
+					items=entry.getChildren()
 				/>
 			</@liferay_aui.col>
 		</#list>
 	</@liferay_aui.row>
 </#if>
 
-<#macro displayPages
+<#macro displayMenuItems
 	depth
-	pages
+	items
 >
 	<#if pages?has_content && ((depth < displayDepth?number) || (displayDepth?number == 0))>
 		<ul class="child-pages">
-			<#list pages as page>
+			<#list items as item>
 				<li>
 					<a
 
-					<#assign pageType = page.getLayoutType() />
+					<#assign siteNavigationMenuItemType = entry.getSiteNavigationMenuItemType() />
 
-					<#if pageType.isBrowsable()>
-						href="${portalUtil.getLayoutURL(page, themeDisplay)}"
+					<#if siteNavigationMenuItemType.isBrowsable(item)>
+						href="${siteNavigationMenuItemType.getRegularURL(request, item)}"
 					</#if>
 
-					>${page.getName(locale)}</a>
+					>${siteNavigationMenuItemType.getTitle(item, locale)}</a>
 
-					<@displayPages
+					<@displayMenuItems
 						depth=depth + 1
-						pages=page.getChildren()
+						items=item.getChildren()
 					/>
 				</li>
 			</#list>
