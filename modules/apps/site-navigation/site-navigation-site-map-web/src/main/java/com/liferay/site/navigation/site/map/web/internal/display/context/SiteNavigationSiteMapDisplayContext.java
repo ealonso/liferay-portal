@@ -14,30 +14,42 @@
 
 package com.liferay.site.navigation.site.map.web.internal.display.context;
 
+import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.ItemSelectorReturnType;
+import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
+import com.liferay.site.navigation.constants.SiteNavigationConstants;
+import com.liferay.site.navigation.item.selector.criterion.SiteNavigationMenuItemSelectorCriterion;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
 import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalServiceUtil;
 import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.site.navigation.site.map.web.configuration.SiteNavigationSiteMapPortletInstanceConfiguration;
+import com.liferay.site.navigation.site.map.web.internal.constants.SiteNavigationSiteMapWebKeys;
 import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -127,10 +139,163 @@ public class SiteNavigationSiteMapDisplayContext {
 				getRootItemId());
 	}
 
+	public long getSelectSiteNavigationMenuId() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		int siteNavigationMenuType = getSiteNavigationMenuType();
+
+		long siteNavigationMenuId = getSiteNavigationMenuId();
+
+		if ((siteNavigationMenuType == -1) && (siteNavigationMenuId <= 0)) {
+			SiteNavigationMenu siteNavigationMenu =
+				SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+					themeDisplay.getScopeGroupId(),
+					_getDefaultSelectSiteNavigationMenuType());
+
+			if (siteNavigationMenu != null) {
+				return siteNavigationMenu.getSiteNavigationMenuId();
+			}
+
+			return 0;
+		}
+
+		if (siteNavigationMenuType > 0) {
+			SiteNavigationMenu siteNavigationMenu =
+				SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+					themeDisplay.getScopeGroupId(), siteNavigationMenuType);
+
+			if (siteNavigationMenu != null) {
+				return siteNavigationMenu.getSiteNavigationMenuId();
+			}
+
+			return 0;
+		}
+
+		return siteNavigationMenuId;
+	}
+
+	public int getSelectSiteNavigationMenuType() {
+		int selectSiteNavigationMenuType = getSiteNavigationMenuType();
+
+		if (selectSiteNavigationMenuType > 0) {
+			return selectSiteNavigationMenuType;
+		}
+
+		return _getDefaultSelectSiteNavigationMenuType();
+	}
+
+	public SiteNavigationMenu getSiteNavigationMenu() {
+		if (_siteNavigationMenu != null) {
+			return _siteNavigationMenu;
+		}
+
+		_siteNavigationMenu =
+			SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+				getSiteNavigationMenuId());
+
+		return _siteNavigationMenu;
+	}
+
+	public String getSiteNavigationMenuEventName() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		return portletDisplay.getNamespace() + "selectSiteNavigationMenu";
+	}
+
+	public long getSiteNavigationMenuId() {
+		if (_siteNavigationMenuId != null) {
+			return _siteNavigationMenuId;
+		}
+
+		_siteNavigationMenuId = ParamUtil.getLong(
+			_request, "siteNavigationMenuId",
+			_siteNavigationSiteMapPortletInstanceConfiguration.
+				siteNavigationMenuId());
+
+		return _siteNavigationMenuId;
+	}
+
+	public String getSiteNavigationMenuItemSelectorURL() {
+		String eventName = getSiteNavigationMenuEventName();
+
+		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
+			SiteNavigationSiteMapWebKeys.ITEM_SELECTOR);
+
+		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
+			new ArrayList<>();
+
+		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
+
+		SiteNavigationMenuItemSelectorCriterion
+			siteNavigationMenuItemSelectorCriterion =
+				new SiteNavigationMenuItemSelectorCriterion();
+
+		siteNavigationMenuItemSelectorCriterion.
+			setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
+
+		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
+			RequestBackedPortletURLFactoryUtil.create(_request), eventName,
+			siteNavigationMenuItemSelectorCriterion);
+
+		return itemSelectorURL.toString();
+	}
+
+	public int getSiteNavigationMenuType() {
+		if (_navigationMenuType != null) {
+			return _navigationMenuType;
+		}
+
+		int siteNavigationMenuType =
+			_siteNavigationSiteMapPortletInstanceConfiguration.
+				siteNavigationMenuType();
+
+		_navigationMenuType = ParamUtil.getInteger(
+			_request, "siteNavigationMenuType", siteNavigationMenuType);
+
+		return _navigationMenuType;
+	}
+
+	public String getSiteNavigationMenuTypeLabel() {
+		int type = getSiteNavigationMenuType();
+
+		String typeKey = "select";
+
+		if (type == SiteNavigationConstants.TYPE_PRIMARY) {
+			typeKey = "primary-navigation";
+		}
+		else if (type == SiteNavigationConstants.TYPE_PRIVATE) {
+			typeKey = "private-navigation";
+		}
+		else if (type == SiteNavigationConstants.TYPE_SECONDARY) {
+			typeKey = "secondary-navigation";
+		}
+		else if (type == SiteNavigationConstants.TYPE_SOCIAL) {
+			typeKey = "social-navigation";
+		}
+
+		return LanguageUtil.get(_request, typeKey);
+	}
+
 	public SiteNavigationSiteMapPortletInstanceConfiguration
 		getSiteNavigationSiteMapPortletInstanceConfiguration() {
 
 		return _siteNavigationSiteMapPortletInstanceConfiguration;
+	}
+
+	public boolean isSiteNavigationMenuSelected() {
+		if ((_siteNavigationSiteMapPortletInstanceConfiguration.
+				siteNavigationMenuId() > 0) &&
+			(_siteNavigationSiteMapPortletInstanceConfiguration.
+				siteNavigationMenuType() == -1)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private void _buildSiteMap(
@@ -253,9 +418,32 @@ public class SiteNavigationSiteMapDisplayContext {
 			layoutUuid, siteNavigationMenuItem.getGroupId(), privateLayout);
 	}
 
+	private int _getDefaultSelectSiteNavigationMenuType() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		if (layout.isPrivateLayout()) {
+			SiteNavigationMenu siteNavigationMenu =
+				SiteNavigationMenuLocalServiceUtil.fetchSiteNavigationMenu(
+					themeDisplay.getScopeGroupId(),
+					SiteNavigationConstants.TYPE_PRIVATE);
+
+			if (siteNavigationMenu != null) {
+				return SiteNavigationConstants.TYPE_PRIVATE;
+			}
+		}
+
+		return SiteNavigationConstants.TYPE_PRIMARY;
+	}
+
 	private Long _displayStyleGroupId;
+	private Integer _navigationMenuType;
 	private final HttpServletRequest _request;
 	private Long _rootItemId;
+	private SiteNavigationMenu _siteNavigationMenu;
+	private Long _siteNavigationMenuId;
 	private final SiteNavigationSiteMapPortletInstanceConfiguration
 		_siteNavigationSiteMapPortletInstanceConfiguration;
 	private final ThemeDisplay _themeDisplay;
