@@ -246,7 +246,7 @@ if (portletTitleBasedNavigation) {
 					<%
 					Portlet portlet = PortletLocalServiceUtil.getPortletById(BlogsPortletKeys.BLOGS);
 
-					String friendlyURLPrefix = StringUtil.shorten("/-/" + portlet.getFriendlyURLMapping(), 40) + StringPool.SLASH;
+					String friendlyURLPrefix = StringUtil.shorten("/-/" + portlet.getFriendlyURLMapping(), 40);
 					%>
 
 					<div class="clearfix form-group">
@@ -274,7 +274,11 @@ if (portletTitleBasedNavigation) {
 							<aui:input checked="<%= !automaticURL %>" label="custom" name="automaticURL" type="radio" value="<%= false %>" />
 						</div>
 
-						<aui:input cssClass="input-medium" disabled="<%= automaticURL %>" helpMessage='<%= LanguageUtil.format(resourceBundle, "for-example-x", "<em>one-day-in-the-life-of-marion-cotillard</em>") %>' ignoreRequestValue="<%= true %>" label="blog-entry-url" name="urlTitle" prefix="<%= friendlyURLPrefix %>" type="text" value="<%= urlTitle %>" />
+						<aui:field-wrapper cssClass="form-group" helpMessage='<%= LanguageUtil.format(resourceBundle, "for-example-x", "<em>one-day-in-the-life-of-marion-cotillard</em>") %>' label="blog-entry-url" name="urlTitleWrapper">
+							<div class="form-text"><%= friendlyURLPrefix %></div>
+
+							<aui:input cssClass="input-medium" disabled="<%= automaticURL %>" ignoreRequestValue="<%= true %>" label="" name="urlTitle" prefix="/" type="text" value="<%= urlTitle %>" />
+						</aui:field-wrapper>
 					</div>
 
 					<div class="clearfix form-group">
