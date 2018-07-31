@@ -78,6 +78,8 @@ public class UpgradeImageContent extends UpgradeProcess {
 				long fileEntryId = GetterUtil.getLong(
 					dynamicContentEl.attributeValue("fileEntryId"));
 
+				long fileEntryGroupId = Long.valueOf(matcher.group(1));
+
 				String uuid = StringPool.BLANK;
 
 				matcher = _uuidPattern.matcher(dynamicContentEl.getText());
@@ -101,7 +103,7 @@ public class UpgradeImageContent extends UpgradeProcess {
 					else {
 						fileEntry =
 							PortletFileRepositoryUtil.getPortletFileEntry(
-								uuid, groupId);
+								uuid, fileEntryGroupId);
 					}
 				}
 				catch (PortalException pe) {
