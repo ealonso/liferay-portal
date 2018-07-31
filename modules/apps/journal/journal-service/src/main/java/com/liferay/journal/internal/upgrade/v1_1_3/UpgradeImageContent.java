@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.Node;
@@ -36,6 +37,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Jürgen Kappler
@@ -65,21 +68,46 @@ public class UpgradeImageContent extends UpgradeProcess {
 				"dynamic-content");
 
 			for (Element dynamicContentEl : dynamicContentEls) {
+				Matcher matcher = _documentsPattern.matcher(
+					dynamicContentEl.getText());
+
+				if (!matcher.find()) {
+					continue;
+				}
+
 				long fileEntryId = GetterUtil.getLong(
 					dynamicContentEl.attributeValue("fileEntryId"));
 
-				if (fileEntryId <= 0) {
+				long fileEntryGroupId = Long.valueOf(matcher.group(1));
+
+				String uuid = StringPool.BLANK;
+
+				matcher = _uuidPattern.matcher(dynamicContentEl.getText());
+
+				if (matcher.find()) {
+					uuid = matcher.group(1);
+				}
+
+				if ((fileEntryId == 0) && Validator.isNull(uuid)) {
 					continue;
 				}
 
 				FileEntry fileEntry = null;
 
 				try {
-					fileEntry = PortletFileRepositoryUtil.getPortletFileEntry(
-						fileEntryId);
+					if (fileEntryId > 0) {
+						fileEntry =
+							PortletFileRepositoryUtil.getPortletFileEntry(
+								fileEntryId);
+					}
+					else {
+						fileEntry =
+							PortletFileRepositoryUtil.getPortletFileEntry(
+								uuid, fileEntryGroupId);
+					}
 				}
 				catch (PortalException pe) {
-					_log.error("Unable to get file entry " + fileEntryId, pe);
+					_log.error("Unable to get file entry", pe);
 				}
 
 				if (fileEntry == null) {
@@ -99,6 +127,12 @@ public class UpgradeImageContent extends UpgradeProcess {
 				dynamicContentEl.clearContent();
 
 				dynamicContentEl.addCDATA(jsonObject.toString());
+
+				if (fileEntryId == 0) {
+					dynamicContentEl.addAttribute(
+						"fileEntryId",
+						String.valueOf(fileEntry.getFileEntryId()));
+				}
 			}
 		}
 
@@ -146,5 +180,11 @@ public class UpgradeImageContent extends UpgradeProcess {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradeImageContent.class);
+
+	private static final Pattern _documentsPattern = Pattern.compile(
+		"/documents/(\\d+)/(\\d+)/([^/?]+)(?:/([-0-9a-fA-F]+))?(?:\\?t=\\d+)" +
+			"\\s*");
+	private static final Pattern _uuidPattern = Pattern.compile(
+		"([a-fA-F0-9]{8}-(?:[a-fA-F0-9]{4}-){3}[a-fA-F0-9]{12}){1}");
 
 }
