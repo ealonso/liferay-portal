@@ -55,4 +55,8 @@ public interface SiteNavigationMenuItem extends SiteNavigationMenuItemModel,
 				return SiteNavigationMenuItem.class;
 			}
 		};
+
+	public java.util.List<SiteNavigationMenuItem> getChildren();
+
+	public com.liferay.site.navigation.type.SiteNavigationMenuItemType getSiteNavigationMenuItemType();
 }

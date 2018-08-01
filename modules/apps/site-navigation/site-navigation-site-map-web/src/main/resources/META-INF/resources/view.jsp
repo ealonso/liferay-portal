@@ -27,7 +27,7 @@ contextObjects.put("siteNavigationSiteMapDisplayContext", siteNavigationSiteMapD
 	contextObjects="<%= contextObjects %>"
 	displayStyle="<%= siteNavigationSiteMapPortletInstanceConfiguration.displayStyle() %>"
 	displayStyleGroupId="<%= siteNavigationSiteMapDisplayContext.getDisplayStyleGroupId() %>"
-	entries="<%= siteNavigationSiteMapDisplayContext.getRootLayouts() %>"
+	entries="<%= siteNavigationSiteMapDisplayContext.getRootItems() %>"
 >
 	<%= siteNavigationSiteMapDisplayContext.buildSiteMap() %>
 </liferay-ddm:template-renderer>

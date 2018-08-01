@@ -14,12 +14,17 @@
 
 package com.liferay.site.navigation.site.map.web.internal.portlet.action;
 
+import com.liferay.item.selector.ItemSelector;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
 import com.liferay.site.navigation.site.map.web.internal.constants.SiteNavigationSiteMapPortletKeys;
+import com.liferay.site.navigation.site.map.web.internal.constants.SiteNavigationSiteMapWebKeys;
+
+import javax.portlet.PortletConfig;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -41,6 +46,18 @@ public class SiteNavigationSiteMapConfigurationAction
 	}
 
 	@Override
+	public void include(
+			PortletConfig portletConfig, HttpServletRequest request,
+			HttpServletResponse response)
+		throws Exception {
+
+		request.setAttribute(
+			SiteNavigationSiteMapWebKeys.ITEM_SELECTOR, _itemSelector);
+
+		super.include(portletConfig, request, response);
+	}
+
+	@Override
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.site.navigation.site.map.web)",
 		unbind = "-"
@@ -48,5 +65,8 @@ public class SiteNavigationSiteMapConfigurationAction
 	public void setServletContext(ServletContext servletContext) {
 		super.setServletContext(servletContext);
 	}
+
+	@Reference
+	private ItemSelector _itemSelector;
 
 }

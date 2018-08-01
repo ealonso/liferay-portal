@@ -186,6 +186,11 @@ public class SiteNavigationMenuItemWrapper implements SiteNavigationMenuItem,
 		return _siteNavigationMenuItem.compareTo(siteNavigationMenuItem);
 	}
 
+	@Override
+	public java.util.List<SiteNavigationMenuItem> getChildren() {
+		return _siteNavigationMenuItem.getChildren();
+	}
+
 	/**
 	* Returns the company ID of this site navigation menu item.
 	*
@@ -304,6 +309,11 @@ public class SiteNavigationMenuItemWrapper implements SiteNavigationMenuItem,
 	@Override
 	public long getSiteNavigationMenuItemId() {
 		return _siteNavigationMenuItem.getSiteNavigationMenuItemId();
+	}
+
+	@Override
+	public com.liferay.site.navigation.type.SiteNavigationMenuItemType getSiteNavigationMenuItemType() {
+		return _siteNavigationMenuItem.getSiteNavigationMenuItemType();
 	}
 
 	/**

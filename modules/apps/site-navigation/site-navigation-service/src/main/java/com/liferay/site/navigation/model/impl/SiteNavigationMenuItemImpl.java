@@ -16,6 +16,12 @@ package com.liferay.site.navigation.model.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.site.navigation.model.SiteNavigationMenuItem;
+import com.liferay.site.navigation.service.SiteNavigationMenuItemLocalServiceUtil;
+import com.liferay.site.navigation.type.SiteNavigationMenuItemType;
+
+import java.util.List;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -23,6 +29,17 @@ import aQute.bnd.annotation.ProviderType;
 public class SiteNavigationMenuItemImpl extends SiteNavigationMenuItemBaseImpl {
 
 	public SiteNavigationMenuItemImpl() {
+	}
+
+	public List<SiteNavigationMenuItem> getChildren() {
+		return SiteNavigationMenuItemLocalServiceUtil.
+			getSiteNavigationMenuItems(
+				getSiteNavigationMenuId(), getSiteNavigationMenuItemId());
+	}
+
+	public SiteNavigationMenuItemType getSiteNavigationMenuItemType() {
+		return SiteNavigationMenuItemLocalServiceUtil.
+			getSiteNavigationMenuItemType(this);
 	}
 
 }
