@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.site.navigation.constants.SiteNavigationConstants;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.model.SiteNavigationMenuItem;
@@ -69,6 +70,13 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 				layout.getGroupId());
 
 		for (SiteNavigationMenu siteNavigationMenu : siteNavigationMenus) {
+			if (layout.isPrivateLayout() &&
+				(siteNavigationMenu.getType() !=
+					SiteNavigationConstants.TYPE_PRIVATE)) {
+
+				continue;
+			}
+
 			_addSiteNavigationMenuItem(siteNavigationMenu, layout);
 		}
 	}

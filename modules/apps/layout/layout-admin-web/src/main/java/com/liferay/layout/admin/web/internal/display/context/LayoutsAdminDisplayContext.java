@@ -67,6 +67,7 @@ import com.liferay.portal.util.LayoutDescription;
 import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portal.util.LayoutTypeControllerTracker;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.site.navigation.constants.SiteNavigationConstants;
 import com.liferay.site.navigation.model.SiteNavigationMenu;
 import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.staging.StagingGroupHelper;
@@ -152,6 +153,13 @@ public class LayoutsAdminDisplayContext {
 		List<SiteNavigationMenu> siteNavigationMenus =
 			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
 				_themeDisplay.getScopeGroupId());
+
+		if (isPrivateLayout()) {
+			siteNavigationMenus = ListUtil.filter(
+				siteNavigationMenus,
+				siteNavigationMenu -> siteNavigationMenu.getType() ==
+					SiteNavigationConstants.TYPE_PRIVATE);
+		}
 
 		return ListUtil.toString(
 			siteNavigationMenus, SiteNavigationMenu.NAME_ACCESSOR,

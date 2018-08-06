@@ -73,7 +73,7 @@ public class SiteNavigationMenuLocalServiceImpl
 
 			privateSiteNavigationMenu = addSiteNavigationMenu(
 				userId, groupId, "Default Private",
-				SiteNavigationConstants.TYPE_PRIVATE, false, serviceContext);
+				SiteNavigationConstants.TYPE_PRIVATE, true, serviceContext);
 
 			_addSiteNavigationMenuItems(
 				privateSiteNavigationMenu, 0, true,
