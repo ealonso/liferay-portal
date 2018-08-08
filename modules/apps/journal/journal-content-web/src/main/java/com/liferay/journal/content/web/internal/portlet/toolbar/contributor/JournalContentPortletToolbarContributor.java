@@ -19,6 +19,7 @@ import com.liferay.journal.constants.JournalContentPortletKeys;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalFolderService;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -35,20 +36,26 @@ import com.liferay.portal.kernel.servlet.taglib.ui.MenuItem;
 import com.liferay.portal.kernel.servlet.taglib.ui.URLMenuItem;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 
+import org.osgi.framework.Constants;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -100,6 +107,39 @@ public class JournalContentPortletToolbarContributor
 				_portal.getCurrentAndAncestorSiteGroupIds(scopeGroupId),
 				JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 				JournalFolderConstants.RESTRICTION_TYPE_INHERIT);
+
+		String filterString = StringBundler.concat(
+			"(", Constants.SERVICE_PID, "=", _JOURNAL_WEB_CONFIGURATION_PID,
+			")");
+
+		Configuration[] configurations = _configurationAdmin.listConfigurations(
+			filterString);
+
+		if (configurations != null) {
+			Configuration configuration = configurations[0];
+
+			Dictionary<String, Object> properties =
+				configuration.getProperties();
+
+			if (properties != null) {
+				boolean journalBrowseByStructuresSortedByName =
+					GetterUtil.getBoolean(
+						properties.get(
+							"journalBrowseByStructuresSortedByName"));
+
+				if (journalBrowseByStructuresSortedByName) {
+					Locale locale = themeDisplay.getLocale();
+
+					ddmStructures.sort(
+						(ddmStructure1, ddmStructure2) -> {
+							String name1 = ddmStructure1.getName(locale);
+							String name2 = ddmStructure2.getName(locale);
+
+							return name1.compareTo(name2);
+						});
+				}
+			}
+		}
 
 		for (DDMStructure ddmStructure : ddmStructures) {
 			portletURL.setParameter(
@@ -218,8 +258,14 @@ public class JournalContentPortletToolbarContributor
 		return hasAddArticlePermission;
 	}
 
+	private static final String _JOURNAL_WEB_CONFIGURATION_PID =
+		"com.liferay.journal.web.configuration.JournalWebConfiguration";
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalContentPortletToolbarContributor.class);
+
+	@Reference
+	private ConfigurationAdmin _configurationAdmin;
 
 	@Reference
 	private JournalFolderService _journalFolderService;

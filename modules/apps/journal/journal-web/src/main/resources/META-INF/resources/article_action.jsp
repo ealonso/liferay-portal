@@ -208,7 +208,11 @@ else {
 		/>
 	</c:if>
 
-	<c:if test="<%= journalDisplayContext.isShowPublishArticleAction(article) %>">
+	<%
+	Group group = themeDisplay.getScopeGroup();
+	%>
+
+	<c:if test="<%= journalDisplayContext.isShowPublishArticleAction(article) && !group.isLayout() %>">
 		<portlet:actionURL name="/journal/publish_article" var="publishArticleURL">
 			<portlet:param name="backURL" value="<%= currentURL %>" />
 			<portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" />
