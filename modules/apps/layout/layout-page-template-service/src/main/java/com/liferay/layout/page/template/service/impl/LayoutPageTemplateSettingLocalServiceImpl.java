@@ -14,29 +14,92 @@
 
 package com.liferay.layout.page.template.service.impl;
 
+import com.liferay.layout.page.template.model.LayoutPageTemplateSetting;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateSettingLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.SystemEventConstants;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
+
+import java.util.Date;
 
 /**
- * The implementation of the layout page template setting local service.
- *
- * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalService} interface.
- *
- * <p>
- * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
- * </p>
- *
- * @author Brian Wing Shun Chan
- * @see LayoutPageTemplateSettingLocalServiceBaseImpl
- * @see com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalServiceUtil
+ * @author Jürgen Kappler
  */
 public class LayoutPageTemplateSettingLocalServiceImpl
 	extends LayoutPageTemplateSettingLocalServiceBaseImpl {
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalServiceUtil} to access the layout page template setting local service.
-	 */
+	@Override
+	public LayoutPageTemplateSetting addLayoutPageTemplateSetting(
+			long userId, long groupId, long classNameId, long classPK,
+			String settings, ServiceContext serviceContext)
+		throws PortalException {
+
+		User user = userLocalService.getUser(userId);
+
+		long layoutPageTemplateSettingId = counterLocalService.increment();
+
+		LayoutPageTemplateSetting layoutPageTemplateSetting =
+			layoutPageTemplateSettingPersistence.create(
+				layoutPageTemplateSettingId);
+
+		layoutPageTemplateSetting.setUuid(serviceContext.getUuid());
+		layoutPageTemplateSetting.setGroupId(groupId);
+		layoutPageTemplateSetting.setCompanyId(user.getCompanyId());
+		layoutPageTemplateSetting.setUserId(user.getUserId());
+		layoutPageTemplateSetting.setUserName(user.getFullName());
+		layoutPageTemplateSetting.setCreateDate(
+			serviceContext.getCreateDate(new Date()));
+		layoutPageTemplateSetting.setModifiedDate(
+			serviceContext.getModifiedDate(new Date()));
+		layoutPageTemplateSetting.setClassNameId(classNameId);
+		layoutPageTemplateSetting.setClassPK(classPK);
+		layoutPageTemplateSetting.setSettings(settings);
+
+		layoutPageTemplateSettingPersistence.update(layoutPageTemplateSetting);
+
+		return layoutPageTemplateSetting;
+	}
+
+	@Override
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public LayoutPageTemplateSetting deleteLayoutPageTemplateSetting(
+			long groupId, long classNameId, long classPK)
+		throws PortalException {
+
+		LayoutPageTemplateSetting layoutPageTemplateSetting =
+			layoutPageTemplateSettingPersistence.findByG_C_C(
+				groupId, classNameId, classPK);
+
+		layoutPageTemplateSettingPersistence.remove(layoutPageTemplateSetting);
+
+		return layoutPageTemplateSetting;
+	}
+
+	@Override
+	public LayoutPageTemplateSetting fetchLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK) {
+
+		return layoutPageTemplateSettingPersistence.fetchByG_C_C(
+			groupId, classNameId, classPK);
+	}
+
+	@Override
+	public LayoutPageTemplateSetting updateLayoutPageTemplateSetting(
+			long groupId, long classNameId, long classPK, String settings)
+		throws PortalException {
+
+		LayoutPageTemplateSetting layoutPageTemplateSetting =
+			layoutPageTemplateSettingPersistence.findByG_C_C(
+				groupId, classNameId, classPK);
+
+		layoutPageTemplateSetting.setModifiedDate(new Date());
+		layoutPageTemplateSetting.setSettings(settings);
+
+		layoutPageTemplateSettingPersistence.update(layoutPageTemplateSetting);
+
+		return layoutPageTemplateSetting;
+	}
 
 }
