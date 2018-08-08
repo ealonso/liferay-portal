@@ -28,10 +28,13 @@ import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
+import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
@@ -74,6 +77,10 @@ public interface LayoutPageTemplateSettingLocalService extends BaseLocalService,
 	public LayoutPageTemplateSetting addLayoutPageTemplateSetting(
 		LayoutPageTemplateSetting layoutPageTemplateSetting);
 
+	public LayoutPageTemplateSetting addLayoutPageTemplateSetting(long userId,
+		long groupId, long classNameId, long classPK, String settings,
+		ServiceContext serviceContext) throws PortalException;
+
 	/**
 	* Creates a new layout page template setting with the primary key. Does not add the layout page template setting to the database.
 	*
@@ -104,6 +111,10 @@ public interface LayoutPageTemplateSettingLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public LayoutPageTemplateSetting deleteLayoutPageTemplateSetting(
 		long layoutPageTemplateSettingId) throws PortalException;
+
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public LayoutPageTemplateSetting deleteLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK) throws PortalException;
 
 	/**
 	* @throws PortalException
@@ -174,6 +185,10 @@ public interface LayoutPageTemplateSettingLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutPageTemplateSetting fetchLayoutPageTemplateSetting(
 		long layoutPageTemplateSettingId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public LayoutPageTemplateSetting fetchLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK);
 
 	/**
 	* Returns the layout page template setting matching the UUID and group.
@@ -289,4 +304,8 @@ public interface LayoutPageTemplateSettingLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutPageTemplateSetting updateLayoutPageTemplateSetting(
 		LayoutPageTemplateSetting layoutPageTemplateSetting);
+
+	public LayoutPageTemplateSetting updateLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK, String settings)
+		throws PortalException;
 }
