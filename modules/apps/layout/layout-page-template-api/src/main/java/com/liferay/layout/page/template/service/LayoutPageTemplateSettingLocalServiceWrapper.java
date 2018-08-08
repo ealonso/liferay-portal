@@ -46,6 +46,16 @@ public class LayoutPageTemplateSettingLocalServiceWrapper
 		return _layoutPageTemplateSettingLocalService.addLayoutPageTemplateSetting(layoutPageTemplateSetting);
 	}
 
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting addLayoutPageTemplateSetting(
+		long userId, long groupId, long classNameId, long classPK,
+		String settings,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateSettingLocalService.addLayoutPageTemplateSetting(userId,
+			groupId, classNameId, classPK, settings, serviceContext);
+	}
+
 	/**
 	* Creates a new layout page template setting with the primary key. Does not add the layout page template setting to the database.
 	*
@@ -82,6 +92,14 @@ public class LayoutPageTemplateSettingLocalServiceWrapper
 		long layoutPageTemplateSettingId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _layoutPageTemplateSettingLocalService.deleteLayoutPageTemplateSetting(layoutPageTemplateSettingId);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting deleteLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateSettingLocalService.deleteLayoutPageTemplateSetting(groupId,
+			classNameId, classPK);
 	}
 
 	/**
@@ -184,6 +202,13 @@ public class LayoutPageTemplateSettingLocalServiceWrapper
 	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting fetchLayoutPageTemplateSetting(
 		long layoutPageTemplateSettingId) {
 		return _layoutPageTemplateSettingLocalService.fetchLayoutPageTemplateSetting(layoutPageTemplateSettingId);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting fetchLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK) {
+		return _layoutPageTemplateSettingLocalService.fetchLayoutPageTemplateSetting(groupId,
+			classNameId, classPK);
 	}
 
 	/**
@@ -333,6 +358,14 @@ public class LayoutPageTemplateSettingLocalServiceWrapper
 	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting updateLayoutPageTemplateSetting(
 		com.liferay.layout.page.template.model.LayoutPageTemplateSetting layoutPageTemplateSetting) {
 		return _layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(layoutPageTemplateSetting);
+	}
+
+	@Override
+	public com.liferay.layout.page.template.model.LayoutPageTemplateSetting updateLayoutPageTemplateSetting(
+		long groupId, long classNameId, long classPK, String settings)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(groupId,
+			classNameId, classPK, settings);
 	}
 
 	@Override
