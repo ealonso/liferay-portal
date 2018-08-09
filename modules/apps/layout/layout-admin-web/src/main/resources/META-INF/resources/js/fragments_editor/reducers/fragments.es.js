@@ -85,9 +85,11 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 				_removeFragmentEntryLink(
 					state.deleteFragmentEntryLinkURL,
 					state.portletNamespace,
+					state.classNameId,
+					state.classPK,
 					fragmentEntryLinkId
 				).then(
-					() => {
+					(response) => {
 						const index = state.fragmentEntryLinks.findIndex(
 							fragmentEntryLink => (
 								fragmentEntryLink.fragmentEntryLinkId === fragmentEntryLinkId
@@ -217,9 +219,14 @@ function _getFragmentEntryLinkContent(
 function _removeFragmentEntryLink(
 	deleteFragmentEntryLinkURL,
 	portletNamespace,
+	classNameId,
+	classPK,
 	fragmentEntryLinkId
 ) {
 	const formData = new FormData();
+
+	formData.append(`${portletNamespace}classNameId`, classNameId);
+	formData.append(`${portletNamespace}classPK`, classPK);
 
 	formData.append(
 		`${portletNamespace}fragmentEntryLinkId`,
