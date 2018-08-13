@@ -14,12 +14,17 @@
 
 package com.liferay.jenkins.results.parser.test.clazz.group;
 
-import com.liferay.jenkins.results.parser.JenkinsResultsParserUtil;
 import com.liferay.jenkins.results.parser.PortalGitWorkingDirectory;
 import com.liferay.jenkins.results.parser.PortalTestClassJob;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +37,9 @@ public class ServiceBuilderBatchTestClassGroup
 
 	@Override
 	public int getAxisCount() {
-		if (testClasses.isEmpty() && (_buildType == BuildType.CORE)) {
+		if ((_buildType == BuildType.FULL) ||
+			(testClasses.isEmpty() && (_buildType == BuildType.CORE))) {
+
 			return 1;
 		}
 
@@ -69,27 +76,64 @@ public class ServiceBuilderBatchTestClassGroup
 			initTestMethods(modulesProjectDirs, modulesDir, "buildService");
 		}
 
-		@Override
-		protected void initTestMethods(
-			List<File> modulesProjectDirs, File modulesDir, String taskName) {
-
-			for (File modulesProjectDir : modulesProjectDirs) {
-				String path = JenkinsResultsParserUtil.getPathRelativeTo(
-					modulesProjectDir, modulesDir);
-
-				String moduleTaskCall = JenkinsResultsParserUtil.combine(
-					path, ":", taskName);
-
-				addTestMethod(moduleTaskCall);
-			}
-		}
-
 	}
 
-	protected static List<File> getModulesProjectDirs(File modulesDir) {
+	protected static List<File> getModulesProjectDirs(File moduleBaseDir) {
 		final List<File> modulesProjectDirs = new ArrayList<>();
+		final Path moduleBaseDirPath = moduleBaseDir.toPath();
 
-		modulesProjectDirs.add(modulesDir);
+		try {
+			Files.walkFileTree(
+				moduleBaseDirPath,
+				new SimpleFileVisitor<Path>() {
+
+					@Override
+					public FileVisitResult preVisitDirectory(
+						Path filePath, BasicFileAttributes attrs) {
+
+						File currentDirectory = filePath.toFile();
+						String filePathString = filePath.toString();
+
+						if (filePathString.endsWith("-service")) {
+							File buildFile = new File(
+								currentDirectory, "build.gradle");
+							File serviceXmlFile = new File(
+								currentDirectory, "service.xml");
+
+							if (buildFile.exists() && serviceXmlFile.exists()) {
+								modulesProjectDirs.add(currentDirectory);
+
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+						}
+						else if (filePathString.endsWith("-portlet")) {
+							File portletXmlFile = new File(
+								currentDirectory,
+								"docroot/WEB-INF/portlet.xml");
+							File serviceXmlFile = new File(
+								currentDirectory,
+								"docroot/WEB-INF/service.xml");
+
+							if (portletXmlFile.exists() &&
+								serviceXmlFile.exists()) {
+
+								modulesProjectDirs.add(currentDirectory);
+
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+						}
+
+						return FileVisitResult.CONTINUE;
+					}
+
+				});
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to get module marker files from " +
+					moduleBaseDir.getPath(),
+				ioe);
+		}
 
 		return modulesProjectDirs;
 	}
@@ -98,6 +142,21 @@ public class ServiceBuilderBatchTestClassGroup
 		String batchName, PortalTestClassJob portalTestClassJob) {
 
 		super(batchName, portalTestClassJob);
+	}
+
+	@Override
+	protected void setAxisTestClassGroups() {
+		int testClassCount = testClasses.size();
+
+		int axisCount = getAxisCount();
+
+		if ((testClassCount == 0) && (axisCount == 1)) {
+			axisTestClassGroups.put(0, new AxisTestClassGroup(this, 0));
+
+			return;
+		}
+
+		super.setAxisTestClassGroups();
 	}
 
 	@Override
@@ -115,8 +174,6 @@ public class ServiceBuilderBatchTestClassGroup
 
 			if (!modifiedPortalToolsServiceBuilderFiles.isEmpty()) {
 				_buildType = BuildType.FULL;
-
-				moduleDirsList.add(portalModulesBaseDir);
 
 				return;
 			}
@@ -137,23 +194,14 @@ public class ServiceBuilderBatchTestClassGroup
 				}
 			}
 
-			List<File> modifiedModuleDirsList =
+			moduleDirsList.addAll(
 				portalGitWorkingDirectory.getModifiedModuleDirsList(
-					excludesPathMatchers, includesPathMatchers);
-
-			for (File modifiedModuleDir : modifiedModuleDirsList) {
-				List<File> serviceXmlFiles = JenkinsResultsParserUtil.findFiles(
-					modifiedModuleDir, "service.xml");
-
-				if (!serviceXmlFiles.isEmpty()) {
-					moduleDirsList.add(modifiedModuleDir);
-				}
-			}
+					excludesPathMatchers, includesPathMatchers));
 		}
 		else {
 			_buildType = BuildType.FULL;
 
-			moduleDirsList.add(portalModulesBaseDir);
+			return;
 		}
 
 		for (File moduleDir : moduleDirsList) {
