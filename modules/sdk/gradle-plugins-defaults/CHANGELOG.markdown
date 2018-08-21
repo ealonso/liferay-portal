@@ -4292,9 +4292,87 @@ directory when it has a dependency with version `default`.
 
 ## 5.5.6 - 2018-08-06
 
+### Changed
+- [LPS-84213]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.101.
+
+## 5.5.7 - 2018-08-06
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.102.
+
 ### Fixed
 - [LPS-84055]: The `printDependentArtifact` task should print the project
-directory when it has a `compile*` dependency with the version `default`..
+directory when it has a `compile*` dependency with the version `default`.
+
+## 5.5.8 - 2018-08-07
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.103.
+
+## 5.5.9 - 2018-08-08
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.104.
+
+## 5.5.10 - 2018-08-09
+
+### Fixed
+- [LPS-84055]: The `writeArtifactPublishCommands` task should not be skipped if
+it has `test` dependency with the version `default`.
+
+## 5.5.11 - 2018-08-09
+
+### Changed
+- [LPS-84307]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.105.
+
+## 5.5.12 - 2018-08-09
+
+### Changed
+- [LPS-84313]: The `com.liferay.spring.boot.defaults` plugin now automatically
+applies the `com.liferay.test.integration.base` plugin. Configure the
+`check` task to depend on the `testIntegration` task.
+
+## 5.5.13 - 2018-08-10
+
+### Changed
+- [LPS-84039]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.106.
+
+## 5.5.14 - 2018-08-13
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.107.
+
+## 5.5.15 - 2018-08-15
+
+### Changed
+- [LPS-84039]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.108.
+
+## 5.5.16 - 2018-08-15
+
+### Changed
+- [LPS-84473]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.109.
+
+## 5.5.17 - 2018-08-15
+
+### Changed
+- [LPS-83790]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.110.
+
+## 5.5.18 - 2018-08-20
+
+### Changed
+- [LPS-84624]: The `com.liferay.spring.boot.defaults` plugin configures the
+`test` and `testIntegration` tasks with sensible defaults.
+
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle Dependency Management]: https://github.com/spring-gradle-plugins/dependency-management-plugin
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -4744,12 +4822,18 @@ directory when it has a `compile*` dependency with the version `default`..
 [LPS-83576]: https://issues.liferay.com/browse/LPS-83576
 [LPS-83705]: https://issues.liferay.com/browse/LPS-83705
 [LPS-83761]: https://issues.liferay.com/browse/LPS-83761
+[LPS-83790]: https://issues.liferay.com/browse/LPS-83790
 [LPS-83920]: https://issues.liferay.com/browse/LPS-83920
 [LPS-83929]: https://issues.liferay.com/browse/LPS-83929
 [LPS-84027]: https://issues.liferay.com/browse/LPS-84027
 [LPS-84039]: https://issues.liferay.com/browse/LPS-84039
 [LPS-84055]: https://issues.liferay.com/browse/LPS-84055
 [LPS-84119]: https://issues.liferay.com/browse/LPS-84119
+[LPS-84213]: https://issues.liferay.com/browse/LPS-84213
+[LPS-84307]: https://issues.liferay.com/browse/LPS-84307
+[LPS-84313]: https://issues.liferay.com/browse/LPS-84313
+[LPS-84473]: https://issues.liferay.com/browse/LPS-84473
+[LPS-84624]: https://issues.liferay.com/browse/LPS-84624
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

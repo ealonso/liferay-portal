@@ -2091,16 +2091,34 @@ app.server.type=@{app.server.type}]]></echo>
 
 							<antcall inheritAll="false" target="prepare-system-ext-properties" />
 
-							<print-test-class-group test.class.group.index="${axis.variable}" />
-
 							<get-test-batch-app-server-start-executable-arg-line />
 
-							<gradle-execute dir="modules" refreshdependencies="@{refreshdependencies}" task="testIntegration">
-								<arg value="-Dapp.server.start.executable.arg.line=${test.batch.app.server.start.executable.arg.line}" />
-								<arg value="-Ddatabase.type=@{database.type}" />
-								<arg value="-Dbuild.exclude.ant.plugin=true" />
-								<arg value="-Dtest.class.group.index=${axis.variable}" />
-							</gradle-execute>
+							<if>
+								<equals arg1="@{subrepository.name}" arg2="" />
+								<then>
+									<print-test-class-group test.class.group.index="${axis.variable}" />
+
+									<echo>Executing Gradle task in directory "modules": testIntegration.</echo>
+
+									<gradle-execute dir="modules" refreshdependencies="@{refreshdependencies}" task="testIntegration">
+										<arg value="-Dapp.server.start.executable.arg.line=${test.batch.app.server.start.executable.arg.line}" />
+										<arg value="-Ddatabase.type=@{database.type}" />
+										<arg value="-Dbuild.exclude.ant.plugin=true" />
+										<arg value="-Dtest.class.group.index=${axis.variable}" />
+									</gradle-execute>
+								</then>
+								<else>
+									<get-module-base-dir-from-subrepository-name subrepository.name="@{subrepository.name}" />
+
+									<echo>Executing Gradle task in directory "${module.base.dir}": testIntegration.</echo>
+
+									<gradle-execute dir="${module.base.dir}" refreshdependencies="@{refreshdependencies}" task="testIntegration">
+										<arg value="-Dapp.server.start.executable.arg.line=${test.batch.app.server.start.executable.arg.line}" />
+										<arg value="-Ddatabase.type=@{database.type}" />
+										<arg value="-Dbuild.exclude.ant.plugin=true" />
+									</gradle-execute>
+								</else>
+							</if>
 
 							<if>
 								<and>
@@ -2215,13 +2233,16 @@ app.server.type=@{app.server.type}]]></echo>
 
 							<property name="artifact.version" value="1.0.0-TEST_ARTIFACT" />
 
-							<copy-artifact-to-local-cache artifact.file="${app.server.lib.portal.dir}/portal-impl.jar" artifact.name="com.liferay.portal.impl" artifact.version="${artifact.version}" />
-							<copy-artifact-to-local-cache artifact.file="${app.server.lib.global.dir}/portal-kernel.jar" artifact.name="com.liferay.portal.kernel" artifact.version="${artifact.version}" />
+							<propertycopy from="app.server.${app.server.type}.lib.global.dir" name="test.app.server.lib.global.dir" />
+							<propertycopy from="app.server.${app.server.type}.lib.portal.dir" name="test.app.server.lib.portal.dir" />
+
+							<copy-artifact-to-local-cache artifact.file="${test.app.server.lib.portal.dir}/portal-impl.jar" artifact.name="com.liferay.portal.impl" artifact.version="${artifact.version}" />
+							<copy-artifact-to-local-cache artifact.file="${test.app.server.lib.global.dir}/portal-kernel.jar" artifact.name="com.liferay.portal.kernel" artifact.version="${artifact.version}" />
 							<copy-artifact-to-local-cache artifact.file="${liferay.home}/osgi/test/com.liferay.portal.test.jar" artifact.name="com.liferay.portal.test" artifact.version="${artifact.version}" />
 							<copy-artifact-to-local-cache artifact.file="${liferay.home}/osgi/test/com.liferay.portal.test.integration.jar" artifact.name="com.liferay.portal.test.integration" artifact.version="${artifact.version}" />
-							<copy-artifact-to-local-cache artifact.file="${app.server.lib.portal.dir}/util-bridges.jar" artifact.name="com.liferay.util.bridges" artifact.version="${artifact.version}" />
-							<copy-artifact-to-local-cache artifact.file="${app.server.lib.portal.dir}/util-java.jar" artifact.name="com.liferay.util.java" artifact.version="${artifact.version}" />
-							<copy-artifact-to-local-cache artifact.file="${app.server.lib.portal.dir}/util-taglib.jar" artifact.name="com.liferay.util.taglib" artifact.version="${artifact.version}" />
+							<copy-artifact-to-local-cache artifact.file="${test.app.server.lib.portal.dir}/util-bridges.jar" artifact.name="com.liferay.util.bridges" artifact.version="${artifact.version}" />
+							<copy-artifact-to-local-cache artifact.file="${test.app.server.lib.portal.dir}/util-java.jar" artifact.name="com.liferay.util.java" artifact.version="${artifact.version}" />
+							<copy-artifact-to-local-cache artifact.file="${test.app.server.lib.portal.dir}/util-taglib.jar" artifact.name="com.liferay.util.taglib" artifact.version="${artifact.version}" />
 
 							<deploy-release-dependency-modules />
 						</then>
@@ -2257,14 +2278,6 @@ app.server.type=@{app.server.type}]]></echo>
 								<param name="test.class.groups.size" value="${test.batch.size}" />
 							</antcall>
 						</then>
-						<else>
-							<get-module-base-dir-from-subrepository-name subrepository.name="@{subrepository.name}" />
-
-							<antcall inheritAll="false" target="record-test-class-file-names">
-								<param name="test.class.modules.base.dir" value="${module.base.dir}" />
-								<param name="test.class.groups.size" value="${test.batch.size}" />
-							</antcall>
-						</else>
 					</if>
 				</test-set-up>
 
@@ -4068,6 +4081,10 @@ log.sanitizer.enabled=false</echo>
 		</run-batch-test>
 	</target>
 
+	<target name="modules-unit-project-templates-jdk8">
+		<antcall target="modules-unit-jdk8" />
+	</target>
+
 	<target name="oracle-service-start">
 		<exec executable="service" failonerror="true">
 			<arg line="oracledb start" />
@@ -4623,7 +4640,51 @@ ${output.content}</echo>
 
 				<record action="start" name="${project.dir}/build.services.output.txt" />
 
-				<ant dir="portal-impl" target="build-services" />
+				<if>
+					<not>
+						<equals arg1="${skip.service.builder.full}" arg2="true" />
+					</not>
+					<then>
+						<ant dir="portal-impl" target="build-services" />
+					</then>
+					<else>
+						<if>
+							<not>
+								<equals arg1="${skip.service.builder.core}" arg2="true" />
+							</not>
+							<then>
+								<ant dir="portal-impl" target="build-service-counter" />
+								<ant dir="portal-impl" target="build-service-portal" />
+								<ant dir="portal-impl" target="build-service-portlets" />
+							</then>
+						</if>
+
+						<if>
+							<isset property="modules.test.class.group" />
+							<then>
+								<loadresource property="modules.build.service.tasks">
+									<filterchain>
+										<tokenfilter>
+											<replaceregex flags="g" pattern="(\S+ )" replace="\0," />
+										</tokenfilter>
+									</filterchain>
+									<propertyresource name="modules.test.class.group" />
+								</loadresource>
+
+								<for list="${modules.build.service.tasks}" param="modules.build.service.task" trim="true">
+									<sequential>
+										<echo>Executing Gradle tasks: @{modules.build.service.task}</echo>
+
+										<gradle-execute dir="modules" forcedcacheenabled="false" task="@{modules.build.service.task}">
+											<arg value="-DbuildService.skipReadOnly=${build.services.skip.read.only}" />
+											<arg value="-Pcom.liferay.portal.tools.service.builder.ignore.local=false" />
+										</gradle-execute>
+									</sequential>
+								</for>
+							</then>
+						</if>
+					</else>
+				</if>
 
 				<record action="stop" name="${project.dir}/build.services.output.txt" />
 

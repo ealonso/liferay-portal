@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletConfigurationLayoutUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletLayoutListener;
+import com.liferay.portal.kernel.portlet.PortletQNameUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -235,8 +236,12 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 		for (PublicRenderParameter publicRenderParameter :
 				portlet.getPublicRenderParameters()) {
 
+			String publicRenderParameterName =
+				PortletQNameUtil.getPublicRenderParameterName(
+					publicRenderParameter.getQName());
+
 			String ignoreKey = PublicRenderParameterConfiguration.getIgnoreKey(
-				publicRenderParameter);
+				publicRenderParameterName);
 
 			boolean ignoreValue = ParamUtil.getBoolean(
 				actionRequest, ignoreKey);
@@ -248,7 +253,7 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 			else {
 				String mappingKey =
 					PublicRenderParameterConfiguration.getMappingKey(
-						publicRenderParameter);
+						publicRenderParameterName);
 
 				String mappingValue = ParamUtil.getString(
 					actionRequest, mappingKey);
@@ -661,12 +666,17 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 			super.doDispatch(renderRequest, renderResponse);
 		}
+		catch (PortalException pe) {
+			if (_log.isInfoEnabled()) {
+				_log.info(pe.getMessage());
+			}
+
+			_handleException(renderRequest, renderResponse, pe);
+		}
 		catch (Exception e) {
 			_log.error(e.getMessage());
 
-			SessionErrors.add(renderRequest, e.getClass());
-
-			include("/error.jsp", renderRequest, renderResponse);
+			_handleException(renderRequest, renderResponse, e);
 		}
 	}
 
@@ -1044,6 +1054,16 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 		}
 
 		portletPreferences.store();
+	}
+
+	private void _handleException(
+			RenderRequest renderRequest, RenderResponse renderResponse,
+			Exception e)
+		throws IOException, PortletException {
+
+		SessionErrors.add(renderRequest, e.getClass());
+
+		include("/error.jsp", renderRequest, renderResponse);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

@@ -744,6 +744,13 @@ public class LayoutReferencesExportImportContentProcessor
 
 			String url = content.substring(beginPos + offset, endPos);
 
+			if (url.contains("/c/document_library/get_file?") ||
+				url.contains("/documents/") ||
+				url.contains("/image/image_gallery?")) {
+
+				continue;
+			}
+
 			endPos = url.indexOf(Portal.FRIENDLY_URL_SEPARATOR);
 
 			if (endPos != -1) {
@@ -797,7 +804,8 @@ public class LayoutReferencesExportImportContentProcessor
 					urlWithoutLocale.startsWith(
 						_PRIVATE_USER_SERVLET_MAPPING) ||
 					urlWithoutLocale.startsWith(
-						_PUBLIC_GROUP_SERVLET_MAPPING)) {
+						_PUBLIC_GROUP_SERVLET_MAPPING) ||
+					_isVirtualHostDefined(urlSB)) {
 
 					url = urlWithoutLocale;
 				}
@@ -913,6 +921,21 @@ public class LayoutReferencesExportImportContentProcessor
 
 				throw eicve;
 			}
+		}
+	}
+
+	private boolean _isVirtualHostDefined(StringBundler urlSB) {
+		String urlSBString = urlSB.toString();
+
+		if (urlSBString.contains(_DATA_HANDLER_PUBLIC_LAYOUT_SET_SECURE_URL) ||
+			urlSBString.contains(_DATA_HANDLER_PUBLIC_LAYOUT_SET_URL) ||
+			urlSBString.contains(_DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL) ||
+			urlSBString.contains(_DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
+
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 

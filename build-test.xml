@@ -2925,9 +2925,64 @@ go</echo>
 					</then>
 				</elseif>
 				<elseif>
-					<contains string="@{liferay.portal.bundle}" substring="6.2" />
+					<or>
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.4" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.5" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.14" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.15" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.16" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.17" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.18" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.19" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.20" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="6.2.10.21" />
+					</or>
 					<then>
 						<var name="app.server.tomcat.version" value="7.0.62" />
+					</then>
+				</elseif>
+				<elseif>
+					<contains string="@{liferay.portal.bundle}" substring="6.2" />
+					<then>
+						<var name="app.server.tomcat.version" value="7.0.90" />
+					</then>
+				</elseif>
+				<elseif>
+					<or>
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.0" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.1" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.2" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.3" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.4" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.5" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.6" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.1" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.2" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.3" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.4" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.5" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.6" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.7" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.0.10.8" />
+					</or>
+					<then>
+						<var name="app.server.tomcat.version" value="8.0.32" />
+					</then>
+				</elseif>
+				<elseif>
+					<contains string="@{liferay.portal.bundle}" substring="7.0" />
+					<then>
+						<var name="app.server.tomcat.version" value="8.0.53" />
+					</then>
+				</elseif>
+				<elseif>
+					<or>
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.1.0" />
+						<equals arg1="@{liferay.portal.bundle}" arg2="7.1.10" />
+					</or>
+					<then>
+						<var name="app.server.tomcat.version" value="9.0.6" />
 					</then>
 				</elseif>
 			</if>
@@ -2935,6 +2990,7 @@ go</echo>
 			<var name="app.server.tomcat.dir" value="${app.server.parent.dir}/tomcat-${app.server.tomcat.version}" />
 			<var name="app.server.tomcat.bin.dir" value="${app.server.parent.dir}/tomcat-${app.server.tomcat.version}/bin" />
 			<var name="app.server.tomcat.lib.global.dir" value="${app.server.parent.dir}/tomcat-${app.server.tomcat.version}/lib/ext" />
+			<var name="app.server.tomcat.lib.portal.dir" value="${app.server.parent.dir}/tomcat-${app.server.tomcat.version}/webapps/ROOT/WEB-INF/lib" />
 			<var name="app.server.tomcat.zip.name" value="apache-tomcat-${app.server.tomcat.version}.zip" />
 			<var name="app.server.tomcat.zip.url" value="http://archive.apache.org/dist/tomcat/tomcat-9/v${app.server.tomcat.version}/bin/${app.server.tomcat.zip.name}" />
 
@@ -2942,6 +2998,7 @@ go</echo>
 				app.server.tomcat.dir=${app.server.tomcat.dir}
 				app.server.tomcat.bin.dir=${app.server.tomcat.bin.dir}
 				app.server.tomcat.lib.global.dir=${app.server.tomcat.lib.global.dir}
+				app.server.tomcat.lib.portal.dir=${app.server.tomcat.lib.portal.dir}
 				app.server.tomcat.version=${app.server.tomcat.version}
 				app.server.tomcat.zip.name=${app.server.tomcat.zip.name}
 				app.server.tomcat.zip.url=${app.server.tomcat.zip.url}
@@ -4898,7 +4955,7 @@ go]]></replacevalue>
 				</if>
 
 				<execute dir="${project.dir}/modules/sdk/project-templates/project-templates-npm-portlet">
-					mvn archetype:generate --batch-mode -DarchetypeArtifactId=com.liferay.project.templates.npm.portlet -DarchetypeGroupId=com.liferay -DarchetypeVersion=1.0.5 -DartifactId=com.npm.simple -Dauthor=liferay -DbuildType=maven -DclassName=Foo -DgroupId=com.test -DinteractiveMode=false -DliferayVersion=7.1 -Dpackage=com.test -DprojectType=standalone -Dversion=1.0.0
+					mvn archetype:generate --batch-mode -DarchetypeArtifactId=com.liferay.project.templates.npm.portlet -DarchetypeGroupId=com.liferay -DarchetypeVersion=1.0.8 -DartifactId=com.npm.simple -Dauthor=liferay -DbuildType=maven -DclassName=Foo -DgroupId=com.test -DinteractiveMode=false -DliferayVersion=7.1 -Dpackage=com.test -DprojectType=standalone -Dversion=1.0.0
 				</execute>
 
 				<execute dir="${project.dir}/modules/sdk/project-templates/project-templates-npm-portlet/com.npm.simple">
@@ -4919,7 +4976,7 @@ go]]></replacevalue>
 				</if>
 
 				<execute dir="${project.dir}/modules/sdk/project-templates/project-templates-npm-${blade.templates}-portlet">
-					mvn archetype:generate --batch-mode -DarchetypeArtifactId=com.liferay.project.templates.npm.${blade.templates}.portlet -DarchetypeGroupId=com.liferay -DarchetypeVersion=1.0.5 -DartifactId=com.npm.${blade.templates} -Dauthor=liferay -DbuildType=maven -DclassName=Foo -DgroupId=com.test -DinteractiveMode=false -DliferayVersion=7.1 -Dpackage=com.test -DprojectType=standalone -Dversion=1.0.0
+					mvn archetype:generate --batch-mode -DarchetypeArtifactId=com.liferay.project.templates.npm.${blade.templates}.portlet -DarchetypeGroupId=com.liferay -DarchetypeVersion=1.0.8 -DartifactId=com.npm.${blade.templates} -Dauthor=liferay -DbuildType=maven -DclassName=Foo -DgroupId=com.test -DinteractiveMode=false -DliferayVersion=7.1 -Dpackage=com.test -DprojectType=standalone -Dversion=1.0.0
 				</execute>
 
 				<execute dir="${project.dir}/modules/sdk/project-templates/project-templates-npm-${blade.templates}-portlet/com.npm.${blade.templates}">
@@ -5241,12 +5298,12 @@ go]]></replacevalue>
 														<echo file="@{module.dir.path}/.lfrbuild-portal" />
 													</then>
 												</if>
+
+												<gradle-execute dir="@{app.dir}" task="deploy">
+													<arg value="clean" />
+												</gradle-execute>
 											</sequential>
 										</for>
-
-										<gradle-execute dir="@{app.dir}" task="deploy">
-											<arg value="clean" />
-										</gradle-execute>
 
 										<ant antfile="build.xml" dir="modules" target="build-app-lpkg">
 											<property name="app.name" value="${osgi.app.name}" />
@@ -6205,9 +6262,11 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 			</then>
 		</if>
 
+		<get-testcase-property property.name="captcha.enabled" />
+
 		<if>
 			<not>
-				<contains string="${osgi.module.configurations}" substring="maxChallenges" />
+				<equals arg1="${captcha.enabled}" arg2="true" />
 			</not>
 			<then>
 				<prepare-captcha-configuration />
@@ -6673,7 +6732,7 @@ auto.deploy.dest.dir=C:/WINDOWS/system32/config/systemprofile/liferay/websphere-
 				<replace
 					file="${app.server.dir}/conf/server.xml"
 					token="&lt;Service name=&quot;Catalina&quot;&gt;"
-					value="&lt;Service name=&quot;Catalina&quot;&gt;${line.separator}    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11Protocol&quot;${line.separator}           maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; scheme=&quot;https&quot; secure=&quot;true&quot;${line.separator}           clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; keystoreFile=&quot;${app.server.parent.dir}/keystore.jks&quot; keystorePass=&quot;liferay&quot; /&gt;"
+					value="&lt;Service name=&quot;Catalina&quot;&gt;${line.separator}    &lt;Connector port=&quot;8443&quot; protocol=&quot;org.apache.coyote.http11.Http11NioProtocol&quot;${line.separator}           maxThreads=&quot;150&quot; SSLEnabled=&quot;true&quot; scheme=&quot;https&quot; secure=&quot;true&quot;${line.separator}           clientAuth=&quot;false&quot; sslProtocol=&quot;TLS&quot; keystoreFile=&quot;${app.server.parent.dir}/keystore.jks&quot; keystorePass=&quot;liferay&quot; /&gt;"
 				/>
 			</then>
 			<else>

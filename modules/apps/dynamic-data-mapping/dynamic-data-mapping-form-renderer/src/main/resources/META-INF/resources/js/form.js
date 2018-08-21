@@ -17,6 +17,10 @@ AUI.add(
 						value: ''
 					},
 
+					defaultLanguageId: {
+						value: themeDisplay.getDefaultLanguageId()
+					},
+
 					enableEvaluations: {
 						value: true
 					},
@@ -86,7 +90,7 @@ AUI.add(
 						var languageId = instance._getURLParameter(portletNamespace, 'languageId');
 
 						if (!languageId) {
-							languageId = themeDisplay.getDefaultLanguageId();
+							languageId = instance.get('defaultLanguageId');
 						}
 
 						return {
@@ -134,7 +138,7 @@ AUI.add(
 
 						var hasFocus = false;
 
-						instance.eachField(
+						instance.eachNestedField(
 							function(field) {
 								hasFocus = field.hasFocus(node);
 
@@ -183,7 +187,7 @@ AUI.add(
 					_afterFormRender: function() {
 						var instance = this;
 
-						instance.eachField(
+						instance.eachNestedField(
 							function(field) {
 								field.render();
 							}

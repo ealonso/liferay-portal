@@ -56,7 +56,8 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			layout.getTypeSettingsProperties();
 
 		boolean addToAutoMenus = GetterUtil.getBoolean(
-			typeSettingsProperties.getProperty("addToAutoMenus"), true);
+			typeSettingsProperties.getProperty("addToAutoMenus"),
+			ExportImportThreadLocal.isLayoutImportInProcess());
 		boolean visible = GetterUtil.getBoolean(
 			typeSettingsProperties.getProperty("visible"), true);
 
@@ -87,7 +88,8 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 	private void _addSiteNavigationMenuItem(
 		SiteNavigationMenu siteNavigationMenu, Layout layout) {
 
-		if (ExportImportThreadLocal.isStagingInProcess() &&
+		if (ExportImportThreadLocal.isImportInProcess() ||
+			ExportImportThreadLocal.isStagingInProcess() ||
 			_menuItemExists(siteNavigationMenu, layout)) {
 
 			return;

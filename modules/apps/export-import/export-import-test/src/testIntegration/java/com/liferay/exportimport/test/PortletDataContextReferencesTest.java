@@ -88,8 +88,12 @@ public class PortletDataContextReferencesTest {
 
 		Element rootElement = document.addElement("root");
 
-		_portletDataContext.setExportDataRootElement(rootElement);
-		_portletDataContext.setImportDataRootElement(rootElement);
+		rootElement.addAttribute("self-path", "dummyPath");
+
+		Element element = rootElement.addElement("PortletDataRootElement");
+
+		_portletDataContext.setExportDataRootElement(element);
+		_portletDataContext.setImportDataRootElement(element);
 
 		Element missingReferencesElement = rootElement.addElement(
 			"missing-references");
@@ -406,7 +410,7 @@ public class PortletDataContextReferencesTest {
 				_bookmarksEntry, BookmarksFolder.class);
 
 		Assert.assertEquals(
-			referencesElements.toString(), 2, referencesElements.size());
+			referencesElements.toString(), 1, referencesElements.size());
 
 		for (Element referenceElement : referencesElements) {
 			Assert.assertTrue(

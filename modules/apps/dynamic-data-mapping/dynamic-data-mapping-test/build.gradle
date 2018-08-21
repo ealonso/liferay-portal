@@ -32,12 +32,14 @@ dependencies {
 	testCompile project(":apps:dynamic-data-mapping:dynamic-data-mapping-io")
 	testCompile project(":apps:dynamic-data-mapping:dynamic-data-mapping-service")
 	testCompile project(":apps:dynamic-data-mapping:dynamic-data-mapping-test-util")
+	testCompile project(":apps:export-import:export-import-api")
 	testCompile project(":apps:journal:journal-api")
 	testCompile project(":apps:portal-search:portal-search-test-util")
 	testCompile project(":apps:portal-template:portal-template-soy-api")
 	testCompile project(":core:petra:petra-concurrent")
 	testCompile project(":core:petra:petra-lang")
 	testCompile project(":core:petra:petra-memory")
+	testCompile project(":core:petra:petra-reflect")
 	testCompile project(":core:petra:petra-string")
 
 	testIntegrationCompile group: "org.springframework", name: "spring-web", version: "4.1.9.RELEASE"

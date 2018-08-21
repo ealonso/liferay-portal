@@ -20,9 +20,6 @@
 String redirect = ParamUtil.getString(request, "redirect", currentURL);
 
 long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
-
-String languageId = LanguageUtil.getLanguageId(request);
-Locale displayLocale = LocaleUtil.fromLanguageId(languageId);
 %>
 
 <c:choose>
@@ -32,6 +29,13 @@ Locale displayLocale = LocaleUtil.fromLanguageId(languageId);
 		</div>
 	</c:when>
 	<c:otherwise>
+
+		<%
+		String languageId = ddmFormDisplayContext.getDefaultLanguageId();
+
+		Locale displayLocale = LocaleUtil.fromLanguageId(languageId);
+		%>
+
 		<c:choose>
 			<c:when test="<%= ddmFormDisplayContext.isShowSuccessPage() %>">
 
@@ -158,7 +162,7 @@ Locale displayLocale = LocaleUtil.fromLanguageId(languageId);
 						}
 
 						Liferay.detach('destroyPortlet', <portlet:namespace />clearPortletHandlers);
-					};
+					}
 
 					Liferay.on('destroyPortlet', <portlet:namespace />clearPortletHandlers);
 
@@ -238,7 +242,7 @@ Locale displayLocale = LocaleUtil.fromLanguageId(languageId);
 
 								var time = Liferay.Session.get('sessionLength') || tenSeconds;
 
-								<portlet:namespace />intervalId = setInterval(<portlet:namespace />extendSession, (time/2));
+								<portlet:namespace />intervalId = setInterval(<portlet:namespace />extendSession, (time / 2));
 							}
 
 							function <portlet:namespace />extendSession() {
