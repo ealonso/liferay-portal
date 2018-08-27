@@ -289,10 +289,6 @@ public class JournalTransformer {
 				template.put("company", getCompany(themeDisplay, companyId));
 				template.put("companyId", companyId);
 				template.put("device", getDevice(themeDisplay));
-
-				String templatesPath = getTemplatesPath(
-					companyId, articleGroupId, classNameId);
-
 				template.put("locale", locale);
 				template.put(
 					"permissionChecker",
@@ -302,7 +298,12 @@ public class JournalTransformer {
 					StringUtil.randomId() + StringPool.UNDERLINE);
 				template.put("scopeGroupId", scopeGroupId);
 				template.put("siteGroupId", siteGroupId);
+
+				String templatesPath = getTemplatesPath(
+					companyId, articleGroupId, classNameId);
+
 				template.put("templatesPath", templatesPath);
+
 				template.put("viewMode", viewMode);
 
 				if (themeDisplay != null) {
