@@ -212,12 +212,13 @@ public class FragmentsEditorDisplayContext {
 		}
 
 		soyContext.put(
-			"updateFragmentEntryLinksURL",
-			_getFragmentEntryActionURL("/layout/update_fragment_entry_links"));
-		soyContext.put(
 			"updateLayoutPageTemplateEntryAssetTypeURL",
 			_getFragmentEntryActionURL(
 				"/layout/update_layout_page_template_entry_asset_type"));
+		soyContext.put(
+			"updateLayoutPageTemplateSettingsURL",
+			_getFragmentEntryActionURL(
+				"/layout/update_layout_page_template_settings"));
 
 		return soyContext;
 	}
