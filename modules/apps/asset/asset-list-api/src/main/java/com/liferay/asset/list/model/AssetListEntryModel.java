@@ -193,6 +193,21 @@ public interface AssetListEntryModel extends BaseModel<AssetListEntry>,
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the preferences of this asset list entry.
+	 *
+	 * @return the preferences of this asset list entry
+	 */
+	@AutoEscape
+	public String getPreferences();
+
+	/**
+	 * Sets the preferences of this asset list entry.
+	 *
+	 * @param preferences the preferences of this asset list entry
+	 */
+	public void setPreferences(String preferences);
+
+	/**
 	 * Returns the title of this asset list entry.
 	 *
 	 * @return the title of this asset list entry
