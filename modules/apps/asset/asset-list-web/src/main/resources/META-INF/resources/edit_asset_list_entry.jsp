@@ -25,40 +25,69 @@ if (Validator.isNull(redirect)) {
 	redirect = portletURL.toString();
 }
 
-AssetListEntry assetListEntry = assetListDisplayContext.getAssetListEntry();
-
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
 renderResponse.setTitle(assetListDisplayContext.getAssetListEntryTitle());
+
+List<ScreenNavigationEntry> screenNavigationEntries = assetListDisplayContext.getScreenNavigationEntries();
+
+ScreenNavigationEntry activeScreenNavigationEntry = assetListDisplayContext.getActiveScreenNavigationEntry();
 %>
 
-<portlet:actionURL name="/asset_list/edit_asset_list_entry" var="editAssetListEntryURL" />
+<div class="container-fluid container-fluid-max-xl container-view">
+	<div class="row">
+		<div class="col-lg-3">
+			<nav class="menubar menubar-transparent menubar-vertical-expand-lg">
+				<ul class="nav nav-nested">
+					<li class="nav-item">
+						<div class="autofit-row autofit-row-center">
+							<div class="autofit-col autofit-col-expand">
+								<strong>
+									<liferay-ui:message key="asset-list" />
+								</strong>
+							</div>
+						</div>
 
-<liferay-frontend:edit-form
-	action="<%= editAssetListEntryURL %>"
-	method="post"
-	name="fm"
->
-	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
-	<aui:input name="assetListEntryId" type="hidden" value="<%= assetListDisplayContext.getAssetListEntryId() %>" />
-	<aui:input name="type" type="hidden" value="<%= assetListDisplayContext.getAssetListEntryType() %>" />
+						<ul class="nav nav-stacked">
 
-	<aui:model-context bean="<%= assetListEntry %>" model="<%= AssetListEntry.class %>" />
+							<%
+							for (ScreenNavigationEntry screenNavigationEntry : screenNavigationEntries) {
+							%>
 
-	<liferay-frontend:edit-form-body>
-		<liferay-frontend:fieldset-group>
-			<liferay-frontend:fieldset>
-				<aui:input autoFocus="<%= windowState.equals(WindowState.MAXIMIZED) %>" name="title" placeholder="title">
-					<aui:validator name="required" />
-				</aui:input>
-			</liferay-frontend:fieldset>
-		</liferay-frontend:fieldset-group>
-	</liferay-frontend:edit-form-body>
+								<li class="nav-item">
 
-	<liferay-frontend:edit-form-footer>
-		<aui:button type="submit" />
+									<%
+									PortletURL screenNavigationEntryURL = renderResponse.createRenderURL();
 
-		<aui:button href="<%= redirect %>" type="cancel" />
-	</liferay-frontend:edit-form-footer>
-</liferay-frontend:edit-form>
+									screenNavigationEntryURL.setParameter("screenNavigationEntryKey", screenNavigationEntry.getEntryKey());
+									%>
+
+									<a class="nav-link truncate-text <%= Objects.equals(activeScreenNavigationEntry.getEntryKey(), screenNavigationEntry.getEntryKey()) ? "active" : StringPool.BLANK %>" href="<%= screenNavigationEntryURL.toString() %>">
+										<%= HtmlUtil.escape(screenNavigationEntry.getLabel(locale)) %>
+									</a>
+								</li>
+
+							<%
+							}
+							%>
+
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+
+		<div class="col-lg-9">
+			<div class="sheet">
+				<div class="sheet-section">
+
+					<%
+					activeScreenNavigationEntry.render(request, response);
+					%>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

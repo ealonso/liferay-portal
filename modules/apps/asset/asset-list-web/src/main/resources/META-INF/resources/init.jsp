@@ -27,6 +27,7 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 <%@ page import="com.liferay.asset.list.model.AssetListEntry" %><%@
 page import="com.liferay.asset.list.web.internal.display.context.AssetListDisplayContext" %><%@
 page import="com.liferay.asset.list.web.internal.security.permission.resource.AssetListEntryPermission" %><%@
+page import="com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.security.permission.ActionKeys" %><%@
@@ -35,6 +36,9 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.taglib.search.ResultRow" %>
+
+<%@ page import="java.util.List" %><%@
+page import="java.util.Objects" %>
 
 <%@ page import="javax.portlet.PortletURL" %><%@
 page import="javax.portlet.WindowState" %>
