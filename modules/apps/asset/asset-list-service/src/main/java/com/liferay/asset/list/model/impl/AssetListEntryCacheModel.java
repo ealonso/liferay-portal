@@ -66,7 +66,7 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{assetListEntryId=");
 		sb.append(assetListEntryId);
@@ -82,6 +82,8 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", preferences=");
+		sb.append(preferences);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append(", type=");
@@ -121,6 +123,13 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 			assetListEntryImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		if (preferences == null) {
+			assetListEntryImpl.setPreferences("");
+		}
+		else {
+			assetListEntryImpl.setPreferences(preferences);
+		}
+
 		if (title == null) {
 			assetListEntryImpl.setTitle("");
 		}
@@ -147,6 +156,7 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		preferences = objectInput.readUTF();
 		title = objectInput.readUTF();
 
 		type = objectInput.readInt();
@@ -173,6 +183,13 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
+		if (preferences == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(preferences);
+		}
+
 		if (title == null) {
 			objectOutput.writeUTF("");
 		}
@@ -190,6 +207,7 @@ public class AssetListEntryCacheModel implements CacheModel<AssetListEntry>,
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public String preferences;
 	public String title;
 	public int type;
 }

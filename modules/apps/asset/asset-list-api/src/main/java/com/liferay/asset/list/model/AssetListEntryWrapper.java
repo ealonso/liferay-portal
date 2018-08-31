@@ -65,6 +65,7 @@ public class AssetListEntryWrapper implements AssetListEntry,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("preferences", getPreferences());
 		attributes.put("title", getTitle());
 		attributes.put("type", getType());
 
@@ -113,6 +114,12 @@ public class AssetListEntryWrapper implements AssetListEntry,
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		String preferences = (String)attributes.get("preferences");
+
+		if (preferences != null) {
+			setPreferences(preferences);
 		}
 
 		String title = (String)attributes.get("title");
@@ -191,6 +198,16 @@ public class AssetListEntryWrapper implements AssetListEntry,
 	@Override
 	public Date getModifiedDate() {
 		return _assetListEntry.getModifiedDate();
+	}
+
+	/**
+	* Returns the preferences of this asset list entry.
+	*
+	* @return the preferences of this asset list entry
+	*/
+	@Override
+	public String getPreferences() {
+		return _assetListEntry.getPreferences();
 	}
 
 	/**
@@ -362,6 +379,16 @@ public class AssetListEntryWrapper implements AssetListEntry,
 	@Override
 	public void setNew(boolean n) {
 		_assetListEntry.setNew(n);
+	}
+
+	/**
+	* Sets the preferences of this asset list entry.
+	*
+	* @param preferences the preferences of this asset list entry
+	*/
+	@Override
+	public void setPreferences(String preferences) {
+		_assetListEntry.setPreferences(preferences);
 	}
 
 	/**
