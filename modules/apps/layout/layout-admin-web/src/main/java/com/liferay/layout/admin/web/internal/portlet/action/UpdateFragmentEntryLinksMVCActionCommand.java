@@ -14,7 +14,6 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalService;
@@ -93,12 +92,6 @@ public class UpdateFragmentEntryLinksMVCActionCommand
 	protected void updateFragmentEntryLinks(ActionRequest actionRequest)
 		throws PortalException {
 
-		long fragmentEntryLinkId1 = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId1");
-
-		long fragmentEntryLinkId2 = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId2");
-
 		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
 		long classPK = ParamUtil.getLong(actionRequest, "classPK");
 		String settings = ParamUtil.getString(actionRequest, "settings");
@@ -106,26 +99,8 @@ public class UpdateFragmentEntryLinksMVCActionCommand
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
-		FragmentEntryLink fragmentEntryLink1 =
-			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
-				fragmentEntryLinkId1);
-
-		FragmentEntryLink fragmentEntryLink2 =
-			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
-				fragmentEntryLinkId2);
-
-		if ((fragmentEntryLink1 != null) && (fragmentEntryLink2 != null)) {
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				fragmentEntryLinkId1, fragmentEntryLink2.getPosition());
-
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				fragmentEntryLinkId2, fragmentEntryLink1.getPosition());
-
-			_layoutPageTemplateSettingLocalService.
-				updateLayoutPageTemplateSetting(
-					serviceContext.getScopeGroupId(), classNameId, classPK,
-					settings);
-		}
+		_layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(
+			serviceContext.getScopeGroupId(), classNameId, classPK, settings);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
