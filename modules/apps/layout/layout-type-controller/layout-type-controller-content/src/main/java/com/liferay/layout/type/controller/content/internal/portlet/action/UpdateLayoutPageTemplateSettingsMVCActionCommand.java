@@ -14,8 +14,6 @@
 
 package com.liferay.layout.type.controller.content.internal.portlet.action;
 
-import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalService;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutPortletKeys;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -51,35 +49,12 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ContentLayoutPortletKeys.CONTENT_PAGE_EDITOR_PORTLET,
-		"mvc.command.name=/content_layout/delete_fragment_entry_link"
+		"mvc.command.name=/content_layout/update_layout_page_template_settings"
 	},
 	service = MVCActionCommand.class
 )
-public class DeleteFragmentEntryLinkMVCActionCommand
+public class UpdateLayoutPageTemplateSettingsMVCActionCommand
 	extends BaseMVCActionCommand {
-
-	protected FragmentEntryLink deleteFragmentEntryLink(
-			ActionRequest actionRequest)
-		throws PortalException {
-
-		long fragmentEntryLinkId = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId");
-		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
-		long classPK = ParamUtil.getLong(actionRequest, "classPK");
-		String settings = ParamUtil.getString(actionRequest, "settings");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		FragmentEntryLink fragmentEntryLink =
-			_fragmentEntryLinkLocalService.deleteFragmentEntryLink(
-				fragmentEntryLinkId);
-
-		_layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(
-			serviceContext.getScopeGroupId(), classNameId, classPK, settings);
-
-		return fragmentEntryLink;
-	}
 
 	@Override
 	protected void doProcessAction(
@@ -89,14 +64,14 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Callable<FragmentEntryLink> deleteFragmentEntryLinkCallable =
-			new DeleteFragmentEntryLinkCallable(actionRequest);
+		Callable<Void> updateLayoutPageTemplateSettingsCallable =
+			new UpdateLayoutPageTemplateSettingsCallable(actionRequest);
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		try {
 			TransactionInvokerUtil.invoke(
-				_transactionConfig, deleteFragmentEntryLinkCallable);
+				_transactionConfig, updateLayoutPageTemplateSettingsCallable);
 		}
 		catch (Throwable t) {
 			_log.error(t, t);
@@ -113,29 +88,44 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 			actionRequest, actionResponse, jsonObject);
 	}
 
+	protected void updateLayoutPageTemplateSettings(ActionRequest actionRequest)
+		throws PortalException {
+
+		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+		String settings = ParamUtil.getString(actionRequest, "settings");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			actionRequest);
+
+		_layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(
+			serviceContext.getScopeGroupId(), classNameId, classPK, settings);
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
-		DeleteFragmentEntryLinkMVCActionCommand.class);
+		UpdateLayoutPageTemplateSettingsMVCActionCommand.class);
 
 	private static final TransactionConfig _transactionConfig =
 		TransactionConfig.Factory.create(
 			Propagation.REQUIRED, new Class<?>[] {Exception.class});
 
 	@Reference
-	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
-
-	@Reference
 	private LayoutPageTemplateSettingLocalService
 		_layoutPageTemplateSettingLocalService;
 
-	private class DeleteFragmentEntryLinkCallable
-		implements Callable<FragmentEntryLink> {
+	private class UpdateLayoutPageTemplateSettingsCallable
+		implements Callable<Void> {
 
 		@Override
-		public FragmentEntryLink call() throws Exception {
-			return deleteFragmentEntryLink(_actionRequest);
+		public Void call() throws Exception {
+			updateLayoutPageTemplateSettings(_actionRequest);
+
+			return null;
 		}
 
-		private DeleteFragmentEntryLinkCallable(ActionRequest actionRequest) {
+		private UpdateLayoutPageTemplateSettingsCallable(
+			ActionRequest actionRequest) {
+
 			_actionRequest = actionRequest;
 		}
 
