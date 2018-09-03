@@ -163,7 +163,17 @@ const INITIAL_STATE = {
 
 	savingChanges: Config.bool()
 		.internal()
-		.value(false)
+		.value(false),
+
+	/**
+	 * URL for updating layout settings.
+	 * @default undefined
+	 * @instance
+	 * @review
+	 * @type {!string}
+	 */
+
+	updateFragmentEntryLinksURL: Config.string().required()
 };
 
 export {INITIAL_STATE};
