@@ -113,29 +113,34 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 				const fragmentEntryLinkId = payload.fragmentEntryLinkId;
 				const nextState = Object.assign({}, state);
 
+				const nextSettings = Object.assign(
+					{},
+					state.layoutSettings,
+					{
+						structure: [
+							...(state.layoutSettings.structure || [])
+						]
+					}
+				);
+
+				const index = state.layoutSettings.structure.indexOf(
+					fragmentEntryLinkId
+				);
+
+				nextSettings.structure.splice(index, 1);
+
 				_removeFragmentEntryLink(
 					state.deleteFragmentEntryLinkURL,
 					state.portletNamespace,
 					state.classNameId,
 					state.classPK,
-					fragmentEntryLinkId
+					fragmentEntryLinkId,
+					nextSettings
 				).then(
 					(response) => {
-						nextState.layoutSettings.structure = (
-							nextState.layoutSettings.structure ||
-							[]
-						);
-
-						const index = state.layoutSettings.structure.indexOf(
-							fragmentEntryLinkId
-						);
+						nextState.layoutSettings = nextSettings;
 
 						delete nextState.fragmentEntryLinks[payload.fragmentEntryLinkId];
-
-						nextState.layoutSettings.structure = [
-							...nextState.layoutSettings.structure.slice(0, index),
-							...nextState.layoutSettings.structure.slice(index + 1)
-						];
 
 						resolve(nextState);
 					}
@@ -252,12 +257,14 @@ function _removeFragmentEntryLink(
 	portletNamespace,
 	classNameId,
 	classPK,
-	fragmentEntryLinkId
+	fragmentEntryLinkId,
+	layoutSettings
 ) {
 	const formData = new FormData();
 
 	formData.append(`${portletNamespace}classNameId`, classNameId);
 	formData.append(`${portletNamespace}classPK`, classPK);
+	formData.append(`${portletNamespace}settings`, JSON.stringify(layoutSettings));
 
 	formData.append(
 		`${portletNamespace}fragmentEntryLinkId`,
