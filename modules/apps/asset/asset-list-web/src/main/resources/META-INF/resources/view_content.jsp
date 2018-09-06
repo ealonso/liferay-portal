@@ -15,3 +15,19 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<div class="container-fluid-1280 pt-3">
+	<liferay-portlet:runtime
+		defaultPreferences="<%= assetListDisplayContext.getViewContentPreferences() %>"
+		instanceId="assetListPreview"
+		portletName="<%= AssetPublisherPortletKeys.ASSET_PUBLISHER %>"
+	/>
+</div>
+
+<%
+String taglibOnClick = "Liferay.fire('closeWindow', {id: Liferay.Util.getWindowName()});";
+%>
+
+<aui:button-row>
+	<aui:button cssClass="btn-lg" onClick="<%= taglibOnClick %>" value="close" />
+</aui:button-row>
