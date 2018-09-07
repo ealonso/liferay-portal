@@ -14,16 +14,15 @@
 		name: string
 	]>}
 	{@param fragmentEntryLinks: ?}
-	{@param highlightMapping: bool}
 	{@param sidebarTabs: list<[enabled:bool, id:string, label:string]>}
 	{@param spritemap: string}
-	{@param visible: bool}
 	{@param? dropTargetClass: string}
 	{@param? structure: list<string>}
 	{@param? _handleHide: any}
 	{@param? _handleHideSidebarButtonClick: any}
 	{@param? _handleTabClick: any}
 	{@param? _selectedTab: string}
+	{@param? highlightMapping: bool}
 	{@param? selectedMappingTypes: [
 		subtype: [
 			id: string,
@@ -35,6 +34,7 @@
 		]
 	]}
 	{@param? store: ?}
+	{@param? visible: bool}
 
 	{call liferay.frontend.ContextualSidebar.render}
 		{param body kind="html"}
@@ -76,7 +76,7 @@
 				{/call}
 			{elseif $_selectedTab == 'mapping'}
 				{call com.liferay.layout.admin.web.SidebarMapping.render}
-					{param highlightMapping: $highlightMapping /}
+					{param highlightMapping: $highlightMapping ?: false /}
 					{param ref: 'sidebarTab' /}
 					{param selectedMappingTypes: $selectedMappingTypes /}
 					{param spritemap: $spritemap /}
@@ -116,7 +116,7 @@
 		{/param}
 
 		{param ref: 'contextualSidebar' /}
-		{param visible: $visible /}
+		{param visible: $visible ?: true /}
 	{/call}
 {/template}
 
