@@ -20,6 +20,18 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 			let nextState = Object.assign({}, state);
 
 			if (actionType === ADD_FRAGMENT_ENTRY_LINK) {
+				let fragmentEntryLink;
+
+				const nextSettings = Object.assign(
+					{},
+					state.layoutSettings,
+					{
+						structure: [
+							...(state.layoutSettings.structure || [])
+						]
+					}
+				);
+
 				_addFragmentEntryLink(
 					state.addFragmentEntryLinkURL,
 					payload.fragmentEntryId,
@@ -29,7 +41,32 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 					state.portletNamespace
 				)
 					.then(
-						fragmentEntryLink => {
+						response => {
+							fragmentEntryLink = response;
+
+							const position = _getDropFragmentPosition(
+								nextSettings.structure,
+								state.hoveredFragmentEntryLinkId,
+								state.hoveredFragmentEntryLinkBorder
+							);
+
+							nextSettings.structure.splice(
+								position,
+								0,
+								fragmentEntryLink.fragmentEntryLinkId
+							);
+
+							return _updateSettings(
+								state.updateFragmentEntryLinksURL,
+								state.portletNamespace,
+								state.classNameId,
+								state.classPK,
+								nextSettings
+							);
+						}
+					)
+					.then(
+						() => {
 							return _getFragmentEntryLinkContent(
 								state.renderFragmentEntryURL,
 								fragmentEntryLink,
@@ -38,22 +75,16 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 						}
 					)
 					.then(
-						fragmentEntryLink => {
-							nextState.fragmentEntryLinks = [
-								...nextState.fragmentEntryLinks
-							];
+						response => {
+							fragmentEntryLink = response;
 
-							const position = _getDropFragmentPosition(
-								state.fragmentEntryLinks,
-								state.hoveredFragmentEntryLinkId,
-								state.hoveredFragmentEntryLinkBorder
+							nextState.fragmentEntryLinks = Object.assign(
+								{},
+								nextState.fragmentEntryLinks,
+								{[fragmentEntryLink.fragmentEntryLinkId]: fragmentEntryLink}
 							);
 
-							nextState.fragmentEntryLinks.splice(
-								position,
-								0,
-								fragmentEntryLink
-							);
+							nextState.layoutSettings = nextSettings;
 
 							resolve(nextState);
 						}
@@ -86,22 +117,34 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 				const fragmentEntryLinkId = payload.fragmentEntryLinkId;
 				const nextState = Object.assign({}, state);
 
+				const nextSettings = Object.assign(
+					{},
+					state.layoutSettings,
+					{
+						structure: [
+							...(state.layoutSettings.structure || [])
+						]
+					}
+				);
+
+				const index = state.layoutSettings.structure.indexOf(
+					fragmentEntryLinkId
+				);
+
+				nextSettings.structure.splice(index, 1);
+
 				_removeFragmentEntryLink(
 					state.deleteFragmentEntryLinkURL,
 					state.portletNamespace,
-					fragmentEntryLinkId
+					state.classNameId,
+					state.classPK,
+					fragmentEntryLinkId,
+					nextSettings
 				).then(
-					() => {
-						const index = state.fragmentEntryLinks.findIndex(
-							fragmentEntryLink => (
-								fragmentEntryLink.fragmentEntryLinkId === fragmentEntryLinkId
-							)
-						);
+					(response) => {
+						nextState.layoutSettings = nextSettings;
 
-						nextState.fragmentEntryLinks = [
-							...nextState.fragmentEntryLinks.slice(0, index),
-							...nextState.fragmentEntryLinks.slice(index + 1)
-						];
+						delete nextState.fragmentEntryLinks[payload.fragmentEntryLinkId];
 
 						resolve(nextState);
 					}
@@ -162,17 +205,12 @@ function _addFragmentEntryLink(
 }
 
 function _getDropFragmentPosition(
-	fragmentEntryLinks,
+	structure,
 	targetFragmentEntryLinkId,
 	targetBorder
 ) {
-	let position = fragmentEntryLinks.length;
-
-	const targetPosition = fragmentEntryLinks.findIndex(
-		fragmentEntryLink => (
-			fragmentEntryLink.fragmentEntryLinkId === targetFragmentEntryLinkId
-		)
-	);
+	let position = structure.length;
+	const targetPosition = structure.indexOf(targetFragmentEntryLinkId);
 
 	if (targetPosition > -1 && targetBorder) {
 		if (targetBorder === DRAG_POSITIONS.top) {
@@ -225,9 +263,16 @@ function _getFragmentEntryLinkContent(
 function _removeFragmentEntryLink(
 	deleteFragmentEntryLinkURL,
 	portletNamespace,
-	fragmentEntryLinkId
+	classNameId,
+	classPK,
+	fragmentEntryLinkId,
+	layoutSettings
 ) {
 	const formData = new FormData();
+
+	formData.append(`${portletNamespace}classNameId`, classNameId);
+	formData.append(`${portletNamespace}classPK`, classPK);
+	formData.append(`${portletNamespace}settings`, JSON.stringify(layoutSettings));
 
 	formData.append(
 		`${portletNamespace}fragmentEntryLinkId`,
@@ -236,6 +281,45 @@ function _removeFragmentEntryLink(
 
 	return fetch(
 		deleteFragmentEntryLinkURL,
+		{
+			body: formData,
+			credentials: 'include',
+			method: 'POST'
+		}
+	);
+}
+
+/**
+ * Update layoutSettings
+ * @param {!string} updateFragmentEntryLinksURL
+ * @param {!string} portletNamespace
+ * @param {!string} classNameId
+ * @param {!string} classPK
+ * @param {!object} settings
+ * @private
+ * @return {Promise}
+ * @review
+ */
+
+function _updateSettings(
+	updateFragmentEntryLinksURL,
+	portletNamespace,
+	classNameId,
+	classPK,
+	settings
+) {
+	const formData = new FormData();
+
+	formData.append(`${portletNamespace}classNameId`, classNameId);
+	formData.append(`${portletNamespace}classPK`, classPK);
+
+	formData.append(
+		`${portletNamespace}settings`,
+		JSON.stringify(settings)
+	);
+
+	return fetch(
+		updateFragmentEntryLinksURL,
 		{
 			body: formData,
 			credentials: 'include',

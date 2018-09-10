@@ -14,14 +14,28 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalService;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.TransactionConfig;
+import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -48,35 +62,76 @@ public class UpdateFragmentEntryLinksMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long fragmentEntryLinkId1 = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId1");
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		long fragmentEntryLinkId2 = ParamUtil.getLong(
-			actionRequest, "fragmentEntryLinkId2");
+		Callable<Void> updateFragmentEntryLinksCallable =
+			new UpdateFragmentEntryLinksCallable(actionRequest);
 
-		FragmentEntryLink fragmentEntryLink1 =
-			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
-				fragmentEntryLinkId1);
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		FragmentEntryLink fragmentEntryLink2 =
-			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
-				fragmentEntryLinkId2);
+		try {
+			TransactionInvokerUtil.invoke(
+				_transactionConfig, updateFragmentEntryLinksCallable);
+		}
+		catch (Throwable t) {
+			_log.error(t, t);
 
-		if ((fragmentEntryLink1 != null) && (fragmentEntryLink2 != null)) {
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				fragmentEntryLinkId1, fragmentEntryLink2.getPosition());
-
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				fragmentEntryLinkId2, fragmentEntryLink1.getPosition());
+			jsonObject.put(
+				"error",
+				LanguageUtil.get(
+					themeDisplay.getRequest(), "an-unexpected-error-occurred"));
 		}
 
 		hideDefaultSuccessMessage(actionRequest);
 
 		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, JSONFactoryUtil.createJSONObject());
+			actionRequest, actionResponse, jsonObject);
 	}
+
+	protected void updateFragmentEntryLinks(ActionRequest actionRequest)
+		throws PortalException {
+
+		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
+		String settings = ParamUtil.getString(actionRequest, "settings");
+
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			actionRequest);
+
+		_layoutPageTemplateSettingLocalService.updateLayoutPageTemplateSetting(
+			serviceContext.getScopeGroupId(), classNameId, classPK, settings);
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UpdateFragmentEntryLinksMVCActionCommand.class);
+
+	private static final TransactionConfig _transactionConfig =
+		TransactionConfig.Factory.create(
+			Propagation.REQUIRED, new Class<?>[] {Exception.class});
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private LayoutPageTemplateSettingLocalService
+		_layoutPageTemplateSettingLocalService;
+
+	private class UpdateFragmentEntryLinksCallable implements Callable<Void> {
+
+		@Override
+		public Void call() throws Exception {
+			updateFragmentEntryLinks(_actionRequest);
+
+			return null;
+		}
+
+		private UpdateFragmentEntryLinksCallable(ActionRequest actionRequest) {
+			_actionRequest = actionRequest;
+		}
+
+		private final ActionRequest _actionRequest;
+
+	}
 
 }

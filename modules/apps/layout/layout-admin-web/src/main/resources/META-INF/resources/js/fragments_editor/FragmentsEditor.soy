@@ -17,8 +17,12 @@
 		fragmentCollectionId: string,
 		name: string
 	]>}
+	{@param fragmentEntryLinks: ?}
 	{@param imageSelectorURL: string}
 	{@param languageId: string}
+	{@param layoutSettings: [
+		structure: list<string>
+	]}
 	{@param portletNamespace: string}
 	{@param redirectURL: string}
 	{@param sidebarTabs: list<[enabled:bool, id:string, label:string]>}
@@ -44,12 +48,6 @@
 	{@param? _selectMappingDialogMappedFieldId: string}
 	{@param? _selectMappingDialogVisible: bool}
 	{@param? _selectMappingTypeDialogVisible: bool}
-	{@param? fragmentEntryLinks: list<[
-		content: html|null,
-		editableValues: ?,
-		fragmentEntryLinkId: string,
-		name: string
-	]>}
 	{@param? getAssetClassTypesURL: any}
 	{@param? getAssetDisplayContributorsURL: any}
 	{@param? hoveredFragmentEntryLinkBorder: string}
@@ -92,9 +90,9 @@
 			{param savingChanges: $savingChanges ?: false /}
 			{param spritemap: $spritemap /}
 			{param store: $_store /}
-			{param translationAvailableLanguages: $availableLanguages /}
-			{param translationDefaultLanguageId: $defaultLanguageId /}
-			{param translationLanguageId: $languageId /}
+			{param availableLanguages: $availableLanguages /}
+			{param defaultLanguageId: $defaultLanguageId /}
+			{param languageId: $languageId /}
 			{param translationStatus: $translationStatus /}
 		{/call}
 
@@ -113,6 +111,7 @@
 			{param sidebarTabs: $sidebarTabs /}
 			{param spritemap: $spritemap /}
 			{param store: $_store /}
+			{param structure: $layoutSettings.structure /}
 			{param visible: $_contextualSidebarVisible ?: true /}
 		{/call}
 
@@ -138,6 +137,7 @@
 				{param selectedMappingTypes: $selectedMappingTypes /}
 				{param spritemap: $spritemap /}
 				{param store: $_store /}
+				{param structure: $layoutSettings.structure /}
 				{param translating: $languageId != $defaultLanguageId /}
 			{/call}
 		</div>
