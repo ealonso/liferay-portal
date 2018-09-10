@@ -1,6 +1,7 @@
 import {DRAG_POSITIONS} from './placeholders.es';
 import {
 	ADD_FRAGMENT_ENTRY_LINK,
+	MOVE_FRAGMENT_ENTRY_LINK,
 	REMOVE_FRAGMENT_ENTRY_LINK
 } from '../actions/actions.es';
 
@@ -92,6 +93,80 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 			}
 			else {
 				resolve(nextState);
+			}
+		}
+	);
+}
+
+/**
+ * @param {!object} state
+ * @param {!string} actionType
+ * @param {!object} payload
+ * @param {!string} payload.placeholderId
+ * @param {!string} payload.placeholderId
+ * @param {!string} payload.placeholderId
+ * @return {object}
+ * @review
+ */
+
+function moveFragmentEntryLinkReducer(state, actionType, payload) {
+	return new Promise(
+		(resolve, reject) => {
+			if (actionType === MOVE_FRAGMENT_ENTRY_LINK) {
+				let nextState = Object.assign({}, state);
+
+				const nextSettings = Object.assign(
+					{},
+					state.layoutSettings,
+					{
+						structure: [
+							...(state.layoutSettings.structure || [])
+						]
+					}
+				);
+
+				if (payload.targetId && (payload.placeholderId != payload.targetId)) {
+					const placeholderIndex = nextSettings.structure.indexOf(
+						payload.placeholderId
+					);
+
+					nextSettings.structure.splice(placeholderIndex, 1);
+
+					const targetIndex = nextSettings.structure.indexOf(
+						payload.targetId
+					);
+
+					if (payload.targetBorder === DRAG_POSITIONS.top) {
+						nextSettings.structure.splice(targetIndex, 0, payload.placeholderId);
+					}
+					else {
+						nextSettings.structure.splice(targetIndex + 1, 0, payload.placeholderId);
+					}
+				}
+
+				_moveFragmentEntryLink(
+					state.updateLayoutPageTemplateSettingsURL,
+					state.portletNamespace,
+					state.classNameId,
+					state.classPK,
+					nextSettings
+				).then(
+					(response) => {
+						if (response.error) {
+							throw response.error;
+						}
+
+						nextState.layoutSettings = nextSettings;
+						resolve(nextState);
+					}
+				).catch(
+					() => {
+						resolve(state);
+					}
+				);
+			}
+			else {
+				resolve(state);
 			}
 		}
 	);
@@ -252,6 +327,29 @@ function _getFragmentEntryLinkContent(
 	);
 }
 
+function _moveFragmentEntryLink(
+	moveFragmentEntryLinkURL,
+	portletNamespace,
+	classNameId,
+	classPK,
+	layoutSettings
+) {
+	const formData = new FormData();
+
+	formData.append(`${portletNamespace}classNameId`, classNameId);
+	formData.append(`${portletNamespace}classPK`, classPK);
+	formData.append(`${portletNamespace}settings`, JSON.stringify(layoutSettings));
+
+	return fetch(
+		moveFragmentEntryLinkURL,
+		{
+			body: formData,
+			credentials: 'include',
+			method: 'POST'
+		}
+	);
+}
+
 function _removeFragmentEntryLink(
 	deleteFragmentEntryLinkURL,
 	portletNamespace,
@@ -322,5 +420,6 @@ function _updateSettings(
 
 export {
 	addFragmentEntryLinkReducer,
+	moveFragmentEntryLinkReducer,
 	removeFragmentEntryLinkReducer
 };
