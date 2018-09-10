@@ -370,6 +370,12 @@ public class FragmentEntryLinkLocalServiceUtil {
 			classNameId, layoutPageTemplateType);
 	}
 
+	public static java.util.Map<Long, com.liferay.fragment.model.FragmentEntryLink> getFragmentEntryLinksMap(
+		long groupId, long classNameId, long classPK) {
+		return getService()
+				   .getFragmentEntryLinksMap(groupId, classNameId, classPK);
+	}
+
 	public static com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
 		return getService().getIndexableActionableDynamicQuery();
 	}

@@ -391,6 +391,13 @@ public class FragmentEntryLinkLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.Map<Long, com.liferay.fragment.model.FragmentEntryLink> getFragmentEntryLinksMap(
+		long groupId, long classNameId, long classPK) {
+		return _fragmentEntryLinkLocalService.getFragmentEntryLinksMap(groupId,
+			classNameId, classPK);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery getIndexableActionableDynamicQuery() {
 		return _fragmentEntryLinkLocalService.getIndexableActionableDynamicQuery();
 	}

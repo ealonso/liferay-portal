@@ -38,7 +38,9 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eudaldo Alonso
@@ -216,6 +218,24 @@ public class FragmentEntryLinkLocalServiceImpl
 
 		return fragmentEntryLinkFinder.countByG_F_C_L(
 			groupId, fragmentEntryId, classNameId, layoutPageTemplateType);
+	}
+
+	@Override
+	public Map<Long, FragmentEntryLink> getFragmentEntryLinksMap(
+		long groupId, long classNameId, long classPK) {
+
+		Map<Long, FragmentEntryLink> fragmentEntryLinkMap = new HashMap<>();
+
+		List<FragmentEntryLink> fragmentEntryLinks =
+			fragmentEntryLinkPersistence.findByG_C_C(
+				groupId, classNameId, classPK);
+
+		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			fragmentEntryLinkMap.put(
+				fragmentEntryLink.getFragmentEntryLinkId(), fragmentEntryLink);
+		}
+
+		return fragmentEntryLinkMap;
 	}
 
 	@Override

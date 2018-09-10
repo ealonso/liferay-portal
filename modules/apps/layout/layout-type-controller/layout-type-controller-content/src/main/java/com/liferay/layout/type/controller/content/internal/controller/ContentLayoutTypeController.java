@@ -17,10 +17,16 @@ package com.liferay.layout.type.controller.content.internal.controller;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.layout.page.template.model.LayoutPageTemplateSetting;
+import com.liferay.layout.page.template.service.LayoutPageTemplateSettingLocalService;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerConstants;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
@@ -29,10 +35,13 @@ import com.liferay.portal.kernel.servlet.TransferHeadersHelperUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -81,11 +90,8 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 			request, "p_l_mode", Constants.VIEW);
 
 		if (layoutMode.equals(Constants.VIEW)) {
-			List<FragmentEntryLink> fragmentEntryLinks =
-				_fragmentEntryLinkLocalService.getFragmentEntryLinks(
-					layout.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					layout.getPlid());
+			List<FragmentEntryLink> fragmentEntryLinks = _getFragmentEntryLinks(
+				layout);
 
 			request.setAttribute(
 				ContentLayoutTypeControllerWebKeys.LAYOUT_FRAGMENTS,
@@ -199,6 +205,51 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 		this.servletContext = servletContext;
 	}
 
+	private List<FragmentEntryLink> _getFragmentEntryLinks(Layout layout)
+		throws JSONException {
+
+		List<FragmentEntryLink> fragmentEntryLinks = new ArrayList<>();
+
+		LayoutPageTemplateSetting layoutPageTemplateSetting =
+			_layoutPageTemplateSettingLocalService.
+				fetchLayoutPageTemplateSetting(
+					layout.getGroupId(),
+					_portal.getClassNameId(Layout.class.getName()),
+					layout.getPlid());
+
+		if ((layoutPageTemplateSetting == null) ||
+			Validator.isNull(layoutPageTemplateSetting.getSettings())) {
+
+			return fragmentEntryLinks;
+		}
+
+		JSONObject settings = JSONFactoryUtil.createJSONObject(
+			layoutPageTemplateSetting.getSettings());
+
+		JSONArray jsonArray = settings.getJSONArray("structure");
+
+		if (jsonArray == null) {
+			return fragmentEntryLinks;
+		}
+
+		Map<Long, FragmentEntryLink> fragmentEntryLinksMap =
+			_fragmentEntryLinkLocalService.getFragmentEntryLinksMap(
+				layout.getGroupId(),
+				_portal.getClassNameId(Layout.class.getName()),
+				layout.getPlid());
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			FragmentEntryLink fragmentEntryLink = fragmentEntryLinksMap.get(
+				jsonArray.getLong(i));
+
+			if (fragmentEntryLink != null) {
+				fragmentEntryLinks.add(fragmentEntryLink);
+			}
+		}
+
+		return fragmentEntryLinks;
+	}
+
 	private static final String _EDIT_LAYOUT_PAGE =
 		"/layout/edit_layout/content.jsp";
 
@@ -213,6 +264,10 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 
 	@Reference
 	private ItemSelector _itemSelector;
+
+	@Reference
+	private LayoutPageTemplateSettingLocalService
+		_layoutPageTemplateSettingLocalService;
 
 	@Reference
 	private Portal _portal;

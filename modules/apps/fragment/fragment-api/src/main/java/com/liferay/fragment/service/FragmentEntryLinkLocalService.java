@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import java.io.Serializable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the local service interface for FragmentEntryLink. Methods of this
@@ -312,6 +313,10 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getFragmentEntryLinksCount(long groupId, long fragmentEntryId,
 		long classNameId, int layoutPageTemplateType);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Map<Long, FragmentEntryLink> getFragmentEntryLinksMap(long groupId,
+		long classNameId, long classPK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
