@@ -9,6 +9,7 @@ import './components/sidebar/FragmentsEditorSidebar.es';
 import './components/toolbar/FragmentsEditorToolbar.es';
 import {
 	addFragmentEntryLinkReducer,
+	moveFragmentEntryLinkReducer,
 	removeFragmentEntryLinkReducer
 } from './reducers/fragments.es';
 import {connect, Store} from './store/store.es';
@@ -43,6 +44,7 @@ class FragmentsEditor extends Component {
 			attributes,
 			[
 				addFragmentEntryLinkReducer,
+				moveFragmentEntryLinkReducer,
 				removeFragmentEntryLinkReducer,
 				saveChangesReducer,
 				translationStatusReducer,
