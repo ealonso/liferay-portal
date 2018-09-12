@@ -13,7 +13,6 @@ import {
 	removeFragmentEntryLinkReducer
 } from './reducers/fragments.es';
 import {connect, Store} from './store/store.es';
-import FragmentEntryLink from './components/fragment_entry_link/FragmentEntryLink.es';
 import {INITIAL_STATE} from './store/state.es';
 import {saveChangesReducer} from './reducers/changes.es';
 import templates from './FragmentsEditor.soy';
@@ -113,97 +112,6 @@ class FragmentsEditor extends Component {
 			data.editableId,
 			{[this.languageId || 'defaultValue']: data.value}
 		);
-	}
-
-	/**
-	 * Moves a fragment one position onto the specified direction.
-	 * @param {!{
-	 *   direction: !number,
-	 *   fragmentEntryLinkId: !string
-	 * }} data
-	 * @private
-	 * @review
-	 */
-
-	_handleFragmentMove(data) {
-		const direction = data.direction;
-		const index = this._getFragmentEntryLinkIndex(data.fragmentEntryLinkId);
-
-		const nextSettings = Object.assign(
-			{},
-			this.layoutSettings,
-			{
-				structure: [
-					...(this.layoutSettings.structure || [])
-				]
-			}
-		);
-
-		if (
-			(
-				(direction === FragmentEntryLink.MOVE_DIRECTIONS.DOWN) &&
-				(index < nextSettings.structure.length - 1)
-			) ||
-			(
-				(direction === FragmentEntryLink.MOVE_DIRECTIONS.UP) &&
-				(index > 0)
-			)
-		) {
-
-			nextSettings.structure = this._swapListElements(
-				Array.prototype.slice.call(nextSettings.structure),
-				index,
-				index + direction
-			);
-
-			const formData = new FormData();
-
-			formData.append(
-				`${this.portletNamespace}classNameId`,
-				this.classNameId
-			);
-
-			formData.append(
-				`${this.portletNamespace}classPK`,
-				this.classPK
-			);
-
-			formData.append(
-				`${this.portletNamespace}settings`,
-				JSON.stringify(nextSettings)
-			);
-
-			fetch(
-				this.updateLayoutPageTemplateSettingsURL,
-				{
-					body: formData,
-					credentials: 'include',
-					method: 'POST'
-				}
-			).then(
-				() => {
-					this._store
-						.dispatchAction(
-							UPDATE_LAST_SAVE_DATE,
-							{
-								lastSaveDate: new Date()
-							}
-						)
-						.dispatchAction(
-							UPDATE_SAVING_CHANGES_STATUS,
-							{
-								savingChanges: false
-							}
-						);
-
-					requestAnimationFrame(
-						() => {
-							this.layoutSettings = nextSettings;
-						}
-					);
-				}
-			);
-		}
 	}
 
 	/**
