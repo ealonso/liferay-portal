@@ -54,6 +54,10 @@ public class LayoutItemSelectorViewDisplayContext {
 		return _privateLayout;
 	}
 
+	public boolean isShowHiddenLayouts() {
+		return _layoutItemSelectorCriterion.isShowHiddenLayouts();
+	}
+
 	private final String _itemSelectedEventName;
 	private final LayoutItemSelectorCriterion _layoutItemSelectorCriterion;
 	private final boolean _privateLayout;
