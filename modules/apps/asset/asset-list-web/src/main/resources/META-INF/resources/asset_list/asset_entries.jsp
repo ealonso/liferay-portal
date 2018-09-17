@@ -29,7 +29,7 @@ List<AssetEntry> assetEntries = editAssetListDisplayContext.getAssetEntries(rend
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.UPDATE %>" />
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="assetListEntryId" type="hidden" value="<%= assetListDisplayContext.getAssetListEntryId() %>" />
-	<aui:input name="assetEntryId" type="hidden" />
+	<aui:input name="assetEntryIds" type="hidden" />
 	<aui:input name="assetEntryOrder" type="hidden" />
 	<aui:input name="assetEntryType" type="hidden" />
 
@@ -252,17 +252,30 @@ List<AssetEntry> assetEntries = editAssetListDisplayContext.getAssetEntries(rend
 		submitForm(document.<portlet:namespace />fm, '<%= moveAssetEntrySelectionUpURL.toString() %>');
 	}
 
-	function selectAsset(assetEntryId, assetClassName, assetType, assetEntryTitle, groupName) {
-		<portlet:namespace />fm.<portlet:namespace />assetEntryId.value = assetEntryId;
-		<portlet:namespace />fm.<portlet:namespace />assetEntryType.value = assetClassName;
-
+	function selectAssets(assetEntryList) {
 		<portlet:actionURL name="/asset_list/add_asset_entry_selection" var="addAssetEntrySelectionURL" />
+
+		var assetClassName;
+		var assetEntryIds = [];
+
+		assetEntryList.forEach(
+			function(assetEntry) {
+				assetEntryIds.push(assetEntry.entityid);
+
+				assetClassName = assetEntry.assetclassname;
+			}
+		);
+
+		<portlet:namespace />fm.<portlet:namespace />assetEntryIds.value = assetEntryIds.join(',');
+		<portlet:namespace />fm.<portlet:namespace />assetEntryType.value = assetClassName;
 
 		submitForm(document.<portlet:namespace />fm, '<%= addAssetEntrySelectionURL.toString() %>');
 	}
 </aui:script>
 
-<aui:script sandbox="<%= true %>">
+<aui:script use="liferay-item-selector-dialog">
+	var form = AUI.$(document.<portlet:namespace />fm);
+
 	$('body').on(
 		'click',
 		'.asset-selector a',
@@ -271,22 +284,25 @@ List<AssetEntry> assetEntries = editAssetListDisplayContext.getAssetEntries(rend
 
 			var currentTarget = $(event.currentTarget);
 
-			Liferay.Util.selectEntity(
+			var itemSelectorDialog = new A.LiferayItemSelectorDialog(
 				{
-					dialog: {
-						constrain: true,
-						destroyOnHide: true,
-						modal: true
-					},
 					eventName: '<%= eventName %>',
 					id: '<%= eventName %>' + currentTarget.attr('id'),
+					on: {
+						selectedItemChange: function(event) {
+							var selectedItems = event.newVal;
+
+							if (selectedItems) {
+								selectAssets(selectedItems);
+							}
+						}
+					},
 					title: currentTarget.data('title'),
-					uri: currentTarget.data('href')
-				},
-				function(event) {
-					selectAsset(event.entityid, event.assetclassname, event.assettype, event.assettitle, event.groupdescriptivename);
+					url: currentTarget.data('href')
 				}
 			);
+
+			itemSelectorDialog.open();
 		}
 	);
 </aui:script>
