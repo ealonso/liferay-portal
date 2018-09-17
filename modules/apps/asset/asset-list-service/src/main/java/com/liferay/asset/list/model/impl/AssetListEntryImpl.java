@@ -35,7 +35,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -59,7 +58,8 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 			return _getManualAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 		}
 
-		return _getDynamicAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		return _getDynamicAssetEntries(
+			new long[] {getGroupId()}, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	}
 
 	public AssetEntryQuery getAssetEntryQuery(long[] groupIds) {
@@ -228,8 +228,15 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		return availableClassNameIds;
 	}
 
-	private List<AssetEntry> _getDynamicAssetEntries(int start, int end) {
-		return Collections.emptyList();
+	private List<AssetEntry> _getDynamicAssetEntries(
+		long[] groupIds, int start, int end) {
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(groupIds);
+
+		assetEntryQuery.setStart(start);
+		assetEntryQuery.setEnd(end);
+
+		return AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
 	}
 
 	private List<AssetEntry> _getManualAssetEntries(int start, int end) {
