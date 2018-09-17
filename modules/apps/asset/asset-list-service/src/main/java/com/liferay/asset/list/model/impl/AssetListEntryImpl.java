@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +65,9 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 			return _getManualAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 		}
 
-		return _getDynamicAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		return _getDynamicAssetEntries(
+			new long[] {getGroupId()}, null, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS);
 	}
 
 	public AssetEntryQuery getAssetEntryQuery(long[] groupIds, Layout layout) {
@@ -88,7 +89,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		if (!anyAssetType) {
 			long[] availableClassNameIds =
 				AssetRendererFactoryRegistryUtil.getClassNameIds(
-					layout.getCompanyId());
+					getCompanyId());
 
 			long[] classNameIds = _getClassNameIds(
 				properties, availableClassNameIds);
@@ -114,7 +115,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		boolean showOnlyLayoutAssets = GetterUtil.getBoolean(
 			properties.getProperty("showOnlyLayoutAssets", null));
 
-		if (showOnlyLayoutAssets) {
+		if (showOnlyLayoutAssets && (layout != null)) {
 			assetEntryQuery.setLayout(layout);
 		}
 
@@ -277,8 +278,15 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		return availableClassNameIds;
 	}
 
-	private List<AssetEntry> _getDynamicAssetEntries(int start, int end) {
-		return Collections.emptyList();
+	private List<AssetEntry> _getDynamicAssetEntries(
+		long[] groupIds, Layout layout, int start, int end) {
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(groupIds, layout);
+
+		assetEntryQuery.setStart(start);
+		assetEntryQuery.setEnd(end);
+
+		return AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
 	}
 
 	private List<AssetEntry> _getManualAssetEntries(int start, int end) {
