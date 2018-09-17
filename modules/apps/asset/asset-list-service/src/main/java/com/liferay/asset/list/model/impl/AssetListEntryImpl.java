@@ -59,15 +59,18 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 	}
 
 	public List<AssetEntry> getAssetEntries() {
+		return getAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
+
+	public List<AssetEntry> getAssetEntries(int start, int end) {
 		if (Objects.equals(
 				getType(), AssetListEntryTypeConstants.TYPE_MANUAL)) {
 
-			return _getManualAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+			return _getManualAssetEntries(start, end);
 		}
 
 		return _getDynamicAssetEntries(
-			new long[] {getGroupId()}, null, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS);
+			new long[] {getGroupId()}, null, start, end);
 	}
 
 	public AssetEntryQuery getAssetEntryQuery(long[] groupIds, Layout layout) {
