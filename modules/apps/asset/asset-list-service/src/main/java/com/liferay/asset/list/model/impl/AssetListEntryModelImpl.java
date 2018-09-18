@@ -78,7 +78,7 @@ public class AssetListEntryModelImpl extends BaseModelImpl<AssetListEntry>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
-			{ "typeSettings", Types.CLOB },
+			{ "typeSettings", Types.VARCHAR },
 			{ "title", Types.VARCHAR },
 			{ "type_", Types.INTEGER }
 		};
@@ -92,12 +92,12 @@ public class AssetListEntryModelImpl extends BaseModelImpl<AssetListEntry>
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("typeSettings", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("typeSettings", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("title", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("type_", Types.INTEGER);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table AssetListEntry (assetListEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,typeSettings TEXT null,title VARCHAR(75) null,type_ INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table AssetListEntry (assetListEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,typeSettings VARCHAR(75) null,title VARCHAR(75) null,type_ INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table AssetListEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY assetListEntry.assetListEntryId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY AssetListEntry.assetListEntryId ASC";
