@@ -19,6 +19,8 @@ import com.liferay.asset.list.service.base.AssetListEntryAssetEntryRelLocalServi
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 
+import java.util.List;
+
 /**
  * @author Pavel savinov
  * @see AssetListEntryAssetEntryRelLocalServiceBaseImpl
@@ -54,6 +56,20 @@ public class AssetListEntryAssetEntryRelLocalServiceImpl
 
 		return assetListEntryAssetEntryRelPersistence.removeByA_P(
 			assetListEntryId, position);
+	}
+
+	@Override
+	public List<AssetListEntryAssetEntryRel> getAssetListEntryAssetEntryRels(
+		long assetListEntryId, int start, int end) {
+
+		return assetListEntryAssetEntryRelPersistence.findByAssetListEntryId(
+			assetListEntryId, start, end);
+	}
+
+	@Override
+	public int getAssetListEntryAssetEntryRelsCount(long assetListEntryId) {
+		return assetListEntryAssetEntryRelPersistence.countByAssetListEntryId(
+			assetListEntryId);
 	}
 
 	@Override
