@@ -9,10 +9,14 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="typeSettings" type="String">
-			<hint-collection name="CLOB" />
-		</field>
+		<field name="typeSettings" type="String" />
 		<field name="title" type="String" />
 		<field name="type" type="int" />
+	</model>
+	<model name="com.liferay.asset.list.model.AssetListEntryAssetEntryRel">
+		<field name="assetListEntryAssetEntryRelId" type="long" />
+		<field name="assetListEntryId" type="long" />
+		<field name="assetEntryId" type="long" />
+		<field name="position" type="int" />
 	</model>
 </model-hints>

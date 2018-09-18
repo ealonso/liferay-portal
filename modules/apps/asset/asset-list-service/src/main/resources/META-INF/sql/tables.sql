@@ -6,7 +6,14 @@ create table AssetListEntry (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	typeSettings TEXT null,
+	typeSettings VARCHAR(75) null,
 	title VARCHAR(75) null,
 	type_ INTEGER
+);
+
+create table AssetListEntryAssetEntryRel (
+	assetListEntryAssetEntryRelId LONG not null primary key,
+	assetListEntryId LONG,
+	assetEntryId LONG,
+	position INTEGER
 );
