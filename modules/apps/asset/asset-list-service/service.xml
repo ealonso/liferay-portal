@@ -47,6 +47,7 @@
 
 		<!-- References -->
 
+		<reference entity="AssetListEntryAssetEntryRel" package-path="com.liferay.asset.list" />
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
@@ -77,10 +78,6 @@
 			<finder-column name="assetListEntryId" />
 			<finder-column name="position" />
 		</finder>
-
-		<!-- References -->
-
-		<reference entity="AssetListEntry" package-path="com.liferay.asset.list" />
 	</entity>
 	<exceptions>
 		<exception>AssetListEntryTitle</exception>
