@@ -235,7 +235,8 @@ public class AssetListEntryPersistenceTest {
 		return OrderByComparatorFactoryUtil.create("AssetListEntry",
 			"assetListEntryId", true, "groupId", true, "companyId", true,
 			"userId", true, "userName", true, "createDate", true,
-			"modifiedDate", true, "title", true, "type", true);
+			"modifiedDate", true, "typeSettings", true, "title", true, "type",
+			true);
 	}
 
 	@Test
