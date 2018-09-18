@@ -26,6 +26,7 @@ import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -58,23 +59,18 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 	}
 
 	public List<AssetEntry> getAssetEntries() {
-		UnicodeProperties properties = new UnicodeProperties(true);
+		return getAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+	}
 
-		properties.fastLoad(getTypeSettings());
+	public List<AssetEntry> getAssetEntries(int start, int end) {
+		if (Objects.equals(
+				getType(), AssetListEntryTypeConstants.TYPE_MANUAL)) {
 
-		List<String> assetEntryXmls = Arrays.asList(
-			StringUtil.split(
-				properties.getProperty("assetEntryXml"), CharPool.COMMA));
+			return _getManualAssetEntries(start, end);
+		}
 
-		Stream<String> stream = assetEntryXmls.stream();
-
-		return stream.map(
-			assetEntryXml -> _getAssetEntry(assetEntryXml)
-		).filter(
-			assetEntry -> assetEntry != null
-		).collect(
-			Collectors.toList()
-		);
+		return _getDynamicAssetEntries(
+			new long[] {getGroupId()}, null, start, end);
 	}
 
 	public AssetEntryQuery getAssetEntryQuery(long[] groupIds, Layout layout) {
@@ -96,7 +92,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		if (!anyAssetType) {
 			long[] availableClassNameIds =
 				AssetRendererFactoryRegistryUtil.getClassNameIds(
-					layout.getCompanyId());
+					getCompanyId());
 
 			long[] classNameIds = _getClassNameIds(
 				properties, availableClassNameIds);
@@ -122,7 +118,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		boolean showOnlyLayoutAssets = GetterUtil.getBoolean(
 			properties.getProperty("showOnlyLayoutAssets", null));
 
-		if (showOnlyLayoutAssets) {
+		if (showOnlyLayoutAssets && (layout != null)) {
 			assetEntryQuery.setLayout(layout);
 		}
 
@@ -283,6 +279,41 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		}
 
 		return availableClassNameIds;
+	}
+
+	private List<AssetEntry> _getDynamicAssetEntries(
+		long[] groupIds, Layout layout, int start, int end) {
+
+		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(groupIds, layout);
+
+		assetEntryQuery.setStart(start);
+		assetEntryQuery.setEnd(end);
+
+		return AssetEntryLocalServiceUtil.getEntries(assetEntryQuery);
+	}
+
+	private List<AssetEntry> _getManualAssetEntries(int start, int end) {
+		UnicodeProperties properties = new UnicodeProperties(true);
+
+		properties.fastLoad(getTypeSettings());
+
+		List<String> assetEntryXmls = Arrays.asList(
+			StringUtil.split(
+				properties.getProperty("assetEntryXml"), CharPool.COMMA));
+
+		Stream<String> stream = assetEntryXmls.stream();
+
+		return stream.map(
+			assetEntryXml -> _getAssetEntry(assetEntryXml)
+		).filter(
+			assetEntry -> assetEntry != null
+		).skip(
+			start != QueryUtil.ALL_POS ? start : 0
+		).limit(
+			end != QueryUtil.ALL_POS ? end : assetEntryXmls.size()
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	private long[] _getSiteGroupIds(long[] groupIds) {
