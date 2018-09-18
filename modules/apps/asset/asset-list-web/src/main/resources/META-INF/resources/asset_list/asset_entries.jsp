@@ -251,10 +251,11 @@ List<AssetEntry> assetEntries = editAssetListDisplayContext.getAssetEntries(rend
 
 		submitForm(document.<portlet:namespace />fm, '<%= moveAssetEntrySelectionUpURL.toString() %>');
 	}
+</aui:script>
 
+<aui:script use="liferay-item-selector-dialog">
 	function selectAssets(assetEntryList) {
 		<portlet:actionURL name="/asset_list/add_asset_entry_selection" var="addAssetEntrySelectionURL" />
-
 		var assetClassName;
 		var assetEntryIds = [];
 
@@ -271,10 +272,6 @@ List<AssetEntry> assetEntries = editAssetListDisplayContext.getAssetEntries(rend
 
 		submitForm(document.<portlet:namespace />fm, '<%= addAssetEntrySelectionURL.toString() %>');
 	}
-</aui:script>
-
-<aui:script use="liferay-item-selector-dialog">
-	var form = AUI.$(document.<portlet:namespace />fm);
 
 	$('body').on(
 		'click',

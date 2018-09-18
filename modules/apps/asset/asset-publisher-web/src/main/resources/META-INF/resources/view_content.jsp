@@ -73,7 +73,7 @@ else {
 		PortalUtil.addPortletBreadcrumbEntry(request, title, currentURL);
 		%>
 
-		<div>
+		<div class="<portlet:namespace />-full-content">
 			<liferay-util:include page="/display/full_content.jsp" servletContext="<%= application %>">
 				<liferay-util:param name="languageId" value="<%= LanguageUtil.getLanguageId(request) %>" />
 			</liferay-util:include>

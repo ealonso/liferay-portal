@@ -125,11 +125,11 @@ request.setAttribute("view.jsp-viewInContext", assetPublisherDisplayContext.isAs
 		</c:if>
 
 		<div class="alert alert-info text-center">
-			<div>
+			<div class="<portlet:namespace />application-not-visible-message">
 				<liferay-ui:message key="this-application-is-not-visible-to-users-yet" />
 			</div>
 
-			<div>
+			<div class="<portlet:namespace />application-not-visible-button">
 				<aui:a href="javascript:;" onClick="<%= portletDisplay.getURLConfigurationJS() %>"><liferay-ui:message key="select-an-asset-list-to-make-it-visible" /></aui:a>
 			</div>
 		</div>
