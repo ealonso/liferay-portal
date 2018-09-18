@@ -77,6 +77,10 @@
 			<finder-column name="assetListEntryId" />
 			<finder-column name="position" />
 		</finder>
+
+		<!-- References -->
+
+		<reference entity="AssetListEntry" package-path="com.liferay.asset.list" />
 	</entity>
 	<exceptions>
 		<exception>AssetListEntryTitle</exception>
