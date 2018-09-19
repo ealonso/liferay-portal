@@ -59,9 +59,8 @@ import org.osgi.service.component.annotations.Reference;
  * Organization}.
  *
  * @author Eduardo Perez
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = CollectionResource.class)
 public class OrganizationCollectionResource
 	implements CollectionResource<Organization, Long, OrganizationIdentifier> {
 

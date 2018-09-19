@@ -30,14 +30,13 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose the <a
- * href="http://schema.org/Comment">Comment</a> resources contained inside a
- * StructuredContent through a web API. The resources are mapped from the
- * internal model {@link Comment} and {@code JournalArticle}.
+ * href="http://schema.org/Comment">Comment</a> resources of structured content
+ * through a web API. The resources are mapped from the internal models {@code
+ * Comment} and {@code JournalArticle}.
  *
  * @author Eduardo Perez
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = NestedCollectionRouter.class)
 public class StructuredContentCommentNestedCollectionRouter
 	extends BaseCommentNestedCollectionRouter<StructuredContentIdentifier>
 	implements NestedCollectionRouter

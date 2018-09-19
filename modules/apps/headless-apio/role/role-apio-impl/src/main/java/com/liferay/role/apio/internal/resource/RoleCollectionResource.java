@@ -36,13 +36,12 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose <a
- * href="http://schema.org/Role">Role </a> resources through a web API. The
+ * href="http://schema.org/Role">Role</a> resources through a web API. The
  * resources are mapped from the internal model {@code Role}.
  *
  * @author Javier
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = CollectionResource.class)
 public class RoleCollectionResource
 	implements CollectionResource<Role, Long, RoleIdentifier> {
 

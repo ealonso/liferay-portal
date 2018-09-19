@@ -41,13 +41,12 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * Provides the information necessary to expose ContentSpace resources through a
- * web API. The resources are mapped from the internal model {@link Group}.
+ * Provides the information necessary to expose content space resources through
+ * a web API. The resources are mapped from the internal model {@code Group}.
  *
  * @author Javier Gamarra
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = CollectionResource.class)
 public class ContentSpaceCollectionResource
 	implements CollectionResource<Group, Long, ContentSpaceIdentifier> {
 

@@ -31,14 +31,12 @@ import org.osgi.service.component.annotations.Reference;
 
 /**
  * Provides the information necessary to expose the {@code Category} resources
- * contained inside a StructuredContent through a web API. The resources are
- * mapped from the internal model {@link AssetCategory} and {@code
- * JournalArticle}.
+ * of structured content through a web API. The resources are mapped from the
+ * internal models {@code AssetCategory} and {@code JournalArticle}.
  *
  * @author Eduardo Perez
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = NestedCollectionRouter.class)
 public class StructuredContentCategoryNestedCollectionRouter
 	extends BaseCategoryNestedCollectionRouter<StructuredContentIdentifier>
 	implements NestedCollectionRouter

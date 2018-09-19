@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,6 +11,15 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/common/phone_numbers.jsp" %>
+package com.liferay.portal.kernel.model.adapter;
+
+import com.liferay.portal.kernel.model.StagedGroupedModel;
+import com.liferay.portal.kernel.model.WorkflowDefinitionLink;
+
+/**
+ * @author Mate Thurzo
+ */
+public interface StagedGroupedWorkflowDefinitionLink
+	extends StagedGroupedModel, WorkflowDefinitionLink {
+}

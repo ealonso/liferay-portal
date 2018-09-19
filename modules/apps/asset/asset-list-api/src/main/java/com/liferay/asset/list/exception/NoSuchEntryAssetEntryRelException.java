@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,6 +11,31 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
+package com.liferay.asset.list.exception;
 
-<%@ include file="/common/websites.jsp" %>
+import aQute.bnd.annotation.ProviderType;
+
+import com.liferay.portal.kernel.exception.NoSuchModelException;
+
+/**
+ * @author Brian Wing Shun Chan
+ */
+@ProviderType
+public class NoSuchEntryAssetEntryRelException extends NoSuchModelException {
+
+	public NoSuchEntryAssetEntryRelException() {
+	}
+
+	public NoSuchEntryAssetEntryRelException(String msg) {
+		super(msg);
+	}
+
+	public NoSuchEntryAssetEntryRelException(String msg, Throwable cause) {
+		super(msg, cause);
+	}
+
+	public NoSuchEntryAssetEntryRelException(Throwable cause) {
+		super(cause);
+	}
+
+}

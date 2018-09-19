@@ -50,9 +50,8 @@ import org.osgi.service.component.annotations.Reference;
  *
  * @author Javier Gamarra
  * @author Eduardo Pérez
- * @review
  */
-@Component(immediate = true)
+@Component(immediate = true, service = NestedCollectionResource.class)
 public class CategoryNestedCollectionResource
 	implements NestedCollectionResource
 		<AssetCategory, Long, CategoryIdentifier, Long, VocabularyIdentifier> {

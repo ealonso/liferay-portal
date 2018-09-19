@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,6 +11,19 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/common/additional_email_addresses.jsp" %>
+package com.liferay.forms.apio.internal.architect.route;
+
+import com.liferay.apio.architect.custom.actions.PostRoute;
+
+/**
+ * @author Javier Gamarra
+ */
+public class EvaluateContextRoute extends PostRoute {
+
+	@Override
+	public String getName() {
+		return "evaluate-context";
+	}
+
+}
