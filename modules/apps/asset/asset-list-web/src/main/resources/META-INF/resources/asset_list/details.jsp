@@ -18,11 +18,6 @@
 
 <%
 AssetListEntry assetListEntry = assetListDisplayContext.getAssetListEntry();
-
-portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(editAssetListDisplayContext.getRedirectURL());
-
-renderResponse.setTitle(assetListDisplayContext.getAssetListEntryTitle());
 %>
 
 <portlet:actionURL name="/asset_list/edit_asset_list_entry" var="editAssetListEntryURL" />
