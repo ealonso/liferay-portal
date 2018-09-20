@@ -24,6 +24,8 @@ FragmentsEditorDisplayContext fragmentsEditorDisplayContext = new FragmentsEdito
 	editorName="alloyeditor"
 />
 
+<link rel="stylesheet" href="http://localhost:8080/o/layout-admin-web/css/fragments_editor/FragmentsEditorEditMode.css?browserId=other&themeId=admin_WAR_admintheme&languageId=en_US&b=7100&t=1537436730000">
+
 <soy:component-renderer
 	componentId='<%= renderResponse.getNamespace() + "fragments" %>'
 	context="<%= fragmentsEditorDisplayContext.getFragmentEntryLinkListContext() %>"
