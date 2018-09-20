@@ -17,12 +17,10 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String redirect = editAssetListDisplayContext.getRedirectURL();
-
 AssetListEntry assetListEntry = assetListDisplayContext.getAssetListEntry();
 
 portletDisplay.setShowBackIcon(true);
-portletDisplay.setURLBack(redirect);
+portletDisplay.setURLBack(editAssetListDisplayContext.getRedirectURL());
 
 renderResponse.setTitle(assetListDisplayContext.getAssetListEntryTitle());
 %>
@@ -63,6 +61,6 @@ renderResponse.setTitle(assetListDisplayContext.getAssetListEntryTitle());
 	<liferay-frontend:edit-form-footer>
 		<aui:button type="submit" />
 
-		<aui:button href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= editAssetListDisplayContext.getRedirectURL() %>" type="cancel" />
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
