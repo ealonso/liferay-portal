@@ -33,11 +33,11 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + AssetListPortletKeys.ASSET_LIST,
-		"mvc.command.name=/asset_list/add_asset_entry_selection"
+		"mvc.command.name=/asset_list/delete_asset_entry_selection"
 	},
 	service = MVCActionCommand.class
 )
-public class AddAssetEntrySelectionMVCActionCommand
+public class DeleteAssetEntrySelectionMVCActionCommand
 	extends BaseMVCActionCommand {
 
 	@Override
@@ -48,10 +48,10 @@ public class AddAssetEntrySelectionMVCActionCommand
 		long assetListEntryId = ParamUtil.getLong(
 			actionRequest, "assetListEntryId");
 
-		long assetEntryId = ParamUtil.getLong(actionRequest, "assetEntryId");
+		int position = ParamUtil.getInteger(actionRequest, "position");
 
-		_assetListEntryService.addAssetEntrySelection(
-			assetListEntryId, assetEntryId);
+		_assetListEntryService.deleteAssetEntrySelection(
+			assetListEntryId, position);
 	}
 
 	@Reference

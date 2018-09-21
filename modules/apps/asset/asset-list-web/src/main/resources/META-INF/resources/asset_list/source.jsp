@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String redirect = editAssetListDisplayContext.getRedirectURL();
-
 List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList();
 %>
 
@@ -31,21 +29,14 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList()
 >
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 	<aui:input name="assetListEntryId" type="hidden" value="<%= assetListDisplayContext.getAssetListEntryId() %>" />
-	<aui:input name="type" type="hidden" value="<%= assetListDisplayContext.getAssetListEntryType() %>" />
 
 	<liferay-frontend:edit-form-body>
-		<h3 class="sheet-subtitle">
-			<span class="autofit-padded-no-gutters autofit-row">
-				<span class="autofit-col autofit-col-expand">
-					<span class="heading-text">
-						<liferay-ui:message key="source" />
-					</span>
-				</span>
-			</span>
-		</h3>
-
 		<liferay-frontend:fieldset-group>
-			<aui:fieldset cssClass="source-container" label="asset-entry-type" markupView="lexicon">
+			<liferay-frontend:fieldset
+				cssClass="source-container"
+				label="source"
+			>
+				<p><liferay-ui:message key="asset-entry-type" /></p>
 
 				<%
 				Set<Long> availableClassNameIdsSet = SetUtil.fromArray(editAssetListDisplayContext.getAvailableClassNameIds());
@@ -203,13 +194,12 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList()
 								%>
 
 									<span class="asset-subtypefields hide" id="<portlet:namespace /><%= classType.getClassTypeId() %>_<%= className %>Options">
-										<liferay-portlet:renderURL portletName="<%= editAssetListDisplayContext.getPortletResource() %>" var="selectStructureFieldURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+										<portlet:renderURL var="selectStructureFieldURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 											<portlet:param name="mvcPath" value="/select_structure_field.jsp" />
-											<portlet:param name="portletResource" value="<%= HtmlUtil.escapeJS(editAssetListDisplayContext.getPortletResource()) %>" />
 											<portlet:param name="className" value="<%= assetRendererFactory.getClassName() %>" />
 											<portlet:param name="classTypeId" value="<%= String.valueOf(classType.getClassTypeId()) %>" />
 											<portlet:param name="eventName" value='<%= renderResponse.getNamespace() + "selectDDMStructureField" %>' />
-										</liferay-portlet:renderURL>
+										</portlet:renderURL>
 
 										<span class="asset-subtypefields-popup" id="<portlet:namespace /><%= classType.getClassTypeId() %>_<%= className %>PopUpButton">
 											<aui:button data-href="<%= selectStructureFieldURL.toString() %>" disabled="<%= !editAssetListDisplayContext.isSubtypeFieldsFilterEnabled() %>" value="select" />
@@ -251,14 +241,14 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList()
 						<aui:input name="TypeSettingsProperties--ddmStructureDisplayFieldValue--" type="hidden" value="<%= editAssetListDisplayContext.getDDMStructureDisplayFieldValue() %>" />
 					</div>
 				</c:if>
-			</aui:fieldset>
+			</liferay-frontend:fieldset>
 		</liferay-frontend:fieldset-group>
 	</liferay-frontend:edit-form-body>
 
 	<liferay-frontend:edit-form-footer>
 		<aui:button type="submit" />
 
-		<aui:button href="<%= redirect %>" type="cancel" />
+		<aui:button href="<%= editAssetListDisplayContext.getRedirectURL() %>" type="cancel" />
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
@@ -469,9 +459,9 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList()
 
 			var uri = btn.data('href');
 
-			uri = Util.addParams('_<%= HtmlUtil.escapeJS(editAssetListDisplayContext.getPortletResource()) %>_ddmStructureDisplayFieldValue=' + encodeURIComponent($('#<portlet:namespace />ddmStructureDisplayFieldValue').val()), uri);
-			uri = Util.addParams('_<%= HtmlUtil.escapeJS(editAssetListDisplayContext.getPortletResource()) %>_ddmStructureFieldName=' + encodeURIComponent($('#<portlet:namespace />ddmStructureFieldName').val()), uri);
-			uri = Util.addParams('_<%= HtmlUtil.escapeJS(editAssetListDisplayContext.getPortletResource()) %>_ddmStructureFieldValue=' + encodeURIComponent($('#<portlet:namespace />ddmStructureFieldValue').val()), uri);
+			uri = Util.addParams('<portlet:namespace />ddmStructureDisplayFieldValue=' + encodeURIComponent($('#<portlet:namespace />ddmStructureDisplayFieldValue').val()), uri);
+			uri = Util.addParams('<portlet:namespace />ddmStructureFieldName=' + encodeURIComponent($('#<portlet:namespace />ddmStructureFieldName').val()), uri);
+			uri = Util.addParams('<portlet:namespace />ddmStructureFieldValue=' + encodeURIComponent($('#<portlet:namespace />ddmStructureFieldValue').val()), uri);
 
 			Util.selectEntity(
 				{

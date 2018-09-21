@@ -17,21 +17,19 @@
 <%@ include file="/init.jsp" %>
 
 <%
-SearchContainer searchContainer = (SearchContainer)request.getAttribute("liferay-ui:search:searchContainer");
-
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
-int assetEntryOrder = searchContainer.getStart() + row.getPos();
+AssetListEntryAssetEntryRel assetListEntryAssetEntryRel = (AssetListEntryAssetEntryRel)row.getObject();
 %>
 
-<portlet:actionURL name="/asset_list/remove_asset_entry_selection" var="removeAssetEntrySelectionURL">
+<portlet:actionURL name="/asset_list/delete_asset_entry_selection" var="deleteAssetEntrySelectionURL">
 	<portlet:param name="redirect" value="<%= currentURL %>" />
-	<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListDisplayContext.getAssetListEntryId()) %>" />
-	<portlet:param name="assetEntryOrder" value="<%= String.valueOf(assetEntryOrder) %>" />
+	<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListEntryAssetEntryRel.getAssetListEntryId()) %>" />
+	<portlet:param name="position" value="<%= String.valueOf(assetListEntryAssetEntryRel.getPosition()) %>" />
 </portlet:actionURL>
 
 <liferay-ui:icon
 	icon="times-circle"
 	markupView="lexicon"
-	url="<%= removeAssetEntrySelectionURL %>"
+	url="<%= deleteAssetEntrySelectionURL %>"
 />

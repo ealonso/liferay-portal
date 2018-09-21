@@ -21,62 +21,73 @@ SearchContainer searchContainer = (SearchContainer)request.getAttribute("liferay
 
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 
-int assetEntryOrder = searchContainer.getStart() + row.getPos();
+AssetListEntryAssetEntryRel assetListEntryAssetEntryRel = (AssetListEntryAssetEntryRel)row.getObject();
 
-boolean last = (assetEntryOrder == (searchContainer.getTotal() - 1));
+int position = assetListEntryAssetEntryRel.getPosition();
+
+boolean last = (position == (searchContainer.getTotal() - 1));
 %>
 
 <c:choose>
-	<c:when test="<%= (assetEntryOrder == 0) && last %>">
+	<c:when test="<%= (position == 0) && last %>">
 	</c:when>
-	<c:when test="<%= (assetEntryOrder > 0) && !last %>">
-
-		<%
-		String taglibDownURL = "javascript:" + renderResponse.getNamespace() + "moveSelectionDown('" + assetEntryOrder + "')";
-		%>
+	<c:when test="<%= (position > 0) && !last %>">
+		<portlet:actionURL name="/asset_list/move_asset_entry_selection" var="moveAssetEntrySelectionDownURL">
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListEntryAssetEntryRel.getAssetListEntryId()) %>" />
+			<portlet:param name="position" value="<%= String.valueOf(position) %>" />
+			<portlet:param name="newPosition" value="<%= String.valueOf(position - 1) %>" />
+		</portlet:actionURL>
 
 		<liferay-ui:icon
 			icon="angle-down"
 			markupView="lexicon"
 			message="down"
-			url="<%= taglibDownURL %>"
+			url="<%= moveAssetEntrySelectionDownURL %>"
 		/>
 
-		<%
-		String taglibUpURL = "javascript:" + renderResponse.getNamespace() + "moveSelectionUp('" + assetEntryOrder + "')";
-		%>
+		<portlet:actionURL name="/asset_list/move_asset_entry_selection" var="moveAssetEntrySelectionUpURL">
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListEntryAssetEntryRel.getAssetListEntryId()) %>" />
+			<portlet:param name="position" value="<%= String.valueOf(position) %>" />
+			<portlet:param name="newPosition" value="<%= String.valueOf(position + 1) %>" />
+		</portlet:actionURL>
 
 		<liferay-ui:icon
 			icon="angle-up"
 			markupView="lexicon"
 			message="up"
-			url="<%= taglibUpURL %>"
+			url="<%= moveAssetEntrySelectionUpURL %>"
 		/>
 	</c:when>
-	<c:when test="<%= assetEntryOrder == 0 %>">
-
-		<%
-		String taglibDownURL = "javascript:" + renderResponse.getNamespace() + "moveSelectionDown('" + assetEntryOrder + "')";
-		%>
+	<c:when test="<%= position == 0 %>">
+		<portlet:actionURL name="/asset_list/move_asset_entry_selection" var="moveAssetEntrySelectionDownURL">
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListEntryAssetEntryRel.getAssetListEntryId()) %>" />
+			<portlet:param name="position" value="<%= String.valueOf(position) %>" />
+			<portlet:param name="newPosition" value="<%= String.valueOf(position + 1) %>" />
+		</portlet:actionURL>
 
 		<liferay-ui:icon
 			icon="angle-down"
 			markupView="lexicon"
 			message="down"
-			url="<%= taglibDownURL %>"
+			url="<%= moveAssetEntrySelectionDownURL %>"
 		/>
 	</c:when>
 	<c:when test="<%= last %>">
-
-		<%
-		String taglibUpURL = "javascript:" + renderResponse.getNamespace() + "moveSelectionUp('" + assetEntryOrder + "')";
-		%>
+		<portlet:actionURL name="/asset_list/move_asset_entry_selection" var="moveAssetEntrySelectionUpURL">
+			<portlet:param name="redirect" value="<%= currentURL %>" />
+			<portlet:param name="assetListEntryId" value="<%= String.valueOf(assetListEntryAssetEntryRel.getAssetListEntryId()) %>" />
+			<portlet:param name="position" value="<%= String.valueOf(position) %>" />
+			<portlet:param name="newPosition" value="<%= String.valueOf(position - 1) %>" />
+		</portlet:actionURL>
 
 		<liferay-ui:icon
 			icon="angle-up"
 			markupView="lexicon"
 			message="up"
-			url="<%= taglibUpURL %>"
+			url="<%= moveAssetEntrySelectionUpURL %>"
 		/>
 	</c:when>
 </c:choose>
