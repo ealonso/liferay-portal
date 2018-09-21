@@ -66,7 +66,8 @@ public class AddAssetEntrySelectionMVCActionCommand
 		long assetListEntryId = ParamUtil.getLong(
 			actionRequest, "assetListEntryId");
 
-		long assetEntryId = ParamUtil.getLong(actionRequest, "assetEntryId");
+		long[] assetEntryIds = ParamUtil.getLongValues(
+			actionRequest, "assetEntryIds");
 		String assetEntryType = ParamUtil.getString(
 			actionRequest, "assetEntryType");
 
@@ -79,7 +80,10 @@ public class AddAssetEntrySelectionMVCActionCommand
 
 			typeSettingsProperties.fastLoad(assetListEntry.getTypeSettings());
 
-			_addSelection(typeSettingsProperties, assetEntryId, assetEntryType);
+			for (long assetEntryId : assetEntryIds) {
+				_addSelection(
+					typeSettingsProperties, assetEntryId, assetEntryType);
+			}
 
 			_assetListEntryService.updateAssetListEntrySettings(
 				assetListEntryId, typeSettingsProperties.toString());

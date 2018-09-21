@@ -104,7 +104,7 @@
 		if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-this" />')) {
 			submitForm(document.querySelector('#<portlet:namespace />fm'), '<portlet:actionURL name="/asset_list/delete_asset_list_entry"><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:actionURL>');
 		}
-	}
+	};
 
 	var ACTIONS = {
 		'deleteSelectedAssetListEntries': deleteSelectedAssetListEntries
