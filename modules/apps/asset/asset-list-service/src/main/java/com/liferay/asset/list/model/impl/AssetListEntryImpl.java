@@ -28,7 +28,6 @@ import com.liferay.asset.list.model.AssetListEntryAssetEntryRel;
 import com.liferay.asset.list.service.AssetListEntryAssetEntryRelLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -63,7 +62,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		return _getDynamicAssetEntries(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 	}
 
-	public AssetEntryQuery getAssetEntryQuery(long[] groupIds, Layout layout) {
+	public AssetEntryQuery getAssetEntryQuery(long[] groupIds) {
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
 		UnicodeProperties properties = new UnicodeProperties(true);
@@ -82,7 +81,7 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 		if (!anyAssetType) {
 			long[] availableClassNameIds =
 				AssetRendererFactoryRegistryUtil.getClassNameIds(
-					layout.getCompanyId());
+					getCompanyId());
 
 			long[] classNameIds = _getClassNameIds(
 				properties, availableClassNameIds);
@@ -94,23 +93,6 @@ public class AssetListEntryImpl extends AssetListEntryBaseImpl {
 			StringUtil.split(properties.getProperty("classTypeIds", null)));
 
 		assetEntryQuery.setClassTypeIds(classTypeIds);
-
-		boolean enablePermissions = GetterUtil.getBoolean(
-			properties.getProperty("enablePermissions", null));
-
-		assetEntryQuery.setEnablePermissions(enablePermissions);
-
-		boolean excludeZeroViewCount = GetterUtil.getBoolean(
-			properties.getProperty("excludeZeroViewCount", null));
-
-		assetEntryQuery.setExcludeZeroViewCount(excludeZeroViewCount);
-
-		boolean showOnlyLayoutAssets = GetterUtil.getBoolean(
-			properties.getProperty("showOnlyLayoutAssets", null));
-
-		if (showOnlyLayoutAssets) {
-			assetEntryQuery.setLayout(layout);
-		}
 
 		String orderByColumn1 = GetterUtil.getString(
 			properties.getProperty("orderByColumn1", "modifiedDate"));

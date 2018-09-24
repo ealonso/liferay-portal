@@ -290,8 +290,7 @@ public class AssetPublisherDisplayContext {
 				_portletPreferences, themeDisplay.getScopeGroupId(),
 				themeDisplay.getLayout());
 
-			_assetEntryQuery = assetListEntry.getAssetEntryQuery(
-				groupIds, themeDisplay.getLayout());
+			_assetEntryQuery = assetListEntry.getAssetEntryQuery(groupIds);
 		}
 		else {
 			_assetEntryQuery = AssetPublisherUtil.getAssetEntryQuery(
