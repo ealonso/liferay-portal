@@ -14,6 +14,7 @@
 
 package com.liferay.asset.list.web.internal.display.context;
 
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.list.constants.AssetListActionKeys;
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.asset.list.constants.AssetListPortletKeys;
@@ -91,6 +92,28 @@ public class AssetListDisplayContext {
 					});
 			}
 		};
+	}
+
+	public SearchContainer<AssetEntry> getAssetListContentSearchContainer() {
+		if (_assetListContentSearchContainer != null) {
+			return _assetListContentSearchContainer;
+		}
+
+		SearchContainer searchContainer = new SearchContainer(
+			_renderRequest, _renderResponse.createRenderURL(), null,
+			"there-are-no-asset-entries");
+
+		AssetListEntry assetListEntry = getAssetListEntry();
+
+		searchContainer.setResults(
+			assetListEntry.getAssetEntries(
+				searchContainer.getStart(), searchContainer.getEnd()));
+
+		searchContainer.setTotal(searchContainer.getEnd());
+
+		_assetListContentSearchContainer = searchContainer;
+
+		return _assetListContentSearchContainer;
 	}
 
 	public int getAssetListEntriesCount() {
@@ -481,6 +504,7 @@ public class AssetListDisplayContext {
 		return false;
 	}
 
+	private SearchContainer _assetListContentSearchContainer;
 	private Integer _assetListEntriesCount;
 	private SearchContainer _assetListEntriesSearchContainer;
 	private AssetListEntry _assetListEntry;
