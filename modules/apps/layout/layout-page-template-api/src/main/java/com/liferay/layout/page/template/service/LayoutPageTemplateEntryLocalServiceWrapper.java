@@ -333,6 +333,13 @@ public class LayoutPageTemplateEntryLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
+		long groupId, long classNameId, int type, boolean defaultTemplate) {
+		return _layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntries(groupId,
+			classNameId, type, defaultTemplate);
+	}
+
+	@Override
+	public java.util.List<com.liferay.layout.page.template.model.LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 		long groupId, long layoutPageTemplateCollectionId, int start, int end) {
 		return _layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntries(groupId,
 			layoutPageTemplateCollectionId, start, end);
