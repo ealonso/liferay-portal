@@ -17,22 +17,50 @@
 <%@ include file="/init.jsp" %>
 
 <%
+long layoutPageTemplateEntryId = ParamUtil.getLong(request, "layoutPageTemplateEntryId");
 String type = ParamUtil.getString(request, "type");
 
 List<SiteNavigationMenu> autoSiteNavigationMenus = layoutsAdminDisplayContext.getAutoSiteNavigationMenus();
+
+String addLayoutURL = StringPool.BLANK;
 %>
 
-<portlet:actionURL name="/layout/add_simple_layout" var="addLayoutURL">
-	<portlet:param name="mvcPath" value="/select_layout_page_template_entry.jsp" />
-	<portlet:param name="portletResource" value="<%= layoutsAdminDisplayContext.getPortletResource() %>" />
-	<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
-	<portlet:param name="liveGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()) %>" />
-	<portlet:param name="stagingGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getStagingGroupId()) %>" />
-	<portlet:param name="parentLayoutId" value="<%= String.valueOf(layoutsAdminDisplayContext.getParentLayoutId()) %>" />
-	<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
-	<portlet:param name="explicitCreation" value="<%= Boolean.TRUE.toString() %>" />
-	<portlet:param name="type" value="<%= type %>" />
-</portlet:actionURL>
+<c:choose>
+	<c:when test="<%= layoutPageTemplateEntryId > 0 %>">
+		<portlet:actionURL name="/layout/add_content_layout" var="addContentLayoutURL">
+			<portlet:param name="mvcPath" value="/select_layout_page_template_entry.jsp" />
+			<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
+			<portlet:param name="portletResource" value="<%= layoutsAdminDisplayContext.getPortletResource() %>" />
+			<portlet:param name="parentLayoutId" value="<%= String.valueOf(layoutsAdminDisplayContext.getParentLayoutId()) %>" />
+			<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
+			<portlet:param name="explicitCreation" value="<%= Boolean.TRUE.toString() %>" />
+			<portlet:param name="layoutPageTemplateEntryId" value="<%= String.valueOf(layoutPageTemplateEntryId) %>" />
+		</portlet:actionURL>
+
+		<%
+		addLayoutURL = addContentLayoutURL;
+		%>
+
+	</c:when>
+	<c:otherwise>
+		<portlet:actionURL name="/layout/add_simple_layout" var="addSimpleLayoutURL">
+			<portlet:param name="mvcPath" value="/select_layout_page_template_entry.jsp" />
+			<portlet:param name="portletResource" value="<%= layoutsAdminDisplayContext.getPortletResource() %>" />
+			<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
+			<portlet:param name="liveGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()) %>" />
+			<portlet:param name="stagingGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getStagingGroupId()) %>" />
+			<portlet:param name="parentLayoutId" value="<%= String.valueOf(layoutsAdminDisplayContext.getParentLayoutId()) %>" />
+			<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
+			<portlet:param name="explicitCreation" value="<%= Boolean.TRUE.toString() %>" />
+			<portlet:param name="type" value="<%= type %>" />
+		</portlet:actionURL>
+
+		<%
+		addLayoutURL = addSimpleLayoutURL;
+		%>
+
+	</c:otherwise>
+</c:choose>
 
 <div class="container-fluid-1280 pt-2">
 	<liferay-frontend:edit-form
