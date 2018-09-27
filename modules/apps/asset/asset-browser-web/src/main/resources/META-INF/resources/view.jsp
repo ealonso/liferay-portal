@@ -30,6 +30,7 @@
 	searchActionURL="<%= assetBrowserDisplayContext.getSearchActionURL() %>"
 	searchContainerId="selectAssetEntries"
 	searchFormName="searchFm"
+	selectable="<%= assetBrowserDisplayContext.isMultipleSelection() %>"
 	sortingOrder="<%= assetBrowserDisplayContext.getOrderByType() %>"
 	sortingURL="<%= assetBrowserDisplayContext.getSortingURL() %>"
 	viewTypeItems="<%= assetBrowserDisplayContext.getViewTypeItems() %>"
@@ -68,9 +69,11 @@
 				data.put("entityid", assetEntry.getEntryId());
 				data.put("groupdescriptivename", group.getDescriptiveName(locale));
 
-				row.setData(data);
-
 				cssClass = "selector-button";
+			}
+
+			if (assetBrowserDisplayContext.isMultipleSelection()) {
+				row.setData(data);
 			}
 			%>
 
@@ -98,8 +101,8 @@
 
 						<h5>
 							<c:choose>
-								<c:when test="<%= assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId() %>">
-									<aui:a cssClass="<%= cssClass %>" href="javascript:;">
+								<c:when test="<%= (assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId()) && !assetBrowserDisplayContext.isMultipleSelection() %>">
+									<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="javascript:;">
 										<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
 									</aui:a>
 								</c:when>
@@ -125,6 +128,7 @@
 							<c:when test="<%= Validator.isNotNull(assetRenderer.getThumbnailPath(renderRequest)) %>">
 								<liferay-frontend:vertical-card
 									cssClass="<%= cssClass %>"
+									data="<%= assetBrowserDisplayContext.isMultipleSelection() ? null : data %>"
 									imageUrl="<%= assetRenderer.getThumbnailPath(renderRequest) %>"
 									subtitle="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
 									title="<%= assetRenderer.getTitle(locale) %>"
@@ -133,6 +137,7 @@
 							<c:otherwise>
 								<liferay-frontend:icon-vertical-card
 									cssClass="<%= cssClass %>"
+									data="<%= assetBrowserDisplayContext.isMultipleSelection() ? null : data %>"
 									icon="<%= assetRendererFactory.getIconCssClass() %>"
 									subtitle="<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>"
 									title="<%= assetRenderer.getTitle(locale) %>"
@@ -147,8 +152,8 @@
 						truncate="<%= true %>"
 					>
 						<c:choose>
-							<c:when test="<%= assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId() %>">
-								<aui:a cssClass="<%= cssClass %>" href="javascript:;">
+							<c:when test="<%= (assetEntry.getEntryId() != assetBrowserDisplayContext.getRefererAssetEntryId()) && !assetBrowserDisplayContext.isMultipleSelection() %>">
+								<aui:a cssClass="<%= cssClass %>" data="<%= data %>" href="javascript:;">
 									<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
 								</aui:a>
 							</c:when>
@@ -190,11 +195,14 @@
 </aui:form>
 
 <aui:script use="liferay-search-container">
+	Liferay.Util.selectEntityHandler('#<portlet:namespace />selectAssetFm', '<%= HtmlUtil.escapeJS(assetBrowserDisplayContext.getEventName()) %>');
+
 	var searchContainer = Liferay.SearchContainer.get('<portlet:namespace />selectAssetEntries');
 
 	searchContainer.on(
 		'rowToggled',
 		function(event) {
+			debugger;
 			var selectedItems = event.elements.allSelectedElements;
 
 			var arr = [];
