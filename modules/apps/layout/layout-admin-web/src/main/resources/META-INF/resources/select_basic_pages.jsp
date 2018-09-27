@@ -120,52 +120,40 @@ SelectLayoutPageTemplateEntryDisplayContext selectLayoutPageTemplateEntryDisplay
 	</c:if>
 </div>
 
-<portlet:actionURL name="/layout/add_simple_layout" var="addLayoutURL">
-	<portlet:param name="mvcPath" value="/select_layout_page_template_entry.jsp" />
-	<portlet:param name="portletResource" value="<%= layoutsAdminDisplayContext.getPortletResource() %>" />
-	<portlet:param name="groupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getGroupId()) %>" />
-	<portlet:param name="liveGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getLiveGroupId()) %>" />
-	<portlet:param name="stagingGroupId" value="<%= String.valueOf(layoutsAdminDisplayContext.getStagingGroupId()) %>" />
-	<portlet:param name="parentLayoutId" value="<%= String.valueOf(layoutsAdminDisplayContext.getParentLayoutId()) %>" />
-	<portlet:param name="privateLayout" value="<%= String.valueOf(layoutsAdminDisplayContext.isPrivateLayout()) %>" />
-	<portlet:param name="explicitCreation" value="<%= Boolean.TRUE.toString() %>" />
-</portlet:actionURL>
-
-<%
-String autoSiteNavigationMenuNames = layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames();
-%>
-
-<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
-	var addLayoutActionOptionQueryClickHandler = dom.delegate(
-		document.body,
+<aui:script use="aui-base,liferay-portlet-url">
+	var addLayoutActionOptionQueryClickHandler = A.one('.lfr-search-container-wrapper').delegate(
 		'click',
-		'.add-layout-action-option',
 		function(event) {
-			var actionElement = event.delegateTarget;
+			var actionElement = event.target;
 
-			modalCommands.openSimpleInputModal(
+			<liferay-portlet:renderURL var="addLayoutURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+				<portlet:param name="mvcRenderCommandName" value="/layout/add_layout" />
+			</liferay-portlet:renderURL>
+
+			var addLayoutURL = Liferay.PortletURL.createURL('<%= HtmlUtil.escapeJS(addLayoutURL) %>');
+
+			addLayoutURL.setParameter('type', actionElement.getData('type'));
+
+			Liferay.Util.openWindow(
 				{
-					<c:if test="<%= Validator.isNotNull(autoSiteNavigationMenuNames) %>">
-						checkboxFieldLabel: '<liferay-ui:message arguments="<%= autoSiteNavigationMenuNames %>" key="add-this-page-to-the-following-menus-x" />',
-						checkboxFieldName: 'TypeSettingsProperties--addToAutoMenus--',
-						checkboxFieldValue: true,
-					</c:if>
-
-					dialogTitle: '<liferay-ui:message key="add-page" />',
-					formSubmitURL: '<%= addLayoutURL %>',
-					idFieldName: 'type',
-					idFieldValue: actionElement.dataset.type,
-					mainFieldName: 'name',
-					mainFieldLabel: '<liferay-ui:message key="name" />',
-					namespace: '<portlet:namespace />',
-					spritemap: '<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg'
+					dialog: {
+						destroyOnHide: true,
+						resizable: false
+					},
+					dialogIframe: {
+						bodyCssClass: 'dialog-with-footer'
+					},
+					id: '<portlet:namespace />addLayoutDialog',
+					title: '<liferay-ui:message key="add-page" />',
+					uri: addLayoutURL
 				}
 			);
-		}
+		},
+		'.add-layout-action-option'
 	);
 
 	function handleDestroyPortlet () {
-		addLayoutActionOptionQueryClickHandler.removeListener();
+		addLayoutActionOptionQueryClickHandler.detach();
 
 		Liferay.detach('destroyPortlet', handleDestroyPortlet);
 	}
