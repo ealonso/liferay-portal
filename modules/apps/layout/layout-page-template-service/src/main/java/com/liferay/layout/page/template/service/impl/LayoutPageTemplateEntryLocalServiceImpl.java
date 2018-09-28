@@ -300,6 +300,14 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 
 	@Override
 	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
+		long groupId, long classNameId, int type, boolean defaultTemplate) {
+
+		return layoutPageTemplateEntryPersistence.findByG_C_T_D(
+			groupId, classNameId, type, defaultTemplate);
+	}
+
+	@Override
+	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 		long groupId, long layoutPageTemplateCollectionId, int start, int end) {
 
 		return getLayoutPageTemplateEntries(
