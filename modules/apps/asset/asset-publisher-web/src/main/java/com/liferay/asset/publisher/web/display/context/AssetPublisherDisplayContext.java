@@ -322,10 +322,6 @@ public class AssetPublisherDisplayContext {
 		return _assetLinkBehavior;
 	}
 
-	public String getAssetListItemSelectorEventName() {
-		return _portletResponse.getNamespace() + "selectAssetList";
-	}
-
 	public String getAssetListItemSelectorURL() throws PortalException {
 		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
 			AssetPublisherWebKeys.ITEM_SELECTOR);
@@ -1004,6 +1000,10 @@ public class AssetPublisherDisplayContext {
 		_scopeGroupId = themeDisplay.getScopeGroupId();
 
 		return _scopeGroupId;
+	}
+
+	public String getSelectAssetListEventName() {
+		return _portletResponse.getNamespace() + "selectAssetList";
 	}
 
 	public String getSelectionStyle() {

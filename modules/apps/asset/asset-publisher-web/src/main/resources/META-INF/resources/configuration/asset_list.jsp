@@ -51,29 +51,32 @@ AssetListEntry assetListEntry = assetPublisherDisplayContext.fetchAssetListEntry
 	A.one('#<portlet:namespace />selectAssetList').on(
 		'click',
 		function(event) {
-			var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+			Liferay.Util.selectEntity(
 				{
-					eventName: '<%= assetPublisherDisplayContext.getAssetListItemSelectorEventName() %>',
-					on: {
-						selectedItemChange: function(event) {
-							var selectedItem = event.newVal;
-
-							if (selectedItem) {
-								assetListEntryId.val(selectedItem.assetListEntryId);
-
-								assetListTitle.html(selectedItem.assetListEntryTitle);
-
-								assetListRemove.removeClass('hide');
-							}
-						}
+					dialog: {
+						constrain: true,
+						destroyOnHide: true
 					},
-					'strings.add': '<liferay-ui:message key="done" />',
-					title: '<liferay-ui:message key="select-layout" />',
-					url: '<%= assetPublisherDisplayContext.getAssetListItemSelectorURL() %>'
+					eventName: '<%= assetPublisherDisplayContext.getSelectAssetListEventName() %>',
+					id: '<portlet:namespace />selectAssetList',
+					title: '<liferay-ui:message key="select-asset-list" />',
+
+					<liferay-portlet:renderURL portletName="<%= AssetPublisherPortletKeys.ASSET_PUBLISHER %>" var="selectAssetListURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+						<portlet:param name="mvcPath" value="/select_asset_list.jsp" />
+						<portlet:param name="assetListEntryId" value="<%= (assetListEntry != null) ? String.valueOf(assetListEntry.getAssetListEntryId()) : StringPool.BLANK %>" />
+						<portlet:param name="eventName" value="<%= assetPublisherDisplayContext.getSelectAssetListEventName() %>" />
+					</liferay-portlet:renderURL>
+
+					uri: '<%= selectAssetListURL %>'
+				},
+				function(event) {
+					assetListEntryId.val(event.assetlistentryid);
+
+					assetListTitle.html(event.assetlistentrytitle);
+
+					assetListRemove.removeClass('hide');
 				}
 			);
-
-			itemSelectorDialog.open();
 		}
 	);
 
