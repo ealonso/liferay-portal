@@ -32,7 +32,6 @@ import com.liferay.asset.kernel.service.AssetEntryServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
-import com.liferay.asset.list.item.selector.criterion.AssetListItemSelectorCriterion;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
@@ -46,9 +45,6 @@ import com.liferay.asset.publisher.web.util.AssetPublisherUtil;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.asset.util.AssetPublisherAddItemHolder;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
-import com.liferay.item.selector.ItemSelector;
-import com.liferay.item.selector.ItemSelectorReturnType;
-import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -64,7 +60,6 @@ import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
-import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
@@ -320,36 +315,6 @@ public class AssetPublisherDisplayContext {
 				"assetLinkBehavior", "showFullContent"));
 
 		return _assetLinkBehavior;
-	}
-
-	public String getAssetListItemSelectorURL() throws PortalException {
-		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
-			AssetPublisherWebKeys.ITEM_SELECTOR);
-
-		AssetListItemSelectorCriterion assetListItemSelectorCriterion =
-			new AssetListItemSelectorCriterion();
-
-		AssetListEntry assetListEntry = fetchAssetListEntry();
-
-		if (assetListEntry != null) {
-			assetListItemSelectorCriterion.setSelectedAssetListEntryId(
-				assetListEntry.getAssetListEntryId());
-		}
-
-		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
-			new ArrayList<>();
-
-		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-		assetListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			desiredItemSelectorReturnTypes);
-
-		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
-			RequestBackedPortletURLFactoryUtil.create(_portletRequest),
-			getAssetListItemSelectorEventName(),
-			assetListItemSelectorCriterion);
-
-		return itemSelectorURL.toString();
 	}
 
 	public AssetPublisherPortletInstanceConfiguration
