@@ -59,7 +59,7 @@ public class ProductNavigationControlMenuTemplateContextContributor
 			return true;
 		}
 
-		if (!themeDisplay.isSignedIn()) {
+		if (!themeDisplay.isShowControlPanelIcon()) {
 			return false;
 		}
 

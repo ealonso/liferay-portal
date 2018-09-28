@@ -70,7 +70,7 @@ public class ProductMenuTemplateContextContributor
 			return true;
 		}
 
-		if (!themeDisplay.isSignedIn()) {
+		if (!themeDisplay.isShowControlPanelIcon()) {
 			return false;
 		}
 
