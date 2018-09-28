@@ -68,6 +68,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProviderUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -653,28 +654,23 @@ public class JournalDisplayContext {
 					add(
 						labelItem -> {
 							ThemeDisplay themeDisplay =
-								(ThemeDisplay)_request.getAttribute(WebKeys.THEME_DISPLAY);
+								(ThemeDisplay)_request.getAttribute(
+									WebKeys.THEME_DISPLAY);
 
-							String label = LanguageUtil.get(_request, "owner");
+							User user = themeDisplay.getUser();
 
-							label = String.format(
-								"%s: %s", label,
-								themeDisplay.getUser().getFullName());
-
-							labelItem.setLabel(label);
+							labelItem.setLabel(
+								LanguageUtil.get(_request, "owner") + ": " +
+									user.getFullName());
 						});
 				}
 
 				if (isNavigationStructure()) {
 					add(
 						labelItem -> {
-							String label = LanguageUtil.get(
-								_request, "structures");
-
-							label = String.format(
-								"%s: %s", label, getDDMStructureName());
-
-							labelItem.setLabel(label);
+							labelItem.setLabel(
+								LanguageUtil.get(_request, "structures") +
+									": " + getDDMStructureName());
 						});
 				}
 
@@ -683,13 +679,9 @@ public class JournalDisplayContext {
 				if (status != -1) {
 					add(
 						labelItem -> {
-							String label = LanguageUtil.get(_request, "status");
-
-							label = String.format(
-								"%s: %s", label,
-								WorkflowConstants.getStatusLabel(status));
-
-							labelItem.setLabel(label);
+							labelItem.setLabel(
+								LanguageUtil.get(_request, "status") + ": " +
+									WorkflowConstants.getStatusLabel(status));
 						});
 				}
 			}
