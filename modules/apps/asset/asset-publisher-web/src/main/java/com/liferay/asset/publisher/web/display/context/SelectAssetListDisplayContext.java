@@ -12,19 +12,21 @@
  * details.
  */
 
-package com.liferay.asset.list.item.selector.web.internal.display.context;
+package com.liferay.asset.publisher.web.display.context;
 
-import com.liferay.asset.list.item.selector.criterion.AssetListItemSelectorCriterion;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.RowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
@@ -39,19 +41,25 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Pavel Savinov
  */
-public class AssetListItemSelectorViewDisplayContext {
+public class SelectAssetListDisplayContext {
 
-	public AssetListItemSelectorViewDisplayContext(
-		AssetListItemSelectorCriterion assetListItemSelectorCriterion,
-		HttpServletRequest request, String eventName, PortletURL portletURL) {
+	public SelectAssetListDisplayContext(
+		HttpServletRequest request,
+		LiferayPortletResponse liferayPortletResponse) {
 
-		_assetListItemSelectorCriterion = assetListItemSelectorCriterion;
 		_request = request;
-		_eventName = eventName;
-		_portletURL = portletURL;
+		_liferayPortletResponse = liferayPortletResponse;
+
+		_portletURL = _liferayPortletResponse.createRenderURL();
 	}
 
 	public String getEventName() {
+		if (Validator.isNotNull(_eventName)) {
+			return _eventName;
+		}
+
+		_eventName = ParamUtil.getString(_request, "eventName");
+
 		return _eventName;
 	}
 
@@ -99,8 +107,9 @@ public class AssetListItemSelectorViewDisplayContext {
 	}
 
 	public AssetListEntry getSelectedAssetListEntry() throws PortalException {
-		return AssetListEntryServiceUtil.fetchAssetListEntry(
-			_assetListItemSelectorCriterion.getSelectedAssetListEntryId());
+		long assetListEntryId = ParamUtil.getLong(_request, "assetListEntryId");
+
+		return AssetListEntryServiceUtil.fetchAssetListEntry(assetListEntryId);
 	}
 
 	private PortletURL _getPortletURL() throws PortletException {
@@ -114,9 +123,8 @@ public class AssetListItemSelectorViewDisplayContext {
 		return portletURL;
 	}
 
-	private final AssetListItemSelectorCriterion
-		_assetListItemSelectorCriterion;
-	private final String _eventName;
+	private String _eventName;
+	private final LiferayPortletResponse _liferayPortletResponse;
 	private final PortletURL _portletURL;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
