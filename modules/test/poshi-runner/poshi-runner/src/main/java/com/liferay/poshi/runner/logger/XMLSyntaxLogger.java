@@ -49,6 +49,35 @@ public final class XMLSyntaxLogger extends SyntaxLogger {
 	}
 
 	@Override
+	protected LoggerElement getBtnContainerLoggerElement(Element element) {
+		LoggerElement btnContainerLoggerElement = new LoggerElement();
+
+		btnContainerLoggerElement.setClassName("btn-container");
+		btnContainerLoggerElement.setName("div");
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(
+			getLineNumberItemText(
+				PoshiRunnerGetterUtil.getLineNumber(element)));
+
+		List<Element> childElements = element.elements();
+
+		if (!childElements.isEmpty()) {
+			if (isExecuting(element)) {
+				sb.append(getBtnItemText("btn-var"));
+			}
+			else {
+				sb.append(getBtnItemText("btn-collapse"));
+			}
+		}
+
+		btnContainerLoggerElement.setText(sb.toString());
+
+		return btnContainerLoggerElement;
+	}
+
+	@Override
 	protected LoggerElement getIfLoggerElement(Element element)
 		throws Exception {
 

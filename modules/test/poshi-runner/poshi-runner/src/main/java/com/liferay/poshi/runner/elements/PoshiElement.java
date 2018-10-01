@@ -842,6 +842,8 @@ public abstract class PoshiElement
 	private String _fixPoshiScript(String poshiScript) {
 		poshiScript = poshiScript.replaceAll("(?s)/\\*.*?\\*/", "/\\*\\*/");
 
+		poshiScript = poshiScript.replaceAll("(?s)\n[\\s]*//.*?\n", "//\n");
+
 		poshiScript = poshiScript.replaceAll(
 			"(?s)\'\'\'.*?\'\'\'", "\'\'\'\'\'\'");
 

@@ -695,26 +695,30 @@ public class PoshiRunnerContext {
 					String extendsCommandName =
 						extendsCommandElement.attributeValue("name");
 
+					String extendsNamespacedClassCommandName =
+						StringUtil.combine(
+							namespace, ".", extendsTestCaseClassName, "#",
+							extendsCommandName);
+
+					Properties properties =
+						_namespacedClassCommandNamePropertiesMap.get(
+							extendsNamespacedClassCommandName);
+
 					if (_isIgnorableCommandNames(
 							rootElement, extendsCommandElement,
 							extendsCommandName)) {
 
-						String namespacedClassCommandName = StringUtil.combine(
-							namespace, ".", className, "#", extendsCommandName);
-
-						Properties properties =
-							_namespacedClassCommandNamePropertiesMap.get(
-								namespacedClassCommandName);
-
 						properties.setProperty("ignored", "true");
-
-						_namespacedClassCommandNamePropertiesMap.put(
-							namespacedClassCommandName, properties);
 					}
 
+					String namespacedClassCommandName = StringUtil.combine(
+						namespace, ".", className, "#", extendsCommandName);
+
+					_namespacedClassCommandNamePropertiesMap.put(
+						namespacedClassCommandName, properties);
+
 					_commandElements.put(
-						"test-case#" + testCaseNamespacedClassName + "#" +
-							extendsCommandName,
+						"test-case#" + namespacedClassCommandName,
 						extendsCommandElement);
 				}
 			}

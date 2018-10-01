@@ -104,6 +104,6 @@ public class NotPoshiElement extends PoshiElement {
 	private static final String _ELEMENT_NAME = "not";
 
 	private static final Pattern _conditionPattern = Pattern.compile(
-		"![\\s\\S]*$");
+		"^![\\s\\S]*$");
 
 }

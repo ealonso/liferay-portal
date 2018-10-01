@@ -15,6 +15,7 @@
 package com.liferay.document.library.opener.google.drive.constants;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.MapUtil;
 
@@ -53,14 +54,23 @@ public class DLOpenerGoogleDriveMimeTypes {
 					"type ", mimeType));
 		}
 
-		return _mimeTypeMapping.get(mimeType);
+		return _googleDocsMimeTypes.get(mimeType);
+	}
+
+	public static String getMimeTypeExtension(String mimeType) {
+		return _extensions.getOrDefault(mimeType, StringPool.BLANK);
 	}
 
 	public static boolean isMimeTypeSupported(String mimeType) {
-		return _mimeTypeMapping.containsKey(mimeType);
+		return _googleDocsMimeTypes.containsKey(mimeType);
 	}
 
-	private static final Map<String, String> _mimeTypeMapping =
+	private static final Map<String, String> _extensions =
+		MapUtil.fromArray(
+			APPLICATION_VND_DOCX, ".docx", APPLICATION_VND_PPTX, ".pptx",
+			APPLICATION_VND_XSLX, ".xslx", ContentTypes.APPLICATION_TEXT,
+			".txt", ContentTypes.TEXT, ".txt", ContentTypes.TEXT_PLAIN, ".txt");
+	private static final Map<String, String> _googleDocsMimeTypes =
 		MapUtil.fromArray(
 			APPLICATION_VND_DOCX, APPLICATION_VND_GOOGLE_APPS_DOCUMENT,
 			APPLICATION_VND_PPTX, APPLICATION_VND_GOOGLE_APPS_PRESENTATION,

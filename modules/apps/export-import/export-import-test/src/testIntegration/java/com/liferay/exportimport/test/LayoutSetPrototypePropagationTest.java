@@ -107,6 +107,7 @@ public class LayoutSetPrototypePropagationTest
 		Assert.assertEquals(_initialPrototypeLayoutCount, _initialLayoutCount);
 	}
 
+	@Ignore
 	@Test
 	public void testIsLayoutDeleteable() throws Exception {
 		Assert.assertFalse(SitesUtil.isLayoutDeleteable(layout));
@@ -116,6 +117,7 @@ public class LayoutSetPrototypePropagationTest
 		Assert.assertTrue(SitesUtil.isLayoutDeleteable(layout));
 	}
 
+	@Ignore
 	@Test
 	public void testIsLayoutSortable() throws Exception {
 		Assert.assertFalse(SitesUtil.isLayoutSortable(layout));
@@ -125,6 +127,7 @@ public class LayoutSetPrototypePropagationTest
 		Assert.assertTrue(SitesUtil.isLayoutSortable(layout));
 	}
 
+	@Ignore
 	@Test
 	public void testIsLayoutUpdateable() throws Exception {
 		doTestIsLayoutUpdateable();

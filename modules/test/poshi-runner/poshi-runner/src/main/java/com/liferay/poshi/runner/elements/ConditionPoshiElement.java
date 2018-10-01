@@ -93,6 +93,6 @@ public class ConditionPoshiElement extends ExecutePoshiElement {
 	private static final String _ELEMENT_NAME = "condition";
 
 	private static final Pattern _conditionPattern = Pattern.compile(
-		"^(?!isSet|contains)[\\w]+\\([\\s\\S]*\\)$");
+		"^(?!isSet|contains)[\\w\\.]+\\([\\s\\S]*\\)$");
 
 }

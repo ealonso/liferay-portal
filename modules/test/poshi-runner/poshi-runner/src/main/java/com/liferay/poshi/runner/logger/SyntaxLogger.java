@@ -150,6 +150,48 @@ public abstract class SyntaxLogger {
 
 	public abstract void updateStatus(Element element, String status);
 
+	protected LoggerElement getBtnContainerLoggerElement(Element element) {
+		LoggerElement btnContainerLoggerElement = new LoggerElement();
+
+		btnContainerLoggerElement.setClassName("btn-container");
+		btnContainerLoggerElement.setName("div");
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(
+			getLineNumberItemText(
+				PoshiRunnerGetterUtil.getLineNumber(element)));
+
+		List<Element> childElements = element.elements();
+
+		if (!childElements.isEmpty() && !isExecuting(element)) {
+			sb.append(getBtnItemText("btn-collapse"));
+		}
+
+		btnContainerLoggerElement.setText(sb.toString());
+
+		return btnContainerLoggerElement;
+	}
+
+	protected final String getBtnItemText(String className) {
+		LoggerElement loggerElement = new LoggerElement();
+
+		if (className.equals("btn-collapse")) {
+			loggerElement.setAttribute(
+				"data-btnlinkid", "collapse-" + _btnLinkCollapseId);
+		}
+		else if (className.equals("btn-var")) {
+			loggerElement.setAttribute(
+				"data-btnlinkid", "var-" + _btnLinkVarId);
+		}
+
+		loggerElement.setClassName("btn " + className);
+		loggerElement.setID(null);
+		loggerElement.setName("button");
+
+		return loggerElement.toString();
+	}
+
 	protected int getBtnLinkVarId() {
 		return _btnLinkVarId;
 	}
@@ -320,7 +362,7 @@ public abstract class SyntaxLogger {
 		}
 
 		loggerElement.addChildLoggerElement(
-			_getBtnContainerLoggerElement(element));
+			getBtnContainerLoggerElement(element));
 		loggerElement.addChildLoggerElement(
 			getLineContainerLoggerElement(element));
 
@@ -350,6 +392,12 @@ public abstract class SyntaxLogger {
 		loggerElement.setText(String.valueOf(lineNumber));
 
 		return loggerElement;
+	}
+
+	protected final String getLineNumberItemText(int lineNumber) {
+		LoggerElement loggerElement = getLineNumberItem(lineNumber);
+
+		return loggerElement.toString();
 	}
 
 	protected abstract LoggerElement getLoggerElementFromElement(
@@ -434,6 +482,17 @@ public abstract class SyntaxLogger {
 	protected abstract LoggerElement getWhileLoggerElement(Element element)
 		throws Exception;
 
+	protected boolean isExecuting(Element element) {
+		if (isExecutingFunction(element) || isExecutingGroovyScript(element) ||
+			isExecutingMacro(element) || isExecutingMethod(element) ||
+			isExecutingTestCase(element)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	protected boolean isExecutingFunction(Element element) {
 		if (element.attributeValue("function") != null) {
 			return true;
@@ -489,58 +548,6 @@ public abstract class SyntaxLogger {
 		LoggerElement loggerElement = getSyntaxLoggerElement(stackTrace);
 
 		loggerElement.setAttribute("data-status01", status);
-	}
-
-	private LoggerElement _getBtnContainerLoggerElement(Element element) {
-		LoggerElement btnContainerLoggerElement = new LoggerElement();
-
-		btnContainerLoggerElement.setClassName("btn-container");
-		btnContainerLoggerElement.setName("div");
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(
-			_getLineNumberItemText(
-				PoshiRunnerGetterUtil.getLineNumber(element)));
-
-		List<Element> childElements = element.elements();
-
-		if ((!childElements.isEmpty() && !isExecutingFunction(element) &&
-			 !isExecutingGroovyScript(element) &&
-			 !isExecutingMethod(element)) ||
-			isExecutingMacro(element) || isExecutingTestCase(element)) {
-
-			sb.append(_getBtnItemText("btn-collapse"));
-		}
-
-		btnContainerLoggerElement.setText(sb.toString());
-
-		return btnContainerLoggerElement;
-	}
-
-	private String _getBtnItemText(String className) {
-		LoggerElement loggerElement = new LoggerElement();
-
-		if (className.equals("btn-collapse")) {
-			loggerElement.setAttribute(
-				"data-btnlinkid", "collapse-" + _btnLinkCollapseId);
-		}
-		else if (className.equals("btn-var")) {
-			loggerElement.setAttribute(
-				"data-btnlinkid", "var-" + _btnLinkVarId);
-		}
-
-		loggerElement.setClassName("btn " + className);
-		loggerElement.setID(null);
-		loggerElement.setName("button");
-
-		return loggerElement.toString();
-	}
-
-	private String _getLineNumberItemText(int lineNumber) {
-		LoggerElement loggerElement = getLineNumberItem(lineNumber);
-
-		return loggerElement.toString();
 	}
 
 	private LoggerElement _getMacroCommandLoggerElement(
