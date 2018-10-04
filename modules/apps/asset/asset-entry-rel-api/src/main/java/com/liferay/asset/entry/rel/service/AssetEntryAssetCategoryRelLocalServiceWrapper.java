@@ -99,6 +99,13 @@ public class AssetEntryAssetCategoryRelLocalServiceWrapper
 	}
 
 	@Override
+	public void deleteAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId) {
+		_assetEntryAssetCategoryRelLocalService.deleteAssetEntryAssetCategoryRel(assetEntryId,
+			assetCategoryId);
+	}
+
+	@Override
 	public void deleteAssetEntryAssetCategoryRelByAssetCategoryId(
 		long assetCategoryId) {
 		_assetEntryAssetCategoryRelLocalService.deleteAssetEntryAssetCategoryRelByAssetCategoryId(assetCategoryId);

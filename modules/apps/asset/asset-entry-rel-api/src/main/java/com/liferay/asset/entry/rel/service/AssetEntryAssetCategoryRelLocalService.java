@@ -108,6 +108,9 @@ public interface AssetEntryAssetCategoryRelLocalService extends BaseLocalService
 	public AssetEntryAssetCategoryRel deleteAssetEntryAssetCategoryRel(
 		long assetEntryAssetCategoryRelId) throws PortalException;
 
+	public void deleteAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId);
+
 	public void deleteAssetEntryAssetCategoryRelByAssetCategoryId(
 		long assetCategoryId);
 

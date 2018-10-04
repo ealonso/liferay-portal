@@ -106,6 +106,12 @@ public class AssetEntryAssetCategoryRelLocalServiceUtil {
 				   .deleteAssetEntryAssetCategoryRel(assetEntryAssetCategoryRelId);
 	}
 
+	public static void deleteAssetEntryAssetCategoryRel(long assetEntryId,
+		long assetCategoryId) {
+		getService()
+			.deleteAssetEntryAssetCategoryRel(assetEntryId, assetCategoryId);
+	}
+
 	public static void deleteAssetEntryAssetCategoryRelByAssetCategoryId(
 		long assetCategoryId) {
 		getService()
