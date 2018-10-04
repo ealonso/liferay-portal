@@ -220,6 +220,13 @@ public class AssetEntryAssetCategoryRelLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.asset.entry.rel.model.AssetEntryAssetCategoryRel fetchAssetEntryAssetCategoryRel(
+		long assetEntryId, long assetCategoryId) {
+		return _assetEntryAssetCategoryRelLocalService.fetchAssetEntryAssetCategoryRel(assetEntryId,
+			assetCategoryId);
+	}
+
+	@Override
 	public com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
 		return _assetEntryAssetCategoryRelLocalService.getActionableDynamicQuery();
 	}
@@ -276,6 +283,11 @@ public class AssetEntryAssetCategoryRelLocalServiceWrapper
 	@Override
 	public int getAssetEntryAssetCategoryRelsCount() {
 		return _assetEntryAssetCategoryRelLocalService.getAssetEntryAssetCategoryRelsCount();
+	}
+
+	@Override
+	public int getAssetEntryAssetCategoryRelsCount(long assetEntryId) {
+		return _assetEntryAssetCategoryRelLocalService.getAssetEntryAssetCategoryRelsCount(assetEntryId);
 	}
 
 	@Override
