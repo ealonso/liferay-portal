@@ -224,10 +224,10 @@ public class EditAssetListDisplayContext {
 	}
 
 	public Set<Group> getAvailableGroups() throws PortalException {
-		Set<Group> availableGroups = new HashSet<>();
-
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		Set<Group> availableGroups = new HashSet<>();
 
 		Company company = themeDisplay.getCompany();
 
@@ -649,13 +649,13 @@ public class EditAssetListDisplayContext {
 	}
 
 	public List<Group> getSelectedGroups() throws PortalException {
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		long[] groupIds = GetterUtil.getLongValues(
 			StringUtil.split(
 				PropertiesParamUtil.getString(
 					_properties, _request, "groupIds")));
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-			WebKeys.THEME_DISPLAY);
 
 		if (ArrayUtil.isEmpty(groupIds)) {
 			return Collections.singletonList(themeDisplay.getScopeGroup());
