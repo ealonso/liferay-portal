@@ -103,6 +103,16 @@ AssetListUsagesDisplayContext assetListUsagesDisplayContext = new AssetListUsage
 						</c:otherwise>
 					</c:choose>
 				</h3>
+
+				<clay:management-toolbar
+					componentId="assetListUsagesManagementToolbar"
+					filterDropdownItems="<%= assetListUsagesDisplayContext.getFilterItemsDropdownItems() %>"
+					itemsTotal="<%= assetListUsagesDisplayContext.getAllUsageCount() %>"
+					searchContainerId="assetListUsages"
+					showSearch="<%= false %>"
+					sortingOrder="<%= assetListUsagesDisplayContext.getOrderByType() %>"
+					sortingURL="<%= assetListUsagesDisplayContext.getSortingURL() %>"
+				/>
 			</div>
 		</div>
 	</div>

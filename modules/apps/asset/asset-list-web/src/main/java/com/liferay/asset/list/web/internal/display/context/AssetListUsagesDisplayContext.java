@@ -16,16 +16,24 @@ package com.liferay.asset.list.web.internal.display.context;
 
 import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
 import com.liferay.asset.list.service.AssetListEntryUsageLocalServiceUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.List;
+import java.util.Objects;
+
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Pavel Savinov
@@ -37,6 +45,8 @@ public class AssetListUsagesDisplayContext {
 
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+
+		_request = PortalUtil.getHttpServletRequest(renderRequest);
 	}
 
 	public int getAllUsageCount() throws PortalException {
@@ -61,6 +71,20 @@ public class AssetListUsagesDisplayContext {
 			PortalUtil.getClassNameId(AssetDisplayPageEntry.class));
 	}
 
+	public List<DropdownItem> getFilterItemsDropdownItems() {
+		return new DropdownItemList() {
+			{
+				addGroup(
+					dropdownGroupItem -> {
+						dropdownGroupItem.setDropdownItems(
+							_getOrderByDropdownItems());
+						dropdownGroupItem.setLabel(
+							LanguageUtil.get(_request, "order-by"));
+					});
+			}
+		};
+	}
+
 	public String getNavigation() {
 		if (Validator.isNotNull(_navigation)) {
 			return _navigation;
@@ -69,6 +93,17 @@ public class AssetListUsagesDisplayContext {
 		_navigation = ParamUtil.getString(_renderRequest, "navigation", "all");
 
 		return _navigation;
+	}
+
+	public String getOrderByType() {
+		if (Validator.isNotNull(_orderByType)) {
+			return _orderByType;
+		}
+
+		_orderByType = ParamUtil.getString(
+			_renderRequest, "orderByType", "asc");
+
+		return _orderByType;
 	}
 
 	public int getPagesUsageCount() throws PortalException {
@@ -103,10 +138,37 @@ public class AssetListUsagesDisplayContext {
 		return _redirect;
 	}
 
+	public String getSortingURL() {
+		PortletURL sortingURL = getPortletURL();
+
+		sortingURL.setParameter(
+			"orderByType",
+			Objects.equals(getOrderByType(), "asc") ? "desc" : "asc");
+
+		return sortingURL.toString();
+	}
+
+	private List<DropdownItem> _getOrderByDropdownItems() {
+		return new DropdownItemList() {
+			{
+				add(
+					dropdownItem -> {
+						dropdownItem.setActive(true);
+						dropdownItem.setHref(
+							getPortletURL(), "orderByCol", "modified-date");
+						dropdownItem.setLabel(
+							LanguageUtil.get(_request, "modified-date"));
+					});
+			}
+		};
+	}
+
 	private Long _assetListEntryId;
 	private String _navigation;
+	private String _orderByType;
 	private String _redirect;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
+	private final HttpServletRequest _request;
 
 }
