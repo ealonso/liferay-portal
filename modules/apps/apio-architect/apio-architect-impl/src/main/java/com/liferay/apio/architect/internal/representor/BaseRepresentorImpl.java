@@ -336,7 +336,7 @@ public abstract class BaseRepresentorImpl<T> implements BaseRepresentor<T> {
 
 			}
 		).apply(
-			new NestedRepresentorImpl.BuilderImpl(_nameFunction, supplier)
+			new NestedRepresentorImpl.BuilderImpl(_nameFunction)
 		);
 
 		nestedFieldFunctions.add(nestedFieldFunction);
@@ -376,7 +376,7 @@ public abstract class BaseRepresentorImpl<T> implements BaseRepresentor<T> {
 
 			}
 		).apply(
-			new NestedRepresentorImpl.BuilderImpl(_nameFunction, supplier)
+			new NestedRepresentorImpl.BuilderImpl(_nameFunction)
 		);
 
 		nestedListFieldFunctions.add(nestedFieldFunction);
