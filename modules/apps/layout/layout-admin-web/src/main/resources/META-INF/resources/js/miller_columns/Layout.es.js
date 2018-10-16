@@ -436,25 +436,16 @@ class Layout extends Component {
 
 			let parentPlid = null;
 			let priority = null;
+			let targetColumn = null;
 			let targetColumnIndex = null;
 			let targetItem = null;
 
 			let targetItemPlid = eventData.targetItemPlid;
 
-			let targetColumn = this._getParentColumnByPlid(
+			layoutColumns = this._removeDraggingItem(
 				layoutColumns,
-				targetItemPlid
+				eventData.targetItemPlid
 			);
-
-			const pathUpdated = this._currentPathItemPlid;
-			const sameColumn = (sourceColumn === targetColumn);
-
-			if (!pathUpdated ||
-				sameColumn ||
-				(pathUpdated && !sameColumn)
-			) {
-				sourceColumn.splice(sourceColumn.indexOf(this._draggingItem), 1);
-			}
 
 			if (eventData.targetColumnIndex) {
 				targetColumnIndex = eventData.targetColumnIndex;
@@ -470,6 +461,11 @@ class Layout extends Component {
 				targetColumn.splice(priority, 0, this._draggingItem);
 			}
 			else {
+				targetColumn = this._getParentColumnByPlid(
+					layoutColumns,
+					targetItemPlid
+				);
+
 				targetColumnIndex = layoutColumns.indexOf(targetColumn);
 
 				targetItem = this._getLayoutColumnItemByPlid(
@@ -728,6 +724,36 @@ class Layout extends Component {
 	}
 
 	/**
+	 * Remove dragging item if necessary
+	 * @param {object} layoutColumns
+	 * @param {string} targetItemPlid
+	 * @private
+	 * @review
+	 */
+
+	_removeDraggingItem(layoutColumns, targetItemPlid) {
+		const sourceColumn = layoutColumns[this._draggingItemColumnIndex];
+		const sourceColumnIndex = layoutColumns.indexOf(sourceColumn);
+
+		const targetColumn = this._getParentColumnByPlid(
+			layoutColumns,
+			targetItemPlid
+		);
+		const targetColumnIndex = layoutColumns.indexOf(targetColumn);
+
+		const pathUpdated = (this._currentPathItemPlid !== null);
+		const sameColumn = (sourceColumn === targetColumn);
+		const targetBelongsPreviousColumn = (this._draggingItemPosition === DRAG_POSITIONS.inside) &&
+			(targetColumnIndex === sourceColumnIndex - 1);
+
+		if (sameColumn || !(pathUpdated && targetBelongsPreviousColumn)) {
+			sourceColumn.splice(sourceColumn.indexOf(this._draggingItem), 1);
+		}
+
+		return layoutColumns;
+	}
+
+	/**
 	 * Resets dragging information to null
 	 * @private
 	 */
@@ -938,13 +964,13 @@ Layout.STATE = {
 
 	/**
 	 * Wether the path is refreshing or not
-	 * @default undefined
+	 * @default null
 	 * @instance
 	 * @review
 	 * @type {!string}
 	 */
 
-	_currentPathItemPlid: Config.string().internal(),
+	_currentPathItemPlid: Config.string().internal().value(null),
 
 	/**
 	 * Item that is being dragged.
