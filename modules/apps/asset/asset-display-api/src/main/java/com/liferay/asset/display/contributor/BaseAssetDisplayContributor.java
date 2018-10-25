@@ -23,6 +23,8 @@ import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -44,15 +46,13 @@ public abstract class BaseAssetDisplayContributor<T>
 
 		// Fields for asset entry
 
-		Set<AssetDisplayField> assetDisplayFields =
-			assetDisplayContributorFieldTracker.getAssetEntryAssetDisplayFields(
-				locale);
+		Set<AssetDisplayField> assetDisplayFields = _getAssetDisplayFields(
+			AssetEntry.class.getName(), locale);
 
 		// Fields for the specific asset type
 
 		Set<AssetDisplayField> journalArticleAssetDisplayFields =
-			assetDisplayContributorFieldTracker.getAssetDisplayFields(
-				getClassName(), locale);
+			_getAssetDisplayFields(getClassName(), locale);
 
 		assetDisplayFields.addAll(journalArticleAssetDisplayFields);
 
@@ -74,8 +74,7 @@ public abstract class BaseAssetDisplayContributor<T>
 		// Field values for asset entry
 
 		Map<String, Object> parameterMap =
-			assetDisplayContributorFieldTracker.
-				getAssetEntryAssetDisplayFieldsValues(assetEntry, locale);
+			_getAssetEntryAssetDisplayFieldsValues(assetEntry, locale);
 
 		// Field values for the specific asset type
 
@@ -180,5 +179,45 @@ public abstract class BaseAssetDisplayContributor<T>
 	@Deprecated
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private List<AssetDisplayContributorField>
+		_getAssetDisplayContributorFields(String className) {
+
+		return assetDisplayContributorFieldTracker.
+			getAssetDisplayContributorFields(className);
+	}
+
+	private Set<AssetDisplayField> _getAssetDisplayFields(
+		String className, Locale locale) {
+
+		Set<AssetDisplayField> assetDisplayFields = new LinkedHashSet<>();
+
+		for (AssetDisplayContributorField assetDisplayContributorField :
+				_getAssetDisplayContributorFields(className)) {
+
+			assetDisplayFields.add(
+				new AssetDisplayField(
+					assetDisplayContributorField.getKey(),
+					assetDisplayContributorField.getLabel(locale)));
+		}
+
+		return assetDisplayFields;
+	}
+
+	private Map<String, Object> _getAssetEntryAssetDisplayFieldsValues(
+		AssetEntry assetEntry, Locale locale) {
+
+		Map<String, Object> assetDisplayFieldsValues = new HashMap<>();
+
+		for (AssetDisplayContributorField assetDisplayContributorField :
+				_getAssetDisplayContributorFields(AssetEntry.class.getName())) {
+
+			assetDisplayFieldsValues.put(
+				assetDisplayContributorField.getKey(),
+				assetDisplayContributorField.getValue(assetEntry, locale));
+		}
+
+		return assetDisplayFieldsValues;
+	}
 
 }
