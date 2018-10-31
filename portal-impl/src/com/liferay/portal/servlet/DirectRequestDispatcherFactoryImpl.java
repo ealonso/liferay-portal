@@ -78,15 +78,9 @@ public class DirectRequestDispatcherFactoryImpl
 	protected RequestDispatcher doGetRequestDispatcher(
 		ServletContext servletContext, String path) {
 
-		return new IndirectRequestDispatcher(
-			_getetRequestDispatcher(servletContext, path));
-	}
-
-	private RequestDispatcher _getetRequestDispatcher(
-		ServletContext servletContext, String path) {
-
 		if (!PropsValues.DIRECT_SERVLET_CONTEXT_ENABLED) {
-			return servletContext.getRequestDispatcher(path);
+			return new IndirectRequestDispatcher(
+				servletContext.getRequestDispatcher(path));
 		}
 
 		if ((path == null) || (path.length() == 0)) {
@@ -147,6 +141,10 @@ public class DirectRequestDispatcherFactoryImpl
 	private static class IndirectRequestDispatcher
 		implements RequestDispatcher {
 
+		public IndirectRequestDispatcher(RequestDispatcher requestDispatcher) {
+			_requestDispatcher = requestDispatcher;
+		}
+
 		@Override
 		public void forward(ServletRequest request, ServletResponse response)
 			throws IOException, ServletException {
@@ -177,10 +175,6 @@ public class DirectRequestDispatcherFactoryImpl
 			}
 
 			_requestDispatcher.include(request, response);
-		}
-
-		private IndirectRequestDispatcher(RequestDispatcher requestDispatcher) {
-			_requestDispatcher = requestDispatcher;
 		}
 
 		private final RequestDispatcher _requestDispatcher;
