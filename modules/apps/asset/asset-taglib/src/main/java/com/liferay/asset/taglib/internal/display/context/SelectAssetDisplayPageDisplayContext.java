@@ -23,7 +23,6 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
-import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
@@ -33,7 +32,6 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServ
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -74,29 +72,14 @@ public class SelectAssetDisplayPageDisplayContext {
 		_liferayPortletResponse = liferayPortletResponse;
 	}
 
-	public AssetDisplayPageEntry getAssetDisplayPageEntry()
-		throws PortalException {
-
+	public AssetDisplayPageEntry getAssetDisplayPageEntry() {
 		if (_assetDisplayPageEntry != null) {
-			return _assetDisplayPageEntry;
-		}
-
-		if (journalArticle == null) {
-			return _assetDisplayPageEntry;
-		}
-
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-			journalArticle.getGroupId(),
-			journalArticle.getArticleResourceUuid());
-
-		if (assetEntry == null) {
 			return _assetDisplayPageEntry;
 		}
 
 		AssetDisplayPageEntry assetDisplayPageEntry =
 			AssetDisplayPageEntryLocalServiceUtil.fetchAssetDisplayPageEntry(
-				assetEntry.getGroupId(), assetEntry.getClassNameId(),
-				assetEntry.getClassPK());
+				_getGroupId(), getClassNameId(), getClassPK());
 
 		if (assetDisplayPageEntry != null) {
 			_assetDisplayPageEntry = assetDisplayPageEntry;
@@ -105,34 +88,31 @@ public class SelectAssetDisplayPageDisplayContext {
 		return _assetDisplayPageEntry;
 	}
 
-	public long getAssetDisplayPageId() throws PortalException {
+	public long getAssetDisplayPageId() {
 		if (_assetDisplayPageId != null) {
 			return _assetDisplayPageId;
 		}
-
-		long assetDisplayPageId = 0;
 
 		AssetDisplayPageEntry assetDisplayPageEntry =
 			getAssetDisplayPageEntry();
 
 		if (assetDisplayPageEntry != null) {
-			assetDisplayPageId =
+			_assetDisplayPageId =
 				assetDisplayPageEntry.getLayoutPageTemplateEntryId();
 		}
-
-		_assetDisplayPageId = assetDisplayPageId;
+		else {
+			_assetDisplayPageId = 0L;
+		}
 
 		return _assetDisplayPageId;
 	}
 
-	public int getAssetDisplayPageType() throws PortalException {
+	public int getAssetDisplayPageType() {
 		if (_displayPageType != null) {
 			return _displayPageType;
 		}
 
-		String articleId = ParamUtil.getString(_request, "articleId");
-
-		if (Validator.isNull(articleId)) {
+		if (getClassPK() == 0) {
 			_displayPageType = AssetDisplayPageConstants.TYPE_DEFAULT;
 
 			return _displayPageType;
@@ -143,11 +123,10 @@ public class SelectAssetDisplayPageDisplayContext {
 
 		if (assetDisplayPageEntry == null) {
 			_displayPageType = AssetDisplayPageConstants.TYPE_NONE;
-
-			return _displayPageType;
 		}
-
-		_displayPageType = assetDisplayPageEntry.getType();
+		else {
+			_displayPageType = assetDisplayPageEntry.getType();
+		}
 
 		return _displayPageType;
 	}
@@ -192,6 +171,18 @@ public class SelectAssetDisplayPageDisplayContext {
 		return _classNameId;
 	}
 
+	public long getClassPK() {
+		if (_classPK != null) {
+			return _classPK;
+		}
+
+		_classPK = GetterUtil.getLong(
+			_request.getAttribute(
+				"liferay-asset:select-asset-display-page:classPK"));
+
+		return _classPK;
+	}
+
 	public long getClassTypeId() {
 		if (_classTypeId != null) {
 			return _classTypeId;
@@ -204,7 +195,7 @@ public class SelectAssetDisplayPageDisplayContext {
 		return _classTypeId;
 	}
 
-	public String getDefaultAssetDisplayPageName() throws PortalException {
+	public String getDefaultAssetDisplayPageName() {
 		if (_defaultAssetDisplayPageName != null) {
 			return _defaultAssetDisplayPageName;
 		}
@@ -318,19 +309,18 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public String getLayoutUuid() throws PortalException {
-		JournalArticle article = getArticle();
-
-		String layoutUuid = BeanParamUtil.getString(
-			getArticle(), _request, "layoutUuid");
-
-		boolean changeStructure = GetterUtil.getBoolean(
-			_request.getAttribute("edit_article.jsp-changeStructure"));
-
-		if (changeStructure && (article != null)) {
-			layoutUuid = article.getLayoutUuid();
+		if (getClassPK() == 0) {
+			return null;
 		}
 
-		return layoutUuid;
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.
+				getAssetRendererFactoryByClassNameId(getClassNameId());
+
+		AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
+			PortalUtil.getClassName(getClassNameId()), getClassPK());
+
+		return assetEntry.getLayoutUuid();
 	}
 
 	public String getURLViewInContext() throws Exception {
@@ -351,7 +341,7 @@ public class SelectAssetDisplayPageDisplayContext {
 			themeDisplay.getURLCurrent());
 	}
 
-	public boolean isAssetDisplayPageTypeDefault() throws PortalException {
+	public boolean isAssetDisplayPageTypeDefault() {
 		if (getAssetDisplayPageType() ==
 				AssetDisplayPageConstants.TYPE_DEFAULT) {
 
@@ -361,7 +351,7 @@ public class SelectAssetDisplayPageDisplayContext {
 		return false;
 	}
 
-	public boolean isAssetDisplayPageTypeNone() throws PortalException {
+	public boolean isAssetDisplayPageTypeNone() {
 		if (getAssetDisplayPageType() == AssetDisplayPageConstants.TYPE_NONE) {
 			return true;
 		}
@@ -369,7 +359,7 @@ public class SelectAssetDisplayPageDisplayContext {
 		return false;
 	}
 
-	public boolean isAssetDisplayPageTypeSpecific() throws PortalException {
+	public boolean isAssetDisplayPageTypeSpecific() {
 		if (getAssetDisplayPageType() ==
 				AssetDisplayPageConstants.TYPE_SPECIFIC) {
 
@@ -407,7 +397,7 @@ public class SelectAssetDisplayPageDisplayContext {
 		return true;
 	}
 
-	private String _getAssetDisplayPageName() throws PortalException {
+	private String _getAssetDisplayPageName() {
 		long assetDisplayPageId = getAssetDisplayPageId();
 
 		if (assetDisplayPageId == 0) {
@@ -470,6 +460,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	private Long _assetDisplayPageId;
 	private String _assetTypeName;
 	private Long _classNameId;
+	private Long _classPK;
 	private Long _classTypeId;
 	private String _defaultAssetDisplayPageName;
 	private Integer _displayPageType;

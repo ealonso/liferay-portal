@@ -54,11 +54,11 @@ Group group = selectAssetDisplayPageDisplayContext.getGroup();
 
 			<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeDefault() %>" label="<%= taglibLabelTypeDefault %>" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_DEFAULT %>" />
 
-			<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() %>" label="use-a-specific-display-page-for-the-web-content" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>" />
+			<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() %>" label="use-a-specific-display-page-for-the-entity" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>" />
 
 			<div class="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />displayPageContainer">
 				<p class="text-default">
-					<span class="<%= Validator.isNull(editArticleDisplayPageDisplayContext.getDisplayPageName()) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
+					<span class="<%= Validator.isNull(selectAssetDisplayPageDisplayContext.getDisplayPageName()) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
 						<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
 					</span>
 					<span id="<portlet:namespace />displayPageNameInput">
