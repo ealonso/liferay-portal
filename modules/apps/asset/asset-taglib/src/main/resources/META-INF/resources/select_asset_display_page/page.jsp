@@ -16,10 +16,14 @@
 
 <%@ include file="/select_asset_display_page/init.jsp" %>
 
+<%
+Group group = selectAssetDisplayPageDisplayContext.getGroup();
+%>
+
 <c:choose>
 	<c:when test="<%= group.isLayout() %>">
 		<p class="text-muted">
-			<liferay-ui:message key="the-display-page-cannot-be-set-when-the-scope-of-the-web-content-is-a-page" />
+			<liferay-ui:message key="the-display-page-cannot-be-set-when-the-scope-of-the-entity-is-a-page" />
 		</p>
 	</c:when>
 	<c:otherwise>
