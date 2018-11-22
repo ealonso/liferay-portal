@@ -43,12 +43,12 @@ Group group = selectAssetDisplayPageDisplayContext.getGroup();
 		>
 
 			<%
-			String defaultAssetDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName(journalDisplayContext.getDDMStructureKey());
+			String defaultAssetDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
 
-			String taglibLabelTypeDefault = LanguageUtil.format(request, "use-default-display-page-for-x-x", new Object[] {journalDisplayContext.getDDMStructureName(), Validator.isNotNull(defaultAssetDisplayPageName) ? defaultAssetDisplayPageName : LanguageUtil.get(request, "none")}, false);
+			String taglibLabelTypeDefault = LanguageUtil.format(resourceBundle, "use-default-display-page-for-x-x", new Object[] {selectAssetDisplayPageDisplayContext.getAssetTypeName(), Validator.isNotNull(defaultAssetDisplayPageName) ? defaultAssetDisplayPageName : LanguageUtil.get(resourceBundle, "none")}, false);
 
 			if (Validator.isNull(defaultAssetDisplayPageName)) {
-				taglibLabelTypeDefault += " <span class=\"text-muted\">" + LanguageUtil.get(request, "this-content-will-not-be-referenceable-with-an-url") + "</span>";
+				taglibLabelTypeDefault += " <span class=\"text-muted\">" + LanguageUtil.get(resourceBundle, "this-entity-will-not-be-referenceable-with-an-url") + "</span>";
 			}
 			%>
 
@@ -92,7 +92,7 @@ Group group = selectAssetDisplayPageDisplayContext.getGroup();
 			</div>
 
 			<%
-			String taglibLabelTypeNone = LanguageUtil.get(request, "none") + " <span class=\"text-muted\">" + LanguageUtil.get(request, "this-content-will-not-be-referenceable-with-an-url") + "</span>";
+			String taglibLabelTypeNone = LanguageUtil.get(resourceBundle, "none") + " <span class=\"text-muted\">" + LanguageUtil.get(resourceBundle, "this-entity-will-not-be-referenceable-with-an-url") + "</span>";
 			%>
 
 			<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeNone() %>" label="<%= taglibLabelTypeNone %>" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_NONE %>" />

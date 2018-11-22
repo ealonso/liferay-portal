@@ -20,6 +20,9 @@ import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
 import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalServiceUtil;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.model.ClassType;
+import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -149,52 +152,75 @@ public class SelectAssetDisplayPageDisplayContext {
 		return _displayPageType;
 	}
 
-	public String getDefaultAssetDisplayPageName(String ddmStructureKey)
-		throws PortalException {
+	public String getAssetTypeName() throws PortalException {
+		if (Validator.isNotNull(_assetTypeName)) {
+			return _assetTypeName;
+		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.
+				getAssetRendererFactoryByClassNameId(getClassNameId());
+
+		_assetTypeName = assetRendererFactory.getTypeName(
+			themeDisplay.getLocale());
+
+		if (getClassTypeId() > 0) {
+			ClassTypeReader classTypeReader =
+				assetRendererFactory.getClassTypeReader();
+
+			ClassType classType = classTypeReader.getClassType(
+				getClassTypeId(), themeDisplay.getLocale());
+
+			_assetTypeName = classType.getName();
+		}
+
+		return _assetTypeName;
+	}
+
+	public long getClassNameId() {
+		if (_classNameId != null) {
+			return _classNameId;
+		}
+
+		_classNameId = GetterUtil.getLong(
+			_request.getAttribute(
+				"liferay-asset:select-asset-display-page:classNameId"));
+
+		return _classNameId;
+	}
+
+	public long getClassTypeId() {
+		if (_classTypeId != null) {
+			return _classTypeId;
+		}
+
+		_classTypeId = GetterUtil.getLong(
+			_request.getAttribute(
+				"liferay-asset:select-asset-display-page:classTypeId"));
+
+		return _classTypeId;
+	}
+
+	public String getDefaultAssetDisplayPageName() throws PortalException {
 		if (_defaultAssetDisplayPageName != null) {
 			return _defaultAssetDisplayPageName;
 		}
 
 		LayoutPageTemplateEntry layoutPageTemplateEntry = null;
 
-		AssetEntry assetEntry = _getAssetEntry();
-
-		if (assetEntry != null) {
-			layoutPageTemplateEntry =
-				LayoutPageTemplateEntryServiceUtil.
-					fetchDefaultLayoutPageTemplateEntry(
-						assetEntry.getGroupId(), assetEntry.getClassNameId(),
-						assetEntry.getClassTypeId());
-		}
+		layoutPageTemplateEntry =
+			LayoutPageTemplateEntryServiceUtil.
+				fetchDefaultLayoutPageTemplateEntry(
+					_getGroupId(), getClassNameId(), getClassTypeId());
 
 		if (layoutPageTemplateEntry != null) {
 			_defaultAssetDisplayPageName = layoutPageTemplateEntry.getName();
-
-			return _defaultAssetDisplayPageName;
 		}
 
-		DDMStructure ddmStructure = _getDDMStructure(ddmStructureKey);
-
-		if (ddmStructure != null) {
-			ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-			layoutPageTemplateEntry =
-				LayoutPageTemplateEntryServiceUtil.
-					fetchDefaultLayoutPageTemplateEntry(
-						themeDisplay.getScopeGroupId(),
-						PortalUtil.getClassNameId(JournalArticle.class),
-						ddmStructure.getStructureId());
-		}
-
-		if (layoutPageTemplateEntry != null) {
-			_defaultAssetDisplayPageName = layoutPageTemplateEntry.getName();
-
-			return _defaultAssetDisplayPageName;
-		}
-
-		return null;
+		return _defaultAssetDisplayPageName;
 	}
 
 	public String getDisplayPageItemSelectorURL() throws PortalException {
@@ -399,24 +425,6 @@ public class SelectAssetDisplayPageDisplayContext {
 		return layoutPageTemplateEntry.getName();
 	}
 
-	private AssetEntry _getAssetEntry() throws PortalException {
-		if (_assetEntry != null) {
-			return _assetEntry;
-		}
-
-		JournalArticle journalArticle = getArticle();
-
-		if (journalArticle == null) {
-			return _assetEntry;
-		}
-
-		_assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
-			journalArticle.getGroupId(),
-			journalArticle.getArticleResourceUuid());
-
-		return _assetEntry;
-	}
-
 	private long _getGroupId() {
 		return GetterUtil.getLong(
 			_request.getAttribute(
@@ -460,7 +468,9 @@ public class SelectAssetDisplayPageDisplayContext {
 
 	private AssetDisplayPageEntry _assetDisplayPageEntry;
 	private Long _assetDisplayPageId;
-	private AssetEntry _assetEntry;
+	private String _assetTypeName;
+	private Long _classNameId;
+	private Long _classTypeId;
 	private String _defaultAssetDisplayPageName;
 	private Integer _displayPageType;
 	private Group _group;
