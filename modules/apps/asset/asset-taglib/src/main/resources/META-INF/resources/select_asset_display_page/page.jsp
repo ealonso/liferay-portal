@@ -111,7 +111,7 @@ Group group = selectAssetDisplayPageDisplayContext.getGroup();
 				function(event) {
 					var itemSelectorDialog = new A.LiferayItemSelectorDialog(
 						{
-							eventName: '<%= liferayPortletResponse.getNamespace() + "selectDisplayPage" %>',
+							eventName: '<%= selectAssetDisplayPageDisplayContext.getEventName() %>',
 							on: {
 								selectedItemChange: function(event) {
 									var selectedItem = event.newVal;

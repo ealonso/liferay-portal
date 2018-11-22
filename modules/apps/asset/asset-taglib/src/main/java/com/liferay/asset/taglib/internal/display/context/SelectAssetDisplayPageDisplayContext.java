@@ -218,19 +218,11 @@ public class SelectAssetDisplayPageDisplayContext {
 		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
 			JournalWebKeys.ITEM_SELECTOR);
 
-		DDMStructure ddmStructure = (DDMStructure)_request.getAttribute(
-			"edit_article.jsp-structure");
-
-		long displayPageClassNameId = PortalUtil.getClassNameId(
-			JournalArticle.class.getName());
-
 		AssetDisplayPageSelectorCriterion assetDisplayPageSelectorCriterion =
 			new AssetDisplayPageSelectorCriterion();
 
-		assetDisplayPageSelectorCriterion.setClassNameId(
-			displayPageClassNameId);
-		assetDisplayPageSelectorCriterion.setClassTypeId(
-			ddmStructure.getStructureId());
+		assetDisplayPageSelectorCriterion.setClassNameId(getClassNameId());
+		assetDisplayPageSelectorCriterion.setClassTypeId(getClassTypeId());
 
 		List<ItemSelectorReturnType>
 			desiredAssetDisplayPageItemSelectorReturnTypes = new ArrayList<>();
@@ -254,12 +246,9 @@ public class SelectAssetDisplayPageDisplayContext {
 		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			desiredItemSelectorReturnTypes);
 
-		String eventName =
-			_liferayPortletResponse.getNamespace() + "selectDisplayPage";
-
 		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(_liferayPortletRequest),
-			eventName, assetDisplayPageSelectorCriterion,
+			getEventName(), assetDisplayPageSelectorCriterion,
 			layoutItemSelectorCriterion);
 
 		itemSelectorURL.setParameter("layoutUuid", getLayoutUuid());
@@ -296,6 +285,19 @@ public class SelectAssetDisplayPageDisplayContext {
 		}
 
 		return StringPool.BLANK;
+	}
+
+	public String getEventName() {
+		if (Validator.isNotNull(_eventName)) {
+			return _eventName;
+		}
+
+		_eventName = GetterUtil.getString(
+			_request.getAttribute(
+				"liferay-asset:select-asset-display-page:eventName"),
+			_liferayPortletResponse.getNamespace() + "selectDisplayPage");
+
+		return _eventName;
 	}
 
 	public Group getGroup() throws PortalException {
@@ -464,6 +466,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	private Long _classTypeId;
 	private String _defaultAssetDisplayPageName;
 	private Integer _displayPageType;
+	private String _eventName;
 	private Group _group;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
