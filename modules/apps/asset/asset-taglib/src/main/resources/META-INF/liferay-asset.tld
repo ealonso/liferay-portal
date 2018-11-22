@@ -548,4 +548,45 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<name>select-asset-display-page</name>
+		<tag-class>com.liferay.asset.taglib.servlet.taglib.SelectAssetDisplayPageTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>Allow selecting pages with Asset Publisher configured as a default Asset Publisher for the page.</description>
+			<name>allowLayoutUuid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>A class name ID of the asset type to select an asset display page for.</description>
+			<name>classNameId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>A primary key of the asset entry to select an asset display page for.</description>
+			<name>classPK</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>A class type ID of the asset type to select an asset display page for.</description>
+			<name>classTypeId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>Event name which fires when user selects a display page using item selector.</description>
+			<name>eventName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>A group ID of the entity to select an asset display page for.</description>
+			<name>groupId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 </taglib>
