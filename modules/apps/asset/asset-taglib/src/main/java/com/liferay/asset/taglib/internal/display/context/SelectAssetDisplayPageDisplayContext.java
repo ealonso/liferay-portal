@@ -26,6 +26,7 @@ import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.asset.taglib.internal.servlet.item.selector.ItemSelectorUtil;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
@@ -218,6 +219,8 @@ public class SelectAssetDisplayPageDisplayContext {
 	public String getDisplayPageItemSelectorURL() throws PortalException {
 		ItemSelector itemSelector = ItemSelectorUtil.getItemSelector();
 
+		List<ItemSelectorCriterion> criteria = new ArrayList<>();
+
 		AssetDisplayPageSelectorCriterion assetDisplayPageSelectorCriterion =
 			new AssetDisplayPageSelectorCriterion();
 
@@ -233,23 +236,29 @@ public class SelectAssetDisplayPageDisplayContext {
 		assetDisplayPageSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			desiredAssetDisplayPageItemSelectorReturnTypes);
 
-		LayoutItemSelectorCriterion layoutItemSelectorCriterion =
-			new LayoutItemSelectorCriterion();
+		criteria.add(assetDisplayPageSelectorCriterion);
 
-		layoutItemSelectorCriterion.setCheckDisplayPage(true);
+		if (isAllowLayoutUuid()) {
+			LayoutItemSelectorCriterion layoutItemSelectorCriterion =
+				new LayoutItemSelectorCriterion();
 
-		List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
-			new ArrayList<>();
+			layoutItemSelectorCriterion.setCheckDisplayPage(true);
 
-		desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
+			List<ItemSelectorReturnType> desiredItemSelectorReturnTypes =
+				new ArrayList<>();
 
-		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			desiredItemSelectorReturnTypes);
+			desiredItemSelectorReturnTypes.add(
+				new UUIDItemSelectorReturnType());
+
+			layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+				desiredItemSelectorReturnTypes);
+
+			criteria.add(layoutItemSelectorCriterion);
+		}
 
 		PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(_liferayPortletRequest),
-			getEventName(), assetDisplayPageSelectorCriterion,
-			layoutItemSelectorCriterion);
+			getEventName(), criteria.toArray(new ItemSelectorCriterion[0]));
 
 		itemSelectorURL.setParameter("layoutUuid", getLayoutUuid());
 
@@ -339,6 +348,12 @@ public class SelectAssetDisplayPageDisplayContext {
 		return assetRenderer.getURLViewInContext(
 			_liferayPortletRequest, _liferayPortletResponse,
 			themeDisplay.getURLCurrent());
+	}
+
+	public boolean isAllowLayoutUuid() {
+		return GetterUtil.getBoolean(
+			_request.getAttribute(
+				"liferay-asset:select-asset-display-page:allowLayoutUuid"));
 	}
 
 	public boolean isAssetDisplayPageTypeDefault() {
