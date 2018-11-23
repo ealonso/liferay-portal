@@ -20,6 +20,7 @@ import com.liferay.asset.display.page.model.AssetDisplayPageEntry;
 import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalServiceUtil;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
@@ -45,7 +46,6 @@ import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -329,14 +329,12 @@ public class SelectAssetDisplayPageDisplayContext {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		AssetRendererFactory<JournalArticle> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClass(
-				JournalArticle.class);
+		AssetRendererFactory assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.
+				getAssetRendererFactoryByClassNameId(getClassNameId());
 
-		JournalArticle article = getArticle();
-
-		AssetRenderer<JournalArticle> assetRenderer =
-			assetRendererFactory.getAssetRenderer(article.getResourcePrimKey());
+		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
+			getClassPK());
 
 		return assetRenderer.getURLViewInContext(
 			_liferayPortletRequest, _liferayPortletResponse,
@@ -372,23 +370,11 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public boolean isURLViewInContext() throws Exception {
-		if (getArticle() == null) {
+		if (getClassPK() == 0) {
 			return false;
 		}
 
 		if (Validator.isNull(getLayoutUuid())) {
-			return false;
-		}
-
-		JournalArticle article = getArticle();
-
-		if (article.isNew()) {
-			return false;
-		}
-
-		long classNameId = ParamUtil.getLong(_request, "classNameId");
-
-		if (classNameId != JournalArticleConstants.CLASSNAME_ID_DEFAULT) {
 			return false;
 		}
 
