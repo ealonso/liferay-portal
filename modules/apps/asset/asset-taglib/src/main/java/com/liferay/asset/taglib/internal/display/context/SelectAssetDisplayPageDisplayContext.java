@@ -23,6 +23,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
+import com.liferay.asset.taglib.internal.servlet.item.selector.ItemSelectorUtil;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
@@ -215,8 +216,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public String getDisplayPageItemSelectorURL() throws PortalException {
-		ItemSelector itemSelector = (ItemSelector)_request.getAttribute(
-			JournalWebKeys.ITEM_SELECTOR);
+		ItemSelector itemSelector = ItemSelectorUtil.getItemSelector();
 
 		AssetDisplayPageSelectorCriterion assetDisplayPageSelectorCriterion =
 			new AssetDisplayPageSelectorCriterion();
