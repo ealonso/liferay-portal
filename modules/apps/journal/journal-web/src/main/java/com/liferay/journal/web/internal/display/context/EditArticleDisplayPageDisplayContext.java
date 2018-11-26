@@ -20,6 +20,7 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -44,14 +45,28 @@ public class EditArticleDisplayPageDisplayContext {
 		return _article;
 	}
 
-	public DDMStructure getDDMStructure(String ddmStructureKey) {
+	public DDMStructure getDDMStructure() throws PortalException {
 		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		return DDMStructureLocalServiceUtil.fetchStructure(
+		String ddmStructureKey = ParamUtil.getString(
+			_request, "ddmStructureKey");
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
 			themeDisplay.getSiteGroupId(),
 			PortalUtil.getClassNameId(JournalArticle.class), ddmStructureKey,
 			true);
+
+		if (ddmStructure == null) {
+			JournalArticle article = getArticle();
+
+			ddmStructure = DDMStructureLocalServiceUtil.fetchStructure(
+				themeDisplay.getSiteGroupId(),
+				PortalUtil.getClassNameId(JournalArticle.class),
+				article.getDDMStructureKey(), true);
+		}
+
+		return ddmStructure;
 	}
 
 	private JournalArticle _article;

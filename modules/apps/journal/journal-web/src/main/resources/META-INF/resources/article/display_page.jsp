@@ -19,13 +19,9 @@
 <%
 EditArticleDisplayPageDisplayContext editArticleDisplayPageDisplayContext = new EditArticleDisplayPageDisplayContext(request);
 
-DDMStructure ddmStructure = editArticleDisplayPageDisplayContext.getDDMStructure(journalDisplayContext.getDDMStructureKey());
-
 JournalArticle article = editArticleDisplayPageDisplayContext.getArticle();
 
-if ((ddmStructure == null) && (article != null)) {
-	ddmStructure = editArticleDisplayPageDisplayContext.getDDMStructure(article.getDDMStructureKey());
-}
+DDMStructure ddmStructure = editArticleDisplayPageDisplayContext.getDDMStructure();
 
 long groupId = BeanParamUtil.getLong(article, request, "groupId", scopeGroupId);
 %>
