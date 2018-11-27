@@ -147,6 +147,23 @@ public class FragmentDisplayContext {
 		};
 	}
 
+	public String getCssClassFragmentEntryType(FragmentEntry fragmentEntry) {
+		String cssClassFragmentEntryType = "file-icon-color-0";
+
+		if (fragmentEntry.getType() ==
+				FragmentEntryTypeConstants.TYPE_SECTION) {
+
+			cssClassFragmentEntryType = "file-icon-color-2";
+		}
+		else if (fragmentEntry.getType() ==
+					FragmentEntryTypeConstants.TYPE_ELEMENT) {
+
+			cssClassFragmentEntryType = "file-icon-color-4";
+		}
+
+		return cssClassFragmentEntryType;
+	}
+
 	public String getCssContent() {
 		if (Validator.isNotNull(_cssContent)) {
 			return _cssContent;
