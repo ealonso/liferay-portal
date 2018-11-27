@@ -14,6 +14,8 @@
 
 package com.liferay.fragment.constants;
 
+import java.util.Objects;
+
 /**
  * @author Jürgen Kappler
  */
@@ -27,6 +29,17 @@ public class FragmentEntryTypeConstants {
 
 	public static final String TYPE_SECTION_LABEL = "section";
 
+	public static int getTypeFromLabel(String label) {
+		if (Objects.equals(TYPE_ELEMENT_LABEL, label)) {
+			return TYPE_SECTION;
+		}
+		else if (Objects.equals(TYPE_ELEMENT_LABEL, label)) {
+			return TYPE_ELEMENT;
+		}
+
+		throw new IllegalArgumentException("Invalid type " + label);
+	}
+
 	public static String getTypeLabel(int type) {
 		if (type == TYPE_SECTION) {
 			return TYPE_SECTION_LABEL;
@@ -35,7 +48,7 @@ public class FragmentEntryTypeConstants {
 			return TYPE_ELEMENT_LABEL;
 		}
 
-		return null;
+		throw new IllegalArgumentException("Invalid type value " + type);
 	}
 
 }
