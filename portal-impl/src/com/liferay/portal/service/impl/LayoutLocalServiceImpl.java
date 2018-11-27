@@ -22,6 +22,7 @@ import com.liferay.petra.lang.CentralizedThreadLocal;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -56,6 +57,10 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntry;
 import com.liferay.portal.kernel.systemevent.SystemEventHierarchyEntryThreadLocal;
+import com.liferay.portal.kernel.transaction.Isolation;
+import com.liferay.portal.kernel.transaction.Propagation;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -71,6 +76,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.comparator.LayoutComparator;
 import com.liferay.portal.kernel.util.comparator.LayoutPriorityComparator;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
+import com.liferay.portal.model.impl.LayoutSetImpl;
+import com.liferay.portal.model.impl.LayoutSetModelImpl;
 import com.liferay.portal.service.base.LayoutLocalServiceBaseImpl;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.sites.kernel.util.Sites;
@@ -92,6 +99,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 /**
  * Provides the local service for accessing, adding, deleting, exporting,
@@ -301,19 +309,23 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 					getLayoutPrototypeByUuidAndCompanyId(
 						layoutPrototypeUuid, layout.getCompanyId());
 
-			try {
-				SitesUtil.applyLayoutPrototype(
-					layoutPrototype, layout, layoutPrototypeLinkEnabled);
-			}
-			catch (PortalException pe) {
-				throw pe;
-			}
-			catch (SystemException se) {
-				throw se;
-			}
-			catch (Exception e) {
-				throw new SystemException(e);
-			}
+
+			TransactionCommitCallbackUtil.registerCallback(
+				new Callable<Void>() {
+
+					@Override
+					public Void call() throws Exception {
+						Layout prototypeLayout =
+							layoutLocalService.getLayout(plid);
+
+						SitesUtil.applyLayoutPrototype(
+							layoutPrototype, prototypeLayout,
+							layoutPrototypeLinkEnabled);
+
+						return null;
+					}
+
+				});
 		}
 
 		// Resources
@@ -2724,6 +2736,10 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 * @throws PortalException if a portal exception occurred
 	 */
 	@Override
+	@Transactional(
+		isolation = Isolation.SERIALIZABLE,
+		propagation = Propagation.REQUIRES_NEW
+	)
 	public Layout updateLayout(
 			long groupId, boolean privateLayout, long layoutId,
 			String typeSettings)

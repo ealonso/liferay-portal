@@ -29,6 +29,8 @@ import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollec
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -527,6 +529,44 @@ public class LayoutsAdminDisplayContext {
 		return layoutsJSONArray;
 	}
 
+	public SearchContainer getLayoutsSearchContainer() throws PortalException {
+		if (_layoutsSearchContainer != null) {
+			return _layoutsSearchContainer;
+		}
+
+		String emptyResultMessage = "there-are-no-public-pages";
+
+		if (isPrivateLayout()) {
+			emptyResultMessage = "there-are-no-private-pages";
+		}
+
+		SearchContainer layoutsSearchContainer = new SearchContainer(
+			_liferayPortletRequest, getPortletURL(), null, emptyResultMessage);
+
+		layoutsSearchContainer.setOrderByCol(_getOrderByCol());
+		layoutsSearchContainer.setOrderByType(_getOrderByType());
+
+		EmptyOnClickRowChecker emptyOnClickRowChecker =
+			new EmptyOnClickRowChecker(_liferayPortletResponse);
+
+		layoutsSearchContainer.setRowChecker(emptyOnClickRowChecker);
+
+		int layoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+			getSelGroup(), isPrivateLayout());
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			getSelGroupId(), isPrivateLayout(),
+			layoutsSearchContainer.getStart(), layoutsSearchContainer.getEnd(),
+			null);
+
+		layoutsSearchContainer.setTotal(layoutsCount);
+		layoutsSearchContainer.setResults(layouts);
+
+		_layoutsSearchContainer = layoutsSearchContainer;
+
+		return _layoutsSearchContainer;
+	}
+
 	public Group getLiveGroup() {
 		return _groupDisplayContextHelper.getLiveGroup();
 	}
@@ -880,6 +920,10 @@ public class LayoutsAdminDisplayContext {
 		return false;
 	}
 
+	public boolean isFlattenedView() {
+		return true;
+	}
+
 	public boolean isPagesTab() {
 		if (Objects.equals(getTabs1(), "pages")) {
 			return true;
@@ -984,6 +1028,23 @@ public class LayoutsAdminDisplayContext {
 		return true;
 	}
 
+	public boolean isShowMarkAsHomePageLayout(Layout layout)
+		throws PortalException {
+
+		if (!isShowConfigureAction(layout)) {
+			return false;
+		}
+
+		if ((layout.getParentLayoutId() !=
+				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) ||
+			(_getHomePagePlid(isPrivateLayout()) == layout.getPlid())) {
+
+			return false;
+		}
+
+		return true;
+	}
+
 	public boolean isShowOrphanPortletsAction(Layout layout)
 		throws PortalException {
 
@@ -1067,15 +1128,11 @@ public class LayoutsAdminDisplayContext {
 
 		if (isShowConfigureAction(layout)) {
 			jsonObject.put("editLayoutURL", getEditLayoutURL(layout));
+		}
 
-			if ((layout.getParentLayoutId() ==
-					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) &&
-				(_getHomePagePlid(isPrivateLayout()) != layout.getPlid())) {
-
-				jsonObject.put(
-					"markAsHomePageLayoutURL",
-					getMarkAsHomePageLayoutURL(layout));
-			}
+		if (isShowMarkAsHomePageLayout(layout)) {
+			jsonObject.put(
+				"markAsHomePageLayoutURL", getMarkAsHomePageLayoutURL(layout));
 		}
 
 		if (isShowOrphanPortletsAction(layout)) {
@@ -1338,6 +1395,28 @@ public class LayoutsAdminDisplayContext {
 		return jsonArray;
 	}
 
+	private String _getOrderByCol() {
+		if (Validator.isNotNull(_orderByCol)) {
+			return _orderByCol;
+		}
+
+		_orderByCol = ParamUtil.getString(
+			_liferayPortletRequest, "orderByCol", "create-date");
+
+		return _orderByCol;
+	}
+
+	private String _getOrderByType() {
+		if (Validator.isNotNull(_orderByType)) {
+			return _orderByType;
+		}
+
+		_orderByType = ParamUtil.getString(
+			_liferayPortletRequest, "orderByType", "asc");
+
+		return _orderByType;
+	}
+
 	private String _getTitle(boolean privatePages) {
 		String title = "pages";
 
@@ -1380,8 +1459,11 @@ public class LayoutsAdminDisplayContext {
 	private String _homePageTitle;
 	private List<LayoutDescription> _layoutDescriptions;
 	private Long _layoutId;
+	private SearchContainer _layoutsSearchContainer;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private String _orderByCol;
+	private String _orderByType;
 	private Long _parentLayoutId;
 	private Boolean _privateLayout;
 	private String _redirect;

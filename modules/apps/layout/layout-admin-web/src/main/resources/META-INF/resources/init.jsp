@@ -139,6 +139,7 @@ page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortletKeys" %><%@
 page import="com.liferay.portal.kernel.util.PropertiesParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.ResourceBundleUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringBundler" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.TextFormatter" %><%@
 page import="com.liferay.portal.kernel.util.UnicodeProperties" %><%@
@@ -154,7 +155,8 @@ page import="com.liferay.portal.util.RobotsUtil" %><%@
 page import="com.liferay.site.navigation.model.SiteNavigationMenu" %><%@
 page import="com.liferay.sites.kernel.util.SitesUtil" %>
 
-<%@ page import="java.util.Date" %><%@
+<%@ page import="java.util.Collections" %><%@
+page import="java.util.Date" %><%@
 page import="java.util.HashMap" %><%@
 page import="java.util.HashSet" %><%@
 page import="java.util.List" %><%@
