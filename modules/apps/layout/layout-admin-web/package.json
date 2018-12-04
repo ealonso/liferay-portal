@@ -34,7 +34,7 @@
 		"cross-env": "^5.2.0",
 		"liferay-npm-bundler": "^2.5.1",
 		"liferay-npm-bundler-preset-liferay-dev": "^1.1.0",
-		"metal-tools-soy": "^6.0.0",
+		"metal-tools-soy": "^4.0.0",
 		"rimraf": "^2.6.2"
 	},
 	"name": "layout-admin-web",
