@@ -18,11 +18,14 @@
 
 <%
 FragmentsEditorDisplayContext fragmentsEditorDisplayContext = new FragmentsEditorDisplayContext(request, renderResponse);
+String moduleName = (String)request.getAttribute(LayoutAdminWebKeys.RESOLVED_MODULE_NAME);
+System.out.println(fragmentsEditorDisplayContext.getModuleName());
+System.out.println(moduleName);
 %>
 
 <soy:component-renderer
 	componentId='<%= PortalUtil.getPortletNamespace(ContentLayoutPortletKeys.CONTENT_PAGE_EDITOR_PORTLET) + "toolbar" %>'
 	context="<%= fragmentsEditorDisplayContext.getFragmentsEditorToolbarContext() %>"
-	module="layout-admin-web/js/fragments_editor/components/toolbar/FragmentsEditorToolbar.es"
+	module="layout-admin-web@3.0.0/js/fragments_editor/components/toolbar/FragmentsEditorToolbar.es"
 	templateNamespace="com.liferay.layout.admin.web.FragmentsEditorToolbar.render"
 />

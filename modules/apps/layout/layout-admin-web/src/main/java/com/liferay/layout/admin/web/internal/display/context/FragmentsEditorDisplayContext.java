@@ -27,6 +27,7 @@ import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -35,6 +36,7 @@ import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
 import com.liferay.item.selector.criteria.url.criterion.URLItemSelectorCriterion;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
+import com.liferay.layout.admin.web.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.layout.admin.web.internal.util.SoyContextFactoryUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
@@ -220,6 +222,16 @@ public class FragmentsEditorDisplayContext {
 				"/layout/update_layout_page_template_entry_asset_type"));
 
 		return soyContext;
+	}
+
+	public String getModuleVersion() {
+		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+
+		if (npmResolver == null) {
+			return StringPool.BLANK;
+		}
+
+		return npmResolver.resolveModuleName("layout-admin-web");
 	}
 
 	private Map<String, Object> _getDefaultConfigurations() {

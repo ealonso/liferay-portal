@@ -18,6 +18,8 @@
 
 <%
 FragmentsEditorDisplayContext fragmentsEditorDisplayContext = new FragmentsEditorDisplayContext(request, renderResponse);
+String moduleName = (String)request.getAttribute(LayoutAdminWebKeys.RESOLVED_MODULE_NAME);
+System.out.println("MODULE NAME: ----" + moduleName);
 %>
 
 <liferay-editor:resources
@@ -31,7 +33,7 @@ FragmentsEditorDisplayContext fragmentsEditorDisplayContext = new FragmentsEdito
 <soy:component-renderer
 	componentId='<%= renderResponse.getNamespace() + "fragments" %>'
 	context="<%= fragmentsEditorDisplayContext.getFragmentEntryLinkListContext() %>"
-	module="layout-admin-web/js/fragments_editor/components/fragment_entry_link/FragmentEntryLinkList.es"
+	module="layout-admin-web@3.0.0/js/fragments_editor/components/fragment_entry_link/FragmentEntryLinkList.es"
 	templateNamespace="com.liferay.layout.admin.web.FragmentEntryLinkList.render"
 />
 
@@ -39,7 +41,7 @@ FragmentsEditorDisplayContext fragmentsEditorDisplayContext = new FragmentsEdito
 JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 %>
 
-<aui:script require="layout-admin-web/js/fragments_editor/components/edit_mode/DisabledAreaMask.es as DisabledAreaMaskModule, layout-admin-web/js/fragments_editor/reducers/changes.es as ChangesReducerModule, layout-admin-web/js/fragments_editor/reducers/fragments.es as FragmentsReducerModule, layout-admin-web/js/fragments_editor/reducers/placeholders.es as PlaceholdersReducerModule, layout-admin-web/js/fragments_editor/reducers/translations.es as TranslationsReducerModule, layout-admin-web/js/fragments_editor/reducers/sidebar.es as SidebarReducerModule, layout-admin-web/js/fragments_editor/store/store.es as StoreModule, layout-admin-web/js/fragments_editor/reducers/dialogs.es as DialogsReducerModule, layout-admin-web/js/fragments_editor/reducers/sections.es as SectionsReducerModule">
+<aui:script require="layout-admin-web@3.0.0/js/fragments_editor/components/edit_mode/DisabledAreaMask.es as DisabledAreaMaskModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/changes.es as ChangesReducerModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/fragments.es as FragmentsReducerModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/placeholders.es as PlaceholdersReducerModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/translations.es as TranslationsReducerModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/sidebar.es as SidebarReducerModule, layout-admin-web@3.0.0/js/fragments_editor/store/store.es as StoreModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/dialogs.es as DialogsReducerModule, layout-admin-web@3.0.0/js/fragments_editor/reducers/sections.es as SectionsReducerModule">
 	StoreModule.createStore(
 		<%= jsonSerializer.serializeDeep(fragmentsEditorDisplayContext.getEditorContext()) %>,
 		[

@@ -17,5 +17,5 @@ dependencies {
 	compileOnly project(":core:petra:petra-lang")
 	compileOnly project(":core:petra:petra-string")
 
-	soyCompile project(":apps:layout:layout-admin-web")
+	jsCompile project(":apps:layout:layout-admin-web")
 }
