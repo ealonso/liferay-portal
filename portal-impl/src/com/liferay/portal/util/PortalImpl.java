@@ -1463,6 +1463,9 @@ public class PortalImpl implements Portal {
 			if (includeQueryString) {
 				sb.append(parametersURL);
 			}
+			else if (parametersURL.startsWith(Portal.FRIENDLY_URL_SEPARATOR)) {
+				sb.append(_removeAllParameters(parametersURL));
+			}
 
 			return sb.toString();
 		}
@@ -1479,6 +1482,10 @@ public class PortalImpl implements Portal {
 			else {
 				groupFriendlyURL = groupFriendlyURL.concat(parametersURL);
 			}
+		}
+		else if (parametersURL.startsWith(Portal.FRIENDLY_URL_SEPARATOR)) {
+			groupFriendlyURL = groupFriendlyURL.concat(
+				_removeAllParameters(parametersURL));
 		}
 
 		return groupFriendlyURL;
@@ -9006,6 +9013,16 @@ public class PortalImpl implements Portal {
 		}
 
 		return virtualHostName.equals(portalDomain);
+	}
+
+	private String _removeAllParameters(String url) {
+		int pos = url.indexOf(StringPool.QUESTION);
+
+		if (pos != -1) {
+			url = url.substring(0, pos);
+		}
+
+		return url;
 	}
 
 	private static final Log _logWebServerServlet = LogFactoryUtil.getLog(
