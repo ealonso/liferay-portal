@@ -73,8 +73,8 @@ public class LabelItem extends HashMap<String, Object> {
 		else if (status == WorkflowConstants.STATUS_SCHEDULED) {
 			return "primary";
 		}
-		else {
-			return "secondary";
-		}
+
+		return "secondary";
 	}
+
 }

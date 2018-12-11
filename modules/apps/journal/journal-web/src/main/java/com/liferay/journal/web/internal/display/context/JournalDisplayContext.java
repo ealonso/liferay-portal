@@ -195,6 +195,55 @@ public class JournalDisplayContext {
 		return _article;
 	}
 
+	public List<DropdownItem> getArticleActionDropdownItems(ResultRow row)
+		throws PortalException {
+
+		JournalArticle article = (JournalArticle)row.getObject();
+		String referringPortletResource = ParamUtil.getString(
+			_request, "referringPortletResource");
+		PermissionChecker permissionChecker =
+			_themeDisplay.getPermissionChecker();
+
+		return new DropdownItemList() {
+			{
+				if (JournalArticlePermission.contains(
+						permissionChecker, article, ActionKeys.UPDATE)) {
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								_liferayPortletResponse.createRenderURL(),
+								"mvcPath", "/edit_article.jsp", "redirect",
+								_themeDisplay.getURLCurrent(),
+								"referringPortletResource",
+								referringPortletResource, "groupId",
+								article.getGroupId(), "folderId",
+								article.getFolderId(), "articleId",
+								article.getArticleId(), "version",
+								article.getVersion());
+							dropdownItem.setIcon("edit");
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "edit"));
+						});
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								_liferayPortletResponse.createRenderURL(),
+								"mvcPath", "/move_entries.jsp", "redirect",
+								_themeDisplay.getURLCurrent(),
+								"referringPortletResource",
+								referringPortletResource,
+								"rowIdsJournalArticle", article.getArticleId());
+							dropdownItem.setIcon("move");
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "move"));
+						});
+				}
+			}
+		};
+	}
+
 	public JournalArticleDisplay getArticleDisplay() throws Exception {
 		if (_articleDisplay != null) {
 			return _articleDisplay;
@@ -220,6 +269,25 @@ public class JournalDisplayContext {
 			_themeDisplay);
 
 		return _articleDisplay;
+	}
+
+	public String getArticleInputName() throws PortalException {
+		SearchContainer searchContainer = getSearchContainer(false);
+
+		return searchContainer.getRowChecker().getRowIds() + JournalArticle.class.getSimpleName();
+	}
+
+	public List<LabelItem> getArticleLabels(ResultRow row) {
+		JournalArticle article = (JournalArticle)row.getObject();
+
+		return new LabelItemList() {
+			{
+				add(
+					labelItem -> {
+						labelItem.setStatus(article.getStatus());
+					});
+			}
+		};
 	}
 
 	public String[] getCharactersBlacklist() throws PortalException {
@@ -451,6 +519,42 @@ public class JournalDisplayContext {
 		return _folder;
 	}
 
+	public List<DropdownItem> getFolderActionDropdownItems(ResultRow row)
+		throws PortalException {
+
+		JournalFolder folder = (JournalFolder)row.getObject();
+		String referringPortletResource = ParamUtil.getString(
+			_request, "referringPortletResource");
+		PermissionChecker permissionChecker =
+			_themeDisplay.getPermissionChecker();
+
+		return new DropdownItemList() {
+			{
+				if (JournalFolderPermission.contains(
+						permissionChecker, folder, ActionKeys.UPDATE)) {
+
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								_liferayPortletResponse.createRenderURL(),
+								"mvcPath", "/edit_folder.jsp", "redirect",
+								_themeDisplay.getURLCurrent(), "groupId",
+								folder.getGroupId(), "folderId",
+								folder.getFolderId(),
+								"mergeWithParentFolderDisabled",
+								String.valueOf(
+									GetterUtil.getBoolean(
+										_request.getAttribute(
+											"view_entries.jsp-folderSelected"))));
+							dropdownItem.setIcon("edit");
+							dropdownItem.setLabel(
+								LanguageUtil.get(_request, "edit"));
+						});
+				}
+			}
+		};
+	}
+
 	public long getFolderId() {
 		if (_folderId != null) {
 			return _folderId;
@@ -463,6 +567,12 @@ public class JournalDisplayContext {
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
 		return _folderId;
+	}
+
+	public String getFolderInputName() throws PortalException {
+		SearchContainer searchContainer = getSearchContainer(false);
+
+		return searchContainer.getRowChecker().getRowIds() + JournalFolder.class.getSimpleName();
 	}
 
 	public JSONArray getFoldersJSONArray() {
@@ -524,113 +634,9 @@ public class JournalDisplayContext {
 		};
 	}
 
-	public String getArticleInputName() throws PortalException {
-		SearchContainer searchContainer = getSearchContainer(false);
-
-		return searchContainer.getRowChecker().getRowIds() + JournalArticle.class.getSimpleName();
-	}
-
-	public String getFolderInputName() throws PortalException {
-		SearchContainer searchContainer = getSearchContainer(false);
-
-		return searchContainer.getRowChecker().getRowIds() + JournalFolder.class.getSimpleName();
-	}
-
 	public JournalConverter getJournalConverter() {
 		return (JournalConverter)_request.getAttribute(
 			JournalWebKeys.JOURNAL_CONVERTER);
-	}
-
-	public List<DropdownItem> getArticleActionDropdownItems(ResultRow row)
-		throws PortalException {
-		JournalArticle article = (JournalArticle)row.getObject();
-		String referringPortletResource = ParamUtil.getString(_request, "referringPortletResource");
-		PermissionChecker permissionChecker =
-			_themeDisplay.getPermissionChecker();
-
-		return new DropdownItemList() {
-			{
-				if(JournalArticlePermission.contains(permissionChecker, article, ActionKeys.UPDATE)) {
-					add(
-						dropdownItem -> {
-
-							dropdownItem.setHref(
-								_liferayPortletResponse.createRenderURL(),
-								"mvcPath", "/edit_article.jsp",
-								"redirect", _themeDisplay.getURLCurrent(),
-								"referringPortletResource",
-								referringPortletResource,
-								"groupId", article.getGroupId(),
-								"folderId", article.getFolderId(),
-								"articleId", article.getArticleId(),
-								"version", article.getVersion()
-							);
-							dropdownItem.setIcon("edit");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "edit"));
-						});
-
-					add(
-						dropdownItem -> {
-
-							dropdownItem.setHref(
-								_liferayPortletResponse.createRenderURL(),
-								"mvcPath", "/move_entries.jsp",
-								"redirect", _themeDisplay.getURLCurrent(),
-								"referringPortletResource",
-								referringPortletResource,
-								"rowIdsJournalArticle", article.getArticleId()
-							);
-							dropdownItem.setIcon("move");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "move"));
-						});
-				}
-			}
-		};
-	}
-
-	public List<DropdownItem> getFolderActionDropdownItems(ResultRow row)
-		throws PortalException {
-		JournalFolder folder = (JournalFolder) row.getObject();
-		String referringPortletResource = ParamUtil.getString(_request, "referringPortletResource");
-		PermissionChecker permissionChecker =
-			_themeDisplay.getPermissionChecker();
-
-		return new DropdownItemList() {
-			{
-				if(JournalFolderPermission.contains(permissionChecker, folder, ActionKeys.UPDATE)) {
-					add(
-						dropdownItem -> {
-							dropdownItem.setHref(
-								_liferayPortletResponse.createRenderURL(),
-								"mvcPath", "/edit_folder.jsp",
-								"redirect", _themeDisplay.getURLCurrent(),
-								"groupId", folder.getGroupId(),
-								"folderId", folder.getFolderId(),
-								"mergeWithParentFolderDisabled", String.valueOf(GetterUtil.getBoolean(_request.getAttribute("view_entries.jsp-folderSelected")))
-							);
-							dropdownItem.setIcon("edit");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "edit"));
-						});
-				}
-			}
-		};
-	}
-
-	public List<LabelItem> getArticleLabels(ResultRow row) {
-		JournalArticle article = (JournalArticle)row.getObject();
-
-		return new LabelItemList() {
-			{
-				add(
-					labelItem -> {
-						labelItem.setStatus(article.getStatus());
-					}
-				);
-			}
-		};
 	}
 
 	public String getKeywords() {
