@@ -319,9 +319,9 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 						</liferay-ui:search-container-column-text>
 
 						<liferay-ui:search-container-column-text>
-                            <clay:dropdown-actions
-                                dropdownItems="<%= journalDisplayContext.getFolderActionDropdownItems(curFolder) %>"
-                            />
+							<clay:dropdown-actions
+								dropdownItems="<%= journalDisplayContext.getFolderActionDropdownItems(curFolder) %>"
+							/>
 						</liferay-ui:search-container-column-text>
 					</c:when>
 					<c:when test='<%= displayStyle.equals("icon") %>'>
