@@ -241,21 +241,7 @@ public class SiteBrowserDisplayContext {
 	public List<NavigationItem> getNavigationItems() {
 		String[] types = _getTypes();
 
-		if (types.length == 1) {
-			return new NavigationItemList() {
-				{
-					add(
-						navigationItem -> {
-							navigationItem.setActive(true);
-							navigationItem.setHref(
-								_liferayPortletResponse.createRenderURL());
-							navigationItem.setLabel(
-								LanguageUtil.get(_request, "sites"));
-						});
-				}
-			};
-		}
-		else if (types.length > 1) {
+		if (types.length > 1) {
 			return new NavigationItemList() {
 				{
 					for (String curType : types) {
