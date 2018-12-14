@@ -124,25 +124,30 @@ GroupSearch groupSearch = siteBrowserDisplayContext.getGroupSearch();
 				</c:when>
 				<c:when test='<%= displayStyle.equals("list") %>'>
 					<liferay-ui:search-container-column-text
+						cssClass="table-cell-expand"
 						name="name"
-						truncate="<%= true %>"
 					>
-						<c:choose>
-							<c:when test="<%= Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId()) %>">
-								<aui:a cssClass="selector-button" data="<%= data %>" href="javascript:;">
-									<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
-								</aui:a>
-							</c:when>
-							<c:otherwise>
-								<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
-							</c:otherwise>
-						</c:choose>
+						<%= HtmlUtil.escape(group.getDescriptiveName(locale)) %>
 					</liferay-ui:search-container-column-text>
 
 					<liferay-ui:search-container-column-text
+						cssClass="table-cell-expand"
 						name="type"
 						value="<%= LanguageUtil.get(request, group.getScopeLabel(themeDisplay)) %>"
 					/>
+
+					<liferay-ui:search-container-column-text>
+
+						<%
+						boolean disabled = true;
+
+						if (Validator.isNull(p_u_i_d) || SiteMembershipPolicyUtil.isMembershipAllowed((selUser != null) ? selUser.getUserId() : 0, group.getGroupId())) {
+							disabled = false;
+						}
+						%>
+
+						<aui:button cssClass="selector-button" data="<%= data %>" disabled="<%= disabled %>" value="choose" />
+					</liferay-ui:search-container-column-text>
 				</c:when>
 			</c:choose>
 		</liferay-ui:search-container-row>
