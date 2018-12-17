@@ -30,14 +30,6 @@ class FragmentsEditorSidebar extends Component {
 	}
 
 	/**
-	 * @private
-	 * @review
-	 */
-	_handleHideSidebarButtonClick() {
-		this.store.dispatchAction(HIDE_SIDEBAR);
-	}
-
-	/**
 	 * Handles title when panel changes
 	 * @private
 	 * @review

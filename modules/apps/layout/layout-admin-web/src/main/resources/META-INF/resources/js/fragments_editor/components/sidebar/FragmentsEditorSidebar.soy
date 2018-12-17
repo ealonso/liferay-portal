@@ -29,11 +29,9 @@
 		fragmentCollectionId: string,
 		name: string
 	]>}
-	{@param? _sidebarTitle: string}
 	{@param spritemap: string}
 	{@param? highlightMapping: bool}
 	{@param? _handleHide: any}
-	{@param? _handleHideSidebarButtonClick: any}
 	{@param? _handleSidebarTitleChanged: any}
 	{@param? selectedMappingTypes: [
 		subtype: [
@@ -72,46 +70,8 @@
 			'hide': $_handleHide
 		] /}
 
-		{param header kind="html"}
-			{call .sidebarHeader}
-				{param handleHideSidebarButtonClick: $_handleHideSidebarButtonClick /}
-				{param sidebarTitle: $_sidebarTitle ?: '' /}
-				{param spritemap: $spritemap /}
-			{/call}
-		{/param}
-
+		{param header kind="html"}{/param}
 		{param ref: 'contextualSidebar' /}
 		{param visible: $visible ?: true /}
 	{/call}
-{/template}
-
-/**
- * Sidebar header
- */
-{template .sidebarHeader}
-	{@param sidebarTitle: string}
-	{@param spritemap: string}
-	{@param? handleHideSidebarButtonClick: any}
-
-	<div class="autofit-row sidebar-section">
-		<div class="autofit-col autofit-col-expand">
-			<h4 class="component-title">
-				<span class="text-truncate-inline">
-					{$sidebarTitle}
-				</span>
-			</h4>
-		</div>
-
-		<div class="autofit-col">
-			<button
-				class="component-action"
-				data-onclick="{$handleHideSidebarButtonClick}"
-				type="button"
-			>
-				<svg class="icon-monospaced lexicon-icon">
-					<use xlink:href="{$spritemap}#times"></use>
-				</svg>
-			</button>
-		</div>
-	</div>
 {/template}
