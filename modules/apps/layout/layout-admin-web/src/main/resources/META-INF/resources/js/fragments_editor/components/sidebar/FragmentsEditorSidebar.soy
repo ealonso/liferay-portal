@@ -32,7 +32,6 @@
 	{@param spritemap: string}
 	{@param? highlightMapping: bool}
 	{@param? _handleHide: any}
-	{@param? _handleSidebarTitleChanged: any}
 	{@param? selectedMappingTypes: [
 		subtype: [
 			id: string,
@@ -50,9 +49,6 @@
 		{param body kind="html"}
 			{call com.liferay.layout.admin.web.FragmentsEditorSidebarContent.render}
 				{param elements: $elements /}
-				{param events: [
-					'sidebarTitleChanged': $_handleSidebarTitleChanged
-				] /}
 				{param fragmentEntryLinks: $fragmentEntryLinks /}
 				{param highlightMapping: $highlightMapping ?: false /}
 				{param layoutData: $layoutData /}

@@ -22,9 +22,10 @@ class FragmentsEditorSidebarContent extends Component {
 	 * @review
 	 */
 	_handlePanelButtonClick(event) {
-		this._panelId = event.delegateTarget.dataset.panelId;
+		const data = event.delegateTarget.dataset;
 
-		this.emit('sidebarTitleChanged', event);
+		this._panelId = data.panelId;
+		this._sidebarTitle = data.sidebarTitle;
 	}
 }
 
@@ -47,7 +48,20 @@ FragmentsEditorSidebarContent.STATE = {
 	_panelId: Config
 		.string()
 		.internal()
-		.value('sections')
+		.value('sections'),
+
+	/**
+	 * Sidebar active panel title
+	 * @default Sections
+	 * @memberof FragmentsEditorSidebarContent
+	 * @private
+	 * @review
+	 * @type {string}
+	 */
+	_sidebarTitle: Config
+		.string()
+		.internal()
+		.value('Sections')
 };
 
 Soy.register(FragmentsEditorSidebarContent, templates);

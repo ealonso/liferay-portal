@@ -28,15 +28,6 @@ class FragmentsEditorSidebar extends Component {
 	_handleHide() {
 		this.store.dispatchAction(HIDE_SIDEBAR);
 	}
-
-	/**
-	 * Handles title when panel changes
-	 * @private
-	 * @review
-	 */
-	_handleSidebarTitleChanged(event) {
-		this._sidebarTitle = event.delegateTarget.dataset.sidebarTitle;
-	}
 }
 
 /**
@@ -55,20 +46,7 @@ FragmentsEditorSidebar.STATE = {
 	 * @review
 	 * @type {Store}
 	 */
-	store: Config.instanceOf(Store),
-
-	/**
-	 * Sidebar active panel ID
-	 * @default sections
-	 * @memberof FragmentsEditorSidebarContent
-	 * @private
-	 * @review
-	 * @type {string}
-	 */
-	_sidebarTitle: Config
-		.string()
-		.internal()
-		.value('Sections')
+	store: Config.instanceOf(Store)
 };
 
 Soy.register(FragmentsEditorSidebar, templates);

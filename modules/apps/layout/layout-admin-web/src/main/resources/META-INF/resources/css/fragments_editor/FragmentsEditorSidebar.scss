@@ -69,6 +69,12 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 		}
 	}
 
+	&__title {
+		font-size: 18px;
+		font-weight: bold;
+		margin: 24px 0;
+	}
+
 	.btn-link {
 		z-index: $sidebarCardPlusButtonZIndex;
 	}
