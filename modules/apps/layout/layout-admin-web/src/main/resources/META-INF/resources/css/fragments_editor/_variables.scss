@@ -1,14 +1,11 @@
 $controlMenuHeight: 48px;
 $desktopControlMenuHeight: 56px;
 $managementBarHeight: 48px;
-$sidebarHeaderHeight: 80px;
 
 $productMenuTransitionDuration: 0.5s;
 
 $contextualSidebarContentPadding: 320px;
 $productMenuWidth: 320px;
-$sidebarCardWidth: 272px;
-$sidebarWidth: 320px;
 
 $draggableItemZIndex: 991;
 $fragmentEditableFieldTooltipZIndex: 4;
@@ -53,3 +50,19 @@ $portletColor: #0B5FFF;
 $portletBorderColor: #89A7E0;
 $portletBorderRadius: 3px;
 $portletBorderWidth: 1px;
+
+$sidebarButtonsBackgroundColor: #393A4A;
+$sidebarButtonsColor: #A7A9BC;
+$sidebarButtonsHeight: 40px;
+$sidebarButtonsHoverColor: #FFF;
+$sidebarButtonsWidth: 40px;
+$sidebarCardImageBorderColor: #E7E7ED;
+$sidebarCardImageMaxHeight: 200px;
+$sidebarCardMarginBottom: 16px;
+$sidebarCardNoPreviewBackgroundColor: #E7EDED;
+$sidebarCardPadding: 8px;
+$sidebarCardTitleColor: #A7A9BC;
+$sidebarContentBackgroundColor: #F4F5F8;
+$sidebarElementCardWidth: calc(50% - 8px);
+$sidebarLeftBorderWidth: 1px;
+$sidebarLeftBorderColor: #E7E7ED;
