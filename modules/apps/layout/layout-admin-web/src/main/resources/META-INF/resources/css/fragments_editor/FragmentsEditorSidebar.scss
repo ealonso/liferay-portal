@@ -78,9 +78,21 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 }
 
 .fragments-editor-sidebar-sections-buttons {
+	background-color: $sidebarButtonsBackgroundColor;
 	flex-direction: column;
+	padding-top: 16px;
+	width: $sidebarButtonsWidth;
 
-	& > .btn {
+	&__btn {
 		border-radius: 0;
+		color: $sidebarButtonsColor;
+		height: $sidebarButtonsHeight;
+		padding: 7px 0;
+		width: $sidebarButtonsWidth;
+
+		&--active, &:active, &:focus, &:hover {
+			box-shadow: none;
+			color: $sidebarButtonsHoverColor;
+		}
 	}
 }

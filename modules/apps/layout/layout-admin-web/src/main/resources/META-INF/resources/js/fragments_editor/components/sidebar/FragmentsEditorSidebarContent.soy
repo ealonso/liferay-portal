@@ -63,17 +63,17 @@
 			{/if}
 		</div>
 
-		<div class="btn-group fragments-editor-sidebar-sections-buttons" role="group">
+		<div class="fragments-editor-sidebar-sections-buttons" role="group">
 			{if $panels}
 				{foreach $panel in $panels}
 					{let $sectionButtonClasses kind="text"}
 						btn
-						{sp}btn-outline-borderless
+						{sp}btn-unstyled
+						{sp}text-center
+						{sp}fragments-editor-sidebar-sections-buttons__btn
 
 						{if $panel.panelId == $_panelId}
-							{sp}btn-outline-primary
-						{else}
-							{sp}btn-outline-secondary
+							{sp}fragments-editor-sidebar-sections-buttons__btn--active
 						{/if}
 					{/let}
 
