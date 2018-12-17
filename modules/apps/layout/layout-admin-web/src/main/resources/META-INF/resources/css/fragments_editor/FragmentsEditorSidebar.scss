@@ -56,6 +56,15 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 	overflow: scroll;
 	padding: 0 1rem 1rem;
 
+	&__panel {
+		background-color: transparent;
+
+		& a {
+			font-size: 12px;
+			margin-bottom: $sidebarCardMarginBottom;
+		}
+	}
+
 	.btn-link {
 		z-index: $sidebarCardPlusButtonZIndex;
 	}
