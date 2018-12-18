@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.spring.extender.service.ServiceReference;
@@ -34,6 +35,8 @@ import com.liferay.portal.spring.extender.service.ServiceReference;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Eudaldo Alonso
@@ -165,10 +168,22 @@ public class AssetDisplayPageEntryLocalServiceImpl
 		serviceContext.setAttribute(
 			"layout.instanceable.allowed", Boolean.TRUE);
 
+		Map<Locale, String> titleMap = assetEntry.getTitleMap();
+
+		Locale siteDefaultLocale = LocaleUtil.getSiteDefault();
+
+		if (!titleMap.containsKey(siteDefaultLocale)) {
+			titleMap.put(
+				siteDefaultLocale,
+				titleMap.get(
+					LocaleUtil.fromLanguageId(
+						assetEntry.getDefaultLanguageId())));
+		}
+
 		return layoutLocalService.addLayout(
-			userId, groupId, false, 0, assetEntry.getTitleMap(),
-			assetEntry.getTitleMap(), assetEntry.getDescriptionMap(), null,
-			null, LayoutConstants.LAYOUT_TYPE_ASSET_DISPLAY,
+			userId, groupId, false, 0, titleMap, titleMap,
+			assetEntry.getDescriptionMap(), null, null,
+			LayoutConstants.LAYOUT_TYPE_ASSET_DISPLAY,
 			typeSettingsProperties.toString(), true, new HashMap<>(),
 			serviceContext);
 	}

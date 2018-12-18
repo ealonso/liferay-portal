@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -30,6 +31,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Pavel Savinov
@@ -86,10 +89,21 @@ public class UpgradeAssetDisplayLayout extends UpgradeProcess {
 				serviceContext.setAttribute(
 					"layout.instanceable.allowed", Boolean.TRUE);
 
+				Map<Locale, String> titleMap = assetEntry.getTitleMap();
+
+				Locale siteDefaultLocale = LocaleUtil.getSiteDefault();
+
+				if (!titleMap.containsKey(siteDefaultLocale)) {
+					titleMap.put(
+						siteDefaultLocale,
+						titleMap.get(
+							LocaleUtil.fromLanguageId(
+								assetEntry.getDefaultLanguageId())));
+				}
+
 				Layout layout = _layoutLocalService.addLayout(
-					userId, groupId, false, 0, assetEntry.getTitleMap(),
-					assetEntry.getTitleMap(), assetEntry.getDescriptionMap(),
-					null, null, "asset_display",
+					userId, groupId, false, 0, titleMap, titleMap,
+					assetEntry.getDescriptionMap(), null, null, "asset_display",
 					typeSettingsProperties.toString(), true, new HashMap<>(),
 					serviceContext);
 
