@@ -60,6 +60,41 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 	overflow: scroll;
 	padding: 0 1rem 1rem;
 
+	&__card {
+		box-shadow: none;
+		margin-bottom: $sidebarCardMarginBottom;
+		padding: $sidebarCardPadding;
+
+		&-image {
+			border: 1px solid $sidebarCardImageBorderColor;
+			border-radius: 0;
+			max-height: $sidebarCardImageMaxHeight;
+			overflow: hidden;
+			text-align: center;
+
+			img {
+				width: 100%;
+			}
+		}
+
+		.card-body {
+			padding: 8px 0 0;
+
+			.btn {
+				z-index: $sidebarCardPlusButtonZIndex;
+			}
+
+			.card-title {
+				color: $sidebarCardTitleColor;
+				font-size: 12px;
+			}
+
+			.card-row {
+				min-height: 32px;
+			}
+		}
+	}
+
 	&__panel {
 		background-color: transparent;
 
@@ -73,10 +108,6 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 		font-size: 18px;
 		font-weight: bold;
 		margin: 24px 0;
-	}
-
-	.btn-link {
-		z-index: $sidebarCardPlusButtonZIndex;
 	}
 
 	.drag-handler {
