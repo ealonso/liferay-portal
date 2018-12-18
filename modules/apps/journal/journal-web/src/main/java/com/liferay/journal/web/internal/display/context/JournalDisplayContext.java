@@ -1480,6 +1480,11 @@ public class JournalDisplayContext {
 			return false;
 		}
 
+		if (!article.isApproved()) {
+			article = JournalArticleLocalServiceUtil.getPreviousApprovedArticle(
+				article);
+		}
+
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
 			JournalArticle.class.getName(),
 			JournalArticleAssetRenderer.getClassPK(article));
