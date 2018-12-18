@@ -95,6 +95,27 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 		}
 	}
 
+	&__elements-panel {
+		.card {
+			flex-basis: $sidebarElementCardWidth;
+
+			.card-body {
+				text-align: center;
+
+				.btn {
+					display: none;
+				}
+			}
+		}
+
+		&-grid {
+			align-items: flex-start;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+		}
+	}
+
 	&__panel {
 		background-color: transparent;
 

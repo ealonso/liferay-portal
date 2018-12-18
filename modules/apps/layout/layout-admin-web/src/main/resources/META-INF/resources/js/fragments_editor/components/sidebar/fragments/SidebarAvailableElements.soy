@@ -23,8 +23,14 @@
 				fragment-collection-{$fragmentCollection.fragmentCollectionId}
 			{/let}
 
+			{let $panelClasses kind="text"}
+				fragments-editor-sidebar-section__panel
+				{sp}fragments-editor-sidebar-section__elements-panel
+				{sp}panel
+			{/let}
+
 			<div aria-orientation="vertical" class="panel-group panel-group-flush" role="tablist">
-				<div class="fragments-editor-sidebar-section__panel panel">
+				<div class="{$panelClasses}">
 					<a
 						aria-controls="{$collapseId}"
 						aria-expanded="false"
@@ -52,18 +58,20 @@
 						id="{$collapseId}"
 						role="tabpanel"
 					>
-						{foreach $fragmentEntry in $fragmentCollection.fragmentEntries}
-							{call com.liferay.layout.admin.web.FragmentsEditorSidebarCard.render}
-								{param events: ['itemClick': $_handleEntryClick] /}
-								{param icon: 'plus' /}
-								{param imagePreviewURL: $fragmentEntry.imagePreviewURL /}
-								{param itemId: $fragmentEntry.fragmentEntryId /}
-								{param itemName: $fragmentEntry.name /}
-								{param key: $fragmentEntry.fragmentEntryId /}
-								{param spritemap: $spritemap /}
-								{param store: $store /}
-							{/call}
-						{/foreach}
+						<div class="fragments-editor-sidebar-section__elements-panel-grid">
+							{foreach $fragmentEntry in $fragmentCollection.fragmentEntries}
+								{call com.liferay.layout.admin.web.FragmentsEditorSidebarCard.render}
+									{param events: ['itemClick': $_handleEntryClick] /}
+									{param icon: 'plus' /}
+									{param imagePreviewURL: $fragmentEntry.imagePreviewURL /}
+									{param itemId: $fragmentEntry.fragmentEntryId /}
+									{param itemName: $fragmentEntry.name /}
+									{param key: $fragmentEntry.fragmentEntryId /}
+									{param spritemap: $spritemap /}
+									{param store: $store /}
+								{/call}
+							{/foreach}
+						</div>
 					</div>
 				</div>
 			</div>
