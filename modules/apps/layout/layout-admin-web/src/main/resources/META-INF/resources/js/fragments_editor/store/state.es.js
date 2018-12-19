@@ -63,17 +63,6 @@ const INITIAL_STATE = {
 	classPK: Config.string().required(),
 
 	/**
-	 * Allow opening/closing contextual sidebar
-	 * @default true
-	 * @instance
-	 * @memberOf FragmentsEditor
-	 * @private
-	 * @review
-	 * @type {boolean}
-	 */
-	contextualSidebarVisible: Config.bool().value(true),
-
-	/**
 	 * URL for removing fragment entries of the underlying model.
 	 * @default undefined
 	 * @instance
@@ -102,6 +91,17 @@ const INITIAL_STATE = {
 			}
 		)
 	).value({}),
+
+	/**
+	 * Allow opening/closing fragments editor sidebar
+	 * @default true
+	 * @instance
+	 * @memberOf FragmentsEditor
+	 * @private
+	 * @review
+	 * @type {boolean}
+	 */
+	fragmentsEditorSidebarVisible: Config.bool().value(true),
 
 	/**
 	 * If true, editable values should be highlighted.

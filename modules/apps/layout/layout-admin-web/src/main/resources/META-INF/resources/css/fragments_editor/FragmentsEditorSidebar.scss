@@ -1,21 +1,33 @@
+@import "mixins";
+
 @import "./variables";
 
-body:not(.has-contextual-sidebar) .contextual-sidebar-content {
-	padding-right: $contextualSidebarContentPadding;
-}
-
-.fragments-editor .contextual-sidebar.fragments-editor-sidebar {
-	height: calc(100vh - #{$controlMenuHeight} - #{$managementBarHeight});
-	margin-top: 2px;
-	top: $controlMenuHeight + $managementBarHeight;
+.fragments-editor-sidebar {
+	box-shadow: none;
+	height: calc(100vh - #{$managementBarHeight});
+	pointer-events: none;
+	position: fixed;
+	right: 0;
+	top: $managementBarHeight;
+	transform: translateX(100%);
+	transition: transform $sidebarTransitionTimingFunction $sidebarTransitionDuration;
+	width: $sidebarWidth;
+	will-change: transform;
 	z-index: $sidebarZIndex;
 
-	.sidebar-header {
-		padding-right: 0.5rem;
+	&-visible {
+		pointer-events: auto;
+		transform: translateX(0);
 	}
 
 	.sidebar-body {
+		display: flex;
+		height: 100%;
 		padding: 0;
+
+		& > div {
+			flex-grow: 2;
+		}
 	}
 
 	.sidebar-body > .sidebar-section:first-child {
@@ -23,27 +35,18 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 	}
 
 	@media (min-width: 768px) {
-		& {
-			height: calc(100vh - #{$desktopControlMenuHeight} - #{$managementBarHeight});
-			top: $desktopControlMenuHeight + $managementBarHeight;
-		}
-	}
-}
-
-.fragments-editor-sidebar {
-	box-shadow: none;
-
-	.sidebar-body {
-		display: flex;
-		height: 100%;
-
-		& > div {
-			flex-grow: 2;
-		}
+		height: calc(100vh - #{desktopManagementBarHeight});
+		top: $desktopManagementBarHeight;
 	}
 
-	.sidebar-header {
-		padding: 0;
+	body.has-control-menu & {
+		height: calc(100vh - #{$controlMenuHeight + $managementBarHeight});
+		top: $controlMenuHeight + $managementBarHeight;
+
+		@media (min-width: 768px) {
+			height: calc(100vh - #{$desktopControlMenuHeight} - #{$desktopManagementBarHeight});
+			top: $desktopControlMenuHeight + $desktopManagementBarHeight;
+		}
 	}
 }
 

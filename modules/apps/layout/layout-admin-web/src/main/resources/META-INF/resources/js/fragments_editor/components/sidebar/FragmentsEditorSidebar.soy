@@ -31,7 +31,6 @@
 	]>}
 	{@param spritemap: string}
 	{@param? highlightMapping: bool}
-	{@param? _handleHide: any}
 	{@param? selectedMappingTypes: [
 		subtype: [
 			id: string,
@@ -45,8 +44,8 @@
 	{@param? store: ?}
 	{@param? visible: bool}
 
-	{call liferay.frontend.ContextualSidebar.render}
-		{param body kind="html"}
+	<div class="fragments-editor-sidebar fragments-editor-sidebar-visible sidebar" id="">
+		<div class="sidebar-body">
 			{call com.liferay.layout.admin.web.FragmentsEditorSidebarContent.render}
 				{param elements: $elements /}
 				{param fragmentEntryLinks: $fragmentEntryLinks /}
@@ -58,16 +57,6 @@
 				{param spritemap: $spritemap /}
 				{param store: $store /}
 			{/call}
-		{/param}
-
-		{param elementClasses: 'fragments-editor-sidebar' /}
-
-		{param events: [
-			'hide': $_handleHide
-		] /}
-
-		{param header kind="html"}{/param}
-		{param ref: 'contextualSidebar' /}
-		{param visible: $visible ?: true /}
-	{/call}
+		</div>
+	</div>
 {/template}

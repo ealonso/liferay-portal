@@ -14,7 +14,7 @@ function hideFragmentsEditorSidebarReducer(state, actionType) {
 
 	if (actionType === HIDE_SIDEBAR) {
 		nextState = Object.assign({}, nextState);
-		nextState.contextualSidebarVisible = false;
+		nextState.fragmentsEditorSidebarVisible = false;
 	}
 
 	return nextState;
@@ -31,7 +31,7 @@ function toggleFragmentsEditorSidebarReducer(state, actionType) {
 
 	if (actionType === TOGGLE_SIDEBAR) {
 		nextState = Object.assign({}, nextState);
-		nextState.contextualSidebarVisible = !nextState.contextualSidebarVisible;
+		nextState.fragmentsEditorSidebarVisible = !nextState.fragmentsEditorSidebarVisible;
 	}
 
 	return nextState;
