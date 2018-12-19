@@ -77,6 +77,15 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 			}
 		}
 
+		&-no-preview {
+			background-color: $sidebarCardNoPreviewBackgroundColor;
+			color: $sidebarCardTitleColor;
+			font-size: 24px;
+			height: 80px;
+			line-height: 80px;
+			text-align: center;
+		}
+
 		.card-body {
 			padding: 8px 0 0;
 

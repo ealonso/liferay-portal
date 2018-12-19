@@ -21,6 +21,12 @@
 		<div class="fragments-editor-sidebar-section__card-image">
 			<img alt="thumbnail" src="{$imagePreviewURL}"/>
 		</div>
+	{else}
+		<div class="fragments-editor-sidebar-section__card-no-preview">
+			<svg class="lexicon-icon">
+				<use xlink:href="{$spritemap}#picture"></use>
+			</svg>
+		</div>
 	{/if}
 
 	<div class="drag-handler"></div>
