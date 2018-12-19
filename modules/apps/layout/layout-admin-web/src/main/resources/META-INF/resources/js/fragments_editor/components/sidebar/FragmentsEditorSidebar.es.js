@@ -14,13 +14,6 @@ import templates from './FragmentsEditorSidebar.soy';
 class FragmentsEditorSidebar extends Component {
 
 	/**
-	 * Disallow setting element display to none
-	 * @inheritDoc
-	 * @review
-	 */
-	syncVisible() {}
-
-	/**
 	 * @private
 	 * @review
 	 */

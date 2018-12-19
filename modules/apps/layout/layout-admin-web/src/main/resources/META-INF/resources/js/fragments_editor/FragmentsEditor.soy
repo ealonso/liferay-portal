@@ -98,6 +98,7 @@
 		{call com.liferay.layout.admin.web.FragmentsEditorSidebar.render}
 			{param elements: $elements /}
 			{param fragmentEntryLinks: $fragmentEntryLinks /}
+			{param fragmentsEditorSidebarVisible: $fragmentsEditorSidebarVisible ?: true /}
 			{param highlightMapping: $highlightMapping ?: false /}
 			{param layoutData: $layoutData /}
 			{param panels: $panels /}
@@ -106,7 +107,6 @@
 			{param selectedMappingTypes: $selectedMappingTypes /}
 			{param spritemap: $spritemap /}
 			{param store: $store /}
-			{param visible: $fragmentsEditorSidebarVisible ?: true /}
 		{/call}
 
 		<div class="contextual-sidebar-content">
