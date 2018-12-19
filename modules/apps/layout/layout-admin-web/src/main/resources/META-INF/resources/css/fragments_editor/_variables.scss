@@ -1,6 +1,8 @@
-$controlMenuHeight: 48px;
+$controlMenuHeight: 49px;
 $desktopControlMenuHeight: 56px;
-$managementBarHeight: 48px;
+
+$managementBarHeight: 50px;
+$desktopManagementBarHeight: 50px;
 
 $productMenuTransitionDuration: 0.5s;
 
@@ -66,3 +68,6 @@ $sidebarContentBackgroundColor: #F4F5F8;
 $sidebarElementCardWidth: calc(50% - 8px);
 $sidebarLeftBorderWidth: 1px;
 $sidebarLeftBorderColor: #E7E7ED;
+$sidebarTransitionDuration: 0.5s;
+$sidebarTransitionTimingFunction: ease;
+$sidebarWidth: 320px;

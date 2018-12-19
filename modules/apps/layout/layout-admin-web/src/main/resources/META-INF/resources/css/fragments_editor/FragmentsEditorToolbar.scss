@@ -5,6 +5,9 @@
 	color: #FFF;
 	height: $managementBarHeight;
 	left: 0;
+	max-height: $managementBarHeight;
+	min-height: $managementBarHeight;
+	overflow: hidden;
 	position: fixed;
 	top: $controlMenuHeight;
 	transition: ease $productMenuTransitionDuration;
@@ -75,7 +78,7 @@
 	}
 
 	@media (min-width: 768px) {
-		height: $managementBarHeight;
+		height: $desktopManagementBarHeight;
 		top: $desktopControlMenuHeight;
 	}
 }

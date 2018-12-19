@@ -4,6 +4,10 @@
 
 .contextual-sidebar-content > .fragment-entry-link-list {
 	margin-top: $managementBarHeight + $fragmentEntryLinkListPadding;
+
+	@media (min-width: 768px) {
+		margin-top: $desktopManagementBarHeight + $fragmentEntryLinkListPadding;
+	}
 }
 
 .fragment-entry-link-list {
