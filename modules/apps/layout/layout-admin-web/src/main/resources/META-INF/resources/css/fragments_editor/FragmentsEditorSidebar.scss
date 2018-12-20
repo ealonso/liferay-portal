@@ -40,12 +40,12 @@
 	}
 
 	body.has-control-menu & {
-		height: calc(100vh - #{$controlMenuHeight + $managementBarHeight});
-		top: $controlMenuHeight + $managementBarHeight;
+		height: calc(100vh - #{$controlMenuHeight});
+		top: $controlMenuHeight;
 
 		@media (min-width: 768px) {
-			height: calc(100vh - #{$desktopControlMenuHeight} - #{$desktopManagementBarHeight});
-			top: $desktopControlMenuHeight + $desktopManagementBarHeight;
+			height: calc(100vh - #{$desktopControlMenuHeight});
+			top: $desktopControlMenuHeight;
 		}
 	}
 }
