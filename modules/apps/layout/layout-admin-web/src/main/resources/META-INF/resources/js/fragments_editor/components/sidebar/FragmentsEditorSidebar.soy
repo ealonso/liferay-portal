@@ -14,7 +14,6 @@
 		name: string
 	]>}
 	{@param fragmentEntryLinks: ?}
-	{@param fragmentsEditorSidebarVisible: bool}
 	{@param layoutData: ?}
 	{@param panels: list<[
 		icon:string,
@@ -31,6 +30,7 @@
 		name: string
 	]>}
 	{@param spritemap: string}
+	{@param? fragmentsEditorSidebarVisible: bool}
 	{@param? highlightMapping: bool}
 	{@param? selectedMappingTypes: [
 		subtype: [
@@ -49,6 +49,7 @@
 			{call com.liferay.layout.admin.web.FragmentsEditorSidebarContent.render}
 				{param elements: $elements /}
 				{param fragmentEntryLinks: $fragmentEntryLinks /}
+				{param fragmentsEditorSidebarVisible: $fragmentsEditorSidebarVisible ?: true /}
 				{param highlightMapping: $highlightMapping ?: false /}
 				{param layoutData: $layoutData /}
 				{param panels: $panels /}

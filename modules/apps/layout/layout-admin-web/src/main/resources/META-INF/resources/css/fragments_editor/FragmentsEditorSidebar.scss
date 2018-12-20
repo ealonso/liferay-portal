@@ -55,6 +55,16 @@
 	border-left: $sidebarLeftBorderWidth solid $sidebarLeftBorderColor;
 	display: flex;
 	height: 100%;
+
+	&--hidden {
+		background-color: transparent;
+		border: none;
+		justify-content: flex-end;
+
+		.fragments-editor-sidebar-section {
+			display: none;
+		}
+	}
 }
 
 .fragments-editor-sidebar-section {
