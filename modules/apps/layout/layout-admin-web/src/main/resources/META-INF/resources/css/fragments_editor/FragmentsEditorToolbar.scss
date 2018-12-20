@@ -25,6 +25,10 @@
 		padding: 0 20px;
 	}
 
+	&--padded {
+		padding-right: $contextualSidebarContentPadding;
+	}
+
 	&__add-fragment-button {
 		border: none;
 		color: #FFF;

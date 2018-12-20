@@ -13,6 +13,10 @@
 .fragment-entry-link-list {
 	padding: 0;
 
+	&--padded, &--padded.no-fragments-message {
+		padding-right: $contextualSidebarContentPadding;
+	}
+
 	&__row-section {
 		border: $fragmentEntryLinkSectionBorder;
 		padding: $fragmentEntryLinkSpacing 0;

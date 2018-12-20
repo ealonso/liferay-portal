@@ -32,6 +32,7 @@
 	{@param? _handleSectionKeyUp: any}
 	{@param? _handleSectionRemoveButtonClick: any}
 	{@param? dropTargetItemTypes: ?}
+	{@param? fragmentsEditorSidebarVisible: bool}
 	{@param? highlightMapping: bool}
 	{@param? hoveredItemId: string}
 	{@param? hoveredItemType: string}
@@ -56,6 +57,10 @@
 		fragment-entry-link-drop-target
 		fragment-entry-link-list
 		layouts-drop-target
+
+		{if $fragmentsEditorSidebarVisible}
+			{sp}fragment-entry-link-list--padded
+		{/if}
 
 		{if $highlightMapping}
 			{sp}mapping
@@ -104,7 +109,9 @@
 			{/foreach}
 		</div>
 	{else}
-		{call .noFragmentsMessage /}
+		{call .noFragmentsMessage}
+			{param fragmentsEditorSidebarVisible: $fragmentsEditorSidebarVisible ?: true /}
+		{/call}
 	{/if}
 {/template}
 
@@ -369,11 +376,17 @@
  * No fragments message
  */
 {template .noFragmentsMessage}
+	{@param? fragmentsEditorSidebarVisible: bool}
+
 	{let $emptyListClasses kind="text"}
 		fragment-entry-link-drop-target
 		{sp}layouts-drop-target
 		{sp}no-fragments-message
 		{sp}taglib-empty-result-message
+
+		{if $fragmentsEditorSidebarVisible}
+			{sp}fragment-entry-link-list--padded
+		{/if}
 	{/let}
 
 	<div class="{$emptyListClasses}" data-fragment-empty-list>
