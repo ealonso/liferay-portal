@@ -17,6 +17,10 @@ import templates from './FragmentsEditor.soy';
  */
 class FragmentsEditor extends Component {
 
+	rendered() {
+		console.log(this.fragmentsEditorSidebarVisible);
+	}
+
 	/**
 	 * Focus a fragmentEntryLink for a given ID
 	 * @param {string} fragmentEntryLinkId

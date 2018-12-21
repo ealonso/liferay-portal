@@ -44,7 +44,16 @@
 	]}
 	{@param? store: ?}
 
-	<div class="fragments-editor-sidebar fragments-editor-sidebar-visible sidebar" id="">
+	{let $sidebarClasses kind="text"}
+		fragments-editor-sidebar
+		{sp}sidebar
+
+		{if not $fragmentsEditorSidebarVisible}
+			{sp}fragments-editor-sidebar--collapsed
+		{/if}
+	{/let}
+
+	<div class="{$sidebarClasses}">
 		<div class="sidebar-body">
 			{call com.liferay.layout.admin.web.FragmentsEditorSidebarContent.render}
 				{param elements: $elements /}

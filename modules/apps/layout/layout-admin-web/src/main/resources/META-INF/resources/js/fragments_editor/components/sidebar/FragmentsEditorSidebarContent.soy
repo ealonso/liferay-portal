@@ -14,7 +14,6 @@
 	]>}
 	{@param sections: ?}
 	{@param spritemap: string}
-	{@param? fragmentsEditorSidebarVisible: bool}
 	{@param? highlightMapping: bool}
 	{@param? selectedMappingTypes: ?}
 	{@param? store: ?}
@@ -22,15 +21,7 @@
 	{@param? _panelId: string}
 	{@param? _sidebarTitle: string}
 
-	{let $contentClasses kind="text"}
-		fragments-editor-sidebar-content
-
-		{if not $fragmentsEditorSidebarVisible}
-			{sp}fragments-editor-sidebar-content--hidden
-		{/if}
-	{/let}
-
-	<div class="{$contentClasses}">
+	<div class="fragments-editor-sidebar-content">
 		<div class="fragments-editor-sidebar-section">
 			<h1 class="fragments-editor-sidebar-section__title">{$_sidebarTitle ?: ''}</h1>
 			{if $_panelId == 'sections'}

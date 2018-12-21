@@ -13,6 +13,10 @@ import templates from './FragmentsEditorSidebar.soy';
  */
 class FragmentsEditorSidebar extends Component {
 
+	rendered() {
+		console.log(this.fragmentsEditorSidebarVisible);
+	}
+	
 	/**
 	 * @private
 	 * @review

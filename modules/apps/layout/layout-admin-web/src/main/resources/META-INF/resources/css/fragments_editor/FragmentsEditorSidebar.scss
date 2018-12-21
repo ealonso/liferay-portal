@@ -5,19 +5,40 @@
 .fragments-editor-sidebar {
 	box-shadow: none;
 	height: calc(100vh - #{$managementBarHeight});
-	pointer-events: none;
+	padding-left: $sidebarWidth - $sidebarButtonsWidth;
 	position: fixed;
 	right: 0;
 	top: $managementBarHeight;
-	transform: translateX(100%);
-	transition: transform $sidebarTransitionTimingFunction $sidebarTransitionDuration;
 	width: $sidebarWidth;
-	will-change: transform;
 	z-index: $sidebarZIndex;
 
-	&-visible {
-		pointer-events: auto;
+	&-content {
+		background-color: $sidebarContentBackgroundColor;
+		border-left: $sidebarLeftBorderWidth solid $sidebarLeftBorderColor;
+		display: flex;
+		height: 100%;
+	}
+
+	&-section {
+		/*(ajustar el top)
+		(z-index por encima de los botones)*/
+		position: fixed;
+		right: $sidebarButtonsWidth;
 		transform: translateX(0);
+	}
+
+	&--collapsed {
+		width: $sidebarButtonsWidth;
+
+		.fragments-editor-sidebar-content {
+			background-color: transparent;
+			border: none;
+			justify-content: flex-end;
+
+			.fragments-editor-sidebar-section {
+				display: none;
+			}
+		}
 	}
 
 	.sidebar-body {
@@ -50,28 +71,13 @@
 	}
 }
 
-.fragments-editor-sidebar-content {
-	background-color: $sidebarContentBackgroundColor;
-	border-left: $sidebarLeftBorderWidth solid $sidebarLeftBorderColor;
-	display: flex;
-	height: 100%;
-
-	&--hidden {
-		background-color: transparent;
-		border: none;
-		justify-content: flex-end;
-
-		.fragments-editor-sidebar-section {
-			display: none;
-		}
-	}
-}
-
 .fragments-editor-sidebar-section {
 	flex-grow: 2;
 	max-height: 100%;
 	overflow: scroll;
 	padding: 0 1rem 1rem;
+	transition: display $sidebarTransitionTimingFunction $sidebarTransitionDuration;
+	will-change: display;
 
 	&__card {
 		box-shadow: none;
