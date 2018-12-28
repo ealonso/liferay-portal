@@ -29,6 +29,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -44,6 +47,13 @@ public class JournalContentPortletHeaderJSPDynamicInclude
 			HttpServletRequest request, HttpServletResponse response,
 			String key)
 		throws IOException {
+
+		String layoutMode = ParamUtil.getString(
+			request, "p_l_mode", Constants.VIEW);
+
+		if (!StringUtil.equals(layoutMode, Constants.EDIT)) {
+			return;
+		}
 
 		JournalContentDisplayContext journalContentDisplayContext =
 			(JournalContentDisplayContext)request.getAttribute(
