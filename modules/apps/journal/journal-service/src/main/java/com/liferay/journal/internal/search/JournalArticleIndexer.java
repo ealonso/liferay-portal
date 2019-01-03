@@ -218,6 +218,8 @@ public class JournalArticleIndexer
 			searchContext.getAttribute("latest"));
 		boolean relatedClassName = GetterUtil.getBoolean(
 			searchContext.getAttribute("relatedClassName"));
+		boolean showInvisible = GetterUtil.getBoolean(
+			searchContext.getAttribute("showInvisible"));
 		boolean showNonindexable = GetterUtil.getBoolean(
 			searchContext.getAttribute("showNonindexable"));
 
@@ -228,10 +230,12 @@ public class JournalArticleIndexer
 			contextBooleanFilter.addRequiredTerm("head", Boolean.TRUE);
 		}
 
-		if (latest && !relatedClassName && showNonindexable) {
+		if ((latest && !relatedClassName && showNonindexable) ||
+			showInvisible) {
+
 			contextBooleanFilter.addRequiredTerm("latest", Boolean.TRUE);
 		}
-		else if (!relatedClassName && showNonindexable) {
+		else if (!relatedClassName && showNonindexable && !showInvisible) {
 			contextBooleanFilter.addRequiredTerm("headListable", Boolean.TRUE);
 		}
 

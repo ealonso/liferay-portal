@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.asset.service.base.AssetEntryLocalServiceBaseImpl;
 import com.liferay.portlet.asset.service.permission.AssetCategoryPermission;
 import com.liferay.portlet.asset.util.AssetSearcher;
@@ -1093,6 +1094,13 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 			searchContext.setClassTypeIds(new long[] {classTypeId});
 		}
 
+		if (ArrayUtil.contains(statuses, WorkflowConstants.STATUS_ANY) ||
+			ArrayUtil.contains(statuses, WorkflowConstants.STATUS_DRAFT) ||
+			ArrayUtil.contains(statuses, WorkflowConstants.STATUS_PENDING)) {
+
+			searchContext.setAttribute("showInvisible", Boolean.TRUE);
+		}
+
 		if (showNonindexable) {
 			searchContext.setAttribute("showNonindexable", Boolean.TRUE);
 		}
@@ -1194,6 +1202,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 
 		assetEntryQuery.setClassNameIds(getClassNameIds(companyId, className));
 
+		assetEntryQuery.setAttribute(
+			"showInvisible", searchContext.getAttribute("showInvisible"));
+
 		_setAssetCategoryIds(
 			searchContext.getAssetCategoryIds(), searchContext.isAndSearch(),
 			assetEntryQuery);
@@ -1222,6 +1233,9 @@ public class AssetEntryLocalServiceImpl extends AssetEntryLocalServiceBaseImpl {
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
 		assetEntryQuery.setClassNameIds(getClassNameIds(companyId, className));
+
+		assetEntryQuery.setAttribute(
+			"showInvisible", searchContext.getAttribute("showInvisible"));
 
 		_setAssetCategoryIds(
 			searchContext.getAssetCategoryIds(), searchContext.isAndSearch(),
