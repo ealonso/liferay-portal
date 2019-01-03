@@ -80,6 +80,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 			selectWebContentURL.setParameter("typeSelection", JournalArticle.class.getName());
 			selectWebContentURL.setParameter("showNonindexable", String.valueOf(Boolean.TRUE));
 			selectWebContentURL.setParameter("showScheduled", String.valueOf(Boolean.TRUE));
+			selectWebContentURL.setParameter("statuses", StringUtil.merge(new int[] {WorkflowConstants.STATUS_APPROVED, WorkflowConstants.STATUS_DRAFT, WorkflowConstants.STATUS_PENDING}));
 			selectWebContentURL.setParameter("eventName", "selectContent");
 			selectWebContentURL.setWindowState(LiferayWindowState.POP_UP);
 			%>
