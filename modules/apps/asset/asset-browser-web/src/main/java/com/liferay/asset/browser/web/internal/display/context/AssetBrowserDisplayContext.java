@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -592,13 +593,20 @@ public class AssetBrowserDisplayContext {
 	}
 
 	private int[] _getStatuses() {
-		int[] statuses = {WorkflowConstants.STATUS_APPROVED};
+		int[] statuses = StringUtil.split(
+			ParamUtil.getString(_request, "statuses"),
+			WorkflowConstants.STATUS_APPROVED);
 
-		if (_isShowScheduled()) {
-			statuses = new int[] {
-				WorkflowConstants.STATUS_APPROVED,
-				WorkflowConstants.STATUS_SCHEDULED
-			};
+		if (ArrayUtil.isEmpty(statuses)) {
+			statuses = ArrayUtil.append(
+				statuses, WorkflowConstants.STATUS_APPROVED);
+		}
+
+		if (_isShowScheduled() &&
+			!ArrayUtil.contains(statuses, WorkflowConstants.STATUS_SCHEDULED)) {
+
+			statuses = ArrayUtil.append(
+				statuses, WorkflowConstants.STATUS_SCHEDULED);
 		}
 
 		return statuses;
