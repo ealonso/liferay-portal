@@ -278,17 +278,11 @@ public class JournalDisplayContext {
 					if (Validator.isNotNull(viewContentURL)) {
 						add(
 							dropdownItem -> {
-								dropdownItem.putData("action", "view");
-								dropdownItem.putData("target", "_blank");
-								dropdownItem.putData(
-									"title",
-									HtmlUtil.escapeJS(
-										article.getTitle(
-											_themeDisplay.getLocale())));
-								dropdownItem.putData(
-									"viewContentURL", viewContentURL);
+								dropdownItem.setHref(viewContentURL);
+								//dropdownItem.setIcon("shortcut");
 								dropdownItem.setLabel(
 									LanguageUtil.get(_request, "view-content"));
+								//dropdownItem.setTarget("_blank");
 							});
 					}
 
@@ -298,9 +292,11 @@ public class JournalDisplayContext {
 						add(
 							dropdownItem -> {
 								dropdownItem.putData("action", "preview");
+								dropdownItem.putData("title", HtmlUtil.escape(
+									article.getTitle(_themeDisplay.getLocale())));
 								dropdownItem.putData("previewURL", previewURL);
 								dropdownItem.setLabel(
-									LanguageUtil.get(_request, "view-content"));
+									LanguageUtil.get(_request, article.isDraft() ? "preview-draft" : "preview"));
 							});
 					}
 
@@ -460,7 +456,7 @@ public class JournalDisplayContext {
 							dropdownItem.putData(
 								"expireURL", expireURL.toString());
 							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "permissions"));
+								LanguageUtil.get(_request, "expire"));
 						});
 				}
 
