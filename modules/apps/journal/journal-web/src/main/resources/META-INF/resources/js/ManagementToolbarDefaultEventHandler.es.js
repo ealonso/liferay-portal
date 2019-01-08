@@ -85,7 +85,7 @@ ManagementToolbarDefaultEventHandler.STATE = {
 	namespace: Config.string(),
 	openViewMoreStructuresURL: Config.string(),
 	selectEntityURL: Config.string(),
-	viewDDMStructureArticlesURL: Config.string(),
+	viewDDMStructureArticlesURL: Config.string()
 };
 
 export default ManagementToolbarDefaultEventHandler;

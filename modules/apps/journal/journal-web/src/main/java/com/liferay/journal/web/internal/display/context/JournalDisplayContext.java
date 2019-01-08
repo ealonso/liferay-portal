@@ -293,10 +293,13 @@ public class JournalDisplayContext {
 							dropdownItem -> {
 								dropdownItem.putData("action", "preview");
 								dropdownItem.putData("title", HtmlUtil.escape(
-									article.getTitle(_themeDisplay.getLocale())));
+									article.getTitle(
+										_themeDisplay.getLocale())));
 								dropdownItem.putData("previewURL", previewURL);
 								dropdownItem.setLabel(
-									LanguageUtil.get(_request, article.isDraft() ? "preview-draft" : "preview"));
+									LanguageUtil.get(
+										_request,
+										article.isDraft() ? "preview-draft" : "preview"));
 							});
 					}
 
@@ -555,6 +558,17 @@ public class JournalDisplayContext {
 		return _articleDisplay;
 	}
 
+	public List<LabelItem> getArticleLabels(JournalArticle article) {
+		return new LabelItemList() {
+			{
+				add(
+					labelItem -> {
+						labelItem.setStatus(article.getStatus());
+					});
+			}
+		};
+	}
+
 	public List<Locale> getAvailableArticleLocales() throws PortalException {
 		JournalArticle article = getArticle();
 
@@ -569,17 +583,6 @@ public class JournalDisplayContext {
 		}
 
 		return availableLocales;
-	}
-
-    public List<LabelItem> getArticleLabels(JournalArticle article) {
-		return new LabelItemList() {
-			{
-				add(
-					labelItem -> {
-						labelItem.setStatus(article.getStatus());
-					});
-			}
-		};
 	}
 
 	public String[] getCharactersBlacklist() throws PortalException {

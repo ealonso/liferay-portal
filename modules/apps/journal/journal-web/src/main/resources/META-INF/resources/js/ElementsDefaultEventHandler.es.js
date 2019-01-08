@@ -11,17 +11,17 @@ class ElementsDefaultEventHandler extends PortletBase {
 	}
 
 	copyArticle(itemData) {
-		submitForm(document.hrefFm, itemData.copyArticleURL);
+		this._send(itemData.copyArticleURL);
 	}
 
 	delete(itemData) {
 		if (this.isTrashEnabled || confirm(Liferay.Language.get('are-you-sure-you-want-to-delete-this'))) {
-			submitForm(document.hrefFm, itemData.deleteFolderURL);
+			this._send(itemData.deleteFolderURL);
 		}
 	}
 
 	expireArticles(itemData) {
-		submitForm(document.hrefFm, itemData.expireURL);
+		this._send(itemData.expireURL);
 	}
 
 	permissions(itemData) {
@@ -49,22 +49,26 @@ class ElementsDefaultEventHandler extends PortletBase {
 
 	publishToLive(itemData) {
 		if (confirm(Liferay.Language.get('are-you-sure-you-want-to-publish-the-selected-web-content'))) {
-			submitForm(document.hrefFm, itemData.publishArticleURL);
+			this._send(itemData.publishArticleURL);
 		}
 	}
 
 	subscribeArticle(itemData) {
-		submitForm(document.hrefFm, itemData.subscribeArticleURL);
+		this._send(itemData.subscribeArticleURL);
 	}
 
 	unsubscribeArticle(itemData) {
-		submitForm(document.hrefFm, itemData.unsubscribeArticleURL);
+		this._send(itemData.unsubscribeArticleURL);
+	}
+
+	_send(url) {
+		submitForm(document.hrefFm, url);
 	}
 }
 
 ElementsDefaultEventHandler.STATE = {
 	isTrashEnabled: Config.bool(),
-	namespace: Config.string(),
+	namespace: Config.string()
 };
 
 

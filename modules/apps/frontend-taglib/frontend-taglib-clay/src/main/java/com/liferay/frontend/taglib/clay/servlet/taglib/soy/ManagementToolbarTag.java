@@ -304,7 +304,8 @@ public class ManagementToolbarTag extends BaseClayTag {
 		}
 
 		if (context.get("defaultEventHandler") == null) {
-			setDefaultEventHandler(managementToolbarDisplayContext.getDefaultEventHandler());
+			setDefaultEventHandler(
+				managementToolbarDisplayContext.getDefaultEventHandler());
 		}
 
 		if (context.get("disabled") == null) {
