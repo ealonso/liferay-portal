@@ -49,7 +49,11 @@ JournalManagementToolbarDisplayContext journaManagementToolbarlDisplayContext = 
 			openViewMoreStructuresURL: '<%= openViewMoreStructuresURL %>',
 			selectEntityURL: '<%= selectEntityURL %>',
 			viewDDMStructureArticlesURL: '<%= viewDDMStructureArticlesURL %>'
-		})
+		}),
+		{
+			destroyOnNavigate: true,
+			portletId: '<%= HtmlUtil.escapeJS(portletDisplay.getId()) %>'
+		}
 	);
 </aui:script>
 

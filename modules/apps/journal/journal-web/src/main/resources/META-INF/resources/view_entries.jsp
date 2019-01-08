@@ -426,6 +426,10 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 		new ElementsDefaultEventHandler.default({
 			isTrashEnabled: <%= trashHelper.isTrashEnabled(scopeGroupId) %>,
 			namespace: '<%= renderResponse.getNamespace() %>'
-		})
+		}),
+		{
+			destroyOnNavigate: true,
+			portletId: '<%= HtmlUtil.escapeJS(portletDisplay.getId()) %>'
+		}
 	);
 </aui:script>
