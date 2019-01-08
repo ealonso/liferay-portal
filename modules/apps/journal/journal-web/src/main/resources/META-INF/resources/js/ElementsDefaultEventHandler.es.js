@@ -15,7 +15,7 @@ class ElementsDefaultEventHandler extends PortletBase {
 	}
 
 	delete(itemData) {
-		if (this.isTrashEnabled || confirm(Liferay.Language.get('are-you-sure-you-want-to-delete-this'))) {
+		if (this.trashEnabled || confirm(Liferay.Language.get('are-you-sure-you-want-to-delete-this'))) {
 			this._send(itemData.deleteFolderURL);
 		}
 	}
@@ -67,9 +67,8 @@ class ElementsDefaultEventHandler extends PortletBase {
 }
 
 ElementsDefaultEventHandler.STATE = {
-	isTrashEnabled: Config.bool(),
-	namespace: Config.string()
+	namespace: Config.string(),
+	trashEnabled: Config.bool()
 };
-
 
 export default ElementsDefaultEventHandler;

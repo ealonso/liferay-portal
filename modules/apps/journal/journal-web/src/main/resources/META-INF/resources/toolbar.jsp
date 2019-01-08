@@ -17,11 +17,11 @@
 <%@ include file="/init.jsp" %>
 
 <%
-JournalManagementToolbarDisplayContext journaManagementToolbarlDisplayContext = new JournalManagementToolbarDisplayContext(liferayPortletRequest, liferayPortletResponse, request, journalDisplayContext, trashHelper);
+JournalManagementToolbarDisplayContext journalManagementToolbarlDisplayContext = new JournalManagementToolbarDisplayContext(liferayPortletRequest, liferayPortletResponse, request, journalDisplayContext, trashHelper);
 %>
 
 <clay:management-toolbar
-	displayContext="<%= journaManagementToolbarlDisplayContext %>"
+	displayContext="<%= journalManagementToolbarlDisplayContext %>"
 />
 
 <aui:script require='<%= journalDisplayContext.getResolvedModuleName() + "/js/ManagementToolbarDefaultEventHandler.es as ManagementToolbarDefaultEventHandler" %>'>
@@ -41,15 +41,17 @@ JournalManagementToolbarDisplayContext journaManagementToolbarlDisplayContext = 
 	</portlet:renderURL>
 
 	Liferay.component(
-		'<%= journaManagementToolbarlDisplayContext.getDefaultEventHandler()%>',
-		new ManagementToolbarDefaultEventHandler.default({
-			folderId: '<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>',
-			isTrashEnabled: <%= trashHelper.isTrashEnabled(scopeGroupId) %>,
-			namespace: '<%= renderResponse.getNamespace() %>',
-			openViewMoreStructuresURL: '<%= openViewMoreStructuresURL %>',
-			selectEntityURL: '<%= selectEntityURL %>',
-			viewDDMStructureArticlesURL: '<%= viewDDMStructureArticlesURL %>'
-		}),
+		'<%= journalManagementToolbarlDisplayContext.getDefaultEventHandler()%>',
+		new ManagementToolbarDefaultEventHandler.default(
+			{
+				folderId: '<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>',
+				namespace: '<%= renderResponse.getNamespace() %>',
+				openViewMoreStructuresURL: '<%= openViewMoreStructuresURL %>',
+				selectEntityURL: '<%= selectEntityURL %>',
+				trashEnabled: <%= trashHelper.isTrashEnabled(scopeGroupId) %>,
+				viewDDMStructureArticlesURL: '<%= viewDDMStructureArticlesURL %>'
+			}
+		),
 		{
 			destroyOnNavigate: true,
 			portletId: '<%= HtmlUtil.escapeJS(portletDisplay.getId()) %>'

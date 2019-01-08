@@ -81,10 +81,10 @@ class ManagementToolbarDefaultEventHandler extends PortletBase {
 
 ManagementToolbarDefaultEventHandler.STATE = {
 	folderId: Config.string(),
-	isTrashEnabled: Config.bool(),
 	namespace: Config.string(),
 	openViewMoreStructuresURL: Config.string(),
 	selectEntityURL: Config.string(),
+	trashEnabled: Config.bool(),
 	viewDDMStructureArticlesURL: Config.string()
 };
 
