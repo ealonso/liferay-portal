@@ -41,7 +41,7 @@ JournalManagementToolbarDisplayContext journaManagementToolbarlDisplayContext = 
 	</portlet:renderURL>
 
 	Liferay.component(
-		'journalManagementToolbarDefaultEventHandler',
+		'<%= journaManagementToolbarlDisplayContext.getDefaultEventHandler()%>',
 		new ManagementToolbarDefaultEventHandler.default({
 			folderId: '<%= String.valueOf(JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) %>',
 			isTrashEnabled: <%= trashHelper.isTrashEnabled(scopeGroupId) %>,
