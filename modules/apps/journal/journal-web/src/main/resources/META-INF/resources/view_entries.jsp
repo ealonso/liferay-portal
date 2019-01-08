@@ -420,7 +420,7 @@ String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 	/>
 </liferay-ui:search-container>
 
-<aui:script require="journal-web/js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler">
+<aui:script require='<%= journalDisplayContext.getResolvedModuleName() + "/js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler" %>'>
 	Liferay.component(
 		'journalElementsDefaultEventHandler',
 		new ElementsDefaultEventHandler.default({

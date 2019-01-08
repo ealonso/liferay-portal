@@ -25,6 +25,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
 import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.web.internal.security.permission.resource.JournalFolderPermission;
 import com.liferay.petra.string.StringPool;
@@ -75,6 +76,8 @@ public class JournalManagementToolbarDisplayContext
 			journalDisplayContext.getSearchContainer(false));
 
 		_journalDisplayContext = journalDisplayContext;
+		_resolvedModuleName = (String)request.getAttribute(
+			JournalWebKeys.RESOLVED_MODULE_NAME);
 		_trashHelper = trashHelper;
 
 		_themeDisplay = (ThemeDisplay)request.getAttribute(
@@ -347,6 +350,10 @@ public class JournalManagementToolbarDisplayContext
 		return "infoPanelId";
 	}
 
+	public String getResolvedModuleName() {
+		return _resolvedModuleName;
+	}
+
 	@Override
 	public String getSearchActionURL() {
 		PortletURL portletURL = liferayPortletResponse.createRenderURL();
@@ -547,6 +554,7 @@ public class JournalManagementToolbarDisplayContext
 		JournalManagementToolbarDisplayContext.class);
 
 	private final JournalDisplayContext _journalDisplayContext;
+	private final String _resolvedModuleName;
 	private final ThemeDisplay _themeDisplay;
 	private final TrashHelper _trashHelper;
 

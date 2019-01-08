@@ -24,7 +24,7 @@ JournalManagementToolbarDisplayContext journaManagementToolbarlDisplayContext = 
 	displayContext="<%= journaManagementToolbarlDisplayContext %>"
 />
 
-<aui:script require="journal-web/js/ManagementToolbarDefaultEventHandler.es as ManagementToolbarDefaultEventHandler">
+<aui:script require='<%= journalDisplayContext.getResolvedModuleName() + "/js/ManagementToolbarDefaultEventHandler.es as ManagementToolbarDefaultEventHandler" %>'>
 	<portlet:renderURL var="openViewMoreStructuresURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="mvcPath" value="/view_more_menu_items.jsp" />
 		<portlet:param name="folderId" value="<%= String.valueOf(journalDisplayContext.getFolderId()) %>" />
