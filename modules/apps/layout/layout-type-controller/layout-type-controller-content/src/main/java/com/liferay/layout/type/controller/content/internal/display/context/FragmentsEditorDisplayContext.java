@@ -42,11 +42,11 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
+import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
@@ -63,6 +63,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.PortletCategoryComparator;
 import com.liferay.portal.kernel.util.comparator.PortletTitleComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.template.soy.data.SoyHTMLData;
 import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import com.liferay.portal.util.PortletCategoryUtil;
@@ -87,6 +88,11 @@ import javax.portlet.RenderResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * @author Eudaldo Alonso
@@ -116,6 +122,10 @@ public class FragmentsEditorDisplayContext {
 			"addFragmentEntryLinkURL",
 			_getFragmentEntryActionURL(
 				"/content_layout/add_fragment_entry_link"));
+
+		soyContext.put(
+			"addPortletURL",
+			_getFragmentEntryActionURL("/content_layout/add_portlet"));
 
 		SoyContext availableLanguagesSoyContext =
 			SoyContextFactoryUtil.createSoyContext();
@@ -498,15 +508,29 @@ public class FragmentsEditorDisplayContext {
 		return StringPool.BLANK;
 	}
 
+	private String _getPortletId(String content) {
+		Document document = Jsoup.parse(content);
+
+		Elements elements = document.getElementsByAttributeValueStarting(
+			"id", "portlet_");
+
+		if (elements.size() != 1) {
+			return StringPool.BLANK;
+		}
+
+		Element element = elements.get(0);
+
+		String id = element.id();
+
+		return PortletIdCodec.decodePortletName(id.substring(8));
+	}
+
 	private List<SoyContext> _getPortletsContexts(
 		PortletCategory portletCategory) {
 
 		Set<String> portletIds = portletCategory.getPortletIds();
 
 		Stream<String> stream = portletIds.stream();
-
-		LayoutTypePortlet layoutTypePortlet =
-			_themeDisplay.getLayoutTypePortlet();
 
 		HttpSession session = _request.getSession();
 
@@ -550,9 +574,14 @@ public class FragmentsEditorDisplayContext {
 					"title",
 					PortalUtil.getPortletTitle(
 						portlet, servletContext, _themeDisplay.getLocale()));
-				portletSoyContext.put(
-					"used",
-					layoutTypePortlet.hasPortletId(portlet.getPortletId()));
+
+				if (!portlet.isInstanceable()) {
+					portletSoyContext.put(
+						"used", _isUsed(portlet.getRootPortletId()));
+				}
+				else {
+					portletSoyContext.put("used", false);
+				}
 
 				return portletSoyContext;
 			}
@@ -614,6 +643,9 @@ public class FragmentsEditorDisplayContext {
 
 		_themeDisplay.setIsolated(true);
 
+		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", _request.getLocale(), getClass());
+
 		try {
 			for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 				FragmentEntry fragmentEntry =
@@ -623,21 +655,33 @@ public class FragmentsEditorDisplayContext {
 				SoyContext soyContext =
 					SoyContextFactoryUtil.createSoyContext();
 
-				soyContext.putHTML(
-					"content",
+				String content =
 					FragmentEntryRenderUtil.renderFragmentEntryLink(
 						fragmentEntryLink, _request,
-						PortalUtil.getHttpServletResponse(_renderResponse)));
+						PortalUtil.getHttpServletResponse(_renderResponse));
+
+				soyContext.putHTML("content", content);
+
 				soyContext.put(
 					"editableValues",
 					JSONFactoryUtil.createJSONObject(
 						fragmentEntryLink.getEditableValues()));
-				soyContext.put(
-					"fragmentEntryId", fragmentEntry.getFragmentEntryId());
+
+				if (fragmentEntry != null) {
+					soyContext.put(
+						"fragmentEntryId", fragmentEntry.getFragmentEntryId());
+					soyContext.put("name", fragmentEntry.getName());
+				}
+				else {
+					soyContext.put("fragmentEntryId", 0);
+					soyContext.put("portletId", _getPortletId(content));
+					soyContext.put(
+						"name", LanguageUtil.get(resourceBundle, "widget"));
+				}
+
 				soyContext.put(
 					"fragmentEntryLinkId",
 					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()));
-				soyContext.put("name", fragmentEntry.getName());
 
 				soyContexts.put(
 					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()),
@@ -719,6 +763,41 @@ public class FragmentsEditorDisplayContext {
 			_themeDisplay.getLayoutTypePortlet());
 
 		return _getWidgetCategoriesContexts(portletCategory);
+	}
+
+	private boolean _isUsed(String rootPortletId) {
+		try {
+			SoyContext fragmentEntryLinks = _getSoyContextFragmentEntryLinks();
+
+			boolean used = false;
+
+			for (Map.Entry<String, Object> entry :
+					fragmentEntryLinks.entrySet()) {
+
+				SoyContext fragmentEntryLinkContext =
+					(SoyContext)entry.getValue();
+
+				SoyHTMLData soyHTMLData =
+					(SoyHTMLData)fragmentEntryLinkContext.get("content");
+
+				Object soyHTMLDataValue = soyHTMLData.getValue();
+
+				String html = soyHTMLDataValue.toString();
+
+				if (html.contains(rootPortletId)) {
+					used = true;
+
+					break;
+				}
+			}
+
+			return used;
+		}
+		catch (PortalException pe) {
+			_log.error("Unable to get fragment entry links", pe);
+		}
+
+		return false;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
