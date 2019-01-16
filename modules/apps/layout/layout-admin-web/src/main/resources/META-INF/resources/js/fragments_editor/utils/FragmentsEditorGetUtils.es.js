@@ -169,6 +169,59 @@ function getTargetBorder(direction) {
 	return targetBorder;
 }
 
+/**
+ * Get widget from the widgets tree by portletId
+ *
+ * @param {!array} widgets
+ * @param {!string} portletId
+ * @return {object}
+ * @review
+ */
+function getWidget(widgets, portletId) {
+	const widget = {};
+
+	const path = ['widgets'];
+
+	const findPortlet = function(parent, category) {
+		path.push(parent.indexOf(category));
+
+		if (category.portlets && !widget.portletObject) {
+			path.push('portlets');
+
+			for (let portletIndex in category.portlets) {
+				if (category.portlets[portletIndex].portletId === portletId) {
+					path.push(portletIndex);
+
+					widget.path = path.slice(0);
+					widget.portletObject = category.portlets[portletIndex];
+
+					break;
+				}
+			}
+
+			path.pop();
+		}
+
+		if (category.categories && !widget.portletObject) {
+			path.push('categories');
+
+			category.categories.forEach(
+				subCategory => findPortlet(category.categories, subCategory)
+			);
+
+			path.pop();
+		}
+
+		path.pop();
+	};
+
+	widgets.forEach(
+		category => findPortlet(widgets, category)
+	);
+
+	return widget;
+}
+
 export {
 	getColumn,
 	getDropSectionPosition,
@@ -177,5 +230,6 @@ export {
 	getItemMoveDirection,
 	getSectionFragmentEntryLinkIds,
 	getSectionIndex,
-	getTargetBorder
+	getTargetBorder,
+	getWidget
 };
