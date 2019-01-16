@@ -5,6 +5,9 @@ import {
 	updateEditableValueReducer
 } from './fragments.es';
 import {
+	addPortletReducer
+} from './portlets.es';
+import {
 	addSectionReducer,
 	moveSectionReducer,
 	removeSectionReducer,
@@ -39,6 +42,7 @@ import {
  */
 const reducers = [
 	addFragmentEntryLinkReducer,
+	addPortletReducer,
 	addSectionReducer,
 	hideFragmentsEditorSidebarReducer,
 	hideMappingDialogReducer,

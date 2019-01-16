@@ -1,4 +1,5 @@
 export const ADD_FRAGMENT_ENTRY_LINK = 'addFragmentEntryLink';
+export const ADD_PORTLET = 'addPortlet';
 export const ADD_SECTION = 'addSection';
 export const CHANGE_LANGUAGE_ID = 'languageId';
 export const CLEAR_ACTIVE_ITEM = 'clearActiveItem';
