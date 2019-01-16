@@ -41,6 +41,16 @@ const INITIAL_STATE = {
 		.value(''),
 
 	/**
+	 * URL for associating portlets to the underlying model.
+	 * @default ''
+	 * @review
+	 * @type {string}
+	 */
+	addPortletURL: Config
+		.string()
+		.value(''),
+
+	/**
 	 * Object of available languages.
 	 * @default {}
 	 * @review
