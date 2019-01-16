@@ -9,7 +9,8 @@ import {
 	remove,
 	setIn,
 	updateIn,
-	updateLayoutData
+	updateLayoutData,
+	updateWidgets
 } from '../utils/FragmentsEditorUpdateUtils.es';
 import {
 	getDropSectionPosition,
@@ -150,6 +151,12 @@ function removeSectionReducer(state, actionType, payload) {
 				const fragmentEntryLinkIds = getSectionFragmentEntryLinkIds(
 					nextState.layoutData.structure,
 					payload.sectionId
+				);
+
+				fragmentEntryLinkIds.forEach(
+					fragmentEntryLinkId => {
+						nextState = updateWidgets(nextState, fragmentEntryLinkId);
+					}
 				);
 
 				updateLayoutData(

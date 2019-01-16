@@ -1,11 +1,6 @@
-import {
-	CLEAR_ACTIVE_ITEM,
-	CLEAR_DROP_TARGET,
-	CLEAR_HOVERED_ITEM,
-	UPDATE_LAST_SAVE_DATE,
-	UPDATE_SAVING_CHANGES_STATUS
-} from '../actions/actions.es';
+import {CLEAR_ACTIVE_ITEM, CLEAR_DROP_TARGET, CLEAR_HOVERED_ITEM, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS} from '../actions/actions.es';
 import {FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
+import {getWidget} from './FragmentsEditorGetUtils.es';
 
 /**
  * Inserts an element in the given position of a given array and returns
@@ -248,6 +243,26 @@ function updateLayoutData(
 	);
 }
 
+function updateWidgets(state, fragmentEntryLinkId) {
+	const fragmentEntryLink = state.fragmentEntryLinks[fragmentEntryLinkId];
+
+	if (fragmentEntryLink.portletId) {
+		const widget = getWidget(state.widgets, fragmentEntryLink.portletId);
+
+		if (!widget.portletObject.instanceable && widget.portletObject.used) {
+			widget.portletObject.used = false;
+
+			state = setIn(
+				state,
+				widget.path,
+				widget.portletObject
+			);
+		}
+	}
+
+	return state;
+}
+
 export {
 	add,
 	focusItem,
@@ -256,5 +271,6 @@ export {
 	removeItem,
 	setIn,
 	updateIn,
-	updateLayoutData
+	updateLayoutData,
+	updateWidgets
 };

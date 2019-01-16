@@ -1,7 +1,7 @@
 import {ADD_FRAGMENT_ENTRY_LINK, MOVE_FRAGMENT_ENTRY_LINK, REMOVE_FRAGMENT_ENTRY_LINK, UPDATE_EDITABLE_VALUE} from '../actions/actions.es';
-import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
+import {add, remove, setIn, updateIn, updateLayoutData, updateWidgets} from '../utils/FragmentsEditorUpdateUtils.es';
 import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../components/fragment_entry_link/FragmentEntryLinkContent.es';
-import {add, remove, setIn, updateIn, updateLayoutData} from '../utils/FragmentsEditorUpdateUtils.es';
+import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
 import {getColumn, getDropSectionPosition, getFragmentColumn} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
@@ -195,6 +195,8 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 					.then(
 						() => {
 							nextState = setIn(nextState, ['layoutData'], nextData);
+
+							updateWidgets(nextState, payload.fragmentEntryLinkId);
 
 							delete nextState.fragmentEntryLinks[
 								payload.fragmentEntryLinkId
