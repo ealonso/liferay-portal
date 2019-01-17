@@ -109,7 +109,7 @@ public class FragmentEntryProcessorEditableTest {
 	}
 
 	@Test
-	public void testFragmentEntryProcessorEditableWithMatchingLanguage()
+	public void testFragmentEntryProcessorEditableWithMatchedLanguage()
 		throws Exception {
 
 		FragmentEntry fragmentEntry = _createFragmentEntry(
@@ -140,7 +140,7 @@ public class FragmentEntryProcessorEditableTest {
 	}
 
 	@Test
-	public void testFragmentEntryProcessorEditableWithUnmatchingLanguage()
+	public void testFragmentEntryProcessorEditableWithUnmatchedLanguage()
 		throws Exception {
 
 		FragmentEntry fragmentEntry = _createFragmentEntry(
@@ -153,7 +153,8 @@ public class FragmentEntryProcessorEditableTest {
 
 		fragmentEntryLink.setEditableValues(
 			_getJsonFileAsString(
-				"fragment_entry_link_editable_values_unmatching_language.json"));
+				"fragment_entry_link_editable_values_unmatching_language." +
+					"json"));
 
 		Assert.assertEquals(
 			_getBodyElementHtmlAsString("processed_fragment_entry.html"),
