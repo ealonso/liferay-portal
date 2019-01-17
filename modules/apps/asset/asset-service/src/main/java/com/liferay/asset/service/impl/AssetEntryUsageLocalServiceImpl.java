@@ -89,11 +89,6 @@ public class AssetEntryUsageLocalServiceImpl
 	}
 
 	@Override
-	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId) {
-		return assetEntryUsagePersistence.findByAssetEntryId(assetEntryId);
-	}
-
-	@Override
 	public List<AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, boolean hidden) {
 
@@ -111,36 +106,11 @@ public class AssetEntryUsageLocalServiceImpl
 
 	@Override
 	public List<AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, int start, int end,
-		OrderByComparator<AssetEntryUsage> orderByComparator) {
-
-		return assetEntryUsagePersistence.findByAssetEntryId(
-			assetEntryId, start, end, orderByComparator);
-	}
-
-	@Override
-	public List<AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId) {
-
-		return assetEntryUsagePersistence.findByA_C(assetEntryId, classNameId);
-	}
-
-	@Override
-	public List<AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, long classNameId, boolean hidden, int start, int end,
 		OrderByComparator<AssetEntryUsage> orderByComparator) {
 
 		return assetEntryUsagePersistence.findByA_C_H(
 			assetEntryId, classNameId, hidden, start, end, orderByComparator);
-	}
-
-	@Override
-	public List<AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId, int start, int end,
-		OrderByComparator<AssetEntryUsage> orderByComparator) {
-
-		return assetEntryUsagePersistence.findByA_C(
-			assetEntryId, classNameId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -152,18 +122,8 @@ public class AssetEntryUsageLocalServiceImpl
 	}
 
 	@Override
-	public int getAssetEntryUsagesCount(long assetEntryId) {
-		return assetEntryUsagePersistence.countByAssetEntryId(assetEntryId);
-	}
-
-	@Override
 	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden) {
 		return assetEntryUsagePersistence.countByA_H(assetEntryId, hidden);
-	}
-
-	@Override
-	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId) {
-		return assetEntryUsagePersistence.countByA_C(assetEntryId, classNameId);
 	}
 
 	@Override

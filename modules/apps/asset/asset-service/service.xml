@@ -32,13 +32,6 @@
 
 		<!-- Finder methods -->
 
-		<finder name="AssetEntryId" return-type="Collection">
-			<finder-column name="assetEntryId" />
-		</finder>
-		<finder name="A_C" return-type="Collection">
-			<finder-column name="assetEntryId" />
-			<finder-column name="classNameId" />
-		</finder>
 		<finder name="A_H" return-type="Collection">
 			<finder-column name="assetEntryId" />
 			<finder-column name="hidden" />
