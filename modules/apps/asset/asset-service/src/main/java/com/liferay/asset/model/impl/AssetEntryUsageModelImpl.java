@@ -82,6 +82,7 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 			{ "classNameId", Types.BIGINT },
 			{ "classPK", Types.BIGINT },
 			{ "portletId", Types.VARCHAR },
+			{ "hidden_", Types.BOOLEAN },
 			{ "lastPublishDate", Types.TIMESTAMP }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
@@ -99,10 +100,11 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 		TABLE_COLUMNS_MAP.put("classNameId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("classPK", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("portletId", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("hidden_", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table AssetEntryUsage (uuid_ VARCHAR(75) null,assetEntryUsageId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,assetEntryId LONG,classNameId LONG,classPK LONG,portletId VARCHAR(200) null,lastPublishDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table AssetEntryUsage (uuid_ VARCHAR(75) null,assetEntryUsageId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,assetEntryId LONG,classNameId LONG,classPK LONG,portletId VARCHAR(200) null,hidden_ BOOLEAN,lastPublishDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table AssetEntryUsage";
 	public static final String ORDER_BY_JPQL = " ORDER BY assetEntryUsage.assetEntryUsageId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY AssetEntryUsage.assetEntryUsageId ASC";
@@ -123,9 +125,10 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 	public static final long CLASSPK_COLUMN_BITMASK = 4L;
 	public static final long COMPANYID_COLUMN_BITMASK = 8L;
 	public static final long GROUPID_COLUMN_BITMASK = 16L;
-	public static final long PORTLETID_COLUMN_BITMASK = 32L;
-	public static final long UUID_COLUMN_BITMASK = 64L;
-	public static final long ASSETENTRYUSAGEID_COLUMN_BITMASK = 128L;
+	public static final long HIDDEN_COLUMN_BITMASK = 32L;
+	public static final long PORTLETID_COLUMN_BITMASK = 64L;
+	public static final long UUID_COLUMN_BITMASK = 128L;
+	public static final long ASSETENTRYUSAGEID_COLUMN_BITMASK = 256L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.asset.service.util.ServiceProps.get(
 				"lock.expiration.time.com.liferay.asset.model.AssetEntryUsage"));
 
@@ -178,6 +181,7 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
 		attributes.put("portletId", getPortletId());
+		attributes.put("hidden", isHidden());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -258,6 +262,12 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 
 		if (portletId != null) {
 			setPortletId(portletId);
+		}
+
+		Boolean hidden = (Boolean)attributes.get("hidden");
+
+		if (hidden != null) {
+			setHidden(hidden);
 		}
 
 		Date lastPublishDate = (Date)attributes.get("lastPublishDate");
@@ -523,6 +533,33 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 	}
 
 	@Override
+	public boolean getHidden() {
+		return _hidden;
+	}
+
+	@Override
+	public boolean isHidden() {
+		return _hidden;
+	}
+
+	@Override
+	public void setHidden(boolean hidden) {
+		_columnBitmask |= HIDDEN_COLUMN_BITMASK;
+
+		if (!_setOriginalHidden) {
+			_setOriginalHidden = true;
+
+			_originalHidden = _hidden;
+		}
+
+		_hidden = hidden;
+	}
+
+	public boolean getOriginalHidden() {
+		return _originalHidden;
+	}
+
+	@Override
 	public Date getLastPublishDate() {
 		return _lastPublishDate;
 	}
@@ -581,6 +618,7 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 		assetEntryUsageImpl.setClassNameId(getClassNameId());
 		assetEntryUsageImpl.setClassPK(getClassPK());
 		assetEntryUsageImpl.setPortletId(getPortletId());
+		assetEntryUsageImpl.setHidden(isHidden());
 		assetEntryUsageImpl.setLastPublishDate(getLastPublishDate());
 
 		assetEntryUsageImpl.resetOriginalValues();
@@ -670,6 +708,10 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 
 		assetEntryUsageModelImpl._originalPortletId = assetEntryUsageModelImpl._portletId;
 
+		assetEntryUsageModelImpl._originalHidden = assetEntryUsageModelImpl._hidden;
+
+		assetEntryUsageModelImpl._setOriginalHidden = false;
+
 		assetEntryUsageModelImpl._columnBitmask = 0;
 	}
 
@@ -733,6 +775,8 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 			assetEntryUsageCacheModel.portletId = null;
 		}
 
+		assetEntryUsageCacheModel.hidden = isHidden();
+
 		Date lastPublishDate = getLastPublishDate();
 
 		if (lastPublishDate != null) {
@@ -747,7 +791,7 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -773,6 +817,8 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 		sb.append(getClassPK());
 		sb.append(", portletId=");
 		sb.append(getPortletId());
+		sb.append(", hidden=");
+		sb.append(isHidden());
 		sb.append(", lastPublishDate=");
 		sb.append(getLastPublishDate());
 		sb.append("}");
@@ -782,7 +828,7 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.asset.model.AssetEntryUsage");
@@ -837,6 +883,10 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 		sb.append(getPortletId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>hidden</column-name><column-value><![CDATA[");
+		sb.append(isHidden());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>lastPublishDate</column-name><column-value><![CDATA[");
 		sb.append(getLastPublishDate());
 		sb.append("]]></column-value></column>");
@@ -875,6 +925,9 @@ public class AssetEntryUsageModelImpl extends BaseModelImpl<AssetEntryUsage>
 	private boolean _setOriginalClassPK;
 	private String _portletId;
 	private String _originalPortletId;
+	private boolean _hidden;
+	private boolean _originalHidden;
+	private boolean _setOriginalHidden;
 	private Date _lastPublishDate;
 	private long _columnBitmask;
 	private AssetEntryUsage _escapedModel;

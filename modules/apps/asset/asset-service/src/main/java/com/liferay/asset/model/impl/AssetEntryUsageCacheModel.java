@@ -66,7 +66,7 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -92,6 +92,8 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 		sb.append(classPK);
 		sb.append(", portletId=");
 		sb.append(portletId);
+		sb.append(", hidden=");
+		sb.append(hidden);
 		sb.append(", lastPublishDate=");
 		sb.append(lastPublishDate);
 		sb.append("}");
@@ -147,6 +149,8 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 			assetEntryUsageImpl.setPortletId(portletId);
 		}
 
+		assetEntryUsageImpl.setHidden(hidden);
+
 		if (lastPublishDate == Long.MIN_VALUE) {
 			assetEntryUsageImpl.setLastPublishDate(null);
 		}
@@ -180,6 +184,8 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 
 		classPK = objectInput.readLong();
 		portletId = objectInput.readUTF();
+
+		hidden = objectInput.readBoolean();
 		lastPublishDate = objectInput.readLong();
 	}
 
@@ -224,6 +230,7 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 			objectOutput.writeUTF(portletId);
 		}
 
+		objectOutput.writeBoolean(hidden);
 		objectOutput.writeLong(lastPublishDate);
 	}
 
@@ -239,5 +246,6 @@ public class AssetEntryUsageCacheModel implements CacheModel<AssetEntryUsage>,
 	public long classNameId;
 	public long classPK;
 	public String portletId;
+	public boolean hidden;
 	public long lastPublishDate;
 }

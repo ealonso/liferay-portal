@@ -11,5 +11,6 @@ create table AssetEntryUsage (
 	classNameId LONG,
 	classPK LONG,
 	portletId VARCHAR(200) null,
+	hidden_ BOOLEAN,
 	lastPublishDate DATE null
 );

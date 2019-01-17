@@ -276,6 +276,27 @@ public interface AssetEntryUsageModel extends AttachedModel,
 	public void setPortletId(String portletId);
 
 	/**
+	 * Returns the hidden of this asset entry usage.
+	 *
+	 * @return the hidden of this asset entry usage
+	 */
+	public boolean getHidden();
+
+	/**
+	 * Returns <code>true</code> if this asset entry usage is hidden.
+	 *
+	 * @return <code>true</code> if this asset entry usage is hidden; <code>false</code> otherwise
+	 */
+	public boolean isHidden();
+
+	/**
+	 * Sets whether this asset entry usage is hidden.
+	 *
+	 * @param hidden the hidden of this asset entry usage
+	 */
+	public void setHidden(boolean hidden);
+
+	/**
 	 * Returns the last publish date of this asset entry usage.
 	 *
 	 * @return the last publish date of this asset entry usage

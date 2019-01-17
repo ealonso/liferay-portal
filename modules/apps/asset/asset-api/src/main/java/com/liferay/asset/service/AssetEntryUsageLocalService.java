@@ -76,6 +76,11 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 
 	public AssetEntryUsage addAssetEntryUsage(long userId, long groupId,
 		long assetEntryId, long classNameId, long classPK, String portletId,
+		boolean hidden, ServiceContext serviceContext)
+		throws PortalException;
+
+	public AssetEntryUsage addAssetEntryUsage(long userId, long groupId,
+		long assetEntryId, long classNameId, long classPK, String portletId,
 		ServiceContext serviceContext) throws PortalException;
 
 	/**
@@ -246,11 +251,25 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
+		boolean hidden);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
+		boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
 		int start, int end, OrderByComparator<AssetEntryUsage> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
 		long classNameId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
+		long classNameId, boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
@@ -299,7 +318,14 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 	public int getAssetEntryUsagesCount(long assetEntryId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId,
+		boolean hidden);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(

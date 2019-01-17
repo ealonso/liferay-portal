@@ -16,6 +16,7 @@
 		<field name="portletId" type="String">
 			<hint name="max-length">200</hint>
 		</field>
+		<field name="hidden" type="boolean" />
 		<field name="lastPublishDate" type="Date" />
 	</model>
 </model-hints>

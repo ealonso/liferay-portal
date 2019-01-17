@@ -146,6 +146,8 @@ public class AssetEntryUsagePersistenceTest {
 
 		newAssetEntryUsage.setPortletId(RandomTestUtil.randomString());
 
+		newAssetEntryUsage.setHidden(RandomTestUtil.randomBoolean());
+
 		newAssetEntryUsage.setLastPublishDate(RandomTestUtil.nextDate());
 
 		_assetEntryUsages.add(_persistence.update(newAssetEntryUsage));
@@ -178,6 +180,8 @@ public class AssetEntryUsagePersistenceTest {
 			newAssetEntryUsage.getClassPK());
 		Assert.assertEquals(existingAssetEntryUsage.getPortletId(),
 			newAssetEntryUsage.getPortletId());
+		Assert.assertEquals(existingAssetEntryUsage.isHidden(),
+			newAssetEntryUsage.isHidden());
 		Assert.assertEquals(Time.getShortTimestamp(
 				existingAssetEntryUsage.getLastPublishDate()),
 			Time.getShortTimestamp(newAssetEntryUsage.getLastPublishDate()));
@@ -223,6 +227,22 @@ public class AssetEntryUsagePersistenceTest {
 			RandomTestUtil.nextLong());
 
 		_persistence.countByA_C(0L, 0L);
+	}
+
+	@Test
+	public void testCountByA_H() throws Exception {
+		_persistence.countByA_H(RandomTestUtil.nextLong(),
+			RandomTestUtil.randomBoolean());
+
+		_persistence.countByA_H(0L, RandomTestUtil.randomBoolean());
+	}
+
+	@Test
+	public void testCountByA_C_H() throws Exception {
+		_persistence.countByA_C_H(RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
+
+		_persistence.countByA_C_H(0L, 0L, RandomTestUtil.randomBoolean());
 	}
 
 	@Test
@@ -272,7 +292,8 @@ public class AssetEntryUsagePersistenceTest {
 			true, "assetEntryUsageId", true, "groupId", true, "companyId",
 			true, "userId", true, "userName", true, "createDate", true,
 			"modifiedDate", true, "assetEntryId", true, "classNameId", true,
-			"classPK", true, "portletId", true, "lastPublishDate", true);
+			"classPK", true, "portletId", true, "hidden", true,
+			"lastPublishDate", true);
 	}
 
 	@Test
@@ -527,6 +548,8 @@ public class AssetEntryUsagePersistenceTest {
 		assetEntryUsage.setClassPK(RandomTestUtil.nextLong());
 
 		assetEntryUsage.setPortletId(RandomTestUtil.randomString());
+
+		assetEntryUsage.setHidden(RandomTestUtil.randomBoolean());
 
 		assetEntryUsage.setLastPublishDate(RandomTestUtil.nextDate());
 

@@ -49,6 +49,17 @@ public class AssetEntryUsageLocalServiceWrapper
 	@Override
 	public com.liferay.asset.model.AssetEntryUsage addAssetEntryUsage(
 		long userId, long groupId, long assetEntryId, long classNameId,
+		long classPK, String portletId, boolean hidden,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _assetEntryUsageLocalService.addAssetEntryUsage(userId, groupId,
+			assetEntryId, classNameId, classPK, portletId, hidden,
+			serviceContext);
+	}
+
+	@Override
+	public com.liferay.asset.model.AssetEntryUsage addAssetEntryUsage(
+		long userId, long groupId, long assetEntryId, long classNameId,
 		long classPK, String portletId,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -284,6 +295,21 @@ public class AssetEntryUsageLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, boolean hidden) {
+		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
+			hidden);
+	}
+
+	@Override
+	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, boolean hidden, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
+		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
+			hidden, start, end, orderByComparator);
+	}
+
+	@Override
+	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
 		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
@@ -295,6 +321,15 @@ public class AssetEntryUsageLocalServiceWrapper
 		long assetEntryId, long classNameId) {
 		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
 			classNameId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, long classNameId, boolean hidden, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
+		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
+			classNameId, hidden, start, end, orderByComparator);
 	}
 
 	@Override
@@ -360,9 +395,22 @@ public class AssetEntryUsageLocalServiceWrapper
 	}
 
 	@Override
+	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden) {
+		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId,
+			hidden);
+	}
+
+	@Override
 	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId) {
 		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId,
 			classNameId);
+	}
+
+	@Override
+	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId,
+		boolean hidden) {
+		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId,
+			classNameId, hidden);
 	}
 
 	@Override

@@ -57,6 +57,7 @@ public class AssetEntryUsageWrapper extends BaseModelWrapper<AssetEntryUsage>
 		attributes.put("classNameId", getClassNameId());
 		attributes.put("classPK", getClassPK());
 		attributes.put("portletId", getPortletId());
+		attributes.put("hidden", isHidden());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
 		return attributes;
@@ -134,6 +135,12 @@ public class AssetEntryUsageWrapper extends BaseModelWrapper<AssetEntryUsage>
 
 		if (portletId != null) {
 			setPortletId(portletId);
+		}
+
+		Boolean hidden = (Boolean)attributes.get("hidden");
+
+		if (hidden != null) {
+			setHidden(hidden);
 		}
 
 		Date lastPublishDate = (Date)attributes.get("lastPublishDate");
@@ -224,6 +231,16 @@ public class AssetEntryUsageWrapper extends BaseModelWrapper<AssetEntryUsage>
 	}
 
 	/**
+	* Returns the hidden of this asset entry usage.
+	*
+	* @return the hidden of this asset entry usage
+	*/
+	@Override
+	public boolean getHidden() {
+		return model.getHidden();
+	}
+
+	/**
 	* Returns the last publish date of this asset entry usage.
 	*
 	* @return the last publish date of this asset entry usage
@@ -301,6 +318,16 @@ public class AssetEntryUsageWrapper extends BaseModelWrapper<AssetEntryUsage>
 	@Override
 	public String getUuid() {
 		return model.getUuid();
+	}
+
+	/**
+	* Returns <code>true</code> if this asset entry usage is hidden.
+	*
+	* @return <code>true</code> if this asset entry usage is hidden; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isHidden() {
+		return model.isHidden();
 	}
 
 	@Override
@@ -381,6 +408,16 @@ public class AssetEntryUsageWrapper extends BaseModelWrapper<AssetEntryUsage>
 	@Override
 	public void setGroupId(long groupId) {
 		model.setGroupId(groupId);
+	}
+
+	/**
+	* Sets whether this asset entry usage is hidden.
+	*
+	* @param hidden the hidden of this asset entry usage
+	*/
+	@Override
+	public void setHidden(boolean hidden) {
+		model.setHidden(hidden);
 	}
 
 	/**

@@ -855,6 +855,380 @@ public class AssetEntryUsageUtil {
 	}
 
 	/**
+	* Returns all the asset entry usages where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @return the matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_H(long assetEntryId,
+		boolean hidden) {
+		return getPersistence().findByA_H(assetEntryId, hidden);
+	}
+
+	/**
+	* Returns a range of all the asset entry usages where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @return the range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_H(long assetEntryId,
+		boolean hidden, int start, int end) {
+		return getPersistence().findByA_H(assetEntryId, hidden, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the asset entry usages where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_H(long assetEntryId,
+		boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .findByA_H(assetEntryId, hidden, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the asset entry usages where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_H(long assetEntryId,
+		boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByA_H(assetEntryId, hidden, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first asset entry usage in the ordered set where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching asset entry usage
+	* @throws NoSuchEntryUsageException if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage findByA_H_First(long assetEntryId,
+		boolean hidden, OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_H_First(assetEntryId, hidden, orderByComparator);
+	}
+
+	/**
+	* Returns the first asset entry usage in the ordered set where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching asset entry usage, or <code>null</code> if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage fetchByA_H_First(long assetEntryId,
+		boolean hidden, OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_H_First(assetEntryId, hidden, orderByComparator);
+	}
+
+	/**
+	* Returns the last asset entry usage in the ordered set where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching asset entry usage
+	* @throws NoSuchEntryUsageException if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage findByA_H_Last(long assetEntryId,
+		boolean hidden, OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_H_Last(assetEntryId, hidden, orderByComparator);
+	}
+
+	/**
+	* Returns the last asset entry usage in the ordered set where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching asset entry usage, or <code>null</code> if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage fetchByA_H_Last(long assetEntryId,
+		boolean hidden, OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_H_Last(assetEntryId, hidden, orderByComparator);
+	}
+
+	/**
+	* Returns the asset entry usages before and after the current asset entry usage in the ordered set where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryUsageId the primary key of the current asset entry usage
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next asset entry usage
+	* @throws NoSuchEntryUsageException if a asset entry usage with the primary key could not be found
+	*/
+	public static AssetEntryUsage[] findByA_H_PrevAndNext(
+		long assetEntryUsageId, long assetEntryId, boolean hidden,
+		OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_H_PrevAndNext(assetEntryUsageId, assetEntryId,
+			hidden, orderByComparator);
+	}
+
+	/**
+	* Removes all the asset entry usages where assetEntryId = &#63; and hidden = &#63; from the database.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	*/
+	public static void removeByA_H(long assetEntryId, boolean hidden) {
+		getPersistence().removeByA_H(assetEntryId, hidden);
+	}
+
+	/**
+	* Returns the number of asset entry usages where assetEntryId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param hidden the hidden
+	* @return the number of matching asset entry usages
+	*/
+	public static int countByA_H(long assetEntryId, boolean hidden) {
+		return getPersistence().countByA_H(assetEntryId, hidden);
+	}
+
+	/**
+	* Returns all the asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @return the matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_C_H(long assetEntryId,
+		long classNameId, boolean hidden) {
+		return getPersistence().findByA_C_H(assetEntryId, classNameId, hidden);
+	}
+
+	/**
+	* Returns a range of all the asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @return the range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_C_H(long assetEntryId,
+		long classNameId, boolean hidden, int start, int end) {
+		return getPersistence()
+				   .findByA_C_H(assetEntryId, classNameId, hidden, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_C_H(long assetEntryId,
+		long classNameId, boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .findByA_C_H(assetEntryId, classNameId, hidden, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link AssetEntryUsageModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param start the lower bound of the range of asset entry usages
+	* @param end the upper bound of the range of asset entry usages (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching asset entry usages
+	*/
+	public static List<AssetEntryUsage> findByA_C_H(long assetEntryId,
+		long classNameId, boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByA_C_H(assetEntryId, classNameId, hidden, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first asset entry usage in the ordered set where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching asset entry usage
+	* @throws NoSuchEntryUsageException if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage findByA_C_H_First(long assetEntryId,
+		long classNameId, boolean hidden,
+		OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_C_H_First(assetEntryId, classNameId, hidden,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first asset entry usage in the ordered set where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching asset entry usage, or <code>null</code> if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage fetchByA_C_H_First(long assetEntryId,
+		long classNameId, boolean hidden,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_C_H_First(assetEntryId, classNameId, hidden,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last asset entry usage in the ordered set where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching asset entry usage
+	* @throws NoSuchEntryUsageException if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage findByA_C_H_Last(long assetEntryId,
+		long classNameId, boolean hidden,
+		OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_C_H_Last(assetEntryId, classNameId, hidden,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last asset entry usage in the ordered set where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching asset entry usage, or <code>null</code> if a matching asset entry usage could not be found
+	*/
+	public static AssetEntryUsage fetchByA_C_H_Last(long assetEntryId,
+		long classNameId, boolean hidden,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+		return getPersistence()
+				   .fetchByA_C_H_Last(assetEntryId, classNameId, hidden,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the asset entry usages before and after the current asset entry usage in the ordered set where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryUsageId the primary key of the current asset entry usage
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next asset entry usage
+	* @throws NoSuchEntryUsageException if a asset entry usage with the primary key could not be found
+	*/
+	public static AssetEntryUsage[] findByA_C_H_PrevAndNext(
+		long assetEntryUsageId, long assetEntryId, long classNameId,
+		boolean hidden, OrderByComparator<AssetEntryUsage> orderByComparator)
+		throws com.liferay.asset.exception.NoSuchEntryUsageException {
+		return getPersistence()
+				   .findByA_C_H_PrevAndNext(assetEntryUsageId, assetEntryId,
+			classNameId, hidden, orderByComparator);
+	}
+
+	/**
+	* Removes all the asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63; from the database.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	*/
+	public static void removeByA_C_H(long assetEntryId, long classNameId,
+		boolean hidden) {
+		getPersistence().removeByA_C_H(assetEntryId, classNameId, hidden);
+	}
+
+	/**
+	* Returns the number of asset entry usages where assetEntryId = &#63; and classNameId = &#63; and hidden = &#63;.
+	*
+	* @param assetEntryId the asset entry ID
+	* @param classNameId the class name ID
+	* @param hidden the hidden
+	* @return the number of matching asset entry usages
+	*/
+	public static int countByA_C_H(long assetEntryId, long classNameId,
+		boolean hidden) {
+		return getPersistence().countByA_C_H(assetEntryId, classNameId, hidden);
+	}
+
+	/**
 	* Returns all the asset entry usages where classNameId = &#63; and classPK = &#63; and portletId = &#63;.
 	*
 	* @param classNameId the class name ID

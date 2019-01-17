@@ -45,6 +45,7 @@ public class AssetEntryUsageSoap implements Serializable {
 		soapModel.setClassNameId(model.getClassNameId());
 		soapModel.setClassPK(model.getClassPK());
 		soapModel.setPortletId(model.getPortletId());
+		soapModel.setHidden(model.isHidden());
 		soapModel.setLastPublishDate(model.getLastPublishDate());
 
 		return soapModel;
@@ -196,6 +197,18 @@ public class AssetEntryUsageSoap implements Serializable {
 		_portletId = portletId;
 	}
 
+	public boolean getHidden() {
+		return _hidden;
+	}
+
+	public boolean isHidden() {
+		return _hidden;
+	}
+
+	public void setHidden(boolean hidden) {
+		_hidden = hidden;
+	}
+
 	public Date getLastPublishDate() {
 		return _lastPublishDate;
 	}
@@ -216,5 +229,6 @@ public class AssetEntryUsageSoap implements Serializable {
 	private long _classNameId;
 	private long _classPK;
 	private String _portletId;
+	private boolean _hidden;
 	private Date _lastPublishDate;
 }
