@@ -148,11 +148,30 @@
 					<ul class="nav nav-equal-height nav-stacked">
 						{foreach $portlet in $category.portlets}
 							<li class="widget-item" role="presentation">
-								<svg class="lexicon-icon lexicon-icon-angle-down">
-									<use xlink:href="{$spritemap}#{if $portlet.instanceable}grid{else}live{/if}"></use>
-								</svg>
 
-								<span class="taglib-icon-label">{$portlet.title}</span>
+							{let $portletDivClasses kind="text"}
+								{if $portlet.used and not $portlet.instanceable}
+									text-muted
+								{else}
+									fragments-editor__drag-source{sp}
+									fragments-editor__drag-source--sidebar-widget
+								{/if}
+							{/let}
+
+								<div
+									class="{$portletDivClasses}"
+									data-drag-source-label="{$portlet.title}"
+									data-instanceable="{$portlet.instanceable}"
+									data-portlet-id="{$portlet.portletId}"
+								>
+									<div class="fragments-editor__drag-handler"></div>
+
+									<svg class="lexicon-icon lexicon-icon-angle-down">
+										<use xlink:href="{$spritemap}#{if $portlet.instanceable}grid{else}live{/if}"></use>
+									</svg>
+
+									<span class="taglib-icon-label">{$portlet.title}</span>
+								</div>
 							</li>
 						{/foreach}
 					</ul>

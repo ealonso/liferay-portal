@@ -1,5 +1,7 @@
 import Component from 'metal-component';
 import {Config} from 'metal-state';
+import {Drag, DragDrop} from 'metal-drag-drop';
+import position from 'metal-position';
 import Soy from 'metal-soy';
 
 import templates from './SidebarWidgetsPanel.soy';
@@ -13,6 +15,14 @@ import {shouldUpdateOnChangeProperties} from '../../../utils/FragmentsEditorComp
  * @type {!string}
  */
 const ENTER_KEY = 'Enter';
+
+import {DROP_TARGET_BORDERS, DROP_TARGET_ITEM_TYPES} from '../../../reducers/placeholders.es';
+import {
+	ADD_PORTLET,
+	CLEAR_DROP_TARGET,
+	UPDATE_DROP_TARGET, UPDATE_LAST_SAVE_DATE,
+	UPDATE_SAVING_CHANGES_STATUS
+} from '../../../actions/actions.es';
 
 /**
  * SidebarWidgetsPanel
@@ -106,6 +116,24 @@ class SidebarWidgetsPanel extends Component {
 	}
 
 	/**
+	 * @inheritDoc
+	 * @private
+	 * @review
+	 */
+	attached() {
+		this._initializeDragAndDrop();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @private
+	 * @review
+	 */
+	disposed() {
+		this._dragDrop.dispose();
+	}
+
+	/**
 	 * @inheritdoc
 	 * @param {object} state
 	 * @return {object}
@@ -140,6 +168,64 @@ class SidebarWidgetsPanel extends Component {
 	}
 
 	/**
+	 * Callback that is executed when an item is being dragged.
+	 * @param {object} eventData
+	 * @param {MouseEvent} data.originalEvent
+	 * @private
+	 * @review
+	 */
+	_handleDrag(eventData) {
+		const targetItem = eventData.target;
+
+		const data = targetItem ? targetItem.dataset : null;
+		const targetIsColumn = targetItem && ('columnId' in data);
+
+		if (targetIsColumn) {
+			const mouseY = eventData.originalEvent.clientY;
+			const targetItemRegion = position.getRegion(targetItem);
+
+			let nearestBorder = DROP_TARGET_BORDERS.bottom;
+
+			if (
+				Math.abs(mouseY - targetItemRegion.top) <=
+				Math.abs(mouseY - targetItemRegion.bottom)
+			) {
+				nearestBorder = DROP_TARGET_BORDERS.top;
+			}
+
+			let dropTargetItemId = null;
+			let dropTargetItemType = null;
+
+			if (targetIsColumn) {
+				dropTargetItemId = data.columnId;
+				dropTargetItemType = DROP_TARGET_ITEM_TYPES.column;
+			}
+
+			if (dropTargetItemId) {
+				this.store.dispatchAction(
+					UPDATE_DROP_TARGET,
+					{
+						dropTargetBorder: nearestBorder,
+						dropTargetItemId,
+						dropTargetItemType
+					}
+				);
+			}
+		}
+	}
+
+	/**
+	 * Callback that is executed when we leave a drag target.
+	 * @private
+	 * @review
+	 */
+	_handleDragEnd() {
+		this.store.dispatchAction(
+			CLEAR_DROP_TARGET
+		);
+	}
+
+	/**
 	 * When the search form is submitted, nothing should happen,
 	 * as filtering is performed on keypress.
 	 * @param {KeyboardEvent} event
@@ -155,6 +241,97 @@ class SidebarWidgetsPanel extends Component {
 		this._keywords = event.delegateTarget.value;
 	}
 
+	/**
+	 * Callback that is executed when an item is dropped.
+	 * @param {!object} data
+	 * @param {!MouseEvent} event
+	 * @private
+	 * @review
+	 */
+	_handleDrop(data, event) {
+		event.preventDefault();
+
+		const targetItem = data.target;
+
+		const targetItemData = targetItem ? targetItem.dataset : null;
+
+		const targetIsColumn = targetItem && ('columnId' in targetItemData);
+
+		if (data.target && targetIsColumn) {
+			const {instanceable, portletId} = data.source.dataset;
+
+			requestAnimationFrame(
+				() => {
+					this._initializeDragAndDrop();
+				}
+			);
+
+			this.store
+				.dispatchAction(
+					UPDATE_SAVING_CHANGES_STATUS,
+					{
+						savingChanges: true
+					}
+				)
+				.dispatchAction(
+					ADD_PORTLET,
+					{
+						instanceable: instanceable,
+						portletId: portletId
+					}
+				)
+				.dispatchAction(
+					UPDATE_LAST_SAVE_DATE,
+					{
+						lastSaveDate: new Date()
+					}
+				)
+				.dispatchAction(
+					UPDATE_SAVING_CHANGES_STATUS,
+					{
+						savingChanges: false
+					}
+				)
+				.dispatchAction(
+					CLEAR_DROP_TARGET
+				);
+		}
+	}
+
+	/**
+	 * @private
+	 * @review
+	 */
+	_initializeDragAndDrop() {
+		if (this._dragDrop) {
+			this._dragDrop.dispose();
+		}
+
+		this._dragDrop = new DragDrop(
+			{
+				autoScroll: true,
+				dragPlaceholder: Drag.Placeholder.CLONE,
+				handles: '.fragments-editor__drag-handler',
+				sources: '.fragments-editor__drag-source--sidebar-widget',
+				targets: '.fragments-editor__drop-target--sidebar-fragment'
+			}
+		);
+
+		this._dragDrop.on(
+			DragDrop.Events.DRAG,
+			this._handleDrag.bind(this)
+		);
+
+		this._dragDrop.on(
+			DragDrop.Events.END,
+			this._handleDrop.bind(this)
+		);
+
+		this._dragDrop.on(
+			DragDrop.Events.TARGET_LEAVE,
+			this._handleDragEnd.bind(this)
+		);
+	}
 }
 
 /**
