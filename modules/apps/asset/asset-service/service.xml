@@ -39,6 +39,15 @@
 			<finder-column name="assetEntryId" />
 			<finder-column name="classNameId" />
 		</finder>
+		<finder name="A_H" return-type="Collection">
+			<finder-column name="assetEntryId" />
+			<finder-column name="hidden" />
+		</finder>
+		<finder name="A_C_H" return-type="Collection">
+			<finder-column name="assetEntryId" />
+			<finder-column name="classNameId" />
+			<finder-column name="hidden" />
+		</finder>
 		<finder name="C_C_P" return-type="Collection">
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
