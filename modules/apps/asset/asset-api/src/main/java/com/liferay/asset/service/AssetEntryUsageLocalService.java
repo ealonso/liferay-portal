@@ -247,9 +247,6 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 	public List<AssetEntryUsage> getAssetEntryUsages(int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
 		boolean hidden);
 
@@ -260,20 +257,7 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
-		int start, int end, OrderByComparator<AssetEntryUsage> orderByComparator);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
-		long classNameId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
 		long classNameId, boolean hidden, int start, int end,
-		OrderByComparator<AssetEntryUsage> orderByComparator);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<AssetEntryUsage> getAssetEntryUsages(long assetEntryId,
-		long classNameId, int start, int end,
 		OrderByComparator<AssetEntryUsage> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -315,13 +299,7 @@ public interface AssetEntryUsageLocalService extends BaseLocalService,
 	public int getAssetEntryUsagesCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getAssetEntryUsagesCount(long assetEntryId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId,

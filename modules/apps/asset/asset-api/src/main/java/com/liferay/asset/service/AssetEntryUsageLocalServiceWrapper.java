@@ -289,12 +289,6 @@ public class AssetEntryUsageLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId) {
-		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId);
-	}
-
-	@Override
-	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, boolean hidden) {
 		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
 			hidden);
@@ -310,34 +304,11 @@ public class AssetEntryUsageLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
-		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
-			start, end, orderByComparator);
-	}
-
-	@Override
-	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId) {
-		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
-			classNameId);
-	}
-
-	@Override
-	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, long classNameId, boolean hidden, int start,
 		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
 		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
 			classNameId, hidden, start, end, orderByComparator);
-	}
-
-	@Override
-	public java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
-		return _assetEntryUsageLocalService.getAssetEntryUsages(assetEntryId,
-			classNameId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -390,20 +361,9 @@ public class AssetEntryUsageLocalServiceWrapper
 	}
 
 	@Override
-	public int getAssetEntryUsagesCount(long assetEntryId) {
-		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId);
-	}
-
-	@Override
 	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden) {
 		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId,
 			hidden);
-	}
-
-	@Override
-	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId) {
-		return _assetEntryUsageLocalService.getAssetEntryUsagesCount(assetEntryId,
-			classNameId);
 	}
 
 	@Override

@@ -215,21 +215,6 @@ public class AssetEntryUsagePersistenceTest {
 	}
 
 	@Test
-	public void testCountByAssetEntryId() throws Exception {
-		_persistence.countByAssetEntryId(RandomTestUtil.nextLong());
-
-		_persistence.countByAssetEntryId(0L);
-	}
-
-	@Test
-	public void testCountByA_C() throws Exception {
-		_persistence.countByA_C(RandomTestUtil.nextLong(),
-			RandomTestUtil.nextLong());
-
-		_persistence.countByA_C(0L, 0L);
-	}
-
-	@Test
 	public void testCountByA_H() throws Exception {
 		_persistence.countByA_H(RandomTestUtil.nextLong(),
 			RandomTestUtil.randomBoolean());

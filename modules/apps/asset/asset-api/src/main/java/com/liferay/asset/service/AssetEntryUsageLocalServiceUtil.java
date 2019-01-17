@@ -273,11 +273,6 @@ public class AssetEntryUsageLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId) {
-		return getService().getAssetEntryUsages(assetEntryId);
-	}
-
-	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, boolean hidden) {
 		return getService().getAssetEntryUsages(assetEntryId, hidden);
 	}
@@ -291,33 +286,12 @@ public class AssetEntryUsageLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
-		return getService()
-				   .getAssetEntryUsages(assetEntryId, start, end,
-			orderByComparator);
-	}
-
-	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId) {
-		return getService().getAssetEntryUsages(assetEntryId, classNameId);
-	}
-
-	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, long classNameId, boolean hidden, int start,
 		int end,
 		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
 		return getService()
 				   .getAssetEntryUsages(assetEntryId, classNameId, hidden,
 			start, end, orderByComparator);
-	}
-
-	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
-		long assetEntryId, long classNameId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator<com.liferay.asset.model.AssetEntryUsage> orderByComparator) {
-		return getService()
-				   .getAssetEntryUsages(assetEntryId, classNameId, start, end,
-			orderByComparator);
 	}
 
 	public static java.util.List<com.liferay.asset.model.AssetEntryUsage> getAssetEntryUsages(
@@ -365,17 +339,8 @@ public class AssetEntryUsageLocalServiceUtil {
 		return getService().getAssetEntryUsagesCount();
 	}
 
-	public static int getAssetEntryUsagesCount(long assetEntryId) {
-		return getService().getAssetEntryUsagesCount(assetEntryId);
-	}
-
 	public static int getAssetEntryUsagesCount(long assetEntryId, boolean hidden) {
 		return getService().getAssetEntryUsagesCount(assetEntryId, hidden);
-	}
-
-	public static int getAssetEntryUsagesCount(long assetEntryId,
-		long classNameId) {
-		return getService().getAssetEntryUsagesCount(assetEntryId, classNameId);
 	}
 
 	public static int getAssetEntryUsagesCount(long assetEntryId,
