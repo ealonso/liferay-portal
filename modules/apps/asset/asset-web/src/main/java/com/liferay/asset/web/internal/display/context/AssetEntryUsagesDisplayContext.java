@@ -60,7 +60,7 @@ public class AssetEntryUsagesDisplayContext {
 
 	public int getAllUsageCount() {
 		return AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
-			getAssetEntryId());
+			getAssetEntryId(), false);
 	}
 
 	public long getAssetEntryId() {
@@ -169,13 +169,13 @@ public class AssetEntryUsagesDisplayContext {
 	public int getDisplayPagesUsageCount() {
 		return AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
 			getAssetEntryId(),
-			PortalUtil.getClassNameId(AssetDisplayPageEntry.class));
+			PortalUtil.getClassNameId(AssetDisplayPageEntry.class), false);
 	}
 
 	public int getFragmentsUsageCount() {
 		return AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
 			getAssetEntryId(),
-			PortalUtil.getClassNameId(FragmentEntryLink.class));
+			PortalUtil.getClassNameId(FragmentEntryLink.class), false);
 	}
 
 	public String getNavigation() {
@@ -190,13 +190,13 @@ public class AssetEntryUsagesDisplayContext {
 
 	public int getPagesUsageCount() {
 		return AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
-			getAssetEntryId(), PortalUtil.getClassNameId(Layout.class));
+			getAssetEntryId(), PortalUtil.getClassNameId(Layout.class), false);
 	}
 
 	public int getPageTemplatesUsageCount() {
 		return AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
 			getAssetEntryId(),
-			PortalUtil.getClassNameId(LayoutPageTemplateEntry.class));
+			PortalUtil.getClassNameId(LayoutPageTemplateEntry.class), false);
 	}
 
 	public PortletURL getPortletURL() {
@@ -252,7 +252,7 @@ public class AssetEntryUsagesDisplayContext {
 			assetEntryUsages =
 				AssetEntryUsageLocalServiceUtil.getAssetEntryUsages(
 					getAssetEntryId(), PortalUtil.getClassNameId(Layout.class),
-					assetEntryUsagesSearchContainer.getStart(),
+					false, assetEntryUsagesSearchContainer.getStart(),
 					assetEntryUsagesSearchContainer.getEnd(),
 					orderByComparator);
 
@@ -263,7 +263,7 @@ public class AssetEntryUsagesDisplayContext {
 				AssetEntryUsageLocalServiceUtil.getAssetEntryUsages(
 					getAssetEntryId(),
 					PortalUtil.getClassNameId(LayoutPageTemplateEntry.class),
-					assetEntryUsagesSearchContainer.getStart(),
+					false, assetEntryUsagesSearchContainer.getStart(),
 					assetEntryUsagesSearchContainer.getEnd(),
 					orderByComparator);
 
@@ -274,7 +274,7 @@ public class AssetEntryUsagesDisplayContext {
 				AssetEntryUsageLocalServiceUtil.getAssetEntryUsages(
 					getAssetEntryId(),
 					PortalUtil.getClassNameId(AssetDisplayPageEntry.class),
-					assetEntryUsagesSearchContainer.getStart(),
+					false, assetEntryUsagesSearchContainer.getStart(),
 					assetEntryUsagesSearchContainer.getEnd(),
 					orderByComparator);
 
@@ -284,7 +284,7 @@ public class AssetEntryUsagesDisplayContext {
 			assetEntryUsages =
 				AssetEntryUsageLocalServiceUtil.getAssetEntryUsages(
 					getAssetEntryId(),
-					PortalUtil.getClassNameId(FragmentEntryLink.class),
+					PortalUtil.getClassNameId(FragmentEntryLink.class), false,
 					assetEntryUsagesSearchContainer.getStart(),
 					assetEntryUsagesSearchContainer.getEnd(),
 					orderByComparator);
@@ -294,7 +294,7 @@ public class AssetEntryUsagesDisplayContext {
 		else {
 			assetEntryUsages =
 				AssetEntryUsageLocalServiceUtil.getAssetEntryUsages(
-					getAssetEntryId(),
+					getAssetEntryId(), false,
 					assetEntryUsagesSearchContainer.getStart(),
 					assetEntryUsagesSearchContainer.getEnd(),
 					orderByComparator);
