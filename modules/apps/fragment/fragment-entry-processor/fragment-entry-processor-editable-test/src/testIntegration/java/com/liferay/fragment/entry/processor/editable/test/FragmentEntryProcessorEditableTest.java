@@ -167,7 +167,8 @@ public class FragmentEntryProcessorEditableTest {
 
 		fragmentEntryLink.setEditableValues(
 			_getJsonFileAsString(
-				"fragment_entry_link_editable_values_matching_language_compatibility.json"));
+				"fragment_entry_link_editable_values_matching_language_" +
+					"compatibility.json"));
 
 		Assert.assertEquals(
 			_getBodyElementHtmlAsString("processed_fragment_entry.html"),
@@ -200,6 +201,30 @@ public class FragmentEntryProcessorEditableTest {
 			_getJsonFileAsString(
 				"fragment_entry_link_editable_values_unmatching_language." +
 					"json"));
+
+		Assert.assertEquals(
+			_getBodyElementHtmlAsString("processed_fragment_entry.html"),
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
+				LocaleUtil.CHINESE));
+	}
+
+	@Test
+	public void testFragmentEntryProcessorEditableWithUnmatchedLanguageCompatibility()
+		throws Exception {
+
+		FragmentEntry fragmentEntry = _createFragmentEntry(
+			"fragment_entry.html");
+
+		FragmentEntryLink fragmentEntryLink =
+			FragmentEntryLinkLocalServiceUtil.createFragmentEntryLink(0);
+
+		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+
+		fragmentEntryLink.setEditableValues(
+			_getJsonFileAsString(
+				"fragment_entry_link_editable_values_unmatching_language_" +
+					"compatibility.json"));
 
 		Assert.assertEquals(
 			_getBodyElementHtmlAsString("processed_fragment_entry.html"),
