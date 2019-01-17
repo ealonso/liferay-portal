@@ -33,7 +33,8 @@ public class AssetEntryUsageLocalServiceImpl
 	@Override
 	public AssetEntryUsage addAssetEntryUsage(
 			long userId, long groupId, long assetEntryId, long classNameId,
-			long classPK, String portletId, ServiceContext serviceContext)
+			long classPK, String portletId, boolean hidden,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userLocalService.getUser(userId);
@@ -55,8 +56,20 @@ public class AssetEntryUsageLocalServiceImpl
 		assetEntryUsage.setClassNameId(classNameId);
 		assetEntryUsage.setClassPK(classPK);
 		assetEntryUsage.setPortletId(portletId);
+		assetEntryUsage.setHidden(hidden);
 
 		return assetEntryUsagePersistence.update(assetEntryUsage);
+	}
+
+	@Override
+	public AssetEntryUsage addAssetEntryUsage(
+			long userId, long groupId, long assetEntryId, long classNameId,
+			long classPK, String portletId, ServiceContext serviceContext)
+		throws PortalException {
+
+		return addAssetEntryUsage(
+			userId, groupId, assetEntryId, classNameId, classPK, portletId,
+			false, serviceContext);
 	}
 
 	@Override
@@ -82,6 +95,22 @@ public class AssetEntryUsageLocalServiceImpl
 
 	@Override
 	public List<AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, boolean hidden) {
+
+		return assetEntryUsagePersistence.findByA_H(assetEntryId, hidden);
+	}
+
+	@Override
+	public List<AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+
+		return assetEntryUsagePersistence.findByA_H(
+			assetEntryId, hidden, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<AssetEntryUsage> getAssetEntryUsages(
 		long assetEntryId, int start, int end,
 		OrderByComparator<AssetEntryUsage> orderByComparator) {
 
@@ -94,6 +123,15 @@ public class AssetEntryUsageLocalServiceImpl
 		long assetEntryId, long classNameId) {
 
 		return assetEntryUsagePersistence.findByA_C(assetEntryId, classNameId);
+	}
+
+	@Override
+	public List<AssetEntryUsage> getAssetEntryUsages(
+		long assetEntryId, long classNameId, boolean hidden, int start, int end,
+		OrderByComparator<AssetEntryUsage> orderByComparator) {
+
+		return assetEntryUsagePersistence.findByA_C_H(
+			assetEntryId, classNameId, hidden, start, end, orderByComparator);
 	}
 
 	@Override
@@ -119,8 +157,21 @@ public class AssetEntryUsageLocalServiceImpl
 	}
 
 	@Override
+	public int getAssetEntryUsagesCount(long assetEntryId, boolean hidden) {
+		return assetEntryUsagePersistence.countByA_H(assetEntryId, hidden);
+	}
+
+	@Override
 	public int getAssetEntryUsagesCount(long assetEntryId, long classNameId) {
 		return assetEntryUsagePersistence.countByA_C(assetEntryId, classNameId);
+	}
+
+	@Override
+	public int getAssetEntryUsagesCount(
+		long assetEntryId, long classNameId, boolean hidden) {
+
+		return assetEntryUsagePersistence.countByA_C_H(
+			assetEntryId, classNameId, hidden);
 	}
 
 }
