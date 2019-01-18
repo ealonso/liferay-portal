@@ -33,6 +33,7 @@ import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutTypeControllerWebKeys;
+import com.liferay.layout.type.controller.content.internal.util.PortletUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.editor.configuration.EditorConfiguration;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigurationFactoryUtil;
@@ -46,7 +47,6 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
-import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
@@ -88,11 +88,6 @@ import javax.portlet.RenderResponse;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * @author Eudaldo Alonso
@@ -508,23 +503,6 @@ public class FragmentsEditorDisplayContext {
 		return StringPool.BLANK;
 	}
 
-	private String _getPortletId(String content) {
-		Document document = Jsoup.parse(content);
-
-		Elements elements = document.getElementsByAttributeValueStarting(
-			"id", "portlet_");
-
-		if (elements.size() != 1) {
-			return StringPool.BLANK;
-		}
-
-		Element element = elements.get(0);
-
-		String id = element.id();
-
-		return PortletIdCodec.decodePortletName(id.substring(8));
-	}
-
 	private List<SoyContext> _getPortletsContexts(
 		PortletCategory portletCategory) {
 
@@ -643,9 +621,6 @@ public class FragmentsEditorDisplayContext {
 
 		_themeDisplay.setIsolated(true);
 
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", _request.getLocale(), getClass());
-
 		try {
 			for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 				FragmentEntry fragmentEntry =
@@ -673,10 +648,14 @@ public class FragmentsEditorDisplayContext {
 					soyContext.put("name", fragmentEntry.getName());
 				}
 				else {
+					String portletId = PortletUtil.getPortletId(content);
+
 					soyContext.put("fragmentEntryId", 0);
-					soyContext.put("portletId", _getPortletId(content));
+					soyContext.put("portletId", portletId);
 					soyContext.put(
-						"name", LanguageUtil.get(resourceBundle, "widget"));
+						"name",
+						PortalUtil.getPortletTitle(
+							portletId, _themeDisplay.getLocale()));
 				}
 
 				soyContext.put(

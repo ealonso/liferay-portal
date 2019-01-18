@@ -43,10 +43,8 @@ import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
@@ -105,8 +103,7 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", themeDisplay.getLocale(), getClass());
+		String portletId = ParamUtil.getString(actionRequest, "portletId");
 
 		try {
 			FragmentEntryLink fragmentEntryLink = TransactionInvokerUtil.invoke(
@@ -124,7 +121,9 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 				"fragmentEntryLinkId",
 				fragmentEntryLink.getFragmentEntryLinkId());
 
-			jsonObject.put("name", LanguageUtil.get(resourceBundle, "widget"));
+			jsonObject.put(
+				"name",
+				_portal.getPortletTitle(portletId, themeDisplay.getLocale()));
 
 			SessionMessages.add(actionRequest, "fragmentEntryLinkAdded");
 		}
