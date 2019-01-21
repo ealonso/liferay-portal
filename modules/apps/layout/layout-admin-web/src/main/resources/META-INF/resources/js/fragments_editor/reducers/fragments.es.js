@@ -5,6 +5,82 @@ import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../uti
 import {getColumn, getDropSectionPosition, getFragmentColumn} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
+ * Adds a fragment at the corresponding container in the layout
+ * @param {string} fragmentEntryLinkId
+ * @param {string} dropTargetBorder
+ * @param {string} dropTargetItemId
+ * @param {string} dropTargetItemType
+ * @param {object} layoutData
+ * @private
+ * @return {object}
+ * @review
+ */
+function addFragment(
+	fragmentEntryLinkId,
+	dropTargetBorder,
+	dropTargetItemId,
+	dropTargetItemType,
+	layoutData
+) {
+	let nextData = layoutData;
+
+	if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.column) {
+		const fragmentColumn = getColumn(
+			layoutData.structure,
+			dropTargetItemId
+		);
+
+		nextData = _addFragmentToColumn(
+			layoutData,
+			fragmentEntryLinkId,
+			dropTargetItemId,
+			fragmentColumn.fragmentEntryLinkIds.length
+		);
+	}
+	else if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.fragment) {
+		const fragmentColumn = getFragmentColumn(
+			layoutData.structure,
+			dropTargetItemId
+		);
+
+		const position = _getDropFragmentPosition(
+			fragmentColumn.fragmentEntryLinkIds,
+			dropTargetItemId,
+			dropTargetBorder
+		);
+
+		nextData = _addFragmentToColumn(
+			layoutData,
+			fragmentEntryLinkId,
+			fragmentColumn.columnId,
+			position
+		);
+	}
+	else if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.section) {
+		const position = getDropSectionPosition(
+			layoutData.structure,
+			dropTargetItemId,
+			dropTargetBorder
+		);
+
+		nextData = _addSingleFragmentRow(
+			layoutData,
+			fragmentEntryLinkId,
+			position
+		);
+	}
+	else {
+		nextData = _addSingleFragmentRow(
+			layoutData,
+			fragmentEntryLinkId,
+			layoutData.structure.length
+		);
+	}
+
+	return nextData;
+}
+
+/**
  * @param {!object} state
  * @param {!string} actionType
  * @param {!object} payload
@@ -34,7 +110,7 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 						response => {
 							fragmentEntryLink = response;
 
-							nextData = _addFragment(
+							nextData = addFragment(
 								fragmentEntryLink.fragmentEntryLinkId,
 								nextState.dropTargetBorder,
 								nextState.dropTargetItemId,
@@ -52,7 +128,7 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 						}
 					)
 					.then(
-						() => _getFragmentEntryLinkContent(
+						() => getFragmentEntryLinkContent(
 							nextState.renderFragmentEntryURL,
 							fragmentEntryLink,
 							nextState.portletNamespace
@@ -94,6 +170,51 @@ function addFragmentEntryLinkReducer(state, actionType, payload) {
 }
 
 /**
+ * @param {string} renderFragmentEntryURL
+ * @param {{fragmentEntryLinkId: string}} fragmentEntryLink
+ * @param {string} portletNamespace
+ * @return {Promise<object>}
+ * @review
+ */
+function getFragmentEntryLinkContent(
+	renderFragmentEntryURL,
+	fragmentEntryLink,
+	portletNamespace
+) {
+	const formData = new FormData();
+
+	formData.append(
+		`${portletNamespace}fragmentEntryLinkId`,
+		fragmentEntryLink.fragmentEntryLinkId
+	);
+
+	return fetch(
+		renderFragmentEntryURL,
+		{
+			body: formData,
+			credentials: 'include',
+			method: 'POST'
+		}
+	)
+		.then(
+			response => response.json()
+		)
+		.then(
+			response => {
+				if (!response.content) {
+					throw new Error();
+				}
+
+				return setIn(
+					fragmentEntryLink,
+					['content'],
+					response.content
+				);
+			}
+		);
+}
+
+/**
  * @param {!object} state
  * @param {!string} actionType
  * @param {!object} payload
@@ -117,7 +238,7 @@ function moveFragmentEntryLinkReducer(state, actionType, payload) {
 					payload.fragmentEntryLinkId
 				);
 
-				nextData = _addFragment(
+				nextData = addFragment(
 					payload.fragmentEntryLinkId,
 					payload.targetBorder,
 					payload.targetItemId,
@@ -300,82 +421,6 @@ function updateEditableValueReducer(state, actionType, payload) {
 }
 
 /**
- * Adds a fragment at the corresponding container in the layout
- * @param {string} fragmentEntryLinkId
- * @param {string} dropTargetBorder
- * @param {string} dropTargetItemId
- * @param {string} dropTargetItemType
- * @param {object} layoutData
- * @private
- * @return {object}
- * @review
- */
-function _addFragment(
-	fragmentEntryLinkId,
-	dropTargetBorder,
-	dropTargetItemId,
-	dropTargetItemType,
-	layoutData
-) {
-	let nextData = layoutData;
-
-	if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.column) {
-		const fragmentColumn = getColumn(
-			layoutData.structure,
-			dropTargetItemId
-		);
-
-		nextData = _addFragmentToColumn(
-			layoutData,
-			fragmentEntryLinkId,
-			dropTargetItemId,
-			fragmentColumn.fragmentEntryLinkIds.length
-		);
-	}
-	else if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.fragment) {
-		const fragmentColumn = getFragmentColumn(
-			layoutData.structure,
-			dropTargetItemId
-		);
-
-		const position = _getDropFragmentPosition(
-			fragmentColumn.fragmentEntryLinkIds,
-			dropTargetItemId,
-			dropTargetBorder
-		);
-
-		nextData = _addFragmentToColumn(
-			layoutData,
-			fragmentEntryLinkId,
-			fragmentColumn.columnId,
-			position
-		);
-	}
-	else if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.section) {
-		const position = getDropSectionPosition(
-			layoutData.structure,
-			dropTargetItemId,
-			dropTargetBorder
-		);
-
-		nextData = _addSingleFragmentRow(
-			layoutData,
-			fragmentEntryLinkId,
-			position
-		);
-	}
-	else {
-		nextData = _addSingleFragmentRow(
-			layoutData,
-			fragmentEntryLinkId,
-			layoutData.structure.length
-		);
-	}
-
-	return nextData;
-}
-
-/**
  * @param {string} addFragmentEntryLinkURL
  * @param {string} fragmentEntryId
  * @param {string} fragmentName
@@ -456,51 +501,6 @@ function _getDropFragmentPosition(
 	}
 
 	return position;
-}
-
-/**
- * @param {string} renderFragmentEntryURL
- * @param {{fragmentEntryLinkId: string}} fragmentEntryLink
- * @param {string} portletNamespace
- * @return {Promise<object>}
- * @review
- */
-function _getFragmentEntryLinkContent(
-	renderFragmentEntryURL,
-	fragmentEntryLink,
-	portletNamespace
-) {
-	const formData = new FormData();
-
-	formData.append(
-		`${portletNamespace}fragmentEntryLinkId`,
-		fragmentEntryLink.fragmentEntryLinkId
-	);
-
-	return fetch(
-		renderFragmentEntryURL,
-		{
-			body: formData,
-			credentials: 'include',
-			method: 'POST'
-		}
-	)
-		.then(
-			response => response.json()
-		)
-		.then(
-			response => {
-				if (!response.content) {
-					throw new Error();
-				}
-
-				return setIn(
-					fragmentEntryLink,
-					['content'],
-					response.content
-				);
-			}
-		);
 }
 
 /**
@@ -695,7 +695,9 @@ function _removeFragmentEntryLink(
 }
 
 export {
+	addFragment,
 	addFragmentEntryLinkReducer,
+	getFragmentEntryLinkContent,
 	moveFragmentEntryLinkReducer,
 	removeFragmentEntryLinkReducer,
 	updateEditableValueReducer
