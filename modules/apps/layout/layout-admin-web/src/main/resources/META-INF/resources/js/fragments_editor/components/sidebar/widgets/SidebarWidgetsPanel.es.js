@@ -174,8 +174,10 @@ class SidebarWidgetsPanel extends Component {
 
 		const data = targetItem ? targetItem.dataset : null;
 		const targetIsColumn = targetItem && ('columnId' in data);
+		const targetIsFragment = targetItem && ('fragmentEntryLinkId' in data);
+		const targetIsSection = targetItem && ('layoutSectionId' in data);
 
-		if (targetIsColumn) {
+		if (targetIsColumn || targetIsFragment || targetIsSection) {
 			const mouseY = eventData.originalEvent.clientY;
 			const targetItemRegion = position.getRegion(targetItem);
 
@@ -195,17 +197,23 @@ class SidebarWidgetsPanel extends Component {
 				dropTargetItemId = data.columnId;
 				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.column;
 			}
-
-			if (dropTargetItemId) {
-				this.store.dispatchAction(
-					UPDATE_DROP_TARGET,
-					{
-						dropTargetBorder: nearestBorder,
-						dropTargetItemId,
-						dropTargetItemType
-					}
-				);
+			else if (targetIsFragment) {
+				dropTargetItemId = data.fragmentEntryLinkId;
+				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.fragment;
 			}
+			else if (targetIsSection) {
+				dropTargetItemId = data.layoutSectionId;
+				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.section;
+			}
+
+			this.store.dispatchAction(
+				UPDATE_DROP_TARGET,
+				{
+					dropTargetBorder: nearestBorder,
+					dropTargetItemId,
+					dropTargetItemType
+				}
+			);
 		}
 	}
 
@@ -246,13 +254,7 @@ class SidebarWidgetsPanel extends Component {
 	_handleDrop(data, event) {
 		event.preventDefault();
 
-		const targetItem = data.target;
-
-		const targetItemData = targetItem ? targetItem.dataset : null;
-
-		const targetIsColumn = targetItem && ('columnId' in targetItemData);
-
-		if (data.target && targetIsColumn) {
+		if (data.target) {
 			const {instanceable, portletId} = data.source.dataset;
 
 			requestAnimationFrame(
@@ -271,8 +273,8 @@ class SidebarWidgetsPanel extends Component {
 				.dispatchAction(
 					ADD_PORTLET,
 					{
-						instanceable: instanceable,
-						portletId: portletId
+						instanceable,
+						portletId
 					}
 				)
 				.dispatchAction(
@@ -308,7 +310,7 @@ class SidebarWidgetsPanel extends Component {
 				dragPlaceholder: Drag.Placeholder.CLONE,
 				handles: '.fragments-editor__drag-handler',
 				sources: '.fragments-editor__drag-source--sidebar-widget',
-				targets: '.fragments-editor__drop-target--sidebar-fragment'
+				targets: '.fragments-editor__drop-target--sidebar-widget'
 			}
 		);
 
