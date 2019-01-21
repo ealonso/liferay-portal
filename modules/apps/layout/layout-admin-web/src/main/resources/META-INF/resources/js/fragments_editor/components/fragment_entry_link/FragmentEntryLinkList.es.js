@@ -487,7 +487,7 @@ class FragmentEntryLinkList extends Component {
 				dragPlaceholder: Drag.Placeholder.CLONE,
 				handles: '.fragments-editor__drag-handler',
 				sources: '.fragments-editor__drag-source--fragment, .fragments-editor__drag-source--layout',
-				targets: '.fragments-editor__drop-target--fragment, .fragments-editor__drag-source--layout'
+				targets: '.fragments-editor__drop-target--fragment, .fragments-editor__drop-target--layout'
 			}
 		);
 
