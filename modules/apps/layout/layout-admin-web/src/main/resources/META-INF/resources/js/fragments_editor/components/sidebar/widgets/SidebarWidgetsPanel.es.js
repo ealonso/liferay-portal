@@ -5,7 +5,7 @@ import position from 'metal-position';
 import Soy from 'metal-soy';
 
 import {ADD_PORTLET, CLEAR_DROP_TARGET, UPDATE_DROP_TARGET, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS} from '../../../actions/actions.es';
-import {DROP_TARGET_BORDERS, DROP_TARGET_ITEM_TYPES} from '../../../reducers/placeholders.es';
+import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../../../utils/constants';
 import {getConnectedComponent} from '../../../store/ConnectedComponent.es';
 import {setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties} from '../../../utils/FragmentsEditorComponentUtils.es';
@@ -179,13 +179,13 @@ class SidebarWidgetsPanel extends Component {
 			const mouseY = eventData.originalEvent.clientY;
 			const targetItemRegion = position.getRegion(targetItem);
 
-			let nearestBorder = DROP_TARGET_BORDERS.bottom;
+			let nearestBorder = FRAGMENTS_EDITOR_ITEM_BORDERS.bottom;
 
 			if (
 				Math.abs(mouseY - targetItemRegion.top) <=
 				Math.abs(mouseY - targetItemRegion.bottom)
 			) {
-				nearestBorder = DROP_TARGET_BORDERS.top;
+				nearestBorder = FRAGMENTS_EDITOR_ITEM_BORDERS.top;
 			}
 
 			let dropTargetItemId = null;
@@ -193,7 +193,7 @@ class SidebarWidgetsPanel extends Component {
 
 			if (targetIsColumn) {
 				dropTargetItemId = data.columnId;
-				dropTargetItemType = DROP_TARGET_ITEM_TYPES.column;
+				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.column;
 			}
 
 			if (dropTargetItemId) {

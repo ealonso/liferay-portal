@@ -1,6 +1,6 @@
 import {ADD_PORTLET} from '../actions/actions.es';
 import {add, setIn, updateIn, updateLayoutData} from '../utils/FragmentsEditorUpdateUtils.es';
-import {DROP_TARGET_ITEM_TYPES} from './placeholders.es';
+import {FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
 import {getColumn, getWidget} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
@@ -175,7 +175,7 @@ function _addPortletElement(
 ) {
 	let nextData = layoutData;
 
-	if (dropTargetItemType === DROP_TARGET_ITEM_TYPES.column) {
+	if (dropTargetItemType === FRAGMENTS_EDITOR_ITEM_TYPES.column) {
 		const fragmentColumn = getColumn(
 			layoutData.structure,
 			dropTargetItemId
