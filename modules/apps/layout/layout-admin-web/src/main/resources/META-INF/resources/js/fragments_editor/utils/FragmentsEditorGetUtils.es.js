@@ -171,59 +171,70 @@ function getTargetBorder(direction) {
 
 /**
  * Get widget from the widgets tree by portletId
- *
  * @param {!array} widgets
  * @param {!string} portletId
  * @return {object}
  * @review
  */
 function getWidget(widgets, portletId) {
-	const widget = {};
+	for (const widgetCategory of widgets) {
+		const {categories = [], portlets = []} = widgetCategory;
+		const categoryPortlet = portlets.find(_portlet => _portlet.portletId === portletId);
+		const subCategoryPortlet = getWidget(categories, portletId);
 
-	const path = ['widgets'];
-
-	/**
-	 * @param {object[]} parent
-	 * @param {object} category
-	 */
-	const findPortlet = (parent, category) => {
-		path.push(parent.indexOf(category));
-
-		if (category.portlets && !widget.portletObject) {
-			path.push('portlets');
-
-			for (const portletIndex in category.portlets) {
-				if (category.portlets[portletIndex].portletId === portletId) {
-					path.push(portletIndex);
-
-					widget.path = path.slice(0);
-					widget.portletObject = category.portlets[portletIndex];
-
-					break;
-				}
-			}
-
-			path.pop();
+		if (categoryPortlet) {
+			return categoryPortlet;
 		}
 
-		if (category.categories && !widget.portletObject) {
-			path.push('categories');
+		if (subCategoryPortlet) {
+			return subCategoryPortlet;
+		}
+	}
 
-			category.categories.forEach(
-				subCategory => findPortlet(category.categories, subCategory)
-			);
+	return null;
+}
 
-			path.pop();
+/**
+ * Get widget path from the widgets tree by portletId
+ * @param {!array} widgets
+ * @param {!string} portletId
+ * @param {string[]} [_path=['widgets']]
+ * @return {object}
+ * @review
+ */
+function getWidgetPath(widgets, portletId, _path = ['widgets']) {
+	for (let categoryIndex = 0; categoryIndex < widgets.length; categoryIndex += 1) {
+		const {categories = [], portlets = []} = widgets[categoryIndex];
+
+		const categoryPortletIndex = portlets.findIndex(
+			_portlet => _portlet.portletId === portletId
+		);
+
+		const subCategoryPortletPath = getWidgetPath(
+			categories,
+			portletId,
+			[
+				..._path,
+				categoryIndex,
+				'categories'
+			]
+		);
+
+		if (categoryPortletIndex !== -1) {
+			return [
+				..._path,
+				categoryIndex,
+				'portlets',
+				categoryPortletIndex
+			];
 		}
 
-		path.pop();
-	};
+		if (subCategoryPortletPath) {
+			return subCategoryPortletPath;
+		}
+	}
 
-	widgets.forEach(
-		category => findPortlet(widgets, category)
-	);
-
-	return widget;
+	return null;
 }
 
 export {
@@ -235,5 +246,6 @@ export {
 	getSectionFragmentEntryLinkIds,
 	getSectionIndex,
 	getTargetBorder,
-	getWidget
+	getWidget,
+	getWidgetPath
 };

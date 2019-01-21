@@ -1,7 +1,7 @@
 import {ADD_PORTLET} from '../actions/actions.es';
 import {add, setIn, updateIn, updateLayoutData} from '../utils/FragmentsEditorUpdateUtils.es';
 import {FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
-import {getColumn, getWidget} from '../utils/FragmentsEditorGetUtils.es';
+import {getColumn, getWidgetPath} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
  * @param {!object} state
@@ -72,14 +72,15 @@ function addPortletReducer(state, actionType, payload) {
 							);
 
 							if (!payload.instanceable) {
-								const widget = getWidget(state.widgets, payload.portletId);
-
-								widget.portletObject.used = true;
+								const widgetPath = getWidgetPath(state.widgets, payload.portletId);
 
 								nextState = setIn(
 									nextState,
-									widget.path,
-									widget.portletObject
+									[
+										...widgetPath,
+										'used'
+									],
+									true
 								);
 							}
 

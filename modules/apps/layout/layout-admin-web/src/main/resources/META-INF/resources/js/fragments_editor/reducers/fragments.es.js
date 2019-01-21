@@ -195,12 +195,16 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 					.then(
 						() => {
 							nextState = setIn(nextState, ['layoutData'], nextData);
+							nextState = updateWidgets(nextState, payload.fragmentEntryLinkId);
 
-							updateWidgets(nextState, payload.fragmentEntryLinkId);
-
-							delete nextState.fragmentEntryLinks[
-								payload.fragmentEntryLinkId
-							];
+							nextState.setIn(
+								nextState,
+								['fragmentEntryLinks'],
+								nextState.fragmentEntryLinks.filter(
+									_fragmentEntryLink => _fragmentEntryLink.fragmentEntryLinkId !==
+										payload.fragmentEntryLinkId
+								)
+							);
 
 							resolve(nextState);
 						}

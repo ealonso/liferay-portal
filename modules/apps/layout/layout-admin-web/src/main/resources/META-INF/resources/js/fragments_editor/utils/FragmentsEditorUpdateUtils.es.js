@@ -1,6 +1,6 @@
 import {CLEAR_ACTIVE_ITEM, CLEAR_DROP_TARGET, CLEAR_HOVERED_ITEM, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS} from '../actions/actions.es';
 import {FRAGMENTS_EDITOR_ITEM_TYPES} from '../utils/constants';
-import {getWidget} from './FragmentsEditorGetUtils.es';
+import {getWidget, getWidgetPath} from './FragmentsEditorGetUtils.es';
 
 /**
  * Inserts an element in the given position of a given array and returns
@@ -257,13 +257,13 @@ function updateWidgets(state, fragmentEntryLinkId) {
 	if (fragmentEntryLink.portletId) {
 		const widget = getWidget(state.widgets, fragmentEntryLink.portletId);
 
-		if (!widget.portletObject.instanceable && widget.portletObject.used) {
-			widget.portletObject.used = false;
+		if (!widget.instanceable && widget.used) {
+			const widgetPath = getWidgetPath(state.widgets, fragmentEntryLink.portletId);
 
 			nextState = setIn(
 				state,
-				widget.path,
-				widget.portletObject
+				[...widgetPath, 'used'],
+				false
 			);
 		}
 	}
