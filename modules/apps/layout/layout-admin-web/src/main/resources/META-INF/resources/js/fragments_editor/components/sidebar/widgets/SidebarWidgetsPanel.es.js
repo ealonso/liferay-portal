@@ -4,10 +4,12 @@ import {Drag, DragDrop} from 'metal-drag-drop';
 import position from 'metal-position';
 import Soy from 'metal-soy';
 
-import templates from './SidebarWidgetsPanel.soy';
+import {ADD_PORTLET, CLEAR_DROP_TARGET, UPDATE_DROP_TARGET, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS} from '../../../actions/actions.es';
+import {DROP_TARGET_BORDERS, DROP_TARGET_ITEM_TYPES} from '../../../reducers/placeholders.es';
 import {getConnectedComponent} from '../../../store/ConnectedComponent.es';
 import {setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties} from '../../../utils/FragmentsEditorComponentUtils.es';
+import templates from './SidebarWidgetsPanel.soy';
 
 /**
  * KeyBoardEvent enter key
@@ -16,13 +18,6 @@ import {shouldUpdateOnChangeProperties} from '../../../utils/FragmentsEditorComp
  */
 const ENTER_KEY = 'Enter';
 
-import {DROP_TARGET_BORDERS, DROP_TARGET_ITEM_TYPES} from '../../../reducers/placeholders.es';
-import {
-	ADD_PORTLET,
-	CLEAR_DROP_TARGET,
-	UPDATE_DROP_TARGET, UPDATE_LAST_SAVE_DATE,
-	UPDATE_SAVING_CHANGES_STATUS
-} from '../../../actions/actions.es';
 
 /**
  * SidebarWidgetsPanel

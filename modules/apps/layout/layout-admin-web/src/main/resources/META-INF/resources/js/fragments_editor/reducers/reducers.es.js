@@ -1,40 +1,11 @@
-import {
-	addFragmentEntryLinkReducer,
-	moveFragmentEntryLinkReducer,
-	removeFragmentEntryLinkReducer,
-	updateEditableValueReducer
-} from './fragments.es';
-import {
-	addPortletReducer
-} from './portlets.es';
-import {
-	addSectionReducer,
-	moveSectionReducer,
-	removeSectionReducer,
-	updateSectionConfigReducer
-} from './sections.es';
-import {
-	hideFragmentsEditorSidebarReducer,
-	toggleFragmentsEditorSidebarReducer
-} from './sidebar.es';
-import {
-	hideMappingDialogReducer,
-	hideMappingTypeDialogReducer,
-	openAssetTypeDialogReducer,
-	openMappingFieldsDialogReducer,
-	selectMappeableTypeReducer
-} from './dialogs.es';
-import {
-	languageIdReducer,
-	translationStatusReducer
-} from './translations.es';
+import {addFragmentEntryLinkReducer, moveFragmentEntryLinkReducer, removeFragmentEntryLinkReducer, updateEditableValueReducer} from './fragments.es';
+import {addPortletReducer} from './portlets.es';
+import {addSectionReducer, moveSectionReducer, removeSectionReducer, updateSectionConfigReducer} from './sections.es';
+import {hideFragmentsEditorSidebarReducer, toggleFragmentsEditorSidebarReducer} from './sidebar.es';
+import {hideMappingDialogReducer, hideMappingTypeDialogReducer, openAssetTypeDialogReducer, openMappingFieldsDialogReducer, selectMappeableTypeReducer} from './dialogs.es';
+import {languageIdReducer, translationStatusReducer} from './translations.es';
 import {saveChangesReducer} from './changes.es';
-import {
-	updateActiveItemReducer,
-	updateDropTargetReducer,
-	updateHighlightMappingReducer,
-	updateHoveredItemReducer
-} from './placeholders.es';
+import {updateActiveItemReducer, updateDropTargetReducer, updateHighlightMappingReducer, updateHoveredItemReducer} from './placeholders.es';
 
 /**
  * List of reducers

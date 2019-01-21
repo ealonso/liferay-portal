@@ -243,8 +243,16 @@ function updateLayoutData(
 	);
 }
 
+/**
+ * @param {object} state
+ * @param {object[]} state.fragmentEntryLinks
+ * @param {object[]} state.widgets
+ * @param {string} fragmentEntryLinkId
+ * @return {object} Next state
+ */
 function updateWidgets(state, fragmentEntryLinkId) {
 	const fragmentEntryLink = state.fragmentEntryLinks[fragmentEntryLinkId];
+	let nextState = state;
 
 	if (fragmentEntryLink.portletId) {
 		const widget = getWidget(state.widgets, fragmentEntryLink.portletId);
@@ -252,7 +260,7 @@ function updateWidgets(state, fragmentEntryLinkId) {
 		if (!widget.portletObject.instanceable && widget.portletObject.used) {
 			widget.portletObject.used = false;
 
-			state = setIn(
+			nextState = setIn(
 				state,
 				widget.path,
 				widget.portletObject
@@ -260,7 +268,7 @@ function updateWidgets(state, fragmentEntryLinkId) {
 		}
 	}
 
-	return state;
+	return nextState;
 }
 
 export {

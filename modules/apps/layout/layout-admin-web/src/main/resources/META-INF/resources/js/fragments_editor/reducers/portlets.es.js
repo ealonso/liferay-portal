@@ -1,19 +1,7 @@
-import {
-	ADD_PORTLET
-} from '../actions/actions.es';
+import {ADD_PORTLET} from '../actions/actions.es';
+import {add, setIn, updateIn, updateLayoutData} from '../utils/FragmentsEditorUpdateUtils.es';
 import {DROP_TARGET_ITEM_TYPES} from './placeholders.es';
-
-import {
-	add,
-	setIn,
-	updateIn,
-	updateLayoutData
-} from '../utils/FragmentsEditorUpdateUtils.es';
-
-import {
-	getColumn,
-	getWidget
-} from '../utils/FragmentsEditorGetUtils.es';
+import {getColumn, getWidget} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
  * @param {!object} state
@@ -296,6 +284,4 @@ function _getFragmentEntryLinkContent(
 		);
 }
 
-export {
-	addPortletReducer
-};
+export {addPortletReducer};

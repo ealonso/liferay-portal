@@ -182,13 +182,17 @@ function getWidget(widgets, portletId) {
 
 	const path = ['widgets'];
 
-	const findPortlet = function(parent, category) {
+	/**
+	 * @param {object[]} parent
+	 * @param {object} category
+	 */
+	const findPortlet = (parent, category) => {
 		path.push(parent.indexOf(category));
 
 		if (category.portlets && !widget.portletObject) {
 			path.push('portlets');
 
-			for (let portletIndex in category.portlets) {
+			for (const portletIndex in category.portlets) {
 				if (category.portlets[portletIndex].portletId === portletId) {
 					path.push(portletIndex);
 

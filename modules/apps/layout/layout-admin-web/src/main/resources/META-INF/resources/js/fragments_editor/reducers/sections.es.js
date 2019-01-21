@@ -1,22 +1,6 @@
-import {
-	ADD_SECTION,
-	MOVE_SECTION,
-	REMOVE_SECTION,
-	UPDATE_SECTION_CONFIG
-} from '../actions/actions.es';
-import {
-	add,
-	remove,
-	setIn,
-	updateIn,
-	updateLayoutData,
-	updateWidgets
-} from '../utils/FragmentsEditorUpdateUtils.es';
-import {
-	getDropSectionPosition,
-	getSectionFragmentEntryLinkIds,
-	getSectionIndex
-} from '../utils/FragmentsEditorGetUtils.es';
+import {ADD_SECTION, MOVE_SECTION, REMOVE_SECTION, UPDATE_SECTION_CONFIG} from '../actions/actions.es';
+import {add, remove, setIn, updateIn, updateLayoutData, updateWidgets} from '../utils/FragmentsEditorUpdateUtils.es';
+import {getDropSectionPosition, getSectionFragmentEntryLinkIds, getSectionIndex} from '../utils/FragmentsEditorGetUtils.es';
 
 /**
  * @param {!object} state
