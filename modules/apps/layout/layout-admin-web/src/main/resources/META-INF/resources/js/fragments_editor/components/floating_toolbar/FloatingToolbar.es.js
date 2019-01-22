@@ -2,6 +2,7 @@ import Component from 'metal-component';
 import {Config} from 'metal-state';
 import Soy from 'metal-soy';
 
+import './background_color/FloatingToolbarBackgroundColorPanel.es';
 import './background_image/FloatingToolbarBackgroundImagePanel.es';
 import './spacing/FloatingToolbarSpacingPanel.es';
 import getConnectedComponent from '../../store/ConnectedComponent.es';
@@ -13,6 +14,11 @@ import templates from './FloatingToolbar.soy';
  * @type {object[]}
  */
 const FLOATING_TOOLBAR_PANELS = [
+	{
+		icon: 'format',
+		panelId: 'background_color',
+		title: Liferay.Language.get('background-color')
+	},
 	{
 		icon: 'table',
 		panelId: 'spacing',
