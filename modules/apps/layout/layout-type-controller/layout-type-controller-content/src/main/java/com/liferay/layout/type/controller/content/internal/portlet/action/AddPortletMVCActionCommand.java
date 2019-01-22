@@ -17,12 +17,9 @@ package com.liferay.layout.type.controller.content.internal.portlet.action;
 import com.liferay.fragment.exception.NoSuchEntryException;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
-import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.FragmentEntryRenderUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.type.controller.content.internal.constants.ContentLayoutPortletKeys;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -38,14 +35,9 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.transaction.Propagation;
-import com.liferay.portal.kernel.transaction.TransactionConfig;
-import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -68,25 +60,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 
-	protected FragmentEntryLink addFragmentEntryLink(
-			ActionRequest actionRequest)
-		throws PortalException {
-
-		String portletId = ParamUtil.getString(actionRequest, "portletId");
-
-		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
-		long classPK = ParamUtil.getLong(actionRequest, "classPK");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
-		return _fragmentEntryLinkLocalService.addFragmentEntryLink(
-			serviceContext.getUserId(), serviceContext.getScopeGroupId(), 0,
-			classNameId, classPK, StringPool.BLANK,
-			_getPortletFragmentEntryLinkHTML(portletId), StringPool.BLANK, null,
-			0, serviceContext);
-	}
-
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -95,16 +68,24 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Callable<FragmentEntryLink> callable = new AddFragmentEntryLinkCallable(
-			actionRequest);
-
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
+		long classPK = ParamUtil.getLong(actionRequest, "classPK");
 
 		String portletId = ParamUtil.getString(actionRequest, "portletId");
 
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			actionRequest);
+
 		try {
-			FragmentEntryLink fragmentEntryLink = TransactionInvokerUtil.invoke(
-				_transactionConfig, callable);
+			FragmentEntryLink fragmentEntryLink =
+				_fragmentEntryLinkLocalService.addFragmentEntryLink(
+					serviceContext.getUserId(),
+					serviceContext.getScopeGroupId(), 0, classNameId, classPK,
+					StringPool.BLANK,
+					_getPortletFragmentEntryLinkHTML(portletId),
+					StringPool.BLANK, null, 0, serviceContext);
 
 			jsonObject.put(
 				"content",
@@ -169,40 +150,13 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 	private static final Log _log = LogFactoryUtil.getLog(
 		AddPortletMVCActionCommand.class);
 
-	private static final TransactionConfig _transactionConfig =
-		TransactionConfig.Factory.create(
-			Propagation.REQUIRED, new Class<?>[] {Exception.class});
-
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
-
-	@Reference
-	private FragmentEntryLocalService _fragmentEntryLocalService;
-
-	@Reference
-	private LayoutPageTemplateStructureLocalService
-		_layoutPageTemplateStructureLocalService;
 
 	@Reference
 	private Portal _portal;
 
 	@Reference
 	private PortletLocalService _portletLocalService;
-
-	private class AddFragmentEntryLinkCallable
-		implements Callable<FragmentEntryLink> {
-
-		@Override
-		public FragmentEntryLink call() throws Exception {
-			return addFragmentEntryLink(_actionRequest);
-		}
-
-		private AddFragmentEntryLinkCallable(ActionRequest actionRequest) {
-			_actionRequest = actionRequest;
-		}
-
-		private final ActionRequest _actionRequest;
-
-	}
 
 }
