@@ -50,12 +50,14 @@ import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -63,7 +65,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.PortletCategoryComparator;
 import com.liferay.portal.kernel.util.comparator.PortletTitleComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.template.soy.data.SoyHTMLData;
 import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import com.liferay.portal.util.PortletCategoryUtil;
@@ -551,7 +552,8 @@ public class FragmentsEditorDisplayContext {
 					"title",
 					PortalUtil.getPortletTitle(
 						portlet, servletContext, _themeDisplay.getLocale()));
-				portletSoyContext.put("used", _isUsed(portlet));
+				portletSoyContext.put(
+					"used", _isUsed(portlet, _themeDisplay.getPlid()));
 
 				return portletSoyContext;
 			}
@@ -736,36 +738,18 @@ public class FragmentsEditorDisplayContext {
 		return _getWidgetCategoriesContexts(portletCategory);
 	}
 
-	private boolean _isUsed(Portlet portlet) {
+	private boolean _isUsed(Portlet portlet, long plid) {
 		if (portlet.isInstanceable()) {
 			return false;
 		}
 
-		try {
-			SoyContext fragmentEntryLinks = _getSoyContextFragmentEntryLinks();
+		long count =
+			PortletPreferencesLocalServiceUtil.getPortletPreferencesCount(
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, plid,
+				portlet.getPortletId());
 
-			for (Map.Entry<String, Object> entry :
-					fragmentEntryLinks.entrySet()) {
-
-				SoyContext fragmentEntryLinkContext =
-					(SoyContext)entry.getValue();
-
-				SoyHTMLData soyHTMLData =
-					(SoyHTMLData)fragmentEntryLinkContext.get("content");
-
-				Object soyHTMLDataValue = soyHTMLData.getValue();
-
-				String html = soyHTMLDataValue.toString();
-
-				if (html.contains(portlet.getRootPortletId())) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-		catch (PortalException pe) {
-			_log.error("Unable to get fragment entry links", pe);
+		if (count > 0) {
+			return true;
 		}
 
 		return false;
