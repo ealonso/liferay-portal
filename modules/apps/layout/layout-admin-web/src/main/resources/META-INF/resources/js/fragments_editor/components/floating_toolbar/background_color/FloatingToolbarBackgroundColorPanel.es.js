@@ -13,15 +13,26 @@ class FloatingToolbarBackgroundColorPanel extends Component {
 	/**
 	 * @inheritDoc
 	 */
+	disposed() {
+		this._colorPalette.destroy();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	rendered() {
 		AUI().use(
 			'aui-color-palette',
 			(A) => {
-				new A.ColorPalette(
+				this._colorPalette = new A.ColorPalette(
 					{
 						items: this.themeColors
 					}
-				).render('#floatingToolbarBackgroundColorPanelPalette');
+				);
+
+				this._colorPalette.render(
+					'#floatingToolbarBackgroundColorPanelPalette'
+				);
 			}
 		);
 	}
@@ -43,6 +54,17 @@ FloatingToolbarBackgroundColorPanel.STATE = {
 	 */
 	store: Config
 		.object()
+		.value(null),
+
+	/**
+	 * Internal Color Palette instance
+	 * @default null
+	 * @memberof FloatingToolbarBackgroundColorPanel
+	 * @review
+	 * @type {object}
+	 */
+	_colorPalette: Config
+		.internal()
 		.value(null)
 };
 
