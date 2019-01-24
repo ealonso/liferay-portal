@@ -7,7 +7,6 @@
 	{@param defaultEditorConfigurations: ?}
 	{@param defaultLanguageId: string}
 	{@param fragmentEntryLinks: ?}
-	{@param imageSelectorURL: string}
 	{@param languageId: string}
 	{@param layoutData: [
 		nextColumnId: number,
@@ -22,7 +21,6 @@
 			rowId: string
 		]>
 	]}
-	{@param portletNamespace: string}
 	{@param spritemap: string}
 	{@param? _handleFragmentEntryLinkListHoverEnd: any}
 	{@param? _handleFragmentMove: any}
@@ -91,7 +89,6 @@
 					{param _handleSectionRemoveButtonClick: $_handleSectionRemoveButtonClick /}
 					{param columns: $row.columns /}
 					{param defaultEditorConfigurations: $defaultEditorConfigurations /}
-					{param defaultLanguageId: $defaultLanguageId /}
 					{param dropTargetItemTypes: $dropTargetItemTypes /}
 					{param empty: $row.empty /}
 					{param fragmentEntryLinks: $fragmentEntryLinks /}
@@ -102,11 +99,8 @@
 					{param dropTargetBorder: $dropTargetBorder /}
 					{param dropTargetItemId: $dropTargetItemId /}
 					{param dropTargetItemType: $dropTargetItemType /}
-					{param imageSelectorURL: $imageSelectorURL /}
 					{param key: $row.rowId /}
-					{param languageId: $languageId /}
 					{param mappingFieldsURL: $mappingFieldsURL /}
-					{param portletNamespace: $portletNamespace /}
 					{param row: $row /}
 					{param rowId: $row.rowId /}
 					{param selectedMappingTypes: $selectedMappingTypes /}
@@ -132,12 +126,8 @@
 		size: string
 	]>}
 	{@param defaultEditorConfigurations: ?}
-	{@param defaultLanguageId: string}
 	{@param fragmentEntryLinks: ?}
-	{@param imageSelectorURL: string}
 	{@param key: string}
-	{@param languageId: string}
-	{@param portletNamespace: string}
 	{@param row: ?}
 	{@param rowId: string}
 	{@param spritemap: string}
@@ -271,7 +261,6 @@
 						{param _handleFragmentMove: $_handleFragmentMove /}
 						{param columnId: $column.columnId /}
 						{param defaultEditorConfigurations: $defaultEditorConfigurations /}
-						{param defaultLanguageId: $defaultLanguageId /}
 						{param dropTargetItemTypes: $dropTargetItemTypes /}
 						{param fragmentEntryLinkIds: $column.fragmentEntryLinkIds /}
 						{param fragmentEntryLinks: $fragmentEntryLinks /}
@@ -280,14 +269,10 @@
 						{param dropTargetItemType: $dropTargetItemType /}
 						{param hoveredItemId: $hoveredItemId /}
 						{param hoveredItemType: $hoveredItemType /}
-						{param imageSelectorURL: $imageSelectorURL /}
 						{param key: $column.columnId /}
-						{param languageId: $languageId /}
 						{param mappingFieldsURL: $mappingFieldsURL /}
-						{param portletNamespace: $portletNamespace /}
 						{param selectedMappingTypes: $selectedMappingTypes /}
 						{param size: $column.size /}
-						{param spritemap: $spritemap /}
 						{param store: $store /}
 					{/call}
 				{/foreach}
@@ -302,14 +287,9 @@
 {template .column}
 	{@param columnId: string}
 	{@param defaultEditorConfigurations: ?}
-	{@param defaultLanguageId: string}
 	{@param fragmentEntryLinkIds: list<string>}
 	{@param fragmentEntryLinks: ?}
-	{@param imageSelectorURL: string}
 	{@param key: string}
-	{@param languageId: string}
-	{@param portletNamespace: string}
-	{@param spritemap: string}
 	{@param? _handleFragmentMove: any}
 	{@param? dropTargetItemTypes: ?}
 	{@param? dropTargetBorder: string}
@@ -359,7 +339,6 @@
 				{call .fragmentEntryLink}
 					{param content: $fragmentEntryLink.content /}
 					{param defaultEditorConfigurations: $defaultEditorConfigurations /}
-					{param defaultLanguageId: $defaultLanguageId /}
 					{param dropTargetItemTypes: $dropTargetItemTypes /}
 					{param editableValues: $fragmentEntryLink.editableValues /}
 					{param fragmentEntryLinkId: $fragmentEntryLink.fragmentEntryLinkId /}
@@ -368,14 +347,10 @@
 					{param dropTargetItemType: $dropTargetItemType /}
 					{param hoveredItemId: $hoveredItemId /}
 					{param hoveredItemType: $hoveredItemType /}
-					{param imageSelectorURL: $imageSelectorURL /}
 					{param key: $fragmentEntryLink.fragmentEntryLinkId /}
-					{param languageId: $languageId /}
 					{param mappingFieldsURL: $mappingFieldsURL /}
 					{param name: $fragmentEntryLink.name /}
-					{param portletNamespace: $portletNamespace /}
 					{param selectedMappingTypes: $selectedMappingTypes /}
-					{param spritemap: $spritemap /}
 					{param store: $store /}
 					{param _handleFragmentMove: $_handleFragmentMove /}
 				{/call}
@@ -389,20 +364,15 @@
  */
 {template .fragmentEntryLink}
 	{@param defaultEditorConfigurations: ?}
-	{@param defaultLanguageId: ?}
 	{@param editableValues: ?}
 	{@param fragmentEntryLinkId: string}
-	{@param imageSelectorURL: ?}
 	{@param key: string}
 	{@param dropTargetBorder: ?}
 	{@param dropTargetItemId: ?}
 	{@param dropTargetItemType: ?}
-	{@param languageId: ?}
 	{@param mappingFieldsURL: ?}
 	{@param name: string}
-	{@param portletNamespace: ?}
 	{@param selectedMappingTypes: ?}
-	{@param spritemap: ?}
 	{@param store: ?}
 	{@param? hoveredItemId: string}
 	{@param? hoveredItemType: string}
@@ -421,27 +391,21 @@
 		{/if}
 	{/let}
 
-	<div key="{$key}">
-		{call com.liferay.layout.admin.web.FragmentEntryLink.render}
-			{param content: $content /}
-			{param defaultEditorConfigurations: $defaultEditorConfigurations /}
-			{param defaultLanguageId: $defaultLanguageId /}
-			{param editableValues: $editableValues /}
-			{param events: [
-				'moveFragment': $_handleFragmentMove
-			] /}
-			{param fragmentEntryLinkId: $fragmentEntryLinkId /}
-			{param imageSelectorURL: $imageSelectorURL /}
-			{param languageId: $languageId /}
-			{param name: $name /}
-			{param portletNamespace: $portletNamespace /}
-			{param selectedMappingTypes: $selectedMappingTypes /}
-			{param showMapping: $selectedMappingTypes and $mappingFieldsURL ? true : false /}
-			{param spritemap: $spritemap /}
-			{param store: $store /}
-			{param styleModifier: $styleModifier /}
-		{/call}
-	</div>
+	{call com.liferay.layout.admin.web.FragmentEntryLink.render}
+		{param content: $content /}
+		{param defaultEditorConfigurations: $defaultEditorConfigurations /}
+		{param editableValues: $editableValues /}
+		{param events: [
+			'moveFragment': $_handleFragmentMove
+		] /}
+		{param fragmentEntryLinkId: $fragmentEntryLinkId /}
+		{param key: $key /}
+		{param name: $name /}
+		{param ref: $key /}
+		{param showMapping: $selectedMappingTypes and $mappingFieldsURL ? true : false /}
+		{param store: $store /}
+		{param styleModifier: $styleModifier /}
+	{/call}
 {/template}
 
 /**
