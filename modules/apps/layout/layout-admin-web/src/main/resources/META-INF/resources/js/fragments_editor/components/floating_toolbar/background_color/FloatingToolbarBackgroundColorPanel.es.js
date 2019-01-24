@@ -2,6 +2,7 @@ import Component from 'metal-component';
 import Soy, {Config} from 'metal-soy';
 
 import './FloatingToolbarBackgroundColorPanelDelegateTemplate.soy';
+import {ITEM_CONFIG_KEYS} from '../../../utils/constants';
 import getConnectedComponent from '../../../store/ConnectedComponent.es';
 import templates from './FloatingToolbarBackgroundColorPanel.soy';
 import {UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS, UPDATE_SECTION_CONFIG, UPDATE_TRANSLATION_STATUS} from '../../../actions/actions.es';
@@ -31,9 +32,29 @@ class FloatingToolbarBackgroundColorPanel extends Component {
 					}
 				);
 
+				this._colorPalette.after(
+					'select',
+					this._handleColorSelect,
+					this
+				);
+
 				this._colorPalette.render(
 					'#floatingToolbarBackgroundColorPanelPalette'
 				);
+			}
+		);
+	}
+
+	/**
+	 * Handle color palette color select
+	 * @param {Event} event
+	 * @private
+	 * @review
+	 */
+	_handleColorSelect(event) {
+		this._updateSectionConfig(
+			{
+				[ITEM_CONFIG_KEYS.backgroundColor]: event.value.value
 			}
 		);
 	}
