@@ -11,12 +11,12 @@ import {UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS, UPDATE_SECTION_CONF
 /**
  * @type {string}
  */
-const DEFAULT_PADDING_SIZE = '1';
+const DEFAULT_PADDING_SIZE = '3';
 
 /**
  * @type {number}
  */
-const PADDING_SIZES = 9;
+const PADDING_SIZES = 6;
 
 /**
  * FloatingToolbarSpacingPanel
@@ -30,16 +30,16 @@ class FloatingToolbarSpacingPanel extends Component {
 	 * @review
 	 */
 	prepareStateForRender(state) {
-		let nextState = state;
 		const config = (state.item && state.item.config) || {};
+		let nextState = state;
 		const selectedPaddingSizes = {
 			horizontal: DEFAULT_PADDING_SIZE,
 			vertical: DEFAULT_PADDING_SIZE
 		};
 
 		if (config) {
-			selectedPaddingSizes.horizontal = config.paddinghorizontal || DEFAULT_PADDING_SIZE;
-			selectedPaddingSizes.vertical = config.paddingvertical || DEFAULT_PADDING_SIZE;
+			selectedPaddingSizes.horizontal = config.paddingHorizontal || DEFAULT_PADDING_SIZE;
+			selectedPaddingSizes.vertical = config.paddingVertical || DEFAULT_PADDING_SIZE;
 		}
 
 		nextState = setIn(
