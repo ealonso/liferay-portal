@@ -1,0 +1,15 @@
+{
+	"fragments": [
+		"card-02",
+		"heading",
+		"image",
+		"image-0",
+		"line",
+		"primary",
+		"quote",
+		"secondary",
+		"spacer",
+		"spacer-8x"
+	],
+	"name": "Basics"
+}

@@ -1,0 +1,8 @@
+{
+	"cssPath": "index.css",
+	"htmlPath": "index.html",
+	"jsPath": "index.js",
+	"name": "image",
+	"thumbnailPath": "thumbnail.png",
+	"type": "element"
+}

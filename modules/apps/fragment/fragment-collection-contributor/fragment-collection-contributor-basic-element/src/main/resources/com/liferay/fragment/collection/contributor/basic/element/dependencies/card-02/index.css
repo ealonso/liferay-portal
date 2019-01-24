@@ -1,0 +1,20 @@
+.card-simple-image-fragment-1 {
+margin: 12px;
+}
+
+.card-simple-image-fragment-1 .aspect-ratio img {
+max-width: inherit;
+width: 100%;
+}
+
+.fragment_37984 .element {
+padding: 12px 0;
+}
+
+h2, h3, p {
+margin: 0;
+}
+
+.btn-card {
+margin: 12px 0;
+}
