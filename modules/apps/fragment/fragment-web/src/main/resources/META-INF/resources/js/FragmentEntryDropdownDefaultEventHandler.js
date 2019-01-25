@@ -18,8 +18,6 @@ class ElementsDefaultEventHandler extends PortletBase {
 	}
 
 	moveFragmentEntry(itemData) {
-		const namespace = this.namespace;
-
 		Liferay.Util.selectEntity(
 			{
 				dialog: {
@@ -32,12 +30,12 @@ class ElementsDefaultEventHandler extends PortletBase {
 				title: Liferay.Language.get('select-collection'),
 				uri: itemData.selectFragmentCollectionURL
 			},
-			function(selectedItem) {
+			selectedItem => {
 				if (selectedItem) {
-					document.querySelector(`#${namespace}fragmentCollectionId`).value = selectedItem.id;
-					document.querySelector(`#${namespace}fragmentEntryIds`).value = itemData.fragmentEntryId;
+					this.one('#fragmentCollectionId').value = selectedItem.id;
+					this.one('#fragmentEntryIds').value = itemData.fragmentEntryId;
 
-					submitForm(document.querySelector(`#${namespace}moveFragmentEntryFm`));
+					submitForm(this.one('#moveFragmentEntryFm'));
 				}
 			}
 		);
@@ -61,8 +59,6 @@ class ElementsDefaultEventHandler extends PortletBase {
 	}
 
 	updateFragmentEntryPreview(itemData) {
-		const namespace = this.namespace;
-
 		AUI().use(
 			'liferay-item-selector-dialog',
 			A => {
@@ -76,10 +72,10 @@ class ElementsDefaultEventHandler extends PortletBase {
 								if (selectedItem) {
 									const itemValue = JSON.parse(selectedItem.value);
 
-									document.querySelector(`#${namespace}fragmentEntryId`).value = itemData.fragmentEntryId;
-									document.querySelector(`#${namespace}fileEntryId`).value = itemValue.fileEntryId;
+									this.one('#fragmentEntryId').value = itemData.fragmentEntryId;
+									this.one('#fileEntryId').value = itemValue.fileEntryId;
 
-									submitForm(document.querySelector(`#${namespace}fragmentEntryPreviewFm`));
+									submitForm(this.one('#fragmentEntryPreviewFm'));
 								}
 							}
 						},
