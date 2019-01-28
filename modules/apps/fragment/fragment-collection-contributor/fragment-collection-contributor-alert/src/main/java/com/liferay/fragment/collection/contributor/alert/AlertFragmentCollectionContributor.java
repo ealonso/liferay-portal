@@ -27,11 +27,6 @@ import org.osgi.service.component.annotations.Component;
 public class AlertFragmentCollectionContributor
 	extends BaseFragmentCollectionContributor {
 
-	@Override
-	public String getKey() {
-		return "ALERT";
-	}
-
 	@Activate
 	protected void activate() {
 		readAndCheckFragmentCollectionStructure();
