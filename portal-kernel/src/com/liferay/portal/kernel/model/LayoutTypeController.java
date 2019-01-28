@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.model;
 
+import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
+
 import java.io.Serializable;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +58,12 @@ public interface LayoutTypeController extends Serializable {
 
 	public default boolean isPrimaryType() {
 		return false;
+	}
+
+	public default boolean isShowPortletConfigurationIcon(
+		PortletConfigurationIcon portletConfigurationIcon) {
+
+		return true;
 	}
 
 	public boolean isSitemapable();
