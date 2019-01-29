@@ -22,14 +22,19 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
+import com.liferay.portal.kernel.portlet.toolbar.contributor.PortletToolbarContributor;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.servlet.TransferHeadersHelperUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
+
+import java.util.Objects;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -162,6 +167,26 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 	}
 
 	@Override
+	public boolean isShowPortletConfigurationIcon(
+		PortletConfigurationIcon portletConfigurationIcon) {
+
+		if (Objects.equals(
+				portletConfigurationIcon.getId(), ActionKeys.CONFIGURATION)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isShowPortletToolbarContributor(
+		PortletToolbarContributor portletToolbarContributor) {
+
+		return false;
+	}
+
+	@Override
 	public boolean isSitemapable() {
 		return false;
 	}
@@ -207,5 +232,8 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 
 	@Reference
 	private ItemSelector _itemSelector;
+
+	@Reference
+	private Portal _portal;
 
 }
