@@ -31,7 +31,7 @@ public interface TrashRenderer extends Renderer {
 	public String getPortletId();
 
 	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
+	 * @deprecated As of 7.0.0, As of Wilberforce (7.0.x), replaced by {@link
 	 *             #getSummary(PortletRequest, PortletResponse)}
 	 */
 	@Deprecated
@@ -40,7 +40,7 @@ public interface TrashRenderer extends Renderer {
 	public String getType();
 
 	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 * @deprecated As of 7.0.0, As of Mueller (7.2.x), with no direct replacement
 	 */
 	@Deprecated
 	public String renderActions(

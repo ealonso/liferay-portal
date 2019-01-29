@@ -114,35 +114,33 @@ public class TrashEntryActionDropdownItems {
 			(ThemeDisplay)_liferayPortletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		String redirect = themeDisplay.getURLCurrent();
-
 		long trashEntryId = ParamUtil.getLong(
 			_liferayPortletRequest, "trashEntryId");
 
-		if (trashEntryId > 0) {
-			TrashEntry trashEntry = TrashEntryLocalServiceUtil.getTrashEntry(
-				trashEntryId);
-
-			TrashEntry rootTrashEntry = trashEntry.getRootEntry();
-
-			PortletURL redirectURL = _liferayPortletResponse.createRenderURL();
-
-			if (rootTrashEntry != null) {
-				redirectURL.setParameter("mvcPath", "/view_content.jsp");
-				redirectURL.setParameter(
-					"classNameId",
-					String.valueOf(rootTrashEntry.getClassNameId()));
-				redirectURL.setParameter(
-					"classPK", String.valueOf(rootTrashEntry.getClassPK()));
-			}
-			else {
-				redirectURL.setParameter("mvcPath", "/view.jsp");
-			}
-
-			redirect = redirectURL.toString();
+		if (trashEntryId <= 0) {
+			return themeDisplay.getURLCurrent();
 		}
 
-		return redirect;
+		TrashEntry trashEntry = TrashEntryLocalServiceUtil.getTrashEntry(
+			trashEntryId);
+
+		TrashEntry rootTrashEntry = trashEntry.getRootEntry();
+
+		PortletURL redirectURL = _liferayPortletResponse.createRenderURL();
+
+		if (rootTrashEntry != null) {
+			redirectURL.setParameter("mvcPath", "/view_content.jsp");
+			redirectURL.setParameter(
+				"classNameId",
+				String.valueOf(rootTrashEntry.getClassNameId()));
+			redirectURL.setParameter(
+				"classPK", String.valueOf(rootTrashEntry.getClassPK()));
+		}
+		else {
+			redirectURL.setParameter("mvcPath", "/view.jsp");
+		}
+
+		return redirectURL.toString();
 	}
 
 	private DropdownItem _getRestoreAction() throws Exception {
@@ -204,10 +202,8 @@ public class TrashEntryActionDropdownItems {
 			return true;
 		}
 
-		String className = _trashRenderer.getClassName();
-
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			className);
+			_trashRenderer.getClassName());
 
 		return trashHandler.isDeletable();
 	}
@@ -237,10 +233,8 @@ public class TrashEntryActionDropdownItems {
 			return false;
 		}
 
-		String className = _trashRenderer.getClassName();
-
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			className);
+			_trashRenderer.getClassName());
 
 		return trashHandler.isMovable();
 	}
