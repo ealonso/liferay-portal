@@ -17,6 +17,7 @@ package com.liferay.portlet.configuration.web.internal.portlet.configuration.ico
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.configuration.icon.BasePortletConfigurationIcon;
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -36,6 +37,11 @@ public class ConfigurationPortletConfigurationIcon
 	@Override
 	public String getCssClass() {
 		return "portlet-configuration portlet-configuration-icon";
+	}
+
+	@Override
+	public String getId() {
+		return ActionKeys.CONFIGURATION;
 	}
 
 	@Override
