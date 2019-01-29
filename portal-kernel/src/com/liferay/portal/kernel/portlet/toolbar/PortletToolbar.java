@@ -14,11 +14,16 @@
 
 package com.liferay.portal.kernel.portlet.toolbar;
 
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutType;
+import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.portlet.toolbar.contributor.PortletToolbarContributor;
 import com.liferay.portal.kernel.portlet.toolbar.contributor.locator.PortletToolbarContributorLocator;
 import com.liferay.portal.kernel.servlet.taglib.ui.Menu;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.ServiceReference;
@@ -62,6 +67,16 @@ public class PortletToolbar {
 			return Collections.emptyList();
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		LayoutType layoutType = layout.getLayoutType();
+
+		LayoutTypeController layoutTypeController =
+			layoutType.getLayoutTypeController();
+
 		List<Menu> portletTitleMenus = new ArrayList<>();
 
 		for (PortletToolbarContributorLocator portletToolbarContributorLocator :
@@ -77,6 +92,12 @@ public class PortletToolbar {
 
 			for (PortletToolbarContributor portletToolbarContributor :
 					portletToolbarContributors) {
+
+				if (!layoutTypeController.isShowPortletToolbarContributor(
+						portletToolbarContributor)) {
+
+					continue;
+				}
 
 				List<Menu> curPortletTitleMenus =
 					portletToolbarContributor.getPortletTitleMenus(

@@ -15,6 +15,7 @@
 package com.liferay.portal.kernel.model;
 
 import com.liferay.portal.kernel.portlet.configuration.icon.PortletConfigurationIcon;
+import com.liferay.portal.kernel.portlet.toolbar.contributor.PortletToolbarContributor;
 
 import java.io.Serializable;
 
@@ -62,6 +63,12 @@ public interface LayoutTypeController extends Serializable {
 
 	public default boolean isShowPortletConfigurationIcon(
 		PortletConfigurationIcon portletConfigurationIcon) {
+
+		return true;
+	}
+
+	public default boolean isShowPortletToolbarContributor(
+		PortletToolbarContributor portletToolbarContributor) {
 
 		return true;
 	}
