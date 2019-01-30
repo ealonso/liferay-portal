@@ -237,11 +237,11 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 	private static final String _VIEW_PAGE = "/layout/view/content.jsp";
 
 	@Reference
-	private ItemSelector _itemSelector;
-
-	@Reference
 	private FragmentCollectionContributorTracker
 		_fragmentCollectionContributorTracker;
+
+	@Reference
+	private ItemSelector _itemSelector;
 
 	@Reference
 	private LayoutPageTemplateEntryLocalService
