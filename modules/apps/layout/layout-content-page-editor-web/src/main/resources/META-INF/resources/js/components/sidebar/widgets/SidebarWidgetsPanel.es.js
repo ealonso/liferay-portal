@@ -18,7 +18,6 @@ import templates from './SidebarWidgetsPanel.soy';
  */
 const ENTER_KEY = 'Enter';
 
-
 /**
  * SidebarWidgetsPanel
  */
