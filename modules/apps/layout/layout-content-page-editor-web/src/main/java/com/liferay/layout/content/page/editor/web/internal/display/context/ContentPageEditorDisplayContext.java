@@ -290,6 +290,16 @@ public class ContentPageEditorDisplayContext {
 		return _layoutData;
 	}
 
+	protected String getRedirect() {
+		if (_redirect != null) {
+			return _redirect;
+		}
+
+		_redirect = ParamUtil.getString(request, "redirect");
+
+		return _redirect;
+	}
+
 	protected List<SoyContext> getSidebarPanelSoyContexts(
 		boolean showMapping, boolean showWidgets) {
 
@@ -357,16 +367,6 @@ public class ContentPageEditorDisplayContext {
 		_sidebarPanelSoyContexts = soyContexts;
 
 		return _sidebarPanelSoyContexts;
-	}
-
-	protected String getRedirect() {
-		if (_redirect != null) {
-			return _redirect;
-		}
-
-		_redirect = ParamUtil.getString(request, "redirect");
-
-		return _redirect;
 	}
 
 	protected List<SoyContext> getSoyContextFragmentCollections(int type) {
@@ -520,8 +520,8 @@ public class ContentPageEditorDisplayContext {
 	private ItemSelectorCriterion _imageItemSelectorCriterion;
 	private final ItemSelector _itemSelector;
 	private String _layoutData;
-	private List<SoyContext> _sidebarPanelSoyContexts;
 	private String _redirect;
+	private List<SoyContext> _sidebarPanelSoyContexts;
 	private SoyContext _soyContextFragmentEntryLinksSoyContext;
 	private ItemSelectorCriterion _urlItemSelectorCriterion;
 
