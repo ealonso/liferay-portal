@@ -360,7 +360,7 @@ public class JournalManagementToolbarDisplayContext
 	@Override
 	public String getSearchContainerId() {
 		String searchContainerId = ParamUtil.getString(
-			request, "searchContainerId");
+			request, "searchContainerId", "articles");
 
 		return searchContainerId;
 	}
