@@ -30,9 +30,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -41,6 +39,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -81,11 +80,6 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 
 		return new DropdownItemList() {
 			{
-				JournalArticle approvedArticle =
-					_journalArticleLocalService.fetchLatestArticle(
-						assetEntry.getClassPK(),
-						WorkflowConstants.STATUS_APPROVED);
-
 				ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 					WebKeys.THEME_DISPLAY);
 
@@ -93,15 +87,29 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 					_resourceBundleLoader.loadResourceBundle(
 						themeDisplay.getLocale());
 
-				add(
-					dropdownItem -> {
-						dropdownItem.setHref(
-							_getURL(
-								approvedArticle, assetEntryUsage.getClassPK(),
-								assetEntryUsage.getPortletId(), request));
-						dropdownItem.setLabel(
-							LanguageUtil.get(resourceBundle, "view-in-page"));
-					});
+				JournalArticle displayArticle = _getDisplayArticle(
+					assetEntry.getClassPK());
+
+				if (displayArticle.isApproved()) {
+					add(
+						dropdownItem -> {
+							dropdownItem.setHref(
+								_getURL(
+									displayArticle,
+									assetEntryUsage.getClassPK(),
+									assetEntryUsage.getPortletId(), request));
+							dropdownItem.setLabel(
+								LanguageUtil.get(
+									resourceBundle, "view-in-page"));
+							dropdownItem.setTarget("_blank");
+						});
+				}
+				else {
+					add(
+						_getPreviewScheduledArticleDropdownItem(
+							displayArticle, assetEntryUsage, request,
+							resourceBundle));
+				}
 
 				boolean hasUpdatePermission = false;
 
@@ -114,6 +122,14 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 					_log.error("Unable to check article permission", pe);
 				}
 
+				if (article.isScheduled() && hasUpdatePermission &&
+					!displayArticle.isScheduled()) {
+
+					add(
+						_getPreviewScheduledArticleDropdownItem(
+							article, assetEntryUsage, request, resourceBundle));
+				}
+
 				if (article.isDraft() && hasUpdatePermission) {
 					add(
 						dropdownItem -> {
@@ -124,6 +140,7 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 							dropdownItem.setLabel(
 								LanguageUtil.get(
 									resourceBundle, "preview-draft-in-page"));
+							dropdownItem.setTarget("_blank");
 						});
 				}
 
@@ -137,23 +154,41 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 							dropdownItem.setLabel(
 								LanguageUtil.get(
 									resourceBundle, "preview-pending-in-page"));
-						});
-				}
-
-				if (article.isScheduled() && hasUpdatePermission) {
-					add(
-						dropdownItem -> {
-							dropdownItem.setHref(
-								_getURL(
-									article, assetEntryUsage.getClassPK(),
-									assetEntryUsage.getPortletId(), request));
-							dropdownItem.setLabel(
-								LanguageUtil.get(
-									resourceBundle,
-									"preview-scheduled-in-page"));
+							dropdownItem.setTarget("_blank");
 						});
 				}
 			}
+		};
+	}
+
+	private JournalArticle _getDisplayArticle(long classPK) {
+		JournalArticle article = _journalArticleLocalService.fetchLatestArticle(
+			classPK, WorkflowConstants.STATUS_ANY, true);
+
+		if (!article.isApproved() && !article.isScheduled()) {
+			article = _journalArticleLocalService.fetchLatestArticle(
+				classPK,
+				new int[] {
+					WorkflowConstants.STATUS_APPROVED,
+					WorkflowConstants.STATUS_SCHEDULED
+				});
+		}
+
+		return article;
+	}
+
+	private Consumer<DropdownItem> _getPreviewScheduledArticleDropdownItem(
+		JournalArticle article, AssetEntryUsage assetEntryUsage,
+		HttpServletRequest request, ResourceBundle resourceBundle) {
+
+		return dropdownItem -> {
+			dropdownItem.setHref(
+				_getURL(
+					article, assetEntryUsage.getClassPK(),
+					assetEntryUsage.getPortletId(), request));
+			dropdownItem.setLabel(
+				LanguageUtil.get(resourceBundle, "preview-scheduled-in-page"));
+			dropdownItem.setTarget("_blank");
 		};
 	}
 
@@ -165,7 +200,8 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 			request, portletId, plid, PortletRequest.RENDER_PHASE);
 
 		if (!article.isApproved()) {
-			portletURL.setParameter("previewArticleId", article.getArticleId());
+			portletURL.setParameter(
+				"previewArticleId", String.valueOf(article.getId()));
 		}
 
 		return portletURL.toString() + "#portlet_" + portletId;
@@ -178,13 +214,7 @@ public class JournalArticleAssetEntryUsageActionMenuContributor
 	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
-	private Http _http;
-
-	@Reference
 	private JournalArticleLocalService _journalArticleLocalService;
-
-	@Reference
-	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private Portal _portal;
