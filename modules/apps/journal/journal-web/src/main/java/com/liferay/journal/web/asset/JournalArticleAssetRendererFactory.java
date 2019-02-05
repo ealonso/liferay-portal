@@ -121,6 +121,19 @@ public class JournalArticleAssetRendererFactory
 					classPK, WorkflowConstants.STATUS_ANY);
 			}
 		}
+		else if (!article.isApproved() && (type == TYPE_LATEST_APPROVED)) {
+			JournalArticle latestArticle =
+				_journalArticleLocalService.fetchLatestArticle(
+					article.getResourcePrimKey(),
+					new int[] {
+						WorkflowConstants.STATUS_APPROVED,
+						WorkflowConstants.STATUS_SCHEDULED
+					});
+
+			if (latestArticle != null) {
+				article = latestArticle;
+			}
+		}
 
 		JournalArticleAssetRenderer journalArticleAssetRenderer =
 			getJournalArticleAssetRenderer(article);
