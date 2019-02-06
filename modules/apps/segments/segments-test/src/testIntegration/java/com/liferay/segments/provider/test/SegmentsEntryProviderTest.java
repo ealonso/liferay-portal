@@ -226,6 +226,9 @@ public class SegmentsEntryProviderTest {
 					_defaultSegment.getSegmentsEntryId()
 				},
 				segmentsEntryIds));
+
+		Assert.assertEquals(
+			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[3]);
 	}
 
 	@Test
@@ -285,6 +288,9 @@ public class SegmentsEntryProviderTest {
 					_defaultSegment.getSegmentsEntryId()
 				},
 				segmentsEntryIds));
+
+		Assert.assertEquals(
+			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[2]);
 	}
 
 	@Test
@@ -333,6 +339,9 @@ public class SegmentsEntryProviderTest {
 					segmentsEntry2.getSegmentsEntryId(),
 					_defaultSegment.getSegmentsEntryId()
 				}));
+
+		Assert.assertEquals(
+			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[2]);
 	}
 
 	@Test
@@ -381,6 +390,9 @@ public class SegmentsEntryProviderTest {
 					_defaultSegment.getSegmentsEntryId()
 				},
 				segmentsEntryIds));
+
+		Assert.assertEquals(
+			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[2]);
 	}
 
 	@Inject(
