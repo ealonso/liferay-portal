@@ -18,7 +18,12 @@ import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Portlet;
+
+import javax.portlet.PortletURL;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,6 +44,18 @@ public class GroupPagesPanelApp extends BasePanelApp {
 	@Override
 	public String getPortletId() {
 		return LayoutAdminPortletKeys.GROUP_PAGES;
+	}
+
+	@Override
+	public PortletURL getPortletURL(HttpServletRequest request)
+		throws PortalException {
+
+		PortletURL portletURL = super.getPortletURL(request);
+
+		portletURL.removePublicRenderParameter("selPlid");
+		portletURL.removePublicRenderParameter("privateLayout");
+
+		return portletURL;
 	}
 
 	@Override
