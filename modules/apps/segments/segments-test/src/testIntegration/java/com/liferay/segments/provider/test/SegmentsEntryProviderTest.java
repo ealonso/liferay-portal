@@ -257,7 +257,6 @@ public class SegmentsEntryProviderTest {
 
 		SegmentsEntry segmentsEntry1 = SegmentsTestUtil.addSegmentsEntry(
 			_group.getGroupId(), User.class.getName(), _user1.getUserId());
-
 		SegmentsEntry segmentsEntry2 = SegmentsTestUtil.addSegmentsEntry(
 			_group.getGroupId(), CriteriaSerializer.serialize(criteria1),
 			User.class.getName());
@@ -280,6 +279,8 @@ public class SegmentsEntryProviderTest {
 
 		Assert.assertEquals(
 			segmentsEntryIds.toString(), 3, segmentsEntryIds.length);
+		Assert.assertEquals(
+			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[2]);
 		Assert.assertTrue(
 			ArrayUtil.containsAll(
 				new long[] {
@@ -288,9 +289,6 @@ public class SegmentsEntryProviderTest {
 					_defaultSegment.getSegmentsEntryId()
 				},
 				segmentsEntryIds));
-
-		Assert.assertEquals(
-			_defaultSegment.getSegmentsEntryId(), segmentsEntryIds[2]);
 	}
 
 	@Test
