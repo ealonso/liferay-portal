@@ -15,6 +15,7 @@
 package com.liferay.site.navigation.admin.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
@@ -54,6 +55,20 @@ public class SiteNavigationAdminManagementToolbarDisplayContext
 			siteNavigationAdminDisplayContext.getSearchContainer());
 
 		_siteNavigationAdminDisplayContext = siteNavigationAdminDisplayContext;
+	}
+
+	@Override
+	public CreationMenu getCreationMenu() {
+		return new CreationMenu() {
+			{
+				addDropdownItem(
+					dropdownItem -> {
+						dropdownItem.putData("action", "addSiteNavigationMenu");
+						dropdownItem.setLabel(
+							LanguageUtil.get(request, "add-new-menu"));
+					});
+			}
+		};
 	}
 
 	@Override

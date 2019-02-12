@@ -21,7 +21,8 @@ class ManagementToolbarDefaultEventHandler extends PortletBase {
 		this.callAction(event);
 	}
 
-	handleCreationButtonClicked() {
+	handleCreationButtonClicked(event) {
+		debugger;
 		OpenSimpleInputModal(
 			{
 				dialogTitle: Liferay.Language.get('add-menu'),
