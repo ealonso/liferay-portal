@@ -35,124 +35,37 @@ String tagNamesSeparatedWithCommas = GetterUtil.getString((String)request.getAtt
 List<String> tagNames = Arrays.asList(StringUtil.split(tagNamesSeparatedWithCommas));
 
 List<Object> selectedItems = new ArrayList<>();
-for (String tagName : tagNames){
+
+for (String tagName : tagNames) {
 	HashMap<String, String> item = new HashMap<>();
+
+	selectedItems.add(item);
+
 	item.put("label", tagName);
 	item.put("value", tagName);
-	selectedItems.add(item);
 }
-
-
-String headerCSRFToken = "X-CSRF-Token";
-String authToken = "zaGrGI9V";
-
-HashMap<String, Object> requestOptions = new HashMap<>();
-requestOptions.put("credentials", "include");
-requestOptions.put(
-	"headers",
-	new HashMap<String, Object>() {
-		{
-			put(headerCSRFToken, authToken);
-		}
-	});
-
-String locator = "name";
-String jsonWebServiceLiferay = "http://localhost:8080/api/jsonws/assettag/get-groups-tags/group-ids/20126";
-String anotherUrl = "https://jsonplaceholder.typicode.com/users";
-
-
-String inputName = namespace + hiddenInput;
-System.out.println("--------------------");
-System.out.println(selectedItems);
-System.out.println("--------------------");
-System.out.println(inputName);
-System.out.println("--------------------\n" +
-	tagNames + "\n--------------------\n" +
-	hiddenInput + "\n--------------------\n" +
-	eventName);
 %>
 
 <h4>
 	<liferay-ui:message key="tags" />
 </h4>
 
-<clay:multi-select
-	componentId="myMultiselect"
-	dataSource="<%= anotherUrl %>"
-	helpText="Amazing help text"
-	labelLocator="name"
-	valueLocator="name"
-	inputName="<%= inputName %>"
-	selectedItems="<%= selectedItems %>"
+<%
+HashMap<String, Object> context = new HashMap<>();
+
+context.put("addCallback", namespace + addCallback);
+context.put("eventName", eventName);
+context.put("inputName", namespace + hiddenInput);
+context.put("portletURL", portletURL.toString());
+context.put("removeCallback", namespace + removeCallback);
+context.put("selectedItems", selectedItems);
+context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
+%>
+
+<input id="<%= namespace + hiddenInput %>" type="hidden" value="<%= tagNamesSeparatedWithCommas %>" />
+
+<soy:component-renderer
+	context="<%= context %>"
+	module="asset_tags_selector/js/TagSelector.es"
+	templateNamespace="com.liferay.asset.taglib.TagSelector.render"
 />
-
-<aui:script use="liferay-asset-taglib-tags-selector">
-	Liferay.componentReady('myMultiselect').then(
-		function(multiSelect) {
-			multiSelect.on(
-				'buttonClicked',
-				function(event) {
-					const selectedTagNames = multiSelect.selectedItems
-						.map(item => item.value).join();
-					_showMultiSelectPopUp(
-						selectedTagNames,
-						event,
-						function(event) {
-							multiSelect.selectedItems = event.selectedItems;
-						}
-					);
-				}
-			);
-		}
-	);
-
-	const _showMultiSelectPopUp = function(selectedTagNames, event, callback) {
-		event.preventDefault();
-
-		const uri = A.Lang.sub(
-			decodeURIComponent("<%= portletURL %>"),
-			{
-				selectedTagNames: selectedTagNames
-			}
-		);
-
-		const itemSelectorDialog = new A.LiferayItemSelectorDialog(
-			{
-				eventName: "<%= eventName %>",
-				on: {
-					selectedItemChange: function(event) {
-						var selectedItem = event.newVal;
-
-						if (selectedItem) {
-							event.selectedItems = [];
-							A.Array.each(
-								selectedItem.items.split(','),
-								function(value) {
-									if(_hasContent(value)){
-										event.selectedItems.push(_createMultiSelectItemObject(value));
-									}
-								}
-							);
-							if (callback) {
-								callback(event);
-							}
-						}
-					}
-				},
-				'strings.add': Liferay.Language.get('done'),
-				title: Liferay.Language.get('tags'),
-				url: uri
-			}
-		);
-
-		itemSelectorDialog.open();
-	}
-
-	const _hasContent = function(value) {
-		return value !== undefined && value !== "" && value!== null;
-	}
-
-	const _createMultiSelectItemObject = function(value) {
-		return {label: value, value: value};
-	}
-</aui:script>
