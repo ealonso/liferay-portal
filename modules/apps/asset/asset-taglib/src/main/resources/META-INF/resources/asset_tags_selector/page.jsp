@@ -17,6 +17,10 @@
 <%@ include file="/asset_tags_selector/init.jsp" %>
 
 <%
+PortletRequest portletRequest = (PortletRequest)request.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+PortletResponse portletResponse = (PortletResponse)request.getAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE);
+String namespace = AUIUtil.getNamespace(portletRequest, portletResponse);
+
 String addCallback = GetterUtil.getString((String)request.getAttribute("liferay-asset:asset-tags-selector:addCallback"));
 boolean allowAddEntry = GetterUtil.getBoolean((String)request.getAttribute("liferay-asset:asset-tags-selector:allowAddEntry"));
 boolean autoFocus = GetterUtil.getBoolean((String)request.getAttribute("liferay-asset:asset-tags-selector:autoFocus"));
@@ -26,72 +30,129 @@ String hiddenInput = (String)request.getAttribute("liferay-asset:asset-tags-sele
 String id = GetterUtil.getString((String)request.getAttribute("liferay-asset:asset-tags-selector:id"));
 PortletURL portletURL = (PortletURL)request.getAttribute("liferay-asset:asset-tags-selector:portletURL");
 String removeCallback = GetterUtil.getString((String)request.getAttribute("liferay-asset:asset-tags-selector:removeCallback"));
-String tagNames = GetterUtil.getString((String)request.getAttribute("liferay-asset:asset-tags-selector:tagNames"));
+String tagNamesSeparatedWithCommas = GetterUtil.getString((String)request.getAttribute("liferay-asset:asset-tags-selector:tagNames"));
+
+List<String> tagNames = Arrays.asList(StringUtil.split(tagNamesSeparatedWithCommas));
+
+List<Object> selectedItems = new ArrayList<>();
+for (String tagName : tagNames){
+	HashMap<String, String> item = new HashMap<>();
+	item.put("label", tagName);
+	item.put("value", tagName);
+	selectedItems.add(item);
+}
+
+
+String headerCSRFToken = "X-CSRF-Token";
+String authToken = "zaGrGI9V";
+
+HashMap<String, Object> requestOptions = new HashMap<>();
+requestOptions.put("credentials", "include");
+requestOptions.put(
+	"headers",
+	new HashMap<String, Object>() {
+		{
+			put(headerCSRFToken, authToken);
+		}
+	});
+
+String locator = "name";
+String jsonWebServiceLiferay = "http://localhost:8080/api/jsonws/assettag/get-groups-tags/group-ids/20126";
+String anotherUrl = "https://jsonplaceholder.typicode.com/users";
+
+
+String inputName = namespace + hiddenInput;
+System.out.println("--------------------");
+System.out.println(selectedItems);
+System.out.println("--------------------");
+System.out.println(inputName);
+System.out.println("--------------------\n" +
+	tagNames + "\n--------------------\n" +
+	hiddenInput + "\n--------------------\n" +
+	eventName);
 %>
 
 <h4>
 	<liferay-ui:message key="tags" />
 </h4>
 
-<div class="lfr-tags-selector-content" id="<portlet:namespace /><%= id %>assetTagsSelector">
-	<aui:input name="<%= hiddenInput %>" type="hidden" />
-
-	<c:if test="<%= allowAddEntry %>">
-		<input class="form-control lfr-tag-selector-input" id="<%= id %>assetTagNames" size="15" title="<liferay-ui:message key="add-tags" />" type="text" />
-	</c:if>
-</div>
+<clay:multi-select
+	componentId="myMultiselect"
+	dataSource="<%= anotherUrl %>"
+	helpText="Amazing help text"
+	labelLocator="name"
+	valueLocator="name"
+	inputName="<%= inputName %>"
+	selectedItems="<%= selectedItems %>"
+/>
 
 <aui:script use="liferay-asset-taglib-tags-selector">
-	var assetTaglibTagsSelector = new Liferay.AssetTaglibTagsSelector(
-		{
-			allowAddEntry: <%= allowAddEntry %>,
-			contentBox: '#<portlet:namespace /><%= id %>assetTagsSelector',
-
-			<c:if test="<%= groupIds != null %>">
-				groupIds: '<%= StringUtil.merge(groupIds) %>',
-			</c:if>
-
-			hiddenInput: '#<portlet:namespace /><%= hiddenInput %>',
-
-			<c:if test="<%= allowAddEntry %>">
-				input: '#<%= id %>assetTagNames',
-			</c:if>
-
-			<c:if test="<%= Validator.isNotNull(eventName) %>">
-				eventName: '<%= eventName %>',
-			</c:if>
-
-			maxLength: <%= ModelHintsConstants.TEXT_MAX_LENGTH %>,
-
-			<c:if test="<%= portletURL != null %>">
-				portletURL: '<%= portletURL.toString() %>',
-			</c:if>
-
-			tagNames: '<%= HtmlUtil.escapeJS(tagNames) %>'
+	Liferay.componentReady('myMultiselect').then(
+		function(multiSelect) {
+			multiSelect.on(
+				'buttonClicked',
+				function(event) {
+					const selectedTagNames = multiSelect.selectedItems
+						.map(item => item.value).join();
+					_showMultiSelectPopUp(
+						selectedTagNames,
+						event,
+						function(event) {
+							multiSelect.selectedItems = event.selectedItems;
+						}
+					);
+				}
+			);
 		}
-	).render();
+	);
 
-	Liferay.component('<portlet:namespace />tagsSelector', assetTaglibTagsSelector);
+	const _showMultiSelectPopUp = function(selectedTagNames, event, callback) {
+		event.preventDefault();
 
-	<c:if test="<%= Validator.isNotNull(addCallback) %>">
-		assetTaglibTagsSelector.entries.on(
-			'add',
-			function(event) {
-				window['<portlet:namespace /><%= addCallback %>'](event.item);
+		const uri = A.Lang.sub(
+			decodeURIComponent("<%= portletURL %>"),
+			{
+				selectedTagNames: selectedTagNames
 			}
 		);
-	</c:if>
 
-	<c:if test="<%= Validator.isNotNull(removeCallback) %>">
-		assetTaglibTagsSelector.entries.on(
-			'remove',
-			function(event) {
-				window['<portlet:namespace /><%= removeCallback %>'](event.item);
+		const itemSelectorDialog = new A.LiferayItemSelectorDialog(
+			{
+				eventName: "<%= eventName %>",
+				on: {
+					selectedItemChange: function(event) {
+						var selectedItem = event.newVal;
+
+						if (selectedItem) {
+							event.selectedItems = [];
+							A.Array.each(
+								selectedItem.items.split(','),
+								function(value) {
+									if(_hasContent(value)){
+										event.selectedItems.push(_createMultiSelectItemObject(value));
+									}
+								}
+							);
+							if (callback) {
+								callback(event);
+							}
+						}
+					}
+				},
+				'strings.add': Liferay.Language.get('done'),
+				title: Liferay.Language.get('tags'),
+				url: uri
 			}
 		);
-	</c:if>
 
-	<c:if test="<%= autoFocus %>">
-		Liferay.Util.focusFormField('#<%= id %>assetTagNames');
-	</c:if>
+		itemSelectorDialog.open();
+	}
+
+	const _hasContent = function(value) {
+		return value !== undefined && value !== "" && value!== null;
+	}
+
+	const _createMultiSelectItemObject = function(value) {
+		return {label: value, value: value};
+	}
 </aui:script>
