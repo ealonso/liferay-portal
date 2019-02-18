@@ -90,11 +90,14 @@ public class AssetEntryDocumentContributor implements DocumentContributor {
 
 		document.addLocalizedKeyword(
 			"localized_title",
-			populateMap(assetEntry, assetEntry.getTitleMap()), true, true);
+			_populateMap(assetEntry, assetEntry.getTitleMap()), true, true);
 		document.addKeyword("visible", assetEntry.isVisible());
 	}
 
-	protected Map<Locale, String> populateMap(
+	@Reference
+	protected AssetEntryLocalService assetEntryLocalService;
+
+	private Map<Locale, String> _populateMap(
 		AssetEntry assetEntry, Map<Locale, String> map) {
 
 		String defaultValue = map.get(
@@ -112,8 +115,5 @@ public class AssetEntryDocumentContributor implements DocumentContributor {
 
 		return map;
 	}
-
-	@Reference
-	protected AssetEntryLocalService assetEntryLocalService;
 
 }

@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -75,6 +76,11 @@ public class AssetCategoryModelDocumentContributor
 		_searchLocalizationHelper.addLocalizedField(
 			document, Field.TITLE, siteDefaultLocale,
 			assetCategory.getTitleMap());
+
+		document.addLocalizedKeyword(
+			"localized_title",
+			populateMap(assetCategory, assetCategory.getTitleMap()), true,
+			true);
 
 		document.addKeyword(
 			"leftCategoryId", assetCategory.getLeftCategoryId());
@@ -141,6 +147,25 @@ public class AssetCategoryModelDocumentContributor
 		catch (PortalException pe) {
 			throw new SystemException(pe);
 		}
+	}
+
+	protected Map<Locale, String> populateMap(
+		AssetCategory assetCategory, Map<Locale, String> map) {
+
+		String defaultValue = map.get(
+			LocaleUtil.fromLanguageId(assetCategory.getDefaultLanguageId()));
+
+		for (Locale availableLocale :
+				LanguageUtil.getAvailableLocales(assetCategory.getGroupId())) {
+
+			if (!map.containsKey(availableLocale) ||
+				Validator.isNull(map.get(availableLocale))) {
+
+				map.put(availableLocale, defaultValue);
+			}
+		}
+
+		return map;
 	}
 
 	@Reference
