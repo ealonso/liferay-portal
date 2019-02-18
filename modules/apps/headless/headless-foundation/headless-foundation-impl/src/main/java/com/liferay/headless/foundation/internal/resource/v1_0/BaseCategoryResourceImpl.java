@@ -20,6 +20,8 @@ import com.liferay.headless.foundation.resource.v1_0.CategoryResource;
 import com.liferay.oauth2.provider.scope.RequiresScope;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
@@ -81,7 +83,7 @@ public abstract class BaseCategoryResourceImpl implements CategoryResource {
 	@Produces("application/json")
 	@RequiresScope("everything.read")
 	@Override
-	public Page<Category> getCategoryCategoriesPage( @PathParam("category-id") Long categoryId , @Context Pagination pagination ) throws Exception {
+	public Page<Category> getCategoryCategoriesPage( @PathParam("category-id") Long categoryId , @Context Filter filter , @Context Pagination pagination , @Context Sort[] sorts ) throws Exception {
 			return Page.of(Collections.emptyList());
 
 	}
@@ -110,7 +112,7 @@ public abstract class BaseCategoryResourceImpl implements CategoryResource {
 	@Produces("application/json")
 	@RequiresScope("everything.read")
 	@Override
-	public Page<Category> getVocabularyCategoriesPage( @PathParam("vocabulary-id") Long vocabularyId , @Context Pagination pagination ) throws Exception {
+	public Page<Category> getVocabularyCategoriesPage( @PathParam("vocabulary-id") Long vocabularyId , @Context Filter filter , @Context Pagination pagination , @Context Sort[] sorts ) throws Exception {
 			return Page.of(Collections.emptyList());
 
 	}

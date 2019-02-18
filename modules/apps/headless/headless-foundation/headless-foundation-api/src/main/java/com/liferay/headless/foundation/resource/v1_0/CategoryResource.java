@@ -15,6 +15,8 @@
 package com.liferay.headless.foundation.resource.v1_0;
 
 import com.liferay.headless.foundation.dto.v1_0.Category;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
@@ -37,13 +39,13 @@ public interface CategoryResource {
 
 	public Category putCategory( Long categoryId , Category category ) throws Exception;
 
-	public Page<Category> getCategoryCategoriesPage( Long categoryId , Pagination pagination ) throws Exception;
+	public Page<Category> getCategoryCategoriesPage( Long categoryId , Filter filter , Pagination pagination , Sort[] sorts ) throws Exception;
 
 	public Category postCategoryCategory( Long categoryId , Category category ) throws Exception;
 
 	public Category postCategoryCategoryBatchCreate( Long categoryId , Category category ) throws Exception;
 
-	public Page<Category> getVocabularyCategoriesPage( Long vocabularyId , Pagination pagination ) throws Exception;
+	public Page<Category> getVocabularyCategoriesPage( Long vocabularyId , Filter filter , Pagination pagination , Sort[] sorts ) throws Exception;
 
 	public Category postVocabularyCategory( Long vocabularyId , Category category ) throws Exception;
 

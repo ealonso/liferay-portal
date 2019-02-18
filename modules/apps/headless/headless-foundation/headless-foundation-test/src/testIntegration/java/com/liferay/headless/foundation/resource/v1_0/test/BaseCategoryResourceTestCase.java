@@ -20,6 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.headless.foundation.dto.v1_0.Category;
 import com.liferay.headless.foundation.internal.dto.v1_0.CategoryImpl;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.vulcan.pagination.Pagination;
@@ -132,13 +134,13 @@ public abstract class BaseCategoryResourceTestCase {
 			);
 
 	}
-	protected Response invokeGetCategoryCategoriesPage( Long categoryId , Pagination pagination ) throws Exception {
+	protected Response invokeGetCategoryCategoriesPage( Long categoryId , Filter filter , Pagination pagination , Sort[] sorts ) throws Exception {
 		RequestSpecification requestSpecification = _createRequestSpecification();
 
 			return requestSpecification.when(
 			).get(
 				_resourceURL + "/categories/{category-id}/categories",
-				categoryId 
+				categoryId , filter  , sorts
 			);
 
 	}
@@ -166,13 +168,13 @@ public abstract class BaseCategoryResourceTestCase {
 			);
 
 	}
-	protected Response invokeGetVocabularyCategoriesPage( Long vocabularyId , Pagination pagination ) throws Exception {
+	protected Response invokeGetVocabularyCategoriesPage( Long vocabularyId , Filter filter , Pagination pagination , Sort[] sorts ) throws Exception {
 		RequestSpecification requestSpecification = _createRequestSpecification();
 
 			return requestSpecification.when(
 			).get(
 				_resourceURL + "/vocabularies/{vocabulary-id}/categories",
-				vocabularyId 
+				vocabularyId , filter  , sorts
 			);
 
 	}
