@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.taglib.clay.sample.web.internal.attribute.provider;
 
-import com.liferay.frontend.taglib.clay.attribute.provider.ClayComponentAttributeProvider;
+import com.liferay.frontend.taglib.clay.servlet.taglib.attribute.provider.ClayComponentAttributeProvider;
 import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.util.Map;
