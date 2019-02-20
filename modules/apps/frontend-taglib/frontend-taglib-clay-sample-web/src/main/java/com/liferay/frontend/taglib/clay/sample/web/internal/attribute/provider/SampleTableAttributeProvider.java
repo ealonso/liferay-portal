@@ -40,7 +40,7 @@ public class SampleTableAttributeProvider
 	implements ClayComponentAttributeProvider {
 
 	@Override
-	public Map<String, Object> getAttributes(Map<String, Object> context) {
+	public void getAttributes(Map<String, Object> context) {
 		context.put("items", _getItems());
 
 		Schema schema = _getSchema();
@@ -49,8 +49,6 @@ public class SampleTableAttributeProvider
 
 		context.put("selectable", true);
 		context.put("tableClasses", "sample-table");
-
-		return context;
 	}
 
 	private Map<String, Object> _getItem(
