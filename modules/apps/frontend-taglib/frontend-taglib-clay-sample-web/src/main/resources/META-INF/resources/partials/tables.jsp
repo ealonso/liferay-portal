@@ -24,8 +24,8 @@
 	displayContext="<%= tablesDisplayContext %>"
 />
 
-<h3>TABLE USING ATTRIBUTE PROVIDER</h3>
+<h3>TABLE USING CONTRIBUTOR</h3>
 
 <clay:table
-	attributeProviderKey="SampleTableAttributeProvider"
+	contributorKey="SampleTable"
 />

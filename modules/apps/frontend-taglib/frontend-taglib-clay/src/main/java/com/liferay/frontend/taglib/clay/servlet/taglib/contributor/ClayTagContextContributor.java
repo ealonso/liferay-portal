@@ -12,28 +12,15 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.clay.sample.web.internal.attribute.provider;
-
-import com.liferay.frontend.taglib.clay.servlet.taglib.attribute.provider.ClayComponentAttributeProvider;
+package com.liferay.frontend.taglib.clay.servlet.taglib.contributor;
 
 import java.util.Map;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(
-	immediate = true,
-	property = "clay.component.attribute.provider.key=SampleNavigationBarAttributeProvider",
-	service = ClayComponentAttributeProvider.class
-)
-public class SampleNavigationBarAttributeProvider
-	implements ClayComponentAttributeProvider {
+public interface ClayTagContextContributor {
 
-	@Override
-	public void getAttributes(Map<String, Object> context) {
-		context.put("inverted", false);
-	}
+	public void populate(Map<String, Object> context);
 
 }

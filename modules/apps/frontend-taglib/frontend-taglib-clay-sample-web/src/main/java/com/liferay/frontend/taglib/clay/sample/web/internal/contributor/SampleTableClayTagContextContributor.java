@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.clay.sample.web.internal.attribute.provider;
+package com.liferay.frontend.taglib.clay.sample.web.internal.contributor;
 
-import com.liferay.frontend.taglib.clay.servlet.taglib.attribute.provider.ClayComponentAttributeProvider;
+import com.liferay.frontend.taglib.clay.servlet.taglib.contributor.ClayTagContextContributor;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Field;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
 
@@ -31,16 +31,16 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"clay.component.attribute.provider.key=SampleTableAttributeProvider",
+		"clay.tag.context.contributor.key=SampleTable",
 		"service.ranking:Integer=2"
 	},
-	service = ClayComponentAttributeProvider.class
+	service = ClayTagContextContributor.class
 )
-public class SampleTableAttributeProvider
-	implements ClayComponentAttributeProvider {
+public class SampleTableClayTagContextContributor
+	implements ClayTagContextContributor {
 
 	@Override
-	public void getAttributes(Map<String, Object> context) {
+	public void populate(Map<String, Object> context) {
 		context.put("items", _getItems());
 
 		Schema schema = _getSchema();

@@ -12,10 +12,9 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.clay.sample.web.internal.attribute.provider;
+package com.liferay.frontend.taglib.clay.sample.web.internal.contributor;
 
-import com.liferay.frontend.taglib.clay.servlet.taglib.attribute.provider.ClayComponentAttributeProvider;
-import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.contributor.ClayTagContextContributor;
 
 import java.util.Map;
 
@@ -26,22 +25,15 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {
-		"clay.component.attribute.provider.key=SampleTableAttributeProvider",
-		"service.ranking:Integer=1"
-	},
-	service = ClayComponentAttributeProvider.class
+	property = "clay.tag.context.contributor.key=SampleNavigationBar",
+	service = ClayTagContextContributor.class
 )
-public class SampleTableStyleAttributeProvider
-	implements ClayComponentAttributeProvider {
+public class SampleNavigationBarClayTagContextContributor
+	implements ClayTagContextContributor {
 
 	@Override
-	public void getAttributes(Map<String, Object> context) {
-		String tableClasses = GetterUtil.getString(context.get("tableClasses"));
-
-		tableClasses += " sample-table-style";
-
-		context.put("tableClasses", tableClasses);
+	public void populate(Map<String, Object> context) {
+		context.put("inverted", false);
 	}
 
 }

@@ -29,9 +29,9 @@
 	navigationItems="<%= navigationBarsDisplayContext.getNavigationItems() %>"
 />
 
-<h3>NAVIGATION BAR USING ATTRIBUTE PROVIDER</h3>
+<h3>NAVIGATION BAR USING CONTRIBUTOR</h3>
 
 <clay:navigation-bar
-	attributeProviderKey="SampleNavigationBarAttributeProvider"
+	contributorKey="SampleNavigationBar"
 	navigationItems="<%= navigationBarsDisplayContext.getNavigationItems() %>"
 />
