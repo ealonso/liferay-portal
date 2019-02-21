@@ -44,7 +44,9 @@ import javax.servlet.jsp.PageContext;
 
 /**
  * @author Antonio Pol
+ * @deprecated As of Mueller (7.2.x)
  */
+@Deprecated
 public class AssetCategoriesSelectorTag extends IncludeTag {
 
 	public void setCategoryIds(String categoryIds) {
