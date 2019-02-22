@@ -93,36 +93,6 @@ String newArticleId = ParamUtil.getString(request, "newArticleId");
 		</c:if>
 	</aui:input>
 
-	<c:if test="<%= (article == null) || article.isNew() %>">
-		<c:choose>
-			<c:when test="<%= journalWebConfiguration.journalArticleForceAutogenerateId() || (classNameId != JournalArticleConstants.CLASSNAME_ID_DEFAULT) %>">
-				<aui:input name="newArticleId" type="hidden" />
-				<aui:input name="autoArticleId" type="hidden" value="<%= true %>" />
-			</c:when>
-			<c:otherwise>
-				<aui:input field="articleId" fieldParam="newArticleId" label="id" name="newArticleId" value="<%= newArticleId %>" />
-
-				<aui:input label="autogenerate-id" name="autoArticleId" type="checkbox" />
-			</c:otherwise>
-		</c:choose>
-	</c:if>
-
-	<div class="article-content-description">
-		<label for="<portlet:namespace />descriptionMapAsXML"><liferay-ui:message key="summary" /></label>
-
-		<liferay-ui:input-localized
-			cssClass="form-control"
-			defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultLanguageId() %>"
-			editorName="alloyeditor"
-			formName="fm"
-			ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
-			name="descriptionMapAsXML"
-			placeholder="description"
-			type="editor"
-			xml="<%= (article != null) ? article.getDescriptionMapAsXML() : StringPool.BLANK %>"
-		/>
-	</div>
-
 	<%
 	JournalItemSelectorHelper journalItemSelectorHelper = new JournalItemSelectorHelper(article, journalDisplayContext.getFolder(), renderRequest, renderResponse);
 
