@@ -30,7 +30,8 @@ page import="com.liferay.portal.kernel.util.UnicodeFormatter" %><%@
 page import="com.liferay.staging.StagingGroupHelper" %><%@
 page import="com.liferay.staging.StagingGroupHelperUtil" %>
 
-<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Map" %><%@
+page import="java.util.Objects" %>
 
 <liferay-theme:defineObjects />
 
