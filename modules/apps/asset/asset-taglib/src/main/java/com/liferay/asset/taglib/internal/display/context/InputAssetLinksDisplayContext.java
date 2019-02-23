@@ -78,6 +78,10 @@ public class InputAssetLinksDisplayContext {
 				"liferay-asset:input-asset-links:assetEntryId"));
 		_className = GetterUtil.getString(
 			_request.getAttribute("liferay-asset:input-asset-links:className"));
+		_displayStyle = GetterUtil.getString(
+			_request.getAttribute(
+				"liferay-asset:input-asset-links:displayStyle"),
+			"table");
 		_portletRequest = (PortletRequest)_request.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
 		_themeDisplay = (ThemeDisplay)_request.getAttribute(
@@ -159,6 +163,10 @@ public class InputAssetLinksDisplayContext {
 		}
 
 		return assetType;
+	}
+
+	public String getDisplayStyle() {
+		return _displayStyle;
 	}
 
 	public String getEventName() {
@@ -530,6 +538,7 @@ public class InputAssetLinksDisplayContext {
 	private final long _assetEntryId;
 	private List<AssetLink> _assetLinks;
 	private final String _className;
+	private final String _displayStyle;
 	private String _eventName;
 	private final PageContext _pageContext;
 	private final PortletRequest _portletRequest;

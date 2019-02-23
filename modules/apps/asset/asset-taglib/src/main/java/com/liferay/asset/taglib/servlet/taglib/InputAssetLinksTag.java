@@ -17,6 +17,7 @@ package com.liferay.asset.taglib.servlet.taglib;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -30,11 +31,26 @@ import javax.servlet.jsp.PageContext;
  */
 public class InputAssetLinksTag extends AssetLinksTag {
 
+	public String getDisplayStyle() {
+		return _displayStyle;
+	}
+
+	public void setDisplayStyle(String displayStyle) {
+		_displayStyle = displayStyle;
+	}
+
 	@Override
 	public void setPageContext(PageContext pageContext) {
 		super.setPageContext(pageContext);
 
 		servletContext = ServletContextUtil.getServletContext();
+	}
+
+	@Override
+	protected void cleanUp() {
+		super.cleanUp();
+
+		_displayStyle = StringPool.BLANK;
 	}
 
 	@Override
@@ -72,11 +88,15 @@ public class InputAssetLinksTag extends AssetLinksTag {
 			String.valueOf(assetEntryId));
 		request.setAttribute(
 			"liferay-asset:input-asset-links:className", className);
+		request.setAttribute(
+			"liferay-asset:input-asset-links:displayStyle", getDisplayStyle());
 	}
 
 	private static final String _PAGE = "/input_asset_links/page.jsp";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		InputAssetLinksTag.class);
+
+	private String _displayStyle = StringPool.BLANK;
 
 }
