@@ -20,7 +20,7 @@
 	var="removeLinkIcon"
 >
 	<liferay-ui:icon
-		icon="times"
+		icon="times-circle"
 		markupView="lexicon"
 		message="remove"
 	/>
@@ -46,25 +46,46 @@
 		AssetEntry assetLinkEntry = inputAssetLinksDisplayContext.getAssetLinkEntry(assetLink);
 		%>
 
-		<liferay-ui:search-container-column-text
-			name="type"
-			value="<%= inputAssetLinksDisplayContext.getAssetType(assetLinkEntry) %>"
-		/>
+		<c:choose>
+			<c:when test='<%= Objects.equals(inputAssetLinksDisplayContext.getDisplayStyle(), "list") %>'>
+				<liferay-ui:search-container-column-text>
+					<h5>
+						<%= HtmlUtil.escape(assetLinkEntry.getTitle(locale)) %>
+					</h5>
 
-		<liferay-ui:search-container-column-text
-			name="title"
-			truncate="<%= true %>"
-			value="<%= HtmlUtil.escape(assetLinkEntry.getTitle(locale)) %>"
-		/>
+					<div class="text-secondary">
+						<%= inputAssetLinksDisplayContext.getAssetType(assetLinkEntry) %>
+					</div>
+				</liferay-ui:search-container-column-text>
 
-		<liferay-ui:search-container-column-text
-			name="scope"
-			value="<%= HtmlUtil.escape(inputAssetLinksDisplayContext.getGroupDescriptiveName(assetLinkEntry)) %>"
-		/>
+				<liferay-ui:search-container-column-text
+					cssClass="text-right"
+				>
+					<a class="modify-link" data-rowId="<%= assetLinkEntry.getEntryId() %>" href="javascript:;"><%= removeLinkIcon %></a>
+				</liferay-ui:search-container-column-text>
+			</c:when>
+			<c:otherwise>
+				<liferay-ui:search-container-column-text
+					name="type"
+					value="<%= inputAssetLinksDisplayContext.getAssetType(assetLinkEntry) %>"
+				/>
 
-		<liferay-ui:search-container-column-text>
-			<a class="modify-link" data-rowId="<%= assetLinkEntry.getEntryId() %>" href="javascript:;"><%= removeLinkIcon %></a>
-		</liferay-ui:search-container-column-text>
+				<liferay-ui:search-container-column-text
+					name="title"
+					truncate="<%= true %>"
+					value="<%= HtmlUtil.escape(assetLinkEntry.getTitle(locale)) %>"
+				/>
+
+				<liferay-ui:search-container-column-text
+					name="scope"
+					value="<%= HtmlUtil.escape(inputAssetLinksDisplayContext.getGroupDescriptiveName(assetLinkEntry)) %>"
+				/>
+
+				<liferay-ui:search-container-column-text>
+					<a class="modify-link" data-rowId="<%= assetLinkEntry.getEntryId() %>" href="javascript:;"><%= removeLinkIcon %></a>
+				</liferay-ui:search-container-column-text>
+			</c:otherwise>
+		</c:choose>
 	</liferay-ui:search-container-row>
 
 	<liferay-ui:search-iterator
@@ -74,9 +95,9 @@
 </liferay-ui:search-container>
 
 <c:if test="<%= stagingGroupHelper.isLiveGroup(themeDisplay.getScopeGroupId()) %>">
-	<div>
+	<span>
 		<liferay-ui:message key="related-assets-for-staged-asset-types-can-be-managed-on-the-staging-site" />
-	</div>
+	</span>
 </c:if>
 
 <liferay-ui:icon-menu
@@ -143,9 +164,22 @@
 										if (searchContainerData.indexOf(entityId) == -1) {
 											var entryLink = '<a class="modify-link" data-rowId="' + entityId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeLinkIcon) %></a>';
 
-											searchContainer.addRow([assetEntry.assettype, A.Escape.html(assetEntry.assettitle), A.Escape.html(assetEntry.groupdescriptivename), entryLink], entityId);
+											<c:choose>
+												<c:when test='<%= Objects.equals(inputAssetLinksDisplayContext.getDisplayStyle(), "list") %>'>
+													var entryHtml = '<h5>' + A.Escape.html(assetEntry.assettitle) + '</h5><div class="text-secondary">' + A.Escape.html(assetEntry.assettype) + '</div>';
 
-											searchContainer.updateDataStore();
+													entryLink = '<div class="text-right">' + entryLink + '</div>';
+
+													searchContainer.addRow([entryHtml, entryLink], entityId);
+
+													searchContainer.updateDataStore();
+												</c:when>
+												<c:otherwise>
+													searchContainer.addRow([assetEntry.assettype, A.Escape.html(assetEntry.assettitle), A.Escape.html(assetEntry.groupdescriptivename), entryLink], entityId);
+
+													searchContainer.updateDataStore();
+												</c:otherwise>
+											</c:choose>
 										}
 									}
 								);
