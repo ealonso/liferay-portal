@@ -208,6 +208,30 @@ public class SelectAssetDisplayPageDisplayContext {
 		return StringPool.BLANK;
 	}
 
+	public int getAssetDisplayPageType() {
+		if (_displayPageType != null) {
+			return _displayPageType;
+		}
+
+		if (_classPK == 0) {
+			_displayPageType = AssetDisplayPageConstants.TYPE_DEFAULT;
+
+			return _displayPageType;
+		}
+
+		AssetDisplayPageEntry assetDisplayPageEntry =
+			_getAssetDisplayPageEntry();
+
+		if (assetDisplayPageEntry == null) {
+			_displayPageType = AssetDisplayPageConstants.TYPE_NONE;
+		}
+		else {
+			_displayPageType = assetDisplayPageEntry.getType();
+		}
+
+		return _displayPageType;
+	}
+
 	public String getAssetTypeName() throws PortalException {
 		if (Validator.isNotNull(_assetTypeName)) {
 			return _assetTypeName;
@@ -236,23 +260,42 @@ public class SelectAssetDisplayPageDisplayContext {
 		return _assetTypeName;
 	}
 
-	public String getDefaultAssetDisplayPageName() {
-		if (_defaultAssetDisplayPageName != null) {
-			return _defaultAssetDisplayPageName;
+	public long getDefaultAssetDisplayPageId() {
+		if (_defaultAssetDisplayPage != null) {
+			return _defaultAssetDisplayPage.getLayoutPageTemplateEntryId();
 		}
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry = null;
-
-		layoutPageTemplateEntry =
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
 			LayoutPageTemplateEntryServiceUtil.
 				fetchDefaultLayoutPageTemplateEntry(
 					_groupId, _classNameId, _classTypeId);
 
 		if (layoutPageTemplateEntry != null) {
-			_defaultAssetDisplayPageName = layoutPageTemplateEntry.getName();
+			_defaultAssetDisplayPage = layoutPageTemplateEntry;
+
+			return _defaultAssetDisplayPage.getLayoutPageTemplateEntryId();
 		}
 
-		return _defaultAssetDisplayPageName;
+		return 0;
+	}
+
+	public String getDefaultAssetDisplayPageName() {
+		if (_defaultAssetDisplayPage != null) {
+			return _defaultAssetDisplayPage.getName();
+		}
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			LayoutPageTemplateEntryServiceUtil.
+				fetchDefaultLayoutPageTemplateEntry(
+					_groupId, _classNameId, _classTypeId);
+
+		if (layoutPageTemplateEntry != null) {
+			_defaultAssetDisplayPage = layoutPageTemplateEntry;
+
+			return _defaultAssetDisplayPage.getName();
+		}
+
+		return StringPool.BLANK;
 	}
 
 	public String getEventName() {
@@ -291,7 +334,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public boolean isAssetDisplayPageTypeDefault() {
-		if (_getAssetDisplayPageType() ==
+		if (getAssetDisplayPageType() ==
 				AssetDisplayPageConstants.TYPE_DEFAULT) {
 
 			return true;
@@ -301,7 +344,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public boolean isAssetDisplayPageTypeNone() {
-		if (_getAssetDisplayPageType() == AssetDisplayPageConstants.TYPE_NONE) {
+		if (getAssetDisplayPageType() == AssetDisplayPageConstants.TYPE_NONE) {
 			return true;
 		}
 
@@ -309,7 +352,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public boolean isAssetDisplayPageTypeSpecific() {
-		if (_getAssetDisplayPageType() ==
+		if (getAssetDisplayPageType() ==
 				AssetDisplayPageConstants.TYPE_SPECIFIC) {
 
 			return true;
@@ -319,23 +362,11 @@ public class SelectAssetDisplayPageDisplayContext {
 	}
 
 	public boolean isShowViewInContextLink() {
-		return _showViewInContextLink;
-	}
-
-	public boolean isURLViewInContext() throws Exception {
 		if (_classPK == 0) {
 			return false;
 		}
 
-		if (Validator.isNull(getLayoutUuid())) {
-			return false;
-		}
-
-		if (Validator.isNull(getURLViewInContext())) {
-			return false;
-		}
-
-		return true;
+		return _showViewInContextLink;
 	}
 
 	private AssetDisplayPageEntry _getAssetDisplayPageEntry() {
@@ -370,30 +401,6 @@ public class SelectAssetDisplayPageDisplayContext {
 		}
 
 		return layoutPageTemplateEntry.getName();
-	}
-
-	private int _getAssetDisplayPageType() {
-		if (_displayPageType != null) {
-			return _displayPageType;
-		}
-
-		if (_classPK == 0) {
-			_displayPageType = AssetDisplayPageConstants.TYPE_DEFAULT;
-
-			return _displayPageType;
-		}
-
-		AssetDisplayPageEntry assetDisplayPageEntry =
-			_getAssetDisplayPageEntry();
-
-		if (assetDisplayPageEntry == null) {
-			_displayPageType = AssetDisplayPageConstants.TYPE_NONE;
-		}
-		else {
-			_displayPageType = assetDisplayPageEntry.getType();
-		}
-
-		return _displayPageType;
 	}
 
 	private String _getLayoutBreadcrumb(Layout layout) throws Exception {
@@ -437,7 +444,7 @@ public class SelectAssetDisplayPageDisplayContext {
 	private final Long _classNameId;
 	private Long _classPK;
 	private final Long _classTypeId;
-	private String _defaultAssetDisplayPageName;
+	private LayoutPageTemplateEntry _defaultAssetDisplayPage;
 	private Integer _displayPageType;
 	private final String _eventName;
 	private final long _groupId;
