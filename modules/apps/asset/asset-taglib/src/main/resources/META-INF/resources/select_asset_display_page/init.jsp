@@ -27,9 +27,6 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 page import="com.liferay.asset.taglib.internal.display.context.SelectAssetDisplayPageDisplayContext" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
-page import="com.liferay.portal.kernel.model.Layout" %><%@
-page import="com.liferay.portal.kernel.service.LayoutLocalServiceUtil" %><%@
-page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %>
 
 <liferay-frontend:defineObjects />
