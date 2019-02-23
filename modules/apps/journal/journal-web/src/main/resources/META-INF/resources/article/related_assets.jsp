@@ -47,4 +47,5 @@ if (article != null) {
 	assetEntryId="<%= assetEntryId %>"
 	className="<%= JournalArticle.class.getName() %>"
 	classPK="<%= classPK %>"
+	displayStyle="list"
 />
