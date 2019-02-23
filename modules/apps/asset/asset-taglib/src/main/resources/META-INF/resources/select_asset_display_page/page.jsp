@@ -20,78 +20,63 @@
 
 <aui:input id="assetDisplayPageIdInput" ignoreRequestValue="<%= true %>" name="assetDisplayPageId" type="hidden" value="<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageId() %>" />
 
-<span><liferay-ui:message key="please-select-one-option" /></span>
-
 <liferay-frontend:fieldset
 	id='<%= renderResponse.getNamespace() + "eventsContainer" %>'
 >
+	<aui:select label="" name="displayPageType" value="<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageType() %>">
+		<aui:option label="default-display-page" value="<%= AssetDisplayPageConstants.TYPE_DEFAULT %>" />
+		<aui:option label="specific-display-page" value="<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>" />
+		<aui:option label="no-display-page" value="<%= AssetDisplayPageConstants.TYPE_NONE %>" />
+	</aui:select>
 
-	<%
-	String defaultAssetDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
+	<div class="input-group <%= !selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeNone() ? StringPool.BLANK : "hide" %> mb-2" id="<portlet:namespace />displayPageNameContainer">
 
-	String taglibLabelTypeDefault = LanguageUtil.format(resourceBundle, "use-default-display-page-for-x-x", new Object[] {selectAssetDisplayPageDisplayContext.getAssetTypeName(), Validator.isNotNull(defaultAssetDisplayPageName) ? defaultAssetDisplayPageName : LanguageUtil.get(resourceBundle, "none")}, false);
+		<%
+		String displayPageName = selectAssetDisplayPageDisplayContext.getAssetDisplayPageName();
 
-	if (Validator.isNull(defaultAssetDisplayPageName)) {
-		taglibLabelTypeDefault += " <span class=\"text-muted\">" + LanguageUtil.get(resourceBundle, "this-entity-will-not-be-referenceable-with-an-url") + "</span>";
-	}
-	%>
+		if (Validator.isNull(displayPageName) && selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeDefault()) {
+			displayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
+		}
+		else if (Validator.isNull(displayPageName) && selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific()) {
+			displayPageName = LanguageUtil.get(resourceBundle, "no-display-page-selected");
+		}
 
-	<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeDefault() %>" label="<%= taglibLabelTypeDefault %>" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_DEFAULT %>" />
+		String wrapperCssClass = "input-group-item";
 
-	<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() %>" label="use-a-specific-display-page-for-the-entity" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>" />
+		if (selectAssetDisplayPageDisplayContext.isShowViewInContextLink()) {
+			wrapperCssClass += " input-group-item-shrink mb-0";
+		}
+		%>
 
-	<div class="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />displayPageContainer">
-		<p class="text-default">
-			<span class="<%= Validator.isNull(selectAssetDisplayPageDisplayContext.getAssetDisplayPageName()) ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />displayPageItemRemove" role="button">
-				<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
-			</span>
-			<span id="<portlet:namespace />displayPageNameInput">
-				<c:choose>
-					<c:when test="<%= Validator.isNull(selectAssetDisplayPageDisplayContext.getAssetDisplayPageName()) %>">
-						<span class="text-muted"><liferay-ui:message key="none" /></span>
-					</c:when>
-					<c:otherwise>
-						<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageName() %>
-					</c:otherwise>
-				</c:choose>
-			</span>
-		</p>
+		<aui:input disabled="<%= true %>" label="" name="displayPageNameInput" value="<%= displayPageName %>" wrapperCssClass="<%= wrapperCssClass %>" />
 
-		<aui:button name="chooseDisplayPage" value="choose" />
-
-		<c:if test="<%= selectAssetDisplayPageDisplayContext.isURLViewInContext() %>">
-
-			<%
-			Layout defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(selectAssetDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), false);
-
-			if (defaultDisplayLayout == null) {
-				defaultDisplayLayout = LayoutLocalServiceUtil.fetchLayoutByUuidAndGroupId(selectAssetDisplayPageDisplayContext.getLayoutUuid(), themeDisplay.getScopeGroupId(), true);
-			}
-			%>
-
-			<c:if test="<%= selectAssetDisplayPageDisplayContext.isShowViewInContextLink() %>">
-				<aui:a href="<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>" target="blank">
-					<liferay-ui:message arguments="<%= HtmlUtil.escape(defaultDisplayLayout.getName(locale)) %>" key="view-content-in-x" translateArguments="<%= false %>" />
-				</aui:a>
-			</c:if>
+		<c:if test="<%= selectAssetDisplayPageDisplayContext.isShowViewInContextLink() %>">
+			<div class="input-group-item" id="<portlet:namespace />previewButtonContainer">
+				<liferay-ui:icon
+					cssClass="btn btn-default"
+					icon="view"
+					id="previewButton"
+					markupView="lexicon"
+					message="preview"
+					url="<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>"
+				/>
+			</div>
 		</c:if>
 	</div>
 
-	<%
-	String taglibLabelTypeNone = LanguageUtil.get(resourceBundle, "none") + " <span class=\"text-muted\">" + LanguageUtil.get(resourceBundle, "this-entity-will-not-be-referenceable-with-an-url") + "</span>";
-	%>
-
-	<aui:input checked="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeNone() %>" label="<%= taglibLabelTypeNone %>" name="displayPageType" type="radio" value="<%= AssetDisplayPageConstants.TYPE_NONE %>" />
+	<div class="<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />displayPageContainer">
+		<aui:button cssClass='<%= selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific() ? StringPool.BLANK : "hide" %>' name="chooseDisplayPage" value="choose" />
+	</div>
 </liferay-frontend:fieldset>
 
 <aui:script use="liferay-item-selector-dialog">
 	var assetDisplayPageIdInput = document.getElementById('<portlet:namespace />assetDisplayPageIdInput');
 	var chooseDisplayPageButton = document.getElementById('<portlet:namespace />chooseDisplayPage');
-	var displayPageItemRemove = document.getElementById('<portlet:namespace />displayPageItemRemove');
 	var displayPageNameInput = document.getElementById('<portlet:namespace />displayPageNameInput');
 	var pagesContainerInput = document.getElementById('<portlet:namespace />pagesContainerInput');
+	var previewButtonContainer = document.getElementById('<portlet:namespace />previewButtonContainer');
 
-	if (assetDisplayPageIdInput && chooseDisplayPageButton && displayPageItemRemove && displayPageNameInput && pagesContainerInput) {
+	if (assetDisplayPageIdInput && chooseDisplayPageButton && displayPageNameInput && pagesContainerInput) {
 		chooseDisplayPageButton.addEventListener(
 			'click',
 			function(event) {
@@ -114,9 +99,7 @@
 										pagesContainerInput.value = selectedItem.id;
 									}
 
-									displayPageNameInput.innerHTML = selectedItem.name;
-
-									displayPageItemRemove.classList.remove('hide');
+									displayPageNameInput.value = selectedItem.name;
 								}
 							}
 						},
@@ -131,20 +114,8 @@
 		);
 	}
 
-	if (displayPageItemRemove && displayPageNameInput && pagesContainerInput) {
-		displayPageItemRemove.addEventListener(
-			'click',
-			function(event) {
-				displayPageNameInput.innerHTML = '<liferay-ui:message key="none" />';
-
-				pagesContainerInput.value = '';
-
-				displayPageItemRemove.classList.add('hide');
-			}
-		);
-	}
-
 	var displayPageContainer = document.getElementById('<portlet:namespace />displayPageContainer');
+	var displayPageNameContainer = document.getElementById('<portlet:namespace />displayPageNameContainer');
 	var eventsContainer = document.getElementById('<portlet:namespace />eventsContainer');
 
 	if (displayPageContainer && eventsContainer) {
@@ -153,11 +124,35 @@
 			function(event) {
 				var target = event.target;
 
-				if (target && target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>') {
-					displayPageContainer.classList.remove('hide');
+				<%
+				String defaultDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
+
+				if (Validator.isNull(defaultDisplayPageName)) {
+					defaultDisplayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
+				}
+				%>
+
+				var defaultDisplayPageName = '<%= defaultDisplayPageName %>';
+
+				if (target && (target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>' || target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>')) {
+					displayPageNameContainer.classList.remove('hide');
+					displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
+					previewButtonContainer.remove();
+
+					if (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>') {
+						assetDisplayPageIdInput.value = '<%= selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageId() %>';
+						displayPageNameInput.value = defaultDisplayPageName;
+					}
+					else {
+						displayPageContainer.classList.remove('hide');
+
+						assetDisplayPageIdInput.value = '0';
+						displayPageNameInput.value = '<%= LanguageUtil.get(resourceBundle, "no-display-page-selected") %>';
+					}
 				}
 				else {
 					displayPageContainer.classList.add('hide');
+					displayPageNameContainer.classList.add('hide');
 				}
 			}
 		);
