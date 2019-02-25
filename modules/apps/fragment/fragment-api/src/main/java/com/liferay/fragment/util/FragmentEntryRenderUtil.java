@@ -21,8 +21,11 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
@@ -154,9 +157,29 @@ public class FragmentEntryRenderUtil {
 		String css = fragmentEntryProcessorRegistry.processFragmentEntryLinkCSS(
 			fragmentEntryLink, mode, locale);
 
-		String html =
-			fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+		boolean displayFragmentEntryLink = true;
+
+		String displaySettings = fragmentEntryLink.getDisplaySettings();
+
+		if (Validator.isNotNull(displaySettings)) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+				displaySettings);
+
+			for (long segmentsId : segmentsIds) {
+				if (!jsonObject.getBoolean("segment-id-" + segmentsId)) {
+					displayFragmentEntryLink = false;
+
+					break;
+				}
+			}
+		}
+
+		String html = StringPool.BLANK;
+
+		if (displayFragmentEntryLink) {
+			html = fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
 				fragmentEntryLink, mode, locale, segmentsIds);
+		}
 
 		if ((request != null) && Validator.isNotNull(html)) {
 			html = _processTemplate(html, parameterMap, request, response);
