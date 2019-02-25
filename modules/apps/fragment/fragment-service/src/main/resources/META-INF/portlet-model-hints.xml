@@ -79,5 +79,8 @@
 		<field name="lastPropagationDate" type="Date" />
 		<field name="namespace" type="String" />
 		<field name="lastPublishDate" type="Date" />
+		<field name="displaySettings" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
 	</model>
 </model-hints>
