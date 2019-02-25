@@ -19,7 +19,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import com.liferay.segments.model.SegmentsEntry;
+import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsEntryServiceUtil;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 
 import java.util.List;
 
@@ -54,6 +56,10 @@ public class ContentPageLayoutEditorDisplayContext
 			"availableSegments",
 			_getSoyContextAvailableSegmentsEntries(segmentsEntries));
 
+		soyContext.put(
+			"availableExperiences",
+			_getSoyContextAvailableSegmentsExperiences());
+
 		soyContext.put("sidebarPanels", getSidebarPanelSoyContexts(false));
 
 		_editorSoyContext = soyContext;
@@ -77,6 +83,10 @@ public class ContentPageLayoutEditorDisplayContext
 			"availableSegments",
 			_getSoyContextAvailableSegmentsEntries(segmentsEntries));
 
+		soyContext.put(
+			"availableExperiences",
+			_getSoyContextAvailableSegmentsExperiences());
+
 		_fragmentsEditorToolbarSoyContext = soyContext;
 
 		return _fragmentsEditorToolbarSoyContext;
@@ -99,14 +109,47 @@ public class ContentPageLayoutEditorDisplayContext
 
 			segmentsSoyContext.put(
 				"segmentId",
-				"segment-id-" + segmentsEntry.getSegmentsEntryId());
-			segmentsSoyContext.put("segmentKey", segmentsEntry.getKey());
+				String.valueOf(segmentsEntry.getSegmentsEntryId()));
 			segmentsSoyContext.put(
 				"segmentLabel",
 				segmentsEntry.getName(themeDisplay.getLocale()));
 
 			availableSegmentsEntriesSoyContext.put(
-				segmentsEntry.getKey(), segmentsSoyContext);
+				String.valueOf(segmentsEntry.getSegmentsEntryId()),
+				segmentsSoyContext);
+		}
+
+		return availableSegmentsEntriesSoyContext;
+	}
+
+	private SoyContext _getSoyContextAvailableSegmentsExperiences()
+		throws PortalException {
+
+		SoyContext availableSegmentsEntriesSoyContext =
+			SoyContextFactoryUtil.createSoyContext();
+
+		List<SegmentsExperience> segmentsExperiences =
+			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
+				getGroupId(), classNameId, classPK, true, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
+
+		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
+			SoyContext experienceSoyContext =
+				SoyContextFactoryUtil.createSoyContext();
+
+			experienceSoyContext.put(
+				"experienceId",
+				String.valueOf(segmentsExperience.getSegmentsExperienceId()));
+			experienceSoyContext.put(
+				"experienceLabel",
+				segmentsExperience.getName(themeDisplay.getLocale()));
+			experienceSoyContext.put(
+				"segmentId",
+				String.valueOf(segmentsExperience.getSegmentsEntryId()));
+
+			availableSegmentsEntriesSoyContext.put(
+				String.valueOf(segmentsExperience.getSegmentsExperienceId()),
+				experienceSoyContext);
 		}
 
 		return availableSegmentsEntriesSoyContext;
