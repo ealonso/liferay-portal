@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
@@ -64,15 +65,43 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 			ActionRequest actionRequest)
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		long fragmentEntryLinkId = ParamUtil.getLong(
 			actionRequest, "fragmentEntryLinkId");
+		String segmentsEntryId = ParamUtil.getString(
+			actionRequest, "segmentsEntryId");
+		String defaultSegmentsEntryId = ParamUtil.getString(
+			actionRequest, "defaultSegmentsEntryId");
 
-		FragmentEntryLink fragmentEntryLink =
-			_fragmentEntryLinkLocalService.deleteFragmentEntryLink(
-				fragmentEntryLinkId);
+		FragmentEntryLink fragmentEntryLink = null;
+
+		if (!Objects.equals(segmentsEntryId, defaultSegmentsEntryId)) {
+			fragmentEntryLink =
+				_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
+					fragmentEntryLinkId);
+
+			String displaySettings = fragmentEntryLink.getDisplaySettings();
+
+			JSONObject jsonObject = null;
+
+			if (Validator.isNotNull(displaySettings)) {
+				jsonObject = JSONFactoryUtil.createJSONObject(displaySettings);
+			}
+			else {
+				jsonObject = JSONFactoryUtil.createJSONObject();
+			}
+
+			jsonObject.put(defaultSegmentsEntryId, true);
+			jsonObject.put(segmentsEntryId, false);
+
+			return _fragmentEntryLinkLocalService.updateDisplaySettings(
+				fragmentEntryLinkId, jsonObject.toString());
+		}
+
+		_fragmentEntryLinkLocalService.deleteFragmentEntryLink(
+			fragmentEntryLinkId);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
 		long classPK = ParamUtil.getLong(actionRequest, "classPK");

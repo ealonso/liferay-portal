@@ -296,6 +296,7 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 
 			if (actionType === REMOVE_FRAGMENT_ENTRY_LINK) {
 				const {fragmentEntryLinkId} = payload;
+				const segmentId = nextState.segmentId || nextState.defaultSegmentId;
 
 				let nextData = setIn(
 					nextState.layoutData,
@@ -311,6 +312,8 @@ function removeFragmentEntryLinkReducer(state, actionType, payload) {
 					nextState.classNameId,
 					nextState.classPK,
 					fragmentEntryLinkId,
+					segmentId,
+					nextState.defaultSegmentId,
 					nextData
 				)
 					.then(
@@ -669,6 +672,8 @@ function _removeFragment(layoutData, fragmentEntryLinkId) {
  * @param {string} classNameId
  * @param {string} classPK
  * @param {string} fragmentEntryLinkId
+ * @param {string} segmentsEntryId
+ * @param {string} defaultSegmentsEntryId
  * @param {object} layoutData
  * @return {Promise}
  * @review
@@ -679,12 +684,16 @@ function _removeFragmentEntryLink(
 	classNameId,
 	classPK,
 	fragmentEntryLinkId,
+	segmentsEntryId,
+	defaultSegmentsEntryId,
 	layoutData
 ) {
 	const formData = new FormData();
 
 	formData.append(`${portletNamespace}classNameId`, classNameId);
 	formData.append(`${portletNamespace}classPK`, classPK);
+	formData.append(`${portletNamespace}segmentsEntryId`, segmentsEntryId);
+	formData.append(`${portletNamespace}defaultSegmentsEntryId`, defaultSegmentsEntryId);
 	formData.append(`${portletNamespace}data`, JSON.stringify(layoutData));
 
 	formData.append(
