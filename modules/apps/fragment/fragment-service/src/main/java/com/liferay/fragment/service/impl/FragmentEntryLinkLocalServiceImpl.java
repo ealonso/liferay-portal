@@ -257,6 +257,24 @@ public class FragmentEntryLinkLocalServiceImpl
 	}
 
 	@Override
+	public FragmentEntryLink updateDisplaySettings(
+			long fragmentEntryLinkId, String displaySettings)
+		throws PortalException {
+
+		FragmentEntryLink fragmentEntryLink = fetchFragmentEntryLink(
+			fragmentEntryLinkId);
+
+		fragmentEntryLink.setDisplaySettings(displaySettings);
+
+		updateClassModel(
+			fragmentEntryLink.getClassNameId(), fragmentEntryLink.getClassPK());
+
+		fragmentEntryLinkPersistence.update(fragmentEntryLink);
+
+		return fragmentEntryLink;
+	}
+
+	@Override
 	public FragmentEntryLink updateFragmentEntryLink(
 			long fragmentEntryLinkId, int position)
 		throws PortalException {
