@@ -390,4 +390,19 @@ public interface FragmentEntryLinkModel extends AttachedModel,
 	 */
 	@Override
 	public void setLastPublishDate(Date lastPublishDate);
+
+	/**
+	 * Returns the display settings of this fragment entry link.
+	 *
+	 * @return the display settings of this fragment entry link
+	 */
+	@AutoEscape
+	public String getDisplaySettings();
+
+	/**
+	 * Sets the display settings of this fragment entry link.
+	 *
+	 * @param displaySettings the display settings of this fragment entry link
+	 */
+	public void setDisplaySettings(String displaySettings);
 }

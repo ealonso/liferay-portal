@@ -338,6 +338,9 @@ public interface FragmentEntryLinkLocalService extends BaseLocalService,
 	public void updateClassModel(long classNameId, long classPK)
 		throws PortalException;
 
+	public FragmentEntryLink updateDisplaySettings(long fragmentEntryLinkId,
+		String displaySettings) throws PortalException;
+
 	/**
 	* Updates the fragment entry link in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
 	*

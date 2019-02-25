@@ -91,7 +91,8 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 			{ "position", Types.INTEGER },
 			{ "lastPropagationDate", Types.TIMESTAMP },
 			{ "namespace", Types.VARCHAR },
-			{ "lastPublishDate", Types.TIMESTAMP }
+			{ "lastPublishDate", Types.TIMESTAMP },
+			{ "displaySettings", Types.VARCHAR }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -116,9 +117,10 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 		TABLE_COLUMNS_MAP.put("lastPropagationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("namespace", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("displaySettings", Types.VARCHAR);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table FragmentEntryLink (uuid_ VARCHAR(75) null,fragmentEntryLinkId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,originalFragmentEntryLinkId LONG,fragmentEntryId LONG,classNameId LONG,classPK LONG,css STRING null,html STRING null,js STRING null,editableValues STRING null,position INTEGER,lastPropagationDate DATE null,namespace VARCHAR(75) null,lastPublishDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table FragmentEntryLink (uuid_ VARCHAR(75) null,fragmentEntryLinkId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,originalFragmentEntryLinkId LONG,fragmentEntryId LONG,classNameId LONG,classPK LONG,css STRING null,html STRING null,js STRING null,editableValues STRING null,position INTEGER,lastPropagationDate DATE null,namespace VARCHAR(75) null,lastPublishDate DATE null,displaySettings STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table FragmentEntryLink";
 	public static final String ORDER_BY_JPQL = " ORDER BY fragmentEntryLink.classNameId ASC, fragmentEntryLink.classPK ASC, fragmentEntryLink.position ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY FragmentEntryLink.classNameId ASC, FragmentEntryLink.classPK ASC, FragmentEntryLink.position ASC";
@@ -273,6 +275,8 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 		attributeSetterBiConsumers.put("namespace", (BiConsumer<FragmentEntryLink, String>)FragmentEntryLink::setNamespace);
 		attributeGetterFunctions.put("lastPublishDate", FragmentEntryLink::getLastPublishDate);
 		attributeSetterBiConsumers.put("lastPublishDate", (BiConsumer<FragmentEntryLink, Date>)FragmentEntryLink::setLastPublishDate);
+		attributeGetterFunctions.put("displaySettings", FragmentEntryLink::getDisplaySettings);
+		attributeSetterBiConsumers.put("displaySettings", (BiConsumer<FragmentEntryLink, String>)FragmentEntryLink::setDisplaySettings);
 
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(attributeGetterFunctions);
@@ -629,6 +633,21 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	}
 
 	@Override
+	public String getDisplaySettings() {
+		if (_displaySettings == null) {
+			return "";
+		}
+		else {
+			return _displaySettings;
+		}
+	}
+
+	@Override
+	public void setDisplaySettings(String displaySettings) {
+		_displaySettings = displaySettings;
+	}
+
+	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(PortalUtil.getClassNameId(
 				FragmentEntryLink.class.getName()), getClassNameId());
@@ -685,6 +704,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 		fragmentEntryLinkImpl.setLastPropagationDate(getLastPropagationDate());
 		fragmentEntryLinkImpl.setNamespace(getNamespace());
 		fragmentEntryLinkImpl.setLastPublishDate(getLastPublishDate());
+		fragmentEntryLinkImpl.setDisplaySettings(getDisplaySettings());
 
 		fragmentEntryLinkImpl.resetOriginalValues();
 
@@ -922,6 +942,14 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 			fragmentEntryLinkCacheModel.lastPublishDate = Long.MIN_VALUE;
 		}
 
+		fragmentEntryLinkCacheModel.displaySettings = getDisplaySettings();
+
+		String displaySettings = fragmentEntryLinkCacheModel.displaySettings;
+
+		if ((displaySettings != null) && (displaySettings.length() == 0)) {
+			fragmentEntryLinkCacheModel.displaySettings = null;
+		}
+
 		return fragmentEntryLinkCacheModel;
 	}
 
@@ -1018,6 +1046,7 @@ public class FragmentEntryLinkModelImpl extends BaseModelImpl<FragmentEntryLink>
 	private Date _lastPropagationDate;
 	private String _namespace;
 	private Date _lastPublishDate;
+	private String _displaySettings;
 	private long _columnBitmask;
 	private FragmentEntryLink _escapedModel;
 }

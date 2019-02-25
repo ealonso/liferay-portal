@@ -66,6 +66,7 @@ public class FragmentEntryLinkWrapper extends BaseModelWrapper<FragmentEntryLink
 		attributes.put("lastPropagationDate", getLastPropagationDate());
 		attributes.put("namespace", getNamespace());
 		attributes.put("lastPublishDate", getLastPublishDate());
+		attributes.put("displaySettings", getDisplaySettings());
 
 		return attributes;
 	}
@@ -192,6 +193,12 @@ public class FragmentEntryLinkWrapper extends BaseModelWrapper<FragmentEntryLink
 		if (lastPublishDate != null) {
 			setLastPublishDate(lastPublishDate);
 		}
+
+		String displaySettings = (String)attributes.get("displaySettings");
+
+		if (displaySettings != null) {
+			setDisplaySettings(displaySettings);
+		}
 	}
 
 	/**
@@ -252,6 +259,16 @@ public class FragmentEntryLinkWrapper extends BaseModelWrapper<FragmentEntryLink
 	@Override
 	public String getCss() {
 		return model.getCss();
+	}
+
+	/**
+	* Returns the display settings of this fragment entry link.
+	*
+	* @return the display settings of this fragment entry link
+	*/
+	@Override
+	public String getDisplaySettings() {
+		return model.getDisplaySettings();
 	}
 
 	/**
@@ -488,6 +505,16 @@ public class FragmentEntryLinkWrapper extends BaseModelWrapper<FragmentEntryLink
 	@Override
 	public void setCss(String css) {
 		model.setCss(css);
+	}
+
+	/**
+	* Sets the display settings of this fragment entry link.
+	*
+	* @param displaySettings the display settings of this fragment entry link
+	*/
+	@Override
+	public void setDisplaySettings(String displaySettings) {
+		model.setDisplaySettings(displaySettings);
 	}
 
 	/**
