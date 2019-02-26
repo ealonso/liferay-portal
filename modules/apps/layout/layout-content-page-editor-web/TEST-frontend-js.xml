@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite hostname="" id="0" errors="0" failures="0" name="Jest" package="layout.layout-content-page-editor-web" skipped="0" tests="5" time="0" timestamp="1551269756079">
+  <testcase classname="layout.layout-content-page-editor-web.test.js.reducers" name="experiences reducers createExperienceReducer communicates with API and updates the state" time="0.006">
+  </testcase>
+  <testcase classname="layout.layout-content-page-editor-web.test.js.reducers" name="experiences reducers startCreateExperience and endCreateExperience switch states" time="0.001">
+  </testcase>
+  <testcase classname="layout.layout-content-page-editor-web.test.js.utils" name="fragmentMigrator should migrate single editable fragment" time="0.002">
+  </testcase>
+  <testcase classname="layout.layout-content-page-editor-web.test.js.utils" name="fragmentMigrator should migrate double editable fragment" time="0">
+  </testcase>
+  <testcase classname="layout.layout-content-page-editor-web.test.js.utils" name="fragmentMigrator should leave already migrated segments as they are" time="0.001">
+  </testcase>
+</testsuite>
