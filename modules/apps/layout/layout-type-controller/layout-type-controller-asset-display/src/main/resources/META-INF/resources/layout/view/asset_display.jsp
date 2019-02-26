@@ -45,7 +45,7 @@ if (assetEntry != null) {
 		try {
 			request.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.FALSE);
 
-			long[] segmentsIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_ENTRY_IDS), new long[0]);
+			long[] experiencesIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[0]);
 		%>
 
 			<div class="layout-content" id="main-content" role="main">
@@ -105,7 +105,7 @@ if (assetEntry != null) {
 											}
 										%>
 
-											<%= FragmentEntryRenderUtil.renderFragmentEntryLink(fragmentEntryLink, FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE, assetDisplayLayoutTypeControllerDisplayContext.getAssetDisplayFieldsValues(), locale, segmentsIds, request, response) %>
+											<%= FragmentEntryRenderUtil.renderFragmentEntryLink(fragmentEntryLink, FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE, assetDisplayLayoutTypeControllerDisplayContext.getAssetDisplayFieldsValues(), locale, experiencesIds, request, response) %>
 
 										<%
 										}

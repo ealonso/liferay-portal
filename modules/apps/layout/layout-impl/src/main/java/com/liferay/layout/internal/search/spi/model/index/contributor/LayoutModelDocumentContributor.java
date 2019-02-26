@@ -23,14 +23,14 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
-import com.liferay.segments.constants.SegmentsConstants;
-import com.liferay.segments.model.SegmentsEntry;
-import com.liferay.segments.service.SegmentsEntryLocalService;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -94,7 +94,10 @@ public class LayoutModelDocumentContributor
 			response = serviceContext.getResponse();
 		}
 
-		long[] segmentsIds = _getSegmentIds(layout.getGroupId());
+		long[] experiencesIds = _getExperiencesIds(
+			layout.getGroupId(),
+			_classNameLocalService.getClassNameId(Layout.class.getName()),
+			layout.getPrimaryKey());
 
 		for (String languageId : layout.getAvailableLanguageIds()) {
 			Locale locale = LocaleUtil.fromLanguageId(languageId);
@@ -104,7 +107,7 @@ public class LayoutModelDocumentContributor
 					LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
 						request, response, layoutPageTemplateStructure,
 						FragmentEntryLinkConstants.VIEW, new HashMap<>(),
-						locale, segmentsIds);
+						locale, experiencesIds);
 
 				document.addText(
 					Field.getLocalizedName(locale, Field.CONTENT), content);
@@ -115,17 +118,27 @@ public class LayoutModelDocumentContributor
 		}
 	}
 
-	private long[] _getSegmentIds(long groupId) {
-		SegmentsEntry segmentsEntry =
-			_segmentsEntryLocalService.fetchSegmentsEntry(
-				groupId, SegmentsConstants.KEY_DEFAULT, true);
+	private long[] _getExperiencesIds(
+		long groupId, long classNameId, long classPK) {
 
-		if (segmentsEntry != null) {
-			return new long[] {segmentsEntry.getSegmentsEntryId()};
+		try {
+			SegmentsExperience segmentsExperience =
+				_segmentsExperienceLocalService.fetchDefaultSegmentsExperience(
+					groupId, classNameId, classPK, true);
+
+			if (segmentsExperience != null) {
+				return new long[] {segmentsExperience.getSegmentsEntryId()};
+			}
+
+			return new long[0];
 		}
-
-		return new long[0];
+		catch (PortalException pe) {
+			throw new SystemException(pe);
+		}
 	}
+
+	@Reference
+	private ClassNameLocalService _classNameLocalService;
 
 	@Reference
 	private LayoutPageTemplateStructureLocalService
@@ -135,6 +148,6 @@ public class LayoutModelDocumentContributor
 	private Portal _portal;
 
 	@Reference
-	private SegmentsEntryLocalService _segmentsEntryLocalService;
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

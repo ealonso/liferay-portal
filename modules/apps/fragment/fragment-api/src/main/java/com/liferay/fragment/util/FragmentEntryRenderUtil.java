@@ -144,8 +144,9 @@ public class FragmentEntryRenderUtil {
 
 	public static String renderFragmentEntryLink(
 			FragmentEntryLink fragmentEntryLink, String mode,
-			Map<String, Object> parameterMap, Locale locale, long[] segmentsIds,
-			HttpServletRequest request, HttpServletResponse response)
+			Map<String, Object> parameterMap, Locale locale,
+			long[] experiencesIds, HttpServletRequest request,
+			HttpServletResponse response)
 		throws PortalException {
 
 		FragmentEntryProcessorRegistry fragmentEntryProcessorRegistry =
@@ -156,7 +157,7 @@ public class FragmentEntryRenderUtil {
 
 		String html =
 			fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
-				fragmentEntryLink, mode, locale, segmentsIds);
+				fragmentEntryLink, mode, locale, experiencesIds);
 
 		if ((request != null) && Validator.isNotNull(html)) {
 			html = _processTemplate(html, parameterMap, request, response);
