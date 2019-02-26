@@ -182,10 +182,9 @@ public class AssetCategoryIndexerIndexedFieldsTest {
 		map.put(
 			"parentCategoryId",
 			String.valueOf(assetCategory.getParentCategoryId()));
+		map.put("title_ja_JP", assetCategory.getName());
 		map.put(
-			"title_sortable",
-			StringUtil.lowerCase(
-				assetCategory.getTitle(assetCategory.getDefaultLanguageId())));
+			"title_sortable", StringUtil.lowerCase(assetCategory.getName()));
 
 		indexedFieldsFixture.populateUID(
 			AssetCategory.class.getName(), assetCategory.getCategoryId(), map);
