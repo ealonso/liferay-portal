@@ -151,7 +151,7 @@ public class FragmentEntryProcessorEditableTest {
 	}
 
 	@Test
-	public void testFragmentEntryProcessorEditableWithMatchedDefaultSegmentAndDefaultLanguage()
+	public void testFragmentEntryProcessorEditableWithMatchedDefaultExperienceAndDefaultLanguage()
 		throws Exception {
 
 		FragmentEntryLink fragmentEntryLink =
@@ -164,13 +164,59 @@ public class FragmentEntryProcessorEditableTest {
 		fragmentEntryLink.setEditableValues(
 			_getJsonFileAsString(
 				"fragment_entry_link_editable_values_matching_default_" +
-					"segment_and_default_language.json"));
+					"experience_and_default_language.json"));
 
 		Assert.assertEquals(
 			_processedHTML,
 			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
 				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
 				LocaleUtil.CHINESE, new long[] {2L, 0L}));
+	}
+
+	@Test
+	public void testFragmentEntryProcessorEditableWithMatchedExperienceAndDefaultLanguage()
+		throws Exception {
+
+		FragmentEntryLink fragmentEntryLink =
+			FragmentEntryLinkLocalServiceUtil.createFragmentEntryLink(0);
+
+		FragmentEntry fragmentEntry = _addFragmentEntry("fragment_entry.html");
+
+		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+
+		fragmentEntryLink.setEditableValues(
+			_getJsonFileAsString(
+				"fragment_entry_link_editable_values_matching_experience_and_" +
+					"default_language.json"));
+
+		Assert.assertEquals(
+			_processedHTML,
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
+				LocaleUtil.CHINESE, new long[] {1L, 0L}));
+	}
+
+	@Test
+	public void testFragmentEntryProcessorEditableWithMatchedExperienceAndLanguage()
+		throws Exception {
+
+		FragmentEntryLink fragmentEntryLink =
+			FragmentEntryLinkLocalServiceUtil.createFragmentEntryLink(0);
+
+		FragmentEntry fragmentEntry = _addFragmentEntry("fragment_entry.html");
+
+		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+
+		fragmentEntryLink.setEditableValues(
+			_getJsonFileAsString(
+				"fragment_entry_link_editable_values_matching_experience_" +
+					"and_language.json"));
+
+		Assert.assertEquals(
+			_processedHTML,
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
+				LocaleUtil.US, new long[] {1L, 0L}));
 	}
 
 	@Test
@@ -216,52 +262,6 @@ public class FragmentEntryProcessorEditableTest {
 			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
 				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
 				LocaleUtil.US));
-	}
-
-	@Test
-	public void testFragmentEntryProcessorEditableWithMatchedSegmentAndDefaultLanguage()
-		throws Exception {
-
-		FragmentEntryLink fragmentEntryLink =
-			FragmentEntryLinkLocalServiceUtil.createFragmentEntryLink(0);
-
-		FragmentEntry fragmentEntry = _addFragmentEntry("fragment_entry.html");
-
-		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
-
-		fragmentEntryLink.setEditableValues(
-			_getJsonFileAsString(
-				"fragment_entry_link_editable_values_matching_segment_and_" +
-					"default_language.json"));
-
-		Assert.assertEquals(
-			_processedHTML,
-			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
-				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
-				LocaleUtil.CHINESE, new long[] {1L, 0L}));
-	}
-
-	@Test
-	public void testFragmentEntryProcessorEditableWithMatchedSegmentAndLanguage()
-		throws Exception {
-
-		FragmentEntryLink fragmentEntryLink =
-			FragmentEntryLinkLocalServiceUtil.createFragmentEntryLink(0);
-
-		FragmentEntry fragmentEntry = _addFragmentEntry("fragment_entry.html");
-
-		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
-
-		fragmentEntryLink.setEditableValues(
-			_getJsonFileAsString(
-				"fragment_entry_link_editable_values_matching_segment_and_" +
-					"language.json"));
-
-		Assert.assertEquals(
-			_processedHTML,
-			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
-				fragmentEntryLink, FragmentEntryLinkConstants.EDIT,
-				LocaleUtil.US, new long[] {1L, 0L}));
 	}
 
 	@Test(expected = FragmentEntryContentException.class)
