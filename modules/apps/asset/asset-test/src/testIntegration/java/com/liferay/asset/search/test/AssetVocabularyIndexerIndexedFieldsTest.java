@@ -201,16 +201,6 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 			Field.MODIFIED_DATE, assetVocabulary.getModifiedDate(), map);
 	}
 
-	private void _populateRoles(
-			AssetVocabulary assetVocabulary, Map<String, String> map)
-		throws Exception {
-
-		indexedFieldsFixture.populateRoleIdFields(
-			assetVocabulary.getCompanyId(), AssetVocabulary.class.getName(),
-			assetVocabulary.getVocabularyId(), assetVocabulary.getGroupId(),
-			null, map);
-	}
-
 	private void _populateLocalizedTitles(
 		String title, Map<String, String> map) {
 
@@ -230,6 +220,16 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 
 			map.put(sb.toString(), title);
 		}
+	}
+
+	private void _populateRoles(
+			AssetVocabulary assetVocabulary, Map<String, String> map)
+		throws Exception {
+
+		indexedFieldsFixture.populateRoleIdFields(
+			assetVocabulary.getCompanyId(), AssetVocabulary.class.getName(),
+			assetVocabulary.getVocabularyId(), assetVocabulary.getGroupId(),
+			null, map);
 	}
 
 	@DeleteAfterTestRun
