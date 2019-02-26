@@ -14,6 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.display.context;
 
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.fragment.constants.FragmentEntryTypeConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
@@ -47,8 +48,11 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
 import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
+import com.liferay.portal.kernel.portlet.PortletProvider;
+import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
@@ -90,6 +94,7 @@ import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletConfig;
+import javax.portlet.PortletMode;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 
@@ -136,6 +141,32 @@ public class ContentPageEditorDisplayContext {
 		soyContext.put(
 			"addPortletURL",
 			getFragmentEntryActionURL("/content_layout/add_portlet"));
+
+		PortletURL assetBrowserURL = PortletProviderUtil.getPortletURL(
+			request, AssetEntry.class.getName(), PortletProvider.Action.BROWSE);
+
+		String assetBrowserEventName =
+			_renderResponse.getNamespace() + "selectAsset";
+
+		assetBrowserURL.setParameter("eventName", assetBrowserEventName);
+
+		assetBrowserURL.setParameter(
+			"groupId", String.valueOf(themeDisplay.getScopeGroupId()));
+		assetBrowserURL.setParameter(
+			"selectedGroupIds", String.valueOf(themeDisplay.getScopeGroupId()));
+		assetBrowserURL.setParameter(
+			"showNonindexable", String.valueOf(Boolean.TRUE));
+		assetBrowserURL.setParameter(
+			"showScheduled", String.valueOf(Boolean.FALSE));
+		assetBrowserURL.setParameter(
+			"useAssetDisplayContributor", String.valueOf(Boolean.TRUE));
+
+		assetBrowserURL.setPortletMode(PortletMode.VIEW);
+		assetBrowserURL.setWindowState(LiferayWindowState.POP_UP);
+
+		soyContext.put("assetBrowserEventName", assetBrowserEventName);
+		soyContext.put("assetBrowserURL", assetBrowserURL.toString());
+
 		soyContext.put(
 			"availableLanguages", _getAvailableLanguagesSoyContext());
 		soyContext.put("classNameId", classNameId);
