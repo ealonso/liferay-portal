@@ -67,7 +67,7 @@ public interface FragmentEntryProcessorRegistry {
 
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink, String mode, Locale locale,
-			long[] segmentsIds)
+			long[] experiencesIds)
 		throws PortalException;
 
 	public void validateFragmentEntryHTML(String html) throws PortalException;

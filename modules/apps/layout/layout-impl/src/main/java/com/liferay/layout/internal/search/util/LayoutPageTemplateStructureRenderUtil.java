@@ -42,7 +42,7 @@ public class LayoutPageTemplateStructureRenderUtil {
 			HttpServletRequest request, HttpServletResponse response,
 			LayoutPageTemplateStructure layoutPageTemplateStructure,
 			String mode, Map<String, Object> parameterMap, Locale locale,
-			long[] segmentsIds)
+			long[] experiencesIds)
 		throws PortalException {
 
 		String data = layoutPageTemplateStructure.getData();
@@ -97,13 +97,13 @@ public class LayoutPageTemplateStructureRenderUtil {
 						renderFragmentEntryLink =
 							FragmentEntryRenderUtil.renderFragmentEntryLink(
 								fragmentEntryLink, mode, parameterMap, locale,
-								segmentsIds, request, response);
+								experiencesIds, request, response);
 					}
 					else {
 						renderFragmentEntryLink =
 							FragmentEntryRenderUtil.renderFragmentEntryLink(
 								fragmentEntryLink, mode, Collections.emptyMap(),
-								locale, segmentsIds, request, response);
+								locale, experiencesIds, request, response);
 					}
 
 					sb.append(renderFragmentEntryLink);
