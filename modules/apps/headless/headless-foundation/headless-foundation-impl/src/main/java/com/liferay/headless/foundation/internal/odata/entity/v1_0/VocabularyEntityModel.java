@@ -47,9 +47,7 @@ public class VocabularyEntityModel implements EntityModel {
 			new StringEntityField(
 				"name",
 				locale -> Field.getSortableFieldName(
-					StringBundler.concat(
-						Field.TITLE, StringPool.UNDERLINE,
-						LocaleUtil.toLanguageId(locale))))
+					"localized_title_".concat(LocaleUtil.toLanguageId(locale))))
 		).collect(
 			Collectors.toMap(EntityField::getName, Function.identity())
 		);
