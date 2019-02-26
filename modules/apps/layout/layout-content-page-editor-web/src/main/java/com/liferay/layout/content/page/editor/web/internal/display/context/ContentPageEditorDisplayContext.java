@@ -97,6 +97,7 @@ import javax.portlet.PortletConfig;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceURL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -189,6 +190,16 @@ public class ContentPageEditorDisplayContext {
 				FragmentEntryTypeConstants.TYPE_COMPONENT));
 		soyContext.put(
 			"fragmentEntryLinks", _getSoyContextFragmentEntryLinks());
+
+		ResourceURL getAssetMappingFieldsURL =
+			_renderResponse.createResourceURL();
+
+		getAssetMappingFieldsURL.setResourceID(
+			"/content_layout/get_asset_class_types");
+
+		soyContext.put(
+			"getAssetMappingFieldsURL", getAssetMappingFieldsURL.toString());
+
 		soyContext.put("imageSelectorURL", _getItemSelectorURL());
 		soyContext.put("languageId", themeDisplay.getLanguageId());
 		soyContext.put(
