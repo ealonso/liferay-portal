@@ -217,12 +217,12 @@ public class AssetCategoryIndexerIndexedFieldsTest {
 	}
 
 	private void _populateTitles(String title, Map<String, String> map) {
-		map.put(Field.TITLE, title);
+		map.put("localized_title", title);
 
 		for (Locale locale : LanguageUtil.getAvailableLocales()) {
 			StringBundler sb = new StringBundler(5);
 
-			sb.append("title_");
+			sb.append("localized_title_");
 			sb.append(locale.getLanguage());
 			sb.append("_");
 			sb.append(locale.getCountry());

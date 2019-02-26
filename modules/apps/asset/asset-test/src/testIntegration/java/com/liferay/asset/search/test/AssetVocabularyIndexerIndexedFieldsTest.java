@@ -177,6 +177,7 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 			StringUtil.lowerCase(assetVocabulary.getUserName()));
 		map.put(
 			"name_sortable", StringUtil.lowerCase(assetVocabulary.getName()));
+		map.put("title_ja_JP", assetVocabulary.getName());
 		map.put(
 			"title_sortable", StringUtil.lowerCase(assetVocabulary.getName()));
 
@@ -186,7 +187,7 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 
 		_populateDates(assetVocabulary, map);
 		_populateRoles(assetVocabulary, map);
-		_populateTitles(assetVocabulary.getTitle(), map);
+		_populateLocalizedTitles(assetVocabulary.getTitle(), map);
 
 		return map;
 	}
@@ -210,13 +211,15 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 			null, map);
 	}
 
-	private void _populateTitles(String title, Map<String, String> map) {
-		map.put(Field.TITLE, title);
+	private void _populateLocalizedTitles(
+		String title, Map<String, String> map) {
+
+		map.put("localized_title", title);
 
 		for (Locale locale : LanguageUtil.getAvailableLocales()) {
 			StringBundler sb = new StringBundler(5);
 
-			sb.append("title_");
+			sb.append("localized_title_");
 			sb.append(locale.getLanguage());
 			sb.append("_");
 			sb.append(locale.getCountry());
