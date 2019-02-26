@@ -2,11 +2,11 @@
 	"com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor": {
 		"editable_img": {
 			"defaultValue": "sample.jpg",
-			"segment-id-0" : {}
+			"experience-id-0" : {}
 		},
 		"editable_text": {
 			"defaultValue": "test",
-			"segment-id-0" : {}
+			"experience-id-0" : {}
 		}
 	}
 }
