@@ -7,6 +7,7 @@ import {languageIdReducer, translationStatusReducer} from './translations.es';
 import {saveChangesReducer} from './changes.es';
 import {segmentIdReducer} from './segments.es';
 import {updateActiveItemReducer, updateDropTargetReducer, updateHoveredItemReducer} from './placeholders.es';
+import {createExperienceReducer, endCreateExperience, selectExperienceReducer, startCreateExperience} from './experiences.es';
 
 /**
  * List of reducers
@@ -16,6 +17,8 @@ const reducers = [
 	addFragmentEntryLinkReducer,
 	addPortletReducer,
 	addSectionReducer,
+	createExperienceReducer,
+	endCreateExperience,
 	hideFragmentsEditorSidebarReducer,
 	hideMappingDialogReducer,
 	hideMappingTypeDialogReducer,
@@ -27,15 +30,17 @@ const reducers = [
 	removeFragmentEntryLinkReducer,
 	removeSectionReducer,
 	saveChangesReducer,
-	selectMappeableTypeReducer,
 	segmentIdReducer,
+	selectMappeableTypeReducer,
 	toggleFragmentsEditorSidebarReducer,
 	translationStatusReducer,
 	updateActiveItemReducer,
 	updateDropTargetReducer,
 	updateEditableValueReducer,
 	updateHoveredItemReducer,
-	updateSectionConfigReducer
+	updateSectionConfigReducer,
+	selectExperienceReducer,
+	startCreateExperience
 ];
 
 export {reducers};
