@@ -3,7 +3,7 @@ import Soy, {Config} from 'metal-soy';
 
 import getConnectedComponent from '../../store/ConnectedComponent.es';
 import templates from './ExperienceSelector.soy';
-import {CREATE_EXPERIENCE, END_CREATE_EXPERIENCE, SELECT_EXPERIENCE, START_CREATE_EXPERIENCE} from '../../actions/actions.es';
+import {CREATE_EXPERIENCE, END_CREATE_EXPERIENCE, SELECT_EXPERIENCE, START_CREATE_EXPERIENCE, UPDATE_TRANSLATION_STATUS} from '../../actions/actions.es';
 import 'frontend-js-web/liferay/compat/modal/Modal.es';
 
 /**
@@ -117,7 +117,10 @@ class ExperienceSelector extends Component {
 			{
 				experienceId
 			}
-		);
+		)
+			.dispatchAction(
+				UPDATE_TRANSLATION_STATUS
+			);
 	}
 
 	/**

@@ -42,7 +42,7 @@ function translationStatusReducer(state, actionType) {
 		actionType === UPDATE_TRANSLATION_STATUS ||
 		actionType === REMOVE_FRAGMENT_ENTRY_LINK
 	) {
-		const experienceId = nextState.experienceId && nextState.experienceId || nextState.defaultExperienceId;
+		const experienceId = nextState.experienceId || nextState.defaultExperienceId;
 
 		const nextTranslationStatus = _getTranslationStatus(
 			_getLanguageKeys(nextState.availableLanguages),
