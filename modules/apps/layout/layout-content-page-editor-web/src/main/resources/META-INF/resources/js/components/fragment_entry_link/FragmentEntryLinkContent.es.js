@@ -9,6 +9,7 @@ import FragmentStyleEditor from './FragmentStyleEditor.es';
 import MetalStore from '../../store/store.es';
 import {setIn} from '../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties} from '../../utils/FragmentsEditorComponentUtils.es';
+import {prefixExperienceId} from '../../utils/prefixExperienceId.es';
 import templates from './FragmentEntryLinkContent.soy';
 import {UPDATE_EDITABLE_VALUE} from '../../actions/actions.es';
 
@@ -324,7 +325,7 @@ class FragmentEntryLinkContent extends Component {
 	 * @param {Object} event
 	 */
 	_handleStyleChanged(event) {
-		const editableValueExperienceId = this.experienceId ? `experience-id-${this.experienceId}` : (this.defaultExperienceId && `experience-id-${this.experienceId}`);
+		const editableValueExperienceId = prefixExperienceId(this.experienceId) || prefixExperienceId(this.defaultExperienceId);
 
 		this.store.dispatchAction(
 			UPDATE_EDITABLE_VALUE,
