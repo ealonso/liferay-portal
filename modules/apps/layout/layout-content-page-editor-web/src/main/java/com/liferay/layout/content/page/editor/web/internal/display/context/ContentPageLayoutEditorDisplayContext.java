@@ -53,12 +53,12 @@ public class ContentPageLayoutEditorDisplayContext
 		List<SegmentsEntry> segmentsEntries = _getSegmentsEntries();
 
 		soyContext.put(
-			"availableSegments",
-			_getSoyContextAvailableSegmentsEntries(segmentsEntries));
-
-		soyContext.put(
 			"availableExperiences",
 			_getSoyContextAvailableSegmentsExperiences());
+
+		soyContext.put(
+			"availableSegments",
+			_getSoyContextAvailableSegmentsEntries(segmentsEntries));
 
 		soyContext.put("sidebarPanels", getSidebarPanelSoyContexts(false));
 
