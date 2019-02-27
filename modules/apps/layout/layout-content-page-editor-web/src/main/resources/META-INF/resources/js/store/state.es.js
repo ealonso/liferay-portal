@@ -415,14 +415,6 @@ const INITIAL_STATE = {
 		.value(false),
 
 	/**
-	 * Currently selected segment id.
-	 * @review
-	 * @type {string}
-	 */
-	segmentId: Config
-		.string(),
-
-	/**
 	 * Editable type of the field that is being mapped
 	 * @default ''
 	 * @review

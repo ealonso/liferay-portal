@@ -6,7 +6,7 @@
 {template .render}
 	{@param defaultEditorConfigurations: ?}
 	{@param defaultLanguageId: string}
-	{@param defaultSegmentId: string}
+	{@param defaultExperienceId: string}
 	{@param fragmentEntryLinks: ?}
 	{@param languageId: string}
 	{@param layoutData: [
@@ -27,7 +27,7 @@
 	{@param? dropTargetItemTypes: ?}
 	{@param? fragmentsEditorSidebarVisible: bool}
 	{@param? mappingFieldsURL: string}
-	{@param? segmentId: string}
+	{@param? experienceId: string}
 	{@param? store: ?}
 
 	{let $entryLinksClasses kind="text"}
@@ -59,7 +59,7 @@
 					{param _handleFragmentMove: $_handleFragmentMove /}
 					{param columns: $row.columns /}
 					{param defaultEditorConfigurations: $defaultEditorConfigurations /}
-					{param defaultSegmentId: $defaultSegmentId /}
+					{param defaultExperienceId: $defaultExperienceId /}
 					{param dropTargetItemTypes: $dropTargetItemTypes /}
 					{param empty: $row.empty /}
 					{param fragmentEntryLinks: $fragmentEntryLinks /}
@@ -67,7 +67,7 @@
 					{param mappingFieldsURL: $mappingFieldsURL /}
 					{param row: $row /}
 					{param rowId: $row.rowId /}
-					{param segmentId: $segmentId /}
+					{param experienceId: $experienceId /}
 					{param store: $store /}
 				{/call}
 			{/foreach}

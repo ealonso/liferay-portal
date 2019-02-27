@@ -117,8 +117,11 @@ class FragmentEditableField extends Component {
 	 * @returns {object}
 	 */
 	prepareStateForRender(state) {
-		const segmentedValue = this.editableValues[this.segmentId] ||
-			this.editableValues[this.defaultSegmentId] ||
+		const defaultExperienceId = this.defaultExperienceId && 'experience-id-' + this.defaultExperienceId;
+		const experienceId = this.experienceId && 'experience-id-' + this.experienceId;
+
+		const segmentedValue = this.editableValues[experienceId] ||
+			this.editableValues[defaultExperienceId] ||
 			this.editableValues;
 
 		const translatedValue = segmentedValue[this.languageId] ||
@@ -172,7 +175,7 @@ class FragmentEditableField extends Component {
 	 */
 	shouldUpdate(changes) {
 		return this._editing ?
-			shouldUpdateOnChangeProperties(changes, ['languageId', 'segmentId']) :
+			shouldUpdateOnChangeProperties(changes, ['languageId', 'experienceId']) :
 			shouldUpdatePureComponent(changes);
 	}
 
@@ -389,6 +392,7 @@ class FragmentEditableField extends Component {
 	 */
 	_saveChanges(newValue) {
 		this._unsavedChanges = false;
+		const editableValueExperienceId = this.experienceId ? `experience-id-${this.experienceId}` : (this.defaultExperienceId && `experience-id-${this.defaultExperienceId}`);
 
 		this.store
 			.dispatchAction(
@@ -402,15 +406,15 @@ class FragmentEditableField extends Component {
 				{
 					editableId: this.editableId,
 					editableValue: newValue,
+					editableValueExperienceId,
 					editableValueId: this.languageId || DEFAULT_LANGUAGE_ID_KEY,
-					editableValueSegmentId: this.segmentId || this.defaultSegmentId,
 					fragmentEntryLinkId: this.fragmentEntryLinkId
 				}
 			)
 			.dispatchAction(
 				UPDATE_TRANSLATION_STATUS,
 				{
-					segmentId: this.segmentId || this.defaultSegmentId
+					experienceId: this.experienceId || this.defaultExperienceId
 				}
 			)
 			.dispatchAction(
@@ -567,12 +571,12 @@ const ConnectedFragmentEditableField = getConnectedComponent(
 		'activeItemId',
 		'activeItemType',
 		'defaultLanguageId',
-		'defaultSegmentId',
+		'defaultExperienceId',
 		'hoveredItemId',
 		'hoveredItemType',
 		'languageId',
 		'portletNamespace',
-		'segmentId'
+		'experienceId'
 	]
 );
 

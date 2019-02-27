@@ -10,7 +10,7 @@ describe(
 				const inputData = JSON.stringify(singleEditableFragmentInput);
 
 				expect(
-					editableValuesMigrator(inputData, DEFAULT_SEGMENT_ID)
+					editableValuesMigrator(inputData, DEFAULT_EXPERIENCE_ID)
 				).toEqual(
 					singleEditableFragmentExpected
 				);
@@ -23,7 +23,7 @@ describe(
 				const inputData = JSON.stringify(doubleEditableFragmentInput);
 
 				expect(
-					editableValuesMigrator(inputData, DEFAULT_SEGMENT_ID)
+					editableValuesMigrator(inputData, DEFAULT_EXPERIENCE_ID)
 				).toEqual(
 					doubleEditableFragmentExpected
 				);
@@ -52,7 +52,7 @@ describe(
 	}
 );
 
-const DEFAULT_SEGMENT_ID = 'defaultSegment';
+const DEFAULT_EXPERIENCE_ID = 'defaultExperienceId';
 
 const singleEditableFragmentInput = {
 	'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor': {
@@ -69,7 +69,7 @@ const singleEditableFragmentExpected = {
 	'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor': {
 		'editable-fragment-id': {
 			defaultValue: 'Livingstone Hotels and Resorts',
-			[DEFAULT_SEGMENT_ID]: {
+			[DEFAULT_EXPERIENCE_ID]: {
 				en_US: 'English Variation',
 				es_ES: 'Spanish variation',
 				pt_BR: 'Portuguese variation'
@@ -99,7 +99,7 @@ const doubleEditableFragmentExpected = {
 	'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor': {
 		'editable-fragment-id': {
 			defaultValue: 'Livingstone Hotels and Resorts',
-			[DEFAULT_SEGMENT_ID]: {
+			[DEFAULT_EXPERIENCE_ID]: {
 				en_US: 'English Variation',
 				es_ES: 'Spanish variation',
 				pt_BR: 'Portuguese variation'
@@ -107,7 +107,7 @@ const doubleEditableFragmentExpected = {
 		},
 		'editable-fragment-id-2': {
 			defaultValue: 'Livingstone Hotels and Resorts',
-			[DEFAULT_SEGMENT_ID]: {
+			[DEFAULT_EXPERIENCE_ID]: {
 				en_US: 'Livingstone Hotels and Resorts English Variation',
 				es_ES: 'Livingstone Hotels and Resorts Spanish variation',
 				pt_BR: 'Livingstone Hotels and Resorts Portuguese variation'
