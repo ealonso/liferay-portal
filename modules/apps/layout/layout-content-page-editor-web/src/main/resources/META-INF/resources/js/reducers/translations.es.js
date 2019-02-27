@@ -2,7 +2,8 @@ import {
 	ADD_FRAGMENT_ENTRY_LINK,
 	CHANGE_LANGUAGE_ID,
 	REMOVE_FRAGMENT_ENTRY_LINK,
-	UPDATE_TRANSLATION_STATUS
+	UPDATE_TRANSLATION_STATUS,
+	SELECT_EXPERIENCE
 } from '../actions/actions.es';
 import {setIn} from '../utils/FragmentsEditorUpdateUtils.es';
 import {prefixExperienceId} from '../utils/prefixExperienceId.es';
@@ -40,7 +41,8 @@ function translationStatusReducer(state, actionType) {
 	if (
 		actionType === ADD_FRAGMENT_ENTRY_LINK ||
 		actionType === UPDATE_TRANSLATION_STATUS ||
-		actionType === REMOVE_FRAGMENT_ENTRY_LINK
+		actionType === REMOVE_FRAGMENT_ENTRY_LINK ||
+		actionType === SELECT_EXPERIENCE
 	) {
 		const experienceId = nextState.experienceId && nextState.experienceId || nextState.defaultExperienceId;
 
