@@ -94,9 +94,12 @@ class FragmentEditableField extends Component {
 	 * @returns {object}
 	 */
 	prepareStateForRender(state) {
-		const defaultSegmentedContent = this.editableValues[this.defaultSegmentId] ||
+		const defaultExperienceId = this.defaultExperienceId && 'experience-id-' + this.defaultExperienceId;
+		const experienceId = this.experienceId && 'experience-id-' + this.experienceId;
+
+		const defaultSegmentedContent = this.editableValues[defaultExperienceId] ||
 			{};
-		const segmentedContent = this.editableValues[this.segmentId] ||
+		const segmentedContent = this.editableValues[experienceId] ||
 			defaultSegmentedContent ||
 			{};
 
@@ -368,6 +371,7 @@ class FragmentEditableField extends Component {
 	 */
 	_saveChanges(newValue) {
 		this._unsavedChanges = false;
+		const editableValueExperienceId = this.experienceId ? `experience-id-${this.experienceId}` : (this.defaultExperienceId && `experience-id-${this.defaultExperienceId}`);
 
 		this.store
 			.dispatchAction(
@@ -381,15 +385,15 @@ class FragmentEditableField extends Component {
 				{
 					editableId: this.editableId,
 					editableValue: newValue,
+					editableValueExperienceId,
 					editableValueId: this.languageId || DEFAULT_LANGUAGE_ID_KEY,
-					editableValueSegmentId: this.segmentId || this.defaultSegmentId,
 					fragmentEntryLinkId: this.fragmentEntryLinkId
 				}
 			)
 			.dispatchAction(
 				UPDATE_TRANSLATION_STATUS,
 				{
-					segmentId: this.segmentId || this.defaultSegmentId
+					experienceId: this.experienceId || this.defaultExperienceId
 				}
 			)
 			.dispatchAction(
@@ -437,14 +441,14 @@ FragmentEditableField.STATE = {
 	defaultLanguageId: Config.string().required(),
 
 	/**
-	 * Default segment id.
+	 * Default experience id.
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @review
 	 * @type {!string}
 	 */
-	defaultSegmentId: Config.string().required(),
+	defaultExperienceId: Config.string().required(),
 
 	/**
 	 * Editable ID
@@ -498,14 +502,14 @@ FragmentEditableField.STATE = {
 	languageId: Config.string().required(),
 
 	/**
-	 * Currently selected segment id.
+	 * Currently selected experienceId id.
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentsEditor
 	 * @review
 	 * @type {!string}
 	 */
-	segmentId: Config.string(),
+	experienceId: Config.string(),
 
 	/**
 	 * Portlet namespace
