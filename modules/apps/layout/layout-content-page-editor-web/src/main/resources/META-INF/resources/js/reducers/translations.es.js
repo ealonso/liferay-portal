@@ -5,6 +5,7 @@ import {
 	UPDATE_TRANSLATION_STATUS
 } from '../actions/actions.es';
 import {setIn} from '../utils/FragmentsEditorUpdateUtils.es';
+import {prefixExperienceId} from '../utils/prefixExperienceId.es';
 
 const EDITABLE_VALUES_KEY = 'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor';
 
@@ -46,7 +47,7 @@ function translationStatusReducer(state, actionType) {
 		const nextTranslationStatus = _getTranslationStatus(
 			_getLanguageKeys(nextState.availableLanguages),
 			_getEditableValues(nextState.fragmentEntryLinks),
-			`experience-id-${experienceId}`
+			prefixExperienceId(experienceId)
 		);
 
 		nextState = setIn(nextState, ['translationStatus'], nextTranslationStatus);

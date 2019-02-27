@@ -6,6 +6,7 @@ import './FragmentEditableFieldTooltip.es';
 
 import {CLEAR_ACTIVE_ITEM, OPEN_MAPPING_FIELDS_DIALOG, UPDATE_ACTIVE_ITEM, UPDATE_EDITABLE_VALUE, UPDATE_HOVERED_ITEM, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS, UPDATE_TRANSLATION_STATUS} from '../../actions/actions.es';
 import {FRAGMENTS_EDITOR_ITEM_TYPES} from '../../utils/constants';
+import {prefixExperienceId} from '../../utils/prefixExperienceId.es';
 import {getConnectedComponent} from '../../store/ConnectedComponent.es';
 import {setIn, shouldClearFocus} from '../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties, shouldUpdatePureComponent} from '../../utils/FragmentsEditorComponentUtils.es';
@@ -117,8 +118,8 @@ class FragmentEditableField extends Component {
 	 * @returns {object}
 	 */
 	prepareStateForRender(state) {
-		const defaultExperienceId = this.defaultExperienceId && 'experience-id-' + this.defaultExperienceId;
-		const experienceId = this.experienceId && 'experience-id-' + this.experienceId;
+		const defaultExperienceId = prefixExperienceId(this.defaultExperienceId);
+		const experienceId = prefixExperienceId(this.experienceId);
 
 		const segmentedValue = this.editableValues[experienceId] ||
 			this.editableValues[defaultExperienceId] ||
@@ -392,7 +393,7 @@ class FragmentEditableField extends Component {
 	 */
 	_saveChanges(newValue) {
 		this._unsavedChanges = false;
-		const editableValueExperienceId = this.experienceId ? `experience-id-${this.experienceId}` : (this.defaultExperienceId && `experience-id-${this.defaultExperienceId}`);
+		const editableValueExperienceId = prefixExperienceId(this.experienceId) || prefixExperienceId(this.defaultExperienceId);
 
 		this.store
 			.dispatchAction(
