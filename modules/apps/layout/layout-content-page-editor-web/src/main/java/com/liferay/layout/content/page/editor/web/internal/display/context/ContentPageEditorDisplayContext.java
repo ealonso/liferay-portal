@@ -120,14 +120,15 @@ public class ContentPageEditorDisplayContext {
 		classNameId = PortalUtil.getClassNameId(className);
 		themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		_defaultExperienceId = _getDefaultExperienceId();
+
 		_fragmentCollectionContributorTracker =
 			(FragmentCollectionContributorTracker)request.getAttribute(
 				ContentPageEditorWebKeys.
 					FRAGMENT_COLLECTION_CONTRIBUTOR_TRACKER);
 		_itemSelector = (ItemSelector)request.getAttribute(
 			ContentPageEditorWebKeys.ITEM_SELECTOR);
-
-		_defaultExperienceId = _getDefaultExperienceId();
 	}
 
 	public SoyContext getEditorContext() throws Exception {
