@@ -110,6 +110,11 @@ for (AssetEntryResult assetEntryResult : assetPublisherDisplayContext.getAssetEn
 }
 %>
 
+<liferay-frontend:component
+	componentId="<%= com.liferay.asset.publisher.web.internal.constants.AssetPublisherWebKeys.ASSET_ENTRY_DROPDOWN_DEFAULT_EVENT_HANDLER %>"
+	module="js/AssetPublisherDropdownDefaultEventHandler.es"
+/>
+
 <%!
 private static Log _log = LogFactoryUtil.getLog("com_liferay_asset_publisher_web.view_asset_entry_list_jsp");
 %>

@@ -23,9 +23,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -71,24 +69,16 @@ public class AssetEntryActionDropdownItemsProvider {
 							dropdownItem -> {
 								dropdownItem.setIcon("pencil");
 								dropdownItem.putData(
-									"destroyOnHide", Boolean.TRUE.toString());
-
-								PortletDisplay portletDisplay =
-									_themeDisplay.getPortletDisplay();
-
-								String id = HtmlUtil.escape(
-									portletDisplay.getNamespace());
-
-								dropdownItem.putData("id", id + "editAsset");
-
+									"action", "editAssetEntry");
+								dropdownItem.putData(
+									"editAssetEntryURL",
+									editAssetEntryURL.toString());
 								dropdownItem.putData(
 									"title",
 									LanguageUtil.format(
 										_request, "edit-x",
 										_assetRenderer.getTitle(
 											_themeDisplay.getLocale())));
-								dropdownItem.setHref(
-									editAssetEntryURL.toString());
 								dropdownItem.setLabel(
 									LanguageUtil.get(_request, "edit"));
 							}));
@@ -116,14 +106,14 @@ public class AssetEntryActionDropdownItemsProvider {
 						add(
 							SafeConsumer.ignore(
 								dropdownItem -> {
-									dropdownItem.setHref(
+									dropdownItem.putData(
+										"action", "assetEntryAction");
+									dropdownItem.putData(
+										"assetEntryActionURL",
 										assetEntryAction.getDialogURL(
 											_request, _assetRenderer));
 									dropdownItem.setIcon(
 										assetEntryAction.getIcon());
-									dropdownItem.putData(
-										"destroyOnHide",
-										Boolean.TRUE.toString());
 									dropdownItem.putData("title", title);
 									dropdownItem.setLabel(title);
 								}));
