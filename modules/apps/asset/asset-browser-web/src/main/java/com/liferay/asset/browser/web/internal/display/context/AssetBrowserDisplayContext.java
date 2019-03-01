@@ -15,9 +15,12 @@
 package com.liferay.asset.browser.web.internal.display.context;
 
 import com.liferay.asset.browser.web.internal.configuration.AssetBrowserWebConfigurationValues;
+import com.liferay.asset.browser.web.internal.constants.AssetBrowserWebKeys;
 import com.liferay.asset.browser.web.internal.search.AddAssetEntryChecker;
 import com.liferay.asset.browser.web.internal.search.AssetBrowserSearch;
 import com.liferay.asset.constants.AssetWebKeys;
+import com.liferay.asset.display.contributor.AssetDisplayContributor;
+import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
@@ -40,6 +43,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -58,6 +62,10 @@ public class AssetBrowserDisplayContext {
 		_request = PortalUtil.getHttpServletRequest(renderRequest);
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+
+		_assetDisplayContributorTracker =
+			(AssetDisplayContributorTracker)renderRequest.getAttribute(
+				AssetBrowserWebKeys.ASSET_DISPLAY_CONTRIBUTOR_TRACKER);
 
 		_assetHelper = (AssetHelper)renderRequest.getAttribute(
 			AssetWebKeys.ASSET_HELPER);
@@ -78,15 +86,27 @@ public class AssetBrowserDisplayContext {
 
 		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
 
+		long[] classNameIds = new long[0];
+
+		if (assetRendererFactory != null) {
+			classNameIds = new long[] {assetRendererFactory.getClassNameId()};
+		}
+		else if (isUseAssetDisplayContributor()) {
+			List<AssetDisplayContributor> assetDisplayContributors =
+				_assetDisplayContributorTracker.getAssetDisplayContributors();
+
+			Stream<AssetDisplayContributor> stream =
+				assetDisplayContributors.stream();
+
+			classNameIds = stream.mapToLong(
+				assetDisplayContributor -> PortalUtil.getClassNameId(
+					assetDisplayContributor.getClassName())
+			).toArray();
+		}
+
 		if (AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE) {
-			long classNameId = 0L;
-
-			if (assetRendererFactory != null) {
-				classNameId = assetRendererFactory.getClassNameId();
-			}
-
 			int total = AssetEntryLocalServiceUtil.getEntriesCount(
-				_getFilterGroupIds(), new long[] {classNameId}, _getKeywords(),
+				_getFilterGroupIds(), classNameIds, _getKeywords(),
 				_getKeywords(), _getKeywords(), _getKeywords(), _getListable(),
 				false, false);
 
@@ -94,7 +114,7 @@ public class AssetBrowserDisplayContext {
 
 			List<AssetEntry> assetEntries =
 				AssetEntryLocalServiceUtil.getEntries(
-					_getFilterGroupIds(), new long[] {classNameId},
+					_getFilterGroupIds(), classNameIds,
 					new long[] {getSubtypeSelectionId()}, _getKeywords(),
 					_getKeywords(), _getKeywords(), _getKeywords(),
 					_getListable(), false, false, assetBrowserSearch.getStart(),
@@ -127,22 +147,16 @@ public class AssetBrowserDisplayContext {
 			sort = new Sort(sortFieldName, Sort.STRING_TYPE, orderByAsc);
 		}
 
-		String className = StringPool.BLANK;
-
-		if (assetRendererFactory != null) {
-			assetRendererFactory.getClassName();
-		}
-
 		int total = (int)AssetEntryLocalServiceUtil.searchCount(
 			themeDisplay.getCompanyId(), _getFilterGroupIds(),
-			themeDisplay.getUserId(), className, getSubtypeSelectionId(),
+			themeDisplay.getUserId(), classNameIds, getSubtypeSelectionId(),
 			_getKeywords(), _isShowNonindexable(), _getStatuses());
 
 		assetBrowserSearch.setTotal(total);
 
 		Hits hits = AssetEntryLocalServiceUtil.search(
 			themeDisplay.getCompanyId(), _getFilterGroupIds(),
-			themeDisplay.getUserId(), className, getSubtypeSelectionId(),
+			themeDisplay.getUserId(), classNameIds, getSubtypeSelectionId(),
 			_getKeywords(), _isShowNonindexable(), _getStatuses(),
 			assetBrowserSearch.getStart(), assetBrowserSearch.getEnd(), sort);
 
@@ -319,6 +333,17 @@ public class AssetBrowserDisplayContext {
 		return _multipleSelection;
 	}
 
+	public boolean isUseAssetDisplayContributor() {
+		if (_useAssetDisplayContributor != null) {
+			return _useAssetDisplayContributor;
+		}
+
+		_useAssetDisplayContributor = ParamUtil.getBoolean(
+			_request, "useAssetDisplayContributor");
+
+		return _useAssetDisplayContributor;
+	}
+
 	private long[] _getFilterGroupIds() {
 		long[] filterGroupIds = getSelectedGroupIds();
 
@@ -398,6 +423,8 @@ public class AssetBrowserDisplayContext {
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetBrowserDisplayContext.class);
 
+	private final AssetDisplayContributorTracker
+		_assetDisplayContributorTracker;
 	private final AssetHelper _assetHelper;
 	private AssetRendererFactory _assetRendererFactory;
 	private String _displayStyle;
@@ -415,5 +442,6 @@ public class AssetBrowserDisplayContext {
 	private Boolean _showScheduled;
 	private Long _subtypeSelectionId;
 	private String _typeSelection;
+	private Boolean _useAssetDisplayContributor;
 
 }
