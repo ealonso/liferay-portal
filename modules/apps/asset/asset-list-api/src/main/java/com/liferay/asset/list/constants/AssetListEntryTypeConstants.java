@@ -19,6 +19,11 @@ package com.liferay.asset.list.constants;
  */
 public class AssetListEntryTypeConstants {
 
+	public static final int TYPE_ASSET_LIST_PROVIDER = 2;
+
+	public static final String TYPE_ASSET_LIST_PROVIDER_LABEL =
+		"asset-list-provider";
+
 	public static final int TYPE_DYNAMIC = 0;
 
 	public static final String TYPE_DYNAMIC_LABEL = "dynamic";
@@ -28,7 +33,10 @@ public class AssetListEntryTypeConstants {
 	public static final String TYPE_MANUAL_LABEL = "manual";
 
 	public static String getTypeLabel(int type) {
-		if (type == TYPE_DYNAMIC) {
+		if (type == TYPE_ASSET_LIST_PROVIDER) {
+			return TYPE_ASSET_LIST_PROVIDER_LABEL;
+		}
+		else if (type == TYPE_DYNAMIC) {
 			return TYPE_DYNAMIC_LABEL;
 		}
 		else if (type == TYPE_MANUAL) {

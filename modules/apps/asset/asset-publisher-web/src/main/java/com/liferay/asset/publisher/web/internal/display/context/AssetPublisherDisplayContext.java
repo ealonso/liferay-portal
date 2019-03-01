@@ -253,8 +253,12 @@ public class AssetPublisherDisplayContext {
 				getAllAssetCategoryIds(), getAllAssetTagNames(), false,
 				isEnablePermissions());
 		}
-		else if (isSelectionStyleAssetList() && (assetListEntry != null)) {
-			return assetListEntry.getAssetEntries();
+		else if (isSelectionStyleAssetList()) {
+			if ((assetListEntry != null)) {
+				return assetListEntry.getAssetEntries();
+			}
+
+			return Collections.emptyList();
 		}
 
 		return Collections.emptyList();

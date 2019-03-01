@@ -160,6 +160,35 @@ public class AssetListManagementToolbarDisplayContext
 						dropdownItem.setLabel(
 							LanguageUtil.get(request, "dynamic-selection"));
 					});
+
+				PortletURL addAssetListProviderEntryURL =
+					liferayPortletResponse.createActionURL();
+
+				addAssetListProviderEntryURL.setParameter(
+					ActionRequest.ACTION_NAME,
+					"/asset_list/add_asset_list_entry");
+				addAssetListProviderEntryURL.setParameter(
+					"type",
+					String.valueOf(
+						AssetListEntryTypeConstants.TYPE_ASSET_LIST_PROVIDER));
+
+				addPrimaryDropdownItem(
+					dropdownItem -> {
+						dropdownItem.putData("action", "addAssetListEntry");
+						dropdownItem.putData(
+							"addAssetListEntryURL",
+							addAssetListProviderEntryURL.toString());
+						dropdownItem.putData(
+							"title",
+							LanguageUtil.format(
+								request, "add-x-asset-list",
+								AssetListEntryTypeConstants.
+									TYPE_ASSET_LIST_PROVIDER_LABEL,
+								true));
+						dropdownItem.setHref("#");
+						dropdownItem.setLabel(
+							LanguageUtil.get(request, "asset-list-provider"));
+					});
 			}
 		};
 	}

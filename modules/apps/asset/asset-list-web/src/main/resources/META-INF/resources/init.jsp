@@ -38,8 +38,13 @@ page import="com.liferay.asset.kernel.model.ClassTypeReader" %><%@
 page import="com.liferay.asset.kernel.service.AssetEntryServiceUtil" %><%@
 page import="com.liferay.asset.kernel.util.comparator.AssetRendererFactoryTypeNameComparator" %><%@
 page import="com.liferay.asset.list.constants.AssetListFormConstants" %><%@
+page import="com.liferay.asset.list.constants.AssetListWebKeys" %><%@
+page import="com.liferay.asset.list.data.source.AssetListProviderTracker" %><%@
 page import="com.liferay.asset.list.model.AssetListEntry" %><%@
 page import="com.liferay.asset.list.model.AssetListEntryAssetEntryRel" %><%@
+page import="com.liferay.asset.list.provider.AssetListProvider" %><%@
+page import="com.liferay.asset.list.provider.AssetListProviderTracker" %><%@
+page import="com.liferay.asset.list.util.AssetListUtil" %><%@
 page import="com.liferay.asset.list.web.internal.display.context.AssetListDisplayContext" %><%@
 page import="com.liferay.asset.list.web.internal.display.context.AssetListEntryUsagesDisplayContext" %><%@
 page import="com.liferay.asset.list.web.internal.display.context.AssetListEntryUsagesManagementToolbarDisplayContext" %><%@
@@ -97,7 +102,9 @@ page import="java.util.Set" %>
 <portlet:defineObjects />
 
 <%
-AssetListDisplayContext assetListDisplayContext = new AssetListDisplayContext(renderRequest, renderResponse);
+AssetListUtil assetListUtil = (AssetListUtil)request.getAttribute(AssetListWebKeys.ASSET_LIST_UTIL);
+
+AssetListDisplayContext assetListDisplayContext = new AssetListDisplayContext(assetListUtil, renderRequest, renderResponse);
 
 UnicodeProperties properties = new UnicodeProperties();
 

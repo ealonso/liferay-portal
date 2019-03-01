@@ -27,6 +27,7 @@ import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryService;
+import com.liferay.asset.list.util.AssetListUtil;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.util.AssetEntryResult;
 import com.liferay.asset.publisher.util.AssetPublisherHelper;
@@ -321,8 +322,13 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 		AssetListEntry assetListEntry =
 			_assetListEntryService.fetchAssetListEntry(assetListEntryId);
 
-		if (selectionStyle.equals("asset-list") && (assetListEntry != null)) {
-			return assetListEntry.getAssetEntries();
+		if (selectionStyle.equals("asset-list")) {
+			if (assetListEntry != null) {
+				return assetListEntry.getAssetEntries();
+			}
+			else {
+
+            }
 		}
 
 		List<AssetEntry> assetEntries = getAssetEntries(
@@ -1218,6 +1224,9 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 	@Reference
 	private AssetListEntryService _assetListEntryService;
+
+	@Reference
+	private AssetListUtil _assetListUtil;
 
 	private AssetPublisherWebConfiguration _assetPublisherWebConfiguration;
 

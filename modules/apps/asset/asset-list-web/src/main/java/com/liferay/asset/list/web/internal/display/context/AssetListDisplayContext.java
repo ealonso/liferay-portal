@@ -22,6 +22,7 @@ import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryLocalServiceUtil;
 import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
+import com.liferay.asset.list.util.AssetListUtil;
 import com.liferay.asset.list.web.internal.security.permission.resource.AssetListPermission;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
@@ -36,6 +37,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -55,8 +57,10 @@ import javax.servlet.http.HttpServletRequest;
 public class AssetListDisplayContext {
 
 	public AssetListDisplayContext(
-		RenderRequest renderRequest, RenderResponse renderResponse) {
+		AssetListUtil assetListUtil, RenderRequest renderRequest,
+		RenderResponse renderResponse) {
 
+		_assetListUtil = assetListUtil;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 
@@ -81,6 +85,12 @@ public class AssetListDisplayContext {
 						AssetListEntryTypeConstants.TYPE_DYNAMIC_LABEL,
 						"dynamic-selection",
 						AssetListEntryTypeConstants.TYPE_DYNAMIC));
+				add(
+					_getAddAssetListEntryDropdownItem(
+						AssetListEntryTypeConstants.
+							TYPE_ASSET_LIST_PROVIDER_LABEL,
+						"asset-list-provider",
+						AssetListEntryTypeConstants.TYPE_ASSET_LIST_PROVIDER));
 			}
 		};
 	}
@@ -96,11 +106,13 @@ public class AssetListDisplayContext {
 
 		AssetListEntry assetListEntry = getAssetListEntry();
 
-		List<AssetEntry> assetEntries = assetListEntry.getAssetEntries();
+		List<AssetEntry> assetEntries = _assetListUtil.getAssetEntries(
+			assetListEntry, _renderRequest);
 
 		searchContainer.setResults(assetEntries);
 
-		int totalCount = assetListEntry.getAssetEntriesCount();
+		int totalCount = _assetListUtil.getAssetEntriesCount(
+			assetListEntry, _renderResponse);
 
 		searchContainer.setTotal(totalCount);
 
@@ -204,7 +216,12 @@ public class AssetListDisplayContext {
 		String title = StringPool.BLANK;
 
 		if (getAssetListEntryType() ==
-				AssetListEntryTypeConstants.TYPE_DYNAMIC) {
+				AssetListEntryTypeConstants.TYPE_ASSET_LIST_PROVIDER) {
+
+			title = "new-data-source-asset-list";
+		}
+		else if (getAssetListEntryType() ==
+					AssetListEntryTypeConstants.TYPE_DYNAMIC) {
 
 			title = "new-dynamic-asset-list";
 		}
@@ -317,6 +334,23 @@ public class AssetListDisplayContext {
 		return portletURL;
 	}
 
+	public String getSelectedAssetListProviderClassName() {
+		if (_selectedAssetListProvider != null) {
+			return _selectedAssetListProvider;
+		}
+
+		UnicodeProperties typeSettingsProperties = new UnicodeProperties();
+
+		AssetListEntry assetListEntry = getAssetListEntry();
+
+		typeSettingsProperties.fastLoad(assetListEntry.getTypeSettings());
+
+		_selectedAssetListProvider = typeSettingsProperties.getProperty(
+			"assetListProviderClassName");
+
+		return _selectedAssetListProvider;
+	}
+
 	public boolean isShowAddAssetListEntryAction() {
 		return AssetListPermission.contains(
 			_themeDisplay.getPermissionChecker(),
@@ -386,6 +420,7 @@ public class AssetListDisplayContext {
 	private AssetListEntry _assetListEntry;
 	private Long _assetListEntryId;
 	private Integer _assetListEntryType;
+	private final AssetListUtil _assetListUtil;
 	private String _keywords;
 	private String _orderByCol;
 	private String _orderByType;
@@ -393,6 +428,7 @@ public class AssetListDisplayContext {
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private String _selectedAssetListProvider;
 	private final ThemeDisplay _themeDisplay;
 
 }

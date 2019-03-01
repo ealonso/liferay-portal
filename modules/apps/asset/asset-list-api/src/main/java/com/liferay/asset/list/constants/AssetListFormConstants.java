@@ -23,6 +23,9 @@ public class AssetListFormConstants {
 
 	public static final String ENTRY_KEY_ASSET_ENTRIES = "asset_entries";
 
+	public static final String ENTRY_KEY_ASSET_LIST_PROVIDER =
+		"asset_list_provider";
+
 	public static final String ENTRY_KEY_FILTER = "filter";
 
 	public static final String ENTRY_KEY_ORDERING = "ordering";
