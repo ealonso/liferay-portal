@@ -1168,6 +1168,13 @@ public class JournalArticleLocalServiceImpl
 		journalArticleLocalizationPersistence.removeByArticlePK(
 			article.getId());
 
+		// Asset (Draft)
+
+		if (article.isDraft() || article.isInTrash()) {
+			assetEntryLocalService.deleteEntry(
+				JournalArticle.class.getName(), article.getPrimaryKey());
+		}
+
 		// Email
 
 		if ((serviceContext != null) && Validator.isNotNull(articleURL) &&
