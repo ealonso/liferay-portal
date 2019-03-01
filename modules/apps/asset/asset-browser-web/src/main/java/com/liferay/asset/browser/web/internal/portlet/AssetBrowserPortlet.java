@@ -15,7 +15,9 @@
 package com.liferay.asset.browser.web.internal.portlet;
 
 import com.liferay.asset.browser.web.internal.constants.AssetBrowserPortletKeys;
+import com.liferay.asset.browser.web.internal.constants.AssetBrowserWebKeys;
 import com.liferay.asset.constants.AssetWebKeys;
+import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -60,6 +62,10 @@ public class AssetBrowserPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		renderRequest.setAttribute(
+			AssetBrowserWebKeys.ASSET_DISPLAY_CONTRIBUTOR_TRACKER,
+			_assetDisplayContributorTracker);
+
 		renderRequest.setAttribute(AssetWebKeys.ASSET_HELPER, _assetHelper);
 
 		super.doDispatch(renderRequest, renderResponse);
@@ -71,6 +77,9 @@ public class AssetBrowserPortlet extends MVCPortlet {
 	)
 	protected void setRelease(Release release) {
 	}
+
+	@Reference
+	private AssetDisplayContributorTracker _assetDisplayContributorTracker;
 
 	@Reference
 	private AssetHelper _assetHelper;
