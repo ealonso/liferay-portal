@@ -47,9 +47,9 @@ public class AssetListEntryLocalServiceImpl
 		AssetListEntry assetListEntry =
 			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
 
-		if (Objects.equals(
+		if (!Objects.equals(
 				assetListEntry.getType(),
-				AssetListEntryTypeConstants.TYPE_DYNAMIC)) {
+				AssetListEntryTypeConstants.TYPE_MANUAL)) {
 
 			throw new PortalException();
 		}
@@ -154,9 +154,9 @@ public class AssetListEntryLocalServiceImpl
 		AssetListEntry assetListEntry =
 			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
 
-		if (Objects.equals(
+		if (!Objects.equals(
 				assetListEntry.getType(),
-				AssetListEntryTypeConstants.TYPE_DYNAMIC)) {
+				AssetListEntryTypeConstants.TYPE_MANUAL)) {
 
 			throw new PortalException();
 		}
@@ -209,9 +209,9 @@ public class AssetListEntryLocalServiceImpl
 		AssetListEntry assetListEntry =
 			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
 
-		if (Objects.equals(
+		if (!Objects.equals(
 				assetListEntry.getType(),
-				AssetListEntryTypeConstants.TYPE_DYNAMIC)) {
+				AssetListEntryTypeConstants.TYPE_MANUAL)) {
 
 			throw new PortalException();
 		}
