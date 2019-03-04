@@ -121,16 +121,6 @@
 		function(event) {
 			var target = event.target;
 
-			<%
-			String defaultDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
-
-			if (Validator.isNull(defaultDisplayPageName)) {
-				defaultDisplayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
-			}
-			%>
-
-			var defaultDisplayPageName = '<%= defaultDisplayPageName %>';
-
 			if (target && (target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>' || target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>')) {
 				displayPageNameContainer.classList.remove('hide');
 				displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
@@ -138,7 +128,16 @@
 
 				if (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>') {
 					assetDisplayPageIdInput.value = '<%= selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageId() %>';
-					displayPageNameInput.value = defaultDisplayPageName;
+
+					<%
+					String defaultDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
+
+					if (Validator.isNull(defaultDisplayPageName)) {
+						defaultDisplayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
+					}
+					%>
+
+					displayPageNameInput.value = '<%= defaultDisplayPageName %>';
 				}
 				else {
 					displayPageContainer.classList.remove('hide');
