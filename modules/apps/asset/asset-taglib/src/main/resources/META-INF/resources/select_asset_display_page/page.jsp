@@ -40,27 +40,18 @@
 		else if (Validator.isNull(displayPageName) && selectAssetDisplayPageDisplayContext.isAssetDisplayPageTypeSpecific()) {
 			displayPageName = LanguageUtil.get(resourceBundle, "no-display-page-selected");
 		}
-
-		String wrapperCssClass = "input-group-item";
-
-		if (selectAssetDisplayPageDisplayContext.isShowViewInContextLink()) {
-			wrapperCssClass += " input-group-item-shrink mb-0";
-		}
 		%>
 
-		<aui:input disabled="<%= true %>" label="" name="displayPageNameInput" value="<%= displayPageName %>" wrapperCssClass="<%= wrapperCssClass %>" />
+		<aui:input disabled="<%= true %>" label="" name="displayPageNameInput" value="<%= displayPageName %>" wrapperCssClass="input-group-item mb-0" />
 
 		<c:if test="<%= selectAssetDisplayPageDisplayContext.isShowViewInContextLink() %>">
-			<div class="input-group-item" id="<portlet:namespace />previewButtonContainer">
-				<liferay-ui:icon
-					cssClass="btn btn-default"
-					icon="view"
-					id="previewButton"
-					markupView="lexicon"
-					message="preview"
-					url="<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>"
-				/>
-			</div>
+			<clay:button
+				elementClasses="ml-1"
+				icon="view"
+				id='<%= liferayPortletResponse.getNamespace() + "previewButton" %>'
+				size="sm"
+				style="secondary"
+			/>
 		</c:if>
 	</div>
 
@@ -70,11 +61,29 @@
 </liferay-frontend:fieldset>
 
 <aui:script use="liferay-item-selector-dialog">
+	var previewButton = document.getElementById('<portlet:namespace />previewButton');
+
+	if (previewButton) {
+		previewButton.addEventListener(
+			'click',
+			function(event) {
+				Liferay.Util.openWindow(
+					{
+						dialog: {
+							destroyOnHide: true
+						},
+						title: '<liferay-ui:message key="preview" />',
+						uri: '<%= selectAssetDisplayPageDisplayContext.getURLViewInContext() %>'
+					}
+				);
+			}
+		);
+	}
+
 	var assetDisplayPageIdInput = document.getElementById('<portlet:namespace />assetDisplayPageIdInput');
 	var chooseDisplayPageButton = document.getElementById('<portlet:namespace />chooseDisplayPage');
 	var displayPageNameInput = document.getElementById('<portlet:namespace />displayPageNameInput');
 	var pagesContainerInput = document.getElementById('<portlet:namespace />pagesContainerInput');
-	var previewButtonContainer = document.getElementById('<portlet:namespace />previewButtonContainer');
 
 	chooseDisplayPageButton.addEventListener(
 		'click',
@@ -124,7 +133,6 @@
 			if (target && ((target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>') || (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>'))) {
 				displayPageNameContainer.classList.remove('hide');
 				displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
-				previewButtonContainer.remove();
 
 				if (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>') {
 					assetDisplayPageIdInput.value = '<%= selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageId() %>';
