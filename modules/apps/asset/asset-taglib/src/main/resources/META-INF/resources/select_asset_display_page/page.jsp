@@ -143,7 +143,7 @@
 					displayPageContainer.classList.remove('hide');
 
 					assetDisplayPageIdInput.value = '0';
-					displayPageNameInput.value = '<%= LanguageUtil.get(resourceBundle, "no-display-page-selected") %>';
+					displayPageNameInput.value = '<liferay-ui:message key="no-display-page-selected" />';
 				}
 			}
 			else {
