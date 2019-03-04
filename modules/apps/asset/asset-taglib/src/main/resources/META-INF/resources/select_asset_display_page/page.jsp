@@ -121,7 +121,7 @@
 		function(event) {
 			var target = event.target;
 
-			if (target && (target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>' || target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>')) {
+			if (target && ((target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>') || (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>'))) {
 				displayPageNameContainer.classList.remove('hide');
 				displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
 				previewButtonContainer.remove();
