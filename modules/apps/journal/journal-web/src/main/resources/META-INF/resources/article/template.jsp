@@ -36,7 +36,7 @@ DDMTemplate ddmTemplate = journalEditArticleDisplayContext.getDDMTemplate();
 
 				<c:if test="<%= (ddmTemplate != null) && DDMTemplatePermission.contains(permissionChecker, ddmTemplate, ActionKeys.UPDATE) %>">
 					<clay:button
-						elementClasses="ml-1 mr-1"
+						elementClasses="ml-1"
 						icon="pencil"
 						id='<%= liferayPortletResponse.getNamespace() + "editDDMTemplate" %>'
 						size="sm"
@@ -46,7 +46,7 @@ DDMTemplate ddmTemplate = journalEditArticleDisplayContext.getDDMTemplate();
 
 				<c:if test="<%= (article != null) && (ddmTemplate != null) %>">
 					<clay:button
-						elementClasses="ml-1 mr-1"
+						elementClasses="ml-1"
 						icon="view"
 						id='<%= liferayPortletResponse.getNamespace() + "previewWithTemplate" %>'
 						size="sm"
@@ -74,9 +74,6 @@ DDMTemplate ddmTemplate = journalEditArticleDisplayContext.getDDMTemplate();
 						{
 							dialog: {
 								destroyOnHide: true
-							},
-							dialogIframe: {
-								bodyCssClass: 'dialog-with-footer'
 							},
 							title: '<liferay-ui:message key="preview" />',
 							uri: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/preview_article_content.jsp" /><portlet:param name="groupId" value="<%= String.valueOf(article.getGroupId()) %>" /><portlet:param name="articleId" value="<%= String.valueOf(article.getArticleId()) %>" /><portlet:param name="version" value="<%= String.valueOf(article.getVersion()) %>" /></portlet:renderURL>'
