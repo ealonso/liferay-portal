@@ -76,85 +76,81 @@
 	var pagesContainerInput = document.getElementById('<portlet:namespace />pagesContainerInput');
 	var previewButtonContainer = document.getElementById('<portlet:namespace />previewButtonContainer');
 
-	if (assetDisplayPageIdInput && chooseDisplayPageButton && displayPageNameInput && pagesContainerInput) {
-		chooseDisplayPageButton.addEventListener(
-			'click',
-			function(event) {
-				var itemSelectorDialog = new A.LiferayItemSelectorDialog(
-					{
-						eventName: '<%= selectAssetDisplayPageDisplayContext.getEventName() %>',
-						on: {
-							selectedItemChange: function(event) {
-								var selectedItem = event.newVal;
+	chooseDisplayPageButton.addEventListener(
+		'click',
+		function(event) {
+			var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+				{
+					eventName: '<%= selectAssetDisplayPageDisplayContext.getEventName() %>',
+					on: {
+						selectedItemChange: function(event) {
+							var selectedItem = event.newVal;
 
-								assetDisplayPageIdInput.value = '';
+							assetDisplayPageIdInput.value = '';
 
-								pagesContainerInput.value = '';
+							pagesContainerInput.value = '';
 
-								if (selectedItem) {
-									if (selectedItem.type === 'asset-display-page') {
-										assetDisplayPageIdInput.value = selectedItem.id;
-									}
-									else {
-										pagesContainerInput.value = selectedItem.id;
-									}
-
-									displayPageNameInput.value = selectedItem.name;
+							if (selectedItem) {
+								if (selectedItem.type === 'asset-display-page') {
+									assetDisplayPageIdInput.value = selectedItem.id;
 								}
-							}
-						},
-						'strings.add': '<liferay-ui:message key="done" />',
-						title: '<liferay-ui:message key="select-page" />',
-						url: '<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageItemSelectorURL() %>'
-					}
-				);
+								else {
+									pagesContainerInput.value = selectedItem.id;
+								}
 
-				itemSelectorDialog.open();
-			}
-		);
-	}
+								displayPageNameInput.value = selectedItem.name;
+							}
+						}
+					},
+					'strings.add': '<liferay-ui:message key="done" />',
+					title: '<liferay-ui:message key="select-page" />',
+					url: '<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageItemSelectorURL() %>'
+				}
+			);
+
+			itemSelectorDialog.open();
+		}
+	);
 
 	var displayPageContainer = document.getElementById('<portlet:namespace />displayPageContainer');
 	var displayPageNameContainer = document.getElementById('<portlet:namespace />displayPageNameContainer');
 	var eventsContainer = document.getElementById('<portlet:namespace />eventsContainer');
 
-	if (displayPageContainer && eventsContainer) {
-		eventsContainer.addEventListener(
-			'change',
-			function(event) {
-				var target = event.target;
+	eventsContainer.addEventListener(
+		'change',
+		function(event) {
+			var target = event.target;
 
-				<%
-				String defaultDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
+			<%
+			String defaultDisplayPageName = selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageName();
 
-				if (Validator.isNull(defaultDisplayPageName)) {
-					defaultDisplayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
-				}
-				%>
+			if (Validator.isNull(defaultDisplayPageName)) {
+				defaultDisplayPageName = LanguageUtil.get(resourceBundle, "no-default-display-page");
+			}
+			%>
 
-				var defaultDisplayPageName = '<%= defaultDisplayPageName %>';
+			var defaultDisplayPageName = '<%= defaultDisplayPageName %>';
 
-				if (target && (target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>' || target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>')) {
-					displayPageNameContainer.classList.remove('hide');
-					displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
-					previewButtonContainer.remove();
+			if (target && (target.value === '<%= AssetDisplayPageConstants.TYPE_SPECIFIC %>' || target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>')) {
+				displayPageNameContainer.classList.remove('hide');
+				displayPageNameInput.parentNode.classList.remove('input-group-item-shrink');
+				previewButtonContainer.remove();
 
-					if (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>') {
-						assetDisplayPageIdInput.value = '<%= selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageId() %>';
-						displayPageNameInput.value = defaultDisplayPageName;
-					}
-					else {
-						displayPageContainer.classList.remove('hide');
-
-						assetDisplayPageIdInput.value = '0';
-						displayPageNameInput.value = '<%= LanguageUtil.get(resourceBundle, "no-display-page-selected") %>';
-					}
+				if (target.value === '<%= AssetDisplayPageConstants.TYPE_DEFAULT %>') {
+					assetDisplayPageIdInput.value = '<%= selectAssetDisplayPageDisplayContext.getDefaultAssetDisplayPageId() %>';
+					displayPageNameInput.value = defaultDisplayPageName;
 				}
 				else {
-					displayPageContainer.classList.add('hide');
-					displayPageNameContainer.classList.add('hide');
+					displayPageContainer.classList.remove('hide');
+
+					assetDisplayPageIdInput.value = '0';
+					displayPageNameInput.value = '<%= LanguageUtil.get(resourceBundle, "no-display-page-selected") %>';
 				}
 			}
-		);
-	}
+			else {
+				displayPageContainer.classList.add('hide');
+				displayPageNameContainer.classList.add('hide');
+			}
+		}
+	);
 </aui:script>
