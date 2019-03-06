@@ -35,6 +35,6 @@ page import="com.liferay.staging.StagingGroupHelperUtil" %>
 <liferay-theme:defineObjects />
 
 <%
-InputAssetLinksDisplayContext inputAssetLinksDisplayContext = new InputAssetLinksDisplayContext(pageContext);
+InputAssetLinksDisplayContext inputAssetLinksDisplayContext = new InputAssetLinksDisplayContext(request);
 StagingGroupHelper stagingGroupHelper = StagingGroupHelperUtil.getStagingGroupHelper();
 %>

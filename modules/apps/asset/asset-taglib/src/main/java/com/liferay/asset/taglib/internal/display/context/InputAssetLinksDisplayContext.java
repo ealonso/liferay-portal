@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
@@ -68,10 +69,8 @@ import javax.servlet.jsp.PageContext;
  */
 public class InputAssetLinksDisplayContext {
 
-	public InputAssetLinksDisplayContext(PageContext pageContext) {
-		_pageContext = pageContext;
-
-		_request = (HttpServletRequest)pageContext.getRequest();
+	public InputAssetLinksDisplayContext(HttpServletRequest request) {
+		_request = request;
 
 		_assetEntryId = GetterUtil.getLong(
 			(String)_request.getAttribute(
@@ -171,14 +170,6 @@ public class InputAssetLinksDisplayContext {
 		return _eventName;
 	}
 
-	public String getGroupDescriptiveName(AssetEntry assetEntry)
-		throws PortalException {
-
-		Group group = GroupLocalServiceUtil.getGroup(assetEntry.getGroupId());
-
-		return group.getDescriptiveName(_themeDisplay.getLocale());
-	}
-
 	public String getRandomNamespace() {
 		if (_randomNamespace != null) {
 			return _randomNamespace;
@@ -192,8 +183,8 @@ public class InputAssetLinksDisplayContext {
 		return _randomNamespace;
 	}
 
-	public List<Map<String, Object>> getSelectorEntries() throws Exception {
-		List<Map<String, Object>> selectorEntries = new ArrayList<>();
+	public long[] getClassNameIds() {
+		List<Long> classNameIds = new ArrayList<>();
 
 		AssetRendererFactory baseAssetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
@@ -218,27 +209,17 @@ public class InputAssetLinksDisplayContext {
 			}
 
 			if (assetRendererFactory.isSupportsClassTypes()) {
-				selectorEntries.addAll(
-					_getSelectorEntries(assetRendererFactory));
+				// Subtypes
+
+				// classNameIds.addAll(
+				// _getSelectorEntries(assetRendererFactory));
 			}
 			else {
-				Map<String, Object> selectorEntry = new HashMap<>();
-
-				selectorEntry.put(
-					"data", _geSelectorEntryData(assetRendererFactory));
-				selectorEntry.put(
-					"iconCssClass",
-					_getSelectorEntryIconCssClass(assetRendererFactory));
-				selectorEntry.put(
-					"id", _getSelectorEntryId(assetRendererFactory));
-				selectorEntry.put(
-					"message", _getSelectorEntryMessage(assetRendererFactory));
-
-				selectorEntries.add(selectorEntry);
+				classNameIds.add(assetRendererFactory.getClassNameId());
 			}
 		}
 
-		return selectorEntries;
+		return ArrayUtil.toLongArray(classNameIds);
 	}
 
 	private List<AssetLink> _createAssetLinks() throws PortalException {
@@ -298,36 +279,7 @@ public class InputAssetLinksDisplayContext {
 		return assetLinks;
 	}
 
-	private Map<String, Object> _geSelectorEntryData(
-			AssetRendererFactory<?> assetRendererFactory)
-		throws Exception {
-
-		Map<String, Object> selectorEntryData = new HashMap<>();
-
-		PortletURL assetBrowserPortletURL = _getAssetBrowserPortletURL(
-			assetRendererFactory);
-
-		if (assetBrowserPortletURL != null) {
-			selectorEntryData.put("href", assetBrowserPortletURL.toString());
-		}
-
-		ResourceBundle resourceBundle = TagResourceBundleUtil.getResourceBundle(
-			_pageContext);
-
-		String typeName = assetRendererFactory.getTypeName(
-			_themeDisplay.getLocale());
-
-		selectorEntryData.put(
-			"title",
-			LanguageUtil.format(resourceBundle, "select-x", typeName, false));
-
-		selectorEntryData.put("type", assetRendererFactory.getClassName());
-
-		return selectorEntryData;
-	}
-
-	private long _getAssetBrowserGroupId(
-		AssetRendererFactory<?> assetRendererFactory) {
+	private long _getAssetBrowserGroupId() {
 
 		Group scopeGroup = _themeDisplay.getScopeGroup();
 
@@ -345,16 +297,13 @@ public class InputAssetLinksDisplayContext {
 		return groupId;
 	}
 
-	private PortletURL _getAssetBrowserPortletURL(
-			AssetRendererFactory<?> assetRendererFactory)
-		throws Exception {
-
+	public PortletURL getAssetBrowserPortletURL() throws Exception {
 		PortletURL portletURL = PortletProviderUtil.getPortletURL(
-			_request, assetRendererFactory.getClassName(),
+			_request, AssetEntry.class.getName(),
 			PortletProvider.Action.BROWSE);
 
 		if (portletURL == null) {
-			return portletURL;
+			return null;
 		}
 
 		long groupId = _getAssetBrowserGroupId(assetRendererFactory);
@@ -370,8 +319,6 @@ public class InputAssetLinksDisplayContext {
 				"refererAssetEntryId", String.valueOf(_assetEntryId));
 		}
 
-		portletURL.setParameter(
-			"typeSelection", assetRendererFactory.getClassName());
 		portletURL.setParameter("eventName", getEventName());
 		portletURL.setPortletMode(PortletMode.VIEW);
 		portletURL.setWindowState(LiferayWindowState.POP_UP);
@@ -399,87 +346,10 @@ public class InputAssetLinksDisplayContext {
 		List<Map<String, Object>> selectorEntries = new ArrayList<>();
 
 		for (ClassType classType : classTypes) {
-			Map<String, Object> selectorEntry = new HashMap<>();
-
-			selectorEntry.put(
-				"data", _getSelectorEntryData(assetRendererFactory, classType));
-			selectorEntry.put(
-				"iconCssClass",
-				_getSelectorEntryIconCssClass(assetRendererFactory));
-			selectorEntry.put(
-				"id", _getSelectorEntryId(assetRendererFactory, classType));
-			selectorEntry.put("message", _getSelectorEntryMessage(classType));
-
-			selectorEntries.add(selectorEntry);
+			selectorEntries.add(new HashMap<>());
 		}
 
 		return selectorEntries;
-	}
-
-	private Map<String, Object> _getSelectorEntryData(
-			AssetRendererFactory<?> assetRendererFactory, ClassType classType)
-		throws Exception {
-
-		Map<String, Object> selectorEntryData = new HashMap<>();
-
-		PortletURL portletURL = _getAssetBrowserPortletURL(
-			assetRendererFactory);
-
-		if (portletURL != null) {
-			portletURL.setParameter(
-				"subtypeSelectionId",
-				String.valueOf(classType.getClassTypeId()));
-
-			selectorEntryData.put("href", portletURL.toString());
-		}
-
-		ResourceBundle resourceBundle = TagResourceBundleUtil.getResourceBundle(
-			_pageContext);
-
-		selectorEntryData.put(
-			"title",
-			LanguageUtil.format(
-				resourceBundle, "select-x", classType.getName(), false));
-
-		selectorEntryData.put("type", classType.getName());
-
-		return selectorEntryData;
-	}
-
-	private String _getSelectorEntryIconCssClass(
-			AssetRendererFactory<?> assetRendererFactory)
-		throws Exception {
-
-		return assetRendererFactory.getIconCssClass();
-	}
-
-	private String _getSelectorEntryId(
-		AssetRendererFactory<?> assetRendererFactory) {
-
-		return FriendlyURLNormalizerUtil.normalize(
-			assetRendererFactory.getTypeName(_themeDisplay.getLocale()));
-	}
-
-	private String _getSelectorEntryId(
-		AssetRendererFactory<?> assetRendererFactory, ClassType classType) {
-
-		String selectorEntryId = String.valueOf(
-			_getAssetBrowserGroupId(assetRendererFactory));
-
-		selectorEntryId += FriendlyURLNormalizerUtil.normalize(
-			classType.getName());
-
-		return selectorEntryId;
-	}
-
-	private String _getSelectorEntryMessage(
-		AssetRendererFactory<?> assetRendererFactory) {
-
-		return assetRendererFactory.getTypeName(_themeDisplay.getLocale());
-	}
-
-	private String _getSelectorEntryMessage(ClassType classType) {
-		return classType.getName();
 	}
 
 	private boolean _isStagedLocally() {
@@ -531,7 +401,6 @@ public class InputAssetLinksDisplayContext {
 	private List<AssetLink> _assetLinks;
 	private final String _className;
 	private String _eventName;
-	private final PageContext _pageContext;
 	private final PortletRequest _portletRequest;
 	private String _randomNamespace;
 	private final HttpServletRequest _request;
