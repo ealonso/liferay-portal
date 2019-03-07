@@ -20,6 +20,12 @@ export const FLOATING_TOOLBAR_PANELS = {
 		title: Liferay.Language.get('edit')
 	},
 
+	imageProperties: {
+		icon: 'format',
+		panelId: 'image_properties',
+		title: Liferay.Language.get('image-properties')
+	},
+
 	map: {
 		icon: 'bolt',
 		panelId: 'map',
@@ -91,10 +97,34 @@ export const FRAGMENTS_EDITOR_ITEM_TYPES = {
  * Available editable field config keys
  */
 export const EDITABLE_FIELD_CONFIG_KEYS = {
+	imageLink: 'imageLink',
+	imageTarget: 'imageTarget',
 	textAlignment: 'textAlignment',
 	textColor: 'textColor',
 	textStyle: 'textStyle'
 };
+
+/**
+ * Available values for imageTargetOptions config key
+ */
+export const IMAGE_TARGET_OPTIONS = [
+	{
+		label: '_self',
+		imageTargetId: 'self'
+	},
+	{
+		label: '_blank',
+		imageTargetId: 'blank'
+	},
+	{
+		label: '_parent',
+		imageTargetId: 'parent'
+	},
+	{
+		label: '_top',
+		imageTargetId: 'top'
+	}
+];
 
 /**
  * Available values for textStyle config key
