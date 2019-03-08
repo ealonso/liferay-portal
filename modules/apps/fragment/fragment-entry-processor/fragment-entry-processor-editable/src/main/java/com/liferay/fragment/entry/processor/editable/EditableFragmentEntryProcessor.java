@@ -247,10 +247,15 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 					editableValueJSONObject, locale, segmentsExperienceIds);
 			}
 
-			JSONObject configJSONObject = editableValueJSONObject.getJSONObject(
-				"config");
+			if (Objects.equals(mode, FragmentEntryLinkConstants.EDIT)) {
+				editableElementParser.replace(element, value);
+			}
+			else {
+				JSONObject configJSONObject =
+					editableValueJSONObject.getJSONObject("config");
 
-			editableElementParser.replace(element, value, configJSONObject);
+				editableElementParser.replace(element, value, configJSONObject);
+			}
 		}
 
 		if (Objects.equals(
