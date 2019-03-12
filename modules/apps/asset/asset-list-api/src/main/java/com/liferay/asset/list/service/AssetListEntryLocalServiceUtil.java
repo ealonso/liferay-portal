@@ -41,12 +41,21 @@ public class AssetListEntryLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.asset.list.service.impl.AssetListEntryLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static void addAssetEntrySelection(
-			long assetListEntryId, long assetEntryId,
+			long assetListEntryId, long segmentsEntryId, long assetEntryId,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		getService().addAssetEntrySelection(
-			assetListEntryId, assetEntryId, serviceContext);
+			assetListEntryId, segmentsEntryId, assetEntryId, serviceContext);
+	}
+
+	public static void addAssetEntrySelections(
+			long assetListEntryId, long segmentsEntryId, long[] assetEntryIds,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		getService().addAssetEntrySelections(
+			assetListEntryId, segmentsEntryId, assetEntryIds, serviceContext);
 	}
 
 	/**
@@ -70,34 +79,33 @@ public class AssetListEntryLocalServiceUtil {
 			userId, groupId, title, type, serviceContext);
 	}
 
-	public static com.liferay.asset.list.model.AssetListEntry addAssetListEntry(
-			long userId, long groupId, String title, int type,
-			String typeSettings,
+	public static void addAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().addAssetListEntry(
-			userId, groupId, title, type, typeSettings, serviceContext);
+		getService().addAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId, typeSettings, serviceContext);
 	}
 
 	public static com.liferay.asset.list.model.AssetListEntry
 			addDynamicAssetListEntry(
-				long userId, long groupId, String title, String typeSettings,
+				long userId, long groupId, String title,
 				com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().addDynamicAssetListEntry(
-			userId, groupId, title, typeSettings, serviceContext);
+			userId, groupId, title, serviceContext);
 	}
 
 	public static com.liferay.asset.list.model.AssetListEntry
 			addManualAssetListEntry(
-				long userId, long groupId, String title, long[] assetEntryIds,
+				long userId, long groupId, String title,
 				com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().addManualAssetListEntry(
-			userId, groupId, title, assetEntryIds, serviceContext);
+			userId, groupId, title, serviceContext);
 	}
 
 	/**
@@ -113,10 +121,11 @@ public class AssetListEntryLocalServiceUtil {
 	}
 
 	public static void deleteAssetEntrySelection(
-			long assetListEntryId, int position)
+			long assetListEntryId, long segmentsEntryId, int position)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		getService().deleteAssetEntrySelection(assetListEntryId, position);
+		getService().deleteAssetEntrySelection(
+			assetListEntryId, segmentsEntryId, position);
 	}
 
 	/**
@@ -144,6 +153,14 @@ public class AssetListEntryLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().deleteAssetListEntry(assetListEntryId);
+	}
+
+	public static void deleteAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		getService().deleteAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId);
 	}
 
 	/**
@@ -395,11 +412,12 @@ public class AssetListEntryLocalServiceUtil {
 	}
 
 	public static void moveAssetEntrySelection(
-			long assetListEntryId, int position, int newPosition)
+			long assetListEntryId, long segmentsEntryId, int position,
+			int newPosition)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		getService().moveAssetEntrySelection(
-			assetListEntryId, position, newPosition);
+			assetListEntryId, segmentsEntryId, position, newPosition);
 	}
 
 	/**
@@ -422,22 +440,21 @@ public class AssetListEntryLocalServiceUtil {
 		return getService().updateAssetListEntry(assetListEntryId, title);
 	}
 
-	public static com.liferay.asset.list.model.AssetListEntry
-			updateAssetListEntryTypeSettings(
-				long assetListEntryId, String typeSettings)
+	public static void updateAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().updateAssetListEntryTypeSettings(
-			assetListEntryId, typeSettings);
+		getService().updateAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId, typeSettings);
 	}
 
-	public static com.liferay.asset.list.model.AssetListEntry
-			updateAssetListEntryTypeSettingsProperties(
-				long assetListEntryId, String typeSettingsProperties)
+	public static void updateAssetListEntryTypeSettingsProperties(
+			long assetListEntryId, long segmentsEntryId,
+			String typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return getService().updateAssetListEntryTypeSettingsProperties(
-			assetListEntryId, typeSettingsProperties);
+		getService().updateAssetListEntryTypeSettingsProperties(
+			assetListEntryId, segmentsEntryId, typeSettingsProperties);
 	}
 
 	public static AssetListEntryLocalService getService() {

@@ -38,12 +38,22 @@ public class AssetListEntryLocalServiceWrapper
 
 	@Override
 	public void addAssetEntrySelection(
-			long assetListEntryId, long assetEntryId,
+			long assetListEntryId, long segmentsEntryId, long assetEntryId,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_assetListEntryLocalService.addAssetEntrySelection(
-			assetListEntryId, assetEntryId, serviceContext);
+			assetListEntryId, segmentsEntryId, assetEntryId, serviceContext);
+	}
+
+	@Override
+	public void addAssetEntrySelections(
+			long assetListEntryId, long segmentsEntryId, long[] assetEntryIds,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_assetListEntryLocalService.addAssetEntrySelections(
+			assetListEntryId, segmentsEntryId, assetEntryIds, serviceContext);
 	}
 
 	/**
@@ -70,34 +80,33 @@ public class AssetListEntryLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.asset.list.model.AssetListEntry addAssetListEntry(
-			long userId, long groupId, String title, int type,
-			String typeSettings,
+	public void addAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _assetListEntryLocalService.addAssetListEntry(
-			userId, groupId, title, type, typeSettings, serviceContext);
+		_assetListEntryLocalService.addAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId, typeSettings, serviceContext);
 	}
 
 	@Override
 	public com.liferay.asset.list.model.AssetListEntry addDynamicAssetListEntry(
-			long userId, long groupId, String title, String typeSettings,
+			long userId, long groupId, String title,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assetListEntryLocalService.addDynamicAssetListEntry(
-			userId, groupId, title, typeSettings, serviceContext);
+			userId, groupId, title, serviceContext);
 	}
 
 	@Override
 	public com.liferay.asset.list.model.AssetListEntry addManualAssetListEntry(
-			long userId, long groupId, String title, long[] assetEntryIds,
+			long userId, long groupId, String title,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _assetListEntryLocalService.addManualAssetListEntry(
-			userId, groupId, title, assetEntryIds, serviceContext);
+			userId, groupId, title, serviceContext);
 	}
 
 	/**
@@ -115,11 +124,12 @@ public class AssetListEntryLocalServiceWrapper
 	}
 
 	@Override
-	public void deleteAssetEntrySelection(long assetListEntryId, int position)
+	public void deleteAssetEntrySelection(
+			long assetListEntryId, long segmentsEntryId, int position)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_assetListEntryLocalService.deleteAssetEntrySelection(
-			assetListEntryId, position);
+			assetListEntryId, segmentsEntryId, position);
 	}
 
 	/**
@@ -149,6 +159,15 @@ public class AssetListEntryLocalServiceWrapper
 
 		return _assetListEntryLocalService.deleteAssetListEntry(
 			assetListEntryId);
+	}
+
+	@Override
+	public void deleteAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_assetListEntryLocalService.deleteAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId);
 	}
 
 	/**
@@ -425,11 +444,12 @@ public class AssetListEntryLocalServiceWrapper
 
 	@Override
 	public void moveAssetEntrySelection(
-			long assetListEntryId, int position, int newPosition)
+			long assetListEntryId, long segmentsEntryId, int position,
+			int newPosition)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_assetListEntryLocalService.moveAssetEntrySelection(
-			assetListEntryId, position, newPosition);
+			assetListEntryId, segmentsEntryId, position, newPosition);
 	}
 
 	/**
@@ -455,24 +475,22 @@ public class AssetListEntryLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.asset.list.model.AssetListEntry
-			updateAssetListEntryTypeSettings(
-				long assetListEntryId, String typeSettings)
+	public void updateAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _assetListEntryLocalService.updateAssetListEntryTypeSettings(
-			assetListEntryId, typeSettings);
+		_assetListEntryLocalService.updateAssetListEntryTypeSettings(
+			assetListEntryId, segmentsEntryId, typeSettings);
 	}
 
 	@Override
-	public com.liferay.asset.list.model.AssetListEntry
-			updateAssetListEntryTypeSettingsProperties(
-				long assetListEntryId, String typeSettingsProperties)
+	public void updateAssetListEntryTypeSettingsProperties(
+			long assetListEntryId, long segmentsEntryId,
+			String typeSettingsProperties)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _assetListEntryLocalService.
-			updateAssetListEntryTypeSettingsProperties(
-				assetListEntryId, typeSettingsProperties);
+		_assetListEntryLocalService.updateAssetListEntryTypeSettingsProperties(
+			assetListEntryId, segmentsEntryId, typeSettingsProperties);
 	}
 
 	@Override
