@@ -28,7 +28,9 @@ import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.list.constants.AssetListFormConstants;
 import com.liferay.asset.list.constants.AssetListPortletKeys;
 import com.liferay.asset.list.constants.AssetListWebKeys;
+import com.liferay.asset.list.model.AssetListEntrySegmentsEntryRel;
 import com.liferay.asset.list.service.AssetListEntryAssetEntryRelLocalServiceUtil;
+import com.liferay.asset.list.service.AssetListEntrySegmentsEntryRelLocalServiceUtil;
 import com.liferay.asset.util.comparator.AssetRendererFactoryTypeNameComparator;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -646,17 +648,38 @@ public class EditAssetListDisplayContext {
 
 		searchContainer.setTotal(
 			AssetListEntryAssetEntryRelLocalServiceUtil.
-				getAssetListEntryAssetEntryRelsCount(getAssetListEntryId()));
+				getAssetListEntryAssetEntryRelsCount(
+					getAssetListEntryId(), getSegmentsEntryId()));
 
 		searchContainer.setResults(
 			AssetListEntryAssetEntryRelLocalServiceUtil.
 				getAssetListEntryAssetEntryRels(
-					getAssetListEntryId(), searchContainer.getStart(),
-					searchContainer.getEnd()));
+					getAssetListEntryId(), getSegmentsEntryId(),
+					searchContainer.getStart(), searchContainer.getEnd()));
 
 		_searchContainer = searchContainer;
 
 		return _searchContainer;
+	}
+
+	public long getSegmentsEntryId() {
+		if (_segmentsEntryId != null) {
+			return _segmentsEntryId;
+		}
+
+		List<AssetListEntrySegmentsEntryRel> assetListEntrySegmentsEntryRels =
+			AssetListEntrySegmentsEntryRelLocalServiceUtil.
+				getAssetListEntrySegmentsEntryRels(getAssetListEntryId(), 0, 1);
+
+		if (!assetListEntrySegmentsEntryRels.isEmpty()) {
+			AssetListEntrySegmentsEntryRel assetListEntrySegmentsEntryRel =
+				assetListEntrySegmentsEntryRels.get(0);
+
+			_segmentsEntryId =
+				assetListEntrySegmentsEntryRel.getSegmentsEntryId();
+		}
+
+		return _segmentsEntryId;
 	}
 
 	public List<Group> getSelectedGroups() throws PortalException {
@@ -872,6 +895,7 @@ public class EditAssetListDisplayContext {
 	private long[] _referencedModelsGroupIds;
 	private final HttpServletRequest _request;
 	private SearchContainer _searchContainer;
+	private Long _segmentsEntryId;
 	private Boolean _subtypeFieldsFilterEnabled;
 	private final ThemeDisplay _themeDisplay;
 
