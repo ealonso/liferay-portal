@@ -19,7 +19,9 @@ import com.liferay.asset.list.constants.AssetListActionKeys;
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.asset.list.constants.AssetListPortletKeys;
 import com.liferay.asset.list.model.AssetListEntry;
+import com.liferay.asset.list.model.AssetListEntrySegmentsEntryRel;
 import com.liferay.asset.list.service.AssetListEntryLocalServiceUtil;
+import com.liferay.asset.list.service.AssetListEntrySegmentsEntryRelLocalServiceUtil;
 import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
 import com.liferay.asset.list.web.internal.security.permission.resource.AssetListPermission;
@@ -96,11 +98,13 @@ public class AssetListDisplayContext {
 
 		AssetListEntry assetListEntry = getAssetListEntry();
 
-		List<AssetEntry> assetEntries = assetListEntry.getAssetEntries();
+		List<AssetEntry> assetEntries = assetListEntry.getAssetEntries(
+			getSegmentsEntryId());
 
 		searchContainer.setResults(assetEntries);
 
-		int totalCount = assetListEntry.getAssetEntriesCount();
+		int totalCount = assetListEntry.getAssetEntriesCount(
+			getSegmentsEntryId());
 
 		searchContainer.setTotal(totalCount);
 
@@ -317,6 +321,26 @@ public class AssetListDisplayContext {
 		return portletURL;
 	}
 
+	public long getSegmentsEntryId() {
+		if (_segmentsEntryId != null) {
+			return _segmentsEntryId;
+		}
+
+		List<AssetListEntrySegmentsEntryRel> assetListEntrySegmentsEntryRels =
+			AssetListEntrySegmentsEntryRelLocalServiceUtil.
+				getAssetListEntrySegmentsEntryRels(getAssetListEntryId(), 0, 1);
+
+		if (!assetListEntrySegmentsEntryRels.isEmpty()) {
+			AssetListEntrySegmentsEntryRel assetListEntrySegmentsEntryRel =
+				assetListEntrySegmentsEntryRels.get(0);
+
+			_segmentsEntryId =
+				assetListEntrySegmentsEntryRel.getSegmentsEntryId();
+		}
+
+		return _segmentsEntryId;
+	}
+
 	public boolean isShowAddAssetListEntryAction() {
 		return AssetListPermission.contains(
 			_themeDisplay.getPermissionChecker(),
@@ -393,6 +417,7 @@ public class AssetListDisplayContext {
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private Long _segmentsEntryId;
 	private final ThemeDisplay _themeDisplay;
 
 }

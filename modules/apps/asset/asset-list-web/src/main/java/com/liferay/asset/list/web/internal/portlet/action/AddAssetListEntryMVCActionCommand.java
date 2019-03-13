@@ -19,6 +19,7 @@ import com.liferay.asset.list.constants.AssetListPortletKeys;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryService;
 import com.liferay.asset.list.web.internal.handler.AssetListEntryExceptionRequestHandler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -34,6 +35,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.model.SegmentsEntry;
+import com.liferay.segments.service.SegmentsEntryLocalService;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -69,7 +72,15 @@ public class AddAssetListEntryMVCActionCommand extends BaseMVCActionCommand {
 		try {
 			AssetListEntry assetListEntry = null;
 
+			String typeSettings = StringPool.BLANK;
+
 			if (type == AssetListEntryTypeConstants.TYPE_DYNAMIC) {
+				assetListEntry =
+					_assetListEntryService.addDynamicAssetListEntry(
+						serviceContext.getUserId(),
+						serviceContext.getScopeGroupId(), title,
+						serviceContext);
+
 				ThemeDisplay themeDisplay =
 					(ThemeDisplay)actionRequest.getAttribute(
 						WebKeys.THEME_DISPLAY);
@@ -79,17 +90,22 @@ public class AddAssetListEntryMVCActionCommand extends BaseMVCActionCommand {
 				properties.setProperty(
 					"groupIds", String.valueOf(themeDisplay.getScopeGroupId()));
 
-				assetListEntry =
-					_assetListEntryService.addDynamicAssetListEntry(
-						serviceContext.getUserId(),
-						serviceContext.getScopeGroupId(), title,
-						properties.toString(), serviceContext);
+				typeSettings = properties.toString();
 			}
 			else {
 				assetListEntry = _assetListEntryService.addAssetListEntry(
 					serviceContext.getScopeGroupId(), title, type,
 					serviceContext);
 			}
+
+			SegmentsEntry defaultSegmentsEntry =
+				_segmentsEntryLocalService.getDefaultSegmentsEntry(
+					serviceContext.getScopeGroupId());
+
+			_assetListEntryService.addAssetListEntryTypeSettings(
+				assetListEntry.getAssetListEntryId(),
+				defaultSegmentsEntry.getSegmentsEntryId(), typeSettings,
+				serviceContext);
 
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -140,5 +156,8 @@ public class AddAssetListEntryMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsEntryLocalService _segmentsEntryLocalService;
 
 }
