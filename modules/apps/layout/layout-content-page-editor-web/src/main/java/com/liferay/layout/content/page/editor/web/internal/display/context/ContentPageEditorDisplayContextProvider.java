@@ -18,6 +18,7 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -74,6 +75,8 @@ public class ContentPageEditorDisplayContextProvider {
 						layout.getRobotsMap(), layout.getType(),
 						layout.getTypeSettings(), true, true,
 						Collections.emptyMap(), serviceContext);
+
+					_layoutCopyHelper.copyLayout(layout, draftLayout);
 				}
 				catch (Exception e) {
 					_log.error("Unable to create draft layout", e);
@@ -105,6 +108,9 @@ public class ContentPageEditorDisplayContextProvider {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ContentPageEditorDisplayContextProvider.class);
+
+	@Reference
+	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
