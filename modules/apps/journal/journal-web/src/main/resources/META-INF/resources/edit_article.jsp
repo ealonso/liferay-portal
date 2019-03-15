@@ -60,11 +60,19 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 		<div class="container-fluid container-fluid-max-xl">
 			<ul class="tbar-nav">
 				<li class="col-4 col-sm-6 tbar-item">
-					<aui:input autoFocus="<%= true %>" label="" localized="<%= true %>" name="titleMapAsXML" placeholder="title" type="text" wrapperCssClass="article-content-title mb-0">
-						<c:if test="<%= classNameId == JournalArticleConstants.CLASSNAME_ID_DEFAULT %>">
-							<aui:validator name="required" />
-						</c:if>
-					</aui:input>
+					<div class="article-content-title">
+						<liferay-ui:input-localized
+							defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultLanguageId() %>"
+							editorName="alloyeditor"
+							formName="fm"
+							ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
+							name="titleMapAsXML"
+							placeholder="title"
+							showSource="<%= false %>"
+							type="editor"
+							xml="<%= (article != null) ? article.getTitleMapAsXML() : StringPool.BLANK %>"
+						/>
+					</div>
 				</li>
 
 				<c:if test="<%= journalWebConfiguration.changeableDefaultLanguage() %>">
