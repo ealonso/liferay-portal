@@ -15,6 +15,7 @@
 package com.liferay.asset.publisher.web.internal.portlet.action;
 
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryService;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.util.AssetPublisherHelper;
@@ -36,6 +37,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.model.SegmentsEntry;
+import com.liferay.segments.service.SegmentsEntryLocalService;
 
 import java.util.Enumeration;
 import java.util.List;
@@ -139,9 +142,19 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 			properties.put(name, value);
 		}
 
-		_assetListEntryService.addDynamicAssetListEntry(
-			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), title,
-			properties.toString(), serviceContext);
+		AssetListEntry assetListEntry =
+			_assetListEntryService.addDynamicAssetListEntry(
+				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), title,
+				serviceContext);
+
+		SegmentsEntry defaultSegmentsEntry =
+			_segmentsEntryLocalService.getDefaultSegmentsEntry(
+				serviceContext.getScopeGroupId());
+
+		_assetListEntryService.addAssetListEntryTypeSettings(
+			assetListEntry.getAssetListEntryId(),
+			defaultSegmentsEntry.getSegmentsEntryId(), properties.toString(),
+			serviceContext);
 	}
 
 	private void _saveManualAssetList(
@@ -166,9 +179,19 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 		long[] assetEntryIds = ListUtil.toLongArray(
 			assetEntries, AssetEntry::getEntryId);
 
-		_assetListEntryService.addManualAssetListEntry(
-			themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), title,
-			assetEntryIds, serviceContext);
+		AssetListEntry assetListEntry =
+			_assetListEntryService.addManualAssetListEntry(
+				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), title,
+				serviceContext);
+
+		SegmentsEntry defaultSegmentsEntry =
+			_segmentsEntryLocalService.getDefaultSegmentsEntry(
+				serviceContext.getScopeGroupId());
+
+		_assetListEntryService.addAssetEntrySelections(
+			assetListEntry.getAssetListEntryId(),
+			defaultSegmentsEntry.getSegmentsEntryId(), assetEntryIds,
+			serviceContext);
 	}
 
 	@Reference
@@ -179,5 +202,8 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private AssetPublisherHelper _assetPublisherHelper;
+
+	@Reference
+	private SegmentsEntryLocalService _segmentsEntryLocalService;
 
 }
