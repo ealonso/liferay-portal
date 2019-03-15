@@ -34,6 +34,7 @@
 					name='<%= inputEditorName %>'
 					onChangeMethod='<%= randomNamespace + \"OnChangeEditor\" %>'
 					placeholder="<%= placeholder %>"
+					showSource="<%= showSource %>"
 					toolbarSet="<%= toolbarSet %>"
 				/>
 
