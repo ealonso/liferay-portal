@@ -160,7 +160,7 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 		</div>
 	</div>
 
-	<div class="contextual-sidebar contextual-sidebar-visible edit-article-sidebar sidebar-light" id="<portlet:namespace />contextualSidebarContainer">
+	<div class="contextual-sidebar contextual-sidebar-visible edit-article-sidebar sidebar-light sidebar-sm" id="<portlet:namespace />contextualSidebarContainer">
 		<div class="sidebar-body">
 
 			<%

@@ -60,24 +60,20 @@ if (article != null) {
 DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 %>
 
-<div class="mb-3">
-	<liferay-asset:asset-categories-selector
-		className="<%= JournalArticle.class.getName() %>"
-		classPK="<%= classPK %>"
-		classTypePK="<%= ddmStructure.getStructureId() %>"
-		ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
-	/>
-</div>
+<liferay-asset:asset-categories-selector
+	className="<%= JournalArticle.class.getName() %>"
+	classPK="<%= classPK %>"
+	classTypePK="<%= ddmStructure.getStructureId() %>"
+	ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
+/>
 
-<div class="mb-3">
-	<liferay-asset:asset-tags-selector
-		className="<%= JournalArticle.class.getName() %>"
-		classPK="<%= classPK %>"
-		ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
-	/>
-</div>
+<liferay-asset:asset-tags-selector
+	className="<%= JournalArticle.class.getName() %>"
+	classPK="<%= classPK %>"
+	ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
+/>
 
-<aui:input cssClass="form-control-sm" label="priority" name="assetPriority" type="text" value="<%= priority %>" wrapperCssClass="mb-3">
+<aui:input label="priority" name="assetPriority" type="text" value="<%= priority %>">
 	<aui:validator name="number" />
 
 	<aui:validator name="min">[0]</aui:validator>
