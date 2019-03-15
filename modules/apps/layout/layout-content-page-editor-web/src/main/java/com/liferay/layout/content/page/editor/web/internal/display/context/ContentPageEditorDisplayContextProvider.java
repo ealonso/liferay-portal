@@ -18,11 +18,16 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.util.Collections;
 import java.util.Objects;
 
 import javax.portlet.RenderResponse;
@@ -53,9 +58,29 @@ public class ContentPageEditorDisplayContextProvider {
 			Layout draftLayout = _layoutLocalService.fetchLayout(
 				_portal.getClassNameId(Layout.class), classPK);
 
-			if (draftLayout != null) {
-				classPK = draftLayout.getPlid();
+			if (draftLayout == null) {
+				try {
+					Layout layout = _layoutLocalService.getLayout(classPK);
+
+					ServiceContext serviceContext =
+						ServiceContextFactory.getInstance(request);
+
+					draftLayout = _layoutLocalService.addLayout(
+						layout.getUserId(), layout.getGroupId(),
+						layout.isPrivateLayout(), layout.getParentLayoutId(),
+						_portal.getClassNameId(Layout.class), layout.getPlid(),
+						layout.getNameMap(), layout.getTitleMap(),
+						layout.getDescriptionMap(), layout.getKeywordsMap(),
+						layout.getRobotsMap(), layout.getType(),
+						layout.getTypeSettings(), true, true,
+						Collections.emptyMap(), serviceContext);
+				}
+				catch (Exception e) {
+					_log.error("Unable to create draft layout", e);
+				}
 			}
+
+			classPK = draftLayout.getPlid();
 
 			return new ContentPageLayoutEditorDisplayContext(
 				request, renderResponse, className, classPK);
@@ -77,6 +102,9 @@ public class ContentPageEditorDisplayContextProvider {
 		return new ContentPageEditorLayoutPageTemplateDisplayContext(
 			request, renderResponse, className, classPK, showMapping);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ContentPageEditorDisplayContextProvider.class);
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
