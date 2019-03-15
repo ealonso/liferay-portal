@@ -61,17 +61,19 @@ long classNameId = ParamUtil.getLong(request, "classNameId");
 			<ul class="tbar-nav">
 				<li class="col-4 col-sm-6 tbar-item">
 					<div class="article-content-title">
-						<liferay-ui:input-localized
-							defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultLanguageId() %>"
-							editorName="alloyeditor"
-							formName="fm"
-							ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
-							name="titleMapAsXML"
-							placeholder="title"
-							showSource="<%= false %>"
-							type="editor"
-							xml="<%= (article != null) ? article.getTitleMapAsXML() : StringPool.BLANK %>"
-						/>
+						<h3 class="mb-0">
+							<liferay-ui:input-localized
+								defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultLanguageId() %>"
+								editorName="alloyeditor"
+								formName="fm"
+								ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
+								name="titleMapAsXML"
+								placeholder="title"
+								showSource="<%= false %>"
+								type="editor"
+								xml="<%= (article != null) ? article.getTitleMapAsXML() : StringPool.BLANK %>"
+							/>
+						</h3>
 					</div>
 				</li>
 
