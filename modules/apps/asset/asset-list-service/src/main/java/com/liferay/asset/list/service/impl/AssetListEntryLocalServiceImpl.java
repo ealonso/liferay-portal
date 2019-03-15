@@ -20,13 +20,13 @@ import com.liferay.asset.list.exception.DuplicateAssetListEntryTitleException;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.model.AssetListEntrySegmentsEntryRel;
 import com.liferay.asset.list.service.base.AssetListEntryLocalServiceBaseImpl;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Date;
@@ -96,16 +96,6 @@ public class AssetListEntryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		return addAssetListEntry(
-			userId, groupId, title, type, null, serviceContext);
-	}
-
-	@Override
-	public AssetListEntry addAssetListEntry(
-			long userId, long groupId, String title, int type,
-			String typeSettings, ServiceContext serviceContext)
-		throws PortalException {
-
 		_validateTitle(groupId, title);
 
 		// Asset List entry
@@ -127,7 +117,6 @@ public class AssetListEntryLocalServiceImpl
 			serviceContext.getModifiedDate(new Date()));
 		assetListEntry.setTitle(title);
 		assetListEntry.setType(type);
-		assetListEntry.setTypeSettings(typeSettings);
 
 		assetListEntryPersistence.update(assetListEntry);
 
@@ -142,18 +131,33 @@ public class AssetListEntryLocalServiceImpl
 	}
 
 	@Override
-	public AssetListEntry addDynamicAssetListEntry(
-			long userId, long groupId, String title, String typeSettings,
+	public void addAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		AssetListEntry assetListEntry = addAssetListEntry(
+		AssetListEntry assetListEntry =
+			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
+
+		assetListEntry.setModifiedDate(new Date());
+
+		assetListEntryPersistence.update(assetListEntry);
+
+		assetListEntrySegmentsEntryRelLocalService.
+			addAssetListEntrySegmentsEntryRel(
+				assetListEntryId, segmentsEntryId, typeSettings,
+				serviceContext);
+	}
+
+	@Override
+	public AssetListEntry addDynamicAssetListEntry(
+			long userId, long groupId, String title,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addAssetListEntry(
 			userId, groupId, title, AssetListEntryTypeConstants.TYPE_DYNAMIC,
 			serviceContext);
-
-		assetListEntry.setTypeSettings(typeSettings);
-
-		return assetListEntryPersistence.update(assetListEntry);
 	}
 
 	@Override
@@ -224,6 +228,23 @@ public class AssetListEntryLocalServiceImpl
 	}
 
 	@Override
+	public void deleteAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId)
+		throws PortalException {
+
+		AssetListEntry assetListEntry =
+			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
+
+		assetListEntry.setModifiedDate(new Date());
+
+		assetListEntryPersistence.update(assetListEntry);
+
+		assetListEntrySegmentsEntryRelLocalService.
+			deleteAssetListEntrySegmentsEntryRel(
+				assetListEntryId, segmentsEntryId);
+	}
+
+	@Override
 	public List<AssetListEntry> getAssetListEntries(long groupId) {
 		return assetListEntryPersistence.findByGroupId(groupId);
 	}
@@ -273,41 +294,38 @@ public class AssetListEntryLocalServiceImpl
 	}
 
 	@Override
-	public AssetListEntry updateAssetListEntryTypeSettings(
-			long assetListEntryId, String typeSettings)
+	public void updateAssetListEntryTypeSettings(
+			long assetListEntryId, long segmentsEntryId, String typeSettings)
 		throws PortalException {
 
 		AssetListEntry assetListEntry =
 			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
 
 		assetListEntry.setModifiedDate(new Date());
-		assetListEntry.setTypeSettings(typeSettings);
 
-		return assetListEntryPersistence.update(assetListEntry);
+		assetListEntryPersistence.update(assetListEntry);
+
+		assetListEntrySegmentsEntryRelLocalService.
+			updateAssetListEntrySegmentsEntryRelTypeSettings(
+				assetListEntryId, segmentsEntryId, typeSettings);
 	}
 
 	@Override
-	public AssetListEntry updateAssetListEntryTypeSettingsProperties(
-			long assetListEntryId, String typeSettingsProperties)
+	public void updateAssetListEntryTypeSettingsProperties(
+			long assetListEntryId, long segmentsEntryId,
+			String typeSettingsProperties)
 		throws PortalException {
 
 		AssetListEntry assetListEntry =
 			assetListEntryPersistence.findByPrimaryKey(assetListEntryId);
 
-		UnicodeProperties existingProperties = new UnicodeProperties();
-
-		existingProperties.fastLoad(assetListEntry.getTypeSettings());
-
-		UnicodeProperties newProperties = new UnicodeProperties();
-
-		newProperties.fastLoad(typeSettingsProperties);
-
-		existingProperties.putAll(newProperties);
-
 		assetListEntry.setModifiedDate(new Date());
-		assetListEntry.setTypeSettings(existingProperties.toString());
 
-		return assetListEntryPersistence.update(assetListEntry);
+		assetListEntryPersistence.update(assetListEntry);
+
+		assetListEntrySegmentsEntryRelLocalService.
+			updateAssetListEntrySegmentsEntryRelTypeSettingsProperties(
+				assetListEntryId, segmentsEntryId, typeSettingsProperties);
 	}
 
 	private void _validateTitle(long groupId, String title)
