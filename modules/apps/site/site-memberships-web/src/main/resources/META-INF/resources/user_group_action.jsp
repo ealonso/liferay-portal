@@ -98,6 +98,14 @@ UserGroup userGroup = (UserGroup)row.getObject();
 								eventName: '<portlet:namespace />selectUserGroupsRoles',
 								on: {
 									selectedItemChange: function(event) {
+										Liferay.fire('updateSelectedRoleIds');
+
+										var userGroupRolesIframe = $('iframe');
+
+										var userGroupRolesIframeContents = userGroupRolesIframe.contents();
+
+										var selectedRoleIdsInput = userGroupRolesIframeContents.find('[name=<portlet:namespace />selectedRoleIds');
+
 										var selectedItems = event.newVal;
 
 										if (selectedItems) {
@@ -107,6 +115,8 @@ UserGroup userGroup = (UserGroup)row.getObject();
 													dom.append(editUserGroupGroupRoleFm, selectedItem);
 												}
 											);
+
+											dom.append(editUserGroupGroupRoleFm, selectedRoleIdsInput);
 
 											submitForm(editUserGroupGroupRoleFm);
 										}

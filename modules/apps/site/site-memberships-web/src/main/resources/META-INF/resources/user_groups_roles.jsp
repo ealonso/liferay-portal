@@ -63,4 +63,76 @@ UserGroupRolesDisplayContext userGroupRolesDisplayContext = new UserGroupRolesDi
 			);
 		}
 	);
+
+	function updateSelectedRoleIds() {
+		var selectedRoleIdsInput = $('[name=<portlet:namespace />selectedRoleIds]');
+
+		var selectedRoleIds = selectedRoleIdsInput.val();
+
+		var list;
+
+		if (selectedRoleIds === '') {
+			list = new A.ArrayList();
+		}
+		else {
+			var array = selectedRoleIds.split('<%= StringPool.COMMA %>');
+
+			list = new A.ArrayList(array);
+		}
+
+		var rowIds = $('input[name=<portlet:namespace />rowIds]:not(.hide)');
+
+		rowIds.each(
+			function(index, input) {
+				var checked = input.checked;
+
+				var value = input.value;
+
+				if (checked) {
+					if (list.indexOf(value) === -1) {
+						list.add(value);
+					}
+				}
+				else {
+					list.remove(value);
+				}
+			}
+		);
+
+		var updatedSelectedRoleIds = '';
+
+		list.each(
+			function(item, index) {
+				if (index > 0) {
+					updatedSelectedRoleIds += '<%= StringPool.COMMA %>';
+				}
+
+				updatedSelectedRoleIds += item;
+			}
+		);
+
+		selectedRoleIdsInput.val(updatedSelectedRoleIds);
+	}
+
+	var opener = Liferay.Util.getOpener();
+
+	opener.Liferay.on('updateSelectedRoleIds', updateSelectedRoleIds);
+
+	Liferay.on('submitForm', updateSelectedRoleIds);
+
+	var modal = Liferay.Util.getWindow();
+
+	function clearHandles(event) {
+		opener.Liferay.detach('updateSelectedRoleIds', updateSelectedRoleIds);
+
+		Liferay.detach('submitForm', updateSelectedRoleIds);
+
+		modal.detach('visibleChange', clearHandles);
+
+		Liferay.detach('destroyPortlet', clearHandles);
+	}
+
+	modal.after('visibleChange', clearHandles);
+
+	Liferay.on('destroyPortlet', clearHandles);
 </aui:script>

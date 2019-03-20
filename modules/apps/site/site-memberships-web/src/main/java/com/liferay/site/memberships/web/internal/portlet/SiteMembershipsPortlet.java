@@ -43,10 +43,13 @@ import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.liveusers.LiveUsers;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.site.memberships.web.internal.constants.SiteMembershipsPortletKeys;
 import com.liferay.site.memberships.web.internal.display.context.SiteMembershipsDisplayContext;
 import com.liferay.users.admin.kernel.util.UsersAdmin;
@@ -234,32 +237,40 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		List<Long> newRoleIds = new ArrayList<>();
+
 		Group group = _getGroup(actionRequest, actionResponse);
 
 		long userGroupId = ParamUtil.getLong(actionRequest, "userGroupId");
-
-		long[] roleIds = ParamUtil.getLongValues(actionRequest, "rowIds");
 
 		List<UserGroupGroupRole> userGroupGroupRoles =
 			_userGroupGroupRoleLocalService.getUserGroupGroupRoles(
 				userGroupId, group.getGroupId());
 
-		List<Long> curRoleIds = ListUtil.toList(
+		List<Long> currentRoleIds = ListUtil.toList(
 			userGroupGroupRoles, UsersAdmin.USER_GROUP_GROUP_ROLE_ID_ACCESSOR);
 
-		List<Long> removeRoleIds = new ArrayList<>();
+		String selectedRoleIds = ParamUtil.getString(
+			actionRequest, "selectedRoleIds");
 
-		for (long roleId : curRoleIds) {
-			if (!ArrayUtil.contains(roleIds, roleId)) {
-				removeRoleIds.add(roleId);
+		String[] arraySelectedRoleIds = StringUtil.split(selectedRoleIds);
+
+		for (String selectedRoleId : arraySelectedRoleIds) {
+			Long roleId = GetterUtil.getLong(selectedRoleId);
+
+			if (!currentRoleIds.contains(roleId)) {
+				newRoleIds.add(roleId);
+			}
+			else {
+				currentRoleIds.remove(roleId);
 			}
 		}
 
 		_userGroupGroupRoleService.addUserGroupGroupRoles(
-			userGroupId, group.getGroupId(), roleIds);
+			userGroupId, group.getGroupId(), ArrayUtil.toLongArray(newRoleIds));
 		_userGroupGroupRoleService.deleteUserGroupGroupRoles(
 			userGroupId, group.getGroupId(),
-			ArrayUtil.toLongArray(removeRoleIds));
+			ArrayUtil.toLongArray(currentRoleIds));
 	}
 
 	public void editUserGroupRole(
@@ -350,6 +361,25 @@ public class SiteMembershipsPortlet extends MVCPortlet {
 
 		_userGroupRoleService.deleteUserGroupRoles(
 			userIds, group.getGroupId(), roleId);
+	}
+
+	@Override
+	public void render(
+			RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		String mvcPath = ParamUtil.getString(renderRequest, "mvcPath");
+
+		if (PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED &&
+			mvcPath.equals("/user_groups_roles.jsp")) {
+
+			String selectedRoleIds = ParamUtil.getString(
+				renderRequest, "selectedRoleIds", null);
+
+			renderRequest.setAttribute("selectedRoleIds", selectedRoleIds);
+		}
+
+		super.render(renderRequest, renderResponse);
 	}
 
 	public void replyMembershipRequest(
