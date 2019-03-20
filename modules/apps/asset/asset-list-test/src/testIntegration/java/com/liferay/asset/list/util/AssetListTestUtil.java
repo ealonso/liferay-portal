@@ -93,6 +93,7 @@ public class AssetListTestUtil {
 
 		return AssetListEntrySegmentsEntryRelLocalServiceUtil.
 			addAssetListEntrySegmentsEntryRel(
+				TestPropsValues.getUserId(), groupId,
 				assetListEntry.getAssetListEntryId(), RandomTestUtil.nextLong(),
 				RandomTestUtil.randomString(), serviceContext);
 	}

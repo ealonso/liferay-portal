@@ -78,8 +78,9 @@ public class AssetListEntryLocalServiceImpl
 		if (assetListEntrySegmentsEntryRel == null) {
 			assetListEntrySegmentsEntryRelLocalService.
 				addAssetListEntrySegmentsEntryRel(
-					assetListEntryId, segmentsEntryId, StringPool.BLANK,
-					serviceContext);
+					serviceContext.getUserId(),
+					serviceContext.getScopeGroupId(), assetListEntryId,
+					segmentsEntryId, StringPool.BLANK, serviceContext);
 		}
 
 		for (long assetEntryId : assetEntryIds) {
@@ -145,6 +146,7 @@ public class AssetListEntryLocalServiceImpl
 
 		assetListEntrySegmentsEntryRelLocalService.
 			addAssetListEntrySegmentsEntryRel(
+				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 				assetListEntryId, segmentsEntryId, typeSettings,
 				serviceContext);
 	}

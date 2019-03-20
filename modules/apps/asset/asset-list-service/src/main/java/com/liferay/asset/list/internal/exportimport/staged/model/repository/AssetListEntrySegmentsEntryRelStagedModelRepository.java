@@ -57,6 +57,7 @@ public class AssetListEntrySegmentsEntryRelStagedModelRepository
 
 		return _assetListEntrySegmentsEntryRelLocalService.
 			addAssetListEntrySegmentsEntryRel(
+				serviceContext.getUserId(), serviceContext.getScopeGroupId(),
 				assetListEntrySegmentsEntryRel.getAssetListEntryId(),
 				assetListEntrySegmentsEntryRel.getSegmentsEntryId(),
 				assetListEntrySegmentsEntryRel.getTypeSettings(),
