@@ -36,6 +36,8 @@ import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsConstants;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.concurrent.Callable;
 
@@ -97,12 +99,17 @@ public class UpdateLayoutPageTemplateDataMVCActionCommand
 		long classPK = ParamUtil.getLong(actionRequest, "classPK");
 		String data = ParamUtil.getString(actionRequest, "data");
 
+		long segmentsExperienceId = ParamUtil.getLong(
+			actionRequest, "segmentsExperienceId",
+			SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructure(
-				serviceContext.getScopeGroupId(), classNameId, classPK, data);
+				serviceContext.getScopeGroupId(), classNameId, classPK,
+				segmentsExperienceId, data);
 
 		String fragmentEntryLinkIdsString = ParamUtil.getString(
 			actionRequest, "fragmentEntryLinkIds");
@@ -129,6 +136,9 @@ public class UpdateLayoutPageTemplateDataMVCActionCommand
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private class UpdateLayoutPageTemplateStructuresCallable
 		implements Callable<Void> {

@@ -50,15 +50,17 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 	<c:otherwise>
 
 		<%
+		long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
+
 		LayoutPageTemplateStructure layoutPageTemplateStructure = LayoutPageTemplateStructureLocalServiceUtil.fetchLayoutPageTemplateStructure(layout.getGroupId(), PortalUtil.getClassNameId(Layout.class.getName()), layout.getPlid(), true);
 
-		String data = layoutPageTemplateStructure.getData();
+		String data = layoutPageTemplateStructure.getData(segmentsExperienceIds);
 		%>
 
 		<c:if test="<%= Validator.isNotNull(data) %>">
 
 			<%
-			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(layoutPageTemplateStructure.getData());
+			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
 			JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
 			%>
@@ -69,8 +71,6 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 					<%
 					try {
 						request.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.FALSE);
-
-						long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[0]);
 
 						for (int i = 0; i < structureJSONArray.length(); i++) {
 							JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);

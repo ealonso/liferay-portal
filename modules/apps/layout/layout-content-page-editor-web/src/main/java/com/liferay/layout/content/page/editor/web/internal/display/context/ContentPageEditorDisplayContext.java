@@ -617,7 +617,8 @@ public class ContentPageEditorDisplayContext {
 				fetchLayoutPageTemplateStructure(
 					themeDisplay.getScopeGroupId(), classNameId, classPK, true);
 
-		_layoutData = layoutPageTemplateStructure.getData();
+		_layoutData = layoutPageTemplateStructure.getData(
+			SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
 
 		return _layoutData;
 	}

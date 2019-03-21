@@ -45,14 +45,14 @@ public class LayoutPageTemplateStructureRenderUtil {
 			long[] segmentsExperienceIds)
 		throws PortalException {
 
-		String data = layoutPageTemplateStructure.getData();
+		String data = layoutPageTemplateStructure.getData(
+			segmentsExperienceIds);
 
 		if (Validator.isNull(data)) {
 			return StringPool.BLANK;
 		}
 
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(
-			layoutPageTemplateStructure.getData());
+		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
 		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
 

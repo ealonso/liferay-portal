@@ -25,6 +25,8 @@ LayoutPageTemplateStructure layoutPageTemplateStructure = null;
 
 JSONArray structureJSONArray = null;
 
+long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
+
 if (assetEntry != null) {
 	assetRendererFactory = assetEntry.getAssetRendererFactory();
 
@@ -32,10 +34,10 @@ if (assetEntry != null) {
 
 	layoutPageTemplateStructure = LayoutPageTemplateStructureLocalServiceUtil.fetchLayoutPageTemplateStructure(assetEntry.getGroupId(), PortalUtil.getClassNameId(Layout.class.getName()), layoutPageTemplateEntry.getPlid(), true);
 
-	String data = layoutPageTemplateStructure.getData();
+	String data = layoutPageTemplateStructure.getData(segmentsExperienceIds);
 
 	if (Validator.isNotNull(data)) {
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(layoutPageTemplateStructure.getData());
+		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
 		structureJSONArray = dataJSONObject.getJSONArray("structure");
 	}
@@ -54,8 +56,6 @@ if (assetEntry != null) {
 
 		try {
 			request.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.FALSE);
-
-			long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[0]);
 		%>
 
 			<div class="layout-content" id="main-content" role="main">
