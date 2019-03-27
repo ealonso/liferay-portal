@@ -70,39 +70,39 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 <div class="asset-full-content clearfix <%= assetPublisherDisplayContext.isDefaultAssetPublisher() ? "default-asset-publisher" : StringPool.BLANK %> <%= assetPublisherDisplayContext.isShowAssetTitle() ? "show-asset-title" : "no-title" %>">
 	<span class="asset-anchor lfr-asset-anchor" id="<%= assetEntry.getEntryId() %>"></span>
 
-	<div class="autofit-row autofit-row-center mb-3">
+	<div class="mb-3">
 		<c:if test="<%= assetPublisherDisplayContext.isShowAssetTitle() %>">
-			<div class="autofit-col">
-				<h4 class="asset-title component-title">
-					<c:if test="<%= showBackURL && Validator.isNotNull(redirect) %>">
-						<liferay-ui:icon
-							cssClass="header-back-to"
-							icon="angle-left"
-							markupView="lexicon"
-							url="<%= redirect %>"
-						/>
-					</c:if>
+			<h4 class="component-title">
+				<c:if test="<%= showBackURL && Validator.isNotNull(redirect) %>">
+					<liferay-ui:icon
+						cssClass="header-back-to"
+						icon="angle-left"
+						markupView="lexicon"
+						url="<%= redirect %>"
+					/>
+				</c:if>
 
-                    <%= HtmlUtil.escape(title) %>
-				</h4>
-			</div>
-		</c:if>
+				<span class="asset-title d-inline">
+					<%= HtmlUtil.escape(title) %>
+				</span>
 
-		<c:if test="<%= !print %>">
+				<c:if test="<%= !print %>">
 
-			<%
-			String fullContentRedirect = currentURL;
+					<%
+					String fullContentRedirect = currentURL;
 
-			if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(assetEntry.getCompanyId(), assetEntry.getGroupId(), assetEntry.getClassName())) {
-				fullContentRedirect = redirect;
-			}
+					if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(assetEntry.getCompanyId(), assetEntry.getGroupId(), assetEntry.getClassName())) {
+						fullContentRedirect = redirect;
+					}
 
-			request.setAttribute("view.jsp-fullContentRedirect", fullContentRedirect);
-			%>
+					request.setAttribute("view.jsp-fullContentRedirect", fullContentRedirect);
+					%>
 
-			<div class="autofit-col autofit-col-end inline-item-after">
-				<liferay-util:include page="/asset_actions.jsp" servletContext="<%= application %>" />
-			</div>
+					<span class="d-inline-flex">
+						<liferay-util:include page="/asset_actions.jsp" servletContext="<%= application %>" />
+					</span>
+				</c:if>
+			</h4>
 		</c:if>
 	</div>
 
@@ -251,7 +251,7 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 	<c:if test="<%= showContextLink || showRatings || assetPublisherDisplayContext.isEnableFlags() || assetPublisherDisplayContext.isEnablePrint() || Validator.isNotNull(assetPublisherDisplayContext.getSocialBookmarksTypes()) %>">
 		<div class="separator"><!-- --></div>
 
-		<div class="asset-details autofit-row autofit-row-center">
+		<div class="asset-details autofit-float autofit-row autofit-row-center">
 			<c:if test="<%= showContextLink %>">
 				<div class="asset-more autofit-col mr-3">
 					<a href="<%= viewInContextURL %>"><liferay-ui:message key="<%= assetRenderer.getViewInContextMessage() %>" /> &raquo;</a>
@@ -361,7 +361,7 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 	<c:if test="<%= showConversions || showLocalization %>">
 		<div class="separator"><!-- --></div>
 
-		<div class="asset-details autofit-row autofit-row-center">
+		<div class="asset-details autofit-float autofit-row autofit-row-center">
 			<c:if test="<%= showLocalization %>">
 
 				<%
