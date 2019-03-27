@@ -19,6 +19,15 @@
 		}
 	}
 
+	.metadata-author {
+		font-size: 0.875rem;
+	}
+
+	.asset-title {
+		font-size: 1.5rem;
+		font-weight: 700;
+	}
+
 	.timeline-item {
 		&:first-child {
 			.timeline-icon {
