@@ -41,37 +41,18 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 		continue;
 	}
 
+	String viewURL = assetPublisherHelper.getAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, assetPublisherDisplayContext.isAssetLinkBehaviorViewInPortlet());
+
 	request.setAttribute("view.jsp-assetEntry", assetEntry);
 	request.setAttribute("view.jsp-assetRenderer", assetRenderer);
 	request.setAttribute("view.jsp-assetRendererFactory", assetRendererFactory);
+	request.setAttribute("view.jsp-viewURL", viewURL);
 
 	try {
-		String viewURL = assetPublisherHelper.getAssetViewURL(liferayPortletRequest, liferayPortletResponse, assetRenderer, assetEntry, assetPublisherDisplayContext.isAssetLinkBehaviorViewInPortlet());
 %>
 
 		<div class="asset-abstract mb-5 <%= assetPublisherWebUtil.isDefaultAssetPublisher(layout, portletDisplay.getId(), assetPublisherDisplayContext.getPortletResource()) ? "default-asset-publisher" : StringPool.BLANK %>">
-			<span class="asset-anchor lfr-asset-anchor" id="<%= assetEntry.getEntryId() %>"></span>
-
-			<div class="mb-4">
-				<h4 class="component-title">
-					<c:choose>
-						<c:when test="<%= assetPublisherDisplayContext.isShowContextLink() %>">
-							<a class="asset-title d-inline" href="<%= viewURL %>">
-								<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
-							</a>
-						</c:when>
-						<c:otherwise>
-							<span class="asset-title d-inline-flex">
-								<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
-							</span>
-						</c:otherwise>
-					</c:choose>
-
-					<span class="d-inline-flex">
-						<liferay-util:include page="/asset_actions.jsp" servletContext="<%= application %>" />
-					</span>
-				</h4>
-			</div>
+			<liferay-util:include page="/view_asset_entry_title.jsp" servletContext="<%= application %>" />
 
 			<liferay-util:include page="/view_asset_entry_author.jsp" servletContext="<%= application %>" />
 
