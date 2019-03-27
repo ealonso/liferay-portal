@@ -294,6 +294,7 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 						<c:when test="<%= print %>">
 							<liferay-ui:icon
 								icon="print"
+								linkCssClass="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm"
 								markupView="lexicon"
 								message='<%= LanguageUtil.format(request, "print-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(title)}, false) %>'
 								url="javascript:print();"
@@ -311,6 +312,7 @@ String viewInContextURL = assetRenderer.getURLViewInContext(liferayPortletReques
 
 							<liferay-ui:icon
 								icon="print"
+								linkCssClass="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm"
 								markupView="lexicon"
 								message='<%= LanguageUtil.format(request, "print-x-x", new Object[] {"hide-accessible", HtmlUtil.escape(title)}, false) %>'
 								url='<%= "javascript:" + renderResponse.getNamespace() + "printPage_" + id + "();" %>'
