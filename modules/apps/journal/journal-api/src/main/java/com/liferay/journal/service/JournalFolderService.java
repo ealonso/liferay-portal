@@ -77,6 +77,10 @@ public interface JournalFolderService extends BaseService {
 	public JournalFolder fetchFolder(long folderId) throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JournalFolder fetchFolder(long folderId, String actionId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DDMStructure> getDDMStructures(
 			long[] groupIds, long folderId, int restrictionType)
 		throws PortalException;

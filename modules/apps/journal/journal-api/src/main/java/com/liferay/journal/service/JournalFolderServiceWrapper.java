@@ -67,6 +67,14 @@ public class JournalFolderServiceWrapper
 	}
 
 	@Override
+	public com.liferay.journal.model.JournalFolder fetchFolder(
+			long folderId, String actionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _journalFolderService.fetchFolder(folderId, actionId);
+	}
+
+	@Override
 	public java.util.List<com.liferay.dynamic.data.mapping.model.DDMStructure>
 			getDDMStructures(
 				long[] groupIds, long folderId, int restrictionType)
