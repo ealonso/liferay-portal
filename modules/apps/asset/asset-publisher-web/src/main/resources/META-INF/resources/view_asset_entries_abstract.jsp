@@ -53,7 +53,7 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 		<div class="asset-abstract mb-5 <%= assetPublisherWebUtil.isDefaultAssetPublisher(layout, portletDisplay.getId(), assetPublisherDisplayContext.getPortletResource()) ? "default-asset-publisher" : StringPool.BLANK %>">
 			<span class="asset-anchor lfr-asset-anchor" id="<%= assetEntry.getEntryId() %>"></span>
 
-			<div class="mb-3">
+			<div class="mb-4">
 				<h4 class="component-title">
 					<c:choose>
 						<c:when test="<%= assetPublisherDisplayContext.isShowContextLink() %>">
@@ -158,7 +158,7 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 				</div>
 			</c:if>
 
-			<div class="asset-content mb-3">
+			<div class="asset-content mb-4">
 				<liferay-asset:asset-display
 					abstractLength="<%= assetPublisherDisplayContext.getAbstractLength() %>"
 					assetEntry="<%= assetEntry %>"
@@ -191,7 +191,7 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 			</c:if>
 
 			<c:if test="<%= assetPublisherDisplayContext.isShowPriority() %>">
-				<div class="asset-priority mb-3 text-secondary">
+				<div class="asset-priority mb-4 text-secondary">
 					<liferay-ui:message key="priority" />: <%= assetEntry.getPriority() %>
 				</div>
 			</c:if>
@@ -204,11 +204,13 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 				assetLingsURL.setParameter("mvcPath", "/view_content.jsp");
 				%>
 
-				<liferay-asset:asset-links
-					assetEntryId="<%= assetEntry.getEntryId() %>"
-					portletURL="<%= assetLingsURL %>"
-					viewInContext="<%= assetPublisherDisplayContext.isAssetLinkBehaviorViewInPortlet() %>"
-				/>
+				<div class="asset-links mb-4">
+					<liferay-asset:asset-links
+						assetEntryId="<%= assetEntry.getEntryId() %>"
+						portletURL="<%= assetLingsURL %>"
+						viewInContext="<%= assetPublisherDisplayContext.isAssetLinkBehaviorViewInPortlet() %>"
+					/>
+				</div>
 			</c:if>
 
 			<c:if test="<%= (assetPublisherDisplayContext.isEnableRatings() && assetRenderer.isRatable()) || assetPublisherDisplayContext.isEnableFlags() || assetPublisherDisplayContext.isEnablePrint() || Validator.isNotNull(assetPublisherDisplayContext.getSocialBookmarksTypes()) %>">
@@ -357,7 +359,7 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 			</c:if>
 
 			<c:if test="<%= assetPublisherDisplayContext.isEnableComments() && assetRenderer.isCommentable() %>">
-				<div class="col-md-12">
+				<div class="col-md-12 mt-4">
 					<liferay-comment:discussion
 						className="<%= assetEntry.getClassName() %>"
 						classPK="<%= assetEntry.getClassPK() %>"
