@@ -87,7 +87,7 @@ assetEntry = assetPublisherDisplayContext.incrementViewCounter(assetEntry);
 
 	<liferay-util:include page="/view_asset_entry_author.jsp" servletContext="<%= application %>" />
 
-	<div class="asset-content mb-4" id="<portlet:namespace /><%= assetEntry.getEntryId() %>">
+	<div class="asset-content mb-4">
 		<liferay-asset:asset-display
 			assetEntry="<%= assetEntry %>"
 			assetRenderer="<%= assetRenderer %>"
