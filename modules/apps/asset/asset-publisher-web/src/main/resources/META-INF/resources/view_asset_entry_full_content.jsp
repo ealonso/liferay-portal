@@ -39,51 +39,25 @@ AssetEntry assetEntry = (AssetEntry)request.getAttribute("view.jsp-assetEntry");
 AssetRendererFactory<?> assetRendererFactory = (AssetRendererFactory<?>)request.getAttribute("view.jsp-assetRendererFactory");
 AssetRenderer<?> assetRenderer = (AssetRenderer<?>)request.getAttribute("view.jsp-assetRenderer");
 
-boolean print = GetterUtil.getBoolean(request.getAttribute("view.jsp-print"));
-
 assetPublisherDisplayContext.setLayoutAssetEntry(assetEntry);
 
 assetEntry = assetPublisherDisplayContext.incrementViewCounter(assetEntry);
+
+String fullContentRedirect = currentURL;
+
+if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(assetEntry.getCompanyId(), assetEntry.getGroupId(), assetEntry.getClassName())) {
+	fullContentRedirect = redirect;
+}
+
+request.setAttribute("view.jsp-fullContentRedirect", fullContentRedirect);
+
+if (showBackURL) {
+	request.setAttribute("view.jsp-redirect", redirect);
+}
 %>
 
 <div class="asset-full-content clearfix mb-5 <%= assetPublisherDisplayContext.isDefaultAssetPublisher() ? "default-asset-publisher" : StringPool.BLANK %> <%= assetPublisherDisplayContext.isShowAssetTitle() ? "show-asset-title" : "no-title" %>">
-	<span class="asset-anchor lfr-asset-anchor" id="<%= assetEntry.getEntryId() %>"></span>
-
-	<div class="mb-4">
-		<c:if test="<%= assetPublisherDisplayContext.isShowAssetTitle() %>">
-			<h4 class="component-title">
-				<c:if test="<%= showBackURL && Validator.isNotNull(redirect) %>">
-					<liferay-ui:icon
-						cssClass="header-back-to"
-						icon="angle-left"
-						markupView="lexicon"
-						url="<%= redirect %>"
-					/>
-				</c:if>
-
-				<span class="asset-title d-inline">
-					<%= HtmlUtil.escape(assetRenderer.getTitle(locale)) %>
-				</span>
-
-				<c:if test="<%= !print %>">
-
-					<%
-					String fullContentRedirect = currentURL;
-
-					if (WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(assetEntry.getCompanyId(), assetEntry.getGroupId(), assetEntry.getClassName())) {
-						fullContentRedirect = redirect;
-					}
-
-					request.setAttribute("view.jsp-fullContentRedirect", fullContentRedirect);
-					%>
-
-					<span class="d-inline-flex">
-						<liferay-util:include page="/asset_actions.jsp" servletContext="<%= application %>" />
-					</span>
-				</c:if>
-			</h4>
-		</c:if>
-	</div>
+	<liferay-util:include page="/view_asset_entry_title.jsp" servletContext="<%= application %>" />
 
 	<liferay-util:include page="/view_asset_entry_author.jsp" servletContext="<%= application %>" />
 
