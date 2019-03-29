@@ -14,6 +14,7 @@
 
 package com.liferay.layout.type.controller.asset.display.internal.portlet;
 
+import com.liferay.asset.display.page.portlet.BaseAssetDisplayPageFriendlyURLResolver;
 import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayPageFriendlyURLResolverConstants;
 import com.liferay.portal.kernel.portlet.FriendlyURLResolver;
 

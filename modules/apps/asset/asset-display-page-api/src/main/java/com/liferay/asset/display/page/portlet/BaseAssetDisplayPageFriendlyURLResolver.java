@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.layout.type.controller.asset.display.internal.portlet;
+package com.liferay.asset.display.page.portlet;
 
 import com.liferay.asset.display.contributor.AssetDisplayContributor;
 import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
