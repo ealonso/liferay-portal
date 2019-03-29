@@ -28,7 +28,7 @@ public class AssetDisplayPageFriendlyURLResolver
 	extends BaseAssetDisplayPageFriendlyURLResolver {
 
 	@Override
-	public String getAssetURLSeparator() {
+	public String getURLSeparator() {
 		return AssetDisplayPageFriendlyURLResolverConstants.
 			ASSET_DISPLAY_PAGE_URL_SEPARATOR;
 	}

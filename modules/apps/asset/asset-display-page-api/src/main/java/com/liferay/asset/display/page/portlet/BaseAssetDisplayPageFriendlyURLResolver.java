@@ -92,8 +92,6 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		return portal.getLayoutActualURL(layout, mainPath);
 	}
 
-	public abstract String getAssetURLSeparator();
-
 	@Override
 	public LayoutFriendlyURLComposite getLayoutFriendlyURLComposite(
 			long companyId, long groupId, boolean privateLayout,
@@ -105,11 +103,6 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 			_getAssetEntry(groupId, friendlyURL));
 
 		return new LayoutFriendlyURLComposite(layout, friendlyURL);
-	}
-
-	@Override
-	public String getURLSeparator() {
-		return getAssetURLSeparator();
 	}
 
 	@Reference
