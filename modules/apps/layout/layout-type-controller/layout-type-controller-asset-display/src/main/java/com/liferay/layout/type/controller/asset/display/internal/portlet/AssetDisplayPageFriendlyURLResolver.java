@@ -14,6 +14,7 @@
 
 package com.liferay.layout.type.controller.asset.display.internal.portlet;
 
+import com.liferay.layout.type.controller.asset.display.internal.constants.AssetDisplayPageFriendlyURLResolverConstants;
 import com.liferay.portal.kernel.portlet.FriendlyURLResolver;
 
 import org.osgi.service.component.annotations.Component;
@@ -24,4 +25,11 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = FriendlyURLResolver.class)
 public class AssetDisplayPageFriendlyURLResolver
 	extends BaseAssetDisplayPageFriendlyURLResolver {
+
+	@Override
+	public String getAssetURLSeparator() {
+		return AssetDisplayPageFriendlyURLResolverConstants.
+			ASSET_DISPLAY_PAGE_URL_SEPARATOR;
+	}
+
 }
