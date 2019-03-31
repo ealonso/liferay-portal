@@ -12,43 +12,33 @@
  * details.
  */
 
-package com.liferay.asset.list.web.internal.frontend.taglib.servlet.taglib;
+package com.liferay.asset.list.web.internal.servlet.taglib.ui;
 
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.asset.list.constants.AssetListFormConstants;
 import com.liferay.asset.list.model.AssetListEntry;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationCategory;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.PortletLocalService;
+import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
+
+import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pavel Savinov
+ * @author Eduardo García
  */
 @Component(
-	property = {
-		"screen.navigation.category.order:Integer=30",
-		"screen.navigation.entry.order:Integer=30"
-	},
-	service = {ScreenNavigationCategory.class, ScreenNavigationEntry.class}
+	property = "form.navigator.entry.order:Integer=200",
+	service = FormNavigatorEntry.class
 )
-public class AssetListOrderingScreenNavigationEntry
-	extends BaseAssetListScreenNavigationEntry {
+public class AssetListOrderingFormNavigatorEntry
+	extends BaseAssetListFormNavigatorEntry {
 
 	@Override
-	public String getCategoryKey() {
+	public String getKey() {
 		return AssetListFormConstants.ENTRY_KEY_ORDERING;
-	}
-
-	@Override
-	public String getEntryKey() {
-		return AssetListFormConstants.ENTRY_KEY_ORDERING;
-	}
-
-	@Override
-	public String getJspPath() {
-		return "/asset_list/ordering.jsp";
 	}
 
 	@Override
@@ -65,5 +55,22 @@ public class AssetListOrderingScreenNavigationEntry
 
 		return false;
 	}
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.asset.list.web)",
+		unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
+	@Override
+	protected String getJspPath() {
+		return "/asset_list/ordering.jsp";
+	}
+
+	@Reference
+	private PortletLocalService _portletLocalService;
 
 }

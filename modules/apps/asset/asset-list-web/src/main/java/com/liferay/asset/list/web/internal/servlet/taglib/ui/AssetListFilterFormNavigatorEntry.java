@@ -12,43 +12,32 @@
  * details.
  */
 
-package com.liferay.asset.list.web.internal.frontend.taglib.servlet.taglib;
+package com.liferay.asset.list.web.internal.servlet.taglib.ui;
 
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.asset.list.constants.AssetListFormConstants;
 import com.liferay.asset.list.model.AssetListEntry;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationCategory;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
+
+import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pavel Savinov
+ * @author Eduardo García
  */
 @Component(
-	property = {
-		"screen.navigation.category.order:Integer=20",
-		"screen.navigation.entry.order:Integer=20"
-	},
-	service = {ScreenNavigationCategory.class, ScreenNavigationEntry.class}
+	property = "form.navigator.entry.order:Integer=400",
+	service = FormNavigatorEntry.class
 )
-public class AssetListFilterScreenNavigationEntry
-	extends BaseAssetListScreenNavigationEntry {
+public class AssetListFilterFormNavigatorEntry
+	extends BaseAssetListFormNavigatorEntry {
 
 	@Override
-	public String getCategoryKey() {
+	public String getKey() {
 		return AssetListFormConstants.ENTRY_KEY_FILTER;
-	}
-
-	@Override
-	public String getEntryKey() {
-		return AssetListFormConstants.ENTRY_KEY_FILTER;
-	}
-
-	@Override
-	public String getJspPath() {
-		return "/asset_list/filter.jsp";
 	}
 
 	@Override
@@ -64,6 +53,20 @@ public class AssetListFilterScreenNavigationEntry
 		}
 
 		return false;
+	}
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.asset.list.web)",
+		unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
+	@Override
+	protected String getJspPath() {
+		return "/asset_list/filter.jsp";
 	}
 
 }

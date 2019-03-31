@@ -12,19 +12,19 @@
  * details.
  */
 
-package com.liferay.asset.list.web.internal.frontend.taglib.servlet.taglib;
+package com.liferay.asset.list.web.internal.servlet.taglib.ui;
 
 import com.liferay.asset.list.constants.AssetListEntryTypeConstants;
 import com.liferay.asset.list.constants.AssetListFormConstants;
 import com.liferay.asset.list.constants.AssetListWebKeys;
 import com.liferay.asset.list.model.AssetListEntry;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationCategory;
-import com.liferay.frontend.taglib.servlet.taglib.ScreenNavigationEntry;
-import com.liferay.item.selector.ItemSelector;
+import com.liferay.dynamic.data.mapping.util.DDMIndexer;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.servlet.taglib.ui.FormNavigatorEntry;
 
 import java.io.IOException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,31 +32,28 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pavel Savinov
+ * @author Eduardo García
  */
 @Component(
-	property = {
-		"screen.navigation.category.order:Integer=15",
-		"screen.navigation.entry.order:Integer=15"
-	},
-	service = {ScreenNavigationCategory.class, ScreenNavigationEntry.class}
+	property = "form.navigator.entry.order:Integer=500",
+	service = FormNavigatorEntry.class
 )
-public class AssetListScopeScreenNavigationEntry
-	extends BaseAssetListScreenNavigationEntry {
+public class AssetListSourceFormNavigatorEntry
+	extends BaseAssetListFormNavigatorEntry {
 
 	@Override
-	public String getCategoryKey() {
-		return AssetListFormConstants.ENTRY_KEY_SCOPE;
+	public String getKey() {
+		return AssetListFormConstants.ENTRY_KEY_SOURCE;
 	}
 
 	@Override
-	public String getEntryKey() {
-		return AssetListFormConstants.ENTRY_KEY_SCOPE;
-	}
+	public void include(
+			HttpServletRequest request, HttpServletResponse response)
+		throws IOException {
 
-	@Override
-	public String getJspPath() {
-		return "/asset_list/scope.jsp";
+		request.setAttribute(AssetListWebKeys.DDM_INDEXER, _ddmIndexer);
+
+		super.include(request, response);
 	}
 
 	@Override
@@ -75,15 +72,20 @@ public class AssetListScopeScreenNavigationEntry
 	}
 
 	@Override
-	public void render(HttpServletRequest request, HttpServletResponse response)
-		throws IOException {
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.asset.list.web)",
+		unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
 
-		request.setAttribute(AssetListWebKeys.ITEM_SELECTOR, _itemSelector);
-
-		super.render(request, response);
+	@Override
+	protected String getJspPath() {
+		return "/asset_list/source.jsp";
 	}
 
 	@Reference
-	private ItemSelector _itemSelector;
+	private DDMIndexer _ddmIndexer;
 
 }
