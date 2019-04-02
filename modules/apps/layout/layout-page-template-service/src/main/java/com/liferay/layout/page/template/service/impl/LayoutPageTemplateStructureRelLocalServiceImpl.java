@@ -87,6 +87,22 @@ public class LayoutPageTemplateStructureRelLocalServiceImpl
 	}
 
 	@Override
+	public void deleteLayoutPageTemplateStructureRels(
+		long segmentsExperienceId) {
+
+		List<LayoutPageTemplateStructureRel> layoutPageTemplateStructureRels =
+			getLayoutPageTemplateStructureRelsBySegmentsExperienceId(
+				segmentsExperienceId);
+
+		for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
+				layoutPageTemplateStructureRels) {
+
+			deleteLayoutPageTemplateStructureRel(
+				layoutPageTemplateStructureRel);
+		}
+	}
+
+	@Override
 	public LayoutPageTemplateStructureRel fetchLayoutPageTemplateStructureRel(
 		long layoutPageTemplateStructureId, long segmentsExperienceId) {
 
@@ -100,6 +116,15 @@ public class LayoutPageTemplateStructureRelLocalServiceImpl
 
 		return layoutPageTemplateStructureRelPersistence.
 			findByLayoutPageTemplateStructureId(layoutPageTemplateStructureId);
+	}
+
+	@Override
+	public List<LayoutPageTemplateStructureRel>
+		getLayoutPageTemplateStructureRelsBySegmentsExperienceId(
+			long segmentsExperienceId) {
+
+		return layoutPageTemplateStructureRelPersistence.
+			findBySegmentsExperienceId(segmentsExperienceId);
 	}
 
 	@Override
