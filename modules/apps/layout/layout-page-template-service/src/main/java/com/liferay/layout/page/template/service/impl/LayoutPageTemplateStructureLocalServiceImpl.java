@@ -92,6 +92,32 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public LayoutPageTemplateStructure deleteLayoutPageTemplateStructure(
+		LayoutPageTemplateStructure layoutPageTemplateStructure) {
+
+		layoutPageTemplateStructurePersistence.remove(
+			layoutPageTemplateStructure);
+
+		// Layout page template structure rels
+
+		List<LayoutPageTemplateStructureRel> layoutPageTemplateStructureRels =
+			layoutPageTemplateStructureRelLocalService.
+				getLayoutPageTemplateStructureRels(
+					layoutPageTemplateStructure.
+						getLayoutPageTemplateStructureId());
+
+		for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
+				layoutPageTemplateStructureRels) {
+
+			layoutPageTemplateStructureRelLocalService.
+				deleteLayoutPageTemplateStructureRel(
+					layoutPageTemplateStructureRel);
+		}
+
+		return layoutPageTemplateStructure;
+	}
+
+	@Override
+	public LayoutPageTemplateStructure deleteLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK)
 		throws PortalException {
 
@@ -99,8 +125,8 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			layoutPageTemplateStructurePersistence.findByG_C_C(
 				groupId, classNameId, classPK);
 
-		layoutPageTemplateStructurePersistence.remove(
-			layoutPageTemplateStructure);
+		layoutPageTemplateStructureLocalService.
+			deleteLayoutPageTemplateStructure(layoutPageTemplateStructure);
 
 		return layoutPageTemplateStructure;
 	}
