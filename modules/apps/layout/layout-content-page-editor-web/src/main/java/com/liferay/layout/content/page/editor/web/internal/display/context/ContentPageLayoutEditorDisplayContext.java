@@ -223,7 +223,7 @@ public class ContentPageLayoutEditorDisplayContext
 						getLayoutPageTemplateStructureId());
 
 		for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
-			layoutPageTemplateStructureRels) {
+				layoutPageTemplateStructureRels) {
 
 			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
 
