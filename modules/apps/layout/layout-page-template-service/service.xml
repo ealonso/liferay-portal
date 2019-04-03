@@ -278,6 +278,9 @@
 		<finder name="LayoutPageTemplateStructureId" return-type="Collection">
 			<finder-column name="layoutPageTemplateStructureId" />
 		</finder>
+		<finder name="SegmentsExperienceId" return-type="Collection">
+			<finder-column name="segmentsExperienceId" />
+		</finder>
 		<finder name="L_S" return-type="LayoutPageTemplateStructureRel" unique="true">
 			<finder-column name="layoutPageTemplateStructureId" />
 			<finder-column name="segmentsExperienceId" />
