@@ -19,6 +19,7 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.util.LayoutCopyHelper;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -32,9 +33,14 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.segments.constants.SegmentsConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.model.SegmentsExperienceModel;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.sites.kernel.util.Sites;
 
 import java.util.List;
@@ -101,20 +107,6 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 			return;
 		}
 
-		String data = layoutPageTemplateStructure.getData();
-
-		if (Validator.isNull(data)) {
-			return;
-		}
-
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
-
-		if (structureJSONArray == null) {
-			return;
-		}
-
 		ServiceContext serviceContext = Optional.ofNullable(
 			ServiceContextThreadLocal.getServiceContext()
 		).orElse(
@@ -135,6 +127,51 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 		_fragmentEntryLinkLocalService.
 			deleteLayoutPageTemplateEntryFragmentEntryLinks(
 				targetLayout.getGroupId(), classNameId, targetLayout.getPlid());
+
+		LayoutPageTemplateStructure targetLayoutPageTemplateStructure =
+			_layoutPageTemplateStructureLocalService.
+				fetchLayoutPageTemplateStructure(
+					targetLayout.getGroupId(), classNameId,
+					targetLayout.getPlid());
+
+		if (targetLayoutPageTemplateStructure == null) {
+			_layoutPageTemplateStructureLocalService.
+				addLayoutPageTemplateStructure(
+					targetLayout.getUserId(), targetLayout.getGroupId(),
+					classNameId, targetLayout.getPlid(), null, serviceContext);
+		}
+
+		for (Long segmentsExperienceId :
+				_getSegmentsExperienceIds(
+					sourceLayout.getGroupId(), classNameId,
+					sourceLayout.getPlid())) {
+
+			_copyLayoutPageTemplateStructureExperience(
+				layoutPageTemplateStructure, segmentsExperienceId, classNameId,
+				targetLayout, fragmentEntryLinkMap, serviceContext);
+		}
+	}
+
+	private void _copyLayoutPageTemplateStructureExperience(
+			LayoutPageTemplateStructure layoutPageTemplateStructure,
+			long segmentsExperienceId, long classNameId, Layout targetLayout,
+			Map<Long, FragmentEntryLink> fragmentEntryLinkMap,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		String data = layoutPageTemplateStructure.getData(segmentsExperienceId);
+
+		if (Validator.isNull(data)) {
+			return;
+		}
+
+		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
+
+		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
+
+		if (structureJSONArray == null) {
+			return;
+		}
 
 		for (int i = 0; i < structureJSONArray.length(); i++) {
 			JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
@@ -181,25 +218,10 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 			}
 		}
 
-		LayoutPageTemplateStructure targetLayoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					targetLayout.getGroupId(), classNameId,
-					targetLayout.getPlid());
-
-		if (targetLayoutPageTemplateStructure != null) {
-			_layoutPageTemplateStructureLocalService.
-				updateLayoutPageTemplateStructure(
-					targetLayout.getGroupId(), classNameId,
-					targetLayout.getPlid(), dataJSONObject.toString());
-		}
-		else {
-			_layoutPageTemplateStructureLocalService.
-				addLayoutPageTemplateStructure(
-					targetLayout.getUserId(), targetLayout.getGroupId(),
-					classNameId, targetLayout.getPlid(),
-					dataJSONObject.toString(), serviceContext);
-		}
+		_layoutPageTemplateStructureLocalService.
+			updateLayoutPageTemplateStructure(
+				targetLayout.getGroupId(), classNameId, targetLayout.getPlid(),
+				segmentsExperienceId, dataJSONObject.toString());
 	}
 
 	private void _copyPortletPreferences(
@@ -237,6 +259,23 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 		}
 	}
 
+	private long[] _getSegmentsExperienceIds(
+			long groupId, long classNameId, long classPK)
+		throws PortalException {
+
+		List<SegmentsExperience> segmentsExperiences =
+			_segmentsExperienceLocalService.getSegmentsExperiences(
+				groupId, classNameId, classPK, true);
+
+		Stream<SegmentsExperience> stream = segmentsExperiences.stream();
+
+		return ArrayUtil.append(
+			stream.mapToLong(
+				SegmentsExperienceModel::getSegmentsExperienceId
+			).toArray(),
+			new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
+	}
+
 	private static final TransactionConfig _transactionConfig =
 		TransactionConfig.Factory.create(
 			Propagation.REQUIRED, new Class<?>[] {Exception.class});
@@ -259,6 +298,9 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 
 	@Reference
 	private PortletPreferencesLocalService _portletPreferencesLocalService;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private Sites _sites;
