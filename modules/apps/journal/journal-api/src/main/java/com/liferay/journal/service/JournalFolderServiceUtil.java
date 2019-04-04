@@ -69,6 +69,13 @@ public class JournalFolderServiceUtil {
 		return getService().fetchFolder(folderId);
 	}
 
+	public static com.liferay.journal.model.JournalFolder fetchFolder(
+			long folderId, String actionId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().fetchFolder(folderId, actionId);
+	}
+
 	public static java.util.List
 		<com.liferay.dynamic.data.mapping.model.DDMStructure> getDDMStructures(
 				long[] groupIds, long folderId, int restrictionType)

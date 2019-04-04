@@ -129,6 +129,24 @@ public class JournalFolderServiceSoap {
 		}
 	}
 
+	public static com.liferay.journal.model.JournalFolderSoap fetchFolder(
+			long folderId, String actionId)
+		throws RemoteException {
+
+		try {
+			com.liferay.journal.model.JournalFolder returnValue =
+				JournalFolderServiceUtil.fetchFolder(folderId, actionId);
+
+			return com.liferay.journal.model.JournalFolderSoap.toSoapModel(
+				returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap[]
 			getDDMStructures(
 				long[] groupIds, long folderId, int restrictionType)
