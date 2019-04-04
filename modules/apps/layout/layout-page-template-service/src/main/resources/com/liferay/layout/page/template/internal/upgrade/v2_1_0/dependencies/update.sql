@@ -9,10 +9,11 @@ create table LayoutPageTemplateStructureRel (
 	modifiedDate DATE null,
 	layoutPageTemplateStructureId LONG,
 	segmentsExperienceId LONG,
-	data_ VARCHAR(75) null
+	data_ STRING null
 );
 
 create unique index IX_BB165B45 on LayoutPageTemplateStructureRel (layoutPageTemplateStructureId, segmentsExperienceId);
+create index IX_12808938 on LayoutPageTemplateStructureRel (segmentsExperienceId);
 create index IX_6F8B3413 on LayoutPageTemplateStructureRel (uuid_[$COLUMN_LENGTH:75$], companyId);
 create unique index IX_2467A355 on LayoutPageTemplateStructureRel (uuid_[$COLUMN_LENGTH:75$], groupId);
 
