@@ -130,6 +130,14 @@ public class LayoutPageTemplateStructureRelLocalServiceWrapper
 				layoutPageTemplateStructureId, segmentsExperienceId);
 	}
 
+	@Override
+	public void deleteLayoutPageTemplateStructureRels(
+		long segmentsExperienceId) {
+
+		_layoutPageTemplateStructureRelLocalService.
+			deleteLayoutPageTemplateStructureRels(segmentsExperienceId);
+	}
+
 	/**
 	 * @throws PortalException
 	 */
@@ -360,6 +368,17 @@ public class LayoutPageTemplateStructureRelLocalServiceWrapper
 
 		return _layoutPageTemplateStructureRelLocalService.
 			getLayoutPageTemplateStructureRels(layoutPageTemplateStructureId);
+	}
+
+	@Override
+	public java.util.List
+		<com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel>
+			getLayoutPageTemplateStructureRelsBySegmentsExperienceId(
+				long segmentsExperienceId) {
+
+		return _layoutPageTemplateStructureRelLocalService.
+			getLayoutPageTemplateStructureRelsBySegmentsExperienceId(
+				segmentsExperienceId);
 	}
 
 	/**

@@ -119,6 +119,9 @@ public interface LayoutPageTemplateStructureRelLocalService
 			long layoutPageTemplateStructureId, long segmentsExperienceId)
 		throws PortalException;
 
+	public void deleteLayoutPageTemplateStructureRels(
+		long segmentsExperienceId);
+
 	/**
 	 * @throws PortalException
 	 */
@@ -266,6 +269,11 @@ public interface LayoutPageTemplateStructureRelLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<LayoutPageTemplateStructureRel>
 		getLayoutPageTemplateStructureRels(long layoutPageTemplateStructureId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<LayoutPageTemplateStructureRel>
+		getLayoutPageTemplateStructureRelsBySegmentsExperienceId(
+			long segmentsExperienceId);
 
 	/**
 	 * Returns all the layout page template structure rels matching the UUID and company.

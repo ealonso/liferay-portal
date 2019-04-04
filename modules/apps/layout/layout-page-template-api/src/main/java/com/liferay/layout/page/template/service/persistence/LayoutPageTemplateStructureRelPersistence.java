@@ -549,6 +549,155 @@ public interface LayoutPageTemplateStructureRelPersistence
 		long layoutPageTemplateStructureId);
 
 	/**
+	 * Returns all the layout page template structure rels where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @return the matching layout page template structure rels
+	 */
+	public java.util.List<LayoutPageTemplateStructureRel>
+		findBySegmentsExperienceId(long segmentsExperienceId);
+
+	/**
+	 * Returns a range of all the layout page template structure rels where segmentsExperienceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param start the lower bound of the range of layout page template structure rels
+	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
+	 * @return the range of matching layout page template structure rels
+	 */
+	public java.util.List<LayoutPageTemplateStructureRel>
+		findBySegmentsExperienceId(
+			long segmentsExperienceId, int start, int end);
+
+	/**
+	 * Returns an ordered range of all the layout page template structure rels where segmentsExperienceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param start the lower bound of the range of layout page template structure rels
+	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching layout page template structure rels
+	 */
+	public java.util.List<LayoutPageTemplateStructureRel>
+		findBySegmentsExperienceId(
+			long segmentsExperienceId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<LayoutPageTemplateStructureRel> orderByComparator);
+
+	/**
+	 * Returns an ordered range of all the layout page template structure rels where segmentsExperienceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not <code>QueryUtil#ALL_POS</code>), then the query will include the default ORDER BY logic from <code>LayoutPageTemplateStructureRelModelImpl</code>. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param start the lower bound of the range of layout page template structure rels
+	 * @param end the upper bound of the range of layout page template structure rels (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching layout page template structure rels
+	 */
+	public java.util.List<LayoutPageTemplateStructureRel>
+		findBySegmentsExperienceId(
+			long segmentsExperienceId, int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<LayoutPageTemplateStructureRel> orderByComparator,
+			boolean retrieveFromCache);
+
+	/**
+	 * Returns the first layout page template structure rel in the ordered set where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching layout page template structure rel
+	 * @throws NoSuchPageTemplateStructureRelException if a matching layout page template structure rel could not be found
+	 */
+	public LayoutPageTemplateStructureRel findBySegmentsExperienceId_First(
+			long segmentsExperienceId,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<LayoutPageTemplateStructureRel> orderByComparator)
+		throws NoSuchPageTemplateStructureRelException;
+
+	/**
+	 * Returns the first layout page template structure rel in the ordered set where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching layout page template structure rel, or <code>null</code> if a matching layout page template structure rel could not be found
+	 */
+	public LayoutPageTemplateStructureRel fetchBySegmentsExperienceId_First(
+		long segmentsExperienceId,
+		com.liferay.portal.kernel.util.OrderByComparator
+			<LayoutPageTemplateStructureRel> orderByComparator);
+
+	/**
+	 * Returns the last layout page template structure rel in the ordered set where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching layout page template structure rel
+	 * @throws NoSuchPageTemplateStructureRelException if a matching layout page template structure rel could not be found
+	 */
+	public LayoutPageTemplateStructureRel findBySegmentsExperienceId_Last(
+			long segmentsExperienceId,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<LayoutPageTemplateStructureRel> orderByComparator)
+		throws NoSuchPageTemplateStructureRelException;
+
+	/**
+	 * Returns the last layout page template structure rel in the ordered set where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching layout page template structure rel, or <code>null</code> if a matching layout page template structure rel could not be found
+	 */
+	public LayoutPageTemplateStructureRel fetchBySegmentsExperienceId_Last(
+		long segmentsExperienceId,
+		com.liferay.portal.kernel.util.OrderByComparator
+			<LayoutPageTemplateStructureRel> orderByComparator);
+
+	/**
+	 * Returns the layout page template structure rels before and after the current layout page template structure rel in the ordered set where segmentsExperienceId = &#63;.
+	 *
+	 * @param layoutPageTemplateStructureRelId the primary key of the current layout page template structure rel
+	 * @param segmentsExperienceId the segments experience ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next layout page template structure rel
+	 * @throws NoSuchPageTemplateStructureRelException if a layout page template structure rel with the primary key could not be found
+	 */
+	public LayoutPageTemplateStructureRel[]
+			findBySegmentsExperienceId_PrevAndNext(
+				long layoutPageTemplateStructureRelId,
+				long segmentsExperienceId,
+				com.liferay.portal.kernel.util.OrderByComparator
+					<LayoutPageTemplateStructureRel> orderByComparator)
+		throws NoSuchPageTemplateStructureRelException;
+
+	/**
+	 * Removes all the layout page template structure rels where segmentsExperienceId = &#63; from the database.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 */
+	public void removeBySegmentsExperienceId(long segmentsExperienceId);
+
+	/**
+	 * Returns the number of layout page template structure rels where segmentsExperienceId = &#63;.
+	 *
+	 * @param segmentsExperienceId the segments experience ID
+	 * @return the number of matching layout page template structure rels
+	 */
+	public int countBySegmentsExperienceId(long segmentsExperienceId);
+
+	/**
 	 * Returns the layout page template structure rel where layoutPageTemplateStructureId = &#63; and segmentsExperienceId = &#63; or throws a <code>NoSuchPageTemplateStructureRelException</code> if it could not be found.
 	 *
 	 * @param layoutPageTemplateStructureId the layout page template structure ID

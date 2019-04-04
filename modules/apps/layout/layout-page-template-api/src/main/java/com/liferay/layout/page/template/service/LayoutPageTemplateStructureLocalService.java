@@ -98,6 +98,7 @@ public interface LayoutPageTemplateStructureLocalService
 	 * @return the layout page template structure that was removed
 	 */
 	@Indexable(type = IndexableType.DELETE)
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public LayoutPageTemplateStructure deleteLayoutPageTemplateStructure(
 		LayoutPageTemplateStructure layoutPageTemplateStructure);
 
@@ -113,7 +114,6 @@ public interface LayoutPageTemplateStructureLocalService
 			long layoutPageTemplateStructureId)
 		throws PortalException;
 
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public LayoutPageTemplateStructure deleteLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK)
 		throws PortalException;
@@ -329,6 +329,11 @@ public interface LayoutPageTemplateStructureLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public LayoutPageTemplateStructure updateLayoutPageTemplateStructure(
 		LayoutPageTemplateStructure layoutPageTemplateStructure);
+
+	public LayoutPageTemplateStructure updateLayoutPageTemplateStructure(
+			long groupId, long classNameId, long classPK,
+			long segmentsExperienceId, String data)
+		throws PortalException;
 
 	public LayoutPageTemplateStructure updateLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK, String data)

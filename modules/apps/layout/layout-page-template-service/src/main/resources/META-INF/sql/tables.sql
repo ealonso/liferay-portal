@@ -47,8 +47,7 @@ create table LayoutPageTemplateStructure (
 	createDate DATE null,
 	modifiedDate DATE null,
 	classNameId LONG,
-	classPK LONG,
-	data_ STRING null
+	classPK LONG
 );
 
 create table LayoutPageTemplateStructureRel (
@@ -62,5 +61,5 @@ create table LayoutPageTemplateStructureRel (
 	modifiedDate DATE null,
 	layoutPageTemplateStructureId LONG,
 	segmentsExperienceId LONG,
-	data_ VARCHAR(75) null
+	data_ STRING null
 );

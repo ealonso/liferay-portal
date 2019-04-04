@@ -435,6 +435,17 @@ public class LayoutPageTemplateStructureLocalServiceUtil {
 	public static
 		com.liferay.layout.page.template.model.LayoutPageTemplateStructure
 				updateLayoutPageTemplateStructure(
+					long groupId, long classNameId, long classPK,
+					long segmentsExperienceId, String data)
+			throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().updateLayoutPageTemplateStructure(
+			groupId, classNameId, classPK, segmentsExperienceId, data);
+	}
+
+	public static
+		com.liferay.layout.page.template.model.LayoutPageTemplateStructure
+				updateLayoutPageTemplateStructure(
 					long groupId, long classNameId, long classPK, String data)
 			throws com.liferay.portal.kernel.exception.PortalException {
 
