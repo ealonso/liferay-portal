@@ -96,6 +96,7 @@ import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
@@ -1290,21 +1291,30 @@ public class JournalPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		try {
-			ActionUtil.getFolder(renderRequest);
+		String path = getPath(renderRequest, renderResponse);
 
-			String path = getPath(renderRequest, renderResponse);
+		if (Objects.equals(path, "/edit_article.jsp") ||
+			Objects.equals(path, "/view_article_history.jsp")) {
 
-			if (Objects.equals(path, "/edit_article.jsp") ||
-				Objects.equals(path, "/view_article_history.jsp")) {
-
+			try {
+				ActionUtil.getFolder(renderRequest, ActionKeys.ACCESS);
 				ActionUtil.getArticle(renderRequest);
 			}
-		}
-		catch (Exception e) {
-			_log.error(e.getMessage());
+			catch (Exception e) {
+				_log.error(e.getMessage());
 
-			SessionErrors.add(renderRequest, e.getClass());
+				SessionErrors.add(renderRequest, e.getClass());
+			}
+		}
+		else {
+			try {
+				ActionUtil.getFolder(renderRequest);
+			}
+			catch (Exception e) {
+				_log.error(e.getMessage());
+
+				SessionErrors.add(renderRequest, e.getClass());
+			}
 		}
 
 		if (SessionErrors.contains(

@@ -383,6 +383,13 @@ public class ActionUtil {
 	public static JournalFolder getFolder(HttpServletRequest request)
 		throws PortalException {
 
+		return getFolder(request, ActionKeys.VIEW);
+	}
+
+	public static JournalFolder getFolder(
+			HttpServletRequest request, String actionId)
+		throws PortalException {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
@@ -393,7 +400,7 @@ public class ActionUtil {
 		if ((folderId > 0) &&
 			(folderId != JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID)) {
 
-			folder = JournalFolderServiceUtil.fetchFolder(folderId);
+			folder = JournalFolderServiceUtil.fetchFolder(folderId, actionId);
 		}
 		else {
 			JournalPermission.check(
@@ -411,6 +418,16 @@ public class ActionUtil {
 			portletRequest);
 
 		return getFolder(request);
+	}
+
+	public static JournalFolder getFolder(
+			PortletRequest portletRequest, String actionId)
+		throws PortalException {
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			portletRequest);
+
+		return getFolder(request, actionId);
 	}
 
 	public static List<JournalFolder> getFolders(ResourceRequest request)
