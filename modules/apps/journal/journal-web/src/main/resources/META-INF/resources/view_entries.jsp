@@ -56,7 +56,22 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 				rowData.put("actions", journalManagementToolbarDisplayContext.getAvailableActions(curArticle));
 				rowData.put("draggable", JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.DELETE) || JournalArticlePermission.contains(permissionChecker, curArticle, ActionKeys.UPDATE));
 
+				JournalFolder curArticleFolder = null;
+
 				String title = curArticle.getTitle(locale);
+
+				try {
+					if ((curArticle.getFolderId() > 0) && (curArticle.getFolderId() != JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID)) {
+						curArticleFolder = JournalFolderServiceUtil.fetchFolder(curArticle.getFolderId());
+					}
+					else {
+						JournalPermission.check(themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroup(), ActionKeys.VIEW);
+
+						curArticleFolder = curArticle.getFolder();
+					}
+				}
+				catch (PortalException e) {
+				}
 
 				if (Validator.isNull(title)) {
 					title = curArticle.getTitle(LocaleUtil.fromLanguageId(curArticle.getDefaultLanguageId()));
@@ -113,9 +128,9 @@ String referringPortletResource = ParamUtil.getString(request, "referringPortlet
 								</aui:a>
 							</h2>
 
-							<c:if test="<%= journalDisplayContext.isSearch() %>">
+							<c:if test="<%= journalDisplayContext.isSearch() && (curArticleFolder != null) %>">
 								<h5>
-									<%= JournalHelperUtil.getAbsolutePath(liferayPortletRequest, curArticle.getFolderId()) %>
+									<%= JournalHelperUtil.getAbsolutePath(liferayPortletRequest, curArticleFolder.getFolderId()) %>
 								</h5>
 							</c:if>
 
