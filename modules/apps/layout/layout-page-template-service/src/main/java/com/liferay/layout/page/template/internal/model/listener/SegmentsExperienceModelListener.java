@@ -35,9 +35,6 @@ public class SegmentsExperienceModelListener
 		throws ModelListenerException {
 
 		try {
-
-			// Layout page template structure rels
-
 			_layoutPageTemplateStructureRelLocalService.
 				deleteLayoutPageTemplateStructureRels(
 					segmentsExperience.getSegmentsExperienceId());

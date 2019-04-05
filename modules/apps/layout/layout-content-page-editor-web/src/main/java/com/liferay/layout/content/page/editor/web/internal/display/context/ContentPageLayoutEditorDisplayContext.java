@@ -29,6 +29,7 @@ import com.liferay.segments.service.SegmentsEntryServiceUtil;
 import com.liferay.segments.service.SegmentsExperienceServiceUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.RenderResponse;
@@ -205,16 +206,16 @@ public class ContentPageLayoutEditorDisplayContext
 	private List<SoyContext> _getLayoutDataListSoyContext()
 		throws PortalException {
 
-		List<SoyContext> soyContexts = new ArrayList<>();
-
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
 					themeDisplay.getScopeGroupId(), classNameId, classPK, true);
 
 		if (layoutPageTemplateStructure == null) {
-			return soyContexts;
+			return Collections.emptyList();
 		}
+
+		List<SoyContext> soyContexts = new ArrayList<>();
 
 		List<LayoutPageTemplateStructureRel> layoutPageTemplateStructureRels =
 			LayoutPageTemplateStructureRelLocalServiceUtil.
