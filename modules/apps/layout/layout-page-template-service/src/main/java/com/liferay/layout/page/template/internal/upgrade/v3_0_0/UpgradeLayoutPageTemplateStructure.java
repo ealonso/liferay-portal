@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.layout.page.template.internal.upgrade.v2_1_0;
+package com.liferay.layout.page.template.internal.upgrade.v3_0_0;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
