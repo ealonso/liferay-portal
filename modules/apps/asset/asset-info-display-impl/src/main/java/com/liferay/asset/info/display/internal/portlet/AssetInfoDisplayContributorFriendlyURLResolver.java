@@ -35,16 +35,13 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutFriendlyURLComposite;
 import com.liferay.portal.kernel.portlet.FriendlyURLResolver;
 import com.liferay.portal.kernel.service.LayoutLocalService;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -119,22 +116,6 @@ public class AssetInfoDisplayContributorFriendlyURLResolver
 	@Override
 	public String getURLSeparator() {
 		return "/a/";
-	}
-
-	@Override
-	public String[] getURLSeparators() {
-		Set<String> urlSeparators = new HashSet<>();
-
-		List<InfoDisplayContributor> infoDisplayContributors =
-			_infoDisplayContributorTracker.getInfoDisplayContributors();
-
-		for (InfoDisplayContributor infoDisplayContributor :
-				infoDisplayContributors) {
-
-			urlSeparators.add(infoDisplayContributor.getInfoURLSeparator());
-		}
-
-		return ArrayUtil.toStringArray(urlSeparators);
 	}
 
 	private AssetEntry _getAssetEntry(
