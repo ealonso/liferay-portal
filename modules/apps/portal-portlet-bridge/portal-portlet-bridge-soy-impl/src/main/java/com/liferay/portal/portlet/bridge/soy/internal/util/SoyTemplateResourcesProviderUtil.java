@@ -32,8 +32,7 @@ public class SoyTemplateResourcesProviderUtil {
 	public static List<TemplateResource> getBundleTemplateResources(
 		Bundle bundle, String templatePath) {
 
-		return _soyTemplateResourcesProvider.getBundleTemplateResources(
-			bundle, templatePath);
+		return _soyTemplateResourcesProvider.getAllTemplateResources();
 	}
 
 	@Reference(unbind = "-")
