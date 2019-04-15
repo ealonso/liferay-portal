@@ -55,12 +55,17 @@ import java.io.File;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -490,13 +495,68 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 
 		Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
 
-		while (enumeration.hasMoreElements()) {
-			ZipEntry zipEntry = enumeration.nextElement();
+		List<? extends ZipEntry> zipEntries = Collections.list(enumeration);
 
+		Stream<? extends ZipEntry> stream = zipEntries.stream();
+
+		Set<String> excludePaths = stream.filter(
+			zipEntry -> {
+				String name = zipEntry.getName();
+
+				return name.endsWith(
+					FragmentExportImportConstants.
+						FILE_NAME_COLLECTION_CONFIG) ||
+					   name.endsWith(
+						   FragmentExportImportConstants.
+							   FILE_NAME_FRAGMENT_CONFIG);
+			}
+		).flatMap(
+			zipEntry -> {
+				String name = zipEntry.getName();
+
+				String path = name.substring(
+					0, name.lastIndexOf(StringPool.SLASH) + 1);
+
+				if (name.endsWith(
+						FragmentExportImportConstants.
+							FILE_NAME_COLLECTION_CONFIG)) {
+
+					return Arrays.stream(new String[] {name});
+				}
+
+				try {
+					String fragmentJSON = StringUtil.read(
+						zipFile.getInputStream(zipEntry));
+
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+						fragmentJSON);
+
+					return Arrays.stream(
+						new String[] {
+							path + "fragment.json",
+							path + jsonObject.getString("cssPath"),
+							path + jsonObject.getString("htmlPath"),
+							path + jsonObject.getString("jsPath"),
+							path + jsonObject.getString("thumbnailPath")
+						});
+				}
+				catch (Exception e) {
+					_log.error("Unable to read fragments.json file " + name, e);
+				}
+
+				return Arrays.stream(new String[0]);
+			}
+		).collect(
+			Collectors.toSet()
+		);
+
+		for (ZipEntry zipEntry : zipEntries) {
 			String[] paths = StringUtil.split(
 				zipEntry.getName(), StringPool.FORWARD_SLASH);
 
-			if (!ArrayUtil.contains(paths, "resources")) {
+			if (!ArrayUtil.contains(paths, "resources") ||
+				excludePaths.contains(zipEntry.getName())) {
+
 				continue;
 			}
 
