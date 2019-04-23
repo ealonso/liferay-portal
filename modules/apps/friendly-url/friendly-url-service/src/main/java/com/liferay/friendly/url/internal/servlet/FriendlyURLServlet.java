@@ -187,6 +187,10 @@ public class FriendlyURLServlet extends HttpServlet {
 
 			Layout layout = layoutFriendlyURLSeparatorComposite.getLayout();
 
+			if (!_isPublished(layout)) {
+				throw new NoSuchLayoutException();
+			}
+
 			request.setAttribute(WebKeys.LAYOUT, layout);
 
 			String layoutFriendlyURLSeparatorCompositeFriendlyURL =
@@ -258,7 +262,9 @@ public class FriendlyURLServlet extends HttpServlet {
 				LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 			for (Layout layout : layouts) {
-				if (layout.matches(request, friendlyURL)) {
+				if (layout.matches(request, friendlyURL) &&
+					_isPublished(layout)) {
+
 					String redirect = portal.getLayoutActualURL(
 						layout, Portal.PATH_MAIN);
 
@@ -571,6 +577,16 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		return false;
+	}
+
+	private boolean _isPublished(Layout layout) {
+		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_CONTENT) &&
+			Objects.equals(layout.getCreateDate(), layout.getPublishDate())) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
