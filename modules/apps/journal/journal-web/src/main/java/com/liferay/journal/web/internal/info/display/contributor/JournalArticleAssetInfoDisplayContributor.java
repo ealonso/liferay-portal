@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portlet.display.template.PortletDisplayTemplate;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;
@@ -249,7 +250,8 @@ public class JournalArticleAssetInfoDisplayContributor
 	private String _getTemplateKey(DDMTemplate ddmTemplate) {
 		String templateKey = ddmTemplate.getTemplateKey();
 
-		return _DDM_TEMPLATE + templateKey.replaceAll("\\W", "_");
+		return PortletDisplayTemplate.DISPLAY_STYLE_PREFIX +
+			templateKey.replaceAll("\\W", "_");
 	}
 
 	private Object _sanitizeFieldValue(
@@ -315,8 +317,6 @@ public class JournalArticleAssetInfoDisplayContributor
 
 		return StringPool.BLANK;
 	}
-
-	private static final String _DDM_TEMPLATE = "ddmTemplate_";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalArticleAssetInfoDisplayContributor.class);
