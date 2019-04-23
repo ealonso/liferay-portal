@@ -18,6 +18,10 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.model.AssetEntryUsage;
 import com.liferay.asset.service.AssetEntryUsageLocalService;
+import com.liferay.dynamic.data.mapping.kernel.DDMTemplate;
+import com.liferay.dynamic.data.mapping.kernel.DDMTemplateManager;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLinkLocalService;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
@@ -40,6 +44,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portlet.display.template.PortletDisplayTemplate;
 
 import java.util.Iterator;
 import java.util.concurrent.Callable;
@@ -144,7 +149,19 @@ public class EditFragmentEntryLinkMVCActionCommand
 					editableJSONObject.getLong("classPK"));
 				long classNameId = GetterUtil.getLong(
 					editableJSONObject.getLong("classNameId"));
+
 				String fieldId = editableJSONObject.getString("fieldId");
+
+				String mappedField = editableJSONObject.getString(
+					"mappedField", fieldId);
+
+				_ddmTemplateLinkLocalService.deleteTemplateLink(
+					_portal.getClassNameId(FragmentEntryLink.class),
+					fragmentEntryLink.getFragmentEntryLinkId());
+
+				if (Validator.isNotNull(mappedField)) {
+					_updateDDMTemplateLink(fragmentEntryLink, mappedField);
+				}
 
 				if ((classNameId <= 0) || (classPK <= 0) ||
 					Validator.isNull(fieldId)) {
@@ -181,6 +198,28 @@ public class EditFragmentEntryLinkMVCActionCommand
 		return fragmentEntryLink;
 	}
 
+	private void _updateDDMTemplateLink(
+		FragmentEntryLink fragmentEntryLink, String mappedField) {
+
+		if (mappedField.startsWith(
+				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+
+			String ddmTemplateKey = mappedField.substring(
+				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX.length());
+
+			DDMTemplate ddmTemplate = _ddmTemplateManager.fetchTemplate(
+				fragmentEntryLink.getGroupId(),
+				_portal.getClassNameId(DDMStructure.class), ddmTemplateKey);
+
+			if (ddmTemplate != null) {
+				_ddmTemplateLinkLocalService.addTemplateLink(
+					_portal.getClassNameId(FragmentEntryLink.class),
+					fragmentEntryLink.getFragmentEntryLinkId(),
+					ddmTemplate.getTemplateId());
+			}
+		}
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		EditFragmentEntryLinkMVCActionCommand.class);
 
@@ -193,6 +232,12 @@ public class EditFragmentEntryLinkMVCActionCommand
 
 	@Reference
 	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
+
+	@Reference
+	private DDMTemplateLinkLocalService _ddmTemplateLinkLocalService;
+
+	@Reference
+	private DDMTemplateManager _ddmTemplateManager;
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
