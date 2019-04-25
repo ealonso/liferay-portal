@@ -75,6 +75,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchContextFactory;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -814,10 +815,13 @@ public class JournalDisplayContext {
 
 			articleSearchContainer.setRowChecker(entriesChecker);
 
-			EntriesMover entriesMover = new EntriesMover(
-				_trashHelper.isTrashEnabled(_themeDisplay.getScopeGroupId()));
+			if (!BrowserSnifferUtil.isMobile(_request)) {
+				EntriesMover entriesMover = new EntriesMover(
+					_trashHelper.isTrashEnabled(
+						_themeDisplay.getScopeGroupId()));
 
-			articleSearchContainer.setRowMover(entriesMover);
+				articleSearchContainer.setRowMover(entriesMover);
+			}
 		}
 
 		if (isNavigationMine() || isNavigationRecent()) {
