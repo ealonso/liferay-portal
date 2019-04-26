@@ -334,6 +334,9 @@ public interface WebKeys {
 
 	public static final String LAYOUT_DESCRIPTIONS = "LAYOUT_DESCRIPTIONS";
 
+	public static final String LAYOUT_DESCRIPTIONS_KEY =
+		"LAYOUT_DESCRIPTIONS_KEY";
+
 	public static final String LAYOUT_PORTLETS = "LAYOUT_PORTLETS";
 
 	public static final String LAYOUT_PROTOTYPE = "LAYOUT_PROTOTYPE";
