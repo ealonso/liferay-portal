@@ -15,6 +15,7 @@
 package com.liferay.portal.util;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.cache.index.IndexEncoder;
 import com.liferay.portal.kernel.cache.thread.local.Lifecycle;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCache;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCacheManager;
@@ -26,6 +27,8 @@ import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.impl.LayoutImpl;
+
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -39,6 +42,14 @@ import java.util.Locale;
  * @author Shuyang Zhou
  */
 public class LayoutListUtil {
+
+	public static List<LayoutDescription> getLayoutDescriptions(
+		LayoutListUtilKey layoutListUtilKey) {
+
+		return getLayoutDescriptions(
+			layoutListUtilKey._groupId, layoutListUtilKey._privateLayout,
+			layoutListUtilKey._rootNodeName, layoutListUtilKey._locale);
+	}
 
 	public static List<LayoutDescription> getLayoutDescriptions(
 		long groupId, boolean privateLayout, String rootNodeName,
@@ -64,21 +75,33 @@ public class LayoutListUtil {
 		return layoutDescriptions;
 	}
 
+	public static class LayoutListUtilKey implements Serializable {
+
+		public LayoutListUtilKey(
+			long groupId, boolean privateLayout, String rootNodeName,
+			Locale locale) {
+
+			_groupId = groupId;
+			_privateLayout = privateLayout;
+			_rootNodeName = rootNodeName;
+			_locale = locale;
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		private final long _groupId;
+		private final Locale _locale;
+		private final boolean _privateLayout;
+		private final String _rootNodeName;
+
+	}
+
 	protected static String buildCacheKey(
 		long groupId, boolean privateLayout, String rootNodeName,
 		Locale locale) {
 
-		StringBundler sb = new StringBundler(7);
-
-		sb.append(StringUtil.toHexString(groupId));
-		sb.append(StringPool.POUND);
-		sb.append(privateLayout);
-		sb.append(StringPool.POUND);
-		sb.append(rootNodeName);
-		sb.append(StringPool.POUND);
-		sb.append(LocaleUtil.toLanguageId(locale));
-
-		return sb.toString();
+		return LayoutListUtilIndexEncoder.encode(
+			groupId, privateLayout, rootNodeName, locale);
 	}
 
 	protected static List<LayoutDescription> doGetLayoutDescriptions(
@@ -130,6 +153,35 @@ public class LayoutListUtil {
 		}
 
 		return layoutDescriptions;
+	}
+
+	private static class LayoutListUtilIndexEncoder
+		implements IndexEncoder<String, LayoutListUtilKey> {
+
+		public static String encode(
+			long groupId, boolean privateLayout, String rootNodeName,
+			Locale locale) {
+
+			StringBundler sb = new StringBundler(7);
+
+			sb.append(StringUtil.toHexString(groupId));
+			sb.append(StringPool.POUND);
+			sb.append(privateLayout);
+			sb.append(StringPool.POUND);
+			sb.append(rootNodeName);
+			sb.append(StringPool.POUND);
+			sb.append(LocaleUtil.toLanguageId(locale));
+
+			return sb.toString();
+		}
+
+		@Override
+		public String encode(LayoutListUtilKey layoutListUtilKey) {
+			return encode(
+				layoutListUtilKey._groupId, layoutListUtilKey._privateLayout,
+				layoutListUtilKey._rootNodeName, layoutListUtilKey._locale);
+		}
+
 	}
 
 }
