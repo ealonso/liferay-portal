@@ -23,7 +23,8 @@ String copyLayoutIdPrefix = ParamUtil.getString(request, "copyLayoutIdPrefix");
 <aui:select id='<%= HtmlUtil.escapeAttribute(copyLayoutIdPrefix) + "copyLayoutId" %>' label="copy-from-page" name="copyLayoutId">
 
 	<%
-	List<LayoutDescription> layoutDescriptions = (List<LayoutDescription>)request.getAttribute(WebKeys.LAYOUT_DESCRIPTIONS);
+	LayoutListUtil.LayoutListUtilKey layoutListUtilKey = (LayoutListUtil.LayoutListUtilKey)request.getAttribute(WebKeys.LAYOUT_DESCRIPTIONS_KEY);
+	List<LayoutDescription> layoutDescriptions = LayoutListUtil.getLayoutDescriptions(layoutListUtilKey);
 
 	for (LayoutDescription layoutDescription : layoutDescriptions) {
 		Layout layoutDescriptionLayout = LayoutLocalServiceUtil.fetchLayout(layoutDescription.getPlid());

@@ -121,7 +121,7 @@ public class LayoutsAdminDisplayContext {
 				LayoutAdminWebKeys.LAYOUT_COPY_HELPER);
 
 		_liferayPortletRequest.setAttribute(
-			WebKeys.LAYOUT_DESCRIPTIONS, getLayoutDescriptions());
+			WebKeys.LAYOUT_DESCRIPTIONS_KEY, _getLayoutListUtilKey());
 	}
 
 	public List<DropdownItem> getAddLayoutDropdownItems() {
@@ -1651,6 +1651,12 @@ public class LayoutsAdminDisplayContext {
 				selLayout.getLayoutId(), selLayout.isPrivateLayout()));
 
 		return layoutColumnsJSONArray;
+	}
+
+	private LayoutListUtil.LayoutListUtilKey _getLayoutListUtilKey() {
+		return new LayoutListUtil.LayoutListUtilKey(
+			getGroupId(), isPrivateLayout(), getRootNodeName(),
+			_themeDisplay.getLocale());
 	}
 
 	private JSONArray _getLayoutSetBranchesJSONArray() throws PortalException {

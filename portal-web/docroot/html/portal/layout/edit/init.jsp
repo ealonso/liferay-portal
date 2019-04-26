@@ -18,7 +18,8 @@
 
 <%@ page import="com.liferay.portal.kernel.util.PortletLister" %><%@
 page import="com.liferay.portal.kernel.util.PortletListerFactoryUtil" %><%@
-page import="com.liferay.portal.kernel.util.TreeView" %>
+page import="com.liferay.portal.kernel.util.TreeView" %><%@
+page import="com.liferay.portal.util.LayoutListUtil" %>
 
 <%
 Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
