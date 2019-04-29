@@ -40,6 +40,10 @@ public interface FragmentEntryProcessor {
 		return null;
 	}
 
+	/**
+	 * @deprecated As of Judson (7.1.x), as of 7.1.x, with no direct replacement
+	 */
+	@Deprecated
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String css, String mode,
 			Locale locale, long[] segmentsExperienceIds)
@@ -49,6 +53,10 @@ public interface FragmentEntryProcessor {
 			fragmentEntryLink, css, mode, locale, segmentsExperienceIds, 0);
 	}
 
+	/**
+	 * @deprecated As of Judson (7.1.x), as of 7.1.x, with no direct replacement
+	 */
+	@Deprecated
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String css, String mode,
 			Locale locale, long[] segmentsExperienceIds, long previewClassPK)

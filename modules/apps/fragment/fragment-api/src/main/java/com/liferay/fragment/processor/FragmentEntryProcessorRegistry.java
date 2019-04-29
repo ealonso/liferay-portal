@@ -37,6 +37,10 @@ public interface FragmentEntryProcessorRegistry {
 
 	public JSONObject getDefaultEditableValuesJSONObject(String html);
 
+	/**
+	 * @deprecated As of Judson (7.1.x), as of 7.1.x, with no direct replacement
+	 */
+	@Deprecated
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String mode, Locale locale,
 			long[] segmentsExperienceIds)
@@ -46,6 +50,10 @@ public interface FragmentEntryProcessorRegistry {
 			fragmentEntryLink, mode, locale, segmentsExperienceIds, 0);
 	}
 
+	/**
+	 * @deprecated As of Judson (7.1.x), as of 7.1.x, with no direct replacement
+	 */
+	@Deprecated
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String mode, Locale locale,
 			long[] segmentsExperienceIds, long previewClassPK)
