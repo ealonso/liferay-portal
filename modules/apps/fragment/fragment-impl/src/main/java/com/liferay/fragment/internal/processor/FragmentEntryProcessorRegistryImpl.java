@@ -103,17 +103,7 @@ public class FragmentEntryProcessorRegistryImpl
 			long[] segmentsExperienceIds, long previewClassPK)
 		throws PortalException {
 
-		String css = fragmentEntryLink.getCss();
-
-		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
-
-			css = fragmentEntryProcessor.processFragmentEntryLinkCSS(
-				fragmentEntryLink, css, mode, locale, segmentsExperienceIds,
-				previewClassPK);
-		}
-
-		return css;
+		return fragmentEntryLink.getCss();
 	}
 
 	@Override

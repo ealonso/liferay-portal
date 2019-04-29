@@ -45,11 +45,6 @@ public class BackgroundImageEditableElementParser
 	}
 
 	@Override
-	public boolean isCss() {
-		return true;
-	}
-
-	@Override
 	public void replace(Element element, String value) {
 	}
 
