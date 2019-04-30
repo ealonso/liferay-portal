@@ -9,6 +9,7 @@ import {setIn} from '../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties} from '../../utils/FragmentsEditorComponentUtils.es';
 import templates from './FragmentEntryLinkContent.soy';
 import {getConnectedComponent} from '../../store/ConnectedComponent.es';
+import FragmentEditableBackgroundImage from './FragmentEditableBackgroundImage.es';
 
 const EDITABLE_FRAGMENT_ENTRY_PROCESSOR = 'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor';
 
@@ -141,6 +142,19 @@ class FragmentEntryLinkContent extends Component {
 	 */
 	_createEditables() {
 		this._destroyEditables();
+
+		[...this.refs.content.querySelectorAll('[data-lfr-background-image-id]')].forEach(
+			element => {
+				return new FragmentEditableBackgroundImage(
+					{
+						element: element,
+						fragmentEntryLinkId: this.fragmentEntryLinkId,
+						showMapping: this.showMapping,
+						store: this.store
+					}
+				);
+			}
+		);
 
 		this._editables = [...this.refs.content.querySelectorAll('lfr-editable')].map(
 			editable => {
