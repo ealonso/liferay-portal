@@ -132,16 +132,16 @@ renderResponse.setTitle(journalEditDDMTemplateDisplayContext.getTitle());
 
 		if (basicInformationWarnings) {
 			var warningMessage = '<div class="alert alert-dismissible alert-warning" role="alert">' +
-					'<button aria-label="<%= LanguageUtil.get(request, "close") %>" class="close" data-dismiss="alert" type="button">' +
+					'<button aria-label="<%= HtmlUtil.escapeJS(LanguageUtil.get(request, "close")) %>" class="close" data-dismiss="alert" type="button">' +
 						'<aui:icon image="times" markupView="lexicon" />' +
-						'<span class="sr-only"><%= LanguageUtil.get(request, "close") %></span>' +
+						'<span class="sr-only"><%= HtmlUtil.escapeJS(LanguageUtil.get(request, "close")) %></span>' +
 					'</button>' +
 					'<span class="alert-indicator">' +
 						'<svg aria-hidden="true" class="lexicon-icon lexicon-icon-warning-full">' +
-							'<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#warning-full"></use>' +
+							'<use xlink:href="<%= HtmlUtil.escapeHREF(themeDisplay.getPathThemeImages()) %>/lexicon/icons.svg#warning-full"></use>' +
 						'</svg>' +
 					'</span>' +
-					'<strong class="lead"><%= LanguageUtil.get(request, "warning-colon") %></strong><liferay-ui:message key="scripts-using-liferay-taglibs-should-not-be-cached-to-prevent-the-display-of-inconsistent-web-contents.-please-uncheck-the-cacheable-field" />' +
+					'<strong class="lead"><%= HtmlUtil.escapeJS(LanguageUtil.get(request, "warning-colon")) %></strong><liferay-ui:message key="scripts-using-liferay-taglibs-should-not-be-cached-to-prevent-the-display-of-inconsistent-web-contents.-please-uncheck-the-cacheable-field" />' +
 				'</div>';
 
 			basicInformationWarnings.innerHTML = warningMessage;
