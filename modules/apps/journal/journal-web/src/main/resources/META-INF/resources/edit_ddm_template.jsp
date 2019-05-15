@@ -125,13 +125,14 @@ renderResponse.setTitle(journalEditDDMTemplateDisplayContext.getTitle());
 		}
 
 		return liferayTaglib;
-	}
+	};
 
 	var showLiferayTaglibWarningMessage = function() {
 		var basicInformationWarnings = document.getElementById('<portlet:namespace />basicInformationWarnings');
 
 		if (basicInformationWarnings) {
-			var warningMessage = '<div class="alert alert-dismissible alert-warning" role="alert">' +
+			var warningMessage =
+				'<div class="alert alert-dismissible alert-warning" role="alert">' +
 					'<button aria-label="<%= HtmlUtil.escapeJS(LanguageUtil.get(request, "close")) %>" class="close" data-dismiss="alert" type="button">' +
 						'<aui:icon image="times" markupView="lexicon" />' +
 						'<span class="sr-only"><%= HtmlUtil.escapeJS(LanguageUtil.get(request, "close")) %></span>' +
@@ -146,7 +147,7 @@ renderResponse.setTitle(journalEditDDMTemplateDisplayContext.getTitle());
 
 			basicInformationWarnings.innerHTML = warningMessage;
 		}
-	}
+	};
 
 	Liferay.after(
 		'<portlet:namespace />saveTemplate',
