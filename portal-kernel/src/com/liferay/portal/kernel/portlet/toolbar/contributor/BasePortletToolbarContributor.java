@@ -45,7 +45,9 @@ public abstract class BasePortletToolbarContributor
 
 		Group scopeGroup = themeDisplay.getScopeGroup();
 
-		if ((scopeGroup == null) || scopeGroup.isLayoutPrototype()) {
+		if ((scopeGroup == null) || scopeGroup.isCompany() ||
+			scopeGroup.isLayoutPrototype()) {
+
 			return Collections.emptyList();
 		}
 
