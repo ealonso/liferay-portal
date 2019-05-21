@@ -26,6 +26,9 @@ DDMStructure ddmStructure = journalEditDDMTemplateDisplayContext.getDDMStructure
 
 <aui:model-context bean="<%= ddmTemplate %>" model="<%= DDMTemplate.class %>" />
 
+<div id="<portlet:namespace />basicInformationWarnings">
+</div>
+
 <%
 StringBundler sb = new StringBundler(6);
 
