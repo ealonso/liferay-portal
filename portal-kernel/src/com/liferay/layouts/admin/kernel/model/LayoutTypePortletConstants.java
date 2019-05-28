@@ -66,6 +66,9 @@ public class LayoutTypePortletConstants
 
 	public static final String LINK_TO_LAYOUT_ID = "linkToLayoutId";
 
+	public static final String LINK_TO_LAYOUT_MOVE_PERMANENTLY =
+		"linkToLayoutMovePermanently";
+
 	public static final String MERGE_FAIL_COUNT = "merge-fail-count";
 
 	public static final String MODIFIED_DATE = "modifiedDate";

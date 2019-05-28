@@ -18,6 +18,7 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
 import com.liferay.layout.type.controller.link.to.page.internal.constants.LinkToPageLayoutTypeControllerWebKeys;
+import com.liferay.layouts.admin.kernel.model.LayoutTypePortletConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -53,6 +54,7 @@ public class LinkToPageLayoutTypeControllerDisplayContext {
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
+		_setMovePermanentlyLink();
 		_setSelectedLayout();
 	}
 
@@ -148,6 +150,22 @@ public class LinkToPageLayoutTypeControllerDisplayContext {
 		return ParamUtil.getString(_liferayPortletRequest, "layoutUuid");
 	}
 
+	public boolean isMovePermanentlyLink() {
+		return _movePermanentlyLink;
+	}
+
+	private void _setMovePermanentlyLink() {
+		Layout layout = (Layout)_liferayPortletRequest.getAttribute(
+			WebKeys.SEL_LAYOUT);
+
+		if (layout != null) {
+			_movePermanentlyLink = GetterUtil.getBoolean(
+				layout.getTypeSettingsProperty(
+					LayoutTypePortletConstants.
+						LINK_TO_LAYOUT_MOVE_PERMANENTLY));
+		}
+	}
+
 	private void _setSelectedLayout() {
 		Layout layout = (Layout)_liferayPortletRequest.getAttribute(
 			WebKeys.SEL_LAYOUT);
@@ -163,6 +181,7 @@ public class LinkToPageLayoutTypeControllerDisplayContext {
 
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private boolean _movePermanentlyLink;
 	private Layout _selectedLayout;
 
 }

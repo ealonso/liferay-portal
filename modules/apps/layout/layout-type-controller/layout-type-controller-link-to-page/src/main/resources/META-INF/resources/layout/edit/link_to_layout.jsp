@@ -62,3 +62,7 @@
 		}
 	</aui:script>
 </div>
+
+<div class="form-group">
+	<aui:input helpMessage="move-permanently-link-help-message" label="move-permanently-link" name="movePermanentlyLink" type="toggle-switch" value="<%= linkToPageLayoutTypeControllerDisplayContext.isMovePermanentlyLink() %>" />
+</div>

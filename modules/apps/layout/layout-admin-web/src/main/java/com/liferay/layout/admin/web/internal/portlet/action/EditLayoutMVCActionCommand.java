@@ -16,6 +16,7 @@ package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layouts.admin.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -100,6 +101,8 @@ public class EditLayoutMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "robots");
 		String type = ParamUtil.getString(uploadPortletRequest, "type");
 		boolean hidden = ParamUtil.getBoolean(uploadPortletRequest, "hidden");
+		boolean movePermanentlyLink = ParamUtil.getBoolean(
+			uploadPortletRequest, "movePermanentlyLink");
 		Map<Locale, String> friendlyURLMap =
 			LocalizationUtil.getLocalizationMap(actionRequest, "friendlyURL");
 		boolean deleteLogo = ParamUtil.getBoolean(actionRequest, "deleteLogo");
@@ -174,6 +177,10 @@ public class EditLayoutMVCActionCommand extends BaseMVCActionCommand {
 			formTypeSettingsProperties.put(
 				"linkToLayoutId", String.valueOf(linkToLayout.getLayoutId()));
 		}
+
+		formTypeSettingsProperties.put(
+			LayoutTypePortletConstants.LINK_TO_LAYOUT_MOVE_PERMANENTLY,
+			String.valueOf(movePermanentlyLink));
 
 		LayoutTypePortlet layoutTypePortlet =
 			(LayoutTypePortlet)layout.getLayoutType();
