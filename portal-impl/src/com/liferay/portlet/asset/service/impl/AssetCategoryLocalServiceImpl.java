@@ -99,10 +99,6 @@ public class AssetCategoryLocalServiceImpl
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
 
-		if (categoryProperties == null) {
-			categoryProperties = new String[0];
-		}
-
 		validate(0, parentCategoryId, name, vocabularyId);
 
 		AssetCategory parentCategory = null;
@@ -634,10 +630,6 @@ public class AssetCategoryLocalServiceImpl
 
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
-
-		if (categoryProperties == null) {
-			categoryProperties = new String[0];
-		}
 
 		validate(categoryId, parentCategoryId, name, vocabularyId);
 
