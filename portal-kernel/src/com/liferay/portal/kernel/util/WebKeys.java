@@ -205,6 +205,9 @@ public interface WebKeys {
 
 	public static final String FORWARD_URL = "FORWARD_URL";
 
+	public static final String FORWARD_URL_MOVE_PERMANENTLY =
+		"FORWARD_URL_MOVE_PERMANENTLY";
+
 	/**
 	 * @deprecated As of Judson (7.1.x), replaced by {@link
 	 *             com.liferay.taglib.util.FriendlyURLUtil.getFriendlyURL(

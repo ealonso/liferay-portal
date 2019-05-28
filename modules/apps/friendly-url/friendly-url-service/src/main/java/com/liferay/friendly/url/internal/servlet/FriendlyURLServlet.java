@@ -14,6 +14,7 @@
 
 package com.liferay.friendly.url.internal.servlet;
 
+import com.liferay.layouts.admin.kernel.model.LayoutTypePortletConstants;
 import com.liferay.petra.encryptor.Encryptor;
 import com.liferay.petra.encryptor.EncryptorException;
 import com.liferay.petra.lang.HashUtil;
@@ -194,6 +195,9 @@ public class FriendlyURLServlet extends HttpServlet {
 			Layout layout = layoutFriendlyURLSeparatorComposite.getLayout();
 
 			httpServletRequest.setAttribute(WebKeys.LAYOUT, layout);
+			httpServletRequest.setAttribute(
+				WebKeys.FORWARD_URL_MOVE_PERMANENTLY,
+				_isMovePermanentlyLink(layout));
 
 			String layoutFriendlyURLSeparatorCompositeFriendlyURL =
 				layoutFriendlyURLSeparatorComposite.getFriendlyURL();
@@ -615,6 +619,13 @@ public class FriendlyURLServlet extends HttpServlet {
 		}
 
 		return true;
+	}
+
+	private boolean _isMovePermanentlyLink(Layout layout) {
+		String movePermanentlyLink = layout.getTypeSettingsProperty(
+			LayoutTypePortletConstants.LINK_TO_LAYOUT_MOVE_PERMANENTLY);
+
+		return GetterUtil.getBoolean(movePermanentlyLink);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

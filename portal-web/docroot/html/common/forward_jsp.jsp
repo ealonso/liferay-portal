@@ -17,5 +17,11 @@
 <%@ include file="/html/common/forward_common.jsp" %>
 
 <%
-response.sendRedirect(forwardURL);
+if (GetterUtil.getBoolean(request.getAttribute(WebKeys.FORWARD_URL_MOVE_PERMANENTLY))) {
+	response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+	response.setHeader("Location", forwardURL);
+}
+else {
+	response.sendRedirect(forwardURL);
+}
 %>
