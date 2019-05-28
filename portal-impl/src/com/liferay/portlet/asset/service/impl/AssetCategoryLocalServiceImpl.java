@@ -23,6 +23,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
@@ -91,7 +92,12 @@ public class AssetCategoryLocalServiceImpl
 
 		User user = userLocalService.getUser(userId);
 
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		String name = titleMap.get(
+			LocaleUtil.fromLanguageId(defaultLanguageId));
 
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
@@ -150,7 +156,11 @@ public class AssetCategoryLocalServiceImpl
 
 		Map<Locale, String> titleMap = new HashMap<>();
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
 
 		titleMap.put(locale, title);
 
@@ -645,9 +655,6 @@ public class AssetCategoryLocalServiceImpl
 		if (parentCategoryId > 0) {
 			assetCategoryPersistence.findByPrimaryKey(parentCategoryId);
 		}
-
-		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
-			categoryId);
 
 		if (vocabularyId != category.getVocabularyId()) {
 			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
