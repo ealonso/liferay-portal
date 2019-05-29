@@ -106,7 +106,12 @@ public class AssetVocabularyLocalServiceImpl
 
 		User user = userLocalService.getUser(userId);
 
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		String name = titleMap.get(
+			LocaleUtil.fromLanguageId(defaultLanguageId));
 
 		validate(groupId, name);
 
@@ -157,7 +162,11 @@ public class AssetVocabularyLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
 
 		Map<Locale, String> titleMap = HashMapBuilder.put(
 			locale, title
@@ -168,7 +177,7 @@ public class AssetVocabularyLocalServiceImpl
 		).build();
 
 		return assetVocabularyLocalService.addVocabulary(
-			userId, groupId, title, titleMap, descriptionMap, null,
+			userId, groupId, null, titleMap, descriptionMap, null,
 			serviceContext);
 	}
 
