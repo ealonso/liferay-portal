@@ -3876,6 +3876,12 @@ public class PortletImpl extends PortletBaseImpl {
 
 				Map<String, Object> properties = new HashMap<>();
 
+				properties.put(
+					"com.liferay.portlet.control-panel-entry-category",
+					getControlPanelEntryCategory());
+				properties.put(
+					"com.liferay.portlet.control-panel-entry-weight",
+					getControlPanelEntryWeight());
 				properties.put("javax.portlet.name", getPortletName());
 
 				serviceRegistrar.registerService(
