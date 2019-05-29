@@ -76,8 +76,11 @@ public class AssetVocabularyLocalServiceImpl
 
 		Map<Locale, String> titleMap = new HashMap<>();
 
-		titleMap.put(
-			LocaleUtil.getSiteDefault(), PropsValues.ASSET_VOCABULARY_DEFAULT);
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
+
+		titleMap.put(locale, PropsValues.ASSET_VOCABULARY_DEFAULT);
 
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -101,7 +104,12 @@ public class AssetVocabularyLocalServiceImpl
 
 		User user = userLocalService.getUser(userId);
 
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		String name = titleMap.get(
+			LocaleUtil.fromLanguageId(defaultLanguageId));
 
 		validate(groupId, name);
 
@@ -154,7 +162,11 @@ public class AssetVocabularyLocalServiceImpl
 
 		Map<Locale, String> titleMap = new HashMap<>();
 
-		Locale locale = LocaleUtil.getSiteDefault();
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
 
 		titleMap.put(locale, title);
 
@@ -163,7 +175,7 @@ public class AssetVocabularyLocalServiceImpl
 		descriptionMap.put(locale, StringPool.BLANK);
 
 		return assetVocabularyLocalService.addVocabulary(
-			userId, groupId, title, titleMap, descriptionMap, null,
+			userId, groupId, null, titleMap, descriptionMap, null,
 			serviceContext);
 	}
 
