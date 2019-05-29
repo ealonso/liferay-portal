@@ -422,12 +422,17 @@ public class AssetVocabularyLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
-
 		AssetVocabulary vocabulary =
 			assetVocabularyPersistence.findByPrimaryKey(vocabularyId);
 
 		String vocabularyName = vocabulary.getName();
+
+		Group group = groupLocalService.getGroup(vocabulary.getGroupId());
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		String name = titleMap.get(
+			LocaleUtil.fromLanguageId(defaultLanguageId));
 
 		if (!vocabularyName.equals(name)) {
 			validate(vocabulary.getGroupId(), name);
