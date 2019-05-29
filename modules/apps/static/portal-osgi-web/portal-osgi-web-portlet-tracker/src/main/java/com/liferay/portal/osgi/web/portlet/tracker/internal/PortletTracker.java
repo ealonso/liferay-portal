@@ -609,6 +609,10 @@ public class PortletTracker
 
 		portletModel.setAutopropagatedParameters(autopropagatedParameters);
 
+		portletModel.setControlPanelEntryCategory(
+			GetterUtil.getString(
+				get(serviceReference, "control-panel-entry-category"),
+				portletModel.getControlPanelEntryCategory()));
 		portletModel.setControlPanelEntryWeight(
 			GetterUtil.getDouble(
 				get(serviceReference, "control-panel-entry-weight"),
