@@ -641,7 +641,17 @@ public class AssetCategoryLocalServiceImpl
 
 		// Category
 
-		String name = titleMap.get(LocaleUtil.getSiteDefault());
+		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
+			categoryId);
+
+		long groupId = category.getGroupId();
+
+		Group group = groupLocalService.getGroup(groupId);
+
+		String defaultLanguageId = group.getDefaultLanguageId();
+
+		String name = titleMap.get(
+			LocaleUtil.fromLanguageId(defaultLanguageId));
 
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
