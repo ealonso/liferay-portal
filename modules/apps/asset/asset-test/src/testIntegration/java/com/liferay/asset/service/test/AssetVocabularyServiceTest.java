@@ -50,6 +50,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.util.PropsValues;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -321,6 +322,10 @@ public class AssetVocabularyServiceTest {
 	@Test
 	public void testLocalizedSiteAddLocalizedVocabulary() throws Exception {
 		LocaleThreadLocal.setSiteDefaultLocale(LocaleUtil.SPAIN);
+
+		GroupTestUtil.updateDisplaySettings(
+			_group.getGroupId(), Collections.singletonList(LocaleUtil.SPAIN),
+			LocaleUtil.SPAIN);
 
 		String title = RandomTestUtil.randomString();
 
