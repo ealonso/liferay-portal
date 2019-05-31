@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,7 +85,7 @@ public class AssetVocabularyFixture {
 
 	public void updateDisplaySettings(Locale locale) throws Exception {
 		Group group = GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), null, locale);
+			_group.getGroupId(), Collections.singletonList(locale), locale);
 
 		_group.setModelAttributes(group.getModelAttributes());
 	}
