@@ -41,9 +41,9 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.facet.category.CategoryFacetFactory;
@@ -55,6 +55,7 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -128,6 +129,9 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 					setDefaultLocale(locale);
 				}
 			});
+
+		GroupTestUtil.updateDisplaySettings(
+			group.getGroupId(), Collections.singletonList(locale), locale);
 
 		AssetCategory assetCategory = addCategory(
 			group, addVocabulary(group), categoryTitleString, locale);
@@ -224,6 +228,9 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 				}
 			});
 
+		GroupTestUtil.updateDisplaySettings(
+			group.getGroupId(), Collections.singletonList(locale), locale);
+
 		AssetVocabulary assetVocabulary = addVocabulary(
 			group, vocabularyTitleString);
 
@@ -302,24 +309,15 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 			}
 		};
 
-		Locale previousLocale = LocaleThreadLocal.getSiteDefaultLocale();
+		AssetCategory assetCategory = assetCategoryLocalService.addCategory(
+			_user.getUserId(), group.getGroupId(),
+			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, titleMap,
+			new HashMap<>(), assetVocabulary.getVocabularyId(), new String[0],
+			serviceContext);
 
-		LocaleThreadLocal.setSiteDefaultLocale(locale);
+		_assetCategories.add(assetCategory);
 
-		try {
-			AssetCategory assetCategory = assetCategoryLocalService.addCategory(
-				_user.getUserId(), group.getGroupId(),
-				AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, titleMap,
-				new HashMap<>(), assetVocabulary.getVocabularyId(),
-				new String[0], serviceContext);
-
-			_assetCategories.add(assetCategory);
-
-			return assetCategory;
-		}
-		finally {
-			LocaleThreadLocal.setSiteDefaultLocale(previousLocale);
-		}
+		return assetCategory;
 	}
 
 	protected AssetVocabulary addVocabulary(Group group) throws Exception {
