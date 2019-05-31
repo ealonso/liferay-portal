@@ -17,7 +17,6 @@ package com.liferay.asset.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
@@ -38,10 +37,12 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -101,7 +102,8 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 		indexedFieldsFixture.postProcessDocument(document);
 
 		FieldValuesAssert.assertFieldValues(
-			_expectedFieldValues(assetVocabulary), document, searchTerm);
+			_expectedFieldValues(assetVocabulary, locale), document,
+			searchTerm);
 	}
 
 	protected void setTestLocale(Locale locale) throws Exception {
@@ -151,7 +153,7 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 	protected UserSearchFixture userSearchFixture;
 
 	private Map<String, String> _expectedFieldValues(
-			AssetVocabulary assetVocabulary)
+			AssetVocabulary assetVocabulary, Locale locale)
 		throws Exception {
 
 		Map<String, String> map = new HashMap<>();
@@ -187,7 +189,9 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 
 		_populateDates(assetVocabulary, map);
 		_populateRoles(assetVocabulary, map);
-		_populateLocalizedTitles(assetVocabulary.getTitle(), map);
+		_populateLocalizedTitles(
+			assetVocabulary.getTitle(locale), map,
+			Collections.singleton(locale));
 
 		return map;
 	}
@@ -202,11 +206,11 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 	}
 
 	private void _populateLocalizedTitles(
-		String title, Map<String, String> map) {
+		String title, Map<String, String> map, Set<Locale> locales) {
 
 		map.put("localized_title", title);
 
-		for (Locale locale : LanguageUtil.getAvailableLocales()) {
+		for (Locale locale : locales) {
 			StringBundler sb = new StringBundler(5);
 
 			sb.append("localized_title_");
