@@ -7,5 +7,3 @@ Export-Package:\
 	com.liferay.asset.link.model.adapter,\
 	com.liferay.asset.link.service,\
 	com.liferay.asset.link.service.persistence
-Liferay-Releng-Module-Group-Description:
-Liferay-Releng-Module-Group-Title: Asset
