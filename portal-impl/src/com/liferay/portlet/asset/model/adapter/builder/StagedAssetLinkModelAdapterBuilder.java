@@ -21,7 +21,7 @@ import com.liferay.portlet.asset.model.adapter.impl.StagedAssetLinkImpl;
 
 /**
  * @author Máté Thurzó
- * @deprecated As of 7.0.0, replaced by {@link
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
  *             com.liferay.asset.link.model.adapter.builder.StagedAssetLinkModelAdapterBuilder}
  */
 @Deprecated
