@@ -167,10 +167,6 @@ public abstract class JournalFolderServiceBaseImpl
 		assetEntryService;
 
 	@Reference
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService
-		assetLinkLocalService;
-
-	@Reference
 	protected com.liferay.expando.kernel.service.ExpandoValueLocalService
 		expandoValueLocalService;
 

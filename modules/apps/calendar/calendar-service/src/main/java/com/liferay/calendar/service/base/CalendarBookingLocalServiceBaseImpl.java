@@ -658,10 +658,6 @@ public abstract class CalendarBookingLocalServiceBaseImpl
 		assetEntryLocalService;
 
 	@Reference
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService
-		assetLinkLocalService;
-
-	@Reference
 	protected com.liferay.ratings.kernel.service.RatingsStatsLocalService
 		ratingsStatsLocalService;
 

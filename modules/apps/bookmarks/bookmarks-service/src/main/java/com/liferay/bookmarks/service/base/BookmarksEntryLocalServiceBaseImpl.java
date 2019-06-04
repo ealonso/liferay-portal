@@ -629,10 +629,6 @@ public abstract class BookmarksEntryLocalServiceBaseImpl
 		assetEntryLocalService;
 
 	@Reference
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService
-		assetLinkLocalService;
-
-	@Reference
 	protected com.liferay.expando.kernel.service.ExpandoRowLocalService
 		expandoRowLocalService;
 

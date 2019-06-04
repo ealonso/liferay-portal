@@ -191,10 +191,6 @@ public abstract class JournalArticleServiceBaseImpl
 		assetEntryService;
 
 	@Reference
-	protected com.liferay.asset.kernel.service.AssetLinkLocalService
-		assetLinkLocalService;
-
-	@Reference
 	protected com.liferay.asset.kernel.service.AssetTagLocalService
 		assetTagLocalService;
 
