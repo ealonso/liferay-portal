@@ -27,18 +27,17 @@
 	</sql>
 	<sql id="com.liferay.asset.link.service.persistence.AssetLinkFinder.findByC_C">
 		<![CDATA[
-			(
-				SELECT
-					AssetLink.*
-				FROM
-					AssetEntry
-				INNER JOIN
-					AssetLink ON
-						AssetEntry.entryId = AssetLink.entryId1
-				WHERE
-					(AssetEntry.classNameId = ?) AND
-					(AssetEntry.classPK = ?)
-			) UNION
+			SELECT
+				AssetLink.*
+			FROM
+				AssetEntry
+			INNER JOIN
+				AssetLink ON
+					AssetEntry.entryId = AssetLink.entryId1
+			WHERE
+				(AssetEntry.classNameId = ?) AND
+				(AssetEntry.classPK = ?)
+			UNION
 			(
 				SELECT
 					AssetLink.*
