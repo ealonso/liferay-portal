@@ -429,15 +429,15 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 	}
 
 	protected void addDeletionSystemEvent(AssetLink assetLink) {
-		StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
-			assetLink, AssetLink.class, StagedAssetLink.class);
-
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
 			assetLink.getEntryId1());
 
 		if (assetEntry == null) {
 			return;
 		}
+
+		StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
+			assetLink, AssetLink.class, StagedAssetLink.class);
 
 		StagedModelType stagedModelType = stagedAssetLink.getStagedModelType();
 
