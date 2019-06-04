@@ -432,14 +432,14 @@ public class AssetLinkLocalServiceImpl extends AssetLinkLocalServiceBaseImpl {
 		StagedAssetLink stagedAssetLink = ModelAdapterUtil.adapt(
 			assetLink, AssetLink.class, StagedAssetLink.class);
 
-		StagedModelType stagedModelType = stagedAssetLink.getStagedModelType();
-
 		AssetEntry assetEntry = assetEntryLocalService.fetchEntry(
 			assetLink.getEntryId1());
 
 		if (assetEntry == null) {
 			return;
 		}
+
+		StagedModelType stagedModelType = stagedAssetLink.getStagedModelType();
 
 		try {
 			systemEventLocalService.addSystemEvent(
