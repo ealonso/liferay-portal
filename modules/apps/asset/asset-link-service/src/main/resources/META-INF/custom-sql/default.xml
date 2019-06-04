@@ -38,7 +38,6 @@
 				(AssetEntry.classNameId = ?) AND
 				(AssetEntry.classPK = ?)
 			UNION
-			(
 				SELECT
 					AssetLink.*
 				FROM
@@ -49,7 +48,6 @@
 				WHERE
 					(AssetEntry.classNameId = ?) AND
 					(AssetEntry.classPK = ?)
-			)
 	]]>
 	</sql>
 </custom-sql>
