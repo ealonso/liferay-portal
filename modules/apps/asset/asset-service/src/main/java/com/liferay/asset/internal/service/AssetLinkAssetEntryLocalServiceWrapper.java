@@ -97,11 +97,10 @@ public class AssetLinkAssetEntryLocalServiceWrapper
 				if ((i + 1) >= links.size()) {
 					throw new NoSuchEntryException("{entryId=" + entryId + "}");
 				}
-				else {
-					AssetLink nextLink = links.get(i + 1);
 
-					return getEntry(nextLink.getEntryId2());
-				}
+				AssetLink nextLink = links.get(i + 1);
+
+				return getEntry(nextLink.getEntryId2());
 			}
 		}
 
@@ -136,11 +135,10 @@ public class AssetLinkAssetEntryLocalServiceWrapper
 				if (i == 0) {
 					throw new NoSuchEntryException("{entryId=" + entryId + "}");
 				}
-				else {
-					AssetLink nextAssetLink = links.get(i - 1);
 
-					return getEntry(nextAssetLink.getEntryId2());
-				}
+				AssetLink nextAssetLink = links.get(i - 1);
+
+				return getEntry(nextAssetLink.getEntryId2());
 			}
 		}
 
