@@ -189,6 +189,23 @@ public class JournalEditArticleDisplayContext {
 		return _classPK;
 	}
 
+	public Map<String, Object> getComponentContext() {
+		Map<String, Object> componentContext = new HashMap<>();
+
+		PortletURL resetValuesDDMStructureURL =
+			_liferayPortletResponse.createActionURL();
+
+		resetValuesDDMStructureURL.setParameter(
+			"", "/journal/reset_values_ddm_structure");
+		resetValuesDDMStructureURL.setParameter(
+			"mvcPath", "/edit_ddm_structure.jsp");
+
+		componentContext.put(
+			"resetValuesDDMStructureURL", resetValuesDDMStructureURL);
+
+		return componentContext;
+	}
+
 	public DDMFormValues getDDMFormValues(DDMStructure ddmStructure)
 		throws PortalException {
 

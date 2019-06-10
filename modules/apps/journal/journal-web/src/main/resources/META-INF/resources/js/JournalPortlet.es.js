@@ -107,6 +107,25 @@ class JournalPortlet extends PortletBase {
 	}
 
 	/**
+	 * @private
+	 */
+	_resetValuesDDMStructure() {
+		if (
+			confirm(
+				Liferay.Language.get(
+					'are-you-sure-you-want-to-reset-the-default-values'
+				)
+			)
+		) {
+			const form = this._getInputByName(this.ns('fm1'));
+
+			if (form) {
+				submitForm(form, this.resetValuesDDMStructureURL);
+			}
+		}
+	}
+
+	/**
 	 * Prepare action and articleId inputs to submit form
 	 * @param {string} actionName
 	 */
