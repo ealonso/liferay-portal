@@ -1143,10 +1143,6 @@ public class JournalDisplayContext {
 	}
 
 	public boolean isShowInfoButton() {
-		if (Validator.isNotNull(getDDMStructureKey())) {
-			return false;
-		}
-
 		if (isNavigationMine()) {
 			return false;
 		}
