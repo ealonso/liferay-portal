@@ -313,6 +313,37 @@ const INITIAL_STATE = {
 	fragmentEditorEnabled: Config.string().value(''),
 
 	/**
+	 * List of fragment entries configuration
+	 * @default {}
+	 * @review
+	 * @type {object}
+	 */
+	fragmentEntriesConfiguration: Config.objectOf(
+		Config.shapeOf({
+			fieldSets: Config.arrayOf(
+				Config.shapeOf({
+					name: Config.string().required(),
+					label: Config.string().required(),
+					fields: Config.arrayOf(
+						Config.shapeOf({
+							name: Config.string().required(),
+							label: Config.string().required(),
+							description: Config.string().value(''),
+							type: Config.string().required(),
+							dataType: Config.string().required(),
+							defaultValue: Config.string().required(),
+							typeOptions: Config.objectOf(
+								Config.shapeOf({
+									validValues: Config.array()
+								})
+							)
+						})
+					).required()
+				})
+			)
+		})
+	),
+	/**
 	 * List of fragment instances being used.
 	 * @default {}
 	 * @review
