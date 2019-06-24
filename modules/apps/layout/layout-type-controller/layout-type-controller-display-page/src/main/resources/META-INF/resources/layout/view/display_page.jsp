@@ -73,9 +73,7 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 			</c:when>
 			<c:when test="<%= displayPageLayoutTypeControllerDisplayContext.getStructureJSONArray() != null %>">
 				<liferay-layout:render-fragment-layout
-					fieldValues="<%= displayPageLayoutTypeControllerDisplayContext.getInfoDisplayFieldsValues() %>"
-					mode="<%= FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE %>"
-					segmentsExperienceIds="<%= displayPageLayoutTypeControllerDisplayContext.getSegmentExperienceIds() %>"
+					fragmentRendererContext="<%= displayPageLayoutTypeControllerDisplayContext.getFragmentRendererContext() %>"
 					structureJSONArray="<%= displayPageLayoutTypeControllerDisplayContext.getStructureJSONArray() %>"
 				/>
 			</c:when>

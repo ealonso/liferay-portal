@@ -20,11 +20,14 @@
 page import="com.liferay.fragment.constants.FragmentConstants" %><%@
 page import="com.liferay.fragment.model.FragmentEntryLink" %><%@
 page import="com.liferay.fragment.renderer.DefaultFragmentRendererContext" %><%@
+page import="com.liferay.fragment.renderer.FragmentRendererContext" %><%@
 page import="com.liferay.fragment.renderer.FragmentRendererController" %><%@
 page import="com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.json.JSONObject" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %>
 
-<%@ page import="java.util.Map" %><%@
-page import="java.util.Objects" %>
+<%@ page import="java.util.Collections" %><%@
+page import="java.util.Map" %><%@
+page import="java.util.Objects" %><%@
+page import="java.util.Optional" %>

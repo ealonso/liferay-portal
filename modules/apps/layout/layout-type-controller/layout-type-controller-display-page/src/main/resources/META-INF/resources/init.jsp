@@ -23,9 +23,6 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.asset.kernel.model.AssetRendererFactory" %><%@
-page import="com.liferay.fragment.constants.FragmentActionKeys" %><%@
-page import="com.liferay.fragment.constants.FragmentConstants" %><%@
-page import="com.liferay.fragment.constants.FragmentEntryLinkConstants" %><%@
 page import="com.liferay.info.display.contributor.InfoDisplayObjectProvider" %><%@
 page import="com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys" %><%@
 page import="com.liferay.layout.type.controller.display.page.internal.display.context.DisplayPageLayoutTypeControllerDisplayContext" %><%@

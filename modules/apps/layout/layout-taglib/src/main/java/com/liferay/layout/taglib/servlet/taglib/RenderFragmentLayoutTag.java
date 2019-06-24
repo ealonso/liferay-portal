@@ -14,11 +14,10 @@
 
 package com.liferay.layout.taglib.servlet.taglib;
 
+import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.taglib.util.IncludeTag;
-
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -28,36 +27,18 @@ import javax.servlet.jsp.PageContext;
  */
 public class RenderFragmentLayoutTag extends IncludeTag {
 
-	public Map<String, Object> getFieldValues() {
-		return _fieldValues;
-	}
-
-	public String getMode() {
-		return _mode;
-	}
-
-	public long getPreviewClassPK() {
-		return _previewClassPK;
-	}
-
-	public int getPreviewType() {
-		return _previewType;
-	}
-
-	public long[] getSegmentsExperienceIds() {
-		return _segmentsExperienceIds;
+	public FragmentRendererContext getFragmentRendererContext() {
+		return _fragmentRendererContext;
 	}
 
 	public JSONArray getStructureJSONArray() {
 		return _structureJSONArray;
 	}
 
-	public void setFieldValues(Map<String, Object> fieldValues) {
-		_fieldValues = fieldValues;
-	}
+	public void setFragmentRendererContext(
+		FragmentRendererContext fragmentRendererContext) {
 
-	public void setMode(String mode) {
-		_mode = mode;
+		_fragmentRendererContext = fragmentRendererContext;
 	}
 
 	@Override
@@ -65,18 +46,6 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 		super.setPageContext(pageContext);
 
 		servletContext = ServletContextUtil.getServletContext();
-	}
-
-	public void setPreviewClassPK(long previewClassPK) {
-		_previewClassPK = previewClassPK;
-	}
-
-	public void setPreviewType(int previewType) {
-		_previewType = previewType;
-	}
-
-	public void setSegmentsExperienceIds(long[] segmentsExperienceIds) {
-		_segmentsExperienceIds = segmentsExperienceIds;
 	}
 
 	public void setStructureJSONArray(JSONArray structureJSONArray) {
@@ -87,11 +56,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 	protected void cleanUp() {
 		super.cleanUp();
 
-		_fieldValues = null;
-		_mode = null;
-		_previewClassPK = 0;
-		_previewType = 0;
-		_segmentsExperienceIds = null;
+		_fragmentRendererContext = null;
 		_structureJSONArray = null;
 	}
 
@@ -105,16 +70,8 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 		super.setAttributes(httpServletRequest);
 
 		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:fieldValues", _fieldValues);
-		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:mode", _mode);
-		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:previewClassPK", _previewClassPK);
-		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:previewType", _previewType);
-		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:segmentsExperienceIds",
-			_segmentsExperienceIds);
+			"liferay-layout:render-fragment-layout:fragmentRendererContext",
+			_fragmentRendererContext);
 		httpServletRequest.setAttribute(
 			"liferay-layout:render-fragment-layout:structureJSONArray",
 			_structureJSONArray);
@@ -122,11 +79,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 
 	private static final String _PAGE = "/render_fragment_layout/page.jsp";
 
-	private Map<String, Object> _fieldValues;
-	private String _mode;
-	private long _previewClassPK;
-	private int _previewType;
-	private long[] _segmentsExperienceIds;
+	private FragmentRendererContext _fragmentRendererContext;
 	private JSONArray _structureJSONArray;
 
 }

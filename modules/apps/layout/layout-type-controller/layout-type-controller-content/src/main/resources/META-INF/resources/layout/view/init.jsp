@@ -20,9 +20,10 @@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.fragment.constants.FragmentEntryLinkConstants" %><%@
+<%@ page import="com.liferay.fragment.renderer.FragmentRendererContext" %><%@
 page import="com.liferay.layout.page.template.model.LayoutPageTemplateStructure" %><%@
 page import="com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil" %><%@
+page import="com.liferay.layout.type.controller.content.internal.fragment.renderer.context.ContentPageFragmentRendererContext" %><%@
 page import="com.liferay.portal.kernel.json.JSONArray" %><%@
 page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.json.JSONObject" %><%@

@@ -17,13 +17,10 @@
 <%@ include file="/render_fragment_layout/init.jsp" %>
 
 <%
-Map<String, Object> fieldValues = (Map<String, Object>)request.getAttribute("liferay-layout:render-fragment-layout:fieldValues");
-String mode = (String)request.getAttribute("liferay-layout:render-fragment-layout:mode");
-long previewClassPK = (long)request.getAttribute("liferay-layout:render-fragment-layout:previewClassPK");
-int previewType = (int)request.getAttribute("liferay-layout:render-fragment-layout:previewType");
-long[] segmentsExperienceIds = (long[])request.getAttribute("liferay-layout:render-fragment-layout:segmentsExperienceIds");
+FragmentRendererContext fragmentRendererContext = (FragmentRendererContext)request.getAttribute("liferay-layout:render-fragment-layout:fragmentRendererContext");
 JSONArray structureJSONArray = (JSONArray)request.getAttribute("liferay-layout:render-fragment-layout:structureJSONArray");
 %>
+
 <c:if test="<%= structureJSONArray != null %>">
 	<div class="layout-content" id="main-content" role="main">
 
@@ -91,12 +88,15 @@ JSONArray structureJSONArray = (JSONArray)request.getAttribute("liferay-layout:r
 
 											DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
 
-											defaultFragmentRendererContext.setFieldValues(fieldValues);
+											Optional<Map<String, Object>>
+												fieldValuesOptional = fragmentRendererContext.getFieldValuesOptional();
+
+											defaultFragmentRendererContext.setFieldValues(fieldValuesOptional.orElse(Collections.emptyMap()));
 											defaultFragmentRendererContext.setLocale(locale);
-											defaultFragmentRendererContext.setMode(mode);
-											defaultFragmentRendererContext.setPreviewClassPK(previewClassPK);
-											defaultFragmentRendererContext.setPreviewType(previewType);
-											defaultFragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
+											defaultFragmentRendererContext.setMode(fragmentRendererContext.getMode());
+											defaultFragmentRendererContext.setPreviewClassPK(fragmentRendererContext.getPreviewClassPK());
+											defaultFragmentRendererContext.setPreviewType(fragmentRendererContext.getPreviewType());
+											defaultFragmentRendererContext.setSegmentsExperienceIds(fragmentRendererContext.getSegmentsExperienceIds());
 										%>
 
 											<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
@@ -147,12 +147,15 @@ JSONArray structureJSONArray = (JSONArray)request.getAttribute("liferay-layout:r
 
 								DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
 
-								defaultFragmentRendererContext.setFieldValues(fieldValues);
+								Optional<Map<String, Object>>
+									fieldValuesOptional = fragmentRendererContext.getFieldValuesOptional();
+
+								defaultFragmentRendererContext.setFieldValues(fieldValuesOptional.orElse(Collections.emptyMap()));
 								defaultFragmentRendererContext.setLocale(locale);
-								defaultFragmentRendererContext.setMode(mode);
-								defaultFragmentRendererContext.setPreviewClassPK(previewClassPK);
-								defaultFragmentRendererContext.setPreviewType(previewType);
-								defaultFragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
+								defaultFragmentRendererContext.setMode(fragmentRendererContext.getMode());
+								defaultFragmentRendererContext.setPreviewClassPK(fragmentRendererContext.getPreviewClassPK());
+								defaultFragmentRendererContext.setPreviewType(fragmentRendererContext.getPreviewType());
+								defaultFragmentRendererContext.setSegmentsExperienceIds(fragmentRendererContext.getSegmentsExperienceIds());
 						%>
 
 								<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
