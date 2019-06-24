@@ -49,6 +49,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.editor.configuration.EditorConfiguration;
 import com.liferay.portal.kernel.editor.configuration.EditorConfigurationFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -203,6 +204,8 @@ public class ContentPageEditorDisplayContext {
 		).put(
 			"elements",
 			_getFragmentCollectionsSoyContexts(FragmentConstants.TYPE_COMPONENT)
+		).put(
+			"fragmentEntriesConfiguration", _getFragmentEntriesConfiguration()
 		).put(
 			"fragmentEntryLinks", _getFragmentEntryLinksSoyContext()
 		);
@@ -701,6 +704,29 @@ public class ContentPageEditorDisplayContext {
 		soyContexts.addAll(_getDynamicFragmentsSoyContexts(type));
 
 		return soyContexts;
+	}
+
+	private SoyContext _getFragmentEntriesConfiguration() throws JSONException {
+		SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
+
+		List<FragmentCollection> fragmentCollections =
+			FragmentCollectionServiceUtil.getFragmentCollections(getGroupId());
+
+		for (FragmentCollection fragmentCollection : fragmentCollections) {
+			List<FragmentEntry> fragmentEntries =
+				FragmentEntryServiceUtil.getFragmentEntries(
+					getGroupId(), fragmentCollection.getFragmentCollectionId(),
+					WorkflowConstants.STATUS_APPROVED);
+
+			for (FragmentEntry fragmentEntry : fragmentEntries) {
+				soyContext.put(
+					fragmentEntry.getFragmentEntryKey(),
+					JSONFactoryUtil.createJSONObject(
+						fragmentEntry.getConfiguration()));
+			}
+		}
+
+		return soyContext;
 	}
 
 	private List<SoyContext> _getFragmentEntriesSoyContexts(
