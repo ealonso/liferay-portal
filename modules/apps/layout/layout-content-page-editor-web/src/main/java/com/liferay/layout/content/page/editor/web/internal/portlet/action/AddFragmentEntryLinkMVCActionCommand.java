@@ -103,8 +103,8 @@ public class AddFragmentEntryLinkMVCActionCommand extends BaseMVCActionCommand {
 				serviceContext.getScopeGroupId(), 0,
 				fragmentEntry.getFragmentEntryId(), classNameId, classPK,
 				fragmentEntry.getCss(), fragmentEntry.getHtml(),
-				fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
-				null, StringPool.BLANK, 0, contributedRendererKey, serviceContext);
+				fragmentEntry.getJs(), fragmentEntry.getConfiguration(), null,
+				StringPool.BLANK, 0, contributedRendererKey, serviceContext);
 		}
 		else {
 			fragmentEntryLink = _fragmentEntryLinkService.addFragmentEntryLink(
