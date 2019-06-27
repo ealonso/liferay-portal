@@ -113,31 +113,15 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	@Override
+	public JSONObject getDefaultEditableValuesJSONObject(
+		FragmentEntryLink fragmentEntryLink) {
+
+		return _getDefaultEditableValuesJSONObject(fragmentEntryLink.getHtml());
+	}
+
+	@Override
 	public JSONObject getDefaultEditableValuesJSONObject(String html) {
-		JSONObject defaultEditableValuesJSONObject =
-			JSONFactoryUtil.createJSONObject();
-
-		Document document = _getDocument(html);
-
-		for (Element element : document.select("lfr-editable")) {
-			EditableElementParser editableElementParser =
-				_editableElementParsers.get(element.attr("type"));
-
-			if (editableElementParser == null) {
-				continue;
-			}
-
-			JSONObject defaultValueJSONObject = JSONUtil.put(
-				"config", editableElementParser.getAttributes(element)
-			).put(
-				"defaultValue", editableElementParser.getValue(element)
-			);
-
-			defaultEditableValuesJSONObject.put(
-				element.attr("id"), defaultValueJSONObject);
-		}
-
-		return defaultEditableValuesJSONObject;
+		return _getDefaultEditableValuesJSONObject(html);
 	}
 
 	@Override
@@ -154,8 +138,7 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			jsonObject.put(
 				clazz.getName(),
-				getDefaultEditableValuesJSONObject(
-					fragmentEntryLink.getHtml()));
+				getDefaultEditableValuesJSONObject(fragmentEntryLink));
 		}
 
 		Document document = _getDocument(html);
@@ -337,6 +320,33 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 		_validateAttributes(html);
 		_validateDuplicatedIds(html);
 		_validateEditableElements(html);
+	}
+
+	private JSONObject _getDefaultEditableValuesJSONObject(String html) {
+		JSONObject defaultEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		Document document = _getDocument(html);
+
+		for (Element element : document.select("lfr-editable")) {
+			EditableElementParser editableElementParser =
+				_editableElementParsers.get(element.attr("type"));
+
+			if (editableElementParser == null) {
+				continue;
+			}
+
+			JSONObject defaultValueJSONObject = JSONUtil.put(
+				"config", editableElementParser.getAttributes(element)
+			).put(
+				"defaultValue", editableElementParser.getValue(element)
+			);
+
+			defaultEditableValuesJSONObject.put(
+				element.attr("id"), defaultValueJSONObject);
+		}
+
+		return defaultEditableValuesJSONObject;
 	}
 
 	private Document _getDocument(String html) {
