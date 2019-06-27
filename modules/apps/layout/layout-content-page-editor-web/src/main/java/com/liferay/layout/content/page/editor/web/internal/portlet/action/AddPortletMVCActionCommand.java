@@ -123,9 +123,17 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 				_portal.getHttpServletResponse(actionResponse), portletId,
 				instanceId);
 
+			FragmentEntryLink fragmentEntryLink =
+				_fragmentEntryLinkLocalService.addFragmentEntryLink(
+					serviceContext.getUserId(),
+					serviceContext.getScopeGroupId(), 0, 0, classNameId,
+					classPK, StringPool.BLANK, html, StringPool.BLANK,
+					StringPool.BLANK, StringPool.BLANK, 0, null,
+					serviceContext);
+
 			JSONObject editableValueJSONObject =
 				_fragmentEntryProcessorRegistry.
-					getDefaultEditableValuesJSONObject(html);
+					getDefaultEditableValuesJSONObject(fragmentEntryLink);
 
 			editableValueJSONObject.put(
 				"instanceId", instanceId
@@ -133,13 +141,11 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 				"portletId", portletId
 			);
 
-			FragmentEntryLink fragmentEntryLink =
-				_fragmentEntryLinkLocalService.addFragmentEntryLink(
-					serviceContext.getUserId(),
-					serviceContext.getScopeGroupId(), 0, 0, classNameId,
-					classPK, StringPool.BLANK, html, StringPool.BLANK,
-					StringPool.BLANK, editableValueJSONObject.toString(),
-					StringPool.BLANK, 0, null, serviceContext);
+			fragmentEntryLink.setEditableValues(
+				editableValueJSONObject.toString());
+
+			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
+				fragmentEntryLink);
 
 			DefaultFragmentRendererContext defaultFragmentRendererContext =
 				new DefaultFragmentRendererContext(fragmentEntryLink);
