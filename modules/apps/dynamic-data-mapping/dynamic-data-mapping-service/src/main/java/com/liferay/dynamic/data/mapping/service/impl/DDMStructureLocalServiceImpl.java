@@ -1877,6 +1877,7 @@ public class DDMStructureLocalServiceImpl
 		structure.setVersionUserId(user.getUserId());
 		structure.setVersionUserName(user.getFullName());
 		structure.setDescriptionMap(descriptionMap, ddmForm.getDefaultLocale());
+		structure.setModifiedDate(new Date());
 		structure.setDefinition(serializeJSONDDMForm(ddmForm));
 
 		// Structure version
