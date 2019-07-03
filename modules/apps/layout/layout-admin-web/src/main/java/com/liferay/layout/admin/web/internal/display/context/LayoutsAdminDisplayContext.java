@@ -95,6 +95,7 @@ import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
+import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -398,6 +399,23 @@ public class LayoutsAdminDisplayContext {
 
 		return HttpUtil.setParameter(
 			layoutFullURL, "p_l_back_url", _themeDisplay.getURLCurrent());
+	}
+
+	public String getExportLayoutDataURL(Layout layout) {
+		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_CONTENT)) {
+			return StringPool.BLANK;
+		}
+
+		ResourceURL exportLayoutDataURL =
+			_liferayPortletResponse.createResourceURL();
+
+		exportLayoutDataURL.setParameter(
+			"groupId", String.valueOf(_themeDisplay.getScopeGroupId()));
+		exportLayoutDataURL.setParameter(
+			"plid", String.valueOf(layout.getPlid()));
+		exportLayoutDataURL.setResourceID("/layout/export_layout_data");
+
+		return exportLayoutDataURL.toString();
 	}
 
 	public String getFirstColumnConfigureLayoutURL(boolean privatePages) {
@@ -1401,7 +1419,11 @@ public class LayoutsAdminDisplayContext {
 			jsonObject.put("permissionsURL", getPermissionsURL(layout));
 		}
 
-		jsonObject.put("viewLayoutURL", getViewLayoutURL(layout));
+		jsonObject.put(
+			"exportLayoutDataURL", getExportLayoutDataURL(layout)
+		).put(
+			"viewLayoutURL", getViewLayoutURL(layout)
+		);
 
 		return jsonObject;
 	}
