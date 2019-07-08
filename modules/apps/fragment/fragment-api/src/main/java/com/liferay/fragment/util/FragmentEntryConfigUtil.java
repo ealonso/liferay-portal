@@ -334,9 +334,6 @@ public class FragmentEntryConfigUtil {
 			JSONObject outputFieldSetValuesJSONObject =
 				JSONFactoryUtil.createJSONObject();
 
-			outputConfigurationValuesJSONObject.put(
-				fieldSetName, outputFieldSetValuesJSONObject);
-
 			if (Validator.isNull(
 					configurationValuesJSONObject.get(fieldSetName))) {
 
@@ -370,6 +367,8 @@ public class FragmentEntryConfigUtil {
 					JSONUtil.toStringList(
 						configurationValidValuesFieldSetFieldJSONArray);
 
+				Object outputValue = null;
+
 				if (Validator.isNull(fieldSetValuesJSONObject.get(fieldKey)) ||
 					!_hasDataType(
 						configurationDataTypesFieldSetJSONObject.getString(
@@ -381,13 +380,24 @@ public class FragmentEntryConfigUtil {
 						defaultValuesFieldSetJSONObject.get(fieldKey))) {
 
 					if (includeDefault) {
-						outputFieldSetValuesJSONObject.put(
-							fieldKey,
-							defaultValuesFieldSetJSONObject.get(fieldKey));
+						outputValue = defaultValuesFieldSetJSONObject.get(
+							fieldKey);
 					}
 				}
 				else {
-					outputFieldSetValuesJSONObject.put(fieldKey, value);
+					outputValue = value;
+				}
+
+				if (outputValue != null) {
+					outputFieldSetValuesJSONObject.put(fieldKey, outputValue);
+
+					if (Validator.isNull(
+							outputConfigurationValuesJSONObject.get(
+								fieldSetName))) {
+
+						outputConfigurationValuesJSONObject.put(
+							fieldSetName, outputFieldSetValuesJSONObject);
+					}
 				}
 			}
 		}
