@@ -409,6 +409,103 @@ public class FragmentEntryConfigUtilTest {
 			configurationValuesJSONObject.toJSONString());
 	}
 
+	@Test
+	public void testGetEditableValuesJSONObjectFieldMissingNondefaultInvalidOptionNullInvalidName()
+		throws Exception {
+
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent(
+					"editable-values-field-missing-non-default-invalid-" +
+						"option-null-invalid-name.json"));
+
+		JSONObject expectedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent(
+					"expected-editable-values-field-missing-non-default-" +
+						"invalid-option-null-invalid-name.json"));
+
+		Assert.assertEquals(
+			expectedEditableValuesJSONObject.toJSONString(),
+			editableValuesJSONObject.toJSONString());
+	}
+
+	@Test
+	public void testGetEditableValuesJSONObjectFieldSegmentExperienceId0And1Empty()
+		throws Exception {
+
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent(
+					"editable-values-segments-experience-id-0-1-empty.json"));
+
+		JSONObject expectedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent(
+					"expected-editable-values-segments-experience-id-0-1-" +
+						"default.json"));
+
+		Assert.assertEquals(
+			expectedEditableValuesJSONObject.toJSONString(),
+			editableValuesJSONObject.toJSONString());
+	}
+
+	@Test
+	public void testGetEditableValuesJSONObjectFieldSegmentExperienceId0Empty()
+		throws Exception {
+
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent(
+					"editable-values-segments-experience-id-0-empty.json"));
+
+		JSONObject expectedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent("expected-editable-values-default.json"));
+
+		Assert.assertEquals(
+			expectedEditableValuesJSONObject.toJSONString(),
+			editableValuesJSONObject.toJSONString());
+	}
+
+	@Test
+	public void testGetEditableValuesJSONObjectNondefault() throws Exception {
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent("editable-values-field-non-default.json"));
+
+		JSONObject expectedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent("expected-editable-values-non-default.json"));
+
+		Assert.assertEquals(
+			expectedEditableValuesJSONObject.toJSONString(),
+			editableValuesJSONObject.toJSONString());
+	}
+
+	@Test
+	public void testGetEditableValuesJSONObjectOtherProcessors()
+		throws Exception {
+
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent("editable-values-other-processors.json"));
+
+		JSONObject expectedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent(
+					"expected-editable-values-other-processors.json"));
+
+		Assert.assertEquals(
+			expectedEditableValuesJSONObject.toJSONString(),
+			editableValuesJSONObject.toJSONString());
+	}
+
 	private String _getFileContent(String fileName) throws Exception {
 		return new String(
 			FileUtil.getBytes(getClass(), "dependencies/" + fileName));
