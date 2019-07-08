@@ -66,7 +66,7 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject configurationValuesJSONObject =
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"), StringPool.BLANK,
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -81,7 +81,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				StringPool.BLANK,
 				_getFileContent("editable-values-default.json"),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals("{}", configurationValuesJSONObject.toJSONString());
 	}
@@ -93,7 +93,7 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject configurationValuesJSONObject =
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				null, _getFileContent("editable-values-default.json"),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals("{}", configurationValuesJSONObject.toJSONString());
 	}
@@ -110,7 +110,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -129,7 +129,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -150,7 +150,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -171,7 +171,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -192,7 +192,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -217,7 +217,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -239,7 +239,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -260,7 +260,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -281,7 +281,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -301,7 +301,7 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject configurationValuesJSONObject =
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
-				_getFileContent(fileName), 10);
+				_getFileContent(fileName), 10, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -322,7 +322,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -343,7 +343,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -364,7 +364,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -386,7 +386,7 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(fileName),
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -402,7 +402,7 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject configurationValuesJSONObject =
 			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
 				_getFileContent("configuration.json"), null,
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
 
 		Assert.assertEquals(
 			configurationDefaultValuesJSONObject.toJSONString(),
@@ -418,7 +418,8 @@ public class FragmentEntryConfigUtilTest {
 				_getFileContent("configuration.json"),
 				_getFileContent(
 					"editable-values-field-missing-non-default-invalid-" +
-						"option-null-invalid-name.json"));
+						"option-null-invalid-name.json"),
+				true);
 
 		JSONObject expectedEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject(
@@ -439,7 +440,8 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getEditableValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(
-					"editable-values-segments-experience-id-0-1-empty.json"));
+					"editable-values-segments-experience-id-0-1-empty.json"),
+				true);
 
 		JSONObject expectedEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject(
@@ -460,7 +462,8 @@ public class FragmentEntryConfigUtilTest {
 			FragmentEntryConfigUtil.getEditableValuesJSONObject(
 				_getFileContent("configuration.json"),
 				_getFileContent(
-					"editable-values-segments-experience-id-0-empty.json"));
+					"editable-values-segments-experience-id-0-empty.json"),
+				true);
 
 		JSONObject expectedEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject(
@@ -476,7 +479,8 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject editableValuesJSONObject =
 			FragmentEntryConfigUtil.getEditableValuesJSONObject(
 				_getFileContent("configuration.json"),
-				_getFileContent("editable-values-field-non-default.json"));
+				_getFileContent("editable-values-field-non-default.json"),
+				true);
 
 		JSONObject expectedEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject(
@@ -494,7 +498,7 @@ public class FragmentEntryConfigUtilTest {
 		JSONObject editableValuesJSONObject =
 			FragmentEntryConfigUtil.getEditableValuesJSONObject(
 				_getFileContent("configuration.json"),
-				_getFileContent("editable-values-other-processors.json"));
+				_getFileContent("editable-values-other-processors.json"), true);
 
 		JSONObject expectedEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject(
