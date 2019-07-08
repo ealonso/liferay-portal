@@ -289,6 +289,11 @@ public class FragmentEntryLinkWrapper
 		return model.getEditableValues();
 	}
 
+	@Override
+	public String getEditableValues(boolean includeDefault) {
+		return model.getEditableValues(includeDefault);
+	}
+
 	/**
 	 * Returns the fragment entry ID of this fragment entry link.
 	 *

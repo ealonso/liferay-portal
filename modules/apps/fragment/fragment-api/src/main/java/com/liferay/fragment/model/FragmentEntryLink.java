@@ -60,6 +60,8 @@ public interface FragmentEntryLink
 
 			};
 
+	public String getEditableValues(boolean includeDefault);
+
 	public boolean isLatestVersion()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
