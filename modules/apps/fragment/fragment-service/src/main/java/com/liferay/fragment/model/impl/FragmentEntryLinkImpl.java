@@ -16,7 +16,9 @@ package com.liferay.fragment.model.impl;
 
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.fragment.util.FragmentEntryConfigUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.Date;
 
@@ -27,6 +29,19 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public class FragmentEntryLinkImpl extends FragmentEntryLinkBaseImpl {
+
+	@Override
+	public String getEditableValues(boolean includeDefault) {
+		JSONObject editableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				getConfiguration(), getEditableValues(), includeDefault);
+
+		if (editableValuesJSONObject == null) {
+			return null;
+		}
+
+		return editableValuesJSONObject.toJSONString();
+	}
 
 	@Override
 	public boolean isLatestVersion() throws PortalException {
