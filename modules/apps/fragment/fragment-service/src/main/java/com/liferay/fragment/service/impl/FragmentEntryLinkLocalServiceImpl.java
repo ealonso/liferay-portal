@@ -20,6 +20,7 @@ import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.base.FragmentEntryLinkLocalServiceBaseImpl;
+import com.liferay.fragment.util.FragmentEntryConfigUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -192,7 +193,12 @@ public class FragmentEntryLinkLocalServiceImpl
 			editableValues = jsonObject.toString();
 		}
 
-		fragmentEntryLink.setEditableValues(editableValues);
+		JSONObject nondefaultEditableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				configuration, editableValues, false);
+
+		fragmentEntryLink.setEditableValues(
+			nondefaultEditableValuesJSONObject.toString());
 
 		if (Validator.isNull(namespace)) {
 			namespace = StringUtil.randomId();
@@ -488,7 +494,13 @@ public class FragmentEntryLinkLocalServiceImpl
 		fragmentEntryLink.setHtml(html);
 		fragmentEntryLink.setJs(js);
 		fragmentEntryLink.setConfiguration(configuration);
-		fragmentEntryLink.setEditableValues(editableValues);
+
+		JSONObject nondefaultEditableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				configuration, editableValues, false);
+
+		fragmentEntryLink.setEditableValues(
+			nondefaultEditableValuesJSONObject.toString());
 
 		if (Validator.isNotNull(namespace)) {
 			fragmentEntryLink.setNamespace(namespace);
@@ -496,9 +508,7 @@ public class FragmentEntryLinkLocalServiceImpl
 
 		fragmentEntryLink.setPosition(position);
 
-		fragmentEntryLinkPersistence.update(fragmentEntryLink);
-
-		return fragmentEntryLink;
+		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
 	}
 
 	@Override
@@ -509,14 +519,17 @@ public class FragmentEntryLinkLocalServiceImpl
 		FragmentEntryLink fragmentEntryLink = fetchFragmentEntryLink(
 			fragmentEntryLinkId);
 
-		fragmentEntryLink.setEditableValues(editableValues);
+		JSONObject nondefaultEditableValuesJSONObject =
+			FragmentEntryConfigUtil.getEditableValuesJSONObject(
+				fragmentEntryLink.getConfiguration(), editableValues, false);
+
+		fragmentEntryLink.setEditableValues(
+			nondefaultEditableValuesJSONObject.toString());
 
 		updateClassedModel(
 			fragmentEntryLink.getClassNameId(), fragmentEntryLink.getClassPK());
 
-		fragmentEntryLinkPersistence.update(fragmentEntryLink);
-
-		return fragmentEntryLink;
+		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
 	}
 
 	@Override
