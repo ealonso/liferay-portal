@@ -24,6 +24,7 @@ import com.liferay.fragment.service.persistence.impl.constants.FragmentPersisten
 import com.liferay.fragment.util.FragmentEntryTestUtil;
 import com.liferay.fragment.util.FragmentTestUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -54,6 +55,7 @@ import com.liferay.portal.test.rule.PersistenceTestRule;
 import com.liferay.portal.test.rule.TransactionalTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Assert;
@@ -202,8 +204,21 @@ public class FragmentEntryLinkServiceTest {
 				fragmentEntryLink.getFragmentEntryLinkId());
 
 		Assert.assertEquals(fragmentEntryLink, persistedFragmentEntryLink);
+
+		JSONObject persistedEditableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				persistedFragmentEntryLink.getEditableValues());
+
+		JSONObject editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
+			editableValues);
+
+		Iterator<String> keys = editableValuesJSONObject.keys();
+
+		String key = keys.next();
+
 		Assert.assertEquals(
-			editableValues, persistedFragmentEntryLink.getEditableValues());
+			editableValuesJSONObject.get(key),
+			persistedEditableValuesJSONObject.get(key));
 	}
 
 	@Test
