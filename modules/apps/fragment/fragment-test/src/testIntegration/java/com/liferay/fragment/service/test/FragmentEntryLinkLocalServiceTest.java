@@ -24,8 +24,11 @@ import com.liferay.fragment.service.FragmentCollectionLocalService;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
@@ -36,6 +39,7 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -43,6 +47,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.portal.util.FileImpl;
 
 import java.util.Dictionary;
 import java.util.List;
@@ -50,6 +55,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,6 +65,7 @@ import org.junit.runner.RunWith;
  * @author Kyle Miho
  */
 @RunWith(Arquillian.class)
+@SuppressWarnings("unused")
 public class FragmentEntryLinkLocalServiceTest {
 
 	@ClassRule
@@ -67,6 +74,15 @@ public class FragmentEntryLinkLocalServiceTest {
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
 			PermissionCheckerMethodTestRule.INSTANCE);
+
+	@BeforeClass
+	public static void setUpClass() {
+		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
+
+		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
+
+		new FileUtil().setFile(new FileImpl());
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -85,7 +101,7 @@ public class FragmentEntryLinkLocalServiceTest {
 	}
 
 	@Test
-	public void testAddFragmentEntryLink() throws PortalException {
+	public void testAddFragmentEntryLink() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
@@ -100,8 +116,8 @@ public class FragmentEntryLinkLocalServiceTest {
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(), null,
 				"Fragment Name", StringPool.BLANK, "<div>test</div>",
-				StringPool.BLANK, "{fieldSets:[]}", 0,
-				FragmentConstants.TYPE_SECTION,
+				StringPool.BLANK, _getFileContent("configuration-light.json"),
+				0, FragmentConstants.TYPE_SECTION,
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		long classNameId = PortalUtil.getClassNameId(Layout.class);
@@ -114,7 +130,8 @@ public class FragmentEntryLinkLocalServiceTest {
 				fragmentEntry.getFragmentEntryId(), classNameId, classPK,
 				fragmentEntry.getCss(), fragmentEntry.getHtml(),
 				fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
-				StringPool.BLANK, StringPool.BLANK, 0, null, serviceContext);
+				_getFileContent("editable-values-light.json"), StringPool.BLANK,
+				0, null, serviceContext);
 
 		Assert.assertNotNull(
 			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
@@ -134,6 +151,21 @@ public class FragmentEntryLinkLocalServiceTest {
 
 		Assert.assertEquals(
 			fragmentEntry.getHtml(), fragmentEntryLink.getHtml());
+
+		String expectedNonDefaultEditablesValues = _getFileContent(
+			"expected-non-default-editable-values-light.json");
+
+		Assert.assertEquals(
+			expectedNonDefaultEditablesValues,
+			fragmentEntryLink.getEditableValues());
+
+		Assert.assertEquals(
+			expectedNonDefaultEditablesValues,
+			fragmentEntryLink.getEditableValues(false));
+
+		Assert.assertEquals(
+			_getFileContent("expected-editable-values-light.json"),
+			fragmentEntryLink.getEditableValues(true));
 	}
 
 	@Test
@@ -337,13 +369,15 @@ public class FragmentEntryLinkLocalServiceTest {
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				"Fragment Collection", StringPool.BLANK, serviceContext);
 
+		String configuration = _getFileContent("configuration-light.json");
+
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.addFragmentEntry(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(), null,
 				"Fragment Name", RandomTestUtil.randomString(),
-				"<div>test</div>", RandomTestUtil.randomString(),
-				"{fieldSets:[]}", 0, FragmentConstants.TYPE_SECTION,
+				"<div>test</div>", RandomTestUtil.randomString(), configuration,
+				0, FragmentConstants.TYPE_SECTION,
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntryLink fragmentEntryLink =
@@ -353,14 +387,16 @@ public class FragmentEntryLinkLocalServiceTest {
 				PortalUtil.getClassNameId(Layout.class),
 				RandomTestUtil.randomLong(), fragmentEntry.getCss(),
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
-				fragmentEntry.getConfiguration(), StringPool.BLANK,
-				StringPool.BLANK, 0, null, serviceContext);
+				fragmentEntry.getConfiguration(),
+				_getFileContent("editable-values-light.json"), StringPool.BLANK,
+				0, null, serviceContext);
 
 		_fragmentEntryLocalService.updateFragmentEntry(
 			TestPropsValues.getUserId(), fragmentEntry.getFragmentEntryId(),
 			fragmentEntry.getName(), StringPool.BLANK,
 			StringUtil.randomString(), StringUtil.randomString(),
-			StringUtil.randomString(), fragmentEntry.getPreviewFileEntryId(),
+			_getFileContent("configuration-dark.json"),
+			fragmentEntry.getPreviewFileEntryId(),
 			WorkflowConstants.STATUS_APPROVED);
 
 		fragmentEntryLink = _fragmentEntryLinkLocalService.getFragmentEntryLink(
@@ -373,6 +409,24 @@ public class FragmentEntryLinkLocalServiceTest {
 		Assert.assertEquals(
 			fragmentEntry.getConfiguration(),
 			fragmentEntryLink.getConfiguration());
+
+		Assert.assertEquals(
+			configuration, fragmentEntryLink.getConfiguration());
+
+		String expectedNonDefaultEditablesValues = _getFileContent(
+			"expected-non-default-editable-values-light.json");
+
+		Assert.assertEquals(
+			expectedNonDefaultEditablesValues,
+			fragmentEntryLink.getEditableValues());
+
+		Assert.assertEquals(
+			expectedNonDefaultEditablesValues,
+			fragmentEntryLink.getEditableValues(false));
+
+		Assert.assertEquals(
+			_getFileContent("expected-editable-values-light.json"),
+			fragmentEntryLink.getEditableValues(true));
 	}
 
 	@Test
@@ -397,9 +451,10 @@ public class FragmentEntryLinkLocalServiceTest {
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.addFragmentEntry(
 				TestPropsValues.getUserId(), _group.getGroupId(),
-				fragmentCollection.getFragmentCollectionId(), "Fragment Name",
-				StringPool.BLANK, StringUtil.randomString(), StringPool.BLANK,
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
+				fragmentCollection.getFragmentCollectionId(), null,
+				"Fragment Name", StringPool.BLANK, StringUtil.randomString(),
+				StringPool.BLANK, _getFileContent("configuration-light.json"),
+				0, 0, WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
@@ -408,12 +463,15 @@ public class FragmentEntryLinkLocalServiceTest {
 				PortalUtil.getClassNameId(Layout.class),
 				RandomTestUtil.randomLong(), fragmentEntry.getCss(),
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
-				StringPool.BLANK, StringPool.BLANK, 0, null, serviceContext);
+				fragmentEntry.getConfiguration(),
+				_getFileContent("editable-values-light.json"), StringPool.BLANK,
+				0, null, serviceContext);
 
 		String newCSS = StringUtil.randomString();
 		String newHTML = StringUtil.randomString();
 		String newJS = StringUtil.randomString();
-		String newConfiguration = StringUtil.randomString();
+
+		String newConfiguration = _getFileContent("configuration-dark.json");
 
 		_fragmentEntryLocalService.updateFragmentEntry(
 			TestPropsValues.getUserId(), fragmentEntry.getFragmentEntryId(),
@@ -429,6 +487,30 @@ public class FragmentEntryLinkLocalServiceTest {
 		Assert.assertEquals(newJS, fragmentEntryLink.getJs());
 		Assert.assertEquals(
 			newConfiguration, fragmentEntryLink.getConfiguration());
+
+		String expectedNonDefaultEditableValues = _getFileContent(
+			"expected-non-default-editable-values-light.json");
+
+		Assert.assertEquals(
+			expectedNonDefaultEditableValues,
+			fragmentEntryLink.getEditableValues());
+
+		Assert.assertEquals(
+			expectedNonDefaultEditableValues,
+			fragmentEntryLink.getEditableValues(false));
+
+		Assert.assertEquals(
+			_getFileContent("expected-editable-values-dark.json"),
+			fragmentEntryLink.getEditableValues(true));
+	}
+
+	private String _getFileContent(String fileName) throws Exception {
+		String fileContent = new String(
+			FileUtil.getBytes(getClass(), "dependencies/" + fileName));
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(fileContent);
+
+		return jsonObject.toJSONString();
 	}
 
 	@Inject
