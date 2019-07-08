@@ -78,8 +78,8 @@ public class FragmentEntryConfigUtil {
 	}
 
 	public static JSONObject getConfigurationValuesJSONObject(
-		String configuration, String editableValues,
-		long segmentsExperienceId) {
+		String configuration, String editableValues, long segmentsExperienceId,
+		boolean includeDefault) {
 
 		try {
 			JSONFactoryUtil.createJSONObject(configuration);
@@ -132,11 +132,12 @@ public class FragmentEntryConfigUtil {
 		return _getConfigurationValuesJSONObject(
 			configurationDefaultValuesJSONObject,
 			configurationDataTypesJSONObject,
-			configurationValidValuesJSONObject, configurationValuesJSONObject);
+			configurationValidValuesJSONObject, configurationValuesJSONObject,
+			includeDefault);
 	}
 
 	public static JSONObject getEditableValuesJSONObject(
-		String configuration, String editableValues) {
+		String configuration, String editableValues, boolean includeDefault) {
 
 		try {
 			JSONFactoryUtil.createJSONObject(configuration);
@@ -221,7 +222,7 @@ public class FragmentEntryConfigUtil {
 					configurationDefaultValuesJSONObject,
 					configurationDataTypesJSONObject,
 					configurationValidValuesJSONObject,
-					configurationValuesJSONObject));
+					configurationValuesJSONObject, includeDefault));
 		}
 
 		outputEditableValuesJSONObject.put(
@@ -322,7 +323,7 @@ public class FragmentEntryConfigUtil {
 		JSONObject configurationDefaultValuesJSONObject,
 		JSONObject configurationDataTypesJSONObject,
 		JSONObject configurationValidValuesJSONObject,
-		JSONObject configurationValuesJSONObject) {
+		JSONObject configurationValuesJSONObject, boolean includeDefault) {
 
 		JSONObject outputConfigurationValuesJSONObject =
 			JSONFactoryUtil.createJSONObject();
@@ -375,11 +376,15 @@ public class FragmentEntryConfigUtil {
 							fieldKey),
 						value) ||
 					!configurationValidValuesFieldSetFieldValues.contains(
-						String.valueOf(value))) {
+						String.valueOf(value)) ||
+					value.equals(
+						defaultValuesFieldSetJSONObject.get(fieldKey))) {
 
-					outputFieldSetValuesJSONObject.put(
-						fieldKey,
-						defaultValuesFieldSetJSONObject.get(fieldKey));
+					if (includeDefault) {
+						outputFieldSetValuesJSONObject.put(
+							fieldKey,
+							defaultValuesFieldSetJSONObject.get(fieldKey));
+					}
 				}
 				else {
 					outputFieldSetValuesJSONObject.put(fieldKey, value);
