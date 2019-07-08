@@ -772,7 +772,7 @@ public class ContentPageEditorDisplayContext {
 
 				JSONObject editableValuesJSONObject =
 					JSONFactoryUtil.createJSONObject(
-						fragmentEntryLink.getEditableValues());
+						fragmentEntryLink.getEditableValues(true));
 
 				boolean error = false;
 
@@ -970,7 +970,7 @@ public class ContentPageEditorDisplayContext {
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 			JSONObject editableValuesJSONObject =
 				JSONFactoryUtil.createJSONObject(
-					fragmentEntryLink.getEditableValues());
+					fragmentEntryLink.getEditableValues(true));
 
 			Iterator<String> keysIterator = editableValuesJSONObject.keys();
 
