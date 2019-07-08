@@ -106,25 +106,8 @@ public class FragmentEntryConfigUtil {
 		JSONObject configurationValidValuesJSONObject =
 			_getConfigurationValidValuesJSONObject(configuration);
 
-		JSONObject editableValuesJSONObject =
-			JSONFactoryUtil.createJSONObject();
-
-		try {
-			editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
-				editableValues);
-		}
-		catch (JSONException jsone) {
-			_log.error(jsone, jsone);
-		}
-
-		if (Validator.isNull(
-				editableValuesJSONObject.getJSONObject(
-					_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME))) {
-
-			editableValuesJSONObject.put(
-				_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME,
-				JSONFactoryUtil.createJSONObject());
-		}
+		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
+			editableValues);
 
 		JSONObject freemarkerFragmentEntryProcessorJSONObject =
 			editableValuesJSONObject.getJSONObject(
@@ -146,70 +129,106 @@ public class FragmentEntryConfigUtil {
 				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_PREFIX +
 					segmentsExperienceId);
 
-		JSONObject outputConfigurationValuesJSONObject =
+		return _getConfigurationValuesJSONObject(
+			configurationDefaultValuesJSONObject,
+			configurationDataTypesJSONObject,
+			configurationValidValuesJSONObject, configurationValuesJSONObject);
+	}
+
+	public static JSONObject getEditableValuesJSONObject(
+		String configuration, String editableValues) {
+
+		try {
+			JSONFactoryUtil.createJSONObject(configuration);
+		}
+		catch (JSONException jsone) {
+			_log.error(
+				"Unable to parse configuration JSON object: " + configuration,
+				jsone);
+
+			return null;
+		}
+
+		JSONObject outputEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject();
 
-		for (String fieldSetName :
-				configurationDefaultValuesJSONObject.keySet()) {
+		JSONObject configurationDefaultValuesJSONObject =
+			getConfigurationDefaultValuesJSONObject(configuration);
 
-			JSONObject outputFieldSetValuesJSONObject =
+		if (configurationDefaultValuesJSONObject == null) {
+			configurationDefaultValuesJSONObject =
 				JSONFactoryUtil.createJSONObject();
+		}
 
-			outputConfigurationValuesJSONObject.put(
-				fieldSetName, outputFieldSetValuesJSONObject);
+		JSONObject configurationDataTypesJSONObject =
+			_getConfigurationDataTypesJSONObject(configuration);
 
-			if (Validator.isNull(
-					configurationValuesJSONObject.get(fieldSetName))) {
+		JSONObject configurationValidValuesJSONObject =
+			_getConfigurationValidValuesJSONObject(configuration);
 
-				configurationValuesJSONObject.put(
-					fieldSetName, JSONFactoryUtil.createJSONObject());
+		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
+			editableValues);
+
+		for (String processorKey : editableValuesJSONObject.keySet()) {
+			if (processorKey.equals(
+					_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME)) {
+
+				outputEditableValuesJSONObject.put(
+					processorKey, JSONFactoryUtil.createJSONObject());
 			}
-
-			JSONObject defaultValuesFieldSetJSONObject =
-				configurationDefaultValuesJSONObject.getJSONObject(
-					fieldSetName);
-
-			JSONObject fieldSetValuesJSONObject =
-				configurationValuesJSONObject.getJSONObject(fieldSetName);
-
-			for (String fieldKey : defaultValuesFieldSetJSONObject.keySet()) {
-				Object value = fieldSetValuesJSONObject.get(fieldKey);
-
-				JSONObject configurationDataTypesFieldSetJSONObject =
-					configurationDataTypesJSONObject.getJSONObject(
-						fieldSetName);
-
-				JSONObject configurationValidValuesFieldSetJSONObject =
-					configurationValidValuesJSONObject.getJSONObject(
-						fieldSetName);
-
-				JSONArray configurationValidValuesFieldSetFieldJSONArray =
-					configurationValidValuesFieldSetJSONObject.getJSONArray(
-						fieldKey);
-
-				List<String> configurationValidValuesFieldSetFieldValues =
-					JSONUtil.toStringList(
-						configurationValidValuesFieldSetFieldJSONArray);
-
-				if (Validator.isNull(fieldSetValuesJSONObject.get(fieldKey)) ||
-					!_hasDataType(
-						configurationDataTypesFieldSetJSONObject.getString(
-							fieldKey),
-						value) ||
-					!configurationValidValuesFieldSetFieldValues.contains(
-						String.valueOf(value))) {
-
-					outputFieldSetValuesJSONObject.put(
-						fieldKey,
-						defaultValuesFieldSetJSONObject.get(fieldKey));
-				}
-				else {
-					outputFieldSetValuesJSONObject.put(fieldKey, value);
-				}
+			else {
+				outputEditableValuesJSONObject.put(
+					processorKey, editableValuesJSONObject.get(processorKey));
 			}
 		}
 
-		return outputConfigurationValuesJSONObject;
+		JSONObject outputFreemarkerFragmentEntryProcessorJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		JSONObject freemarkerFragmentEntryProcessorJSONObject =
+			editableValuesJSONObject.getJSONObject(
+				_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME);
+
+		if (Validator.isNull(
+				freemarkerFragmentEntryProcessorJSONObject.getJSONObject(
+					SegmentsConstants.SEGMENTS_EXPERIENCE_ID_PREFIX +
+						SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT))) {
+
+			freemarkerFragmentEntryProcessorJSONObject.put(
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_PREFIX +
+					SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT,
+				JSONFactoryUtil.createJSONObject());
+		}
+
+		for (String segmentsExperienceKey :
+				freemarkerFragmentEntryProcessorJSONObject.keySet()) {
+
+			if (Validator.isNull(
+					freemarkerFragmentEntryProcessorJSONObject.getJSONObject(
+						segmentsExperienceKey))) {
+
+				freemarkerFragmentEntryProcessorJSONObject.put(
+					segmentsExperienceKey, JSONFactoryUtil.createJSONObject());
+			}
+
+			JSONObject configurationValuesJSONObject =
+				freemarkerFragmentEntryProcessorJSONObject.getJSONObject(
+					segmentsExperienceKey);
+
+			outputFreemarkerFragmentEntryProcessorJSONObject.put(
+				segmentsExperienceKey,
+				_getConfigurationValuesJSONObject(
+					configurationDefaultValuesJSONObject,
+					configurationDataTypesJSONObject,
+					configurationValidValuesJSONObject,
+					configurationValuesJSONObject));
+		}
+
+		outputEditableValuesJSONObject.put(
+			_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME,
+			outputFreemarkerFragmentEntryProcessorJSONObject);
+
+		return outputEditableValuesJSONObject;
 	}
 
 	private static JSONObject _getConfigurationDataTypesJSONObject(
@@ -297,6 +316,104 @@ public class FragmentEntryConfigUtil {
 		}
 
 		return dataTypesJSONObject;
+	}
+
+	private static JSONObject _getConfigurationValuesJSONObject(
+		JSONObject configurationDefaultValuesJSONObject,
+		JSONObject configurationDataTypesJSONObject,
+		JSONObject configurationValidValuesJSONObject,
+		JSONObject configurationValuesJSONObject) {
+
+		JSONObject outputConfigurationValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		for (String fieldSetName :
+				configurationDefaultValuesJSONObject.keySet()) {
+
+			JSONObject outputFieldSetValuesJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			outputConfigurationValuesJSONObject.put(
+				fieldSetName, outputFieldSetValuesJSONObject);
+
+			if (Validator.isNull(
+					configurationValuesJSONObject.get(fieldSetName))) {
+
+				configurationValuesJSONObject.put(
+					fieldSetName, JSONFactoryUtil.createJSONObject());
+			}
+
+			JSONObject defaultValuesFieldSetJSONObject =
+				configurationDefaultValuesJSONObject.getJSONObject(
+					fieldSetName);
+
+			JSONObject fieldSetValuesJSONObject =
+				configurationValuesJSONObject.getJSONObject(fieldSetName);
+
+			for (String fieldKey : defaultValuesFieldSetJSONObject.keySet()) {
+				Object value = fieldSetValuesJSONObject.get(fieldKey);
+
+				JSONObject configurationDataTypesFieldSetJSONObject =
+					configurationDataTypesJSONObject.getJSONObject(
+						fieldSetName);
+
+				JSONObject configurationValidValuesFieldSetJSONObject =
+					configurationValidValuesJSONObject.getJSONObject(
+						fieldSetName);
+
+				JSONArray configurationValidValuesFieldSetFieldJSONArray =
+					configurationValidValuesFieldSetJSONObject.getJSONArray(
+						fieldKey);
+
+				List<String> configurationValidValuesFieldSetFieldValues =
+					JSONUtil.toStringList(
+						configurationValidValuesFieldSetFieldJSONArray);
+
+				if (Validator.isNull(fieldSetValuesJSONObject.get(fieldKey)) ||
+					!_hasDataType(
+						configurationDataTypesFieldSetJSONObject.getString(
+							fieldKey),
+						value) ||
+					!configurationValidValuesFieldSetFieldValues.contains(
+						String.valueOf(value))) {
+
+					outputFieldSetValuesJSONObject.put(
+						fieldKey,
+						defaultValuesFieldSetJSONObject.get(fieldKey));
+				}
+				else {
+					outputFieldSetValuesJSONObject.put(fieldKey, value);
+				}
+			}
+		}
+
+		return outputConfigurationValuesJSONObject;
+	}
+
+	private static JSONObject _getEditableValuesJSONObject(
+		String editableValues) {
+
+		JSONObject editableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		try {
+			editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
+				editableValues);
+		}
+		catch (JSONException jsone) {
+			_log.error(jsone, jsone);
+		}
+
+		if (Validator.isNull(
+				editableValuesJSONObject.getJSONObject(
+					_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME))) {
+
+			editableValuesJSONObject.put(
+				_FREE_MARKER_FRAGMENT_ENTRY_PROCESSOR_CLASS_NAME,
+				JSONFactoryUtil.createJSONObject());
+		}
+
+		return editableValuesJSONObject;
 	}
 
 	private static JSONArray _getFieldSetsJSONArray(String configuration) {
