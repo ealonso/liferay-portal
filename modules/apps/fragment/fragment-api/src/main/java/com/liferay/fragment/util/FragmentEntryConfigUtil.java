@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsConstants;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Rubén Pulido
@@ -92,18 +92,17 @@ public class FragmentEntryConfigUtil {
 			return null;
 		}
 
-		JSONObject configurationDefaultValuesJSONObject =
+		JSONObject defaultValuesJSONObject =
 			getConfigurationDefaultValuesJSONObject(configuration);
 
-		if (configurationDefaultValuesJSONObject == null) {
-			configurationDefaultValuesJSONObject =
-				JSONFactoryUtil.createJSONObject();
+		if (defaultValuesJSONObject == null) {
+			defaultValuesJSONObject = JSONFactoryUtil.createJSONObject();
 		}
 
-		JSONObject configurationDataTypesJSONObject =
-			_getConfigurationDataTypesJSONObject(configuration);
+		JSONObject dataTypesJSONObject = _getConfigurationDataTypesJSONObject(
+			configuration);
 
-		JSONObject configurationValidValuesJSONObject =
+		JSONObject validValuesJSONObject =
 			_getConfigurationValidValuesJSONObject(configuration);
 
 		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
@@ -130,10 +129,8 @@ public class FragmentEntryConfigUtil {
 					segmentsExperienceId);
 
 		return _getConfigurationValuesJSONObject(
-			configurationDefaultValuesJSONObject,
-			configurationDataTypesJSONObject,
-			configurationValidValuesJSONObject, configurationValuesJSONObject,
-			includeDefault);
+			defaultValuesJSONObject, dataTypesJSONObject, validValuesJSONObject,
+			configurationValuesJSONObject, includeDefault);
 	}
 
 	public static JSONObject getEditableValuesJSONObject(
@@ -153,18 +150,17 @@ public class FragmentEntryConfigUtil {
 		JSONObject outputEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject();
 
-		JSONObject configurationDefaultValuesJSONObject =
+		JSONObject defaultValuesJSONObject =
 			getConfigurationDefaultValuesJSONObject(configuration);
 
-		if (configurationDefaultValuesJSONObject == null) {
-			configurationDefaultValuesJSONObject =
-				JSONFactoryUtil.createJSONObject();
+		if (defaultValuesJSONObject == null) {
+			defaultValuesJSONObject = JSONFactoryUtil.createJSONObject();
 		}
 
-		JSONObject configurationDataTypesJSONObject =
-			_getConfigurationDataTypesJSONObject(configuration);
+		JSONObject dataTypesJSONObject = _getConfigurationDataTypesJSONObject(
+			configuration);
 
-		JSONObject configurationValidValuesJSONObject =
+		JSONObject validValuesJSONObject =
 			_getConfigurationValidValuesJSONObject(configuration);
 
 		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
@@ -219,10 +215,9 @@ public class FragmentEntryConfigUtil {
 			outputFreemarkerFragmentEntryProcessorJSONObject.put(
 				segmentsExperienceKey,
 				_getConfigurationValuesJSONObject(
-					configurationDefaultValuesJSONObject,
-					configurationDataTypesJSONObject,
-					configurationValidValuesJSONObject,
-					configurationValuesJSONObject, includeDefault));
+					defaultValuesJSONObject, dataTypesJSONObject,
+					validValuesJSONObject, configurationValuesJSONObject,
+					includeDefault));
 		}
 
 		outputEditableValuesJSONObject.put(
@@ -320,89 +315,67 @@ public class FragmentEntryConfigUtil {
 	}
 
 	private static JSONObject _getConfigurationValuesJSONObject(
-		JSONObject configurationDefaultValuesJSONObject,
-		JSONObject configurationDataTypesJSONObject,
-		JSONObject configurationValidValuesJSONObject,
-		JSONObject configurationValuesJSONObject, boolean includeDefault) {
+		JSONObject defaultValuesJSONObject, JSONObject dataTypesJSONObject,
+		JSONObject validValuesJSONObject, JSONObject valuesJSONObject,
+		boolean includeDefault) {
 
-		JSONObject outputConfigurationValuesJSONObject =
-			JSONFactoryUtil.createJSONObject();
+		JSONObject outputValuesJSONObject = JSONFactoryUtil.createJSONObject();
 
-		for (String fieldSetName :
-				configurationDefaultValuesJSONObject.keySet()) {
-
+		for (String fieldSetName : defaultValuesJSONObject.keySet()) {
 			JSONObject outputFieldSetValuesJSONObject =
 				JSONFactoryUtil.createJSONObject();
 
-			if (Validator.isNull(
-					configurationValuesJSONObject.get(fieldSetName))) {
-
-				configurationValuesJSONObject.put(
+			if (Validator.isNull(valuesJSONObject.get(fieldSetName))) {
+				valuesJSONObject.put(
 					fieldSetName, JSONFactoryUtil.createJSONObject());
 			}
 
 			JSONObject defaultValuesFieldSetJSONObject =
-				configurationDefaultValuesJSONObject.getJSONObject(
-					fieldSetName);
+				defaultValuesJSONObject.getJSONObject(fieldSetName);
 
 			JSONObject fieldSetValuesJSONObject =
-				configurationValuesJSONObject.getJSONObject(fieldSetName);
+				valuesJSONObject.getJSONObject(fieldSetName);
 
 			for (String fieldKey : defaultValuesFieldSetJSONObject.keySet()) {
 				Object value = fieldSetValuesJSONObject.get(fieldKey);
 
-				JSONObject configurationDataTypesFieldSetJSONObject =
-					configurationDataTypesJSONObject.getJSONObject(
-						fieldSetName);
+				JSONObject dataTypesFieldSetJSONObject =
+					dataTypesJSONObject.getJSONObject(fieldSetName);
 
-				JSONObject configurationValidValuesFieldSetJSONObject =
-					configurationValidValuesJSONObject.getJSONObject(
-						fieldSetName);
+				JSONObject validValuesFieldSetJSONObject =
+					validValuesJSONObject.getJSONObject(fieldSetName);
 
-				JSONArray configurationValidValuesFieldSetFieldJSONArray =
-					configurationValidValuesFieldSetJSONObject.getJSONArray(
-						fieldKey);
+				JSONArray validValuesFieldSetFieldJSONArray =
+					validValuesFieldSetJSONObject.getJSONArray(fieldKey);
 
-				List<String> configurationValidValuesFieldSetFieldValues =
-					JSONUtil.toStringList(
-						configurationValidValuesFieldSetFieldJSONArray);
+				Set<String> validValues = JSONUtil.toStringSet(
+					validValuesFieldSetFieldJSONArray);
 
-				Object outputValue = null;
+				String dataType = dataTypesFieldSetJSONObject.getString(
+					fieldKey);
 
-				if (Validator.isNull(fieldSetValuesJSONObject.get(fieldKey)) ||
-					!_hasDataType(
-						configurationDataTypesFieldSetJSONObject.getString(
-							fieldKey),
-						value) ||
-					!configurationValidValuesFieldSetFieldValues.contains(
-						String.valueOf(value)) ||
-					value.equals(
-						defaultValuesFieldSetJSONObject.get(fieldKey))) {
+				Object defaultValue = defaultValuesFieldSetJSONObject.get(
+					fieldKey);
 
-					if (includeDefault) {
-						outputValue = defaultValuesFieldSetJSONObject.get(
-							fieldKey);
-					}
-				}
-				else {
-					outputValue = value;
-				}
+				Object outputValue = _getFieldValue(
+					dataType, value, defaultValue, validValues);
 
-				if (outputValue != null) {
+				if (!outputValue.equals(defaultValue) ||
+					(outputValue.equals(defaultValue) && includeDefault)) {
+
 					outputFieldSetValuesJSONObject.put(fieldKey, outputValue);
 
 					if (Validator.isNull(
-							outputConfigurationValuesJSONObject.get(
-								fieldSetName))) {
+							outputValuesJSONObject.get(fieldSetName))) {
 
-						outputConfigurationValuesJSONObject.put(
+						outputValuesJSONObject.put(
 							fieldSetName, outputFieldSetValuesJSONObject);
 					}
 				}
 			}
 		}
 
-		return outputConfigurationValuesJSONObject;
+		return outputValuesJSONObject;
 	}
 
 	private static JSONObject _getEditableValuesJSONObject(
@@ -447,6 +420,29 @@ public class FragmentEntryConfigUtil {
 		return configurationJSONObject.getJSONArray("fieldSets");
 	}
 
+	private static Object _getFieldValue(
+		String dataType, Object value, Object defaultValue,
+		Set<String> validValues) {
+
+		if ((value == null) || !validValues.contains(String.valueOf(value))) {
+			return defaultValue;
+		}
+
+		if (dataType.equals("double")) {
+			return GetterUtil.getDouble(value, (double)defaultValue);
+		}
+
+		if (dataType.equals("int")) {
+			return GetterUtil.getInteger(value, (int)defaultValue);
+		}
+
+		if (dataType.equals("string")) {
+			return GetterUtil.getString(value, defaultValue.toString());
+		}
+
+		return defaultValue;
+	}
+
 	private static Object _getFieldValue(String dataType, String value) {
 		if (dataType.equals("double")) {
 			return GetterUtil.getDouble(value);
@@ -459,22 +455,6 @@ public class FragmentEntryConfigUtil {
 		}
 
 		return null;
-	}
-
-	private static boolean _hasDataType(String dataType, Object value) {
-		if (dataType.equals("double") && (value instanceof Double)) {
-			return true;
-		}
-
-		if (dataType.equals("int") && (value instanceof Integer)) {
-			return true;
-		}
-
-		if (dataType.equals("string") && (value instanceof String)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	private static final String
