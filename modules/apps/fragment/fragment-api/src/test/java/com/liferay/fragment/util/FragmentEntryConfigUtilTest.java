@@ -247,6 +247,29 @@ public class FragmentEntryConfigUtilTest {
 	}
 
 	@Test
+	public void testGetConfigurationValuesJSONObjectFieldNondefaultString()
+		throws Exception {
+
+		String fileName = "editable-values-field-non-default-string.json";
+
+		JSONObject configurationDefaultValuesJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				_getFileContent(
+					"expected-configuration-values-field-non-default-string." +
+						"json"));
+
+		JSONObject configurationValuesJSONObject =
+			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
+				_getFileContent("configuration.json"),
+				_getFileContent(fileName),
+				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT, true);
+
+		Assert.assertEquals(
+			configurationDefaultValuesJSONObject.toJSONString(),
+			configurationValuesJSONObject.toJSONString());
+	}
+
+	@Test
 	public void testGetConfigurationValuesJSONObjectFieldNull()
 		throws Exception {
 
