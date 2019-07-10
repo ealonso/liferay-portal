@@ -1,0 +1,12 @@
+{
+	"com.liferay.fragment.entry.processor.freemarker.FreeMarkerFragmentEntryProcessor": {
+		"segments-experience-id-0" : {
+		}
+	},
+	"com.liferay.fragment.entry.processor.other.FragmentEntryProcessor1": {
+		"someKey1" : "someValue1"
+	},
+	"com.liferay.fragment.entry.processor.other.FragmentEntryProcessor2": {
+		"someKey2" : "someValue2"
+	}
+}

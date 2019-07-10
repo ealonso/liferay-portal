@@ -23,7 +23,6 @@ import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.util.FragmentEntryConfigUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -129,43 +128,22 @@ public class FreeMarkerFragmentEntryProcessor
 
 		Map<String, Object> contextObjects = new HashMap<>();
 
-		JSONObject configurationJSONObject = null;
+		long[] segmentsExperienceIds =
+			fragmentEntryProcessorContext.getSegmentsExperienceIds();
 
-		JSONObject editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
-			fragmentEntryLink.getEditableValues());
+		long segmentsExperienceId =
+			SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT;
 
-		Class<?> clazz = getClass();
-
-		String className = clazz.getName();
-
-		if ((editableValuesJSONObject == null) ||
-			(editableValuesJSONObject.get(className) == null)) {
-
-			configurationJSONObject =
-				FragmentEntryConfigUtil.getConfigurationDefaultValuesJSONObject(
-					fragmentEntryLink.getConfiguration());
-		}
-		else {
-			JSONObject configurationValuesJSONObject =
-				editableValuesJSONObject.getJSONObject(className);
-
-			long[] segmentsExperienceIds =
-				fragmentEntryProcessorContext.getSegmentsExperienceIds();
-
-			long segmentsExperienceId =
-				SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT;
-
-			if (segmentsExperienceIds.length > 0) {
-				segmentsExperienceId = segmentsExperienceIds[0];
-			}
-
-			configurationJSONObject =
-				configurationValuesJSONObject.getJSONObject(
-					SegmentsConstants.SEGMENTS_EXPERIENCE_ID_PREFIX +
-						segmentsExperienceId);
+		if (segmentsExperienceIds.length > 0) {
+			segmentsExperienceId = segmentsExperienceIds[0];
 		}
 
-		contextObjects.put("configuration", configurationJSONObject);
+		contextObjects.put(
+			"configuration",
+			FragmentEntryConfigUtil.getConfigurationValuesJSONObject(
+				fragmentEntryLink.getConfiguration(),
+				fragmentEntryLink.getEditableValues(), segmentsExperienceId,
+				true));
 
 		templateManager.addContextObjects(template, contextObjects);
 
