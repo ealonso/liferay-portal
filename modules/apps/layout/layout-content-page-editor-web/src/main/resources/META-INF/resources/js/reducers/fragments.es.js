@@ -271,7 +271,7 @@ function getFragmentEntryLinkContent(
 	renderFragmentEntryURL,
 	fragmentEntryLink,
 	portletNamespace,
-	segmentsExperienceId = null
+	segmentsExperienceId
 ) {
 	const formData = new FormData();
 
@@ -280,12 +280,10 @@ function getFragmentEntryLinkContent(
 		fragmentEntryLink.fragmentEntryLinkId
 	);
 
-	if (segmentsExperienceId) {
-		formData.append(
-			`${portletNamespace}segmentsExperienceId`,
-			segmentsExperienceId
-		);
-	}
+	formData.append(
+		`${portletNamespace}segmentsExperienceId`,
+		segmentsExperienceId
+	);
 
 	return fetch(renderFragmentEntryURL, {
 		body: formData,

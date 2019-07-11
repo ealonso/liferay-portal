@@ -53,9 +53,7 @@ function _renderFragmentEntryLinkContent(segmentsExperienceId) {
 			return;
 		}
 
-		const fragmentEntryLinkIds = _getLayoutDataFragmentEntryLinkIds(
-			layoutData
-		);
+		const fragmentEntryLinkIds = getRowFragmentEntryLinkIds(layoutData);
 
 		fragmentEntryLinkIds.forEach(fragmentEntryLinkId => {
 			dispatch(
@@ -66,18 +64,6 @@ function _renderFragmentEntryLinkContent(segmentsExperienceId) {
 			);
 		});
 	};
-}
-
-/**
- * Get the fragment entry link ids from the layout data object
- * @param {object} layoutData
- * @review
- */
-function _getLayoutDataFragmentEntryLinkIds(layoutData) {
-	return layoutData.structure.reduce(
-		(acc, row) => [...acc, ...getRowFragmentEntryLinkIds(row)],
-		[]
-	);
 }
 
 export {selectSegmentExperienceAction};
