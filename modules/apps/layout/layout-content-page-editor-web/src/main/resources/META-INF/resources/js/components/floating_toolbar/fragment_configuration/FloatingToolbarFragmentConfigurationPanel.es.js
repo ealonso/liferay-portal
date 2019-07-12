@@ -24,7 +24,7 @@ import {getCheckboxData} from './field_types/Checkbox.es';
 import {getColorPaletteData} from './field_types/ColorPalette.es';
 import {getConnectedComponent} from '../../../store/ConnectedComponent.es';
 import {getSelectData} from './field_types/Select.es';
-import {setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
+import {deleteIn, setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
 import templates from './FloatingToolbarFragmentConfigurationPanel.soy';
 import {updateConfigurationValueAction} from '../../../actions/updateEditableValue.es';
 
@@ -92,13 +92,21 @@ class FloatingToolbarFragmentConfigurationPanel extends Component {
 
 		const fieldType = element.dataset.fieldType;
 
-		const fieldData = GET_DATA_FUNCTIONS[fieldType](event);
+		const {fieldName, fieldValue} = GET_DATA_FUNCTIONS[fieldType](event);
 
-		const nextConfigurationValues = setIn(
-			this.item.configurationValues,
-			[fieldData.fieldName],
-			fieldData.fieldValue
-		);
+		let nextConfigurationValues;
+
+		if (fieldValue !== this.item.defaultConfigurationValues[fieldName]) {
+			nextConfigurationValues = setIn(
+				this.item.configurationValues,
+				[fieldName],
+				fieldValue
+			);
+		} else {
+			nextConfigurationValues = deleteIn(this.item.configurationValues, [
+				fieldName
+			]);
+		}
 
 		this._sendConfiguration(nextConfigurationValues);
 	}
