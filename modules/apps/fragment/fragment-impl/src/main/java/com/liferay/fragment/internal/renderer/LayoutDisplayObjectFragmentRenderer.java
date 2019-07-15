@@ -56,6 +56,34 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 	}
 
 	@Override
+	public String getConfiguration(
+		FragmentRendererContext fragmentRendererContext) {
+
+		return "{\n" + "  \"fieldSets\": [\n" + "    {\n" +
+			"      \"fields\": [\n" + "        {\n" +
+				"          \"name\": \"text\",\n" +
+					"          \"label\": \"Heading\",\n" +
+						"          \"description\": \"\",\n" +
+							"          \"type\": \"select\",\n" +
+								"          \"dataType\": \"string\",\n" +
+									"          \"typeOptions\": {\n" +
+										"            \"validValues\": [\n" +
+											"              \"h1\",\n" +
+												"              \"h2\",\n" +
+													"              \"h3\",\n" +
+														"              \"h4\",\n" +
+															"              \"h5\"\n" +
+																"            ]\n" +
+																	"          },\n" +
+																		"          \"defaultValue\": \"h1\"\n" +
+																			"        }\n" +
+																				"      ]\n" +
+																					"    }\n" +
+																						"  ]\n" +
+																							"}";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		return LanguageUtil.get(locale, "content");
 	}
