@@ -100,7 +100,7 @@ public class FragmentEntryLinkLocalServiceTest {
 	}
 
 	@Test
-	public void testAddFragmentEntryLink() throws PortalException {
+	public void testAddFragmentEntryLink() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
@@ -115,8 +115,8 @@ public class FragmentEntryLinkLocalServiceTest {
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				fragmentCollection.getFragmentCollectionId(), null,
 				"Fragment Name", StringPool.BLANK, "<div>test</div>",
-				StringPool.BLANK, "{fieldSets:[]}", 0,
-				FragmentConstants.TYPE_SECTION,
+				StringPool.BLANK, _getFileContent("configuration-light.json"),
+				0, FragmentConstants.TYPE_SECTION,
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		long classNameId = PortalUtil.getClassNameId(Layout.class);
@@ -129,7 +129,8 @@ public class FragmentEntryLinkLocalServiceTest {
 				fragmentEntry.getFragmentEntryId(), classNameId, classPK,
 				fragmentEntry.getCss(), fragmentEntry.getHtml(),
 				fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
-				StringPool.BLANK, StringPool.BLANK, 0, null, serviceContext);
+				_getFileContent("editable-values-light-modified.json"),
+				StringPool.BLANK, 0, null, serviceContext);
 
 		Assert.assertNotNull(
 			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
@@ -149,6 +150,10 @@ public class FragmentEntryLinkLocalServiceTest {
 
 		Assert.assertEquals(
 			fragmentEntry.getHtml(), fragmentEntryLink.getHtml());
+
+		Assert.assertEquals(
+			_getFileContent("expected-editable-values-light-modified.json"),
+			fragmentEntryLink.getEditableValues());
 	}
 
 	@Test
