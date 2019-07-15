@@ -1,0 +1,10 @@
+{
+	"com.liferay.fragment.entry.processor.freemarker.FreeMarkerFragmentEntryProcessor": {
+		"segments-experience-id-0" : {
+			"bodyAppliedStyle" : "light",
+			"bodyNumberOfColumns" : 1,
+			"bodyTableWidth" : 3.2,
+			"headingAppliedStyle" : "light"
+		}
+	}
+}
