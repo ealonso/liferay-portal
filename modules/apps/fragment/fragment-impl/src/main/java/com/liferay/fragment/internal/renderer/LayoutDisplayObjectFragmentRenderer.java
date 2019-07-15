@@ -59,28 +59,7 @@ public class LayoutDisplayObjectFragmentRenderer implements FragmentRenderer {
 	public String getConfiguration(
 		FragmentRendererContext fragmentRendererContext) {
 
-		return "{\n" + "  \"fieldSets\": [\n" + "    {\n" +
-			"      \"fields\": [\n" + "        {\n" +
-				"          \"name\": \"text\",\n" +
-					"          \"label\": \"Heading\",\n" +
-						"          \"description\": \"\",\n" +
-							"          \"type\": \"select\",\n" +
-								"          \"dataType\": \"string\",\n" +
-									"          \"typeOptions\": {\n" +
-										"            \"validValues\": [\n" +
-											"              \"h1\",\n" +
-												"              \"h2\",\n" +
-													"              \"h3\",\n" +
-														"              \"h4\",\n" +
-															"              \"h5\"\n" +
-																"            ]\n" +
-																	"          },\n" +
-																		"          \"defaultValue\": \"h1\"\n" +
-																			"        }\n" +
-																				"      ]\n" +
-																					"    }\n" +
-																						"  ]\n" +
-																							"}";
+		return "{\"fieldSets\":[{\"fields\":[{\"name\":\"text\",\"label\":\"Heading\",\"description\":\"\",\"type\":\"select\",\"dataType\":\"string\",\"typeOptions\":{\"validValues\":[\"h1\",\"h2\",\"h3\",\"h4\",\"h5\"]},\"defaultValue\":\"h1\"}]}]}";
 	}
 
 	@Override

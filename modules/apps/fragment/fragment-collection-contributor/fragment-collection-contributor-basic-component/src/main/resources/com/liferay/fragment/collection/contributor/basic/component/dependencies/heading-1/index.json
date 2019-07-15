@@ -1,0 +1,25 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"dataType": "string",
+					"defaultValue": "h1",
+					"description": "",
+					"label": "Heading",
+					"name": "text",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							"h1",
+							"h2",
+							"h3",
+							"h4",
+							"h5"
+						]
+					}
+				}
+			]
+		}
+	]
+}
