@@ -80,7 +80,9 @@ public class FragmentEntryLinkLocalServiceTest {
 
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 
-		new FileUtil().setFile(new FileImpl());
+		FileUtil fileUtil = new FileUtil();
+
+		fileUtil.setFile(new FileImpl());
 	}
 
 	@Before
