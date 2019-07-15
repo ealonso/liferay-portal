@@ -28,7 +28,6 @@ import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
@@ -49,6 +48,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.util.FileImpl;
 
+import java.io.InputStream;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -473,12 +473,12 @@ public class FragmentEntryLinkLocalServiceTest {
 	}
 
 	private String _getFileContent(String fileName) throws Exception {
-		String fileContent = new String(
-			FileUtil.getBytes(getClass(), "dependencies/" + fileName));
+		Class<?> clazz = getClass();
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(fileContent);
+		InputStream inputStream = clazz.getResourceAsStream(
+			"dependencies/" + fileName);
 
-		return jsonObject.toJSONString();
+		return StringUtil.read(inputStream);
 	}
 
 	@Inject
