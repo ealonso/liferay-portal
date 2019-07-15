@@ -69,7 +69,7 @@ public class FreeMarkerFragmentEntryProcessor
 		String html, String configuration) {
 
 		if (Validator.isNull(configuration)) {
-			return null;
+			return JSONFactoryUtil.createJSONObject();
 		}
 
 		return JSONUtil.put(
