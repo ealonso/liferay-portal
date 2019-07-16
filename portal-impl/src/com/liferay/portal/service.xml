@@ -3096,13 +3096,22 @@
 
 		<column name="layoutSetId" type="long" />
 		<column name="hostname" type="String" />
+		<column name="priority" type="int" />
+		<column name="languageId" type="String" />
+
+		<!-- Order -->
+
+		<order by="desc">
+			<order-column name="virtualHostId" />
+			<order-column name="priority" />
+		</order>
 
 		<!-- Finder methods -->
 
 		<finder name="Hostname" return-type="VirtualHost" unique="true">
 			<finder-column name="hostname" />
 		</finder>
-		<finder name="C_L" return-type="VirtualHost" unique="true">
+		<finder name="C_L" return-type="Collection">
 			<finder-column name="companyId" />
 			<finder-column name="layoutSetId" />
 		</finder>
