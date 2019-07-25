@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -117,7 +118,8 @@ public class FragmentEntryLinkModelListener
 						"mappedField", fieldId);
 
 					if (Validator.isNotNull(mappedField)) {
-						_updateDDMTemplateLink(fragmentEntryLink, mappedField);
+						_updateDDMTemplateLink(
+							fragmentEntryLink, editableKey, mappedField);
 					}
 
 					long classPK = GetterUtil.getLong(
@@ -170,7 +172,8 @@ public class FragmentEntryLinkModelListener
 	}
 
 	private void _updateDDMTemplateLink(
-		FragmentEntryLink fragmentEntryLink, String mappedField) {
+		FragmentEntryLink fragmentEntryLink, String editableKey,
+		String mappedField) {
 
 		if (mappedField.startsWith(
 				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
@@ -182,9 +185,13 @@ public class FragmentEntryLinkModelListener
 				fragmentEntryLink.getGroupId(),
 				_portal.getClassNameId(DDMStructure.class), ddmTemplateKey);
 
+			String compositeClassName =
+				ResourceActionsUtil.getCompositeModelName(
+					FragmentEntryLink.class.getName(), editableKey);
+
 			if (ddmTemplate != null) {
-				_ddmTemplateLinkLocalService.addTemplateLink(
-					_portal.getClassNameId(FragmentEntryLink.class),
+				_ddmTemplateLinkLocalService.updateTemplateLink(
+					_portal.getClassNameId(compositeClassName),
 					fragmentEntryLink.getFragmentEntryLinkId(),
 					ddmTemplate.getTemplateId());
 			}
