@@ -60,11 +60,9 @@ public class FragmentEntryLinkModelListener
 			String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()),
 			fragmentEntryLink.getClassPK());
 
-		_ddmTemplateLinkLocalService.deleteTemplateLink(
-			_portal.getClassNameId(FragmentEntryLink.class),
-			fragmentEntryLink.getFragmentEntryLinkId());
-
 		try {
+			_deleteDDMTemplateLinks(fragmentEntryLink);
+
 			_commentManager.deleteDiscussion(
 				FragmentEntryLink.class.getName(),
 				fragmentEntryLink.getFragmentEntryLinkId());
@@ -134,6 +132,45 @@ public class FragmentEntryLinkModelListener
 		}
 		catch (PortalException pe) {
 			throw new ModelListenerException(pe);
+		}
+	}
+
+	private void _deleteDDMTemplateLinks(FragmentEntryLink fragmentEntryLink)
+		throws PortalException {
+
+		_ddmTemplateLinkLocalService.deleteTemplateLink(
+			_portal.getClassNameId(FragmentEntryLink.class),
+			fragmentEntryLink.getFragmentEntryLinkId());
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+			fragmentEntryLink.getEditableValues());
+
+		Iterator<String> keysIterator = jsonObject.keys();
+
+		while (keysIterator.hasNext()) {
+			String key = keysIterator.next();
+
+			JSONObject editableProcessorJSONObject = jsonObject.getJSONObject(
+				key);
+
+			if (editableProcessorJSONObject == null) {
+				continue;
+			}
+
+			Iterator<String> editableKeysIterator =
+				editableProcessorJSONObject.keys();
+
+			while (editableKeysIterator.hasNext()) {
+				String editableKey = editableKeysIterator.next();
+
+				String compositeClassName =
+					ResourceActionsUtil.getCompositeModelName(
+						FragmentEntryLink.class.getName(), editableKey);
+
+				_ddmTemplateLinkLocalService.deleteTemplateLink(
+					_portal.getClassNameId(compositeClassName),
+					fragmentEntryLink.getFragmentEntryLinkId());
+			}
 		}
 	}
 
