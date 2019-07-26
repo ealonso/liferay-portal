@@ -19,8 +19,6 @@
 <liferay-util:dynamic-include key="com.liferay.journal.web#/asset/full_content.jsp#pre" />
 
 <%
-AssetRendererFactory<?> assetRendererFactory = (AssetRendererFactory<?>)request.getAttribute(WebKeys.ASSET_RENDERER_FACTORY);
-
 JournalArticleDisplay articleDisplay = (JournalArticleDisplay)request.getAttribute(WebKeys.JOURNAL_ARTICLE_DISPLAY);
 %>
 
@@ -44,7 +42,6 @@ JournalArticleDisplay articleDisplay = (JournalArticleDisplay)request.getAttribu
 	articlePageURL.setParameter("mvcPath", "/view_content.jsp");
 	articlePageURL.setParameter("cur", String.valueOf(cur));
 	articlePageURL.setParameter("redirect", pageRedirect);
-	articlePageURL.setParameter("type", assetRendererFactory.getType());
 	articlePageURL.setParameter("groupId", String.valueOf(articleDisplay.getGroupId()));
 	articlePageURL.setParameter("urlTitle", articleDisplay.getUrlTitle());
 	%>
