@@ -97,7 +97,7 @@ class ItemSelectorField extends Component {
 					}
 				});
 			},
-			eventName: `${this.portletNamespace}selectAsset`,
+			eventName: `selectInfoItem`,
 			modalTitle: assetBrowserWindowTitle
 		});
 	}
