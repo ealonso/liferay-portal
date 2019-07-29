@@ -163,7 +163,7 @@ public class NestedPortletsDisplayContext {
 			WebKeys.VIRTUAL_HOST_LAYOUT_SET);
 
 		if ((layoutSet != null) &&
-			Validator.isNotNull(layoutSet.getVirtualHostname())) {
+			!layoutSet.getVirtualHostnames().isEmpty()) {
 
 			return true;
 		}

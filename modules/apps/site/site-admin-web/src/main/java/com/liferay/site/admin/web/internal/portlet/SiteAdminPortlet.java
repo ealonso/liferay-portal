@@ -112,6 +112,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
@@ -920,20 +921,18 @@ public class SiteAdminPortlet extends MVCPortlet {
 		LayoutSet publicLayoutSet = liveGroup.getPublicLayoutSet();
 
 		String publicVirtualHost = ParamUtil.getString(
-			actionRequest, "publicVirtualHost",
-			publicLayoutSet.getVirtualHostname());
+			actionRequest, "publicVirtualHost");
 
-		layoutSetService.updateVirtualHost(
-			liveGroup.getGroupId(), false, publicVirtualHost);
+		layoutSetService.updateVirtualHosts(
+			liveGroup.getGroupId(), false, _toTreeMap(publicVirtualHost));
 
 		LayoutSet privateLayoutSet = liveGroup.getPrivateLayoutSet();
 
 		String privateVirtualHost = ParamUtil.getString(
-			actionRequest, "privateVirtualHost",
-			privateLayoutSet.getVirtualHostname());
+			actionRequest, "privateVirtualHost");
 
-		layoutSetService.updateVirtualHost(
-			liveGroup.getGroupId(), true, privateVirtualHost);
+		layoutSetService.updateVirtualHosts(
+			liveGroup.getGroupId(), true, _toTreeMap(privateVirtualHost));
 
 		// Staging
 
@@ -947,25 +946,19 @@ public class SiteAdminPortlet extends MVCPortlet {
 			groupService.updateFriendlyURL(
 				stagingGroup.getGroupId(), friendlyURL);
 
-			LayoutSet stagingPublicLayoutSet =
-				stagingGroup.getPublicLayoutSet();
-
 			publicVirtualHost = ParamUtil.getString(
-				actionRequest, "stagingPublicVirtualHost",
-				stagingPublicLayoutSet.getVirtualHostname());
+				actionRequest, "stagingPublicVirtualHost");
 
-			layoutSetService.updateVirtualHost(
-				stagingGroup.getGroupId(), false, publicVirtualHost);
-
-			LayoutSet stagingPrivateLayoutSet =
-				stagingGroup.getPrivateLayoutSet();
+			layoutSetService.updateVirtualHosts(
+				stagingGroup.getGroupId(), false,
+				_toTreeMap(publicVirtualHost));
 
 			privateVirtualHost = ParamUtil.getString(
-				actionRequest, "stagingPrivateVirtualHost",
-				stagingPrivateLayoutSet.getVirtualHostname());
+				actionRequest, "stagingPrivateVirtualHost");
 
-			layoutSetService.updateVirtualHost(
-				stagingGroup.getGroupId(), true, privateVirtualHost);
+			layoutSetService.updateVirtualHosts(
+				stagingGroup.getGroupId(), true,
+				_toTreeMap(privateVirtualHost));
 
 			UnicodeProperties stagedGroupTypeSettingsProperties =
 				stagingGroup.getTypeSettingsProperties();
@@ -1077,6 +1070,31 @@ public class SiteAdminPortlet extends MVCPortlet {
 		if ((nameMap == null) || Validator.isNull(nameMap.get(defaultLocale))) {
 			throw new GroupNameException();
 		}
+	}
+
+	// This is an interim function which converts the temporary UI input into a
+	// compatible type for the service. It's fully expected that a better UI
+	// would more closely map to the method type.
+	private TreeMap<String, String> _toTreeMap(String virtualHost) {
+		TreeMap<String, String> treeMap = new TreeMap<>();
+
+		for (String part : StringUtil.split(virtualHost)) {
+			String[] subparts = StringUtil.split(part, ';');
+
+			if (subparts.length == 2) {
+				treeMap.put(subparts[0], subparts[1]);
+			}
+			else if (subparts.length == 1) {
+				treeMap.put(subparts[0], StringPool.BLANK);
+			}
+			else {
+				_log.error(
+					"Syntax of virtual host entry is incorrect. Was " + part +
+						" should be <hostname>[;<languageId>]");
+			}
+		}
+
+		return treeMap;
 	}
 
 	@Reference

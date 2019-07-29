@@ -52,6 +52,7 @@ import com.liferay.staging.StagingGroupHelper;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -121,14 +122,14 @@ public class LayoutReferencesExportImportContentProcessor
 
 		LayoutSet publicLayoutSet = group.getPublicLayoutSet();
 
-		String publicLayoutSetVirtualHostname =
-			publicLayoutSet.getVirtualHostname();
+		TreeMap<String, String> publicLayoutSetVirtualHostnames =
+			publicLayoutSet.getVirtualHostnames();
 
 		String portalUrl = StringPool.BLANK;
 
-		if (Validator.isNotNull(publicLayoutSetVirtualHostname)) {
+		if (!publicLayoutSetVirtualHostnames.isEmpty()) {
 			portalUrl = _portal.getPortalURL(
-				publicLayoutSetVirtualHostname, serverPort, secure);
+				publicLayoutSetVirtualHostnames.firstKey(), serverPort, secure);
 
 			if (url.startsWith(portalUrl)) {
 				if (secure) {
@@ -144,12 +145,13 @@ public class LayoutReferencesExportImportContentProcessor
 
 		LayoutSet privateLayoutSet = group.getPrivateLayoutSet();
 
-		String privateLayoutSetVirtualHostname =
-			privateLayoutSet.getVirtualHostname();
+		TreeMap<String, String> privateLayoutSetVirtualHostnames =
+			privateLayoutSet.getVirtualHostnames();
 
-		if (Validator.isNotNull(privateLayoutSetVirtualHostname)) {
+		if (!privateLayoutSetVirtualHostnames.isEmpty()) {
 			portalUrl = _portal.getPortalURL(
-				privateLayoutSetVirtualHostname, serverPort, secure);
+				privateLayoutSetVirtualHostnames.firstKey(), serverPort,
+				secure);
 
 			if (url.startsWith(portalUrl)) {
 				if (secure) {
@@ -239,7 +241,7 @@ public class LayoutReferencesExportImportContentProcessor
 				}
 			}
 			else if ((content.charAt(beginPos) == CharPool.OPEN_BRACKET) ||
-					 (content.charAt(beginPos) == CharPool.OPEN_CURLY_BRACE)) {
+					(content.charAt(beginPos) == CharPool.OPEN_CURLY_BRACE)) {
 
 				offset = 2;
 			}
@@ -361,8 +363,8 @@ public class LayoutReferencesExportImportContentProcessor
 					}
 					else if (urlSBString.contains(
 								_DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL) ||
-							 urlSBString.contains(
-								 _DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
+							urlSBString.contains(
+								_DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
 
 						layoutSet = group.getPrivateLayoutSet();
 					}
@@ -451,8 +453,8 @@ public class LayoutReferencesExportImportContentProcessor
 					urlSB.append(liveGroup.getUuid());
 				}
 				else if (urlGroup.isControlPanel() ||
-						 (_stagingGroupHelper.isLiveGroup(urlGroup) &&
-						  (group.getLiveGroupId() == urlGroup.getGroupId()))) {
+						(_stagingGroupHelper.isLiveGroup(urlGroup) &&
+						(group.getLiveGroupId() == urlGroup.getGroupId()))) {
 
 					urlSB.append(urlGroup.getUuid());
 				}
@@ -558,17 +560,23 @@ public class LayoutReferencesExportImportContentProcessor
 					company.getVirtualHostname(), serverPort, false);
 			}
 
-			if (Validator.isNotNull(privateLayoutSet.getVirtualHostname())) {
+			TreeMap<String, String> privateVirtualHostnames =
+				privateLayoutSet.getVirtualHostnames();
+
+			if (!privateVirtualHostnames.isEmpty()) {
 				privateLayoutSetPortalURL = _portal.getPortalURL(
-					privateLayoutSet.getVirtualHostname(), serverPort, false);
+					privateVirtualHostnames.firstKey(), serverPort, false);
 			}
 			else {
 				privateLayoutSetPortalURL = companyPortalURL;
 			}
 
-			if (Validator.isNotNull(publicLayoutSet.getVirtualHostname())) {
+			TreeMap<String, String> publicVirtualHostnames =
+				publicLayoutSet.getVirtualHostnames();
+
+			if (!publicVirtualHostnames.isEmpty()) {
 				publicLayoutSetPortalURL = _portal.getPortalURL(
-					publicLayoutSet.getVirtualHostname(), serverPort, false);
+					publicVirtualHostnames.firstKey(), serverPort, false);
 			}
 			else {
 				publicLayoutSetPortalURL = companyPortalURL;
@@ -587,15 +595,21 @@ public class LayoutReferencesExportImportContentProcessor
 					company.getVirtualHostname(), secureSecurePort, true);
 			}
 
-			if (Validator.isNotNull(privateLayoutSet.getVirtualHostname())) {
+			TreeMap<String, String> privateVirtualHostnames =
+				privateLayoutSet.getVirtualHostnames();
+
+			if (!privateVirtualHostnames.isEmpty()) {
 				privateLayoutSetSecurePortalURL = _portal.getPortalURL(
-					privateLayoutSet.getVirtualHostname(), secureSecurePort,
+					privateVirtualHostnames.firstKey(), secureSecurePort,
 					true);
 			}
 
-			if (Validator.isNotNull(publicLayoutSet.getVirtualHostname())) {
+			TreeMap<String, String> publicVirtualHostnames =
+				publicLayoutSet.getVirtualHostnames();
+
+			if (!publicVirtualHostnames.isEmpty()) {
 				publicLayoutSetSecurePortalURL = _portal.getPortalURL(
-					publicLayoutSet.getVirtualHostname(), secureSecurePort,
+					publicVirtualHostnames.firstKey(), secureSecurePort,
 					true);
 			}
 		}
@@ -741,7 +755,7 @@ public class LayoutReferencesExportImportContentProcessor
 				}
 			}
 			else if ((content.charAt(beginPos) == CharPool.OPEN_BRACKET) ||
-					 (content.charAt(beginPos) == CharPool.OPEN_CURLY_BRACE)) {
+					(content.charAt(beginPos) == CharPool.OPEN_CURLY_BRACE)) {
 
 				offset = 2;
 			}
@@ -852,8 +866,8 @@ public class LayoutReferencesExportImportContentProcessor
 				}
 				else if (urlSBString.contains(
 							_DATA_HANDLER_PRIVATE_LAYOUT_SET_SECURE_URL) ||
-						 urlSBString.contains(
-							 _DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
+						urlSBString.contains(
+							_DATA_HANDLER_PRIVATE_LAYOUT_SET_URL)) {
 
 					layoutSet = group.getPrivateLayoutSet();
 				}
