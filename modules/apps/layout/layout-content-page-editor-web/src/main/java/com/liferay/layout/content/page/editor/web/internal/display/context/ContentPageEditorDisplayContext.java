@@ -565,6 +565,13 @@ public class ContentPageEditorDisplayContext {
 
 			InfoItemSelector infoItemSelector = infoItemSelectors.get(0);
 
+			PortletURL infoItemSelectorPortletURL =
+				infoItemSelector.getInfoItemSelectorPortletURL(request);
+
+			if (infoItemSelectorPortletURL == null) {
+				continue;
+			}
+
 			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
 
 			soyContext.put(
@@ -572,7 +579,7 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"classNameId", PortalUtil.getClassNameId(className)
 			).put(
-				"href", infoItemSelector.getInfoItemSelectorPortletURL(request)
+				"href", infoItemSelectorPortletURL.toString()
 			).put(
 				"typeName",
 				ResourceActionsUtil.getModelResource(
