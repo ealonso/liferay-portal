@@ -14,6 +14,8 @@
 
 package com.liferay.segments.asah.connector.internal.client.model.util;
 
+import java.util.TreeMap;
+
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -151,8 +153,11 @@ public class ExperimentUtil {
 
 		LayoutSet layoutSet = layout.getLayoutSet();
 
-		if (Validator.isNotNull(layoutSet.getVirtualHostname())) {
-			virtualHostname = layoutSet.getVirtualHostname();
+		TreeMap<String, String> virtualHostnames =
+			layoutSet.getVirtualHostnames();
+
+		if (!virtualHostnames.isEmpty()) {
+			virtualHostname = virtualHostnames.firstKey();
 		}
 		else {
 			Company company = companyLocalService.getCompany(
