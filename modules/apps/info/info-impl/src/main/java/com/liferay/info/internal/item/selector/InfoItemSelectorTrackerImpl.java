@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.info.internal.selector;
+package com.liferay.info.internal.item.selector;
 
 import com.liferay.info.internal.util.GenericsUtil;
-import com.liferay.info.selector.InfoItemSelector;
-import com.liferay.info.selector.InfoItemSelectorTracker;
+import com.liferay.info.item.selector.InfoItemSelector;
+import com.liferay.info.item.selector.InfoItemSelectorTracker;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
