@@ -12,38 +12,21 @@
  * details.
  */
 
-package com.liferay.fragment.entry.processor.util;
-
-import aQute.bnd.annotation.ProviderType;
+package com.liferay.fragment.entry.processor.editable.mapper;
 
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 
-import java.util.Locale;
-import java.util.Map;
+import org.jsoup.nodes.Element;
 
 /**
- * @author Eudaldo Alonso
+ * @author Pavel Savinov
  */
-@ProviderType
-public interface FragmentEntryProcessorUtil {
+public interface EditableElementMapper {
 
-	public String getEditableValue(
-		JSONObject jsonObject, Locale locale, long[] segmentsExperienceIds);
-
-	public Object getMappedValue(
-			JSONObject jsonObject,
-			Map<Long, Map<String, Object>> infoDisplaysFieldValues, String mode,
-			Locale locale, long previewClassPK, int previewType)
-		throws PortalException;
-
-	public boolean isAssetDisplayPage(String mode);
-
-	public boolean isMapped(JSONObject jsonObject);
-
-	public String processTemplate(
-			String html,
+	public void map(
+			Element element, JSONObject configJSONObject,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException;
 

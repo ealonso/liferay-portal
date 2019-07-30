@@ -51,12 +51,34 @@ function destroy() {}
  * @return {object[]} Floating toolbar panels
  */
 function getFloatingToolbarButtons(editableValues) {
-	return editableValues.mappedField
-		? [FLOATING_TOOLBAR_BUTTONS.imageLink, FLOATING_TOOLBAR_BUTTONS.map]
-		: [
-				FLOATING_TOOLBAR_BUTTONS.imageProperties,
-				FLOATING_TOOLBAR_BUTTONS.map
-		  ];
+	const buttons = [];
+
+	if (!editableValues.mappedField && !editableValues.fieldId) {
+		buttons.push(FLOATING_TOOLBAR_BUTTONS.imageProperties);
+	}
+
+	const linkButton = Object.assign({}, FLOATING_TOOLBAR_BUTTONS.link);
+
+	if (
+		editableValues.config.fieldId ||
+		editableValues.config.href ||
+		editableValues.config.mappedField
+	) {
+		linkButton.cssClass =
+			'fragments-editor__floating-toolbar--linked-field';
+	}
+
+	buttons.push(linkButton);
+
+	const mapButton = Object.assign({}, FLOATING_TOOLBAR_BUTTONS.map);
+
+	if (editableValues.fieldId || editableValues.mappedField) {
+		mapButton.cssClass = 'fragments-editor__floating-toolbar--mapped-field';
+	}
+
+	buttons.push(mapButton);
+
+	return buttons;
 }
 
 /**
