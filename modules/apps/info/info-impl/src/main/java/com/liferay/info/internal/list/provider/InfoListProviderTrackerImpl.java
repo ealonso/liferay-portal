@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.info.internal.provider;
+package com.liferay.info.internal.list.provider;
 
 import com.liferay.info.internal.util.GenericsUtil;
 import com.liferay.info.provider.InfoListProvider;
