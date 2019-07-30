@@ -12,25 +12,25 @@
  * details.
  */
 
-package com.liferay.info.selector;
+package com.liferay.info.item.selector;
 
-import javax.portlet.PortletURL;
+import java.util.List;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Eudaldo Alonso
  */
-public interface InfoItemSelector<T> {
+@ProviderType
+public interface InfoItemSelectorTracker {
 
-	public PortletURL getInfoItemSelectorPortletURL(
-			HttpServletRequest httpServletRequest)
-		throws Exception;
+	public InfoItemSelector getInfoItemSelector(String key);
 
-	public default String getKey() {
-		Class<?> clazz = getClass();
+	public List<InfoItemSelector> getInfoItemSelectors();
 
-		return clazz.getName();
-	}
+	public List<InfoItemSelector> getInfoItemSelectors(String itemClassName);
+
+	public Set<String> getInfoItemSelectorsClassNames();
 
 }
