@@ -17,8 +17,16 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
 String className = ParamUtil.getString(request, "className");
 long classPK = ParamUtil.getLong(request, "classPK");
+
+AssetEntry assetEntry = AssetEntryServiceUtil.getEntry(className, classPK);
+
+portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
+
+renderResponse.setTitle(assetEntry.getTitle(themeDisplay.getLocale()));
 %>
 
 <liferay-asset:asset-entry-usages
