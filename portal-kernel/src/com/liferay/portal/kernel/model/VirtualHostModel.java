@@ -128,4 +128,33 @@ public interface VirtualHostModel
 	 */
 	public void setHostname(String hostname);
 
+	/**
+	 * Returns the priority of this virtual host.
+	 *
+	 * @return the priority of this virtual host
+	 */
+	public int getPriority();
+
+	/**
+	 * Sets the priority of this virtual host.
+	 *
+	 * @param priority the priority of this virtual host
+	 */
+	public void setPriority(int priority);
+
+	/**
+	 * Returns the language ID of this virtual host.
+	 *
+	 * @return the language ID of this virtual host
+	 */
+	@AutoEscape
+	public String getLanguageId();
+
+	/**
+	 * Sets the language ID of this virtual host.
+	 *
+	 * @param languageId the language ID of this virtual host
+	 */
+	public void setLanguageId(String languageId);
+
 }

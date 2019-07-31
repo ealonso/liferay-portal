@@ -48,6 +48,8 @@ public class VirtualHostWrapper
 		attributes.put("companyId", getCompanyId());
 		attributes.put("layoutSetId", getLayoutSetId());
 		attributes.put("hostname", getHostname());
+		attributes.put("priority", getPriority());
+		attributes.put("languageId", getLanguageId());
 
 		return attributes;
 	}
@@ -83,6 +85,18 @@ public class VirtualHostWrapper
 		if (hostname != null) {
 			setHostname(hostname);
 		}
+
+		Integer priority = (Integer)attributes.get("priority");
+
+		if (priority != null) {
+			setPriority(priority);
+		}
+
+		String languageId = (String)attributes.get("languageId");
+
+		if (languageId != null) {
+			setLanguageId(languageId);
+		}
 	}
 
 	/**
@@ -103,6 +117,16 @@ public class VirtualHostWrapper
 	@Override
 	public String getHostname() {
 		return model.getHostname();
+	}
+
+	/**
+	 * Returns the language ID of this virtual host.
+	 *
+	 * @return the language ID of this virtual host
+	 */
+	@Override
+	public String getLanguageId() {
+		return model.getLanguageId();
 	}
 
 	/**
@@ -133,6 +157,16 @@ public class VirtualHostWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
+	}
+
+	/**
+	 * Returns the priority of this virtual host.
+	 *
+	 * @return the priority of this virtual host
+	 */
+	@Override
+	public int getPriority() {
+		return model.getPriority();
 	}
 
 	/**
@@ -171,6 +205,16 @@ public class VirtualHostWrapper
 	}
 
 	/**
+	 * Sets the language ID of this virtual host.
+	 *
+	 * @param languageId the language ID of this virtual host
+	 */
+	@Override
+	public void setLanguageId(String languageId) {
+		model.setLanguageId(languageId);
+	}
+
+	/**
 	 * Sets the layout set ID of this virtual host.
 	 *
 	 * @param layoutSetId the layout set ID of this virtual host
@@ -198,6 +242,16 @@ public class VirtualHostWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the priority of this virtual host.
+	 *
+	 * @param priority the priority of this virtual host
+	 */
+	@Override
+	public void setPriority(int priority) {
+		model.setPriority(priority);
 	}
 
 	/**
