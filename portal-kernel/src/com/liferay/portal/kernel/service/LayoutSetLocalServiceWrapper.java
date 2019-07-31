@@ -444,6 +444,11 @@ public class LayoutSetLocalServiceWrapper
 			groupId, privateLayout, settings);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #updateVirtualHosts(long, boolean, TreeMap)}
+	 */
+	@Deprecated
 	@Override
 	public com.liferay.portal.kernel.model.LayoutSet updateVirtualHost(
 			long groupId, boolean privateLayout, String virtualHostname)
@@ -451,6 +456,16 @@ public class LayoutSetLocalServiceWrapper
 
 		return _layoutSetLocalService.updateVirtualHost(
 			groupId, privateLayout, virtualHostname);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.model.LayoutSet updateVirtualHosts(
+			long groupId, boolean privateLayout,
+			java.util.TreeMap<String, String> virtualHostnames)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _layoutSetLocalService.updateVirtualHosts(
+			groupId, privateLayout, virtualHostnames);
 	}
 
 	@Override
