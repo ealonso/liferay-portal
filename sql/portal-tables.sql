@@ -1412,7 +1412,9 @@ create table VirtualHost (
 	virtualHostId LONG not null primary key,
 	companyId LONG,
 	layoutSetId LONG,
-	hostname VARCHAR(200) null
+	hostname VARCHAR(200) null,
+	priority INTEGER,
+	languageId VARCHAR(75) null
 );
 
 create table WebDAVProps (
