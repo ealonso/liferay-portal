@@ -71,7 +71,8 @@ public class VirtualHostFilter extends BasePortalFilter {
 		String proxyPath = PortalUtil.getPathProxy();
 
 		if (!contextPath.isEmpty() && !proxyPath.isEmpty() &&
-			contextPath.startsWith(proxyPath)) {
+			contextPath.startsWith(proxyPath) &&
+			!contextPath.equals(proxyPath)) {
 
 			contextPath = contextPath.substring(proxyPath.length());
 		}
