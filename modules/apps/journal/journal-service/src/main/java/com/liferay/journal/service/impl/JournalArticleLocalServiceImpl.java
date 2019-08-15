@@ -8309,9 +8309,15 @@ public class JournalArticleLocalServiceImpl
 			article);
 
 		try {
-			PortletRequestModel portletRequestModel = new PortletRequestModel(
-				serviceContext.getLiferayPortletRequest(),
-				serviceContext.getLiferayPortletResponse());
+			PortletRequestModel portletRequestModel = null;
+
+			if ((serviceContext.getLiferayPortletRequest() != null) &&
+				(serviceContext.getLiferayPortletResponse() != null)) {
+
+				portletRequestModel = new PortletRequestModel(
+					serviceContext.getLiferayPortletRequest(),
+					serviceContext.getLiferayPortletResponse());
+			}
 
 			JournalArticleDisplay articleDisplay = getArticleDisplay(
 				article, article.getDDMTemplateKey(), Constants.VIEW,
