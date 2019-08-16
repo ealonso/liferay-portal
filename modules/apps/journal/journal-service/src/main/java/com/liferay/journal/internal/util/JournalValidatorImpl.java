@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -55,6 +56,8 @@ public final class JournalValidatorImpl implements JournalValidator {
 		catch (Exception e) {
 			_log.error(e, e);
 		}
+
+		charactersBlacklist = ArrayUtil.remove(charactersBlacklist, "");
 
 		for (String blacklistChar : charactersBlacklist) {
 			blacklistChar = StringEscapeUtils.unescapeJava(blacklistChar);
