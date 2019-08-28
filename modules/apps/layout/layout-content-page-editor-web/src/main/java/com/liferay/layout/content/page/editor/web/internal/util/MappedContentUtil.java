@@ -67,8 +67,17 @@ public class MappedContentUtil {
 	public static Set<AssetEntry> getFragmentEntryLinkMappedAssetEntries(
 		FragmentEntryLink fragmentEntryLink) {
 
-		return _getFragmentEntryLinkMappedAssetEntries(
-			fragmentEntryLink, new HashSet<>());
+		Set<Long> mappedClassPKs = new HashSet<>();
+
+		Set<AssetEntry> assetEntries =
+			_getFragmentEntryLinkConfiguredAssetEntries(
+				fragmentEntryLink, mappedClassPKs);
+
+		assetEntries.addAll(
+			_getFragmentEntryLinkMappedAssetEntries(
+				fragmentEntryLink, mappedClassPKs));
+
+		return assetEntries;
 	}
 
 	public static Set<AssetEntry> getLayoutMappedAssetEntries(
@@ -236,6 +245,53 @@ public class MappedContentUtil {
 		return JSONFactoryUtil.createJSONObject();
 	}
 
+	private static Set<AssetEntry> _getFragmentEntryLinkConfiguredAssetEntries(
+		FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
+
+		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
+			fragmentEntryLink);
+
+		JSONObject editableProcessorJSONObject =
+			editableValuesJSONObject.getJSONObject(
+				_KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR);
+
+		if (editableProcessorJSONObject == null) {
+			return Collections.emptySet();
+		}
+
+		Set<AssetEntry> assetEntries = new HashSet<>();
+
+		JSONObject configurationJSONObject =
+			editableProcessorJSONObject.getJSONObject(
+				SegmentsExperienceConstants.ID_PREFIX +
+					SegmentsExperienceConstants.ID_DEFAULT);
+
+		Iterator<String> configurationKeysIterator =
+			configurationJSONObject.keys();
+
+		while (configurationKeysIterator.hasNext()) {
+			String editableKey = configurationKeysIterator.next();
+
+			JSONObject editableJSONObject =
+				editableProcessorJSONObject.getJSONObject(editableKey);
+
+			if (editableJSONObject == null) {
+				continue;
+			}
+
+			AssetEntry assetEntry = _getAssetEntry(
+				editableJSONObject, mappedClassPKs);
+
+			if (assetEntry == null) {
+				continue;
+			}
+
+			assetEntries.add(assetEntry);
+		}
+
+		return assetEntries;
+	}
+
 	private static Set<AssetEntry> _getFragmentEntryLinkMappedAssetEntries(
 		FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
 
@@ -308,6 +364,10 @@ public class MappedContentUtil {
 				groupId, layoutClassNameId, layoutClassPK);
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			assetEntries.addAll(
+				_getFragmentEntryLinkConfiguredAssetEntries(
+					fragmentEntryLink, mappedClassPKs));
+
 			assetEntries.addAll(
 				_getFragmentEntryLinkMappedAssetEntries(
 					fragmentEntryLink, mappedClassPKs));
@@ -456,6 +516,10 @@ public class MappedContentUtil {
 				latestAssetRenderer.getStatus())
 		);
 	}
+
+	private static final String _KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR =
+		"com.liferay.fragment.entry.processor.freemarker." +
+			"FreeMarkerFragmentEntryProcessor";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		MappedContentUtil.class);
