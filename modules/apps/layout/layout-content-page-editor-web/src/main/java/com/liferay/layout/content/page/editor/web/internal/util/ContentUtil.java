@@ -62,9 +62,29 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Víctor Galán
  */
-public class MappedContentUtil {
+public class ContentUtil {
 
-	public static Set<AssetEntry> getFragmentEntryLinkMappedAssetEntries(
+	public static JSONArray getContentsJSONArray(
+		Set<AssetEntry> assetEntries, String backURL,
+		HttpServletRequest httpServletRequest) {
+
+		JSONArray mappedContentsJSONArray = JSONFactoryUtil.createJSONArray();
+
+		try {
+			for (AssetEntry assetEntry : assetEntries) {
+				mappedContentsJSONArray.put(
+					_getContentJSONObject(
+						assetEntry, backURL, httpServletRequest));
+			}
+		}
+		catch (Exception e) {
+			_log.error("An error ocurred while getting mapped contents", e);
+		}
+
+		return mappedContentsJSONArray;
+	}
+
+	public static Set<AssetEntry> getFragmentEntryLinkAssetEntries(
 		FragmentEntryLink fragmentEntryLink) {
 
 		Set<Long> mappedClassPKs = new HashSet<>();
@@ -80,48 +100,46 @@ public class MappedContentUtil {
 		return assetEntries;
 	}
 
-	public static Set<AssetEntry> getLayoutMappedAssetEntries(
-			LayoutPageTemplateStructure layoutPageTemplateStructure)
-		throws PortalException {
-
-		return _getLayoutMappedAssetEntries(
-			layoutPageTemplateStructure, new HashSet<>());
-	}
-
-	public static Set<AssetEntry> getMappedAssetEntries(
+	public static Set<AssetEntry> getLayoutAssetEntries(
 			long groupId, long layoutClassNameId, long layoutClassPK)
 		throws PortalException {
 
 		Set<Long> mappedClassPKs = new HashSet<>();
 
-		Set<AssetEntry> assetEntries = _getFragmentEntryLinksMappedAssetEntries(
-			groupId, layoutClassNameId, layoutClassPK, mappedClassPKs);
+		Set<AssetEntry> assetEntries = new HashSet<>();
+
+		List<FragmentEntryLink> fragmentEntryLinks =
+			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
+				groupId, layoutClassNameId, layoutClassPK);
+
+		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			assetEntries.addAll(
+				_getFragmentEntryLinkConfiguredAssetEntries(
+					fragmentEntryLink, mappedClassPKs));
+
+			assetEntries.addAll(
+				_getFragmentEntryLinkMappedAssetEntries(
+					fragmentEntryLink, mappedClassPKs));
+		}
+
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			LayoutPageTemplateStructureLocalServiceUtil.
+				fetchLayoutPageTemplateStructure(
+					groupId, layoutClassNameId, layoutClassPK, false);
 
 		assetEntries.addAll(
-			_getLayoutMappedAssetEntries(
-				groupId, layoutClassNameId, layoutClassPK, mappedClassPKs));
+			_getLayoutPageTemplateStructureMappedAssetEntries(
+				layoutPageTemplateStructure, mappedClassPKs));
 
 		return assetEntries;
 	}
 
-	public static JSONArray getMappedContentsJSONArray(
-		Set<AssetEntry> assetEntries, String backURL,
-		HttpServletRequest httpServletRequest) {
+	public static Set<AssetEntry> getLayoutPageTemplateStructureAssetEntries(
+			LayoutPageTemplateStructure layoutPageTemplateStructure)
+		throws PortalException {
 
-		JSONArray mappedContentsJSONArray = JSONFactoryUtil.createJSONArray();
-
-		try {
-			for (AssetEntry assetEntry : assetEntries) {
-				mappedContentsJSONArray.put(
-					_getMappedContentJSONObject(
-						assetEntry, backURL, httpServletRequest));
-			}
-		}
-		catch (Exception e) {
-			_log.error("An error ocurred while getting mapped contents", e);
-		}
-
-		return mappedContentsJSONArray;
+		return _getLayoutPageTemplateStructureMappedAssetEntries(
+			layoutPageTemplateStructure, new HashSet<>());
 	}
 
 	private static JSONObject _getActionsJSONObject(
@@ -224,6 +242,52 @@ public class MappedContentUtil {
 		}
 
 		return null;
+	}
+
+	private static JSONObject _getContentJSONObject(
+			AssetEntry assetEntry, String backURL,
+			HttpServletRequest httpServletRequest)
+		throws Exception {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		JSONObject mappedContentJSONObject = JSONUtil.put(
+			"actions",
+			_getActionsJSONObject(
+				assetEntry, themeDisplay, httpServletRequest, backURL)
+		).put(
+			"className", assetEntry.getClassName()
+		).put(
+			"classNameId", assetEntry.getClassNameId()
+		).put(
+			"classPK", assetEntry.getClassPK()
+		);
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				assetEntry.getClassName());
+
+		String name = ResourceActionsUtil.getModelResource(
+			themeDisplay.getLocale(), assetEntry.getClassName());
+
+		if (assetEntry.getClassTypeId() > 0) {
+			name = assetRendererFactory.getTypeName(
+				themeDisplay.getLocale(), assetEntry.getClassTypeId());
+		}
+
+		return mappedContentJSONObject.put(
+			"name", name
+		).put(
+			"status", _getStatusJSONObject(assetEntry)
+		).put(
+			"title", assetEntry.getTitle(themeDisplay.getLocale())
+		).put(
+			"usagesCount",
+			AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
+				assetEntry.getEntryId())
+		);
 	}
 
 	private static JSONObject _getEditableValuesJSONObject(
@@ -353,32 +417,10 @@ public class MappedContentUtil {
 		return assetEntries;
 	}
 
-	private static Set<AssetEntry> _getFragmentEntryLinksMappedAssetEntries(
-		long groupId, long layoutClassNameId, long layoutClassPK,
-		Set<Long> mappedClassPKs) {
-
-		Set<AssetEntry> assetEntries = new HashSet<>();
-
-		List<FragmentEntryLink> fragmentEntryLinks =
-			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-				groupId, layoutClassNameId, layoutClassPK);
-
-		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
-			assetEntries.addAll(
-				_getFragmentEntryLinkConfiguredAssetEntries(
-					fragmentEntryLink, mappedClassPKs));
-
-			assetEntries.addAll(
-				_getFragmentEntryLinkMappedAssetEntries(
-					fragmentEntryLink, mappedClassPKs));
-		}
-
-		return assetEntries;
-	}
-
-	private static Set<AssetEntry> _getLayoutMappedAssetEntries(
-			LayoutPageTemplateStructure layoutPageTemplateStructure,
-			Set<Long> mappedClassPKs)
+	private static Set<AssetEntry>
+			_getLayoutPageTemplateStructureMappedAssetEntries(
+				LayoutPageTemplateStructure layoutPageTemplateStructure,
+				Set<Long> mappedClassPKs)
 		throws PortalException {
 
 		JSONObject layoutDataJSONObject = JSONFactoryUtil.createJSONObject(
@@ -417,66 +459,6 @@ public class MappedContentUtil {
 			});
 
 		return assetEntries;
-	}
-
-	private static Set<AssetEntry> _getLayoutMappedAssetEntries(
-			long groupId, long layoutClassNameId, long layoutClassPK,
-			Set<Long> mappedClassPKs)
-		throws PortalException {
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, layoutClassNameId, layoutClassPK, false);
-
-		return _getLayoutMappedAssetEntries(
-			layoutPageTemplateStructure, mappedClassPKs);
-	}
-
-	private static JSONObject _getMappedContentJSONObject(
-			AssetEntry assetEntry, String backURL,
-			HttpServletRequest httpServletRequest)
-		throws Exception {
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		JSONObject mappedContentJSONObject = JSONUtil.put(
-			"actions",
-			_getActionsJSONObject(
-				assetEntry, themeDisplay, httpServletRequest, backURL)
-		).put(
-			"className", assetEntry.getClassName()
-		).put(
-			"classNameId", assetEntry.getClassNameId()
-		).put(
-			"classPK", assetEntry.getClassPK()
-		);
-
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				assetEntry.getClassName());
-
-		String name = ResourceActionsUtil.getModelResource(
-			themeDisplay.getLocale(), assetEntry.getClassName());
-
-		if (assetEntry.getClassTypeId() > 0) {
-			name = assetRendererFactory.getTypeName(
-				themeDisplay.getLocale(), assetEntry.getClassTypeId());
-		}
-
-		return mappedContentJSONObject.put(
-			"name", name
-		).put(
-			"status", _getStatusJSONObject(assetEntry)
-		).put(
-			"title", assetEntry.getTitle(themeDisplay.getLocale())
-		).put(
-			"usagesCount",
-			AssetEntryUsageLocalServiceUtil.getAssetEntryUsagesCount(
-				assetEntry.getEntryId())
-		);
 	}
 
 	private static JSONObject _getStatusJSONObject(AssetEntry assetEntry)
@@ -521,7 +503,6 @@ public class MappedContentUtil {
 		"com.liferay.fragment.entry.processor.freemarker." +
 			"FreeMarkerFragmentEntryProcessor";
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		MappedContentUtil.class);
+	private static final Log _log = LogFactoryUtil.getLog(ContentUtil.class);
 
 }
