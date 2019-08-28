@@ -217,13 +217,11 @@ public class MappedContentUtil {
 		return jsonObject;
 	}
 
-	private static Set<AssetEntry> _getFragmentEntryLinkMappedAssetEntries(
-		FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
-
-		JSONObject editableValuesJSONObject = null;
+	private static JSONObject _getEditableValuesJSONObject(
+		FragmentEntryLink fragmentEntryLink) {
 
 		try {
-			editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
+			return JSONFactoryUtil.createJSONObject(
 				fragmentEntryLink.getEditableValues());
 		}
 		catch (JSONException jsone) {
@@ -233,9 +231,16 @@ public class MappedContentUtil {
 						fragmentEntryLink.getEditableValues(),
 					jsone);
 			}
-
-			return Collections.emptySet();
 		}
+
+		return JSONFactoryUtil.createJSONObject();
+	}
+
+	private static Set<AssetEntry> _getFragmentEntryLinkMappedAssetEntries(
+		FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
+
+		JSONObject editableValuesJSONObject = _getEditableValuesJSONObject(
+			fragmentEntryLink);
 
 		Set<AssetEntry> assetEntries = new HashSet<>();
 
