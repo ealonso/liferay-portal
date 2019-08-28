@@ -64,48 +64,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class MappedContentUtil {
 
-	public static AssetEntry getAssetEntry(
-		JSONObject jsonObject, Set<Long> mappedClassPKs) {
-
-		if (!jsonObject.has("classNameId") || !jsonObject.has("classPK")) {
-			return null;
-		}
-
-		long classPK = jsonObject.getLong("classPK");
-
-		if (classPK <= 0) {
-			return null;
-		}
-
-		if (mappedClassPKs.contains(classPK)) {
-			return null;
-		}
-
-		mappedClassPKs.add(classPK);
-
-		long classNameId = jsonObject.getLong("classNameId");
-
-		if (classNameId <= 0) {
-			return null;
-		}
-
-		try {
-			return AssetEntryServiceUtil.getEntry(
-				PortalUtil.getClassName(classNameId), classPK);
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					StringBundler.concat(
-						"Unable to get asset entry for class name ID ",
-						classNameId, " with primary key ", classPK),
-					pe);
-			}
-		}
-
-		return null;
-	}
-
 	public static Set<AssetEntry> getFragmentEntryLinkMappedAssetEntries(
 		FragmentEntryLink fragmentEntryLink) {
 
@@ -217,6 +175,48 @@ public class MappedContentUtil {
 		return jsonObject;
 	}
 
+	private static AssetEntry _getAssetEntry(
+		JSONObject jsonObject, Set<Long> mappedClassPKs) {
+
+		if (!jsonObject.has("classNameId") || !jsonObject.has("classPK")) {
+			return null;
+		}
+
+		long classPK = jsonObject.getLong("classPK");
+
+		if (classPK <= 0) {
+			return null;
+		}
+
+		if (mappedClassPKs.contains(classPK)) {
+			return null;
+		}
+
+		mappedClassPKs.add(classPK);
+
+		long classNameId = jsonObject.getLong("classNameId");
+
+		if (classNameId <= 0) {
+			return null;
+		}
+
+		try {
+			return AssetEntryServiceUtil.getEntry(
+				PortalUtil.getClassName(classNameId), classPK);
+		}
+		catch (PortalException pe) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					StringBundler.concat(
+						"Unable to get asset entry for class name ID ",
+						classNameId, " with primary key ", classPK),
+					pe);
+			}
+		}
+
+		return null;
+	}
+
 	private static JSONObject _getEditableValuesJSONObject(
 		FragmentEntryLink fragmentEntryLink) {
 
@@ -275,7 +275,7 @@ public class MappedContentUtil {
 				if ((configJSONObject != null) &&
 					(configJSONObject.length() > 0)) {
 
-					AssetEntry assetEntry = getAssetEntry(
+					AssetEntry assetEntry = _getAssetEntry(
 						configJSONObject, mappedClassPKs);
 
 					if (assetEntry != null) {
@@ -283,7 +283,7 @@ public class MappedContentUtil {
 					}
 				}
 
-				AssetEntry assetEntry = getAssetEntry(
+				AssetEntry assetEntry = _getAssetEntry(
 					editableJSONObject, mappedClassPKs);
 
 				if (assetEntry == null) {
@@ -346,7 +346,7 @@ public class MappedContentUtil {
 						configJSONObject.getJSONObject("backgroundImage");
 
 					if (backgroundImageJSONObject != null) {
-						AssetEntry assetEntry = getAssetEntry(
+						AssetEntry assetEntry = _getAssetEntry(
 							backgroundImageJSONObject, mappedClassPKs);
 
 						if (assetEntry != null) {
