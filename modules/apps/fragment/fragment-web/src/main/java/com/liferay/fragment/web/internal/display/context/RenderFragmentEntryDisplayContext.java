@@ -15,11 +15,13 @@
 package com.liferay.fragment.web.internal.display.context;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
+import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.fragment.web.internal.constants.FragmentWebKeys;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 
@@ -34,6 +36,11 @@ public class RenderFragmentEntryDisplayContext {
 		HttpServletRequest httpServletRequest) {
 
 		_httpServletRequest = httpServletRequest;
+
+		_fragmentCollectionContributorTracker =
+			(FragmentCollectionContributorTracker)
+				_httpServletRequest.getAttribute(
+					FragmentWebKeys.FRAGMENT_COLLECTION_CONTRIBUTOR_TRACKER);
 	}
 
 	public DefaultFragmentRendererContext getDefaultFragmentRendererContext() {
@@ -73,9 +80,20 @@ public class RenderFragmentEntryDisplayContext {
 		FragmentEntry fragmentEntry =
 			FragmentEntryLocalServiceUtil.fetchFragmentEntry(fragmentEntryId);
 
+		if (fragmentEntry == null) {
+			String fragmentEntryKey = ParamUtil.getString(
+				_httpServletRequest, "fragmentEntryKey");
+
+			fragmentEntry =
+				_fragmentCollectionContributorTracker.getFragmentEntry(
+					fragmentEntryKey);
+		}
+
 		return fragmentEntry;
 	}
 
+	private final FragmentCollectionContributorTracker
+		_fragmentCollectionContributorTracker;
 	private final HttpServletRequest _httpServletRequest;
 
 }
