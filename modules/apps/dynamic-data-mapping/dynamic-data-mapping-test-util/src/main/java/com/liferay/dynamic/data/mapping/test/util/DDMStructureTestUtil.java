@@ -227,7 +227,7 @@ public class DDMStructureTestUtil {
 	}
 
 	public static String getSampleStructuredContent() {
-		return getSampleStructuredContent("name", "title");
+		return getSampleStructuredContent("content", "title");
 	}
 
 	public static String getSampleStructuredContent(
