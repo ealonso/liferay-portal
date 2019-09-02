@@ -58,13 +58,6 @@ public class ContentsContentPageEditorSidebarPanel
 
 	@Override
 	public boolean isVisible(boolean pageIsDisplayPage) {
-
-		// LPS-100647
-
-		if (true) {
-			return false;
-		}
-
 		return !pageIsDisplayPage;
 	}
 
