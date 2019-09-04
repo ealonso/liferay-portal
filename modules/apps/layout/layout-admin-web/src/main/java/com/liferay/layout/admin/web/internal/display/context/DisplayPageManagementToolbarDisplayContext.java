@@ -138,16 +138,16 @@ public class DisplayPageManagementToolbarDisplayContext
 			{
 				addDropdownItem(
 					dropdownItem -> {
-						dropdownItem.setData(
-							new HashMap<String, Object>() {
-								{
-									put("action", "addDisplayPage");
-									put(
-										"addDisplayPageURL",
-										addDisplayPageURL.toString());
-									put("mappingTypes", _getMappingTypes());
-								}
-							});
+						dropdownItem.putData("action", "addDisplayPage");
+						dropdownItem.putData(
+							"addDisplayPageURL",
+							addDisplayPageURL.toString());
+
+						JSONArray jsonArray = _getMappingTypes();
+
+						dropdownItem.putData(
+							"mappingTypes", jsonArray.toString());
+
 						dropdownItem.setLabel(LanguageUtil.get(request, "add"));
 					});
 			}
