@@ -30,7 +30,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface ComponentBlacklistConfiguration {
 
 	@Meta.AD(
-		deflt = "", description = "blacklist-component-names-help",
+		description = "blacklist-component-names-help",
 		name = "blacklist-component-names", required = false
 	)
 	public String[] blacklistComponentNames();
