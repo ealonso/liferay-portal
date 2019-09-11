@@ -86,12 +86,11 @@ public class ContentUtil {
 			));
 	}
 
-	public static Set<AssetEntry> getLayoutMappedAssetEntries(
-			LayoutPageTemplateStructure layoutPageTemplateStructure)
+	public static Set<AssetEntry> getLayoutMappedAssetEntries(String layoutData)
 		throws PortalException {
 
 		Set<MappedContent> mappedContents = _getLayoutMappedAssetEntries(
-			layoutPageTemplateStructure);
+			layoutData);
 
 		Stream<MappedContent> stream = mappedContents.stream();
 
@@ -357,12 +356,26 @@ public class ContentUtil {
 	}
 
 	private static Set<MappedContent> _getLayoutMappedAssetEntries(
-			LayoutPageTemplateStructure layoutPageTemplateStructure)
+			long groupId, long plid)
+		throws PortalException {
+
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			LayoutPageTemplateStructureLocalServiceUtil.
+				fetchLayoutPageTemplateStructure(
+					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
+					plid, false);
+
+		return _getLayoutMappedAssetEntries(
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.ID_DEFAULT));
+	}
+
+	private static Set<MappedContent> _getLayoutMappedAssetEntries(
+			String layoutData)
 		throws PortalException {
 
 		JSONObject layoutDataJSONObject = JSONFactoryUtil.createJSONObject(
-			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+			layoutData);
 
 		JSONArray structureJSONArray = layoutDataJSONObject.getJSONArray(
 			"structure");
@@ -396,19 +409,6 @@ public class ContentUtil {
 			});
 
 		return mappedContents;
-	}
-
-	private static Set<MappedContent> _getLayoutMappedAssetEntries(
-			long groupId, long plid)
-		throws PortalException {
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, false);
-
-		return _getLayoutMappedAssetEntries(layoutPageTemplateStructure);
 	}
 
 	private static MappedContent _getMappedContent(JSONObject jsonObject) {
