@@ -27,6 +27,7 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItem;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -57,6 +58,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletURL;
 
@@ -70,30 +73,47 @@ public class ContentUtil {
 	public static Set<AssetEntry> getFragmentEntryLinkMappedAssetEntries(
 		FragmentEntryLink fragmentEntryLink) {
 
-		return _getFragmentEntryLinkMappedAssetEntries(
-			fragmentEntryLink, new HashSet<>());
+		Set<MappedContent> mappedContents =
+			_getFragmentEntryLinkMappedAssetEntries(fragmentEntryLink);
+
+		Stream<MappedContent> stream = mappedContents.stream();
+
+		return _toAssetEntry(
+			stream.filter(
+				mappedContent -> Validator.isNotNull(mappedContent.getFieldId())
+			).collect(
+				Collectors.toSet()
+			));
 	}
 
 	public static Set<AssetEntry> getLayoutMappedAssetEntries(
 			LayoutPageTemplateStructure layoutPageTemplateStructure)
 		throws PortalException {
 
-		return _getLayoutMappedAssetEntries(
-			layoutPageTemplateStructure, new HashSet<>());
+		Set<MappedContent> mappedContents = _getLayoutMappedAssetEntries(
+			layoutPageTemplateStructure);
+
+		Stream<MappedContent> stream = mappedContents.stream();
+
+		return _toAssetEntry(
+			stream.filter(
+				mappedContent -> Validator.isNotNull(mappedContent.getFieldId())
+			).collect(
+				Collectors.toSet()
+			));
 	}
 
 	public static Set<AssetEntry> getMappedAssetEntries(long groupId, long plid)
 		throws PortalException {
 
-		Set<Long> mappedClassPKs = new HashSet<>();
+		Set<MappedContent> mappedContents = new HashSet<>();
 
-		Set<AssetEntry> assetEntries = _getFragmentEntryLinksMappedAssetEntries(
-			groupId, plid, mappedClassPKs);
+		mappedContents.addAll(
+			_getFragmentEntryLinksMappedAssetEntries(groupId, plid));
 
-		assetEntries.addAll(
-			_getLayoutMappedAssetEntries(groupId, plid, mappedClassPKs));
+		mappedContents.addAll(_getLayoutMappedAssetEntries(groupId, plid));
 
-		return assetEntries;
+		return _toAssetEntry(mappedContents);
 	}
 
 	public static JSONArray getPageContentsJSONArray(
@@ -127,6 +147,60 @@ public class ContentUtil {
 		}
 
 		return mappedContentsJSONArray;
+	}
+
+	public static class MappedContent {
+
+		public MappedContent(long classNameId, long classPK, String fieldId) {
+			_classNameId = classNameId;
+			_classPK = classPK;
+			_fieldId = fieldId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+
+			if ((o == null) || (getClass() != o.getClass())) {
+				return false;
+			}
+
+			MappedContent that = (MappedContent)o;
+
+			if ((_classNameId == that._classNameId) &&
+				(_classPK == that._classPK)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public long getClassNameId() {
+			return _classNameId;
+		}
+
+		public long getClassPK() {
+			return _classPK;
+		}
+
+		public String getFieldId() {
+			return _fieldId;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = HashUtil.hash(0, _classNameId);
+
+			return HashUtil.hash(hash, _classPK);
+		}
+
+		private final long _classNameId;
+		private final long _classPK;
+		private final String _fieldId;
+
 	}
 
 	private static JSONObject _getActionsJSONObject(
@@ -189,50 +263,8 @@ public class ContentUtil {
 		return jsonObject;
 	}
 
-	private static AssetEntry _getAssetEntry(
-		JSONObject jsonObject, Set<Long> mappedClassPKs) {
-
-		if (!jsonObject.has("classNameId") || !jsonObject.has("classPK")) {
-			return null;
-		}
-
-		long classPK = jsonObject.getLong("classPK");
-
-		if (classPK <= 0) {
-			return null;
-		}
-
-		if (mappedClassPKs.contains(classPK)) {
-			return null;
-		}
-
-		mappedClassPKs.add(classPK);
-
-		long classNameId = jsonObject.getLong("classNameId");
-
-		if (classNameId <= 0) {
-			return null;
-		}
-
-		try {
-			return AssetEntryServiceUtil.getEntry(
-				PortalUtil.getClassName(classNameId), classPK);
-		}
-		catch (PortalException pe) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					StringBundler.concat(
-						"Unable to get asset entry for class name ID ",
-						classNameId, " with primary key ", classPK),
-					pe);
-			}
-		}
-
-		return null;
-	}
-
-	private static Set<AssetEntry> _getFragmentEntryLinkMappedAssetEntries(
-		FragmentEntryLink fragmentEntryLink, Set<Long> mappedClassPKs) {
+	private static Set<MappedContent> _getFragmentEntryLinkMappedAssetEntries(
+		FragmentEntryLink fragmentEntryLink) {
 
 		JSONObject editableValuesJSONObject = null;
 
@@ -251,7 +283,7 @@ public class ContentUtil {
 			return Collections.emptySet();
 		}
 
-		Set<AssetEntry> assetEntries = new HashSet<>();
+		Set<MappedContent> mappedContents = new HashSet<>();
 
 		Iterator<String> keysIterator = editableValuesJSONObject.keys();
 
@@ -284,32 +316,32 @@ public class ContentUtil {
 				if ((configJSONObject != null) &&
 					(configJSONObject.length() > 0)) {
 
-					AssetEntry assetEntry = _getAssetEntry(
-						configJSONObject, mappedClassPKs);
+					MappedContent mappedContent = _getMappedContent(
+						configJSONObject);
 
-					if (assetEntry != null) {
-						assetEntries.add(assetEntry);
+					if (mappedContent != null) {
+						mappedContents.add(mappedContent);
 					}
 				}
 
-				AssetEntry assetEntry = _getAssetEntry(
-					editableJSONObject, mappedClassPKs);
+				MappedContent mappedContent = _getMappedContent(
+					editableJSONObject);
 
-				if (assetEntry == null) {
+				if (mappedContent == null) {
 					continue;
 				}
 
-				assetEntries.add(assetEntry);
+				mappedContents.add(mappedContent);
 			}
 		}
 
-		return assetEntries;
+		return mappedContents;
 	}
 
-	private static Set<AssetEntry> _getFragmentEntryLinksMappedAssetEntries(
-		long groupId, long plid, Set<Long> mappedClassPKs) {
+	private static Set<MappedContent> _getFragmentEntryLinksMappedAssetEntries(
+		long groupId, long plid) {
 
-		Set<AssetEntry> assetEntries = new HashSet<>();
+		Set<MappedContent> mappedContents = new HashSet<>();
 
 		List<FragmentEntryLink> fragmentEntryLinks =
 			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
@@ -317,17 +349,15 @@ public class ContentUtil {
 				plid);
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
-			assetEntries.addAll(
-				_getFragmentEntryLinkMappedAssetEntries(
-					fragmentEntryLink, mappedClassPKs));
+			mappedContents.addAll(
+				_getFragmentEntryLinkMappedAssetEntries(fragmentEntryLink));
 		}
 
-		return assetEntries;
+		return mappedContents;
 	}
 
-	private static Set<AssetEntry> _getLayoutMappedAssetEntries(
-			LayoutPageTemplateStructure layoutPageTemplateStructure,
-			Set<Long> mappedClassPKs)
+	private static Set<MappedContent> _getLayoutMappedAssetEntries(
+			LayoutPageTemplateStructure layoutPageTemplateStructure)
 		throws PortalException {
 
 		JSONObject layoutDataJSONObject = JSONFactoryUtil.createJSONObject(
@@ -341,7 +371,7 @@ public class ContentUtil {
 			return Collections.emptySet();
 		}
 
-		Set<AssetEntry> assetEntries = new HashSet<>();
+		Set<MappedContent> mappedContents = new HashSet<>();
 
 		Iterator<JSONObject> iteratorStructure = structureJSONArray.iterator();
 
@@ -355,21 +385,21 @@ public class ContentUtil {
 						configJSONObject.getJSONObject("backgroundImage");
 
 					if (backgroundImageJSONObject != null) {
-						AssetEntry assetEntry = _getAssetEntry(
-							backgroundImageJSONObject, mappedClassPKs);
+						MappedContent mappedContent = _getMappedContent(
+							backgroundImageJSONObject);
 
-						if (assetEntry != null) {
-							assetEntries.add(assetEntry);
+						if (mappedContent != null) {
+							mappedContents.add(mappedContent);
 						}
 					}
 				}
 			});
 
-		return assetEntries;
+		return mappedContents;
 	}
 
-	private static Set<AssetEntry> _getLayoutMappedAssetEntries(
-			long groupId, long plid, Set<Long> mappedClassPKs)
+	private static Set<MappedContent> _getLayoutMappedAssetEntries(
+			long groupId, long plid)
 		throws PortalException {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
@@ -378,8 +408,30 @@ public class ContentUtil {
 					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
 					plid, false);
 
-		return _getLayoutMappedAssetEntries(
-			layoutPageTemplateStructure, mappedClassPKs);
+		return _getLayoutMappedAssetEntries(layoutPageTemplateStructure);
+	}
+
+	private static MappedContent _getMappedContent(JSONObject jsonObject) {
+		if ((jsonObject == null) || !jsonObject.has("classNameId") ||
+			!jsonObject.has("classPK")) {
+
+			return null;
+		}
+
+		long classPK = jsonObject.getLong("classPK");
+
+		if (classPK <= 0) {
+			return null;
+		}
+
+		long classNameId = jsonObject.getLong("classNameId");
+
+		if (classNameId <= 0) {
+			return null;
+		}
+
+		return new MappedContent(
+			classNameId, classPK, jsonObject.getString("fieldId"));
 	}
 
 	private static JSONObject _getPageContentJSONObject(
@@ -464,6 +516,35 @@ public class ContentUtil {
 			LabelItem.getStyleFromWorkflowStatus(
 				latestAssetRenderer.getStatus())
 		);
+	}
+
+	private static Set<AssetEntry> _toAssetEntry(
+		Set<MappedContent> mappedContents) {
+
+		Set<AssetEntry> assetEntries = new HashSet<>();
+
+		for (MappedContent mappedContent : mappedContents) {
+			long classNameId = mappedContent.getClassNameId();
+			long classPK = mappedContent.getClassPK();
+
+			try {
+				AssetEntry assetEntry = AssetEntryServiceUtil.getEntry(
+					PortalUtil.getClassName(classNameId), classPK);
+
+				assetEntries.add(assetEntry);
+			}
+			catch (PortalException pe) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						StringBundler.concat(
+							"Unable to get asset entry for class name ID ",
+							classNameId, " with primary key ", classPK),
+						pe);
+				}
+			}
+		}
+
+		return assetEntries;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(ContentUtil.class);
