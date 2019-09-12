@@ -407,14 +407,6 @@ public class EmbeddedPortletFragmentEntryProcessor
 				portletPreferencesList, jxPortletPreferences);
 		}
 
-		try {
-			FragmentPortletSetupUtil.setPortletBareboneCSSClassName(
-				jxPortletPreferences);
-		}
-		catch (Exception e) {
-			throw new PortalException(e);
-		}
-
 		Document preferencesDocument = _getDocument(
 			PortletPreferencesFactoryUtil.toXML(jxPortletPreferences));
 
