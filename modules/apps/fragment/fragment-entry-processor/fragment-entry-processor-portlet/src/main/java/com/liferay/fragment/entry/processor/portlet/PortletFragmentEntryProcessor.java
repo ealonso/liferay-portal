@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.entry.processor.portlet;
 
+import com.liferay.fragment.entry.processor.portlet.util.PortletFragmentEntryProcessorUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
@@ -34,14 +35,9 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
-import com.liferay.segments.model.SegmentsExperience;
-import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.util.SegmentsExperiencePortletUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.OptionalLong;
-import java.util.stream.LongStream;
 
 import javax.portlet.PortletPreferences;
 
@@ -80,26 +76,6 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 	public void validateFragmentEntryHTML(String html, String configuration) {
 	}
 
-	private OptionalLong _getSegmentsExperienceIdOptional(
-		long[] segmentsExperienceIds) {
-
-		LongStream longStream = Arrays.stream(segmentsExperienceIds);
-
-		return longStream.mapToObj(
-			segmentsExperienceId ->
-				_segmentsExperienceLocalService.fetchSegmentsExperience(
-					segmentsExperienceId)
-		).filter(
-			segmentsExperience -> segmentsExperience != null
-		).sorted(
-			Comparator.comparingInt(
-				SegmentsExperience::getPriority
-			).reversed()
-		).mapToLong(
-			SegmentsExperience::getSegmentsExperienceId
-		).findFirst();
-	}
-
 	private String _renderWidgetHTML(
 			String editableValues,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
@@ -120,7 +96,7 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 		PortletPreferences portletPreferences = null;
 
 		OptionalLong segmentsExperienceIdOptionalLong =
-			_getSegmentsExperienceIdOptional(
+			PortletFragmentEntryProcessorUtil.getSegmentsExperienceIdOptional(
 				fragmentEntryProcessorContext.getSegmentsExperienceIds());
 
 		if (segmentsExperienceIdOptionalLong.isPresent()) {
@@ -193,8 +169,5 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Reference
 	private PortletRegistry _portletRegistry;
-
-	@Reference
-	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

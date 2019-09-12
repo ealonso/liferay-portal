@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.entry.processor.portlet;
 
+import com.liferay.fragment.entry.processor.portlet.util.PortletFragmentEntryProcessorUtil;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
@@ -52,17 +53,12 @@ import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.segments.model.SegmentsExperience;
-import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.util.SegmentsExperiencePortletUtil;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalLong;
 import java.util.ResourceBundle;
-import java.util.stream.LongStream;
 
 import javax.portlet.PortletPreferences;
 
@@ -182,8 +178,10 @@ public class EmbeddedPortletFragmentEntryProcessor
 				fragmentEntryLink.getNamespace(), id);
 
 			OptionalLong segmentsExperienceIdOptionalLong =
-				_getSegmentsExperienceIdOptional(
-					fragmentEntryProcessorContext.getSegmentsExperienceIds());
+				PortletFragmentEntryProcessorUtil.
+					getSegmentsExperienceIdOptional(
+						fragmentEntryProcessorContext.
+							getSegmentsExperienceIds());
 
 			if (segmentsExperienceIdOptionalLong.isPresent()) {
 				instanceId =
@@ -344,7 +342,8 @@ public class EmbeddedPortletFragmentEntryProcessor
 
 		if (ArrayUtil.isNotEmpty(segmentsExperienceIds)) {
 			OptionalLong segmentsExperienceIdOptionalLong =
-				_getSegmentsExperienceIdOptional(segmentsExperienceIds);
+				PortletFragmentEntryProcessorUtil.
+					getSegmentsExperienceIdOptional(segmentsExperienceIds);
 
 			if (segmentsExperienceIdOptionalLong.isPresent()) {
 				instanceId =
@@ -424,26 +423,6 @@ public class EmbeddedPortletFragmentEntryProcessor
 		return preferencesBody.html();
 	}
 
-	private OptionalLong _getSegmentsExperienceIdOptional(
-		long[] segmentsExperienceIds) {
-
-		LongStream longStream = Arrays.stream(segmentsExperienceIds);
-
-		return longStream.mapToObj(
-			segmentsExperienceId ->
-				_segmentsExperienceLocalService.fetchSegmentsExperience(
-					segmentsExperienceId)
-		).filter(
-			segmentsExperience -> segmentsExperience != null
-		).sorted(
-			Comparator.comparingInt(
-				SegmentsExperience::getPriority
-			).reversed()
-		).mapToLong(
-			SegmentsExperience::getSegmentsExperienceId
-		).findFirst();
-	}
-
 	private void _updateLayoutPortletSetup(
 		List<com.liferay.portal.kernel.model.PortletPreferences>
 			portletPreferencesList,
@@ -506,8 +485,5 @@ public class EmbeddedPortletFragmentEntryProcessor
 
 	private final ResourceBundle _resourceBundle = ResourceBundleUtil.getBundle(
 		"content.Language", getClass());
-
-	@Reference
-	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }
