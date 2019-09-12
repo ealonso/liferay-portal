@@ -24,7 +24,6 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.util.FragmentPortletSetupUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
-import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -44,7 +43,6 @@ import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -53,9 +51,7 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.PortletPreferencesImpl;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.util.SegmentsExperiencePortletUtil;
@@ -69,8 +65,6 @@ import java.util.ResourceBundle;
 import java.util.stream.LongStream;
 
 import javax.portlet.PortletPreferences;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -156,16 +150,6 @@ public class EmbeddedPortletFragmentEntryProcessor
 			FragmentEntryLink fragmentEntryLink, String html,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
-
-		validateFragmentEntryHTML(html);
-
-		String widgetHTML = _renderWidgetHTML(
-			fragmentEntryLink.getEditableValues(),
-			fragmentEntryProcessorContext);
-
-		if (Validator.isNotNull(widgetHTML)) {
-			return widgetHTML;
-		}
 
 		Document document = _getDocument(html);
 
@@ -458,88 +442,6 @@ public class EmbeddedPortletFragmentEntryProcessor
 		).mapToLong(
 			SegmentsExperience::getSegmentsExperienceId
 		).findFirst();
-	}
-
-	private String _renderWidgetHTML(
-			String editableValues,
-			FragmentEntryProcessorContext fragmentEntryProcessorContext)
-		throws PortalException {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-			editableValues);
-
-		String portletId = jsonObject.getString("portletId");
-
-		if (Validator.isNull(portletId)) {
-			return StringPool.BLANK;
-		}
-
-		String instanceId = jsonObject.getString("instanceId");
-		Portlet portlet = _portletLocalService.getPortletById(
-			SegmentsExperiencePortletUtil.decodePortletName(portletId));
-		PortletPreferences portletPreferences = null;
-
-		OptionalLong segmentsExperienceIdOptionalLong =
-			_getSegmentsExperienceIdOptional(
-				fragmentEntryProcessorContext.getSegmentsExperienceIds());
-
-		if (segmentsExperienceIdOptionalLong.isPresent()) {
-			String defaultPreferencesPortletId = portletId;
-
-			if (!portlet.isInstanceable()) {
-				instanceId = String.valueOf(CharPool.NUMBER_0);
-			}
-			else {
-				defaultPreferencesPortletId = PortletIdCodec.encode(
-					portletId,
-					SegmentsExperiencePortletUtil.setSegmentsExperienceId(
-						instanceId, SegmentsExperienceConstants.ID_DEFAULT));
-			}
-
-			instanceId = SegmentsExperiencePortletUtil.setSegmentsExperienceId(
-				instanceId, segmentsExperienceIdOptionalLong.getAsLong());
-
-			String preferencesPortletId = PortletIdCodec.encode(
-				portletId, instanceId);
-
-			HttpServletRequest httpServletRequest =
-				fragmentEntryProcessorContext.getHttpServletRequest();
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)httpServletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
-
-			PortletPreferences defaultExperiencePortletPreferences =
-				_portletPreferencesLocalService.fetchPreferences(
-					themeDisplay.getCompanyId(),
-					PortletKeys.PREFS_OWNER_ID_DEFAULT,
-					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid(),
-					defaultPreferencesPortletId);
-
-			if (defaultExperiencePortletPreferences == null) {
-				defaultExperiencePortletPreferences =
-					PortletPreferencesFactoryUtil.fromDefaultXML(
-						portlet.getDefaultPreferences());
-			}
-
-			portletPreferences = PortletPreferencesFactoryUtil.getPortletSetup(
-				fragmentEntryProcessorContext.getHttpServletRequest(),
-				preferencesPortletId,
-				PortletPreferencesFactoryUtil.toXML(
-					defaultExperiencePortletPreferences));
-		}
-		else {
-			portletPreferences =
-				PortletPreferencesFactoryUtil.getPortletPreferences(
-					fragmentEntryProcessorContext.getHttpServletRequest(),
-					PortletIdCodec.encode(portletId, instanceId));
-		}
-
-		return _fragmentPortletRenderer.renderPortlet(
-			fragmentEntryProcessorContext.getHttpServletRequest(),
-			fragmentEntryProcessorContext.getHttpServletResponse(), portletId,
-			instanceId,
-			PortletPreferencesFactoryUtil.toXML(portletPreferences));
 	}
 
 	private void _updateLayoutPortletSetup(
