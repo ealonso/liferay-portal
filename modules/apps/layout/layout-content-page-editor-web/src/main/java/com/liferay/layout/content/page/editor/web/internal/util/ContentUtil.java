@@ -504,19 +504,19 @@ public class ContentUtil {
 		}
 
 		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
+		public boolean equals(Object obj) {
+			if (this == obj) {
 				return true;
 			}
 
-			if ((o == null) || (getClass() != o.getClass())) {
+			if ((obj == null) || (getClass() != obj.getClass())) {
 				return false;
 			}
 
-			MappedContent that = (MappedContent)o;
+			MappedContent mappedContent = (MappedContent)obj;
 
-			if ((_classNameId == that._classNameId) &&
-				(_classPK == that._classPK)) {
+			if ((_classNameId == mappedContent.getClassNameId()) &&
+				(_classPK == mappedContent.getClassPK())) {
 
 				return true;
 			}
