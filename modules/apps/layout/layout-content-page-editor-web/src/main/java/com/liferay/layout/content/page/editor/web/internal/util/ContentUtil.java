@@ -148,60 +148,6 @@ public class ContentUtil {
 		return mappedContentsJSONArray;
 	}
 
-	public static class MappedContent {
-
-		public MappedContent(long classNameId, long classPK, String fieldId) {
-			_classNameId = classNameId;
-			_classPK = classPK;
-			_fieldId = fieldId;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-
-			if ((o == null) || (getClass() != o.getClass())) {
-				return false;
-			}
-
-			MappedContent that = (MappedContent)o;
-
-			if ((_classNameId == that._classNameId) &&
-				(_classPK == that._classPK)) {
-
-				return true;
-			}
-
-			return false;
-		}
-
-		public long getClassNameId() {
-			return _classNameId;
-		}
-
-		public long getClassPK() {
-			return _classPK;
-		}
-
-		public String getFieldId() {
-			return _fieldId;
-		}
-
-		@Override
-		public int hashCode() {
-			int hash = HashUtil.hash(0, _classNameId);
-
-			return HashUtil.hash(hash, _classPK);
-		}
-
-		private final long _classNameId;
-		private final long _classPK;
-		private final String _fieldId;
-
-	}
-
 	private static JSONObject _getActionsJSONObject(
 			AssetEntry assetEntry, ThemeDisplay themeDisplay,
 			HttpServletRequest httpServletRequest, String backURL)
@@ -548,5 +494,59 @@ public class ContentUtil {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(ContentUtil.class);
+
+	private static class MappedContent {
+
+		public MappedContent(long classNameId, long classPK, String fieldId) {
+			_classNameId = classNameId;
+			_classPK = classPK;
+			_fieldId = fieldId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) {
+				return true;
+			}
+
+			if ((o == null) || (getClass() != o.getClass())) {
+				return false;
+			}
+
+			MappedContent that = (MappedContent)o;
+
+			if ((_classNameId == that._classNameId) &&
+				(_classPK == that._classPK)) {
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public long getClassNameId() {
+			return _classNameId;
+		}
+
+		public long getClassPK() {
+			return _classPK;
+		}
+
+		public String getFieldId() {
+			return _fieldId;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = HashUtil.hash(0, _classNameId);
+
+			return HashUtil.hash(hash, _classPK);
+		}
+
+		private final long _classNameId;
+		private final long _classPK;
+		private final String _fieldId;
+
+	}
 
 }
