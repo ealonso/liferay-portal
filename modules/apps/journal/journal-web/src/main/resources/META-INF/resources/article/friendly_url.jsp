@@ -31,5 +31,6 @@ JournalEditArticleDisplayContext journalEditArticleDisplayContext = new JournalE
 	defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultLanguageId() %>"
 	maxLength='<%= String.valueOf(ModelHintsUtil.getMaxLength(JournalArticle.class.getName(), "urlTitle")) %>'
 	name="friendlyURL"
+	selectedLanguageId="<%= themeDisplay.getLanguageId() %>"
 	xml="<%= (article != null) ? HttpUtil.decodeURL(article.getFriendlyURLsXML()) : StringPool.BLANK %>"
 />
