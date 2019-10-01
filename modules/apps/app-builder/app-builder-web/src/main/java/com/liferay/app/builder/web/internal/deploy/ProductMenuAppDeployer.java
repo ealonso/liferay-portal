@@ -21,12 +21,9 @@ import com.liferay.app.builder.model.AppBuilderAppDeployment;
 import com.liferay.app.builder.service.AppBuilderAppDeploymentLocalService;
 import com.liferay.app.builder.service.AppBuilderAppLocalService;
 import com.liferay.app.builder.web.internal.application.list.ProductMenuAppPanelApp;
-import com.liferay.app.builder.web.internal.application.list.ProductMenuAppPanelCategory;
-import com.liferay.app.builder.web.internal.constants.AppBuilderPanelCategoryKeys;
 import com.liferay.app.builder.web.internal.constants.AppBuilderPortletKeys;
 import com.liferay.app.builder.web.internal.portlet.AppPortlet;
 import com.liferay.application.list.PanelApp;
-import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -35,8 +32,8 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 
-import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.portlet.Portlet;
@@ -71,8 +68,10 @@ public class ProductMenuAppDeployer implements AppDeployer {
 
 	@Override
 	public void deploy(long appId) throws Exception {
-		String appBuilderPanelCategoryKey = _getPanelCategoryKey(appId);
 		String portletName = _getPortletName(appId);
+
+		String controlPanelPortletName = portletName.concat("controlPanel");
+		String sitePortletName = portletName.concat("site");
 
 		AppBuilderApp appBuilderApp =
 			_appBuilderAppLocalService.getAppBuilderApp(appId);
@@ -93,31 +92,32 @@ public class ProductMenuAppDeployer implements AppDeployer {
 			_serviceRegistrationsMap.computeIfAbsent(
 				appId,
 				key -> new ServiceRegistration<?>[] {
-					_deployPortlet(appId, appName, portletName),
-					_deployPanelApp(
-						appBuilderPanelCategoryKey, portletName,
+					_deployAppPortlet(appId, appName, controlPanelPortletName),
+					_deployAppPortlet(appId, appName, sitePortletName),
+					_deployAppPanelApp(
+						true, PanelCategoryKeys.CONTROL_PANEL,
+						controlPanelPortletName,
 						JSONUtil.toLongArray(
 							jsonObject.getJSONArray("siteIds"))),
-					_deployPanelCategory(
-						appBuilderPanelCategoryKey, appName,
-						PanelCategoryKeys.CONTROL_PANEL),
-					_deployPanelCategory(
-						appBuilderPanelCategoryKey, appName,
-						PanelCategoryKeys.SITE_ADMINISTRATION_CONTENT)
+					_deployAppPanelApp(
+						false, PanelCategoryKeys.SITE_ADMINISTRATION_CONTENT,
+						sitePortletName,
+						JSONUtil.toLongArray(
+							jsonObject.getJSONArray("siteIds")))
 				});
 		}
 		else {
 			_serviceRegistrationsMap.computeIfAbsent(
 				appId,
 				mapKey -> new ServiceRegistration<?>[] {
-					_deployPortlet(appId, appName, portletName),
-					_deployPanelApp(
-						appBuilderPanelCategoryKey, portletName,
+					_deployAppPortlet(appId, appName, portletName),
+					_deployAppPanelApp(
+						Objects.equals(
+							PanelCategoryKeys.CONTROL_PANEL,
+							jsonArray.getString(0)),
+						jsonArray.getString(0), portletName,
 						JSONUtil.toLongArray(
-							jsonObject.getJSONArray("siteIds"))),
-					_deployPanelCategory(
-						appBuilderPanelCategoryKey, appName,
-						jsonArray.getString(0))
+							jsonObject.getJSONArray("siteIds")))
 				});
 		}
 
@@ -149,11 +149,13 @@ public class ProductMenuAppDeployer implements AppDeployer {
 		_appBuilderAppLocalService.updateAppBuilderApp(appBuilderApp);
 	}
 
-	private ServiceRegistration<?> _deployPanelApp(
-		String panelCategoryKey, String portletName, long[] siteIds) {
+	private ServiceRegistration<?> _deployAppPanelApp(
+		boolean inControlPanel, String panelCategoryKey, String portletName,
+		long[] siteIds) {
 
 		return _bundleContext.registerService(
-			PanelApp.class, new ProductMenuAppPanelApp(portletName, siteIds),
+			PanelApp.class,
+			new ProductMenuAppPanelApp(inControlPanel, portletName, siteIds),
 			new HashMapDictionary<String, Object>() {
 				{
 					put("panel.app.order:Integer", 100);
@@ -162,36 +164,12 @@ public class ProductMenuAppDeployer implements AppDeployer {
 			});
 	}
 
-	private ServiceRegistration<?> _deployPanelCategory(
-		String panelCategoryKey, String appName,
-		String parentPanelCategoryKey) {
-
-		Dictionary<String, Object> properties =
-			new HashMapDictionary<String, Object>() {
-				{
-					put("key", panelCategoryKey);
-					put("label", appName);
-					put("panel.category.key", parentPanelCategoryKey);
-					put("panel.category.order:Integer", 600);
-				}
-			};
-
-		return _bundleContext.registerService(
-			PanelCategory.class, new ProductMenuAppPanelCategory(properties),
-			properties);
-	}
-
-	private ServiceRegistration<?> _deployPortlet(
+	private ServiceRegistration<?> _deployAppPortlet(
 		long appId, String appName, String portletName) {
 
 		return _bundleContext.registerService(
 			Portlet.class, new AppPortlet(appId),
 			AppPortlet.getProperties(appName, portletName, new HashMap<>()));
-	}
-
-	private String _getPanelCategoryKey(long appId) {
-		return AppBuilderPanelCategoryKeys.CONTROL_PANEL_APP_BUILDER_APP +
-			appId;
 	}
 
 	private String _getPortletName(long appId) {
