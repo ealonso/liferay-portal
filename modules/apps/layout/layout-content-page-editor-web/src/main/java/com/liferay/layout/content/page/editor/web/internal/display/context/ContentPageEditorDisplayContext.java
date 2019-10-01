@@ -391,7 +391,11 @@ public class ContentPageEditorDisplayContext {
 		for (ContentPageEditorSidebarPanel contentPageEditorSidebarPanel :
 				_contentPageEditorSidebarPanels) {
 
-			if (!contentPageEditorSidebarPanel.isVisible(pageIsDisplayPage)) {
+			if (!contentPageEditorSidebarPanel.isVisible(pageIsDisplayPage) ||
+				!contentPageEditorSidebarPanel.isVisible(
+			        themeDisplay.getPermissionChecker(), themeDisplay.getPlid(),
+					pageIsDisplayPage)) {
+
 				continue;
 			}
 
