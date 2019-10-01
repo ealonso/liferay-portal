@@ -43,6 +43,18 @@
 		.panel-group {
 			border-radius: 0;
 		}
+
+		.panel-app-root li {
+			font-weight: 400;
+			list-style: none;
+
+			&.active {
+				border-left: 4px solid #fff;
+				font-weight: 700;
+				margin-left: -24px;
+				padding-left: 20px;
+			}
+		}
 	}
 
 	.lfr-product-menu-sidebar .panel-group {
