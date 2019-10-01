@@ -450,6 +450,13 @@ const INITIAL_STATE = {
 	getPageContentsURL: Config.string().value(''),
 
 	/**
+	 * @default true
+	 * @review
+	 * @type {bool}
+	 */
+	hasUpdatePermissions: Config.bool().value(false),
+
+	/**
 	 * Id of the last element that was hovered
 	 * @default ''
 	 * @review
