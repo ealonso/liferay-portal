@@ -25,7 +25,10 @@ import com.liferay.portal.kernel.util.ArrayUtil;
  */
 public class ProductMenuAppPanelApp extends BasePanelApp {
 
-	public ProductMenuAppPanelApp(String portletId, long[] siteIds) {
+	public ProductMenuAppPanelApp(
+		boolean inControlPanel, String portletId, long[] siteIds) {
+
+		_inControlPanel = inControlPanel;
 		_portletId = portletId;
 		_siteIds = siteIds;
 	}
@@ -39,9 +42,8 @@ public class ProductMenuAppPanelApp extends BasePanelApp {
 	public boolean isShow(PermissionChecker permissionChecker, Group group)
 		throws PortalException {
 
-		if (super.isShow(permissionChecker, group) &&
-			(ArrayUtil.isEmpty(_siteIds) ||
-			 ArrayUtil.contains(_siteIds, group.getGroupId()))) {
+		if ((super.isShow(permissionChecker, group) && _inControlPanel) ||
+			ArrayUtil.contains(_siteIds, group.getGroupId())) {
 
 			return true;
 		}
@@ -49,6 +51,7 @@ public class ProductMenuAppPanelApp extends BasePanelApp {
 		return false;
 	}
 
+	private final boolean _inControlPanel;
 	private final String _portletId;
 	private final long[] _siteIds;
 
