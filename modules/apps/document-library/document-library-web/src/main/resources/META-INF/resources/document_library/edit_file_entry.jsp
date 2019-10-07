@@ -459,7 +459,7 @@ if (portletTitleBasedNavigation) {
 				<c:if test="<%= !scopeGroup.isCompany() %>">
 					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="display-page-template">
 						<liferay-asset:select-asset-display-page
-							classNameId="<%= PortalUtil.getClassNameId(DLFileEntry.class) %>"
+							classNameId="<%= PortalUtil.getClassNameId(FileEntry.class) %>"
 							classPK="<%= (fileEntry != null) ? fileEntry.getFileEntryId() : 0 %>"
 							classTypeId="<%= (fileEntryTypeId < 0) ? DLFileEntryTypeConstants.FILE_ENTRY_TYPE_ID_BASIC_DOCUMENT : fileEntryTypeId %>"
 							groupId="<%= scopeGroupId %>"
