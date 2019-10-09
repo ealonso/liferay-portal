@@ -41,7 +41,7 @@ PanelCategory panelCategory = (PanelCategory)request.getAttribute("liferay-appli
 		for (PanelApp panelApp : panelAppRegistry.getPanelApps(panelCategory.getKey())) {
 		%>
 
-			<div class="list-group-heading panel-app-root panel-header">
+			<div class="list-group-heading panel-app-root panel-header <%= Objects.equals(themeDisplay.getPpid(), panelApp.getPortletId()) ? "active" : StringPool.BLANK %>">
 				<liferay-application-list:panel-app
 					panelApp="<%= panelApp %>"
 				/>
