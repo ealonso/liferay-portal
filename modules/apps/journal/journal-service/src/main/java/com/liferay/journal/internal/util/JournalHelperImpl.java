@@ -161,44 +161,6 @@ public class JournalHelperImpl implements JournalHelper {
 		return layout;
 	}
 
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public List<JournalArticle> getArticles(Hits hits) throws PortalException {
-		List<Document> documents = hits.toList();
-
-		List<JournalArticle> articles = new ArrayList<>(documents.size());
-
-		for (Document document : documents) {
-			String articleId = document.get(Field.ARTICLE_ID);
-			long groupId = GetterUtil.getLong(
-				document.get(Field.SCOPE_GROUP_ID));
-
-			JournalArticle article =
-				JournalArticleLocalServiceUtil.fetchLatestArticle(
-					groupId, articleId, WorkflowConstants.STATUS_APPROVED);
-
-			if (article == null) {
-				articles = null;
-
-				Indexer<JournalArticle> indexer =
-					IndexerRegistryUtil.getIndexer(JournalArticle.class);
-
-				long companyId = GetterUtil.getLong(
-					document.get(Field.COMPANY_ID));
-
-				indexer.delete(companyId, document.getUID());
-			}
-			else if (articles != null) {
-				articles.add(article);
-			}
-		}
-
-		return articles;
-	}
-
 	@Override
 	public int getRestrictionType(long folderId) {
 		int restrictionType = JournalFolderConstants.RESTRICTION_TYPE_INHERIT;

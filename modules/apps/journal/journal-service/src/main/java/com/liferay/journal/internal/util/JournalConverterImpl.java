@@ -222,68 +222,6 @@ public class JournalConverterImpl implements JournalConverter {
 		return _fieldsToDDMFormValuesConverter.convert(ddmStructure, fields);
 	}
 
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public String getDDMXSD(String journalXSD) throws Exception {
-		Locale defaultLocale = LocaleUtil.getSiteDefault();
-
-		return getDDMXSD(journalXSD, defaultLocale);
-	}
-
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public String getDDMXSD(String journalXSD, Locale defaultLocale)
-		throws Exception {
-
-		Document document = SAXReaderUtil.read(journalXSD);
-
-		Element rootElement = document.getRootElement();
-
-		rootElement.addAttribute("available-locales", defaultLocale.toString());
-		rootElement.addAttribute("default-locale", defaultLocale.toString());
-
-		List<Element> dynamicElementElements = rootElement.elements(
-			"dynamic-element");
-
-		for (Element dynamicElementElement : dynamicElementElements) {
-			updateJournalXSDDynamicElement(
-				dynamicElementElement, defaultLocale.toString());
-		}
-
-		return XMLUtil.formatXML(document);
-	}
-
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public String getJournalXSD(String ddmXSD) throws Exception {
-		Document document = SAXReaderUtil.read(ddmXSD);
-
-		Element rootElement = document.getRootElement();
-
-		String defaultLanguageId = rootElement.attributeValue("default-locale");
-
-		removeAttribute(rootElement, "available-locales");
-		removeAttribute(rootElement, "default-locale");
-
-		List<Element> dynamicElementElements = rootElement.elements(
-			"dynamic-element");
-
-		for (Element dynamicElementElement : dynamicElementElements) {
-			updateDDMXSDDynamicElement(
-				dynamicElementElement, defaultLanguageId);
-		}
-
-		return XMLUtil.formatXML(document);
-	}
 
 	protected void addDDMFields(
 			Element dynamicElementElement, DDMStructure ddmStructure,

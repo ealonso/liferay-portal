@@ -42,12 +42,6 @@ public interface JournalHelper {
 
 	public Layout getArticleLayout(String layoutUuid, long groupId);
 
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	public List<JournalArticle> getArticles(Hits hits) throws PortalException;
-
 	public int getRestrictionType(long folderId);
 
 	public String getTemplateScript(
