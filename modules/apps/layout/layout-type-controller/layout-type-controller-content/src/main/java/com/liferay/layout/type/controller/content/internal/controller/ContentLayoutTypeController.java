@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
+import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
@@ -90,20 +91,30 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		if (layout.getClassNameId() == _portal.getClassNameId(Layout.class)) {
-			LayoutPermissionUtil.check(
+		boolean hasPermissions = false;
+
+		if (LayoutPermissionUtil.contains(
 				themeDisplay.getPermissionChecker(), layout.getClassPK(),
-				ActionKeys.UPDATE);
+				ActionKeys.UPDATE) ||
+			LayoutPermissionUtil.contains(
+				themeDisplay.getPermissionChecker(), layout.getClassPK(),
+				ActionKeys.UPDATE_LAYOUT_CONTENT)) {
+
+			hasPermissions = true;
+		}
+
+		if ((layout.getClassNameId() == _portal.getClassNameId(Layout.class)) &&
+			!hasPermissions) {
+
+			throw new PrincipalException.MustHavePermission(
+				themeDisplay.getPermissionChecker(), Layout.class.getName(),
+				layout.getLayoutId(), ActionKeys.UPDATE);
 		}
 
 		String layoutMode = ParamUtil.getString(
 			httpServletRequest, "p_l_mode", Constants.VIEW);
 
-		if (layoutMode.equals(Constants.EDIT) &&
-			!LayoutPermissionUtil.contains(
-				themeDisplay.getPermissionChecker(), themeDisplay.getLayout(),
-				ActionKeys.UPDATE)) {
-
+		if (layoutMode.equals(Constants.EDIT) && !hasPermissions) {
 			layoutMode = Constants.VIEW;
 		}
 
