@@ -588,28 +588,6 @@ public interface JournalArticleService extends BaseService {
 		throws PortalException;
 
 	/**
-	 * Returns the web content from the web content article matching the group,
-	 * article ID, and version.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param version the web content article's version
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the matching web content
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, double, String,
-	 PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getArticleContent(
-			long groupId, String articleId, double version, String languageId,
-			ThemeDisplay themeDisplay)
-		throws PortalException;
-
-	/**
 	 * Returns the latest web content from the web content article matching the
 	 * group and article ID.
 	 *
@@ -625,27 +603,6 @@ public interface JournalArticleService extends BaseService {
 	public String getArticleContent(
 			long groupId, String articleId, String languageId,
 			PortletRequestModel portletRequestModel, ThemeDisplay themeDisplay)
-		throws PortalException;
-
-	/**
-	 * Returns the latest web content from the web content article matching the
-	 * group and article ID.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the matching web content
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, String, PortletRequestModel,
-	 ThemeDisplay)}
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public String getArticleContent(
-			long groupId, String articleId, String languageId,
-			ThemeDisplay themeDisplay)
 		throws PortalException;
 
 	/**
@@ -1284,22 +1241,6 @@ public interface JournalArticleService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
-
-	/**
-	 * Moves all versions of the web content article matching the group and
-	 * article ID to the folder.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param newFolderId the primary key of the web content article's new
-	 folder
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #moveArticle(long, String, long, ServiceContext)}
-	 */
-	@Deprecated
-	public void moveArticle(long groupId, String articleId, long newFolderId)
-		throws PortalException;
 
 	/**
 	 * Moves all versions of the web content article matching the group and

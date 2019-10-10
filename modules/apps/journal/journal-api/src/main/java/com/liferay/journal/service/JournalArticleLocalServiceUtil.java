@@ -1188,33 +1188,6 @@ public class JournalArticleLocalServiceUtil {
 	}
 
 	/**
-	 * Returns the web content from the web content article associated with the
-	 * DDM template.
-	 *
-	 * @param article the web content article
-	 * @param ddmTemplateKey the primary key of the web content article's
-	 DDM template
-	 * @param viewMode the mode in which the web content is being viewed
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the web content from the matching web content article
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(JournalArticle, String, String, String,
-	 PortletRequestModel,ThemeDisplay)}
-	 */
-	@Deprecated
-	public static String getArticleContent(
-			com.liferay.journal.model.JournalArticle article,
-			String ddmTemplateKey, String viewMode, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().getArticleContent(
-			article, ddmTemplateKey, viewMode, languageId, themeDisplay);
-	}
-
-	/**
 	 * Returns the web content from the web content article matching the group,
 	 * article ID, and version, and associated with the portlet request model
 	 * and the DDM template.
@@ -1245,65 +1218,6 @@ public class JournalArticleLocalServiceUtil {
 	}
 
 	/**
-	 * Returns the web content from the web content article matching the group,
-	 * article ID, and version, and associated with the DDM template.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param version the web content article's version
-	 * @param viewMode the mode in which the web content is being viewed
-	 * @param ddmTemplateKey the primary key of the web content article's
-	 DDM template (optionally <code>null</code>). If the article
-	 is related to a DDM structure, the template's structure must
-	 match it.
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the web content from the matching web content article
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, double, String, String,
-	 String, PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	public static String getArticleContent(
-			long groupId, String articleId, double version, String viewMode,
-			String ddmTemplateKey, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().getArticleContent(
-			groupId, articleId, version, viewMode, ddmTemplateKey, languageId,
-			themeDisplay);
-	}
-
-	/**
-	 * Returns the web content from the web content article matching the group,
-	 * article ID, and version.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param version the web content article's version
-	 * @param viewMode the mode in which the web content is being viewed
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the web content from the matching web content article
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, double, String, String,
-	 String, PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	public static String getArticleContent(
-			long groupId, String articleId, double version, String viewMode,
-			String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().getArticleContent(
-			groupId, articleId, version, viewMode, languageId, themeDisplay);
-	}
-
-	/**
 	 * Returns the latest web content from the web content article matching the
 	 * group and article ID, and associated with the portlet request model and
 	 * the DDM template.
@@ -1330,60 +1244,6 @@ public class JournalArticleLocalServiceUtil {
 		return getService().getArticleContent(
 			groupId, articleId, viewMode, ddmTemplateKey, languageId,
 			portletRequestModel, themeDisplay);
-	}
-
-	/**
-	 * Returns the latest web content from the web content article matching the
-	 * group and article ID, and associated with the DDM template.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param viewMode the mode in which the web content is being viewed
-	 * @param ddmTemplateKey the primary key of the web content article's
-	 DDM template
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the latest web content from the matching web content article
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, String, String, String,
-	 PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	public static String getArticleContent(
-			long groupId, String articleId, String viewMode,
-			String ddmTemplateKey, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().getArticleContent(
-			groupId, articleId, viewMode, ddmTemplateKey, languageId,
-			themeDisplay);
-	}
-
-	/**
-	 * Returns the latest web content from the web content article matching the
-	 * group and article ID.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param viewMode the mode in which the web content is being viewed
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the latest web content from the matching web content article
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, String, String, String,
-	 PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	public static String getArticleContent(
-			long groupId, String articleId, String viewMode, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().getArticleContent(
-			groupId, articleId, viewMode, languageId, themeDisplay);
 	}
 
 	public static String getArticleDescription(
@@ -2759,28 +2619,6 @@ public class JournalArticleLocalServiceUtil {
 	 * @param articleId the primary key of the web content article
 	 * @param newFolderId the primary key of the web content article's new
 	 folder
-	 * @return the updated web content article, which was moved to a new
-	 folder
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #moveArticle(long, String, long, ServiceContext)}
-	 */
-	@Deprecated
-	public static com.liferay.journal.model.JournalArticle moveArticle(
-			long groupId, String articleId, long newFolderId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return getService().moveArticle(groupId, articleId, newFolderId);
-	}
-
-	/**
-	 * Moves the web content article matching the group and article ID to a new
-	 * folder.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param newFolderId the primary key of the web content article's new
-	 folder
 	 * @param serviceContext the service context to be applied. Can set the
 	 user ID, language ID, portlet preferences, portlet request,
 	 portlet response, theme display, and can set whether to add the
@@ -3373,26 +3211,6 @@ public class JournalArticleLocalServiceUtil {
 			companyId, groupId, folderIds, classNameId, articleId, title,
 			description, content, status, ddmStructureKey, ddmTemplateKey,
 			params, andSearch, start, end, sort);
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link #search(long,
-	 long, List, long, String, String, String, String, int,
-	 String, String, LinkedHashMap, boolean, int, int, Sort)}
-	 */
-	@Deprecated
-	public static com.liferay.portal.kernel.search.Hits search(
-		long companyId, long groupId, java.util.List<Long> folderIds,
-		long classNameId, String articleId, String title, String description,
-		String content, String type, String statusString,
-		String ddmStructureKey, String ddmTemplateKey,
-		java.util.LinkedHashMap<String, Object> params, boolean andSearch,
-		int start, int end, com.liferay.portal.kernel.search.Sort sort) {
-
-		return getService().search(
-			companyId, groupId, folderIds, classNameId, articleId, title,
-			description, content, type, statusString, ddmStructureKey,
-			ddmTemplateKey, params, andSearch, start, end, sort);
 	}
 
 	/**
@@ -4297,34 +4115,6 @@ public class JournalArticleLocalServiceUtil {
 	 * @param article the web content article
 	 * @param assetCategoryIds the primary keys of the new asset categories
 	 * @param assetTagNames the new asset tag names
-	 * @param assetLinkEntryIds the primary keys of the new asset link
-	 entries
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #updateAsset(long, JournalArticle, long[], String[], long[],
-	 Double)}
-	 */
-	@Deprecated
-	public static void updateAsset(
-			long userId, com.liferay.journal.model.JournalArticle article,
-			long[] assetCategoryIds, String[] assetTagNames,
-			long[] assetLinkEntryIds)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		getService().updateAsset(
-			userId, article, assetCategoryIds, assetTagNames,
-			assetLinkEntryIds);
-	}
-
-	/**
-	 * Updates the web content article's asset with the new asset categories,
-	 * tag names, and link entries, removing and adding them as necessary.
-	 *
-	 * @param userId the primary key of the user updating the web content
-	 article's asset
-	 * @param article the web content article
-	 * @param assetCategoryIds the primary keys of the new asset categories
-	 * @param assetTagNames the new asset tag names
 	 * @param assetLinkEntryIds the primary keys of the new asset link entries
 	 * @param priority the priority of the asset
 	 * @throws PortalException if a portal exception occurred
@@ -4490,32 +4280,6 @@ public class JournalArticleLocalServiceUtil {
 		return getService().updateStatus(
 			userId, groupId, articleId, version, status, articleURL,
 			workflowContext, serviceContext);
-	}
-
-	/**
-	 * Updates the web content articles matching the group, class name ID, and
-	 * DDM template key, replacing the DDM template key with a new one.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param classNameId the primary key of the DDMStructure class if the
-	 web content article is related to a DDM structure, the
-	 primary key of the class name associated with the article, or
-	 JournalArticleConstants.CLASSNAME_ID_DEFAULT in the
-	 journal-api module otherwise
-	 * @param oldDDMTemplateKey the primary key of the web content
-	 article's old DDM template
-	 * @param newDDMTemplateKey the primary key of the web content
-	 article's new DDM template
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #updateDDMTemplateKey}
-	 */
-	@Deprecated
-	public static void updateTemplateId(
-		long groupId, long classNameId, String oldDDMTemplateKey,
-		String newDDMTemplateKey) {
-
-		getService().updateTemplateId(
-			groupId, classNameId, oldDDMTemplateKey, newDDMTemplateKey);
 	}
 
 	public static JournalArticleLocalService getService() {

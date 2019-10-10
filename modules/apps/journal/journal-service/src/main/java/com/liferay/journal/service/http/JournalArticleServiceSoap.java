@@ -1731,34 +1731,6 @@ public class JournalArticleServiceSoap {
 	 * @param articleId the primary key of the web content article
 	 * @param newFolderId the primary key of the web content article's new
 	 folder
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #moveArticle(long, String, long, ServiceContext)}
-	 */
-	@Deprecated
-	public static void moveArticle(
-			long groupId, String articleId, long newFolderId)
-		throws RemoteException {
-
-		try {
-			JournalArticleServiceUtil.moveArticle(
-				groupId, articleId, newFolderId);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	/**
-	 * Moves all versions of the web content article matching the group and
-	 * article ID to the folder.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param newFolderId the primary key of the web content article's new
-	 folder
 	 * @param serviceContext the service context to be applied. Can set the
 	 user ID, language ID, portlet preferences, portlet request,
 	 portlet response, theme display, and can set whether to add the

@@ -673,32 +673,6 @@ public class JournalArticleServiceWrapper
 	}
 
 	/**
-	 * Returns the web content from the web content article matching the group,
-	 * article ID, and version.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param version the web content article's version
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the matching web content
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, double, String,
-	 PortletRequestModel, ThemeDisplay)}
-	 */
-	@Deprecated
-	@Override
-	public String getArticleContent(
-			long groupId, String articleId, double version, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _journalArticleService.getArticleContent(
-			groupId, articleId, version, languageId, themeDisplay);
-	}
-
-	/**
 	 * Returns the latest web content from the web content article matching the
 	 * group and article ID.
 	 *
@@ -720,31 +694,6 @@ public class JournalArticleServiceWrapper
 
 		return _journalArticleService.getArticleContent(
 			groupId, articleId, languageId, portletRequestModel, themeDisplay);
-	}
-
-	/**
-	 * Returns the latest web content from the web content article matching the
-	 * group and article ID.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param languageId the primary key of the language translation to get
-	 * @param themeDisplay the theme display
-	 * @return the matching web content
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #getArticleContent(long, String, String, PortletRequestModel,
-	 ThemeDisplay)}
-	 */
-	@Deprecated
-	@Override
-	public String getArticleContent(
-			long groupId, String articleId, String languageId,
-			com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _journalArticleService.getArticleContent(
-			groupId, articleId, languageId, themeDisplay);
 	}
 
 	/**
@@ -1517,26 +1466,6 @@ public class JournalArticleServiceWrapper
 	@Override
 	public String getOSGiServiceIdentifier() {
 		return _journalArticleService.getOSGiServiceIdentifier();
-	}
-
-	/**
-	 * Moves all versions of the web content article matching the group and
-	 * article ID to the folder.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param newFolderId the primary key of the web content article's new
-	 folder
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #moveArticle(long, String, long, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void moveArticle(long groupId, String articleId, long newFolderId)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		_journalArticleService.moveArticle(groupId, articleId, newFolderId);
 	}
 
 	/**
