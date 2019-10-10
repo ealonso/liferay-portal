@@ -148,12 +148,6 @@ public interface JournalArticleFinder {
 				<com.liferay.journal.model.JournalArticle> orderByComparator);
 
 	public java.util.List<com.liferay.journal.model.JournalArticle>
-		filterFindByG_F(
-			long groupId, java.util.List<Long> folderIds,
-			com.liferay.portal.kernel.dao.orm.QueryDefinition
-				<com.liferay.journal.model.JournalArticle> queryDefinition);
-
-	public java.util.List<com.liferay.journal.model.JournalArticle>
 		filterFindByG_ST(
 			long groupId, int status,
 			com.liferay.portal.kernel.dao.orm.QueryDefinition
@@ -274,11 +268,6 @@ public interface JournalArticleFinder {
 	public com.liferay.journal.model.JournalArticle findByR_D(
 			long resourcePrimKey, java.util.Date displayDate)
 		throws com.liferay.journal.exception.NoSuchArticleException;
-
-	public java.util.List<com.liferay.journal.model.JournalArticle> findByG_F(
-		long groupId, java.util.List<Long> folderIds,
-		com.liferay.portal.kernel.dao.orm.QueryDefinition
-			<com.liferay.journal.model.JournalArticle> queryDefinition);
 
 	public java.util.List<com.liferay.journal.model.JournalArticle> findByG_ST(
 		long groupId, int status,

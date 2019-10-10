@@ -389,26 +389,6 @@ public class JournalArticleLocalServiceUtil {
 	}
 
 	/**
-	 * Adds the model resources with the permissions to the web content article.
-	 *
-	 * @param article the web content article to add resources to
-	 * @param groupPermissions the group permissions to be added
-	 * @param guestPermissions the guest permissions to be added
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Judson (7.1.x), replaced by {@link
-	 #addArticleResources(JournalArticle, ModelPermissions)}
-	 */
-	@Deprecated
-	public static void addArticleResources(
-			com.liferay.journal.model.JournalArticle article,
-			String[] groupPermissions, String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		getService().addArticleResources(
-			article, groupPermissions, guestPermissions);
-	}
-
-	/**
 	 * Adds the resources to the most recently created web content article.
 	 *
 	 * @param groupId the primary key of the web content article's group
@@ -424,28 +404,6 @@ public class JournalArticleLocalServiceUtil {
 
 		getService().addArticleResources(
 			groupId, articleId, addGroupPermissions, addGuestPermissions);
-	}
-
-	/**
-	 * Adds the resources with the permissions to the most recently created web
-	 * content article.
-	 *
-	 * @param groupId the primary key of the web content article's group
-	 * @param articleId the primary key of the web content article
-	 * @param groupPermissions the group permissions to be added
-	 * @param guestPermissions the guest permissions to be added
-	 * @throws PortalException if a portal exception occurred
-	 * @deprecated As of Judson (7.1.x), replaced by {@link
-	 #addArticleResources(JournalArticle, ModelPermissions)}
-	 */
-	@Deprecated
-	public static void addArticleResources(
-			long groupId, String articleId, String[] groupPermissions,
-			String[] guestPermissions)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		getService().addArticleResources(
-			groupId, articleId, groupPermissions, guestPermissions);
 	}
 
 	/**
@@ -2764,46 +2722,6 @@ public class JournalArticleLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return getService().restoreArticleFromTrash(userId, article);
-	}
-
-	/**
-	 * Returns a range of all the web content articles matching the parameters
-	 * without using the indexer. It is preferable to use the indexed version
-	 * {@link #search(long, long, long, int, int, int)} instead of this method
-	 * wherever possible for performance reasons.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end -
-	 * start</code> instances. <code>start</code> and <code>end</code> are not
-	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
-	 * refers to the first result in the set. Setting both <code>start</code>
-	 * and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
-	 * result set.
-	 * </p>
-	 *
-	 * @param groupId the primary key of the group (optionally
-	 <code>0</code>)
-	 * @param folderIds the primary keys of the web content article folders
-	 (optionally {@link Collections#EMPTY_LIST})
-	 * @param status the web content article's workflow status. For more
-	 information see {@link WorkflowConstants} for constants
-	 starting with the "STATUS_" prefix.
-	 * @param start the lower bound of the range of web content articles to
-	 return
-	 * @param end the upper bound of the range of web content articles to
-	 return (not inclusive)
-	 * @return the matching web content articles
-	 * @deprecated As of Judson (7.1.x), replaced by {@link #search(long
-	 groupId, List folderIds, Locale locale, int status, int
-	 start, int end)}
-	 */
-	@Deprecated
-	public static java.util.List<com.liferay.journal.model.JournalArticle>
-		search(
-			long groupId, java.util.List<Long> folderIds, int status, int start,
-			int end) {
-
-		return getService().search(groupId, folderIds, status, start, end);
 	}
 
 	public static java.util.List<com.liferay.journal.model.JournalArticle>
