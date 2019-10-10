@@ -14,14 +14,11 @@
 
 package com.liferay.journal.util;
 
-import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
-import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.portlet.PortletRequest;
