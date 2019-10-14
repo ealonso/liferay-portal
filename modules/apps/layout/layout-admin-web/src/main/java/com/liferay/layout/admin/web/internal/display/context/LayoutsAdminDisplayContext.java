@@ -1077,7 +1077,7 @@ public class LayoutsAdminDisplayContext {
 		boolean privateLayout) {
 
 		return getSelectLayoutPageTemplateEntryURL(
-			layoutPageTemplateCollectionId, selPlid, "basic-pages",
+			layoutPageTemplateCollectionId, selPlid, "basic-templates",
 			privateLayout);
 	}
 
