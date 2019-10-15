@@ -14,15 +14,19 @@
 
 package com.liferay.layout.taglib.servlet.taglib;
 
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -126,6 +130,37 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			_getStructureJSONArray());
 	}
 
+	private JSONArray _getDropZoneStructureJSONArray() {
+		try {
+			LayoutPageTemplateStructure layoutPageTemplateStructure =
+				LayoutPageTemplateStructureLocalServiceUtil.
+					fetchLayoutPageTemplateStructure(
+						_groupId,
+						PortalUtil.getClassNameId(Layout.class.getName()),
+						_plid, true);
+
+			long[] segmentsExperienceIds = GetterUtil.getLongValues(
+				request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
+				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+
+			String data = layoutPageTemplateStructure.getData(
+				segmentsExperienceIds);
+
+			if (Validator.isNull(data)) {
+				return null;
+			}
+
+			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
+
+			return dataJSONObject.getJSONArray("structure");
+		}
+		catch (Exception e) {
+			_log.error("Unable to get structure JSON array", e);
+
+			return null;
+		}
+	}
+
 	private long _getPreviewClassPK() {
 		if (!_showPreview) {
 			return 0;
@@ -150,27 +185,41 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 
 	private JSONArray _getStructureJSONArray() {
 		try {
-			LayoutPageTemplateStructure layoutPageTemplateStructure =
+			Layout layout = LayoutLocalServiceUtil.fetchLayout(_plid);
+
+			LayoutPageTemplateEntry masterLayoutPageTemplateEntry =
+				LayoutPageTemplateEntryLocalServiceUtil.
+					fetchLayoutPageTemplateEntry(
+						layout.getMasterLayoutPageTemplateEntryId());
+
+			JSONArray dropZoneStructureJSONArray =
+				_getDropZoneStructureJSONArray();
+
+			if (masterLayoutPageTemplateEntry == null) {
+				return dropZoneStructureJSONArray;
+			}
+
+			LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
 				LayoutPageTemplateStructureLocalServiceUtil.
 					fetchLayoutPageTemplateStructure(
-						_groupId,
-						PortalUtil.getClassNameId(Layout.class.getName()),
-						_plid, true);
+						masterLayoutPageTemplateEntry.getGroupId(),
+						PortalUtil.getClassNameId(Layout.class),
+						masterLayoutPageTemplateEntry.getPlid());
 
-			long[] segmentsExperienceIds = GetterUtil.getLongValues(
-				request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
-
-			String data = layoutPageTemplateStructure.getData(
-				segmentsExperienceIds);
+			String data = masterLayoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.ID_DEFAULT);
 
 			if (Validator.isNull(data)) {
-				return null;
+				return dropZoneStructureJSONArray;
 			}
 
 			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
-			return dataJSONObject.getJSONArray("structure");
+			JSONArray structureJSONArray = dataJSONObject.getJSONArray(
+				"structure");
+
+			return JSONUtil.concat(
+				structureJSONArray, dropZoneStructureJSONArray);
 		}
 		catch (Exception e) {
 			_log.error("Unable to get structure JSON array", e);
