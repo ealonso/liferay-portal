@@ -1,5 +1,5 @@
 <#assign
-	itemName = "cur_" + name
+	itemName = "cur_" + stringUtil.replace(name, ".", "_")
 
 	variableName = name + ".getSiblings()"
 />
