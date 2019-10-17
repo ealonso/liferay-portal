@@ -15,7 +15,10 @@
 package com.liferay.asset.model.impl;
 
 /**
- * @author Pavel Savinov
+ * @author     Pavel Savinov
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *             com.liferay.info.model.impl.InfoItemUsageImpl}
  */
+@Deprecated
 public class AssetEntryUsageImpl extends AssetEntryUsageBaseImpl {
 }

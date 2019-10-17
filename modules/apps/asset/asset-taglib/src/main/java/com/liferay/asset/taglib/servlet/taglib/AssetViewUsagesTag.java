@@ -22,7 +22,10 @@ import javax.servlet.jsp.PageContext;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ *             com.liferay.info.taglib.servlet.taglib.InfoItemViewUsagesTag}
  */
+@Deprecated
 public class AssetViewUsagesTag<R> extends IncludeTag {
 
 	public String getClassName() {
