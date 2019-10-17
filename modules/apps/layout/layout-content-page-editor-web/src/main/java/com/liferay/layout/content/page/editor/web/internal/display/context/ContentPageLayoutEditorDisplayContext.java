@@ -191,14 +191,6 @@ public class ContentPageLayoutEditorDisplayContext
 		SoyContext availableSegmentsExperiencesSoyContext =
 			SoyContextFactoryUtil.createSoyContext();
 
-		Layout draftLayout = themeDisplay.getLayout();
-
-		Layout layout = LayoutLocalServiceUtil.getLayout(
-			draftLayout.getClassPK());
-
-		String layoutFullURL = PortalUtil.getLayoutFullURL(
-			layout, themeDisplay);
-
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceServiceUtil.getSegmentsExperiences(
 				getGroupId(), PortalUtil.getClassNameId(Layout.class.getName()),
@@ -228,7 +220,7 @@ public class ContentPageLayoutEditorDisplayContext
 			).put(
 				"segmentsExperimentURL",
 				_getSegmentsExperimentURL(
-					layoutFullURL, segmentsExperience.getSegmentsExperienceId())
+					segmentsExperience.getSegmentsExperienceId())
 			);
 
 			availableSegmentsExperiencesSoyContext.put(
@@ -259,8 +251,7 @@ public class ContentPageLayoutEditorDisplayContext
 				SegmentsExperienceConstants.ID_DEFAULT)
 		).put(
 			"segmentsExperimentURL",
-			_getSegmentsExperimentURL(
-				layoutFullURL, SegmentsExperienceConstants.ID_DEFAULT)
+			_getSegmentsExperimentURL(SegmentsExperienceConstants.ID_DEFAULT)
 		);
 
 		availableSegmentsExperiencesSoyContext.put(
@@ -391,13 +382,21 @@ public class ContentPageLayoutEditorDisplayContext
 		);
 	}
 
-	private String _getSegmentsExperimentURL(
-		String layoutFullURL, long segmentsExperienceId) {
+	private String _getSegmentsExperimentURL(long segmentsExperienceId)
+		throws PortalException {
+
+		Layout draftLayout = themeDisplay.getLayout();
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(
+			draftLayout.getClassPK());
+
+		String layoutFullURL = PortalUtil.getLayoutFullURL(
+			layout, themeDisplay);
 
 		HttpUtil.addParameter(
 			layoutFullURL, "p_l_back_url", themeDisplay.getURLCurrent());
 
-		return layoutFullURL = HttpUtil.addParameter(
+		return HttpUtil.addParameter(
 			layoutFullURL, "segmentsExperienceId", segmentsExperienceId);
 	}
 
@@ -436,13 +435,12 @@ public class ContentPageLayoutEditorDisplayContext
 			return _showSegmentsExperiences;
 		}
 
+		_showSegmentsExperiences = false;
+
 		Group group = GroupLocalServiceUtil.getGroup(getGroupId());
 
 		if (!group.isLayoutSetPrototype() && !group.isUser()) {
 			_showSegmentsExperiences = true;
-		}
-		else {
-			_showSegmentsExperiences = false;
 		}
 
 		return _showSegmentsExperiences;
