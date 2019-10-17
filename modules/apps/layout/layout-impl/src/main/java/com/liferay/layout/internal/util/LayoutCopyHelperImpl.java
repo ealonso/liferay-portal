@@ -16,11 +16,11 @@ package com.liferay.layout.internal.util;
 
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
-import com.liferay.asset.model.AssetEntryUsage;
-import com.liferay.asset.service.AssetEntryUsageLocalService;
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.info.model.InfoItemUsage;
+import com.liferay.info.service.InfoItemUsageLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
@@ -193,18 +193,18 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				targetLayout, fragmentEntryLinkMap, serviceContext);
 		}
 
-		_assetEntryUsageLocalService.deleteAssetEntryUsagesByPlid(
+		_infoItemUsageLocalService.deleteInfoItemUsagesByPlid(
 			targetLayout.getPlid());
 
-		List<AssetEntryUsage> assetEntryUsages =
-			_assetEntryUsageLocalService.getAssetEntryUsagesByPlid(
+		List<InfoItemUsage> infoItemUsages =
+			_infoItemUsageLocalService.getInfoItemUsagesByPlid(
 				sourceLayout.getPlid());
 
-		for (AssetEntryUsage assetEntryUsage : assetEntryUsages) {
-			_assetEntryUsageLocalService.addAssetEntryUsage(
-				assetEntryUsage.getGroupId(), assetEntryUsage.getAssetEntryId(),
-				assetEntryUsage.getContainerType(),
-				assetEntryUsage.getContainerKey(), targetLayout.getPlid(),
+		for (InfoItemUsage infoItemUsage : infoItemUsages) {
+			_infoItemUsageLocalService.addInfoItemUsage(
+				infoItemUsage.getGroupId(), infoItemUsage.getClassNameId(),
+				infoItemUsage.getClassPK(), infoItemUsage.getContainerType(),
+				infoItemUsage.getContainerKey(), targetLayout.getPlid(),
 				serviceContext);
 		}
 	}
@@ -384,9 +384,6 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 	private AssetCategoryLocalService _assetCategoryLocalService;
 
 	@Reference
-	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
-
-	@Reference
 	private AssetTagLocalService _assetTagLocalService;
 
 	@Reference
@@ -400,6 +397,9 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 
 	@Reference
 	private ImageLocalService _imageLocalService;
+
+	@Reference
+	private InfoItemUsageLocalService _infoItemUsageLocalService;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;

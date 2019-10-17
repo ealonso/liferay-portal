@@ -16,10 +16,10 @@ package com.liferay.asset.publisher.web.internal.portlet;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.model.AssetEntryUsage;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
-import com.liferay.asset.service.AssetEntryUsageLocalService;
+import com.liferay.info.model.InfoItemUsage;
+import com.liferay.info.service.InfoItemUsageLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -100,23 +100,25 @@ public class AssetPublisherAddPortletProvider
 			portletPreferences, assetEntry.getEntryId(), -1,
 			assetEntry.getClassName());
 
-		_addAssetEntryUsage(assetEntry, themeDisplay.getLayout(), portletId);
+		_addInfoItemUsage(
+			assetEntry.getClassNameId(), assetEntry.getClassPK(),
+			themeDisplay.getLayout(), portletId);
 	}
 
-	private void _addAssetEntryUsage(
-		AssetEntry assetEntry, Layout layout, String portletId) {
+	private void _addInfoItemUsage(
+		long classNameId, long classPK, Layout layout, String portletId) {
 
-		AssetEntryUsage assetEntryUsage =
-			_assetEntryUsageLocalService.fetchAssetEntryUsage(
-				assetEntry.getEntryId(), _portal.getClassNameId(Portlet.class),
+		InfoItemUsage infoItemUsage =
+			_infoItemUsageLocalService.fetchInfoItemUsage(
+				classNameId, classPK, _portal.getClassNameId(Portlet.class),
 				portletId, layout.getPlid());
 
-		if (assetEntryUsage != null) {
+		if (infoItemUsage != null) {
 			return;
 		}
 
-		_assetEntryUsageLocalService.addAssetEntryUsage(
-			layout.getGroupId(), assetEntry.getEntryId(),
+		_infoItemUsageLocalService.addInfoItemUsage(
+			layout.getGroupId(), classNameId, classPK,
 			_portal.getClassNameId(Portlet.class), portletId, layout.getPlid(),
 			ServiceContextThreadLocal.getServiceContext());
 	}
@@ -125,10 +127,10 @@ public class AssetPublisherAddPortletProvider
 	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
-	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
+	private AssetPublisherWebUtil _assetPublisherWebUtil;
 
 	@Reference
-	private AssetPublisherWebUtil _assetPublisherWebUtil;
+	private InfoItemUsageLocalService _infoItemUsageLocalService;
 
 	@Reference
 	private Portal _portal;

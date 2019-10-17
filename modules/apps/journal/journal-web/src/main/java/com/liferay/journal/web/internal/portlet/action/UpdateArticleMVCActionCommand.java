@@ -18,12 +18,12 @@ import com.liferay.asset.display.page.constants.AssetDisplayPageConstants;
 import com.liferay.asset.display.page.portlet.AssetDisplayPageEntryFormProcessor;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.asset.model.AssetEntryUsage;
-import com.liferay.asset.service.AssetEntryUsageLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
+import com.liferay.info.model.InfoItemUsage;
+import com.liferay.info.service.InfoItemUsageLocalService;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.exception.ArticleContentSizeException;
 import com.liferay.journal.model.JournalArticle;
@@ -394,8 +394,10 @@ public class UpdateArticleMVCActionCommand extends BaseMVCActionCommand {
 			}
 
 			if (assetEntry != null) {
-				_updateAssetEntryUsage(
-					groupId, assetEntry, portletResource, refererPlid,
+				_updateInfoItemUsage(
+					groupId,
+					_portal.getClassNameId(JournalArticle.class.getName()),
+					article.getResourcePrimKey(), portletResource, refererPlid,
 					serviceContext);
 			}
 		}
@@ -549,21 +551,21 @@ public class UpdateArticleMVCActionCommand extends BaseMVCActionCommand {
 		return true;
 	}
 
-	private void _updateAssetEntryUsage(
-		long groupId, AssetEntry assetEntry, String portletResource, long plid,
-		ServiceContext serviceContext) {
+	private void _updateInfoItemUsage(
+		long groupId, long classNameId, long classPK, String portletResource,
+		long plid, ServiceContext serviceContext) {
 
-		AssetEntryUsage assetEntryUsage =
-			_assetEntryUsageLocalService.fetchAssetEntryUsage(
-				assetEntry.getEntryId(), _portal.getClassNameId(Portlet.class),
+		InfoItemUsage infoItemUsage =
+			_infoItemUsageLocalService.fetchInfoItemUsage(
+				classNameId, classPK, _portal.getClassNameId(Portlet.class),
 				portletResource, plid);
 
-		if (assetEntryUsage != null) {
+		if (infoItemUsage != null) {
 			return;
 		}
 
-		_assetEntryUsageLocalService.addAssetEntryUsage(
-			groupId, assetEntry.getEntryId(),
+		_infoItemUsageLocalService.addInfoItemUsage(
+			groupId, classNameId, classPK,
 			_portal.getClassNameId(Portlet.class), portletResource, plid,
 			serviceContext);
 	}
@@ -579,13 +581,13 @@ public class UpdateArticleMVCActionCommand extends BaseMVCActionCommand {
 	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
-	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
-
-	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Reference
 	private Http _http;
+
+	@Reference
+	private InfoItemUsageLocalService _infoItemUsageLocalService;
 
 	@Reference
 	private JournalArticleService _journalArticleService;

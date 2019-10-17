@@ -14,10 +14,10 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.asset.service.AssetEntryUsageLocalService;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkService;
+import com.liferay.info.service.InfoItemUsageLocalService;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -94,7 +94,7 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 					PortletIdCodec.encode(portletId, instanceId),
 					themeDisplay.getPlid());
 
-				_assetEntryUsageLocalService.deleteAssetEntryUsages(
+				_infoItemUsageLocalService.deleteInfoItemUsages(
 					_portal.getClassNameId(Portlet.class),
 					PortletIdCodec.encode(portletId, instanceId),
 					themeDisplay.getPlid());
@@ -108,12 +108,12 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 			_portletLocalService.deletePortlet(
 				themeDisplay.getCompanyId(), portletId, themeDisplay.getPlid());
 
-			_assetEntryUsageLocalService.deleteAssetEntryUsages(
+			_infoItemUsageLocalService.deleteInfoItemUsages(
 				_portal.getClassNameId(Portlet.class), portletId,
 				themeDisplay.getPlid());
 		}
 
-		_assetEntryUsageLocalService.deleteAssetEntryUsages(
+		_infoItemUsageLocalService.deleteInfoItemUsages(
 			_portal.getClassNameId(FragmentEntryLink.class),
 			String.valueOf(fragmentEntryLinkId), themeDisplay.getPlid());
 
@@ -159,10 +159,10 @@ public class DeleteFragmentEntryLinkMVCActionCommand
 			Propagation.REQUIRED, new Class<?>[] {Exception.class});
 
 	@Reference
-	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
+	private FragmentEntryLinkService _fragmentEntryLinkService;
 
 	@Reference
-	private FragmentEntryLinkService _fragmentEntryLinkService;
+	private InfoItemUsageLocalService _infoItemUsageLocalService;
 
 	@Reference
 	private Portal _portal;

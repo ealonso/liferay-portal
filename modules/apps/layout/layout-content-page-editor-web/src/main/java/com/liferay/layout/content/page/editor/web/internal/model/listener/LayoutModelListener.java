@@ -14,9 +14,9 @@
 
 package com.liferay.layout.content.page.editor.web.internal.model.listener;
 
-import com.liferay.asset.model.AssetEntryUsage;
-import com.liferay.asset.service.AssetEntryUsageLocalService;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.info.model.InfoItemUsage;
+import com.liferay.info.service.InfoItemUsageLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
@@ -133,17 +133,17 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			draftLayout.getGroupId(), draftLayout.isPrivateLayout(),
 			draftLayout.getLayoutId(), draftLayout.getTypeSettings());
 
-		List<AssetEntryUsage> assetEntryUsages =
-			_assetEntryUsageLocalService.getAssetEntryUsagesByPlid(
+		List<InfoItemUsage> infoItemUsages =
+			_infoItemUsageLocalService.getInfoItemUsagesByPlid(
 				layoutPageTemplateEntry.getPlid());
 
 		ServiceContext serviceContext = new ServiceContext();
 
-		assetEntryUsages.forEach(
-			assetEntryUsage -> _assetEntryUsageLocalService.addAssetEntryUsage(
-				assetEntryUsage.getGroupId(), assetEntryUsage.getAssetEntryId(),
-				assetEntryUsage.getContainerType(),
-				assetEntryUsage.getContainerKey(), layout.getPlid(),
+		infoItemUsages.forEach(
+			infoItemUsage -> _infoItemUsageLocalService.addInfoItemUsage(
+				infoItemUsage.getGroupId(), infoItemUsage.getClassNameId(),
+				infoItemUsage.getClassPK(), infoItemUsage.getContainerType(),
+				infoItemUsage.getContainerKey(), layout.getPlid(),
 				serviceContext));
 
 		return null;
@@ -188,7 +188,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		LayoutModelListener.class);
 
 	@Reference
-	private AssetEntryUsageLocalService _assetEntryUsageLocalService;
+	private InfoItemUsageLocalService _infoItemUsageLocalService;
 
 	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;
