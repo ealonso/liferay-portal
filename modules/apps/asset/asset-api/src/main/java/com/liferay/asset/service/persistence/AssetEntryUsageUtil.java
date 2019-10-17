@@ -38,8 +38,11 @@ import org.osgi.util.tracker.ServiceTracker;
  *
  * @author Brian Wing Shun Chan
  * @see AssetEntryUsagePersistence
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ com.liferay.info.model.impl.InfoItemUsageImpl}
  * @generated
  */
+@Deprecated
 public class AssetEntryUsageUtil {
 
 	/**

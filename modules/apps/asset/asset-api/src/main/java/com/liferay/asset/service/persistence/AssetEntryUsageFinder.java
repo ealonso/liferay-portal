@@ -18,8 +18,11 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ com.liferay.info.service.persistence.impl.InfoItemUsageFinderImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 public interface AssetEntryUsageFinder {
 

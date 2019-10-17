@@ -31,8 +31,11 @@ import java.util.Date;
  * The cache model class for representing AssetEntryUsage in entity cache.
  *
  * @author Brian Wing Shun Chan
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ com.liferay.info.model.impl.InfoItemUsageImpl}
  * @generated
  */
+@Deprecated
 public class AssetEntryUsageCacheModel
 	implements CacheModel<AssetEntryUsage>, Externalizable, MVCCModel {
 

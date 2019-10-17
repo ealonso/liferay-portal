@@ -46,8 +46,11 @@ import org.osgi.annotation.versioning.ProviderType;
  *
  * @author Brian Wing Shun Chan
  * @see AssetEntryUsageLocalServiceUtil
+ * @deprecated As of Mueller (7.2.x), replaced by {@link
+ com.liferay.info.service.impl.InfoItemUsageLocalServiceImpl}
  * @generated
  */
+@Deprecated
 @ProviderType
 @Transactional(
 	isolation = Isolation.PORTAL,
