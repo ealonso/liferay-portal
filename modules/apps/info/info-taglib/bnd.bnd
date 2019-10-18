@@ -1,0 +1,10 @@
+Bundle-Name: Liferay Info Taglib
+Bundle-SymbolicName: com.liferay.info.taglib
+Bundle-Version: 1.0.0
+Liferay-JS-Submodules-Bridge: info-taglib
+Provide-Capability:\
+	osgi.extender;\
+		osgi.extender="jsp.taglib";\
+		uri="http://liferay.com/tld/info";\
+		version:Version="${Bundle-Version}"
+Web-ContextPath: /info-taglib
