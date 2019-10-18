@@ -19,4 +19,5 @@ Export-Package:\
 	com.liferay.info.renderer,\
 	com.liferay.info.service,\
 	com.liferay.info.service.persistence,\
-	com.liferay.info.sort
+	com.liferay.info.sort,\
+	com.liferay.info.util.comparator
