@@ -15,7 +15,6 @@
 package com.liferay.fragment.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.exception.FragmentEntryConfigurationException;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
@@ -97,16 +96,14 @@ public class FragmentEntryServiceTest {
 			StringUtil.randomString(), StringUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		_fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			StringUtil.randomString(), StringUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		List<FragmentEntry> actualFragmentEntries =
 			_fragmentEntryService.getFragmentEntries(
@@ -129,7 +126,8 @@ public class FragmentEntryServiceTest {
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			StringUtil.randomString(), name, RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-			"{fieldSets: []}", 0, WorkflowConstants.STATUS_APPROVED, serviceContext);
+			"{fieldSets: []}", 0, WorkflowConstants.STATUS_APPROVED,
+			serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -163,8 +161,7 @@ public class FragmentEntryServiceTest {
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(), null,
 			"<div></div>", null,
 			_read("configuration-invalid-missing-field-sets.json"), 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	@Test
@@ -234,8 +231,7 @@ public class FragmentEntryServiceTest {
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(), null,
 			"<div></div>", null, configuration, 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -256,8 +252,7 @@ public class FragmentEntryServiceTest {
 			"FRAGMENTENTRYKEY", RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -283,8 +278,7 @@ public class FragmentEntryServiceTest {
 			"FRAGMENTENTRYKEY", RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -507,32 +501,28 @@ public class FragmentEntryServiceTest {
 			StringUtil.randomString(), "AC Fragment Entry",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		_fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			StringUtil.randomString(), "AA Fragment",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		_fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			StringUtil.randomString(), "AB Fragment Entry",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_DRAFT,
-			serviceContext);
+			WorkflowConstants.STATUS_DRAFT, serviceContext);
 
 		_fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			StringUtil.randomString(), "AD Fragment Entry",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntryNameComparator fragmentEntryNameComparatorAsc =
 			new FragmentEntryNameComparator(true);
@@ -792,16 +782,14 @@ public class FragmentEntryServiceTest {
 			"FRAGMENTENTRYKEYONE", "Fragment Entry One",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		_fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
 			"FRAGMENTENTRYKEYTWO", "Fragment Entry Two",
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		List<FragmentEntry> actualFragmentEntries =
 			_fragmentEntryService.getFragmentEntriesByStatus(
@@ -826,11 +814,9 @@ public class FragmentEntryServiceTest {
 
 		localDateTime = localDateTime.plus(1, ChronoUnit.SECONDS);
 
-		FragmentEntry fragmentEntry =
-			FragmentEntryTestUtil.addFragmentEntry(
-				_fragmentCollection.getFragmentCollectionId(),
-				"AB Fragment Entry",
-				Timestamp.valueOf(localDateTime));
+		FragmentEntry fragmentEntry = FragmentEntryTestUtil.addFragmentEntry(
+			_fragmentCollection.getFragmentCollectionId(), "AB Fragment Entry",
+			Timestamp.valueOf(localDateTime));
 
 		localDateTime = localDateTime.plus(1, ChronoUnit.SECONDS);
 
@@ -845,8 +831,8 @@ public class FragmentEntryServiceTest {
 			_fragmentEntryService.getFragmentEntriesByType(
 				_group.getGroupId(),
 				_fragmentCollection.getFragmentCollectionId(),
-				QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, fragmentEntryCreateDateComparatorAsc);
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				fragmentEntryCreateDateComparatorAsc);
 
 		FragmentEntry firstFragmentEntry = fragmentEntries.get(0);
 
@@ -860,8 +846,8 @@ public class FragmentEntryServiceTest {
 
 		fragmentEntries = _fragmentEntryService.getFragmentEntriesByType(
 			_group.getGroupId(), _fragmentCollection.getFragmentCollectionId(),
-			QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, fragmentEntryCreateDateComparatorDesc);
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			fragmentEntryCreateDateComparatorDesc);
 
 		FragmentEntry lastFragmentEntry = fragmentEntries.get(
 			fragmentEntries.size() - 1);
@@ -878,10 +864,8 @@ public class FragmentEntryServiceTest {
 		FragmentEntryTestUtil.addFragmentEntry(
 			_fragmentCollection.getFragmentCollectionId(), "AC Fragment Entry");
 
-		FragmentEntry fragmentEntry =
-			FragmentEntryTestUtil.addFragmentEntry(
-				_fragmentCollection.getFragmentCollectionId(),
-				"AB Fragment Entry");
+		FragmentEntry fragmentEntry = FragmentEntryTestUtil.addFragmentEntry(
+			_fragmentCollection.getFragmentCollectionId(), "AB Fragment Entry");
 
 		FragmentEntryTestUtil.addFragmentEntry(
 			_fragmentCollection.getFragmentCollectionId(), "AA Fragment Entry");
@@ -893,8 +877,8 @@ public class FragmentEntryServiceTest {
 			_fragmentEntryService.getFragmentEntries(
 				_group.getGroupId(),
 				_fragmentCollection.getFragmentCollectionId(),
-				QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, fragmentEntryNameComparatorAsc);
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+				fragmentEntryNameComparatorAsc);
 
 		FragmentEntry lastFragmentEntry = fragmentEntries.get(
 			fragmentEntries.size() - 1);

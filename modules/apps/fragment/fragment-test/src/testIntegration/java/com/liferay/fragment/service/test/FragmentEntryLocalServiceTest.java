@@ -15,7 +15,6 @@
 package com.liferay.fragment.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryLocalService;
@@ -180,7 +179,8 @@ public class FragmentEntryLocalServiceTest {
 			_fragmentEntryLocalService.addFragmentEntry(
 				TestPropsValues.getUserId(), _group.getGroupId(),
 				_fragmentCollection.getFragmentCollectionId(), fragmentEntryKey,
-				name, css, html, js, previewFileEntryId, status, serviceContext);
+				name, css, html, js, previewFileEntryId, status,
+				serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -280,8 +280,8 @@ public class FragmentEntryLocalServiceTest {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				RandomTestUtil.randomString(), html,
 				RandomTestUtil.randomString(), null,
-				RandomTestUtil.randomLong(),
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
+				RandomTestUtil.randomLong(), WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryPersistence.fetchByPrimaryKey(
@@ -532,7 +532,8 @@ public class FragmentEntryLocalServiceTest {
 				_fragmentCollection.getFragmentCollectionId(), fragmentEntryKey,
 				StringUtil.randomString(), RandomTestUtil.randomString(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				"{fieldSets: []}", 0, WorkflowConstants.STATUS_APPROVED, serviceContext);
+				"{fieldSets: []}", 0, WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		FragmentEntry persistedFragmentEntry =
 			_fragmentEntryLocalService.fetchFragmentEntry(
@@ -552,8 +553,8 @@ public class FragmentEntryLocalServiceTest {
 			_fragmentCollection.getFragmentCollectionId(), "test-key",
 			StringUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-			"{fieldSets: []}", 0,
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
+			"{fieldSets: []}", 0, WorkflowConstants.STATUS_APPROVED,
+			serviceContext);
 
 		String fragmentEntryKey =
 			_fragmentEntryLocalService.generateFragmentEntryKey(
@@ -932,8 +933,8 @@ public class FragmentEntryLocalServiceTest {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				RandomTestUtil.randomString(), "<H1>A</H1>",
 				RandomTestUtil.randomString(), null,
-				RandomTestUtil.randomLong(),
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
+				RandomTestUtil.randomLong(), WorkflowConstants.STATUS_APPROVED,
+				serviceContext);
 
 		String html = "<H1>A&B&amp;C</H1>";
 
