@@ -15,7 +15,6 @@
 package com.liferay.fragment.service.impl;
 
 import com.liferay.fragment.configuration.FragmentServiceConfiguration;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.exception.DuplicateFragmentEntryKeyException;
 import com.liferay.fragment.exception.FragmentEntryNameException;
