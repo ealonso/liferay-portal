@@ -55,9 +55,25 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			getPermissionChecker(), groupId,
 			FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES);
 
+		return addFragmentEntry(
+			groupId, fragmentCollectionId, fragmentEntryKey, name,
+			previewFileEntryId, status, serviceContext);
+	}
+
+	@Override
+	public FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, long previewFileEntryId, int status,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES);
+
 		return fragmentEntryLocalService.addFragmentEntry(
 			getUserId(), groupId, fragmentCollectionId, fragmentEntryKey, name,
-			previewFileEntryId, type, status, serviceContext);
+			previewFileEntryId, status, serviceContext);
 	}
 
 	@Override
@@ -68,13 +84,27 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		return addFragmentEntry(
+			groupId, fragmentCollectionId, fragmentEntryKey, name,
+			css, html, js, configuration, previewFileEntryId, status,
+			serviceContext);
+	}
+
+	@Override
+	public FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, String css, String html, String js,
+			String configuration, long previewFileEntryId, int status,
+			ServiceContext serviceContext)
+		throws PortalException {
+
 		_portletResourcePermission.check(
 			getPermissionChecker(), groupId,
 			FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES);
 
 		return fragmentEntryLocalService.addFragmentEntry(
 			getUserId(), groupId, fragmentCollectionId, fragmentEntryKey, name,
-			css, html, js, configuration, previewFileEntryId, type, status,
+			css, html, js, configuration, previewFileEntryId, status,
 			serviceContext);
 	}
 
@@ -224,8 +254,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 	public List<FragmentEntry> getFragmentEntriesByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status) {
 
-		return fragmentEntryPersistence.findByG_FCI_T_S(
-			groupId, fragmentCollectionId, type, status);
+		return getFragmentEntriesByStatus(
+			groupId, fragmentCollectionId, status);
 	}
 
 	@Override
@@ -240,8 +270,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 				orderByComparator);
 		}
 
-		return fragmentEntryPersistence.findByG_FCI_T_S(
-			groupId, fragmentCollectionId, type, status, start, end,
+		return getFragmentEntriesByStatus(
+			groupId, fragmentCollectionId, status, start, end,
 			orderByComparator);
 	}
 
@@ -307,8 +337,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 				groupId, fragmentCollectionId, type);
 		}
 
-		return fragmentEntryPersistence.countByG_FCI_T_S(
-			groupId, fragmentCollectionId, type, status);
+		return getFragmentEntriesCountByStatus(
+			groupId, fragmentCollectionId, status);
 	}
 
 	@Override
