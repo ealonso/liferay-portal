@@ -130,18 +130,6 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 		return fragmentEntryLocalService.fetchFragmentEntry(fragmentEntryId);
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 *             #getFragmentEntriesCount(Long, Long)}
-	 */
-	@Deprecated
-	@Override
-	public int getFragmentCollectionsCount(
-		long groupId, long fragmentCollectionId) {
-
-		return getFragmentEntriesCount(groupId, fragmentCollectionId);
-	}
-
 	@Override
 	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId) {
 		return fragmentEntryLocalService.getFragmentEntries(
