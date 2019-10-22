@@ -96,19 +96,6 @@ public class FragmentEntryServiceWrapper
 		return _fragmentEntryService.fetchFragmentEntry(fragmentEntryId);
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 #getFragmentEntriesCount(Long, Long)}
-	 */
-	@Deprecated
-	@Override
-	public int getFragmentCollectionsCount(
-		long groupId, long fragmentCollectionId) {
-
-		return _fragmentEntryService.getFragmentCollectionsCount(
-			groupId, fragmentCollectionId);
-	}
-
 	@Override
 	public java.util.List<com.liferay.fragment.model.FragmentEntry>
 		getFragmentEntries(long fragmentCollectionId) {

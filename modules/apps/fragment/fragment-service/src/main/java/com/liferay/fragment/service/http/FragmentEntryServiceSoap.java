@@ -178,29 +178,6 @@ public class FragmentEntryServiceSoap {
 		}
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 #getFragmentEntriesCount(Long, Long)}
-	 */
-	@Deprecated
-	public static int getFragmentCollectionsCount(
-			long groupId, long fragmentCollectionId)
-		throws RemoteException {
-
-		try {
-			int returnValue =
-				FragmentEntryServiceUtil.getFragmentCollectionsCount(
-					groupId, fragmentCollectionId);
-
-			return returnValue;
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
 	public static com.liferay.fragment.model.FragmentEntrySoap[]
 			getFragmentEntries(long fragmentCollectionId)
 		throws RemoteException {

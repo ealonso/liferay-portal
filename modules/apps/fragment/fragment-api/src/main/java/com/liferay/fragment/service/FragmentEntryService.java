@@ -81,15 +81,6 @@ public interface FragmentEntryService extends BaseService {
 	public FragmentEntry fetchFragmentEntry(long fragmentEntryId)
 		throws PortalException;
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 #getFragmentEntriesCount(Long, Long)}
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getFragmentCollectionsCount(
-		long groupId, long fragmentCollectionId);
-
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntries(long fragmentCollectionId);
 
