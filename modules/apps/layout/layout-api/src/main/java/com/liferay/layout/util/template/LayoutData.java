@@ -14,7 +14,6 @@
 
 package com.liferay.layout.util.template;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -75,8 +74,6 @@ public class LayoutData {
 					"config", JSONFactoryUtil.createJSONObject()
 				).put(
 					"rowId", String.valueOf(rowId++)
-				).put(
-					"type", String.valueOf(FragmentConstants.TYPE_COMPONENT)
 				));
 		}
 

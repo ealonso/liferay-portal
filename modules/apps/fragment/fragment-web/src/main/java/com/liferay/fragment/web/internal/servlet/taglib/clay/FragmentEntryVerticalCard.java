@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.web.internal.servlet.taglib.clay;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.web.internal.constants.FragmentWebKeys;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.BaseBaseClayCard;
@@ -60,20 +59,12 @@ public abstract class FragmentEntryVerticalCard
 
 	@Override
 	public String getStickerCssClass() {
-		if (fragmentEntry.getType() == FragmentConstants.TYPE_COMPONENT) {
-			return "file-icon-color-4";
-		}
-
-		return "file-icon-color-2";
+		return "file-icon-color-4";
 	}
 
 	@Override
 	public String getStickerIcon() {
-		if (fragmentEntry.getType() == FragmentConstants.TYPE_COMPONENT) {
-			return "cards2";
-		}
-
-		return "cards-full";
+		return "cards2";
 	}
 
 	@Override

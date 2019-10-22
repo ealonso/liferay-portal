@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.web.internal.portlet.action;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentEntryService;
@@ -62,8 +61,6 @@ public class AddFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "fragmentCollectionId");
 
 		String name = ParamUtil.getString(actionRequest, "name");
-		int type = ParamUtil.getInteger(
-			actionRequest, "type", FragmentConstants.TYPE_SECTION);
 
 		try {
 			ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -72,7 +69,7 @@ public class AddFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			FragmentEntry fragmentEntry =
 				_fragmentEntryService.addFragmentEntry(
 					serviceContext.getScopeGroupId(), fragmentCollectionId,
-					null, name, 0, type, WorkflowConstants.STATUS_DRAFT,
+					null, name, 0, WorkflowConstants.STATUS_DRAFT,
 					serviceContext);
 
 			JSONObject jsonObject = JSONUtil.put(

@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.internal.importer;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentExportImportConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.exception.DuplicateFragmentCollectionKeyException;
@@ -196,7 +195,7 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 	private FragmentEntry _addFragmentEntry(
 			long fragmentCollectionId, String fragmentEntryKey, String name,
 			String css, String html, String js, String configuration,
-			String typeLabel, boolean overwrite)
+			boolean overwrite)
 		throws Exception {
 
 		FragmentCollection fragmentCollection =
@@ -229,14 +228,11 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 			_invalidFragmentEntriesNames.add(name);
 		}
 
-		int type = FragmentConstants.getTypeFromLabel(
-			StringUtil.toLowerCase(StringUtil.trim(typeLabel)));
-
 		if (fragmentEntry == null) {
 			return _fragmentEntryService.addFragmentEntry(
 				fragmentCollection.getGroupId(), fragmentCollectionId,
-				fragmentEntryKey, name, css, html, js, configuration, 0, type,
-				status, ServiceContextThreadLocal.getServiceContext());
+				fragmentEntryKey, name, css, html, js, configuration, 0, status,
+				ServiceContextThreadLocal.getServiceContext());
 		}
 
 		return _fragmentEntryService.updateFragmentEntry(
@@ -498,7 +494,6 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 			String html = StringPool.BLANK;
 			String js = StringPool.BLANK;
 			String configuration = StringPool.BLANK;
-			String typeLabel = StringPool.BLANK;
 
 			String fragmentJSON = _getContent(zipFile, entry.getValue());
 
@@ -517,12 +512,11 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 				configuration = _getFragmentEntryContent(
 					zipFile, entry.getValue(),
 					jsonObject.getString("configurationPath"));
-				typeLabel = jsonObject.getString("type");
 			}
 
 			FragmentEntry fragmentEntry = _addFragmentEntry(
 				fragmentCollectionId, entry.getKey(), name, css, html, js,
-				configuration, typeLabel, overwrite);
+				configuration, overwrite);
 
 			if (Validator.isNotNull(fragmentJSON)) {
 				if (fragmentEntry.getPreviewFileEntryId() > 0) {

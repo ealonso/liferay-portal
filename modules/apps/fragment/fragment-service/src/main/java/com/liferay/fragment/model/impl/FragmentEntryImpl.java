@@ -106,12 +106,6 @@ public class FragmentEntryImpl extends FragmentEntryBaseImpl {
 				"thumbnail." + previewFileEntry.getExtension());
 		}
 
-		String typeLabel = getTypeLabel();
-
-		if (Validator.isNotNull(typeLabel)) {
-			jsonObject.put("type", typeLabel);
-		}
-
 		zipWriter.addEntry(
 			path + StringPool.SLASH +
 				FragmentExportImportConstants.FILE_NAME_FRAGMENT_CONFIG,

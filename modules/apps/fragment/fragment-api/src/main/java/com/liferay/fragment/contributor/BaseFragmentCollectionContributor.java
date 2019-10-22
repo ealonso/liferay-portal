@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.contributor;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentExportImportConstants;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
@@ -249,8 +248,6 @@ public abstract class BaseFragmentCollectionContributor
 
 		String thumbnailURL = _getImagePreviewURL(
 			jsonObject.getString("thumbnail"));
-		int type = FragmentConstants.getTypeFromLabel(
-			jsonObject.getString("type"));
 
 		FragmentEntry fragmentEntry =
 			fragmentEntryLocalService.createFragmentEntry(0L);
@@ -261,7 +258,6 @@ public abstract class BaseFragmentCollectionContributor
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
 		fragmentEntry.setConfiguration(configuration);
-		fragmentEntry.setType(type);
 		fragmentEntry.setImagePreviewURL(thumbnailURL);
 
 		return fragmentEntry;

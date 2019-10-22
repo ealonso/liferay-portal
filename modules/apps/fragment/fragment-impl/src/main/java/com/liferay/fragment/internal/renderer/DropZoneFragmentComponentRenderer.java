@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.internal.renderer;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
@@ -61,11 +60,6 @@ public class DropZoneFragmentComponentRenderer implements FragmentRenderer {
 			"content.Language", locale, getClass());
 
 		return LanguageUtil.get(resourceBundle, "drop-zone-component");
-	}
-
-	@Override
-	public int getType() {
-		return FragmentConstants.TYPE_COMPONENT;
 	}
 
 	@Override

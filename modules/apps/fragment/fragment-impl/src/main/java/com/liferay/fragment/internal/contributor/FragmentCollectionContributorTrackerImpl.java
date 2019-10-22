@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.internal.contributor;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntry;
@@ -99,14 +98,12 @@ public class FragmentCollectionContributorTrackerImpl
 			fragmentCollectionContributor -> {
 				Map<String, FragmentEntry> fragmentEntries = new HashMap<>();
 
-				for (int type : _SUPPORTED_FRAGMENT_TYPES) {
-					for (FragmentEntry fragmentEntry :
-							fragmentCollectionContributor.getFragmentEntries(
-								type, locale)) {
+				for (FragmentEntry fragmentEntry :
+						fragmentCollectionContributor.getFragmentEntries(
+							locale)) {
 
-						fragmentEntries.put(
-							fragmentEntry.getFragmentEntryKey(), fragmentEntry);
-					}
+					fragmentEntries.put(
+						fragmentEntry.getFragmentEntryKey(), fragmentEntry);
 				}
 
 				return fragmentEntries;
@@ -199,19 +196,17 @@ public class FragmentCollectionContributorTrackerImpl
 
 		Map<String, FragmentEntry> fragmentEntries = new HashMap<>();
 
-		for (int type : _SUPPORTED_FRAGMENT_TYPES) {
-			for (FragmentEntry fragmentEntry :
-					fragmentCollectionContributor.getFragmentEntries(type)) {
+		for (FragmentEntry fragmentEntry :
+				fragmentCollectionContributor.getFragmentEntries()) {
 
-				if (!_validateFragmentEntry(fragmentEntry)) {
-					continue;
-				}
-
-				fragmentEntries.put(
-					fragmentEntry.getFragmentEntryKey(), fragmentEntry);
-
-				_updateFragmentEntryLinks(fragmentEntry);
+			if (!_validateFragmentEntry(fragmentEntry)) {
+				continue;
 			}
+
+			fragmentEntries.put(
+				fragmentEntry.getFragmentEntryKey(), fragmentEntry);
+
+			_updateFragmentEntryLinks(fragmentEntry);
 		}
 
 		return fragmentEntries;
@@ -250,10 +245,6 @@ public class FragmentCollectionContributorTrackerImpl
 
 		return false;
 	}
-
-	private static final int[] _SUPPORTED_FRAGMENT_TYPES = {
-		FragmentConstants.TYPE_COMPONENT, FragmentConstants.TYPE_SECTION
-	};
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		FragmentCollectionContributorTrackerImpl.class);

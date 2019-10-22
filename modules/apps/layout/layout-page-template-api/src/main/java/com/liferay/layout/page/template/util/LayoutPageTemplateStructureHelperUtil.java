@@ -14,10 +14,7 @@
 
 package com.liferay.layout.page.template.util;
 
-import com.liferay.fragment.constants.FragmentConstants;
-import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -53,8 +50,6 @@ public class LayoutPageTemplateStructureHelperUtil {
 				"columns", JSONUtil.put(columnJSONObject)
 			).put(
 				"rowId", String.valueOf(i)
-			).put(
-				"type", String.valueOf(_getRowType(fragmentEntryLink))
 			);
 
 			structureJSONArray.put(structureJSONObject);
@@ -76,20 +71,6 @@ public class LayoutPageTemplateStructureHelperUtil {
 		jsonObject.put("structure", structureJSONArray);
 
 		return jsonObject;
-	}
-
-	private static int _getRowType(FragmentEntryLink fragmentEntryLink) {
-		FragmentEntry fragmentEntry =
-			FragmentEntryLocalServiceUtil.fetchFragmentEntry(
-				fragmentEntryLink.getFragmentEntryId());
-
-		if ((fragmentEntry != null) &&
-			(fragmentEntry.getType() == FragmentConstants.TYPE_COMPONENT)) {
-
-			return FragmentConstants.TYPE_COMPONENT;
-		}
-
-		return FragmentConstants.TYPE_SECTION;
 	}
 
 }

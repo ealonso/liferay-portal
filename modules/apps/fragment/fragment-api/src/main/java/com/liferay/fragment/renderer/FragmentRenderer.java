@@ -54,8 +54,7 @@ public interface FragmentRenderer {
 	}
 
 	public default String getLabel(Locale locale) {
-		return LanguageUtil.get(
-			locale, FragmentConstants.getTypeLabel(getType()));
+		return LanguageUtil.get(locale, "component");
 	}
 
 	public default int getType() {

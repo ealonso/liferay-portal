@@ -15,12 +15,10 @@
 package com.liferay.fragment.web.internal.display.context;
 
 import com.liferay.fragment.constants.FragmentActionKeys;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.web.internal.security.permission.resource.FragmentPermission;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
-import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -184,14 +182,32 @@ public class BasicFragmentManagementToolbarDisplayContext
 		return new CreationMenu() {
 			{
 				addPrimaryDropdownItem(
-					_getAddFragmentEntryDropdownItem(
-						FragmentConstants.TYPE_SECTION,
-						FragmentConstants.TYPE_SECTION_LABEL));
+					dropdownItem -> {
+						dropdownItem.putData("action", "addFragmentEntry");
 
-				addPrimaryDropdownItem(
-					_getAddFragmentEntryDropdownItem(
-						FragmentConstants.TYPE_COMPONENT,
-						FragmentConstants.TYPE_COMPONENT_LABEL));
+						PortletURL addFragmentEntryURL =
+							liferayPortletResponse.createActionURL();
+
+						addFragmentEntryURL.setParameter(
+							ActionRequest.ACTION_NAME,
+							"/fragment/add_fragment_entry");
+						addFragmentEntryURL.setParameter(
+							"fragmentCollectionId",
+							String.valueOf(
+								fragmentDisplayContext.
+									getFragmentCollectionId()));
+
+						dropdownItem.putData(
+							"addFragmentEntryURL",
+							addFragmentEntryURL.toString());
+
+						dropdownItem.putData(
+							"title",
+							LanguageUtil.get(request, "add-component"));
+						dropdownItem.setHref("#");
+						dropdownItem.setLabel(
+							LanguageUtil.get(request, "component"));
+					});
 			}
 		};
 	}
@@ -210,34 +226,6 @@ public class BasicFragmentManagementToolbarDisplayContext
 		}
 
 		return false;
-	}
-
-	private UnsafeConsumer<DropdownItem, Exception>
-		_getAddFragmentEntryDropdownItem(int type, String label) {
-
-		return dropdownItem -> {
-			dropdownItem.putData("action", "addFragmentEntry");
-			dropdownItem.putData(
-				"addFragmentEntryURL", _getAddFragmentEntryURL(type));
-			dropdownItem.putData(
-				"title", LanguageUtil.format(request, "add-x", label, true));
-			dropdownItem.setHref("#");
-			dropdownItem.setLabel(LanguageUtil.get(request, label));
-		};
-	}
-
-	private String _getAddFragmentEntryURL(int type) {
-		PortletURL addFragmentEntryURL =
-			liferayPortletResponse.createActionURL();
-
-		addFragmentEntryURL.setParameter(
-			ActionRequest.ACTION_NAME, "/fragment/add_fragment_entry");
-		addFragmentEntryURL.setParameter(
-			"fragmentCollectionId",
-			String.valueOf(fragmentDisplayContext.getFragmentCollectionId()));
-		addFragmentEntryURL.setParameter("type", String.valueOf(type));
-
-		return addFragmentEntryURL.toString();
 	}
 
 }
