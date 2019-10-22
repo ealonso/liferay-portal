@@ -50,6 +50,12 @@ public class FragmentEntryLocalServiceUtil {
 		return getService().addFragmentEntry(fragmentEntry);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, long, String, String, long, int,
+	 ServiceContext)}
+	 */
+	@Deprecated
 	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, long previewFileEntryId,
@@ -64,6 +70,24 @@ public class FragmentEntryLocalServiceUtil {
 
 	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, long previewFileEntryId,
+			int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().addFragmentEntry(
+			userId, groupId, fragmentCollectionId, fragmentEntryKey, name,
+			previewFileEntryId, status, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, long, String, String, String, String, String, String, long, int,
+	 ServiceContext)}
+	 */
+	@Deprecated
+	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, String css, String html,
 			String js, String configuration, long previewFileEntryId, int type,
 			int status,
@@ -73,6 +97,20 @@ public class FragmentEntryLocalServiceUtil {
 		return getService().addFragmentEntry(
 			userId, groupId, fragmentCollectionId, fragmentEntryKey, name, css,
 			html, js, configuration, previewFileEntryId, type, status,
+			serviceContext);
+	}
+
+	public static com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, String css, String html,
+			String js, String configuration, long previewFileEntryId,
+			int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().addFragmentEntry(
+			userId, groupId, fragmentCollectionId, fragmentEntryKey, name, css,
+			html, js, configuration, previewFileEntryId, status,
 			serviceContext);
 	}
 

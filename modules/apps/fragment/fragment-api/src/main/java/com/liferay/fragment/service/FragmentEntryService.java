@@ -53,6 +53,12 @@ public interface FragmentEntryService extends BaseService {
 	 *
 	 * Never modify or reference this interface directly. Always use {@link FragmentEntryServiceUtil} to access the fragment entry remote service. Add custom service methods to <code>com.liferay.fragment.service.impl.FragmentEntryServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, String, String, long, int, ServiceContext)}
+	 */
+	@Deprecated
 	public FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
 			String name, long previewFileEntryId, int type, int status,
@@ -61,8 +67,26 @@ public interface FragmentEntryService extends BaseService {
 
 	public FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, long previewFileEntryId, int status,
+			ServiceContext serviceContext)
+		throws PortalException;
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, String, String, String, String, String, String, long, int, ServiceContext)}
+	 */
+	@Deprecated
+	public FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
 			String name, String css, String html, String js,
 			String configuration, long previewFileEntryId, int type, int status,
+			ServiceContext serviceContext)
+		throws PortalException;
+
+	public FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, String css, String html, String js,
+			String configuration, long previewFileEntryId, int status,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -112,15 +136,30 @@ public interface FragmentEntryService extends BaseService {
 		long groupId, long fragmentCollectionId, int status, int start, int end,
 		OrderByComparator<FragmentEntry> orderByComparator);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntriesByType(
 		long groupId, long fragmentCollectionId, int type, int start, int end,
 		OrderByComparator<FragmentEntry> orderByComparator);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntriesByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesByStatus(long, long, int, int, int,
+	 OrderByComparator)}
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntry> getFragmentEntriesByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status,
@@ -141,10 +180,19 @@ public interface FragmentEntryService extends BaseService {
 	public int getFragmentEntriesCountByStatus(
 		long groupId, long fragmentCollectionId, int status);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getFragmentEntriesCountByType(
 		long groupId, long fragmentCollectionId, int type);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesCountByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getFragmentEntriesCountByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status);

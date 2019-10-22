@@ -75,6 +75,12 @@ public interface FragmentEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentEntry addFragmentEntry(FragmentEntry fragmentEntry);
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, long, String, String, long, int,
+	 ServiceContext)}
+	 */
+	@Deprecated
 	public FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, long previewFileEntryId,
@@ -83,8 +89,27 @@ public interface FragmentEntryLocalService
 
 	public FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, long previewFileEntryId,
+			int status, ServiceContext serviceContext)
+		throws PortalException;
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, long, String, String, String, String, String, String, long, int,
+	 ServiceContext)}
+	 */
+	@Deprecated
+	public FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, String css, String html,
 			String js, String configuration, long previewFileEntryId, int type,
+			int status, ServiceContext serviceContext)
+		throws PortalException;
+
+	public FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, String css, String html,
+			String js, String configuration, long previewFileEntryId,
 			int status, ServiceContext serviceContext)
 		throws PortalException;
 

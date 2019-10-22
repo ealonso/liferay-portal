@@ -33,10 +33,10 @@ public class FragmentEntryServiceWrapper
 	}
 
 	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never modify or reference this interface directly. Always use {@link FragmentEntryServiceUtil} to access the fragment entry remote service. Add custom service methods to <code>com.liferay.fragment.service.impl.FragmentEntryServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface.
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, String, String, long, int, ServiceContext)}
 	 */
+	@Deprecated
 	@Override
 	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
@@ -52,6 +52,23 @@ public class FragmentEntryServiceWrapper
 	@Override
 	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, long previewFileEntryId, int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryService.addFragmentEntry(
+			groupId, fragmentCollectionId, fragmentEntryKey, name,
+			previewFileEntryId, status, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #addFragmentEntry(long, long, String, String, String, String, String, String, long, int, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
 			String name, String css, String html, String js,
 			String configuration, long previewFileEntryId, int type, int status,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -61,6 +78,19 @@ public class FragmentEntryServiceWrapper
 			groupId, fragmentCollectionId, fragmentEntryKey, name, css, html,
 			js, configuration, previewFileEntryId, type, status,
 			serviceContext);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, String css, String html, String js,
+			String configuration, long previewFileEntryId, int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryService.addFragmentEntry(
+			groupId, fragmentCollectionId, fragmentEntryKey, name, css, html,
+			js, configuration, previewFileEntryId, status, serviceContext);
 	}
 
 	@Override
@@ -170,6 +200,10 @@ public class FragmentEntryServiceWrapper
 			orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public java.util.List<com.liferay.fragment.model.FragmentEntry>
 		getFragmentEntriesByType(
@@ -182,6 +216,11 @@ public class FragmentEntryServiceWrapper
 			groupId, fragmentCollectionId, type, start, end, orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Override
 	public java.util.List<com.liferay.fragment.model.FragmentEntry>
 		getFragmentEntriesByTypeAndStatus(
@@ -191,6 +230,12 @@ public class FragmentEntryServiceWrapper
 			groupId, fragmentCollectionId, type, status);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesByStatus(long, long, int, int, int,
+	 OrderByComparator)}
+	 */
+	@Deprecated
 	@Override
 	public java.util.List<com.liferay.fragment.model.FragmentEntry>
 		getFragmentEntriesByTypeAndStatus(
@@ -236,6 +281,10 @@ public class FragmentEntryServiceWrapper
 			groupId, fragmentCollectionId, status);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntriesCountByType(
 		long groupId, long fragmentCollectionId, int type) {
@@ -244,6 +293,11 @@ public class FragmentEntryServiceWrapper
 			groupId, fragmentCollectionId, type);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 #getFragmentEntriesCountByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntriesCountByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status) {
