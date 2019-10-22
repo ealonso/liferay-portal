@@ -14,7 +14,6 @@
 
 package com.liferay.frontend.theme.fjord.site.initializer.internal;
 
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
@@ -267,8 +266,8 @@ public class FjordSiteInitializer implements SiteInitializer {
 						FileUtil.stripExtension(shortFileName)),
 					StringUtil.read(cssURL.openStream()),
 					StringUtil.read(url.openStream()), StringPool.BLANK,
-					StringPool.BLANK, 0, FragmentConstants.TYPE_SECTION,
-					WorkflowConstants.STATUS_APPROVED, serviceContext);
+					StringPool.BLANK, 0, WorkflowConstants.STATUS_APPROVED,
+					serviceContext);
 
 			long fragmentEntryPreviewFileEntryId = _getPreviewFileEntryId(
 				FragmentPortletKeys.FRAGMENT, FragmentEntry.class.getName(),

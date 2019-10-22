@@ -17,7 +17,6 @@ package com.liferay.frontend.theme.westeros.bank.site.initializer.internal;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.dynamic.data.mapping.util.DefaultDDMStructureHelper;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
@@ -398,8 +397,8 @@ public class WesterosBankSiteInitializer implements SiteInitializer {
 					fragmentCollection.getFragmentCollectionId(), null,
 					fragmentEntryName, StringUtil.read(cssURL.openStream()),
 					StringUtil.read(url.openStream()), StringPool.BLANK,
-					StringPool.BLANK, 0, FragmentConstants.TYPE_SECTION,
-					WorkflowConstants.STATUS_APPROVED, serviceContext);
+					StringPool.BLANK, 0, WorkflowConstants.STATUS_APPROVED,
+					serviceContext);
 
 			long fragmentEntryPreviewFileEntryId = _getPreviewFileEntryId(
 				FragmentPortletKeys.FRAGMENT, FragmentEntry.class.getName(),
