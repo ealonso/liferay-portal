@@ -401,8 +401,7 @@ public class FragmentEntryProcessorEditableTest {
 			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
 			"fragment-entry", "Fragment Entry", null,
 			_getFileAsString(htmlFile), null, null, 0,
-			FragmentConstants.TYPE_SECTION, WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	private String _getFileAsString(String fileName) throws IOException {

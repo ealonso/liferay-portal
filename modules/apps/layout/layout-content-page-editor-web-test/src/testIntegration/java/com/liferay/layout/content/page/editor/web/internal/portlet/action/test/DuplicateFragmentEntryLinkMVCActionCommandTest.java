@@ -207,7 +207,6 @@ public class DuplicateFragmentEntryLinkMVCActionCommandTest {
 				StringUtil.randomString(), StringUtil.randomString(),
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				RandomTestUtil.randomString(), "{\"fieldSets\":[]}", 0,
-				FragmentConstants.TYPE_COMPONENT,
 				WorkflowConstants.STATUS_APPROVED, _serviceContext);
 
 		FragmentEntryLink originalFragmentEntryLink =

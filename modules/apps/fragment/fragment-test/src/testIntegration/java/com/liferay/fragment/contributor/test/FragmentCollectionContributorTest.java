@@ -70,10 +70,7 @@ public class FragmentCollectionContributorTest {
 		Map<String, FragmentEntry> fragmentEntries =
 			_fragmentCollectionContributorTracker.getFragmentEntries();
 
-		Assert.assertNotNull(
-			fragmentEntries.get(
-				TestFragmentCollectionContributor.
-					TEST_COMPONENT_FRAGMENT_ENTRY));
+		Assert.assertNotNull(fragmentEntries.get());
 		Assert.assertNotNull(
 			fragmentEntries.get(
 				TestFragmentCollectionContributor.TEST_SECTION_FRAGMENT_ENTRY));
@@ -105,14 +102,8 @@ public class FragmentCollectionContributorTest {
 	private static class TestFragmentCollectionContributor
 		implements FragmentCollectionContributor {
 
-		public static final String TEST_COMPONENT_FRAGMENT_ENTRY =
-			"test-component-fragment-entry";
-
 		public static final String TEST_FRAGMENT_COLLECTION_KEY =
 			"test-fragment-collection-contributor";
-
-		public static final String TEST_SECTION_FRAGMENT_ENTRY =
-			"test-section-fragment-entry";
 
 		public static final String TEST_UNSUPPORTED_FRAGMENT_ENTRY =
 			"test-unsuported-fragment-entry";
@@ -123,7 +114,7 @@ public class FragmentCollectionContributorTest {
 		}
 
 		@Override
-		public List<FragmentEntry> getFragmentEntries(int type) {
+		public List<FragmentEntry> getFragmentEntries() {
 			List<FragmentEntry> fragmentEntries = new ArrayList<>();
 
 			if (type == FragmentConstants.TYPE_COMPONENT) {
@@ -131,8 +122,7 @@ public class FragmentCollectionContributorTest {
 					_getFragmentEntry(TEST_COMPONENT_FRAGMENT_ENTRY, type));
 			}
 			else if (type == FragmentConstants.TYPE_SECTION) {
-				fragmentEntries.add(
-					_getFragmentEntry(TEST_SECTION_FRAGMENT_ENTRY, type));
+				fragmentEntries.add(_getFragmentEntry());
 			}
 			else {
 				fragmentEntries.add(
@@ -149,7 +139,7 @@ public class FragmentCollectionContributorTest {
 			return "Test Fragment Collection Contributor";
 		}
 
-		private FragmentEntry _getFragmentEntry(String key, int type) {
+		private FragmentEntry _getFragmentEntry(String key) {
 			FragmentEntry fragmentEntry =
 				FragmentEntryLocalServiceUtil.createFragmentEntry(0L);
 
@@ -159,7 +149,6 @@ public class FragmentCollectionContributorTest {
 			fragmentEntry.setHtml(RandomTestUtil.randomString());
 			fragmentEntry.setJs(null);
 			fragmentEntry.setConfiguration(null);
-			fragmentEntry.setType(type);
 
 			return fragmentEntry;
 		}

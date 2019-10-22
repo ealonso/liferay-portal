@@ -99,8 +99,8 @@ public class FragmentsImporterTest {
 	}
 
 	@Test
-	public void testImportComponents() throws Exception {
-		_importFragmentsByType(FragmentConstants.TYPE_COMPONENT);
+	public void testImport() throws Exception {
+		_importFragments();
 	}
 
 	@Test
@@ -177,11 +177,6 @@ public class FragmentsImporterTest {
 		Assert.assertTrue(fragmentEntryNames.contains("resource"));
 	}
 
-	@Test
-	public void testImportSections() throws Exception {
-		_importFragmentsByType(FragmentConstants.TYPE_SECTION);
-	}
-
 	private void _addFragmentEntryType(JSONObject jsonObject) {
 		int type = FragmentConstants.getTypeFromLabel(
 			jsonObject.getString("type"));
@@ -240,7 +235,7 @@ public class FragmentsImporterTest {
 		}
 	}
 
-	private void _importFragmentsByType(int type) throws Exception {
+	private void _importFragments() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
 
@@ -266,7 +261,7 @@ public class FragmentsImporterTest {
 
 		Stream<FragmentEntry> stream = fragmentEntries.stream();
 
-		List<String> expectedFragmentsEntries = _fragmentEntryTypes.get(type);
+		List<String> expectedFragmentsEntries = _fragmentEntryTypes.get();
 
 		List<FragmentEntry> actualFragmentEntries = stream.filter(
 			fragmentEntry -> fragmentEntry.getType() == type

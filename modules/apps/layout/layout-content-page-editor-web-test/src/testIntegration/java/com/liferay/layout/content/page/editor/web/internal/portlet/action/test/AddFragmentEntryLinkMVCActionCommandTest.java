@@ -190,8 +190,7 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 			StringUtil.randomString(), StringUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), "{fieldSets: []}", 0,
-			FragmentConstants.TYPE_COMPONENT, WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	private MockActionRequest _getMockActionRequest() throws PortalException {

@@ -146,8 +146,7 @@ public class FragmentEntryStagedModelDataHandlerTest
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), configuration, 0,
-			FragmentConstants.TYPE_COMPONENT, WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	@Override

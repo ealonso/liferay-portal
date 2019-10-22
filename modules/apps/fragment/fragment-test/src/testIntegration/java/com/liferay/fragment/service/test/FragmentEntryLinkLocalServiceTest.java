@@ -90,8 +90,7 @@ public class FragmentEntryLinkLocalServiceTest {
 			_fragmentCollection.getFragmentCollectionId(), null,
 			"Fragment Name", StringPool.BLANK, "<div>test</div>",
 			StringPool.BLANK, _read("configuration-light.json"), 0,
-			FragmentConstants.TYPE_SECTION, WorkflowConstants.STATUS_APPROVED,
-			serviceContext);
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	@After
@@ -313,8 +312,7 @@ public class FragmentEntryLinkLocalServiceTest {
 				_fragmentCollection.getFragmentCollectionId(), null,
 				"Fragment Name", RandomTestUtil.randomString(),
 				"<div>test</div>", RandomTestUtil.randomString(), configuration,
-				0, FragmentConstants.TYPE_SECTION,
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
+				0, WorkflowConstants.STATUS_APPROVED, serviceContext);
 
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
