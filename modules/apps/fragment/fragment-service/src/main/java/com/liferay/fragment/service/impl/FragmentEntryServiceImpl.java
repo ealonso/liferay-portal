@@ -44,6 +44,12 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #addFragmentEntry(long, long, String, String, long, int,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
@@ -76,6 +82,12 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			previewFileEntryId, status, serviceContext);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #addFragmentEntry(long, long, String, String, String, String,
+	 *             String, String, long, int, ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
@@ -241,6 +253,10 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntry> getFragmentEntriesByType(
 		long groupId, long fragmentCollectionId, int type, int start, int end,
@@ -250,6 +266,11 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			groupId, fragmentCollectionId, type, start, end, orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #getFragmentEntriesByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntry> getFragmentEntriesByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status) {
@@ -258,6 +279,12 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			groupId, fragmentCollectionId, status);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #getFragmentEntriesByStatus(long, long, int, int, int,
+	 *             OrderByComparator)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntry> getFragmentEntriesByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status,
@@ -320,6 +347,10 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			groupId, fragmentCollectionId, status);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntriesCountByType(
 		long groupId, long fragmentCollectionId, int type) {
@@ -328,6 +359,11 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 			groupId, fragmentCollectionId, type);
 	}
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by {@link
+	 *             #getFragmentEntriesCountByStatus(long, long, int)}
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntriesCountByTypeAndStatus(
 		long groupId, long fragmentCollectionId, int type, int status) {
