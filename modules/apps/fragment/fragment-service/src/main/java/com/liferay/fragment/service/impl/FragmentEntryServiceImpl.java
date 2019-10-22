@@ -97,9 +97,8 @@ public class FragmentEntryServiceImpl extends FragmentEntryServiceBaseImpl {
 		throws PortalException {
 
 		return addFragmentEntry(
-			groupId, fragmentCollectionId, fragmentEntryKey, name,
-			css, html, js, configuration, previewFileEntryId, status,
-			serviceContext);
+			groupId, fragmentCollectionId, fragmentEntryKey, name, css, html,
+			js, configuration, previewFileEntryId, status, serviceContext);
 	}
 
 	@Override
