@@ -3,6 +3,5 @@
 	"htmlPath": "index.html",
 	"jsPath": "index.js",
 	"name": "Webcontent Widget Element",
-	"thumbnailPath": "thumbnail.png",
-	"type": "component"
+	"thumbnailPath": "thumbnail.png"
 }

@@ -1,6 +1,5 @@
 {
 	"fragmentEntryKey": "slider",
 	"name": "slider",
-	"thumbnail": "slider.png",
-	"type": "component"
+	"thumbnail": "slider.png"
 }

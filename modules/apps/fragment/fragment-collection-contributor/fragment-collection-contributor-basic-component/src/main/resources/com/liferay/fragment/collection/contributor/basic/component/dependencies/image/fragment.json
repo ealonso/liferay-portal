@@ -1,6 +1,5 @@
 {
 	"fragmentEntryKey": "image",
 	"name": "image",
-	"thumbnail": "image.png",
-	"type": "component"
+	"thumbnail": "image.png"
 }

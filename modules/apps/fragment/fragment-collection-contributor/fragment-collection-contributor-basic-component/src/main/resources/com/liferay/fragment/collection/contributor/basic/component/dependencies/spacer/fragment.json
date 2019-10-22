@@ -1,6 +1,5 @@
 {
 	"fragmentEntryKey": "spacer",
 	"name": "spacer",
-	"thumbnail": "spacer.png",
-	"type": "component"
+	"thumbnail": "spacer.png"
 }

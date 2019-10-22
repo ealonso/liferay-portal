@@ -4,6 +4,5 @@
 	"htmlPath": "index.html",
 	"jsPath": "index.js",
 	"name": "Link Green Left",
-	"thumbnailPath": "thumbnail.png",
-	"type": "component"
+	"thumbnailPath": "thumbnail.png"
 }

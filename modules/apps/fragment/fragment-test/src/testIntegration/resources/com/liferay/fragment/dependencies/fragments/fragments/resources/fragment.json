@@ -3,6 +3,5 @@
 	"fragmentEntryKey": "resources",
 	"htmlPath": "index.html",
 	"jsPath": "index.js",
-	"name": "resources",
-	"type": "component"
+	"name": "resources"
 }
