@@ -107,9 +107,22 @@ public class DropZoneFragmentRenderer implements FragmentRenderer {
 			HttpServletResponse httpServletResponse)
 		throws IOException {
 
+		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", fragmentRendererContext.getLocale(),
+			getClass());
+
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
-		printWriter.write("<div style=\"min-height: 400px;\"></div>");
+		printWriter.write("<div class=\"fragments-editor__drop-zone\">");
+		printWriter.write("<p>");
+		printWriter.write(LanguageUtil.get(resourceBundle, "drop-zone"));
+		printWriter.write("</p><p>");
+		printWriter.write(
+			LanguageUtil.get(
+				resourceBundle,
+				"area-enabled-to-place-components-only-when-page-building"));
+		printWriter.write("</p>");
+		printWriter.write("</div>");
 	}
 
 	@Reference
