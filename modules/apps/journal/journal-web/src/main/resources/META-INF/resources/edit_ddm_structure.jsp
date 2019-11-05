@@ -176,6 +176,18 @@ if (ddmStructure != null) {
 
 				<c:choose>
 					<c:when test="<%= journalDisplayContext.useDataEngineEditor() %>">
+						<liferay-data-engine:data-layout-builder
+							dataDefinitionInputId="dataDefinition"
+							dataLayoutId="<%= 0L %>"
+							dataLayoutInputId="dataLayout"
+							namespace="<%= renderResponse.getNamespace() %>"
+						>
+							<button class="btn btn-primary lfr-ddm-add-field lfr-ddm-plus-button nav-btn nav-btn-monospaced" id="addFieldButton" type="button">
+								<svg class="lexicon-icon">
+									<use xlink:href="<%= themeDisplay.getPathThemeImages() %>/lexicon/icons.svg#plus" />
+								</svg>
+							</button>
+						</liferay-data-engine:data-layout-builder>
 					</c:when>
 					<c:otherwise>
 						<%@ include file="/ddm_form_builder.jspf" %>
