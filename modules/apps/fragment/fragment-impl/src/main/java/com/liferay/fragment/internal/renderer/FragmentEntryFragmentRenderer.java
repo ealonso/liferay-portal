@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.internal.renderer;
 
+import com.liferay.fragment.constants.FragmentEntryRendererWebKeys;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
@@ -27,7 +28,11 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
 import java.io.IOException;
@@ -35,6 +40,7 @@ import java.io.PrintWriter;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -115,10 +121,38 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		sb.append(html);
 		sb.append("</div>");
 
-		if (Validator.isNotNull(css)) {
+		boolean cssLoaded = false;
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		OutputData outputData = null;
+
+		if (serviceContext != null) {
+			outputData = (OutputData)serviceContext.getAttribute(
+				WebKeys.OUTPUT_DATA);
+
+			if (outputData == null) {
+				outputData = new OutputData();
+			}
+
+			Set<String> outputKeys = outputData.getOutputKeys();
+
+			cssLoaded = outputKeys.contains(
+				fragmentEntryId + FragmentEntryRendererWebKeys.CSS);
+		}
+
+		if (Validator.isNotNull(css) && !cssLoaded) {
 			sb.append("<style>");
 			sb.append(css);
 			sb.append("</style>");
+
+			if (outputData != null) {
+				outputData.addOutputKey(
+					fragmentEntryId + FragmentEntryRendererWebKeys.CSS);
+
+				serviceContext.setAttribute(WebKeys.OUTPUT_DATA, outputData);
+			}
 		}
 
 		if (Validator.isNotNull(js)) {
