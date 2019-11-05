@@ -253,8 +253,8 @@ public class ContentPageEditorDisplayContext {
 			"getAssetMappingFieldsURL",
 			_getResourceURL("/content_layout/get_asset_mapping_fields")
 		).put(
-			"getAvailableTemplatesURL",
-			_getResourceURL("/content_layout/get_available_templates")
+			"getAvailableDDMTemplatesURL",
+			_getResourceURL("/content_layout/get_available_ddm_templates")
 		).put(
 			"getContentStructureMappingFieldsURL",
 			_getResourceURL(
