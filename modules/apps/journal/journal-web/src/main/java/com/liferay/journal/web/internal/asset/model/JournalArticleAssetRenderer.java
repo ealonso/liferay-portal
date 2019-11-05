@@ -229,7 +229,9 @@ public class JournalArticleAssetRenderer
 			}
 
 			String ddmTemplateKey = ParamUtil.getString(
-				portletRequest, "ddmTemplateKey");
+				portletRequest, "ddmTemplateKey",
+				GetterUtil.getString(
+					portletRequest.getAttribute(WebKeys.JOURNAL_TEMPLATE_ID)));
 
 			JournalArticleDisplay articleDisplay =
 				JournalArticleLocalServiceUtil.getArticleDisplay(
