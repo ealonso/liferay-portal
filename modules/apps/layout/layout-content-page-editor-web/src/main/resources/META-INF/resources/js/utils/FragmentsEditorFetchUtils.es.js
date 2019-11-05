@@ -193,10 +193,12 @@ function getAssetMappingFields(classNameId, classPK) {
 
 /**
  * @param {string} className
+ * @param {string} classPK
  */
-function getAvailableTemplates(className) {
-	return _fetch(getState().getAvailableTemplatesURL, {
-		className
+function getAvailableDDMTemplates(className, classPK) {
+	return _fetch(getState().getAvailableDDMTemplatesURL, {
+		className,
+		classPK
 	});
 }
 
@@ -348,7 +350,7 @@ export {
 	editFragmentEntryLinkComment,
 	getAssetFieldValue,
 	getAssetMappingFields,
-	getAvailableTemplates,
+	getAvailableDDMTemplates,
 	getContentStructureMappingFields,
 	getExperienceUsedPortletIds,
 	getPageContents,

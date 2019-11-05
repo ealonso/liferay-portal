@@ -21,7 +21,7 @@ import '../../../common/InfoItemSelector.es';
 import './ItemSelectorFieldDelegateTemplate.soy';
 import getConnectedComponent from '../../../../store/ConnectedComponent.es';
 import {openItemSelector} from '../../../../utils/FragmentsEditorDialogUtils';
-import {getAvailableTemplates} from '../../../../utils/FragmentsEditorFetchUtils.es';
+import {getAvailableDDMTemplates} from '../../../../utils/FragmentsEditorFetchUtils.es';
 import {setIn} from '../../../../utils/FragmentsEditorUpdateUtils.es';
 import templates from './ItemSelectorField.soy';
 
@@ -63,10 +63,12 @@ class ItemSelectorField extends Component {
 		if (
 			this.configurationValues &&
 			this.configurationValues[this.field.name] &&
-			this.configurationValues[this.field.name].className
+			this.configurationValues[this.field.name].className &&
+			this.configurationValues[this.field.name].classPK
 		) {
-			getAvailableTemplates(
-				this.configurationValues[this.field.name].className
+			getAvailableDDMTemplates(
+				this.configurationValues[this.field.name].className,
+				this.configurationValues[this.field.name].classPK
 			).then(availableTemplates => {
 				this.availableTemplates = availableTemplates;
 			});
@@ -170,7 +172,7 @@ ItemSelectorField.STATE = {
 };
 
 const ConnectedItemSelectorField = getConnectedComponent(ItemSelectorField, [
-	'getAvailableTemplatesURL',
+	'getAvailableDDMTemplatesURL',
 	'spritemap'
 ]);
 
