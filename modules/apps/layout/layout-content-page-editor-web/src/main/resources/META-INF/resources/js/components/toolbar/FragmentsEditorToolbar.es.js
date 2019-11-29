@@ -94,10 +94,7 @@ class FragmentsEditorToolbar extends Component {
 
 	_checkPublishButtonState() {
 		requestAnimationFrame(() => {
-			this._publishButtonEnabled =
-				this._online &&
-				(this.pageType !== PAGE_TYPES.master ||
-					this.layoutData.hasDropZone);
+			this._publishButtonEnabled = this._online;
 		});
 	}
 

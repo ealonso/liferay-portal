@@ -24,6 +24,8 @@ import '../floating_toolbar/spacing/FloatingToolbarSpacingPanel.es';
 
 import './ColumnOverlayGrid.es';
 
+import './DropZoneFragmentEntryLink.es';
+
 import './FragmentEntryLink.es';
 import {removeRowAction} from '../../actions/removeRow.es';
 import {updateRowColumnsAction} from '../../actions/updateRowColumns.es';
