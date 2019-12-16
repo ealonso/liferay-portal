@@ -14,6 +14,8 @@
 
 package com.liferay.journal.terms.of.use.internal;
 
+import com.liferay.journal.configuration.JournalServiceConfiguration;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.terms.of.use.TermsOfUseContentProvider;
 
 import javax.servlet.RequestDispatcher;
@@ -21,13 +23,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
+
+import java.util.Map;
 
 /**
  * @author Eduardo García
  */
-@Component(immediate = true, service = TermsOfUseContentProvider.class)
+@Component(
+	configurationPid = "com.liferay.journal.configuration.JournalServiceConfiguration",
+	immediate = true, service = TermsOfUseContentProvider.class)
 public class JournalArticleTermsOfUseContentProvider
 	implements TermsOfUseContentProvider {
 
@@ -39,6 +47,10 @@ public class JournalArticleTermsOfUseContentProvider
 
 		RequestDispatcher requestDispatcher =
 			_servletContext.getRequestDispatcher(_JSP_PATH_CONFIGURATION);
+
+		httpServletRequest.setAttribute(
+			JournalServiceConfiguration.class.getName(),
+			_journalServiceConfiguration);
 
 		requestDispatcher.include(httpServletRequest, httpServletResponse);
 	}
@@ -52,6 +64,10 @@ public class JournalArticleTermsOfUseContentProvider
 		RequestDispatcher requestDispatcher =
 			_servletContext.getRequestDispatcher(_JSP_PATH_VIEW);
 
+		httpServletRequest.setAttribute(
+			JournalServiceConfiguration.class.getName(),
+			_journalServiceConfiguration);
+
 		requestDispatcher.include(httpServletRequest, httpServletResponse);
 	}
 
@@ -63,10 +79,19 @@ public class JournalArticleTermsOfUseContentProvider
 		_servletContext = servletContext;
 	}
 
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_journalServiceConfiguration = ConfigurableUtil.createConfigurable(
+			JournalServiceConfiguration.class, properties);
+	}
+
 	private static final String _JSP_PATH_CONFIGURATION = "/configuration.jsp";
 
 	private static final String _JSP_PATH_VIEW = "/view.jsp";
 
 	private ServletContext _servletContext;
+
+	private JournalServiceConfiguration _journalServiceConfiguration;
 
 }
