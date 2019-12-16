@@ -482,24 +482,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 			getLayoutUuid(), getGroupId());
 	}
 
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	@Override
-	public String getLegacyDescription() {
-		return _description;
-	}
-
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	@Override
-	public String getLegacyTitle() {
-		return _title;
-	}
-
 	@Override
 	public Date getReviewDate() {
 		if (!PropsValues.SCHEDULER_ENABLED) {
@@ -642,15 +624,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		_document = null;
 	}
 
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	@Override
-	public void setDescription(String description) {
-		_description = description;
-	}
-
 	@Override
 	public void setDescriptionMap(Map<Locale, String> descriptionMap) {
 		_descriptionMap = descriptionMap;
@@ -671,15 +644,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		_smallImageType = smallImageType;
 	}
 
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	@Override
-	public void setTitle(String title) {
-		_title = title;
-	}
-
 	@Override
 	public void setTitleMap(Map<Locale, String> titleMap) {
 		_titleMap = titleMap;
@@ -688,12 +652,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalArticleImpl.class);
 
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	private String _description;
-
 	private Map<Locale, String> _descriptionMap;
 
 	@CacheField(propagateToInterface = true)
@@ -701,13 +659,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 
 	private long _imagesFolderId;
 	private String _smallImageType;
-
-	/**
-	 * @deprecated As of Judson (7.1.x)
-	 */
-	@Deprecated
-	private String _title;
-
 	private Map<Locale, String> _titleMap;
 
 }
