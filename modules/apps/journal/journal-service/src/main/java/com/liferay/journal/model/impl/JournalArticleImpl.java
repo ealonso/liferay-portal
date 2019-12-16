@@ -526,26 +526,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		return new StagedModelType(JournalArticle.class);
 	}
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #getDDMStructureKey()}
-	 */
-	@Deprecated
-	@Override
-	public String getStructureId() {
-		return getDDMStructureKey();
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #getDDMTemplateKey()}
-	 */
-	@Deprecated
-	@Override
-	public String getTemplateId() {
-		return getDDMTemplateKey();
-	}
-
 	@JSON
 	@Override
 	public String getTitle() {
@@ -655,15 +635,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 		return true;
 	}
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public boolean isTemplateDriven() {
-		return true;
-	}
-
 	@Override
 	public void setContent(String content) {
 		super.setContent(content);
@@ -698,26 +669,6 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 	@Override
 	public void setSmallImageType(String smallImageType) {
 		_smallImageType = smallImageType;
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #setDDMStructureKey(String)}
-	 */
-	@Deprecated
-	@Override
-	public void setStructureId(String ddmStructureKey) {
-		setDDMStructureKey(ddmStructureKey);
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #setDDMTemplateKey(String)}
-	 */
-	@Deprecated
-	@Override
-	public void setTemplateId(String ddmTemplateKey) {
-		setDDMTemplateKey(ddmTemplateKey);
 	}
 
 	/**
