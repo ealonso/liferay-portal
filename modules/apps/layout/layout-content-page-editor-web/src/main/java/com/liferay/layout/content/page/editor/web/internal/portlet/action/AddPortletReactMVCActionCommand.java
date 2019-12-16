@@ -101,18 +101,18 @@ public class AddPortletReactMVCActionCommand
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId",
 			SegmentsExperienceConstants.ID_DEFAULT);
-		String itemConfig = ParamUtil.getString(actionRequest, "config");
 		String parentItemId = ParamUtil.getString(actionRequest, "parentId");
-		String itemType = ParamUtil.getString(actionRequest, "type");
 		int position = ParamUtil.getInteger(actionRequest, "position");
 
 		return LayoutStructureUtil.updateLayoutPageTemplateData(
 			themeDisplay.getScopeGroupId(), segmentsExperienceId,
 			themeDisplay.getPlid(),
 			layoutStructure -> layoutStructure.addLayoutStructureItem(
-				JSONFactoryUtil.createJSONObject(itemConfig),
+				JSONUtil.put(
+					"fragmentEntryLinkId",
+					fragmentEntryLink.getFragmentEntryLinkId()),
 				String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()),
-				parentItemId, itemType, position));
+				parentItemId, "fragment", position));
 	}
 
 	@Override
