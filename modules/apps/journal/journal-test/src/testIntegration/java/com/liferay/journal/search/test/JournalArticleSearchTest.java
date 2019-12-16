@@ -522,12 +522,6 @@ public class JournalArticleSearchTest extends BaseSearchTestCase {
 	}
 
 	@Override
-	protected boolean isCheckBaseModelPermission() {
-		return _journalServiceConfiguration.
-			articleViewPermissionsCheckEnabled();
-	}
-
-	@Override
 	protected boolean isExpirableAllVersions() {
 		return _journalServiceConfiguration.expireAllArticleVersionsEnabled();
 	}
