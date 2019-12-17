@@ -1,0 +1,30 @@
+.change-tracking-indicator {
+	font-size: 12px;
+	position: fixed;
+	text-align: center;
+	top: 0;
+
+	.change-tracking-indicator-link {
+		display: table-cell;
+		font-weight: 600;
+		vertical-align: middle;
+		white-space: nowrap;
+
+		.change-tracking-indicator-icon-change-list {
+			color: #89A7E0;
+			margin-right: 4px;
+			margin-top: 0px;
+		}
+
+		.change-tracking-indicator-icon-production {
+			color: #5ACA75;
+			font-size: 16px;
+			margin-top: 0px;
+		}
+
+		span, svg {
+			display: inline-flex;
+			vertical-align: middle;
+		}
+	}
+}
