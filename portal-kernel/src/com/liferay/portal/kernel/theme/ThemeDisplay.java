@@ -951,6 +951,15 @@ public class ThemeDisplay
 
 		Layout layout = getLayout();
 
+		if (layout.getMasterLayoutPlid() > 0) {
+			Layout masterLayout = LayoutLocalServiceUtil.fetchLayout(
+				layout.getMasterLayoutPlid());
+
+			if (masterLayout != null) {
+				return masterLayout.getThemeSetting(key, device);
+			}
+		}
+
 		return layout.getThemeSetting(key, device);
 	}
 
