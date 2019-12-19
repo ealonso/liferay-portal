@@ -45,7 +45,7 @@ export default {
 			classPK,
 			fragmentGroupId,
 			fragmentKey,
-			parentId,
+			parentItemId: parentId,
 			position,
 			segmentsExperienceId
 		});

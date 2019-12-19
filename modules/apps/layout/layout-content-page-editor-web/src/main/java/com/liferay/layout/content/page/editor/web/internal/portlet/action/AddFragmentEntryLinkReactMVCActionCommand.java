@@ -178,7 +178,8 @@ public class AddFragmentEntryLinkReactMVCActionCommand
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId",
 			SegmentsExperienceConstants.ID_DEFAULT);
-		String parentItemId = ParamUtil.getString(actionRequest, "parentId");
+		String parentItemId = ParamUtil.getString(
+			actionRequest, "parentItemId");
 		int position = ParamUtil.getInteger(actionRequest, "position");
 
 		return LayoutStructureUtil.updateLayoutPageTemplateData(

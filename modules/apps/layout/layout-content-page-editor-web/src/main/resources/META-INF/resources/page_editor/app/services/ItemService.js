@@ -35,11 +35,11 @@ export default {
 		const {addItemURL} = config;
 
 		return serviceFetch(config, addItemURL, {
-			config: JSON.stringify(itemConfig),
-			parentId,
+			itemConfig: JSON.stringify(itemConfig),
+			itemType: type,
+			parentItemId: parentId,
 			position,
-			segmentsExperienceId,
-			type
+			segmentsExperienceId
 		});
 	},
 
@@ -58,7 +58,7 @@ export default {
 
 		return serviceFetch(config, moveItemURL, {
 			itemId,
-			parentId,
+			parentItemId: parentId,
 			position,
 			segmentsExperienceId
 		});

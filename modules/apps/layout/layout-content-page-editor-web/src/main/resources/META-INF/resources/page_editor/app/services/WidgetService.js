@@ -32,7 +32,7 @@ export default {
 		return serviceFetch(config, addPortletURL, {
 			classNameId,
 			classPK,
-			parentId,
+			parentItemId: parentId,
 			portletId,
 			position,
 			segmentsExperienceId
