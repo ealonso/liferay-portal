@@ -191,6 +191,18 @@ public class RenderFragmentLayoutDisplayContext {
 		return unsyncStringWriter.toString();
 	}
 
+	public boolean isReactEditor(JSONObject dataJSONObject) {
+		int version = dataJSONObject.getInt("version");
+
+		if (version == _LATEST_VERSION) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static final int _LATEST_VERSION = 1;
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		RenderFragmentLayoutDisplayContext.class);
 

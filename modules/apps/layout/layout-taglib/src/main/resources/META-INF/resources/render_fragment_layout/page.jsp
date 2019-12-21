@@ -36,7 +36,14 @@ JSONObject dataJSONObject = (JSONObject)request.getAttribute("liferay-layout:ren
 
 			<%= renderFragmentLayoutDisplayContext.getPortletPaths() %>
 
-			<liferay-util:include page="/render_fragment_layout/render_layout_data_structure.jsp" servletContext="<%= application %>" />
+			<c:choose>
+				<c:when test="<%= renderFragmentLayoutDisplayContext.isReactEditor(dataJSONObject) %>">
+					<liferay-util:include page="/render_fragment_layout/render_react_editor_layout_data_structure.jsp" servletContext="<%= application %>" />
+				</c:when>
+				<c:otherwise>
+					<liferay-util:include page="/render_fragment_layout/render_layout_data_structure.jsp" servletContext="<%= application %>" />
+				</c:otherwise>
+			</c:choose>
 
 		<%
 		}
