@@ -788,6 +788,10 @@ public class ContentPageEditorDisplayContext {
 				continue;
 			}
 
+			if (!_isFragmentEntryAllowed(fragmentRenderer.getKey())) {
+				continue;
+			}
+
 			SoyContext dynamicFragmentSoyContext =
 				SoyContextFactoryUtil.createSoyContext();
 
