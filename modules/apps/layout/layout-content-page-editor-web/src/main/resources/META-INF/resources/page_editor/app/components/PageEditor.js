@@ -53,7 +53,7 @@ const Container = React.forwardRef(({children, item}, ref) => {
 	const {
 		backgroundColorCssClass,
 		backgroundImage,
-		columnSpacing,
+		gutters,
 		paddingHorizontal,
 		paddingVertical,
 		type
@@ -69,7 +69,7 @@ const Container = React.forwardRef(({children, item}, ref) => {
 					'container-fluid': type === 'fluid',
 					empty: !item.children.length,
 					[`px-${paddingHorizontal}`]: paddingHorizontal !== 3,
-					'no-gutters': columnSpacing
+					'no-gutters': gutters
 				}
 			)}
 			ref={ref}
@@ -92,14 +92,25 @@ const Container = React.forwardRef(({children, item}, ref) => {
 const Row = React.forwardRef(({children, item, layoutData}, ref) => {
 	const parent = layoutData.items[item.parentId];
 
+	const {
+		config: {gutters, paddingHorizontal, paddingVertical, type}
+	} = item;
+
+	const ROW_CLASSES = {
+		container: type === 'fixed',
+		'container-fluid': type === 'fluid',
+		[`py-${paddingVertical}`]: paddingVertical,
+		[`px-${paddingHorizontal}`]: paddingHorizontal > 0,
+		'no-gutters': gutters
+	};
+
 	const rowContent = (
 		<div className="page-editor__row-outline" ref={ref}>
 			<div
 				className={classNames('page-editor__row row', {
 					empty: !item.children.some(
 						childId => layoutData.items[childId].children.length
-					),
-					'no-gutters': !item.config.gutters
+					)
 				})}
 			>
 				{children}
@@ -108,7 +119,7 @@ const Row = React.forwardRef(({children, item, layoutData}, ref) => {
 	);
 
 	return !parent || parent.type === LAYOUT_DATA_ITEM_TYPES.root ? (
-		<div className="container-fluid p-0">{rowContent}</div>
+		<div className={classNames(ROW_CLASSES)}>{rowContent}</div>
 	) : (
 		rowContent
 	);
@@ -119,7 +130,14 @@ const Column = React.forwardRef(({children, className, item}, ref) => {
 
 	return (
 		<div
-			className={classNames(className, 'col', {[`col-${size}`]: size})}
+			className={classNames(
+				className,
+				'page-editor__row-outline',
+				'col',
+				{
+					[`col-${size}`]: size
+				}
+			)}
 			ref={ref}
 		>
 			{children}
