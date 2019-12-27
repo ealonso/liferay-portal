@@ -876,14 +876,20 @@ public class ContentPageEditorDisplayContext {
 				continue;
 			}
 
+			List<SoyContext> fragmentEntriesSoyContext =
+				_getFragmentEntriesSoyContexts(fragmentEntries);
+
+			if (ListUtil.isEmpty(fragmentEntriesSoyContext)) {
+				continue;
+			}
+
 			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
 
 			soyContext.put(
 				"fragmentCollectionId",
 				fragmentCollectionContributor.getFragmentCollectionKey()
 			).put(
-				"fragmentEntries",
-				_getFragmentEntriesSoyContexts(fragmentEntries)
+				"fragmentEntries", fragmentEntriesSoyContext
 			).put(
 				"name",
 				fragmentCollectionContributor.getName(themeDisplay.getLocale())
@@ -922,12 +928,18 @@ public class ContentPageEditorDisplayContext {
 
 			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
 
+			List<SoyContext> fragmentEntriesSoyContext =
+				_getFragmentEntriesSoyContexts(fragmentEntries);
+
+			if (ListUtil.isEmpty(fragmentEntriesSoyContext)) {
+				continue;
+			}
+
 			soyContext.put(
 				"fragmentCollectionId",
 				fragmentCollection.getFragmentCollectionId()
 			).put(
-				"fragmentEntries",
-				_getFragmentEntriesSoyContexts(fragmentEntries)
+				"fragmentEntries", fragmentEntriesSoyContext
 			).put(
 				"name", fragmentCollection.getName()
 			);
