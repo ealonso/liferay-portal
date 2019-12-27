@@ -80,7 +80,8 @@ public class DefaultLayoutConverter implements LayoutConverter {
 
 								columnSize = GetterUtil.getInteger(
 									className.substring(
-										_CSS_CLASS_COLUMN_PREFIX.length()), 12);
+										_CSS_CLASS_COLUMN_PREFIX.length()),
+									12);
 
 								break;
 							}
