@@ -24,6 +24,10 @@ public interface LayoutConverter {
 
 	public LayoutData convert(Layout layout);
 
+	public default String[] getConversionWarnings(Layout layout) {
+		return new String[0];
+	}
+
 	public default boolean isConvertible(Layout layout) {
 		if (LayoutConstants.TYPE_CONTENT.equals(layout.getType())) {
 			return false;
