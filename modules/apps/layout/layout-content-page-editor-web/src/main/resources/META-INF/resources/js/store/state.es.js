@@ -503,6 +503,14 @@ const INITIAL_STATE = {
 	lastSaveDate: Config.string().value(''),
 
 	/**
+	 * Array of warnings to display for layout conversion draft.
+	 * @default []
+	 * @review
+	 * @type {Array<string>}
+	 */
+	layoutConversionWarnings: Config.array().value([]),
+
+	/**
 	 * Data associated to the layout
 	 * @default {structure: []}
 	 * @review
