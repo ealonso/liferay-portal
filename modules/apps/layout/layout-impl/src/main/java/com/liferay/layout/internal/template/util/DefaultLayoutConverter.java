@@ -18,6 +18,7 @@ import com.liferay.layout.util.template.LayoutColumn;
 import com.liferay.layout.util.template.LayoutConverter;
 import com.liferay.layout.util.template.LayoutData;
 import com.liferay.layout.util.template.LayoutRow;
+import com.liferay.layout.util.template.LayoutTypeSettingsInspectorUtil;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutTemplate;
@@ -91,6 +92,30 @@ public class DefaultLayoutConverter implements LayoutConverter {
 
 		return LayoutData.of(
 			layout, rowUnsafeConsumers.toArray(new UnsafeConsumer[0]));
+	}
+
+	public String[] getConversionWarnings(Layout layout) {
+		List<String> conversionWarnings = new ArrayList<>();
+
+		if (LayoutTypeSettingsInspectorUtil.hasNestedPortletsPortlet(
+				layout.getTypeSettingsProperties())) {
+
+			conversionWarnings.add("page-conversion-warning-nested-widgets");
+		}
+
+		if (LayoutTypeSettingsInspectorUtil.isCustomizableLayout(
+				layout.getTypeSettingsProperties())) {
+
+			conversionWarnings.add(
+				"page-conversion-warning-customizable-columns");
+		}
+
+		if (!_isLayoutTemplateParseable(layout)) {
+			conversionWarnings.add(
+				"page-conversion-warning-non-standard-page-layout");
+		}
+
+		return conversionWarnings.toArray(new String[0]);
 	}
 
 	private Document _getLayoutTemplateDocument(Layout layout) {
