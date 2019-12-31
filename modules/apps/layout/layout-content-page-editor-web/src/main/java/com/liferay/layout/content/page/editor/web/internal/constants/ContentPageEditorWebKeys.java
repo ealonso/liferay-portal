@@ -19,6 +19,9 @@ package com.liferay.layout.content.page.editor.web.internal.constants;
  */
 public class ContentPageEditorWebKeys {
 
+	public static final String LAYOUT_CONVERTER_REGISTRY =
+		"LAYOUT_CONVERTER_REGISTRY";
+
 	public static final String
 		LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT =
 			"LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT";
