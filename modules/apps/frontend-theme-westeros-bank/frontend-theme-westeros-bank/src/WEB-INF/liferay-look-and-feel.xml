@@ -21,6 +21,10 @@
 					<template-path>/layoutttpl/custom/westeros_2_width_limited.tpl</template-path>
 					<thumbnail-path>/layoutttpl/custom/westeros_2_width_limited.png</thumbnail-path>
 				</layout-template>
+				<layout-template id="westeros_2_width_limited_non_standard" name="Westeros 2 columns (90/10) width limited non standard">
+					<template-path>/layoutttpl/custom/westeros_2_width_limited_non_standard.tpl</template-path>
+					<thumbnail-path>/layoutttpl/custom/westeros_2_width_limited_non_standard.png</thumbnail-path>
+				</layout-template>
 			</custom>
 		</layout-templates>
 		<portlet-decorator id="barebone" name="Barebone">
