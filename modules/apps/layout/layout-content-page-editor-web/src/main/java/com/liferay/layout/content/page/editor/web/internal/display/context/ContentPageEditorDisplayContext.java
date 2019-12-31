@@ -56,6 +56,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.util.constants.LayoutConverterTypeConstants;
+import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.comment.Comment;
@@ -180,6 +181,10 @@ public class ContentPageEditorDisplayContext {
 				FragmentActionKeys.FRAGMENT_RENDERER_TRACKER);
 		_itemSelector = (ItemSelector)httpServletRequest.getAttribute(
 			ContentPageEditorWebKeys.ITEM_SELECTOR);
+		_layoutConverterRegistry =
+			(LayoutConverterRegistry)httpServletRequest.getAttribute(
+				com.liferay.layout.content.page.editor.web.internal.constants.
+					ContentPageEditorWebKeys.LAYOUT_CONVERTER_REGISTRY);
 	}
 
 	public String getDiscardDraftURL() throws PortalException {
@@ -1681,6 +1686,7 @@ public class ContentPageEditorDisplayContext {
 	private Long _groupId;
 	private ItemSelectorCriterion _imageItemSelectorCriterion;
 	private final ItemSelector _itemSelector;
+	private final LayoutConverterRegistry _layoutConverterRegistry;
 	private String _layoutData;
 	private Integer _pageType;
 	private Layout _publishedLayout;
