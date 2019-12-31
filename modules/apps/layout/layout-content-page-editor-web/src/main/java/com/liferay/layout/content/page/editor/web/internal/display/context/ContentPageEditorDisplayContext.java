@@ -444,6 +444,8 @@ public class ContentPageEditorDisplayContext {
 		).put(
 			"languageId", themeDisplay.getLanguageId()
 		).put(
+			"layoutConversionWarnings", _getLayoutConversionWarnings()
+		).put(
 			"layoutData", JSONFactoryUtil.createJSONObject(_getLayoutData())
 		).put(
 			"lookAndFeelURL", _getLookAndFeelURL()
