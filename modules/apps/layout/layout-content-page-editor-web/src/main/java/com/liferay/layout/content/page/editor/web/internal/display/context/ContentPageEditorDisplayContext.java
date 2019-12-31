@@ -56,6 +56,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.util.constants.LayoutConverterTypeConstants;
+import com.liferay.layout.util.template.LayoutConverter;
 import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
@@ -74,6 +75,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -102,6 +104,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.PortletCategoryComparator;
@@ -1207,6 +1210,30 @@ public class ContentPageEditorDisplayContext {
 			_getImageItemSelectorCriterion(), _getURLItemSelectorCriterion());
 
 		return itemSelectorURL.toString();
+	}
+
+	private String[] _getLayoutConversionWarnings() throws PortalException {
+		UnicodeProperties typeSettingsProperties =
+			_publishedLayout.getTypeSettingsProperties();
+
+		String layoutTemplateId = typeSettingsProperties.getProperty(
+			LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID);
+
+		LayoutConverter layoutConverter =
+			_layoutConverterRegistry.getLayoutConverter(layoutTemplateId);
+
+		List<String> localizedConversionWarnings = Stream.of(
+			layoutConverter.getConversionWarnings(_publishedLayout)
+		).map(
+			s -> LanguageUtil.get(
+				ResourceBundleUtil.getBundle(
+					themeDisplay.getLocale(), getClass()),
+				s)
+		).collect(
+			Collectors.toList()
+		);
+
+		return localizedConversionWarnings.toArray(new String[0]);
 	}
 
 	private String _getLayoutData() throws PortalException {
