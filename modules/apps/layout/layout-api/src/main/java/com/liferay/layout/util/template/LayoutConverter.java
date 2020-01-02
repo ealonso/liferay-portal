@@ -17,12 +17,20 @@ package com.liferay.layout.util.template;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 
+import java.util.Locale;
+
 /**
  * @author Eudaldo Alonso
  */
 public interface LayoutConverter {
 
 	public LayoutData convert(Layout layout);
+
+	public default String[] getConversionWarningMessages(
+		Layout layout, Locale locale) {
+
+		return new String[0];
+	}
 
 	public default boolean isConvertible(Layout layout) {
 		if (LayoutConstants.TYPE_CONTENT.equals(layout.getType())) {
