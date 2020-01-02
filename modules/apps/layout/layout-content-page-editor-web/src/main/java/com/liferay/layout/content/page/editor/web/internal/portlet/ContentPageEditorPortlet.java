@@ -20,6 +20,7 @@ import com.liferay.layout.content.page.editor.web.internal.configuration.Content
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.content.page.editor.web.internal.display.context.ContentPageEditorDisplayContext;
 import com.liferay.layout.content.page.editor.web.internal.display.context.ContentPageEditorDisplayContextProvider;
+import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
@@ -96,6 +97,9 @@ public class ContentPageEditorPortlet extends MVCPortlet {
 		httpServletRequest.setAttribute(
 			FragmentEntryConfigurationParser.class.getName(),
 			_fragmentEntryConfigurationParser);
+		httpServletRequest.setAttribute(
+			ContentPageEditorWebKeys.LAYOUT_CONVERTER_REGISTRY,
+			_layoutConverterRegistry);
 
 		ContentPageEditorDisplayContext contentPageEditorDisplayContext =
 			(ContentPageEditorDisplayContext)httpServletRequest.getAttribute(
@@ -166,6 +170,9 @@ public class ContentPageEditorPortlet extends MVCPortlet {
 
 	@Reference
 	private Http _http;
+
+	@Reference
+	private LayoutConverterRegistry _layoutConverterRegistry;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
