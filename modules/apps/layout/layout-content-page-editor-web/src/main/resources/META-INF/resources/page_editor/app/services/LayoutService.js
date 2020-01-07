@@ -82,6 +82,23 @@ export default {
 	},
 
 	/**
+	 * Updates a config into an item
+	 * @param {object} options
+	 * @param {object} options.config Application config
+	 * @param {object} options.itemConfig Updated item config
+	 * @param {object} options.itemId id of the item to be updated
+	 * @return {Promise<void>}
+	 */
+	updateItemConfig({config, itemConfig, itemId}) {
+		const {updateItemConfigURL} = config;
+
+		return serviceFetch(config, updateItemConfigURL, {
+			itemConfig,
+			itemId
+		});
+	},
+
+	/**
 	 * Updates layout's layoutData
 	 * @param {object} options
 	 * @param {object} options.config Application config
@@ -98,5 +115,11 @@ export default {
 			data: JSON.stringify(layoutData),
 			segmentsExperienceId
 		});
+	},
+
+	updateRowColumnCount() {
+		// TBD
+		console.warn('To be developed');
+		return Promise.resolve({});
 	}
 };

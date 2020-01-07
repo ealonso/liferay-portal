@@ -25,7 +25,6 @@ function updateColumnsSize({items, newNumberOfColumns, rowItem}) {
 			const columnConfig = newItems[child].config;
 
 			if (columnConfig) {
-
 				let newColumnSize = columnsSize;
 				const middleColumnPosition =
 					Math.ceil(newNumberOfColumns / 2) - 1;
@@ -93,7 +92,6 @@ function removeColumn(items, action) {
 		const columnItemIdToBeRemoved = children.pop();
 
 		if (Array.isArray(children) && children.length) {
-
 			newItems = updateColumnsSize({
 				items: {
 					...newItems,
@@ -139,27 +137,21 @@ export default function layoutDataReducer(state, action) {
 		case TYPES.CREATE_COLUMN:
 			return {
 				...state,
-				layoutData: {
-					...state.layoutData,
-					items: createColumn(state.layoutData.items, {
-						itemId: action.itemId,
-						itemType: action.itemType,
-						newNumberOfColumns: action.newNumberOfColumns,
-						rowItemId: action.rowItemId
-					})
-				}
+				items: createColumn(state.items, {
+					itemId: action.itemId,
+					itemType: action.itemType,
+					newNumberOfColumns: action.newNumberOfColumns,
+					rowItemId: action.rowItemId
+				})
 			};
 
 		case TYPES.REMOVE_COLUMN:
 			return {
 				...state,
-				layoutData: {
-					...state.layoutData,
-					items: removeColumn(state.layoutData.items, {
-						newNumberOfColumns: action.newNumberOfColumns,
-						rowItemId: action.rowItemId
-					})
-				}
+				items: removeColumn(state.items, {
+					newNumberOfColumns: action.newNumberOfColumns,
+					rowItemId: action.rowItemId
+				})
 			};
 
 		default:
