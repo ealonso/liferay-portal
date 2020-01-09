@@ -15,20 +15,20 @@
 import updateLayoutData from '../actions/updateLayoutData';
 import LayoutService from '../services/LayoutService';
 
-export default function updateItemConfig({
+export default function updateRowColumns({
 	config,
-	itemConfig,
 	itemId,
+	numberOfColumns,
 	segmentsExperienceId
 }) {
 	/**
 	 * An updated `layoutData` must be returned from BE.
 	 */
 	return dispatch =>
-		LayoutService.updateItemConfig({
+		LayoutService.updateRowColumns({
 			config,
-			itemConfig,
 			itemId,
+			numberOfColumns,
 			segmentsExperienceId
 		}).then(layoutData => {
 			console.log(layoutData);

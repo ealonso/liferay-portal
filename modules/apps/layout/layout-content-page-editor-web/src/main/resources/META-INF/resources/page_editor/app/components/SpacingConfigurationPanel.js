@@ -18,9 +18,12 @@ import React, {useContext, useState} from 'react';
 import {DispatchContext} from '../../app/reducers/index';
 import createColumn from '../actions/createColumn';
 import removeColumn from '../actions/removeColumn';
-import updateItemConfig from '../actions/updateItemConfig';
 import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../config/constants/layoutDataItemDefaultConfigurations';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
+import {ConfigContext} from '../config/index';
+import {StoreContext} from '../store/index';
+import updateItemConfig from '../thunks/updateItemConfig';
+import updateRowColumns from '../thunks/updateRowColumns';
 
 const NUMBER_OF_COLUMNS_OPTIONS = ['0', '1', '2', '3', '4', '5', '6'];
 
@@ -133,15 +136,22 @@ function updateColumns(item, newNumberOfColumns, dispatchFn) {
 }
 
 export const SpacingConfigurationPanel = ({item}) => {
+	const config = useContext(ConfigContext);
 	const dispatch = useContext(DispatchContext);
+	const {segmentsExperienceId} = useContext(StoreContext);
+
+	const prefixedSegmentsExperienceId =
+		'segments-experience-id-' + segmentsExperienceId;
 
 	const handleSelectValueChanged = (identifier, value) => {
 		dispatch(
 			updateItemConfig({
+				config,
 				itemConfig: {
 					[identifier]: value
 				},
-				itemId: item.itemId
+				itemId: item.itemId,
+				segmentsExperienceId: prefixedSegmentsExperienceId
 			})
 		);
 

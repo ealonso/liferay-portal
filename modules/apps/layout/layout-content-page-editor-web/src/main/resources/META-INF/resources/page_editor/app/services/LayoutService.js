@@ -89,12 +89,13 @@ export default {
 	 * @param {object} options.itemId id of the item to be updated
 	 * @return {Promise<void>}
 	 */
-	updateItemConfig({config, itemConfig, itemId}) {
+	updateItemConfig({config, itemConfig, itemId, segmentsExperienceId}) {
 		const {updateItemConfigURL} = config;
 
 		return serviceFetch(config, updateItemConfigURL, {
 			itemConfig,
-			itemId
+			itemId,
+			segmentsExperienceId
 		});
 	},
 
@@ -117,9 +118,13 @@ export default {
 		});
 	},
 
-	updateRowColumnCount() {
-		// TBD
-		console.warn('To be developed');
-		return Promise.resolve({});
+	updateRowColumns({config, itemId, numberOfColumns, segmentsExperienceId}) {
+		const {updateRowColumnsURL} = config;
+
+		return serviceFetch(config, updateRowColumnsURL, {
+			itemId,
+			numberOfColumns,
+			segmentsExperienceId
+		});
 	}
 };
