@@ -118,7 +118,15 @@ const AllowedFragmentSelector = ({onSelectedFragment}) => {
 				)}
 				NodeComponent={AllowedFragmentTreeNode}
 				nodes={nodes}
-				onSelectedNodesChange={onSelectedFragment}
+				onSelectedNodesChange={selectedNodeIds =>
+					onSelectedFragment(
+						getSelectedNodeIds(
+							initialAllowNewFragmentEntries,
+							Array.from(selectedNodeIds),
+							fragmentEntryKeysArray
+						)
+					)
+				}
 			/>
 
 			<ClayCheckbox
