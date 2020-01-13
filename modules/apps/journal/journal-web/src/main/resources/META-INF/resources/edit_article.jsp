@@ -243,7 +243,7 @@ JournalEditArticleDisplayContext journalEditArticleDisplayContext = new JournalE
 
 				<div class="article-content-content">
 					<c:choose>
-						<c:when test="<%= journalDisplayContext.useDataEngineEditor() %>">
+						<c:when test="<%= true %>">
 							<liferay-data-engine:data-layout-renderer
 								containerId="reportId"
 								dataLayoutId="<%= 0L %>"

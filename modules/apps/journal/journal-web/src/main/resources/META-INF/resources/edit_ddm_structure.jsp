@@ -175,7 +175,7 @@ if (ddmStructure != null) {
 				</c:if>
 
 				<c:choose>
-					<c:when test="<%= journalDisplayContext.useDataEngineEditor() %>">
+					<c:when test="<%= true %>">
 						<liferay-data-engine:data-layout-builder
 							dataDefinitionInputId="dataDefinition"
 							dataLayoutId="<%= 0L %>"
