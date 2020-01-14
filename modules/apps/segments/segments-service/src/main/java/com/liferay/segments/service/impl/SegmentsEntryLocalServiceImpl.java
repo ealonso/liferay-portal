@@ -50,6 +50,7 @@ import com.liferay.segments.exception.RequiredSegmentsEntryException;
 import com.liferay.segments.exception.SegmentsEntryKeyException;
 import com.liferay.segments.exception.SegmentsEntryNameException;
 import com.liferay.segments.internal.background.task.SegmentsEntryRelIndexerBackgroundTaskExecutor;
+import com.liferay.segments.internal.criteria.contributor.SegmentsEntrySegmentsCriteriaContributor;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.service.SegmentsEntryRelLocalService;
 import com.liferay.segments.service.SegmentsEntryRoleLocalService;
@@ -540,21 +541,8 @@ public class SegmentsEntryLocalServiceImpl
 	protected void reindexSegmentsEntryRels(SegmentsEntry segmentsEntry)
 		throws PortalException {
 
-		Map<String, Serializable> taskContextMap =
-			HashMapBuilder.<String, Serializable>put(
-				BackgroundTaskContextMapConstants.DELETE_ON_SUCCESS, true
-			).put(
-				"segmentsEntryId", segmentsEntry.getSegmentsEntryId()
-			).put(
-				"type", segmentsEntry.getType()
-			).build();
-
-		_backgroundTaskManager.addBackgroundTask(
-			segmentsEntry.getUserId(), segmentsEntry.getGroupId(),
-			SegmentsEntryRelIndexerBackgroundTaskExecutor.getBackgroundTaskName(
-				segmentsEntry.getSegmentsEntryId()),
-			SegmentsEntryRelIndexerBackgroundTaskExecutor.class.getName(),
-			taskContextMap, new ServiceContext());
+		_reindexSegmentsEntryRels(segmentsEntry);
+		_reindexReferredSegmentsEntryRels(segmentsEntry);
 	}
 
 	protected void validateKey(
@@ -580,6 +568,50 @@ public class SegmentsEntryLocalServiceImpl
 			throw new SegmentsEntryNameException(
 				"Name is null for locale " + defaultLocale.getDisplayName());
 		}
+	}
+
+	private void _reindexReferredSegmentsEntryRels(SegmentsEntry segmentsEntry)
+		throws PortalException {
+
+		List<SegmentsEntry> referredSegmentsEntries =
+			segmentsEntryPersistence.findBySource(
+				SegmentsEntryConstants.SOURCE_REFERRED);
+
+		for (SegmentsEntry referredSegmentsEntry : referredSegmentsEntries) {
+			Criteria criteria = referredSegmentsEntry.getCriteriaObj();
+
+			Criteria.Criterion criterion = criteria.getCriterion(
+				SegmentsEntrySegmentsCriteriaContributor.KEY);
+
+			String filterString = criterion.getFilterString();
+
+			if (Validator.isNotNull(filterString) &&
+				filterString.contains(
+					String.valueOf(segmentsEntry.getSegmentsEntryId()))) {
+
+				_reindexSegmentsEntryRels(referredSegmentsEntry);
+			}
+		}
+	}
+
+	private void _reindexSegmentsEntryRels(SegmentsEntry segmentsEntry)
+		throws PortalException {
+
+		Map<String, Serializable> taskContextMap =
+			HashMapBuilder.<String, Serializable>put(
+				BackgroundTaskContextMapConstants.DELETE_ON_SUCCESS, true
+			).put(
+				"segmentsEntryId", segmentsEntry.getSegmentsEntryId()
+			).put(
+				"type", segmentsEntry.getType()
+			).build();
+
+		_backgroundTaskManager.addBackgroundTask(
+			segmentsEntry.getUserId(), segmentsEntry.getGroupId(),
+			SegmentsEntryRelIndexerBackgroundTaskExecutor.getBackgroundTaskName(
+				segmentsEntry.getSegmentsEntryId()),
+			SegmentsEntryRelIndexerBackgroundTaskExecutor.class.getName(),
+			taskContextMap, new ServiceContext());
 	}
 
 	@Reference
