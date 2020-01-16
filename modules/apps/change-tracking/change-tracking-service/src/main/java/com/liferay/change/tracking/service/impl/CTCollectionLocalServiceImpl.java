@@ -234,6 +234,18 @@ public class CTCollectionLocalServiceImpl
 
 			ctPreferences.setCtCollectionId(
 				CTConstants.CT_COLLECTION_ID_PRODUCTION);
+			ctPreferences.setPreviousCtCollectionId(
+				CTConstants.CT_COLLECTION_ID_NONE);
+
+			ctPreferencesPersistence.update(ctPreferences);
+		}
+
+		for (CTPreferences ctPreferences :
+				ctPreferencesPersistence.findByPreviousCollectionId(
+					ctCollection.getCtCollectionId())) {
+
+			ctPreferences.setPreviousCtCollectionId(
+				CTConstants.CT_COLLECTION_ID_NONE);
 
 			ctPreferencesPersistence.update(ctPreferences);
 		}
@@ -284,6 +296,8 @@ public class CTCollectionLocalServiceImpl
 				undoCTCollection.getCompanyId(), userId);
 
 		ctPreferences.setCtCollectionId(newCTCollection.getCtCollectionId());
+		ctPreferences.setPreviousCtCollectionId(
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 
 		ctPreferencesPersistence.update(ctPreferences);
 

@@ -73,9 +73,14 @@ public class CheckoutCTCollectionMVCActionCommand extends BaseMVCActionCommand {
 			_ctPreferencesLocalService.getCTPreferences(
 				themeDisplay.getCompanyId(), themeDisplay.getUserId());
 
-		ctPreferences.setCtCollectionId(ctCollectionId);
+		long currentCtCollectionId = ctPreferences.getCtCollectionId();
 
-		_ctPreferencesLocalService.updateCTPreferences(ctPreferences);
+		if (currentCtCollectionId != ctCollectionId) {
+			ctPreferences.setCtCollectionId(ctCollectionId);
+			ctPreferences.setPreviousCtCollectionId(currentCtCollectionId);
+
+			_ctPreferencesLocalService.updateCTPreferences(ctPreferences);
+		}
 
 		if (ctCollectionId == CTConstants.CT_COLLECTION_ID_PRODUCTION) {
 			SessionMessages.add(

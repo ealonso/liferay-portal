@@ -75,6 +75,18 @@ public class CTProcessLocalServiceImpl extends CTProcessLocalServiceBaseImpl {
 
 			ctPreferences.setCtCollectionId(
 				CTConstants.CT_COLLECTION_ID_PRODUCTION);
+			ctPreferences.setPreviousCtCollectionId(
+				CTConstants.CT_COLLECTION_ID_NONE);
+
+			_ctPreferencesPersistence.update(ctPreferences);
+		}
+
+		for (CTPreferences ctPreferences :
+				_ctPreferencesPersistence.findByPreviousCollectionId(
+					ctCollectionId)) {
+
+			ctPreferences.setPreviousCtCollectionId(
+				CTConstants.CT_COLLECTION_ID_NONE);
 
 			_ctPreferencesPersistence.update(ctPreferences);
 		}
