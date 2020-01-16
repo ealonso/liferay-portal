@@ -12,28 +12,29 @@
  * details.
  */
 
-import updateLayoutData from '../actions/updateLayoutData';
-import LayoutService from '../services/LayoutService';
+import updateEditableValuesAction from '../actions/updateEditableValues';
+import FragmentService from '../services/FragmentService';
 
-export default function moveItem({
+export default function updateEditableValues({
 	config,
-	itemId,
-	parentItemId,
-	position,
-	store
+	editableValues,
+	fragmentEntryLinkId,
+	segmentsExperienceId
 }) {
 	return dispatch => {
-		const {segmentsExperienceId} = store;
-
-		LayoutService.moveItem({
+		FragmentService.updateEditableValues({
 			config,
-			itemId,
-			onNetworkStatus: dispatch,
-			parentItemId,
-			position,
-			segmentsExperienceId
-		}).then(layoutData => {
-			dispatch(updateLayoutData({layoutData}));
+			editableValues,
+			fragmentEntryLinkId,
+			onNetworkStatus: dispatch
+		}).then(() => {
+			dispatch(
+				updateEditableValuesAction({
+					editableValues,
+					fragmentEntryLinkId,
+					segmentsExperienceId
+				})
+			);
 		});
 	};
 }

@@ -12,6 +12,18 @@
  * details.
  */
 
-export {default as fallback} from './FallbackProcessor';
-export {default as html} from './HTMLProcessor';
-export {default as image} from './ImageProcessor';
+import FallbackProcessor from './FallbackProcessor';
+import HTMLProcessor from './HTMLProcessor';
+import ImageProcessor from './ImageProcessor';
+import LinkProcessor from './LinkProcessor';
+import RichTextProcessor from './RichTextProcessor';
+import TextProcessor from './TextProcessor';
+
+export default {
+	fallback: FallbackProcessor,
+	html: HTMLProcessor,
+	image: ImageProcessor,
+	link: LinkProcessor,
+	'rich-text': RichTextProcessor,
+	text: TextProcessor
+};

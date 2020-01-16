@@ -15,22 +15,25 @@
 import classNames from 'classnames';
 import React from 'react';
 
-const Column = React.forwardRef(
-	({children, className, item, ...props}, ref) => {
-		const {size} = item.config;
+import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
+import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 
-		return (
-			<div
-				className={classNames(className, 'col', {
-					[`col-${size}`]: size
-				})}
-				ref={ref}
-				{...props}
-			>
-				{children}
-			</div>
-		);
-	}
-);
+const Column = React.forwardRef(({children, className, item}, ref) => {
+	const size =
+		item.config.size ||
+		LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[LAYOUT_DATA_ITEM_TYPES.column]
+			.size;
+
+	return (
+		<div
+			className={classNames(className, 'col', {
+				[`col-${size}`]: size
+			})}
+			ref={ref}
+		>
+			{children}
+		</div>
+	);
+});
 
 export default Column;

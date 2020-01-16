@@ -15,50 +15,56 @@
 import classNames from 'classnames';
 import React from 'react';
 
-const Container = React.forwardRef(
-	(
-		{
-			backgroundColorCssClass,
-			backgroundImage,
-			children,
-			className,
-			paddingBottom,
-			paddingHorizontal,
-			paddingTop,
-			type,
-			...props
-		},
-		ref
-	) => {
-		return (
-			<div
-				className={classNames(
-					className,
-					`pb-${paddingBottom} pt-${paddingTop}`,
-					{
-						[`bg-${backgroundColorCssClass}`]: !!backgroundColorCssClass,
-						container: type === 'fixed',
-						'container-fluid': type === 'fluid',
-						[`px-${paddingHorizontal}`]: paddingHorizontal !== 3
-					}
-				)}
-				ref={ref}
-				style={
-					backgroundImage
-						? {
-								backgroundImage: `url(${backgroundImage})`,
-								backgroundPosition: '50% 50%',
-								backgroundRepeat: 'no-repeat',
-								backgroundSize: 'cover'
-						  }
-						: {}
+import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
+import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
+
+const Container = React.forwardRef(({children, className, item}, ref) => {
+	const {
+		backgroundColorCssClass,
+		backgroundImage,
+		paddingBottom,
+		paddingHorizontal,
+		paddingTop,
+		type
+	} = {
+		...LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[
+			LAYOUT_DATA_ITEM_TYPES.container
+		],
+		...item.config
+	};
+
+	return (
+		<div
+			className={classNames(
+				className,
+				`pb-${paddingBottom} pt-${paddingTop}`,
+				{
+					[`bg-${backgroundColorCssClass}`]: !!backgroundColorCssClass,
+					[`px-${paddingHorizontal}`]: paddingHorizontal !== 3
 				}
-				{...props}
+			)}
+			ref={ref}
+			style={
+				backgroundImage
+					? {
+							backgroundImage: `url(${backgroundImage})`,
+							backgroundPosition: '50% 50%',
+							backgroundRepeat: 'no-repeat',
+							backgroundSize: 'cover'
+					  }
+					: {}
+			}
+		>
+			<div
+				className={classNames('px-0', {
+					container: type === 'fixed',
+					'container-fluid': type === 'fluid'
+				})}
 			>
 				{children}
 			</div>
-		);
-	}
-);
+		</div>
+	);
+});
 
 export default Container;

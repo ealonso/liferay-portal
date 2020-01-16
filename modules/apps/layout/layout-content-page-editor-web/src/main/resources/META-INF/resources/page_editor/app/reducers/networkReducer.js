@@ -12,28 +12,18 @@
  * details.
  */
 
-import updateLayoutData from '../actions/updateLayoutData';
-import LayoutService from '../services/LayoutService';
+import {TYPES} from '../actions/index';
 
-export default function moveItem({
-	config,
-	itemId,
-	parentItemId,
-	position,
-	store
-}) {
-	return dispatch => {
-		const {segmentsExperienceId} = store;
+export default function networkReducer(state, action) {
+	switch (action.type) {
+		case TYPES.UPDATE_NETWORK:
+			return {
+				...state,
+				...action.network
+			};
+		default:
+			break;
+	}
 
-		LayoutService.moveItem({
-			config,
-			itemId,
-			onNetworkStatus: dispatch,
-			parentItemId,
-			position,
-			segmentsExperienceId
-		}).then(layoutData => {
-			dispatch(updateLayoutData({layoutData}));
-		});
-	};
+	return state;
 }

@@ -12,28 +12,11 @@
  * details.
  */
 
-import updateLayoutData from '../actions/updateLayoutData';
-import LayoutService from '../services/LayoutService';
+import {UPDATE_NETWORK} from './types';
 
-export default function moveItem({
-	config,
-	itemId,
-	parentItemId,
-	position,
-	store
-}) {
-	return dispatch => {
-		const {segmentsExperienceId} = store;
-
-		LayoutService.moveItem({
-			config,
-			itemId,
-			onNetworkStatus: dispatch,
-			parentItemId,
-			position,
-			segmentsExperienceId
-		}).then(layoutData => {
-			dispatch(updateLayoutData({layoutData}));
-		});
+export default function updateNetwork(network) {
+	return {
+		network,
+		type: UPDATE_NETWORK
 	};
 }

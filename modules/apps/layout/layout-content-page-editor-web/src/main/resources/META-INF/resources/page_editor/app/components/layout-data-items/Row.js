@@ -15,37 +15,40 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import {LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS} from '../../config/constants/layoutDataItemDefaultConfigurations';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 
-const Row = React.forwardRef(
-	({children, className, item, layoutData, ...props}, ref) => {
-		const parent = layoutData.items[item.parentId];
+const Row = React.forwardRef(({children, className, item, layoutData}, ref) => {
+	const gutters =
+		item.config.gutters ||
+		LAYOUT_DATA_ITEM_DEFAULT_CONFIGURATIONS[LAYOUT_DATA_ITEM_TYPES.row]
+			.gutters;
 
-		const rowContent = (
-			<div
-				className={classNames(className, 'row', {
-					empty: !item.children.some(
-						childId => layoutData.items[childId].children.length
-					),
-					'no-gutters': !item.config.gutters
-				})}
-				ref={ref}
-				{...props}
-			>
-				{children}
-			</div>
-		);
+	const parent = layoutData.items[item.parentId];
 
-		return (
-			<>
-				{!parent || parent.type === LAYOUT_DATA_ITEM_TYPES.root ? (
-					<div className="container-fluid p-0">{rowContent}</div>
-				) : (
-					rowContent
-				)}
-			</>
-		);
-	}
-);
+	const rowContent = (
+		<div
+			className={classNames(className, 'row', {
+				empty: !item.children.some(
+					childId => layoutData.items[childId].children.length
+				),
+				'no-gutters': !gutters
+			})}
+			ref={ref}
+		>
+			{children}
+		</div>
+	);
+
+	return (
+		<>
+			{!parent || parent.type === LAYOUT_DATA_ITEM_TYPES.root ? (
+				<div className="container-fluid p-0">{rowContent}</div>
+			) : (
+				rowContent
+			)}
+		</>
+	);
+});
 
 export default Row;

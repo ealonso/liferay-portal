@@ -26,8 +26,9 @@ export default function updateRowColumns({
 			config,
 			itemId,
 			numberOfColumns,
+			onNetworkStatus: dispatch,
 			segmentsExperienceId
 		}).then(({layoutData}) => {
-			dispatch(updateLayoutData(layoutData));
+			dispatch(updateLayoutData({layoutData}));
 		});
 }

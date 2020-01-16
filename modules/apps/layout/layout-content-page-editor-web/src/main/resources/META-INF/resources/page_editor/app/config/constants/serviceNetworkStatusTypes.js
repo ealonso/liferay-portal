@@ -12,28 +12,14 @@
  * details.
  */
 
-import updateLayoutData from '../actions/updateLayoutData';
-import LayoutService from '../services/LayoutService';
-
-export default function moveItem({
-	config,
-	itemId,
-	parentItemId,
-	position,
-	store
-}) {
-	return dispatch => {
-		const {segmentsExperienceId} = store;
-
-		LayoutService.moveItem({
-			config,
-			itemId,
-			onNetworkStatus: dispatch,
-			parentItemId,
-			position,
-			segmentsExperienceId
-		}).then(layoutData => {
-			dispatch(updateLayoutData({layoutData}));
-		});
-	};
-}
+/**
+ * - Idle (0) When no request is happening the status will be `Idle`.
+ * - Fetching (1) When a request is pending the status will be `Fetching`.
+ * - Error (2) When any timeout or request `error` occurs, the status will be set
+ * 	 to error.
+ */
+export const SERVICE_NETWORK_STATUS_TYPES = {
+	Error: 2,
+	Fetching: 1,
+	Idle: 0
+};

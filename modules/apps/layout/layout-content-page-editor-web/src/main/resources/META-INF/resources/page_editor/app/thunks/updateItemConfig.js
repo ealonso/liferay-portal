@@ -26,8 +26,9 @@ export default function updateItemConfig({
 			config,
 			itemConfig,
 			itemId,
+			onNetworkStatus: dispatch,
 			segmentsExperienceId
 		}).then(layoutData => {
-			dispatch(updateLayoutData(layoutData));
+			dispatch(updateLayoutData({layoutData}));
 		});
 }
