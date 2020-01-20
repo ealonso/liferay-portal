@@ -42,7 +42,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Samuel Trong Tran
  */
-@Component(immediate = true, service = DynamicInclude.class)
+@Component(service = DynamicInclude.class)
 public class ChangeTrackingIndicatorJSPDynamicInclude
 	extends BaseJSPDynamicInclude {
 
@@ -82,10 +82,10 @@ public class ChangeTrackingIndicatorJSPDynamicInclude
 	public void register(DynamicIncludeRegistry dynamicIncludeRegistry) {
 		dynamicIncludeRegistry.register(
 			"com.liferay.product.navigation.control.menu.web#/entries" +
-				"/layout_header.jsp#ct_indicator");
+				"/layout_header.jsp#pre");
 		dynamicIncludeRegistry.register(
 			"com.liferay.product.navigation.control.menu.web#/entries" +
-				"/portlet_header.jsp#ct_indicator");
+				"/portlet_header.jsp#pre");
 	}
 
 	@Override

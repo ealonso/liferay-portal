@@ -33,7 +33,7 @@ if (Validator.isNotNull(portletId) && layout.isSystem() && !layout.isTypeControl
 %>
 
 <li class="align-items-center control-menu-nav-item control-menu-nav-item-content">
-	<span class="control-menu-level-1-heading text-truncate" data-qa-id="headerTitle"><%= headerTitle %></span>&nbsp;<span class="text-muted text-truncate">(<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + layout.getType()) %>)</span>
+	<liferay-util:dynamic-include key="com.liferay.product.navigation.control.menu.web#/entries/portlet_header.jsp#pre" />
 
-	<liferay-util:dynamic-include key="com.liferay.product.navigation.control.menu.web#/entries/portlet_header.jsp#ct_indicator" />
+	<span class="control-menu-level-1-heading text-truncate" data-qa-id="headerTitle"><%= headerTitle %></span>&nbsp;<span class="text-muted text-truncate">(<%= LanguageUtil.get(request, layoutTypeResourceBundle, "layout.types." + layout.getType()) %>)</span>
 </li>
