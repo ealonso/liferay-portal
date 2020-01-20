@@ -47,13 +47,15 @@ String analyticsReportsPanelState = SessionClicks.get(request, "com.liferay.anal
 
 	sidenavInstance.on('open.lexicon.sidenav', function(event) {
 		Liferay.Util.Session.set(
-			'com.liferay.analytics.reports.web_panelState', 'open'
+			'com.liferay.analytics.reports.web_panelState',
+			'open'
 		);
 	});
 
 	sidenavInstance.on('closed.lexicon.sidenav', function(event) {
 		Liferay.Util.Session.set(
-			'com.liferay.analytics.reports.web_panelState', 'closed'
+			'com.liferay.analytics.reports.web_panelState',
+			'closed'
 		);
 	});
 
