@@ -16,8 +16,11 @@ package com.liferay.change.tracking.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.change.tracking.conflict.ConflictInfo;
+import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.model.CTCollection;
+import com.liferay.change.tracking.model.CTPreferences;
 import com.liferay.change.tracking.service.CTCollectionLocalService;
+import com.liferay.change.tracking.service.CTPreferencesLocalService;
 import com.liferay.change.tracking.service.CTProcessLocalService;
 import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.journal.model.JournalArticle;
@@ -30,6 +33,7 @@ import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.lang.SafeClosable;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
@@ -291,6 +295,31 @@ public class CTCollectionLocalServiceTest {
 	}
 
 	@Test
+	public void testDeleteCTCollection() throws PortalException {
+		CTPreferences ctPreferences =
+			_ctPreferencesLocalService.getCTPreferences(
+				TestPropsValues.getCompanyId(), TestPropsValues.getUserId());
+
+		ctPreferences.setCtCollectionId(_ctCollection.getCtCollectionId());
+		ctPreferences.setPreviousCtCollectionId(
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
+
+		_ctPreferencesLocalService.updateCTPreferences(ctPreferences);
+
+		_ctCollectionLocalService.deleteCTCollection(_ctCollection);
+
+		ctPreferences = _ctPreferencesLocalService.getCTPreferences(
+			TestPropsValues.getCompanyId(), TestPropsValues.getUserId());
+
+		Assert.assertEquals(
+			ctPreferences.getCtCollectionId(),
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
+		Assert.assertEquals(
+			ctPreferences.getPreviousCtCollectionId(),
+			CTConstants.CT_COLLECTION_ID_NONE);
+	}
+
+	@Test
 	public void testUndoCTCollection() throws Exception {
 		Layout addedLayout = null;
 
@@ -330,9 +359,30 @@ public class CTCollectionLocalServiceTest {
 
 		Assert.assertEquals(newFriendlyURL, modifiedLayout.getFriendlyURL());
 
+		CTPreferences ctPreferences =
+			_ctPreferencesLocalService.getCTPreferences(
+				TestPropsValues.getCompanyId(), TestPropsValues.getUserId());
+
+		Assert.assertEquals(
+			ctPreferences.getCtCollectionId(),
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
+		Assert.assertEquals(
+			ctPreferences.getPreviousCtCollectionId(),
+			CTConstants.CT_COLLECTION_ID_NONE);
+
 		_ctCollection2 = _ctCollectionLocalService.undoCTCollection(
 			_ctCollection.getCtCollectionId(), _ctCollection.getUserId(),
 			_ctCollection.getName() + " (undo)", StringPool.BLANK);
+
+		ctPreferences = _ctPreferencesLocalService.getCTPreferences(
+			TestPropsValues.getCompanyId(), TestPropsValues.getUserId());
+
+		Assert.assertEquals(
+			ctPreferences.getCtCollectionId(),
+			_ctCollection2.getCtCollectionId());
+		Assert.assertEquals(
+			ctPreferences.getPreviousCtCollectionId(),
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 
 		try (SafeClosable safeClosable =
 				CTCollectionThreadLocal.setCTCollectionId(
@@ -377,6 +427,9 @@ public class CTCollectionLocalServiceTest {
 
 	@Inject
 	private static CTCollectionLocalService _ctCollectionLocalService;
+
+	@Inject
+	private static CTPreferencesLocalService _ctPreferencesLocalService;
 
 	@Inject
 	private static CTProcessLocalService _ctProcessLocalService;
