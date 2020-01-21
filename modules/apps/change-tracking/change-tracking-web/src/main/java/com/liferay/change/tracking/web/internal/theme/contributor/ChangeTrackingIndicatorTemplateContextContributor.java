@@ -47,9 +47,13 @@ public class ChangeTrackingIndicatorTemplateContextContributor
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
+		if (!themeDisplay.isSignedIn()) {
+			return;
+		}
+
 		CTPreferences ctPreferences =
 			_ctPreferencesLocalService.fetchCTPreferences(
-				themeDisplay.getCompanyId(), 0);
+				themeDisplay.getCompanyId(), themeDisplay.getUserId());
 
 		if (ctPreferences == null) {
 			return;
