@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Html;
@@ -67,6 +66,10 @@ public class ChangeTrackingIndicatorDisplayContext {
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		_resourceBundle = ResourceBundleUtil.getBundle(
+			_themeDisplay.getLocale(),
+			ChangeTrackingIndicatorDisplayContext.class);
 
 		_ctPreferences = _ctPreferencesLocalService.fetchCTPreferences(
 			_themeDisplay.getCompanyId(), _themeDisplay.getUserId());
@@ -113,11 +116,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 			data.put("iconClass", "change-tracking-indicator-icon-production");
 			data.put("iconName", "simple-circle");
 
-			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-				_themeDisplay.getLocale(),
-				ChangeTrackingIndicatorDisplayContext.class);
-
-			data.put("title", _language.get(resourceBundle, "production"));
+			data.put("title", _language.get(_resourceBundle, "production"));
 		}
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
@@ -152,8 +151,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 							"href", checkoutURL.toString()
 						).put(
 							"label",
-							LanguageUtil.get(
-								_httpServletRequest, "work-on-production")
+							_language.get(_resourceBundle, "work-on-production")
 						).put(
 							"symbolLeft", "simple-circle"
 						));
@@ -173,8 +171,8 @@ public class ChangeTrackingIndicatorDisplayContext {
 								"href", checkoutURL.toString()
 							).put(
 								"label",
-								LanguageUtil.format(
-									_httpServletRequest, "work-on-x",
+								_language.format(
+									_resourceBundle, "work-on-x",
 									previousCtCollection.getName(), false)
 							).put(
 								"symbolLeft", "radio-button"
@@ -188,8 +186,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 			JSONUtil.put(
 				"href", "javascript:Liferay.fire('" + getEventName() + "', {});"
 			).put(
-				"label",
-				LanguageUtil.get(_httpServletRequest, "select-a-publication")
+				"label", _language.get(_resourceBundle, "select-a-publication")
 			).put(
 				"symbolLeft", "cards2"
 			));
@@ -212,7 +209,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 				"href", addURL.toString()
 			).put(
 				"label",
-				LanguageUtil.get(_httpServletRequest, "create-new-publication")
+				_language.get(_resourceBundle, "create-new-publication")
 			).put(
 				"symbolLeft", "plus"
 			));
@@ -224,8 +221,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 				JSONUtil.put(
 					"href", overviewURL.toString()
 				).put(
-					"label",
-					LanguageUtil.get(_httpServletRequest, "review-changes")
+					"label", _language.get(_resourceBundle, "review-changes")
 				).put(
 					"symbolLeft", "list-ul"
 				)
@@ -255,7 +251,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 					"javascript:confirm('",
 					_html.escapeJS(
 						_language.format(
-							_httpServletRequest,
+							_resourceBundle,
 							"are-you-sure-you-want-to-publish-x-change-list",
 							_ctCollection.getName(), false)),
 					"') && Liferay.Util.navigate('",
@@ -265,8 +261,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 					JSONUtil.put(
 						"href", href
 					).put(
-						"label",
-						LanguageUtil.get(_httpServletRequest, "publish")
+						"label", _language.get(_resourceBundle, "publish")
 					).put(
 						"symbolLeft", "upload"
 					));
@@ -300,6 +295,7 @@ public class ChangeTrackingIndicatorDisplayContext {
 	private final HttpServletRequest _httpServletRequest;
 	private final Language _language;
 	private final Portal _portal;
+	private final ResourceBundle _resourceBundle;
 	private final ThemeDisplay _themeDisplay;
 
 }
