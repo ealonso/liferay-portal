@@ -320,7 +320,7 @@ public class CTCollectionLocalServiceTest {
 			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 		Assert.assertEquals(
 			ctPreferences.getPreviousCtCollectionId(),
-			CTConstants.CT_COLLECTION_ID_NONE);
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 	}
 
 	@Test
@@ -395,7 +395,7 @@ public class CTCollectionLocalServiceTest {
 			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 		Assert.assertEquals(
 			ctPreferences.getPreviousCtCollectionId(),
-			CTConstants.CT_COLLECTION_ID_NONE);
+			CTConstants.CT_COLLECTION_ID_PRODUCTION);
 
 		_ctCollection2 = _ctCollectionLocalService.undoCTCollection(
 			_ctCollection.getCtCollectionId(), _ctCollection.getUserId(),
