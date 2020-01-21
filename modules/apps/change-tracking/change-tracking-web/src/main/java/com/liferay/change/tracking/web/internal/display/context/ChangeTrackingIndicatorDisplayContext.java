@@ -165,18 +165,16 @@ public class ChangeTrackingIndicatorDisplayContext {
 							"symbolLeft", "simple-circle"
 						));
 				}
-				else if (previousCtCollectionId !=
-							CTConstants.CT_COLLECTION_ID_NONE) {
-
-					checkoutURL.setParameter(
-						"ctCollectionId",
-						String.valueOf(previousCtCollectionId));
-
+				else {
 					CTCollection previousCtCollection =
 						_ctCollectionLocalService.fetchCTCollection(
 							previousCtCollectionId);
 
 					if (previousCtCollection != null) {
+						checkoutURL.setParameter(
+							"ctCollectionId",
+							String.valueOf(previousCtCollectionId));
+
 						jsonArray.put(
 							JSONUtil.put(
 								"href", checkoutURL.toString()
