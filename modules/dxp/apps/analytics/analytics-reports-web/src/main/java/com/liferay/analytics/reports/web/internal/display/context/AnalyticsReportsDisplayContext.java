@@ -15,6 +15,7 @@
 package com.liferay.analytics.reports.web.internal.display.context;
 
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 
 import java.util.Map;
 
@@ -23,7 +24,10 @@ import java.util.Map;
  */
 public class AnalyticsReportsDisplayContext {
 
-	public Map<String, Object> getData() {
+	public AnalyticsReportsDisplayContext() {
+	}
+
+	public Map<String, Object> getData() throws Exception {
 		if (_data != null) {
 			return _data;
 		}
@@ -35,6 +39,10 @@ public class AnalyticsReportsDisplayContext {
 		).build();
 
 		return _data;
+	}
+
+	public String getLiferayAnalyticsURL(long companyId) {
+		return PrefsPropsUtil.getString(companyId, "liferayAnalyticsURL");
 	}
 
 	private Map<String, Object> _data;
