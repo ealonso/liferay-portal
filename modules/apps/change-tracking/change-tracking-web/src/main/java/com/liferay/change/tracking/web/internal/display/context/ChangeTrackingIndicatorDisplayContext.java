@@ -91,6 +91,8 @@ public class ChangeTrackingIndicatorDisplayContext {
 
 		checkoutURL.setParameter(
 			ActionRequest.ACTION_NAME, "/change_lists/checkout_ct_collection");
+		checkoutURL.setParameter(
+			"redirect", _portal.getCurrentURL(_httpServletRequest));
 
 		return checkoutURL.toString();
 	}
@@ -129,6 +131,8 @@ public class ChangeTrackingIndicatorDisplayContext {
 			checkoutURL.setParameter(
 				ActionRequest.ACTION_NAME,
 				"/change_lists/checkout_ct_collection");
+			checkoutURL.setParameter(
+				"redirect", _portal.getCurrentURL(_httpServletRequest));
 
 			long ctCollectionId = CTConstants.CT_COLLECTION_ID_PRODUCTION;
 
