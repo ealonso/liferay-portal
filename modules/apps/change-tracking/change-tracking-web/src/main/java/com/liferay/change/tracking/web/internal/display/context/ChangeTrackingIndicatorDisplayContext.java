@@ -68,24 +68,17 @@ public class ChangeTrackingIndicatorDisplayContext {
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		CTPreferences ctPreferences =
-			_ctPreferencesLocalService.fetchCTPreferences(
-				_themeDisplay.getCompanyId(), 0);
+		_ctPreferences = _ctPreferencesLocalService.fetchCTPreferences(
+			_themeDisplay.getCompanyId(), _themeDisplay.getUserId());
 
 		long ctCollectionId = CTConstants.CT_COLLECTION_ID_PRODUCTION;
 
-		if (ctPreferences != null) {
-			ctPreferences = _ctPreferencesLocalService.fetchCTPreferences(
-				_themeDisplay.getCompanyId(), _themeDisplay.getUserId());
-
-			if (ctPreferences != null) {
-				ctCollectionId = ctPreferences.getCtCollectionId();
-			}
+		if (_ctPreferences != null) {
+			ctCollectionId = _ctPreferences.getCtCollectionId();
 		}
 
 		_ctCollection = _ctCollectionLocalService.fetchCTCollection(
 			ctCollectionId);
-		_ctPreferences = ctPreferences;
 	}
 
 	public String getCheckoutURL() {
