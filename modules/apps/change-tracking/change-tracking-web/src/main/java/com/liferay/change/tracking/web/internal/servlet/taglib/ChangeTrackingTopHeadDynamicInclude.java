@@ -18,7 +18,6 @@ import com.liferay.change.tracking.model.CTPreferences;
 import com.liferay.change.tracking.service.CTPreferencesLocalService;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -33,7 +32,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -66,22 +64,18 @@ public class ChangeTrackingTopHeadDynamicInclude implements DynamicInclude {
 
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
-		StringBundler sb = new StringBundler(3);
-
-		sb.append("<link data-senna-track=\"permanent\" href=\"");
+		printWriter.print("<link data-senna-track=\"permanent\" href=\"");
 
 		AbsolutePortalURLBuilder absolutePortalURLBuilder =
 			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
 				httpServletRequest);
 
-		sb.append(
+		printWriter.print(
 			absolutePortalURLBuilder.forModule(
 				_bundle, "/dynamic_include/change_tracking_indicator.css"
 			).build());
 
-		sb.append("\" rel=\"stylesheet\" type = \"text/css\" />\n");
-
-		printWriter.println(sb.toString());
+		printWriter.print("\" rel=\"stylesheet\" type = \"text/css\" />\n");
 	}
 
 	@Override
@@ -91,7 +85,6 @@ public class ChangeTrackingTopHeadDynamicInclude implements DynamicInclude {
 	}
 
 	@Activate
-	@Modified
 	protected void activate(BundleContext bundleContext) {
 		_bundle = bundleContext.getBundle();
 	}
