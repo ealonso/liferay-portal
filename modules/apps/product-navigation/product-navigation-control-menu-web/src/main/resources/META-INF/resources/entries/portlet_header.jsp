@@ -27,4 +27,6 @@ String portletTitle = (String)request.getAttribute(ProductNavigationControlMenuW
 	<c:if test="<%= Validator.isNotNull(portletDescription) %>">
 		<liferay-ui:icon-help message="<%= portletDescription %>" />
 	</c:if>
+
+	<liferay-util:dynamic-include key="com.liferay.product.navigation.control.menu.web#/entries/portlet_header.jsp#ct_indicator" />
 </li>

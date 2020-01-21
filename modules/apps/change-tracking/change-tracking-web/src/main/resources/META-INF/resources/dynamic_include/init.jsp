@@ -14,12 +14,14 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+<%@ page import="com.liferay.change.tracking.web.internal.constants.CTWebKeys" %><%@
+page import="com.liferay.change.tracking.web.internal.display.context.ChangeTrackingIndicatorDisplayContext" %>
 
-<%@ page import="com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys" %><%@
-page import="com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuCategoryRegistry" %><%@
-page import="com.liferay.product.navigation.taglib.internal.servlet.ServletContextUtil" %>
+<liferay-theme:defineObjects />
 
-<%@ page import="java.util.LinkedHashMap" %>
+<%
+ChangeTrackingIndicatorDisplayContext changeTrackingIndicatorDisplayContext = (ChangeTrackingIndicatorDisplayContext)request.getAttribute(CTWebKeys.CHANGE_TRACKING_INDICATOR_DISPLAY_CONTEXT);
+%>

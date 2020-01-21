@@ -14,12 +14,17 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/dynamic_include/init.jsp" %>
 
-<%@taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
+<div class="control-menu-level-0"></div>
 
-<%@ page import="com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys" %><%@
-page import="com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuCategoryRegistry" %><%@
-page import="com.liferay.product.navigation.taglib.internal.servlet.ServletContextUtil" %>
+<div class="change-tracking-indicator">
+	<a class="change-tracking-indicator-link" href="<%= changeTrackingIndicatorDisplayContext.getChangeTrackingURL() %>" type="button">
+		<clay:icon
+			elementClasses="<%= changeTrackingIndicatorDisplayContext.getIconClass() %>"
+			symbol="<%= changeTrackingIndicatorDisplayContext.getIconName() %>"
+		/>
 
-<%@ page import="java.util.LinkedHashMap" %>
+		<span><%= changeTrackingIndicatorDisplayContext.getTitle() %></span>
+	</a>
+</div>

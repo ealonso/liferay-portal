@@ -31,6 +31,54 @@
 		}
 	}
 
+	&.has-change-tracking-indicator .affix,
+	&.has-change-tracking-indicator #wrapper {
+		margin-top: (
+			$has-control-menu-margin-top-mobile +
+				$has-change-tracking-indicator-margin-top
+		);
+
+		.portlet-boundary > span:first-child {
+			display: block;
+			position: relative;
+			top: -($has-control-menu-margin-top-mobile +
+						$has-change-tracking-indicator-margin-top);
+			visibility: hidden;
+		}
+
+		:target::before {
+			content: '';
+			display: block;
+			height: (
+				$has-control-menu-margin-top-mobile +
+					$has-change-tracking-indicator-margin-top
+			);
+			margin-top: -($has-control-menu-margin-top-mobile +
+						$has-change-tracking-indicator-margin-top);
+		}
+
+		@include media-breakpoint-up(sm) {
+			margin-top: (
+				$has-control-menu-margin-top-desktop +
+					$has-change-tracking-indicator-margin-top
+			);
+
+			.portlet-boundary > span:first-child {
+				top: -($has-control-menu-margin-top-desktop +
+							$has-change-tracking-indicator-margin-top);
+			}
+
+			:target::before {
+				height: (
+					$has-control-menu-margin-top-desktop +
+						$has-change-tracking-indicator-margin-top
+				);
+				margin-top: -($has-control-menu-margin-top-desktop +
+							$has-change-tracking-indicator-margin-top);
+			}
+		}
+	}
+
 	&.has-customization-menu .affix,
 	&.has-customization-menu #wrapper {
 		margin-top: (
@@ -78,6 +126,62 @@
 			}
 		}
 	}
+
+	&.has-change-tracking-indicator.has-customization-menu .affix,
+	&.has-change-tracking-indicator.has-customization-menu #wrapper {
+		margin-top: (
+			$has-control-menu-margin-top-mobile +
+				$has-customization-menu-margin-top-mobile +
+				$has-change-tracking-indicator-margin-top
+		);
+
+		.portlet-boundary > span:first-child {
+			display: block;
+			position: relative;
+			top: -($has-control-menu-margin-top-mobile +
+						$has-customization-menu-margin-top-mobile +
+						$has-change-tracking-indicator-margin-top);
+			visibility: hidden;
+		}
+
+		:target::before {
+			content: '';
+			display: block;
+			height: (
+				$has-control-menu-margin-top-mobile +
+					$has-customization-menu-margin-top-mobile +
+					$has-change-tracking-indicator-margin-top
+			);
+			margin-top: -($has-control-menu-margin-top-mobile +
+						$has-customization-menu-margin-top-mobile +
+						$has-change-tracking-indicator-margin-top);
+		}
+
+		@include media-breakpoint-up(sm) {
+			margin-top: (
+				$has-control-menu-margin-top-desktop +
+					$has-customization-menu-margin-top-desktop +
+					$has-change-tracking-indicator-margin-top
+			);
+
+			.portlet-boundary > span:first-child {
+				top: -($has-control-menu-margin-top-desktop +
+							$has-customization-menu-margin-top-desktop +
+							$has-change-tracking-indicator-margin-top);
+			}
+
+			:target::before {
+				height: (
+					$has-control-menu-margin-top-desktop +
+						$has-customization-menu-margin-top-desktop +
+						 $has-change-tracking-indicator-margin-top
+				);
+				margin-top: -($has-control-menu-margin-top-desktop +
+							$has-customization-menu-margin-top-desktop +
+							$has-change-tracking-indicator-margin-top);
+			}
+		}
+	}
 }
 
 .affix,
@@ -87,6 +191,24 @@
 	right: 0;
 	top: 0;
 	z-index: $control-menu-zindex;
+}
+
+.has-change-tracking-indicator .affix,
+.has-change-tracking-indicator .control-menu {
+	top: $has-change-tracking-indicator-margin-top;
+}
+
+
+.control-menu-level-0 {
+	background-color: $control-menu-level-1-bg;
+	border: 0;
+	border-bottom: 1px solid #434454;
+	color: $control-menu-level-1-color;
+	height: $has-change-tracking-indicator-margin-top;
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
 }
 
 .control-menu-icon {
