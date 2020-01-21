@@ -16,6 +16,7 @@ package com.liferay.change.tracking.web.internal.servlet.taglib;
 
 import com.liferay.change.tracking.model.CTPreferences;
 import com.liferay.change.tracking.service.CTCollectionLocalService;
+import com.liferay.change.tracking.service.CTEntryLocalService;
 import com.liferay.change.tracking.service.CTPreferencesLocalService;
 import com.liferay.change.tracking.web.internal.constants.CTWebKeys;
 import com.liferay.change.tracking.web.internal.display.context.ChangeTrackingIndicatorDisplayContext;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseJSPDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -66,7 +68,8 @@ public class ChangeTrackingIndicatorJSPDynamicInclude
 			changeTrackingIndicatorDisplayContext =
 				new ChangeTrackingIndicatorDisplayContext(
 					httpServletRequest, _ctCollectionLocalService,
-					_ctPreferencesLocalService, _language, _portal);
+					_ctEntryLocalService, _ctPreferencesLocalService, _html,
+					_language, _portal);
 
 		httpServletRequest.setAttribute(
 			CTWebKeys.CHANGE_TRACKING_INDICATOR_DISPLAY_CONTEXT,
@@ -111,7 +114,13 @@ public class ChangeTrackingIndicatorJSPDynamicInclude
 	private CTCollectionLocalService _ctCollectionLocalService;
 
 	@Reference
+	private CTEntryLocalService _ctEntryLocalService;
+
+	@Reference
 	private CTPreferencesLocalService _ctPreferencesLocalService;
+
+	@Reference
+	private Html _html;
 
 	@Reference
 	private Language _language;

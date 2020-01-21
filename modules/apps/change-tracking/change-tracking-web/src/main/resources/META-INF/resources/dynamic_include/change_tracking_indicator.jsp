@@ -19,12 +19,52 @@
 <div class="control-menu-level-0"></div>
 
 <div class="change-tracking-indicator">
-	<a class="change-tracking-indicator-link" href="<%= changeTrackingIndicatorDisplayContext.getChangeTrackingURL() %>" type="button">
-		<clay:icon
-			elementClasses="<%= changeTrackingIndicatorDisplayContext.getIconClass() %>"
-			symbol="<%= changeTrackingIndicatorDisplayContext.getIconName() %>"
-		/>
-
-		<span><%= changeTrackingIndicatorDisplayContext.getTitle() %></span>
-	</a>
+	<react:component
+		data="<%= changeTrackingIndicatorDisplayContext.getReactData() %>"
+		module="dynamic_include/ChangeTrackingIndictator.es"
+	/>
 </div>
+
+<aui:script use="liferay-portlet-url">
+	var onDestroyPortlet = function() {
+		Liferay.detach('destroyPortlet', onDestroyPortlet);
+		Liferay.detach(
+			'<%= changeTrackingIndicatorDisplayContext.getEventName() %>',
+			onSelectChangeList
+		);
+	};
+
+	Liferay.on('destroyPortlet', onDestroyPortlet);
+
+	var onSelectChangeList = function() {
+		Liferay.Util.selectEntity(
+			{
+				dialog: {
+					constrain: true,
+					height: 580,
+					modal: true,
+					width: 900
+				},
+				id:
+					'<%= changeTrackingIndicatorDisplayContext.getNamespace() + "selectChangeList" %>',
+				title: '<liferay-ui:message key="select-a-publication" />',
+				uri:
+					'<%= changeTrackingIndicatorDisplayContext.getSelectChangeListURL() %>'
+			},
+			function(event) {
+				var checkoutURL = Liferay.PortletURL.createURL(
+					'<%= changeTrackingIndicatorDisplayContext.getCheckoutURL() %>'
+				);
+
+				checkoutURL.setParameter('ctCollectionId', event.ctcollectionid);
+
+				Liferay.Util.navigate(checkoutURL);
+			}
+		);
+	};
+
+	Liferay.on(
+		'<%= changeTrackingIndicatorDisplayContext.getEventName() %>',
+		onSelectChangeList
+	);
+</aui:script>

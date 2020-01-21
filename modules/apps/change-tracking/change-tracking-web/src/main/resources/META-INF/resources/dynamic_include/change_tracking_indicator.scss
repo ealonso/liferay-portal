@@ -1,31 +1,37 @@
 .change-tracking-indicator {
+	display: table-cell;
 	font-size: 12px;
 	position: fixed;
 	text-align: center;
 	top: 0;
+	vertical-align: middle;
+	white-space: nowrap;
 
-	.change-tracking-indicator-link {
-		display: table-cell;
-		font-weight: 600;
-		vertical-align: middle;
-		white-space: nowrap;
+	.change-tracking-indicator-button {
+		background-color: inherit;
+		border: none;
 
 		.change-tracking-indicator-icon-change-list {
 			color: #89a7e0;
-			margin-right: 4px;
-			margin-top: 0px;
+			margin-right: 7px;
+			margin-top: 0;
 		}
 
 		.change-tracking-indicator-icon-production {
 			color: #5aca75;
 			font-size: 16px;
-			margin-top: 0px;
+			margin-right: 3px;
+			margin-top: 0;
 		}
 
-		span,
-		svg {
-			display: inline-flex;
-			vertical-align: middle;
+		.change-tracking-indicator-title {
+			font-size: 12px;
+			font-weight: 600;
+		}
+
+		.lexicon-icon-caret-bottom {
+			margin-left: 6px;
+			margin-top: 0;
 		}
 	}
 }
