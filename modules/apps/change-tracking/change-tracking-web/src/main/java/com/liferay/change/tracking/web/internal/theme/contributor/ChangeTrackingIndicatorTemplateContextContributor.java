@@ -16,7 +16,6 @@ package com.liferay.change.tracking.web.internal.theme.contributor;
 
 import com.liferay.change.tracking.model.CTPreferences;
 import com.liferay.change.tracking.service.CTPreferencesLocalService;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.template.TemplateContextContributor;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -56,13 +55,10 @@ public class ChangeTrackingIndicatorTemplateContextContributor
 			return;
 		}
 
-		StringBuilder sb = new StringBuilder(3);
-
-		sb.append(GetterUtil.getString(contextObjects.get("bodyCssClass")));
-		sb.append(StringPool.SPACE);
-		sb.append("has-change-tracking-indicator");
-
-		contextObjects.put("bodyCssClass", sb.toString());
+		contextObjects.put(
+			"bodyCssClass",
+			GetterUtil.getString(contextObjects.get("bodyCssClass")) +
+				" has-change-tracking-indicator");
 	}
 
 	@Reference
