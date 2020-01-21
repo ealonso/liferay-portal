@@ -16,8 +16,6 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<div class="control-menu-level-0"></div>
-
 <div class="change-tracking-indicator">
 	<react:component
 		data="<%= changeTrackingIndicatorDisplayContext.getReactData() %>"
