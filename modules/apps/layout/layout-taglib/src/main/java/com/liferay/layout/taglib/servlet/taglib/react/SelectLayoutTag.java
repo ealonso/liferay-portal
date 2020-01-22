@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -269,7 +270,7 @@ public class SelectLayoutTag extends IncludeTag {
 
 		for (Layout layout : layouts) {
 			if ((layout.isHidden() && !_showHiddenLayouts) ||
-				(!layout.isSystem() && layout.isTypeContent()) ||
+				!_isPublishedContentLayout(layout) ||
 				StagingUtil.isIncomplete(layout)) {
 
 				continue;
@@ -322,6 +323,32 @@ public class SelectLayoutTag extends IncludeTag {
 	private long _getSelPlid() {
 		return ParamUtil.getLong(
 			request, "selPlid", LayoutConstants.DEFAULT_PLID);
+	}
+
+	private boolean _isPublishedContentLayout(Layout layout) {
+		if (!layout.isTypeContent()) {
+			return true;
+		}
+
+		if (layout.isSystem() || (layout.getClassNameId() != 0)) {
+			return false;
+		}
+
+		Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+			PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+		if (draftLayout == null) {
+			return false;
+		}
+
+		boolean published = GetterUtil.getBoolean(
+			draftLayout.getTypeSettingsProperty("published"));
+
+		if (!published) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private static final String _PAGE = "/select_layout/page.jsp";
