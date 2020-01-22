@@ -17,6 +17,8 @@ import ClayIcon from '@clayui/icon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import './ChangeTrackingIndicator.scss';
+
 const Component = ({iconClass, iconName, items, title}) => {
 	return (
 		<ClayDropDownWithItems
