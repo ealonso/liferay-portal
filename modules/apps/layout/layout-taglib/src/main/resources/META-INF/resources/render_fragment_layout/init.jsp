@@ -17,14 +17,10 @@
 <%@ include file="/init.jsp" %>
 
 <%@ page import="com.liferay.fragment.constants.FragmentActionKeys" %><%@
-page import="com.liferay.fragment.constants.FragmentConstants" %><%@
 page import="com.liferay.fragment.model.FragmentEntryLink" %><%@
 page import="com.liferay.fragment.renderer.DefaultFragmentRendererContext" %><%@
 page import="com.liferay.fragment.renderer.FragmentRendererController" %><%@
 page import="com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil" %><%@
-page import="com.liferay.layout.page.template.model.LayoutPageTemplateStructure" %><%@
-page import="com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil" %><%@
-page import="com.liferay.layout.page.template.util.LayoutDataConverter" %><%@
 page import="com.liferay.layout.taglib.internal.display.context.RenderFragmentLayoutDisplayContext" %><%@
 page import="com.liferay.layout.util.structure.LayoutStructure" %><%@
 page import="com.liferay.layout.util.structure.item.ColumnLayoutStructureItem" %><%@
@@ -36,10 +32,7 @@ page import="com.liferay.layout.util.structure.item.RootLayoutStructureItem" %><
 page import="com.liferay.layout.util.structure.item.RowLayoutStructureItem" %><%@
 page import="com.liferay.petra.string.StringBundler" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
-page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %><%@
 page import="com.liferay.portal.kernel.json.JSONObject" %><%@
-page import="com.liferay.portal.kernel.model.Layout" %><%@
-page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %>
 
 <%@ page import="java.util.List" %><%@

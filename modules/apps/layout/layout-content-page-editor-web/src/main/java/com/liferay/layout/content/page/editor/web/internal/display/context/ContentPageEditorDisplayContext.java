@@ -834,10 +834,6 @@ public class ContentPageEditorDisplayContext {
 	private JSONObject _getDropZoneConfigJSONObject(
 		JSONObject masterLayoutDataJSONObject) {
 
-		if (!LayoutDataConverter.isLatestVersion(masterLayoutDataJSONObject)) {
-			return masterLayoutDataJSONObject;
-		}
-
 		JSONObject itemsJSONObject = masterLayoutDataJSONObject.getJSONObject(
 			"items");
 

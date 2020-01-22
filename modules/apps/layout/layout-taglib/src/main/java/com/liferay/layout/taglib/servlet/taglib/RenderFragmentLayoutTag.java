@@ -18,12 +18,10 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
-import com.liferay.layout.page.template.util.LayoutDataConverter;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -153,34 +151,19 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 
 			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
-			if (LayoutDataConverter.isLatestVersion(dataJSONObject)) {
-				String masterLayoutData = _getMasterLayoutData();
-
-				if (Validator.isNull(masterLayoutData)) {
-					_dataJSONObject = dataJSONObject;
-
-					return _dataJSONObject;
-				}
-
-				JSONObject masterLayoutDataJSONObject =
-					JSONFactoryUtil.createJSONObject(masterLayoutData);
-
-				_dataJSONObject = _mergeLayoutDataJSONObject(
-					dataJSONObject, masterLayoutDataJSONObject);
-
-				return _dataJSONObject;
-			}
-
 			String masterLayoutData = _getMasterLayoutData();
 
 			if (Validator.isNull(masterLayoutData)) {
-				_dataJSONObject = _getDefaultDataJSONObject();
+				_dataJSONObject = dataJSONObject;
 
 				return _dataJSONObject;
 			}
 
-			_dataJSONObject = JSONFactoryUtil.createJSONObject(
-				masterLayoutData);
+			JSONObject masterLayoutDataJSONObject =
+				JSONFactoryUtil.createJSONObject(masterLayoutData);
+
+			_dataJSONObject = _mergeLayoutDataJSONObject(
+				dataJSONObject, masterLayoutDataJSONObject);
 
 			return _dataJSONObject;
 		}
@@ -189,20 +172,6 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 
 			return null;
 		}
-	}
-
-	private JSONObject _getDefaultDataJSONObject() {
-		return JSONUtil.put(
-			"structure",
-			JSONUtil.putAll(
-				JSONUtil.put(
-					"columns",
-					JSONUtil.putAll(
-						JSONUtil.put(
-							"fragmentEntryLinkIds", JSONUtil.put("drop-zone")
-						).put(
-							"size", 12
-						)))));
 	}
 
 	private String _getMasterLayoutData() {

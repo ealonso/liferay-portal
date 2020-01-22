@@ -30,36 +30,21 @@ JSONObject dataJSONObject = (JSONObject)request.getAttribute("liferay-layout:ren
 			RenderFragmentLayoutDisplayContext renderFragmentLayoutDisplayContext = new RenderFragmentLayoutDisplayContext(request, response);
 
 			request.setAttribute("render_layout_data_structure.jsp-renderFragmentLayoutDisplayContext", renderFragmentLayoutDisplayContext);
+
+			LayoutStructure layoutStructure = LayoutStructure.of(dataJSONObject.toString());
+
+			request.setAttribute("render_react_editor_layout_data_structure.jsp-layoutStructure", layoutStructure);
+
+			String mainItemId = layoutStructure.getMainItemId();
+
+			LayoutStructureItem layoutStructureItem = layoutStructure.getLayoutStructureItem(mainItemId);
+
+			request.setAttribute("render_react_editor_layout_data_structure.jsp-childrenItemIds", layoutStructureItem.getChildrenItemIds());
 		%>
 
 			<%= renderFragmentLayoutDisplayContext.getPortletPaths() %>
 
-			<c:choose>
-				<c:when test="<%= LayoutDataConverter.isLatestVersion(dataJSONObject) %>">
-
-					<%
-					LayoutStructure layoutStructure = LayoutStructure.of(dataJSONObject.toString());
-
-					request.setAttribute("render_react_editor_layout_data_structure.jsp-layoutStructure", layoutStructure);
-
-					String mainItemId = layoutStructure.getMainItemId();
-
-					LayoutStructureItem layoutStructureItem = layoutStructure.getLayoutStructureItem(mainItemId);
-
-					request.setAttribute("render_react_editor_layout_data_structure.jsp-childrenItemIds", layoutStructureItem.getChildrenItemIds());
-					%>
-
-					<liferay-util:include page="/render_fragment_layout/render_react_editor_layout_data_structure.jsp" servletContext="<%= application %>" />
-				</c:when>
-				<c:otherwise>
-
-					<%
-					request.setAttribute("render_layout_data_structure.jsp-dataJSONObject", dataJSONObject);
-					%>
-
-					<liferay-util:include page="/render_fragment_layout/render_layout_data_structure.jsp" servletContext="<%= application %>" />
-				</c:otherwise>
-			</c:choose>
+			<liferay-util:include page="/render_fragment_layout/render_react_editor_layout_data_structure.jsp" servletContext="<%= application %>" />
 
 		<%
 		}
