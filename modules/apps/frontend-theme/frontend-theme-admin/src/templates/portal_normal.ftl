@@ -20,6 +20,8 @@
 
 <#assign scope_group = theme_display.getScopeGroup() />
 
+<@liferay.control_menu />
+
 <div id="wrapper">
 	<div id="content-wrapper">
 		<div id="content">
