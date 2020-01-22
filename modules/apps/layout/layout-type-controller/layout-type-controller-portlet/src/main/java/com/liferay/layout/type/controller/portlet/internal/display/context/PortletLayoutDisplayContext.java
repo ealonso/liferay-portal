@@ -22,41 +22,54 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.template.LayoutStructure;
+import com.liferay.layout.util.template.LayoutStructureItem;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.model.PortletPreferences;
+import com.liferay.portal.kernel.portlet.PortletJSONUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.taglib.servlet.PipingServletResponse;
+
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Eudaldo Alonso
  */
 public class PortletLayoutDisplayContext {
 
-	public PortletLayoutDisplayContext(HttpServletRequest httpServletRequest) {
+	public PortletLayoutDisplayContext(
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
 		_httpServletRequest = httpServletRequest;
+		_httpServletResponse = httpServletResponse;
 
 		_infoDisplayContributorTracker =
 			(InfoDisplayContributorTracker)httpServletRequest.getAttribute(
 				InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR_TRACKER);
 	}
 
-	public String getBackgroundImage(JSONObject rowConfigJSONObject)
-		throws PortalException {
-
+	public String getBackgroundImage(JSONObject rowConfigJSONObject) {
 		if (rowConfigJSONObject == null) {
 			return StringPool.BLANK;
 		}
@@ -112,7 +125,7 @@ public class PortletLayoutDisplayContext {
 		return StringPool.BLANK;
 	}
 
-	public JSONArray getStructureJSONArray() {
+	public LayoutStructure getLayoutStructure() {
 		try {
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)_httpServletRequest.getAttribute(
@@ -127,7 +140,7 @@ public class PortletLayoutDisplayContext {
 						layout.getMasterLayoutPlid());
 
 			if (masterLayoutPageTemplateEntry == null) {
-				return _getDefaultStructureJSONArray();
+				return _getDefaultLayoutStructure();
 			}
 
 			LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
@@ -141,12 +154,10 @@ public class PortletLayoutDisplayContext {
 				SegmentsExperienceConstants.ID_DEFAULT);
 
 			if (Validator.isNull(data)) {
-				return _getDefaultStructureJSONArray();
+				return _getDefaultLayoutStructure();
 			}
 
-			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-			return dataJSONObject.getJSONArray("structure");
+			return new LayoutStructure(data);
 		}
 		catch (Exception exception) {
 			_log.error("Unable to get structure JSON array", exception);
@@ -155,22 +166,77 @@ public class PortletLayoutDisplayContext {
 		}
 	}
 
-	private JSONArray _getDefaultStructureJSONArray() {
-		return JSONUtil.putAll(
-			JSONUtil.put(
-				"columns",
-				JSONUtil.putAll(
-					JSONUtil.put(
-						"fragmentEntryLinkIds", JSONUtil.putAll("drop-zone")
-					).put(
-						"size", 12
-					))));
+	public String getPortletPaths() {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)_httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
+
+		PipingServletResponse pipingServletResponse = new PipingServletResponse(
+			_httpServletResponse, unsyncStringWriter);
+
+		List<PortletPreferences> portletPreferencesList =
+			PortletPreferencesLocalServiceUtil.getPortletPreferences(
+				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid());
+
+		for (PortletPreferences portletPreferences : portletPreferencesList) {
+			Portlet portlet = PortletLocalServiceUtil.getPortletById(
+				themeDisplay.getCompanyId(), portletPreferences.getPortletId());
+
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			try {
+				PortletJSONUtil.populatePortletJSONObject(
+					_httpServletRequest, StringPool.BLANK, portlet, jsonObject);
+
+				PortletJSONUtil.writeHeaderPaths(
+					pipingServletResponse, jsonObject);
+
+				PortletJSONUtil.writeFooterPaths(
+					pipingServletResponse, jsonObject);
+			}
+			catch (Exception exception) {
+				_log.error(
+					"Unable to write portlet paths " + portlet.getPortletId(),
+					exception);
+			}
+		}
+
+		return unsyncStringWriter.toString();
+	}
+
+	private LayoutStructure _getDefaultLayoutStructure() {
+		LayoutStructure layoutStructure = new LayoutStructure();
+
+		LayoutStructureItem containerLayoutStructureItem =
+			layoutStructure.addLayoutStructureItem(
+				LayoutDataItemTypeConstants.TYPE_CONTAINER,
+				layoutStructure.getMainItemId(), 0);
+
+		LayoutStructureItem rowLayoutStructureItem =
+			layoutStructure.addLayoutStructureItem(
+				LayoutDataItemTypeConstants.TYPE_ROW,
+				containerLayoutStructureItem.getItemId(), 0);
+
+		LayoutStructureItem columnLayoutStructureItem =
+			layoutStructure.addLayoutStructureItem(
+				LayoutDataItemTypeConstants.TYPE_COLUMN,
+				rowLayoutStructureItem.getItemId(), 0);
+
+		layoutStructure.addLayoutStructureItem(
+			LayoutDataItemTypeConstants.TYPE_DROP_ZONE,
+			columnLayoutStructureItem.getItemId(), 0);
+
+		return layoutStructure;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		PortletLayoutDisplayContext.class);
 
 	private final HttpServletRequest _httpServletRequest;
+	private final HttpServletResponse _httpServletResponse;
 	private final InfoDisplayContributorTracker _infoDisplayContributorTracker;
 
 }

@@ -21,9 +21,11 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLocalService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.template.LayoutStructure;
+import com.liferay.layout.util.template.LayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
@@ -113,64 +115,43 @@ public class LayoutPageTemplateStructureDataHandlerUtil {
 			return;
 		}
 
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
-
-		if (structureJSONArray == null) {
-			return;
-		}
-
 		Map<Long, Long> fragmentEntryLinkIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				FragmentEntryLink.class);
 
-		for (int i = 0; i < structureJSONArray.length(); i++) {
-			JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
+		LayoutStructure layoutStructure = new LayoutStructure(data);
 
-			JSONArray columnsJSONArray = rowJSONObject.getJSONArray("columns");
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
 
-			for (int j = 0; j < columnsJSONArray.length(); j++) {
-				JSONObject columnJSONObject = columnsJSONArray.getJSONObject(j);
+			if (!Objects.equals(
+					layoutStructureItem.getItemType(),
+					LayoutDataItemTypeConstants.TYPE_FRAGMENT)) {
 
-				JSONArray fragmentEntryLinkIdsJSONArray =
-					columnJSONObject.getJSONArray("fragmentEntryLinkIds");
-
-				JSONArray newFragmentEntryLinkIdsJSONArray =
-					JSONFactoryUtil.createJSONArray();
-
-				for (int k = 0; k < fragmentEntryLinkIdsJSONArray.length();
-					 k++) {
-
-					if (Objects.equals(
-							fragmentEntryLinkIdsJSONArray.getString(k),
-							"drop-zone")) {
-
-						newFragmentEntryLinkIdsJSONArray.put(
-							fragmentEntryLinkIdsJSONArray.getString(k));
-
-						continue;
-					}
-
-					long fragmentEntryLinkId = MapUtil.getLong(
-						fragmentEntryLinkIds,
-						fragmentEntryLinkIdsJSONArray.getLong(k),
-						fragmentEntryLinkIdsJSONArray.getLong(k));
-
-					if (fragmentEntryLinkId <= 0) {
-						continue;
-					}
-
-					newFragmentEntryLinkIdsJSONArray.put(fragmentEntryLinkId);
-				}
-
-				columnJSONObject.put(
-					"fragmentEntryLinkIds", newFragmentEntryLinkIdsJSONArray);
+				continue;
 			}
+
+			JSONObject itemConfigJSONObject =
+				layoutStructureItem.getItemConfigJSONObject();
+
+			long fragmentEntryLinkId = itemConfigJSONObject.getLong(
+				"fragmentEntryLinkId");
+
+			fragmentEntryLinkId = MapUtil.getLong(
+				fragmentEntryLinkIds, fragmentEntryLinkId, fragmentEntryLinkId);
+
+			if (fragmentEntryLinkId <= 0) {
+				continue;
+			}
+
+			layoutStructureItem.updateItemConfigJSONObject(
+				JSONUtil.put("fragmentEntryLinkId", fragmentEntryLinkId));
 		}
 
+		JSONObject layoutStructureJSONObject = layoutStructure.toJSONObject();
+
 		existingLayoutPageTemplateStructureRel.setData(
-			dataJSONObject.toString());
+			layoutStructureJSONObject.toString());
 
 		_layoutPageTemplateStructureRelLocalService.
 			updateLayoutPageTemplateStructureRel(

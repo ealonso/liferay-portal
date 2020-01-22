@@ -34,12 +34,16 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionLoca
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.util.LayoutCopyHelper;
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.template.LayoutStructure;
+import com.liferay.layout.util.template.LayoutStructureItem;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -86,6 +90,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
@@ -573,55 +578,47 @@ public class BuildingsSiteInitializer implements SiteInitializer {
 	private String _parseLayoutContent(long plid, String data)
 		throws Exception {
 
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
+		LayoutStructure layoutStructure = new LayoutStructure(data);
 
-		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
 
-		for (int i = 0; i < structureJSONArray.length(); i++) {
-			JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
+			if (!Objects.equals(
+					LayoutDataItemTypeConstants.TYPE_FRAGMENT,
+					layoutStructureItem.getItemType())) {
 
-			JSONArray columnsJSONArray = rowJSONObject.getJSONArray("columns");
+				continue;
+			}
 
-			for (int j = 0; j < columnsJSONArray.length(); j++) {
-				JSONObject columnJSONObject = columnsJSONArray.getJSONObject(j);
+			JSONObject itemConfigJSONObject =
+				layoutStructureItem.getItemConfigJSONObject();
 
-				JSONArray fragmentEntriesJSONArray =
-					columnJSONObject.getJSONArray("fragmentEntries");
+			String fragmentEntryKey = itemConfigJSONObject.getString(
+				"fragmentEntryKey");
 
-				JSONArray fragmentEntryLinkIdsJSONArray =
-					JSONFactoryUtil.createJSONArray();
+			String editableValues = itemConfigJSONObject.getString(
+				"editableValues");
 
-				for (int k = 0; k < fragmentEntriesJSONArray.length(); k++) {
-					JSONObject fragmentEntryJSONObject =
-						fragmentEntriesJSONArray.getJSONObject(k);
+			editableValues = StringUtil.replace(
+				editableValues, StringPool.DOLLAR, StringPool.DOLLAR,
+				_resourcesMap);
 
-					String fragmentEntryKey = fragmentEntryJSONObject.getString(
-						"fragmentEntryKey");
+			FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
+				plid, fragmentEntryKey, editableValues);
 
-					String editableValues = fragmentEntryJSONObject.getString(
-						"editableValues");
+			if (fragmentEntryLink != null) {
+				_addComments(fragmentEntryLink);
 
-					editableValues = StringUtil.replace(
-						editableValues, StringPool.DOLLAR, StringPool.DOLLAR,
-						_resourcesMap);
+				itemConfigJSONObject.remove("fragmentEntryKey");
 
-					FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-						plid, fragmentEntryKey, editableValues);
-
-					if (fragmentEntryLink != null) {
-						_addComments(fragmentEntryLink);
-
-						fragmentEntryLinkIdsJSONArray.put(
-							fragmentEntryLink.getFragmentEntryLinkId());
-					}
-				}
-
-				columnJSONObject.remove("fragmentEntries");
-
-				columnJSONObject.put(
-					"fragmentEntryLinkIds", fragmentEntryLinkIdsJSONArray);
+				layoutStructureItem.updateItemConfigJSONObject(
+					JSONUtil.put(
+						"fragmentEntryLinkId",
+						fragmentEntryLink.getFragmentEntryLinkId()));
 			}
 		}
+
+		JSONObject dataJSONObject = layoutStructure.toJSONObject();
 
 		return StringUtil.replace(
 			dataJSONObject.toString(), StringPool.DOLLAR, StringPool.DOLLAR,

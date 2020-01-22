@@ -17,58 +17,31 @@
 <%@ include file="/render_fragment_layout/init.jsp" %>
 
 <%
-JSONObject dataJSONObject = (JSONObject)request.getAttribute("liferay-layout:render-fragment-layout:dataJSONObject");
+LayoutStructure layoutStructure = (LayoutStructure)request.getAttribute("liferay-layout:render-fragment-layout:layoutStructure");
 %>
 
-<c:if test="<%= dataJSONObject != null %>">
-	<div class="layout-content portlet-layout" id="main-content" role="main">
+<div class="layout-content portlet-layout" id="main-content" role="main">
 
-		<%
-		try {
-			request.setAttribute(WebKeys.SHOW_PORTLET_TOPPER, Boolean.TRUE);
+	<%
+	try {
+		request.setAttribute(WebKeys.SHOW_PORTLET_TOPPER, Boolean.TRUE);
 
-			RenderFragmentLayoutDisplayContext renderFragmentLayoutDisplayContext = new RenderFragmentLayoutDisplayContext(request, response);
+		request.setAttribute("render_layout_data.jsp-itemId", layoutStructure.getMainItemId());
 
-			request.setAttribute("render_layout_data_structure.jsp-renderFragmentLayoutDisplayContext", renderFragmentLayoutDisplayContext);
-		%>
+		RenderFragmentLayoutDisplayContext renderFragmentLayoutDisplayContext = new RenderFragmentLayoutDisplayContext(request, response);
 
-			<%= renderFragmentLayoutDisplayContext.getPortletPaths() %>
+		request.setAttribute("render_layout_data.jsp-renderFragmentLayoutDisplayContext", renderFragmentLayoutDisplayContext);
+	%>
 
-			<c:choose>
-				<c:when test="<%= LayoutDataConverter.isLatestVersion(dataJSONObject) %>">
+		<%= renderFragmentLayoutDisplayContext.getPortletPaths() %>
 
-					<%
-					JSONObject rootItemsJSONObject = dataJSONObject.getJSONObject("rootItems");
+		<liferay-util:include page="/render_fragment_layout/render_layout_data.jsp" servletContext="<%= application %>" />
 
-					String mainItemId = rootItemsJSONObject.getString("main");
+	<%
+	}
+	finally {
+		request.removeAttribute(WebKeys.SHOW_PORTLET_TOPPER);
+	}
+	%>
 
-					JSONObject itemsJSONObject = dataJSONObject.getJSONObject("items");
-
-					request.setAttribute("render_react_editor_layout_data_structure.jsp-itemsJSONObject", itemsJSONObject);
-
-					JSONObject mainJSONObject = itemsJSONObject.getJSONObject(mainItemId);
-
-					request.setAttribute("render_react_editor_layout_data_structure.jsp-childrenJSONArray", mainJSONObject.getJSONArray("children"));
-					%>
-
-					<liferay-util:include page="/render_fragment_layout/render_react_editor_layout_data_structure.jsp" servletContext="<%= application %>" />
-				</c:when>
-				<c:otherwise>
-
-					<%
-					request.setAttribute("render_layout_data_structure.jsp-dataJSONObject", dataJSONObject);
-					%>
-
-					<liferay-util:include page="/render_fragment_layout/render_layout_data_structure.jsp" servletContext="<%= application %>" />
-				</c:otherwise>
-			</c:choose>
-
-		<%
-		}
-		finally {
-			request.removeAttribute(WebKeys.SHOW_PORTLET_TOPPER);
-		}
-		%>
-
-	</div>
-</c:if>
+</div>

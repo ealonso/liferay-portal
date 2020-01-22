@@ -19,16 +19,18 @@ import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.template.LayoutStructure;
+import com.liferay.layout.util.template.LayoutStructureItem;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,60 +60,51 @@ public class LayoutPageTemplateStructureRenderUtil {
 			return StringPool.BLANK;
 		}
 
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
-
-		if (structureJSONArray == null) {
-			return StringPool.BLANK;
-		}
-
 		StringBundler sb = new StringBundler();
 
-		for (int i = 0; i < structureJSONArray.length(); i++) {
-			JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
+		LayoutStructure layoutStructure = new LayoutStructure(data);
 
-			JSONArray columnsJSONArray = rowJSONObject.getJSONArray("columns");
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
 
-			for (int j = 0; j < columnsJSONArray.length(); j++) {
-				JSONObject columnJSONObject = columnsJSONArray.getJSONObject(j);
+			if (!Objects.equals(
+					layoutStructureItem.getItemType(),
+					LayoutDataItemTypeConstants.TYPE_FRAGMENT)) {
 
-				JSONArray fragmentEntryLinkIdsJSONArray =
-					columnJSONObject.getJSONArray("fragmentEntryLinkIds");
-
-				for (int k = 0; k < fragmentEntryLinkIdsJSONArray.length();
-					 k++) {
-
-					long fragmentEntryLinkId =
-						fragmentEntryLinkIdsJSONArray.getLong(k);
-
-					if (fragmentEntryLinkId <= 0) {
-						continue;
-					}
-
-					FragmentEntryLink fragmentEntryLink =
-						FragmentEntryLinkLocalServiceUtil.
-							fetchFragmentEntryLink(fragmentEntryLinkId);
-
-					if (fragmentEntryLink == null) {
-						continue;
-					}
-
-					DefaultFragmentRendererContext fragmentRendererContext =
-						new DefaultFragmentRendererContext(fragmentEntryLink);
-
-					fragmentRendererContext.setFieldValues(parameterMap);
-					fragmentRendererContext.setLocale(locale);
-					fragmentRendererContext.setMode(mode);
-					fragmentRendererContext.setSegmentsExperienceIds(
-						segmentsExperienceIds);
-
-					sb.append(
-						fragmentRendererController.render(
-							fragmentRendererContext, httpServletRequest,
-							httpServletResponse));
-				}
+				continue;
 			}
+
+			JSONObject itemConfigJSONObject =
+				layoutStructureItem.getItemConfigJSONObject();
+
+			long fragmentEntryLinkId = itemConfigJSONObject.getLong(
+				"fragmentEntryLinkId");
+
+			if (fragmentEntryLinkId <= 0) {
+				continue;
+			}
+
+			FragmentEntryLink fragmentEntryLink =
+				FragmentEntryLinkLocalServiceUtil.fetchFragmentEntryLink(
+					fragmentEntryLinkId);
+
+			if (fragmentEntryLink == null) {
+				continue;
+			}
+
+			DefaultFragmentRendererContext fragmentRendererContext =
+				new DefaultFragmentRendererContext(fragmentEntryLink);
+
+			fragmentRendererContext.setFieldValues(parameterMap);
+			fragmentRendererContext.setLocale(locale);
+			fragmentRendererContext.setMode(mode);
+			fragmentRendererContext.setSegmentsExperienceIds(
+				segmentsExperienceIds);
+
+			sb.append(
+				fragmentRendererController.render(
+					fragmentRendererContext, httpServletRequest,
+					httpServletResponse));
 		}
 
 		return sb.toString();
