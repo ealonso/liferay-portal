@@ -16,8 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<%@taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
-
 <%@ page import="com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys" %><%@
 page import="com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuCategoryRegistry" %><%@
 page import="com.liferay.product.navigation.taglib.internal.servlet.ServletContextUtil" %>
