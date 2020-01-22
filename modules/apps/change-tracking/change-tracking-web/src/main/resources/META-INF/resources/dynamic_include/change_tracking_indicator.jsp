@@ -21,7 +21,7 @@
 <div class="change-tracking-indicator">
 	<react:component
 		data="<%= changeTrackingIndicatorDisplayContext.getReactData() %>"
-		module="dynamic_include/ChangeTrackingIndictator.es"
+		module="dynamic_include/ChangeTrackingIndictator"
 	/>
 </div>
 
