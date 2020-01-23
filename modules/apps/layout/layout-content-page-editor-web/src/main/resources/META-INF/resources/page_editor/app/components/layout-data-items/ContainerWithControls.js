@@ -13,16 +13,36 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS} from '../../config/constants/layoutDataFloatingToolbarButtons';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
+import {ConfigContext} from '../../config/index';
+import {DispatchContext} from '../../reducers/index';
+import {StoreContext} from '../../store/index';
+import duplicateItem from '../../thunks/duplicateItem';
 import FloatingToolbar from '../FloatingToolbar';
 import Topper from '../Topper';
 import Container from './Container';
 
 const ContainerWithControls = React.forwardRef(
 	({children, item, layoutData}, ref) => {
+		const config = useContext(ConfigContext);
+		const dispatch = useContext(DispatchContext);
+		const store = useContext(StoreContext);
+
+		const handleButtonClick = id => {
+			if (id === LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem.id) {
+				dispatch(
+					duplicateItem({
+						config,
+						itemId: item.itemId,
+						store
+					})
+				);
+			}
+		};
+
 		return (
 			<Topper
 				acceptDrop={[
@@ -48,10 +68,12 @@ const ContainerWithControls = React.forwardRef(
 					>
 						<FloatingToolbar
 							buttons={[
+								LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem,
 								LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.containerConfiguration
 							]}
 							item={item}
 							itemRef={ref}
+							onButtonClick={handleButtonClick}
 						/>
 
 						{children}

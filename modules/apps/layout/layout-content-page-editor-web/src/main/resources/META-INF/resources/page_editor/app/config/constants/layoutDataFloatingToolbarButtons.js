@@ -24,7 +24,7 @@ export const LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS = {
 		type: 'panel'
 	},
 
-	duplicateFragment: {
+	duplicateItem: {
 		icon: 'paste',
 		id: 'duplicate_fragment',
 		panelId: '',

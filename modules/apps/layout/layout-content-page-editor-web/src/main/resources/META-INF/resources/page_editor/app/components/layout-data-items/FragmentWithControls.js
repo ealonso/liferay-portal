@@ -33,7 +33,7 @@ import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes
 import {ConfigContext} from '../../config/index';
 import {DispatchContext} from '../../reducers/index';
 import {StoreContext} from '../../store/index';
-import duplicateFragment from '../../thunks/duplicateFragment';
+import duplicateItem from '../../thunks/duplicateItem';
 import FloatingToolbar from '../FloatingToolbar';
 import Topper from '../Topper';
 import FragmentContent from './FragmentContent';
@@ -49,9 +49,9 @@ const FragmentWithControls = React.forwardRef(({item, layoutData}, ref) => {
 		fragmentEntryLinks[item.config.fragmentEntryLinkId];
 
 	const handleButtonClick = id => {
-		if (id === LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateFragment.id) {
+		if (id === LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem.id) {
 			dispatch(
-				duplicateFragment({
+				duplicateItem({
 					config,
 					fragmentEntryLinkId: item.config.fragmentEntryLinkId,
 					itemId: item.itemId,
@@ -64,7 +64,7 @@ const FragmentWithControls = React.forwardRef(({item, layoutData}, ref) => {
 	const portletId = fragmentEntryLink.portletId;
 
 	const floatingToolbarButtons = [
-		LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateFragment
+		LAYOUT_DATA_FLOATING_TOOLBAR_BUTTONS.duplicateItem
 	];
 
 	if (!portletId) {

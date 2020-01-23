@@ -15,7 +15,7 @@ import FragmentService from '../services/FragmentService';
  * details.
  */
 
-export default function duplicateFragment({
+export default function duplicateItem({
 	config,
 	fragmentEntryLinkId,
 	itemId,
@@ -24,7 +24,7 @@ export default function duplicateFragment({
 	const {segmentsExperienceId} = store;
 
 	return dispatch => {
-		FragmentService.duplicateFragmentEntryLink({
+		FragmentService.duplicateItem({
 			config,
 			fragmentEntryLinkId,
 			itemId,

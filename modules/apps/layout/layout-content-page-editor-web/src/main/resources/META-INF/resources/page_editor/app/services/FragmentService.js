@@ -129,7 +129,7 @@ export default {
 	 * @param {string} options.itemId id of the item
 	 * @param {string} options.segmentsExperienceId Experience id
 	 */
-	duplicateFragmentEntryLink({
+	duplicateItem({
 		config,
 		fragmentEntryLinkId,
 		itemId,
