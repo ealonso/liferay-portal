@@ -17,12 +17,24 @@ package com.liferay.analytics.reports.web.internal.portlet;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsPortletKeys;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsWebKeys;
 import com.liferay.analytics.reports.web.internal.display.context.AnalyticsReportsDisplayContext;
+import com.liferay.asset.display.page.constants.AssetDisplayPageWebKeys;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.info.display.contributor.InfoDisplayContributor;
+import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
+import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
+
+import java.util.Optional;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -61,6 +73,9 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+			renderRequest);
+
 		HttpServletRequest originalHttpServletRequest =
 			_portal.getOriginalServletRequest(
 				_portal.getHttpServletRequest(renderRequest));
@@ -72,14 +87,85 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 			return;
 		}
 
+		Object displayObject = null;
+		long classNameId = 0;
+
+		Optional<InfoDisplayObjectProvider> infoDisplayObjectProviderOptional =
+			_getInfoDisplayObjectProviderOptional(
+				httpServletRequest, originalHttpServletRequest);
+
+		if (infoDisplayObjectProviderOptional.isPresent()) {
+			InfoDisplayObjectProvider infoDisplayObjectProvider =
+				infoDisplayObjectProviderOptional.get();
+
+			displayObject = infoDisplayObjectProvider.getDisplayObject();
+			classNameId = infoDisplayObjectProvider.getClassNameId();
+		}
+
 		renderRequest.setAttribute(
 			AnalyticsReportsWebKeys.ANALYTICS_REPORTS_DISPLAY_CONTEXT,
-			new AnalyticsReportsDisplayContext());
+			new AnalyticsReportsDisplayContext(
+				classNameId, _classNameLocalService, displayObject,
+				httpServletRequest, _portal, _userLocalService));
 
 		super.doDispatch(renderRequest, renderResponse);
 	}
 
+	private Optional<InfoDisplayObjectProvider>
+		_getInfoDisplayObjectProviderOptional(
+			HttpServletRequest httpServletRequest,
+			HttpServletRequest originalHttpServletRequest) {
+
+		InfoDisplayObjectProvider infoDisplayObjectProvider =
+			(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
+				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
+
+		if (infoDisplayObjectProvider != null) {
+			return Optional.of(infoDisplayObjectProvider);
+		}
+
+		long assetEntryId = ParamUtil.getLong(
+			originalHttpServletRequest, "assetEntryId");
+
+		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
+			assetEntryId);
+
+		if (assetEntry == null) {
+			return Optional.empty();
+		}
+
+		InfoDisplayContributor infoDisplayContributor =
+			_infoDisplayContributorTracker.getInfoDisplayContributor(
+				assetEntry.getClassName());
+
+		try {
+			return Optional.ofNullable(
+				infoDisplayContributor.getInfoDisplayObjectProvider(
+					assetEntry.getClassPK()));
+		}
+		catch (Exception exception) {
+			_log.error("Unable to get info display object provider", exception);
+
+			return Optional.empty();
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AnalyticsReportsPortlet.class);
+
+	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
+	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
+	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
+
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private UserLocalService _userLocalService;
 
 }
