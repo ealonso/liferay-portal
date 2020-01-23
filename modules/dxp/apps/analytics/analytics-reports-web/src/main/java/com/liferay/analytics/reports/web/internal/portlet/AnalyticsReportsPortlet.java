@@ -79,7 +79,7 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 		renderRequest.setAttribute(
 			AnalyticsReportsWebKeys.ANALYTICS_REPORTS_DISPLAY_CONTEXT,
 			new AnalyticsReportsDisplayContext(
-				httpServletRequest, _userLocalService));
+				httpServletRequest, renderResponse, _userLocalService));
 
 		super.doDispatch(renderRequest, renderResponse);
 	}

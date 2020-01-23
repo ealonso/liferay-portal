@@ -19,13 +19,19 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Locale;
 import java.util.Map;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.PortletURL;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,10 +42,11 @@ import javax.servlet.http.HttpServletRequest;
 public class AnalyticsReportsDisplayContext {
 
 	public AnalyticsReportsDisplayContext(
-		HttpServletRequest httpServletRequest,
+		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
 		UserLocalService userLocalService) {
 
 		_httpServletRequest = httpServletRequest;
+		_renderResponse = renderResponse;
 		_userLocalService = userLocalService;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
@@ -52,7 +59,7 @@ public class AnalyticsReportsDisplayContext {
 		}
 
 		_data = HashMapBuilder.<String, Object>put(
-			"context", StringPool.BLANK
+			"context", getContext()
 		).put(
 			"props", getProps()
 		).build();
@@ -62,6 +69,12 @@ public class AnalyticsReportsDisplayContext {
 
 	public String getLiferayAnalyticsURL(long companyId) {
 		return PrefsPropsUtil.getString(companyId, "liferayAnalyticsURL");
+	}
+
+	protected Map<String, Object> getContext() {
+		return HashMapBuilder.<String, Object>put(
+			"endpoints", _getEndpoints()
+		).build();
 	}
 
 	protected Map<String, Object> getProps() {
@@ -91,8 +104,30 @@ public class AnalyticsReportsDisplayContext {
 		).build();
 	}
 
+	private String _getAnalyticsReportsActionURL(String action) {
+		PortletURL actionURL = _renderResponse.createActionURL();
+
+		actionURL.setParameter(ActionRequest.ACTION_NAME, action);
+
+		return HttpUtil.addParameter(
+			actionURL.toString(), "p_l_mode", Constants.VIEW);
+	}
+
+	private String _getAnalyticsReportsTotalViewsURL() {
+		return _getAnalyticsReportsActionURL(
+			"/analytics_reports/get_total_views");
+	}
+
+	private Map<String, Object> _getEndpoints() {
+		return HashMapBuilder.<String, Object>put(
+			"getAnalyticsReportsTotalViewsURL",
+			_getAnalyticsReportsTotalViewsURL()
+		).build();
+	}
+
 	private Map<String, Object> _data;
 	private final HttpServletRequest _httpServletRequest;
+	private final RenderResponse _renderResponse;
 	private final ThemeDisplay _themeDisplay;
 	private final UserLocalService _userLocalService;
 
