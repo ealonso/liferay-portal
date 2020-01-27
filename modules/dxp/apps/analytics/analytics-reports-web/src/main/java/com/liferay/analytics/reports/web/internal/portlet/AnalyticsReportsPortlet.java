@@ -14,9 +14,15 @@
 
 package com.liferay.analytics.reports.web.internal.portlet;
 
+import com.liferay.analytics.reports.info.AnalyticsReportsInfo;
+import com.liferay.analytics.reports.info.AnalyticsReportsInfoTracker;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsPortletKeys;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsWebKeys;
 import com.liferay.analytics.reports.web.internal.display.context.AnalyticsReportsDisplayContext;
+import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.Constants;
@@ -24,6 +30,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
+
+import java.util.Optional;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -77,6 +85,19 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 			return;
 		}
 
+		Optional<AssetEntry> assetEntryOptional = _getAssetEntryOptional(
+			originalHttpServletRequest);
+
+		if (assetEntryOptional.isPresent()) {
+			AssetEntry assetEntry = assetEntryOptional.get();
+
+			AnalyticsReportsInfo analyticsReportsInfo =
+				_analyticsReportsInfoTracker.getAnalyticsReportsInfo(
+					assetEntry.getClassName());
+
+			_log.info(analyticsReportsInfo.getKey());
+		}
+
 		renderRequest.setAttribute(
 			AnalyticsReportsWebKeys.ANALYTICS_REPORTS_DISPLAY_CONTEXT,
 			new AnalyticsReportsDisplayContext(
@@ -84,6 +105,25 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 
 		super.doDispatch(renderRequest, renderResponse);
 	}
+
+	private Optional<AssetEntry> _getAssetEntryOptional(
+		HttpServletRequest originalHttpServletRequest) {
+
+		long assetEntryId = ParamUtil.getLong(
+			originalHttpServletRequest, "assetEntryId");
+
+		return Optional.ofNullable(
+			_assetEntryLocalService.fetchEntry(assetEntryId));
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AnalyticsReportsPortlet.class);
+
+	@Reference
+	private AnalyticsReportsInfoTracker _analyticsReportsInfoTracker;
+
+	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
 	private Portal _portal;
