@@ -14,21 +14,24 @@
 
 package com.liferay.layout.page.template.admin.web.internal.portlet.action;
 
+import com.liferay.headless.delivery.dto.v1_0.PageDefinition;
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
 import com.liferay.layout.page.template.admin.web.internal.portlet.util.ExportUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
+import com.liferay.layout.util.PageDefinitionConverter;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Time;
 
 import java.io.File;
 import java.io.FileInputStream;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
@@ -72,22 +75,24 @@ public class ExportLayoutPageTemplateEntriesMVCResourceCommand
 		}
 
 		try {
-			List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
-				new ArrayList<>();
+			Map<Long, PageDefinition> pageDefinitionsMap = new HashMap<>();
 
 			for (long exportLayoutPageTemplateEntryId :
 					exportLayoutPageTemplateEntryIds) {
 
 				LayoutPageTemplateEntry layoutPageTemplateEntryEntry =
-					_layoutPageTemplateEntryEntryService.
+					_layoutPageTemplateEntryService.
 						fetchLayoutPageTemplateEntry(
 							exportLayoutPageTemplateEntryId);
 
-				layoutPageTemplateEntries.add(layoutPageTemplateEntryEntry);
+				pageDefinitionsMap.put(
+					layoutPageTemplateEntryEntry.getPlid(),
+					_pageDefinitionConverter.toPageDefinition(
+						layoutPageTemplateEntryEntry.getPlid(),
+						LocaleUtil.getDefault()));
 			}
 
-			File file = _exportUtil.exportLayoutPageTemplateEntries(
-				layoutPageTemplateEntries);
+			File file = _exportUtil.exportPageDefinitions(pageDefinitionsMap);
 
 			PortletResponseUtil.sendFile(
 				resourceRequest, resourceResponse,
@@ -105,6 +110,9 @@ public class ExportLayoutPageTemplateEntriesMVCResourceCommand
 	private ExportUtil _exportUtil;
 
 	@Reference
-	private LayoutPageTemplateEntryService _layoutPageTemplateEntryEntryService;
+	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
+
+	@Reference
+	private PageDefinitionConverter _pageDefinitionConverter;
 
 }
