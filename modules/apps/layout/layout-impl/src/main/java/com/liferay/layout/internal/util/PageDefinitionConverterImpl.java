@@ -472,6 +472,12 @@ public class PageDefinitionConverterImpl implements PageDefinitionConverter {
 						JSONObject backgroundImageJSONObject =
 							configJSONObject.getJSONObject("backgroundImage");
 
+						if ((backgroundImageJSONObject == null) ||
+							(backgroundImageJSONObject.length() == 0)) {
+
+							return null;
+						}
+
 						return new FragmentImage() {
 							{
 								setTitle(
