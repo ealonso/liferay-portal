@@ -74,23 +74,7 @@ public class AnalyticsReportsDisplayContext {
 				).build()
 			).build()
 		).put(
-			"props",
-			HashMapBuilder.<String, Object>put(
-				"authorName",
-				_analyticsReportsInfoItem.getAuthorName(
-					_analyticsReportsInfoItemObject)
-			).put(
-				"publishDate",
-				FastDateFormatFactoryUtil.getSimpleDateFormat(
-					"MMMM dd, yyyy", _themeDisplay.getLocale()
-				).format(
-					_getPublishDate()
-				)
-			).put(
-				"title",
-				_analyticsReportsInfoItem.getTitle(
-					_analyticsReportsInfoItemObject, _themeDisplay.getLocale())
-			).build()
+			"props", getProps()
 		).build();
 
 		return _data;
@@ -98,6 +82,25 @@ public class AnalyticsReportsDisplayContext {
 
 	public String getLiferayAnalyticsURL(long companyId) {
 		return PrefsPropsUtil.getString(companyId, "liferayAnalyticsURL");
+	}
+
+	protected Map<String, Object> getProps() {
+		return HashMapBuilder.<String, Object>put(
+			"authorName",
+			_analyticsReportsInfoItem.getAuthorName(
+				_analyticsReportsInfoItemObject)
+		).put(
+			"publishDate",
+			FastDateFormatFactoryUtil.getSimpleDateFormat(
+				"MMMM dd, yyyy", _themeDisplay.getLocale()
+			).format(
+				_getPublishDate()
+			)
+		).put(
+			"title",
+			_analyticsReportsInfoItem.getTitle(
+				_analyticsReportsInfoItemObject, _themeDisplay.getLocale())
+		).build();
 	}
 
 	private Date _getPublishDate() {
