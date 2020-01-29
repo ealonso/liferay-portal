@@ -21,6 +21,7 @@ import useLazy from '../../core/hooks/useLazy';
 import useLoad from '../../core/hooks/useLoad';
 import usePlugins from '../../core/hooks/usePlugins';
 import * as Actions from '../actions/index';
+import {PAGE_TYPES} from '../config/constants/pageTypes';
 import {ConfigContext} from '../config/index';
 import {useSelector, useDispatch} from '../store/index';
 import {useSelectItem} from './Controls';
@@ -49,6 +50,7 @@ function ToolbarBody() {
 		classPK,
 		discardDraftRedirectURL,
 		discardDraftURL,
+		pageType,
 		publishURL,
 		redirectURL,
 		singleSegmentsExperienceMode,
@@ -124,6 +126,7 @@ function ToolbarBody() {
 		}
 	};
 
+	const isMasterLayout = pageType === PAGE_TYPES.master;
 	return (
 		<div
 			className="container-fluid container-fluid-max-xl"
@@ -222,7 +225,9 @@ function ToolbarBody() {
 							small
 							type="submit"
 						>
-							{singleSegmentsExperienceMode
+							{isMasterLayout
+								? Liferay.Language.get('publish-master')
+								: singleSegmentsExperienceMode
 								? Liferay.Language.get('save-variant')
 								: Liferay.Language.get('publish')}
 						</ClayButton>
