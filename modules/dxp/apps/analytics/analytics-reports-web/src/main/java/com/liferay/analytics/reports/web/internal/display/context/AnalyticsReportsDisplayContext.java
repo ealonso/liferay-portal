@@ -15,7 +15,6 @@
 package com.liferay.analytics.reports.web.internal.display.context;
 
 import com.liferay.analytics.reports.info.item.AnalyticsReportsInfoItem;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.DateUtil;
@@ -26,6 +25,9 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Date;
 import java.util.Map;
+
+import javax.portlet.RenderResponse;
+import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,12 +40,12 @@ public class AnalyticsReportsDisplayContext {
 	public AnalyticsReportsDisplayContext(
 		AnalyticsReportsInfoItem analyticsReportsInfoItem,
 		Object analyticsReportsInfoItemObject,
-		HttpServletRequest httpServletRequest) {
+		HttpServletRequest httpServletRequest, RenderResponse renderResponse) {
 
 		_analyticsReportsInfoItem = analyticsReportsInfoItem;
 		_analyticsReportsInfoItemObject = analyticsReportsInfoItemObject;
-
 		_httpServletRequest = httpServletRequest;
+		_renderResponse = renderResponse;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -55,9 +57,9 @@ public class AnalyticsReportsDisplayContext {
 		}
 
 		_data = HashMapBuilder.<String, Object>put(
-			"context", StringPool.BLANK
+			"context", getContext()
 		).put(
-			"props", _getProps()
+			"props", getProps()
 		).build();
 
 		return _data;
@@ -67,7 +69,13 @@ public class AnalyticsReportsDisplayContext {
 		return PrefsPropsUtil.getString(companyId, "liferayAnalyticsURL");
 	}
 
-	private Map<String, Object> _getProps() {
+	protected Map<String, Object> getContext() {
+		return HashMapBuilder.<String, Object>put(
+			"endpoints", _getEndpoints()
+		).build();
+	}
+
+	protected Map<String, Object> getProps() {
 		return HashMapBuilder.<String, Object>put(
 			"authorName",
 			_analyticsReportsInfoItem.getAuthorName(
@@ -83,6 +91,21 @@ public class AnalyticsReportsDisplayContext {
 			"title",
 			_analyticsReportsInfoItem.getTitle(
 				_analyticsReportsInfoItemObject, _themeDisplay.getLocale())
+		).build();
+	}
+
+	private String _getAnalyticsReportsTotalViewsURL() {
+		ResourceURL resourceURL = _renderResponse.createResourceURL();
+
+		resourceURL.setResourceID("/analytics_reports/get_total_views");
+
+		return resourceURL.toString();
+	}
+
+	private Map<String, Object> _getEndpoints() {
+		return HashMapBuilder.<String, Object>put(
+			"getAnalyticsReportsTotalViewsURL",
+			_getAnalyticsReportsTotalViewsURL()
 		).build();
 	}
 
@@ -103,6 +126,7 @@ public class AnalyticsReportsDisplayContext {
 	private final Object _analyticsReportsInfoItemObject;
 	private Map<String, Object> _data;
 	private final HttpServletRequest _httpServletRequest;
+	private final RenderResponse _renderResponse;
 	private final ThemeDisplay _themeDisplay;
 
 }
