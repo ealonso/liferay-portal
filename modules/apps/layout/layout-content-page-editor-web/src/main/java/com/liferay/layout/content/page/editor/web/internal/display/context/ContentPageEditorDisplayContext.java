@@ -37,9 +37,11 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.criteria.DownloadFileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.InfoItemItemSelectorReturnType;
+import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
 import com.liferay.item.selector.criteria.image.criterion.ImageItemSelectorCriterion;
 import com.liferay.item.selector.criteria.info.item.criterion.InfoItemItemSelectorCriterion;
+import com.liferay.item.selector.criteria.info.item.criterion.InfoListItemSelectorCriterion;
 import com.liferay.item.selector.criteria.url.criterion.URLItemSelectorCriterion;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
@@ -322,6 +324,9 @@ public class ContentPageEditorDisplayContext {
 				"infoItemSelectorURL",
 				editorSoyContext.get("infoItemSelectorURL")
 			).put(
+				"infoListSelectorURL",
+				editorSoyContext.get("infoListSelectorURL")
+			).put(
 				"lookAndFeelURL", _getLookAndFeelURL()
 			).put(
 				"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
@@ -516,6 +521,8 @@ public class ContentPageEditorDisplayContext {
 			"imageSelectorURL", _getItemSelectorURL()
 		).put(
 			"infoItemSelectorURL", _getInfoItemSelectorURL()
+		).put(
+			"infoListSelectorURL", _getInfoListSelectorURL()
 		).put(
 			"languageId", themeDisplay.getLanguageId()
 		).put(
@@ -1403,6 +1410,25 @@ public class ContentPageEditorDisplayContext {
 		}
 
 		return infoItemSelectorURL.toString();
+	}
+
+	private String _getInfoListSelectorURL() {
+		InfoListItemSelectorCriterion infoListItemSelectorCriterion =
+			new InfoListItemSelectorCriterion();
+
+		infoListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			new InfoListItemSelectorReturnType());
+
+		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
+			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
+			_renderResponse.getNamespace() + "selectInfoList",
+			infoListItemSelectorCriterion);
+
+		if (infoListSelectorURL == null) {
+			return StringPool.BLANK;
+		}
+
+		return infoListSelectorURL.toString();
 	}
 
 	private String _getItemSelectorURL() {
