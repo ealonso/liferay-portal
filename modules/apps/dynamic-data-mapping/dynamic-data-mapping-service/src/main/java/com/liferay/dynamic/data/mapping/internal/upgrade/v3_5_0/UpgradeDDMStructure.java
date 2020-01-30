@@ -14,7 +14,16 @@
 
 package com.liferay.dynamic.data.mapping.internal.upgrade.v3_5_0;
 
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeRequest;
+import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeResponse;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeRequest;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeResponse;
+import com.liferay.dynamic.data.mapping.model.DDMForm;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
+import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
@@ -27,6 +36,7 @@ import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.sql.PreparedStatement;
@@ -37,6 +47,17 @@ import java.sql.Timestamp;
  * @author Marcela Cunha
  */
 public class UpgradeDDMStructure extends UpgradeProcess {
+
+	public UpgradeDDMStructure(
+		DDM ddm, DDMFormLayoutSerializer ddmFormLayoutSerializer,
+		DDMFormDeserializer ddmFormJSONDeserializer,
+		DDMFormDeserializer ddmFormXSDDeserializer) {
+
+		_ddm = ddm;
+		_ddmFormLayoutSerializer = ddmFormLayoutSerializer;
+		_ddmFormJSONDeserializer = ddmFormJSONDeserializer;
+		_ddmFormXSDDeserializer = ddmFormXSDDeserializer;
+	}
 
 	protected JSONObject createLocalizedValue(String value) throws Exception {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -67,6 +88,26 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		return JSONUtil.put(jsonObject);
 	}
 
+	protected DDMForm deserialize(String content, String type) {
+		DDMFormDeserializerDeserializeRequest.Builder builder =
+			DDMFormDeserializerDeserializeRequest.Builder.newBuilder(content);
+
+		DDMFormDeserializer ddmFormDeserializer = null;
+
+		if (StringUtil.equalsIgnoreCase(type, "json")) {
+			ddmFormDeserializer = _ddmFormJSONDeserializer;
+		}
+		else if (StringUtil.equalsIgnoreCase(type, "xsd")) {
+			ddmFormDeserializer = _ddmFormXSDDeserializer;
+		}
+
+		DDMFormDeserializerDeserializeResponse
+			ddmFormDeserializerDeserializeResponse =
+				ddmFormDeserializer.deserialize(builder.build());
+
+		return ddmFormDeserializerDeserializeResponse.getDDMForm();
+	}
+
 	@Override
 	protected void doUpgrade() throws Exception {
 		StringBundler sb1 = new StringBundler(6);
@@ -78,6 +119,14 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		sb1.append("statusByUserId, statusByUserName, statusDate) values (?, ");
 		sb1.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
+		StringBundler sb2 = new StringBundler(5);
+
+		sb2.append("insert into DDMStructureLayout (uuid_, ");
+		sb2.append("structureLayoutId, groupId, companyId, userId, userName, ");
+		sb2.append("createDate, modifiedDate, structureLayoutKey, ");
+		sb2.append("structureVersionId, definition) values (?, ?, ?, ?, ?, ");
+		sb2.append("?, ?, ?, ?, ?, ?)");
+
 		try (PreparedStatement ps1 = connection.prepareStatement(
 				"select * from DDMStructure where classNameId = ? or " +
 					"classNameId = ?");
@@ -88,7 +137,10 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 						"structureId = ?");
 			PreparedStatement ps3 =
 				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
-					connection, sb1.toString())) {
+					connection, sb1.toString());
+			PreparedStatement ps4 =
+				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+					connection, sb2.toString())) {
 
 			ps1.setLong(
 				1,
@@ -144,13 +196,56 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 					ps3.setTimestamp(18, modifiedDate);
 
 					ps3.addBatch();
+
+					DDMForm ddmForm = getDDMForm(definition, storageType);
+
+					String ddmFormLayoutDefinition =
+						getDefaultDDMFormLayoutDefinition(ddmForm);
+
+					ps4.setString(1, PortalUUIDUtil.generate());
+					ps4.setLong(2, increment());
+					ps4.setLong(3, groupId);
+					ps4.setLong(4, _companyId);
+					ps4.setLong(5, userId);
+					ps4.setString(6, userName);
+					ps4.setTimestamp(7, modifiedDate);
+					ps4.setTimestamp(8, modifiedDate);
+					ps4.setString(9, rs.getString("structureKey"));
+					ps4.setLong(10, structureVersionId);
+					ps4.setString(11, ddmFormLayoutDefinition);
+
+					ps4.addBatch();
 				}
 
 				ps2.executeBatch();
 
 				ps3.executeBatch();
+
+				ps4.executeBatch();
 			}
 		}
+	}
+
+	protected DDMForm getDDMForm(String definition, String storageType) {
+		if (storageType.equals("expando") || storageType.equals("xml")) {
+			return deserialize(definition, "xsd");
+		}
+
+		return deserialize(definition, "json");
+	}
+
+	protected String getDefaultDDMFormLayoutDefinition(DDMForm ddmForm) {
+		DDMFormLayout ddmFormLayout = _ddm.getDefaultDDMFormLayout(ddmForm);
+
+		DDMFormLayoutSerializerSerializeRequest.Builder builder =
+			DDMFormLayoutSerializerSerializeRequest.Builder.newBuilder(
+				ddmFormLayout);
+
+		DDMFormLayoutSerializerSerializeResponse
+			ddmFormLayoutSerializerSerializeResponse =
+				_ddmFormLayoutSerializer.serialize(builder.build());
+
+		return ddmFormLayoutSerializerSerializeResponse.getContent();
 	}
 
 	protected String getNextVersion(String version) {
@@ -363,5 +458,9 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 	private static final String _TYPE = "type";
 
 	private long _companyId;
+	private final DDM _ddm;
+	private final DDMFormDeserializer _ddmFormJSONDeserializer;
+	private final DDMFormLayoutSerializer _ddmFormLayoutSerializer;
+	private final DDMFormDeserializer _ddmFormXSDDeserializer;
 
 }
