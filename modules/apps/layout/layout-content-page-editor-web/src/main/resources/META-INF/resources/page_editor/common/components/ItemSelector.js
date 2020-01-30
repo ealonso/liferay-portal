@@ -81,7 +81,11 @@ export default function ItemSelector({label, onItemSelect, selectedItemTitle}) {
 					<ClayButton
 						displayType="secondary"
 						onClick={() =>
-							openInfoItemSelector(onItemSelect, config)
+							openInfoItemSelector(
+								onItemSelect,
+								eventName,
+								itemSelectorURL
+							)
 						}
 						small
 					>
