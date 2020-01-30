@@ -14,6 +14,8 @@
 
 package com.liferay.dynamic.data.mapping.internal.upgrade.v3_5_0;
 
+import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -25,9 +27,11 @@ import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 /**
  * @author Marcela Cunha
@@ -65,6 +69,15 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+		StringBundler sb1 = new StringBundler(6);
+
+		sb1.append("insert into DDMStructureVersion (structureVersionId, ");
+		sb1.append("groupId, companyId, userId, userName, createDate, ");
+		sb1.append("structureId, version, parentStructureId, name, ");
+		sb1.append("description, definition, storageType, type_, status, ");
+		sb1.append("statusByUserId, statusByUserName, statusDate) values (?, ");
+		sb1.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
 		try (PreparedStatement ps1 = connection.prepareStatement(
 				"select * from DDMStructure where classNameId = ? or " +
 					"classNameId = ?");
@@ -72,7 +85,10 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
 					connection,
 					"update DDMStructure set definition = ? where " +
-						"structureId = ?")) {
+						"structureId = ?");
+			PreparedStatement ps3 =
+				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+					connection, sb1.toString())) {
 
 			ps1.setLong(
 				1,
@@ -97,11 +113,69 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 					ps2.setLong(2, structureId);
 
 					ps2.addBatch();
+
+					_companyId = rs.getLong("companyId");
+					long groupId = rs.getLong("groupId");
+					Timestamp modifiedDate = rs.getTimestamp("modifiedDate");
+					String storageType = rs.getString("storageType");
+					long userId = rs.getLong("userId");
+					String userName = rs.getString("userName");
+
+					long structureVersionId = increment();
+
+					ps3.setLong(1, structureVersionId);
+
+					ps3.setLong(2, groupId);
+					ps3.setLong(3, _companyId);
+					ps3.setLong(4, userId);
+					ps3.setString(5, userName);
+					ps3.setTimestamp(6, modifiedDate);
+					ps3.setLong(7, structureId);
+					ps3.setString(8, getVersion(structureId));
+					ps3.setLong(9, rs.getLong("parentStructureId"));
+					ps3.setString(10, rs.getString("name"));
+					ps3.setString(11, rs.getString("description"));
+					ps3.setString(12, definition);
+					ps3.setString(13, storageType);
+					ps3.setInt(14, rs.getInt("type_"));
+					ps3.setInt(15, WorkflowConstants.STATUS_APPROVED);
+					ps3.setLong(16, userId);
+					ps3.setString(17, userName);
+					ps3.setTimestamp(18, modifiedDate);
+
+					ps3.addBatch();
 				}
 
 				ps2.executeBatch();
+
+				ps3.executeBatch();
 			}
 		}
+	}
+
+	protected String getNextVersion(String version) {
+		int[] versionParts = StringUtil.split(version, StringPool.PERIOD, 0);
+
+		return versionParts[0] + StringPool.PERIOD + ++versionParts[1];
+	}
+
+	protected String getVersion(Long structureId) throws Exception {
+		try (PreparedStatement ps1 = connection.prepareStatement(
+				"select MAX(version) from DDMStructureVersion where " +
+					"structureId = ?")) {
+
+			ps1.setLong(1, structureId);
+
+			try (ResultSet rs = ps1.executeQuery()) {
+				while (rs.next()) {
+					String lastVersion = rs.getString(1);
+
+					return getNextVersion(lastVersion);
+				}
+			}
+		}
+
+		return DDMStructureConstants.VERSION_DEFAULT;
 	}
 
 	protected void upgradeColorField(JSONObject field) {
