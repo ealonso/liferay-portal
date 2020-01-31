@@ -29,10 +29,12 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -185,6 +187,18 @@ public class PageDefinitionConverterUtil {
 		}
 
 		return pageElements.toArray(new PageElement[0]);
+	}
+
+	private Map<String, String> _toValueMap(
+		JSONObject jsonObject, String name) {
+
+		if (jsonObject == null) {
+			return null;
+		}
+
+		return HashMapBuilder.put(
+			"value", jsonObject.getString(name)
+		).build();
 	}
 
 	@Reference
