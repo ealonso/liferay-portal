@@ -21,7 +21,6 @@ import java.util.Locale;
 
 /**
  * @author Rubén Pulido
- * @review
  */
 public interface PageDefinitionConverter {
 
