@@ -15,12 +15,24 @@
 package com.liferay.layout.page.template.admin.web.internal.util;
 
 import com.liferay.headless.delivery.dto.v1_0.PageDefinition;
+import com.liferay.headless.delivery.dto.v1_0.PageElement;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutDataConverter;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.util.Portal;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -31,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = PageDefinitionConverterUtil.class)
 public class PageDefinitionConverterUtil {
 
-	public PageDefinition toPageDefinition(long plid) {
+	public PageDefinition toPageDefinition(long plid) throws JSONException {
 		Layout layout = _layoutLocalService.fetchLayout(plid);
 
 		LayoutPageTemplateEntry layoutPageTemplateEntry =
@@ -42,6 +54,7 @@ public class PageDefinitionConverterUtil {
 			{
 				dateCreated = layout.getCreateDate();
 				dateModified = layout.getModifiedDate();
+				pageElements = _toPageElements(layout);
 				setCollectionName(
 					() -> {
 						if (layoutPageTemplateEntry == null) {
@@ -69,6 +82,111 @@ public class PageDefinitionConverterUtil {
 		};
 	}
 
+	private PageElement _toPageElement(
+		JSONObject itemsJSONObject, JSONObject jsonObject) {
+
+		List<PageElement> childrenPageElements = new ArrayList<>();
+
+		JSONArray childrenJSONArray = jsonObject.getJSONArray("children");
+
+		for (int i = 0; i < childrenJSONArray.length(); i++) {
+			String childUUID = childrenJSONArray.getString(i);
+
+			JSONObject childJSONObject = itemsJSONObject.getJSONObject(
+				childUUID);
+
+			JSONArray grandChildrenJSONArray = childJSONObject.getJSONArray(
+				"children");
+
+			if (grandChildrenJSONArray.length() == 0) {
+				childrenPageElements.add(
+					_toPageElement(childJSONObject.getString("type")));
+			}
+			else {
+				childrenPageElements.add(
+					_toPageElement(itemsJSONObject, childJSONObject));
+			}
+		}
+
+		PageElement pageElement = _toPageElement(jsonObject.getString("type"));
+
+		pageElement.setPageElements(
+			childrenPageElements.toArray(new PageElement[0]));
+
+		return pageElement;
+	}
+
+	private PageElement _toPageElement(String type) {
+		if (type.equals("column")) {
+			return new PageElement() {
+				{
+					type = PageElement.Type.COLUMN;
+				}
+			};
+		}
+		else if (type.equals("container")) {
+			return new PageElement() {
+				{
+					type = PageElement.Type.SECTION;
+				}
+			};
+		}
+		else if (type.equals("fragment")) {
+			return new PageElement() {
+				{
+					type = PageElement.Type.FRAGMENT;
+				}
+			};
+		}
+		else if (type.equals("row")) {
+			return new PageElement() {
+				{
+					type = PageElement.Type.ROW;
+				}
+			};
+		}
+
+		return null;
+	}
+
+	private PageElement[] _toPageElements(Layout layout) throws JSONException {
+		List<PageElement> pageElements = new ArrayList<>();
+
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			_layoutPageTemplateStructureLocalService.
+				fetchLayoutPageTemplateStructure(
+					layout.getGroupId(), _portal.getClassNameId(Layout.class),
+					layout.getPlid());
+
+		String layoutData = LayoutDataConverter.convert(
+			layoutPageTemplateStructure.getData(0L));
+
+		JSONObject layoutDataJSONObject = JSONFactoryUtil.createJSONObject(
+			layoutData);
+
+		JSONObject rootItemsJSONObject = layoutDataJSONObject.getJSONObject(
+			"rootItems");
+
+		String mainUUID = rootItemsJSONObject.getString("main");
+
+		JSONObject itemsJSONObject = layoutDataJSONObject.getJSONObject(
+			"items");
+
+		JSONObject mainJSONObject = itemsJSONObject.getJSONObject(mainUUID);
+
+		JSONArray childrenJSONArray = mainJSONObject.getJSONArray("children");
+
+		for (int i = 0; i < childrenJSONArray.length(); i++) {
+			String childUUID = childrenJSONArray.getString(i);
+
+			pageElements.add(
+				_toPageElement(
+					itemsJSONObject, itemsJSONObject.getJSONObject(childUUID)));
+		}
+
+		return pageElements.toArray(new PageElement[0]);
+	}
+
 	@Reference
 	private LayoutLocalService _layoutLocalService;
 
@@ -79,5 +197,12 @@ public class PageDefinitionConverterUtil {
 	@Reference
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureLocalService
+		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }
