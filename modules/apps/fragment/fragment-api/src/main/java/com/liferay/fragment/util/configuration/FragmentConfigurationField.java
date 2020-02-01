@@ -60,7 +60,8 @@ public class FragmentConfigurationField {
 
 	public String getDefaultValue() {
 		if (Validator.isNotNull(_defaultValue) &&
-			!Objects.equals("itemSelector", _type)) {
+			(!Objects.equals("itemSelector", _type) ||
+			 !Objects.equals("itemCollectionSelector", _type))) {
 
 			return _defaultValue;
 		}
@@ -69,6 +70,9 @@ public class FragmentConfigurationField {
 		}
 		else if (Objects.equals("itemSelector", _type)) {
 			return _getItemSelectorDefaultValue();
+		}
+		else if (Objects.equals("itemCollectionSelector", _type)) {
+			return _getItemCollectionSelectorDefaultValue();
 		}
 
 		return StringPool.BLANK;
@@ -90,6 +94,54 @@ public class FragmentConfigurationField {
 		);
 
 		return defaultValueJSONObject.toString();
+	}
+
+	private String _getItemCollectionSelectorDefaultValue() {
+		if (Validator.isNull(_defaultValue)) {
+			return _defaultValue;
+		}
+
+		try {
+			JSONObject defaultValueJSONObject =
+				JSONFactoryUtil.createJSONObject(_defaultValue);
+
+			if (defaultValueJSONObject.has("className") &&
+				defaultValueJSONObject.has("classPK")) {
+
+				String className = defaultValueJSONObject.getString(
+					"className");
+
+				InfoDisplayContributorTracker infoDisplayContributorTracker =
+					_serviceTracker.getService();
+
+				InfoDisplayContributor infoDisplayContributor =
+					infoDisplayContributorTracker.getInfoDisplayContributor(
+						className);
+
+				if (infoDisplayContributor == null) {
+					return _defaultValue;
+				}
+
+				long classPK = defaultValueJSONObject.getLong("classPK");
+
+				InfoDisplayObjectProvider infoDisplayObjectProvider =
+					infoDisplayContributor.getInfoDisplayObjectProvider(
+						classPK);
+
+				defaultValueJSONObject.put(
+					"title",
+					infoDisplayObjectProvider.getTitle(
+						LocaleUtil.getMostRelevantLocale()));
+
+				return defaultValueJSONObject.toString();
+			}
+		}
+		catch (PortalException portalException) {
+			_log.error(
+				"Unable to parse default value JSON object", portalException);
+		}
+
+		return _defaultValue;
 	}
 
 	private String _getItemSelectorDefaultValue() {
