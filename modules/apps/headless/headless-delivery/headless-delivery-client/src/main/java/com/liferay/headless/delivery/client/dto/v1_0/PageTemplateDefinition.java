@@ -15,7 +15,7 @@
 package com.liferay.headless.delivery.client.dto.v1_0;
 
 import com.liferay.headless.delivery.client.function.UnsafeSupplier;
-import com.liferay.headless.delivery.client.serdes.v1_0.PageDefinitionSerDes;
+import com.liferay.headless.delivery.client.serdes.v1_0.PageTemplateDefinitionSerDes;
 
 import java.util.Date;
 import java.util.Objects;
@@ -27,7 +27,28 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class PageDefinition {
+public class PageTemplateDefinition {
+
+	public String getCollectionName() {
+		return collectionName;
+	}
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+
+	public void setCollectionName(
+		UnsafeSupplier<String, Exception> collectionNameUnsafeSupplier) {
+
+		try {
+			collectionName = collectionNameUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected String collectionName;
 
 	public Creator getCreator() {
 		return creator;
@@ -92,27 +113,6 @@ public class PageDefinition {
 
 	protected Date dateModified;
 
-	public String getFriendlyURLPath() {
-		return friendlyURLPath;
-	}
-
-	public void setFriendlyURLPath(String friendlyURLPath) {
-		this.friendlyURLPath = friendlyURLPath;
-	}
-
-	public void setFriendlyURLPath(
-		UnsafeSupplier<String, Exception> friendlyURLPathUnsafeSupplier) {
-
-		try {
-			friendlyURLPath = friendlyURLPathUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String friendlyURLPath;
-
 	public Long getId() {
 		return id;
 	}
@@ -131,27 +131,6 @@ public class PageDefinition {
 	}
 
 	protected Long id;
-
-	public String[] getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(String[] keywords) {
-		this.keywords = keywords;
-	}
-
-	public void setKeywords(
-		UnsafeSupplier<String[], Exception> keywordsUnsafeSupplier) {
-
-		try {
-			keywords = keywordsUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String[] keywords;
 
 	public String getName() {
 		return name;
@@ -172,88 +151,48 @@ public class PageDefinition {
 
 	protected String name;
 
-	public Settings getSettings() {
-		return settings;
+	public PageDefinition getPageDefinition() {
+		return pageDefinition;
 	}
 
-	public void setSettings(Settings settings) {
-		this.settings = settings;
+	public void setPageDefinition(PageDefinition pageDefinition) {
+		this.pageDefinition = pageDefinition;
 	}
 
-	public void setSettings(
-		UnsafeSupplier<Settings, Exception> settingsUnsafeSupplier) {
+	public void setPageDefinition(
+		UnsafeSupplier<PageDefinition, Exception>
+			pageDefinitionUnsafeSupplier) {
 
 		try {
-			settings = settingsUnsafeSupplier.get();
+			pageDefinition = pageDefinitionUnsafeSupplier.get();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected Settings settings;
+	protected PageDefinition pageDefinition;
 
-	public TaxonomyCategory[] getTaxonomyCategories() {
-		return taxonomyCategories;
+	public PageElement[] getPageElements() {
+		return pageElements;
 	}
 
-	public void setTaxonomyCategories(TaxonomyCategory[] taxonomyCategories) {
-		this.taxonomyCategories = taxonomyCategories;
+	public void setPageElements(PageElement[] pageElements) {
+		this.pageElements = pageElements;
 	}
 
-	public void setTaxonomyCategories(
-		UnsafeSupplier<TaxonomyCategory[], Exception>
-			taxonomyCategoriesUnsafeSupplier) {
+	public void setPageElements(
+		UnsafeSupplier<PageElement[], Exception> pageElementsUnsafeSupplier) {
 
 		try {
-			taxonomyCategories = taxonomyCategoriesUnsafeSupplier.get();
+			pageElements = pageElementsUnsafeSupplier.get();
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	protected TaxonomyCategory[] taxonomyCategories;
-
-	public Long[] getTaxonomyCategoryIds() {
-		return taxonomyCategoryIds;
-	}
-
-	public void setTaxonomyCategoryIds(Long[] taxonomyCategoryIds) {
-		this.taxonomyCategoryIds = taxonomyCategoryIds;
-	}
-
-	public void setTaxonomyCategoryIds(
-		UnsafeSupplier<Long[], Exception> taxonomyCategoryIdsUnsafeSupplier) {
-
-		try {
-			taxonomyCategoryIds = taxonomyCategoryIdsUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long[] taxonomyCategoryIds;
-
-	public String getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	public void setUuid(UnsafeSupplier<String, Exception> uuidUnsafeSupplier) {
-		try {
-			uuid = uuidUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected String uuid;
+	protected PageElement[] pageElements;
 
 	@Override
 	public boolean equals(Object object) {
@@ -261,13 +200,14 @@ public class PageDefinition {
 			return true;
 		}
 
-		if (!(object instanceof PageDefinition)) {
+		if (!(object instanceof PageTemplateDefinition)) {
 			return false;
 		}
 
-		PageDefinition pageDefinition = (PageDefinition)object;
+		PageTemplateDefinition pageTemplateDefinition =
+			(PageTemplateDefinition)object;
 
-		return Objects.equals(toString(), pageDefinition.toString());
+		return Objects.equals(toString(), pageTemplateDefinition.toString());
 	}
 
 	@Override
@@ -278,7 +218,7 @@ public class PageDefinition {
 	}
 
 	public String toString() {
-		return PageDefinitionSerDes.toJSON(this);
+		return PageTemplateDefinitionSerDes.toJSON(this);
 	}
 
 }

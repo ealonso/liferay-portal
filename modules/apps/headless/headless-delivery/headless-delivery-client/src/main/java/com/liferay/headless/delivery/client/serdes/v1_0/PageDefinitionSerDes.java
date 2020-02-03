@@ -15,7 +15,6 @@
 package com.liferay.headless.delivery.client.serdes.v1_0;
 
 import com.liferay.headless.delivery.client.dto.v1_0.PageDefinition;
-import com.liferay.headless.delivery.client.dto.v1_0.PageElement;
 import com.liferay.headless.delivery.client.dto.v1_0.TaxonomyCategory;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
@@ -63,20 +62,6 @@ public class PageDefinitionSerDes {
 
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-		if (pageDefinition.getCollectionName() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"collectionName\": ");
-
-			sb.append("\"");
-
-			sb.append(_escape(pageDefinition.getCollectionName()));
-
-			sb.append("\"");
-		}
 
 		if (pageDefinition.getCreator() != null) {
 			if (sb.length() > 1) {
@@ -182,26 +167,6 @@ public class PageDefinitionSerDes {
 			sb.append("\"");
 		}
 
-		if (pageDefinition.getPageElements() != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"pageElements\": ");
-
-			sb.append("[");
-
-			for (int i = 0; i < pageDefinition.getPageElements().length; i++) {
-				sb.append(String.valueOf(pageDefinition.getPageElements()[i]));
-
-				if ((i + 1) < pageDefinition.getPageElements().length) {
-					sb.append(", ");
-				}
-			}
-
-			sb.append("]");
-		}
-
 		if (pageDefinition.getSettings() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
@@ -293,15 +258,6 @@ public class PageDefinitionSerDes {
 		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (pageDefinition.getCollectionName() == null) {
-			map.put("collectionName", null);
-		}
-		else {
-			map.put(
-				"collectionName",
-				String.valueOf(pageDefinition.getCollectionName()));
-		}
-
 		if (pageDefinition.getCreator() == null) {
 			map.put("creator", null);
 		}
@@ -345,15 +301,6 @@ public class PageDefinitionSerDes {
 		}
 		else {
 			map.put("name", String.valueOf(pageDefinition.getName()));
-		}
-
-		if (pageDefinition.getPageElements() == null) {
-			map.put("pageElements", null);
-		}
-		else {
-			map.put(
-				"pageElements",
-				String.valueOf(pageDefinition.getPageElements()));
 		}
 
 		if (pageDefinition.getSettings() == null) {
@@ -409,13 +356,7 @@ public class PageDefinitionSerDes {
 			PageDefinition pageDefinition, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "collectionName")) {
-				if (jsonParserFieldValue != null) {
-					pageDefinition.setCollectionName(
-						(String)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					pageDefinition.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -454,18 +395,6 @@ public class PageDefinitionSerDes {
 			else if (Objects.equals(jsonParserFieldName, "name")) {
 				if (jsonParserFieldValue != null) {
 					pageDefinition.setName((String)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "pageElements")) {
-				if (jsonParserFieldValue != null) {
-					pageDefinition.setPageElements(
-						Stream.of(
-							toStrings((Object[])jsonParserFieldValue)
-						).map(
-							object -> PageElementSerDes.toDTO((String)object)
-						).toArray(
-							size -> new PageElement[size]
-						));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "settings")) {
