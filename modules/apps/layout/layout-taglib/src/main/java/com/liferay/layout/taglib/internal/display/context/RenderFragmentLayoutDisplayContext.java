@@ -100,16 +100,10 @@ public class RenderFragmentLayoutDisplayContext {
 				return StringPool.BLANK;
 			}
 
-			Object object = infoDisplayContributor.getInfoDisplayFieldValue(
+			return _getFieldValueURL(
 				infoDisplayObjectProvider.getDisplayObject(),
 				displayObjectMappedFieldLayoutStructureImage.getMappedField(),
-				LocaleUtil.getDefault());
-
-			if (object instanceof JSONObject) {
-				JSONObject fieldValueJSONObject = (JSONObject)object;
-
-				return fieldValueJSONObject.getString("url", StringPool.BLANK);
-			}
+				infoDisplayContributor);
 		}
 
 		if (backgroundLayoutStructureImage instanceof
@@ -148,15 +142,9 @@ public class RenderFragmentLayoutDisplayContext {
 				return StringPool.BLANK;
 			}
 
-			Object object = infoDisplayContributor.getInfoDisplayFieldValue(
+			return _getFieldValueURL(
 				infoDisplayObjectProvider.getDisplayObject(), fieldId,
-				LocaleUtil.getDefault());
-
-			if (object instanceof JSONObject) {
-				JSONObject fieldValueJSONObject = (JSONObject)object;
-
-				return fieldValueJSONObject.getString("url", StringPool.BLANK);
-			}
+				infoDisplayContributor);
 		}
 
 		if (backgroundLayoutStructureImage instanceof URLLayoutStructureImage) {
@@ -206,15 +194,9 @@ public class RenderFragmentLayoutDisplayContext {
 				return StringPool.BLANK;
 			}
 
-			Object object = infoDisplayContributor.getInfoDisplayFieldValue(
+			return _getFieldValueURL(
 				infoDisplayObjectProvider.getDisplayObject(), mappedField,
-				LocaleUtil.getDefault());
-
-			if (object instanceof JSONObject) {
-				JSONObject fieldValueJSONObject = (JSONObject)object;
-
-				return fieldValueJSONObject.getString("url", StringPool.BLANK);
-			}
+				infoDisplayContributor);
 		}
 
 		String fieldId = backgroundImageJSONObject.getString("fieldId");
@@ -242,15 +224,9 @@ public class RenderFragmentLayoutDisplayContext {
 				return StringPool.BLANK;
 			}
 
-			Object object = infoDisplayContributor.getInfoDisplayFieldValue(
+			return _getFieldValueURL(
 				infoDisplayObjectProvider.getDisplayObject(), fieldId,
-				LocaleUtil.getDefault());
-
-			if (object instanceof JSONObject) {
-				JSONObject fieldValueJSONObject = (JSONObject)object;
-
-				return fieldValueJSONObject.getString("url", StringPool.BLANK);
-			}
+				infoDisplayContributor);
 		}
 
 		String backgroundImageURL = backgroundImageJSONObject.getString("url");
@@ -301,6 +277,23 @@ public class RenderFragmentLayoutDisplayContext {
 		}
 
 		return unsyncStringWriter.toString();
+	}
+
+	private String _getFieldValueURL(
+			Object displayObject, String fieldId,
+			InfoDisplayContributor infoDisplayContributor)
+		throws PortalException {
+
+		Object object = infoDisplayContributor.getInfoDisplayFieldValue(
+			displayObject, fieldId, LocaleUtil.getDefault());
+
+		if (object instanceof JSONObject) {
+			JSONObject fieldValueJSONObject = (JSONObject)object;
+
+			return fieldValueJSONObject.getString("url", StringPool.BLANK);
+		}
+
+		return StringPool.BLANK;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
