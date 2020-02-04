@@ -15,6 +15,10 @@
 package com.liferay.layout.util.structure.item;
 
 import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.structure.image.DisplayObjectMappedFieldLayoutStructureImage;
+import com.liferay.layout.util.structure.image.LayoutStructureImage;
+import com.liferay.layout.util.structure.image.SelectedObjectMappedFieldLayoutStructureImage;
+import com.liferay.layout.util.structure.image.URLLayoutStructureImage;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 
@@ -31,12 +35,8 @@ public class ContainerLayoutStructureItem extends LayoutStructureItem {
 		return _backgroundColorCssClass;
 	}
 
-	public String getBackgroundImageTitle() {
-		return _backgroundImageTitle;
-	}
-
-	public String getBackgroundImageURL() {
-		return _backgroundImageURL;
+	public LayoutStructureImage getBackgroundLayoutStructureImage() {
+		return _backgroundLayoutStructureImage;
 	}
 
 	public String getContainerType() {
@@ -48,12 +48,7 @@ public class ContainerLayoutStructureItem extends LayoutStructureItem {
 		return JSONUtil.put(
 			"backgroundColorCssClass", _backgroundColorCssClass
 		).put(
-			"backgroundImage",
-			JSONUtil.put(
-				"title", _backgroundImageTitle
-			).put(
-				"url", _backgroundImageURL
-			)
+			"backgroundImage", _backgroundLayoutStructureImage.toJSONObject()
 		).put(
 			"containerType", _containerType
 		).put(
@@ -86,12 +81,10 @@ public class ContainerLayoutStructureItem extends LayoutStructureItem {
 		_backgroundColorCssClass = backgroundColorCssClass;
 	}
 
-	public void setBackgroundImageTitle(String backgroundImageTitle) {
-		_backgroundImageTitle = backgroundImageTitle;
-	}
+	public void setBackgroundLayoutStructureImage(
+		LayoutStructureImage backgroundLayoutStructureImage) {
 
-	public void setBackgroundImageURL(String backgroundImageURL) {
-		_backgroundImageURL = backgroundImageURL;
+		_backgroundLayoutStructureImage = backgroundLayoutStructureImage;
 	}
 
 	public void setContainerType(String containerType) {
@@ -121,9 +114,20 @@ public class ContainerLayoutStructureItem extends LayoutStructureItem {
 			JSONObject backgroundImageJSONObject =
 				itemConfigJSONObject.getJSONObject("backgroundImage");
 
-			setBackgroundImageTitle(
-				backgroundImageJSONObject.getString("title"));
-			setBackgroundImageURL(backgroundImageJSONObject.getString("url"));
+			if (backgroundImageJSONObject.has("fieldId")) {
+				_backgroundLayoutStructureImage =
+					new SelectedObjectMappedFieldLayoutStructureImage();
+			}
+			else if (backgroundImageJSONObject.has("mappedField")) {
+				_backgroundLayoutStructureImage =
+					new DisplayObjectMappedFieldLayoutStructureImage();
+			}
+			else if (backgroundImageJSONObject.has("url")) {
+				_backgroundLayoutStructureImage = new URLLayoutStructureImage();
+			}
+
+			_backgroundLayoutStructureImage.updateItemConfig(
+				itemConfigJSONObject);
 		}
 
 		if (itemConfigJSONObject.has("containerType")) {
@@ -145,8 +149,7 @@ public class ContainerLayoutStructureItem extends LayoutStructureItem {
 	}
 
 	private String _backgroundColorCssClass;
-	private String _backgroundImageTitle;
-	private String _backgroundImageURL;
+	private LayoutStructureImage _backgroundLayoutStructureImage;
 	private String _containerType = "fluid";
 	private int _paddingBottom = 3;
 	private int _paddingHorizontal = 3;
