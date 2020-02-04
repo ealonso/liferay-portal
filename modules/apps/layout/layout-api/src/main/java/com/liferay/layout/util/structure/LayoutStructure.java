@@ -184,8 +184,16 @@ public class LayoutStructure {
 			itemId, layoutStructureItem.getParentItemId(), position);
 	}
 
+	public LayoutStructureItem getLayoutStructureItem(String itemId) {
+		return _layoutStructureItems.get(itemId);
+	}
+
 	public List<LayoutStructureItem> getLayoutStructureItems() {
 		return ListUtil.fromCollection(_layoutStructureItems.values());
+	}
+
+	public String getMainItemId() {
+		return _mainItemId;
 	}
 
 	public LayoutStructureItem moveLayoutStructureItem(
