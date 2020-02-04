@@ -22,14 +22,11 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -112,50 +109,41 @@ public class PortletLayoutDisplayContext {
 		return StringPool.BLANK;
 	}
 
-	public JSONArray getStructureJSONArray() {
-		try {
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)_httpServletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
+	public LayoutStructure getLayoutStructure() {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)_httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
-			Layout layout = LayoutLocalServiceUtil.fetchLayout(
-				themeDisplay.getPlid());
+		Layout layout = LayoutLocalServiceUtil.fetchLayout(
+			themeDisplay.getPlid());
 
-			LayoutPageTemplateEntry masterLayoutPageTemplateEntry =
-				LayoutPageTemplateEntryLocalServiceUtil.
-					fetchLayoutPageTemplateEntryByPlid(
-						layout.getMasterLayoutPlid());
+		LayoutPageTemplateEntry masterLayoutPageTemplateEntry =
+			LayoutPageTemplateEntryLocalServiceUtil.
+				fetchLayoutPageTemplateEntryByPlid(
+					layout.getMasterLayoutPlid());
 
-			if (masterLayoutPageTemplateEntry == null) {
-				return _getDefaultStructureJSONArray();
-			}
-
-			LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
-				LayoutPageTemplateStructureLocalServiceUtil.
-					fetchLayoutPageTemplateStructure(
-						masterLayoutPageTemplateEntry.getGroupId(),
-						PortalUtil.getClassNameId(Layout.class),
-						masterLayoutPageTemplateEntry.getPlid());
-
-			String data = masterLayoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT);
-
-			if (Validator.isNull(data)) {
-				return _getDefaultStructureJSONArray();
-			}
-
-			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-			return dataJSONObject.getJSONArray("structure");
+		if (masterLayoutPageTemplateEntry == null) {
+			return _getDefaultLayoutStructure();
 		}
-		catch (Exception exception) {
-			_log.error("Unable to get structure JSON array", exception);
 
-			return null;
+		LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
+			LayoutPageTemplateStructureLocalServiceUtil.
+				fetchLayoutPageTemplateStructure(
+					masterLayoutPageTemplateEntry.getGroupId(),
+					PortalUtil.getClassNameId(Layout.class),
+					masterLayoutPageTemplateEntry.getPlid());
+
+		String data = masterLayoutPageTemplateStructure.getData(
+			SegmentsExperienceConstants.ID_DEFAULT);
+
+		if (Validator.isNull(data)) {
+			return _getDefaultLayoutStructure();
 		}
+
+		return LayoutStructure.of(data);
 	}
 
-	private JSONArray _getDefaultStructureJSONArray() {
+	private LayoutStructure _getDefaultLayoutStructure() {
 		return JSONUtil.putAll(
 			JSONUtil.put(
 				"columns",
@@ -166,9 +154,6 @@ public class PortletLayoutDisplayContext {
 						"size", 12
 					))));
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		PortletLayoutDisplayContext.class);
 
 	private final HttpServletRequest _httpServletRequest;
 	private final InfoDisplayContributorTracker _infoDisplayContributorTracker;
