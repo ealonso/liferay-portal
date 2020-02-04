@@ -24,6 +24,8 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.page.template.util.LayoutDataConverter;
 import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.image.LayoutStructureImage;
+import com.liferay.layout.util.structure.image.URLLayoutStructureImage;
 import com.liferay.layout.util.structure.item.ColumnLayoutStructureItem;
 import com.liferay.layout.util.structure.item.ContainerLayoutStructureItem;
 import com.liferay.layout.util.structure.item.DropZoneLayoutStructureItem;
@@ -51,6 +53,33 @@ public class PageDefinitionConverterUtil {
 				dateModified = layout.getModifiedDate();
 				name = layout.getName();
 				pageElements = _toPageElements(layout);
+			}
+		};
+	}
+
+	private static FragmentImage _getBackgroundImage(
+		ContainerLayoutStructureItem containerLayoutStructureItem) {
+
+		LayoutStructureImage layoutStructureImage =
+			containerLayoutStructureItem.getBackgroundLayoutStructureImage();
+
+		if (!(layoutStructureImage instanceof URLLayoutStructureImage)) {
+			return null;
+		}
+
+		URLLayoutStructureImage urlLayoutStructureImage =
+			(URLLayoutStructureImage)layoutStructureImage;
+
+		if (Validator.isNull(urlLayoutStructureImage.getTitle()) ||
+			Validator.isNull(urlLayoutStructureImage.getURL())) {
+
+			return null;
+		}
+
+		return new FragmentImage() {
+			{
+				title = urlLayoutStructureImage.getTitle();
+				url = urlLayoutStructureImage.getURL();
 			}
 		};
 	}
@@ -86,6 +115,8 @@ public class PageDefinitionConverterUtil {
 								containerLayoutStructureItem.
 									getBackgroundColorCssClass(),
 								null);
+							backgroundImage = _getBackgroundImage(
+								containerLayoutStructureItem);
 							paddingBottom =
 								containerLayoutStructureItem.getPaddingBottom();
 							paddingHorizontal =
@@ -93,31 +124,6 @@ public class PageDefinitionConverterUtil {
 									getPaddingHorizontal();
 							paddingTop =
 								containerLayoutStructureItem.getPaddingTop();
-
-							setBackgroundImage(
-								() -> {
-									String backgroundImageTitle =
-										containerLayoutStructureItem.
-											getBackgroundImageTitle();
-
-									String backgroundImageURL =
-										containerLayoutStructureItem.
-											getBackgroundImageURL();
-
-									if (Validator.isNull(
-											backgroundImageTitle) ||
-										Validator.isNull(backgroundImageURL)) {
-
-										return null;
-									}
-
-									return new FragmentImage() {
-										{
-											title = backgroundImageTitle;
-											url = backgroundImageURL;
-										}
-									};
-								});
 						}
 					};
 					type = PageElement.Type.SECTION;
