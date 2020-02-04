@@ -12,5 +12,6 @@ Export-Package:\
 	com.liferay.layout.util.comparator,\
 	com.liferay.layout.util.constants,\
 	com.liferay.layout.util.structure,\
+	com.liferay.layout.util.structure.image,\
 	com.liferay.layout.util.structure.item,\
 	com.liferay.layout.util.template
