@@ -15,6 +15,13 @@
 package com.liferay.layout.util.structure;
 
 import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.structure.item.ColumnLayoutStructureItem;
+import com.liferay.layout.util.structure.item.ContainerLayoutStructureItem;
+import com.liferay.layout.util.structure.item.DropZoneLayoutStructureItem;
+import com.liferay.layout.util.structure.item.FragmentLayoutStructureItem;
+import com.liferay.layout.util.structure.item.LayoutStructureItem;
+import com.liferay.layout.util.structure.item.RootLayoutStructureItem;
+import com.liferay.layout.util.structure.item.RowLayoutStructureItem;
 
 import java.util.Objects;
 

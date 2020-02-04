@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.layout.util.structure;
+package com.liferay.layout.util.structure.item;
 
+import com.liferay.layout.util.structure.LayoutStructureItemUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
@@ -81,6 +82,8 @@ public abstract class LayoutStructureItem {
 		return _childrenItemIds;
 	}
 
+	public abstract JSONObject getItemConfigJSONObject();
+
 	public String getItemId() {
 		return _itemId;
 	}
@@ -118,8 +121,6 @@ public abstract class LayoutStructureItem {
 	}
 
 	public abstract void updateItemConfig(JSONObject itemConfigJSONObject);
-
-	protected abstract JSONObject getItemConfigJSONObject();
 
 	private List<String> _childrenItemIds;
 	private String _itemId;

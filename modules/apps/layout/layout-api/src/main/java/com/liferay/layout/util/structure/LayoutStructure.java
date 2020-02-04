@@ -14,6 +14,13 @@
 
 package com.liferay.layout.util.structure;
 
+import com.liferay.layout.util.structure.item.ColumnLayoutStructureItem;
+import com.liferay.layout.util.structure.item.ContainerLayoutStructureItem;
+import com.liferay.layout.util.structure.item.DropZoneLayoutStructureItem;
+import com.liferay.layout.util.structure.item.FragmentLayoutStructureItem;
+import com.liferay.layout.util.structure.item.LayoutStructureItem;
+import com.liferay.layout.util.structure.item.RootLayoutStructureItem;
+import com.liferay.layout.util.structure.item.RowLayoutStructureItem;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;

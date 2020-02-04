@@ -12,32 +12,33 @@
  * details.
  */
 
-package com.liferay.layout.util.structure;
+package com.liferay.layout.util.structure.item;
 
 import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONObject;
 
 /**
  * @author Eudaldo Alonso
  */
-public class DropZoneLayoutStructureItem extends LayoutStructureItem {
+public class RootLayoutStructureItem extends LayoutStructureItem {
 
-	public DropZoneLayoutStructureItem(String parentItemId) {
-		super(parentItemId);
+	public RootLayoutStructureItem() {
+		super(StringPool.BLANK);
+	}
+
+	@Override
+	public JSONObject getItemConfigJSONObject() {
+		return null;
 	}
 
 	@Override
 	public String getItemType() {
-		return LayoutDataItemTypeConstants.TYPE_DROP_ZONE;
+		return LayoutDataItemTypeConstants.TYPE_ROOT;
 	}
 
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
-	}
-
-	@Override
-	protected JSONObject getItemConfigJSONObject() {
-		return null;
 	}
 
 }
