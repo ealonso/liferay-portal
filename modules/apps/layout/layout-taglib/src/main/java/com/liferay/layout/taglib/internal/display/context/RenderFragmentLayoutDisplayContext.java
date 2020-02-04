@@ -76,11 +76,6 @@ public class RenderFragmentLayoutDisplayContext {
 		if (backgroundLayoutStructureImage instanceof
 				DisplayObjectMappedFieldLayoutStructureImage) {
 
-			DisplayObjectMappedFieldLayoutStructureImage
-				displayObjectMappedFieldLayoutStructureImage =
-					(DisplayObjectMappedFieldLayoutStructureImage)
-						backgroundLayoutStructureImage;
-
 			InfoDisplayObjectProvider infoDisplayObjectProvider =
 				(InfoDisplayObjectProvider)_httpServletRequest.getAttribute(
 					AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
@@ -99,6 +94,11 @@ public class RenderFragmentLayoutDisplayContext {
 			if (infoDisplayContributor == null) {
 				return StringPool.BLANK;
 			}
+
+			DisplayObjectMappedFieldLayoutStructureImage
+				displayObjectMappedFieldLayoutStructureImage =
+					(DisplayObjectMappedFieldLayoutStructureImage)
+						backgroundLayoutStructureImage;
 
 			return _getFieldValueURL(
 				infoDisplayObjectProvider.getDisplayObject(),
