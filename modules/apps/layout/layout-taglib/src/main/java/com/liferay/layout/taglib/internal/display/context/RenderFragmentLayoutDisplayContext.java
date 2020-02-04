@@ -19,6 +19,11 @@ import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.layout.util.structure.image.DisplayObjectMappedFieldLayoutStructureImage;
+import com.liferay.layout.util.structure.image.LayoutStructureImage;
+import com.liferay.layout.util.structure.image.SelectedObjectMappedFieldLayoutStructureImage;
+import com.liferay.layout.util.structure.image.URLLayoutStructureImage;
+import com.liferay.layout.util.structure.item.ContainerLayoutStructureItem;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
@@ -59,6 +64,110 @@ public class RenderFragmentLayoutDisplayContext {
 		_infoDisplayContributorTracker =
 			(InfoDisplayContributorTracker)httpServletRequest.getAttribute(
 				InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR_TRACKER);
+	}
+
+	public String getBackgroundImage(
+			ContainerLayoutStructureItem containerLayoutStructureItem)
+		throws PortalException {
+
+		LayoutStructureImage backgroundLayoutStructureImage =
+			containerLayoutStructureItem.getBackgroundLayoutStructureImage();
+
+		if (backgroundLayoutStructureImage instanceof
+				DisplayObjectMappedFieldLayoutStructureImage) {
+
+			DisplayObjectMappedFieldLayoutStructureImage
+				displayObjectMappedFieldLayoutStructureImage =
+					(DisplayObjectMappedFieldLayoutStructureImage)
+						backgroundLayoutStructureImage;
+
+			InfoDisplayObjectProvider infoDisplayObjectProvider =
+				(InfoDisplayObjectProvider)_httpServletRequest.getAttribute(
+					AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
+
+			if ((_infoDisplayContributorTracker != null) &&
+				(infoDisplayObjectProvider != null)) {
+
+				InfoDisplayContributor infoDisplayContributor =
+					_infoDisplayContributorTracker.getInfoDisplayContributor(
+						PortalUtil.getClassName(
+							infoDisplayObjectProvider.getClassNameId()));
+
+				if (infoDisplayContributor != null) {
+					Object object =
+						infoDisplayContributor.getInfoDisplayFieldValue(
+							infoDisplayObjectProvider.getDisplayObject(),
+							displayObjectMappedFieldLayoutStructureImage.
+								getMappedField(),
+							LocaleUtil.getDefault());
+
+					if (object instanceof JSONObject) {
+						JSONObject fieldValueJSONObject = (JSONObject)object;
+
+						return fieldValueJSONObject.getString(
+							"url", StringPool.BLANK);
+					}
+				}
+			}
+		}
+
+		if (backgroundLayoutStructureImage instanceof
+				SelectedObjectMappedFieldLayoutStructureImage) {
+
+			SelectedObjectMappedFieldLayoutStructureImage
+				selectedObjectMappedFieldLayoutStructureImage =
+					(SelectedObjectMappedFieldLayoutStructureImage)
+						backgroundLayoutStructureImage;
+
+			String fieldId =
+				selectedObjectMappedFieldLayoutStructureImage.getFieldId();
+
+			if (Validator.isNotNull(fieldId)) {
+				long classNameId =
+					selectedObjectMappedFieldLayoutStructureImage.
+						getClassNameId();
+				long classPK =
+					selectedObjectMappedFieldLayoutStructureImage.getClassPK();
+
+				if ((classNameId != 0L) && (classPK != 0L)) {
+					InfoDisplayContributor infoDisplayContributor =
+						_infoDisplayContributorTracker.
+							getInfoDisplayContributor(
+								PortalUtil.getClassName(classNameId));
+
+					if (infoDisplayContributor != null) {
+						InfoDisplayObjectProvider infoDisplayObjectProvider =
+							infoDisplayContributor.getInfoDisplayObjectProvider(
+								classPK);
+
+						if (infoDisplayObjectProvider != null) {
+							Object object =
+								infoDisplayContributor.getInfoDisplayFieldValue(
+									infoDisplayObjectProvider.
+										getDisplayObject(),
+									fieldId, LocaleUtil.getDefault());
+
+							if (object instanceof JSONObject) {
+								JSONObject fieldValueJSONObject =
+									(JSONObject)object;
+
+								return fieldValueJSONObject.getString(
+									"url", StringPool.BLANK);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (backgroundLayoutStructureImage instanceof URLLayoutStructureImage) {
+			URLLayoutStructureImage urlLayoutStructureImage =
+				(URLLayoutStructureImage)backgroundLayoutStructureImage;
+
+			return urlLayoutStructureImage.getURL();
+		}
+
+		return StringPool.BLANK;
 	}
 
 	public String getBackgroundImage(JSONObject rowConfigJSONObject)
