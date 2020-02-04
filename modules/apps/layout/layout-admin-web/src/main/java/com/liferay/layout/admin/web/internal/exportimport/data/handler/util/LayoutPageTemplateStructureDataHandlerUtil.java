@@ -21,8 +21,9 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLocalService;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.item.FragmentLayoutStructureItem;
+import com.liferay.layout.util.structure.item.LayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -34,7 +35,6 @@ import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -102,10 +102,8 @@ public class LayoutPageTemplateStructureDataHandlerUtil {
 	}
 
 	private void _importLayoutPageTemplateStructureRel(
-			PortletDataContext portletDataContext,
-			LayoutPageTemplateStructureRel
-				existingLayoutPageTemplateStructureRel)
-		throws Exception {
+		PortletDataContext portletDataContext,
+		LayoutPageTemplateStructureRel existingLayoutPageTemplateStructureRel) {
 
 		String data = existingLayoutPageTemplateStructureRel.getData();
 
@@ -113,61 +111,36 @@ public class LayoutPageTemplateStructureDataHandlerUtil {
 			return;
 		}
 
-		JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
-
-		JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
-
-		if (structureJSONArray == null) {
-			return;
-		}
+		LayoutStructure layoutStructure = LayoutStructure.of(data);
 
 		Map<Long, Long> fragmentEntryLinkIds =
 			(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
 				FragmentEntryLink.class);
 
-		for (int i = 0; i < structureJSONArray.length(); i++) {
-			JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
 
-			JSONArray columnsJSONArray = rowJSONObject.getJSONArray("columns");
-
-			for (int j = 0; j < columnsJSONArray.length(); j++) {
-				JSONObject columnJSONObject = columnsJSONArray.getJSONObject(j);
-
-				JSONArray fragmentEntryLinkIdsJSONArray =
-					columnJSONObject.getJSONArray("fragmentEntryLinkIds");
-
-				JSONArray newFragmentEntryLinkIdsJSONArray =
-					JSONFactoryUtil.createJSONArray();
-
-				for (int k = 0; k < fragmentEntryLinkIdsJSONArray.length();
-					 k++) {
-
-					if (Objects.equals(
-							fragmentEntryLinkIdsJSONArray.getString(k),
-							"drop-zone")) {
-
-						newFragmentEntryLinkIdsJSONArray.put(
-							fragmentEntryLinkIdsJSONArray.getString(k));
-
-						continue;
-					}
-
-					long fragmentEntryLinkId = MapUtil.getLong(
-						fragmentEntryLinkIds,
-						fragmentEntryLinkIdsJSONArray.getLong(k),
-						fragmentEntryLinkIdsJSONArray.getLong(k));
-
-					if (fragmentEntryLinkId <= 0) {
-						continue;
-					}
-
-					newFragmentEntryLinkIdsJSONArray.put(fragmentEntryLinkId);
-				}
-
-				columnJSONObject.put(
-					"fragmentEntryLinkIds", newFragmentEntryLinkIdsJSONArray);
+			if (!(layoutStructureItem instanceof FragmentLayoutStructureItem)) {
+				continue;
 			}
+
+			FragmentLayoutStructureItem fragmentLayoutStructureItem =
+				(FragmentLayoutStructureItem)layoutStructureItem;
+
+			long fragmentEntryLinkId = MapUtil.getLong(
+				fragmentEntryLinkIds,
+				fragmentLayoutStructureItem.getFragmentEntryLinkId(),
+				fragmentLayoutStructureItem.getFragmentEntryLinkId());
+
+			if (fragmentEntryLinkId <= 0) {
+				continue;
+			}
+
+			fragmentLayoutStructureItem.setFragmentEntryLinkId(
+				fragmentEntryLinkId);
 		}
+
+		JSONObject dataJSONObject = layoutStructure.toJSONObject();
 
 		existingLayoutPageTemplateStructureRel.setData(
 			dataJSONObject.toString());
