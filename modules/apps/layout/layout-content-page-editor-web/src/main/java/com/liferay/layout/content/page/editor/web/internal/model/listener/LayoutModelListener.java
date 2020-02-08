@@ -111,20 +111,11 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		Layout pageTemplateLayout = _layoutLocalService.getLayout(
 			layoutPageTemplateEntry.getPlid());
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					pageTemplateLayout.getGroupId(),
-					_portal.getClassNameId(Layout.class),
-					pageTemplateLayout.getPlid());
-
-		if (layoutPageTemplateStructure == null) {
-			_layoutPageTemplateStructureLocalService.
-				rebuildLayoutPageTemplateStructure(
-					pageTemplateLayout.getGroupId(),
-					_portal.getClassNameId(Layout.class),
-					pageTemplateLayout.getPlid());
-		}
+		_layoutPageTemplateStructureLocalService.
+			fetchLayoutPageTemplateStructure(
+				pageTemplateLayout.getGroupId(),
+				_portal.getClassNameId(Layout.class),
+				pageTemplateLayout.getPlid(), true);
 
 		draftLayout = _layoutCopyHelper.copyLayout(
 			pageTemplateLayout, draftLayout);
