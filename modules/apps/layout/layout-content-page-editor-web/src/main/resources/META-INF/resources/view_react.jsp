@@ -28,7 +28,7 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 	<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathModule() + "/layout-content-page-editor-web/page_editor/app/components/App.css") %>" rel="stylesheet" />
 </liferay-util:html-top>
 
-<div class="management-bar navbar navbar-expand-md page-editor-toolbar <%= contentPageEditorDisplayContext.isMasterLayout() ? "page-editor-toolbar--master-layout" : StringPool.BLANK %>" id="<%= contentPageEditorDisplayContext.getPortletNamespace() %>pageEditorToolbar">
+<div class="management-bar navbar navbar-expand-md page-editor-toolbar <%= contentPageEditorDisplayContext.isMasterLayout() ? "page-editor-toolbar--master-layout" : StringPool.BLANK %>" id="<portlet:namespace />pageEditorToolbar">
 	<div class="container-fluid container-fluid-max-xl">
 		<ul class="navbar-nav">
 		</ul>

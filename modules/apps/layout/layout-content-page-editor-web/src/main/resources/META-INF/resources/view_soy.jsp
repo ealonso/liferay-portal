@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String portletNamespace = PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
-
 ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEditorDisplayContext)request.getAttribute(ContentPageEditorWebKeys.LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT);
 %>
 
@@ -31,14 +29,14 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 </liferay-util:html-top>
 
 <soy:component-renderer
-	componentId='<%= portletNamespace + "toolbar" %>'
+	componentId='<%= renderResponse.getNamespace() + "toolbar" %>'
 	context="<%= contentPageEditorDisplayContext.getFragmentsEditorToolbarSoyContext() %>"
 	module="js/components/toolbar/FragmentsEditorToolbar.es"
 	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditorToolbar.render"
 />
 
 <soy:component-renderer
-	componentId='<%= portletNamespace + "fragmentsEditor" %>'
+	componentId='<%= renderResponse.getNamespace() + "fragmentsEditor" %>'
 	context="<%= contentPageEditorDisplayContext.getEditorSoyContext() %>"
 	module="js/FragmentsEditor.es"
 	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditor.render"
@@ -64,18 +62,18 @@ JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 		<%= jsonSerializer.serializeDeep(contentPageEditorDisplayContext.getEditorSoyContext()) %>,
 		ReducersModule.reducer,
 		[
-			'<%= portletNamespace + "disabledAreaMaskWrapper" %>',
-			'<%= portletNamespace + "editModeWrapper" %>',
-			'<%= portletNamespace + "fragmentsEditor" %>',
-			'<%= portletNamespace + "sidebar" %>',
-			'<%= portletNamespace + "toolbar" %>'
+			'<portlet:namespace />disabledAreaMaskWrapper',
+			'<portlet:namespace />editModeWrapper',
+			'<portlet:namespace />fragmentsEditor',
+			'<portlet:namespace />sidebar',
+			'<portlet:namespace />toolbar'
 		]
 	);
 
 	var editModeComponents = {
-		<%= portletNamespace + "disabledAreaMaskWrapper" %>:
+		<portlet:namespace />disabledAreaMaskWrapper:
 			DisabledAreaMaskModule.default,
-		<%= portletNamespace + "editModeWrapper" %>: EditModeWrapperModule.default
+		<portlet:namespace />editModeWrapper: EditModeWrapperModule.default
 	};
 
 	Object.keys(editModeComponents).forEach(function(key) {
