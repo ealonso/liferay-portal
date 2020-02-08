@@ -28,6 +28,48 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 	<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathModule() + "/layout-content-page-editor-web/page_editor/app/components/App.css") %>" rel="stylesheet" />
 </liferay-util:html-top>
 
+<div class="management-bar navbar navbar-expand-md page-editor-toolbar <%= contentPageEditorDisplayContext.isMasterLayout() ? "page-editor-toolbar--master-layout" : StringPool.BLANK %>" id="<%= contentPageEditorDisplayContext.getPortletNamespace() %>pageEditorToolbar">
+	<div class="container-fluid container-fluid-max-xl">
+		<ul class="navbar-nav">
+		</ul>
+
+		<ul class="navbar-nav">
+			<c:if test="<%= Validator.isNotNull(contentPageEditorDisplayContext.getDiscardDraftURL()) %>">
+				<li class="nav-item">
+					<button class="btn btn-secondary nav-btn" disabled type="submit">
+						<c:choose>
+							<c:when test="<%= contentPageEditorDisplayContext.isSingleSegmentsExperienceMode() %>">
+								<liferay-ui:message key="discard-variant" />
+							</c:when>
+							<c:otherwise>
+								<liferay-ui:message key="discard-draft" />
+							</c:otherwise>
+						</c:choose>
+					</button>
+				</li>
+			</c:if>
+
+			<c:if test="<%= Validator.isNotNull(contentPageEditorDisplayContext.getPublishURL()) %>">
+				<li class="nav-item">
+					<button class="btn btn-primary nav-btn" disabled type="submit">
+						<c:choose>
+							<c:when test="<%= contentPageEditorDisplayContext.isMasterLayout() %>">
+								<liferay-ui:message key="publish-master" />
+							</c:when>
+							<c:when test="<%= contentPageEditorDisplayContext.isSingleSegmentsExperienceMode() %>">
+								<liferay-ui:message key="save-variant" />
+							</c:when>
+							<c:otherwise>
+								<liferay-ui:message key="publish" />
+							</c:otherwise>
+						</c:choose>
+					</button>
+				</li>
+			</c:if>
+		</ul>
+	</div>
+</div>
+
 <div id="<portlet:namespace />pageEditor">
 	<div class="inline-item my-5 p-5 w-100">
 		<span aria-hidden="true" class="loading-animation"></span>

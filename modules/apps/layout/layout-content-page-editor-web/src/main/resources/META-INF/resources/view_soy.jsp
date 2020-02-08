@@ -31,6 +31,13 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 </liferay-util:html-top>
 
 <soy:component-renderer
+	componentId='<%= portletNamespace + "toolbar" %>'
+	context="<%= contentPageEditorDisplayContext.getFragmentsEditorToolbarSoyContext() %>"
+	module="js/components/toolbar/FragmentsEditorToolbar.es"
+	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditorToolbar.render"
+/>
+
+<soy:component-renderer
 	componentId='<%= portletNamespace + "fragmentsEditor" %>'
 	context="<%= contentPageEditorDisplayContext.getEditorSoyContext() %>"
 	module="js/FragmentsEditor.es"
