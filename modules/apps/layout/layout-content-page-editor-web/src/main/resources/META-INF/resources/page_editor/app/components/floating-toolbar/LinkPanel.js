@@ -22,7 +22,7 @@ import React, {
 	useRef
 } from 'react';
 
-import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../../../js/utils/constants';
+import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../config/constants/editableFragmentEntryProcessor';
 import {EDITABLE_TYPES} from '../../config/constants/editableTypes';
 import {ConfigContext} from '../../config/index';
 import InfoItemService from '../../services/InfoItemService';
