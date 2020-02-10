@@ -35,7 +35,7 @@ export default function addFragment({
 			parentItemId,
 			position,
 			segmentsExperienceId
-		}).then(({fragmentEntryLink, layoutData}) => {
+		}).then(({addedItemId, fragmentEntryLink, layoutData}) => {
 			fragmentEntryLink.content = {
 				value: {
 					content: fragmentEntryLink.content
@@ -49,14 +49,8 @@ export default function addFragment({
 				})
 			);
 
-			const item = Object.values(layoutData.items).find(
-				layoutDataItem =>
-					layoutDataItem.config.fragmentEntryLinkId ===
-					parseInt(fragmentEntryLink.fragmentEntryLinkId, 10)
-			);
-
-			if (item) {
-				selectItem(item.itemId);
+			if (addedItemId) {
+				selectItem(addedItemId);
 			}
 		});
 	};
