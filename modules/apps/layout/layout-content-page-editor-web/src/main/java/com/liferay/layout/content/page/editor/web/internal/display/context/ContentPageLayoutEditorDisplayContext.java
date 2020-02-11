@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -149,6 +150,15 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean isWorkflowEnabled() throws PortalException {
+		Layout publishedLayout = getPublishedLayout();
+
+		return WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+			publishedLayout.getCompanyId(), publishedLayout.getGroupId(),
+			Layout.class.getName());
 	}
 
 	@Override

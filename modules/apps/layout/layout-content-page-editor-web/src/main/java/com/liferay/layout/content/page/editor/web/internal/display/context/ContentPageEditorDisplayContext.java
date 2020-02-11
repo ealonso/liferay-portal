@@ -87,7 +87,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
-import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.servlet.MultiSessionMessages;
@@ -185,7 +184,7 @@ public abstract class ContentPageEditorDisplayContext {
 	}
 
 	public String getDiscardDraftURL() throws PortalException {
-		Layout layout = _getPublishedLayout();
+		Layout layout = getPublishedLayout();
 
 		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
 			return getFragmentEntryActionURL(
@@ -587,11 +586,7 @@ public abstract class ContentPageEditorDisplayContext {
 		return false;
 	}
 
-	public boolean isWorkflowEnabled() {
-		return WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
-			_publishedLayout.getCompanyId(), _publishedLayout.getGroupId(),
-			Layout.class.getName());
-	}
+	public abstract boolean isWorkflowEnabled() throws PortalException;
 
 	protected String getFragmentEntryActionURL(String action) {
 		return getFragmentEntryActionURL(action, null);
@@ -619,6 +614,19 @@ public abstract class ContentPageEditorDisplayContext {
 			httpServletRequest, "groupId", themeDisplay.getScopeGroupId());
 
 		return _groupId;
+	}
+
+	protected Layout getPublishedLayout() throws PortalException {
+		if (_publishedLayout != null) {
+			return _publishedLayout;
+		}
+
+		Layout draftLayout = themeDisplay.getLayout();
+
+		_publishedLayout = LayoutLocalServiceUtil.getLayout(
+			draftLayout.getClassPK());
+
+		return _publishedLayout;
 	}
 
 	protected long getSegmentsExperienceId() {
@@ -1495,7 +1503,7 @@ public abstract class ContentPageEditorDisplayContext {
 			return _pageType;
 		}
 
-		Layout publishedLayout = _getPublishedLayout();
+		Layout publishedLayout = getPublishedLayout();
 
 		if (Objects.equals(
 				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
@@ -1644,19 +1652,6 @@ public abstract class ContentPageEditorDisplayContext {
 		).collect(
 			Collectors.toList()
 		);
-	}
-
-	private Layout _getPublishedLayout() throws PortalException {
-		if (_publishedLayout != null) {
-			return _publishedLayout;
-		}
-
-		Layout draftLayout = themeDisplay.getLayout();
-
-		_publishedLayout = LayoutLocalServiceUtil.getLayout(
-			draftLayout.getClassPK());
-
-		return _publishedLayout;
 	}
 
 	private String _getRedirect() {
@@ -1863,7 +1858,7 @@ public abstract class ContentPageEditorDisplayContext {
 			return false;
 		}
 
-		Layout layout = _getPublishedLayout();
+		Layout layout = getPublishedLayout();
 
 		int masterUsagesCount = LayoutLocalServiceUtil.getLayoutsCount(
 			themeDisplay.getScopeGroupId(), layout.getPlid());

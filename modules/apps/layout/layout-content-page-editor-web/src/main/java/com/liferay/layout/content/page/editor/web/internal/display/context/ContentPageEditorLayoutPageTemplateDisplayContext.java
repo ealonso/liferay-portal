@@ -83,9 +83,14 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 			soyContext.put("selectedMappingTypes", _getSelectedMappingTypes());
 		}
 
-		_editorSoyContext = soyContext.put("workflowEnabled", false);
+		_editorSoyContext = soyContext;
 
 		return _editorSoyContext;
+	}
+
+	@Override
+	public boolean isWorkflowEnabled() {
+		return false;
 	}
 
 	@Override
