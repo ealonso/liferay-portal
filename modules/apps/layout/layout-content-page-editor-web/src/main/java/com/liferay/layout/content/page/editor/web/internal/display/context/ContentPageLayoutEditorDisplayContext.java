@@ -61,7 +61,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 
@@ -78,68 +77,13 @@ public class ContentPageLayoutEditorDisplayContext
 		CommentManager commentManager,
 		List<ContentPageEditorSidebarPanel> contentPageEditorSidebarPanels,
 		FragmentRendererController fragmentRendererController,
-		PortletRequest portletRequest, StagingGroupHelper stagingGroupHelper) {
+		StagingGroupHelper stagingGroupHelper) {
 
 		super(
 			httpServletRequest, renderResponse, commentManager,
-			contentPageEditorSidebarPanels, fragmentRendererController,
-			portletRequest);
+			contentPageEditorSidebarPanels, fragmentRendererController);
 
 		_stagingGroupHelper = stagingGroupHelper;
-	}
-
-	@Override
-	public SoyContext getEditorSoyContext() throws Exception {
-		if (_editorSoyContext != null) {
-			return _editorSoyContext;
-		}
-
-		if (!_isShowSegmentsExperiences()) {
-			_editorSoyContext = super.getEditorSoyContext();
-
-			return _editorSoyContext;
-		}
-
-		SoyContext soyContext = super.getEditorSoyContext();
-
-		_editorSoyContext = soyContext.put(
-			"addSegmentsExperienceURL",
-			getFragmentEntryActionURL("/content_layout/add_segments_experience")
-		).put(
-			"availableSegmentsEntries", _getAvailableSegmentsEntriesSoyContext()
-		).put(
-			"availableSegmentsExperiences",
-			_getAvailableSegmentsExperiencesSoyContext()
-		).put(
-			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
-		).put(
-			"defaultSegmentsExperienceId",
-			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
-			"deleteSegmentsExperienceURL",
-			getFragmentEntryActionURL(
-				"/content_layout/delete_segments_experience")
-		).put(
-			"editSegmentsEntryURL", _getEditSegmentsEntryURL()
-		).put(
-			"hasEditSegmentsEntryPermission", _hasEditSegmentsEntryPermission()
-		).put(
-			"layoutDataList", _getLayoutDataListSoyContext()
-		).put(
-			"lockedSegmentsExperience",
-			_isLockedSegmentsExperience(getSegmentsExperienceId())
-		).put(
-			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId())
-		).put(
-			"segmentsExperimentStatus",
-			_getSegmentsExperimentStatusSoyContext(getSegmentsExperienceId())
-		).put(
-			"selectedSegmentsEntryId", String.valueOf(_getSegmentsEntryId())
-		).put(
-			"singleSegmentsExperienceMode", isSingleSegmentsExperienceMode()
-		);
-
-		return _editorSoyContext;
 	}
 
 	@Override
@@ -171,53 +115,49 @@ public class ContentPageLayoutEditorDisplayContext
 
 	@Override
 	protected Map<String, Object> getPermissionsState() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
+		if (!_isShowSegmentsExperiences()) {
+			return Collections.emptyMap();
+		}
 
 		return HashMapBuilder.<String, Object>put(
 			ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
-			editorSoyContext.get("hasLockedSegmentsExperiment")
+			_isLockedSegmentsExperience(getSegmentsExperienceId())
 		).put(
-			ContentPageEditorActionKeys.UPDATE,
-			editorSoyContext.get("hasUpdatePermissions")
+			ContentPageEditorActionKeys.UPDATE, hasUpdatePermissions()
 		).put(
 			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
-			editorSoyContext.get("hasUpdateContentPermissions")
+			hasUpdateContentPermissions()
 		).build();
 	}
 
 	@Override
 	protected Map<String, Object> getSegmentsConfig() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
+		if (!_isShowSegmentsExperiences()) {
+			return super.getSegmentsConfig();
+		}
 
 		return HashMapBuilder.<String, Object>put(
 			"addSegmentsExperienceURL",
-			editorSoyContext.get("addSegmentsExperienceURL")
+			getFragmentEntryActionURL("/content_layout/add_segments_experience")
 		).put(
-			"availableSegmentsEntries",
-			editorSoyContext.get("availableSegmentsEntries")
+			"availableSegmentsEntries", _getAvailableSegmentsEntriesSoyContext()
 		).put(
-			"defaultSegmentsEntryId",
-			editorSoyContext.get("defaultSegmentsEntryId")
+			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
 		).put(
 			"defaultSegmentsExperienceId",
-			editorSoyContext.get("defaultSegmentsExperienceId")
+			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
 		).put(
 			"deleteSegmentsExperienceURL",
 			getFragmentEntryActionURL(
 				"/content_layout/delete_segments_experience")
 		).put(
-			"editSegmentsEntryURL", editorSoyContext.get("editSegmentsEntryURL")
+			"editSegmentsEntryURL", _getEditSegmentsEntryURL()
 		).put(
-			"getExperienceUsedPortletsURL",
-			editorSoyContext.get("getExperienceUsedPortletsURL")
+			"hasEditSegmentsEntryPermission", _hasEditSegmentsEntryPermission()
 		).put(
-			"hasEditSegmentsEntryPermission",
-			editorSoyContext.get("hasEditSegmentsEntryPermission")
+			"layoutDataList", _getLayoutDataListSoyContext()
 		).put(
-			"layoutDataList", editorSoyContext.get("layoutDataList")
-		).put(
-			"singleSegmentsExperienceMode",
-			editorSoyContext.get("singleSegmentsExperienceMode")
+			"singleSegmentsExperienceMode", isSingleSegmentsExperienceMode()
 		).put(
 			"updateSegmentsExperiencePriorityURL",
 			getFragmentEntryActionURL(
@@ -260,16 +200,18 @@ public class ContentPageLayoutEditorDisplayContext
 
 	@Override
 	protected Map<String, Object> getSegmentsState() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
+		if (!_isShowSegmentsExperiences()) {
+			return super.getSegmentsState();
+		}
 
 		return HashMapBuilder.<String, Object>put(
 			"availableSegmentsExperiences",
-			editorSoyContext.get("availableSegmentsExperiences")
+			_getAvailableSegmentsExperiencesSoyContext()
 		).put(
-			"segmentsExperienceId", editorSoyContext.get("segmentsExperienceId")
+			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId())
 		).put(
 			"segmentsExperimentStatus",
-			editorSoyContext.get("segmentsExperimentStatus")
+			_getSegmentsExperimentStatusSoyContext(getSegmentsExperienceId())
 		).build();
 	}
 
@@ -468,18 +410,6 @@ public class ContentPageLayoutEditorDisplayContext
 		return soyContexts;
 	}
 
-	private long _getSegmentsEntryId() {
-		if (_segmentsEntryId != null) {
-			return _segmentsEntryId;
-		}
-
-		_segmentsEntryId = ParamUtil.getLong(
-			PortalUtil.getOriginalServletRequest(httpServletRequest),
-			"segmentsEntryId");
-
-		return _segmentsEntryId;
-	}
-
 	private Optional<SegmentsExperiment> _getSegmentsExperimentOptional(
 			long segmentsExperienceId)
 		throws PortalException {
@@ -624,10 +554,8 @@ public class ContentPageLayoutEditorDisplayContext
 		return _showSegmentsExperiences;
 	}
 
-	private SoyContext _editorSoyContext;
 	private String _editSegmentsEntryURL;
 	private Boolean _lockedSegmentsExperience;
-	private Long _segmentsEntryId;
 	private Long _segmentsExperienceId;
 	private Boolean _showSegmentsExperiences;
 	private final StagingGroupHelper _stagingGroupHelper;

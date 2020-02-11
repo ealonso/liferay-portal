@@ -36,7 +36,6 @@ import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import java.util.List;
 import java.util.Map;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,37 +50,13 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
 		boolean pageIsDisplayPage, CommentManager commentManager,
 		List<ContentPageEditorSidebarPanel> contentPageEditorSidebarPanels,
-		FragmentRendererController fragmentRendererController,
-		PortletRequest portletRequest) {
+		FragmentRendererController fragmentRendererController) {
 
 		super(
 			httpServletRequest, renderResponse, commentManager,
-			contentPageEditorSidebarPanels, fragmentRendererController,
-			portletRequest);
+			contentPageEditorSidebarPanels, fragmentRendererController);
 
 		_pageIsDisplayPage = pageIsDisplayPage;
-	}
-
-	@Override
-	public SoyContext getEditorSoyContext() throws Exception {
-		if (_editorSoyContext != null) {
-			return _editorSoyContext;
-		}
-
-		SoyContext soyContext = super.getEditorSoyContext();
-
-		if (_pageIsDisplayPage) {
-			soyContext.put(
-				"mappingFieldsURL",
-				getFragmentEntryActionURL("/content_layout/get_mapping_fields")
-			).put(
-				"selectedMappingTypes", _getSelectedMappingTypes()
-			);
-		}
-
-		_editorSoyContext = soyContext;
-
-		return _editorSoyContext;
 	}
 
 	@Override
@@ -97,25 +72,25 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 
 	@Override
 	protected Map<String, Object> getMappingConfig() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
+		if (_pageIsDisplayPage) {
+			return HashMapBuilder.<String, Object>put(
+				"mappingFieldsURL",
+				getFragmentEntryActionURL("/content_layout/get_mapping_fields")
+			).put(
+				"selectedMappingTypes", _getSelectedMappingTypes()
+			).build();
+		}
 
-		return HashMapBuilder.<String, Object>put(
-			"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
-		).put(
-			"selectedMappingTypes", editorSoyContext.get("selectedMappingTypes")
-		).build();
+		return super.getMappingConfig();
 	}
 
 	@Override
 	protected Map<String, Object> getPermissionsState() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
-
 		return HashMapBuilder.<String, Object>put(
-			ContentPageEditorActionKeys.UPDATE,
-			editorSoyContext.get("hasUpdatePermissions")
+			ContentPageEditorActionKeys.UPDATE, hasUpdatePermissions()
 		).put(
 			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
-			editorSoyContext.get("hasUpdateContentPermissions")
+			hasUpdateContentPermissions()
 		).build();
 	}
 
@@ -223,7 +198,6 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 		return soyContext;
 	}
 
-	private SoyContext _editorSoyContext;
 	private LayoutPageTemplateEntry _layoutPageTemplateEntry;
 	private final boolean _pageIsDisplayPage;
 
