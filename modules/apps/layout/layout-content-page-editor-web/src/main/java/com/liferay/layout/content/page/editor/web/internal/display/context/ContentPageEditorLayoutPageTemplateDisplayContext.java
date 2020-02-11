@@ -83,13 +83,14 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 			soyContext.put("selectedMappingTypes", _getSelectedMappingTypes());
 		}
 
-		_editorSoyContext = soyContext.put(
-			"sidebarPanels", getSidebarPanelSoyContexts(_pageIsDisplayPage)
-		).put(
-			"workflowEnabled", false
-		);
+		_editorSoyContext = soyContext.put("workflowEnabled", false);
 
 		return _editorSoyContext;
+	}
+
+	@Override
+	protected List<SoyContext> getSidebarPanelSoyContexts() {
+		return super.getSidebarPanelSoyContexts(_pageIsDisplayPage);
 	}
 
 	private LayoutPageTemplateEntry _getLayoutPageTemplateEntry() {

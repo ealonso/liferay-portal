@@ -538,6 +538,8 @@ public class ContentPageEditorDisplayContext {
 			"renderFragmentEntryURL",
 			getFragmentEntryActionURL("/content_layout/render_fragment_entry")
 		).put(
+			"sidebarPanels", getSidebarPanelSoyContexts()
+		).put(
 			"spritemap",
 			themeDisplay.getPathThemeImages() + "/lexicon/icons.svg"
 		).put(
@@ -615,6 +617,10 @@ public class ContentPageEditorDisplayContext {
 
 	protected long getSegmentsExperienceId() {
 		return SegmentsExperienceConstants.ID_DEFAULT;
+	}
+
+	protected List<SoyContext> getSidebarPanelSoyContexts() {
+		return getSidebarPanelSoyContexts(true);
 	}
 
 	protected List<SoyContext> getSidebarPanelSoyContexts(

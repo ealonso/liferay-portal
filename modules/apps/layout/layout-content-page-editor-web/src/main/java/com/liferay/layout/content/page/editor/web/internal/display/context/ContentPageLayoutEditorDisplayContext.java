@@ -90,15 +90,13 @@ public class ContentPageLayoutEditorDisplayContext
 			return _editorSoyContext;
 		}
 
-		SoyContext soyContext = super.getEditorSoyContext();
-
-		soyContext.put("sidebarPanels", getSidebarPanelSoyContexts(false));
-
 		if (!_isShowSegmentsExperiences()) {
-			_editorSoyContext = soyContext;
+			_editorSoyContext = super.getEditorSoyContext();
 
 			return _editorSoyContext;
 		}
+
+		SoyContext soyContext = super.getEditorSoyContext();
 
 		_editorSoyContext = soyContext.put(
 			"addSegmentsExperienceURL",
@@ -180,6 +178,11 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return _segmentsExperienceId;
+	}
+
+	@Override
+	protected List<SoyContext> getSidebarPanelSoyContexts() {
+		return super.getSidebarPanelSoyContexts(false);
 	}
 
 	private SoyContext _getAvailableSegmentsEntriesSoyContext() {
