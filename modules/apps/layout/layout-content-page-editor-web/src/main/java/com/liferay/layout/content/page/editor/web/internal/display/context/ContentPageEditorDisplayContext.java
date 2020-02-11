@@ -315,8 +315,6 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"languageDirection", _getLanguageDirection()
 			).put(
-				"lookAndFeelURL", _getLookAndFeelURL()
-			).put(
 				"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
 			).put(
 				"masterUsed", editorSoyContext.get("masterUsed")
@@ -513,8 +511,6 @@ public class ContentPageEditorDisplayContext {
 				_portletRequest, "layoutConversionWarningMessages")
 		).put(
 			"layoutData", JSONFactoryUtil.createJSONObject(_getLayoutData())
-		).put(
-			"lookAndFeelURL", _getLookAndFeelURL()
 		).put(
 			"mappedInfoItems", _getMappedInfoItemsSoyContexts()
 		).put(
@@ -1394,33 +1390,6 @@ public class ContentPageEditorDisplayContext {
 			getSegmentsExperienceId());
 
 		return _layoutData;
-	}
-
-	private String _getLookAndFeelURL() {
-		PortletURL lookAndFeelURL = PortalUtil.getControlPanelPortletURL(
-			httpServletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
-			PortletRequest.RENDER_PHASE);
-
-		lookAndFeelURL.setParameter(
-			"mvcRenderCommandName", "/layout/edit_layout");
-
-		lookAndFeelURL.setParameter(
-			"redirect",
-			ParamUtil.getString(
-				PortalUtil.getOriginalServletRequest(httpServletRequest),
-				"p_l_back_url"));
-		lookAndFeelURL.setParameter("backURL", themeDisplay.getURLCurrent());
-
-		Layout layout = themeDisplay.getLayout();
-
-		lookAndFeelURL.setParameter(
-			"groupId", String.valueOf(layout.getGroupId()));
-		lookAndFeelURL.setParameter(
-			"selPlid", String.valueOf(layout.getPlid()));
-		lookAndFeelURL.setParameter(
-			"privateLayout", String.valueOf(layout.isPrivateLayout()));
-
-		return lookAndFeelURL.toString();
 	}
 
 	private Set<SoyContext> _getMappedInfoItemsSoyContexts()
