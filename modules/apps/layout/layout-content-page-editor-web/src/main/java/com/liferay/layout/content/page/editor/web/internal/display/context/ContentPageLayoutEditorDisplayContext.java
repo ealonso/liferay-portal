@@ -16,6 +16,7 @@ package com.liferay.layout.content.page.editor.web.internal.display.context;
 
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
+import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
@@ -32,6 +33,7 @@ import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -56,6 +58,7 @@ import com.liferay.staging.StagingGroupHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.portlet.PortletRequest;
@@ -167,6 +170,66 @@ public class ContentPageLayoutEditorDisplayContext
 	}
 
 	@Override
+	protected Map<String, Object> getPermissionsState() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
+			editorSoyContext.get("hasLockedSegmentsExperiment")
+		).put(
+			ContentPageEditorActionKeys.UPDATE,
+			editorSoyContext.get("hasUpdatePermissions")
+		).put(
+			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
+			editorSoyContext.get("hasUpdateContentPermissions")
+		).build();
+	}
+
+	@Override
+	protected Map<String, Object> getSegmentsConfig() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"addSegmentsExperienceURL",
+			editorSoyContext.get("addSegmentsExperienceURL")
+		).put(
+			"availableSegmentsEntries",
+			editorSoyContext.get("availableSegmentsEntries")
+		).put(
+			"defaultSegmentsEntryId",
+			editorSoyContext.get("defaultSegmentsEntryId")
+		).put(
+			"defaultSegmentsExperienceId",
+			editorSoyContext.get("defaultSegmentsExperienceId")
+		).put(
+			"deleteSegmentsExperienceURL",
+			getFragmentEntryActionURL(
+				"/content_layout/delete_segments_experience")
+		).put(
+			"editSegmentsEntryURL", editorSoyContext.get("editSegmentsEntryURL")
+		).put(
+			"getExperienceUsedPortletsURL",
+			editorSoyContext.get("getExperienceUsedPortletsURL")
+		).put(
+			"hasEditSegmentsEntryPermission",
+			editorSoyContext.get("hasEditSegmentsEntryPermission")
+		).put(
+			"layoutDataList", editorSoyContext.get("layoutDataList")
+		).put(
+			"singleSegmentsExperienceMode",
+			editorSoyContext.get("singleSegmentsExperienceMode")
+		).put(
+			"updateSegmentsExperiencePriorityURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience_priority")
+		).put(
+			"updateSegmentsExperienceURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience")
+		).build();
+	}
+
+	@Override
 	protected long getSegmentsExperienceId() {
 		if (_segmentsExperienceId != null) {
 			return _segmentsExperienceId;
@@ -193,6 +256,21 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return _segmentsExperienceId;
+	}
+
+	@Override
+	protected Map<String, Object> getSegmentsState() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"availableSegmentsExperiences",
+			editorSoyContext.get("availableSegmentsExperiences")
+		).put(
+			"segmentsExperienceId", editorSoyContext.get("segmentsExperienceId")
+		).put(
+			"segmentsExperimentStatus",
+			editorSoyContext.get("segmentsExperimentStatus")
+		).build();
 	}
 
 	@Override

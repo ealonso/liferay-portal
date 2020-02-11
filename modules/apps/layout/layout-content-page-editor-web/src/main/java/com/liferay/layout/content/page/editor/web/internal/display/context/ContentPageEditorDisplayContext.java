@@ -47,7 +47,6 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
 import com.liferay.layout.content.page.editor.web.internal.comment.CommentUtil;
 import com.liferay.layout.content.page.editor.web.internal.configuration.util.ContentCreationContentPageEditorConfigurationUtil;
-import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkItemSelectorUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
@@ -553,28 +552,11 @@ public abstract class ContentPageEditorDisplayContext {
 	}
 
 	protected Map<String, Object> getMappingConfig() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
-
-		return HashMapBuilder.<String, Object>put(
-			"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
-		).put(
-			"selectedMappingTypes", editorSoyContext.get("selectedMappingTypes")
-		).build();
+		return Collections.emptyMap();
 	}
 
 	protected Map<String, Object> getPermissionsState() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
-
-		return HashMapBuilder.<String, Object>put(
-			ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
-			editorSoyContext.get("hasLockedSegmentsExperiment")
-		).put(
-			ContentPageEditorActionKeys.UPDATE,
-			editorSoyContext.get("hasUpdatePermissions")
-		).put(
-			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
-			editorSoyContext.get("hasUpdateContentPermissions")
-		).build();
+		return Collections.emptyMap();
 	}
 
 	protected Layout getPublishedLayout() throws PortalException {
@@ -591,46 +573,7 @@ public abstract class ContentPageEditorDisplayContext {
 	}
 
 	protected Map<String, Object> getSegmentsConfig() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
-
-		return HashMapBuilder.<String, Object>put(
-			"addSegmentsExperienceURL",
-			editorSoyContext.get("addSegmentsExperienceURL")
-		).put(
-			"availableSegmentsEntries",
-			editorSoyContext.get("availableSegmentsEntries")
-		).put(
-			"defaultSegmentsEntryId",
-			editorSoyContext.get("defaultSegmentsEntryId")
-		).put(
-			"defaultSegmentsExperienceId",
-			editorSoyContext.get("defaultSegmentsExperienceId")
-		).put(
-			"deleteSegmentsExperienceURL",
-			getFragmentEntryActionURL(
-				"/content_layout/delete_segments_experience")
-		).put(
-			"editSegmentsEntryURL", editorSoyContext.get("editSegmentsEntryURL")
-		).put(
-			"getExperienceUsedPortletsURL",
-			editorSoyContext.get("getExperienceUsedPortletsURL")
-		).put(
-			"hasEditSegmentsEntryPermission",
-			editorSoyContext.get("hasEditSegmentsEntryPermission")
-		).put(
-			"layoutDataList", editorSoyContext.get("layoutDataList")
-		).put(
-			"singleSegmentsExperienceMode",
-			editorSoyContext.get("singleSegmentsExperienceMode")
-		).put(
-			"updateSegmentsExperiencePriorityURL",
-			getFragmentEntryActionURL(
-				"/content_layout/update_segments_experience_priority")
-		).put(
-			"updateSegmentsExperienceURL",
-			getFragmentEntryActionURL(
-				"/content_layout/update_segments_experience")
-		).build();
+		return Collections.emptyMap();
 	}
 
 	protected long getSegmentsExperienceId() {
@@ -638,17 +581,7 @@ public abstract class ContentPageEditorDisplayContext {
 	}
 
 	protected Map<String, Object> getSegmentsState() throws Exception {
-		SoyContext editorSoyContext = getEditorSoyContext();
-
-		return HashMapBuilder.<String, Object>put(
-			"availableSegmentsExperiences",
-			editorSoyContext.get("availableSegmentsExperiences")
-		).put(
-			"segmentsExperienceId", editorSoyContext.get("segmentsExperienceId")
-		).put(
-			"segmentsExperimentStatus",
-			editorSoyContext.get("segmentsExperimentStatus")
-		).build();
+		return Collections.emptyMap();
 	}
 
 	protected abstract List<SoyContext> getSidebarPanelSoyContexts();

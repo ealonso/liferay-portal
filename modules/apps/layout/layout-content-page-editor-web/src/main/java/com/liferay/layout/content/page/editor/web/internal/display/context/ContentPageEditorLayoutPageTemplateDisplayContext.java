@@ -21,17 +21,20 @@ import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
+import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
@@ -90,6 +93,30 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 	@Override
 	public boolean isWorkflowEnabled() {
 		return false;
+	}
+
+	@Override
+	protected Map<String, Object> getMappingConfig() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
+		).put(
+			"selectedMappingTypes", editorSoyContext.get("selectedMappingTypes")
+		).build();
+	}
+
+	@Override
+	protected Map<String, Object> getPermissionsState() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			ContentPageEditorActionKeys.UPDATE,
+			editorSoyContext.get("hasUpdatePermissions")
+		).put(
+			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
+			editorSoyContext.get("hasUpdateContentPermissions")
+		).build();
 	}
 
 	@Override
