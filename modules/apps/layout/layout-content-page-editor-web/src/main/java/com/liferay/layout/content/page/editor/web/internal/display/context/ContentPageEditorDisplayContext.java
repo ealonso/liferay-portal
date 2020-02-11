@@ -619,9 +619,7 @@ public abstract class ContentPageEditorDisplayContext {
 		return SegmentsExperienceConstants.ID_DEFAULT;
 	}
 
-	protected List<SoyContext> getSidebarPanelSoyContexts() {
-		return getSidebarPanelSoyContexts(true);
-	}
+	protected abstract List<SoyContext> getSidebarPanelSoyContexts();
 
 	protected List<SoyContext> getSidebarPanelSoyContexts(
 		boolean pageIsDisplayPage) {
