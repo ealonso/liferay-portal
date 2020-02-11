@@ -266,6 +266,10 @@ public class DDMFormInstanceRecordLocalServiceImpl
 		DDMStorageAdapterGetResponse ddmStorageAdapterGetResponse =
 			ddmStorageAdapter.get(ddmStorageAdapterGetRequest);
 
+		if (ddmStorageAdapterGetResponse == null) {
+			return new DDMFormValues(ddmForm);
+		}
+
 		return ddmStorageAdapterGetResponse.getDDMFormValues();
 	}
 
