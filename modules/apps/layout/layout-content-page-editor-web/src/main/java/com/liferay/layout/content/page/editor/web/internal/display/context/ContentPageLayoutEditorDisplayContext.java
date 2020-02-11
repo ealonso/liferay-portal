@@ -140,6 +140,11 @@ public class ContentPageLayoutEditorDisplayContext
 	}
 
 	@Override
+	public String getPublishURL() {
+		return getFragmentEntryActionURL("/content_layout/publish_layout");
+	}
+
+	@Override
 	public boolean isSingleSegmentsExperienceMode() {
 		long segmentsExperienceId = ParamUtil.getLong(
 			PortalUtil.getOriginalServletRequest(httpServletRequest),

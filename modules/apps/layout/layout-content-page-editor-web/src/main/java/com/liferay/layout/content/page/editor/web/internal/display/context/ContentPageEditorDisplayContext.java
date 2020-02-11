@@ -568,9 +568,7 @@ public abstract class ContentPageEditorDisplayContext {
 		return _renderResponse.getNamespace();
 	}
 
-	public String getPublishURL() {
-		return getFragmentEntryActionURL("/content_layout/publish_layout");
-	}
+	public abstract String getPublishURL();
 
 	public boolean isMasterLayout() throws PortalException {
 		if (_getPageType() ==

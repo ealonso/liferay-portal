@@ -70,22 +70,21 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 		if (_pageIsDisplayPage) {
 			soyContext.put(
 				"mappingFieldsURL",
-				getFragmentEntryActionURL(
-					"/content_layout/get_mapping_fields"));
-		}
-
-		soyContext.put(
-			"publishURL",
-			getFragmentEntryActionURL(
-				"/content_layout/publish_layout_page_template_entry"));
-
-		if (_pageIsDisplayPage) {
-			soyContext.put("selectedMappingTypes", _getSelectedMappingTypes());
+				getFragmentEntryActionURL("/content_layout/get_mapping_fields")
+			).put(
+				"selectedMappingTypes", _getSelectedMappingTypes()
+			);
 		}
 
 		_editorSoyContext = soyContext;
 
 		return _editorSoyContext;
+	}
+
+	@Override
+	public String getPublishURL() {
+		return getFragmentEntryActionURL(
+			"/content_layout/publish_layout_page_template_entry");
 	}
 
 	@Override
