@@ -238,13 +238,7 @@ public abstract class ContentPageEditorDisplayContext {
 				"addPortletURL",
 				getFragmentEntryActionURL("/content_layout/add_portlet_react")
 			).put(
-				"addSegmentsExperienceURL",
-				editorSoyContext.get("addSegmentsExperienceURL")
-			).put(
 				"availableLanguages", editorSoyContext.get("availableLanguages")
-			).put(
-				"availableSegmentsEntries",
-				editorSoyContext.get("availableSegmentsEntries")
 			).put(
 				"collections", _getFragmentCollectionsSoyContexts(true, false)
 			).put(
@@ -252,22 +246,12 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"defaultLanguageId", editorSoyContext.get("defaultLanguageId")
 			).put(
-				"defaultSegmentsEntryId",
-				editorSoyContext.get("defaultSegmentsEntryId")
-			).put(
-				"defaultSegmentsExperienceId",
-				editorSoyContext.get("defaultSegmentsExperienceId")
-			).put(
 				"deleteFragmentEntryLinkCommentURL",
 				getFragmentEntryActionURL(
 					"/content_layout/delete_fragment_entry_link_comment")
 			).put(
 				"deleteItemURL",
 				getFragmentEntryActionURL("/content_layout/delete_item_react")
-			).put(
-				"deleteSegmentsExperienceURL",
-				getFragmentEntryActionURL(
-					"/content_layout/delete_segments_experience")
 			).put(
 				"discardDraftRedirectURL",
 				editorSoyContext.get("discardDraftRedirectURL")
@@ -287,9 +271,6 @@ public abstract class ContentPageEditorDisplayContext {
 				getFragmentEntryActionURL(
 					"/content_layout/edit_fragment_entry_link")
 			).put(
-				"editSegmentsEntryURL",
-				editorSoyContext.get("editSegmentsEntryURL")
-			).put(
 				"fragments", editorSoyContext.get("elements")
 			).put(
 				"getAssetFieldValueURL",
@@ -300,12 +281,6 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"getAvailableTemplatesURL",
 				editorSoyContext.get("getAvailableTemplatesURL")
-			).put(
-				"getExperienceUsedPortletsURL",
-				editorSoyContext.get("getExperienceUsedPortletsURL")
-			).put(
-				"hasEditSegmentsEntryPermission",
-				editorSoyContext.get("hasEditSegmentsEntryPermission")
 			).put(
 				"imageSelectorURL", editorSoyContext.get("imageSelectorURL")
 			).put(
@@ -338,13 +313,49 @@ public abstract class ContentPageEditorDisplayContext {
 				"renderFragmentEntryURL",
 				editorSoyContext.get("renderFragmentEntryURL")
 			).put(
+				"segments",
+				HashMapBuilder.<String, Object>put(
+					"addSegmentsExperienceURL",
+					editorSoyContext.get("addSegmentsExperienceURL")
+				).put(
+					"availableSegmentsEntries",
+					editorSoyContext.get("availableSegmentsEntries")
+				).put(
+					"defaultSegmentsEntryId",
+					editorSoyContext.get("defaultSegmentsEntryId")
+				).put(
+					"defaultSegmentsExperienceId",
+					editorSoyContext.get("defaultSegmentsExperienceId")
+				).put(
+					"deleteSegmentsExperienceURL",
+					getFragmentEntryActionURL(
+						"/content_layout/delete_segments_experience")
+				).put(
+					"editSegmentsEntryURL",
+					editorSoyContext.get("editSegmentsEntryURL")
+				).put(
+					"getExperienceUsedPortletsURL",
+					editorSoyContext.get("getExperienceUsedPortletsURL")
+				).put(
+					"hasEditSegmentsEntryPermission",
+					editorSoyContext.get("hasEditSegmentsEntryPermission")
+				).put(
+					"singleSegmentsExperienceMode",
+					editorSoyContext.get("singleSegmentsExperienceMode")
+				).put(
+					"updateSegmentsExperiencePriorityURL",
+					getFragmentEntryActionURL(
+						"/content_layout/update_segments_experience_priority")
+				).put(
+					"updateSegmentsExperienceURL",
+					getFragmentEntryActionURL(
+						"/content_layout/update_segments_experience")
+				).build()
+			).put(
 				"selectedMappingTypes",
 				editorSoyContext.get("selectedMappingTypes")
 			).put(
 				"sidebarPanels", editorSoyContext.get("sidebarPanels")
-			).put(
-				"singleSegmentsExperienceMode",
-				editorSoyContext.get("singleSegmentsExperienceMode")
 			).put(
 				"themeColorsCssClasses", _getThemeColorsCssClasses()
 			).put(
@@ -359,22 +370,11 @@ public abstract class ContentPageEditorDisplayContext {
 				getFragmentEntryActionURL(
 					"/content_layout/update_row_columns_react")
 			).put(
-				"updateSegmentsExperiencePriorityURL",
-				getFragmentEntryActionURL(
-					"/content_layout/update_segments_experience_priority")
-			).put(
-				"updateSegmentsExperienceURL",
-				getFragmentEntryActionURL(
-					"/content_layout/update_segments_experience")
-			).put(
 				"workflowEnabled", editorSoyContext.get("workflowEnabled")
 			).build()
 		).put(
 			"state",
 			HashMapBuilder.<String, Object>put(
-				"availableSegmentsExperiences",
-				editorSoyContext.get("availableSegmentsExperiences")
-			).put(
 				"fragmentEntryLinks", editorSoyContext.get("fragmentEntryLinks")
 			).put(
 				"languageId", editorSoyContext.get("languageId")
@@ -401,11 +401,17 @@ public abstract class ContentPageEditorDisplayContext {
 					editorSoyContext.get("hasUpdateContentPermissions")
 				).build()
 			).put(
-				"segmentsExperienceId",
-				editorSoyContext.get("segmentsExperienceId")
-			).put(
-				"segmentsExperimentStatus",
-				editorSoyContext.get("segmentsExperimentStatus")
+				"segments",
+				HashMapBuilder.<String, Object>put(
+					"availableSegmentsExperiences",
+					editorSoyContext.get("availableSegmentsExperiences")
+				).put(
+					"segmentsExperienceId",
+					editorSoyContext.get("segmentsExperienceId")
+				).put(
+					"segmentsExperimentStatus",
+					editorSoyContext.get("segmentsExperimentStatus")
+				).build()
 			).put(
 				"widgets", editorSoyContext.get("widgets")
 			).build()
