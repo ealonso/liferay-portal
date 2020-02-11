@@ -288,7 +288,14 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"lookAndFeelURL", _getLookAndFeelURL()
 			).put(
-				"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
+				"mapping",
+				HashMapBuilder.<String, Object>put(
+					"mappingFieldsURL",
+					editorSoyContext.get("mappingFieldsURL")
+				).put(
+					"selectedMappingTypes",
+					editorSoyContext.get("selectedMappingTypes")
+				).build()
 			).put(
 				"masterUsed", editorSoyContext.get("masterUsed")
 			).put(
@@ -350,9 +357,6 @@ public abstract class ContentPageEditorDisplayContext {
 					getFragmentEntryActionURL(
 						"/content_layout/update_segments_experience")
 				).build()
-			).put(
-				"selectedMappingTypes",
-				editorSoyContext.get("selectedMappingTypes")
 			).put(
 				"sidebarPanels", editorSoyContext.get("sidebarPanels")
 			).put(
