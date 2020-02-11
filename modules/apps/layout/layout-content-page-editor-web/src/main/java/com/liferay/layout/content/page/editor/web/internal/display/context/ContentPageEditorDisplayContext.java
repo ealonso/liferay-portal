@@ -288,14 +288,7 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"lookAndFeelURL", _getLookAndFeelURL()
 			).put(
-				"mapping",
-				HashMapBuilder.<String, Object>put(
-					"mappingFieldsURL",
-					editorSoyContext.get("mappingFieldsURL")
-				).put(
-					"selectedMappingTypes",
-					editorSoyContext.get("selectedMappingTypes")
-				).build()
+				"mapping", getMappingConfig()
 			).put(
 				"masterUsed", editorSoyContext.get("masterUsed")
 			).put(
@@ -319,46 +312,7 @@ public abstract class ContentPageEditorDisplayContext {
 				"renderFragmentEntryURL",
 				editorSoyContext.get("renderFragmentEntryURL")
 			).put(
-				"segments",
-				HashMapBuilder.<String, Object>put(
-					"addSegmentsExperienceURL",
-					editorSoyContext.get("addSegmentsExperienceURL")
-				).put(
-					"availableSegmentsEntries",
-					editorSoyContext.get("availableSegmentsEntries")
-				).put(
-					"defaultSegmentsEntryId",
-					editorSoyContext.get("defaultSegmentsEntryId")
-				).put(
-					"defaultSegmentsExperienceId",
-					editorSoyContext.get("defaultSegmentsExperienceId")
-				).put(
-					"deleteSegmentsExperienceURL",
-					getFragmentEntryActionURL(
-						"/content_layout/delete_segments_experience")
-				).put(
-					"editSegmentsEntryURL",
-					editorSoyContext.get("editSegmentsEntryURL")
-				).put(
-					"getExperienceUsedPortletsURL",
-					editorSoyContext.get("getExperienceUsedPortletsURL")
-				).put(
-					"hasEditSegmentsEntryPermission",
-					editorSoyContext.get("hasEditSegmentsEntryPermission")
-				).put(
-					"layoutDataList", editorSoyContext.get("layoutDataList")
-				).put(
-					"singleSegmentsExperienceMode",
-					editorSoyContext.get("singleSegmentsExperienceMode")
-				).put(
-					"updateSegmentsExperiencePriorityURL",
-					getFragmentEntryActionURL(
-						"/content_layout/update_segments_experience_priority")
-				).put(
-					"updateSegmentsExperienceURL",
-					getFragmentEntryActionURL(
-						"/content_layout/update_segments_experience")
-				).build()
+				"segments", getSegmentsConfig()
 			).put(
 				"sidebarPanels", editorSoyContext.get("sidebarPanels")
 			).put(
@@ -392,29 +346,9 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"pageContents", editorSoyContext.get("pageContents")
 			).put(
-				"permissions",
-				HashMapBuilder.<String, Object>put(
-					ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
-					editorSoyContext.get("hasLockedSegmentsExperiment")
-				).put(
-					ContentPageEditorActionKeys.UPDATE,
-					editorSoyContext.get("hasUpdatePermissions")
-				).put(
-					ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
-					editorSoyContext.get("hasUpdateContentPermissions")
-				).build()
+				"permissions", getPermissionsState()
 			).put(
-				"segments",
-				HashMapBuilder.<String, Object>put(
-					"availableSegmentsExperiences",
-					editorSoyContext.get("availableSegmentsExperiences")
-				).put(
-					"segmentsExperienceId",
-					editorSoyContext.get("segmentsExperienceId")
-				).put(
-					"segmentsExperimentStatus",
-					editorSoyContext.get("segmentsExperimentStatus")
-				).build()
+				"segments", getSegmentsState()
 			).put(
 				"widgets", editorSoyContext.get("widgets")
 			).build()
@@ -618,6 +552,31 @@ public abstract class ContentPageEditorDisplayContext {
 		return _groupId;
 	}
 
+	protected Map<String, Object> getMappingConfig() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"mappingFieldsURL", editorSoyContext.get("mappingFieldsURL")
+		).put(
+			"selectedMappingTypes", editorSoyContext.get("selectedMappingTypes")
+		).build();
+	}
+
+	protected Map<String, Object> getPermissionsState() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
+			editorSoyContext.get("hasLockedSegmentsExperiment")
+		).put(
+			ContentPageEditorActionKeys.UPDATE,
+			editorSoyContext.get("hasUpdatePermissions")
+		).put(
+			ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
+			editorSoyContext.get("hasUpdateContentPermissions")
+		).build();
+	}
+
 	protected Layout getPublishedLayout() throws PortalException {
 		if (_publishedLayout != null) {
 			return _publishedLayout;
@@ -631,8 +590,65 @@ public abstract class ContentPageEditorDisplayContext {
 		return _publishedLayout;
 	}
 
+	protected Map<String, Object> getSegmentsConfig() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"addSegmentsExperienceURL",
+			editorSoyContext.get("addSegmentsExperienceURL")
+		).put(
+			"availableSegmentsEntries",
+			editorSoyContext.get("availableSegmentsEntries")
+		).put(
+			"defaultSegmentsEntryId",
+			editorSoyContext.get("defaultSegmentsEntryId")
+		).put(
+			"defaultSegmentsExperienceId",
+			editorSoyContext.get("defaultSegmentsExperienceId")
+		).put(
+			"deleteSegmentsExperienceURL",
+			getFragmentEntryActionURL(
+				"/content_layout/delete_segments_experience")
+		).put(
+			"editSegmentsEntryURL", editorSoyContext.get("editSegmentsEntryURL")
+		).put(
+			"getExperienceUsedPortletsURL",
+			editorSoyContext.get("getExperienceUsedPortletsURL")
+		).put(
+			"hasEditSegmentsEntryPermission",
+			editorSoyContext.get("hasEditSegmentsEntryPermission")
+		).put(
+			"layoutDataList", editorSoyContext.get("layoutDataList")
+		).put(
+			"singleSegmentsExperienceMode",
+			editorSoyContext.get("singleSegmentsExperienceMode")
+		).put(
+			"updateSegmentsExperiencePriorityURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience_priority")
+		).put(
+			"updateSegmentsExperienceURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience")
+		).build();
+	}
+
 	protected long getSegmentsExperienceId() {
 		return SegmentsExperienceConstants.ID_DEFAULT;
+	}
+
+	protected Map<String, Object> getSegmentsState() throws Exception {
+		SoyContext editorSoyContext = getEditorSoyContext();
+
+		return HashMapBuilder.<String, Object>put(
+			"availableSegmentsExperiences",
+			editorSoyContext.get("availableSegmentsExperiences")
+		).put(
+			"segmentsExperienceId", editorSoyContext.get("segmentsExperienceId")
+		).put(
+			"segmentsExperimentStatus",
+			editorSoyContext.get("segmentsExperimentStatus")
+		).build();
 	}
 
 	protected abstract List<SoyContext> getSidebarPanelSoyContexts();
