@@ -659,6 +659,15 @@ public class ContentPageEditorDisplayContext {
 				"sidebarPanelId", contentPageEditorSidebarPanel.getId()
 			);
 
+			if (contentPageEditorSidebarPanel.isLink()) {
+				availableSoyContext.put(
+					"isLink", true
+				).put(
+					"url",
+					contentPageEditorSidebarPanel.getURL(httpServletRequest)
+				);
+			}
+
 			soyContexts.add(availableSoyContext);
 		}
 
