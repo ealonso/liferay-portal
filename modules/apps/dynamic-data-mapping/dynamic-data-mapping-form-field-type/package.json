@@ -1,11 +1,13 @@
 {
 	"dependencies": {
+		"@clayui/form": "3.3.0",
 		"clay-button": "2.20.2",
 		"clay-checkbox": "2.20.2",
 		"clay-dropdown": "2.20.2",
 		"clay-icon": "2.20.2",
 		"clay-label": "2.20.2",
 		"clay-radio": "2.20.2",
+		"frontend-editor-ckeditor-web": "*",
 		"frontend-js-web": "*",
 		"leaflet": "1.2.0",
 		"map-google-maps": "*",
