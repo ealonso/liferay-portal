@@ -105,8 +105,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.PortletCategoryComparator;
 import com.liferay.portal.kernel.util.comparator.PortletTitleComparator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.template.soy.util.SoyContext;
-import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import com.liferay.portal.util.PortletCategoryUtil;
 import com.liferay.portal.util.WebAppPool;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
@@ -230,9 +228,9 @@ public abstract class ContentPageEditorDisplayContext {
 				"addPortletURL",
 				getFragmentEntryActionURL("/content_layout/add_portlet_react")
 			).put(
-				"availableLanguages", _getAvailableLanguagesSoyContext()
+				"availableLanguages", _getAvailableLanguages()
 			).put(
-				"collections", _getFragmentCollectionsSoyContexts(true, false)
+				"collections", _getFragmentCollections(true, false)
 			).put(
 				"defaultEditorConfigurations", _getDefaultConfigurations()
 			).put(
@@ -263,7 +261,7 @@ public abstract class ContentPageEditorDisplayContext {
 				getFragmentEntryActionURL(
 					"/content_layout/edit_fragment_entry_link")
 			).put(
-				"fragments", _getFragmentCollectionsSoyContexts(false, true)
+				"fragments", _getFragmentCollections(false, true)
 			).put(
 				"getAssetFieldValueURL",
 				_getResourceURL("/content_layout/get_asset_field_value")
@@ -311,7 +309,7 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"segments", getSegmentsConfig()
 			).put(
-				"sidebarPanels", getSidebarPanelSoyContexts()
+				"sidebarPanels", getSidebarPanels()
 			).put(
 				"themeColorsCssClasses", _getThemeColorsCssClasses()
 			).put(
@@ -332,13 +330,13 @@ public abstract class ContentPageEditorDisplayContext {
 		).put(
 			"state",
 			HashMapBuilder.<String, Object>put(
-				"fragmentEntryLinks", _getFragmentEntryLinksSoyContext()
+				"fragmentEntryLinks", _getFragmentEntryLinks()
 			).put(
 				"languageId", themeDisplay.getLanguageId()
 			).put(
 				"layoutData", JSONFactoryUtil.createJSONObject(_getLayoutData())
 			).put(
-				"mappedInfoItems", _getMappedInfoItemsSoyContexts()
+				"mappedInfoItems", _getMappedInfoItems()
 			).put(
 				"masterLayoutData",
 				JSONFactoryUtil.createJSONObject(_getMasterLayoutData())
@@ -351,7 +349,7 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"segments", getSegmentsState()
 			).put(
-				"widgets", _getWidgetsSoyContexts()
+				"widgets", _getWidgets()
 			).build()
 		).build();
 	}
@@ -439,16 +437,16 @@ public abstract class ContentPageEditorDisplayContext {
 		return Collections.emptyMap();
 	}
 
-	protected abstract List<SoyContext> getSidebarPanelSoyContexts();
+	protected abstract List<Map<String, Object>> getSidebarPanels();
 
-	protected List<SoyContext> getSidebarPanelSoyContexts(
+	protected List<Map<String, Object>> getSidebarPanels(
 		boolean pageIsDisplayPage) {
 
-		if (_sidebarPanelSoyContexts != null) {
-			return _sidebarPanelSoyContexts;
+		if (_sidebarPanels != null) {
+			return _sidebarPanels;
 		}
 
-		List<SoyContext> soyContexts = new ArrayList<>();
+		List<Map<String, Object>> sidebarPanels = new ArrayList<>();
 
 		for (ContentPageEditorSidebarPanel contentPageEditorSidebarPanel :
 				_contentPageEditorSidebarPanels) {
@@ -462,34 +460,29 @@ public abstract class ContentPageEditorDisplayContext {
 			}
 
 			if (contentPageEditorSidebarPanel.includeSeparator() &&
-				!soyContexts.isEmpty()) {
+				!sidebarPanels.isEmpty()) {
 
-				SoyContext availableSoyContext =
-					SoyContextFactoryUtil.createSoyContext();
-
-				availableSoyContext.put("sidebarPanelId", "separator");
-
-				soyContexts.add(availableSoyContext);
+				sidebarPanels.add(
+					HashMapBuilder.<String, Object>put(
+						"sidebarPanelId", "separator"
+					).build());
 			}
 
-			SoyContext availableSoyContext =
-				SoyContextFactoryUtil.createSoyContext();
-
-			availableSoyContext.put(
-				"icon", contentPageEditorSidebarPanel.getIcon()
-			).put(
-				"label",
-				contentPageEditorSidebarPanel.getLabel(themeDisplay.getLocale())
-			).put(
-				"sidebarPanelId", contentPageEditorSidebarPanel.getId()
-			);
-
-			soyContexts.add(availableSoyContext);
+			sidebarPanels.add(
+				HashMapBuilder.<String, Object>put(
+					"icon", contentPageEditorSidebarPanel.getIcon()
+				).put(
+					"label",
+					contentPageEditorSidebarPanel.getLabel(
+						themeDisplay.getLocale())
+				).put(
+					"sidebarPanelId", contentPageEditorSidebarPanel.getId()
+				).build());
 		}
 
-		_sidebarPanelSoyContexts = soyContexts;
+		_sidebarPanels = sidebarPanels;
 
-		return _sidebarPanelSoyContexts;
+		return _sidebarPanels;
 	}
 
 	protected boolean hasUpdateContentPermissions() {
@@ -532,38 +525,32 @@ public abstract class ContentPageEditorDisplayContext {
 	protected final InfoDisplayContributorTracker infoDisplayContributorTracker;
 	protected final ThemeDisplay themeDisplay;
 
-	private SoyContext _getAvailableLanguagesSoyContext() {
-		SoyContext availableLanguagesSoyContext =
-			SoyContextFactoryUtil.createSoyContext();
+	private Map<String, Object> _getAvailableLanguages() {
+		Map<String, Object> availableLanguages = new HashMap<>();
 
 		String[] languageIds = LocaleUtil.toLanguageIds(
 			LanguageUtil.getAvailableLocales(themeDisplay.getSiteGroupId()));
 
 		for (String languageId : languageIds) {
-			SoyContext languageSoyContext =
-				SoyContextFactoryUtil.createSoyContext();
-
-			String languageIcon = StringUtil.toLowerCase(
-				StringUtil.replace(
-					languageId, CharPool.UNDERLINE, CharPool.DASH));
-
-			languageSoyContext.put("languageIcon", languageIcon);
-
-			String languageLabel = StringUtil.replace(
-				languageId, CharPool.UNDERLINE, CharPool.DASH);
-
-			languageSoyContext.put("languageLabel", languageLabel);
-
-			availableLanguagesSoyContext.put(languageId, languageSoyContext);
+			availableLanguages.put(
+				languageId,
+				HashMapBuilder.<String, Object>put(
+					"languageIcon",
+					StringUtil.toLowerCase(
+						StringUtil.replace(
+							languageId, CharPool.UNDERLINE, CharPool.DASH))
+				).put(
+					"languageLabel",
+					StringUtil.replace(
+						languageId, CharPool.UNDERLINE, CharPool.DASH)
+				).build());
 		}
 
-		return availableLanguagesSoyContext;
+		return availableLanguages;
 	}
 
-	private SoyContext _getContributedFragmentEntrySoyContext(
+	private Map<String, Object> _getContributedFragmentEntry(
 		String rendererKey) {
-
-		SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
 
 		Map<String, FragmentEntry> fragmentEntries =
 			_fragmentCollectionContributorTracker.getFragmentEntries(
@@ -572,14 +559,14 @@ public abstract class ContentPageEditorDisplayContext {
 		FragmentEntry fragmentEntry = fragmentEntries.get(rendererKey);
 
 		if (fragmentEntry != null) {
-			soyContext.put(
+			return HashMapBuilder.<String, Object>put(
 				"fragmentEntryId", 0
 			).put(
 				"name", fragmentEntry.getName()
-			);
+			).build();
 		}
 
-		return soyContext;
+		return Collections.emptyMap();
 	}
 
 	private Map<String, Object> _getDefaultConfigurations() {
@@ -654,10 +641,10 @@ public abstract class ContentPageEditorDisplayContext {
 		return layoutStructureItem.getItemConfigJSONObject();
 	}
 
-	private List<SoyContext> _getDynamicFragmentsSoyContexts() {
-		List<SoyContext> soyContexts = new ArrayList<>();
+	private List<Map<String, Object>> _getDynamicFragments() {
+		List<Map<String, Object>> dynamicFragments = new ArrayList<>();
 
-		Map<String, List<SoyContext>> fragmentCollectionSoyContextsMap =
+		Map<String, List<Map<String, Object>>> fragmentCollectionsMap =
 			new HashMap<>();
 		Map<String, FragmentRenderer> fragmentCollectionFragmentRenderers =
 			new HashMap<>();
@@ -674,70 +661,66 @@ public abstract class ContentPageEditorDisplayContext {
 				continue;
 			}
 
-			SoyContext dynamicFragmentSoyContext =
-				SoyContextFactoryUtil.createSoyContext();
+			Map<String, Object> dynamicFragment =
+				HashMapBuilder.<String, Object>put(
+					"fragmentEntryKey", fragmentRenderer.getKey()
+				).put(
+					"imagePreviewURL",
+					fragmentRenderer.getImagePreviewURL(httpServletRequest)
+				).put(
+					"name", fragmentRenderer.getLabel(themeDisplay.getLocale())
+				).build();
 
-			dynamicFragmentSoyContext.put(
-				"fragmentEntryKey", fragmentRenderer.getKey()
-			).put(
-				"imagePreviewURL",
-				fragmentRenderer.getImagePreviewURL(httpServletRequest)
-			).put(
-				"name", fragmentRenderer.getLabel(themeDisplay.getLocale())
-			);
+			List<Map<String, Object>> fragmentCollections =
+				fragmentCollectionsMap.get(fragmentRenderer.getCollectionKey());
 
-			List<SoyContext> fragmentCollectionSoyContexts =
-				fragmentCollectionSoyContextsMap.get(
-					fragmentRenderer.getCollectionKey());
-
-			if (fragmentCollectionSoyContexts == null) {
-				List<SoyContext> dynamicFragmentSoyContexts =
-					fragmentCollectionSoyContextsMap.computeIfAbsent(
+			if (fragmentCollections == null) {
+				List<Map<String, Object>> filteredDynamicFragments =
+					fragmentCollectionsMap.computeIfAbsent(
 						fragmentRenderer.getCollectionKey(),
 						key -> new ArrayList<>());
 
-				dynamicFragmentSoyContexts.add(dynamicFragmentSoyContext);
+				filteredDynamicFragments.add(dynamicFragment);
 
-				fragmentCollectionSoyContextsMap.put(
+				fragmentCollectionsMap.put(
 					fragmentRenderer.getCollectionKey(),
-					dynamicFragmentSoyContexts);
+					filteredDynamicFragments);
 
 				fragmentCollectionFragmentRenderers.put(
 					fragmentRenderer.getCollectionKey(), fragmentRenderer);
 			}
 			else {
-				fragmentCollectionSoyContexts.add(dynamicFragmentSoyContext);
+				fragmentCollections.add(dynamicFragment);
 			}
 		}
 
-		for (Map.Entry<String, List<SoyContext>> entry :
-				fragmentCollectionSoyContextsMap.entrySet()) {
+		for (Map.Entry<String, List<Map<String, Object>>> entry :
+				fragmentCollectionsMap.entrySet()) {
 
 			FragmentRenderer fragmentRenderer =
 				fragmentCollectionFragmentRenderers.get(entry.getKey());
 
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-			soyContext.put(
-				"fragmentCollectionId", entry.getKey()
-			).put(
-				"fragmentEntries", entry.getValue()
-			).put(
-				"name",
-				LanguageUtil.get(
-					ResourceBundleUtil.getBundle(
-						themeDisplay.getLocale(), fragmentRenderer.getClass()),
-					"fragment.collection.label." + entry.getKey())
-			);
-
-			soyContexts.add(soyContext);
+			dynamicFragments.add(
+				HashMapBuilder.<String, Object>put(
+					"fragmentCollectionId", entry.getKey()
+				).put(
+					"fragmentEntries", entry.getValue()
+				).put(
+					"name",
+					LanguageUtil.get(
+						ResourceBundleUtil.getBundle(
+							themeDisplay.getLocale(),
+							fragmentRenderer.getClass()),
+						"fragment.collection.label." + entry.getKey())
+				).build());
 		}
 
-		return soyContexts;
+		return dynamicFragments;
 	}
 
-	private List<SoyContext> _getFragmentCollectionContributorSoyContexts() {
-		List<SoyContext> soyContexts = new ArrayList<>();
+	private List<Map<String, Object>> _getFragmentCollectionContributors() {
+		List<Map<String, Object>> filteredFragmentCollectionContributors =
+			new ArrayList<>();
 
 		List<FragmentCollectionContributor> fragmentCollectionContributors =
 			_fragmentCollectionContributorTracker.
@@ -759,39 +742,39 @@ public abstract class ContentPageEditorDisplayContext {
 				continue;
 			}
 
-			List<SoyContext> fragmentEntriesSoyContexts =
-				_getFragmentEntriesSoyContexts(fragmentEntries);
+			List<Map<String, Object>> filteredFragmentEntries =
+				_getFragmentEntries(fragmentEntries);
 
-			if (ListUtil.isEmpty(fragmentEntriesSoyContexts)) {
+			if (ListUtil.isEmpty(filteredFragmentEntries)) {
 				continue;
 			}
 
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-			soyContext.put(
-				"fragmentCollectionId",
-				fragmentCollectionContributor.getFragmentCollectionKey()
-			).put(
-				"fragmentEntries", fragmentEntriesSoyContexts
-			).put(
-				"name",
-				fragmentCollectionContributor.getName(themeDisplay.getLocale())
-			);
-
-			soyContexts.add(soyContext);
+			filteredFragmentCollectionContributors.add(
+				HashMapBuilder.<String, Object>put(
+					"fragmentCollectionId",
+					fragmentCollectionContributor.getFragmentCollectionKey()
+				).put(
+					"fragmentEntries", filteredFragmentEntries
+				).put(
+					"name",
+					fragmentCollectionContributor.getName(
+						themeDisplay.getLocale())
+				).build());
 		}
 
-		return soyContexts;
+		return filteredFragmentCollectionContributors;
 	}
 
-	private List<SoyContext> _getFragmentCollectionsSoyContexts(
+	private List<Map<String, Object>> _getFragmentCollections(
 		boolean includeEmpty, boolean includeSystem) {
 
-		List<SoyContext> soyContexts = new ArrayList<>();
+		List<Map<String, Object>> filteredFragmentCollections =
+			new ArrayList<>();
 
 		if (includeSystem) {
-			soyContexts.addAll(_getFragmentCollectionContributorSoyContexts());
-			soyContexts.addAll(_getDynamicFragmentsSoyContexts());
+			filteredFragmentCollections.addAll(
+				_getFragmentCollectionContributors());
+			filteredFragmentCollections.addAll(_getDynamicFragments());
 		}
 
 		long[] groupIds = {
@@ -813,12 +796,10 @@ public abstract class ContentPageEditorDisplayContext {
 				continue;
 			}
 
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
+			List<Map<String, Object>> filteredFragmentEntries =
+				_getFragmentEntries(fragmentEntries);
 
-			List<SoyContext> fragmentEntriesSoyContexts =
-				_getFragmentEntriesSoyContexts(fragmentEntries);
-
-			if (!includeEmpty && ListUtil.isEmpty(fragmentEntriesSoyContexts)) {
+			if (!includeEmpty && ListUtil.isEmpty(filteredFragmentEntries)) {
 				continue;
 			}
 
@@ -829,52 +810,109 @@ public abstract class ContentPageEditorDisplayContext {
 				continue;
 			}
 
-			soyContext.put(
-				"fragmentCollectionId",
-				fragmentCollection.getFragmentCollectionId()
-			).put(
-				"fragmentEntries", fragmentEntriesSoyContexts
-			).put(
-				"name", fragmentCollection.getName()
-			);
-
-			soyContexts.add(soyContext);
+			filteredFragmentCollections.add(
+				HashMapBuilder.<String, Object>put(
+					"fragmentCollectionId",
+					fragmentCollection.getFragmentCollectionId()
+				).put(
+					"fragmentEntries", filteredFragmentEntries
+				).put(
+					"name", fragmentCollection.getName()
+				).build());
 		}
 
-		return soyContexts;
+		return filteredFragmentCollections;
 	}
 
-	private List<SoyContext> _getFragmentEntriesSoyContexts(
+	private List<Map<String, Object>> _getFragmentEntries(
 		List<FragmentEntry> fragmentEntries) {
 
-		List<SoyContext> soyContexts = new ArrayList<>();
+		List<Map<String, Object>> filteredFragmentEntries = new ArrayList<>();
 
 		for (FragmentEntry fragmentEntry : fragmentEntries) {
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
 			if (!_isAllowedFragmentEntryKey(
 					fragmentEntry.getFragmentEntryKey())) {
 
 				continue;
 			}
 
-			soyContext.put(
-				"fragmentEntryKey", fragmentEntry.getFragmentEntryKey()
-			).put(
-				"groupId", fragmentEntry.getGroupId()
-			).put(
-				"imagePreviewURL",
-				fragmentEntry.getImagePreviewURL(themeDisplay)
-			).put(
-				"name", fragmentEntry.getName()
-			).put(
-				"type", fragmentEntry.getType()
-			);
-
-			soyContexts.add(soyContext);
+			filteredFragmentEntries.add(
+				HashMapBuilder.<String, Object>put(
+					"fragmentEntryKey", fragmentEntry.getFragmentEntryKey()
+				).put(
+					"groupId", fragmentEntry.getGroupId()
+				).put(
+					"imagePreviewURL",
+					fragmentEntry.getImagePreviewURL(themeDisplay)
+				).put(
+					"name", fragmentEntry.getName()
+				).put(
+					"type", fragmentEntry.getType()
+				).build());
 		}
 
-		return soyContexts;
+		return filteredFragmentEntries;
+	}
+
+	private Map<String, Object> _getFragmentEntry(
+		FragmentEntryLink fragmentEntryLink, FragmentEntry fragmentEntry,
+		String content) {
+
+		if (fragmentEntry != null) {
+			return HashMapBuilder.<String, Object>put(
+				"fragmentEntryId", fragmentEntry.getFragmentEntryId()
+			).put(
+				"fragmentEntryKey", fragmentEntry.getFragmentEntryKey()
+			).put(
+				"name", fragmentEntry.getName()
+			).build();
+		}
+
+		String rendererKey = fragmentEntryLink.getRendererKey();
+
+		if (Validator.isNotNull(rendererKey)) {
+			Map<String, Object> contributedFragmentEntry =
+				_getContributedFragmentEntry(rendererKey);
+
+			if (!contributedFragmentEntry.isEmpty()) {
+				return contributedFragmentEntry;
+			}
+
+			FragmentRenderer fragmentRenderer =
+				_fragmentRendererTracker.getFragmentRenderer(
+					fragmentEntryLink.getRendererKey());
+
+			if (fragmentRenderer != null) {
+				return HashMapBuilder.<String, Object>put(
+					"fragmentEntryId", 0
+				).put(
+					"fragmentEntryKey", fragmentRenderer.getKey()
+				).put(
+					"name", fragmentRenderer.getLabel(themeDisplay.getLocale())
+				).build();
+			}
+		}
+
+		String portletId = _getPortletId(content);
+
+		PortletConfig portletConfig = PortletConfigFactoryUtil.get(portletId);
+
+		if (portletConfig == null) {
+			return HashMapBuilder.<String, Object>put(
+				"fragmentEntryId", 0
+			).put(
+				"name", StringPool.BLANK
+			).build();
+		}
+
+		return HashMapBuilder.<String, Object>put(
+			"fragmentEntryId", 0
+		).put(
+			"name",
+			PortalUtil.getPortletTitle(portletId, themeDisplay.getLocale())
+		).put(
+			"portletId", portletId
+		).build();
 	}
 
 	private List<String> _getFragmentEntryKeys() {
@@ -974,14 +1012,14 @@ public abstract class ContentPageEditorDisplayContext {
 		return jsonArray;
 	}
 
-	private SoyContext _getFragmentEntryLinksSoyContext()
+	private Map<String, Object> _getFragmentEntryLinks()
 		throws PortalException {
 
-		if (_soyContextFragmentEntryLinksSoyContext != null) {
-			return _soyContextFragmentEntryLinksSoyContext;
+		if (_fragmentEntryLinks != null) {
+			return _fragmentEntryLinks;
 		}
 
-		SoyContext soyContexts = SoyContextFactoryUtil.createSoyContext();
+		Map<String, Object> fragmentEntryLinksMap = new HashMap<>();
 
 		List<FragmentEntryLink> fragmentEntryLinks = new ArrayList<>(
 			FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
@@ -1010,17 +1048,8 @@ public abstract class ContentPageEditorDisplayContext {
 		LiferayPortletResponse liferayPortletResponse =
 			PortalUtil.getLiferayPortletResponse(_renderResponse);
 
-		long[] segmentsExperienceIds = {getSegmentsExperienceId()};
-
 		try {
 			for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
-				FragmentEntry fragmentEntry =
-					FragmentEntryServiceUtil.fetchFragmentEntry(
-						fragmentEntryLink.getFragmentEntryId());
-
-				SoyContext soyContext =
-					SoyContextFactoryUtil.createSoyContext();
-
 				DefaultFragmentRendererContext fragmentRendererContext =
 					new DefaultFragmentRendererContext(fragmentEntryLink);
 
@@ -1028,153 +1057,90 @@ public abstract class ContentPageEditorDisplayContext {
 				fragmentRendererContext.setMode(
 					FragmentEntryLinkConstants.EDIT);
 				fragmentRendererContext.setSegmentsExperienceIds(
-					segmentsExperienceIds);
+					new long[] {getSegmentsExperienceId()});
 
 				String content = _fragmentRendererController.render(
 					fragmentRendererContext, httpServletRequest,
 					PortalUtil.getHttpServletResponse(_renderResponse));
 
-				JSONObject editableValuesJSONObject =
-					JSONFactoryUtil.createJSONObject(
-						fragmentEntryLink.getEditableValues());
-
-				boolean error = false;
-
-				if (SessionErrors.contains(
-						httpServletRequest, "fragmentEntryContentInvalid")) {
-
-					error = true;
-
-					SessionErrors.clear(httpServletRequest);
-				}
-
-				soyContext.put(
-					"comments",
-					_getFragmentEntryLinkCommentsJSONArray(fragmentEntryLink));
-
 				String configuration =
 					_fragmentRendererController.getConfiguration(
 						fragmentRendererContext);
 
-				JSONObject configurationJSONObject =
-					JSONFactoryUtil.createJSONObject(configuration);
+				Map<String, Object> fragmentEntryLinkMap =
+					HashMapBuilder.<String, Object>put(
+						"comments",
+						_getFragmentEntryLinkCommentsJSONArray(
+							fragmentEntryLink)
+					).put(
+						"configuration",
+						() -> {
+							JSONObject configurationJSONObject =
+								JSONFactoryUtil.createJSONObject(configuration);
 
-				FragmentEntryLinkItemSelectorUtil.
-					addFragmentEntryLinkFieldsSelectorURL(
-						_itemSelector, httpServletRequest,
-						liferayPortletResponse, configurationJSONObject);
+							FragmentEntryLinkItemSelectorUtil.
+								addFragmentEntryLinkFieldsSelectorURL(
+									_itemSelector, httpServletRequest,
+									liferayPortletResponse,
+									configurationJSONObject);
 
-				soyContext.put(
-					"configuration", configurationJSONObject
-				).put(
-					"content", content
-				).put(
-					"defaultConfigurationValues",
-					_fragmentEntryConfigurationParser.
-						getConfigurationDefaultValuesJSONObject(configuration)
-				).put(
-					"editableValues", editableValuesJSONObject
-				).put(
-					"error", error
-				).put(
-					"fragmentEntryLinkId",
-					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId())
-				).put(
-					"masterLayout",
-					layout.getMasterLayoutPlid() ==
-						fragmentEntryLink.getClassPK()
-				).putAll(
-					_getFragmentEntrySoyContext(
-						fragmentEntryLink, fragmentEntry, content)
-				);
+							return configurationJSONObject;
+						}
+					).put(
+						"content", content
+					).put(
+						"defaultConfigurationValues",
+						_fragmentEntryConfigurationParser.
+							getConfigurationDefaultValuesJSONObject(
+								configuration)
+					).put(
+						"editableValues",
+						JSONFactoryUtil.createJSONObject(
+							fragmentEntryLink.getEditableValues())
+					).put(
+						"error",
+						() -> {
+							if (SessionErrors.contains(
+									httpServletRequest,
+									"fragmentEntryContentInvalid")) {
 
-				soyContexts.put(
+								SessionErrors.clear(httpServletRequest);
+
+								return true;
+							}
+
+							return false;
+						}
+					).put(
+						"fragmentEntryLinkId",
+						String.valueOf(
+							fragmentEntryLink.getFragmentEntryLinkId())
+					).put(
+						"masterLayout",
+						layout.getMasterLayoutPlid() ==
+							fragmentEntryLink.getClassPK()
+					).build();
+
+				FragmentEntry fragmentEntry =
+					FragmentEntryServiceUtil.fetchFragmentEntry(
+						fragmentEntryLink.getFragmentEntryId());
+
+				fragmentEntryLinkMap.putAll(
+					_getFragmentEntry(
+						fragmentEntryLink, fragmentEntry, content));
+
+				fragmentEntryLinksMap.put(
 					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()),
-					soyContext);
+					fragmentEntryLinkMap);
 			}
 		}
 		finally {
 			themeDisplay.setIsolated(isolated);
 		}
 
-		_soyContextFragmentEntryLinksSoyContext = soyContexts;
+		_fragmentEntryLinks = fragmentEntryLinksMap;
 
-		return _soyContextFragmentEntryLinksSoyContext;
-	}
-
-	private SoyContext _getFragmentEntrySoyContext(
-		FragmentEntryLink fragmentEntryLink, FragmentEntry fragmentEntry,
-		String content) {
-
-		if (fragmentEntry != null) {
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-			soyContext.put(
-				"fragmentEntryId", fragmentEntry.getFragmentEntryId()
-			).put(
-				"fragmentEntryKey", fragmentEntry.getFragmentEntryKey()
-			).put(
-				"name", fragmentEntry.getName()
-			);
-
-			return soyContext;
-		}
-
-		String rendererKey = fragmentEntryLink.getRendererKey();
-
-		if (Validator.isNotNull(rendererKey)) {
-			SoyContext soyContext = _getContributedFragmentEntrySoyContext(
-				rendererKey);
-
-			if (!soyContext.isEmpty()) {
-				return soyContext;
-			}
-
-			soyContext = SoyContextFactoryUtil.createSoyContext();
-
-			FragmentRenderer fragmentRenderer =
-				_fragmentRendererTracker.getFragmentRenderer(
-					fragmentEntryLink.getRendererKey());
-
-			if (fragmentRenderer != null) {
-				soyContext.put(
-					"fragmentEntryId", 0
-				).put(
-					"fragmentEntryKey", fragmentRenderer.getKey()
-				).put(
-					"name", fragmentRenderer.getLabel(themeDisplay.getLocale())
-				);
-			}
-
-			if (!soyContext.isEmpty()) {
-				return soyContext;
-			}
-		}
-
-		SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-		soyContext.put(
-			"fragmentEntryId", 0
-		).put(
-			"name", StringPool.BLANK
-		);
-
-		String portletId = _getPortletId(content);
-
-		PortletConfig portletConfig = PortletConfigFactoryUtil.get(portletId);
-
-		if (portletConfig == null) {
-			return soyContext;
-		}
-
-		soyContext.put(
-			"name",
-			PortalUtil.getPortletTitle(portletId, themeDisplay.getLocale())
-		).put(
-			"portletId", portletId
-		);
-
-		return soyContext;
+		return _fragmentEntryLinks;
 	}
 
 	private ItemSelectorCriterion _getImageItemSelectorCriterion() {
@@ -1266,10 +1232,10 @@ public abstract class ContentPageEditorDisplayContext {
 		return lookAndFeelURL.toString();
 	}
 
-	private Set<SoyContext> _getMappedInfoItemsSoyContexts()
+	private Set<Map<String, Object>> _getMappedInfoItems()
 		throws PortalException {
 
-		Set<SoyContext> mappedInfoItemsSoyContexts = new HashSet<>();
+		Set<Map<String, Object>> mappedInfoItems = new HashSet<>();
 
 		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
 			ContentUtil.getMappedInfoDisplayObjectProviders(
@@ -1278,22 +1244,18 @@ public abstract class ContentPageEditorDisplayContext {
 		for (InfoDisplayObjectProvider infoDisplayObjectProvider :
 				infoDisplayObjectProviders) {
 
-			SoyContext mappedInfoItemSoyContext =
-				SoyContextFactoryUtil.createSoyContext();
-
-			mappedInfoItemSoyContext.put(
-				"classNameId", infoDisplayObjectProvider.getClassNameId()
-			).put(
-				"classPK", infoDisplayObjectProvider.getClassPK()
-			).put(
-				"title",
-				infoDisplayObjectProvider.getTitle(themeDisplay.getLocale())
-			);
-
-			mappedInfoItemsSoyContexts.add(mappedInfoItemSoyContext);
+			mappedInfoItems.add(
+				HashMapBuilder.<String, Object>put(
+					"classNameId", infoDisplayObjectProvider.getClassNameId()
+				).put(
+					"classPK", infoDisplayObjectProvider.getClassPK()
+				).put(
+					"title",
+					infoDisplayObjectProvider.getTitle(themeDisplay.getLocale())
+				).build());
 		}
 
-		return mappedInfoItemsSoyContexts;
+		return mappedInfoItems;
 	}
 
 	private String _getMasterLayoutData() {
@@ -1428,7 +1390,7 @@ public abstract class ContentPageEditorDisplayContext {
 		return PortletIdCodec.decodePortletName(id.substring(8));
 	}
 
-	private List<SoyContext> _getPortletsSoyContexts(
+	private List<Map<String, Object>> _getPortlets(
 		PortletCategory portletCategory) {
 
 		Set<String> portletIds = portletCategory.getPortletIds();
@@ -1473,24 +1435,17 @@ public abstract class ContentPageEditorDisplayContext {
 		).sorted(
 			new PortletTitleComparator(servletContext, themeDisplay.getLocale())
 		).map(
-			portlet -> {
-				SoyContext portletSoyContext =
-					SoyContextFactoryUtil.createSoyContext();
-
-				portletSoyContext.put(
-					"instanceable", portlet.isInstanceable()
-				).put(
-					"portletId", portlet.getPortletId()
-				).put(
-					"title",
-					PortalUtil.getPortletTitle(
-						portlet, servletContext, themeDisplay.getLocale())
-				).put(
-					"used", _isUsed(portlet, themeDisplay.getPlid())
-				);
-
-				return portletSoyContext;
-			}
+			portlet -> HashMapBuilder.<String, Object>put(
+				"instanceable", portlet.isInstanceable()
+			).put(
+				"portletId", portlet.getPortletId()
+			).put(
+				"title",
+				PortalUtil.getPortletTitle(
+					portlet, servletContext, themeDisplay.getLocale())
+			).put(
+				"used", _isUsed(portlet, themeDisplay.getPlid())
+			).build()
 		).collect(
 			Collectors.toList()
 		);
@@ -1552,7 +1507,7 @@ public abstract class ContentPageEditorDisplayContext {
 		return _urlItemSelectorCriterion;
 	}
 
-	private List<SoyContext> _getWidgetCategoriesSoyContexts(
+	private List<Map<String, Object>> _getWidgetCategories(
 		PortletCategory portletCategory) {
 
 		Collection<PortletCategory> portletCategories =
@@ -1565,31 +1520,24 @@ public abstract class ContentPageEditorDisplayContext {
 		).filter(
 			category -> !category.isHidden()
 		).map(
-			category -> {
-				SoyContext categoryContext =
-					SoyContextFactoryUtil.createSoyContext();
-
-				categoryContext.put(
-					"categories", _getWidgetCategoriesSoyContexts(category)
-				).put(
-					"path",
-					StringUtil.replace(
-						category.getPath(), new String[] {"/", "."},
-						new String[] {"-", "-"})
-				).put(
-					"portlets", _getPortletsSoyContexts(category)
-				).put(
-					"title", _getPortletCategoryTitle(category)
-				);
-
-				return categoryContext;
-			}
+			category -> HashMapBuilder.<String, Object>put(
+				"categories", _getWidgetCategories(category)
+			).put(
+				"path",
+				StringUtil.replace(
+					category.getPath(), new String[] {"/", "."},
+					new String[] {"-", "-"})
+			).put(
+				"portlets", _getPortlets(category)
+			).put(
+				"title", _getPortletCategoryTitle(category)
+			).build()
 		).collect(
 			Collectors.toList()
 		);
 	}
 
-	private List<SoyContext> _getWidgetsSoyContexts() throws Exception {
+	private List<Map<String, Object>> _getWidgets() throws Exception {
 		PortletCategory portletCategory = (PortletCategory)WebAppPool.get(
 			themeDisplay.getCompanyId(), WebKeys.PORTLET_CATEGORY);
 
@@ -1598,7 +1546,7 @@ public abstract class ContentPageEditorDisplayContext {
 			themeDisplay.getLayout(), portletCategory,
 			themeDisplay.getLayoutTypePortlet());
 
-		return _getWidgetCategoriesSoyContexts(portletCategory);
+		return _getWidgetCategories(portletCategory);
 	}
 
 	private boolean _isAllowedFragmentEntryKey(String fragmentEntryKey) {
@@ -1711,6 +1659,7 @@ public abstract class ContentPageEditorDisplayContext {
 	private final FragmentEntryConfigurationParser
 		_fragmentEntryConfigurationParser;
 	private List<String> _fragmentEntryKeys;
+	private Map<String, Object> _fragmentEntryLinks;
 	private final FragmentRendererController _fragmentRendererController;
 	private final FragmentRendererTracker _fragmentRendererTracker;
 	private Long _groupId;
@@ -1722,8 +1671,7 @@ public abstract class ContentPageEditorDisplayContext {
 	private Layout _publishedLayout;
 	private String _redirect;
 	private final RenderResponse _renderResponse;
-	private List<SoyContext> _sidebarPanelSoyContexts;
-	private SoyContext _soyContextFragmentEntryLinksSoyContext;
+	private List<Map<String, Object>> _sidebarPanels;
 	private ItemSelectorCriterion _urlItemSelectorCriterion;
 
 }

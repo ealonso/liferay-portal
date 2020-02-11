@@ -40,8 +40,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.template.soy.util.SoyContext;
-import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsExperimentConstants;
@@ -57,6 +55,7 @@ import com.liferay.staging.StagingGroupHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -140,7 +139,7 @@ public class ContentPageLayoutEditorDisplayContext
 			"addSegmentsExperienceURL",
 			getFragmentEntryActionURL("/content_layout/add_segments_experience")
 		).put(
-			"availableSegmentsEntries", _getAvailableSegmentsEntriesSoyContext()
+			"availableSegmentsEntries", _getAvailableSegmentsEntries()
 		).put(
 			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
 		).put(
@@ -155,7 +154,7 @@ public class ContentPageLayoutEditorDisplayContext
 		).put(
 			"hasEditSegmentsEntryPermission", _hasEditSegmentsEntryPermission()
 		).put(
-			"layoutDataList", _getLayoutDataListSoyContext()
+			"layoutDataList", _getLayoutDataList()
 		).put(
 			"singleSegmentsExperienceMode", isSingleSegmentsExperienceMode()
 		).put(
@@ -205,68 +204,55 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return HashMapBuilder.<String, Object>put(
-			"availableSegmentsExperiences",
-			_getAvailableSegmentsExperiencesSoyContext()
+			"availableSegmentsExperiences", _getAvailableSegmentsExperiences()
 		).put(
 			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId())
 		).put(
 			"segmentsExperimentStatus",
-			_getSegmentsExperimentStatusSoyContext(getSegmentsExperienceId())
+			_getSegmentsExperimentStatus(getSegmentsExperienceId())
 		).build();
 	}
 
 	@Override
-	protected List<SoyContext> getSidebarPanelSoyContexts() {
-		return super.getSidebarPanelSoyContexts(false);
+	protected List<Map<String, Object>> getSidebarPanels() {
+		return super.getSidebarPanels(false);
 	}
 
-	private SoyContext _getAvailableSegmentsEntriesSoyContext() {
-		SoyContext availableSegmentsEntriesSoyContext =
-			SoyContextFactoryUtil.createSoyContext();
+	private Map<String, Object> _getAvailableSegmentsEntries() {
+		Map<String, Object> availableSegmentsEntries = new HashMap<>();
 
 		List<SegmentsEntry> segmentsEntries =
 			SegmentsEntryServiceUtil.getSegmentsEntries(
 				_getStagingAwareGroupId(), true);
 
 		for (SegmentsEntry segmentsEntry : segmentsEntries) {
-			SoyContext segmentsEntrySoyContext =
-				SoyContextFactoryUtil.createSoyContext();
-
-			segmentsEntrySoyContext.put(
-				"name", segmentsEntry.getName(themeDisplay.getLocale())
-			).put(
-				"segmentsEntryId",
-				String.valueOf(segmentsEntry.getSegmentsEntryId())
-			);
-
-			availableSegmentsEntriesSoyContext.put(
+			availableSegmentsEntries.put(
 				String.valueOf(segmentsEntry.getSegmentsEntryId()),
-				segmentsEntrySoyContext);
+				HashMapBuilder.<String, Object>put(
+					"name", segmentsEntry.getName(themeDisplay.getLocale())
+				).put(
+					"segmentsEntryId",
+					String.valueOf(segmentsEntry.getSegmentsEntryId())
+				).build());
 		}
 
-		SoyContext defaultSegmentsEntrySoyContext =
-			SoyContextFactoryUtil.createSoyContext();
-
-		defaultSegmentsEntrySoyContext.put(
-			"name",
-			SegmentsEntryConstants.getDefaultSegmentsEntryName(
-				themeDisplay.getLocale())
-		).put(
-			"segmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
-		);
-
-		availableSegmentsEntriesSoyContext.put(
+		availableSegmentsEntries.put(
 			String.valueOf(SegmentsEntryConstants.ID_DEFAULT),
-			defaultSegmentsEntrySoyContext);
+			HashMapBuilder.<String, Object>put(
+				"name",
+				SegmentsEntryConstants.getDefaultSegmentsEntryName(
+					themeDisplay.getLocale())
+			).put(
+				"segmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
+			).build());
 
-		return availableSegmentsEntriesSoyContext;
+		return availableSegmentsEntries;
 	}
 
-	private SoyContext _getAvailableSegmentsExperiencesSoyContext()
+	private Map<String, Object> _getAvailableSegmentsExperiences()
 		throws PortalException {
 
-		SoyContext availableSegmentsExperiencesSoyContext =
-			SoyContextFactoryUtil.createSoyContext();
+		Map<String, Object> availableSegmentsExperiences = new HashMap<>();
 
 		Layout draftLayout = themeDisplay.getLayout();
 
@@ -282,69 +268,61 @@ public class ContentPageLayoutEditorDisplayContext
 				themeDisplay.getPlid(), true);
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
-			SoyContext segmentsExperienceSoyContext =
-				SoyContextFactoryUtil.createSoyContext();
+			availableSegmentsExperiences.put(
+				String.valueOf(segmentsExperience.getSegmentsExperienceId()),
+				HashMapBuilder.<String, Object>put(
+					"hasLockedSegmentsExperiment",
+					segmentsExperience.hasSegmentsExperiment()
+				).put(
+					"name", segmentsExperience.getName(themeDisplay.getLocale())
+				).put(
+					"priority", segmentsExperience.getPriority()
+				).put(
+					"segmentsEntryId",
+					String.valueOf(segmentsExperience.getSegmentsEntryId())
+				).put(
+					"segmentsExperienceId",
+					String.valueOf(segmentsExperience.getSegmentsExperienceId())
+				).put(
+					"segmentsExperimentStatus",
+					_getSegmentsExperimentStatus(
+						segmentsExperience.getSegmentsExperienceId())
+				).put(
+					"segmentsExperimentURL",
+					_getSegmentsExperimentURL(
+						layoutFullURL,
+						segmentsExperience.getSegmentsExperienceId())
+				).build());
+		}
 
-			segmentsExperienceSoyContext.put(
+		availableSegmentsExperiences.put(
+			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT),
+			HashMapBuilder.<String, Object>put(
 				"hasLockedSegmentsExperiment",
-				segmentsExperience.hasSegmentsExperiment()
+				_hasDefaultSegmentsExperienceLockedSegmentsExperiment()
 			).put(
-				"name", segmentsExperience.getName(themeDisplay.getLocale())
+				"name",
+				SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
+					themeDisplay.getLocale())
 			).put(
-				"priority", segmentsExperience.getPriority()
+				"priority", SegmentsExperienceConstants.PRIORITY_DEFAULT
 			).put(
 				"segmentsEntryId",
-				String.valueOf(segmentsExperience.getSegmentsEntryId())
+				String.valueOf(SegmentsEntryConstants.ID_DEFAULT)
 			).put(
 				"segmentsExperienceId",
-				String.valueOf(segmentsExperience.getSegmentsExperienceId())
+				String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
 			).put(
 				"segmentsExperimentStatus",
-				_getSegmentsExperimentStatusSoyContext(
-					segmentsExperience.getSegmentsExperienceId())
+				_getSegmentsExperimentStatus(
+					SegmentsExperienceConstants.ID_DEFAULT)
 			).put(
 				"segmentsExperimentURL",
 				_getSegmentsExperimentURL(
-					layoutFullURL, segmentsExperience.getSegmentsExperienceId())
-			);
+					layoutFullURL, SegmentsExperienceConstants.ID_DEFAULT)
+			).build());
 
-			availableSegmentsExperiencesSoyContext.put(
-				String.valueOf(segmentsExperience.getSegmentsExperienceId()),
-				segmentsExperienceSoyContext);
-		}
-
-		SoyContext defaultSegmentsExperienceSoyContext =
-			SoyContextFactoryUtil.createSoyContext();
-
-		defaultSegmentsExperienceSoyContext.put(
-			"hasLockedSegmentsExperiment",
-			_hasDefaultSegmentsExperienceLockedSegmentsExperiment()
-		).put(
-			"name",
-			SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-				themeDisplay.getLocale())
-		).put(
-			"priority", SegmentsExperienceConstants.PRIORITY_DEFAULT
-		).put(
-			"segmentsEntryId", String.valueOf(SegmentsEntryConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperienceId",
-			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperimentStatus",
-			_getSegmentsExperimentStatusSoyContext(
-				SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperimentURL",
-			_getSegmentsExperimentURL(
-				layoutFullURL, SegmentsExperienceConstants.ID_DEFAULT)
-		);
-
-		availableSegmentsExperiencesSoyContext.put(
-			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT),
-			defaultSegmentsExperienceSoyContext);
-
-		return availableSegmentsExperiencesSoyContext;
+		return availableSegmentsExperiences;
 	}
 
 	private String _getEditSegmentsEntryURL() throws PortalException {
@@ -368,7 +346,7 @@ public class ContentPageLayoutEditorDisplayContext
 		return _editSegmentsEntryURL;
 	}
 
-	private List<SoyContext> _getLayoutDataListSoyContext()
+	private List<Map<String, Object>> _getLayoutDataList()
 		throws PortalException {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
@@ -382,7 +360,7 @@ public class ContentPageLayoutEditorDisplayContext
 			return Collections.emptyList();
 		}
 
-		List<SoyContext> soyContexts = new ArrayList<>();
+		List<Map<String, Object>> layoutDataList = new ArrayList<>();
 
 		List<LayoutPageTemplateStructureRel> layoutPageTemplateStructureRels =
 			LayoutPageTemplateStructureRelLocalServiceUtil.
@@ -393,21 +371,18 @@ public class ContentPageLayoutEditorDisplayContext
 		for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
 				layoutPageTemplateStructureRels) {
 
-			SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-			soyContext.put(
-				"layoutData",
-				JSONFactoryUtil.createJSONObject(
-					layoutPageTemplateStructureRel.getData())
-			).put(
-				"segmentsExperienceId",
-				layoutPageTemplateStructureRel.getSegmentsExperienceId()
-			);
-
-			soyContexts.add(soyContext);
+			layoutDataList.add(
+				HashMapBuilder.<String, Object>put(
+					"layoutData",
+					JSONFactoryUtil.createJSONObject(
+						layoutPageTemplateStructureRel.getData())
+				).put(
+					"segmentsExperienceId",
+					layoutPageTemplateStructureRel.getSegmentsExperienceId()
+				).build());
 		}
 
-		return soyContexts;
+		return layoutDataList;
 	}
 
 	private Optional<SegmentsExperiment> _getSegmentsExperimentOptional(
@@ -426,7 +401,7 @@ public class ContentPageLayoutEditorDisplayContext
 				SegmentsExperimentConstants.Status.getExclusiveStatusValues()));
 	}
 
-	private SoyContext _getSegmentsExperimentStatusSoyContext(
+	private Map<String, Object> _getSegmentsExperimentStatus(
 			long segmentsExperienceId)
 		throws PortalException {
 
@@ -444,9 +419,7 @@ public class ContentPageLayoutEditorDisplayContext
 			SegmentsExperimentConstants.Status.valueOf(
 				segmentsExperiment.getStatus());
 
-		SoyContext soyContext = SoyContextFactoryUtil.createSoyContext();
-
-		return soyContext.put(
+		return HashMapBuilder.<String, Object>put(
 			"label",
 			LanguageUtil.get(
 				ResourceBundleUtil.getBundle(
@@ -454,7 +427,7 @@ public class ContentPageLayoutEditorDisplayContext
 				status.getLabel())
 		).put(
 			"value", status.getValue()
-		);
+		).build();
 	}
 
 	private String _getSegmentsExperimentURL(
