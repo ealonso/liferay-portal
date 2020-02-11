@@ -346,6 +346,8 @@ public abstract class ContentPageEditorDisplayContext {
 					"hasEditSegmentsEntryPermission",
 					editorSoyContext.get("hasEditSegmentsEntryPermission")
 				).put(
+					"layoutDataList", editorSoyContext.get("layoutDataList")
+				).put(
 					"singleSegmentsExperienceMode",
 					editorSoyContext.get("singleSegmentsExperienceMode")
 				).put(
@@ -383,8 +385,6 @@ public abstract class ContentPageEditorDisplayContext {
 				"languageId", editorSoyContext.get("languageId")
 			).put(
 				"layoutData", editorSoyContext.get("layoutData")
-			).put(
-				"layoutDataList", editorSoyContext.get("layoutDataList")
 			).put(
 				"mappedInfoItems", editorSoyContext.get("mappedInfoItems")
 			).put(
