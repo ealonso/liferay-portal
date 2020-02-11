@@ -148,7 +148,7 @@ import org.jsoup.select.Elements;
 /**
  * @author Eudaldo Alonso
  */
-public class ContentPageEditorDisplayContext {
+public abstract class ContentPageEditorDisplayContext {
 
 	public ContentPageEditorDisplayContext(
 		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
