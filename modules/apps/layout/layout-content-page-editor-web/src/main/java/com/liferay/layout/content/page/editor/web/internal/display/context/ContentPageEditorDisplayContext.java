@@ -87,7 +87,6 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
-import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -147,7 +146,7 @@ import org.jsoup.select.Elements;
 /**
  * @author Eudaldo Alonso
  */
-public class ContentPageEditorDisplayContext {
+public abstract class ContentPageEditorDisplayContext {
 
 	public ContentPageEditorDisplayContext(
 		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
@@ -182,7 +181,7 @@ public class ContentPageEditorDisplayContext {
 	}
 
 	public String getDiscardDraftURL() {
-		Layout publishedLayout = _getPublishedLayout();
+		Layout publishedLayout = getPublishedLayout();
 
 		if (!Objects.equals(
 				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
@@ -298,7 +297,7 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"pending",
 				() -> {
-					Layout publishedLayout = _getPublishedLayout();
+					Layout publishedLayout = getPublishedLayout();
 
 					if (publishedLayout.getStatus() ==
 							WorkflowConstants.STATUS_PENDING) {
@@ -389,14 +388,6 @@ public class ContentPageEditorDisplayContext {
 		return _renderResponse.getNamespace();
 	}
 
-	public String getPublishURL() {
-		return getFragmentEntryActionURL("/content_layout/publish_layout");
-	}
-
-	public List<SoyContext> getSidebarPanelSoyContexts() {
-		return Collections.emptyList();
-	}
-
 	public boolean isMasterLayout() {
 		if (_getPageType() ==
 				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT) {
@@ -407,17 +398,9 @@ public class ContentPageEditorDisplayContext {
 		return false;
 	}
 
-	public boolean isSingleSegmentsExperienceMode() {
-		return false;
-	}
+	public abstract boolean isSingleSegmentsExperienceMode();
 
-	public boolean isWorkflowEnabled() {
-		Layout publishedLayout = _getPublishedLayout();
-
-		return WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
-			publishedLayout.getCompanyId(), publishedLayout.getGroupId(),
-			Layout.class.getName());
-	}
+	public abstract boolean isWorkflowEnabled();
 
 	protected String getFragmentEntryActionURL(String action) {
 		return getFragmentEntryActionURL(action, null);
@@ -447,9 +430,24 @@ public class ContentPageEditorDisplayContext {
 		return _groupId;
 	}
 
-	protected long getSegmentsExperienceId() {
-		return SegmentsExperienceConstants.ID_DEFAULT;
+	protected Layout getPublishedLayout() {
+		if (_publishedLayout != null) {
+			return _publishedLayout;
+		}
+
+		Layout draftLayout = themeDisplay.getLayout();
+
+		_publishedLayout = LayoutLocalServiceUtil.fetchLayout(
+			draftLayout.getClassPK());
+
+		return _publishedLayout;
 	}
+
+	protected abstract String getPublishURL();
+
+	protected abstract long getSegmentsExperienceId();
+
+	protected abstract List<SoyContext> getSidebarPanelSoyContexts();
 
 	protected List<SoyContext> getSidebarPanelSoyContexts(
 		boolean pageIsDisplayPage) {
@@ -1271,7 +1269,7 @@ public class ContentPageEditorDisplayContext {
 			return _pageType;
 		}
 
-		Layout publishedLayout = _getPublishedLayout();
+		Layout publishedLayout = getPublishedLayout();
 
 		if (Objects.equals(
 				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
@@ -1420,19 +1418,6 @@ public class ContentPageEditorDisplayContext {
 		).collect(
 			Collectors.toList()
 		);
-	}
-
-	private Layout _getPublishedLayout() {
-		if (_publishedLayout != null) {
-			return _publishedLayout;
-		}
-
-		Layout draftLayout = themeDisplay.getLayout();
-
-		_publishedLayout = LayoutLocalServiceUtil.fetchLayout(
-			draftLayout.getClassPK());
-
-		return _publishedLayout;
 	}
 
 	private String _getRedirect() {
@@ -1636,7 +1621,7 @@ public class ContentPageEditorDisplayContext {
 			return false;
 		}
 
-		Layout publishedLayout = _getPublishedLayout();
+		Layout publishedLayout = getPublishedLayout();
 
 		int masterUsagesCount = LayoutLocalServiceUtil.getLayoutsCount(
 			themeDisplay.getScopeGroupId(), publishedLayout.getPlid());

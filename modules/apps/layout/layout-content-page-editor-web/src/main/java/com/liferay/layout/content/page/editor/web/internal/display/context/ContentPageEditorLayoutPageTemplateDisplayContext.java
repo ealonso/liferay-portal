@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.util.List;
 import java.util.Map;
@@ -78,19 +79,29 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 	}
 
 	@Override
-	public String getPublishURL() {
-		return getFragmentEntryActionURL(
-			"/content_layout/publish_layout_page_template_entry");
-	}
-
-	@Override
-	public List<SoyContext> getSidebarPanelSoyContexts() {
-		return getSidebarPanelSoyContexts(_pageIsDisplayPage);
+	public boolean isSingleSegmentsExperienceMode() {
+		return false;
 	}
 
 	@Override
 	public boolean isWorkflowEnabled() {
 		return false;
+	}
+
+	@Override
+	protected String getPublishURL() {
+		return getFragmentEntryActionURL(
+			"/content_layout/publish_layout_page_template_entry");
+	}
+
+	@Override
+	protected long getSegmentsExperienceId() {
+		return SegmentsExperienceConstants.ID_DEFAULT;
+	}
+
+	@Override
+	protected List<SoyContext> getSidebarPanelSoyContexts() {
+		return getSidebarPanelSoyContexts(_pageIsDisplayPage);
 	}
 
 	private LayoutPageTemplateEntry _getLayoutPageTemplateEntry() {

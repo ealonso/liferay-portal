@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -144,11 +145,6 @@ public class ContentPageLayoutEditorDisplayContext
 	}
 
 	@Override
-	public List<SoyContext> getSidebarPanelSoyContexts() {
-		return getSidebarPanelSoyContexts(false);
-	}
-
-	@Override
 	public boolean isSingleSegmentsExperienceMode() {
 		long segmentsExperienceId = ParamUtil.getLong(
 			PortalUtil.getOriginalServletRequest(httpServletRequest),
@@ -159,6 +155,20 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean isWorkflowEnabled() {
+		Layout publishedLayout = getPublishedLayout();
+
+		return WorkflowDefinitionLinkLocalServiceUtil.hasWorkflowDefinitionLink(
+			publishedLayout.getCompanyId(), publishedLayout.getGroupId(),
+			Layout.class.getName());
+	}
+
+	@Override
+	protected String getPublishURL() {
+		return getFragmentEntryActionURL("/content_layout/publish_layout");
 	}
 
 	@Override
@@ -188,6 +198,11 @@ public class ContentPageLayoutEditorDisplayContext
 		}
 
 		return _segmentsExperienceId;
+	}
+
+	@Override
+	protected List<SoyContext> getSidebarPanelSoyContexts() {
+		return getSidebarPanelSoyContexts(false);
 	}
 
 	private SoyContext _getAvailableSegmentsEntriesSoyContext() {
