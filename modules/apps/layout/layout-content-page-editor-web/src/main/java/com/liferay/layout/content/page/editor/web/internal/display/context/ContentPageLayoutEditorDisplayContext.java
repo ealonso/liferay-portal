@@ -382,18 +382,6 @@ public class ContentPageLayoutEditorDisplayContext
 		return soyContexts;
 	}
 
-	private long _getSegmentsEntryId() {
-		if (_segmentsEntryId != null) {
-			return _segmentsEntryId;
-		}
-
-		_segmentsEntryId = ParamUtil.getLong(
-			PortalUtil.getOriginalServletRequest(httpServletRequest),
-			"segmentsEntryId");
-
-		return _segmentsEntryId;
-	}
-
 	private Optional<SegmentsExperiment> _getSegmentsExperimentOptional(
 			long segmentsExperienceId)
 		throws PortalException {
@@ -521,28 +509,9 @@ public class ContentPageLayoutEditorDisplayContext
 		return _lockedSegmentsExperience;
 	}
 
-	private boolean _isShowSegmentsExperiences() throws PortalException {
-		if (_showSegmentsExperiences != null) {
-			return _showSegmentsExperiences;
-		}
-
-		Group group = GroupLocalServiceUtil.getGroup(getGroupId());
-
-		if (!group.isLayoutSetPrototype() && !group.isUser()) {
-			_showSegmentsExperiences = true;
-		}
-		else {
-			_showSegmentsExperiences = false;
-		}
-
-		return _showSegmentsExperiences;
-	}
-
 	private String _editSegmentsEntryURL;
 	private Boolean _lockedSegmentsExperience;
-	private Long _segmentsEntryId;
 	private Long _segmentsExperienceId;
-	private Boolean _showSegmentsExperiences;
 	private final StagingGroupHelper _stagingGroupHelper;
 
 }
