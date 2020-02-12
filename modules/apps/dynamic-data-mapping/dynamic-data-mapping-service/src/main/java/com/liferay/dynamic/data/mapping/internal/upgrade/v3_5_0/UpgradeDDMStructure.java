@@ -17,13 +17,17 @@ package com.liferay.dynamic.data.mapping.internal.upgrade.v3_5_0;
 import com.liferay.dynamic.data.mapping.io.DDMFormDeserializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeRequest;
 import com.liferay.dynamic.data.mapping.io.DDMFormDeserializerDeserializeResponse;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutDeserializer;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutDeserializerDeserializeRequest;
+import com.liferay.dynamic.data.mapping.io.DDMFormLayoutDeserializerDeserializeResponse;
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeRequest;
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeResponse;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayoutPage;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
-import com.liferay.dynamic.data.mapping.util.DDM;
+import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
@@ -31,17 +35,20 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author Marcela Cunha
@@ -49,43 +56,15 @@ import java.sql.Timestamp;
 public class UpgradeDDMStructure extends UpgradeProcess {
 
 	public UpgradeDDMStructure(
-		DDM ddm, DDMFormLayoutSerializer ddmFormLayoutSerializer,
+		DDMFormLayoutDeserializer ddmFormLayoutDeserializer,
+		DDMFormLayoutSerializer ddmFormLayoutSerializer,
 		DDMFormDeserializer ddmFormJSONDeserializer,
 		DDMFormDeserializer ddmFormXSDDeserializer) {
 
-		_ddm = ddm;
+		_ddmFormLayoutDeserializer = ddmFormLayoutDeserializer;
 		_ddmFormLayoutSerializer = ddmFormLayoutSerializer;
 		_ddmFormJSONDeserializer = ddmFormJSONDeserializer;
 		_ddmFormXSDDeserializer = ddmFormXSDDeserializer;
-	}
-
-	protected JSONObject createLocalizedValue(String value) throws Exception {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		String languageId = UpgradeProcessUtil.getDefaultLanguageId(_companyId);
-
-		if (Validator.isNull(value)) {
-			jsonObject.put(languageId, StringPool.BLANK);
-		}
-		else {
-			jsonObject.put(languageId, value);
-		}
-
-		return jsonObject;
-	}
-
-	protected JSONArray createOption() throws Exception {
-		JSONObject jsonObject = JSONUtil.put(
-			"label",
-			JSONFactoryUtil.createJSONObject(
-				createLocalizedValue(
-					"Option"
-				).toString())
-		).put(
-			"value", "Option"
-		);
-
-		return JSONUtil.put(jsonObject);
 	}
 
 	protected DDMForm deserialize(String content, String type) {
@@ -108,122 +87,143 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		return ddmFormDeserializerDeserializeResponse.getDDMForm();
 	}
 
-	@Override
-	protected void doUpgrade() throws Exception {
-		StringBundler sb1 = new StringBundler(6);
-
-		sb1.append("insert into DDMStructureVersion (structureVersionId, ");
-		sb1.append("groupId, companyId, userId, userName, createDate, ");
-		sb1.append("structureId, version, parentStructureId, name, ");
-		sb1.append("description, definition, storageType, type_, status, ");
-		sb1.append("statusByUserId, statusByUserName, statusDate) values (?, ");
-		sb1.append("?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-		StringBundler sb2 = new StringBundler(5);
-
-		sb2.append("insert into DDMStructureLayout (uuid_, ");
-		sb2.append("structureLayoutId, groupId, companyId, userId, userName, ");
-		sb2.append("createDate, modifiedDate, structureLayoutKey, ");
-		sb2.append("structureVersionId, definition) values (?, ?, ?, ?, ?, ");
-		sb2.append("?, ?, ?, ?, ?, ?)");
-
+	protected void doStructureDefinitionUpgrade() throws Exception {
 		try (PreparedStatement ps1 = connection.prepareStatement(
 				"select * from DDMStructure where classNameId = ? or " +
-					"classNameId = ?");
+					"classNameId = ? ");
 			PreparedStatement ps2 =
 				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
 					connection,
 					"update DDMStructure set definition = ? where " +
-						"structureId = ?");
-			PreparedStatement ps3 =
-				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
-					connection, sb1.toString());
-			PreparedStatement ps4 =
-				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
-					connection, sb2.toString())) {
+						"structureId = ?")) {
 
 			ps1.setLong(
 				1,
 				PortalUtil.getClassNameId(
-					"com.liferay.journal.model.JournalArticle"));
-
+					"com.liferay.document.library.kernel.model." +
+						"DLFileEntryMetadata"));
 			ps1.setLong(
 				2,
 				PortalUtil.getClassNameId(
-					"com.liferay.document.library.kernel.model." +
-						"DLFileEntryMetadata"));
+					"com.liferay.journal.model.JournalArticle"));
 
 			try (ResultSet rs = ps1.executeQuery()) {
 				while (rs.next()) {
 					String definition = upgradeDefinition(
-						rs.getString("definition"));
-
-					long structureId = rs.getLong("structureId");
+						rs.getLong("companyId"), rs.getString("definition"));
 
 					ps2.setString(1, definition);
 
-					ps2.setLong(2, structureId);
-
+					ps2.setLong(2, rs.getLong("structureId"));
 					ps2.addBatch();
-
-					_companyId = rs.getLong("companyId");
-					long groupId = rs.getLong("groupId");
-					Timestamp modifiedDate = rs.getTimestamp("modifiedDate");
-					String storageType = rs.getString("storageType");
-					long userId = rs.getLong("userId");
-					String userName = rs.getString("userName");
-
-					long structureVersionId = increment();
-
-					ps3.setLong(1, structureVersionId);
-
-					ps3.setLong(2, groupId);
-					ps3.setLong(3, _companyId);
-					ps3.setLong(4, userId);
-					ps3.setString(5, userName);
-					ps3.setTimestamp(6, modifiedDate);
-					ps3.setLong(7, structureId);
-					ps3.setString(8, getVersion(structureId));
-					ps3.setLong(9, rs.getLong("parentStructureId"));
-					ps3.setString(10, rs.getString("name"));
-					ps3.setString(11, rs.getString("description"));
-					ps3.setString(12, definition);
-					ps3.setString(13, storageType);
-					ps3.setInt(14, rs.getInt("type_"));
-					ps3.setInt(15, WorkflowConstants.STATUS_APPROVED);
-					ps3.setLong(16, userId);
-					ps3.setString(17, userName);
-					ps3.setTimestamp(18, modifiedDate);
-
-					ps3.addBatch();
-
-					DDMForm ddmForm = getDDMForm(definition, storageType);
-
-					String ddmFormLayoutDefinition =
-						getDefaultDDMFormLayoutDefinition(ddmForm);
-
-					ps4.setString(1, PortalUUIDUtil.generate());
-					ps4.setLong(2, increment());
-					ps4.setLong(3, groupId);
-					ps4.setLong(4, _companyId);
-					ps4.setLong(5, userId);
-					ps4.setString(6, userName);
-					ps4.setTimestamp(7, modifiedDate);
-					ps4.setTimestamp(8, modifiedDate);
-					ps4.setString(9, rs.getString("structureKey"));
-					ps4.setLong(10, structureVersionId);
-					ps4.setString(11, ddmFormLayoutDefinition);
-
-					ps4.addBatch();
 				}
 
 				ps2.executeBatch();
-
-				ps3.executeBatch();
-
-				ps4.executeBatch();
 			}
 		}
+	}
+
+	protected void doStructureLayoutUpgrade() throws Exception {
+		StringBundler sb1 = new StringBundler(11);
+
+		sb1.append("select DDMStructureLayout.definition, ");
+		sb1.append("DDMStructureLayout.structureLayoutId, ");
+		sb1.append("DDMStructure.structureKey, DDMStructure.classNameId from ");
+		sb1.append("DDMStructureLayout inner join DDMStructureVersion on ");
+		sb1.append("DDMStructureVersion.structureVersionId = ");
+		sb1.append("DDMStructureLayout.structureVersionId inner join ");
+		sb1.append("DDMStructure on DDMStructure.structureId = ");
+		sb1.append("DDMStructureVersion.structureId and DDMStructure.version ");
+		sb1.append("= DDMStructureVersion.version where ");
+		sb1.append("DDMStructure.classNameId = ? or DDMStructure.classNameId ");
+		sb1.append("= ?");
+
+		try (PreparedStatement ps1 = connection.prepareStatement(
+				sb1.toString());
+			PreparedStatement ps2 =
+				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+					connection,
+					"update DDMStructureLayout set definition = ?, " +
+						"classNameId = ?, structureLayoutKey = ? where " +
+							"structureLayoutId = ?")) {
+
+			ps1.setLong(
+				1,
+				PortalUtil.getClassNameId(
+					"com.liferay.document.library.kernel.model." +
+						"DLFileEntryMetadata"));
+			ps1.setLong(
+				2,
+				PortalUtil.getClassNameId(
+					"com.liferay.journal.model.JournalArticle"));
+
+			try (ResultSet rs = ps1.executeQuery()) {
+				while (rs.next()) {
+					ps2.setString(
+						1,
+						upgradeDDMFormLayoutDefinition(
+							rs.getString("definition")));
+					ps2.setLong(2, rs.getLong("classNameId"));
+					ps2.setString(3, rs.getString("structureKey"));
+					ps2.setLong(4, rs.getLong("structureLayoutId"));
+
+					ps2.addBatch();
+				}
+
+				ps2.executeBatch();
+			}
+		}
+	}
+
+	protected void doStructureVersionDefinitionUpgrade() throws Exception {
+		StringBundler sb1 = new StringBundler(6);
+
+		sb1.append("select DDMStructure.structureKey, DDMStructureVersion.* ");
+		sb1.append("from DDMStructureVersion inner join DDMStructure on ");
+		sb1.append("DDMStructure.structureId = ");
+		sb1.append("DDMStructureVersion.structureId where ");
+		sb1.append("DDMStructure.classNameId = ? or DDMStructure.classNameId ");
+		sb1.append("= ?");
+
+		try (PreparedStatement ps1 = connection.prepareStatement(
+				sb1.toString());
+			PreparedStatement ps2 =
+				AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+					connection,
+					"update DDMStructureVersion set definition = ? where " +
+						"structureVersionId = ?")) {
+
+			ps1.setLong(
+				1,
+				PortalUtil.getClassNameId(
+					"com.liferay.document.library.kernel.model." +
+						"DLFileEntryMetadata"));
+			ps1.setLong(
+				2,
+				PortalUtil.getClassNameId(
+					"com.liferay.journal.model.JournalArticle"));
+
+			try (ResultSet rs = ps1.executeQuery()) {
+				while (rs.next()) {
+					String definition = upgradeDefinition(
+						rs.getLong("companyId"), rs.getString("definition"));
+
+					ps2.setString(1, definition);
+
+					ps2.setLong(2, rs.getLong("structureVersionId"));
+					ps2.addBatch();
+				}
+
+				ps2.executeBatch();
+			}
+		}
+	}
+
+	@Override
+	protected void doUpgrade() throws Exception {
+		doStructureDefinitionUpgrade();
+		doStructureVersionDefinitionUpgrade();
+		doStructureLayoutUpgrade();
 	}
 
 	protected DDMForm getDDMForm(String definition, String storageType) {
@@ -234,24 +234,33 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		return deserialize(definition, "json");
 	}
 
-	protected String getDefaultDDMFormLayoutDefinition(DDMForm ddmForm) {
-		DDMFormLayout ddmFormLayout = _ddm.getDefaultDDMFormLayout(ddmForm);
-
-		DDMFormLayoutSerializerSerializeRequest.Builder builder =
-			DDMFormLayoutSerializerSerializeRequest.Builder.newBuilder(
-				ddmFormLayout);
-
-		DDMFormLayoutSerializerSerializeResponse
-			ddmFormLayoutSerializerSerializeResponse =
-				_ddmFormLayoutSerializer.serialize(builder.build());
-
-		return ddmFormLayoutSerializerSerializeResponse.getContent();
-	}
-
 	protected String getNextVersion(String version) {
 		int[] versionParts = StringUtil.split(version, StringPool.PERIOD, 0);
 
 		return versionParts[0] + StringPool.PERIOD + ++versionParts[1];
+	}
+
+	protected long getStructureVersionId(long structureId) throws Exception {
+		StringBundler sb1 = new StringBundler(6);
+
+		sb1.append("select DDMStructureVersion.structureVersionId from ");
+		sb1.append("DDMStructureVersion inner join DDMStructure on ");
+		sb1.append("DDMStructure.structureId = ");
+		sb1.append("DDMStructureVersion.structureId and DDMStructure.version ");
+		sb1.append("= DDMStructureVersion.version where ");
+		sb1.append("DDMStructure.structureId = ?");
+
+		try (PreparedStatement ps1 = connection.prepareStatement(
+				sb1.toString())) {
+
+			ps1.setLong(1, structureId);
+
+			try (ResultSet rs = ps1.executeQuery()) {
+				rs.next();
+
+				return rs.getLong("structureVersionId");
+			}
+		}
 	}
 
 	protected String getVersion(Long structureId) throws Exception {
@@ -273,164 +282,289 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		return DDMStructureConstants.VERSION_DEFAULT;
 	}
 
-	protected void upgradeColorField(JSONObject field) {
-		field.put(
-			_DATATYPE, "string"
+	protected void upgradeColorField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "string"
+		).put(
+			"type", "color"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-		upgradeFieldType(field, StringPool.BLANK);
 	}
 
-	protected void upgradeDateField(JSONObject field) {
-		field.put(
-			_DATATYPE, "string"
+	protected void upgradeDateField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "string"
+		).put(
+			"type", "date"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-		upgradeFieldType(field, StringPool.BLANK);
 	}
 
-	protected void upgradeDecimalField(JSONObject field) {
-		field.put(
-			_DATATYPE, "decimal"
+	protected String upgradeDDMFormLayoutDefinition(String content) {
+		DDMFormLayoutDeserializerDeserializeResponse
+			ddmFormLayoutDeserializerDeserializeResponse =
+				_ddmFormLayoutDeserializer.deserialize(
+					DDMFormLayoutDeserializerDeserializeRequest.Builder.
+						newBuilder(
+							content
+						).build());
+
+		DDMFormLayout ddmFormLayout =
+			ddmFormLayoutDeserializerDeserializeResponse.getDDMFormLayout();
+
+		Set<Locale> availableLocales = ddmFormLayout.getAvailableLocales();
+
+		List<DDMFormLayoutPage> ddmFormLayoutPages =
+			ddmFormLayout.getDDMFormLayoutPages();
+
+		for (DDMFormLayoutPage ddmFormLayoutPage : ddmFormLayoutPages) {
+			LocalizedValue localizedValue = ddmFormLayoutPage.getTitle();
+
+			if (localizedValue == null) {
+				localizedValue = new LocalizedValue();
+
+				localizedValue.addString(
+					ddmFormLayout.getDefaultLocale(),
+					LanguageUtil.get(ddmFormLayout.getDefaultLocale(), "page"));
+
+				for (Locale locale : availableLocales) {
+					localizedValue.addString(
+						locale, LanguageUtil.get(locale, "page"));
+				}
+			}
+			else {
+				if (Validator.isNull(
+						localizedValue.getString(
+							ddmFormLayout.getDefaultLocale()))) {
+
+					localizedValue.addString(
+						ddmFormLayout.getDefaultLocale(),
+						LanguageUtil.get(
+							ddmFormLayout.getDefaultLocale(), "page"));
+				}
+			}
+
+			ddmFormLayoutPage.setTitle(localizedValue);
+
+			localizedValue = ddmFormLayoutPage.getDescription();
+
+			if (localizedValue == null) {
+				localizedValue = new LocalizedValue();
+
+				localizedValue.addString(
+					ddmFormLayout.getDefaultLocale(),
+					LanguageUtil.get(
+						ddmFormLayout.getDefaultLocale(), "description"));
+
+				for (Locale locale : availableLocales) {
+					localizedValue.addString(
+						locale, LanguageUtil.get(locale, "description"));
+				}
+			}
+			else {
+				if (Validator.isNull(
+						localizedValue.getString(
+							ddmFormLayout.getDefaultLocale()))) {
+
+					localizedValue.addString(
+						ddmFormLayout.getDefaultLocale(),
+						LanguageUtil.get(
+							ddmFormLayout.getDefaultLocale(), "description"));
+				}
+			}
+
+			ddmFormLayoutPage.setDescription(localizedValue);
+		}
+
+		DDMFormLayoutSerializerSerializeResponse
+			ddmFormLayoutSerializerSerializeResponse =
+				_ddmFormLayoutSerializer.serialize(
+					DDMFormLayoutSerializerSerializeRequest.Builder.newBuilder(
+						ddmFormLayout
+					).build());
+
+		return ddmFormLayoutSerializerSerializeResponse.getContent();
+	}
+
+	protected void upgradeDecimalField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "decimal"
+		).put(
+			"type", "numeric"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-		upgradeFieldType(field, "numeric");
 	}
 
-	protected String upgradeDefinition(String definition) throws Exception {
-		JSONObject definitionJSONObject = JSONFactoryUtil.createJSONObject(
-			definition);
+	protected String upgradeDefinition(long companyId, String definition)
+		throws Exception {
 
-		definitionJSONObject.put(
-			"fields", upgradeFields(definitionJSONObject.get("fields")));
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(definition);
 
-		return definitionJSONObject.toString();
+		jsonObject.put(
+			"fields",
+			upgradeFields(companyId, jsonObject.getJSONArray("fields")));
+
+		return jsonObject.toString();
 	}
 
-	protected void upgradeDocumentLibraryField(JSONObject field) {
-		field.put(
-			_DATATYPE, "string"
+	protected void upgradeDocumentLibraryField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "string"
+		).put(
+			"type", "document_library"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-		upgradeFieldType(field, "document_library");
 	}
 
-	protected JSONArray upgradeFields(Object fields) throws Exception {
+	protected JSONArray upgradeFields(long companyId, JSONArray fieldsJSONArray)
+		throws Exception {
+
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		if (Validator.isNotNull(fields)) {
-			JSONArray fieldsJSONArray = JSONFactoryUtil.createJSONArray(
-				fields.toString());
+		if (fieldsJSONArray != null) {
+			for (int i = 0; i < fieldsJSONArray.length(); i++) {
+				JSONObject jsonObject = fieldsJSONArray.getJSONObject(i);
 
-			for (Object field : fieldsJSONArray) {
-				JSONObject fieldJSONObject = JSONFactoryUtil.createJSONObject(
-					field.toString());
-
-				String type = fieldJSONObject.getString(_TYPE);
+				String type = jsonObject.getString("type");
 
 				if (StringUtil.equals(type, "ddm-color")) {
-					upgradeColorField(fieldJSONObject);
+					upgradeColorField(jsonObject);
 				}
 				else if (StringUtil.equals(type, "ddm-date")) {
-					upgradeDateField(fieldJSONObject);
+					upgradeDateField(jsonObject);
 				}
 				else if (type.startsWith("ddm-decimal")) {
-					upgradeDecimalField(fieldJSONObject);
+					upgradeDecimalField(jsonObject);
 				}
 				else if (type.startsWith("ddm-documentlibrary")) {
-					upgradeDocumentLibraryField(fieldJSONObject);
+					upgradeDocumentLibraryField(jsonObject);
 				}
 				else if (type.startsWith("ddm-geolocation")) {
-					upgradeGeolocation(fieldJSONObject);
+					upgradeGeolocation(jsonObject);
 				}
 				else if (type.startsWith("ddm-integer")) {
-					upgradeIntegerField(fieldJSONObject);
+					upgradeIntegerField(jsonObject);
 				}
 				else if (type.startsWith("ddm-number")) {
-					upgradeNumberField(fieldJSONObject);
+					upgradeNumberField(jsonObject);
 				}
 				else if (StringUtil.equals(type, "ddm-separator")) {
-					upgradeSeparatorField(fieldJSONObject);
+					upgradeSeparatorField(jsonObject);
 				}
 				else if (type.startsWith("ddm-")) {
-					upgradeFieldType(fieldJSONObject, StringPool.BLANK);
+					jsonObject.put(
+						"dataType", "string"
+					).put(
+						"type", type.substring(4)
+					);
 				}
 				else if (StringUtil.equals(type, "text")) {
-					upgradeTextField(fieldJSONObject);
+					upgradeTextField(companyId, jsonObject);
 				}
 				else if (StringUtil.equals(type, "textarea")) {
-					upgradeTextArea(fieldJSONObject);
+					upgradeTextArea(companyId, jsonObject);
 				}
 
-				if (Validator.isNotNull(fieldJSONObject.get("nestedFields"))) {
-					fieldJSONObject.put(
+				if (jsonObject.has("nestedFields")) {
+					jsonObject.put(
 						"nestedFields",
-						upgradeFields(fieldJSONObject.get("nestedFields")));
+						upgradeFields(
+							companyId,
+							jsonObject.getJSONArray("nestedFields")));
 				}
 
-				jsonArray.put(fieldJSONObject);
+				jsonArray.put(jsonObject);
 			}
 		}
 
 		return jsonArray;
 	}
 
-	protected void upgradeFieldType(JSONObject field, String fieldType) {
-		String type = field.getString(_TYPE);
-
-		if (fieldType.isEmpty()) {
-			field.put(_TYPE, type.substring(4));
-		}
-		else {
-			field.put(_TYPE, fieldType);
-		}
+	protected void upgradeGeolocation(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "string"
+		).put(
+			"type", "geolocation"
+		);
 	}
 
-	protected void upgradeGeolocation(JSONObject field) {
-		field.put(_DATATYPE, "string");
-
-		upgradeFieldType(field, StringPool.BLANK);
-	}
-
-	protected void upgradeIntegerField(JSONObject field) {
-		field.put("visibilityExpression", StringPool.BLANK);
-
-		upgradeFieldType(field, "numeric");
-	}
-
-	protected void upgradeNumberField(JSONObject field) {
-		field.put(
-			_DATATYPE, "decimal"
+	protected void upgradeIntegerField(JSONObject jsonObject) {
+		jsonObject.put(
+			"type", "numeric"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-		upgradeFieldType(field, "numeric");
 	}
 
-	protected void upgradeSeparatorField(JSONObject field) {
-		field.put(_DATATYPE, StringPool.BLANK);
+	protected void upgradeNumberField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", "decimal"
+		).put(
+			"type", "numeric"
+		).put(
+			"visibilityExpression", StringPool.BLANK
+		);
 	}
 
-	protected void upgradeTextArea(JSONObject field) {
-		field.put(
-			_DATATYPE, StringPool.BLANK
+	protected void upgradeSeparatorField(JSONObject jsonObject) {
+		jsonObject.put(
+			"dataType", StringPool.BLANK
+		).put(
+			"type", "separator"
+		);
+	}
+
+	protected void upgradeTextArea(long companyId, JSONObject jsonObject)
+		throws Exception {
+
+		jsonObject.put(
+			"autocomplete", false
+		).put(
+			"dataSourceType", "manual"
+		).put(
+			"ddmDataProviderInstanceId", "[]"
+		).put(
+			"ddmDataProviderInstanceOutput", "[]"
+		).put(
+			"displayStyle", "multiline"
 		).put(
 			"fieldNamespace", StringPool.BLANK
 		).put(
-			"text", field.getJSONObject("predefinedValue")
+			"options",
+			JSONUtil.put(
+				JSONUtil.put(
+					"label",
+					JSONUtil.put(
+						UpgradeProcessUtil.getDefaultLanguageId(companyId),
+						GetterUtil.getString("Option"))
+				).put(
+					"value", "Option"
+				))
+		).put(
+			"placeholder",
+			JSONUtil.put(
+				UpgradeProcessUtil.getDefaultLanguageId(companyId),
+				StringPool.BLANK)
+		).put(
+			"tooltip",
+			JSONUtil.put(
+				UpgradeProcessUtil.getDefaultLanguageId(companyId),
+				StringPool.BLANK)
+		).put(
+			"type", "text"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
-
-		upgradeFieldType(field, "paragraph");
 	}
 
-	protected void upgradeTextField(JSONObject field) throws Exception {
-		field.put(
+	protected void upgradeTextField(long companyId, JSONObject jsonObject)
+		throws Exception {
+
+		jsonObject.put(
 			"autocomplete", false
 		).put(
 			"dataSourceType", "manual"
@@ -443,23 +577,35 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		).put(
 			"fieldNamespace", StringPool.BLANK
 		).put(
-			"options", createOption()
+			"options",
+			JSONUtil.put(
+				JSONUtil.put(
+					"label",
+					JSONUtil.put(
+						UpgradeProcessUtil.getDefaultLanguageId(companyId),
+						GetterUtil.getString("Option"))
+				).put(
+					"value", "Option"
+				))
 		).put(
-			"placeholder", createLocalizedValue(StringPool.BLANK)
+			"placeholder",
+			JSONUtil.put(
+				UpgradeProcessUtil.getDefaultLanguageId(companyId),
+				StringPool.BLANK)
 		).put(
-			"tooltip", createLocalizedValue(StringPool.BLANK)
+			"tooltip",
+			JSONUtil.put(
+				UpgradeProcessUtil.getDefaultLanguageId(companyId),
+				StringPool.BLANK)
+		).put(
+			"type", "text"
 		).put(
 			"visibilityExpression", StringPool.BLANK
 		);
 	}
 
-	private static final String _DATATYPE = "dataType";
-
-	private static final String _TYPE = "type";
-
-	private long _companyId;
-	private final DDM _ddm;
 	private final DDMFormDeserializer _ddmFormJSONDeserializer;
+	private final DDMFormLayoutDeserializer _ddmFormLayoutDeserializer;
 	private final DDMFormLayoutSerializer _ddmFormLayoutSerializer;
 	private final DDMFormDeserializer _ddmFormXSDDeserializer;
 
