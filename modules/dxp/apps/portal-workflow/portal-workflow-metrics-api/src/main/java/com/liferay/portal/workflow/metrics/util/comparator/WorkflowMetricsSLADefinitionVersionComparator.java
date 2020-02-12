@@ -19,8 +19,11 @@ import com.liferay.portal.kernel.version.Version;
 import com.liferay.portal.workflow.metrics.model.WorkflowMetricsSLADefinitionVersion;
 
 /**
- * @author Rafael Praxedes
+ * @author     Rafael Praxedes
+ * @deprecated As of Athanasius (7.3.x), replaced by {@link
+ *             WorkflowMetricsSLADefinitionVersionIdComparator}
  */
+@Deprecated
 public class WorkflowMetricsSLADefinitionVersionComparator
 	extends OrderByComparator<WorkflowMetricsSLADefinitionVersion> {
 

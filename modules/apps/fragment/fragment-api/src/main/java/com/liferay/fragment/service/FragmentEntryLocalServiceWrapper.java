@@ -63,6 +63,21 @@ public class FragmentEntryLocalServiceWrapper
 	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, String css, String html,
+			String js, boolean cacheable, String configuration,
+			long previewFileEntryId, int type, int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryLocalService.addFragmentEntry(
+			userId, groupId, fragmentCollectionId, fragmentEntryKey, name, css,
+			html, js, cacheable, configuration, previewFileEntryId, type,
+			status, serviceContext);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, String css, String html,
 			String js, String configuration, long previewFileEntryId, int type,
 			int status,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -511,6 +526,18 @@ public class FragmentEntryLocalServiceWrapper
 
 		return _fragmentEntryLocalService.updateFragmentEntry(
 			fragmentEntryId, previewFileEntryId);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+			long userId, long fragmentEntryId, String name, String css,
+			String html, String js, boolean cacheable, String configuration,
+			long previewFileEntryId, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryLocalService.updateFragmentEntry(
+			userId, fragmentEntryId, name, css, html, js, cacheable,
+			configuration, previewFileEntryId, status);
 	}
 
 	@Override

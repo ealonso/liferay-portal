@@ -21,6 +21,7 @@ export default function addFragment({
 	groupId,
 	parentItemId,
 	position,
+	selectItem = () => {},
 	store
 }) {
 	return dispatch => {
@@ -34,22 +35,17 @@ export default function addFragment({
 			parentItemId,
 			position,
 			segmentsExperienceId
-		}).then(({fragmentEntryLink, layoutData}) => {
-			// TODO: This is a temporary "hack"
-			//       until the backend is consitent
-			//       between both "metal+soy" and "react" versions
-			fragmentEntryLink.content = {
-				value: {
-					content: fragmentEntryLink.content
-				}
-			};
-
+		}).then(({addedItemId, fragmentEntryLink, layoutData}) => {
 			dispatch(
 				addFragmentEntryLink({
 					fragmentEntryLink,
 					layoutData
 				})
 			);
+
+			if (addedItemId) {
+				selectItem(addedItemId);
+			}
 		});
 	};
 }

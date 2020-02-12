@@ -58,6 +58,7 @@ public class FragmentEntryWrapper
 		attributes.put("css", getCss());
 		attributes.put("html", getHtml());
 		attributes.put("js", getJs());
+		attributes.put("cacheable", isCacheable());
 		attributes.put("configuration", getConfiguration());
 		attributes.put("previewFileEntryId", getPreviewFileEntryId());
 		attributes.put("readOnly", isReadOnly());
@@ -164,6 +165,12 @@ public class FragmentEntryWrapper
 			setJs(js);
 		}
 
+		Boolean cacheable = (Boolean)attributes.get("cacheable");
+
+		if (cacheable != null) {
+			setCacheable(cacheable);
+		}
+
 		String configuration = (String)attributes.get("configuration");
 
 		if (configuration != null) {
@@ -217,6 +224,16 @@ public class FragmentEntryWrapper
 		if (statusDate != null) {
 			setStatusDate(statusDate);
 		}
+	}
+
+	/**
+	 * Returns the cacheable of this fragment entry.
+	 *
+	 * @return the cacheable of this fragment entry
+	 */
+	@Override
+	public boolean getCacheable() {
+		return model.getCacheable();
 	}
 
 	/**
@@ -527,6 +544,16 @@ public class FragmentEntryWrapper
 	}
 
 	/**
+	 * Returns <code>true</code> if this fragment entry is cacheable.
+	 *
+	 * @return <code>true</code> if this fragment entry is cacheable; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isCacheable() {
+		return model.isCacheable();
+	}
+
+	/**
 	 * Returns <code>true</code> if this fragment entry is denied.
 	 *
 	 * @return <code>true</code> if this fragment entry is denied; <code>false</code> otherwise
@@ -617,6 +644,16 @@ public class FragmentEntryWrapper
 		throws Exception {
 
 		model.populateZipWriter(zipWriter, path);
+	}
+
+	/**
+	 * Sets whether this fragment entry is cacheable.
+	 *
+	 * @param cacheable the cacheable of this fragment entry
+	 */
+	@Override
+	public void setCacheable(boolean cacheable) {
+		model.setCacheable(cacheable);
 	}
 
 	/**

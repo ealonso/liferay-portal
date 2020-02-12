@@ -68,6 +68,7 @@
 		<field name="js" type="String">
 			<hint-collection name="CLOB" />
 		</field>
+		<field name="cacheable" type="boolean" />
 		<field name="configuration" type="String">
 			<hint-collection name="CLOB" />
 		</field>

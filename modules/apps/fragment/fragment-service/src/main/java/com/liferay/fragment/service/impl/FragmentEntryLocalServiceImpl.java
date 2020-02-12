@@ -94,8 +94,9 @@ public class FragmentEntryLocalServiceImpl
 	public FragmentEntry addFragmentEntry(
 			long userId, long groupId, long fragmentCollectionId,
 			String fragmentEntryKey, String name, String css, String html,
-			String js, String configuration, long previewFileEntryId, int type,
-			int status, ServiceContext serviceContext)
+			String js, boolean cacheable, String configuration,
+			long previewFileEntryId, int type, int status,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		// Fragment entry
@@ -145,6 +146,7 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setCacheable(cacheable);
 		fragmentEntry.setConfiguration(configuration);
 		fragmentEntry.setPreviewFileEntryId(previewFileEntryId);
 		fragmentEntry.setType(type);
@@ -154,6 +156,20 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setStatusDate(new Date());
 
 		return fragmentEntryPersistence.update(fragmentEntry);
+	}
+
+	@Override
+	public FragmentEntry addFragmentEntry(
+			long userId, long groupId, long fragmentCollectionId,
+			String fragmentEntryKey, String name, String css, String html,
+			String js, String configuration, long previewFileEntryId, int type,
+			int status, ServiceContext serviceContext)
+		throws PortalException {
+
+		return addFragmentEntry(
+			userId, groupId, fragmentCollectionId, fragmentEntryKey, name, css,
+			html, js, false, configuration, previewFileEntryId, type, status,
+			serviceContext);
 	}
 
 	@Override
@@ -178,7 +194,8 @@ public class FragmentEntryLocalServiceImpl
 		FragmentEntry copyFragmentEntry = addFragmentEntry(
 			userId, groupId, fragmentCollectionId, null, sb.toString(),
 			fragmentEntry.getCss(), fragmentEntry.getHtml(),
-			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
+			fragmentEntry.getJs(), fragmentEntry.isCacheable(),
+			fragmentEntry.getConfiguration(),
 			fragmentEntry.getPreviewFileEntryId(), fragmentEntry.getType(),
 			fragmentEntry.getStatus(), serviceContext);
 
@@ -367,21 +384,7 @@ public class FragmentEntryLocalServiceImpl
 	@Override
 	public FragmentEntry updateFragmentEntry(
 			long userId, long fragmentEntryId, String name, String css,
-			String html, String js, String configuration, int status)
-		throws PortalException {
-
-		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
-			fragmentEntryId);
-
-		return updateFragmentEntry(
-			userId, fragmentEntryId, name, css, html, js, configuration,
-			fragmentEntry.getPreviewFileEntryId(), status);
-	}
-
-	@Override
-	public FragmentEntry updateFragmentEntry(
-			long userId, long fragmentEntryId, String name, String css,
-			String html, String js, String configuration,
+			String html, String js, boolean cacheable, String configuration,
 			long previewFileEntryId, int status)
 		throws PortalException {
 
@@ -403,6 +406,7 @@ public class FragmentEntryLocalServiceImpl
 		fragmentEntry.setCss(css);
 		fragmentEntry.setHtml(html);
 		fragmentEntry.setJs(js);
+		fragmentEntry.setCacheable(cacheable);
 		fragmentEntry.setConfiguration(configuration);
 		fragmentEntry.setPreviewFileEntryId(previewFileEntryId);
 		fragmentEntry.setStatus(status);
@@ -422,6 +426,32 @@ public class FragmentEntryLocalServiceImpl
 		}
 
 		return fragmentEntry;
+	}
+
+	@Override
+	public FragmentEntry updateFragmentEntry(
+			long userId, long fragmentEntryId, String name, String css,
+			String html, String js, String configuration, int status)
+		throws PortalException {
+
+		FragmentEntry fragmentEntry = fragmentEntryPersistence.findByPrimaryKey(
+			fragmentEntryId);
+
+		return updateFragmentEntry(
+			userId, fragmentEntryId, name, css, html, js, configuration,
+			fragmentEntry.getPreviewFileEntryId(), status);
+	}
+
+	@Override
+	public FragmentEntry updateFragmentEntry(
+			long userId, long fragmentEntryId, String name, String css,
+			String html, String js, String configuration,
+			long previewFileEntryId, int status)
+		throws PortalException {
+
+		return updateFragmentEntry(
+			userId, fragmentEntryId, name, css, html, js, false, configuration,
+			previewFileEntryId, status);
 	}
 
 	@Override

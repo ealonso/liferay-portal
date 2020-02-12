@@ -65,8 +65,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.personal.menu.PersonalMenuEntry;
 import com.liferay.roles.admin.constants.RolesAdminPortletKeys;
+import com.liferay.roles.admin.role.type.contributor.RoleTypeContributor;
 import com.liferay.roles.admin.web.internal.constants.RolesAdminWebKeys;
-import com.liferay.roles.admin.web.internal.role.type.contributor.RoleTypeContributor;
 import com.liferay.roles.admin.web.internal.role.type.contributor.provider.RoleTypeContributorProvider;
 import com.liferay.segments.service.SegmentsEntryRoleLocalService;
 
@@ -452,7 +452,8 @@ public class RolesAdminPortlet extends MVCPortlet {
 
 				int scope = ResourceConstants.SCOPE_COMPANY;
 
-				if ((role.getType() == RoleConstants.TYPE_ORGANIZATION) ||
+				if ((role.getType() == RoleConstants.TYPE_DEPOT) ||
+					(role.getType() == RoleConstants.TYPE_ORGANIZATION) ||
 					(role.getType() == RoleConstants.TYPE_PROVIDER) ||
 					(role.getType() == RoleConstants.TYPE_SITE)) {
 

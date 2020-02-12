@@ -20,7 +20,6 @@ import React, {
 	useContext,
 	useEffect,
 	useLayoutEffect,
-	useMemo,
 	useState
 } from 'react';
 
@@ -57,8 +56,12 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 	const selectEditingItemId = useSelectEditingItem();
 	const state = useSelector(state => state);
 
-	const defaultContent = fragmentEntryLink.content.value.content;
+	const defaultContent = fragmentEntryLink.content;
+	const {defaultLanguageId} = config;
 	const {fragmentEntryLinkId} = fragmentEntryLink;
+	const prefixedSegmentsExperienceId = selectPrefixedSegmentsExperienceId(
+		state
+	);
 
 	const [content, setContent] = useState(defaultContent);
 	const [editablesIds, setEditablesIds] = useState([]);
@@ -80,19 +83,51 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 			permissions.UPDATE_LAYOUT_CONTENT
 	);
 
-	const showEditableDecoration = useMemo(
-		() =>
+	const editableValues = useSelector(state => {
+		const values = {};
+
+		if (fragmentEntryLink) {
+			Object.keys(
+				fragmentEntryLink.editableValues[
+					EDITABLE_FRAGMENT_ENTRY_PROCESSOR
+				]
+			).forEach(editableId => {
+				const editableValue = selectEditableValue(
+					state,
+					fragmentEntryLinkId,
+					editableId
+				);
+
+				values[editableId] = editableValue;
+			});
+		}
+
+		return values;
+	});
+
+	const showEditableDecoration = useCallback(
+		editableValue =>
 			canUpdateLayoutContent
 				? [itemId, ...editablesIds.map(getEditableUniqueId)].some(
 						isActive
+				  ) ||
+				  editableIsMapped(editableValue) ||
+				  editableIsTranslated(
+						defaultLanguageId,
+						editableValue,
+						state.languageId,
+						prefixedSegmentsExperienceId
 				  )
 				: true,
 		[
 			canUpdateLayoutContent,
+			itemId,
 			editablesIds,
 			getEditableUniqueId,
-			itemId,
-			isActive
+			isActive,
+			defaultLanguageId,
+			state.languageId,
+			prefixedSegmentsExperienceId
 		]
 	);
 
@@ -122,15 +157,13 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 				editableConfig,
 				editingItemElement.getAttribute('type')
 			);
-
-			selectEditingItemId(null);
 		}
 	}, [
 		activeItemId,
+		destroyProcessor,
 		editingItemId,
 		fragmentEntryLinkId,
 		ref,
-		selectEditingItemId,
 		state
 	]);
 
@@ -236,7 +269,9 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 		);
 
 		if (!editingItemId) {
-			selectEditingItemId(getEditableUniqueId(editableId));
+			if (isAlloyEditorBasedEditableType(editableType)) {
+				selectEditingItemId(getEditableUniqueId(editableId));
+			}
 
 			processor.createEditor(
 				editableElement,
@@ -248,9 +283,6 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 						editableValues[EDITABLE_FRAGMENT_ENTRY_PROCESSOR][
 							editableId
 						];
-					const prefixedSegmentsExperienceId = selectPrefixedSegmentsExperienceId(
-						state
-					);
 
 					if (state.segmentsExperienceId) {
 						editableValue[prefixedSegmentsExperienceId] = {
@@ -278,11 +310,16 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 		}
 	};
 
-	const destroyProcessor = (element, editableConfig, editableType) => {
-		const processor = Processors[editableType] || Processors.fallback;
+	const destroyProcessor = useCallback(
+		(element, editableConfig, editableType) => {
+			const processor = Processors[editableType] || Processors.fallback;
 
-		processor.destroyEditor(element, editableConfig);
-	};
+			processor.destroyEditor(element, editableConfig);
+
+			selectEditingItemId(null);
+		},
+		[selectEditingItemId]
+	);
 
 	const onFloatingToolbarButtonClick = (buttonId, itemRef) => {
 		if (buttonId === EDITABLE_FLOATING_TOOLBAR_BUTTONS.edit.id) {
@@ -334,21 +371,23 @@ function FragmentContent({fragmentEntryLink, itemId}, ref) {
 					);
 				})}
 
-			{showEditableDecoration &&
-				editablesIds.map(editableId => (
-					<EditableDecoration
-						editableId={editableId}
-						fragmentEntryLinkId={fragmentEntryLinkId}
-						itemId={getEditableUniqueId(editableId)}
-						key={editableId}
-						onEditableDoubleClick={initProcessor}
-						parentItemId={itemId}
-						parentRef={ref}
-						siblingsItemIds={editablesIds.map(siblingId =>
-							getEditableUniqueId(siblingId)
-						)}
-					/>
-				))}
+			{editablesIds.map(
+				editableId =>
+					showEditableDecoration(editableValues[editableId]) && (
+						<EditableDecoration
+							editableId={editableId}
+							fragmentEntryLinkId={fragmentEntryLinkId}
+							itemId={getEditableUniqueId(editableId)}
+							key={editableId}
+							onEditableDoubleClick={initProcessor}
+							parentItemId={itemId}
+							parentRef={ref}
+							siblingsItemIds={editablesIds.map(siblingId =>
+								getEditableUniqueId(siblingId)
+							)}
+						/>
+					)
+			)}
 		</>
 	);
 }
@@ -360,6 +399,26 @@ const editableIsMappedToInfoItem = editableValue =>
 	editableValue.classNameId &&
 	editableValue.classPK &&
 	editableValue.fieldId;
+
+const isAlloyEditorBasedEditableType = editableType =>
+	editableType === EDITABLE_TYPES.link ||
+	editableType === EDITABLE_TYPES['rich-text'] ||
+	editableType === EDITABLE_TYPES.text;
+
+const editableIsMapped = editableValue =>
+	editableIsMappedToInfoItem(editableValue) || editableValue.mappedField;
+
+const editableIsTranslated = (
+	defaultLanguageId,
+	editableValue,
+	languageId,
+	segmentsExperienceId
+) =>
+	editableValue &&
+	defaultLanguageId !== languageId &&
+	(editableValue[languageId] ||
+		(segmentsExperienceId in editableValue &&
+			editableValue[segmentsExperienceId][languageId]));
 
 const getFloatingToolbarButtons = (editableType, editableValue) => {
 	const showLinkButton =

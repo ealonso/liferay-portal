@@ -54,6 +54,7 @@ class Sidebar extends Component {
 			fieldTypes,
 			focusedField
 		} = this.props;
+		const {activeTab} = this.state;
 		const {dispatch} = this.context;
 		const newFieldType = fieldTypes.find(({name}) => name === type);
 		const newSettingsContext = {
@@ -65,6 +66,7 @@ class Sidebar extends Component {
 				focusedField.fieldName
 			)
 		};
+		const sidebarTabIndex = newSettingsContext.pages.length - 1;
 		let {settingsContext} = focusedField;
 
 		if (type !== focusedField.type) {
@@ -72,6 +74,11 @@ class Sidebar extends Component {
 				settingsContext,
 				newSettingsContext
 			);
+			if (sidebarTabIndex < activeTab) {
+				this.setState({
+					activeTab: sidebarTabIndex
+				});
+			}
 		}
 
 		dispatch('focusedFieldUpdated', {
@@ -761,27 +768,29 @@ class Sidebar extends Component {
 		return {
 			...newSettingsContext,
 			pages: newVisitor.mapFields(newField => {
-				const previousField = getPreviousField(newField);
+				if (newField.visible) {
+					const previousField = getPreviousField(newField);
 
-				if (previousField) {
-					newField.value = previousField.value;
+					if (previousField) {
+						newField.value = previousField.value;
 
-					if (newField.localizable && previousField.localizable) {
-						newField.localizedValue = {
-							...previousField.localizedValue
-						};
+						if (newField.localizable && previousField.localizable) {
+							newField.localizedValue = {
+								...previousField.localizedValue
+							};
+						}
 					}
-				}
 
-				if (newField.fieldName == 'predefinedValue') {
-					delete newField.value;
+					if (newField.fieldName == 'predefinedValue') {
+						delete newField.value;
 
-					newField.localizedValue = {};
+						newField.localizedValue = {};
 
-					if (newField.options) {
-						newField.options = this._getPredefinedOptions(
-							newVisitor
-						);
+						if (newField.options) {
+							newField.options = this._getPredefinedOptions(
+								newVisitor
+							);
+						}
 					}
 				}
 

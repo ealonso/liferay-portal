@@ -26,6 +26,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +75,10 @@ public class ActionUtil {
 			String permissionName, Object object, Long siteId, UriInfo uriInfo)
 		throws Exception {
 
+		if (uriInfo == null) {
+			return new HashMap<>();
+		}
+
 		MultivaluedMap<String, String> queryParameters =
 			uriInfo.getQueryParameters();
 
@@ -100,13 +105,13 @@ public class ActionUtil {
 			return null;
 		}
 
-		if (object != null) {
+		if ((object != null) &&
+			OAuth2ProviderScopeLiferayAccessControlContext.
+				isOAuth2AuthVerified()) {
+
 			ScopeChecker scopeChecker = (ScopeChecker)object;
 
-			if (OAuth2ProviderScopeLiferayAccessControlContext.
-					isOAuth2AuthVerified() &&
-				!scopeChecker.checkScope(methodName)) {
-
+			if (!scopeChecker.checkScope(methodName)) {
 				return null;
 			}
 		}

@@ -47,6 +47,20 @@ public class FragmentEntryServiceWrapper
 	@Override
 	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, String css, String html, String js, boolean cacheable,
+			String configuration, long previewFileEntryId, int type, int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryService.addFragmentEntry(
+			groupId, fragmentCollectionId, fragmentEntryKey, name, css, html,
+			js, cacheable, configuration, previewFileEntryId, type, status,
+			serviceContext);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
 			String name, String css, String html, String js,
 			String configuration, long previewFileEntryId, int type, int status,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -288,6 +302,29 @@ public class FragmentEntryServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _fragmentEntryService.updateFragmentEntry(fragmentEntryId, name);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+			long fragmentEntryId, String name, String css, String html,
+			String js, boolean cacheable, String configuration, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryService.updateFragmentEntry(
+			fragmentEntryId, name, css, html, js, cacheable, configuration,
+			status);
+	}
+
+	@Override
+	public com.liferay.fragment.model.FragmentEntry updateFragmentEntry(
+			long fragmentEntryId, String name, String css, String html,
+			String js, boolean cacheable, String configuration,
+			long previewFileEntryId, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _fragmentEntryService.updateFragmentEntry(
+			fragmentEntryId, name, css, html, js, cacheable, configuration,
+			previewFileEntryId, status);
 	}
 
 	@Override

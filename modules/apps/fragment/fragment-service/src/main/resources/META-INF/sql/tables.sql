@@ -53,6 +53,7 @@ create table FragmentEntry (
 	css TEXT null,
 	html TEXT null,
 	js TEXT null,
+	cacheable BOOLEAN,
 	configuration TEXT null,
 	previewFileEntryId LONG,
 	readOnly BOOLEAN,

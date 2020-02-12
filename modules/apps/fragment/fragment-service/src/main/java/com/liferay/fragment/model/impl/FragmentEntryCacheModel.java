@@ -77,7 +77,7 @@ public class FragmentEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(49);
+		StringBundler sb = new StringBundler(51);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -109,6 +109,8 @@ public class FragmentEntryCacheModel
 		sb.append(html);
 		sb.append(", js=");
 		sb.append(js);
+		sb.append(", cacheable=");
+		sb.append(cacheable);
 		sb.append(", configuration=");
 		sb.append(configuration);
 		sb.append(", previewFileEntryId=");
@@ -208,6 +210,8 @@ public class FragmentEntryCacheModel
 			fragmentEntryImpl.setJs(js);
 		}
 
+		fragmentEntryImpl.setCacheable(cacheable);
+
 		if (configuration == null) {
 			fragmentEntryImpl.setConfiguration("");
 		}
@@ -270,6 +274,8 @@ public class FragmentEntryCacheModel
 		css = objectInput.readUTF();
 		html = objectInput.readUTF();
 		js = objectInput.readUTF();
+
+		cacheable = objectInput.readBoolean();
 		configuration = objectInput.readUTF();
 
 		previewFileEntryId = objectInput.readLong();
@@ -352,6 +358,8 @@ public class FragmentEntryCacheModel
 			objectOutput.writeUTF(js);
 		}
 
+		objectOutput.writeBoolean(cacheable);
+
 		if (configuration == null) {
 			objectOutput.writeUTF("");
 		}
@@ -395,6 +403,7 @@ public class FragmentEntryCacheModel
 	public String css;
 	public String html;
 	public String js;
+	public boolean cacheable;
 	public String configuration;
 	public long previewFileEntryId;
 	public boolean readOnly;

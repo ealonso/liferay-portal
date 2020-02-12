@@ -25,6 +25,7 @@ import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.service.FragmentCollectionLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.headless.delivery.dto.v1_0.FragmentContentField;
 import com.liferay.headless.delivery.dto.v1_0.FragmentContentFieldImage;
 import com.liferay.headless.delivery.dto.v1_0.FragmentContentFieldText;
@@ -67,6 +68,7 @@ public class FragmentDefinitionConverterUtil {
 	public static FragmentDefinition toFragmentDefinition(
 		FragmentCollectionContributorTracker
 			fragmentCollectionContributorTracker,
+		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
 		FragmentLayoutStructureItem fragmentLayoutStructureItem,
 		FragmentRendererTracker fragmentRendererTracker) {
 
@@ -85,6 +87,8 @@ public class FragmentDefinitionConverterUtil {
 				fragmentCollectionName = _getFragmentCollectionName(
 					fragmentCollectionContributorTracker, fragmentEntry,
 					fragmentRendererTracker, rendererKey);
+				fragmentConfig = _getFragmentConfig(
+					fragmentEntryConfigurationParser, fragmentEntryLink);
 				fragmentContentFields = _getFragmentContentFields(
 					fragmentEntryLink);
 				fragmentName = _getFragmentName(
@@ -203,6 +207,45 @@ public class FragmentDefinitionConverterUtil {
 		}
 
 		return null;
+	}
+
+	private static Map<String, Object> _getFragmentConfig(
+		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
+		FragmentEntryLink fragmentEntryLink) {
+
+		try {
+			return new HashMap<String, Object>() {
+				{
+					JSONObject jsonObject =
+						fragmentEntryConfigurationParser.
+							getConfigurationJSONObject(
+								fragmentEntryLink.getConfiguration(),
+								fragmentEntryLink.getEditableValues(),
+								new long[] {0L});
+
+					Set<String> keys = jsonObject.keySet();
+
+					Iterator<String> iterator = keys.iterator();
+
+					while (iterator.hasNext()) {
+						String key = iterator.next();
+
+						Object value = jsonObject.get(key);
+
+						if (value instanceof JSONObject) {
+							JSONObject valueJSONObject = (JSONObject)value;
+
+							value = _toMap(valueJSONObject);
+						}
+
+						put(key, value);
+					}
+				}
+			};
+		}
+		catch (JSONException jsonException) {
+			return null;
+		}
 	}
 
 	private static FragmentContentField[] _getFragmentContentFields(
@@ -445,6 +488,32 @@ public class FragmentDefinitionConverterUtil {
 				}
 			}
 		};
+	}
+
+	private static Map<String, String> _toMap(JSONObject jsonObject) {
+		HashMap<String, String> map = new HashMap<String, String>() {
+			{
+				Set<String> keys = jsonObject.keySet();
+
+				Iterator<String> iterator = keys.iterator();
+
+				while (iterator.hasNext()) {
+					String key = iterator.next();
+
+					String value = jsonObject.getString(key);
+
+					if (Validator.isNotNull(value)) {
+						put(key, value);
+					}
+				}
+			}
+		};
+
+		if (map.isEmpty()) {
+			return null;
+		}
+
+		return map;
 	}
 
 	private static Map<String, String> _toMap(

@@ -83,11 +83,11 @@ public class FragmentEntryModelImpl
 		{"fragmentCollectionId", Types.BIGINT},
 		{"fragmentEntryKey", Types.VARCHAR}, {"name", Types.VARCHAR},
 		{"css", Types.CLOB}, {"html", Types.CLOB}, {"js", Types.CLOB},
-		{"configuration", Types.CLOB}, {"previewFileEntryId", Types.BIGINT},
-		{"readOnly", Types.BOOLEAN}, {"type_", Types.INTEGER},
-		{"lastPublishDate", Types.TIMESTAMP}, {"status", Types.INTEGER},
-		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
-		{"statusDate", Types.TIMESTAMP}
+		{"cacheable", Types.BOOLEAN}, {"configuration", Types.CLOB},
+		{"previewFileEntryId", Types.BIGINT}, {"readOnly", Types.BOOLEAN},
+		{"type_", Types.INTEGER}, {"lastPublishDate", Types.TIMESTAMP},
+		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
+		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -109,6 +109,7 @@ public class FragmentEntryModelImpl
 		TABLE_COLUMNS_MAP.put("css", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("html", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("js", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("cacheable", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("configuration", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("previewFileEntryId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("readOnly", Types.BOOLEAN);
@@ -121,7 +122,7 @@ public class FragmentEntryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table FragmentEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,fragmentEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,fragmentCollectionId LONG,fragmentEntryKey VARCHAR(75) null,name VARCHAR(75) null,css TEXT null,html TEXT null,js TEXT null,configuration TEXT null,previewFileEntryId LONG,readOnly BOOLEAN,type_ INTEGER,lastPublishDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
+		"create table FragmentEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,fragmentEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,fragmentCollectionId LONG,fragmentEntryKey VARCHAR(75) null,name VARCHAR(75) null,css TEXT null,html TEXT null,js TEXT null,cacheable BOOLEAN,configuration TEXT null,previewFileEntryId LONG,readOnly BOOLEAN,type_ INTEGER,lastPublishDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
 
 	public static final String TABLE_SQL_DROP = "drop table FragmentEntry";
 
@@ -189,6 +190,7 @@ public class FragmentEntryModelImpl
 		model.setCss(soapModel.getCss());
 		model.setHtml(soapModel.getHtml());
 		model.setJs(soapModel.getJs());
+		model.setCacheable(soapModel.isCacheable());
 		model.setConfiguration(soapModel.getConfiguration());
 		model.setPreviewFileEntryId(soapModel.getPreviewFileEntryId());
 		model.setReadOnly(soapModel.isReadOnly());
@@ -413,6 +415,10 @@ public class FragmentEntryModelImpl
 		attributeGetterFunctions.put("js", FragmentEntry::getJs);
 		attributeSetterBiConsumers.put(
 			"js", (BiConsumer<FragmentEntry, String>)FragmentEntry::setJs);
+		attributeGetterFunctions.put("cacheable", FragmentEntry::getCacheable);
+		attributeSetterBiConsumers.put(
+			"cacheable",
+			(BiConsumer<FragmentEntry, Boolean>)FragmentEntry::setCacheable);
 		attributeGetterFunctions.put(
 			"configuration", FragmentEntry::getConfiguration);
 		attributeSetterBiConsumers.put(
@@ -753,6 +759,23 @@ public class FragmentEntryModelImpl
 
 	@JSON
 	@Override
+	public boolean getCacheable() {
+		return _cacheable;
+	}
+
+	@JSON
+	@Override
+	public boolean isCacheable() {
+		return _cacheable;
+	}
+
+	@Override
+	public void setCacheable(boolean cacheable) {
+		_cacheable = cacheable;
+	}
+
+	@JSON
+	@Override
 	public String getConfiguration() {
 		if (_configuration == null) {
 			return "";
@@ -1043,6 +1066,7 @@ public class FragmentEntryModelImpl
 		fragmentEntryImpl.setCss(getCss());
 		fragmentEntryImpl.setHtml(getHtml());
 		fragmentEntryImpl.setJs(getJs());
+		fragmentEntryImpl.setCacheable(isCacheable());
 		fragmentEntryImpl.setConfiguration(getConfiguration());
 		fragmentEntryImpl.setPreviewFileEntryId(getPreviewFileEntryId());
 		fragmentEntryImpl.setReadOnly(isReadOnly());
@@ -1239,6 +1263,8 @@ public class FragmentEntryModelImpl
 			fragmentEntryCacheModel.js = null;
 		}
 
+		fragmentEntryCacheModel.cacheable = isCacheable();
+
 		fragmentEntryCacheModel.configuration = getConfiguration();
 
 		String configuration = fragmentEntryCacheModel.configuration;
@@ -1384,6 +1410,7 @@ public class FragmentEntryModelImpl
 	private String _css;
 	private String _html;
 	private String _js;
+	private boolean _cacheable;
 	private String _configuration;
 	private long _previewFileEntryId;
 	private boolean _readOnly;

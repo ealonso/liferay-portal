@@ -60,7 +60,7 @@ import com.liferay.portal.workflow.metrics.model.WorkflowMetricsSLADefinitionVer
 import com.liferay.portal.workflow.metrics.service.WorkflowMetricsSLADefinitionLocalService;
 import com.liferay.portal.workflow.metrics.service.WorkflowMetricsSLADefinitionVersionLocalService;
 import com.liferay.portal.workflow.metrics.sla.processor.WorkflowMetricsSLAStatus;
-import com.liferay.portal.workflow.metrics.util.comparator.WorkflowMetricsSLADefinitionVersionComparator;
+import com.liferay.portal.workflow.metrics.util.comparator.WorkflowMetricsSLADefinitionVersionIdComparator;
 
 import java.text.DateFormat;
 
@@ -127,16 +127,24 @@ public class WorkflowMetricsSLAProcessBackgroundTaskExecutor
 			workflowMetricsSLADefinition.getProcessId(),
 			workflowMetricsSLADefinition.getProcessVersion());
 
-		_processRunningInstances(
-			0, startNodeId, workflowMetricsSLADefinitionVersion);
+		if (workflowMetricsSLADefinitionVersion.isActive()) {
+			_processRunningInstances(
+				0, startNodeId, workflowMetricsSLADefinitionVersion);
+		}
 
 		if (MapUtil.getBoolean(backgroundTask.getTaskContextMap(), "reindex")) {
 			_processCompletedInstances(
 				startNodeId, workflowMetricsSLADefinitionId);
 		}
 		else {
+			Date endDate = null;
+
+			if (!workflowMetricsSLADefinitionVersion.isActive()) {
+				endDate = workflowMetricsSLADefinitionVersion.getCreateDate();
+			}
+
 			_processCompletedInstances(
-				workflowMetricsSLADefinition.getCompanyId(), null, 0,
+				workflowMetricsSLADefinition.getCompanyId(), endDate, 0,
 				workflowMetricsSLADefinition.getProcessId(),
 				workflowMetricsSLADefinition.
 					getWorkflowMetricsSLADefinitionId(),
@@ -444,7 +452,7 @@ public class WorkflowMetricsSLAProcessBackgroundTaskExecutor
 				_workflowMetricsSLADefinitionVersionLocalService.
 					getWorkflowMetricsSLADefinitionVersions(
 						workflowMetricsSLADefinitionId,
-						new WorkflowMetricsSLADefinitionVersionComparator(
+						new WorkflowMetricsSLADefinitionVersionIdComparator(
 							true));
 
 		Iterator<WorkflowMetricsSLADefinitionVersion> iterator =
@@ -468,12 +476,15 @@ public class WorkflowMetricsSLAProcessBackgroundTaskExecutor
 					nextWorkflowMetricsSLADefinitionVersion.getCreateDate();
 			}
 
-			_processCompletedInstances(
-				workflowMetricsSLADefinitionVersion.getCompanyId(), endDate, 0,
-				workflowMetricsSLADefinitionVersion.getProcessId(),
-				workflowMetricsSLADefinitionVersion.
-					getWorkflowMetricsSLADefinitionId(),
-				startDate, startNodeId, workflowMetricsSLADefinitionVersion);
+			if (workflowMetricsSLADefinitionVersion.isActive()) {
+				_processCompletedInstances(
+					workflowMetricsSLADefinitionVersion.getCompanyId(), endDate,
+					0, workflowMetricsSLADefinitionVersion.getProcessId(),
+					workflowMetricsSLADefinitionVersion.
+						getWorkflowMetricsSLADefinitionId(),
+					startDate, startNodeId,
+					workflowMetricsSLADefinitionVersion);
+			}
 
 			startDate = endDate;
 			workflowMetricsSLADefinitionVersion =

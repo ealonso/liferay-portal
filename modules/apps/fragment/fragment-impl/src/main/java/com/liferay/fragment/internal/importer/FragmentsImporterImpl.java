@@ -199,8 +199,9 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 
 	private FragmentEntry _addFragmentEntry(
 			long fragmentCollectionId, String fragmentEntryKey, String name,
-			String css, String html, String js, String configuration,
-			boolean readOnly, String typeLabel, boolean overwrite)
+			String css, String html, String js, boolean cacheable,
+			String configuration, boolean readOnly, String typeLabel,
+			boolean overwrite)
 		throws Exception {
 
 		FragmentCollection fragmentCollection =
@@ -239,13 +240,14 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 		if (fragmentEntry == null) {
 			fragmentEntry = _fragmentEntryService.addFragmentEntry(
 				fragmentCollection.getGroupId(), fragmentCollectionId,
-				fragmentEntryKey, name, css, html, js, configuration, 0, type,
-				status, ServiceContextThreadLocal.getServiceContext());
+				fragmentEntryKey, name, css, html, js, cacheable, configuration,
+				0, type, status, ServiceContextThreadLocal.getServiceContext());
 		}
 		else {
 			fragmentEntry = _fragmentEntryService.updateFragmentEntry(
 				fragmentEntry.getFragmentEntryId(), name, css, html, js,
-				configuration, fragmentEntry.getPreviewFileEntryId(), status);
+				cacheable, configuration, fragmentEntry.getPreviewFileEntryId(),
+				status);
 		}
 
 		fragmentEntry.setReadOnly(readOnly);
@@ -517,6 +519,7 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 			String css = StringPool.BLANK;
 			String html = StringPool.BLANK;
 			String js = StringPool.BLANK;
+			boolean cacheable = false;
 			String configuration = StringPool.BLANK;
 			boolean readOnly = false;
 			String typeLabel = StringPool.BLANK;
@@ -535,6 +538,7 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 					jsonObject.getString("htmlPath"));
 				js = _getFragmentEntryContent(
 					zipFile, entry.getValue(), jsonObject.getString("jsPath"));
+				cacheable = jsonObject.getBoolean("cacheable");
 				configuration = _getFragmentEntryContent(
 					zipFile, entry.getValue(),
 					jsonObject.getString("configurationPath"));
@@ -544,7 +548,7 @@ public class FragmentsImporterImpl implements FragmentsImporter {
 
 			FragmentEntry fragmentEntry = _addFragmentEntry(
 				fragmentCollectionId, entry.getKey(), name, css, html, js,
-				configuration, readOnly, typeLabel, overwrite);
+				cacheable, configuration, readOnly, typeLabel, overwrite);
 
 			if (Validator.isNotNull(fragmentJSON)) {
 				if (fragmentEntry.getPreviewFileEntryId() > 0) {

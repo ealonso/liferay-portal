@@ -36,9 +36,13 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
+import com.liferay.portal.vulcan.permission.ModelPermissionsUtil;
+import com.liferay.portal.vulcan.permission.Permission;
+import com.liferay.portal.vulcan.permission.PermissionUtil;
 
 import java.util.List;
 
@@ -148,6 +152,37 @@ public class DataRecordCollectionResourceImpl
 	}
 
 	@Override
+	public Page<Permission> getDataRecordCollectionPermissionsPage(
+			Long dataRecordCollectionId, String roleNames)
+		throws Exception {
+
+		SPIDataRecordCollectionResource<DataRecordCollection>
+			spiDataRecordCollectionResource =
+				_getSPIDataRecordCollectionResource();
+
+		DataRecordCollection dataRecordCollection =
+			spiDataRecordCollectionResource.getDataRecordCollection(
+				dataRecordCollectionId);
+
+		_dataDefinitionModelResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(),
+			dataRecordCollection.getDataDefinitionId(), ActionKeys.PERMISSIONS);
+
+		String resourceName = getPermissionCheckerResourceName(
+			dataRecordCollectionId);
+
+		return Page.of(
+			transform(
+				PermissionUtil.getRoles(
+					contextCompany, roleLocalService,
+					StringUtil.split(roleNames)),
+				role -> PermissionUtil.toPermission(
+					contextCompany.getCompanyId(), dataRecordCollectionId,
+					resourceActionLocalService.getResourceActions(resourceName),
+					resourceName, resourcePermissionLocalService, role)));
+	}
+
+	@Override
 	public DataRecordCollection
 			getSiteDataRecordCollectionByDataRecordCollectionKey(
 				Long siteId, String dataRecordCollectionKey)
@@ -207,6 +242,36 @@ public class DataRecordCollectionResourceImpl
 		return spiDataRecordCollectionResource.updateDataRecordCollection(
 			dataRecordCollectionId, dataRecordCollection.getDescription(),
 			dataRecordCollection.getName());
+	}
+
+	@Override
+	public void putDataRecordCollectionPermission(
+			Long dataRecordCollectionId, Permission[] permissions)
+		throws Exception {
+
+		SPIDataRecordCollectionResource<DataRecordCollection>
+			spiDataRecordCollectionResource =
+				_getSPIDataRecordCollectionResource();
+
+		DataRecordCollection dataRecordCollection =
+			spiDataRecordCollectionResource.getDataRecordCollection(
+				dataRecordCollectionId);
+
+		_dataDefinitionModelResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(),
+			dataRecordCollection.getDataDefinitionId(), ActionKeys.PERMISSIONS);
+
+		String resourceName = getPermissionCheckerResourceName(
+			dataRecordCollectionId);
+
+		resourcePermissionLocalService.updateResourcePermissions(
+			contextCompany.getCompanyId(), 0, resourceName,
+			String.valueOf(dataRecordCollectionId),
+			ModelPermissionsUtil.toModelPermissions(
+				contextCompany.getCompanyId(), permissions,
+				dataRecordCollectionId, resourceName,
+				resourceActionLocalService, resourcePermissionLocalService,
+				roleLocalService));
 	}
 
 	@Override

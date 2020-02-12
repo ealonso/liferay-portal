@@ -119,7 +119,7 @@ public class SpiraRelease {
 			spiraProject, releaseName, parentSpiraRelease.getID());
 	}
 
-	public static void deleteSpiraReleaseById(
+	public static void deleteSpiraReleaseByID(
 			SpiraProject spiraProject, int releaseID)
 		throws IOException {
 
@@ -145,7 +145,7 @@ public class SpiraRelease {
 			releasePath);
 
 		for (SpiraRelease spiraRelease : spiraReleases) {
-			deleteSpiraReleaseById(spiraProject, spiraRelease.getID());
+			deleteSpiraReleaseByID(spiraProject, spiraRelease.getID());
 		}
 	}
 
@@ -171,18 +171,12 @@ public class SpiraRelease {
 	}
 
 	public JSONObject toJSONObject() {
-		JSONObject jsonObject = new JSONObject(_jsonObject.toString());
-
-		jsonObject.put("Path", getPath());
-
-		return jsonObject;
+		return _jsonObject;
 	}
 
 	@Override
 	public String toString() {
-		JSONObject jsonObject = toJSONObject();
-
-		return jsonObject.toString();
+		return _jsonObject.toString();
 	}
 
 	protected static List<SpiraRelease> getSpiraReleases(
@@ -241,7 +235,7 @@ public class SpiraRelease {
 
 	protected SpiraRelease(JSONObject jsonObject) {
 		_jsonObject = jsonObject;
-		_spiraProject = SpiraProject.getSpiraProjectById(
+		_spiraProject = SpiraProject.getSpiraProjectByID(
 			jsonObject.getInt("ProjectId"));
 
 		SpiraRelease parentSpiraRelease = null;
@@ -262,6 +256,8 @@ public class SpiraRelease {
 		}
 
 		_parentSpiraRelease = parentSpiraRelease;
+
+		_jsonObject.put("Path", getPath());
 	}
 
 	protected String getIndentLevel() {

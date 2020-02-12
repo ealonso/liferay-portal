@@ -1550,6 +1550,22 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		return rolePersistence.update(role);
 	}
 
+	@Override
+	public void validateName(String name) throws PortalException {
+		String[] invalidCharacters = StringUtil.split(
+			RoleConstants.NAME_INVALID_CHARACTERS, StringPool.SPACE);
+
+		if (Validator.isNull(name) ||
+			(StringUtil.indexOfAny(name, invalidCharacters) > -1)) {
+
+			throw new RoleNameException();
+		}
+
+		if (!PropsValues.ROLES_NAME_ALLOW_NUMERIC && Validator.isNumber(name)) {
+			throw new RoleNameException();
+		}
+	}
+
 	protected void checkSystemRole(
 			long companyId, String name, Map<Locale, String> descriptionMap,
 			int type)
@@ -1725,18 +1741,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 		throws PortalException {
 
 		if (classNameId == classNameLocalService.getClassNameId(Role.class)) {
-			if (Validator.isNull(name) ||
-				(name.indexOf(CharPool.COMMA) != -1) ||
-				(name.indexOf(CharPool.STAR) != -1)) {
-
-				throw new RoleNameException();
-			}
-
-			if (Validator.isNumber(name) &&
-				!PropsValues.ROLES_NAME_ALLOW_NUMERIC) {
-
-				throw new RoleNameException();
-			}
+			validateName(name);
 		}
 
 		try {

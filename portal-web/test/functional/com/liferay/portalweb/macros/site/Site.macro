@@ -335,9 +335,9 @@ definition {
 		Click(locator1 = "SiteMembershipsUserGroups#USER_GROUP_TABLE_ACTIONS");
 
 		AssertClick(
-			key_menuItem = "Assign Site Roles",
+			key_menuItem = "Assign Roles",
 			locator1 = "MenuItem#ANY_MENU_ITEM",
-			value1 = "Assign Site Roles");
+			value1 = "Assign Roles");
 
 		SelectFrame(locator1 = "IFrame#DIALOG");
 

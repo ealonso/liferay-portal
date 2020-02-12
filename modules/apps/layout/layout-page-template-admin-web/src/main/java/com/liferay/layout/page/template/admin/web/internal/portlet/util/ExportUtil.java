@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
+import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.headless.delivery.dto.v1_0.PageDefinition;
 import com.liferay.headless.delivery.dto.v1_0.PageTemplate;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.PageDefinitionConverterUtil;
@@ -129,7 +130,8 @@ public class ExportUtil {
 			PageDefinition pageDefinition =
 				PageDefinitionConverterUtil.toPageDefinition(
 					_fragmentCollectionContributorTracker,
-					_fragmentRendererTracker, layout);
+					_fragmentEntryConfigurationParser, _fragmentRendererTracker,
+					layout);
 
 			zipWriter.addEntry(
 				path + "/page-definition.json",
@@ -165,6 +167,9 @@ public class ExportUtil {
 	@Reference
 	private FragmentCollectionContributorTracker
 		_fragmentCollectionContributorTracker;
+
+	@Reference
+	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 
 	@Reference
 	private FragmentRendererTracker _fragmentRendererTracker;

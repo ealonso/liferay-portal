@@ -67,6 +67,7 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		String css = ParamUtil.getString(actionRequest, "cssContent");
 		String html = ParamUtil.getString(actionRequest, "htmlContent");
 		String js = ParamUtil.getString(actionRequest, "jsContent");
+		boolean cacheable = ParamUtil.getBoolean(actionRequest, "cacheable");
 		String configuration = ParamUtil.getString(
 			actionRequest, "configurationContent");
 		int status = ParamUtil.getInteger(actionRequest, "status");
@@ -76,8 +77,8 @@ public class EditFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		try {
 			FragmentEntry fragmentEntry =
 				_fragmentEntryService.updateFragmentEntry(
-					fragmentEntryId, name, css, html, js, configuration,
-					status);
+					fragmentEntryId, name, css, html, js, cacheable,
+					configuration, status);
 
 			if (status == WorkflowConstants.ACTION_SAVE_DRAFT) {
 				String redirect = _getSaveAndContinueRedirect(

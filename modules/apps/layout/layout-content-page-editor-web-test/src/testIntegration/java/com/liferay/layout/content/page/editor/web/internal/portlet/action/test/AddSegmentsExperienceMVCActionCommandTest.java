@@ -159,6 +159,7 @@ public class AddSegmentsExperienceMVCActionCommandTest {
 		themeDisplay.setPlid(_layout.getPlid());
 		themeDisplay.setPermissionChecker(
 			PermissionThreadLocal.getPermissionChecker());
+		themeDisplay.setPlid(_layout.getPlid());
 		themeDisplay.setRequest(new MockHttpServletRequest());
 		themeDisplay.setScopeGroupId(_group.getGroupId());
 		themeDisplay.setServerName("localhost");

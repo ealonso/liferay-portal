@@ -16,7 +16,6 @@ package com.liferay.account.admin.web.internal.display;
 
 import com.liferay.account.model.AccountRole;
 import com.liferay.portal.kernel.model.Role;
-import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 
 import java.util.Locale;
 
@@ -47,6 +46,10 @@ public class AccountRoleDisplay {
 		return _role.getTitle(locale);
 	}
 
+	public Role getRole() {
+		return _role;
+	}
+
 	public long getRoleId() {
 		return _role.getRoleId();
 	}
@@ -54,7 +57,7 @@ public class AccountRoleDisplay {
 	private AccountRoleDisplay(AccountRole accountRole) throws Exception {
 		_accountRole = accountRole;
 
-		_role = RoleLocalServiceUtil.getRole(accountRole.getRoleId());
+		_role = accountRole.getRole();
 	}
 
 	private final AccountRole _accountRole;

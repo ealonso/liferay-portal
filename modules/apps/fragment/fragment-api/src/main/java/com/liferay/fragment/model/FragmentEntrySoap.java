@@ -46,6 +46,7 @@ public class FragmentEntrySoap implements Serializable {
 		soapModel.setCss(model.getCss());
 		soapModel.setHtml(model.getHtml());
 		soapModel.setJs(model.getJs());
+		soapModel.setCacheable(model.isCacheable());
 		soapModel.setConfiguration(model.getConfiguration());
 		soapModel.setPreviewFileEntryId(model.getPreviewFileEntryId());
 		soapModel.setReadOnly(model.isReadOnly());
@@ -228,6 +229,18 @@ public class FragmentEntrySoap implements Serializable {
 		_js = js;
 	}
 
+	public boolean getCacheable() {
+		return _cacheable;
+	}
+
+	public boolean isCacheable() {
+		return _cacheable;
+	}
+
+	public void setCacheable(boolean cacheable) {
+		_cacheable = cacheable;
+	}
+
 	public String getConfiguration() {
 		return _configuration;
 	}
@@ -319,6 +332,7 @@ public class FragmentEntrySoap implements Serializable {
 	private String _css;
 	private String _html;
 	private String _js;
+	private boolean _cacheable;
 	private String _configuration;
 	private long _previewFileEntryId;
 	private boolean _readOnly;

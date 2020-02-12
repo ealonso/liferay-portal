@@ -85,6 +85,30 @@ public class FragmentEntryServiceSoap {
 
 	public static com.liferay.fragment.model.FragmentEntrySoap addFragmentEntry(
 			long groupId, long fragmentCollectionId, String fragmentEntryKey,
+			String name, String css, String html, String js, boolean cacheable,
+			String configuration, long previewFileEntryId, int type, int status,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+
+		try {
+			com.liferay.fragment.model.FragmentEntry returnValue =
+				FragmentEntryServiceUtil.addFragmentEntry(
+					groupId, fragmentCollectionId, fragmentEntryKey, name, css,
+					html, js, cacheable, configuration, previewFileEntryId,
+					type, status, serviceContext);
+
+			return com.liferay.fragment.model.FragmentEntrySoap.toSoapModel(
+				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.fragment.model.FragmentEntrySoap addFragmentEntry(
+			long groupId, long fragmentCollectionId, String fragmentEntryKey,
 			String name, String css, String html, String js,
 			String configuration, long previewFileEntryId, int type, int status,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -594,6 +618,28 @@ public class FragmentEntryServiceSoap {
 	public static com.liferay.fragment.model.FragmentEntrySoap
 			updateFragmentEntry(
 				long fragmentEntryId, String name, String css, String html,
+				String js, boolean cacheable, String configuration, int status)
+		throws RemoteException {
+
+		try {
+			com.liferay.fragment.model.FragmentEntry returnValue =
+				FragmentEntryServiceUtil.updateFragmentEntry(
+					fragmentEntryId, name, css, html, js, cacheable,
+					configuration, status);
+
+			return com.liferay.fragment.model.FragmentEntrySoap.toSoapModel(
+				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.fragment.model.FragmentEntrySoap
+			updateFragmentEntry(
+				long fragmentEntryId, String name, String css, String html,
 				String js, String configuration, int status)
 		throws RemoteException {
 
@@ -602,6 +648,29 @@ public class FragmentEntryServiceSoap {
 				FragmentEntryServiceUtil.updateFragmentEntry(
 					fragmentEntryId, name, css, html, js, configuration,
 					status);
+
+			return com.liferay.fragment.model.FragmentEntrySoap.toSoapModel(
+				returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.fragment.model.FragmentEntrySoap
+			updateFragmentEntry(
+				long fragmentEntryId, String name, String css, String html,
+				String js, boolean cacheable, String configuration,
+				long previewFileEntryId, int status)
+		throws RemoteException {
+
+		try {
+			com.liferay.fragment.model.FragmentEntry returnValue =
+				FragmentEntryServiceUtil.updateFragmentEntry(
+					fragmentEntryId, name, css, html, js, cacheable,
+					configuration, previewFileEntryId, status);
 
 			return com.liferay.fragment.model.FragmentEntrySoap.toSoapModel(
 				returnValue);
