@@ -33,14 +33,12 @@ const Layout = ({
 			'liferay-search-container',
 			'liferay-search-container-select',
 			A => {
-				const plugins = [];
-
-				plugins.push({
+				const plugins = [{
 					cfg: {
 						rowSelector: '.miller-columns-item'
 					},
 					fn: A.Plugin.SearchContainerSelect
-				});
+				}];
 
 				new Liferay.SearchContainer({
 					contentBox: layoutRef.current,
