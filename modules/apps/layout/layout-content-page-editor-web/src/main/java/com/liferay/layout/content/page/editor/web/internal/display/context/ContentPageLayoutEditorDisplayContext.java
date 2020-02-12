@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
-import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -85,11 +84,10 @@ public class ContentPageLayoutEditorDisplayContext
 	}
 
 	@Override
-	public Map<String, Object> getEditorReactContext(
-			String npmResolvedPackageName)
+	public Map<String, Object> getEditorContext(String npmResolvedPackageName)
 		throws Exception {
 
-		Map<String, Object> editorReactContext = super.getEditorReactContext(
+		Map<String, Object> editorReactContext = super.getEditorContext(
 			npmResolvedPackageName);
 
 		Map<String, Object> configContext =

@@ -58,11 +58,10 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 	}
 
 	@Override
-	public Map<String, Object> getEditorReactContext(
-			String npmResolvedPackageName)
+	public Map<String, Object> getEditorContext(String npmResolvedPackageName)
 		throws Exception {
 
-		Map<String, Object> editorReactContext = super.getEditorReactContext(
+		Map<String, Object> editorReactContext = super.getEditorContext(
 			npmResolvedPackageName);
 
 		Map<String, Object> configContext =

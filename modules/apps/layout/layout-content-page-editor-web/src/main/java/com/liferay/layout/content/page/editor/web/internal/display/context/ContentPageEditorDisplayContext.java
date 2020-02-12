@@ -212,8 +212,7 @@ public class ContentPageEditorDisplayContext {
 		return deleteLayoutURL.toString();
 	}
 
-	public Map<String, Object> getEditorReactContext(
-			String npmResolvedPackageName)
+	public Map<String, Object> getEditorContext(String npmResolvedPackageName)
 		throws Exception {
 
 		return HashMapBuilder.<String, Object>put(
