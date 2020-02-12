@@ -25,7 +25,7 @@ const MillerColumnsColumn = ({index, items}) => (
 				description={item.description}
 				draggable={index !== 0}
 				hasChild={item.hasChild}
-				id={item.id}
+				itemId={item.id}
 				key={item.url}
 				selectable={index !== 0}
 				state={item.state}
