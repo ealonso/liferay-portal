@@ -311,7 +311,7 @@ public abstract class ContentPageEditorDisplayContext {
 				"pluginsRootPath",
 				npmResolvedPackageName + "/page_editor/plugins"
 			).put(
-				"portletNamespace", getPortletNamespace()
+				"portletNamespace", _renderResponse.getNamespace()
 			).put(
 				"publishURL", getPublishURL()
 			).put(
@@ -382,10 +382,6 @@ public abstract class ContentPageEditorDisplayContext {
 				"widgets", _getWidgetsSoyContexts()
 			).build()
 		).build();
-	}
-
-	public String getPortletNamespace() {
-		return _renderResponse.getNamespace();
 	}
 
 	public boolean isMasterLayout() {
