@@ -29,6 +29,8 @@ const ITEM_STATES_COLORS = {
 	pending: 'info'
 };
 
+const noop = () => {};
+
 const MillerColumnsColumnItem = ({
 	actions = [],
 	active,
@@ -42,16 +44,38 @@ const MillerColumnsColumnItem = ({
 	title,
 	url
 }) => {
-	const {namespace = ''} = useContext(MillerColumnsContext);
+	const {actionHandlers = {}, namespace = ''} = useContext(MillerColumnsContext);
 
 	const [dropdownActionsActive, setDropdownActionsActive] = useState();
 
 	const getDropdownActions = actions => {
-		return actions.filter(action => !action.quickAction && action.url);
+		const dropdownActions = [];
+
+		actions.map(action => {
+			if (!action.quickAction && action.url) {
+				dropdownActions.push({
+					...action,
+					handler: action.handler || actionHandlers[action.id] || noop
+				});
+			}
+		});
+
+		return dropdownActions;
 	};
 
 	const getQuickActions = actions => {
-		return actions.filter(action => action.quickAction && action.url);
+		const quickActions = [];
+
+		actions.map(action => {
+			if (action.quickAction && action.url) {
+				quickActions.push({
+					...action,
+					handler: action.handler || actionHandlers[action.id] || noop
+				});
+			}
+		});
+
+		return quickActions;
 	};
 
 	const dropdownActions = useRef(getDropdownActions(actions));
@@ -152,6 +176,7 @@ const MillerColumnsColumnItem = ({
 									href={action.url}
 									id={action.id}
 									key={action.id}
+									onClick={action.handler}
 								>
 									{action.label}
 								</ClayDropDown.Item>

@@ -14,6 +14,7 @@
 
 import React, {useEffect, useRef} from 'react';
 
+import actionHandlers from './miller_columns/actionHandlers.es';
 import Breadcrumbs from './breadcrumbs/Breadcrumbs.es';
 import MillerColumns from './miller_columns/MillerColumns.es';
 import MillerColumnsContext from './miller_columns/MillerColumnsContext.es';
@@ -58,7 +59,7 @@ const Layout = ({
 
 	return (
 		<div ref={layoutRef}>
-			<MillerColumnsContext.Provider value={{namespace}}>
+			<MillerColumnsContext.Provider value={{actionHandlers, namespace}}>
 				<Breadcrumbs entries={breadcrumbEntries} />
 				<MillerColumns columns={layoutColumns} />
 			</MillerColumnsContext.Provider>
