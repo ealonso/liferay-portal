@@ -60,7 +60,7 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 					Map<String, Object> layoutProps = new HashMap<>();
 
 					layoutProps.put("breadcrumbEntries", layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray());
-					layoutProps.put("layoutColumns", layoutsAdminDisplayContext.getLayoutColumnsJSONArray());
+					layoutProps.put("layoutColumns", layoutsAdminDisplayContext.getReactLayoutColumnsJSONArray());
 					layoutProps.put("searchContainerId", "pages");
 
 					layoutData.put("props", layoutProps);

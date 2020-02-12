@@ -693,8 +693,6 @@ public class LayoutsAdminDisplayContext {
 			LayoutType layoutType = layout.getLayoutType();
 
 			layoutJSONObject.put(
-				"id", layout.getPlid()
-			).put(
 				"parentable", layoutType.isParentable()
 			).put(
 				"pending",
@@ -915,6 +913,128 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		return portletURL;
+	}
+
+	public JSONArray getReactLayoutColumnsJSONArray() throws Exception {
+		JSONArray layoutColumnsJSONArray = JSONUtil.put(
+			_getReactFirstLayoutColumnJSONArray());
+
+		if (isFirstColumn()) {
+			return layoutColumnsJSONArray;
+		}
+
+		JSONArray layoutSetBranchesJSONArray = _getLayoutSetBranchesJSONArray();
+
+		if (layoutSetBranchesJSONArray.length() > 0) {
+			layoutColumnsJSONArray.put(layoutSetBranchesJSONArray);
+		}
+
+		Layout selLayout = getSelLayout();
+
+		if (selLayout == null) {
+			layoutColumnsJSONArray.put(
+				getReactLayoutsJSONArray(0, isPrivateLayout()));
+
+			return layoutColumnsJSONArray;
+		}
+
+		List<Layout> layouts = ListUtil.copy(selLayout.getAncestors());
+
+		Collections.reverse(layouts);
+
+		layouts.add(selLayout);
+
+		for (Layout layout : layouts) {
+			layoutColumnsJSONArray.put(
+				getReactLayoutsJSONArray(
+					layout.getParentLayoutId(), selLayout.isPrivateLayout()));
+		}
+
+		layoutColumnsJSONArray.put(
+			getReactLayoutsJSONArray(
+				selLayout.getLayoutId(), selLayout.isPrivateLayout()));
+
+		return layoutColumnsJSONArray;
+	}
+
+	public JSONArray getReactLayoutsJSONArray(
+			long parentLayoutId, boolean privateLayout)
+		throws Exception {
+
+		JSONArray layoutsJSONArray = JSONFactoryUtil.createJSONArray();
+
+		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+			getSelGroupId(), privateLayout, parentLayoutId, true,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		for (Layout layout : layouts) {
+			if (_getActiveLayoutSetBranchId() > 0) {
+				LayoutRevision layoutRevision =
+					LayoutStagingUtil.getLayoutRevision(layout);
+
+				if ((layoutRevision != null) && layoutRevision.isIncomplete()) {
+					continue;
+				}
+			}
+
+			JSONObject layoutJSONObject = JSONUtil.put(
+				"actions", _getReactLayoutActionsJSONArray(layout)
+			).put(
+				"active", _isActive(layout.getPlid())
+			).put(
+				"bulkActions", StringUtil.merge(_getAvailableActions(layout))
+			);
+
+			LayoutTypeController layoutTypeController =
+				LayoutTypeControllerTracker.getLayoutTypeController(
+					layout.getType());
+
+			ResourceBundle layoutTypeResourceBundle =
+				ResourceBundleUtil.getBundle(
+					"content.Language", _themeDisplay.getLocale(),
+					layoutTypeController.getClass());
+
+			layoutJSONObject.put(
+				"description",
+				LanguageUtil.get(
+					_httpServletRequest, layoutTypeResourceBundle,
+					"layout.types." + layout.getType()));
+
+			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+				getSelGroup(), layout.isPrivateLayout(), layout.getLayoutId());
+
+			layoutJSONObject.put(
+				"hasChild", childLayoutsCount > 0
+			).put(
+				"id", layout.getPlid()
+			);
+
+			LayoutType layoutType = layout.getLayoutType();
+
+			layoutJSONObject.put(
+				"parentable", layoutType.isParentable()
+			).put(
+				"states", _getReactLayoutStatesJSONArray(layout)
+			).put(
+				"title", layout.getName(_themeDisplay.getLocale())
+			);
+
+			PortletURL portletURL = getPortletURL();
+
+			portletURL.setParameter(
+				"selPlid", String.valueOf(layout.getPlid()));
+			portletURL.setParameter(
+				"layoutSetBranchId",
+				String.valueOf(_getActiveLayoutSetBranchId()));
+			portletURL.setParameter(
+				"privateLayout", String.valueOf(layout.isPrivateLayout()));
+
+			layoutJSONObject.put("url", portletURL.toString());
+
+			layoutsJSONArray.put(layoutJSONObject);
+		}
+
+		return layoutsJSONArray;
 	}
 
 	public String getRedirect() {
@@ -1743,8 +1863,6 @@ public class LayoutsAdminDisplayContext {
 		).put(
 			"hasChild", true
 		).put(
-			"id", LayoutConstants.DEFAULT_PLID
-		).put(
 			"plid", LayoutConstants.DEFAULT_PLID
 		).put(
 			"title", getTitle(privatePages)
@@ -1930,6 +2048,236 @@ public class LayoutsAdminDisplayContext {
 			_liferayPortletRequest, "orderByType", "asc");
 
 		return _orderByType;
+	}
+
+	private JSONObject _getReactFirstLayoutColumn(
+			boolean privatePages, boolean active)
+		throws PortalException {
+
+		JSONObject pagesJSONObject = JSONUtil.put(
+			"actions", _getReactFirstLayoutColumnActionsJSONArray(privatePages)
+		).put(
+			"active", active
+		).put(
+			"hasChild", true
+		).put(
+			"id", LayoutConstants.DEFAULT_PLID
+		).put(
+			"title", getTitle(privatePages)
+		);
+
+		PortletURL pagesURL = getPortletURL();
+
+		pagesURL.setParameter(
+			"selPlid", String.valueOf(LayoutConstants.DEFAULT_PLID));
+		pagesURL.setParameter("privateLayout", String.valueOf(privatePages));
+
+		pagesJSONObject.put("url", pagesURL.toString());
+
+		return pagesJSONObject;
+	}
+
+	private JSONArray _getReactFirstLayoutColumnActionsJSONArray(
+			boolean privatePages)
+		throws PortalException {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		if (isShowFirstColumnConfigureAction()) {
+			jsonArray.put(
+				JSONUtil.put(
+					"url", getFirstColumnConfigureLayoutURL(privatePages)));
+		}
+
+		if (isShowAddRootLayoutButton()) {
+			jsonArray.put(
+				JSONUtil.put(
+					"url", getSelectLayoutPageTemplateEntryURL(privatePages)));
+		}
+
+		return jsonArray;
+	}
+
+	private JSONArray _getReactFirstLayoutColumnJSONArray() throws Exception {
+		JSONArray firstColumnJSONArray = JSONFactoryUtil.createJSONArray();
+
+		Layout selLayout = getSelLayout();
+
+		if (LayoutLocalServiceUtil.hasLayouts(getSelGroup(), false) &&
+			isShowPublicPages()) {
+
+			boolean active = !isPrivateLayout();
+
+			if (selLayout != null) {
+				active = selLayout.isPublicLayout();
+			}
+
+			if (isFirstColumn()) {
+				active = false;
+			}
+
+			firstColumnJSONArray.put(_getReactFirstLayoutColumn(false, active));
+		}
+
+		if (LayoutLocalServiceUtil.hasLayouts(getSelGroup(), true)) {
+			boolean active = isPrivateLayout();
+
+			if (selLayout != null) {
+				active = selLayout.isPrivateLayout();
+			}
+
+			if (isFirstColumn()) {
+				active = false;
+			}
+
+			firstColumnJSONArray.put(_getReactFirstLayoutColumn(true, active));
+		}
+
+		return firstColumnJSONArray;
+	}
+
+	private JSONArray _getReactLayoutActionsJSONArray(Layout layout)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		if (isShowAddChildPageAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//addURL
+				getSelectLayoutPageTemplateEntryURL(
+					getFirstLayoutPageTemplateCollectionId(), layout.getPlid(),
+					layout.isPrivateLayout())
+			));
+		}
+
+		if (isShowConfigureAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//configureURL
+				getConfigureLayoutURL(layout)
+			));
+		}
+
+		Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+			PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+		if (isShowConvertLayoutAction(layout)) {
+			if (draftLayout == null) {
+				jsonArray.put(JSONUtil.put(
+					"url",	//layoutConversionPreviewURL
+					getLayoutConversionPreviewURL(layout)
+				));
+			}
+			else {
+				jsonArray.put(JSONUtil.put(
+					"url",	//deleteLayoutConversionPreviewURL
+					getDeleteLayoutURL(layout)
+				));
+			}
+		}
+
+		if (isShowCopyLayoutAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//copyLayoutURL
+				getCopyLayoutRenderURL(layout)
+			));
+		}
+
+		if (isShowDeleteAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//deleteURL
+				getDeleteLayoutURL(layout)
+			));
+		}
+
+		if (isConversionDraft(layout) && isShowConfigureAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//editConversionLayoutURL
+				getEditLayoutURL(layout)
+			));
+		}
+		else if (isShowConfigureAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//editLayoutURL
+				getEditLayoutURL(layout)
+			));
+		}
+
+		if (isShowOrphanPortletsAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//orphanPortletsURL
+				getOrphanPortletsURL(layout)
+			));
+		}
+
+		if (isShowPermissionsAction(layout)) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//permissionsURL
+				getPermissionsURL(layout)
+			));
+		}
+
+		if (layout.isPending()) {
+			jsonArray.put(JSONUtil.put(
+				"url",	//previewLayoutURL
+				getViewLayoutURL(layout)
+			));
+		}
+		else {
+			jsonArray.put(JSONUtil.put(
+				"url",	//viewLayoutURL
+				getViewLayoutURL(layout)
+			));
+		}
+
+		return jsonArray;
+	}
+
+	private JSONArray _getReactLayoutStatesJSONArray(Layout layout)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+			PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+		if (layout.isTypeContent()) {
+			boolean published = GetterUtil.getBoolean(
+				draftLayout.getTypeSettingsProperty("published"));
+
+			if ((draftLayout.getStatus() == WorkflowConstants.STATUS_DRAFT) ||
+				!published) {
+
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "draft"
+					).put(
+						"label", LanguageUtil.get(_httpServletRequest, "draft")
+					));
+			}
+		}
+		else {
+			if (draftLayout != null) {
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "conversionPreview"
+					).put(
+						"label",
+						LanguageUtil.get(
+							_httpServletRequest, "conversionPreview")
+					));
+			}
+		}
+
+		if (layout.getStatus() == WorkflowConstants.STATUS_PENDING) {
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "pending"
+				).put(
+					"label", LanguageUtil.get(_httpServletRequest, "pending")
+				));
+		}
+
+		return jsonArray;
 	}
 
 	private boolean _isActive(long plid) throws PortalException {
