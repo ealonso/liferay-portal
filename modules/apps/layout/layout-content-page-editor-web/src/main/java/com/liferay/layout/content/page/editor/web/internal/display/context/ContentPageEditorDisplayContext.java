@@ -192,13 +192,13 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"addFragmentEntryLinkURL",
 				getFragmentEntryActionURL(
-					"/content_layout/add_fragment_entry_link_react")
+					"/content_layout/add_fragment_entry_link")
 			).put(
 				"addItemURL",
-				getFragmentEntryActionURL("/content_layout/add_item_react")
+				getFragmentEntryActionURL("/content_layout/add_item")
 			).put(
 				"addPortletURL",
-				getFragmentEntryActionURL("/content_layout/add_portlet_react")
+				getFragmentEntryActionURL("/content_layout/add_portlet")
 			).put(
 				"availableLanguages", _getAvailableLanguagesSoyContext()
 			).put(
@@ -214,15 +214,14 @@ public abstract class ContentPageEditorDisplayContext {
 					"/content_layout/delete_fragment_entry_link_comment")
 			).put(
 				"deleteItemURL",
-				getFragmentEntryActionURL("/content_layout/delete_item_react")
+				getFragmentEntryActionURL("/content_layout/delete_item")
 			).put(
 				"discardDraftRedirectURL", themeDisplay.getURLCurrent()
 			).put(
 				"discardDraftURL", _getDiscardDraftURL()
 			).put(
 				"duplicateItemURL",
-				getFragmentEntryActionURL(
-					"/content_layout/duplicate_item_react")
+				getFragmentEntryActionURL("/content_layout/duplicate_item")
 			).put(
 				"editFragmentEntryLinkCommentURL",
 				getFragmentEntryActionURL(
@@ -257,7 +256,7 @@ public abstract class ContentPageEditorDisplayContext {
 			).put(
 				"moveItemURL",
 				getFragmentEntryActionURL(
-					"/content_layout/move_fragment_entry_link_react")
+					"/content_layout/move_fragment_entry_link")
 			).put(
 				"pageType", String.valueOf(_getPageType())
 			).put(
@@ -294,16 +293,14 @@ public abstract class ContentPageEditorDisplayContext {
 				"themeColorsCssClasses", _getThemeColorsCssClasses()
 			).put(
 				"updateItemConfigURL",
-				getFragmentEntryActionURL(
-					"/content_layout/update_item_config_react")
+				getFragmentEntryActionURL("/content_layout/update_item_config")
 			).put(
 				"updateLayoutPageTemplateDataURL",
 				getFragmentEntryActionURL(
 					"/content_layout/update_layout_page_template_data")
 			).put(
 				"updateRowColumnsURL",
-				getFragmentEntryActionURL(
-					"/content_layout/update_row_columns_react")
+				getFragmentEntryActionURL("/content_layout/update_row_columns")
 			).put(
 				"workflowEnabled", isWorkflowEnabled()
 			).build()
