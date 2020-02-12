@@ -220,16 +220,34 @@ public class LayoutsAdminReactDisplayContext
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		if (isShowFirstColumnConfigureAction()) {
-			jsonArray.put(
-				JSONUtil.put(
-					"url", getFirstColumnConfigureLayoutURL(privatePages)));
-		}
-
 		if (isShowAddRootLayoutButton()) {
 			jsonArray.put(
 				JSONUtil.put(
-					"url", getSelectLayoutPageTemplateEntryURL(privatePages)));
+					"icon", "plus"
+				).put(
+					"id", "addURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "add")
+				).put(
+					"quickAction", true
+				).put(
+					"url", getSelectLayoutPageTemplateEntryURL(privatePages)
+				));
+		}
+
+		if (isShowFirstColumnConfigureAction()) {
+			jsonArray.put(
+				JSONUtil.put(
+					"icon", "cog"
+				).put(
+					"id", "configureURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "configure")
+				).put(
+					"quickAction", true
+				).put(
+					"url", getFirstColumnConfigureLayoutURL(privatePages)
+				));
 		}
 
 		return jsonArray;
@@ -281,6 +299,8 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowAddChildPageAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
+					"icon", "plus"
+				).put(
 					"id", "addURL"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "add")
@@ -297,11 +317,11 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowConfigureAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
+					"icon", "cog"
+				).put(
 					"id", "configureURL"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "configure")
-				).put(
-					"quickAction", true
 				).put(
 					"url", getConfigureLayoutURL(layout)
 				));
