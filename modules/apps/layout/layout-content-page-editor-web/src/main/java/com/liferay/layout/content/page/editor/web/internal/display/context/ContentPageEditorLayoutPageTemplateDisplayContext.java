@@ -23,7 +23,6 @@ import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
@@ -33,8 +32,8 @@ import com.liferay.portal.template.soy.util.SoyContext;
 import com.liferay.portal.template.soy.util.SoyContextFactoryUtil;
 
 import java.util.List;
+import java.util.Map;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,50 +48,51 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
 		boolean pageIsDisplayPage, CommentManager commentManager,
 		List<ContentPageEditorSidebarPanel> contentPageEditorSidebarPanels,
-		FragmentRendererController fragmentRendererController,
-		PortletRequest portletRequest) {
+		FragmentRendererController fragmentRendererController) {
 
 		super(
 			httpServletRequest, renderResponse, commentManager,
-			contentPageEditorSidebarPanels, fragmentRendererController,
-			portletRequest);
+			contentPageEditorSidebarPanels, fragmentRendererController);
 
 		_pageIsDisplayPage = pageIsDisplayPage;
 	}
 
 	@Override
-	public SoyContext getEditorSoyContext() throws Exception {
-		if (_editorSoyContext != null) {
-			return _editorSoyContext;
+	public Map<String, Object> getEditorReactContext(
+			String npmResolvedPackageName)
+		throws Exception {
+
+		Map<String, Object> editorReactContext = super.getEditorReactContext(
+			npmResolvedPackageName);
+
+		Map<String, Object> configContext =
+			(Map<String, Object>)editorReactContext.get("config");
+
+		if (!_pageIsDisplayPage) {
+			return editorReactContext;
 		}
 
-		SoyContext soyContext = super.getEditorSoyContext();
+		configContext.put(
+			"mappingFieldsURL", "/content_layout/get_mapping_fields");
+		configContext.put("selectedMappingTypes", _getSelectedMappingTypes());
 
-		soyContext.put("lastSaveDate", StringPool.BLANK);
+		return editorReactContext;
+	}
 
-		if (_pageIsDisplayPage) {
-			soyContext.put(
-				"mappingFieldsURL",
-				getFragmentEntryActionURL(
-					"/content_layout/get_mapping_fields"));
-		}
+	@Override
+	public String getPublishURL() {
+		return getFragmentEntryActionURL(
+			"/content_layout/publish_layout_page_template_entry");
+	}
 
-		soyContext.put(
-			"publishURL",
-			getFragmentEntryActionURL(
-				"/content_layout/publish_layout_page_template_entry"));
+	@Override
+	public List<SoyContext> getSidebarPanelSoyContexts() {
+		return getSidebarPanelSoyContexts(_pageIsDisplayPage);
+	}
 
-		if (_pageIsDisplayPage) {
-			soyContext.put("selectedMappingTypes", _getSelectedMappingTypes());
-		}
-
-		_editorSoyContext = soyContext.put(
-			"sidebarPanels", getSidebarPanelSoyContexts(_pageIsDisplayPage)
-		).put(
-			"workflowEnabled", false
-		);
-
-		return _editorSoyContext;
+	@Override
+	public boolean isWorkflowEnabled() {
+		return false;
 	}
 
 	private LayoutPageTemplateEntry _getLayoutPageTemplateEntry() {
@@ -194,7 +194,6 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 		return soyContext;
 	}
 
-	private SoyContext _editorSoyContext;
 	private LayoutPageTemplateEntry _layoutPageTemplateEntry;
 	private final boolean _pageIsDisplayPage;
 

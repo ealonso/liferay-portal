@@ -16,6 +16,7 @@ package com.liferay.layout.content.page.editor.web.internal.display.context;
 
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
+import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
@@ -55,9 +56,9 @@ import com.liferay.staging.StagingGroupHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderResponse;
 
@@ -74,70 +75,79 @@ public class ContentPageLayoutEditorDisplayContext
 		CommentManager commentManager,
 		List<ContentPageEditorSidebarPanel> contentPageEditorSidebarPanels,
 		FragmentRendererController fragmentRendererController,
-		PortletRequest portletRequest, StagingGroupHelper stagingGroupHelper) {
+		StagingGroupHelper stagingGroupHelper) {
 
 		super(
 			httpServletRequest, renderResponse, commentManager,
-			contentPageEditorSidebarPanels, fragmentRendererController,
-			portletRequest);
+			contentPageEditorSidebarPanels, fragmentRendererController);
 
 		_stagingGroupHelper = stagingGroupHelper;
 	}
 
 	@Override
-	public SoyContext getEditorSoyContext() throws Exception {
-		if (_editorSoyContext != null) {
-			return _editorSoyContext;
-		}
+	public Map<String, Object> getEditorReactContext(
+			String npmResolvedPackageName)
+		throws Exception {
 
-		SoyContext soyContext = super.getEditorSoyContext();
+		Map<String, Object> editorReactContext = super.getEditorReactContext(
+			npmResolvedPackageName);
 
-		soyContext.put("sidebarPanels", getSidebarPanelSoyContexts(false));
+		Map<String, Object> configContext =
+			(Map<String, Object>)editorReactContext.get("config");
 
-		if (!_isShowSegmentsExperiences()) {
-			_editorSoyContext = soyContext;
-
-			return _editorSoyContext;
-		}
-
-		_editorSoyContext = soyContext.put(
+		configContext.put(
 			"addSegmentsExperienceURL",
-			getFragmentEntryActionURL("/content_layout/add_segments_experience")
-		).put(
-			"availableSegmentsEntries", _getAvailableSegmentsEntriesSoyContext()
-		).put(
-			"availableSegmentsExperiences",
-			_getAvailableSegmentsExperiencesSoyContext()
-		).put(
-			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
-		).put(
+			getFragmentEntryActionURL(
+				"/content_layout/add_segments_experience"));
+		configContext.put(
+			"availableSegmentsEntries",
+			_getAvailableSegmentsEntriesSoyContext());
+		configContext.put(
+			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT);
+		configContext.put(
 			"defaultSegmentsExperienceId",
-			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
+			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT));
+		configContext.put(
 			"deleteSegmentsExperienceURL",
 			getFragmentEntryActionURL(
-				"/content_layout/delete_segments_experience")
-		).put(
-			"editSegmentsEntryURL", _getEditSegmentsEntryURL()
-		).put(
-			"hasEditSegmentsEntryPermission", _hasEditSegmentsEntryPermission()
-		).put(
-			"layoutDataList", _getLayoutDataListSoyContext()
-		).put(
-			"lockedSegmentsExperience",
-			_isLockedSegmentsExperience(getSegmentsExperienceId())
-		).put(
-			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId())
-		).put(
-			"segmentsExperimentStatus",
-			_getSegmentsExperimentStatusSoyContext(getSegmentsExperienceId())
-		).put(
-			"selectedSegmentsEntryId", String.valueOf(_getSegmentsEntryId())
-		).put(
-			"singleSegmentsExperienceMode", isSingleSegmentsExperienceMode()
-		);
+				"/content_layout/delete_segments_experience"));
+		configContext.put("editSegmentsEntryURL", _getEditSegmentsEntryURL());
+		configContext.put(
+			"hasEditSegmentsEntryPermission",
+			_hasEditSegmentsEntryPermission());
+		configContext.put(
+			"updateSegmentsExperiencePriorityURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience_priority"));
+		configContext.put(
+			"updateSegmentsExperienceURL",
+			getFragmentEntryActionURL(
+				"/content_layout/update_segments_experience"));
 
-		return _editorSoyContext;
+		Map<String, Object> stateContext =
+			(Map<String, Object>)editorReactContext.get("state");
+
+		stateContext.put(
+			"availableSegmentsExperiences",
+			_getAvailableSegmentsExperiencesSoyContext());
+		stateContext.put("layoutDataList", _getLayoutDataListSoyContext());
+		stateContext.put(
+			"segmentsExperimentStatus",
+			_getSegmentsExperimentStatusSoyContext(getSegmentsExperienceId()));
+
+		Map<String, Object> permissionsContext =
+			(Map<String, Object>)stateContext.get("state");
+
+		permissionsContext.put(
+			ContentPageEditorActionKeys.LOCKED_SEGMENTS_EXPERIMENT,
+			_isLockedSegmentsExperience(getSegmentsExperienceId()));
+
+		return editorReactContext;
+	}
+
+	@Override
+	public List<SoyContext> getSidebarPanelSoyContexts() {
+		return getSidebarPanelSoyContexts(false);
 	}
 
 	@Override
@@ -528,7 +538,6 @@ public class ContentPageLayoutEditorDisplayContext
 		return _showSegmentsExperiences;
 	}
 
-	private SoyContext _editorSoyContext;
 	private String _editSegmentsEntryURL;
 	private Boolean _lockedSegmentsExperience;
 	private Long _segmentsEntryId;

@@ -61,8 +61,7 @@ public class ContentPageEditorDisplayContextProvider {
 			return new ContentPageLayoutEditorDisplayContext(
 				httpServletRequest, renderResponse, _commentManager,
 				_getContentPageEditorSidebarPanels(),
-				_fragmentRendererController, portletRequest,
-				_stagingGroupHelper);
+				_fragmentRendererController, _stagingGroupHelper);
 		}
 
 		long classPK = GetterUtil.getLong(
@@ -84,7 +83,7 @@ public class ContentPageEditorDisplayContextProvider {
 		return new ContentPageEditorLayoutPageTemplateDisplayContext(
 			httpServletRequest, renderResponse, pageIsDisplayPage,
 			_commentManager, _getContentPageEditorSidebarPanels(),
-			_fragmentRendererController, portletRequest);
+			_fragmentRendererController);
 	}
 
 	@Activate
