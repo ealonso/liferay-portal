@@ -225,7 +225,7 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"icon", "plus"
 				).put(
-					"id", "addURL"
+					"id", "add"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "add")
 				).put(
@@ -240,7 +240,7 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"icon", "cog"
 				).put(
-					"id", "configureURL"
+					"id", "configure"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "configure")
 				).put(
@@ -301,7 +301,7 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"icon", "plus"
 				).put(
-					"id", "addURL"
+					"id", "add"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "add")
 				).put(
@@ -319,7 +319,7 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"icon", "cog"
 				).put(
-					"id", "configureURL"
+					"id", "configure"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "configure")
 				).put(
@@ -334,7 +334,7 @@ public class LayoutsAdminReactDisplayContext
 			if (draftLayout == null) {
 				jsonArray.put(
 					JSONUtil.put(
-						"id", "layoutConversionPreviewURL"
+						"id", "layoutConversionPreview"
 					).put(
 						"label",
 						LanguageUtil.get(
@@ -347,7 +347,7 @@ public class LayoutsAdminReactDisplayContext
 			else {
 				jsonArray.put(
 					JSONUtil.put(
-						"id", "deleteLayoutConversionPreviewURL"
+						"id", "deleteLayoutConversionPreview"
 					).put(
 						"label",
 						LanguageUtil.get(
@@ -361,7 +361,7 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowCopyLayoutAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "copyLayoutURL"
+					"id", "copyLayout"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "copy-page")
 				).put(
@@ -372,7 +372,7 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowDeleteAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "deleteURL"
+					"id", "delete"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "delete")
 				).put(
@@ -383,7 +383,7 @@ public class LayoutsAdminReactDisplayContext
 		if (isConversionDraft(layout) && isShowConfigureAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "editConversionLayoutURL"
+					"id", "editConversionLayout"
 				).put(
 					"label",
 					LanguageUtil.get(
@@ -395,7 +395,7 @@ public class LayoutsAdminReactDisplayContext
 		else if (isShowConfigureAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "editLayoutURL"
+					"id", "editLayout"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "edit")
 				).put(
@@ -406,7 +406,7 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowOrphanPortletsAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "orphanPortletsURL"
+					"id", "orphanPortlets"
 				).put(
 					"label",
 					LanguageUtil.get(httpServletRequest, "orphan-widgets")
@@ -418,7 +418,7 @@ public class LayoutsAdminReactDisplayContext
 		if (isShowPermissionsAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "permissionsURL"
+					"id", "permissions"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "permissions")
 				).put(
@@ -429,7 +429,7 @@ public class LayoutsAdminReactDisplayContext
 		if (layout.isPending()) {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "previewLayoutURL"
+					"id", "previewLayout"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "preview")
 				).put(
@@ -439,7 +439,7 @@ public class LayoutsAdminReactDisplayContext
 		else {
 			jsonArray.put(
 				JSONUtil.put(
-					"id", "viewLayoutURL"
+					"id", "viewLayout"
 				).put(
 					"label", LanguageUtil.get(httpServletRequest, "view")
 				).put(
