@@ -181,7 +181,7 @@ public class ContentPageEditorDisplayContext {
 			ContentPageEditorWebKeys.ITEM_SELECTOR);
 	}
 
-	public String getDiscardDraftURL() throws PortalException {
+	public String getDiscardDraftURL() {
 		Layout layout = _getPublishedLayout();
 
 		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
@@ -384,7 +384,7 @@ public class ContentPageEditorDisplayContext {
 		return Collections.emptyList();
 	}
 
-	public boolean isMasterLayout() throws PortalException {
+	public boolean isMasterLayout() {
 		if (_getPageType() ==
 				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT) {
 
@@ -1251,7 +1251,7 @@ public class ContentPageEditorDisplayContext {
 		return _masterLayoutStructure;
 	}
 
-	private int _getPageType() throws PortalException {
+	private int _getPageType() {
 		if (_pageType != null) {
 			return _pageType;
 		}
@@ -1407,14 +1407,14 @@ public class ContentPageEditorDisplayContext {
 		);
 	}
 
-	private Layout _getPublishedLayout() throws PortalException {
+	private Layout _getPublishedLayout() {
 		if (_publishedLayout != null) {
 			return _publishedLayout;
 		}
 
 		Layout draftLayout = themeDisplay.getLayout();
 
-		_publishedLayout = LayoutLocalServiceUtil.getLayout(
+		_publishedLayout = LayoutLocalServiceUtil.fetchLayout(
 			draftLayout.getClassPK());
 
 		return _publishedLayout;
@@ -1614,7 +1614,7 @@ public class ContentPageEditorDisplayContext {
 		return _allowNewFragmentEntries;
 	}
 
-	private boolean _isMasterUsed() throws PortalException {
+	private boolean _isMasterUsed() {
 		if (_getPageType() !=
 				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT) {
 
