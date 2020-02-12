@@ -12,13 +12,19 @@
  * details.
  */
 
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import MillerColumnsColumn from './MillerColumnsColumn.es';
 
 const MillerColumns = ({columns}) => {
+	const rowRef = useRef();
+
+	useEffect(() => {
+		rowRef.current.scrollLeft = rowRef.current.scrollWidth;
+	}, [rowRef]);
+
 	return (
-		<div className="bg-white miller-columns-row">
+		<div className="bg-white miller-columns-row" ref={rowRef}>
 			{columns.map((items, index) => (
 				<MillerColumnsColumn index={index} items={items} key={index} />
 			))}
