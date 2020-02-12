@@ -25,6 +25,7 @@ const Layout = ({
 	searchContainerId
 }) => {
 	const layoutRef = useRef();
+	const searchContainer = useRef();
 
 	useEffect(() => {
 		const A = new AUI();
@@ -33,14 +34,20 @@ const Layout = ({
 			'liferay-search-container',
 			'liferay-search-container-select',
 			A => {
-				const plugins = [{
-					cfg: {
-						rowSelector: '.miller-columns-item'
-					},
-					fn: A.Plugin.SearchContainerSelect
-				}];
+				const plugins = [
+					{
+						cfg: {
+							rowSelector: '.miller-columns-item'
+						},
+						fn: A.Plugin.SearchContainerSelect
+					}
+				];
 
-				new Liferay.SearchContainer({
+				if (searchContainer.current) {
+					searchContainer.current.destroy();
+				}
+
+				searchContainer.current = new Liferay.SearchContainer({
 					contentBox: layoutRef.current,
 					id: `${namespace}${searchContainerId}`,
 					plugins
