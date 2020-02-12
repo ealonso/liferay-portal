@@ -14,115 +14,57 @@
 
 package com.liferay.layout.admin.web.internal.display.context;
 
-import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
-import com.liferay.asset.kernel.model.AssetVocabulary;
-import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
-import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
-import com.liferay.exportimport.kernel.staging.StagingUtil;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
-import com.liferay.layout.admin.web.internal.configuration.LayoutEditorTypeConfiguration;
-import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
-import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
-import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionLocalServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
-import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionNameComparator;
-import com.liferay.layout.util.LayoutCopyHelper;
-import com.liferay.layout.util.comparator.LayoutCreateDateComparator;
-import com.liferay.layout.util.template.LayoutConverter;
-import com.liferay.layout.util.template.LayoutConverterRegistry;
-import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
-import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutRevision;
-import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.model.LayoutTypeController;
-import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
-import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
-import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
-import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
-import com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.OrderByComparator;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.util.LayoutDescription;
-import com.liferay.portal.util.LayoutListUtil;
 import com.liferay.portal.util.LayoutTypeControllerTracker;
-import com.liferay.portal.util.RobotsUtil;
-import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
-import com.liferay.site.navigation.model.SiteNavigationMenu;
-import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 import com.liferay.staging.StagingGroupHelper;
-import com.liferay.taglib.security.PermissionsURLTag;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
 
-import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Carlos Lancha
  */
-public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext {
+public class LayoutsAdminReactDisplayContext
+	extends LayoutsAdminDisplayContext {
 
-    public LayoutsAdminReactDisplayContext(
+	public LayoutsAdminReactDisplayContext(
 		LayoutConverterConfiguration layoutConverterConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
 		StagingGroupHelper stagingGroupHelper) {
-            super(layoutConverterConfiguration, liferayPortletRequest, liferayPortletResponse, stagingGroupHelper);
-    }
 
-    @Override
-    public JSONArray getLayoutColumnsJSONArray() throws Exception {
+		super(
+			layoutConverterConfiguration, liferayPortletRequest,
+			liferayPortletResponse, stagingGroupHelper);
+	}
+
+	@Override
+	public JSONArray getLayoutColumnsJSONArray() throws Exception {
 		JSONArray layoutColumnsJSONArray = JSONUtil.put(
 			_getFirstLayoutColumnJSONArray());
 
@@ -164,7 +106,7 @@ public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext 
 		return layoutColumnsJSONArray;
 	}
 
-    @Override
+	@Override
 	public JSONArray getLayoutsJSONArray(
 			long parentLayoutId, boolean privateLayout)
 		throws Exception {
@@ -245,7 +187,7 @@ public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext 
 		return layoutsJSONArray;
 	}
 
-    private JSONObject _getFirstLayoutColumn(
+	private JSONObject _getFirstLayoutColumn(
 			boolean privatePages, boolean active)
 		throws PortalException {
 
@@ -337,19 +279,32 @@ public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		if (isShowAddChildPageAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//addURL
-				getSelectLayoutPageTemplateEntryURL(
-					getFirstLayoutPageTemplateCollectionId(), layout.getPlid(),
-					layout.isPrivateLayout())
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "addURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "add")
+				).put(
+					"quickAction", true
+				).put(
+					"url",
+					getSelectLayoutPageTemplateEntryURL(
+						getFirstLayoutPageTemplateCollectionId(),
+						layout.getPlid(), layout.isPrivateLayout())
+				));
 		}
 
 		if (isShowConfigureAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//configureURL
-				getConfigureLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "configureURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "configure")
+				).put(
+					"quickAction", true
+				).put(
+					"url", getConfigureLayoutURL(layout)
+				));
 		}
 
 		Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
@@ -357,71 +312,119 @@ public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext 
 
 		if (isShowConvertLayoutAction(layout)) {
 			if (draftLayout == null) {
-				jsonArray.put(JSONUtil.put(
-					"url",	//layoutConversionPreviewURL
-					getLayoutConversionPreviewURL(layout)
-				));
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "layoutConversionPreviewURL"
+					).put(
+						"label",
+						LanguageUtil.get(
+							httpServletRequest,
+							"convert-to-content-page-and-preview")
+					).put(
+						"url", getLayoutConversionPreviewURL(layout)
+					));
 			}
 			else {
-				jsonArray.put(JSONUtil.put(
-					"url",	//deleteLayoutConversionPreviewURL
-					getDeleteLayoutURL(layout)
-				));
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "deleteLayoutConversionPreviewURL"
+					).put(
+						"label",
+						LanguageUtil.get(
+							httpServletRequest, "discard-conversion-draft")
+					).put(
+						"url", getDeleteLayoutURL(layout)
+					));
 			}
 		}
 
 		if (isShowCopyLayoutAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//copyLayoutURL
-				getCopyLayoutRenderURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "copyLayoutURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "copy-page")
+				).put(
+					"url", getCopyLayoutRenderURL(layout)
+				));
 		}
 
 		if (isShowDeleteAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//deleteURL
-				getDeleteLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "deleteURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "delete")
+				).put(
+					"url", getDeleteLayoutURL(layout)
+				));
 		}
 
 		if (isConversionDraft(layout) && isShowConfigureAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//editConversionLayoutURL
-				getEditLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "editConversionLayoutURL"
+				).put(
+					"label",
+					LanguageUtil.get(
+						httpServletRequest, "edit-conversion-draft")
+				).put(
+					"url", getEditLayoutURL(layout)
+				));
 		}
 		else if (isShowConfigureAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//editLayoutURL
-				getEditLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "editLayoutURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "edit")
+				).put(
+					"url", getEditLayoutURL(layout)
+				));
 		}
 
 		if (isShowOrphanPortletsAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//orphanPortletsURL
-				getOrphanPortletsURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "orphanPortletsURL"
+				).put(
+					"label",
+					LanguageUtil.get(httpServletRequest, "orphan-widgets")
+				).put(
+					"url", getOrphanPortletsURL(layout)
+				));
 		}
 
 		if (isShowPermissionsAction(layout)) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//permissionsURL
-				getPermissionsURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "permissionsURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "permissions")
+				).put(
+					"url", getPermissionsURL(layout)
+				));
 		}
 
 		if (layout.isPending()) {
-			jsonArray.put(JSONUtil.put(
-				"url",	//previewLayoutURL
-				getViewLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "previewLayoutURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "preview")
+				).put(
+					"url", getViewLayoutURL(layout)
+				));
 		}
 		else {
-			jsonArray.put(JSONUtil.put(
-				"url",	//viewLayoutURL
-				getViewLayoutURL(layout)
-			));
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "viewLayoutURL"
+				).put(
+					"label", LanguageUtil.get(httpServletRequest, "view")
+				).put(
+					"url", getViewLayoutURL(layout)
+				));
 		}
 
 		return jsonArray;
@@ -474,4 +477,5 @@ public class LayoutsAdminReactDisplayContext extends LayoutsAdminDisplayContext 
 
 		return jsonArray;
 	}
+
 }

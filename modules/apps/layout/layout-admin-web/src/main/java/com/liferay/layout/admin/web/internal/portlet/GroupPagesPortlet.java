@@ -209,7 +209,8 @@ public class GroupPagesPortlet extends MVCPortlet {
 					_stagingGroupHelper));
 
 			renderRequest.setAttribute(
-				LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT,
+				LayoutAdminWebKeys.
+					LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT,
 				new LayoutsAdminReactDisplayContext(
 					_layoutConverterConfiguration,
 					_portal.getLiferayPortletRequest(renderRequest),
