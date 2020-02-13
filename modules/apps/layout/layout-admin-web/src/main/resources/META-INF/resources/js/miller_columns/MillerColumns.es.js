@@ -20,8 +20,10 @@ const MillerColumns = ({columns}) => {
 	const rowRef = useRef();
 
 	useEffect(() => {
-		rowRef.current.scrollLeft = rowRef.current.scrollWidth;
-	}, [rowRef]);
+		if (rowRef.current) {
+			rowRef.current.scrollLeft = rowRef.current.scrollWidth;
+		}
+	}, []);
 
 	return (
 		<div className="bg-white miller-columns-row" ref={rowRef}>
