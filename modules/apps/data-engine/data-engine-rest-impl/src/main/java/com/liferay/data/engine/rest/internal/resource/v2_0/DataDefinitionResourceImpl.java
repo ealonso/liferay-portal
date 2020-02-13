@@ -206,7 +206,9 @@ public class DataDefinitionResourceImpl
 			ddmFormFieldTypeName -> _getFieldTypeMetadataJSONObject(
 				contextAcceptLanguage, ddmFormFieldTypeName,
 				contextHttpServletRequest,
-				_getResourceBundle(contextAcceptLanguage.getPreferredLocale()))
+				_getResourceBundle(
+					ddmFormFieldTypeName,
+					contextAcceptLanguage.getPreferredLocale()))
 		).filter(
 			jsonObject -> !jsonObject.getBoolean("system")
 		).forEach(
@@ -696,10 +698,18 @@ public class DataDefinitionResourceImpl
 				String.class));
 	}
 
-	private ResourceBundle _getResourceBundle(Locale locale) {
+	private ResourceBundle _getResourceBundle(
+		String ddmFormFieldTypeName, Locale locale) {
+
+		DDMFormFieldType ddmFormFieldType =
+			_ddmFormFieldTypeServicesTracker.getDDMFormFieldType(
+				ddmFormFieldTypeName);
+
 		return new AggregateResourceBundle(
 			ResourceBundleUtil.getBundle(
 				"content.Language", locale, getClass()),
+			ResourceBundleUtil.getBundle(
+				"content.Language", locale, ddmFormFieldType.getClass()),
 			_portal.getResourceBundle(locale));
 	}
 
