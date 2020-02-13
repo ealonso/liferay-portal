@@ -66,7 +66,8 @@ public interface JournalArticleDDMFormFieldTypeSettings
 	extends DefaultDDMFormFieldTypeSettings {
 
 	@DDMFormField(
-		dataType = "string", label = "%predefined-value", type = "image"
+		dataType = "string", label = "%predefined-value",
+		type = "journal_article"
 	)
 	@Override
 	public LocalizedValue predefinedValue();
