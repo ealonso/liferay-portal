@@ -12,13 +12,18 @@
  * details.
  */
 
+/* eslint-disable no-unused-vars */
 import {FieldBase} from 'dynamic-data-mapping-form-field-type';
+
+/* eslint-enable no-unused-vars */
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import {Config} from 'metal-state';
 
 import './JournalArticleSelectorAdapter.soy';
+
 import './JournalArticleSelectorRegister.soy';
+
 import './ReactJournalArticleSelectorAdapter';
 import templates from './JournalArticleSelector.soy';
 
