@@ -41,6 +41,7 @@
 		]
 	},
 	"name": "dynamic-data-mapping-form-field-type",
+	"main": "index.js",
 	"private": true,
 	"scripts": {
 		"build": "liferay-npm-scripts build",
