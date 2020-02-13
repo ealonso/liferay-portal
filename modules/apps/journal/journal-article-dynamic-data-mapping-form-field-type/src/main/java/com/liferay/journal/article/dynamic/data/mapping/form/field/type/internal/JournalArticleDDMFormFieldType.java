@@ -17,6 +17,7 @@ package com.liferay.journal.article.dynamic.data.mapping.form.field.type.interna
 import com.liferay.dynamic.data.mapping.form.field.type.BaseDDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeSettings;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 
 import org.osgi.service.component.annotations.Component;
@@ -50,8 +51,9 @@ public class JournalArticleDDMFormFieldType extends BaseDDMFormFieldType {
 
 	@Override
 	public String getModuleName() {
-		return _npmResolver.getJSPackage().getResolvedId() +
-			"/JournalArticleSelector";
+		JSPackage jsPackage = _npmResolver.getJSPackage();
+
+		return jsPackage.getResolvedId() + "/JournalArticleSelector";
 	}
 
 	@Override
