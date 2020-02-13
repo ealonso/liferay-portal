@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Journal Article Dynamic Data Mapping Form Field Type
-Bundle-SymbolicName: journal.article.dynamic.data.mapping.form.field.type
+Bundle-SymbolicName: com.liferay.journal.article.dynamic.data.mapping.form.field.type
 Bundle-Version: 1.0.0
 Provide-Capability:\
 	liferay.resource.bundle;\
