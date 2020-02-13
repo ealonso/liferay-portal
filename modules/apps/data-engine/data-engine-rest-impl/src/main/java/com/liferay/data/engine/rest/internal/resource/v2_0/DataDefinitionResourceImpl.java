@@ -64,6 +64,7 @@ import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureCreateDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureModifiedDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureNameComparator;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -650,6 +651,7 @@ public class DataDefinitionResourceImpl
 		).put(
 			"javaScriptModule",
 			_resolveModuleName(
+				ddmFormFieldType,
 				GetterUtil.getString(ddmFormFieldType.getModuleName()))
 		).put(
 			"label",
@@ -717,12 +719,20 @@ public class DataDefinitionResourceImpl
 			fieldName -> !ArrayUtil.contains(removedFieldNames, fieldName));
 	}
 
-	private String _resolveModuleName(String moduleName) {
+	private String _resolveModuleName(
+		DDMFormFieldType ddmFormFieldType, String moduleName) {
+
 		if (Validator.isNull(moduleName)) {
 			return StringPool.BLANK;
 		}
 
-		return _npmResolver.resolveModuleName(moduleName);
+		String resolvedModuleName = moduleName;
+
+		if (!ddmFormFieldType.isCustomDDMFormFieldType()) {
+			resolvedModuleName = _npmResolver.resolveModuleName(moduleName);
+		}
+
+		return resolvedModuleName;
 	}
 
 	private void _setTypeDDMFormFieldValue(
@@ -954,6 +964,9 @@ public class DataDefinitionResourceImpl
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private NPMRegistry _npmRegistry;
 
 	@Reference
 	private NPMResolver _npmResolver;

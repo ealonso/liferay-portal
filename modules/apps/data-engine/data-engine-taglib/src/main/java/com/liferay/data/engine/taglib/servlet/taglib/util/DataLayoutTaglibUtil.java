@@ -50,6 +50,7 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
 import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
@@ -394,10 +395,8 @@ public class DataLayoutTaglibUtil {
 	}
 
 	private String _resolveFieldTypeModule(String name) {
-		DDMFormFieldType ddmFormFieldType =
-			_ddmFormFieldTypeServicesTracker.getDDMFormFieldType(name);
-
-		return _resolveModuleName(ddmFormFieldType.getModuleName());
+		return _resolveModuleName(
+			_ddmFormFieldTypeServicesTracker.getDDMFormFieldType(name));
 	}
 
 	private String _resolveFieldTypesModules() {
@@ -415,12 +414,20 @@ public class DataLayoutTaglibUtil {
 		);
 	}
 
-	private String _resolveModuleName(String moduleName) {
+	private String _resolveModuleName(DDMFormFieldType ddmFormFieldType) {
+		String moduleName = ddmFormFieldType.getModuleName();
+
 		if (Validator.isNull(moduleName)) {
 			return StringPool.BLANK;
 		}
 
-		return _npmResolver.resolveModuleName(moduleName);
+		String resolvedModuleName = moduleName;
+
+		if (!ddmFormFieldType.isCustomDDMFormFieldType()) {
+			resolvedModuleName = _npmResolver.resolveModuleName(moduleName);
+		}
+
+		return resolvedModuleName;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -457,6 +464,9 @@ public class DataLayoutTaglibUtil {
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private NPMRegistry _npmRegistry;
 
 	@Reference
 	private NPMResolver _npmResolver;
