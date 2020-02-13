@@ -36,8 +36,8 @@
 			"Validation"
 		]
 	},
-	"name": "dynamic-data-mapping-form-field-type",
 	"main": "index.js",
+	"name": "dynamic-data-mapping-form-field-type",
 	"private": true,
 	"scripts": {
 		"build": "liferay-npm-scripts build",
