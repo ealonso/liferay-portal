@@ -24,35 +24,78 @@ import {
 
 import {numberFormat} from '../utils/numberFormat';
 
-const {useEffect, useMemo, useState} = React;
+const {useEffect, useMemo, useReducer} = React;
 
 const AXIS_COLOR = '#6B6C7E';
-const SECONDARY_COLOR = '#4B9BFF';
-const CHART_SIZE = {height: 180, width: 280};
+const CHART_SIZE = {height: 220, width: 280};
 
 function keyToTranslatedLabelValue(key) {
 	if (key === 'analyticsReportsHistoricalViews') {
 		return Liferay.Language.get('views-metric');
-	}
-	else {
+	} else if (key === 'analyticsReportsHistoricalReads') {
+		return Liferay.Language.get('reads-metric');
+	} else {
 		return key;
 	}
 }
 
-function transformDataToDataSet(key, data, previousDataset = {}) {
-	const langLabel = keyToTranslatedLabelValue(key);
-	const result = {totals: {}, ...previousDataset};
+function keyToHexColor(key) {
+	if (key === 'analyticsReportsHistoricalViews') {
+		return '#4B9BFF';
+	} else if (key === 'analyticsReportsHistoricalReads') {
+		return '#50D2A0';
+	} else {
+		return '#666666';
+	}
+}
 
-	result.keyList = [key];
-	result.totals = {
-		...result.totals,
-		[key]: data.value
+function mergeDataSets(newData, previousDataSet, key) {
+	const resultDataSet = {};
+
+	resultDataSet.keyList = [...previousDataSet.keyList, key];
+
+	resultDataSet.totals = {
+		...previousDataSet.totals,
+		[key]: newData.value
 	};
-	result.histogram = data.histogram.map(d => ({
-		[key]: d.value,
-		label: d.key,
-		langLabel
+
+	const newFormattedHistogram = newData.histogram.map(h => ({
+		[key]: h.value,
+		label: h.key
 	}));
+
+	let start = 0;
+	const mergeHistogram = [];
+
+	while (start < newData.histogram.length) {
+		if (!previousDataSet.histogram[start]) {
+			mergeHistogram.push({
+				...newFormattedHistogram[start]
+			});
+		} else if (
+			newFormattedHistogram[start].label ===
+			previousDataSet.histogram[start].label
+		) {
+			mergeHistogram.push({
+				...newFormattedHistogram[start],
+				...previousDataSet.histogram[start]
+			});
+		}
+
+		start = start + 1;
+	}
+
+	resultDataSet.histogram = mergeHistogram;
+
+	return resultDataSet;
+}
+
+function transformDataToDataSet(
+	key,
+	data,
+	previousDataset = {histogram: [], keyList: [], totals: []}
+) {
+	const result = mergeDataSets(data, previousDataset, key);
 
 	return result;
 }
@@ -114,9 +157,7 @@ const generateDateFormatters = key => {
 	 * String => 'June 16, 2020'
 	 */
 	function formatLongDate(value) {
-		return Intl.DateTimeFormat([key], {
-			dateStyle: 'long'
-		}).format(new Date(value));
+		return Intl.DateTimeFormat([key]).format(new Date(value));
 	}
 
 	/*
@@ -149,8 +190,21 @@ function legendFormatterGenerator(totals, languageTag) {
 	);
 }
 
+function reducer(state, action) {
+	switch (action.type) {
+		case 'add-data-key':
+			return transformDataToDataSet(
+				action.payload.key,
+				action.payload.dataSet,
+				state
+			);
+		default:
+			return state;
+	}
+}
+
 export default function Chart({languageTag, dataProviders = []}) {
-	const [dataSet, setDataSet] = useState(null);
+	const [dataSet, setDataSet] = useReducer(reducer);
 	const isMounted = useIsMounted();
 
 	useEffect(() => {
@@ -158,13 +212,10 @@ export default function Chart({languageTag, dataProviders = []}) {
 			getter().then(data => {
 				if (isMounted()) {
 					Object.keys(data).map(key => {
-						const normalizedData = transformDataToDataSet(
-							key,
-							data[key],
-							dataSet
-						);
-
-						setDataSet(normalizedData);
+						setDataSet({
+							payload: {dataSet: data[key], key},
+							type: 'add-data-key'
+						});
 					});
 				}
 			});
@@ -202,10 +253,11 @@ export default function Chart({languageTag, dataProviders = []}) {
 				width={CHART_SIZE.width}
 			>
 				<Legend
-					align={'left'}
 					formatter={legendFormatter}
-					height={36}
+					iconType="circle"
+					layout="vertical"
 					verticalAlign="top"
+					wrapperStyle={{left: 0, paddingBottom: '1rem'}}
 				/>
 
 				<CartesianGrid strokeDasharray="0 0" vertical={false} />
@@ -225,25 +277,28 @@ export default function Chart({languageTag, dataProviders = []}) {
 				/>
 
 				<Tooltip
-					formatter={(value, name, {payload}) => {
+					formatter={(value, name) => {
 						return [
 							numberFormat(languageTag, value),
-							payload.langLabel
+							keyToTranslatedLabelValue(name)
 						];
 					}}
 					itemStyle={{color: AXIS_COLOR}}
 					labelFormatter={dateFormatters.formatLongDate}
 					separator={': '}
+					wrapperStyle={{opacity: 0.9}}
 				/>
 
 				{dataSet.keyList.map(keyName => {
+					const color = keyToHexColor(keyName);
+
 					return (
 						<Line
 							activeDot={{r: 6, strokeWidth: 0}}
 							dataKey={keyName}
-							fill={SECONDARY_COLOR}
+							fill={color}
 							key={keyName}
-							stroke={SECONDARY_COLOR}
+							stroke={color}
 							strokeWidth={2}
 							type="monotone"
 						/>
