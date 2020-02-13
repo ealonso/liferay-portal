@@ -50,7 +50,6 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormFactory;
 import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
@@ -464,9 +463,6 @@ public class DataLayoutTaglibUtil {
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	@Reference
-	private NPMRegistry _npmRegistry;
 
 	@Reference
 	private NPMResolver _npmResolver;

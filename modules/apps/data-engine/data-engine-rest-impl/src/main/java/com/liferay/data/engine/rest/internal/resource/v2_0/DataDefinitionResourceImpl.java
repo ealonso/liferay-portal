@@ -64,7 +64,6 @@ import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureCreateDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureModifiedDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureNameComparator;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -974,9 +973,6 @@ public class DataDefinitionResourceImpl
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	@Reference
-	private NPMRegistry _npmRegistry;
 
 	@Reference
 	private NPMResolver _npmResolver;
