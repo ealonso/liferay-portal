@@ -19,7 +19,13 @@ import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
 import ClayLink from '@clayui/link';
 import classNames from 'classnames';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState
+} from 'react';
 
 import MillerColumnsContext from './MillerColumnsContext.es';
 
@@ -44,39 +50,49 @@ const MillerColumnsColumnItem = ({
 	title,
 	url
 }) => {
-	const {actionHandlers = {}, namespace = ''} = useContext(MillerColumnsContext);
+	const {actionHandlers = {}, namespace = ''} = useContext(
+		MillerColumnsContext
+	);
 
 	const [dropdownActionsActive, setDropdownActionsActive] = useState();
 
-	const getDropdownActions = actions => {
-		const dropdownActions = [];
+	const getDropdownActions = useCallback(
+		actions => {
+			const dropdownActions = [];
 
-		actions.map(action => {
-			if (!action.quickAction && action.url) {
-				dropdownActions.push({
-					...action,
-					handler: action.handler || actionHandlers[action.id] || noop
-				});
-			}
-		});
+			actions.map(action => {
+				if (!action.quickAction && action.url) {
+					dropdownActions.push({
+						...action,
+						handler:
+							action.handler || actionHandlers[action.id] || noop
+					});
+				}
+			});
 
-		return dropdownActions;
-	};
+			return dropdownActions;
+		},
+		[actionHandlers]
+	);
 
-	const getQuickActions = actions => {
-		const quickActions = [];
+	const getQuickActions = useCallback(
+		actions => {
+			const quickActions = [];
 
-		actions.map(action => {
-			if (action.quickAction && action.url) {
-				quickActions.push({
-					...action,
-					handler: action.handler || actionHandlers[action.id] || noop
-				});
-			}
-		});
+			actions.map(action => {
+				if (action.quickAction && action.url) {
+					quickActions.push({
+						...action,
+						handler:
+							action.handler || actionHandlers[action.id] || noop
+					});
+				}
+			});
 
-		return quickActions;
-	};
+			return quickActions;
+		},
+		[actionHandlers]
+	);
 
 	const dropdownActions = useRef(getDropdownActions(actions));
 	const quickActions = useRef(getQuickActions(actions));
@@ -84,7 +100,7 @@ const MillerColumnsColumnItem = ({
 	useEffect(() => {
 		dropdownActions.current = getDropdownActions(actions);
 		quickActions.current = getQuickActions(actions);
-	}, [actions]);
+	}, [actions, getDropdownActions, getQuickActions]);
 
 	return (
 		<li
