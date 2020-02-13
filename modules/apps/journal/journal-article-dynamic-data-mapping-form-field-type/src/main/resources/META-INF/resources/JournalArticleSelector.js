@@ -12,17 +12,14 @@
  * details.
  */
 
+import {FieldBase} from 'dynamic-data-mapping-form-field-type';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import {Config} from 'metal-state';
 
-import '../FieldBase/FieldBase.es';
-
 import './JournalArticleSelectorAdapter.soy';
-
 import './JournalArticleSelectorRegister.soy';
-
-import './ReactJournalArticleSelectorAdapter.es';
+import './ReactJournalArticleSelectorAdapter';
 import templates from './JournalArticleSelector.soy';
 
 class JournalArticleSelector extends Component {

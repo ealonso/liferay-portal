@@ -14,10 +14,10 @@
 
 import ClayButton from '@clayui/button';
 import ClayForm, {ClayInput} from '@clayui/form';
+import {getConnectedReactComponentAdapter} from 'dynamic-data-mapping-form-field-type';
 import {ItemSelectorDialog} from 'frontend-js-web';
 import React, {useEffect, useState} from 'react';
 
-import getConnectedReactComponentAdapter from '../util/ReactComponentAdapter.es';
 import templates from './JournalArticleSelectorAdapter.soy';
 
 const JournalArticleSelectorWithState = ({
