@@ -54,7 +54,7 @@ const MillerColumnsColumnItem = ({
 	const dropdownActions = useMemo(() => {
 		const dropdownActions = [];
 
-		actions.map(action => {
+		actions.forEach(action => {
 			if (!action.quickAction && action.url) {
 				dropdownActions.push({
 					...action,
@@ -69,7 +69,7 @@ const MillerColumnsColumnItem = ({
 	const quickActions = useMemo(() => {
 		const quickActions = [];
 
-		actions.map(action => {
+		actions.forEach(action => {
 			if (action.quickAction && action.url) {
 				quickActions.push({
 					...action,
