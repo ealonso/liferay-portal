@@ -69,8 +69,6 @@ public class UserSearchFacetDisplayBuilder {
 
 		userSearchFacetDisplayContext.setDisplayStyleGroupId(
 			getDisplayStyleGroupId());
-		userSearchFacetDisplayContext.setUserFacetPortletInstanceConfiguration(
-			_userFacetPortletInstanceConfiguration);
 		userSearchFacetDisplayContext.setNothingSelected(nothingSelected);
 		userSearchFacetDisplayContext.setParamName(_paramName);
 		userSearchFacetDisplayContext.setParamValue(getFirstParamValue());
@@ -78,6 +76,8 @@ public class UserSearchFacetDisplayBuilder {
 		userSearchFacetDisplayContext.setRenderNothing(renderNothing);
 		userSearchFacetDisplayContext.setTermDisplayContexts(
 			buildTermDisplayContexts(termCollectors));
+		userSearchFacetDisplayContext.setUserFacetPortletInstanceConfiguration(
+			_userFacetPortletInstanceConfiguration);
 
 		return userSearchFacetDisplayContext;
 	}
