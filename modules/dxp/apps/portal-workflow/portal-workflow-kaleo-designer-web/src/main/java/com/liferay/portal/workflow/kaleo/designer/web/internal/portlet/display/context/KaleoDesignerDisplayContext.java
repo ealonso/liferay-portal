@@ -91,6 +91,10 @@ public class KaleoDesignerDisplayContext {
 		UserLocalService userLocalService) {
 
 		_renderRequest = renderRequest;
+
+		_themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		_kaleoDefinitionVersionLocalService =
 			kaleoDefinitionVersionLocalService;
 		_resourceBundleLoader = resourceBundleLoader;
@@ -98,8 +102,6 @@ public class KaleoDesignerDisplayContext {
 
 		_kaleoDesignerRequestHelper = new KaleoDesignerRequestHelper(
 			renderRequest);
-		_themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 	}
 
 	public boolean canPublishWorkflowDefinition() {

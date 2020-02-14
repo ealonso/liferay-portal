@@ -28,11 +28,10 @@ public class JavaParameter extends BaseJavaTerm {
 		String name, List<JavaAnnotation> javaAnnotations,
 		List<JavaSimpleValue> modifiers, JavaType javaType) {
 
+		_name = new JavaSimpleValue(name);
 		_javaAnnotations = javaAnnotations;
 		_modifiers = modifiers;
 		_javaType = javaType;
-
-		_name = new JavaSimpleValue(name);
 	}
 
 	@Override

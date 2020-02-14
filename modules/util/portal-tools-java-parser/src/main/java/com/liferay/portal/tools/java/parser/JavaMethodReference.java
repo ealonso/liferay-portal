@@ -27,10 +27,9 @@ public class JavaMethodReference extends JavaExpression {
 		String methodName, JavaExpression referenceJavaExpression,
 		List<JavaType> genericJavaTypes) {
 
+		_methodName = new JavaSimpleValue(methodName);
 		_referenceJavaExpression = referenceJavaExpression;
 		_genericJavaTypes = genericJavaTypes;
-
-		_methodName = new JavaSimpleValue(methodName);
 	}
 
 	@Override

@@ -89,8 +89,6 @@ public class SampleSQLBuilder {
 	public SampleSQLBuilder(Properties properties, DataFactory dataFactory)
 		throws Exception {
 
-		_dataFactory = dataFactory;
-
 		_dbType = DBType.valueOf(
 			StringUtil.toUpperCase(
 				properties.getProperty("sample.sql.db.type")));
@@ -99,6 +97,8 @@ public class SampleSQLBuilder {
 			properties.getProperty("sample.sql.optimize.buffer.size"));
 		_outputDir = properties.getProperty("sample.sql.output.dir");
 		_script = properties.getProperty("sample.sql.script");
+
+		_dataFactory = dataFactory;
 
 		// Generic
 

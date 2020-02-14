@@ -27,9 +27,8 @@ public class JavaPackageDefinition extends BaseJavaTerm {
 	public JavaPackageDefinition(
 		String name, List<JavaAnnotation> javaAnnotations) {
 
-		_javaAnnotations = javaAnnotations;
-
 		_name = new JavaSimpleValue(name);
+		_javaAnnotations = javaAnnotations;
 	}
 
 	@Override

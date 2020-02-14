@@ -22,9 +22,8 @@ import com.liferay.petra.string.StringBundler;
 public class JavaImport extends BaseJavaTerm {
 
 	public JavaImport(String name, boolean isStatic) {
-		_isStatic = isStatic;
-
 		_name = new JavaSimpleValue(name);
+		_isStatic = isStatic;
 	}
 
 	@Override

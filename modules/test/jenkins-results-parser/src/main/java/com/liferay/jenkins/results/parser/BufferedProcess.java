@@ -85,9 +85,8 @@ public class BufferedProcess extends Process {
 	private class InputStreamBuffer extends Thread {
 
 		public InputStreamBuffer(int bufferSize, InputStream inputStream) {
-			_inputStream = inputStream;
-
 			_buffer = new byte[bufferSize];
+			_inputStream = inputStream;
 		}
 
 		public void run() {

@@ -28,9 +28,8 @@ public class JavaAnnotationMemberValuePair
 	public JavaAnnotationMemberValuePair(
 		String name, JavaExpression valueJavaExpression) {
 
-		_valueJavaExpression = valueJavaExpression;
-
 		_name = new JavaSimpleValue(name);
+		_valueJavaExpression = valueJavaExpression;
 	}
 
 	@Override

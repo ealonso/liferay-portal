@@ -40,9 +40,9 @@ public class JenkinsConsoleTextLoader {
 	}
 
 	public JenkinsConsoleTextLoader(String buildURL, boolean buildComplete) {
-		this.buildComplete = buildComplete;
-
 		this.buildURL = JenkinsResultsParserUtil.getLocalURL(buildURL);
+
+		this.buildComplete = buildComplete;
 
 		if (!this.buildComplete) {
 			try {

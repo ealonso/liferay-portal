@@ -26,9 +26,8 @@ public class JavaArrayDeclarator extends JavaExpression {
 	public JavaArrayDeclarator(
 		String className, List<JavaExpression> dimensionValueJavaExpressions) {
 
-		_dimensionValueJavaExpressions = dimensionValueJavaExpressions;
-
 		_className = new JavaSimpleValue(className);
+		_dimensionValueJavaExpressions = dimensionValueJavaExpressions;
 	}
 
 	public void setGenericJavaTypes(List<JavaType> genericJavaTypes) {
