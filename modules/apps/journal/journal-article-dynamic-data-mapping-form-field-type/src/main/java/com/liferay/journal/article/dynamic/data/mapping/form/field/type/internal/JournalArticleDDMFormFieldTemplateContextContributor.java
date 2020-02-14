@@ -25,7 +25,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
-import com.liferay.portal.kernel.util.Portal;
 
 import java.util.Map;
 
@@ -54,22 +53,22 @@ public class JournalArticleDDMFormFieldTemplateContextContributor
 		DDMFormField ddmFormField,
 		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
 
-		LocalizedValue predefinedValueProperty =
+		LocalizedValue localizedValue =
 			(LocalizedValue)ddmFormField.getProperty("predefinedValue");
 
 		String predefinedValue = StringPool.BLANK;
 
-		if (predefinedValueProperty != null) {
+		if (localizedValue != null) {
 			predefinedValue = GetterUtil.getString(
-				predefinedValueProperty.getString(
+				localizedValue.getString(
 					ddmFormFieldRenderingContext.getLocale()));
 		}
 
 		return HashMapBuilder.<String, Object>put(
 			"itemSelectorURL",
 			getItemSelectorURL(
-				ddmFormFieldRenderingContext.getHttpServletRequest(),
-				ddmFormFieldRenderingContext)
+				ddmFormFieldRenderingContext,
+				ddmFormFieldRenderingContext.getHttpServletRequest())
 		).put(
 			"portletNamespace",
 			ddmFormFieldRenderingContext.getPortletNamespace()
@@ -83,8 +82,8 @@ public class JournalArticleDDMFormFieldTemplateContextContributor
 	}
 
 	protected String getItemSelectorURL(
-		HttpServletRequest httpServletRequest,
-		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext,
+		HttpServletRequest httpServletRequest) {
 
 		if (_itemSelector == null) {
 			return null;
@@ -104,9 +103,6 @@ public class JournalArticleDDMFormFieldTemplateContextContributor
 
 		return itemSelectorURL.toString();
 	}
-
-	@Reference
-	protected Portal portal;
 
 	@Reference
 	private ItemSelector _itemSelector;

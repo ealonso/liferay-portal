@@ -20,6 +20,7 @@ import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueRendere
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -45,32 +46,34 @@ public class JournalArticleDDMFormFieldValueRenderer
 
 		String valueString = value.getString(locale);
 
-		if (Validator.isNotNull(valueString)) {
-			JSONObject jsonObject = null;
+		if (Validator.isNull(valueString)) {
+			return StringPool.BLANK;
+		}
 
-			String className = jsonObject.getString("className");
+		try {
+			JSONObject jsonObject = _jsonFactory.createJSONObject(valueString);
+
 			long classPK = jsonObject.getLong("classPK");
 
-			if (Validator.isNull(className) || (classPK == 0)) {
+			if (jsonObject.isNull("className") || (classPK == 0)) {
 				return StringPool.BLANK;
 			}
 
-			try {
-				AssetEntry assetEntry = _assetEntryLocalService.getEntry(
-					className, classPK);
+			AssetEntry assetEntry = _assetEntryLocalService.getEntry(
+				jsonObject.getString("className"), classPK);
 
-				return assetEntry.getTitle(locale);
-			}
-			catch (Exception exception) {
-				return LanguageUtil.format(
-					locale, "is-temporarily-unavailable", "content");
-			}
+			return assetEntry.getTitle(locale);
 		}
-
-		return StringPool.BLANK;
+		catch (Exception exception) {
+			return LanguageUtil.format(
+				locale, "is-temporarily-unavailable", "content");
+		}
 	}
 
 	@Reference
 	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
+	private JSONFactory _jsonFactory;
 
 }
