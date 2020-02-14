@@ -56,15 +56,15 @@ import java.util.Set;
 public class UpgradeDDMStructure extends UpgradeProcess {
 
 	public UpgradeDDMStructure(
-		DDMFormLayoutDeserializer ddmFormLayoutDeserializer,
-		DDMFormLayoutSerializer ddmFormLayoutSerializer,
 		DDMFormDeserializer ddmFormJSONDeserializer,
-		DDMFormDeserializer ddmFormXSDDeserializer) {
+		DDMFormDeserializer ddmFormXSDDeserializer,
+		DDMFormLayoutDeserializer ddmFormLayoutDeserializer,
+		DDMFormLayoutSerializer ddmFormLayoutSerializer) {
 
-		_ddmFormLayoutDeserializer = ddmFormLayoutDeserializer;
-		_ddmFormLayoutSerializer = ddmFormLayoutSerializer;
 		_ddmFormJSONDeserializer = ddmFormJSONDeserializer;
 		_ddmFormXSDDeserializer = ddmFormXSDDeserializer;
+		_ddmFormLayoutDeserializer = ddmFormLayoutDeserializer;
+		_ddmFormLayoutSerializer = ddmFormLayoutSerializer;
 	}
 
 	protected DDMForm deserialize(String content, String type) {
