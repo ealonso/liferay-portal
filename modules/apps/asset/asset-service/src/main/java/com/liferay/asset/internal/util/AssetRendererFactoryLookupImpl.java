@@ -132,7 +132,7 @@ public class AssetRendererFactoryLookupImpl
 		catch (InterruptedException interruptedException) {
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"Interrupted while waiting to load factory",
+					"Interrupted while waiting to load asset renderer factory",
 					interruptedException);
 			}
 		}
