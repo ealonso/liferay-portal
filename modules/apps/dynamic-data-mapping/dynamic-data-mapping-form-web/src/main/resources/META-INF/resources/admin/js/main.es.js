@@ -203,23 +203,19 @@ class Form extends Component {
 		store.on('activePageChanged', () => {
 			const {activePage, pages} = store.state;
 
-			this.disableAddButton();
-
 			if (
 				activePage > -1 &&
 				pages[activePage] &&
 				!pages[activePage].successPageSettings
 			) {
 				this.enableAddButton();
-			}
 
-			if (
-				activePage > -1 &&
-				pages[activePage] &&
-				!pages[activePage].successPageSettings &&
-				!this._pageHasFields(pages, activePage)
-			) {
-				this.openSidebar();
+				if (!this._pageHasFields(pages, activePage)) {
+					this.openSidebar();
+				}
+			}
+			else {
+				this.disableAddButton();
 			}
 		});
 
@@ -232,6 +228,7 @@ class Form extends Component {
 			) {
 				this.openSidebar();
 			}
+
 			this.enableAddButton();
 		});
 
@@ -275,7 +272,7 @@ class Form extends Component {
 	disableAddButton() {
 		const addButton = document.querySelector('#addFieldButton');
 
-		addButton.disabled = 'disabled';
+		addButton.setAttribute('disabled', true);
 	}
 
 	disposed() {
