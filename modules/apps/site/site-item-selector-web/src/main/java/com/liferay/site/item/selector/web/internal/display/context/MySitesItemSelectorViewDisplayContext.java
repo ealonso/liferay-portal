@@ -135,10 +135,9 @@ public class MySitesItemSelectorViewDisplayContext
 		return null;
 	}
 
-	private void _prependGroup(GroupSearch groupSearch, Group formsSite) {
+	private void _prependGroup(GroupSearch groupSearch, Group group) {
 		groupSearch.setResults(
-			ListUtil.concat(
-				Arrays.asList(formsSite), groupSearch.getResults()));
+			ListUtil.concat(Arrays.asList(group), groupSearch.getResults()));
 
 		groupSearch.setTotal(groupSearch.getTotal() + 1);
 	}
