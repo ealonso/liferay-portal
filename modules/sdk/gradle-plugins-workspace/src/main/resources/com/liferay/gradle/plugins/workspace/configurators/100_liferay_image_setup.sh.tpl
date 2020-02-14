@@ -22,17 +22,17 @@ function copy_and_remove_scripts {
 	SCRIPTS_DIR="/home/liferay/configs/${LIFERAY_WORKSPACE_ENVIRONMENT}/scripts"
 
 	if [ -n "$(ls -A ${SCRIPTS_DIR}/* 2> /dev/null)" ]; then
-		echo "[LIFERAY] Copying $SCRIPTS_DIR script files:"
+		echo "[LIFERAY] Copying ${SCRIPTS_DIR} script files:"
 		echo ""
 
-		tree --noreport "$SCRIPTS_DIR"
+		tree --noreport "${SCRIPTS_DIR}"
 
 		echo ""
 		echo "[LIFERAY] ... into ${LIFERAY_MOUNT_DIR}/scripts"
 
-		cp -R "$SCRIPTS_DIR"/* ${LIFERAY_MOUNT_DIR}/scripts
+		cp -R "${SCRIPTS_DIR}"/* ${LIFERAY_MOUNT_DIR}/scripts
 
-		rm -rf "$SCRIPTS_DIR"
+		rm -rf "${SCRIPTS_DIR}"
 
 		echo ""
 	fi
