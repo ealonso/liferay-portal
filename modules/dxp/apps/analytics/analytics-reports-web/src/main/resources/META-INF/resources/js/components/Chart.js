@@ -32,9 +32,11 @@ const CHART_SIZE = {height: 220, width: 280};
 function keyToTranslatedLabelValue(key) {
 	if (key === 'analyticsReportsHistoricalViews') {
 		return Liferay.Language.get('views-metric');
-	} else if (key === 'analyticsReportsHistoricalReads') {
+	}
+	else if (key === 'analyticsReportsHistoricalReads') {
 		return Liferay.Language.get('reads-metric');
-	} else {
+	}
+	else {
 		return key;
 	}
 }
@@ -42,9 +44,11 @@ function keyToTranslatedLabelValue(key) {
 function keyToHexColor(key) {
 	if (key === 'analyticsReportsHistoricalViews') {
 		return '#4B9BFF';
-	} else if (key === 'analyticsReportsHistoricalReads') {
+	}
+	else if (key === 'analyticsReportsHistoricalReads') {
 		return '#50D2A0';
-	} else {
+	}
+	else {
 		return '#666666';
 	}
 }
@@ -72,7 +76,8 @@ function mergeDataSets(newData, previousDataSet, key) {
 			mergeHistogram.push({
 				...newFormattedHistogram[start]
 			});
-		} else if (
+		}
+		else if (
 			newFormattedHistogram[start].label ===
 			previousDataSet.histogram[start].label
 		) {
