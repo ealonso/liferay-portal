@@ -23,10 +23,10 @@ import {
 } from 'recharts';
 
 import {numberFormat} from '../utils/numberFormat';
+import CustomTooltip from './CustomTooltip';
 
 const {useEffect, useMemo, useReducer} = React;
 
-const AXIS_COLOR = '#6B6C7E';
 const CHART_SIZE = {height: 220, width: 280};
 
 function keyToTranslatedLabelValue(key) {
@@ -247,64 +247,65 @@ export default function Chart({languageTag, dataProviders = []}) {
 		<>
 			{title && <h4>{title}</h4>}
 
-			<LineChart
-				data={dataSet.histogram}
-				height={CHART_SIZE.height}
-				width={CHART_SIZE.width}
-			>
-				<Legend
-					formatter={legendFormatter}
-					iconType="circle"
-					layout="vertical"
-					verticalAlign="top"
-					wrapperStyle={{left: 0, paddingBottom: '1rem'}}
-				/>
+			<div className="mt-3">
+				<LineChart
+					data={dataSet.histogram}
+					height={CHART_SIZE.height}
+					width={CHART_SIZE.width}
+				>
+					<Legend
+						formatter={legendFormatter}
+						iconType="circle"
+						layout="vertical"
+						verticalAlign="top"
+						wrapperStyle={{left: 0, paddingBottom: '1rem'}}
+					/>
 
-				<CartesianGrid strokeDasharray="0 0" vertical={false} />
+					<CartesianGrid strokeDasharray="0 0" vertical={false} />
 
-				<XAxis
-					dataKey="label"
-					tickFormatter={dateFormatters.formatNumericDay}
-					tickLine={false}
-				/>
+					<XAxis
+						dataKey="label"
+						tickFormatter={dateFormatters.formatNumericDay}
+						tickLine={false}
+					/>
 
-				<YAxis
-					allowDecimals={false}
-					minTickGap={3}
-					tickFormatter={thousandsToKilosFormater}
-					tickLine={false}
-					width={40}
-				/>
+					<YAxis
+						allowDecimals={false}
+						minTickGap={3}
+						tickFormatter={thousandsToKilosFormater}
+						tickLine={false}
+						width={40}
+					/>
 
-				<Tooltip
-					formatter={(value, name) => {
-						return [
-							numberFormat(languageTag, value),
-							keyToTranslatedLabelValue(name)
-						];
-					}}
-					itemStyle={{color: AXIS_COLOR}}
-					labelFormatter={dateFormatters.formatLongDate}
-					separator={': '}
-					wrapperStyle={{opacity: 0.9}}
-				/>
+					<Tooltip
+						content={<CustomTooltip />}
+						formatter={(value, name) => {
+							return [
+								numberFormat(languageTag, value),
+								keyToTranslatedLabelValue(name)
+							];
+						}}
+						labelFormatter={dateFormatters.formatLongDate}
+						separator={': '}
+					/>
 
-				{dataSet.keyList.map(keyName => {
-					const color = keyToHexColor(keyName);
+					{dataSet.keyList.map(keyName => {
+						const color = keyToHexColor(keyName);
 
-					return (
-						<Line
-							activeDot={{r: 6, strokeWidth: 0}}
-							dataKey={keyName}
-							fill={color}
-							key={keyName}
-							stroke={color}
-							strokeWidth={2}
-							type="monotone"
-						/>
-					);
-				})}
-			</LineChart>
+						return (
+							<Line
+								activeDot={{r: 6, strokeWidth: 0}}
+								dataKey={keyName}
+								fill={color}
+								key={keyName}
+								stroke={color}
+								strokeWidth={2}
+								type="monotone"
+							/>
+						);
+					})}
+				</LineChart>
+			</div>
 		</>
 	) : null;
 }
