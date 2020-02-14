@@ -333,7 +333,6 @@ public class PageDefinitionConverterUtil {
 
 						return colorScheme.getName();
 					});
-
 				setCss(
 					() -> {
 						if (Validator.isNull(layout.getCss())) {
@@ -342,7 +341,6 @@ public class PageDefinitionConverterUtil {
 
 						return layout.getCss();
 					});
-
 				setJavascript(
 					() -> {
 						for (Map.Entry<String, String> entry :
@@ -357,7 +355,6 @@ public class PageDefinitionConverterUtil {
 
 						return null;
 					});
-
 				setMasterPage(
 					() -> {
 						LayoutPageTemplateEntry layoutPageTemplateEntry =
@@ -375,7 +372,6 @@ public class PageDefinitionConverterUtil {
 							}
 						};
 					});
-
 				setThemeName(
 					() -> {
 						Theme theme = layout.getTheme();
@@ -386,7 +382,6 @@ public class PageDefinitionConverterUtil {
 
 						return theme.getName();
 					});
-
 				setThemeSettings(
 					() -> {
 						UnicodeProperties themeSettingsUnicodeProperties =
