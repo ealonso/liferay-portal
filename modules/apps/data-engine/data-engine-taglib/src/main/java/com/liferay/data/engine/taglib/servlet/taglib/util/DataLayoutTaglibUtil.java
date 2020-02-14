@@ -414,19 +414,15 @@ public class DataLayoutTaglibUtil {
 	}
 
 	private String _resolveModuleName(DDMFormFieldType ddmFormFieldType) {
-		String moduleName = ddmFormFieldType.getModuleName();
-
-		if (Validator.isNull(moduleName)) {
+		if (Validator.isNull(ddmFormFieldType.getModuleName())) {
 			return StringPool.BLANK;
 		}
 
-		String resolvedModuleName = moduleName;
-
-		if (!ddmFormFieldType.isCustomDDMFormFieldType()) {
-			resolvedModuleName = _npmResolver.resolveModuleName(moduleName);
+		if (ddmFormFieldType.isCustomDDMFormFieldType()) {
+			return ddmFormFieldType.getModuleName();
 		}
 
-		return resolvedModuleName;
+		return _npmResolver.resolveModuleName(ddmFormFieldType.getModuleName());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

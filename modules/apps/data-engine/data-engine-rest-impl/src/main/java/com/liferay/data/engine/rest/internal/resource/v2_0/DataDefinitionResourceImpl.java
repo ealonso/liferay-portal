@@ -650,10 +650,7 @@ public class DataDefinitionResourceImpl
 			MapUtil.getString(
 				ddmFormFieldTypeProperties, "ddm.form.field.type.icon")
 		).put(
-			"javaScriptModule",
-			_resolveModuleName(
-				ddmFormFieldType,
-				GetterUtil.getString(ddmFormFieldType.getModuleName()))
+			"javaScriptModule", _resolveModuleName(ddmFormFieldType)
 		).put(
 			"label",
 			_translate(
@@ -728,20 +725,16 @@ public class DataDefinitionResourceImpl
 			fieldName -> !ArrayUtil.contains(removedFieldNames, fieldName));
 	}
 
-	private String _resolveModuleName(
-		DDMFormFieldType ddmFormFieldType, String moduleName) {
-
-		if (Validator.isNull(moduleName)) {
+	private String _resolveModuleName(DDMFormFieldType ddmFormFieldType) {
+		if (Validator.isNull(ddmFormFieldType.getModuleName())) {
 			return StringPool.BLANK;
 		}
 
-		String resolvedModuleName = moduleName;
-
-		if (!ddmFormFieldType.isCustomDDMFormFieldType()) {
-			resolvedModuleName = _npmResolver.resolveModuleName(moduleName);
+		if (ddmFormFieldType.isCustomDDMFormFieldType()) {
+			return ddmFormFieldType.getModuleName();
 		}
 
-		return resolvedModuleName;
+		return _npmResolver.resolveModuleName(ddmFormFieldType.getModuleName());
 	}
 
 	private void _setTypeDDMFormFieldValue(
