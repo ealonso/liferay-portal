@@ -39,7 +39,8 @@ class DataLayoutBuilder extends React.Component {
 			fieldTypes,
 			localizable,
 			portletNamespace,
-			singlePage
+			singlePage,
+			successPageSettings
 		} = this.props;
 
 		const context = this._setContext(this.props.context);
@@ -66,6 +67,7 @@ class DataLayoutBuilder extends React.Component {
 					editingLanguageId: themeDisplay.getDefaultLanguageId(),
 					initialPages: context.pages,
 					initialPaginationMode: context.paginationMode,
+					initialSuccessPageSettings: successPageSettings,
 					ref: 'layoutProvider'
 				},
 				singlePage
@@ -142,8 +144,7 @@ class DataLayoutBuilder extends React.Component {
 			({fieldName, localizable, localizedValue, value}) => {
 				if (fieldName === 'predefinedValue') {
 					fieldName = 'defaultValue';
-				}
-				else if (fieldName === 'type') {
+				} else if (fieldName === 'type') {
 					fieldName = 'fieldType';
 				}
 
@@ -152,16 +153,13 @@ class DataLayoutBuilder extends React.Component {
 						fieldConfig.customProperties[
 							fieldName
 						] = localizedValue;
-					}
-					else {
+					} else {
 						fieldConfig[fieldName] = localizedValue;
 					}
-				}
-				else {
+				} else {
 					if (this._isCustomProperty(fieldName)) {
 						fieldConfig.customProperties[fieldName] = value;
-					}
-					else {
+					} else {
 						fieldConfig[fieldName] = value;
 					}
 				}
