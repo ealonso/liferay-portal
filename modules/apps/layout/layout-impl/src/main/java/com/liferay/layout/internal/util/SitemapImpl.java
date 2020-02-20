@@ -20,6 +20,7 @@ import com.liferay.layout.admin.kernel.util.SitemapURLProvider;
 import com.liferay.layout.admin.kernel.util.SitemapURLProviderRegistryUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
@@ -42,6 +43,7 @@ import com.liferay.portal.util.PropsValues;
 
 import java.text.DateFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -264,9 +266,17 @@ public class SitemapImpl implements Sitemap {
 				continue;
 			}
 
-			List<Layout> layouts = _layoutLocalService.getLayouts(
-				layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
-				entry.getKey());
+			List<Layout> layouts = null;
+
+			if (_isDisplayPageLayoutTypeController(layoutTypeController)) {
+				layouts = _getAssetDisplayLayouts(
+					layoutSet.getGroupId(), layoutSet.isPrivateLayout());
+			}
+			else {
+				layouts = _layoutLocalService.getLayouts(
+					layoutSet.getGroupId(), layoutSet.isPrivateLayout(),
+					entry.getKey());
+			}
 
 			for (Layout layout : layouts) {
 				UnicodeProperties typeSettingsProperties =
@@ -301,6 +311,40 @@ public class SitemapImpl implements Sitemap {
 				locationElement.addText(sb.toString());
 			}
 		}
+	}
+
+	private List<Layout> _getAssetDisplayLayouts(
+		long groupId, boolean privateLayout) {
+
+		List<Layout> layouts = _layoutLocalService.getLayouts(
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+		List<Layout> assetDisplayLayouts = new ArrayList<>();
+
+		for (Layout layout : layouts) {
+			if ((layout.getGroupId() == groupId) &&
+				(layout.isPrivateLayout() == privateLayout) &&
+				layout.isTypeAssetDisplay()) {
+
+				assetDisplayLayouts.add(layout);
+			}
+		}
+
+		return assetDisplayLayouts;
+	}
+
+	private boolean _isDisplayPageLayoutTypeController(
+		LayoutTypeController layoutTypeController) {
+
+		Class<?> clazz = layoutTypeController.getClass();
+
+		String className = clazz.getSimpleName();
+
+		if (className.equals("DisplayPageLayoutTypeController")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Reference
