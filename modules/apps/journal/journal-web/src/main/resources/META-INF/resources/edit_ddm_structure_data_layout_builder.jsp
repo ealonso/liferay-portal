@@ -142,7 +142,7 @@ if (ddmStructure != null) {
 		</c:if>
 
 		<liferay-data-engine:data-layout-builder
-			additionalPanels="<%= journalEditDDMStructuresDisplayContext.getAdditionalPanels() %>"
+			additionalPanels="<%= journalEditDDMStructuresDisplayContext.getAdditionalPanels(npmResolvedPackageName) %>"
 			componentId='<%= renderResponse.getNamespace() + "dataLayoutBuilder" %>'
 			contentType="journal"
 			dataDefinitionId="<%= ddmStructureId %>"
