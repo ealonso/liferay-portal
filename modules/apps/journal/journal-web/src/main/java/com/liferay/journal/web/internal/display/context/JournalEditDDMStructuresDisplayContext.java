@@ -96,7 +96,8 @@ public class JournalEditDDMStructuresDisplayContext {
 
 					editBasicInfoURL.setParameter(
 						"mvcPath", "/ddm_structure/basic_info.jsp");
-					editBasicInfoURL.setWindowState(LiferayWindowState.POP_UP);
+					editBasicInfoURL.setWindowState(
+						LiferayWindowState.EXCLUSIVE);
 
 					return editBasicInfoURL.toString();
 				}
