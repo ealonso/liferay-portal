@@ -77,7 +77,6 @@ public class JournalEditDDMStructuresDisplayContext {
 	}
 
 	public List<Map> getAdditionalPanels(String npmResolvedPackageName) {
-
 		return ListUtil.fromArray(
 			HashMapBuilder.<String, Object>put(
 				"icon", "cog"
@@ -94,6 +93,8 @@ public class JournalEditDDMStructuresDisplayContext {
 					PortletURL editBasicInfoURL =
 						_liferayPortletResponse.createRenderURL();
 
+					editBasicInfoURL.setParameter(
+						"ddmStructureId", String.valueOf(getDDMStructureId()));
 					editBasicInfoURL.setParameter(
 						"mvcPath", "/ddm_structure/basic_info.jsp");
 					editBasicInfoURL.setWindowState(
