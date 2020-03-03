@@ -12,8 +12,5 @@
  * details.
  */
 
-import useKeyDown from './useKeyDown.es';
-import useRequest from './useRequest.es';
-import useSidebarContent from './useSidebarContent.es';
-
-export {useKeyDown, useRequest, useSidebarContent};
+export {default as useKeyDown} from './useKeyDown.es';
+export {default as useRequest} from './useRequest.es';
