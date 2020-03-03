@@ -19,6 +19,10 @@ package com.liferay.layout.util.constants;
  */
 public class LayoutDataItemTypeConstants {
 
+	public static final String TYPE_COLLECTION = "collection";
+
+	public static final String TYPE_COLLECTION_ITEM = "collection-item";
+
 	public static final String TYPE_COLUMN = "column";
 
 	public static final String TYPE_CONTAINER = "container";

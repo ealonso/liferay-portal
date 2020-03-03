@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
@@ -70,30 +71,41 @@ public class GetMappingFieldsMVCResourceCommand extends BaseMVCResourceCommand {
 			return;
 		}
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		long classTypeId = ParamUtil.getLong(resourceRequest, "classTypeId");
 		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		Set<InfoDisplayField> infoDisplayFields =
-			infoDisplayContributor.getInfoDisplayFields(
-				classTypeId, themeDisplay.getLocale());
+		try {
+			JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		for (InfoDisplayField infoDisplayField : infoDisplayFields) {
-			JSONObject jsonObject = JSONUtil.put(
-				"key", infoDisplayField.getKey()
-			).put(
-				"label", infoDisplayField.getLabel()
-			).put(
-				"type", infoDisplayField.getType()
-			);
+			Set<InfoDisplayField> infoDisplayFields =
+				infoDisplayContributor.getInfoDisplayFields(
+					classTypeId, themeDisplay.getLocale());
 
-			jsonArray.put(jsonObject);
+			for (InfoDisplayField infoDisplayField : infoDisplayFields) {
+				jsonArray.put(
+					JSONUtil.put(
+						"key", infoDisplayField.getKey()
+					).put(
+						"label", infoDisplayField.getLabel()
+					).put(
+						"type", infoDisplayField.getType()
+					));
+			}
+
+			jsonObject.put("infoDisplayFields", jsonArray);
+		}
+		catch (Exception exception) {
+			jsonObject.put(
+				"error",
+				LanguageUtil.get(
+					themeDisplay.getRequest(), "an-unexpected-error-occurred"));
 		}
 
 		JSONPortletResponseUtil.writeJSON(
-			resourceRequest, resourceResponse, jsonArray);
+			resourceRequest, resourceResponse, jsonObject);
 	}
 
 	@Reference

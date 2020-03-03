@@ -159,12 +159,18 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 			CollectionService.getCollectionField({
 				layoutObjectReference: JSON.stringify(item.config.collection),
 				onNetworkStatus: dispatch,
+				size: collectionConfig.numberOfItems,
 				store,
 			}).then(response => {
 				setCollection(response);
 			});
 		}
-	}, [dispatch, item.config.collection, store]);
+	}, [
+		collectionConfig.numberOfItems,
+		dispatch,
+		item.config.collection,
+		store,
+	]);
 
 	const [collectionFields, setCollectionFields] = useState('');
 

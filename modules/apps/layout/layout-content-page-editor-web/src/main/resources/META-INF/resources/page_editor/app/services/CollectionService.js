@@ -22,7 +22,7 @@ export default {
 	 * @param {string} options.layoutObjectReference
 	 * @param {function} options.onNetworkStatus
 	 */
-	getCollectionField({layoutObjectReference, onNetworkStatus, store}) {
+	getCollectionField({layoutObjectReference, onNetworkStatus, size, store}) {
 		const {segmentsExperienceId} = store;
 
 		return serviceFetch(
@@ -31,6 +31,7 @@ export default {
 				body: {
 					layoutObjectReference,
 					segmentsExperienceId,
+					size,
 				},
 			},
 			onNetworkStatus
