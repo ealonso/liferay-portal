@@ -19,7 +19,6 @@ import Collapse from '../../../common/components/Collapse';
 import SearchForm from '../../../common/components/SearchForm';
 import SidebarPanelContent from '../../../common/components/SidebarPanelContent';
 import SidebarPanelHeader from '../../../common/components/SidebarPanelHeader';
-import CollectionDisplay from './CollectionDisplay';
 import FragmentCard from './FragmentCard';
 import LayoutElements from './LayoutElements';
 
@@ -88,8 +87,6 @@ export default function FragmentsSidebar() {
 						</Collapse>
 					</div>
 				))}
-
-				{!searchValue.length && <CollectionDisplay />}
 			</SidebarPanelContent>
 		</>
 	);
