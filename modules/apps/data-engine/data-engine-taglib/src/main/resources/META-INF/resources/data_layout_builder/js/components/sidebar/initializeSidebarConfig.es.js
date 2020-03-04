@@ -16,7 +16,6 @@ const DEFAULT_CONFIG = {
 	toolbarId: 'dataEngineToolbar',
 };
 
-/** @type {import('../../types/config').Config} */
 export const config = null;
 
 /**
