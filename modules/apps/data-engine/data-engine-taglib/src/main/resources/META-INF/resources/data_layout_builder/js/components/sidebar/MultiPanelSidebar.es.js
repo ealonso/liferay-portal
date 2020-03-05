@@ -199,32 +199,28 @@ export default function MultiPanelSidebar({panels, sidebarPanels}) {
 									pluginEntryPoint
 								).then(...swallow);
 
-							return (
-								<>
-									{isLink ? (
-										<a
-											className={classNames({active})}
-											href={url}
-											key={panel.sidebarPanelId}
-										>
-											<ClayIcon symbol={icon} />
-										</a>
-									) : (
-										<ClayButtonWithIcon
-											aria-pressed={active}
-											className={classNames({active})}
-											data-tooltip-align="left"
-											displayType="unstyled"
-											id={panel.sidebarPanelId}
-											key={panel.sidebarPanelId}
-											onClick={() => handleClick(panel)}
-											onFocus={prefetch}
-											onMouseEnter={prefetch}
-											symbol={icon}
-											title={label}
-										/>
-									)}
-								</>
+							return isLink ? (
+								<a
+									className={classNames({active})}
+									href={url}
+									key={panel.sidebarPanelId}
+								>
+									<ClayIcon symbol={icon} />
+								</a>
+							) : (
+								<ClayButtonWithIcon
+									aria-pressed={active}
+									className={classNames({active})}
+									data-tooltip-align="left"
+									displayType="unstyled"
+									id={panel.sidebarPanelId}
+									key={panel.sidebarPanelId}
+									onClick={() => handleClick(panel)}
+									onFocus={prefetch}
+									onMouseEnter={prefetch}
+									symbol={icon}
+									title={label}
+								/>
 							);
 						});
 
