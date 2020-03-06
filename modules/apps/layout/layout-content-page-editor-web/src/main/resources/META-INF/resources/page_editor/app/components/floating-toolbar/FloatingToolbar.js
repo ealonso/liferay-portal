@@ -27,6 +27,7 @@ import {
 } from '../../../prop-types/index';
 import {EDITABLE_FLOATING_TOOLBAR_CLASSNAMES} from '../../config/constants/editableFloatingToolbarClassNames';
 import {FLOATING_TOOLBAR_CONFIGURATIONS} from '../../config/constants/floatingToolbarConfigurations';
+import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 import {useHoverItem, useIsActive} from '../Controls';
 
 export default function FloatingToolbar({
@@ -115,7 +116,7 @@ export default function FloatingToolbar({
 	}, []);
 
 	useEffect(() => {
-		if (!itemRef.current) {
+		if (item.type !== LAYOUT_DATA_ITEM_TYPES.row || !itemRef.current) {
 			return;
 		}
 
@@ -126,7 +127,7 @@ export default function FloatingToolbar({
 		if (show && parseInt(itemRefMarginRight, 10) < 0) {
 			toolbarRef.current.style.transform = `translate(${itemRefMarginRight})`;
 		}
-	}, [itemRef, show]);
+	}, [item.type, itemRef, show]);
 
 	useEffect(() => {
 		alignElement(toolbarRef, itemRef, () => {
