@@ -60,10 +60,10 @@
 
 .app-builder-form-view-body {
 	display: flex;
+	margin-top: $upperToolbarHeight;
 
 	.app-builder-custom-object-sidebar .data-layout-builder-sidebar {
 		background-color: transparent;
-		margin-top: $upperToolbarHeight;
 		right: auto;
 		top: auto;
 		width: 280px;
@@ -155,8 +155,6 @@
 	}
 
 	.data-layout-builder-wrapper {
-		margin-top: 3.5rem;
-		padding-left: 306px;
 		width: 100%;
 	}
 
@@ -171,9 +169,7 @@
 	}
 
 	.ddm-form-builder-wrapper .sheet {
-		margin: 1.5rem auto 0;
-		max-width: 808px;
-		padding-top: 0;
+		margin-top: 0;
 
 		.form-builder-layout {
 			padding: 0;
