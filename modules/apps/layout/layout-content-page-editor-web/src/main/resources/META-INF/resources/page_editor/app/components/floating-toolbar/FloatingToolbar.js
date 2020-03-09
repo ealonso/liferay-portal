@@ -135,6 +135,7 @@ export default function FloatingToolbar({
 		});
 	}, [
 		alignElement,
+		item.config,
 		itemRef,
 		panelId,
 		show,
