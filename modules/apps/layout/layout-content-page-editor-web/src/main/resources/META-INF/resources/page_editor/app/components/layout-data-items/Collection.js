@@ -53,7 +53,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 		return <NotMappedMessage />;
 	}
 
-	const child = React.Children.only(children);
+	const child = React.Children.toArray(children)[0];
 
 	return (
 		<div className="page-editor__collection" ref={ref}>
