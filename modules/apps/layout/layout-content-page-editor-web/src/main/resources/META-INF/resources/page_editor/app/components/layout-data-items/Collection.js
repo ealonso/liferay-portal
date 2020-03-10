@@ -208,7 +208,9 @@ const Grid = ({child, collectionId, numberOfColumns, numberOfItems}) => {
 									),
 								}}
 							>
-								{React.cloneElement(child)}
+								<div className="page-editor__collection__block">
+									{React.cloneElement(child)}
+								</div>
 							</ControlsIdConverterContextProvider>
 						)}
 					</div>
@@ -235,7 +237,9 @@ const Stack = ({child, collectionId, numberOfItems}) => {
 				toControlsId: getToControlsId(collectionId, idx),
 			}}
 		>
-			{React.cloneElement(child)}
+			<div className="page-editor__collection__block">
+				{React.cloneElement(child)}
+			</div>
 		</ControlsIdConverterContextProvider>
 	));
 };
