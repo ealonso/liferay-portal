@@ -1,0 +1,90 @@
+{
+	"definition": {
+		"backgroundColor": "",
+		"backgroundImage": {
+			"description": null,
+			"title": {
+				"value": "welcome_bg.jpg",
+				"value_i18n": null
+			},
+			"url": {
+				"value": "${WELCOME_IMAGE_URL}",
+				"value_i18n": null
+			}
+		},
+		"layout": {
+			"containerType": "Fixed",
+			"paddingBottom": 10,
+			"paddingHorizontal": 1,
+			"paddingTop": 10
+		}
+	},
+	"pageElements": [
+		{
+			"definition": {
+				"fragment": {
+					"fragmentCollectionName": "Basic Components",
+					"fragmentKey": "BASIC_COMPONENT-heading",
+					"fragmentName": "Heading"
+				},
+				"fragmentConfig": {
+					"bottomSpacing": "2",
+					"headingLevel": "h1",
+					"textAlign": "left",
+					"textColor": {
+						"color": "white"
+					}
+				},
+				"fragmentFields": [
+					{
+						"id": "element-text",
+						"value": {
+							"fragmentLink": null,
+							"text": {
+								"value": null,
+								"value_i18n": {
+									"en_US": "Hello World"
+								}
+							}
+						}
+					}
+				]
+			},
+			"pageElements": null,
+			"type": "Fragment"
+		},
+		{
+			"definition": {
+				"fragment": {
+					"fragmentCollectionName": "Basic Components",
+					"fragmentKey": "BASIC_COMPONENT-paragraph",
+					"fragmentName": "Paragraph"
+				},
+				"fragmentConfig": {
+					"bottomSpacing": "5",
+					"textAlign": "left",
+					"textColor": {
+						"color": "white"
+					}
+				},
+				"fragmentFields": [
+					{
+						"id": "element-text",
+						"value": {
+							"fragmentLink": null,
+							"text": {
+								"value": null,
+								"value_i18n": {
+									"en_US": "Welcome to Liferay Community Edition Portal 7.3.1 CE GA2<br />\n(Athanasius / Build 7301 / March 10, 2020)."
+								}
+							}
+						}
+					}
+				]
+			},
+			"pageElements": null,
+			"type": "Fragment"
+		}
+	],
+	"type": "Section"
+}
