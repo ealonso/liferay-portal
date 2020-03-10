@@ -52,7 +52,8 @@ public class CollectionLayoutStructureItem extends LayoutStructureItem {
 			!Objects.equals(
 				_numberOfItems, collectionLayoutStructureItem._numberOfItems) ||
 			!Objects.equals(
-				_numberOfColumns, collectionLayoutStructureItem._numberOfColumns)) {
+				_numberOfColumns,
+				collectionLayoutStructureItem._numberOfColumns)) {
 
 			return false;
 		}

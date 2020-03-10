@@ -179,8 +179,7 @@ const NotMappedMessage = () => (
 	</div>
 );
 
-const Grid = ({child, collectionId, numberOfItems}) => {
-	const numberOfColumns = 3;
+const Grid = ({child, collectionId, numberOfColumns, numberOfItems}) => {
 	const numberOfRows = Math.ceil(numberOfItems / numberOfColumns);
 
 	const createRows = () => {
@@ -256,6 +255,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 				<ContentComponent
 					child={child}
 					collectionId={item.itemId}
+					numberOfColumns={collectionConfig.numberOfColumns}
 					numberOfItems={collectionConfig.numberOfItems}
 				/>
 			) : (
