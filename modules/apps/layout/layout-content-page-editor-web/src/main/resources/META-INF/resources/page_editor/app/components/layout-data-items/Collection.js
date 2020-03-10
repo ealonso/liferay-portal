@@ -179,8 +179,15 @@ const NotMappedMessage = () => (
 	</div>
 );
 
-const Grid = ({child, collectionId, numberOfColumns, numberOfItems}) => {
+const Grid = ({
+	child,
+	collectionId,
+	collectionLength,
+	numberOfColumns,
+	numberOfItems,
+}) => {
 	const numberOfRows = Math.ceil(numberOfItems / numberOfColumns);
+	const maxNumberOfItems = Math.min(collectionLength, numberOfItems);
 
 	const createRows = () => {
 		const rows = [];
@@ -194,7 +201,7 @@ const Grid = ({child, collectionId, numberOfColumns, numberOfItems}) => {
 
 				columns.push(
 					<div className={`col col-${12 / numberOfColumns}`}>
-						{itemCount < numberOfItems && (
+						{itemCount < maxNumberOfItems && (
 							<ControlsIdConverterContextProvider
 								key={index}
 								value={{
@@ -226,8 +233,10 @@ const Grid = ({child, collectionId, numberOfColumns, numberOfItems}) => {
 	return createRows();
 };
 
-const Stack = ({child, collectionId, numberOfItems}) => {
-	return Array.from({length: numberOfItems}).map((_element, idx) => (
+const Stack = ({child, collectionId, collectionLength, numberOfItems}) => {
+	const maxNumberOfItems = Math.min(collectionLength, numberOfItems);
+
+	return Array.from({length: maxNumberOfItems}).map((_element, idx) => (
 		<ControlsIdConverterContextProvider
 			key={idx}
 			value={{
@@ -259,6 +268,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 				<ContentComponent
 					child={child}
 					collectionId={item.itemId}
+					collectionLength={mockList.length}
 					numberOfColumns={collectionConfig.numberOfColumns}
 					numberOfItems={collectionConfig.numberOfItems}
 				/>
