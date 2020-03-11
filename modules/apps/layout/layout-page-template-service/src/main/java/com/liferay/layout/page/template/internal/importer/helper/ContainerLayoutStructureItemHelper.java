@@ -21,6 +21,7 @@ import com.liferay.layout.page.template.util.PaddingConverter;
 import com.liferay.layout.util.structure.ContainerLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
@@ -58,11 +59,17 @@ public class ContainerLayoutStructureItemHelper
 			Map<String, Object> backgroundImageMap =
 				(Map<String, Object>)definitionMap.get("backgroundImage");
 
+			Map<String, Object> titleMap =
+				(Map<String, Object>)backgroundImageMap.get("title");
+
+			Map<String, Object> urlMap =
+				(Map<String, Object>)backgroundImageMap.get("url");
+
 			if (backgroundImageMap != null) {
 				JSONObject jsonObject = JSONUtil.put(
-					"title", backgroundImageMap.get("title")
+					"title", _getLocalizedValue(titleMap)
 				).put(
-					"url", backgroundImageMap.get("url")
+					"url", _getLocalizedValue(urlMap)
 				);
 
 				containerLayoutStructureItem.setBackgroundImageJSONObject(
@@ -89,6 +96,26 @@ public class ContainerLayoutStructureItemHelper
 		}
 
 		return containerLayoutStructureItem;
+	}
+
+	private Object _getLocalizedValue(Map<String, Object> map) {
+		Map<String, Object> localizedValuesMap = (Map<String, Object>)map.get(
+			"value_i18n");
+
+		if (localizedValuesMap != null) {
+			JSONObject localizedValueJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			for (Map.Entry<String, Object> entry :
+					localizedValuesMap.entrySet()) {
+
+				localizedValueJSONObject.put(entry.getKey(), entry.getValue());
+			}
+
+			return localizedValueJSONObject;
+		}
+
+		return map.get("value");
 	}
 
 }
