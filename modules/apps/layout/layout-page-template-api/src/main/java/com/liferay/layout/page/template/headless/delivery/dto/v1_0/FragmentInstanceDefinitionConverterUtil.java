@@ -287,12 +287,6 @@ public class FragmentInstanceDefinitionConverterUtil {
 
 						Object value = jsonObject.get(key);
 
-						if (value instanceof JSONObject) {
-							JSONObject valueJSONObject = (JSONObject)value;
-
-							value = valueJSONObject.getString("color");
-						}
-
 						put(key, value);
 					}
 				}
