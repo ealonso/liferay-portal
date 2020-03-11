@@ -17,11 +17,19 @@
 <%@ include file="/init.jsp" %>
 
 <%
-EditFragmentEntryDisplayContext editFragmentEntryDisplayContext = new EditFragmentEntryDisplayContext(request, renderResponse);
+FragmentEditorTypeConfiguration fragmentEditorTypeConfiguration = (FragmentEditorTypeConfiguration)renderRequest.getAttribute(FragmentWebKeys.FRAGMENT_EDITOR_TYPE);
+
+EditFragmentEntryDisplayContext editFragmentEntryDisplayContext = new EditFragmentEntryDisplayContext(request, renderResponse, fragmentEditorTypeConfiguration);
 %>
 
-<soy:component-renderer
-	context="<%= editFragmentEntryDisplayContext.getFragmentEditorDisplayContext() %>"
-	module="js/FragmentEditor.es"
-	templateNamespace="com.liferay.fragment.web.FragmentEditor.render"
-/>
+<c:choose>
+	<c:when test='<%= Objects.equals(editFragmentEntryDisplayContext.getFragmentEditorType(), "react") %>'>
+	</c:when>
+	<c:otherwise>
+		<soy:component-renderer
+			context="<%= editFragmentEntryDisplayContext.getFragmentEditorDisplayContext() %>"
+			module="js/FragmentEditor.es"
+			templateNamespace="com.liferay.fragment.web.FragmentEditor.render"
+		/>
+	</c:otherwise>
+</c:choose>

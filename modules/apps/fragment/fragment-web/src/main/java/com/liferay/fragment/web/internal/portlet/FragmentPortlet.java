@@ -21,9 +21,11 @@ import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentCollectionService;
+import com.liferay.fragment.web.internal.configuration.FragmentEditorTypeConfiguration;
 import com.liferay.fragment.web.internal.configuration.FragmentPortletConfiguration;
 import com.liferay.fragment.web.internal.constants.FragmentWebKeys;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -35,6 +37,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.GroupService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.staging.StagingGroupHelper;
 
@@ -49,7 +52,11 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -77,6 +84,13 @@ import org.osgi.service.component.annotations.Reference;
 	service = Portlet.class
 )
 public class FragmentPortlet extends MVCPortlet {
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_fragmentEditorTypeConfiguration = ConfigurableUtil.createConfigurable(
+			FragmentEditorTypeConfiguration.class, properties);
+	}
 
 	@Override
 	protected void doDispatch(
@@ -141,6 +155,13 @@ public class FragmentPortlet extends MVCPortlet {
 			_fragmentCollectionService.getFragmentCollections(
 				CompanyConstants.SYSTEM));
 
+		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+			renderRequest);
+
+		renderRequest.setAttribute(
+			FragmentWebKeys.FRAGMENT_EDITOR_TYPE,
+			_fragmentEditorTypeConfiguration);
+
 		super.doDispatch(renderRequest, renderResponse);
 	}
 
@@ -186,6 +207,9 @@ public class FragmentPortlet extends MVCPortlet {
 	@Reference
 	private FragmentCollectionService _fragmentCollectionService;
 
+	private volatile FragmentEditorTypeConfiguration
+		_fragmentEditorTypeConfiguration;
+
 	@Reference
 	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
 
@@ -197,6 +221,9 @@ public class FragmentPortlet extends MVCPortlet {
 
 	@Reference
 	private ItemSelector _itemSelector;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;

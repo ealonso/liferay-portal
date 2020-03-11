@@ -23,6 +23,7 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.FragmentCollectionLocalServiceUtil;
 import com.liferay.fragment.service.FragmentCollectionServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
+import com.liferay.fragment.web.internal.configuration.FragmentEditorTypeConfiguration;
 import com.liferay.fragment.web.internal.constants.FragmentWebKeys;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -65,10 +66,12 @@ import javax.servlet.http.HttpServletRequest;
 public class EditFragmentEntryDisplayContext {
 
 	public EditFragmentEntryDisplayContext(
-		HttpServletRequest httpServletRequest, RenderResponse renderResponse) {
+		HttpServletRequest httpServletRequest, RenderResponse renderResponse,
+		FragmentEditorTypeConfiguration fragmentEditorTypeConfiguration) {
 
 		_httpServletRequest = httpServletRequest;
 		_renderResponse = renderResponse;
+		_fragmentEditorTypeConfiguration = fragmentEditorTypeConfiguration;
 
 		_fragmentCollectionContributorTracker =
 			(FragmentCollectionContributorTracker)
@@ -237,6 +240,10 @@ public class EditFragmentEntryDisplayContext {
 		soyContext.put("urls", urlsSoycontext);
 
 		return soyContext;
+	}
+
+	public String getFragmentEditorType() {
+		return _fragmentEditorTypeConfiguration.type();
 	}
 
 	public FragmentEntry getFragmentEntry() {
@@ -510,6 +517,8 @@ public class EditFragmentEntryDisplayContext {
 	private final FragmentCollectionContributorTracker
 		_fragmentCollectionContributorTracker;
 	private Long _fragmentCollectionId;
+	private final FragmentEditorTypeConfiguration
+		_fragmentEditorTypeConfiguration;
 	private FragmentEntry _fragmentEntry;
 	private Long _fragmentEntryId;
 	private String _fragmentEntryKey;
