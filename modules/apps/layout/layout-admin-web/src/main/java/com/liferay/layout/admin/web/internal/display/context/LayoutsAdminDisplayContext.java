@@ -63,6 +63,7 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -621,9 +622,9 @@ public class LayoutsAdminDisplayContext {
 
 		JSONArray layoutsJSONArray = JSONFactoryUtil.createJSONArray();
 
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+		List<Layout> layouts = LayoutServiceUtil.getLayouts(
 			getSelGroupId(), privateLayout, parentLayoutId, true,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
 
 		for (Layout layout : layouts) {
 			if (getActiveLayoutSetBranchId() > 0) {
@@ -685,8 +686,9 @@ public class LayoutsAdminDisplayContext {
 				);
 			}
 
-			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				getSelGroup(), layout.isPrivateLayout(), layout.getLayoutId());
+			int childLayoutsCount = LayoutServiceUtil.getLayoutsCount(
+				getSelGroupId(), layout.isPrivateLayout(),
+				layout.getLayoutId());
 
 			layoutJSONObject.put("hasChild", childLayoutsCount > 0);
 
@@ -761,7 +763,7 @@ public class LayoutsAdminDisplayContext {
 
 		layoutsSearchContainer.setRowChecker(emptyOnClickRowChecker);
 
-		int layoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
+		int layoutsCount = LayoutServiceUtil.getLayoutsCount(
 			getSelGroup(), isPrivateLayout(), getKeywords(),
 			new String[] {
 				LayoutConstants.TYPE_CONTENT, LayoutConstants.TYPE_EMBEDDED,
@@ -771,7 +773,7 @@ public class LayoutsAdminDisplayContext {
 				LayoutConstants.TYPE_URL
 			});
 
-		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
+		List<Layout> layouts = LayoutServiceUtil.getLayouts(
 			getSelGroupId(), isPrivateLayout(), getKeywords(),
 			new String[] {
 				LayoutConstants.TYPE_CONTENT, LayoutConstants.TYPE_EMBEDDED,
@@ -1148,8 +1150,8 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public int getTotalItems() throws Exception {
-		return LayoutLocalServiceUtil.getLayoutsCount(
-			getSelGroup(), isPrivateLayout());
+		return LayoutServiceUtil.getLayoutsCount(
+			getSelGroupId(), isPrivateLayout());
 	}
 
 	public String getViewLayoutURL(Layout layout) throws PortalException {
@@ -1206,11 +1208,11 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public boolean hasLayouts() {
-		int privatePagesCount = LayoutLocalServiceUtil.getLayoutsCount(
-			getSelGroup(), true, 0);
+		int privatePagesCount = LayoutServiceUtil.getLayoutsCount(
+			getSelGroupId(), true, 0);
 
-		int publicPagesCount = LayoutLocalServiceUtil.getLayoutsCount(
-			getSelGroup(), false, 0);
+		int publicPagesCount = LayoutServiceUtil.getLayoutsCount(
+			getSelGroupId(), false, 0);
 
 		if ((privatePagesCount + publicPagesCount) > 0) {
 			return true;
