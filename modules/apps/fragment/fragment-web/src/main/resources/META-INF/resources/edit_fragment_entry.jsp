@@ -22,12 +22,14 @@ EditFragmentEntryDisplayContext editFragmentEntryDisplayContext = (EditFragmentE
 
 <c:choose>
 	<c:when test='<%= Objects.equals(editFragmentEntryDisplayContext.getFragmentEditorType(), "react") %>'>
-		<%
-			Map<String, Object> fragmentEditorData = new HashMap<>();
 
-			fragmentEditorData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
-			fragmentEditorData.put("props", editFragmentEntryDisplayContext.getFragmentEditorDisplayContext());
+		<%
+		Map<String, Object> fragmentEditorData = new HashMap<>();
+
+		fragmentEditorData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
+		fragmentEditorData.put("props", editFragmentEntryDisplayContext.getFragmentEditorDisplayContext());
 		%>
+
 		<div>
 			<react:component
 				data="<%= fragmentEditorData %>"
