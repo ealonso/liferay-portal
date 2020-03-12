@@ -1340,7 +1340,7 @@
     "@clayui/shared" "^3.1.0"
     classnames "^2.2.6"
 
-"@clayui/tooltip@3.2.0":
+"@clayui/tooltip@3.2.0", "@clayui/tooltip@^3.2.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@clayui/tooltip/-/tooltip-3.2.0.tgz#1f4ce15b87a809df1077c74db2d61d6e5b9d461a"
   integrity sha512-hb2rQqAQ9B5Z83BCQgDM7F6LJdNcQSKXDonbJK03spe1II2CU8WvcxvrI5/EuqF249y5Ow4KBH+HyR5JdgM+mQ==

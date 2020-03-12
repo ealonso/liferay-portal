@@ -99,8 +99,7 @@ public class BasicFragmentManagementToolbarDisplayContext
 						});
 					add(
 						dropdownItem -> {
-							dropdownItem.putData(
-								"action", "deleteSelectedFragmentEntries");
+							dropdownItem.putData("action", "deleteEntries");
 							dropdownItem.setIcon("times-circle");
 							dropdownItem.setLabel(
 								LanguageUtil.get(request, "delete"));
@@ -130,18 +129,19 @@ public class BasicFragmentManagementToolbarDisplayContext
 				return copyFragmentEntryURL.toString();
 			}
 		).put(
-			"deleteFragmentEntriesURL",
+			"deleteEntriesURL",
 			() -> {
-				PortletURL deleteFragmentEntriesURL =
+				PortletURL deleteEntriesURL =
 					liferayPortletResponse.createActionURL();
 
-				deleteFragmentEntriesURL.setParameter(
+				deleteEntriesURL.setParameter(
 					ActionRequest.ACTION_NAME,
-					"/fragment/delete_fragment_entries");
-				deleteFragmentEntriesURL.setParameter(
+					"/fragment/delete_fragment_compositions_and_fragment_" +
+						"entries");
+				deleteEntriesURL.setParameter(
 					"redirect", themeDisplay.getURLCurrent());
 
-				return deleteFragmentEntriesURL.toString();
+				return deleteEntriesURL.toString();
 			}
 		).put(
 			"exportFragmentEntriesURL",

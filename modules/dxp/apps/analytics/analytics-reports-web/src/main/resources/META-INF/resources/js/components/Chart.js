@@ -12,6 +12,7 @@
 import {ClayButtonWithIcon} from '@clayui/button';
 import {ClaySelect} from '@clayui/form';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
+import {ClayTooltipProvider} from '@clayui/tooltip';
 import className from 'classnames';
 import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
@@ -21,6 +22,7 @@ import {
 	Legend,
 	Line,
 	LineChart,
+	ReferenceDot,
 	Tooltip,
 	XAxis,
 	YAxis,
@@ -33,25 +35,37 @@ import CustomTooltip from './CustomTooltip';
 
 const {useEffect, useMemo} = React;
 
-const CARTESIAN_GRID_COLOR = '#E7E7ED';
+const CHART_COLORS = {
+	analyticsReportsHistoricalReads: '#50D2A0',
+	analyticsReportsHistoricalViews: '#4B9BFF',
+	cartesianGrid: '#E7E7ED',
+	publishDate: '#2E5AAC',
+};
+
 const CHART_SIZES = {
 	dotRadius: 4,
+	fill: 'white',
 	height: 220,
 	lineWidth: 2,
 	width: 280,
 	yAxisWidth: 40,
 };
+
+const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+
+const HOUR_IN_MILLISECONDS = 60 * 60 * 1000;
+
 const LAST_24_HOURS = 'last-24-hours';
 
 const METRICS_STATIC_VALUES = {
 	analyticsReportsHistoricalReads: {
-		color: '#50D2A0',
+		color: CHART_COLORS.analyticsReportsHistoricalReads,
 		iconType: 'square',
 		langKey: Liferay.Language.get('reads-metric'),
 	},
 
 	analyticsReportsHistoricalViews: {
-		color: '#4B9BFF',
+		color: CHART_COLORS.analyticsReportsHistoricalViews,
 		iconType: 'circle',
 		langKey: Liferay.Language.get('views-metric'),
 	},
@@ -136,7 +150,7 @@ const generateDateFormatters = key => {
 	 * Given a date like string it produces a internationalized long date
 	 *
 	 * For 'en-US'
-	 * String => 'June 16, 2020'
+	 * String => '06/17/2020'
 	 */
 	function formatLongDate(value) {
 		return Intl.DateTimeFormat([key]).format(new Date(value));
@@ -201,10 +215,12 @@ export default function Chart({
 	dataProviders = [],
 	defaultTimeSpanOption,
 	languageTag,
+	publishDate,
 	timeSpanOptions,
 }) {
 	const {actions, state: chartState} = useChartState({
 		defaultTimeSpanOption,
+		publishDate,
 	});
 	const isMounted = useIsMounted();
 
@@ -220,10 +236,16 @@ export default function Chart({
 			}).then(data => {
 				if (!gone) {
 					if (isMounted()) {
+						const timeSpanComparator =
+							chartState.timeSpanOption === LAST_24_HOURS
+								? HOUR_IN_MILLISECONDS
+								: DAY_IN_MILLISECONDS;
+
 						Object.keys(data).map(key => {
 							actions.addDataSetItem({
 								dataSetItem: data[key],
 								key,
+								timeSpanComparator,
 							});
 						});
 					}
@@ -242,19 +264,40 @@ export default function Chart({
 	]);
 
 	const {dataSet} = chartState;
+	const {histogram, keyList} = dataSet;
+
+	const disabledPreviousPeriodButton = useMemo(() => {
+		if (histogram.length) {
+			const firstDateLabel = histogram[0].label;
+
+			const firstDate = new Date(firstDateLabel);
+			const publishedDate = new Date(publishDate);
+
+			return firstDate < publishedDate;
+		}
+
+		return true;
+	}, [histogram, publishDate]);
+
+	const referenceDotPosition = useMemo(() => {
+		const publishDateISOString = new Date(publishDate).toISOString();
+
+		return chartState.timeSpanOption === LAST_24_HOURS
+			? publishDateISOString.split(':')[0].concat(':00:00')
+			: publishDateISOString.split('T')[0].concat('T00:00:00');
+	}, [chartState.timeSpanOption, publishDate]);
 
 	const title = useMemo(() => {
-		if (dataSet && dataSet.histogram) {
-			const firstDateLabel = dataSet.histogram[0].label;
-			const lastDateLabel =
-				dataSet.histogram[dataSet.histogram.length - 1].label;
+		if (histogram.length) {
+			const firstDateLabel = histogram[0].label;
+			const lastDateLabel = histogram[histogram.length - 1].label;
 
 			return dateFormatters.formatChartTitle([
 				new Date(firstDateLabel),
 				new Date(lastDateLabel),
 			]);
 		}
-	}, [dataSet, dateFormatters]);
+	}, [histogram, dateFormatters]);
 
 	const handleTimeSpanChange = event => {
 		const {value} = event.target;
@@ -303,14 +346,27 @@ export default function Chart({
 					</ClaySelect>
 
 					<div className="d-flex ml-2">
-						<ClayButtonWithIcon
-							aria-label={Liferay.Language.get('previous-period')}
-							className="mr-1"
-							displayType="secondary"
-							onClick={handlePreviousTimeSpanClick}
-							small
-							symbol="angle-left"
-						/>
+						<ClayTooltipProvider>
+							<ClayButtonWithIcon
+								aria-label={Liferay.Language.get(
+									'previous-period'
+								)}
+								className="mr-1"
+								data-tooltip-align="top-right"
+								disabled={disabledPreviousPeriodButton}
+								displayType="secondary"
+								onClick={handlePreviousTimeSpanClick}
+								small
+								symbol="angle-left"
+								title={
+									disabledPreviousPeriodButton
+										? Liferay.Language.get(
+												'you-cannot-choose-a-date-prior-to-the-publication-date'
+										  )
+										: undefined
+								}
+							/>
+						</ClayTooltipProvider>
 						<ClayButtonWithIcon
 							aria-label={Liferay.Language.get('next-period')}
 							disabled={disabledNextTimeSpan}
@@ -337,7 +393,7 @@ export default function Chart({
 
 					<div className="line-chart mt-3">
 						<LineChart
-							data={dataSet.histogram}
+							data={histogram}
 							height={CHART_SIZES.height}
 							width={CHART_SIZES.width}
 						>
@@ -350,7 +406,7 @@ export default function Chart({
 							/>
 
 							<CartesianGrid
-								stroke={CARTESIAN_GRID_COLOR}
+								stroke={CHART_COLORS.cartesianGrid}
 								strokeDasharray="0 0"
 								vertical={true}
 								verticalPoints={[
@@ -360,7 +416,7 @@ export default function Chart({
 
 							<XAxis
 								axisLine={{
-									stroke: CARTESIAN_GRID_COLOR,
+									stroke: CHART_COLORS.cartesianGrid,
 								}}
 								dataKey="label"
 								tickFormatter={xAxisFormatter}
@@ -370,7 +426,7 @@ export default function Chart({
 							<YAxis
 								allowDecimals={false}
 								axisLine={{
-									stroke: CARTESIAN_GRID_COLOR,
+									stroke: CHART_COLORS.cartesianGrid,
 								}}
 								minTickGap={3}
 								tickFormatter={thousandsToKilosFormater}
@@ -379,7 +435,16 @@ export default function Chart({
 							/>
 
 							<Tooltip
-								content={<CustomTooltip />}
+								content={
+									<CustomTooltip
+										publishDateFill={
+											CHART_COLORS.publishDate
+										}
+										showPublishedDateLabel={
+											disabledPreviousPeriodButton
+										}
+									/>
+								}
 								formatter={(value, name) => {
 									return [
 										numberFormat(languageTag, value),
@@ -391,7 +456,16 @@ export default function Chart({
 								separator={': '}
 							/>
 
-							{dataSet.keyList.map(keyName => {
+							<ReferenceDot
+								fill={CHART_SIZES.referenceDotFill}
+								r={3}
+								stroke={CHART_COLORS.publishDate}
+								strokeWidth={CHART_SIZES.lineWidth}
+								x={referenceDotPosition}
+								y={0}
+							/>
+
+							{keyList.map(keyName => {
 								const color = keyToHexColor(keyName);
 								const shape = keyToIconType(keyName);
 
@@ -422,6 +496,7 @@ Chart.propTypes = {
 	dataProviders: PropTypes.arrayOf(PropTypes.func).isRequired,
 	defaultTimeSpanOption: PropTypes.string.isRequired,
 	languageTag: PropTypes.string.isRequired,
+	publishDate: PropTypes.number.isRequired,
 	timeSpanOptions: PropTypes.arrayOf(
 		PropTypes.shape({
 			key: PropTypes.string.isRequired,

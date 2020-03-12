@@ -65,8 +65,9 @@ public interface RedirectEntryLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public RedirectEntry addRedirectEntry(
-		long groupId, String destinationURL, String sourceURL,
-		boolean temporary, ServiceContext serviceContext);
+			long groupId, String destinationURL, String sourceURL,
+			boolean temporary, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	 * Adds the redirect entry to the database. Also notifies the appropriate model listeners.
@@ -188,6 +189,9 @@ public interface RedirectEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public RedirectEntry fetchRedirectEntry(long redirectEntryId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public RedirectEntry fetchRedirectEntry(long groupId, String sourceURL);
+
 	/**
 	 * Returns the redirect entry matching the UUID and group.
 	 *
@@ -238,6 +242,10 @@ public interface RedirectEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<RedirectEntry> getRedirectEntries(int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<RedirectEntry> getRedirectEntries(
+		long groupId, int start, int end, OrderByComparator<RedirectEntry> obc);
+
 	/**
 	 * Returns all the redirect entries matching the UUID and company.
 	 *
@@ -271,6 +279,9 @@ public interface RedirectEntryLocalService
 	 */
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getRedirectEntriesCount();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getRedirectEntriesCount(long groupId);
 
 	/**
 	 * Returns the redirect entry with the primary key.

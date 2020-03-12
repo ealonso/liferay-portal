@@ -19,8 +19,15 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.redirect.exception.DuplicateRedirectEntrySourceURLException;
+import com.liferay.redirect.exception.RequiredRedirectEntryDestinationURLException;
+import com.liferay.redirect.exception.RequiredRedirectEntrySourceURLException;
 import com.liferay.redirect.model.RedirectEntry;
 import com.liferay.redirect.service.base.RedirectEntryLocalServiceBaseImpl;
+
+import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -37,8 +44,15 @@ public class RedirectEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public RedirectEntry addRedirectEntry(
-		long groupId, String destinationURL, String sourceURL,
-		boolean temporary, ServiceContext serviceContext) {
+			long groupId, String destinationURL, String sourceURL,
+			boolean temporary, ServiceContext serviceContext)
+		throws PortalException {
+
+		_validate(destinationURL, sourceURL);
+
+		if (fetchRedirectEntry(groupId, sourceURL) != null) {
+			throw new DuplicateRedirectEntrySourceURLException();
+		}
 
 		RedirectEntry redirectEntry = redirectEntryPersistence.create(
 			counterLocalService.increment());
@@ -56,6 +70,24 @@ public class RedirectEntryLocalServiceImpl
 		return redirectEntryPersistence.update(redirectEntry);
 	}
 
+	@Override
+	public RedirectEntry fetchRedirectEntry(long groupId, String sourceURL) {
+		return redirectEntryPersistence.fetchByG_S(groupId, sourceURL);
+	}
+
+	@Override
+	public List<RedirectEntry> getRedirectEntries(
+		long groupId, int start, int end,
+		OrderByComparator<RedirectEntry> obc) {
+
+		return redirectEntryPersistence.findByGroupId(groupId, start, end, obc);
+	}
+
+	@Override
+	public int getRedirectEntriesCount(long groupId) {
+		return redirectEntryPersistence.countByGroupId(groupId);
+	}
+
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public RedirectEntry updateRedirectEntry(
@@ -63,13 +95,36 @@ public class RedirectEntryLocalServiceImpl
 			boolean temporary)
 		throws PortalException {
 
+		_validate(destinationURL, sourceURL);
+
 		RedirectEntry redirectEntry = getRedirectEntry(redirectEntryId);
+
+		RedirectEntry existingRedirectEntry = fetchRedirectEntry(
+			redirectEntry.getGroupId(), sourceURL);
+
+		if ((existingRedirectEntry != null) &&
+			(existingRedirectEntry.getRedirectEntryId() != redirectEntryId)) {
+
+			throw new DuplicateRedirectEntrySourceURLException();
+		}
 
 		redirectEntry.setDestinationURL(destinationURL);
 		redirectEntry.setSourceURL(sourceURL);
 		redirectEntry.setTemporary(temporary);
 
 		return redirectEntryPersistence.update(redirectEntry);
+	}
+
+	private void _validate(String destinationURL, String sourceURL)
+		throws PortalException {
+
+		if (Validator.isNull(destinationURL)) {
+			throw new RequiredRedirectEntryDestinationURLException();
+		}
+
+		if (Validator.isNull(sourceURL)) {
+			throw new RequiredRedirectEntrySourceURLException();
+		}
 	}
 
 }

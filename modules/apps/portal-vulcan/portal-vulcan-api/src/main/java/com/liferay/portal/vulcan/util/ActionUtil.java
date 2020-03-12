@@ -50,6 +50,23 @@ public class ActionUtil {
 			uriInfo);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addAction(String, Class, Long, String, Object, Long, String,
+	 *             Long, UriInfo)}
+	 */
+	@Deprecated
+	public static Map<String, String> addAction(
+		String actionName, Class clazz, GroupedModel groupedModel,
+		String methodName, UriInfo uriInfo) {
+
+		return addAction(
+			actionName, clazz, (Long)groupedModel.getPrimaryKeyObj(),
+			methodName, null, groupedModel.getUserId(),
+			groupedModel.getModelClassName(), groupedModel.getGroupId(),
+			uriInfo);
+	}
+
 	public static Map<String, String> addAction(
 		String actionName, Class clazz, Long id, String methodName,
 		Object object, Long ownerId, String permissionName, Long siteId,
@@ -66,7 +83,24 @@ public class ActionUtil {
 	}
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x)
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addAction(String, Class, Long, String, Object, Long, String,
+	 *             Long, UriInfo)}
+	 */
+	@Deprecated
+	public static Map<String, String> addAction(
+		String actionName, Class clazz, Long id, String methodName,
+		String permissionName, Long siteId, UriInfo uriInfo) {
+
+		return addAction(
+			actionName, clazz, id, methodName, null, null, permissionName,
+			siteId, uriInfo);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addAction(String, Class, Long, String, Object, Long, String,
+	 *             Long, UriInfo)}
 	 */
 	@Deprecated
 	public static Map<String, String> addAction(

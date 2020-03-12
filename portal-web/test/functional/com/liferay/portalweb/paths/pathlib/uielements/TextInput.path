@@ -465,7 +465,7 @@
 </tr>
 <tr>
 	<td>REQUIRED_ALERT</td>
-	<td>//div[contains(@class,'has-error')] | //div[contains(@class,'has-error') and contains(.,'key_fieldName')]</td>
+	<td>//div[contains(@class,'has-error')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -516,6 +516,11 @@
 <tr>
 	<td>SOURCE_URL</td>
 	<td>//input[contains(@id,'_src')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SPECIFIC_FIELD_REQUIRED_ALERT</td>
+	<td>//div[@data-fieldname='${key_fieldName}']//div[@class='required']</td>
 	<td></td>
 </tr>
 <tr>

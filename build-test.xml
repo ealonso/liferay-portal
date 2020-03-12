@@ -4584,12 +4584,9 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 						docker kill ${docker_rm_list}
 
 						docker rm -f ${docker_rm_list}
-
-						while IFS=read -r docker_container
-						do
-						    docker network disconnect -f ${HOSTNAME} $docker_container
-						done <<< "${docker_rm_list}"
 					fi
+
+					docker network disconnect -f ${env.DOCKER_NETWORK_NAME} ${database.host}
 				]]>
 			</echo>
 
@@ -5986,6 +5983,7 @@ go</echo>
 									<fileset
 										dir="${test.app.server.liferay.home}/data"
 									>
+										<exclude if:true="${keep.hypersonicdb}" name="hypersonic/lportal.lobs" />
 										<exclude if:true="${keep.hypersonicdb}" name="hypersonic/lportal.properties" />
 										<exclude if:true="${keep.hypersonicdb}" name="hypersonic/lportal.script" />
 									</fileset>
@@ -10334,7 +10332,9 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 				<isset property="skip.rebuild-database" />
 			</not>
 			<then>
-				<antcall target="delete-liferay-home" />
+				<antcall target="delete-liferay-home">
+					<param name="keep.hypersonicdb" value="true" />
+				</antcall>
 
 				<if>
 					<and>
@@ -10506,7 +10506,13 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 									<equals arg1="${database.type}" arg2="hypersonic" />
 								</and>
 								<then>
-									<delete dir="${liferay.home}/data" includeemptydirs="true" />
+									<delete failonerror="false" includeemptydirs="true">
+										<fileset
+											dir="${liferay.home}/data"
+										>
+											<exclude name="hypersonic/lportal.lobs" />
+										</fileset>
+									</delete>
 
 									<copy
 										file="sql/${database.name}.properties"

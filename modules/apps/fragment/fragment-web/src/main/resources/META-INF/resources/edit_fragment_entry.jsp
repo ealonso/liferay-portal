@@ -17,11 +17,31 @@
 <%@ include file="/init.jsp" %>
 
 <%
-EditFragmentEntryDisplayContext editFragmentEntryDisplayContext = new EditFragmentEntryDisplayContext(request, renderResponse);
+EditFragmentEntryDisplayContext editFragmentEntryDisplayContext = (EditFragmentEntryDisplayContext)renderRequest.getAttribute(EditFragmentEntryDisplayContext.class.getName());
 %>
 
-<soy:component-renderer
-	context="<%= editFragmentEntryDisplayContext.getFragmentEditorDisplayContext() %>"
-	module="js/FragmentEditor.es"
-	templateNamespace="com.liferay.fragment.web.FragmentEditor.render"
-/>
+<c:choose>
+	<c:when test='<%= Objects.equals(editFragmentEntryDisplayContext.getFragmentEditorType(), "react") %>'>
+
+		<%
+		Map<String, Object> fragmentEditorData = new HashMap<>();
+
+		fragmentEditorData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
+		fragmentEditorData.put("props", editFragmentEntryDisplayContext.getFragmentEditorDisplayContext());
+		%>
+
+		<div>
+			<react:component
+				data="<%= fragmentEditorData %>"
+				module="js/fragment-editor/FragmentEditor"
+			/>
+		</div>
+	</c:when>
+	<c:otherwise>
+		<soy:component-renderer
+			context="<%= editFragmentEntryDisplayContext.getFragmentEditorDisplayContext() %>"
+			module="js/FragmentEditor.es"
+			templateNamespace="com.liferay.fragment.web.FragmentEditor.render"
+		/>
+	</c:otherwise>
+</c:choose>

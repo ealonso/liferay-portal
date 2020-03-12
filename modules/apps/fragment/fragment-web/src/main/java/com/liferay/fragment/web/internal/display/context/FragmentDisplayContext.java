@@ -18,6 +18,7 @@ import com.liferay.fragment.constants.FragmentActionKeys;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentCollection;
+import com.liferay.fragment.model.FragmentComposition;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentCollectionLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
@@ -53,6 +54,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.PortalInstances;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -104,6 +106,33 @@ public class FragmentDisplayContext {
 					LanguageUtil.get(_httpServletRequest, "import"));
 			}
 		).build();
+	}
+
+	public String getAvailableActions(Object object) {
+		if ((object instanceof FragmentComposition) &&
+			FragmentPermission.contains(
+				_themeDisplay.getPermissionChecker(),
+				_themeDisplay.getScopeGroupId(),
+				FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES)) {
+
+			return "deleteEntries";
+		}
+
+		List<String> availableActions = new ArrayList<>();
+
+		availableActions.add("exportSelectedFragmentEntries");
+
+		if (FragmentPermission.contains(
+				_themeDisplay.getPermissionChecker(),
+				_themeDisplay.getScopeGroupId(),
+				FragmentActionKeys.MANAGE_FRAGMENT_ENTRIES)) {
+
+			availableActions.add("deleteEntries");
+			availableActions.add("copySelectedFragmentEntries");
+			availableActions.add("moveSelectedFragmentEntries");
+		}
+
+		return StringUtil.merge(availableActions, StringPool.COMMA);
 	}
 
 	public List<DropdownItem> getCollectionsDropdownItems() {
@@ -356,16 +385,16 @@ public class FragmentDisplayContext {
 		fragmentEntriesSearchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(_renderResponse));
 
-		OrderByComparator<FragmentEntry> orderByComparator =
-			FragmentPortletUtil.getFragmentEntryOrderByComparator(
+		OrderByComparator<Object> orderByComparator =
+			FragmentPortletUtil.getFragmentCompositionAndEntryOrderByComparator(
 				_getOrderByCol(), getOrderByType());
 
 		fragmentEntriesSearchContainer.setOrderByCol(_getOrderByCol());
 		fragmentEntriesSearchContainer.setOrderByComparator(orderByComparator);
 		fragmentEntriesSearchContainer.setOrderByType(getOrderByType());
 
-		List<FragmentEntry> fragmentEntries = null;
-		int fragmentEntriesCount = 0;
+		List<Object> fragmentCompositionsAndEntries = null;
+		int fragmentCompositionsAndEntriesCount = 0;
 
 		FragmentCollection fragmentCollection = getFragmentCollection();
 
@@ -378,36 +407,44 @@ public class FragmentDisplayContext {
 		}
 
 		if (isSearch()) {
-			fragmentEntries =
-				FragmentEntryServiceUtil.getFragmentEntriesByNameAndStatus(
-					fragmentCollection.getGroupId(),
-					fragmentCollection.getFragmentCollectionId(),
-					_getKeywords(), status,
-					fragmentEntriesSearchContainer.getStart(),
-					fragmentEntriesSearchContainer.getEnd(), orderByComparator);
+			fragmentCompositionsAndEntries =
+				FragmentEntryServiceUtil.
+					getFragmentCompositionsAndFragmentEntries(
+						fragmentCollection.getGroupId(),
+						fragmentCollection.getFragmentCollectionId(),
+						_getKeywords(), status,
+						fragmentEntriesSearchContainer.getStart(),
+						fragmentEntriesSearchContainer.getEnd(),
+						orderByComparator);
 
-			fragmentEntriesCount =
-				FragmentEntryServiceUtil.getFragmentEntriesCountByNameAndStatus(
-					fragmentCollection.getGroupId(),
-					fragmentCollection.getFragmentCollectionId(),
-					_getKeywords(), status);
+			fragmentCompositionsAndEntriesCount =
+				FragmentEntryServiceUtil.
+					getFragmentCompositionsAndFragmentEntriesCount(
+						fragmentCollection.getGroupId(),
+						fragmentCollection.getFragmentCollectionId(),
+						_getKeywords(), status);
 		}
 		else {
-			fragmentEntries =
-				FragmentEntryServiceUtil.getFragmentEntriesByStatus(
-					fragmentCollection.getGroupId(),
-					fragmentCollection.getFragmentCollectionId(), status,
-					fragmentEntriesSearchContainer.getStart(),
-					fragmentEntriesSearchContainer.getEnd(), orderByComparator);
+			fragmentCompositionsAndEntries =
+				FragmentEntryServiceUtil.
+					getFragmentCompositionsAndFragmentEntries(
+						fragmentCollection.getGroupId(),
+						fragmentCollection.getFragmentCollectionId(), status,
+						fragmentEntriesSearchContainer.getStart(),
+						fragmentEntriesSearchContainer.getEnd(),
+						orderByComparator);
 
-			fragmentEntriesCount =
-				FragmentEntryServiceUtil.getFragmentEntriesCountByStatus(
-					fragmentCollection.getGroupId(),
-					fragmentCollection.getFragmentCollectionId(), status);
+			fragmentCompositionsAndEntriesCount =
+				FragmentEntryServiceUtil.
+					getFragmentCompositionsAndFragmentEntriesCount(
+						fragmentCollection.getGroupId(),
+						fragmentCollection.getFragmentCollectionId(), status);
 		}
 
-		fragmentEntriesSearchContainer.setResults(fragmentEntries);
-		fragmentEntriesSearchContainer.setTotal(fragmentEntriesCount);
+		fragmentEntriesSearchContainer.setResults(
+			fragmentCompositionsAndEntries);
+		fragmentEntriesSearchContainer.setTotal(
+			fragmentCompositionsAndEntriesCount);
 
 		_fragmentEntriesSearchContainer = fragmentEntriesSearchContainer;
 

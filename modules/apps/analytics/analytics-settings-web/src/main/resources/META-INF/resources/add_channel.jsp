@@ -135,8 +135,43 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 
 				<aui:button href="<%= cancel.toString() %>" value="cancel" />
 
-				<aui:button type="submit" value="done" />
+				<aui:button disabled="<%= true %>" id="add-channel-button" type="submit" value="done" />
 			</aui:button-row>
 		</div>
 	</div>
 </aui:form>
+
+<aui:script use="liferay-search-container">
+	var searchContainer = Liferay.SearchContainer.get(
+		'<portlet:namespace />selectGroups'
+	);
+
+	function <portlet:namespace />handleSubmitButton(selectedItems) {
+		var button = document.getElementById(
+			'<portlet:namespace />add-channel-button'
+		);
+
+		if (selectedItems.isEmpty()) {
+			button.classList.add('disabled');
+			button.setAttribute('disabled', 'disabled');
+		}
+		else {
+			button.classList.remove('disabled');
+			button.removeAttribute('disabled');
+		}
+	}
+
+	searchContainer.on('rowToggled', function(event) {
+		return <portlet:namespace />handleSubmitButton(
+			event.elements.allSelectedElements
+		);
+	});
+
+	Liferay.componentReady('<portlet:namespace />selectGroups').then(function(
+		searchContainer
+	) {
+		return <portlet:namespace />handleSubmitButton(
+			searchContainer.select.getAllSelectedElements()
+		);
+	});
+</aui:script>

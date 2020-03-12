@@ -285,6 +285,20 @@ public class PullRequest {
 		return headJSONObject.getString("sha");
 	}
 
+	public JSONArray getSenderSHAStatuses() {
+		JSONArray statusesJSONArray = null;
+
+		try {
+			statusesJSONArray = JenkinsResultsParserUtil.toJSONArray(
+				_jsonObject.getString("statuses_url"));
+		}
+		catch (IOException ioException) {
+			throw new RuntimeException(ioException);
+		}
+
+		return statusesJSONArray;
+	}
+
 	public String getSenderUsername() {
 		JSONObject headJSONObject = _jsonObject.getJSONObject("head");
 
@@ -592,6 +606,13 @@ public class PullRequest {
 						_commentJSONObject.getString("modified_at"),
 					parseException);
 			}
+		}
+
+		public String getUserLogin() {
+			JSONObject userJSONObject = _commentJSONObject.getJSONObject(
+				"user");
+
+			return userJSONObject.getString("login");
 		}
 
 		private static final SimpleDateFormat _UtcIso8601SimpleDateFormat;

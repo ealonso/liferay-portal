@@ -21,6 +21,7 @@
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
+taglib uri="http://liferay.com/tld/react" prefix="react" %><%@
 taglib uri="http://liferay.com/tld/soy" prefix="soy" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
@@ -35,6 +36,7 @@ page import="com.liferay.fragment.exception.FragmentCollectionNameException" %><
 page import="com.liferay.fragment.exception.InvalidFileException" %><%@
 page import="com.liferay.fragment.exception.RequiredFragmentEntryException" %><%@
 page import="com.liferay.fragment.model.FragmentCollection" %><%@
+page import="com.liferay.fragment.model.FragmentComposition" %><%@
 page import="com.liferay.fragment.model.FragmentEntry" %><%@
 page import="com.liferay.fragment.renderer.FragmentRendererController" %><%@
 page import="com.liferay.fragment.service.FragmentCollectionLocalServiceUtil" %><%@
@@ -68,6 +70,7 @@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.repository.model.FileEntry" %><%@
 page import="com.liferay.portal.kernel.service.GroupLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.servlet.SessionMessages" %><%@
+page import="com.liferay.portal.kernel.util.HashMapBuilder" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ListUtil" %><%@
 page import="com.liferay.portal.kernel.util.MapUtil" %><%@
@@ -76,7 +79,9 @@ page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.taglib.search.ResultRow" %>
 
-<%@ page import="java.util.List" %><%@
+<%@ page import="java.util.Collections" %><%@
+page import="java.util.HashMap" %><%@
+page import="java.util.List" %><%@
 page import="java.util.Map" %><%@
 page import="java.util.Objects" %>
 

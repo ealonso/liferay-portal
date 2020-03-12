@@ -94,6 +94,7 @@ export default function({context, props}) {
 				dataProviders={[getHistoricalViews, getHistoricalReads]}
 				defaultTimeSpanOption={defaultTimeSpanKey}
 				languageTag={languageTag}
+				publishDate={publishDate}
 				timeSpanOptions={timeSpans}
 			/>
 		</div>

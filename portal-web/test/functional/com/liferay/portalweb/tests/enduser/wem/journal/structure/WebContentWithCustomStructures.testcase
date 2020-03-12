@@ -1131,7 +1131,10 @@ definition {
 
 		Button.clickPublish();
 
-		Alert.viewRequiredField();
+		AssertTextEquals.assertPartialText(
+			key_fieldName = "Text",
+			locator1 = "TextInput#SPECIFIC_FIELD_REQUIRED_ALERT",
+			value1 = "This field is required.");
 	}
 
 	@priority = "4"
@@ -1372,12 +1375,7 @@ definition {
 
 		WebContent.editNullCP(
 			webContentContent = "WC WebContent Content",
-			webContentContentEdit = "WC WebContent Content",
-			webContentTitle = "WC WebContent Title");
-
-		WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");
-
-		WebContentNavigator.gotoEditCP(webContentTitle = "Untitled");
+			webContentContentEdit = "WC WebContent Content");
 
 		WebContent.editCP(
 			webContentContentEdit = "WC WebContent Content Edit",

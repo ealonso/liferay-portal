@@ -121,6 +121,8 @@ const viewsDataProvider = jest.fn(() =>
 	})
 );
 
+const mockedPublishDate = 1581957977840;
+
 const mockedTimeSpanOptions = [
 	{
 		key: 'last-30-days',
@@ -148,6 +150,7 @@ describe('Chart', () => {
 				dataProviders={[viewsDataProvider]}
 				defaultTimeSpanOption={'last-7-days'}
 				languageTag={'en-EN'}
+				publishDate={mockedPublishDate}
 				timeSpanOptions={mockedTimeSpanOptions}
 			/>
 		);
@@ -170,6 +173,7 @@ describe('Chart', () => {
 				dataProviders={[viewsDataProvider, readsDataProvider]}
 				defaultTimeSpanOption={'last-7-days'}
 				languageTag={'en-EN'}
+				publishDate={mockedPublishDate}
 				timeSpanOptions={mockedTimeSpanOptions}
 			/>
 		);
