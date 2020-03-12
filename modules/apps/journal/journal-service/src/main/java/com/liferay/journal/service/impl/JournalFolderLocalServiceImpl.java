@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.social.SocialActivityManagerUtil;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -74,6 +75,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -1045,6 +1047,32 @@ public class JournalFolderLocalServiceImpl
 					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW) {
 
 			ddmStructureIds = new long[0];
+
+			if (parentFolderId !=
+					JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+
+				JournalFolder ancestorWithRestriction =
+					_getAncestorWithRestriction(getFolder(parentFolderId));
+
+				if (ancestorWithRestriction != null) {
+					List<DDMStructureLink> ancestorDDMStructureLinks =
+						_ddmStructureLinkLocalService.getStructureLinks(
+							_classNameLocalService.getClassNameId(
+								JournalFolder.class),
+							ancestorWithRestriction.getFolderId());
+
+					Stream<DDMStructureLink> ancestorDDMStructureLinksStream =
+						ancestorDDMStructureLinks.stream();
+
+					long[] ancestorDDMStructureIds =
+						ancestorDDMStructureLinksStream.mapToLong(
+							DDMStructureLink::getStructureId
+						).toArray();
+
+					validateArticleDDMStructures(
+						folderId, ancestorDDMStructureIds);
+				}
+			}
 		}
 
 		validateArticleDDMStructures(folderId, ddmStructureIds);
@@ -1471,12 +1499,32 @@ public class JournalFolderLocalServiceImpl
 			folder, parentFolderId);
 	}
 
+	private JournalFolder _getAncestorWithRestriction(JournalFolder folder)
+		throws PortalException {
+
+		if (folder.getRestrictionType() ==
+				JournalFolderConstants.
+					RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW) {
+
+			return folder;
+		}
+
+		if (folder.isRoot()) {
+			return null;
+		}
+
+		return _getAncestorWithRestriction(folder.getParentFolder());
+	}
+
 	private JournalFolderModelValidator _getJournalFolderModelValidator() {
 		ModelValidator<JournalFolder> modelValidator =
 			ModelValidatorRegistryUtil.getModelValidator(JournalFolder.class);
 
 		return (JournalFolderModelValidator)modelValidator;
 	}
+
+	@Reference
+	private ClassNameLocalService _classNameLocalService;
 
 	@Reference
 	private DDMStructureLinkLocalService _ddmStructureLinkLocalService;
