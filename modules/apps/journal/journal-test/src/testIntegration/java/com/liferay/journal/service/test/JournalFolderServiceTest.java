@@ -162,6 +162,64 @@ public class JournalFolderServiceTest {
 	}
 
 	@Test
+	public void testAddRestrictionToParentWithRestrictedChildFolder()
+		throws Exception {
+
+		JournalFolder parentFolder = JournalTestUtil.addFolder(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID, "Test 1");
+
+		JournalFolder childFolder = JournalTestUtil.addFolder(
+			_group.getGroupId(), parentFolder.getFolderId(), "Test 2");
+
+		String xml = DDMStructureTestUtil.getSampleStructuredContent(
+			"Test Article");
+
+		DDMStructure childDDMStructure = DDMStructureTestUtil.addStructure(
+			_group.getGroupId(), JournalArticle.class.getName());
+
+		DDMTemplate ddmTemplate = DDMTemplateTestUtil.addTemplate(
+			_group.getGroupId(), childDDMStructure.getStructureId(),
+			PortalUtil.getClassNameId(JournalArticle.class),
+			LocaleUtil.getDefault());
+
+		JournalTestUtil.addArticleWithXMLContent(
+			_group.getGroupId(), childFolder.getFolderId(),
+			JournalArticleConstants.CLASSNAME_ID_DEFAULT, xml,
+			childDDMStructure.getStructureKey(), ddmTemplate.getTemplateKey());
+
+		long[] childDDMStructureIds = {childDDMStructure.getStructureId()};
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		JournalFolderLocalServiceUtil.updateFolder(
+			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
+			childFolder.getFolderId(), childFolder.getParentFolderId(),
+			childFolder.getName(), childFolder.getDescription(),
+			childDDMStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW,
+			false, serviceContext);
+
+		DDMStructure parentDDMStructure = DDMStructureTestUtil.addStructure(
+			_group.getGroupId(), JournalArticle.class.getName());
+
+		long[] parentDDMStructureIds = {parentDDMStructure.getStructureId()};
+
+		parentFolder = JournalFolderLocalServiceUtil.updateFolder(
+			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(),
+			parentFolder.getFolderId(), parentFolder.getParentFolderId(),
+			parentFolder.getName(), parentFolder.getDescription(),
+			parentDDMStructureIds,
+			JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW,
+			false, serviceContext);
+
+		Assert.assertEquals(
+			JournalFolderConstants.RESTRICTION_TYPE_DDM_STRUCTURES_AND_WORKFLOW,
+			parentFolder.getRestrictionType());
+	}
+
+	@Test
 	public void testGetInheritedWorkflowFolderId() throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
