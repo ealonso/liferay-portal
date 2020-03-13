@@ -42,8 +42,9 @@ if (ddmStructure != null) {
 <aui:form cssClass="edit-article-form" enctype="multipart/form-data" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "saveDDMStructure();" %>'>
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="groupId" type="hidden" value="<%= groupId %>" />
+	<aui:input name="dataDefinition" type="hidden" />
+	<aui:input name="dataLayout" type="hidden" />
 	<aui:input name="ddmStructureId" type="hidden" value="<%= journalEditDDMStructuresDisplayContext.getDDMStructureId() %>" />
-	<aui:input name="definition" type="hidden" />
 	<aui:input name="indexable" type="hidden" value="<%= journalEditDDMStructuresDisplayContext.isStructureFieldIndexableEnable() %>" />
 
 	<aui:model-context bean="<%= ddmStructure %>" model="<%= DDMStructure.class %>" />
@@ -235,21 +236,24 @@ if (ddmStructure != null) {
 			var description = <portlet:namespace />getInputLocalizedValues(
 				'description'
 			);
+			var formData = dataLayoutBuilder.getFormData();
 
-			dataLayoutBuilder
-				.save({
-					dataDefinition: {
-						description: description,
-						name: name,
-					},
-					dataLayout: {
-						description: description,
-						name: name,
-					},
-				})
-				.then(function(dataLayout) {
-					Liferay.Util.navigate('<%= HtmlUtil.escapeJS(redirect) %>');
-				});
+			var dataDefinition = formData.definition;
+
+			dataDefinition.description = description;
+			dataDefinition.name = name;
+
+			var dataLayout = formData.layout;
+
+			dataLayout.description = description;
+			dataLayout.name = name;
+
+			Liferay.Util.postForm(document.<portlet:namespace />fm, {
+				data: {
+					dataDefinition: JSON.stringify(dataDefinition),
+					dataLayout: JSON.stringify(dataLayout),
+				},
+			});
 		});
 	}
 </aui:script>
