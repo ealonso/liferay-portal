@@ -17,6 +17,7 @@ import ClayTabs from '@clayui/tabs';
 import React, {useState} from 'react';
 
 import CodeMirrorEditor from './CodeMirrorEditor';
+import FragmentsPreview from './FragmentsPreview';
 
 const FragmentEditor = ({
 	allowedStatus = {
@@ -28,13 +29,19 @@ const FragmentEditor = ({
 	initialConfiguration,
 	initialHTML,
 	initialJS,
+	namespace,
 	propagationEnabled,
 	readOnly,
 	status,
+	urls,
 }) => {
 	const [activeTabKeyValue, setActiveTabKeyValue] = useState(0);
 	const [isCacheable, setIsCacheable] = useState(cacheable);
 	const [isSaving, setIsSaving] = useState(false);
+	const [configuration, setConfiguration] = useState(initialConfiguration);
+	const [css, setCss] = useState(initialCSS);
+	const [html, setHtml] = useState(initialHTML);
+	const [js, setJs] = useState(initialJS);
 
 	const handleSaveButtonClick = () => {
 		setIsSaving(true);
@@ -177,6 +184,7 @@ const FragmentEditor = ({
 							<CodeMirrorEditor
 								content={initialHTML}
 								mode="html"
+								onChange={setHtml}
 								readOnly={readOnly}
 							/>
 						</div>
@@ -185,6 +193,7 @@ const FragmentEditor = ({
 							<CodeMirrorEditor
 								content={initialCSS}
 								mode="css"
+								onChange={setCss}
 								readOnly={readOnly}
 							/>
 						</div>
@@ -201,9 +210,19 @@ const FragmentEditor = ({
 								codeHeaderText="function(fragmentElement, configuration) {"
 								content={initialJS}
 								mode="javascript"
+								onChange={setJs}
 								readOnly={readOnly}
 							/>
 						</div>
+
+						<FragmentsPreview
+							configuration={configuration}
+							css={css}
+							html={html}
+							js={js}
+							namespace={namespace}
+							urls={urls}
+						/>
 					</div>
 				</ClayTabs.TabPane>
 
@@ -212,6 +231,7 @@ const FragmentEditor = ({
 						<CodeMirrorEditor
 							content={initialConfiguration}
 							mode="json"
+							onChange={setConfiguration}
 							readOnly={readOnly}
 						/>
 					</div>
@@ -222,6 +242,7 @@ const FragmentEditor = ({
 };
 
 export default function({
+	context: {namespace},
 	props: {
 		allowedStatus,
 		cacheable,
@@ -232,6 +253,7 @@ export default function({
 		propagationEnabled,
 		readOnly,
 		status,
+		urls,
 	},
 }) {
 	return (
@@ -242,9 +264,11 @@ export default function({
 			initialCSS={initialCSS}
 			initialHTML={initialHTML}
 			initialJS={initialJS}
+			namespace={namespace}
 			propagationEnabled={propagationEnabled}
 			readOnly={readOnly}
 			status={status}
+			urls={urls}
 		/>
 	);
 }
