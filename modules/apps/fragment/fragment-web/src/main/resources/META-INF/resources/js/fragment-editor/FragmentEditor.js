@@ -14,6 +14,7 @@
 
 import ClayIcon from '@clayui/icon';
 import ClayTabs from '@clayui/tabs';
+import {fetch, openToast} from 'frontend-js-web';
 import React, {useState} from 'react';
 
 import CodeMirrorEditor from './CodeMirrorEditor';
@@ -25,10 +26,13 @@ const FragmentEditor = ({
 		draft: false,
 	},
 	cacheable,
+	fragmentCollectionId,
+	fragmentEntryId,
 	initialCSS,
 	initialConfiguration,
 	initialHTML,
 	initialJS,
+	name,
 	namespace,
 	propagationEnabled,
 	readOnly,
@@ -43,8 +47,57 @@ const FragmentEditor = ({
 	const [html, setHtml] = useState(initialHTML);
 	const [js, setJs] = useState(initialJS);
 
-	const handleSaveButtonClick = () => {
+	const handleSaveButtonClick = event => {
+		const status = event.currentTarget.value;
+
 		setIsSaving(true);
+
+		const formData = new FormData();
+
+		formData.append(`${namespace}cacheable`, isCacheable);
+		formData.append(`${namespace}configurationContent`, configuration);
+		formData.append(`${namespace}cssContent`, css);
+		formData.append(`${namespace}htmlContent`, html);
+		formData.append(
+			`${namespace}fragmentCollectionId`,
+			fragmentCollectionId
+		);
+		formData.append(`${namespace}fragmentEntryId`, fragmentEntryId);
+		formData.append(`${namespace}jsContent`, js);
+		formData.append(`${namespace}name`, name);
+		formData.append(`${namespace}status`, status);
+
+		fetch(urls.edit, {
+			body: formData,
+			method: 'POST',
+		})
+			.then(response => response.json())
+			.then(response => {
+				if (response.error) {
+					throw response.error;
+				}
+
+				return response;
+			})
+			.then(response => {
+				const redirectURL = response.redirect || this.urls.redirect;
+
+				Liferay.Util.navigate(redirectURL);
+			})
+			.catch(error => {
+				setIsSaving(false);
+
+				const message =
+					typeof error === 'string'
+						? error
+						: Liferay.Language.get('error');
+
+				openToast({
+					message,
+					title: Liferay.Language.get('error'),
+					type: 'danger',
+				});
+			});
 	};
 
 	return (
@@ -246,10 +299,13 @@ export default function({
 	props: {
 		allowedStatus,
 		cacheable,
+		fragmentCollectionId,
+		fragmentEntryId,
 		initialCSS,
 		initialConfiguration,
 		initialHTML,
 		initialJS,
+		name,
 		propagationEnabled,
 		readOnly,
 		status,
@@ -260,10 +316,13 @@ export default function({
 		<FragmentEditor
 			allowedStatus={allowedStatus}
 			cacheable={cacheable}
+			fragmentCollectionId={fragmentCollectionId}
+			fragmentEntryId={fragmentEntryId}
 			initialConfiguration={initialConfiguration}
 			initialCSS={initialCSS}
 			initialHTML={initialHTML}
 			initialJS={initialJS}
+			name={name}
 			namespace={namespace}
 			propagationEnabled={propagationEnabled}
 			readOnly={readOnly}
