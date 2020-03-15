@@ -355,26 +355,23 @@ public class FjordSiteInitializer implements SiteInitializer {
 		return serviceContext;
 	}
 
-	private File _generateLayoutPageTemplatesZipFile() throws Exception {
+	private File _generateZipFile(String path, String[] fileExtensions)
+		throws Exception {
+
 		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
 
-		Enumeration<URL> enumeration = _bundle.findEntries(
-			_PATH + "/page_templates", "*.json", true);
+		Enumeration<URL> enumeration = null;
 
 		try {
-			while (enumeration.hasMoreElements()) {
-				URL url = enumeration.nextElement();
+			for (String fileExtension : fileExtensions) {
+				enumeration = _bundle.findEntries(
+					_PATH + CharPool.SLASH + path, fileExtension, true);
 
-				_addZipWriterEntry(zipWriter, url);
-			}
+				while (enumeration.hasMoreElements()) {
+					URL url = enumeration.nextElement();
 
-			enumeration = _bundle.findEntries(
-				_PATH + "/page_templates", "*.jpg", true);
-
-			while (enumeration.hasMoreElements()) {
-				URL url = enumeration.nextElement();
-
-				_addZipWriterEntry(zipWriter, url);
+					_addZipWriterEntry(zipWriter, url);
+				}
 			}
 
 			zipWriter.finish();
@@ -446,7 +443,8 @@ public class FjordSiteInitializer implements SiteInitializer {
 	private void _importLayoutPageTemplateEntries(ServiceContext serviceContext)
 		throws Exception {
 
-		File file = _generateLayoutPageTemplatesZipFile();
+		File file = _generateZipFile(
+			"page_templates", new String[] {"*.jpg", "*.json"});
 
 		_layoutPageTemplatesImporter.importFile(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(), file,
