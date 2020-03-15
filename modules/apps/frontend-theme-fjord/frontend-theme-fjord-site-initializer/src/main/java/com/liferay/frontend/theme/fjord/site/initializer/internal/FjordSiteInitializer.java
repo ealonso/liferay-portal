@@ -16,6 +16,7 @@ package com.liferay.frontend.theme.fjord.site.initializer.internal;
 
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentPortletKeys;
+import com.liferay.fragment.importer.FragmentsImporter;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.service.FragmentCollectionLocalService;
@@ -119,47 +120,7 @@ public class FjordSiteInitializer implements SiteInitializer {
 			_updateLogo(serviceContext);
 			_updateLookAndFeel(serviceContext);
 
-			FragmentCollection fragmentCollection = _addFragmentCollection(
-				serviceContext);
-
-			_addFileEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				fragmentCollection.getResourcesFolderId(), serviceContext);
-
-			List<FragmentEntry> homeFragmentEntries = _addFragmentEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				_PATH + "/fragments/home", serviceContext);
-
-			List<FragmentEntry> downloadFragmentEntries = _addFragmentEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				_PATH + "/fragments/download", serviceContext);
-
-			homeFragmentEntries.addAll(downloadFragmentEntries);
-
-			List<FragmentEntry> featuresFragmentEntries = _addFragmentEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				_PATH + "/fragments/features", serviceContext);
-
-			homeFragmentEntries.addAll(featuresFragmentEntries);
-
-			List<FragmentEntry> headerFragmentEntries = _addFragmentEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				_PATH + "/fragments/common/header", serviceContext);
-
-			FragmentEntry headerFullscreenFragmentEntry = _getFragmentEntry(
-				headerFragmentEntries, "Header");
-
-			downloadFragmentEntries.add(0, headerFullscreenFragmentEntry);
-			featuresFragmentEntries.add(0, headerFullscreenFragmentEntry);
-			homeFragmentEntries.add(0, headerFullscreenFragmentEntry);
-
-			List<FragmentEntry> footerFragmentEntries = _addFragmentEntries(
-				fragmentCollection.getFragmentCollectionId(),
-				_PATH + "/fragments/common/footer", serviceContext);
-
-			downloadFragmentEntries.addAll(footerFragmentEntries);
-			featuresFragmentEntries.addAll(footerFragmentEntries);
-			homeFragmentEntries.addAll(footerFragmentEntries);
+			_importFragmentEntries(serviceContext);
 
 			_importLayoutPageTemplateEntries(serviceContext);
 
@@ -440,6 +401,18 @@ public class FjordSiteInitializer implements SiteInitializer {
 		return fileEntry.getFileEntryId();
 	}
 
+	private void _importFragmentEntries(ServiceContext serviceContext)
+		throws Exception {
+
+		File file = _generateZipFile(
+			"fragments",
+			new String[] {"*.css", "*.html", "*.js", "*.jpg", "*.json"});
+
+		_fragmentsImporter.importFile(
+			serviceContext.getUserId(), serviceContext.getScopeGroupId(), 0,
+			file, false);
+	}
+
 	private void _importLayoutPageTemplateEntries(ServiceContext serviceContext)
 		throws Exception {
 
@@ -504,6 +477,9 @@ public class FjordSiteInitializer implements SiteInitializer {
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
+
+	@Reference
+	private FragmentsImporter _fragmentsImporter;
 
 	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;
