@@ -14,7 +14,11 @@
 
 import {ClayButtonWithIcon} from '@clayui/button';
 import classNames from 'classnames';
-import {useIsMounted, usePrevious} from 'frontend-js-react-web';
+import {
+	useEventListener,
+	useIsMounted,
+	usePrevious,
+} from 'frontend-js-react-web';
 import {cancelDebounce, debounce, fetch} from 'frontend-js-web';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
@@ -49,6 +53,11 @@ const PREVIEW_SIZES = [
 	'mobile-portrait',
 	'full-size',
 ];
+
+const stopEventPropagation = event => {
+	event.preventDefault();
+	event.stopPropagation();
+};
 
 const FragmentsPreview = ({
 	configuration,
@@ -137,21 +146,17 @@ const FragmentsPreview = ({
 		) {
 			cancelDebounce(previousUpdatePreviewSetyles);
 			updatePreviewStyles();
-			window.removeEventListener('resize', updatePreviewStyles);
-			window.addEventListener('resize', updatePreviewStyles);
 		}
 	}, [previousUpdatePreviewSetyles, updatePreviewStyles]);
 
-	useEffect(() => {
-		iframeRef.current.contentWindow.addEventListener(
-			'click',
-			event => {
-				event.preventDefault();
-				event.stopPropagation();
-			},
-			true
-		);
-	}, [iframeRef]);
+	useEventListener(
+		'click',
+		stopEventPropagation,
+		true,
+		iframeRef.current && iframeRef.current.contentWindow
+	);
+
+	useEventListener('resize', updatePreviewStyles, true, window);
 
 	return (
 		<div class="fragment-preview" ref={ref}>
