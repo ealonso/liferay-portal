@@ -21,23 +21,25 @@ import CodeMirrorEditor from './CodeMirrorEditor';
 import FragmentsPreview from './FragmentsPreview';
 
 const FragmentEditor = ({
-	allowedStatus = {
-		approved: false,
-		draft: false,
+	context: {namespace},
+	props: {
+		allowedStatus = {
+			approved: false,
+			draft: false,
+		},
+		cacheable,
+		fragmentCollectionId,
+		fragmentEntryId,
+		initialCSS,
+		initialConfiguration,
+		initialHTML,
+		initialJS,
+		name,
+		propagationEnabled,
+		readOnly,
+		status,
+		urls,
 	},
-	cacheable,
-	fragmentCollectionId,
-	fragmentEntryId,
-	initialCSS,
-	initialConfiguration,
-	initialHTML,
-	initialJS,
-	name,
-	namespace,
-	propagationEnabled,
-	readOnly,
-	status,
-	urls,
 }) => {
 	const [activeTabKeyValue, setActiveTabKeyValue] = useState(0);
 	const [isCacheable, setIsCacheable] = useState(cacheable);
@@ -294,40 +296,4 @@ const FragmentEditor = ({
 	);
 };
 
-export default function({
-	context: {namespace},
-	props: {
-		allowedStatus,
-		cacheable,
-		fragmentCollectionId,
-		fragmentEntryId,
-		initialCSS,
-		initialConfiguration,
-		initialHTML,
-		initialJS,
-		name,
-		propagationEnabled,
-		readOnly,
-		status,
-		urls,
-	},
-}) {
-	return (
-		<FragmentEditor
-			allowedStatus={allowedStatus}
-			cacheable={cacheable}
-			fragmentCollectionId={fragmentCollectionId}
-			fragmentEntryId={fragmentEntryId}
-			initialConfiguration={initialConfiguration}
-			initialCSS={initialCSS}
-			initialHTML={initialHTML}
-			initialJS={initialJS}
-			name={name}
-			namespace={namespace}
-			propagationEnabled={propagationEnabled}
-			readOnly={readOnly}
-			status={status}
-			urls={urls}
-		/>
-	);
-}
+export default FragmentEditor;
