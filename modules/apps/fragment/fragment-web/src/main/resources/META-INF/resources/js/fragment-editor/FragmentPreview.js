@@ -130,7 +130,7 @@ const FragmentPreview = ({
 	);
 
 	const previousUpdatePreview = usePrevious(updatePreview);
-	const previousUpdatePreviewSetyles = usePrevious(updatePreviewStyles);
+	const previousUpdatePreviewStyles = usePrevious(updatePreviewStyles);
 
 	useEffect(() => {
 		if (previousUpdatePreview && previousUpdatePreview !== updatePreview) {
@@ -141,13 +141,13 @@ const FragmentPreview = ({
 
 	useEffect(() => {
 		if (
-			previousUpdatePreviewSetyles &&
-			previousUpdatePreviewSetyles !== updatePreviewStyles
+			previousUpdatePreviewStyles &&
+			previousUpdatePreviewStyles !== updatePreviewStyles
 		) {
-			cancelDebounce(previousUpdatePreviewSetyles);
+			cancelDebounce(previousUpdatePreviewStyles);
 			updatePreviewStyles();
 		}
-	}, [previousUpdatePreviewSetyles, updatePreviewStyles]);
+	}, [previousUpdatePreviewStyles, updatePreviewStyles]);
 
 	useEventListener(
 		'click',
