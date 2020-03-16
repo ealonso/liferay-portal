@@ -140,7 +140,23 @@ const CodeMirrorEditor = ({
 
 			editor.current = codeMirror;
 		}
-	}, [mode, onChange, content, readOnly, ref]);
+	}, [ref]); // eslint-disable-line
+
+	useEffect(() => {
+		if (editor.current) {
+			editor.current.setOption('mode', {
+				globalVars: true,
+				name: MODES[mode].type,
+			});
+			editor.current.setOption('readOnly', readOnly);
+		}
+	}, [mode, readOnly]);
+
+	useEffect(() => {
+		if (editor.current) {
+			editor.current.setValue(content);
+		}
+	}, [content]);
 
 	return (
 		<>
