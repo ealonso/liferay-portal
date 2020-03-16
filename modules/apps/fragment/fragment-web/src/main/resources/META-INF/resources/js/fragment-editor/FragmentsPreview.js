@@ -14,7 +14,7 @@
 
 import {ClayButtonWithIcon} from '@clayui/button';
 import classNames from 'classnames';
-import {usePrevious} from 'frontend-js-react-web';
+import {useIsMounted, usePrevious} from 'frontend-js-react-web';
 import {cancelDebounce, debounce, fetch} from 'frontend-js-web';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
@@ -65,9 +65,11 @@ const FragmentsPreview = ({
 	const [loading, setLoading] = useState(false);
 	const [previewStyles, setPreviewStyles] = useState({});
 
+	const isMounted = useIsMounted();
+
 	const updatePreview = useCallback(
 		debounce(() => {
-			if (!loading) {
+			if (!loading && isMounted()) {
 				setLoading(true);
 
 				const formData = new FormData();
@@ -83,7 +85,9 @@ const FragmentsPreview = ({
 				})
 					.then(response => response.text())
 					.then(response => {
-						setLoading(false);
+						if (isMounted()) {
+							setLoading(false);
+						}
 
 						iframeRef.current.contentWindow.postMessage(
 							JSON.stringify({data: response}),

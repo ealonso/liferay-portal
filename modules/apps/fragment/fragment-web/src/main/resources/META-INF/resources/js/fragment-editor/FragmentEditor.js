@@ -14,6 +14,7 @@
 
 import ClayIcon from '@clayui/icon';
 import ClayTabs from '@clayui/tabs';
+import {useIsMounted} from 'frontend-js-react-web';
 import {fetch, openToast} from 'frontend-js-web';
 import React, {useState} from 'react';
 
@@ -48,6 +49,8 @@ const FragmentEditor = ({
 	const [css, setCss] = useState(initialCSS);
 	const [html, setHtml] = useState(initialHTML);
 	const [js, setJs] = useState(initialJS);
+
+	const isMounted = useIsMounted();
 
 	const handleSaveButtonClick = event => {
 		const status = event.currentTarget.value;
@@ -87,7 +90,9 @@ const FragmentEditor = ({
 				Liferay.Util.navigate(redirectURL);
 			})
 			.catch(error => {
-				setIsSaving(false);
+				if (isMounted()) {
+					setIsSaving(false);
+				}
 
 				const message =
 					typeof error === 'string'
