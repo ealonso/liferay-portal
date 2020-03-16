@@ -59,7 +59,7 @@ const stopEventPropagation = event => {
 	event.stopPropagation();
 };
 
-const FragmentsPreview = ({
+const FragmentPreview = ({
 	configuration,
 	css,
 	html,
@@ -203,4 +203,4 @@ const FragmentsPreview = ({
 	);
 };
 
-export default FragmentsPreview;
+export default FragmentPreview;

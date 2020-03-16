@@ -19,7 +19,7 @@ import {fetch, openToast} from 'frontend-js-web';
 import React, {useState} from 'react';
 
 import CodeMirrorEditor from './CodeMirrorEditor';
-import FragmentsPreview from './FragmentsPreview';
+import FragmentPreview from './FragmentPreview';
 
 const FragmentEditor = ({
 	context: {namespace},
@@ -275,7 +275,7 @@ const FragmentEditor = ({
 							/>
 						</div>
 
-						<FragmentsPreview
+						<FragmentPreview
 							configuration={configuration}
 							css={css}
 							html={html}
