@@ -52,8 +52,6 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -154,9 +152,6 @@ public class FragmentPortlet extends MVCPortlet {
 			FragmentWebKeys.SYSTEM_FRAGMENT_COLLECTIONS,
 			_fragmentCollectionService.getFragmentCollections(
 				CompanyConstants.SYSTEM));
-
-		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
-			renderRequest);
 
 		renderRequest.setAttribute(
 			FragmentWebKeys.FRAGMENT_EDITOR_TYPE,
