@@ -65,6 +65,38 @@ const MODES = {
 		type: 'text/css',
 	},
 	html: {
+		hint: (cm, options) => {
+			const {customAutocompleteData} = options;
+
+			const htmlCompletion = CodeMirror.hint.html(cm, options);
+
+			const cursor = cm.getCursor();
+			const token = cm.getTokenAt(cursor);
+
+			const start = token.type === 'tag' ? token.start - 1 : token.start;
+
+			//Get only the part of the tag its being written
+			const content = cm.getLine(cursor.line).slice(start, token.end);
+
+			const results = [];
+
+			customAutocompleteData.forEach(item => {
+				const displayText = item.name;
+				const text = item.content;
+
+				if (text.startsWith(content)) {
+					results.push({
+						displayText,
+						text,
+					});
+				}
+			});
+
+			return {
+				...htmlCompletion,
+				list: [...htmlCompletion.list, ...results],
+			};
+		},
 		name: 'HTML',
 		type: 'text/html',
 	},
@@ -101,6 +133,7 @@ const FixedText = ({helpText, text = ''}) => {
 };
 
 const CodeMirrorEditor = ({
+	customAutocompleteData = [],
 	onChange = noop,
 	mode = 'html',
 	codeFooterText,
@@ -122,6 +155,10 @@ const CodeMirrorEditor = ({
 				},
 				foldGutter: true,
 				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+				hintOptions: {
+					customAutocompleteData,
+					hint: MODES[mode].hint,
+				},
 				indentWithTabs: true,
 				inputStyle: 'contenteditable',
 				lineNumbers: true,
@@ -136,6 +173,17 @@ const CodeMirrorEditor = ({
 
 			codeMirror.on('change', cm => {
 				onChange(cm.getValue());
+			});
+
+			codeMirror.on('keyup', (cm, event) => {
+				if (
+					!cm.state.completionActive &&
+					event.keyCode != 13 &&
+					event.keyCode != 32 &&
+					event.keyCode != 8
+				) {
+					codeMirror.showHint();
+				}
 			});
 
 			editor.current = codeMirror;

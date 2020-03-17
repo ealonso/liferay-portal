@@ -16,7 +16,7 @@ import ClayIcon from '@clayui/icon';
 import ClayTabs from '@clayui/tabs';
 import {useIsMounted} from 'frontend-js-react-web';
 import {fetch, openToast} from 'frontend-js-web';
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 
 import CodeMirrorEditor from './CodeMirrorEditor';
 import FragmentPreview from './FragmentPreview';
@@ -28,6 +28,9 @@ const FragmentEditor = ({
 			approved: false,
 			draft: false,
 		},
+		autocompleteTags = [],
+		freeMarkerTaglibs = [],
+		freeMarkerVariables = [],
 		cacheable,
 		fragmentCollectionId,
 		fragmentEntryId,
@@ -49,6 +52,26 @@ const FragmentEditor = ({
 	const [css, setCss] = useState(initialCSS);
 	const [html, setHtml] = useState(initialHTML);
 	const [js, setJs] = useState(initialJS);
+
+	const htmlEditorAutocompleteData = useMemo(() => {
+		const data = [...autocompleteTags];
+
+		freeMarkerTaglibs.forEach(item => {
+			data.push({
+				content: '[@' + item,
+				name: item,
+			});
+		});
+
+		freeMarkerVariables.forEach(item => {
+			data.push({
+				content: '${' + item,
+				name: item,
+			});
+		});
+
+		return data;
+	}, [autocompleteTags, freeMarkerTaglibs, freeMarkerVariables]);
 
 	const isMounted = useIsMounted();
 
@@ -243,6 +266,9 @@ const FragmentEditor = ({
 						<div class="source-editor html">
 							<CodeMirrorEditor
 								content={initialHTML}
+								customAutocompleteData={
+									htmlEditorAutocompleteData
+								}
 								mode="html"
 								onChange={setHtml}
 								readOnly={readOnly}
