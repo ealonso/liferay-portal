@@ -57,7 +57,24 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/xml/xml';
 import ClayIcon from '@clayui/icon';
 import CodeMirror from 'codemirror';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
+
+const AUTOCOMPLETE_EXCLUDED_KEY_CODES = new Set(
+	Object.values({
+		ALT: 18,
+		ARROW_DOWN: 40,
+		ARROW_LEFT: 37,
+		ARROW_RIGHT: 39,
+		ARROW_UP: 38,
+		BACKSPACE: 8,
+		CONTROL: 17,
+		ESCAPE: 27,
+		META: 91,
+		RETURN: 13,
+		SHIFT: 16,
+		SPACE: 32,
+	})
+);
 
 const MODES = {
 	css: {
@@ -66,36 +83,74 @@ const MODES = {
 	},
 	html: {
 		hint: (cm, options) => {
-			const {customAutocompleteData} = options;
-
-			const htmlCompletion = CodeMirror.hint.html(cm, options);
+			const {
+				customEntities,
+				customEntitiesSymbolsRegex,
+				customTags,
+			} = options;
 
 			const cursor = cm.getCursor();
 			const token = cm.getTokenAt(cursor);
 
-			const start = token.type === 'tag' ? token.start - 1 : token.start;
+			let htmlCompletion;
 
-			//Get only the part of the tag its being written
-			const content = cm.getLine(cursor.line).slice(start, token.end);
+			if (token.type) {
+				const content = token.string;
 
-			const results = [];
+				htmlCompletion = CodeMirror.hint.html(cm, options);
 
-			customAutocompleteData.forEach(item => {
-				const displayText = item.name;
-				const text = item.content;
-
-				if (text.startsWith(content)) {
-					results.push({
-						displayText,
-						text,
-					});
+				if (!htmlCompletion) {
+					return;
 				}
-			});
 
-			return {
-				...htmlCompletion,
-				list: [...htmlCompletion.list, ...results],
-			};
+				const resultSet = new Set(htmlCompletion.list);
+
+				customTags.forEach(item => {
+					if (
+						item.name.startsWith(content) &&
+						!resultSet.has(item.content)
+					) {
+						resultSet.add({
+							displayText: item.name,
+							text: item.content,
+						});
+					}
+				});
+
+				return {
+					...htmlCompletion,
+					list: Array.from(resultSet),
+				};
+			}
+			else if (customEntities && customEntitiesSymbolsRegex) {
+				const match = cm
+					.getLine(cursor.line)
+					.slice(0, cursor.ch)
+					.match(new RegExp(customEntitiesSymbolsRegex));
+
+				if (!match) {
+					return;
+				}
+
+				const [content, start, contentName] = match;
+
+				const customEntity = customEntities.find(
+					entity => entity.start === start
+				);
+
+				const results = customEntity.content
+					.filter(element => element.startsWith(contentName))
+					.map(element => `${start}${element}`);
+
+				return {
+					from: CodeMirror.Pos(
+						cursor.line,
+						cursor.ch - content.length
+					),
+					list: results,
+					to: CodeMirror.Pos(cursor.line, cursor.ch),
+				};
+			}
 		},
 		name: 'HTML',
 		type: 'text/html',
@@ -109,6 +164,8 @@ const MODES = {
 		type: 'application/json',
 	},
 };
+
+const escapeChars = string => string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
 
 const noop = () => {};
 
@@ -133,7 +190,8 @@ const FixedText = ({helpText, text = ''}) => {
 };
 
 const CodeMirrorEditor = ({
-	customAutocompleteData = [],
+	customEntities,
+	customTags,
 	onChange = noop,
 	mode = 'html',
 	codeFooterText,
@@ -144,6 +202,22 @@ const CodeMirrorEditor = ({
 }) => {
 	const editor = useRef();
 	const ref = useRef();
+
+	const customEntitiesSymbolsRegex = useMemo(() => {
+		if (!customEntities) {
+			return;
+		}
+
+		const start = `(${customEntities
+			.map(entity => escapeChars(entity.start))
+			.join('|')})`;
+
+		const end = `([^\\s${customEntities
+			.map(entity => escapeChars(entity.end))
+			.join()}]*)$`;
+
+		return `${start}${end}`;
+	}, [customEntities]);
 
 	useEffect(() => {
 		if (ref.current) {
@@ -156,7 +230,10 @@ const CodeMirrorEditor = ({
 				foldGutter: true,
 				gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
 				hintOptions: {
-					customAutocompleteData,
+					completeSingle: false,
+					customEntities,
+					customEntitiesSymbolsRegex,
+					customTags,
 					hint: MODES[mode].hint,
 				},
 				indentWithTabs: true,
@@ -178,9 +255,7 @@ const CodeMirrorEditor = ({
 			codeMirror.on('keyup', (cm, event) => {
 				if (
 					!cm.state.completionActive &&
-					event.keyCode != 13 &&
-					event.keyCode != 32 &&
-					event.keyCode != 8
+					!AUTOCOMPLETE_EXCLUDED_KEY_CODES.has(event.keyCode)
 				) {
 					codeMirror.showHint();
 				}
@@ -196,9 +271,23 @@ const CodeMirrorEditor = ({
 				globalVars: true,
 				name: MODES[mode].type,
 			});
+
 			editor.current.setOption('readOnly', readOnly);
+
+			editor.current.setOption('hintOptions', {
+				...editor.current.getOption('hintOptions'),
+				customEntities,
+				customEntitiesSymbolsRegex,
+				customTags,
+			});
 		}
-	}, [mode, readOnly]);
+	}, [
+		customEntities,
+		customEntitiesSymbolsRegex,
+		customTags,
+		mode,
+		readOnly,
+	]);
 
 	useEffect(() => {
 		if (editor.current) {

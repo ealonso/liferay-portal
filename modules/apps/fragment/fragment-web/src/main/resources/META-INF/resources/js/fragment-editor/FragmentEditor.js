@@ -28,9 +28,9 @@ const FragmentEditor = ({
 			approved: false,
 			draft: false,
 		},
-		autocompleteTags = [],
-		freeMarkerTaglibs = [],
-		freeMarkerVariables = [],
+		autocompleteTags,
+		freeMarkerTaglibs = arr,
+		freeMarkerVariables = arr,
 		cacheable,
 		fragmentCollectionId,
 		fragmentEntryId,
@@ -53,25 +53,22 @@ const FragmentEditor = ({
 	const [html, setHtml] = useState(initialHTML);
 	const [js, setJs] = useState(initialJS);
 
-	const htmlEditorAutocompleteData = useMemo(() => {
-		const data = [...autocompleteTags];
+	const htmlEditorCustomEntities = useMemo(
+		() => [
+			{
+				content: freeMarkerTaglibs,
+				end: ']',
+				start: '[@',
+			},
+			{
+				content: freeMarkerVariables,
+				end: '}',
+				start: '${',
+			},
 
-		freeMarkerTaglibs.forEach(item => {
-			data.push({
-				content: '[@' + item,
-				name: item,
-			});
-		});
-
-		freeMarkerVariables.forEach(item => {
-			data.push({
-				content: '${' + item,
-				name: item,
-			});
-		});
-
-		return data;
-	}, [autocompleteTags, freeMarkerTaglibs, freeMarkerVariables]);
+		],
+		[freeMarkerTaglibs, freeMarkerVariables]
+	);
 
 	const isMounted = useIsMounted();
 
@@ -266,9 +263,8 @@ const FragmentEditor = ({
 						<div class="source-editor html">
 							<CodeMirrorEditor
 								content={initialHTML}
-								customAutocompleteData={
-									htmlEditorAutocompleteData
-								}
+								customEntities={htmlEditorCustomEntities}
+								customTags={autocompleteTags}
 								mode="html"
 								onChange={setHtml}
 								readOnly={readOnly}
