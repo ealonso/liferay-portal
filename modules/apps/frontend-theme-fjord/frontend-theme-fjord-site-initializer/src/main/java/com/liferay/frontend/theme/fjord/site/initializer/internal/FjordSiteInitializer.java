@@ -42,18 +42,14 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.kernel.zip.ZipWriter;
-import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.site.exception.InitializationException;
 import com.liferay.site.initializer.SiteInitializer;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -175,16 +171,6 @@ public class FjordSiteInitializer implements SiteInitializer {
 			});
 	}
 
-	private void _addZipWriterEntry(ZipWriter zipWriter, URL url)
-		throws IOException {
-
-		String entryPath = url.getPath();
-
-		String zipPath = StringUtil.removeSubstring(entryPath, _PATH);
-
-		zipWriter.addEntry(zipPath, url.openStream());
-	}
-
 	private void _copyLayout(Layout layout) throws Exception {
 		Layout draftLayout = _layoutLocalService.fetchLayout(
 			_portal.getClassNameId(Layout.class), layout.getPlid());
@@ -215,40 +201,12 @@ public class FjordSiteInitializer implements SiteInitializer {
 		return serviceContext;
 	}
 
-	private File _generateZipFile(String path, String[] fileExtensions)
-		throws Exception {
-
-		ZipWriter zipWriter = ZipWriterFactoryUtil.getZipWriter();
-
-		Enumeration<URL> enumeration = null;
-
-		try {
-			for (String fileExtension : fileExtensions) {
-				enumeration = _bundle.findEntries(
-					_PATH + CharPool.SLASH + path, fileExtension, true);
-
-				while (enumeration.hasMoreElements()) {
-					URL url = enumeration.nextElement();
-
-					_addZipWriterEntry(zipWriter, url);
-				}
-			}
-
-			zipWriter.finish();
-
-			return zipWriter.getFile();
-		}
-		catch (Exception exception) {
-			throw new Exception(exception);
-		}
-	}
-
 	private void _importFragmentEntries(ServiceContext serviceContext)
 		throws Exception {
 
-		File file = _generateZipFile(
-			"fragments",
-			new String[] {"*.css", "*.html", "*.js", "*.jpg", "*.json"});
+		URL url = _bundle.getEntry("/fragments.zip");
+
+		File file = FileUtil.createTempFile(url.openStream());
 
 		_fragmentsImporter.importFile(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(), 0,
@@ -258,8 +216,9 @@ public class FjordSiteInitializer implements SiteInitializer {
 	private void _importLayoutPageTemplateEntries(ServiceContext serviceContext)
 		throws Exception {
 
-		File file = _generateZipFile(
-			"page_templates", new String[] {"*.jpg", "*.json"});
+		URL url = _bundle.getEntry("/page-templates.zip");
+
+		File file = FileUtil.createTempFile(url.openStream());
 
 		_layoutPageTemplatesImporter.importFile(
 			serviceContext.getUserId(), serviceContext.getScopeGroupId(), file,
