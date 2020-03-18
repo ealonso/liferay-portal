@@ -154,6 +154,23 @@ public class EditFragmentEntryDisplayContext {
 
 		freeMarkerVariables.add("configuration");
 
+		List<Map<String, Object>> htmlEditorCustomEntities = new ArrayList<>();
+
+		Map<String, Object> htmlEditorFreeMarkerTaglibs = new HashMap<>();
+
+		htmlEditorFreeMarkerTaglibs.put("content", freeMarkerTaglibs);
+		htmlEditorFreeMarkerTaglibs.put("end", "]");
+		htmlEditorFreeMarkerTaglibs.put("start", "[@");
+
+		Map<String, Object> htmlEditorFreeMarkerVariables = new HashMap<>();
+
+		htmlEditorFreeMarkerVariables.put("content", freeMarkerVariables);
+		htmlEditorFreeMarkerVariables.put("end", "}");
+		htmlEditorFreeMarkerVariables.put("start", "${");
+
+		htmlEditorCustomEntities.add(htmlEditorFreeMarkerTaglibs);
+		htmlEditorCustomEntities.add(htmlEditorFreeMarkerVariables);
+
 		soyContext.put(
 			"allowedStatus", allowedStatusSoyContext
 		).put(
@@ -169,6 +186,8 @@ public class EditFragmentEntryDisplayContext {
 			"freeMarkerTaglibs", freeMarkerTaglibs
 		).put(
 			"freeMarkerVariables", freeMarkerVariables
+		).put(
+			"htmlEditorCustomEntities", htmlEditorCustomEntities
 		).put(
 			"initialConfiguration", _getConfigurationContent()
 		).put(

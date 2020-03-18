@@ -16,7 +16,7 @@ import ClayIcon from '@clayui/icon';
 import ClayTabs from '@clayui/tabs';
 import {useIsMounted} from 'frontend-js-react-web';
 import {fetch, openToast} from 'frontend-js-web';
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 
 import CodeMirrorEditor from './CodeMirrorEditor';
 import FragmentPreview from './FragmentPreview';
@@ -29,11 +29,10 @@ const FragmentEditor = ({
 			draft: false,
 		},
 		autocompleteTags,
-		freeMarkerTaglibs = arr,
-		freeMarkerVariables = arr,
 		cacheable,
 		fragmentCollectionId,
 		fragmentEntryId,
+		htmlEditorCustomEntities,
 		initialCSS,
 		initialConfiguration,
 		initialHTML,
@@ -52,23 +51,6 @@ const FragmentEditor = ({
 	const [css, setCss] = useState(initialCSS);
 	const [html, setHtml] = useState(initialHTML);
 	const [js, setJs] = useState(initialJS);
-
-	const htmlEditorCustomEntities = useMemo(
-		() => [
-			{
-				content: freeMarkerTaglibs,
-				end: ']',
-				start: '[@',
-			},
-			{
-				content: freeMarkerVariables,
-				end: '}',
-				start: '${',
-			},
-
-		],
-		[freeMarkerTaglibs, freeMarkerVariables]
-	);
 
 	const isMounted = useIsMounted();
 
