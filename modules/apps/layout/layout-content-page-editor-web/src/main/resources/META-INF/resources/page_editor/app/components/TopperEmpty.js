@@ -19,6 +19,7 @@ import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../prop-types/index';
+import {useToControlsId} from './ControlsIdConverterContext';
 import useDragAndDrop, {
 	DragDropManagerImpl,
 	TARGET_POSITION,
@@ -29,6 +30,8 @@ export default function TopperEmpty({children, item, layoutData}) {
 		store: {dropTargetItemId, targetPosition},
 	} = useContext(DragDropManagerImpl);
 	const containerRef = useRef(null);
+
+	const toControlsId = useToControlsId();
 
 	const {canDrop, drop, isDragging, isOver} = useDragAndDrop({
 		containerRef,
@@ -53,13 +56,13 @@ export default function TopperEmpty({children, item, layoutData}) {
 			className: classNames(child.props.className, {
 				'drag-over-bottom':
 					targetPosition === TARGET_POSITION.BOTTOM &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				'drag-over-middle':
 					targetPosition === TARGET_POSITION.MIDDLE &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				'drag-over-top':
 					targetPosition === TARGET_POSITION.TOP &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				dragged: isDragging,
 				'page-editor__topper': true,
 			}),

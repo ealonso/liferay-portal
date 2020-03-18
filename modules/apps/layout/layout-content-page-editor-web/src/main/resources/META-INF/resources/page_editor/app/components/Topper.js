@@ -38,6 +38,7 @@ import {
 	useIsSelected,
 	useSelectItem,
 } from './Controls';
+import {useToControlsId} from './ControlsIdConverterContext';
 import hasDropZoneChild from './layout-data-items/hasDropZoneChild';
 import useDragAndDrop, {
 	DragDropManagerImpl,
@@ -77,6 +78,7 @@ export default function Topper({children, item, itemRef, layoutData}) {
 	const isHovered = useIsHovered();
 	const isSelected = useIsSelected();
 	const selectItem = useSelectItem();
+	const toControlsId = useToControlsId();
 
 	const {
 		store: {dropTargetItemId, targetPosition},
@@ -195,13 +197,13 @@ export default function Topper({children, item, itemRef, layoutData}) {
 				active: isSelected(item.itemId),
 				'drag-over-bottom':
 					targetPosition === TARGET_POSITION.BOTTOM &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				'drag-over-middle':
 					targetPosition === TARGET_POSITION.MIDDLE &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				'drag-over-top':
 					targetPosition === TARGET_POSITION.TOP &&
-					dropTargetItemId === item.itemId,
+					dropTargetItemId === toControlsId(item.itemId),
 				dragged: isDragging,
 				hovered: isHovered(item.itemId) || fragmentShouldBeHovered(),
 				'page-editor__topper': true,
