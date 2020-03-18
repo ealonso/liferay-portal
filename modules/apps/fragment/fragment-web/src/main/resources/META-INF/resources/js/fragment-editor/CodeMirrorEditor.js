@@ -92,12 +92,10 @@ const MODES = {
 			const cursor = cm.getCursor();
 			const token = cm.getTokenAt(cursor);
 
-			let htmlCompletion;
-
 			if (token.type) {
 				const content = token.string;
 
-				htmlCompletion = CodeMirror.hint.html(cm, options);
+				const htmlCompletion = CodeMirror.hint.html(cm, options);
 
 				if (!htmlCompletion) {
 					return;
@@ -123,30 +121,32 @@ const MODES = {
 				};
 			}
 			else if (customEntities && customEntitiesSymbolsRegex) {
-				const match = cm
-					.getLine(cursor.line)
-					.slice(0, cursor.ch)
-					.match(new RegExp(customEntitiesSymbolsRegex));
+				const match = (
+					cm
+						.getLine(cursor.line)
+						.slice(0, cursor.ch)
+						.match(new RegExp(customEntitiesSymbolsRegex, 'g')) ||
+					[]
+				).pop();
 
 				if (!match) {
 					return;
 				}
 
-				const [content, start, contentName] = match;
-
-				const customEntity = customEntities.find(
-					entity => entity.start === start
+				const customEntity = customEntities.find(entity =>
+					match.startsWith(entity.start)
 				);
 
+				const content = match.slice(customEntity.start.length);
+
 				const results = customEntity.content
-					.filter(element => element.startsWith(contentName))
-					.map(element => `${start}${element}`);
+					.filter(entityContent => entityContent.startsWith(content))
+					.map(
+						entityContent => `${customEntity.start}${entityContent}`
+					);
 
 				return {
-					from: CodeMirror.Pos(
-						cursor.line,
-						cursor.ch - content.length
-					),
+					from: CodeMirror.Pos(cursor.line, cursor.ch - match.length),
 					list: results,
 					to: CodeMirror.Pos(cursor.line, cursor.ch),
 				};
@@ -208,15 +208,14 @@ const CodeMirrorEditor = ({
 			return;
 		}
 
-		const start = `(${customEntities
-			.map(entity => escapeChars(entity.start))
-			.join('|')})`;
+		return customEntities
+			.map(entity => {
+				const start = escapeChars(entity.start);
+				const end = escapeChars(entity.end);
 
-		const end = `([^\\s${customEntities
-			.map(entity => escapeChars(entity.end))
-			.join()}]*)$`;
-
-		return `${start}${end}`;
+				return `(${start})([^\\s${end}]*)${end}*`;
+			})
+			.join('|');
 	}, [customEntities]);
 
 	useEffect(() => {
