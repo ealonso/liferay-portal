@@ -121,11 +121,10 @@ const MODES = {
 				};
 			}
 			else if (customEntities && customEntitiesSymbolsRegex) {
+				const line = cm.getLine(cursor.line).slice(0, cursor.ch);
+
 				const match = (
-					cm
-						.getLine(cursor.line)
-						.slice(0, cursor.ch)
-						.match(new RegExp(customEntitiesSymbolsRegex, 'g')) ||
+					line.match(new RegExp(customEntitiesSymbolsRegex, 'g')) ||
 					[]
 				).pop();
 
@@ -208,14 +207,14 @@ const CodeMirrorEditor = ({
 			return;
 		}
 
-		return customEntities
+		return `${customEntities
 			.map(entity => {
 				const start = escapeChars(entity.start);
 				const end = escapeChars(entity.end);
 
-				return `(${start})([^\\s${end}]*)${end}*`;
+				return `${start}((?!\\s|${end}).)*(?:${end})?`;
 			})
-			.join('|');
+			.join('|')}$`;
 	}, [customEntities]);
 
 	useEffect(() => {
