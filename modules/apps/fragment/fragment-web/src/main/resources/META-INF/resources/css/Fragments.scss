@@ -1,0 +1,15 @@
+@import 'variables';
+
+.fragment-composition-sticker {
+	background-color: $fragmentCompositionStrickerBackgroundColor;
+	color: $fragmentStrickerIconColor;
+}
+
+.fragment-entry-sticker {
+	background-color: $fragmentEntryStrickerBackgroundColor;
+	color: $fragmentStrickerIconColor;
+
+	.lexicon-icon {
+		font-size: 22px;
+	}
+}
