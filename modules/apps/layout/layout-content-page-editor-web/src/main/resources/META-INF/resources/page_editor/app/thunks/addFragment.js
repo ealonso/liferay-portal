@@ -15,6 +15,7 @@
 import addFragmentEntryLinks from '../actions/addFragmentEntryLinks';
 import {FRAGMENT_TYPES} from '../config/constants/fragmentTypes';
 import FragmentService from '../services/FragmentService';
+import LayoutService from '../services/LayoutService';
 
 export default function addFragment({
 	fragmentEntryKey,
@@ -63,7 +64,41 @@ export default function addFragment({
 		else {
 			FragmentService.addFragmentEntryLink(params).then(
 				({addedItemId, fragmentEntryLink, layoutData}) => {
-					updateState([fragmentEntryLink], layoutData, addedItemId);
+					let l = layoutData;
+					const f = {...fragmentEntryLink, dropZones: {}};
+					const fe = document.createElement('div');
+					fe.innerHTML = f.content;
+
+					console.log(
+						`add ${addedItemId} from fragment ${fragmentEntryKey}`
+					);
+
+					const ps = Array.from(
+						fe.querySelectorAll('lfr-dropzone')
+					).map(dropZoneElement => {
+						return LayoutService.addItem({
+							itemType: 'root',
+							onNetworkStatus: dispatch,
+							parentItemId: addedItemId,
+							position: 0,
+							segmentsExperienceId,
+						}).then(({addedItemId, layoutData}) => {
+							console.log(
+								`add ${addedItemId} for dropZone ${dropZoneElement.getAttribute(
+									'id'
+								)}`
+							);
+
+							l = layoutData;
+							f.dropZones[
+								dropZoneElement.getAttribute('id')
+							] = addedItemId;
+						});
+					});
+
+					Promise.all(ps).then(() => {
+						updateState([f], l, addedItemId);
+					});
 				}
 			);
 		}
