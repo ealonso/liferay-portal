@@ -55,24 +55,12 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 				<c:otherwise>
 
 					<%
-					Map<String, Object> layoutData = new HashMap<>();
-
-					layoutData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
-
-					Map<String, Object> layoutProps = new HashMap<>();
-
-					layoutProps.put("breadcrumbEntries", layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray());
-					layoutProps.put("getItemChildrenURL", layoutsAdminDisplayContext.getLayoutChildrenURL());
-					layoutProps.put("layoutColumns", layoutsAdminDisplayContext.getLayoutColumnsJSONArray());
-					layoutProps.put("moveItemURL", layoutsAdminDisplayContext.getMoveLayoutColumnItemURL());
-					layoutProps.put("searchContainerId", "pages");
-
-					layoutData.put("props", layoutProps);
+					MillerColumnsDisplayContext millerColumnsDisplayContext = new MillerColumnsDisplayContext(layoutsAdminDisplayContext, renderResponse);
 					%>
 
 					<div>
 						<react:component
-							data="<%= layoutData %>"
+							data="<%= millerColumnsDisplayContext.getData() %>"
 							module="js/layout/Layout"
 						/>
 					</div>
