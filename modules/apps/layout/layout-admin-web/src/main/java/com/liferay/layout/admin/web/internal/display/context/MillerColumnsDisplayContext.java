@@ -14,8 +14,9 @@
 
 package com.liferay.layout.admin.web.internal.display.context;
 
+import com.liferay.portal.kernel.util.HashMapBuilder;
+
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.portlet.RenderResponse;
@@ -34,32 +35,28 @@ public class MillerColumnsDisplayContext {
 	}
 
 	public Map<String, Object> getData() throws Exception {
-		Map<String, Object> layoutData = new HashMap<>();
-
-		layoutData.put(
+		return HashMapBuilder.<String, Object>put(
 			"context",
 			Collections.singletonMap(
-				"namespace", _renderResponse.getNamespace()));
-
-		Map<String, Object> layoutProps = new HashMap<>();
-
-		layoutProps.put(
-			"breadcrumbEntries",
-			_layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray());
-		layoutProps.put(
-			"getItemChildrenURL",
-			_layoutsAdminDisplayContext.getLayoutChildrenURL());
-		layoutProps.put(
-			"layoutColumns",
-			_layoutsAdminDisplayContext.getLayoutColumnsJSONArray());
-		layoutProps.put(
-			"moveItemURL",
-			_layoutsAdminDisplayContext.getMoveLayoutColumnItemURL());
-		layoutProps.put("searchContainerId", "pages");
-
-		layoutData.put("props", layoutProps);
-
-		return layoutData;
+				"namespace", _renderResponse.getNamespace())
+		).put(
+			"props",
+			HashMapBuilder.<String, Object>put(
+				"breadcrumbEntries",
+				_layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray()
+			).put(
+				"getItemChildrenURL",
+				_layoutsAdminDisplayContext.getLayoutChildrenURL()
+			).put(
+				"layoutColumns",
+				_layoutsAdminDisplayContext.getLayoutColumnsJSONArray()
+			).put(
+				"moveItemURL",
+				_layoutsAdminDisplayContext.getMoveLayoutColumnItemURL()
+			).put(
+				"searchContainerId", "pages"
+			).build()
+		).build();
 	}
 
 	private final LayoutsAdminDisplayContext _layoutsAdminDisplayContext;
