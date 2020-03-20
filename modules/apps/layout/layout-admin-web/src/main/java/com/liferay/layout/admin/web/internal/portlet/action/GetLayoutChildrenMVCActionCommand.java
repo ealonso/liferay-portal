@@ -21,8 +21,6 @@ import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDispla
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
@@ -87,13 +85,12 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse));
 
-		JSONArray jsonArray = millerColumnsDisplayContext.getLayoutsJSONArray(
-			layout.getLayoutId(), layout.isPrivateLayout());
-
-		JSONObject jsonObject = JSONUtil.put("children", jsonArray);
-
 		JSONPortletResponseUtil.writeJSON(
-			actionRequest, actionResponse, jsonObject);
+			actionRequest, actionResponse,
+			JSONUtil.put(
+				"children",
+				millerColumnsDisplayContext.getLayoutsJSONArray(
+					layout.getLayoutId(), layout.isPrivateLayout())));
 	}
 
 	private volatile LayoutConverterConfiguration _layoutConverterConfiguration;
