@@ -16,7 +16,6 @@ package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
-import com.liferay.layout.admin.web.internal.configuration.LayoutEditorTypeConfiguration;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -60,15 +59,14 @@ public class LayoutsAdminReactDisplayContext
 		LayoutConverterConfiguration layoutConverterConfiguration,
 		LayoutConverterRegistry layoutConverterRegistry,
 		LayoutCopyHelper layoutCopyHelper,
-		LayoutEditorTypeConfiguration layoutEditorTypeConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
 		StagingGroupHelper stagingGroupHelper) {
 
 		super(
 			layoutConverterConfiguration, layoutConverterRegistry,
-			layoutCopyHelper, layoutEditorTypeConfiguration,
-			liferayPortletRequest, liferayPortletResponse, stagingGroupHelper);
+			layoutCopyHelper, liferayPortletRequest, liferayPortletResponse,
+			stagingGroupHelper);
 
 		_liferayPortletResponse = liferayPortletResponse;
 	}
