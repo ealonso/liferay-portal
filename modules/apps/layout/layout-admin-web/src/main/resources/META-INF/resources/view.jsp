@@ -55,7 +55,7 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 				<c:otherwise>
 
 					<%
-					MillerColumnsDisplayContext millerColumnsDisplayContext = new MillerColumnsDisplayContext(layoutsAdminDisplayContext, renderResponse);
+					MillerColumnsDisplayContext millerColumnsDisplayContext = new MillerColumnsDisplayContext(layoutsAdminDisplayContext, liferayPortletRequest, liferayPortletResponse);
 					%>
 
 					<div>
