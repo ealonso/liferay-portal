@@ -20,7 +20,6 @@ import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
-import com.liferay.layout.admin.web.internal.configuration.LayoutEditorTypeConfiguration;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminReactDisplayContext;
@@ -85,10 +84,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Jorge Ferrer
  */
 @Component(
-	configurationPid = {
-		"com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration",
-		"com.liferay.layout.admin.web.internal.configuration.LayoutEditorTypeConfiguration"
-	},
+	configurationPid = "com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration",
 	immediate = true,
 	property = {
 		"com.liferay.portlet.add-default-resource=true",
@@ -133,9 +129,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 	protected void activate(Map<String, Object> properties) {
 		_layoutConverterConfiguration = ConfigurableUtil.createConfigurable(
 			LayoutConverterConfiguration.class, properties);
-
-		_layoutEditorTypeConfiguration = ConfigurableUtil.createConfigurable(
-			LayoutEditorTypeConfiguration.class, properties);
 	}
 
 	@Override
@@ -192,7 +185,7 @@ public class GroupPagesPortlet extends MVCPortlet {
 				LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_DISPLAY_CONTEXT,
 				new LayoutsAdminDisplayContext(
 					_layoutConverterConfiguration, _layoutConverterRegistry,
-					_layoutCopyHelper, _layoutEditorTypeConfiguration,
+					_layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
 					_stagingGroupHelper));
@@ -201,7 +194,7 @@ public class GroupPagesPortlet extends MVCPortlet {
 					LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT,
 				new LayoutsAdminReactDisplayContext(
 					_layoutConverterConfiguration, _layoutConverterRegistry,
-					_layoutCopyHelper, _layoutEditorTypeConfiguration,
+					_layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
 					_stagingGroupHelper));
@@ -260,9 +253,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;
-
-	private volatile LayoutEditorTypeConfiguration
-		_layoutEditorTypeConfiguration;
 
 	@Reference
 	private LayoutPageTemplateEntryLocalService
