@@ -150,20 +150,50 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 
 	const dispatch = useDispatch();
 
-	const store = useSelector(state => state);
+	const [collection, setCollection] = useState({
+		items: [
+			{
+				authorName: 'authorName1',
+				coverImage: 'https://i.picsum.photos/id/238/200/300.jpg',
+				subtitle: 'subtitle1',
+				title: 'item1',
+			},
+			{
+				authorName: 'authorName2',
+				coverImage: 'https://i.picsum.photos/id/239/200/300.jpg',
+				subtitle: 'subtitle2',
+				title: 'item2',
+			},
+			{
+				authorName: 'authorName3',
+				coverImage: 'https://i.picsum.photos/id/240/200/300.jpg',
+				subtitle: 'subtitle3',
+				title: 'item3',
+			},
+			{
+				authorName: 'authorName4',
+				coverImage: 'https://i.picsum.photos/id/241/200/300.jpg',
+				subtitle: 'subtitle4',
+				title: 'item4',
+			},
+		],
+	});
 
-	const [collection, setCollection] = useState('');
+	// useEffect(() => {
+	// 	CollectionService.getCollectionField({
+	// 		layoutObjectReference: JSON.stringify(item.config.collection),
+	// 		onNetworkStatus: dispatch,
+	// 		store,
+	// 	}).then(response => {
+	// 		setCollection({
+	// 			items: [,],
+	// 		});
+	// 	});
+	// , subtitle: 'subtitle'}, [dispatch, item.config.collection, store]);
+
+	const [collectionFields, setCollectionFields] = useState({});
 
 	useEffect(() => {
-		CollectionService.getCollectionField({
-			layoutObjectReference: JSON.stringify(item.config.collection),
-			onNetworkStatus: dispatch,
-			store,
-		}).then(response => {
-			setCollection(response);
-		});
-	}, [dispatch, item.config.collection, store]);
-
 		if (item.config.collection) {
 			InfoItemService.getAvailableStructureMappingFields({
 				classNameId: item.config.collection.itemType,
@@ -183,7 +213,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 					collection={collection.items}
 					collectionFields={collectionFields}
 					collectionId={item.itemId}
-					collectionLength={collection.length}
+					collectionLength={collection.items.length}
 					numberOfColumns={collectionConfig.numberOfColumns}
 					numberOfItems={collectionConfig.numberOfItems}
 				/>
