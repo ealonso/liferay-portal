@@ -18,6 +18,7 @@ import React, {useState} from 'react';
 
 import {BackgroundImagePropTypes} from '../../../prop-types/index';
 import {EDITABLE_TYPES} from '../../config/constants/editableTypes';
+import isMapped from '../fragment-content/isMapped';
 import {ImageSelector} from './../../../common/components/ImageSelector';
 import MappingSelector from './MappingSelector';
 
@@ -30,11 +31,17 @@ export const ContainerBackgroundImageConfiguration = ({
 	backgroundImage,
 	onValueChange,
 }) => {
-	const [imageSource, setImageSource] = useState(() =>
-		backgroundImage.fieldId || backgroundImage.mappedField
-			? IMAGE_SOURCE.contentMapping
-			: IMAGE_SOURCE.manualSelection
+	const [imageSource, setImageSource] = useState(
+		IMAGE_SOURCE.manualSelection
 	);
+
+	useEffect(() => {
+		setImageSource(
+			isMapped(backgroundImage)
+				? IMAGE_SOURCE.contentMapping
+				: IMAGE_SOURCE.manualSelection
+		);
+	}, [backgroundImage]);
 
 	return (
 		<>
