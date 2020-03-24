@@ -27,6 +27,7 @@ import {
 	useIsActive,
 	useIsHovered,
 } from '../Controls';
+import {useToControlsId} from '../ControlsIdConverterContext';
 import {useEditableDecoration} from './EditableDecorationContext';
 import {EDITABLE_DECORATION_CLASS_NAMES} from './EditableDecorationMask';
 import getAllEditables from './getAllEditables';
@@ -43,6 +44,7 @@ export default function FragmentContentDecoration({
 	const isHovered = useIsHovered();
 	const hoveredItemType = useHoveredItemType();
 	const isActive = useIsActive();
+	const toControlsId = useToControlsId();
 	const languageId = useSelector(state => state.languageId);
 	const prefixedSegmentsExperienceId = useSelector(
 		selectPrefixedSegmentsExperienceId
@@ -52,6 +54,8 @@ export default function FragmentContentDecoration({
 		fragmentEntryLinkId,
 		getEditableElementId(editableElement)
 	);
+
+	const editableUniqueControlsId = toControlsId(editableUniqueId);
 
 	const editableValue = useSelector(state =>
 		createSelectEditableValue(
@@ -129,16 +133,16 @@ export default function FragmentContentDecoration({
 
 	useLayoutEffect(() => {
 		if (className) {
-			registerElement(editableUniqueId, editableElement);
-			updateClassName(editableUniqueId, className);
+			registerElement(editableUniqueControlsId, editableElement);
+			updateClassName(editableUniqueControlsId, className);
 		}
 		else {
-			unregisterElement(editableUniqueId);
+			unregisterElement(editableUniqueControlsId);
 		}
 	}, [
 		className,
 		editableElement,
-		editableUniqueId,
+		editableUniqueControlsId,
 		registerElement,
 		unregisterElement,
 		updateClassName,
@@ -146,9 +150,9 @@ export default function FragmentContentDecoration({
 
 	useLayoutEffect(
 		() => () => {
-			unregisterElement(editableUniqueId);
+			unregisterElement(editableUniqueControlsId);
 		},
-		[editableUniqueId, unregisterElement]
+		[editableUniqueControlsId, unregisterElement]
 	);
 
 	return null;
