@@ -29,12 +29,15 @@ import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
 import {config} from '../config/index';
 import Processors from '../processors/index';
 import {useSelector} from '../store/index';
+import {useGetFieldValue} from './ControlsIdConverterContext';
 import PageEditor from './PageEditor';
 import UnsafeHTML from './UnsafeHTML';
-import isMapped from './fragment-content/isMapped';
-import {Column, Container, Row} from './layout-data-items/index';
+import resolveEditableValue from './fragment-content/resolveEditableValue';
+import {Collection, Column, Container, Row} from './layout-data-items/index';
 
 const LAYOUT_DATA_ITEMS = {
+	[LAYOUT_DATA_ITEM_TYPES.collection]: Collection,
+	[LAYOUT_DATA_ITEM_TYPES.collectionItem]: CollectionItem,
 	[LAYOUT_DATA_ITEM_TYPES.column]: Column,
 	[LAYOUT_DATA_ITEM_TYPES.container]: Container,
 	[LAYOUT_DATA_ITEM_TYPES.dropZone]: DropZoneContainer,
@@ -113,6 +116,10 @@ function Root({children}) {
 	return <div>{children}</div>;
 }
 
+function CollectionItem({children}) {
+	return <div>{children}</div>;
+}
+
 const FragmentContent = React.memo(function FragmentContent({
 	content: defaultContent,
 	editableValues,
@@ -121,6 +128,8 @@ const FragmentContent = React.memo(function FragmentContent({
 	const ref = useRef(null);
 	const isMounted = useIsMounted();
 	const [content, setContent] = useState(defaultContent);
+
+	const getFieldValue = useGetFieldValue();
 
 	useEffect(() => {
 		const element = ref.current;
@@ -159,48 +168,38 @@ const FragmentContent = React.memo(function FragmentContent({
 		).map(editable => {
 			const editableId = editable.dataset.lfrBackgroundImageId;
 
-			const editableValue =
-				editableValues[BACKGROUND_IMAGE_FRAGMENT_ENTRY_PROCESSOR][
-					editableId
-				];
-
-			if (isMapped(editableValue)) {
-				return;
-			}
-
-			const value = editableValue[languageId];
-
-			if (value) {
+			resolveEditableValue(
+				editableValues,
+				editableId,
+				BACKGROUND_IMAGE_FRAGMENT_ENTRY_PROCESSOR,
+				languageId,
+				null,
+				getFieldValue
+			).then(([value]) => {
 				const processor = Processors['background-image'];
 
 				processor.render(editable, value);
-			}
+			});
 		});
 
 		Array.from(element.querySelectorAll('lfr-editable')).forEach(
 			editable => {
 				const editableId = editable.getAttribute('id');
 
-				const editableValue =
-					editableValues[EDITABLE_FRAGMENT_ENTRY_PROCESSOR][
-						editableId
-					];
-
-				if (isMapped(editableValue)) {
-					return;
-				}
-
-				const value = editableValue[languageId];
-
-				const editableConfig = editableValue.config || {};
-
-				if (value && editableConfig) {
+				resolveEditableValue(
+					editableValues,
+					editableId,
+					EDITABLE_FRAGMENT_ENTRY_PROCESSOR,
+					languageId,
+					null,
+					getFieldValue
+				).then(([value, editableConfig]) => {
 					const processor =
 						Processors[editable.getAttribute('type')] ||
 						Processors.fallback;
 
 					processor.render(editable, value, editableConfig);
-				}
+				});
 			}
 		);
 
@@ -209,7 +208,14 @@ const FragmentContent = React.memo(function FragmentContent({
 		return () => {
 			element = null;
 		};
-	}, [defaultContent, content, isMounted, editableValues, languageId]);
+	}, [
+		defaultContent,
+		content,
+		isMounted,
+		editableValues,
+		languageId,
+		getFieldValue,
+	]);
 
 	return (
 		<UnsafeHTML
