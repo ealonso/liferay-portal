@@ -73,15 +73,17 @@ public class RobotsUtil {
 
 		String robotsTxt = GetterUtil.getString(
 			layoutSet.getSettingsProperty(
-				layoutSet.isPrivateLayout() + "-robots.txt"), null);
+				layoutSet.isPrivateLayout() + "-robots.txt"),
+			null);
 
 		if (robotsTxt != null) {
-			robotsTxt =  _replaceWildcards(
+			robotsTxt = _replaceWildcards(
 				robotsTxt, virtualHostname, secure, portalServerPort);
 
 			if (robotsTxt.contains("[$HOST$]") && _log.isWarnEnabled()) {
-				_log.warn("Wildcard [$HOST$] could not be replaced with " +
-					"the actual virtualhost");
+				_log.warn(
+					"Wildcard [$HOST$] could not be replaced with the actual " +
+						"virtualhost");
 			}
 
 			return robotsTxt;
@@ -112,4 +114,5 @@ public class RobotsUtil {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(RobotsUtil.class);
+
 }
