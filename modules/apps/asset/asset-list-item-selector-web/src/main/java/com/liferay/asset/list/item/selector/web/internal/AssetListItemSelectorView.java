@@ -166,6 +166,10 @@ public class AssetListItemSelectorView
 					).put(
 						"classPK", assetListEntry.getAssetListEntryId()
 					).put(
+						"itemType",
+						_portal.getClassNameId(
+							assetListEntry.getAssetEntryType())
+					).put(
 						"title", assetListEntry.getTitle()
 					).toString();
 				}
