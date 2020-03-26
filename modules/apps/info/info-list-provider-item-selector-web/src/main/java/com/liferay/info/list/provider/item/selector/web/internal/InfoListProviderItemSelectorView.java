@@ -167,20 +167,11 @@ public class InfoListProviderItemSelectorView
 
 				@Override
 				public String getSubtitle(Locale locale) {
-					Class<?> clazz = infoListProvider.getClass();
+					String className = _getClassName(infoListProvider);
 
-					Type[] genericInterfaceTypes = clazz.getGenericInterfaces();
-
-					for (Type genericInterfaceType : genericInterfaceTypes) {
-						ParameterizedType parameterizedType =
-							(ParameterizedType)genericInterfaceType;
-
-						Class<?> typeClazz =
-							(Class<?>)
-								parameterizedType.getActualTypeArguments()[0];
-
+					if (Validator.isNotNull(className)) {
 						return ResourceActionsUtil.getModelResource(
-							locale, typeClazz.getName());
+							locale, className);
 					}
 
 					return StringPool.BLANK;
@@ -243,6 +234,24 @@ public class InfoListProviderItemSelectorView
 		@Override
 		public boolean isShowBreadcrumb() {
 			return false;
+		}
+
+		private String _getClassName(InfoListProvider infoListProvider) {
+			Class<?> clazz = infoListProvider.getClass();
+
+			Type[] genericInterfaceTypes = clazz.getGenericInterfaces();
+
+			for (Type genericInterfaceType : genericInterfaceTypes) {
+				ParameterizedType parameterizedType =
+					(ParameterizedType)genericInterfaceType;
+
+				Class<?> typeClazz =
+					(Class<?>)parameterizedType.getActualTypeArguments()[0];
+
+				return typeClazz.getName();
+			}
+
+			return StringPool.BLANK;
 		}
 
 		private final HttpServletRequest _httpServletRequest;
