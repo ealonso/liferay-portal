@@ -21,13 +21,13 @@ import {config} from '../../config/index';
 import createSelectEditableValue from '../../selectors/selectEditableValue';
 import selectPrefixedSegmentsExperienceId from '../../selectors/selectPrefixedSegmentsExperienceId';
 import {useSelector} from '../../store/index';
+import {useToControlsId} from '../CollectionItemContext';
 import {
 	useHoveredItemId,
 	useHoveredItemType,
 	useIsActive,
 	useIsHovered,
 } from '../Controls';
-import {useToControlsId} from '../ControlsIdConverterContext';
 import {useEditableDecoration} from './EditableDecorationContext';
 import {EDITABLE_DECORATION_CLASS_NAMES} from './EditableDecorationMask';
 import getAllEditables from './getAllEditables';

@@ -30,6 +30,7 @@ import selectCanUpdateLayoutContent from '../selectors/selectCanUpdateLayoutCont
 import {useDispatch, useSelector} from '../store/index';
 import deleteItem from '../thunks/deleteItem';
 import moveItem from '../thunks/moveItem';
+import {useToControlsId} from './CollectionItemContext';
 import {
 	useActiveItemId,
 	useHoverItem,
@@ -38,7 +39,6 @@ import {
 	useIsSelected,
 	useSelectItem,
 } from './Controls';
-import {useToControlsId} from './ControlsIdConverterContext';
 import hasDropZoneChild from './layout-data-items/hasDropZoneChild';
 import useDragAndDrop, {
 	DragDropManagerImpl,

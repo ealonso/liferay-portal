@@ -19,7 +19,7 @@ import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../prop-types/index';
-import {useToControlsId} from './ControlsIdConverterContext';
+import {useToControlsId} from './CollectionItemContext';
 import useDragAndDrop, {
 	DragDropManagerImpl,
 	TARGET_POSITION,
