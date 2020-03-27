@@ -16,7 +16,6 @@ import React, {useEffect, useState} from 'react';
 
 import {COLLECTION_LIST_FORMATS} from '../../config/constants/collectionListFormats';
 import CollectionService from '../../services/CollectionService';
-import InfoItemService from '../../services/InfoItemService';
 import {useDispatch, useSelector} from '../../store/index';
 import {CollectionItemContextProvider} from '../CollectionItemContext';
 
@@ -183,9 +182,8 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 
 	useEffect(() => {
 		if (collectionConfig.collection) {
-			InfoItemService.getAvailableStructureMappingFields({
-				classNameId: collectionConfig.collection.itemType,
-				classTypeId: collectionConfig.collection.itemSubtype,
+			CollectionService.getCollectionMappingFields({
+				itemType: collectionConfig.collection.itemType,
 				onNetworkStatus: dispatch,
 			})
 				.then(response => {
