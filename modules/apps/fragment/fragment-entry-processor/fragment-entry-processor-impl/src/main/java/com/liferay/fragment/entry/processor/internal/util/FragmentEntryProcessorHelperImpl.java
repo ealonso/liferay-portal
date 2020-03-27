@@ -74,6 +74,45 @@ public class FragmentEntryProcessorHelperImpl
 	}
 
 	@Override
+	public Object getMappedCollectionValue(
+			JSONObject jsonObject,
+			FragmentEntryProcessorContext fragmentEntryProcessorContext)
+		throws PortalException {
+
+		if (!isMappedCollection(jsonObject)) {
+			return JSONFactoryUtil.createJSONObject();
+		}
+
+		Optional<Object> displayObjectOptional =
+			fragmentEntryProcessorContext.getDisplayObjectOptional();
+
+		if (!displayObjectOptional.isPresent()) {
+			return null;
+		}
+
+		InfoDisplayContributor infoDisplayContributor =
+			_infoDisplayContributorTracker.getInfoDisplayContributor(
+				jsonObject.getString("className"));
+
+		Object fieldValue = infoDisplayContributor.getInfoDisplayFieldValue(
+			displayObjectOptional.get(),
+			jsonObject.getString("collectionFieldId"),
+			fragmentEntryProcessorContext.getLocale());
+
+		if (fieldValue == null) {
+			return null;
+		}
+
+		if (fieldValue instanceof ContentAccessor) {
+			ContentAccessor contentAccessor = (ContentAccessor)fieldValue;
+
+			fieldValue = contentAccessor.getContent();
+		}
+
+		return fieldValue;
+	}
+
+	@Override
 	public Object getMappedValue(
 			JSONObject jsonObject,
 			Map<Long, Map<String, Object>> infoDisplaysFieldValues,
@@ -197,6 +236,17 @@ public class FragmentEntryProcessorHelperImpl
 
 		if ((classNameId > 0) && (classPK > 0) &&
 			Validator.isNotNull(fieldId)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isMappedCollection(JSONObject jsonObject) {
+		if (jsonObject.has("collectionFieldId") &&
+			jsonObject.has("className")) {
 
 			return true;
 		}
