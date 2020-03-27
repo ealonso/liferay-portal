@@ -188,8 +188,8 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 				classTypeId: collectionConfig.collection.itemSubtype,
 				onNetworkStatus: dispatch,
 			})
-				.then(({infoDisplayFields}) => {
-					setCollectionFields(infoDisplayFields);
+				.then(response => {
+					setCollectionFields(response);
 				})
 				.catch(error => {
 					if (process.env.NODE_ENV === 'development') {
