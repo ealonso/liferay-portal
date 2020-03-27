@@ -205,6 +205,14 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 						value, fragmentEntryProcessorContext);
 				}
 			}
+			else if (_fragmentEntryProcessorHelper.isMappedCollection(
+						editableValueJSONObject)) {
+
+				value = String.valueOf(
+					_fragmentEntryProcessorHelper.getMappedCollectionValue(
+						editableValueJSONObject,
+						fragmentEntryProcessorContext));
+			}
 			else {
 				value = _fragmentEntryProcessorHelper.getEditableValue(
 					editableValueJSONObject,
