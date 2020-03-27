@@ -14,7 +14,7 @@
 
 import ClayForm, {ClaySelectWithOption} from '@clayui/form';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {BackgroundImagePropTypes} from '../../../prop-types/index';
 import {EDITABLE_TYPES} from '../../config/constants/editableTypes';
