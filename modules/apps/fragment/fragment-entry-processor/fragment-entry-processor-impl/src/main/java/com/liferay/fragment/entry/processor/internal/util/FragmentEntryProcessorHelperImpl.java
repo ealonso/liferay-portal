@@ -92,7 +92,7 @@ public class FragmentEntryProcessorHelperImpl
 
 		InfoDisplayContributor infoDisplayContributor =
 			_infoDisplayContributorTracker.getInfoDisplayContributor(
-				jsonObject.getString("className"));
+				"com.liferay.journal.model.JournalArticle");
 
 		Object fieldValue = infoDisplayContributor.getInfoDisplayFieldValue(
 			displayObjectOptional.get(),
