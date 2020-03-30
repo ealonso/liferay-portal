@@ -178,6 +178,10 @@ for (String childrenItemId : childrenItemIds) {
 
 			DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
 
+			Object displayObject = request.getAttribute("render_layout_structure.jsp-collectionObject");
+
+			defaultFragmentRendererContext.setDisplayObject(displayObject);
+
 			defaultFragmentRendererContext.setFieldValues(fieldValues);
 			defaultFragmentRendererContext.setLocale(locale);
 			defaultFragmentRendererContext.setMode(mode);
