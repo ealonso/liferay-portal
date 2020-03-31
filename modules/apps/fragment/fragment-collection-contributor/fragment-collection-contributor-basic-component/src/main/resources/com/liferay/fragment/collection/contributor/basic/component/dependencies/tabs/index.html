@@ -16,22 +16,22 @@
 				<div class="container-fluid container-fluid-max-xl">
 					<ul class="navbar-nav">
 						[#list 0..configuration.numberOfTabs-1 as i]
-						<li class="nav-item">
-							<a
-								aria-controls="${i+1}-tab-panel"
-								aria-selected="false"
-								class="nav-link"
-								href="#${i+1}-tab-panel"
-								id="${i+1}-tab"
-								role="tab"
-							>
-								<span class="navbar-text-truncate">
-									<lfr-editable id="${i+1}-title" type="rich-text">
-										Tab ${i+1}
-									</lfr-editable>
-								</span>
-							</a>
-						</li>
+							<li class="nav-item">
+								<a
+									aria-controls="${i+1}-tab-panel"
+									aria-selected="false"
+									class="nav-link"
+									href="#${i+1}-tab-panel"
+									id="${i+1}-tab"
+									role="tab"
+								>
+									<span class="navbar-text-truncate">
+										<lfr-editable id="${i+1}-title" type="rich-text">
+											Tab ${i+1}
+										</lfr-editable>
+									</span>
+								</a>
+							</li>
 						[/#list]
 					</ul>
 				</div>
@@ -41,9 +41,9 @@
 
 	<div class="tab-panel">
 		[#list 0..configuration.numberOfTabs-1 as i]
-		<div aria-labelledby="${i+1}-tab" class="tab-panel-item d-none" id="${i+1}-tab-panel" role="tabpanel" tabindex="0">
-			<lfr-drop-zone id="${i+1}-drop-zone"></lfr-drop-zone>
-		</div>
+			<div aria-labelledby="${i+1}-tab" class="tab-panel-item d-none" id="${i+1}-tab-panel" role="tabpanel" tabindex="0">
+				<lfr-drop-zone id="${i+1}-drop-zone"></lfr-drop-zone>
+			</div>
 		[/#list]
 	</div>
 </div>
