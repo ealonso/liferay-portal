@@ -56,25 +56,11 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 
 					<%
 					LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext = (LayoutsAdminReactDisplayContext)request.getAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT);
-
-					Map<String, Object> layoutData = new HashMap<>();
-
-					layoutData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
-
-					Map<String, Object> layoutProps = new HashMap<>();
-
-					layoutProps.put("breadcrumbEntries", layoutsAdminReactDisplayContext.getBreadcrumbEntriesJSONArray());
-					layoutProps.put("getItemChildrenURL", layoutsAdminReactDisplayContext.getLayoutChildrenURL());
-					layoutProps.put("layoutColumns", layoutsAdminReactDisplayContext.getLayoutColumnsJSONArray());
-					layoutProps.put("moveItemURL", layoutsAdminReactDisplayContext.getMoveLayoutColumnItemURL());
-					layoutProps.put("searchContainerId", "pages");
-
-					layoutData.put("props", layoutProps);
 					%>
 
 					<div>
 						<react:component
-							data="<%= layoutData %>"
+							data="<%= layoutsAdminReactDisplayContext.getLayoutData() %>"
 							module="js/layout/Layout"
 						/>
 					</div>

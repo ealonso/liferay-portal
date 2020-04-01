@@ -43,7 +43,9 @@ import com.liferay.portal.util.LayoutTypeControllerTracker;
 import com.liferay.staging.StagingGroupHelper;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
@@ -122,6 +124,27 @@ public class LayoutsAdminReactDisplayContext
 				selLayout.getLayoutId(), selLayout.isPrivateLayout()));
 
 		return layoutColumnsJSONArray;
+	}
+
+	public Map<String, Object> getLayoutData() throws Exception {
+		Map<String, Object> layoutData = new HashMap<>();
+
+		layoutData.put(
+			"context",
+			Collections.singletonMap(
+				"namespace", _liferayPortletResponse.getNamespace()));
+
+		Map<String, Object> layoutProps = new HashMap<>();
+
+		layoutProps.put("breadcrumbEntries", getBreadcrumbEntriesJSONArray());
+		layoutProps.put("getItemChildrenURL", getLayoutChildrenURL());
+		layoutProps.put("layoutColumns", getLayoutColumnsJSONArray());
+		layoutProps.put("moveItemURL", getMoveLayoutColumnItemURL());
+		layoutProps.put("searchContainerId", "pages");
+
+		layoutData.put("props", layoutProps);
+
+		return layoutData;
 	}
 
 	@Override
