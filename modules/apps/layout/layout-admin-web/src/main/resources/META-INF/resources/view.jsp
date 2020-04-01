@@ -21,7 +21,7 @@ portletDisplay.setShowStagingIcon(false);
 
 LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext = (LayoutsAdminReactDisplayContext)request.getAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT);
 
-LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayContext = new LayoutsAdminManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, layoutsAdminReactDisplayContext);
+LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayContext = new LayoutsAdminManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, layoutsAdminDisplayContext);
 %>
 
 <liferay-ui:success key='<%= portletDisplay.getPortletName() + "layoutUpdated" %>' message='<%= LanguageUtil.get(resourceBundle, "the-page-was-updated-succesfully") %>' />
@@ -49,9 +49,9 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 
 <aui:form cssClass="container-fluid-1280" name="fm">
 	<c:choose>
-		<c:when test="<%= layoutsAdminReactDisplayContext.hasLayouts() %>">
+		<c:when test="<%= layoutsAdminDisplayContext.hasLayouts() %>">
 			<c:choose>
-				<c:when test="<%= layoutsAdminReactDisplayContext.isSearch() %>">
+				<c:when test="<%= layoutsAdminDisplayContext.isSearch() %>">
 					<liferay-util:include page="/flattened_view.jsp" servletContext="<%= application %>" />
 				</c:when>
 				<c:otherwise>
@@ -83,7 +83,7 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 		</c:when>
 		<c:otherwise>
 			<liferay-frontend:empty-result-message
-				actionDropdownItems="<%= layoutsAdminReactDisplayContext.isShowAddRootLayoutButton() ? layoutsAdminReactDisplayContext.getAddLayoutDropdownItems() : null %>"
+				actionDropdownItems="<%= layoutsAdminDisplayContext.isShowAddRootLayoutButton() ? layoutsAdminDisplayContext.getAddLayoutDropdownItems() : null %>"
 				description='<%= LanguageUtil.get(request, "fortunately-it-is-very-easy-to-add-new-ones") %>'
 				elementType='<%= LanguageUtil.get(request, "pages") %>'
 			/>
