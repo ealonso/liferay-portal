@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -43,7 +44,6 @@ import com.liferay.portal.util.LayoutTypeControllerTracker;
 import com.liferay.staging.StagingGroupHelper;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -127,24 +127,24 @@ public class LayoutsAdminReactDisplayContext
 	}
 
 	public Map<String, Object> getLayoutData() throws Exception {
-		Map<String, Object> layoutData = new HashMap<>();
-
-		layoutData.put(
+		return HashMapBuilder.<String, Object>put(
 			"context",
 			Collections.singletonMap(
-				"namespace", _liferayPortletResponse.getNamespace()));
-
-		Map<String, Object> layoutProps = new HashMap<>();
-
-		layoutProps.put("breadcrumbEntries", getBreadcrumbEntriesJSONArray());
-		layoutProps.put("getItemChildrenURL", getLayoutChildrenURL());
-		layoutProps.put("layoutColumns", getLayoutColumnsJSONArray());
-		layoutProps.put("moveItemURL", getMoveLayoutColumnItemURL());
-		layoutProps.put("searchContainerId", "pages");
-
-		layoutData.put("props", layoutProps);
-
-		return layoutData;
+				"namespace", _liferayPortletResponse.getNamespace())
+		).put(
+			"props",
+			HashMapBuilder.<String, Object>put(
+				"breadcrumbEntries", getBreadcrumbEntriesJSONArray()
+			).put(
+				"getItemChildrenURL", getLayoutChildrenURL()
+			).put(
+				"layoutColumns", getLayoutColumnsJSONArray()
+			).put(
+				"moveItemURL", getMoveLayoutColumnItemURL()
+			).put(
+				"searchContainerId", "pages"
+			).build()
+		).build();
 	}
 
 	@Override
