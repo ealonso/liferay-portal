@@ -635,7 +635,7 @@ public class MillerColumnsDisplayContext {
 					).put(
 						"label",
 						LanguageUtil.get(
-							_httpServletRequest, "conversionPreview")
+							_httpServletRequest, "conversion-draft")
 					));
 			}
 		}
