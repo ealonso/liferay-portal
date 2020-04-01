@@ -517,6 +517,13 @@ public class JournalDisplayContext {
 		if (!ArrayUtil.contains(displayViews, _displayStyle)) {
 			_displayStyle = displayViews[0];
 		}
+		else if (ArrayUtil.contains(displayViews, _displayStyle)) {
+			portalPreferences.setValue(
+				JournalPortletKeys.JOURNAL, "display-style", _displayStyle);
+
+			_httpServletRequest.setAttribute(
+				WebKeys.SINGLE_PAGE_APPLICATION_CLEAR_CACHE, Boolean.TRUE);
+		}
 
 		portalPreferences.setValue(
 			JournalPortletKeys.JOURNAL, "display-style", _displayStyle);
