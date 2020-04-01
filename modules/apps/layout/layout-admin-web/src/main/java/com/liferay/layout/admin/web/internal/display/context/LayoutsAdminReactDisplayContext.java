@@ -15,9 +15,6 @@
 package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
-import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
-import com.liferay.layout.util.LayoutCopyHelper;
-import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -33,15 +30,16 @@ import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.LayoutTypeControllerTracker;
-import com.liferay.staging.StagingGroupHelper;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,29 +49,27 @@ import java.util.ResourceBundle;
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Carlos Lancha
  */
-public class LayoutsAdminReactDisplayContext
-	extends LayoutsAdminDisplayContext {
+public class LayoutsAdminReactDisplayContext {
 
 	public LayoutsAdminReactDisplayContext(
-		LayoutConverterConfiguration layoutConverterConfiguration,
-		LayoutConverterRegistry layoutConverterRegistry,
-		LayoutCopyHelper layoutCopyHelper,
+		LayoutsAdminDisplayContext layoutsAdminDisplayContext,
 		LiferayPortletRequest liferayPortletRequest,
-		LiferayPortletResponse liferayPortletResponse,
-		StagingGroupHelper stagingGroupHelper) {
+		LiferayPortletResponse liferayPortletResponse) {
 
-		super(
-			layoutConverterConfiguration, layoutConverterRegistry,
-			layoutCopyHelper, liferayPortletRequest, liferayPortletResponse,
-			stagingGroupHelper);
-
+		_layoutsAdminDisplayContext = layoutsAdminDisplayContext;
 		_liferayPortletResponse = liferayPortletResponse;
+
+		_httpServletRequest = PortalUtil.getHttpServletRequest(
+			liferayPortletRequest);
+		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
-	@Override
 	public String getLayoutChildrenURL() {
 		PortletURL itemChildrenURL = _liferayPortletResponse.createActionURL();
 
@@ -83,26 +79,27 @@ public class LayoutsAdminReactDisplayContext
 		return itemChildrenURL.toString();
 	}
 
-	@Override
 	public JSONArray getLayoutColumnsJSONArray() throws Exception {
 		JSONArray layoutColumnsJSONArray = JSONUtil.put(
 			_getFirstLayoutColumnJSONArray());
 
-		if (isFirstColumn()) {
+		if (_layoutsAdminDisplayContext.isFirstColumn()) {
 			return layoutColumnsJSONArray;
 		}
 
-		JSONArray layoutSetBranchesJSONArray = getLayoutSetBranchesJSONArray();
+		JSONArray layoutSetBranchesJSONArray =
+			_layoutsAdminDisplayContext.getLayoutSetBranchesJSONArray();
 
 		if (layoutSetBranchesJSONArray.length() > 0) {
 			layoutColumnsJSONArray.put(layoutSetBranchesJSONArray);
 		}
 
-		Layout selLayout = getSelLayout();
+		Layout selLayout = _layoutsAdminDisplayContext.getSelLayout();
 
 		if (selLayout == null) {
 			layoutColumnsJSONArray.put(
-				getLayoutsJSONArray(0, isPrivateLayout()));
+				getLayoutsJSONArray(
+					0, _layoutsAdminDisplayContext.isPrivateLayout()));
 
 			return layoutColumnsJSONArray;
 		}
@@ -134,20 +131,21 @@ public class LayoutsAdminReactDisplayContext
 		).put(
 			"props",
 			HashMapBuilder.<String, Object>put(
-				"breadcrumbEntries", getBreadcrumbEntriesJSONArray()
+				"breadcrumbEntries",
+				_layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray()
 			).put(
 				"getItemChildrenURL", getLayoutChildrenURL()
 			).put(
 				"layoutColumns", getLayoutColumnsJSONArray()
 			).put(
-				"moveItemURL", getMoveLayoutColumnItemURL()
+				"moveItemURL",
+				_layoutsAdminDisplayContext.getMoveLayoutColumnItemURL()
 			).put(
 				"searchContainerId", "pages"
 			).build()
 		).build();
 	}
 
-	@Override
 	public JSONArray getLayoutsJSONArray(
 			long parentLayoutId, boolean privateLayout)
 		throws Exception {
@@ -155,11 +153,11 @@ public class LayoutsAdminReactDisplayContext
 		JSONArray layoutsJSONArray = JSONFactoryUtil.createJSONArray();
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			getSelGroupId(), privateLayout, parentLayoutId, true,
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+			_layoutsAdminDisplayContext.getSelGroupId(), privateLayout,
+			parentLayoutId, true, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 		for (Layout layout : layouts) {
-			if (getActiveLayoutSetBranchId() > 0) {
+			if (_layoutsAdminDisplayContext.getActiveLayoutSetBranchId() > 0) {
 				LayoutRevision layoutRevision =
 					LayoutStagingUtil.getLayoutRevision(layout);
 
@@ -171,9 +169,11 @@ public class LayoutsAdminReactDisplayContext
 			JSONObject layoutJSONObject = JSONUtil.put(
 				"actions", _getLayoutActionsJSONArray(layout)
 			).put(
-				"active", isActive(layout.getPlid())
+				"active", _layoutsAdminDisplayContext.isActive(layout.getPlid())
 			).put(
-				"bulkActions", StringUtil.merge(getAvailableActions(layout))
+				"bulkActions",
+				StringUtil.merge(
+					_layoutsAdminDisplayContext.getAvailableActions(layout))
 			);
 
 			LayoutTypeController layoutTypeController =
@@ -182,20 +182,21 @@ public class LayoutsAdminReactDisplayContext
 
 			ResourceBundle layoutTypeResourceBundle =
 				ResourceBundleUtil.getBundle(
-					"content.Language", themeDisplay.getLocale(),
+					"content.Language", _themeDisplay.getLocale(),
 					layoutTypeController.getClass());
 
 			layoutJSONObject.put(
 				"description",
 				LanguageUtil.get(
-					httpServletRequest, layoutTypeResourceBundle,
+					_httpServletRequest, layoutTypeResourceBundle,
 					"layout.types." + layout.getType())
 			).put(
 				"draggable", true
 			);
 
 			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
-				getSelGroup(), layout.isPrivateLayout(), layout.getLayoutId());
+				_layoutsAdminDisplayContext.getSelGroup(),
+				layout.isPrivateLayout(), layout.getLayoutId());
 
 			layoutJSONObject.put(
 				"hasChild", childLayoutsCount > 0
@@ -212,23 +213,24 @@ public class LayoutsAdminReactDisplayContext
 			).put(
 				"states", _getLayoutStatesJSONArray(layout)
 			).put(
-				"title", layout.getName(themeDisplay.getLocale())
+				"title", layout.getName(_themeDisplay.getLocale())
 			);
 
-			PortletURL portletURL = getPortletURL();
+			PortletURL portletURL = _layoutsAdminDisplayContext.getPortletURL();
 
 			portletURL.setParameter(
 				"selPlid", String.valueOf(layout.getPlid()));
 			portletURL.setParameter(
 				"layoutSetBranchId",
-				String.valueOf(getActiveLayoutSetBranchId()));
+				String.valueOf(
+					_layoutsAdminDisplayContext.getActiveLayoutSetBranchId()));
 			portletURL.setParameter(
 				"privateLayout", String.valueOf(layout.isPrivateLayout()));
 
 			layoutJSONObject.put(
 				"url", portletURL.toString()
 			).put(
-				"viewUrl", getViewLayoutURL(layout)
+				"viewUrl", _layoutsAdminDisplayContext.getViewLayoutURL(layout)
 			);
 
 			layoutsJSONArray.put(layoutJSONObject);
@@ -250,10 +252,10 @@ public class LayoutsAdminReactDisplayContext
 		).put(
 			"id", LayoutConstants.DEFAULT_PLID
 		).put(
-			"title", getTitle(privatePages)
+			"title", _layoutsAdminDisplayContext.getTitle(privatePages)
 		);
 
-		PortletURL pagesURL = getPortletURL();
+		PortletURL pagesURL = _layoutsAdminDisplayContext.getPortletURL();
 
 		pagesURL.setParameter(
 			"selPlid", String.valueOf(LayoutConstants.DEFAULT_PLID));
@@ -270,33 +272,37 @@ public class LayoutsAdminReactDisplayContext
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		if (isShowAddRootLayoutButton()) {
+		if (_layoutsAdminDisplayContext.isShowAddRootLayoutButton()) {
 			jsonArray.put(
 				JSONUtil.put(
 					"icon", "plus"
 				).put(
 					"id", "add"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "add")
+					"label", LanguageUtil.get(_httpServletRequest, "add")
 				).put(
 					"quickAction", true
 				).put(
-					"url", getSelectLayoutPageTemplateEntryURL(privatePages)
+					"url",
+					_layoutsAdminDisplayContext.
+						getSelectLayoutPageTemplateEntryURL(privatePages)
 				));
 		}
 
-		if (isShowFirstColumnConfigureAction()) {
+		if (_layoutsAdminDisplayContext.isShowFirstColumnConfigureAction()) {
 			jsonArray.put(
 				JSONUtil.put(
 					"icon", "cog"
 				).put(
 					"id", "configure"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "configure")
+					"label", LanguageUtil.get(_httpServletRequest, "configure")
 				).put(
 					"quickAction", true
 				).put(
-					"url", getFirstColumnConfigureLayoutURL(privatePages)
+					"url",
+					_layoutsAdminDisplayContext.
+						getFirstColumnConfigureLayoutURL(privatePages)
 				));
 		}
 
@@ -306,32 +312,35 @@ public class LayoutsAdminReactDisplayContext
 	private JSONArray _getFirstLayoutColumnJSONArray() throws Exception {
 		JSONArray firstColumnJSONArray = JSONFactoryUtil.createJSONArray();
 
-		Layout selLayout = getSelLayout();
+		Layout selLayout = _layoutsAdminDisplayContext.getSelLayout();
 
-		if (LayoutLocalServiceUtil.hasLayouts(getSelGroup(), false) &&
-			isShowPublicPages()) {
+		if (LayoutLocalServiceUtil.hasLayouts(
+				_layoutsAdminDisplayContext.getSelGroup(), false) &&
+			_layoutsAdminDisplayContext.isShowPublicPages()) {
 
-			boolean active = !isPrivateLayout();
+			boolean active = !_layoutsAdminDisplayContext.isPrivateLayout();
 
 			if (selLayout != null) {
 				active = selLayout.isPublicLayout();
 			}
 
-			if (isFirstColumn()) {
+			if (_layoutsAdminDisplayContext.isFirstColumn()) {
 				active = false;
 			}
 
 			firstColumnJSONArray.put(_getFirstLayoutColumn(false, active));
 		}
 
-		if (LayoutLocalServiceUtil.hasLayouts(getSelGroup(), true)) {
-			boolean active = isPrivateLayout();
+		if (LayoutLocalServiceUtil.hasLayouts(
+				_layoutsAdminDisplayContext.getSelGroup(), true)) {
+
+			boolean active = _layoutsAdminDisplayContext.isPrivateLayout();
 
 			if (selLayout != null) {
 				active = selLayout.isPrivateLayout();
 			}
 
-			if (isFirstColumn()) {
+			if (_layoutsAdminDisplayContext.isFirstColumn()) {
 				active = false;
 			}
 
@@ -346,41 +355,44 @@ public class LayoutsAdminReactDisplayContext
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		if (isShowAddChildPageAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowAddChildPageAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"icon", "plus"
 				).put(
 					"id", "add"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "add")
+					"label", LanguageUtil.get(_httpServletRequest, "add")
 				).put(
 					"quickAction", true
 				).put(
 					"url",
-					getSelectLayoutPageTemplateEntryURL(
-						getFirstLayoutPageTemplateCollectionId(),
-						layout.getPlid(), layout.isPrivateLayout())
+					_layoutsAdminDisplayContext.
+						getSelectLayoutPageTemplateEntryURL(
+							_layoutsAdminDisplayContext.
+								getFirstLayoutPageTemplateCollectionId(),
+							layout.getPlid(), layout.isPrivateLayout())
 				));
 		}
 
-		if (isShowConfigureAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowConfigureAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"icon", "cog"
 				).put(
 					"id", "configure"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "configure")
+					"label", LanguageUtil.get(_httpServletRequest, "configure")
 				).put(
-					"url", getConfigureLayoutURL(layout)
+					"url",
+					_layoutsAdminDisplayContext.getConfigureLayoutURL(layout)
 				));
 		}
 
 		Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
 			PortalUtil.getClassNameId(Layout.class), layout.getPlid());
 
-		if (isShowConvertLayoutAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowConvertLayoutAction(layout)) {
 			if (draftLayout == null) {
 				jsonArray.put(
 					JSONUtil.put(
@@ -388,9 +400,11 @@ public class LayoutsAdminReactDisplayContext
 					).put(
 						"label",
 						LanguageUtil.get(
-							httpServletRequest, "convert-to-content-page...")
+							_httpServletRequest, "convert-to-content-page...")
 					).put(
-						"url", getLayoutConversionPreviewURL(layout)
+						"url",
+						_layoutsAdminDisplayContext.
+							getLayoutConversionPreviewURL(layout)
 					));
 			}
 			else {
@@ -400,78 +414,85 @@ public class LayoutsAdminReactDisplayContext
 					).put(
 						"label",
 						LanguageUtil.get(
-							httpServletRequest, "discard-conversion-draft")
+							_httpServletRequest, "discard-conversion-draft")
 					).put(
-						"url", getDeleteLayoutURL(layout)
+						"url",
+						_layoutsAdminDisplayContext.getDeleteLayoutURL(layout)
 					));
 			}
 		}
 
-		if (isShowCopyLayoutAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowCopyLayoutAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "copyLayout"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "copy-page")
+					"label", LanguageUtil.get(_httpServletRequest, "copy-page")
 				).put(
-					"url", getCopyLayoutRenderURL(layout)
+					"url",
+					_layoutsAdminDisplayContext.getCopyLayoutRenderURL(layout)
 				));
 		}
 
-		if (isShowDeleteAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowDeleteAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "delete"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "delete")
+					"label", LanguageUtil.get(_httpServletRequest, "delete")
 				).put(
-					"url", getDeleteLayoutURL(layout)
+					"url",
+					_layoutsAdminDisplayContext.getDeleteLayoutURL(layout)
 				));
 		}
 
-		if (isConversionDraft(layout) && isShowConfigureAction(layout)) {
+		if (_layoutsAdminDisplayContext.isConversionDraft(layout) &&
+			_layoutsAdminDisplayContext.isShowConfigureAction(layout)) {
+
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "editConversionLayout"
 				).put(
 					"label",
 					LanguageUtil.get(
-						httpServletRequest, "edit-conversion-draft")
+						_httpServletRequest, "edit-conversion-draft")
 				).put(
-					"url", getEditLayoutURL(layout)
+					"url", _layoutsAdminDisplayContext.getEditLayoutURL(layout)
 				));
 		}
-		else if (isShowConfigureAction(layout)) {
+		else if (_layoutsAdminDisplayContext.isShowConfigureAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "editLayout"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "edit")
+					"label", LanguageUtil.get(_httpServletRequest, "edit")
 				).put(
-					"url", getEditLayoutURL(layout)
+					"url", _layoutsAdminDisplayContext.getEditLayoutURL(layout)
 				));
 		}
 
-		if (isShowOrphanPortletsAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowOrphanPortletsAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "orphanPortlets"
 				).put(
 					"label",
-					LanguageUtil.get(httpServletRequest, "orphan-widgets")
+					LanguageUtil.get(_httpServletRequest, "orphan-widgets")
 				).put(
-					"url", getOrphanPortletsURL(layout)
+					"url",
+					_layoutsAdminDisplayContext.getOrphanPortletsURL(layout)
 				));
 		}
 
-		if (isShowPermissionsAction(layout)) {
+		if (_layoutsAdminDisplayContext.isShowPermissionsAction(layout)) {
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "permissions"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "permissions")
+					"label",
+					LanguageUtil.get(_httpServletRequest, "permissions")
 				).put(
-					"url", getPermissionsURL(layout)
+					"url", _layoutsAdminDisplayContext.getPermissionsURL(layout)
 				));
 		}
 
@@ -480,9 +501,9 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"id", "previewLayout"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "preview")
+					"label", LanguageUtil.get(_httpServletRequest, "preview")
 				).put(
-					"url", getViewLayoutURL(layout)
+					"url", _layoutsAdminDisplayContext.getViewLayoutURL(layout)
 				));
 		}
 		else {
@@ -490,9 +511,9 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"id", "viewLayout"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "view")
+					"label", LanguageUtil.get(_httpServletRequest, "view")
 				).put(
-					"url", getViewLayoutURL(layout)
+					"url", _layoutsAdminDisplayContext.getViewLayoutURL(layout)
 				));
 		}
 
@@ -518,7 +539,7 @@ public class LayoutsAdminReactDisplayContext
 					JSONUtil.put(
 						"id", "draft"
 					).put(
-						"label", LanguageUtil.get(httpServletRequest, "draft")
+						"label", LanguageUtil.get(_httpServletRequest, "draft")
 					));
 			}
 		}
@@ -530,7 +551,7 @@ public class LayoutsAdminReactDisplayContext
 					).put(
 						"label",
 						LanguageUtil.get(
-							httpServletRequest, "conversionPreview")
+							_httpServletRequest, "conversionPreview")
 					));
 			}
 		}
@@ -540,13 +561,16 @@ public class LayoutsAdminReactDisplayContext
 				JSONUtil.put(
 					"id", "pending"
 				).put(
-					"label", LanguageUtil.get(httpServletRequest, "pending")
+					"label", LanguageUtil.get(_httpServletRequest, "pending")
 				));
 		}
 
 		return jsonArray;
 	}
 
+	private final HttpServletRequest _httpServletRequest;
+	private final LayoutsAdminDisplayContext _layoutsAdminDisplayContext;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private final ThemeDisplay _themeDisplay;
 
 }

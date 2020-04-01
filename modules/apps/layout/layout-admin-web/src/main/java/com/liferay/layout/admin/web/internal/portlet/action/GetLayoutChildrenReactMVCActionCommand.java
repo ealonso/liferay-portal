@@ -16,6 +16,7 @@ package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
+import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminReactDisplayContext;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.template.LayoutConverterRegistry;
@@ -73,13 +74,19 @@ public class GetLayoutChildrenReactMVCActionCommand
 
 		Layout layout = _layoutLocalService.fetchLayout(plid);
 
-		LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext =
-			new LayoutsAdminReactDisplayContext(
+		LayoutsAdminDisplayContext layoutsAdminDisplayContext =
+			new LayoutsAdminDisplayContext(
 				_layoutConverterConfiguration, _layoutConverterRegistry,
 				_layoutCopyHelper,
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse),
 				_stagingGroupHelper);
+
+		LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext =
+			new LayoutsAdminReactDisplayContext(
+				layoutsAdminDisplayContext,
+				_portal.getLiferayPortletRequest(actionRequest),
+				_portal.getLiferayPortletResponse(actionResponse));
 
 		JSONArray jsonArray =
 			layoutsAdminReactDisplayContext.getLayoutsJSONArray(

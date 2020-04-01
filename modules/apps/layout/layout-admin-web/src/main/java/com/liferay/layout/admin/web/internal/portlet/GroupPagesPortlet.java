@@ -181,23 +181,25 @@ public class GroupPagesPortlet extends MVCPortlet {
 				}
 			}
 
-			renderRequest.setAttribute(
-				LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_DISPLAY_CONTEXT,
+			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
 					_layoutConverterConfiguration, _layoutConverterRegistry,
 					_layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
-					_stagingGroupHelper));
+					_stagingGroupHelper);
+
+			renderRequest.setAttribute(
+				LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_DISPLAY_CONTEXT,
+				layoutsAdminDisplayContext);
+
 			renderRequest.setAttribute(
 				LayoutAdminWebKeys.
 					LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT,
 				new LayoutsAdminReactDisplayContext(
-					_layoutConverterConfiguration, _layoutConverterRegistry,
-					_layoutCopyHelper,
+					layoutsAdminDisplayContext,
 					_portal.getLiferayPortletRequest(renderRequest),
-					_portal.getLiferayPortletResponse(renderResponse),
-					_stagingGroupHelper));
+					_portal.getLiferayPortletResponse(renderResponse)));
 
 			super.doDispatch(renderRequest, renderResponse);
 		}
