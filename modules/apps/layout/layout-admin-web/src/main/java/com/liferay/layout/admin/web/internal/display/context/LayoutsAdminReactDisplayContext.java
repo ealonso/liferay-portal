@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.LayoutTypeControllerTracker;
@@ -209,6 +210,33 @@ public class LayoutsAdminReactDisplayContext {
 				"draggable", true
 			);
 
+			if (layout.isTypeContent()) {
+				Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+					PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+				boolean published = GetterUtil.getBoolean(
+					draftLayout.getTypeSettingsProperty("published"));
+
+				layoutJSONObject.put(
+					"conversionPreview", false
+				).put(
+					"draft",
+					(draftLayout.getStatus() ==
+						WorkflowConstants.STATUS_DRAFT) ||
+					!published
+				);
+			}
+			else {
+				Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+					PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+				layoutJSONObject.put(
+					"conversionPreview", draftLayout != null
+				).put(
+					"draft", false
+				);
+			}
+
 			int childLayoutsCount = LayoutLocalServiceUtil.getLayoutsCount(
 				_layoutsAdminDisplayContext.getSelGroup(),
 				layout.isPrivateLayout(), layout.getLayoutId());
@@ -223,6 +251,8 @@ public class LayoutsAdminReactDisplayContext {
 
 			layoutJSONObject.put(
 				"parentable", layoutType.isParentable()
+			).put(
+				"pending", layout.isDenied() || layout.isPending()
 			).put(
 				"selectable", true
 			).put(
@@ -448,6 +478,14 @@ public class LayoutsAdminReactDisplayContext {
 					_layoutsAdminDisplayContext.getCopyLayoutRenderURL(layout)
 				));
 		}
+		else {
+			jsonArray.put(
+				JSONUtil.put(
+					"id", "copyLayout"
+				).put(
+					"label", LanguageUtil.get(_httpServletRequest, "copy-page")
+				));
+		}
 
 		if (_layoutsAdminDisplayContext.isShowDeleteAction(layout)) {
 			jsonArray.put(
@@ -476,14 +514,27 @@ public class LayoutsAdminReactDisplayContext {
 				));
 		}
 		else if (_layoutsAdminDisplayContext.isShowConfigureAction(layout)) {
-			jsonArray.put(
-				JSONUtil.put(
-					"id", "editLayout"
-				).put(
-					"label", LanguageUtil.get(_httpServletRequest, "edit")
-				).put(
-					"url", _layoutsAdminDisplayContext.getEditLayoutURL(layout)
-				));
+			String editLayoutURL = _layoutsAdminDisplayContext.getEditLayoutURL(
+				layout);
+
+			if (Validator.isNotNull(editLayoutURL)) {
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "editLayout"
+					).put(
+						"label", LanguageUtil.get(_httpServletRequest, "edit")
+					).put(
+						"url", editLayoutURL
+					));
+			}
+			else {
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "editLayout"
+					).put(
+						"label", LanguageUtil.get(_httpServletRequest, "edit")
+					));
+			}
 		}
 
 		if (_layoutsAdminDisplayContext.isShowOrphanPortletsAction(layout)) {
@@ -522,14 +573,32 @@ public class LayoutsAdminReactDisplayContext {
 				));
 		}
 		else {
-			jsonArray.put(
-				JSONUtil.put(
-					"id", "viewLayout"
-				).put(
-					"label", LanguageUtil.get(_httpServletRequest, "view")
-				).put(
-					"url", _layoutsAdminDisplayContext.getViewLayoutURL(layout)
-				));
+			boolean published = true;
+
+			if (draftLayout != null) {
+				published = GetterUtil.getBoolean(
+					draftLayout.getTypeSettingsProperty("published"));
+			}
+
+			if (!layout.isTypeContent() || published) {
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "viewLayout"
+					).put(
+						"label", LanguageUtil.get(_httpServletRequest, "view")
+					).put(
+						"url",
+						_layoutsAdminDisplayContext.getViewLayoutURL(layout)
+					));
+			}
+			else {
+				jsonArray.put(
+					JSONUtil.put(
+						"id", "viewLayout"
+					).put(
+						"label", LanguageUtil.get(_httpServletRequest, "view")
+					));
+			}
 		}
 
 		return jsonArray;
