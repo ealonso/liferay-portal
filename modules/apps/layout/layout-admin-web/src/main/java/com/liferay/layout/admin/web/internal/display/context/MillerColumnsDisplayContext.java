@@ -58,9 +58,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Carlos Lancha
  */
-public class LayoutsAdminReactDisplayContext {
+public class MillerColumnsDisplayContext {
 
-	public LayoutsAdminReactDisplayContext(
+	public MillerColumnsDisplayContext(
 		LayoutsAdminDisplayContext layoutsAdminDisplayContext,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
@@ -88,7 +88,7 @@ public class LayoutsAdminReactDisplayContext {
 		PortletURL itemChildrenURL = _liferayPortletResponse.createActionURL();
 
 		itemChildrenURL.setParameter(
-			ActionRequest.ACTION_NAME, "/layout/react/get_layout_children");
+			ActionRequest.ACTION_NAME, "/layout/get_layout_children");
 
 		return itemChildrenURL.toString();
 	}

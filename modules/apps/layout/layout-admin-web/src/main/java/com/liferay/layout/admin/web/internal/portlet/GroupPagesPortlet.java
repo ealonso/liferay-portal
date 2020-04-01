@@ -22,7 +22,7 @@ import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
-import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminReactDisplayContext;
+import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDisplayContext;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -194,9 +194,8 @@ public class GroupPagesPortlet extends MVCPortlet {
 				layoutsAdminDisplayContext);
 
 			renderRequest.setAttribute(
-				LayoutAdminWebKeys.
-					LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT,
-				new LayoutsAdminReactDisplayContext(
+				LayoutAdminWebKeys.MILLER_COLUMNS_DISPLAY_CONTEXT,
+				new MillerColumnsDisplayContext(
 					layoutsAdminDisplayContext,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));

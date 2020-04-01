@@ -17,7 +17,7 @@ package com.liferay.layout.admin.web.internal.portlet.action;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
-import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminReactDisplayContext;
+import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDisplayContext;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.template.LayoutConverterRegistry;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
@@ -51,12 +51,11 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + LayoutAdminPortletKeys.GROUP_PAGES,
-		"mvc.command.name=/layout/react/get_layout_children"
+		"mvc.command.name=/layout/get_layout_children"
 	},
 	service = MVCActionCommand.class
 )
-public class GetLayoutChildrenReactMVCActionCommand
-	extends BaseMVCActionCommand {
+public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 
 	@Activate
 	@Modified
@@ -82,15 +81,14 @@ public class GetLayoutChildrenReactMVCActionCommand
 				_portal.getLiferayPortletResponse(actionResponse),
 				_stagingGroupHelper);
 
-		LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext =
-			new LayoutsAdminReactDisplayContext(
+		MillerColumnsDisplayContext millerColumnsDisplayContext =
+			new MillerColumnsDisplayContext(
 				layoutsAdminDisplayContext,
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse));
 
-		JSONArray jsonArray =
-			layoutsAdminReactDisplayContext.getLayoutsJSONArray(
-				layout.getLayoutId(), layout.isPrivateLayout());
+		JSONArray jsonArray = millerColumnsDisplayContext.getLayoutsJSONArray(
+			layout.getLayoutId(), layout.isPrivateLayout());
 
 		JSONObject jsonObject = JSONUtil.put("children", jsonArray);
 

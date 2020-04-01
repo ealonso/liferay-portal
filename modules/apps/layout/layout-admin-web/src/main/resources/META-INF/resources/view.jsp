@@ -55,12 +55,12 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 				<c:otherwise>
 
 					<%
-					LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext = (LayoutsAdminReactDisplayContext)request.getAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT);
+					MillerColumnsDisplayContext millerColumnsDisplayContext = (MillerColumnsDisplayContext)request.getAttribute(LayoutAdminWebKeys.MILLER_COLUMNS_DISPLAY_CONTEXT);
 					%>
 
 					<div>
 						<react:component
-							data="<%= layoutsAdminReactDisplayContext.getLayoutData() %>"
+							data="<%= millerColumnsDisplayContext.getLayoutData() %>"
 							module="js/layout/Layout"
 						/>
 					</div>
