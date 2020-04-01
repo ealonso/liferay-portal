@@ -19,8 +19,6 @@
 <%
 portletDisplay.setShowStagingIcon(false);
 
-LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext = (LayoutsAdminReactDisplayContext)request.getAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT);
-
 LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayContext = new LayoutsAdminManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, layoutsAdminDisplayContext);
 %>
 
@@ -57,6 +55,8 @@ LayoutsAdminManagementToolbarDisplayContext layoutsManagementToolbarDisplayConte
 				<c:otherwise>
 
 					<%
+					LayoutsAdminReactDisplayContext layoutsAdminReactDisplayContext = (LayoutsAdminReactDisplayContext)request.getAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_REACT_DISPLAY_CONTEXT);
+
 					Map<String, Object> layoutData = new HashMap<>();
 
 					layoutData.put("context", Collections.singletonMap("namespace", renderResponse.getNamespace()));
