@@ -206,16 +206,6 @@ public class LayoutsAdminDisplayContext {
 		return portletURL.toString();
 	}
 
-	public String getAutoSiteNavigationMenuNames() {
-		List<SiteNavigationMenu> siteNavigationMenus =
-			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
-				themeDisplay.getScopeGroupId());
-
-		return ListUtil.toString(
-			siteNavigationMenus, SiteNavigationMenu.NAME_ACCESSOR,
-			StringPool.COMMA_AND_SPACE);
-	}
-
 	public List<SiteNavigationMenu> getAutoSiteNavigationMenus() {
 		return SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
 			themeDisplay.getScopeGroupId());

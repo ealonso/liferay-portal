@@ -15,6 +15,7 @@
 package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -40,6 +41,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.LayoutTypeControllerTracker;
+import com.liferay.site.navigation.model.SiteNavigationMenu;
+import com.liferay.site.navigation.service.SiteNavigationMenuLocalServiceUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -68,6 +71,16 @@ public class LayoutsAdminReactDisplayContext {
 			liferayPortletRequest);
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+	}
+
+	public String getAutoSiteNavigationMenuNames() {
+		List<SiteNavigationMenu> siteNavigationMenus =
+			SiteNavigationMenuLocalServiceUtil.getAutoSiteNavigationMenus(
+				_themeDisplay.getScopeGroupId());
+
+		return ListUtil.toString(
+			siteNavigationMenus, SiteNavigationMenu.NAME_ACCESSOR,
+			StringPool.COMMA_AND_SPACE);
 	}
 
 	public String getLayoutChildrenURL() {
@@ -142,6 +155,8 @@ public class LayoutsAdminReactDisplayContext {
 				_layoutsAdminDisplayContext.getMoveLayoutColumnItemURL()
 			).put(
 				"searchContainerId", "pages"
+			).put(
+				"siteNavigationMenuNames", getAutoSiteNavigationMenuNames()
 			).build()
 		).build();
 	}
