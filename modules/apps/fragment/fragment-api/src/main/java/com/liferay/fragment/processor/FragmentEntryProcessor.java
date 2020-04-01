@@ -51,7 +51,7 @@ public interface FragmentEntryProcessor {
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
-		return fragmentEntryLink.getHtml();
+		return html;
 	}
 
 	public void validateFragmentEntryHTML(String html, String configuration)
