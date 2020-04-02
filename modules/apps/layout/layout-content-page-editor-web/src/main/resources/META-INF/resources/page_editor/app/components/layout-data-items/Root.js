@@ -63,6 +63,8 @@ const Root = React.forwardRef(({children, item, layoutData}, ref) => {
 	);
 });
 
+Root.displayName = 'Root';
+
 Root.propTypes = {
 	item: getLayoutDataItemPropTypes().isRequired,
 	layoutData: LayoutDataPropTypes.isRequired,

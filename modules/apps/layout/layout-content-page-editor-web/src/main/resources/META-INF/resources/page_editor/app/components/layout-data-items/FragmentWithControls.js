@@ -132,6 +132,8 @@ function getWidget(widgets, portletId) {
 	return widget;
 }
 
+FragmentWithControls.displayName = 'FragmentWithControls';
+
 FragmentWithControls.propTypes = {
 	item: getLayoutDataItemPropTypes().isRequired,
 	layoutData: LayoutDataPropTypes.isRequired,
