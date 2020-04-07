@@ -146,7 +146,7 @@ public class DataDefinitionResourceImpl
 
 		dataLayoutResource.deleteDataLayoutsDataDefinition(dataDefinitionId);
 
-		_ddmStructureLocalService.deleteDDMStructure(dataDefinitionId);
+		_ddmStructureLocalService.deleteStructure(dataDefinitionId);
 
 		List<DDMStructureVersion> ddmStructureVersions =
 			_ddmStructureVersionLocalService.getStructureVersions(
