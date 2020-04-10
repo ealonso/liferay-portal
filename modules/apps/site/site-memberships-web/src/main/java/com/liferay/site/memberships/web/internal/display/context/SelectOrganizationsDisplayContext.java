@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.OrganizationConstants;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
@@ -33,6 +35,7 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.sitesadmin.search.OrganizationSiteMembershipChecker;
 import com.liferay.portlet.usersadmin.search.OrganizationSearch;
 import com.liferay.portlet.usersadmin.search.OrganizationSearchTerms;
+import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -62,8 +65,20 @@ public class SelectOrganizationsDisplayContext {
 			return _displayStyle;
 		}
 
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_httpServletRequest);
+
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "list");
+			_httpServletRequest, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				UsersAdminPortletKeys.USERS_ADMIN, "display-style", "list");
+		}
+
+		portalPreferences.setValue(
+			UsersAdminPortletKeys.USERS_ADMIN, "display-style", _displayStyle);
 
 		return _displayStyle;
 	}
