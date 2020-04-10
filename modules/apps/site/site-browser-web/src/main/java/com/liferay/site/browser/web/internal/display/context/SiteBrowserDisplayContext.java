@@ -30,6 +30,8 @@ import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.security.membershippolicy.SiteMembershipPolicyUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -46,6 +48,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.usersadmin.search.GroupSearch;
 import com.liferay.portlet.usersadmin.search.GroupSearchTerms;
+import com.liferay.site.browser.web.internal.constants.SiteBrowserPortletKeys;
 import com.liferay.sites.kernel.util.SitesUtil;
 
 import java.util.ArrayList;
@@ -80,8 +83,21 @@ public class SiteBrowserDisplayContext {
 			return _displayStyle;
 		}
 
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_httpServletRequest);
+
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "list");
+			_httpServletRequest, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				SiteBrowserPortletKeys.SITE_BROWSER, "display-style", "list");
+		}
+
+		portalPreferences.setValue(
+			SiteBrowserPortletKeys.SITE_BROWSER, "display-style",
+			_displayStyle);
 
 		return _displayStyle;
 	}
