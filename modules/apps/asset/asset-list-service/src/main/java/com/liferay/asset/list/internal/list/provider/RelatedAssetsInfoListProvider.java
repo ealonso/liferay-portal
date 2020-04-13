@@ -28,13 +28,11 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -88,10 +86,7 @@ public class RelatedAssetsInfoListProvider
 
 	@Override
 	public String getLabel(Locale locale) {
-		ResourceBundle resourceBundle =
-			_resourceBundleLoader.loadResourceBundle(locale);
-
-		return LanguageUtil.get(resourceBundle, "related-assets");
+		return LanguageUtil.get(locale, "related-assets");
 	}
 
 	private AssetEntry _getAssetEntry(long assetEntryId, AssetLink assetLink) {
@@ -136,8 +131,5 @@ public class RelatedAssetsInfoListProvider
 
 	@Reference
 	private AssetLinkLocalService _assetLinkLocalService;
-
-	@Reference(target = "(bundle.symbolic.name=com.liferay.asset.list.service)")
-	private ResourceBundleLoader _resourceBundleLoader;
 
 }
