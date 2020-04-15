@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,10 +74,10 @@ public class FragmentEntryLinkLocalServiceImpl
 	@Override
 	public FragmentEntryLink addFragmentEntryLink(
 			long userId, long groupId, long originalFragmentEntryLinkId,
-			long fragmentEntryId, long classNameId, long classPK, String css,
-			String html, String js, String configuration, String editableValues,
-			String namespace, int position, String rendererKey,
-			ServiceContext serviceContext)
+			long fragmentEntryId, long segmentsExperienceId, long classNameId,
+			long classPK, String css, String html, String js,
+			String configuration, String editableValues, String namespace,
+			int position, String rendererKey, ServiceContext serviceContext)
 		throws PortalException {
 
 		User user = userLocalService.getUser(userId);
@@ -100,6 +101,7 @@ public class FragmentEntryLinkLocalServiceImpl
 		fragmentEntryLink.setOriginalFragmentEntryLinkId(
 			originalFragmentEntryLinkId);
 		fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
+		fragmentEntryLink.setSegmentsExperienceId(segmentsExperienceId);
 		fragmentEntryLink.setClassNameId(classNameId);
 		fragmentEntryLink.setClassPK(classPK);
 		fragmentEntryLink.setCss(css);
@@ -152,6 +154,29 @@ public class FragmentEntryLinkLocalServiceImpl
 			serviceContext.getCreateDate(new Date()));
 
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addFragmentEntryLink(long, long, long, long, long, long,
+	 *             long, String, String, String, String, String, String, int,
+	 *             String, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public FragmentEntryLink addFragmentEntryLink(
+			long userId, long groupId, long originalFragmentEntryLinkId,
+			long fragmentEntryId, long classNameId, long classPK, String css,
+			String html, String js, String configuration, String editableValues,
+			String namespace, int position, String rendererKey,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addFragmentEntryLink(
+			userId, groupId, originalFragmentEntryLinkId, fragmentEntryId,
+			SegmentsExperienceConstants.ID_DEFAULT, classNameId, classPK, css,
+			html, js, configuration, editableValues, namespace, position,
+			rendererKey, serviceContext);
 	}
 
 	@Override
@@ -284,6 +309,15 @@ public class FragmentEntryLinkLocalServiceImpl
 
 		return fragmentEntryLinkPersistence.findByFragmentEntryId(
 			fragmentEntryId);
+	}
+
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinksBySegmentsExperienceId(
+		long groupId, long segmentsExperienceId, long classNameId,
+		long classPK) {
+
+		return fragmentEntryLinkPersistence.findByG_S_C_C(
+			groupId, segmentsExperienceId, classNameId, classPK);
 	}
 
 	@Override

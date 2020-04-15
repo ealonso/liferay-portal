@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.security.permission.BaseModelPermissionCheckerU
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.util.Map;
 import java.util.Objects;
@@ -48,10 +49,10 @@ public class FragmentEntryLinkServiceImpl
 	@Override
 	public FragmentEntryLink addFragmentEntryLink(
 			long groupId, long originalFragmentEntryLinkId,
-			long fragmentEntryId, long classNameId, long classPK, String css,
-			String html, String js, String configuration, String editableValues,
-			String namespace, int position, String rendererKey,
-			ServiceContext serviceContext)
+			long fragmentEntryId, long segmentsExperienceId, long classNameId,
+			long classPK, String css, String html, String js,
+			String configuration, String editableValues, String namespace,
+			int position, String rendererKey, ServiceContext serviceContext)
 		throws PortalException {
 
 		_checkPermission(
@@ -59,8 +60,32 @@ public class FragmentEntryLinkServiceImpl
 
 		return fragmentEntryLinkLocalService.addFragmentEntryLink(
 			getUserId(), groupId, originalFragmentEntryLinkId, fragmentEntryId,
-			classNameId, classPK, css, html, js, configuration, editableValues,
-			namespace, position, rendererKey, serviceContext);
+			segmentsExperienceId, classNameId, classPK, css, html, js,
+			configuration, editableValues, namespace, position, rendererKey,
+			serviceContext);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addFragmentEntryLink(long, long, long, long, long, long,
+	 *             String, String, String, String, String, String, int, String,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public FragmentEntryLink addFragmentEntryLink(
+			long groupId, long originalFragmentEntryLinkId,
+			long fragmentEntryId, long classNameId, long classPK, String css,
+			String html, String js, String configuration, String editableValues,
+			String namespace, int position, String rendererKey,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addFragmentEntryLink(
+			groupId, originalFragmentEntryLinkId, fragmentEntryId,
+			SegmentsExperienceConstants.ID_DEFAULT, classNameId, classPK, css,
+			html, js, configuration, editableValues, namespace, position,
+			rendererKey, serviceContext);
 	}
 
 	@Override

@@ -247,6 +247,7 @@
 
 		<column name="originalFragmentEntryLinkId" type="long" />
 		<column name="fragmentEntryId" type="long" />
+		<column name="segmentsExperienceId" type="long" />
 		<column name="classNameId" type="long" />
 		<column name="classPK" type="long" />
 		<column name="css" type="String" />
@@ -296,6 +297,12 @@
 		<finder name="G_F_C_C" return-type="Collection">
 			<finder-column name="groupId" />
 			<finder-column name="fragmentEntryId" />
+			<finder-column name="classNameId" />
+			<finder-column name="classPK" />
+		</finder>
+		<finder name="G_S_C_C" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="segmentsExperienceId" />
 			<finder-column name="classNameId" />
 			<finder-column name="classPK" />
 		</finder>
