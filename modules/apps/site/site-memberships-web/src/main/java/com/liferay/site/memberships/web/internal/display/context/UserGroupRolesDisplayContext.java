@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.UserGroupGroupRole;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupGroupRoleLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -32,6 +34,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.RoleNameComparator;
 import com.liferay.portlet.rolesadmin.search.RoleSearch;
 import com.liferay.portlet.rolesadmin.search.RoleSearchTerms;
+import com.liferay.site.memberships.constants.SiteMembershipsPortletKeys;
 import com.liferay.users.admin.kernel.util.UsersAdminUtil;
 
 import java.util.List;
@@ -64,8 +67,22 @@ public class UserGroupRolesDisplayContext {
 			return _displayStyle;
 		}
 
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_httpServletRequest);
+
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "icon");
+			_httpServletRequest, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+				"display-style-usergroupsroles", "icon");
+		}
+
+		portalPreferences.setValue(
+			SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+			"display-style-usergroupsroles", _displayStyle);
 
 		return _displayStyle;
 	}

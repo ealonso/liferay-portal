@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.UserGroup;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserGroupServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -31,6 +33,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.service.persistence.constants.UserGroupFinderConstants;
 import com.liferay.portlet.usergroupsadmin.search.UserGroupDisplayTerms;
 import com.liferay.portlet.usergroupsadmin.search.UserGroupSearch;
+import com.liferay.site.memberships.constants.SiteMembershipsPortletKeys;
 import com.liferay.site.memberships.web.internal.util.GroupUtil;
 
 import java.util.LinkedHashMap;
@@ -61,8 +64,22 @@ public class UserGroupsDisplayContext {
 			return _displayStyle;
 		}
 
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_httpServletRequest);
+
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "list");
+			_httpServletRequest, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+				"display-style-usergroups", "list");
+		}
+
+		portalPreferences.setValue(
+			SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+			"display-style-usergroups", _displayStyle);
 
 		return _displayStyle;
 	}

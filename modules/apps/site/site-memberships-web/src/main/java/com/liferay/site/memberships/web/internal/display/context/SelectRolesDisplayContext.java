@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.role.RoleConstants;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.RoleLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -27,6 +29,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.rolesadmin.search.RoleSearch;
 import com.liferay.portlet.rolesadmin.search.RoleSearchTerms;
+import com.liferay.site.memberships.constants.SiteMembershipsPortletKeys;
 import com.liferay.users.admin.kernel.util.UsersAdminUtil;
 
 import java.util.List;
@@ -57,7 +60,21 @@ public class SelectRolesDisplayContext {
 		}
 
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "list");
+			_httpServletRequest, "displayStyle");
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_httpServletRequest);
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+				"display-style-roles", "list");
+		}
+
+		portalPreferences.setValue(
+			SiteMembershipsPortletKeys.SITE_MEMBERSHIPS_ADMIN,
+			"display-style-roles", _displayStyle);
 
 		return _displayStyle;
 	}
