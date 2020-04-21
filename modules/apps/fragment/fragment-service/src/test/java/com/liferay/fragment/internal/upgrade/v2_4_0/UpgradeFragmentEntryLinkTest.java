@@ -14,6 +14,8 @@
 
 package com.liferay.fragment.internal.upgrade.v2_4_0;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -64,29 +66,38 @@ public class UpgradeFragmentEntryLinkTest {
 
 	@Test
 	public void testGetEditableEditableValues() throws Exception {
+		ObjectMapper objectMapper = new ObjectMapper() {
+			{
+				configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+			}
+		};
+
 		String editableValues = _read(
 			"fragment_entry_link_editable_editable_values.json");
 
 		Assert.assertEquals(
-			_toString(
+			objectMapper.readTree(
 				_read(
 					"fragment_entry_link_editable_editable_values_segments_" +
 						"experience_0.json")),
-			_upgradeFragmentEntryLink.getEditableValues(editableValues, 0));
+			objectMapper.readTree(
+				_upgradeFragmentEntryLink.getEditableValues(editableValues, 0)));
 
 		Assert.assertEquals(
-			_toString(
+			objectMapper.readTree(
 				_read(
 					"fragment_entry_link_editable_editable_values_segments_" +
 						"experience_1.json")),
-			_upgradeFragmentEntryLink.getEditableValues(editableValues, 1));
+			objectMapper.readTree(
+				_upgradeFragmentEntryLink.getEditableValues(editableValues, 1)));
 
 		Assert.assertEquals(
-			_toString(
+			objectMapper.readTree(
 				_read(
 					"fragment_entry_link_editable_editable_values_segments_" +
 						"experience_2.json")),
-			_upgradeFragmentEntryLink.getEditableValues(editableValues, 2));
+			objectMapper.readTree(
+				_upgradeFragmentEntryLink.getEditableValues(editableValues, 2)));
 	}
 
 	@Test
