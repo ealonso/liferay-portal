@@ -173,7 +173,16 @@ public class AssetBrowserDisplayContext {
 		}
 
 		_displayStyle = ParamUtil.getString(
-			_httpServletRequest, "displayStyle", "list");
+			_httpServletRequest, "displayStyle");
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = _portalPreferences.getValue(
+				AssetBrowserPortletKeys.ASSET_BROWSER, "display-style", "list");
+		}
+
+		_portalPreferences.setValue(
+			AssetBrowserPortletKeys.ASSET_BROWSER, "display-style",
+			_displayStyle);
 
 		return _displayStyle;
 	}
