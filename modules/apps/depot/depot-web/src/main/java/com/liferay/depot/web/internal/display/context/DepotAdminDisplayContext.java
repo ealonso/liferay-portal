@@ -17,6 +17,7 @@ package com.liferay.depot.web.internal.display.context;
 import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.service.DepotEntryLocalService;
 import com.liferay.depot.web.internal.constants.DepotAdminWebKeys;
+import com.liferay.depot.web.internal.constants.DepotPortletKeys;
 import com.liferay.depot.web.internal.search.DepotEntrySearch;
 import com.liferay.depot.web.internal.servlet.taglib.clay.DepotEntryVerticalCard;
 import com.liferay.depot.web.internal.servlet.taglib.util.DepotActionDropdownItemsProvider;
@@ -25,6 +26,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -100,7 +103,20 @@ public class DepotAdminDisplayContext {
 		}
 
 		_displayStyle = ParamUtil.getString(
-			_liferayPortletRequest, "displayStyle", getDefaultDisplayStyle());
+			_liferayPortletRequest, "displayStyle");
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				_liferayPortletRequest);
+
+		if (Validator.isNull(_displayStyle)) {
+			_displayStyle = portalPreferences.getValue(
+				DepotPortletKeys.DEPOT_ADMIN, "display-style",
+				getDefaultDisplayStyle());
+		}
+
+		portalPreferences.setValue(
+			DepotPortletKeys.DEPOT_ADMIN, "display-style", _displayStyle);
 
 		return _displayStyle;
 	}
