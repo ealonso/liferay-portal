@@ -19,6 +19,9 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.info.display.contributor.InfoDisplayContributor;
+import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
+import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -29,6 +32,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.ResourceRequest;
@@ -86,6 +90,29 @@ public class GetFragmentEntryLinkMVCResourceCommand
 			defaultFragmentRendererContext.setSegmentsExperienceIds(
 				new long[] {segmentsExperienceId});
 
+			String collectionItemClassName = ParamUtil.getString(
+				resourceRequest, "collectionItemClassName");
+
+			long collectionItemClassPK = ParamUtil.getLong(
+				resourceRequest, "collectionItemClassPK");
+
+			if (Validator.isNotNull(collectionItemClassName) &&
+				(collectionItemClassPK > 0)) {
+
+				InfoDisplayContributor infoDisplayContributor =
+					_infoDisplayContributorTracker.getInfoDisplayContributor(
+						collectionItemClassName);
+
+				if (infoDisplayContributor != null) {
+					InfoDisplayObjectProvider infoDisplayObjectProvider =
+						infoDisplayContributor.getInfoDisplayObjectProvider(
+							collectionItemClassPK);
+
+					defaultFragmentRendererContext.setDisplayObject(
+						infoDisplayObjectProvider.getDisplayObject());
+				}
+			}
+
 			HttpServletRequest httpServletRequest =
 				_portal.getHttpServletRequest(resourceRequest);
 
@@ -119,6 +146,9 @@ public class GetFragmentEntryLinkMVCResourceCommand
 
 	@Reference
 	private FragmentRendererController _fragmentRendererController;
+
+	@Reference
+	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
 
 	@Reference
 	private Portal _portal;
