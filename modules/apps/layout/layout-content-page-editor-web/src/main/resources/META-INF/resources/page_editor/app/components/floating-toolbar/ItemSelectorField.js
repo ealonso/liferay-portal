@@ -28,6 +28,18 @@ export const ItemSelectorField = ({field, onValueSelect, value}) => {
 
 	const {typeOptions = {}} = field;
 
+	const className =
+		value.className ||
+		(collectionItemContext.collectionItem
+			? collectionItemContext.collectionItem.className
+			: '');
+
+	const classPK =
+		value.className ||
+		(collectionItemContext.collectionItem
+			? collectionItemContext.collectionItem.classPK
+			: '');
+
 	return (
 		<>
 			<ClayForm.Group small>
@@ -43,17 +55,21 @@ export const ItemSelectorField = ({field, onValueSelect, value}) => {
 						});
 					}}
 					selectedItemTitle={
-						value.title || (collectionItemContext.collectionItem
+						value.title ||
+						(collectionItemContext.collectionItem
 							? Liferay.Language.get('collection-item')
 							: '')
 					}
 				/>
 			</ClayForm.Group>
 
-			{typeOptions.enableSelectTemplate && value.className && (
+			{typeOptions.enableSelectTemplate && className && (
 				<ClayForm.Group small>
 					<TemplateSelector
-						item={value}
+						item={{
+							className,
+							classPK,
+						}}
 						onTemplateSelect={template => {
 							onValueSelect(field.name, {...value, template});
 						}}
