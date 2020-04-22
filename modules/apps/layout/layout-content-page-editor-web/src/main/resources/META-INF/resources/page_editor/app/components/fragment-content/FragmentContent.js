@@ -99,9 +99,9 @@ const FragmentContent = React.forwardRef(
 				: {}
 		);
 
-		const [content, setContent] = useState(defaultContent);
-
 		const collectionItemContext = useContext(CollectionItemContext);
+
+		const [content, setContent] = useState(defaultContent);
 
 		const collectionItemClassName = collectionItemContext.collectionItem
 			? collectionItemContext.collectionItem.className
@@ -111,6 +111,14 @@ const FragmentContent = React.forwardRef(
 			? collectionItemContext.collectionItem.classPK
 			: '';
 
+		const collectionItemContent = collectionItemContext.collectionItem
+			? collectionItemContext.collectionItemContent
+			: '';
+
+		const setCollectionItemContent = collectionItemContext.setCollectionItemContent
+			? collectionItemContext.setCollectionItemContent
+			: undefined;
+
 		useEffect(() => {
 			FragmentService.renderFragmentEntryLinkContent({
 				collectionItemClassName,
@@ -118,15 +126,22 @@ const FragmentContent = React.forwardRef(
 				fragmentEntryLinkId,
 				onNetworkStatus: dispatch,
 				segmentsExperienceId,
-			}).then(({content}) =>
-				dispatch(
-					updateFragmentEntryLinkContent({
-						content,
-						editableValues,
-						fragmentEntryLinkId,
-					})
-				)
-			);
+			}).then(({content}) => {
+				if (setCollectionItemContent) {
+					setCollectionItemContent(content);
+
+					setContent(content);
+				}
+				else {
+					dispatch(
+						updateFragmentEntryLinkContent({
+							content,
+							editableValues,
+							fragmentEntryLinkId,
+						})
+					);
+				}
+			});
 		}, [
 			collectionItemClassName,
 			collectionItemClassPK,
@@ -134,11 +149,12 @@ const FragmentContent = React.forwardRef(
 			editableValues,
 			fragmentEntryLinkId,
 			segmentsExperienceId,
+			setCollectionItemContent,
 		]);
 
 		useEffect(() => {
 			let element = document.createElement('div');
-			element.innerHTML = defaultContent;
+			element.innerHTML = collectionItemContent || defaultContent;
 
 			const updateContent = debounce(() => {
 				if (isMounted() && element) {
@@ -176,6 +192,7 @@ const FragmentContent = React.forwardRef(
 				element = null;
 			};
 		}, [
+			collectionItemContent,
 			defaultContent,
 			editableProcessorUniqueId,
 			editableValues,
