@@ -42,17 +42,6 @@ public class FragmentEntryLinkModelListener
 	public void onAfterCreate(FragmentEntryLink fragmentEntryLink)
 		throws ModelListenerException {
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					fragmentEntryLink.getGroupId(),
-					fragmentEntryLink.getClassNameId(),
-					fragmentEntryLink.getClassPK());
-
-		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(
-				fragmentEntryLink.getSegmentsExperienceId()));
-
 		try {
 			JSONObject editableValuesJSONObject =
 				JSONFactoryUtil.createJSONObject(
@@ -62,12 +51,32 @@ public class FragmentEntryLinkModelListener
 				editableValuesJSONObject.getJSONObject(
 					DropZoneFragmentEntryProcessor.class.getName());
 
+			if (dropZoneProcessorJSONObject == null) {
+				return;
+			}
+
 			JSONArray jsonArray = dropZoneProcessorJSONObject.getJSONArray(
 				"dropZones");
 
 			if (jsonArray == null) {
 				return;
 			}
+
+            LayoutPageTemplateStructure layoutPageTemplateStructure =
+                _layoutPageTemplateStructureLocalService.
+                    fetchLayoutPageTemplateStructure(
+                        fragmentEntryLink.getGroupId(),
+                        fragmentEntryLink.getClassNameId(),
+                        fragmentEntryLink.getClassPK());
+
+            String data = layoutPageTemplateStructure.getData(
+                fragmentEntryLink.getSegmentsExperienceId());
+
+            if (Validator.isNull(data)) {
+                return;
+            }
+
+            LayoutStructure layoutStructure = LayoutStructure.of(data);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject dropZoneJSONObject = jsonArray.getJSONObject(i);
