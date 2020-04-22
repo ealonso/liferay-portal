@@ -14,25 +14,32 @@
 
 package com.liferay.layout.content.page.editor.web.internal.segments;
 
+import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.PortletKeys;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.segments.util.SegmentsExperiencePortletUtil;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Eduardo García
@@ -41,136 +48,28 @@ import java.util.Map;
 public class SegmentsExperienceUtil {
 
 	public static void copySegmentsExperienceData(
-			long classNameId, long classPK, long groupId,
-			long sourceSegmentsExperienceId, long targetSegmentsExperienceId)
+			long classNameId, long classPK, CommentManager commentManager,
+			long groupId, long sourceSegmentsExperienceId,
+			long targetSegmentsExperienceId,
+			Function<String, ServiceContext> serviceContextFunction,
+			long userId)
 		throws PortalException {
 
 		_copyLayoutData(
-			classNameId, classPK, groupId, sourceSegmentsExperienceId,
-			targetSegmentsExperienceId);
-
-		_copyFragmentEntryLinksEditableValues(
-			classNameId, classPK, groupId, sourceSegmentsExperienceId,
-			targetSegmentsExperienceId);
+			classNameId, classPK, commentManager, groupId,
+			sourceSegmentsExperienceId, targetSegmentsExperienceId,
+			serviceContextFunction, userId);
 
 		_copyPortletPreferences(
 			classPK, sourceSegmentsExperienceId, targetSegmentsExperienceId);
 	}
 
-	protected static JSONObject copyEditableValues(
-		JSONObject editableValuesJSONObject, long sourceSegmentsExperienceId,
-		long targetSegmentsExperienceId) {
-
-		Iterator<String> keysIterator = editableValuesJSONObject.keys();
-
-		while (keysIterator.hasNext()) {
-			String editableProcessorKey = keysIterator.next();
-
-			JSONObject editableProcessorJSONObject =
-				editableValuesJSONObject.getJSONObject(editableProcessorKey);
-
-			if (editableProcessorJSONObject == null) {
-				continue;
-			}
-
-			Iterator<String> editableKeysIterator =
-				editableProcessorJSONObject.keys();
-
-			while (editableKeysIterator.hasNext()) {
-				String editableKey = editableKeysIterator.next();
-
-				if (editableKey.startsWith(
-						SegmentsExperienceConstants.ID_PREFIX)) {
-
-					JSONObject baseExperienceValueJSONObject =
-						editableProcessorJSONObject.getJSONObject(
-							SegmentsExperienceConstants.ID_PREFIX +
-								sourceSegmentsExperienceId);
-
-					editableProcessorJSONObject.put(
-						SegmentsExperienceConstants.ID_PREFIX +
-							targetSegmentsExperienceId,
-						baseExperienceValueJSONObject);
-
-					editableValuesJSONObject.put(
-						editableProcessorKey, editableProcessorJSONObject);
-
-					break;
-				}
-
-				JSONObject editableJSONObject =
-					editableProcessorJSONObject.getJSONObject(editableKey);
-
-				if ((editableJSONObject == null) ||
-					!editableJSONObject.has(
-						SegmentsExperienceConstants.ID_PREFIX +
-							sourceSegmentsExperienceId)) {
-
-					continue;
-				}
-
-				JSONObject valueJSONObject = editableJSONObject.getJSONObject(
-					SegmentsExperienceConstants.ID_PREFIX +
-						sourceSegmentsExperienceId);
-
-				editableJSONObject.put(
-					SegmentsExperienceConstants.ID_PREFIX +
-						targetSegmentsExperienceId,
-					valueJSONObject);
-
-				editableProcessorJSONObject.put(
-					editableKey, editableJSONObject);
-
-				editableValuesJSONObject.put(
-					editableProcessorKey, editableProcessorJSONObject);
-			}
-		}
-
-		return editableValuesJSONObject;
-	}
-
-	private static Map<Long, String> _copyFragmentEntryLinksEditableValues(
-			List<FragmentEntryLink> fragmentEntryLinks,
-			long sourceSegmentsExperienceId, long targetSegmentsExperienceId)
-		throws PortalException {
-
-		Map<Long, String> fragmentEntryLinksEditableValuesMap = new HashMap<>();
-
-		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
-			JSONObject editableValuesJSONObject =
-				JSONFactoryUtil.createJSONObject(
-					fragmentEntryLink.getEditableValues());
-
-			copyEditableValues(
-				editableValuesJSONObject, sourceSegmentsExperienceId,
-				targetSegmentsExperienceId);
-
-			fragmentEntryLinksEditableValuesMap.put(
-				fragmentEntryLink.getFragmentEntryLinkId(),
-				editableValuesJSONObject.toString());
-		}
-
-		return fragmentEntryLinksEditableValuesMap;
-	}
-
-	private static void _copyFragmentEntryLinksEditableValues(
-			long classNameId, long classPK, long groupId,
-			long sourceSegmentsExperienceId, long targetSegmentsExperienceId)
-		throws PortalException {
-
-		Map<Long, String> fragmentEntryLinksEditableValuesMap =
-			_copyFragmentEntryLinksEditableValues(
-				FragmentEntryLinkLocalServiceUtil.getFragmentEntryLinks(
-					groupId, classNameId, classPK),
-				sourceSegmentsExperienceId, targetSegmentsExperienceId);
-
-		FragmentEntryLinkLocalServiceUtil.updateFragmentEntryLinks(
-			fragmentEntryLinksEditableValuesMap);
-	}
-
 	private static void _copyLayoutData(
-			long classNameId, long classPK, long groupId,
-			long sourceSegmentsExperienceId, long targetSegmentsExperienceId)
+			long classNameId, long classPK, CommentManager commentManager,
+			long groupId, long sourceSegmentsExperienceId,
+			long targetSegmentsExperienceId,
+			Function<String, ServiceContext> serviceContextFunction,
+			long userId)
 		throws PortalException {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
@@ -178,11 +77,16 @@ public class SegmentsExperienceUtil {
 				fetchLayoutPageTemplateStructure(
 					groupId, classNameId, classPK, true);
 
+		JSONObject dataJSONObject = _updateLayoutDataJSONObject(
+			classNameId, classPK, commentManager,
+			layoutPageTemplateStructure.getData(sourceSegmentsExperienceId),
+			groupId, sourceSegmentsExperienceId, serviceContextFunction,
+			targetSegmentsExperienceId, userId);
+
 		LayoutPageTemplateStructureLocalServiceUtil.
 			updateLayoutPageTemplateStructure(
 				groupId, classNameId, classPK, targetSegmentsExperienceId,
-				layoutPageTemplateStructure.getData(
-					sourceSegmentsExperienceId));
+				dataJSONObject.toString());
 	}
 
 	private static void _copyPortletPreferences(
@@ -235,6 +139,74 @@ public class SegmentsExperienceUtil {
 					existingPortletPreferences);
 			}
 		}
+	}
+
+	private static JSONObject _updateLayoutDataJSONObject(
+			long classNameId, long classPK, CommentManager commentManager,
+			String data, long groupId, long sourceSegmentsExperienceId,
+			Function<String, ServiceContext> serviceContextFunction,
+			long targetSegmentsExperienceId, long userId)
+		throws PortalException {
+
+		LayoutStructure layoutStructure = LayoutStructure.of(data);
+
+		List<FragmentEntryLink> fragmentEntryLinks =
+			FragmentEntryLinkLocalServiceUtil.
+				getFragmentEntryLinksBySegmentsExperienceId(
+					groupId, sourceSegmentsExperienceId, classNameId, classPK);
+
+		Stream<FragmentEntryLink> stream = fragmentEntryLinks.stream();
+
+		Map<Long, FragmentEntryLink> fragmentEntryLinkMap = stream.collect(
+			Collectors.toMap(
+				FragmentEntryLink::getFragmentEntryLinkId,
+				fragmentEntryLink -> fragmentEntryLink));
+
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
+
+			if (!(layoutStructureItem instanceof FragmentLayoutStructureItem)) {
+				continue;
+			}
+
+			FragmentLayoutStructureItem fragmentLayoutStructureItem =
+				(FragmentLayoutStructureItem)layoutStructureItem;
+
+			FragmentEntryLink fragmentEntryLink = fragmentEntryLinkMap.get(
+				fragmentLayoutStructureItem.getFragmentEntryLinkId());
+
+			if (fragmentEntryLink == null) {
+				continue;
+			}
+
+			FragmentEntryLink newFragmentEntryLink =
+				(FragmentEntryLink)fragmentEntryLink.clone();
+
+			newFragmentEntryLink.setUuid(PortalUUIDUtil.generate());
+			newFragmentEntryLink.setFragmentEntryLinkId(
+				CounterLocalServiceUtil.increment());
+			newFragmentEntryLink.setCreateDate(new Date());
+			newFragmentEntryLink.setModifiedDate(new Date());
+			newFragmentEntryLink.setOriginalFragmentEntryLinkId(0);
+			newFragmentEntryLink.setSegmentsExperienceId(
+				targetSegmentsExperienceId);
+			newFragmentEntryLink.setLastPropagationDate(new Date());
+
+			newFragmentEntryLink =
+				FragmentEntryLinkLocalServiceUtil.addFragmentEntryLink(
+					newFragmentEntryLink);
+
+			fragmentLayoutStructureItem.setFragmentEntryLinkId(
+				newFragmentEntryLink.getFragmentEntryLinkId());
+
+			commentManager.copyDiscussion(
+				userId, groupId, FragmentEntryLink.class.getName(),
+				fragmentEntryLink.getFragmentEntryLinkId(),
+				newFragmentEntryLink.getFragmentEntryLinkId(),
+				serviceContextFunction);
+		}
+
+		return layoutStructure.toJSONObject();
 	}
 
 }
