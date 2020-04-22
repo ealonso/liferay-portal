@@ -99,6 +99,8 @@ public class FileEntryInfoDisplayContributor
 			HashMapBuilder.<String, Object>putAll(
 				_infoDisplayFieldProvider.getContributorInfoDisplayFieldsValues(
 					getClassName(), fileEntry, locale)
+			).put(
+				"classPK", fileEntry.getFileEntryId()
 			).build();
 
 		if (fileEntry.getModel() instanceof DLFileEntry) {

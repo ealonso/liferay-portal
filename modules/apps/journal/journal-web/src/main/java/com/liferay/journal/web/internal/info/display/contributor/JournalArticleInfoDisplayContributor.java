@@ -158,6 +158,8 @@ public class JournalArticleInfoDisplayContributor
 					getClassName(), article, locale)
 		).putAll(
 			_getDDMTemplateInfoDisplayFieldsValues(article, locale)
+		).put(
+			"classPK", article.getResourcePrimKey()
 		).build();
 	}
 
