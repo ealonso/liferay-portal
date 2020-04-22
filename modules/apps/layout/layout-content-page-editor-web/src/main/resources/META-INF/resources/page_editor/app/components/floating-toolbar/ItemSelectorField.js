@@ -15,14 +15,17 @@
 import ClayForm from '@clayui/form';
 import {useIsMounted} from 'frontend-js-react-web';
 import PropTypes from 'prop-types';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import ItemSelector from '../../../common/components/ItemSelector';
 import {ConfigurationFieldPropTypes} from '../../../prop-types/index';
 import InfoItemService from '../../services/InfoItemService';
 import {useDispatch} from '../../store/index';
+import {CollectionItemContext} from '../CollectionItemContext';
 
 export const ItemSelectorField = ({field, onValueSelect, value}) => {
+	const collectionItemContext = useContext(CollectionItemContext);
+
 	const {typeOptions = {}} = field;
 
 	return (
@@ -39,7 +42,11 @@ export const ItemSelectorField = ({field, onValueSelect, value}) => {
 							title: item.title,
 						});
 					}}
-					selectedItemTitle={value.title}
+					selectedItemTitle={
+						value.title || (collectionItemContext.collectionItem
+							? Liferay.Language.get('collection-item')
+							: '')
+					}
 				/>
 			</ClayForm.Group>
 
