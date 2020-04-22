@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.Tuple;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -86,7 +87,10 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		JSONObject jsonObject = _getFieldValueJSONObject(
 			fragmentRendererContext);
 
-		if (jsonObject == null) {
+		Optional<Object> displayObjectOptional =
+			fragmentRendererContext.getDisplayObjectOptional();
+
+		if (!displayObjectOptional.isPresent() && (jsonObject == null)) {
 			if (FragmentRendererUtil.isEditMode(httpServletRequest)) {
 				FragmentRendererUtil.printPortletMessageInfo(
 					httpServletRequest, httpServletResponse,
@@ -96,8 +100,16 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 			return;
 		}
 
-		Object displayObject = _getDisplayObject(
-			jsonObject.getString("className"), jsonObject.getLong("classPK"));
+		Object displayObject = null;
+
+		if (jsonObject != null) {
+			displayObject = _getDisplayObject(
+				jsonObject.getString("className"),
+				jsonObject.getLong("classPK"), displayObjectOptional);
+		}
+		else {
+			displayObject = displayObjectOptional.orElse(null);
+		}
 
 		if (displayObject == null) {
 			if (FragmentRendererUtil.isEditMode(httpServletRequest)) {
@@ -141,7 +153,10 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		}
 	}
 
-	private Object _getDisplayObject(String className, long classPK) {
+	private Object _getDisplayObject(
+		String className, long classPK,
+		Optional<Object> displayObjectOptional) {
+
 		InfoDisplayContributor infoDisplayContributor =
 			_infoDisplayContributorTracker.getInfoDisplayContributor(className);
 
@@ -150,7 +165,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 				infoDisplayContributor.getInfoDisplayObjectProvider(classPK);
 
 			if (infoDisplayObjectProvider == null) {
-				return null;
+				return displayObjectOptional.orElse(null);
 			}
 
 			return infoDisplayObjectProvider.getDisplayObject();
@@ -158,7 +173,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		catch (Exception exception) {
 		}
 
-		return null;
+		return displayObjectOptional.orElse(null);
 	}
 
 	private JSONObject _getFieldValueJSONObject(
