@@ -17,7 +17,7 @@ package com.liferay.fragment.entry.processor.drop.zone.model.listener;
 import com.liferay.fragment.entry.processor.drop.zone.DropZoneFragmentEntryProcessor;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
-import com.liferay.fragment.service.FragmentEntryLinkService;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
@@ -75,7 +75,9 @@ public class FragmentEntryLinkModelListener
 				editableValuesJSONObject.getJSONObject(
 					DropZoneFragmentEntryProcessor.class.getName());
 
-			if (dropZoneProcessorJSONObject == null) {
+			if ((dropZoneProcessorJSONObject == null) ||
+				(dropZoneProcessorJSONObject.length() <= 0)) {
+
 				return;
 			}
 
@@ -154,7 +156,7 @@ public class FragmentEntryLinkModelListener
 		throws PortalException {
 
 		FragmentEntryLink fragmentEntryLink =
-			_fragmentEntryLinkService.deleteFragmentEntryLink(
+			_fragmentEntryLinkLocalService.deleteFragmentEntryLink(
 				fragmentEntryLinkId);
 
 		if (fragmentEntryLink.getFragmentEntryId() == 0) {
@@ -275,7 +277,7 @@ public class FragmentEntryLinkModelListener
 	}
 
 	@Reference
-	private FragmentEntryLinkService _fragmentEntryLinkService;
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
 	@Reference
 	private LayoutClassedModelUsageLocalService
