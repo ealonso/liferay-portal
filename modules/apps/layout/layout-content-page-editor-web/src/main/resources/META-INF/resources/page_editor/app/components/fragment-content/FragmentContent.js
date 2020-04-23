@@ -173,6 +173,10 @@ const FragmentContent = React.forwardRef(
 					DROP_ZONE_FRAGMENT_ENTRY_PROCESSOR
 				] || {};
 
+			console.clear();
+			console.log(fragmentEntryLink.editableValues);
+			console.log(state.layoutData);
+
 			return dropZoneValues.dropZones || {};
 		});
 
