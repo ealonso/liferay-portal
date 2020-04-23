@@ -22,12 +22,13 @@ import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.util.Iterator;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -98,13 +99,6 @@ public class FragmentEntryLinkModelListener
 			return;
 		}
 
-		JSONArray dropZoneJSONArray = dropZoneProcessorJSONObject.getJSONArray(
-			"dropZones");
-
-		if (dropZoneJSONArray == null) {
-			return;
-		}
-
 		LayoutStructure layoutStructure = _getLayoutStructure(
 			fragmentEntryLink);
 
@@ -112,10 +106,12 @@ public class FragmentEntryLinkModelListener
 			return;
 		}
 
-		for (int i = 0; i < dropZoneJSONArray.length(); i++) {
-			JSONObject dropZoneJSONObject = dropZoneJSONArray.getJSONObject(i);
+		Iterator<String> keys = dropZoneProcessorJSONObject.keys();
 
-			String uuid = dropZoneJSONObject.getString("uuid");
+		while (keys.hasNext()) {
+			String key = keys.next();
+
+			String uuid = dropZoneProcessorJSONObject.getString(key);
 
 			if (Validator.isNotNull(uuid)) {
 				continue;
@@ -124,7 +120,8 @@ public class FragmentEntryLinkModelListener
 			LayoutStructureItem layoutStructureItem =
 				layoutStructure.addRootLayoutStructureItem();
 
-			dropZoneJSONObject.put("uuid", layoutStructureItem.getItemId());
+			dropZoneProcessorJSONObject.put(
+				key, layoutStructureItem.getItemId());
 		}
 
 		fragmentEntryLink.setEditableValues(
