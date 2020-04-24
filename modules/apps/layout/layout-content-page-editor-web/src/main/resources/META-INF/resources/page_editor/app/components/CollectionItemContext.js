@@ -12,7 +12,7 @@
  * details.
  */
 
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext} from 'react';
 
 import InfoItemService from '../services/InfoItemService';
 
@@ -23,7 +23,7 @@ const INITIAL_STATE = {
 	canElevate: null,
 	collectionFields: null,
 	collectionItem: null,
-	collectionItemContent: null,
+	collectionItemIndex: null,
 	fromControlsId: defaultFromControlsId,
 	setCollectionItemContent: () => null,
 	toControlsId: defaultToControlsId,
@@ -31,21 +31,7 @@ const INITIAL_STATE = {
 
 const CollectionItemContext = React.createContext(INITIAL_STATE);
 
-const CollectionItemContextProvider = props => {
-	const [collectionItemContent, setCollectionItemContent] = useState('');
-
-	return (
-		<CollectionItemContext.Provider
-			value={{
-				...props.value,
-				collectionItemContent,
-				setCollectionItemContent,
-			}}
-		>
-			{props.children}
-		</CollectionItemContext.Provider>
-	);
-};
+const CollectionItemContextProvider = CollectionItemContext.Provider;
 
 const useFromControlsId = () => {
 	const context = useContext(CollectionItemContext);

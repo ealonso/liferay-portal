@@ -98,6 +98,8 @@ const Grid = ({
 									collectionFields,
 									collectionItem:
 										collection[i * numberOfColumns + j],
+									collectionItemIndex:
+										i * numberOfColumns + j,
 									fromControlsId:
 										itemCount === 0 ? null : fromControlsId,
 									toControlsId:
