@@ -51,6 +51,7 @@ import com.liferay.layout.util.structure.CollectionLayoutStructureItem;
 import com.liferay.layout.util.structure.ColumnLayoutStructureItem;
 import com.liferay.layout.util.structure.ContainerLayoutStructureItem;
 import com.liferay.layout.util.structure.DropZoneLayoutStructureItem;
+import com.liferay.layout.util.structure.FragmentDropZoneLayoutStructureItem;
 import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
@@ -714,6 +715,14 @@ public class PageDefinitionConverterUtil {
 						}
 					};
 					type = PageElement.Type.DROP_ZONE;
+				}
+			};
+		}
+
+		if (layoutStructureItem instanceof FragmentDropZoneLayoutStructureItem) {
+			return new PageElement() {
+				{
+					type = PageElement.Type.FRAGMENT_DROP_ZONE;
 				}
 			};
 		}
