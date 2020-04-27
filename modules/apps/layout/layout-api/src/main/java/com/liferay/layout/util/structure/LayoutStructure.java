@@ -38,9 +38,17 @@ import java.util.UUID;
  */
 public class LayoutStructure {
 
+	public static LayoutStructure emptyLayoutStructure() {
+		LayoutStructure layoutStructure = new LayoutStructure();
+
+		layoutStructure.addRootLayoutStructureItem();
+
+		return layoutStructure;
+	}
+
 	public static LayoutStructure of(String layoutStructure) {
 		if (Validator.isNull(layoutStructure)) {
-			return new LayoutStructure();
+			return emptyLayoutStructure();
 		}
 
 		try {
@@ -87,7 +95,7 @@ public class LayoutStructure {
 			}
 		}
 
-		return new LayoutStructure();
+		return emptyLayoutStructure();
 	}
 
 	public LayoutStructure() {
