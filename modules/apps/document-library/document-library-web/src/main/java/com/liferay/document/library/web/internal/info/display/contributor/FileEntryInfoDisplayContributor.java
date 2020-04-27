@@ -100,7 +100,7 @@ public class FileEntryInfoDisplayContributor
 				_infoDisplayFieldProvider.getContributorInfoDisplayFieldsValues(
 					getClassName(), fileEntry, locale)
 			).put(
-				"classPK", fileEntry.getFileEntryId()
+				"classPK", String.valueOf(fileEntry.getFileEntryId())
 			).build();
 
 		if (fileEntry.getModel() instanceof DLFileEntry) {

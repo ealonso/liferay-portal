@@ -159,7 +159,7 @@ public class JournalArticleInfoDisplayContributor
 		).putAll(
 			_getDDMTemplateInfoDisplayFieldsValues(article, locale)
 		).put(
-			"classPK", article.getResourcePrimKey()
+			"classPK", String.valueOf(article.getResourcePrimKey())
 		).build();
 	}
 

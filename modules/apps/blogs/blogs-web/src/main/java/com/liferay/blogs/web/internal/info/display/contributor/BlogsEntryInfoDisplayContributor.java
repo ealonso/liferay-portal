@@ -79,7 +79,7 @@ public class BlogsEntryInfoDisplayContributor
 			_infoDisplayFieldProvider.getContributorInfoDisplayFieldsValues(
 				BlogsEntry.class.getName(), blogsEntry, locale)
 		).put(
-			"classPK", blogsEntry.getEntryId()
+			"classPK", String.valueOf(blogsEntry.getEntryId())
 		).build();
 	}
 
