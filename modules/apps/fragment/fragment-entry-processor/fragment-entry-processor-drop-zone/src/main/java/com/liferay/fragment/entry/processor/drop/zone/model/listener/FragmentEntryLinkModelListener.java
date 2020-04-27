@@ -18,8 +18,10 @@ import com.liferay.fragment.entry.processor.drop.zone.DropZoneFragmentEntryProce
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -88,6 +90,29 @@ public class FragmentEntryLinkModelListener
 		return LayoutStructure.of(data);
 	}
 
+	private String _getParentItemId(
+		LayoutStructure layoutStructure, long fragmentEntryLinkId) {
+
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
+
+			if (!(layoutStructureItem instanceof FragmentLayoutStructureItem)) {
+				continue;
+			}
+
+			FragmentLayoutStructureItem fragmentLayoutStructureItem =
+				(FragmentLayoutStructureItem)layoutStructureItem;
+
+			if (fragmentLayoutStructureItem.getFragmentEntryLinkId() ==
+					fragmentEntryLinkId) {
+
+				return fragmentLayoutStructureItem.getItemId();
+			}
+		}
+
+		return StringPool.BLANK;
+	}
+
 	private void _updateLayoutPageTemplateStructure(
 			FragmentEntryLink fragmentEntryLink)
 		throws PortalException {
@@ -112,6 +137,9 @@ public class FragmentEntryLinkModelListener
 			return;
 		}
 
+		String parentItemId = _getParentItemId(
+			layoutStructure, fragmentEntryLink.getFragmentEntryLinkId());
+
 		Iterator<String> keys = dropZoneProcessorJSONObject.keys();
 
 		while (keys.hasNext()) {
@@ -124,7 +152,8 @@ public class FragmentEntryLinkModelListener
 			}
 
 			LayoutStructureItem layoutStructureItem =
-				layoutStructure.addRootLayoutStructureItem();
+				layoutStructure.addFragmentDropZoneLayoutStructureItem(
+					parentItemId, 0);
 
 			dropZoneProcessorJSONObject.put(
 				key, layoutStructureItem.getItemId());
