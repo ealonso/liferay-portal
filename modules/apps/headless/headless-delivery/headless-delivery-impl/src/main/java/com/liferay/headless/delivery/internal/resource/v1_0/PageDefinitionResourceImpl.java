@@ -124,9 +124,6 @@ public class PageDefinitionResourceImpl extends BasePageDefinitionResourceImpl {
 			StringPool.BLANK, true, false, Collections.emptyMap(), 0,
 			serviceContext);
 
-		LayoutStructure layoutStructure =
-			LayoutStructure.emptyLayoutStructure();
-
 		_fragmentEntryLinkLocalService.
 			deleteLayoutPageTemplateEntryFragmentEntryLinks(
 				siteId, _portal.getClassNameId(Layout.class), layout.getPlid());
@@ -146,6 +143,9 @@ public class PageDefinitionResourceImpl extends BasePageDefinitionResourceImpl {
 		ObjectWriter objectWriter = objectMapper.writer(filterProvider);
 
 		try {
+			LayoutStructure layoutStructure =
+				LayoutStructure.emptyLayoutStructure();
+
 			_layoutPageTemplatesImporter.importPageElement(
 				layout, layoutStructure, layoutStructure.getMainItemId(),
 				objectWriter.writeValueAsString(
