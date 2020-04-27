@@ -395,7 +395,7 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"languageId", themeDisplay.getLanguageId()
 			).put(
-				"layoutData", JSONFactoryUtil.createJSONObject(_getLayoutData())
+				"layoutData", _getLayoutDataJSONObject()
 			).put(
 				"mappedInfoItems", _getMappedInfoItems()
 			).put(
@@ -1379,9 +1379,9 @@ public class ContentPageEditorDisplayContext {
 		return languageDirection;
 	}
 
-	private String _getLayoutData() {
-		if (_layoutData != null) {
-			return _layoutData;
+	private JSONObject _getLayoutDataJSONObject() {
+		if (_layoutDataJSONObject != null) {
+			return _layoutDataJSONObject;
 		}
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
@@ -1391,10 +1391,12 @@ public class ContentPageEditorDisplayContext {
 					PortalUtil.getClassNameId(Layout.class.getName()),
 					themeDisplay.getPlid());
 
-		_layoutData = layoutPageTemplateStructure.getData(
-			getSegmentsExperienceId());
+		LayoutStructure layoutStructure = LayoutStructure.of(
+			layoutPageTemplateStructure.getData(getSegmentsExperienceId()));
 
-		return _layoutData;
+		_layoutDataJSONObject = layoutStructure.toJSONObject();
+
+		return _layoutDataJSONObject;
 	}
 
 	private Set<Map<String, Object>> _getMappedInfoItems() {
@@ -1868,7 +1870,7 @@ public class ContentPageEditorDisplayContext {
 	private final ItemSelector _itemSelector;
 	private final LayoutContentPageEditorConfiguration
 		_layoutContentPageEditorConfiguration;
-	private String _layoutData;
+	private JSONObject _layoutDataJSONObject;
 	private LayoutStructure _masterLayoutStructure;
 	private Integer _pageType;
 	private final PortletRequest _portletRequest;
