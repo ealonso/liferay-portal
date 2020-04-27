@@ -189,9 +189,7 @@ public class LayoutPageTemplateStructureWrapper
 	}
 
 	@Override
-	public String getData(long[] segmentsExperienceIds)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
+	public String getData(long[] segmentsExperienceIds) {
 		return model.getData(segmentsExperienceIds);
 	}
 

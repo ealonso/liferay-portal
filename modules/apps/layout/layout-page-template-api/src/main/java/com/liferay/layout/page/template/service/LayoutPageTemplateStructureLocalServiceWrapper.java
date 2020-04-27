@@ -255,6 +255,11 @@ public class LayoutPageTemplateStructureLocalServiceWrapper
 			fetchLayoutPageTemplateStructure(groupId, classNameId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #fetchLayoutPageTemplateStructure(long, long, long)}
+	 */
+	@Deprecated
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateStructure
 			fetchLayoutPageTemplateStructure(
@@ -438,6 +443,10 @@ public class LayoutPageTemplateStructureLocalServiceWrapper
 			primaryKeyObj);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public com.liferay.layout.page.template.model.LayoutPageTemplateStructure
 			rebuildLayoutPageTemplateStructure(

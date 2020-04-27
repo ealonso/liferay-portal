@@ -249,6 +249,11 @@ public class LayoutPageTemplateStructureLocalServiceUtil {
 			groupId, classNameId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #fetchLayoutPageTemplateStructure(long, long, long)}
+	 */
+	@Deprecated
 	public static
 		com.liferay.layout.page.template.model.LayoutPageTemplateStructure
 				fetchLayoutPageTemplateStructure(
@@ -416,6 +421,10 @@ public class LayoutPageTemplateStructureLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public static
 		com.liferay.layout.page.template.model.LayoutPageTemplateStructure
 				rebuildLayoutPageTemplateStructure(

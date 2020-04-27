@@ -205,6 +205,11 @@ public interface LayoutPageTemplateStructureLocalService
 	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
 		long groupId, long classNameId, long classPK);
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #fetchLayoutPageTemplateStructure(long, long, long)}
+	 */
+	@Deprecated
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK,
@@ -325,6 +330,10 @@ public interface LayoutPageTemplateStructureLocalService
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	public LayoutPageTemplateStructure rebuildLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK)
 		throws PortalException;
