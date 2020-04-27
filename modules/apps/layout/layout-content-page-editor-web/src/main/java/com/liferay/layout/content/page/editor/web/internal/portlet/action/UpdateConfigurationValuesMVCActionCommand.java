@@ -121,7 +121,7 @@ public class UpdateConfigurationValuesMVCActionCommand
 				fetchLayoutPageTemplateStructure(
 					themeDisplay.getScopeGroupId(),
 					_portal.getClassNameId(Layout.class.getName()),
-					themeDisplay.getPlid(), true);
+					themeDisplay.getPlid());
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(

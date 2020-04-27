@@ -78,14 +78,13 @@ public class LayoutStructureUtil {
 	}
 
 	public static LayoutStructure getLayoutStructure(
-			long groupId, long plid, long segmentsExperienceId)
-		throws PortalException {
+		long groupId, long plid, long segmentsExperienceId) {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
 					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, true);
+					plid);
 
 		return LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
@@ -105,7 +104,7 @@ public class LayoutStructureUtil {
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
 					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, true);
+					plid);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
@@ -142,7 +141,7 @@ public class LayoutStructureUtil {
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
 					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, true);
+					plid);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));

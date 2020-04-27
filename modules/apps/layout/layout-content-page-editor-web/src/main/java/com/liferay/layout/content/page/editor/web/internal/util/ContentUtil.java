@@ -86,8 +86,7 @@ public class ContentUtil {
 	}
 
 	public static Set<InfoDisplayObjectProvider>
-			getMappedInfoDisplayObjectProviders(long groupId, long plid)
-		throws PortalException {
+		getMappedInfoDisplayObjectProviders(long groupId, long plid) {
 
 		Set<Long> mappedClassPKs = new HashSet<>();
 
@@ -387,15 +386,14 @@ public class ContentUtil {
 	}
 
 	private static Set<InfoDisplayObjectProvider>
-			_getLayoutMappedInfoDisplayObjectProviders(
-				long groupId, long plid, Set<Long> mappedClassPKs)
-		throws PortalException {
+		_getLayoutMappedInfoDisplayObjectProviders(
+			long groupId, long plid, Set<Long> mappedClassPKs) {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
 					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, false);
+					plid);
 
 		return _getLayoutMappedInfoDisplayObjectProviders(
 			layoutPageTemplateStructure.getData(

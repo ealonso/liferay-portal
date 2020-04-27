@@ -114,7 +114,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			fetchLayoutPageTemplateStructure(
 				pageTemplateLayout.getGroupId(),
 				_portal.getClassNameId(Layout.class),
-				pageTemplateLayout.getPlid(), true);
+				pageTemplateLayout.getPlid());
 
 		draftLayout = _layoutCopyHelper.copyLayout(
 			pageTemplateLayout, draftLayout);

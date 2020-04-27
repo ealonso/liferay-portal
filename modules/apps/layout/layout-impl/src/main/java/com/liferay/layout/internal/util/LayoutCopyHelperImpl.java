@@ -159,12 +159,6 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				deleteLayoutPageTemplateEntryFragmentEntryLinks(
 					targetLayout.getGroupId(), classNameId,
 					targetLayout.getPlid());
-
-			layoutPageTemplateStructure =
-				_layoutPageTemplateStructureLocalService.
-					rebuildLayoutPageTemplateStructure(
-						sourceLayout.getGroupId(), classNameId,
-						sourceLayout.getPlid());
 		}
 
 		ServiceContext serviceContext = Optional.ofNullable(

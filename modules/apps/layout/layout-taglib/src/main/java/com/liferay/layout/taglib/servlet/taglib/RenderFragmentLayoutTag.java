@@ -23,8 +23,6 @@ import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.layout.util.structure.DropZoneLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -161,34 +159,27 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			return _layoutStructure;
 		}
 
-		try {
-			LayoutPageTemplateStructure layoutPageTemplateStructure =
-				LayoutPageTemplateStructureLocalServiceUtil.
-					fetchLayoutPageTemplateStructure(
-						getGroupId(),
-						PortalUtil.getClassNameId(Layout.class.getName()),
-						getPlid(), true);
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			LayoutPageTemplateStructureLocalServiceUtil.
+				fetchLayoutPageTemplateStructure(
+					getGroupId(),
+					PortalUtil.getClassNameId(Layout.class.getName()),
+					getPlid());
 
-			String data = layoutPageTemplateStructure.getData(
-				_getSegmentsExperienceIds());
+		String data = layoutPageTemplateStructure.getData(
+			_getSegmentsExperienceIds());
 
-			String masterLayoutData = _getMasterLayoutData();
+		String masterLayoutData = _getMasterLayoutData();
 
-			if (Validator.isNull(masterLayoutData)) {
-				_layoutStructure = LayoutStructure.of(data);
-
-				return _layoutStructure;
-			}
-
-			_layoutStructure = _mergeLayoutStructure(data, masterLayoutData);
+		if (Validator.isNull(masterLayoutData)) {
+			_layoutStructure = LayoutStructure.of(data);
 
 			return _layoutStructure;
 		}
-		catch (Exception exception) {
-			_log.error("Unable to get layout structure", exception);
 
-			return null;
-		}
+		_layoutStructure = _mergeLayoutStructure(data, masterLayoutData);
+
+		return _layoutStructure;
 	}
 
 	private String _getMainItemId() {
@@ -286,9 +277,6 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 	}
 
 	private static final String _PAGE = "/render_fragment_layout/page.jsp";
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		RenderFragmentLayoutTag.class);
 
 	private Map<String, Object> _fieldValues;
 	private long _groupId;

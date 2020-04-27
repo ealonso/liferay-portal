@@ -74,8 +74,7 @@ public class SegmentsExperienceUtil {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, classNameId, classPK, true);
+				fetchLayoutPageTemplateStructure(groupId, classNameId, classPK);
 
 		JSONObject dataJSONObject = _updateLayoutDataJSONObject(
 			classNameId, classPK, commentManager,

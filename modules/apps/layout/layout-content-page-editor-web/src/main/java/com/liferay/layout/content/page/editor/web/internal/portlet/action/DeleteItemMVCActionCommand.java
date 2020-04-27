@@ -85,7 +85,7 @@ public class DeleteItemMVCActionCommand
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
 					groupId, _portal.getClassNameId(Layout.class.getName()),
-					plid, true);
+					plid);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));

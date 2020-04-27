@@ -331,7 +331,7 @@ public class ContentPageLayoutEditorDisplayContext
 				fetchLayoutPageTemplateStructure(
 					themeDisplay.getScopeGroupId(),
 					PortalUtil.getClassNameId(Layout.class.getName()),
-					themeDisplay.getPlid(), true);
+					themeDisplay.getPlid());
 
 		if (layoutPageTemplateStructure == null) {
 			return Collections.emptyList();

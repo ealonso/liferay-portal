@@ -58,7 +58,7 @@ public class DefaultLayoutDefinitionImporter {
 					fetchLayoutPageTemplateStructure(
 						layout.getGroupId(),
 						_portal.getClassNameId(Layout.class.getName()),
-						layout.getPlid(), true);
+						layout.getPlid());
 
 			LayoutStructure layoutStructure = LayoutStructure.of(
 				layoutPageTemplateStructure.getData(

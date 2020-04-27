@@ -107,7 +107,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 				fetchLayoutPageTemplateStructure(
 					_group.getGroupId(),
 					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid(), true);
+					_layout.getPlid());
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
@@ -154,7 +154,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 				fetchLayoutPageTemplateStructure(
 					_group.getGroupId(),
 					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid(), true);
+					_layout.getPlid());
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
@@ -209,7 +209,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 				fetchLayoutPageTemplateStructure(
 					_group.getGroupId(),
 					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid(), true);
+					_layout.getPlid());
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(

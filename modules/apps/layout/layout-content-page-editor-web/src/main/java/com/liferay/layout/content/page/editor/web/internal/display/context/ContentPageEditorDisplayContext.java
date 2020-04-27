@@ -1379,7 +1379,7 @@ public class ContentPageEditorDisplayContext {
 		return languageDirection;
 	}
 
-	private String _getLayoutData() throws PortalException {
+	private String _getLayoutData() {
 		if (_layoutData != null) {
 			return _layoutData;
 		}
@@ -1389,7 +1389,7 @@ public class ContentPageEditorDisplayContext {
 				fetchLayoutPageTemplateStructure(
 					themeDisplay.getScopeGroupId(),
 					PortalUtil.getClassNameId(Layout.class.getName()),
-					themeDisplay.getPlid(), true);
+					themeDisplay.getPlid());
 
 		_layoutData = layoutPageTemplateStructure.getData(
 			getSegmentsExperienceId());
@@ -1397,9 +1397,7 @@ public class ContentPageEditorDisplayContext {
 		return _layoutData;
 	}
 
-	private Set<Map<String, Object>> _getMappedInfoItems()
-		throws PortalException {
-
+	private Set<Map<String, Object>> _getMappedInfoItems() {
 		Set<Map<String, Object>> mappedInfoItems = new HashSet<>();
 
 		Set<InfoDisplayObjectProvider> infoDisplayObjectProviders =
@@ -1449,7 +1447,7 @@ public class ContentPageEditorDisplayContext {
 					fetchLayoutPageTemplateStructure(
 						getGroupId(),
 						PortalUtil.getClassNameId(Layout.class.getName()),
-						masterLayoutPageTemplateEntry.getPlid(), true);
+						masterLayoutPageTemplateEntry.getPlid());
 
 			String masterLayoutData = layoutPageTemplateStructure.getData(
 				SegmentsExperienceConstants.ID_DEFAULT);
