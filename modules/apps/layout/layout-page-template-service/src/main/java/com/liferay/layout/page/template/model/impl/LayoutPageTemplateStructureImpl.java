@@ -17,7 +17,6 @@ package com.liferay.layout.page.template.model.impl;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.util.Arrays;
@@ -45,7 +44,7 @@ public class LayoutPageTemplateStructureImpl
 		return StringPool.BLANK;
 	}
 
-	public String getData(long[] segmentsExperienceIds) throws PortalException {
+	public String getData(long[] segmentsExperienceIds) {
 		long segmentsExperienceId = _getFirstSegmentsExperienceId(
 			segmentsExperienceIds);
 
