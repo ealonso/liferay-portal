@@ -41,6 +41,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMFormRule;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
+import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
 import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.model.DDMTemplateConstants;
@@ -210,9 +211,16 @@ public class DDMStructureLocalServiceImpl
 
 		// Structure layout
 
-		_ddmStructureLayoutLocalService.addStructureLayout(
-			userId, groupId, structureVersion.getStructureVersionId(),
-			ddmFormLayout, serviceContext);
+		DDMStructureLayout structureLayout =
+			_ddmStructureLayoutLocalService.addStructureLayout(
+				userId, groupId, structureVersion.getStructureVersionId(),
+				ddmFormLayout, serviceContext);
+
+		structureLayout.setClassNameId(structure.getClassNameId());
+		structureLayout.setStructureLayoutKey(structure.getStructureKey());
+
+		_ddmStructureLayoutLocalService.updateDDMStructureLayout(
+			structureLayout);
 
 		// Data provider instance links
 
