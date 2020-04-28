@@ -38,7 +38,6 @@ import com.liferay.layout.page.template.importer.LayoutPageTemplatesImporter;
 import com.liferay.layout.page.template.importer.LayoutPageTemplatesImporterResultEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
@@ -55,7 +54,6 @@ import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -175,7 +173,11 @@ public class LayoutPageTemplatesImporterImpl
 				layoutStructure,
 				parentLayoutStructureItem.getChildrenItemIds()));
 
-		_updateLayoutPageTemplateStructure(layout, layoutStructure);
+		_layoutPageTemplateStructureLocalService.
+			updateLayoutPageTemplateStructure(
+				layout.getGroupId(),
+				_portal.getClassNameId(Layout.class.getName()),
+				layout.getPlid(), layoutStructure.toString());
 
 		return fragmentEntryLinks;
 	}
@@ -1056,7 +1058,11 @@ public class LayoutPageTemplatesImporterImpl
 			}
 		}
 
-		_updateLayoutPageTemplateStructure(layout, layoutStructure);
+		_layoutPageTemplateStructureLocalService.
+			updateLayoutPageTemplateStructure(
+				layout.getGroupId(),
+				_portal.getClassNameId(Layout.class.getName()),
+				layout.getPlid(), layoutStructure.toString());
 
 		_updateLayouts(layoutPageTemplateEntry);
 	}
@@ -1172,30 +1178,6 @@ public class LayoutPageTemplatesImporterImpl
 		}
 
 		return null;
-	}
-
-	private void _updateLayoutPageTemplateStructure(
-			Layout layout, LayoutStructure layoutStructure)
-		throws Exception {
-
-		long classNameId = _portal.getClassNameId(Layout.class.getName());
-
-		JSONObject jsonObject = layoutStructure.toJSONObject();
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(), classNameId, layout.getPlid());
-
-		if (layoutPageTemplateStructure != null) {
-			_layoutPageTemplateStructureLocalService.
-				deleteLayoutPageTemplateStructure(layoutPageTemplateStructure);
-		}
-
-		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
-			layout.getUserId(), layout.getGroupId(), classNameId,
-			layout.getPlid(), jsonObject.toString(),
-			ServiceContextThreadLocal.getServiceContext());
 	}
 
 	private void _updateLayouts(LayoutPageTemplateEntry layoutPageTemplateEntry)
