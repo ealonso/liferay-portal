@@ -32,8 +32,6 @@ import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.headless.delivery.dto.v1_0.PageElement;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.layout.page.template.headless.delivery.dto.v1_0.PageDefinitionConverterUtil;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureServiceUtil;
 import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
@@ -76,19 +74,6 @@ public class LayoutStructureUtil {
 		}
 
 		return ArrayUtil.toLongArray(fragmentEntryLinkIds);
-	}
-
-	public static LayoutStructure getLayoutStructure(
-		long groupId, long plid, long segmentsExperienceId) {
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid);
-
-		return LayoutStructure.of(
-			layoutPageTemplateStructure.getData(segmentsExperienceId));
 	}
 
 	public static String getLayoutStructureItemJSON(
