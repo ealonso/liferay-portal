@@ -24,8 +24,7 @@ import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.web.internal.security.permission.resource.ModelResourcePermissionUtil;
 import com.liferay.layout.model.LayoutClassedModelUsage;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalServiceUtil;
 import com.liferay.layout.util.structure.ContainerLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
@@ -389,16 +388,12 @@ public class ContentUtil {
 		_getLayoutMappedInfoDisplayObjectProviders(
 			long groupId, long plid, Set<Long> mappedClassPKs) {
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid);
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				groupId, plid, SegmentsExperienceConstants.ID_DEFAULT);
 
 		return _getLayoutMappedInfoDisplayObjectProviders(
-			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT),
-			mappedClassPKs);
+			layoutStructure.toString(), mappedClassPKs);
 	}
 
 	private static Set<InfoDisplayObjectProvider>

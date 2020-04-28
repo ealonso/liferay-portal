@@ -42,9 +42,8 @@ import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.page.template.util.PaddingConverter;
 import com.liferay.layout.util.structure.CollectionItemLayoutStructureItem;
 import com.liferay.layout.util.structure.CollectionLayoutStructureItem;
@@ -530,16 +529,9 @@ public class PageDefinitionConverterUtil {
 		com.liferay.portal.kernel.model.Layout layout,
 		boolean saveInlineContent, boolean saveMappingConfiguration) {
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(),
-					PortalUtil.getClassNameId(
-						com.liferay.portal.kernel.model.Layout.class),
-					layout.getPlid());
-
-		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(0L));
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				layout.getGroupId(), layout.getPlid(), 0);
 
 		LayoutStructureItem mainLayoutStructureItem =
 			layoutStructure.getMainLayoutStructureItem();

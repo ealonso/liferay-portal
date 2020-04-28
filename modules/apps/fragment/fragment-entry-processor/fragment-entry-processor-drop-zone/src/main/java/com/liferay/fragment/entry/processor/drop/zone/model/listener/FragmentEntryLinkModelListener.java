@@ -18,8 +18,8 @@ import com.liferay.fragment.entry.processor.drop.zone.DropZoneFragmentEntryProce
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
 import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
@@ -81,8 +81,11 @@ public class FragmentEntryLinkModelListener
 				return;
 			}
 
-			LayoutStructure layoutStructure = _getLayoutStructure(
-				fragmentEntryLink);
+			LayoutStructure layoutStructure =
+				LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+					fragmentEntryLink.getGroupId(),
+					fragmentEntryLink.getClassPK(),
+					fragmentEntryLink.getSegmentsExperienceId());
 
 			if (layoutStructure == null) {
 				return;
@@ -202,30 +205,6 @@ public class FragmentEntryLinkModelListener
 			fragmentEntryLink.getClassPK());
 	}
 
-	private LayoutStructure _getLayoutStructure(
-		FragmentEntryLink fragmentEntryLink) {
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					fragmentEntryLink.getGroupId(),
-					fragmentEntryLink.getClassNameId(),
-					fragmentEntryLink.getClassPK());
-
-		if (layoutPageTemplateStructure == null) {
-			return null;
-		}
-
-		String data = layoutPageTemplateStructure.getData(
-			fragmentEntryLink.getSegmentsExperienceId());
-
-		if (Validator.isNull(data)) {
-			return null;
-		}
-
-		return LayoutStructure.of(data);
-	}
-
 	private void _updateLayoutPageTemplateStructure(
 			FragmentEntryLink fragmentEntryLink)
 		throws PortalException {
@@ -243,8 +222,11 @@ public class FragmentEntryLinkModelListener
 			return;
 		}
 
-		LayoutStructure layoutStructure = _getLayoutStructure(
-			fragmentEntryLink);
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				fragmentEntryLink.getGroupId(),
+				fragmentEntryLink.getClassPK(),
+				fragmentEntryLink.getSegmentsExperienceId());
 
 		if (layoutStructure == null) {
 			return;

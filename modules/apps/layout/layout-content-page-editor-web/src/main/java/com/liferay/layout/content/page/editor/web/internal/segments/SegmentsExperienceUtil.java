@@ -17,8 +17,8 @@ package com.liferay.layout.content.page.editor.web.internal.segments;
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.structure.FragmentLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
@@ -72,14 +72,9 @@ public class SegmentsExperienceUtil {
 			long userId)
 		throws PortalException {
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(groupId, classNameId, classPK);
-
 		JSONObject dataJSONObject = _updateLayoutDataJSONObject(
-			classNameId, classPK, commentManager,
-			layoutPageTemplateStructure.getData(sourceSegmentsExperienceId),
-			groupId, sourceSegmentsExperienceId, serviceContextFunction,
+			classNameId, classPK, commentManager, groupId,
+			sourceSegmentsExperienceId, serviceContextFunction,
 			targetSegmentsExperienceId, userId);
 
 		LayoutPageTemplateStructureLocalServiceUtil.
@@ -142,12 +137,14 @@ public class SegmentsExperienceUtil {
 
 	private static JSONObject _updateLayoutDataJSONObject(
 			long classNameId, long classPK, CommentManager commentManager,
-			String data, long groupId, long sourceSegmentsExperienceId,
+			long groupId, long sourceSegmentsExperienceId,
 			Function<String, ServiceContext> serviceContextFunction,
 			long targetSegmentsExperienceId, long userId)
 		throws PortalException {
 
-		LayoutStructure layoutStructure = LayoutStructure.of(data);
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				groupId, classPK, sourceSegmentsExperienceId);
 
 		List<FragmentEntryLink> fragmentEntryLinks =
 			FragmentEntryLinkLocalServiceUtil.

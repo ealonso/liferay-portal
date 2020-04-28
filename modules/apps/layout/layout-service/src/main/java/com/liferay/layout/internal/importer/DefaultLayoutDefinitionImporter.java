@@ -17,8 +17,8 @@ package com.liferay.layout.internal.importer;
 import com.liferay.document.library.kernel.util.DLUtil;
 import com.liferay.layout.internal.service.DefaultLayoutLayoutSetPrototypeLocalServiceWrapper;
 import com.liferay.layout.page.template.importer.LayoutPageTemplatesImporter;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
@@ -53,16 +53,10 @@ public class DefaultLayoutDefinitionImporter {
 		throws PortalException {
 
 		try {
-			LayoutPageTemplateStructure layoutPageTemplateStructure =
-				_layoutPageTemplateStructureLocalService.
-					fetchLayoutPageTemplateStructure(
-						layout.getGroupId(),
-						_portal.getClassNameId(Layout.class.getName()),
-						layout.getPlid());
-
-			LayoutStructure layoutStructure = LayoutStructure.of(
-				layoutPageTemplateStructure.getData(
-					SegmentsExperienceConstants.ID_DEFAULT));
+			LayoutStructure layoutStructure =
+				LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+					layout.getGroupId(), layout.getPlid(),
+					SegmentsExperienceConstants.ID_DEFAULT);
 
 			String releaseInfo = StringPool.BLANK;
 

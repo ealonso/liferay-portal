@@ -19,8 +19,8 @@ import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentComposition;
 import com.liferay.fragment.service.FragmentCollectionLocalService;
 import com.liferay.fragment.service.FragmentCompositionLocalService;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.StringPool;
@@ -44,7 +44,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
@@ -102,16 +101,10 @@ public class AddFragmentCompositionMVCActionCommandTest {
 		MockLiferayPortletActionResponse actionResponse =
 			new MockLiferayPortletActionResponse();
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					_group.getGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid());
-
-		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				_group.getGroupId(), _layout.getPlid(),
+				SegmentsExperienceConstants.ID_DEFAULT);
 
 		actionRequest.addParameter("fragmentCollectionId", String.valueOf(0));
 		actionRequest.addParameter("name", "test name");
@@ -149,16 +142,10 @@ public class AddFragmentCompositionMVCActionCommandTest {
 		MockLiferayPortletActionResponse actionResponse =
 			new MockLiferayPortletActionResponse();
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					_group.getGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid());
-
-		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				_group.getGroupId(), _layout.getPlid(),
+				SegmentsExperienceConstants.ID_DEFAULT);
 
 		FragmentCollection newFragmentCollection =
 			_fragmentCollectionLocalService.addFragmentCollection(
@@ -204,16 +191,10 @@ public class AddFragmentCompositionMVCActionCommandTest {
 		MockLiferayPortletActionResponse actionResponse =
 			new MockLiferayPortletActionResponse();
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					_group.getGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					_layout.getPlid());
-
-		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				_group.getGroupId(), _layout.getPlid(),
+				SegmentsExperienceConstants.ID_DEFAULT);
 
 		FragmentCollection newFragmentCollection =
 			_fragmentCollectionLocalService.addFragmentCollection(

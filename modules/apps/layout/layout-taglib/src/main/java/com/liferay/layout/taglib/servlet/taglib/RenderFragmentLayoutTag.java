@@ -15,9 +15,8 @@
 package com.liferay.layout.taglib.servlet.taglib;
 
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.taglib.internal.display.context.RenderFragmentLayoutDisplayContext;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.layout.util.structure.DropZoneLayoutStructureItem;
@@ -27,7 +26,6 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
@@ -159,25 +157,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			return _layoutStructure;
 		}
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					getGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					getPlid());
-
-		String data = layoutPageTemplateStructure.getData(
-			_getSegmentsExperienceIds());
-
-		String masterLayoutData = _getMasterLayoutData();
-
-		if (Validator.isNull(masterLayoutData)) {
-			_layoutStructure = LayoutStructure.of(data);
-
-			return _layoutStructure;
-		}
-
-		_layoutStructure = _mergeLayoutStructure(data, masterLayoutData);
+		_layoutStructure = _mergeLayoutStructure();
 
 		return _layoutStructure;
 	}
@@ -192,7 +172,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 		return layoutStructure.getMainItemId();
 	}
 
-	private String _getMasterLayoutData() {
+	private LayoutStructure _getMasterLayoutStructure() {
 		Layout layout = LayoutLocalServiceUtil.fetchLayout(_plid);
 
 		LayoutPageTemplateEntry masterLayoutPageTemplateEntry =
@@ -204,14 +184,9 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			return null;
 		}
 
-		LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					masterLayoutPageTemplateEntry.getGroupId(),
-					PortalUtil.getClassNameId(Layout.class),
-					masterLayoutPageTemplateEntry.getPlid());
-
-		return masterLayoutPageTemplateStructure.getData(
+		return LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+			masterLayoutPageTemplateEntry.getGroupId(),
+			masterLayoutPageTemplateEntry.getPlid(),
 			SegmentsExperienceConstants.ID_DEFAULT);
 	}
 
@@ -245,13 +220,18 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			new long[] {SegmentsExperienceConstants.ID_DEFAULT});
 	}
 
-	private LayoutStructure _mergeLayoutStructure(
-		String data, String masterLayoutData) {
+	private LayoutStructure _mergeLayoutStructure() {
+		LayoutStructure masterLayoutStructure = _getMasterLayoutStructure();
 
-		LayoutStructure masterLayoutStructure = LayoutStructure.of(
-			masterLayoutData);
+		long[] segmentsExperienceIds = _getSegmentsExperienceIds();
 
-		LayoutStructure layoutStructure = LayoutStructure.of(data);
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				getGroupId(), getPlid(), segmentsExperienceIds[0]);
+
+		if (masterLayoutStructure == null) {
+			return layoutStructure;
+		}
 
 		for (LayoutStructureItem layoutStructureItem :
 				layoutStructure.getLayoutStructureItems()) {

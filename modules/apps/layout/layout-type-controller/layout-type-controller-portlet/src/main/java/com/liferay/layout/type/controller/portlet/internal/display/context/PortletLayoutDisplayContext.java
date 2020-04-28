@@ -173,7 +173,13 @@ public class PortletLayoutDisplayContext {
 					layout.getMasterLayoutPlid());
 
 		if (masterLayoutPageTemplateEntry == null) {
-			_layoutStructure = _getDefaultMasterLayoutStructure();
+			LayoutStructure layoutStructure =
+				LayoutStructure.emptyLayoutStructure();
+
+			layoutStructure.addDropZoneLayoutStructureItem(
+				layoutStructure.getMainItemId(), 0);
+
+			_layoutStructure = layoutStructure;
 
 			return _layoutStructure;
 		}
@@ -197,16 +203,6 @@ public class PortletLayoutDisplayContext {
 		_layoutStructure = LayoutStructure.of(data);
 
 		return _layoutStructure;
-	}
-
-	private LayoutStructure _getDefaultMasterLayoutStructure() {
-		LayoutStructure layoutStructure =
-			LayoutStructure.emptyLayoutStructure();
-
-		layoutStructure.addDropZoneLayoutStructureItem(
-			layoutStructure.getMainItemId(), 0);
-
-		return layoutStructure;
 	}
 
 	private long[] _getSegmentsExperienceIds() {

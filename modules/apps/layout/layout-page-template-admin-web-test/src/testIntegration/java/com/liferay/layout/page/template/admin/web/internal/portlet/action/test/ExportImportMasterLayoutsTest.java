@@ -19,9 +19,9 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeCon
 import com.liferay.layout.page.template.importer.LayoutPageTemplatesImporter;
 import com.liferay.layout.page.template.importer.LayoutPageTemplatesImporterResultEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.structure.DropZoneLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
@@ -192,23 +192,14 @@ public class ExportImportMasterLayoutsTest {
 			layoutPageTemplateEntry1.getType(),
 			layoutPageTemplateEntry2.getType());
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure1 =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					layoutPageTemplateEntry1.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					layoutPageTemplateEntry1.getPlid());
-		LayoutPageTemplateStructure layoutPageTemplateStructure2 =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					layoutPageTemplateEntry2.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					layoutPageTemplateEntry2.getPlid());
-
-		LayoutStructure layoutStructure1 = LayoutStructure.of(
-			layoutPageTemplateStructure1.getData(0));
-		LayoutStructure layoutStructure2 = LayoutStructure.of(
-			layoutPageTemplateStructure2.getData(0));
+		LayoutStructure layoutStructure1 =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				layoutPageTemplateEntry1.getGroupId(),
+				layoutPageTemplateEntry1.getPlid(), 0);
+		LayoutStructure layoutStructure2 =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				layoutPageTemplateEntry2.getGroupId(),
+				layoutPageTemplateEntry2.getPlid(), 0);
 
 		DropZoneLayoutStructureItem dropZoneLayoutStructureItem1 =
 			_getDropZoneLayoutStructureItem(layoutStructure1);

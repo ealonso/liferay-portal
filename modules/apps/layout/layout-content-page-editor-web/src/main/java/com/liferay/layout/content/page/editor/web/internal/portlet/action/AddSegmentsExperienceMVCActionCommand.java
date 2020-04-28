@@ -24,8 +24,9 @@ import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.web.internal.segments.SegmentsExperienceUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkUtil;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
+import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -113,8 +114,7 @@ public class AddSegmentsExperienceMVCActionCommand
 		).put(
 			"layoutData",
 			_getLayoutDataJSONObject(
-				_portal.getClassNameId(Layout.class), themeDisplay.getPlid(),
-				themeDisplay.getScopeGroupId(),
+				themeDisplay.getPlid(), themeDisplay.getScopeGroupId(),
 				segmentsExperience.getSegmentsExperienceId())
 		).put(
 			"segmentsExperience",
@@ -234,16 +234,13 @@ public class AddSegmentsExperienceMVCActionCommand
 	}
 
 	private JSONObject _getLayoutDataJSONObject(
-			long classNameId, long classPK, long groupId,
-			long segmentsExperienceId)
-		throws PortalException {
+		long plid, long groupId, long segmentsExperienceId) {
 
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(groupId, classNameId, classPK);
+		LayoutStructure layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				groupId, plid, segmentsExperienceId);
 
-		return JSONFactoryUtil.createJSONObject(
-			layoutPageTemplateStructure.getData(segmentsExperienceId));
+		return layoutStructure.toJSONObject();
 	}
 
 	private JSONObject _getSegmentsExperienceJSONObject(
