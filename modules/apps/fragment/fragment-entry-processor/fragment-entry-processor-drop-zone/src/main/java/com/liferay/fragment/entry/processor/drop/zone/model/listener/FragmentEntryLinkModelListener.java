@@ -224,8 +224,7 @@ public class FragmentEntryLinkModelListener
 
 		LayoutStructure layoutStructure =
 			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
-				fragmentEntryLink.getGroupId(),
-				fragmentEntryLink.getClassPK(),
+				fragmentEntryLink.getGroupId(), fragmentEntryLink.getClassPK(),
 				fragmentEntryLink.getSegmentsExperienceId());
 
 		if (layoutStructure == null) {

@@ -24,9 +24,8 @@ import com.liferay.layout.list.retriever.LayoutListRetrieverTracker;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactory;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactoryTracker;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.structure.CollectionLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.StringPool;
@@ -184,23 +183,11 @@ public class PortletLayoutDisplayContext {
 			return _layoutStructure;
 		}
 
-		LayoutPageTemplateStructure masterLayoutPageTemplateStructure =
-			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					masterLayoutPageTemplateEntry.getGroupId(),
-					PortalUtil.getClassNameId(Layout.class),
-					masterLayoutPageTemplateEntry.getPlid());
-
-		String data = masterLayoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
-
-		if (Validator.isNull(data)) {
-			_layoutStructure = _getDefaultMasterLayoutStructure();
-
-			return _layoutStructure;
-		}
-
-		_layoutStructure = LayoutStructure.of(data);
+		_layoutStructure =
+			LayoutPageTemplateStructureHelperUtil.getLayoutStructure(
+				masterLayoutPageTemplateEntry.getGroupId(),
+				masterLayoutPageTemplateEntry.getPlid(),
+				SegmentsExperienceConstants.ID_DEFAULT);
 
 		return _layoutStructure;
 	}
