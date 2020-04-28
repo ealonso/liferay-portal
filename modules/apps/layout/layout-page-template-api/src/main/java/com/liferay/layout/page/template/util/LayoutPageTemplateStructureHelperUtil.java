@@ -16,9 +16,13 @@ package com.liferay.layout.page.template.util;
 
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
+import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.util.List;
 
@@ -73,6 +77,19 @@ public class LayoutPageTemplateStructureHelperUtil {
 		}
 
 		return layoutStructure.toJSONObject();
+	}
+
+	public static LayoutStructure getLayoutStructure(
+		long groupId, long plid, long segmentExperienceId) {
+
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			LayoutPageTemplateStructureLocalServiceUtil.
+				fetchLayoutPageTemplateStructure(
+					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
+					plid);
+
+		return LayoutStructure.of(
+			layoutPageTemplateStructure.getData(segmentExperienceId));
 	}
 
 }
