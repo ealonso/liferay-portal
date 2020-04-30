@@ -28,7 +28,10 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.asset.constants.AssetWebKeys" %><%@
+<%@ page import="com.liferay.app.builder.constants.AppBuilderPortletKeys" %><%@
+page import="com.liferay.app.builder.model.AppBuilderApp" %><%@
+page import="com.liferay.app.builder.service.AppBuilderAppLocalServiceUtil" %><%@
+page import="com.liferay.asset.constants.AssetWebKeys" %><%@
 page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@
 page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@

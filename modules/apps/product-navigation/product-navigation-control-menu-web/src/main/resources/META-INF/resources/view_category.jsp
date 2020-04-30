@@ -48,6 +48,16 @@ categories = ListUtil.sort(categories, new PortletCategoryComparator(locale));
 List<Portlet> portlets = new ArrayList<Portlet>();
 
 for (String portletId : portletCategory.getPortletIds()) {
+	if (StringUtil.startsWith(portletId, AppBuilderPortletKeys.WIDGET_APP)) {
+		long appBuilderAppId = GetterUtil.getLong(StringUtil.removeSubstring(portletId, AppBuilderPortletKeys.WIDGET_APP + StringPool.UNDERLINE));
+
+		AppBuilderApp appBuilderApp = AppBuilderAppLocalServiceUtil.fetchAppBuilderApp(appBuilderAppId);
+
+		if ((appBuilderApp == null) || (appBuilderApp.getCompanyId() != themeDisplay.getCompanyId())) {
+			continue;
+		}
+	}
+
 	Portlet portlet = PortletLocalServiceUtil.getPortletById(user.getCompanyId(), portletId);
 
 	if ((portlet != null) && PortletPermissionUtil.contains(permissionChecker, layout, portlet, ActionKeys.ADD_TO_PAGE)) {

@@ -14,6 +14,9 @@
 
 package com.liferay.layout.content.page.editor.web.internal.display.context;
 
+import com.liferay.app.builder.constants.AppBuilderPortletKeys;
+import com.liferay.app.builder.model.AppBuilderApp;
+import com.liferay.app.builder.service.AppBuilderAppLocalServiceUtil;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
@@ -105,6 +108,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -1576,6 +1580,30 @@ public class ContentPageEditorDisplayContext {
 		).filter(
 			portlet -> {
 				if (portlet == null) {
+					return false;
+				}
+
+				if (StringUtil.startsWith(
+						portlet.getPortletId(),
+						AppBuilderPortletKeys.WIDGET_APP)) {
+
+					long appBuilderAppId = GetterUtil.getLong(
+						StringUtil.removeSubstring(
+							portlet.getPortletId(),
+							AppBuilderPortletKeys.WIDGET_APP +
+								StringPool.UNDERLINE));
+
+					AppBuilderApp appBuilderApp =
+						AppBuilderAppLocalServiceUtil.fetchAppBuilderApp(
+							appBuilderAppId);
+
+					if ((appBuilderApp != null) &&
+						(appBuilderApp.getCompanyId() ==
+							themeDisplay.getCompanyId())) {
+
+						return true;
+					}
+
 					return false;
 				}
 
