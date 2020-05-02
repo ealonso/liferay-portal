@@ -24,12 +24,12 @@ import com.liferay.asset.test.util.AssetTestUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
-import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.test.constants.LayoutPortletKeys;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.layout.util.LayoutCopyHelper;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Image;
 import com.liferay.portal.kernel.model.Layout;
@@ -153,14 +153,23 @@ public class LayoutCopyHelperTest {
 
 		fragmentEntryLinks.add(fragmentEntryLink2);
 
-		JSONObject jsonObject =
-			LayoutPageTemplateStructureHelperUtil.
-				generateContentLayoutStructure(fragmentEntryLinks);
+		LayoutStructure layoutStructure =
+			LayoutStructure.emptyLayoutStructure();
+
+		LayoutStructureItem containerLayoutStructureItem =
+			layoutStructure.addContainerLayoutStructureItem(
+				layoutStructure.getMainItemId(), 0);
+
+		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+			layoutStructure.addFragmentLayoutStructureItem(
+				fragmentEntryLink.getFragmentEntryLinkId(),
+				containerLayoutStructureItem.getItemId(), 0);
+		}
 
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
 			sourceLayout.getUserId(), sourceLayout.getGroupId(),
 			_portal.getClassNameId(Layout.class), sourceLayout.getPlid(),
-			jsonObject.toString(), _serviceContext);
+			layoutStructure.toString(), _serviceContext);
 
 		Layout targetLayout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), StringPool.BLANK);
