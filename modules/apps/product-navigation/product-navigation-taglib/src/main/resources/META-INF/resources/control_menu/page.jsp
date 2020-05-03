@@ -72,6 +72,7 @@ for (ProductNavigationControlMenuCategory productNavigationControlMenuCategory :
 											markupView="<%= productNavigationControlMenuEntry.getMarkupView(request) %>"
 											message="<%= productNavigationControlMenuEntry.getLabel(locale) %>"
 											url="<%= productNavigationControlMenuEntry.getURL(request) %>"
+											useDialog="<%= productNavigationControlMenuEntry.isUseDialog() %>"
 										/>
 									</li>
 
