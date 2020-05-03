@@ -57,6 +57,10 @@ public class ControlPanelCategory extends BasePanelCategory {
 	public boolean isShow(PermissionChecker permissionChecker, Group group)
 		throws PortalException {
 
+		if (true) {
+			return false;
+		}
+
 		if (PortalPermissionUtil.contains(
 				permissionChecker, ActionKeys.VIEW_CONTROL_PANEL)) {
 
