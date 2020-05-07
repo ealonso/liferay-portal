@@ -16,11 +16,14 @@ package com.liferay.application.list.util;
 
 import com.liferay.application.list.PanelEntry;
 import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapper;
+import com.liferay.osgi.util.StringPlus;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.ListUtil;
 
 import org.osgi.framework.ServiceReference;
+
+import java.util.List;
 
 /**
  * @author Adolfo Pérez
@@ -33,16 +36,19 @@ public class PanelCategoryServiceReferenceMapper
 		ServiceReference<PanelEntry> serviceReference,
 		Emitter<String> emitter) {
 
-		String panelCategoryKey = (String)serviceReference.getProperty(
-			"panel.category.key");
+		List<String> panelCategoryKeys =
+			StringPlus.asList(serviceReference.getProperty(
+				"panel.category.key"));
 
-		if (Validator.isNull(panelCategoryKey)) {
+		if (ListUtil.isEmpty(panelCategoryKeys)) {
 			_log.error(
 				"Unable to register panel entry because of missing service " +
 					"property \"panel.category.key\"");
 		}
 		else {
-			emitter.emit(panelCategoryKey);
+			for (String panelCategoryKey : panelCategoryKeys) {
+				emitter.emit(panelCategoryKey);
+			}
 		}
 	}
 

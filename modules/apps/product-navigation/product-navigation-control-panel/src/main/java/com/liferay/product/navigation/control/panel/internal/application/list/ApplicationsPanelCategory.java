@@ -12,17 +12,15 @@
  * details.
  */
 
-package com.liferay.product.navigation.global.apps.web.internal.application.list;
+package com.liferay.product.navigation.control.panel.internal.application.list;
 
 import com.liferay.application.list.BasePanelCategory;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.product.navigation.simulation.constants.ProductNavigationSimulationConstants;
+import org.osgi.service.component.annotations.Component;
 
 import java.util.Locale;
-
-import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Eudaldo Alonso
@@ -30,22 +28,21 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
-		"panel.category.key=" + PanelCategoryKeys.HIDDEN,
-		"panel.category.order:Integer=600"
+		"panel.category.key=" + PanelCategoryKeys.GLOBAL_APPS,
+		"panel.category.order:Integer=50"
 	},
 	service = PanelCategory.class
 )
-public class GlobalAppsPanelCategory extends BasePanelCategory {
+public class ApplicationsPanelCategory extends BasePanelCategory {
 
 	@Override
 	public String getKey() {
-		return ProductNavigationSimulationConstants.
-			SIMULATION_PANEL_CATEGORY_KEY;
+		return PanelCategoryKeys.GLOBAL_APPS_APPLICATIONS;
 	}
 
 	@Override
 	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "global-apps");
+		return LanguageUtil.get(locale, "category.global_apps.applications");
 	}
 
 }

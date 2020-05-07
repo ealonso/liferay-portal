@@ -37,6 +37,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"panel.category.key=" + PanelCategoryKeys.ROOT,
+		"panel.category.key=" + PanelCategoryKeys.GLOBAL_APPS,
 		"panel.category.order:Integer=100"
 	},
 	service = PanelCategory.class
@@ -56,10 +57,6 @@ public class ControlPanelCategory extends BasePanelCategory {
 	@Override
 	public boolean isShow(PermissionChecker permissionChecker, Group group)
 		throws PortalException {
-
-		if (true) {
-			return false;
-		}
 
 		if (PortalPermissionUtil.contains(
 				permissionChecker, ActionKeys.VIEW_CONTROL_PANEL)) {

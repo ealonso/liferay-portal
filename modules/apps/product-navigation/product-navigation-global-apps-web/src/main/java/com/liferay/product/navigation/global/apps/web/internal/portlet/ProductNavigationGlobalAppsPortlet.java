@@ -14,12 +14,21 @@
 
 package com.liferay.product.navigation.global.apps.web.internal.portlet;
 
+import com.liferay.application.list.PanelAppRegistry;
+import com.liferay.application.list.PanelCategoryRegistry;
+import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.product.navigation.global.apps.web.internal.constants.ProductNavigationGlobalAppsPortletKeys;
 
 import javax.portlet.Portlet;
+import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+import java.io.IOException;
 
 /**
  * @author Eudaldo Alonso
@@ -43,4 +52,25 @@ import org.osgi.service.component.annotations.Component;
 	service = Portlet.class
 )
 public class ProductNavigationGlobalAppsPortlet extends MVCPortlet {
+
+	@Override
+	protected void doDispatch(
+		RenderRequest renderRequest, RenderResponse renderResponse)
+		throws IOException, PortletException {
+
+		renderRequest.setAttribute(
+			ApplicationListWebKeys.PANEL_APP_REGISTRY, _panelAppRegistry);
+		renderRequest.setAttribute(
+			ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY,
+			_panelCategoryRegistry);
+
+		super.doDispatch(renderRequest, renderResponse);
+	}
+
+	@Reference
+	private PanelCategoryRegistry _panelCategoryRegistry;
+
+	@Reference
+	private PanelAppRegistry _panelAppRegistry;
+
 }
