@@ -17,14 +17,17 @@ package com.liferay.product.navigation.global.apps.web.internal.product.navigati
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.petra.reflect.ReflectionUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.product.navigation.control.menu.BaseProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
 import com.liferay.product.navigation.global.apps.web.internal.constants.ProductNavigationGlobalAppsPortletKeys;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -50,8 +53,21 @@ public class GlobalAppsProductNavigationControlMenuEntry
 	extends BaseProductNavigationControlMenuEntry {
 
 	@Override
+	public String getIcon(HttpServletRequest httpServletRequest) {
+		return "grid";
+	}
+
+	@Override
+	public String getIconCssClass(HttpServletRequest httpServletRequest) {
+		return "icon-monospaced";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
-		return null;
+		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+			locale, getClass());
+
+		return LanguageUtil.get(resourceBundle, "global-apps");
 	}
 
 	@Override
@@ -63,7 +79,7 @@ public class GlobalAppsProductNavigationControlMenuEntry
 			PortletRequest.RENDER_PHASE);
 
 		try {
-			globalAppsURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+			globalAppsURL.setWindowState(LiferayWindowState.POP_UP);
 		}
 		catch (WindowStateException windowStateException) {
 			ReflectionUtil.throwException(windowStateException);
@@ -75,16 +91,6 @@ public class GlobalAppsProductNavigationControlMenuEntry
 	@Override
 	public boolean isUseDialog() {
 		return true;
-	}
-
-	@Override
-	public String getIconCssClass(HttpServletRequest httpServletRequest) {
-		return "icon-monospaced";
-	}
-
-	@Override
-	public String getIcon(HttpServletRequest httpServletRequest) {
-		return "grid";
 	}
 
 	@Reference(
