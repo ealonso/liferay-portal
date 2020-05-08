@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.product.navigation.control.menu.BaseProductNavigationControlMenuEntry;
+import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
 import com.liferay.product.navigation.global.apps.web.internal.constants.ProductNavigationGlobalAppsPortletKeys;
@@ -33,6 +33,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowStateException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
@@ -50,16 +51,11 @@ import org.osgi.service.component.annotations.Reference;
 	service = ProductNavigationControlMenuEntry.class
 )
 public class GlobalAppsProductNavigationControlMenuEntry
-	extends BaseProductNavigationControlMenuEntry {
+	extends BaseJSPProductNavigationControlMenuEntry {
 
 	@Override
-	public String getIcon(HttpServletRequest httpServletRequest) {
-		return "grid";
-	}
-
-	@Override
-	public String getIconCssClass(HttpServletRequest httpServletRequest) {
-		return "icon-monospaced";
+	public String getIconJspPath() {
+		return "/global_menu/global_menu.jsp";
 	}
 
 	@Override
@@ -102,5 +98,14 @@ public class GlobalAppsProductNavigationControlMenuEntry
 
 	@Reference
 	private PortletURLFactory _portletURLFactory;
+
+	@Override
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.product.navigation.global.apps.web)",
+		unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
 
 }

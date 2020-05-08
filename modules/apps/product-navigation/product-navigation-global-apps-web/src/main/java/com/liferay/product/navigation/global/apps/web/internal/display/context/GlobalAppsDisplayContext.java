@@ -23,16 +23,25 @@ import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.product.navigation.global.apps.web.internal.constants.ProductNavigationGlobalAppsPortletKeys;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
+import javax.portlet.WindowStateException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -43,19 +52,20 @@ public class GlobalAppsDisplayContext {
 		HttpServletRequest httpServletRequest, RenderRequest renderRequest,
 		RenderResponse renderResponse) {
 
-		_renderRequest = renderRequest;
-		_renderResponse = renderResponse;
+		//_renderRequest = renderRequest;
+		//_renderResponse = renderResponse;
 
-		_panelCategoryRegistry =
-			(PanelCategoryRegistry)_renderRequest.getAttribute(
-				ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
-		_panelAppRegistry =
-			(PanelAppRegistry)_renderRequest.getAttribute(
-				ApplicationListWebKeys.PANEL_APP_REGISTRY);
-		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		// _panelCategoryRegistry =
+		// 	(PanelCategoryRegistry)_renderRequest.getAttribute(
+		// 		ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
+		// _panelAppRegistry =
+		// 	(PanelAppRegistry)_renderRequest.getAttribute(
+		// 		ApplicationListWebKeys.PANEL_APP_REGISTRY);
+		// _themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
+		// 	WebKeys.THEME_DISPLAY);
 	}
 
+/*
 	private List<PanelCategory> _globalAppsPanelCategories;
 	private List<PanelCategory> _selectedPanelCategories;
 
@@ -87,7 +97,27 @@ public class GlobalAppsDisplayContext {
 
 	private final PanelCategoryRegistry _panelCategoryRegistry;
 	private final PanelAppRegistry _panelAppRegistry;
+*/
 
+	public Map<String, Object> getGlobalMenuComponentData() {
+		/*
+		LiferayPortletURL globalAppsItemsURL = _portletURLFactory.create(
+			httpServletRequest,
+			ProductNavigationGlobalAppsPortletKeys.
+				PRODUCT_NAVIGATION_GLOBAL_APPS,
+			PortletRequest.RESOURCE_PHASE);
+
+		globalAppsItemsURL.setResourceID("/global_apps/items");
+		*/
+
+		Map data = new HashMap();
+
+		data.put("itemsURL", "http://localhost:8080/web/guest/home?p_p_id=com_liferay_product_navigation_global_apps_web_internal_portlet_ProductNavigationGlobalAppsPortlet&p_p_lifecycle=2&p_p_resource_id=%2Fglobal_apps%2Fitems&p_p_cacheability=cacheLevelPag");
+
+		return data;
+	}
+
+/*
 	public List<NavigationItem> getNavigationItems() {
 		return new NavigationItemList() {
 			{
@@ -140,7 +170,7 @@ public class GlobalAppsDisplayContext {
 
 		return _selectedPanelCategories;
 	}
-	
+
 	private List<PanelCategory> _getChildPanelCategories(String key) {
 		List<PanelCategory> childPanelCategories =
 			_panelCategoryRegistry.getChildPanelCategories(
@@ -160,5 +190,8 @@ public class GlobalAppsDisplayContext {
 				return true;
 			});
 	}
-	
+*/
+	@Reference
+	private PortletURLFactory _portletURLFactory;
+
 }
