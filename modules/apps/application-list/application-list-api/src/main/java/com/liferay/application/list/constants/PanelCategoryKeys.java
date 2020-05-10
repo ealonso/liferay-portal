@@ -45,6 +45,10 @@ public interface PanelCategoryKeys {
 
 	public static final String ROOT = "root";
 
+	public static final String GLOBAL_APPS = "global_apps";
+
+	public static final String GLOBAL_APPS_APPLICATIONS = "global_apps.applications";
+
 	public static final String SITE_ADMINISTRATION = "site_administration";
 
 	public static final String SITE_ADMINISTRATION_BUILD =
