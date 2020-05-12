@@ -19,7 +19,10 @@ import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -40,6 +43,42 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = ProductNavigationProductMenuHelper.class)
 public class ProductNavigationProductMenuHelperImpl
 	implements ProductNavigationProductMenuHelper {
+
+	@Override
+	public String getRootPanelCategoryKey(
+		Group group, PermissionChecker permissionChecker, String ppid) {
+
+		List<PanelCategory> childPanelCategories =
+			_panelCategoryRegistry.getChildPanelCategories(
+				PanelCategoryKeys.ROOT, permissionChecker, group);
+
+		if (childPanelCategories.isEmpty()) {
+			return StringPool.BLANK;
+		}
+
+		PanelCategory lastChildPanelCategory = childPanelCategories.get(
+			childPanelCategories.size() - 1);
+
+		if (Validator.isNull(ppid)) {
+			return lastChildPanelCategory.getKey();
+		}
+
+		PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(
+			_panelAppRegistry, _panelCategoryRegistry);
+
+		for (PanelCategory panelCategory :
+				_panelCategoryRegistry.getChildPanelCategories(
+					PanelCategoryKeys.ROOT)) {
+
+			if (panelCategoryHelper.containsPortlet(
+					ppid, panelCategory.getKey(), permissionChecker, group)) {
+
+				return panelCategory.getKey();
+			}
+		}
+
+		return lastChildPanelCategory.getKey();
+	}
 
 	@Override
 	public boolean isShowProductMenu(HttpServletRequest httpServletRequest) {

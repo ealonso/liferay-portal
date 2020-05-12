@@ -14,12 +14,18 @@
 
 package com.liferay.product.navigation.product.menu.util;
 
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
  */
 public interface ProductNavigationProductMenuHelper {
+
+	public String getRootPanelCategoryKey(
+		Group group, PermissionChecker permissionChecker, String ppid);
 
 	public boolean isShowProductMenu(HttpServletRequest httpServletRequest);
 

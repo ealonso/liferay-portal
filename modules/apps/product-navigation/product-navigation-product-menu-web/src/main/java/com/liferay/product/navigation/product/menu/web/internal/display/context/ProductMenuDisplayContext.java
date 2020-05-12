@@ -14,15 +14,12 @@
 
 package com.liferay.product.navigation.product.menu.web.internal.display.context;
 
-import com.liferay.application.list.PanelAppRegistry;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
@@ -35,8 +32,6 @@ import javax.portlet.PortletRequest;
 public class ProductMenuDisplayContext {
 
 	public ProductMenuDisplayContext(PortletRequest portletRequest) {
-		_panelAppRegistry = (PanelAppRegistry)portletRequest.getAttribute(
-			ApplicationListWebKeys.PANEL_APP_REGISTRY);
 		_panelCategoryHelper = (PanelCategoryHelper)portletRequest.getAttribute(
 			ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 		_panelCategoryRegistry =
@@ -64,51 +59,9 @@ public class ProductMenuDisplayContext {
 			_themeDisplay.getScopeGroup(), _themeDisplay.getUser());
 	}
 
-	public String getRootPanelCategoryKey() {
-		if (_rootPanelCategoryKey != null) {
-			return _rootPanelCategoryKey;
-		}
-
-		_rootPanelCategoryKey = StringPool.BLANK;
-
-		List<PanelCategory> childPanelCategories = getChildPanelCategories();
-
-		if (!childPanelCategories.isEmpty()) {
-			PanelCategory lastChildPanelCategory = childPanelCategories.get(
-				childPanelCategories.size() - 1);
-
-			_rootPanelCategoryKey = lastChildPanelCategory.getKey();
-
-			if (Validator.isNotNull(_themeDisplay.getPpid())) {
-				PanelCategoryHelper panelCategoryHelper =
-					new PanelCategoryHelper(
-						_panelAppRegistry, _panelCategoryRegistry);
-
-				for (PanelCategory panelCategory :
-						_panelCategoryRegistry.getChildPanelCategories(
-							PanelCategoryKeys.ROOT)) {
-
-					if (panelCategoryHelper.containsPortlet(
-							_themeDisplay.getPpid(), panelCategory.getKey(),
-							_themeDisplay.getPermissionChecker(),
-							_themeDisplay.getScopeGroup())) {
-
-						_rootPanelCategoryKey = panelCategory.getKey();
-
-						return _rootPanelCategoryKey;
-					}
-				}
-			}
-		}
-
-		return _rootPanelCategoryKey;
-	}
-
 	private List<PanelCategory> _childPanelCategories;
-	private final PanelAppRegistry _panelAppRegistry;
 	private final PanelCategoryHelper _panelCategoryHelper;
 	private final PanelCategoryRegistry _panelCategoryRegistry;
-	private String _rootPanelCategoryKey;
 	private final ThemeDisplay _themeDisplay;
 
 }
