@@ -36,14 +36,14 @@ page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.SessionClicks" %><%@
 page import="com.liferay.portal.kernel.webserver.WebServerServletTokenUtil" %><%@
+page import="com.liferay.product.navigation.product.menu.util.ProductNavigationProductMenuHelper" %><%@
 page import="com.liferay.product.navigation.product.menu.web.internal.constants.ProductNavigationProductMenuWebKeys" %><%@
 page import="com.liferay.product.navigation.product.menu.web.internal.display.context.LayoutsTreeDisplayContext" %><%@
 page import="com.liferay.product.navigation.product.menu.web.internal.display.context.ProductMenuDisplayContext" %><%@
 page import="com.liferay.taglib.aui.AUIUtil" %><%@
 page import="com.liferay.taglib.servlet.PipingServletResponse" %>
 
-<%@ page import="java.util.List" %><%@
-page import="java.util.Objects" %>
+<%@ page import="java.util.Objects" %>
 
 <liferay-staging:defineObjects />
 

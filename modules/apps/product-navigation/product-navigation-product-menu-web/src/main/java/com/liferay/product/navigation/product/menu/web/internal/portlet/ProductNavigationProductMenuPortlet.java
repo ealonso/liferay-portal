@@ -34,6 +34,7 @@ import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.product.navigation.product.menu.util.ProductNavigationProductMenuHelper;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -94,6 +95,10 @@ public class ProductNavigationProductMenuPortlet extends MVCPortlet {
 			ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY,
 			_panelCategoryRegistry);
 
+		renderRequest.setAttribute(
+			ProductNavigationProductMenuHelper.class.getName(),
+			_productNavigationProductMenuHelper);
+
 		super.doDispatch(renderRequest, renderResponse);
 	}
 
@@ -108,5 +113,9 @@ public class ProductNavigationProductMenuPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private ProductNavigationProductMenuHelper
+		_productNavigationProductMenuHelper;
 
 }

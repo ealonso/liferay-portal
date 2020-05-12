@@ -17,12 +17,16 @@
 <%@ include file="/portlet/init.jsp" %>
 
 <%
+ProductNavigationProductMenuHelper productNavigationProductMenuHelper = (ProductNavigationProductMenuHelper)request.getAttribute(ProductNavigationProductMenuHelper.class.getName());
+
 ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayContext(liferayPortletRequest);
 %>
 
 <div aria-multiselectable="true" class="panel-group" data-qa-id="productMenuBody" id="<portlet:namespace />Accordion" role="tablist">
 
 	<%
+	String rootPanelCategoryKey = productNavigationProductMenuHelper.getRootPanelCategoryKey(themeDisplay.getGroup(), themeDisplay.getPermissionChecker(), themeDisplay.getPpid());
+
 	for (PanelCategory childPanelCategory : productMenuDisplayContext.getChildPanelCategories()) {
 	%>
 
@@ -35,7 +39,7 @@ ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayCont
 						Class<?> childPanelCategoryClass = childPanelCategory.getClass();
 						%>
 
-						<a aria-controls="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" aria-expanded="<%= Objects.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) %>" class="collapse-icon collapse-icon-middle panel-toggler panel-header-link <%= Objects.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? StringPool.BLANK : "collapsed" %>" data-parent="#<portlet:namespace />Accordion" data-qa-id="productMenu<%= childPanelCategoryClass.getSimpleName() %>" data-toggle="liferay-collapse" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="button">
+						<a aria-controls="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" aria-expanded="<%= Objects.equals(childPanelCategory.getKey(), rootPanelCategoryKey) %>" class="collapse-icon collapse-icon-middle panel-toggler panel-header-link <%= Objects.equals(childPanelCategory.getKey(), rootPanelCategoryKey) ? StringPool.BLANK : "collapsed" %>" data-parent="#<portlet:namespace />Accordion" data-qa-id="productMenu<%= childPanelCategoryClass.getSimpleName() %>" data-toggle="liferay-collapse" href="#<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="button">
 							<span class="category-name text-truncate"><%= childPanelCategory.getLabel(locale) %></span>
 
 							<%
@@ -54,7 +58,7 @@ ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayCont
 				</div>
 			</div>
 
-			<div aria-expanded="<%= Objects.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) %>" aria-labelledby="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Heading" class="collapse panel-collapse <%= Objects.equals(childPanelCategory.getKey(), productMenuDisplayContext.getRootPanelCategoryKey()) ? "show" : StringPool.BLANK %>" data-parent="#<portlet:namespace />Accordion" id="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="tabpanel">
+			<div aria-expanded="<%= Objects.equals(childPanelCategory.getKey(), rootPanelCategoryKey) %>" aria-labelledby="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Heading" class="collapse panel-collapse <%= Objects.equals(childPanelCategory.getKey(), rootPanelCategoryKey) ? "show" : StringPool.BLANK %>" data-parent="#<portlet:namespace />Accordion" id="<portlet:namespace /><%= AUIUtil.normalizeId(childPanelCategory.getKey()) %>Collapse" role="tabpanel">
 				<div class="panel-body">
 					<liferay-application-list:panel-content
 						panelCategory="<%= childPanelCategory %>"
