@@ -22,7 +22,6 @@ import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -126,22 +125,6 @@ public class ProductMenuDisplayContext {
 		}
 
 		return false;
-	}
-
-	public boolean isShowProductMenu() {
-		Layout layout = _themeDisplay.getLayout();
-
-		if (layout.isTypeControlPanel()) {
-			return true;
-		}
-
-		List<PanelCategory> childPanelCategories = getChildPanelCategories();
-
-		if (childPanelCategories.isEmpty()) {
-			return false;
-		}
-
-		return true;
 	}
 
 	private List<PanelCategory> _childPanelCategories;
