@@ -14,6 +14,7 @@
 
 package com.liferay.product.navigation.taglib.internal.servlet;
 
+import com.liferay.application.list.PanelCategoryRegistry;
 import com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuCategoryRegistry;
 import com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuEntryRegistry;
 
@@ -32,6 +33,10 @@ public class ServletContextUtil {
 		return _servletContext.getContextPath();
 	}
 
+	public static final PanelCategoryRegistry getPanelCategoryRegistry() {
+		return _panelCategoryRegistry;
+	}
+
 	public static final ProductNavigationControlMenuCategoryRegistry
 		getProductNavigationControlMenuCategoryRegistry() {
 
@@ -46,6 +51,13 @@ public class ServletContextUtil {
 
 	public static final ServletContext getServletContext() {
 		return _servletContext;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPanelCategoryRegistry(
+		PanelCategoryRegistry panelCategoryRegistry) {
+
+		_panelCategoryRegistry = panelCategoryRegistry;
 	}
 
 	@Reference(unbind = "-")
@@ -74,6 +86,7 @@ public class ServletContextUtil {
 		_servletContext = servletContext;
 	}
 
+	private static PanelCategoryRegistry _panelCategoryRegistry;
 	private static ProductNavigationControlMenuCategoryRegistry
 		_productNavigationControlMenuCategoryRegistry;
 	private static ProductNavigationControlMenuEntryRegistry

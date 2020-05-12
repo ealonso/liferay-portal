@@ -14,12 +14,24 @@
 
 package com.liferay.product.navigation.taglib.servlet.taglib;
 
+import com.liferay.application.list.PanelCategory;
+import com.liferay.application.list.PanelCategoryRegistry;
+import com.liferay.application.list.constants.PanelCategoryKeys;
+import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.taglib.util.IncludeTag;
 
 import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +87,58 @@ public class ProductNavigationControlMenuTag extends IncludeTag {
 
 	@Override
 	protected void setAttributes(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		httpServletRequest.setAttribute(
+			"liferay-product-navigation:control-menu:globalMenuApp",
+			_isGlobalMenuApp(themeDisplay.getPpid()));
+	}
+
+	private boolean _isGlobalMenuApp(String ppid) {
+		if (Validator.isNull(ppid)) {
+			return false;
+		}
+
+		Portlet portlet = PortletLocalServiceUtil.getPortletById(ppid);
+
+		if (portlet == null) {
+			return false;
+		}
+
+		String controlPanelEntryCategory =
+			portlet.getControlPanelEntryCategory();
+
+		if (Validator.isNull(controlPanelEntryCategory)) {
+			return false;
+		}
+
+		PanelCategoryRegistry panelCategoryRegistry =
+			ServletContextUtil.getPanelCategoryRegistry();
+
+		List<PanelCategory> panelCategories = new ArrayList<>();
+
+		for (PanelCategory panelCategory :
+				panelCategoryRegistry.getChildPanelCategories(
+					PanelCategoryKeys.GLOBAL_MENU)) {
+
+			panelCategories.addAll(
+				panelCategoryRegistry.getChildPanelCategories(panelCategory));
+		}
+
+		if (ListUtil.isEmpty(panelCategories)) {
+			return false;
+		}
+
+		if (panelCategories.contains(
+				panelCategoryRegistry.getPanelCategory(
+					controlPanelEntryCategory))) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private static final String _PAGE = "/control_menu/page.jsp";
