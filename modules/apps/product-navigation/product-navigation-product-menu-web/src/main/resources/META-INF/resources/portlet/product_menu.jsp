@@ -16,6 +16,10 @@
 
 <%@ include file="/portlet/init.jsp" %>
 
+<%
+ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayContext(liferayPortletRequest);
+%>
+
 <div aria-multiselectable="true" class="panel-group" data-qa-id="productMenuBody" id="<portlet:namespace />Accordion" role="tablist">
 
 	<%
