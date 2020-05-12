@@ -43,7 +43,7 @@ import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.product.navigation.product.menu.display.context.ProductMenuDisplayContext;
+import com.liferay.product.navigation.product.menu.util.ProductNavigationProductMenuHelper;
 import com.liferay.product.navigation.site.administration.internal.application.list.SiteAdministrationPanelCategory;
 import com.liferay.product.navigation.site.administration.internal.constants.SiteAdministrationWebKeys;
 import com.liferay.site.util.GroupURLProvider;
@@ -334,17 +334,20 @@ public class SiteAdministrationPanelCategoryDisplayContext {
 		return _stagingLabel;
 	}
 
-	public boolean isCollapsedPanel() throws PortalException {
+	public boolean isCollapsedPanel() {
 		if (_collapsedPanel != null) {
 			return _collapsedPanel;
 		}
 
-		ProductMenuDisplayContext productMenuDisplayContext =
-			new ProductMenuDisplayContext(_portletRequest, _portletResponse);
+		ProductNavigationProductMenuHelper productNavigationProductMenuHelper =
+			(ProductNavigationProductMenuHelper)_portletRequest.getAttribute(
+				ProductNavigationProductMenuHelper.class.getName());
 
 		_collapsedPanel = Objects.equals(
 			_panelCategory.getKey(),
-			productMenuDisplayContext.getRootPanelCategoryKey());
+			productNavigationProductMenuHelper.getRootPanelCategoryKey(
+				_themeDisplay.getScopeGroup(),
+				_themeDisplay.getPermissionChecker(), _themeDisplay.getPpid()));
 
 		return _collapsedPanel;
 	}

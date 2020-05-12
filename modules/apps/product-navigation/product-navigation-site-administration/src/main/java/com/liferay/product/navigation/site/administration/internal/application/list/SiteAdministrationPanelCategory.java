@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
+import com.liferay.product.navigation.product.menu.util.ProductNavigationProductMenuHelper;
 import com.liferay.product.navigation.site.administration.internal.constants.SiteAdministrationWebKeys;
 import com.liferay.site.util.GroupURLProvider;
 import com.liferay.site.util.RecentGroupManager;
@@ -101,6 +102,10 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 			SiteAdministrationWebKeys.RECENT_GROUP_MANAGER,
 			_recentGroupManager);
 
+		httpServletRequest.setAttribute(
+			ProductNavigationProductMenuHelper.class.getName(),
+			_productNavigationProductMenuHelper);
+
 		return super.includeHeader(httpServletRequest, httpServletResponse);
 	}
 
@@ -136,6 +141,10 @@ public class SiteAdministrationPanelCategory extends BaseJSPPanelCategory {
 
 	@Reference
 	private ItemSelector _itemSelector;
+
+	@Reference
+	private ProductNavigationProductMenuHelper
+		_productNavigationProductMenuHelper;
 
 	@Reference
 	private RecentGroupManager _recentGroupManager;
