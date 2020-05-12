@@ -21,7 +21,6 @@ import com.liferay.application.list.constants.ApplicationListWebKeys;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -29,29 +28,21 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 
 /**
  * @author Julio Camarero
  */
 public class ProductMenuDisplayContext {
 
-	public ProductMenuDisplayContext(
-			PortletRequest portletRequest, PortletResponse portletResponse)
-		throws PortalException {
-
-		_portletRequest = portletRequest;
-		_portletResponse = portletResponse;
-
-		_panelAppRegistry = (PanelAppRegistry)_portletRequest.getAttribute(
+	public ProductMenuDisplayContext(PortletRequest portletRequest) {
+		_panelAppRegistry = (PanelAppRegistry)portletRequest.getAttribute(
 			ApplicationListWebKeys.PANEL_APP_REGISTRY);
-		_panelCategoryHelper =
-			(PanelCategoryHelper)_portletRequest.getAttribute(
-				ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
+		_panelCategoryHelper = (PanelCategoryHelper)portletRequest.getAttribute(
+			ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 		_panelCategoryRegistry =
-			(PanelCategoryRegistry)_portletRequest.getAttribute(
+			(PanelCategoryRegistry)portletRequest.getAttribute(
 				ApplicationListWebKeys.PANEL_CATEGORY_REGISTRY);
-		_themeDisplay = (ThemeDisplay)_portletRequest.getAttribute(
+		_themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
 
@@ -113,26 +104,10 @@ public class ProductMenuDisplayContext {
 		return _rootPanelCategoryKey;
 	}
 
-	public boolean hasUserPanelCategory() {
-		List<PanelCategory> panelCategories = getChildPanelCategories();
-
-		for (PanelCategory panelCategory : panelCategories) {
-			String panelCategoryKey = panelCategory.getKey();
-
-			if (panelCategoryKey.equals(PanelCategoryKeys.USER)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	private List<PanelCategory> _childPanelCategories;
 	private final PanelAppRegistry _panelAppRegistry;
 	private final PanelCategoryHelper _panelCategoryHelper;
 	private final PanelCategoryRegistry _panelCategoryRegistry;
-	private final PortletRequest _portletRequest;
-	private final PortletResponse _portletResponse;
 	private String _rootPanelCategoryKey;
 	private final ThemeDisplay _themeDisplay;
 
