@@ -23,9 +23,7 @@ ProductMenuDisplayContext productMenuDisplayContext = new ProductMenuDisplayCont
 <div aria-multiselectable="true" class="panel-group" data-qa-id="productMenuBody" id="<portlet:namespace />Accordion" role="tablist">
 
 	<%
-	List<PanelCategory> childPanelCategories = productMenuDisplayContext.getChildPanelCategories();
-
-	for (PanelCategory childPanelCategory : childPanelCategories) {
+	for (PanelCategory childPanelCategory : productMenuDisplayContext.getChildPanelCategories()) {
 	%>
 
 		<div class="panel panel-secondary">
