@@ -14,6 +14,9 @@
 
 package com.liferay.frontend.taglib.clay.internal.servlet;
 
+import com.liferay.application.list.PanelAppRegistry;
+import com.liferay.application.list.PanelCategoryRegistry;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Component;
@@ -29,8 +32,28 @@ public class ServletContextUtil {
 		return _servletContext.getContextPath();
 	}
 
+	public static final PanelAppRegistry getPanelAppRegistry() {
+		return _panelAppRegistry;
+	}
+
+	public static final PanelCategoryRegistry getPanelCategoryRegistry() {
+		return _panelCategoryRegistry;
+	}
+
 	public static final ServletContext getServletContext() {
 		return _servletContext;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPanelAppRegistry(PanelAppRegistry panelAppRegistry) {
+		_panelAppRegistry = panelAppRegistry;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPanelCategoryRegistry(
+		PanelCategoryRegistry panelCategoryRegistry) {
+
+		_panelCategoryRegistry = panelCategoryRegistry;
 	}
 
 	@Reference(
@@ -41,6 +64,8 @@ public class ServletContextUtil {
 		_servletContext = servletContext;
 	}
 
+	private static PanelAppRegistry _panelAppRegistry;
+	private static PanelCategoryRegistry _panelCategoryRegistry;
 	private static ServletContext _servletContext;
 
 }

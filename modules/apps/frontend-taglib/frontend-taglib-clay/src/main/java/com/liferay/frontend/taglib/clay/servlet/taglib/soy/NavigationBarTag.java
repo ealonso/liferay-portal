@@ -14,8 +14,13 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
+import com.liferay.application.list.display.context.logic.PanelCategoryHelper;
+import com.liferay.frontend.taglib.clay.internal.servlet.ServletContextUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 
@@ -26,8 +31,12 @@ public class NavigationBarTag extends BaseClayTag {
 
 	@Override
 	public int doStartTag() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		setComponentBaseName("ClayNavigationBar");
 		setHydrate(true);
+		setInverted(!_isGlobalMenuApp(themeDisplay.getPpid()));
 		setModuleBaseName("navigation-bar");
 
 		return super.doStartTag();
@@ -39,6 +48,22 @@ public class NavigationBarTag extends BaseClayTag {
 
 	public void setNavigationItems(List<NavigationItem> navigationItems) {
 		putValue("items", navigationItems);
+	}
+
+	private boolean _isGlobalMenuApp(String ppid) {
+		if (Validator.isNull(ppid)) {
+			return false;
+		}
+
+		PanelCategoryHelper panelCategoryHelper = new PanelCategoryHelper(
+			ServletContextUtil.getPanelAppRegistry(),
+			ServletContextUtil.getPanelCategoryRegistry());
+
+		if (panelCategoryHelper.isGlobalMenuApp(ppid)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
