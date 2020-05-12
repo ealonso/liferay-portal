@@ -34,7 +34,10 @@ import javax.portlet.PortletResponse;
 
 /**
  * @author Julio Camarero
+ * @deprecated As of Athanasius (7.3.x), replaced by {@link
+ *             com.liferay.product.navigation.product.menu.util.ProductNavigationProductMenuHelper}
  */
+@Deprecated
 public class ProductMenuDisplayContext {
 
 	public ProductMenuDisplayContext(
