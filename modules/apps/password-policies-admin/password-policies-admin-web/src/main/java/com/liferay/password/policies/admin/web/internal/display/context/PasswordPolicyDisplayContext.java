@@ -16,7 +16,6 @@ package com.liferay.password.policies.admin.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -26,7 +25,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletException;
@@ -130,39 +128,6 @@ public class PasswordPolicyDisplayContext {
 		if (navigationItems.isEmpty()) {
 			return null;
 		}
-
-		return navigationItems;
-	}
-
-	public List<NavigationItem> getSelectMembersNavigationItems() {
-		String tabs2 = ParamUtil.getString(
-			_httpServletRequest, "tabs2", "users");
-
-		List<NavigationItem> navigationItems = new ArrayList<>();
-
-		NavigationItem entriesNavigationItem = new NavigationItem();
-
-		entriesNavigationItem.setActive(true);
-		entriesNavigationItem.setHref(StringPool.BLANK);
-		entriesNavigationItem.setLabel(
-			LanguageUtil.get(_httpServletRequest, tabs2));
-
-		navigationItems.add(entriesNavigationItem);
-
-		return navigationItems;
-	}
-
-	public List<NavigationItem> getViewPasswordPoliciesNavigationItems() {
-		List<NavigationItem> navigationItems = new ArrayList<>();
-
-		NavigationItem entriesNavigationItem = new NavigationItem();
-
-		entriesNavigationItem.setActive(true);
-		entriesNavigationItem.setHref(StringPool.BLANK);
-		entriesNavigationItem.setLabel(
-			LanguageUtil.get(_httpServletRequest, "password-policies"));
-
-		navigationItems.add(entriesNavigationItem);
 
 		return navigationItems;
 	}
