@@ -17,6 +17,7 @@ package com.liferay.layout.util.structure;
 import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -53,6 +55,9 @@ public class LayoutStructure {
 
 			JSONObject itemsJSONObject =
 				layoutStructureJSONObject.getJSONObject("items");
+
+			JSONArray itemIdsMarkedForDeletion =
+				layoutStructureJSONObject.getJSONArray("itemIdsMarkedForDeletion");
 
 			Map<Long, LayoutStructureItem> fragmentLayoutStructureItems =
 				new HashMap<>(itemsJSONObject.length());
@@ -79,6 +84,7 @@ public class LayoutStructure {
 			}
 
 			return new LayoutStructure(
+				JSONUtil.toStringSet(itemIdsMarkedForDeletion),
 				fragmentLayoutStructureItems, layoutStructureItems,
 				rootItemsJSONObject.getString("main"));
 		}
@@ -344,6 +350,29 @@ public class LayoutStructure {
 		return HashUtil.hash(0, getMainItemId());
 	}
 
+	public void markLayoutStructureItemForDeletion(String itemId) {
+		LayoutStructureItem layoutStructureItem = _layoutStructureItems.get(
+			itemId);
+
+		if (layoutStructureItem instanceof DropZoneLayoutStructureItem) {
+			throw new UnsupportedOperationException(
+				"Removing the drop zone of a layout structure is not allowed");
+		}
+
+		if (Validator.isNotNull(layoutStructureItem.getParentItemId())) {
+			LayoutStructureItem parentLayoutStructureItem =
+				_layoutStructureItems.get(
+					layoutStructureItem.getParentItemId());
+
+			List<String> childrenItemIds =
+				parentLayoutStructureItem.getChildrenItemIds();
+
+			childrenItemIds.remove(itemId);
+		}
+
+		_itemIdsMarkedForDeletion.add(itemId);
+	}
+
 	public LayoutStructureItem moveLayoutStructureItem(
 		String itemId, String parentItemId, int position) {
 
@@ -388,6 +417,8 @@ public class LayoutStructure {
 		}
 
 		return JSONUtil.put(
+			"itemIdsMarkedForDeletion", _itemIdsMarkedForDeletion
+		).put(
 			"items", layoutStructureItemsJSONObject
 		).put(
 			"rootItems",
@@ -492,10 +523,12 @@ public class LayoutStructure {
 	}
 
 	private LayoutStructure(
+		Set<String> itemIdsMarkedForDeletion,
 		Map<Long, LayoutStructureItem> fragmentLayoutStructureItems,
 		Map<String, LayoutStructureItem> layoutStructureItems,
 		String mainItemId) {
 
+		_itemIdsMarkedForDeletion = itemIdsMarkedForDeletion;
 		_fragmentLayoutStructureItems = fragmentLayoutStructureItems;
 		_layoutStructureItems = layoutStructureItems;
 		_mainItemId = mainItemId;
@@ -598,6 +631,7 @@ public class LayoutStructure {
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutStructure.class);
 
+	private Set<String> _itemIdsMarkedForDeletion;
 	private final Map<Long, LayoutStructureItem> _fragmentLayoutStructureItems;
 	private final Map<String, LayoutStructureItem> _layoutStructureItems;
 	private String _mainItemId;
