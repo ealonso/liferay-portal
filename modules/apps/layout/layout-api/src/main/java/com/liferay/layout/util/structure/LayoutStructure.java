@@ -266,6 +266,7 @@ public class LayoutStructure {
 			}
 		}
 
+		_itemIdsMarkedForDeletion.remove(itemId);
 		_layoutStructureItems.remove(itemId);
 
 		return deletedLayoutStructureItems;
@@ -335,6 +336,10 @@ public class LayoutStructure {
 
 	public List<LayoutStructureItem> getLayoutStructureItems() {
 		return ListUtil.fromCollection(_layoutStructureItems.values());
+	}
+
+	public List<String> getItemIdsMarkedForDeletion() {
+		return ListUtil.fromCollection(_itemIdsMarkedForDeletion);
 	}
 
 	public String getMainItemId() {
