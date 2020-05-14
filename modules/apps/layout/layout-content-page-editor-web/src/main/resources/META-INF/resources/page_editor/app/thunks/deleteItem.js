@@ -15,14 +15,19 @@
 import deleteItemAction from '../actions/deleteItem';
 import deleteWidgets from '../actions/deleteWidgets';
 import updatePageContents from '../actions/updatePageContents';
+import {config} from '../config/index';
 import InfoItemService from '../services/InfoItemService';
 import LayoutService from '../services/LayoutService';
 
-export default function deleteItem({itemId, store}) {
+export default function deleteItem({isUndo = false, itemId, store}) {
 	return (dispatch) => {
 		const {segmentsExperienceId} = store;
 
-		return LayoutService.deleteItem({
+		const service = config.undoEnabled
+			? LayoutService.markItemForDeletion
+			: LayoutService.deleteItem;
+
+		service({
 			itemId,
 			onNetworkStatus: dispatch,
 			segmentsExperienceId,
@@ -45,6 +50,7 @@ export default function deleteItem({itemId, store}) {
 				dispatch(
 					deleteItemAction({
 						deletedFragmentEntryLinkIds,
+						isUndo,
 						itemId,
 						layoutData,
 					})
