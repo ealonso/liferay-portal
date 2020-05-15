@@ -16,6 +16,7 @@ package com.liferay.layout.admin.web.internal.display.context;
 
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -24,12 +25,14 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutRevision;
+import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -88,8 +91,7 @@ public class MillerColumnsDisplayContext {
 			return layoutColumnsJSONArray;
 		}
 
-		JSONArray layoutSetBranchesJSONArray =
-			_layoutsAdminDisplayContext.getLayoutSetBranchesJSONArray();
+		JSONArray layoutSetBranchesJSONArray = _getLayoutSetBranchesJSONArray();
 
 		if (layoutSetBranchesJSONArray.length() > 0) {
 			layoutColumnsJSONArray.put(layoutSetBranchesJSONArray);
@@ -566,6 +568,49 @@ public class MillerColumnsDisplayContext {
 					"url",
 					_layoutsAdminDisplayContext.getDeleteLayoutURL(layout)
 				));
+		}
+
+		return jsonArray;
+	}
+
+	private JSONArray _getLayoutSetBranchesJSONArray() throws PortalException {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<LayoutSetBranch> layoutSetBranches =
+			LayoutSetBranchLocalServiceUtil.getLayoutSetBranches(
+				_themeDisplay.getScopeGroupId(),
+				_layoutsAdminDisplayContext.isPrivateLayout());
+
+		for (LayoutSetBranch layoutSetBranch : layoutSetBranches) {
+			JSONObject jsonObject = JSONUtil.put(
+				"active",
+				layoutSetBranch.getLayoutSetBranchId() ==
+					_layoutsAdminDisplayContext.getActiveLayoutSetBranchId()
+			).put(
+				"hasChild", true
+			).put(
+				"id", LayoutConstants.DEFAULT_PLID
+			).put(
+				"key", String.valueOf(layoutSetBranch.getLayoutSetBranchId())
+			).put(
+				"plid", LayoutConstants.DEFAULT_PLID
+			).put(
+				"title",
+				LanguageUtil.get(_httpServletRequest, layoutSetBranch.getName())
+			);
+
+			PortletURL portletURL = _layoutsAdminDisplayContext.getPortletURL();
+
+			portletURL.setParameter(
+				"layoutSetBranchId",
+				String.valueOf(layoutSetBranch.getLayoutSetBranchId()));
+			portletURL.setParameter(
+				"privateLayout",
+				String.valueOf(layoutSetBranch.isPrivateLayout()));
+
+			jsonObject.put("url", portletURL.toString());
+
+			jsonArray.put(jsonObject);
 		}
 
 		return jsonArray;
