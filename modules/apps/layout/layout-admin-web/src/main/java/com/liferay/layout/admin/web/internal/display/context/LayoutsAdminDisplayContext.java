@@ -1464,6 +1464,8 @@ public class LayoutsAdminDisplayContext {
 			).put(
 				"id", LayoutConstants.DEFAULT_PLID
 			).put(
+				"key", String.valueOf(layoutSetBranch.getLayoutSetBranchId())
+			).put(
 				"plid", LayoutConstants.DEFAULT_PLID
 			).put(
 				"title",
