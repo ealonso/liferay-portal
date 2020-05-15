@@ -39,7 +39,7 @@ import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -205,66 +205,17 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public JSONArray getBreadcrumbEntriesJSONArray() throws PortalException {
-		boolean privatePages = isPrivateLayout();
+		JSONArray breadcrumbEntriesJSONArray =
+			JSONFactoryUtil.createJSONArray();
 
-		Layout selLayout = getSelLayout();
-
-		if (selLayout != null) {
-			privatePages = selLayout.isPrivateLayout();
-		}
-
-		JSONObject breadcrumbEntryJSONObject = JSONUtil.put(
-			"title", LanguageUtil.get(httpServletRequest, "pages"));
-
-		PortletURL portletURL = _liferayPortletResponse.createRenderURL();
-
-		portletURL.setParameter("tabs1", getTabs1());
-		portletURL.setParameter(
-			"selPlid", String.valueOf(LayoutConstants.DEFAULT_PLID));
-
-		String displayStyle = getDisplayStyle();
-
-		if (Validator.isNotNull(displayStyle)) {
-			portletURL.setParameter("displayStyle", displayStyle);
-		}
-
-		portletURL.setParameter("firstColumn", Boolean.TRUE.toString());
-
-		breadcrumbEntryJSONObject.put("url", portletURL.toString());
-
-		JSONArray breadcrumbEntriesJSONArray = JSONUtil.put(
-			breadcrumbEntryJSONObject);
-
-		if (isFirstColumn()) {
-			return breadcrumbEntriesJSONArray;
-		}
-
-		breadcrumbEntriesJSONArray.put(
-			_getBreadcrumbEntryJSONObject(
-				LayoutConstants.DEFAULT_PLID, privatePages,
-				getTitle(privatePages)));
-
-		if ((getSelPlid() == LayoutConstants.DEFAULT_PLID) ||
-			(selLayout == null)) {
-
-			return breadcrumbEntriesJSONArray;
-		}
-
-		List<Layout> layouts = selLayout.getAncestors();
-
-		Collections.reverse(layouts);
-
-		for (Layout layout : layouts) {
+		for (BreadcrumbEntry breadcrumbEntry : getPortletBreadcrumbEntries()) {
 			breadcrumbEntriesJSONArray.put(
-				_getBreadcrumbEntryJSONObject(
-					layout.getPlid(), layout.isPrivateLayout(),
-					layout.getName(themeDisplay.getLocale())));
+				JSONUtil.put(
+					"title", breadcrumbEntry.getTitle()
+				).put(
+					"url", breadcrumbEntry.getURL()
+				));
 		}
-
-		breadcrumbEntriesJSONArray.put(
-			_getBreadcrumbEntryJSONObject(
-				selLayout.getPlid(), selLayout.isPrivateLayout(),
-				selLayout.getName(themeDisplay.getLocale())));
 
 		return breadcrumbEntriesJSONArray;
 	}
@@ -1540,21 +1491,6 @@ public class LayoutsAdminDisplayContext {
 		breadcrumbEntry.setURL(portletURL.toString());
 
 		return breadcrumbEntry;
-	}
-
-	private JSONObject _getBreadcrumbEntryJSONObject(
-		long plid, boolean privateLayout, String title) {
-
-		JSONObject breadcrumbEntryJSONObject = JSONUtil.put("title", title);
-
-		PortletURL portletURL = getPortletURL();
-
-		portletURL.setParameter("selPlid", String.valueOf(plid));
-		portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
-
-		breadcrumbEntryJSONObject.put("url", portletURL.toString());
-
-		return breadcrumbEntryJSONObject;
 	}
 
 	private String _getDraftLayoutURL(Layout layout) throws Exception {
