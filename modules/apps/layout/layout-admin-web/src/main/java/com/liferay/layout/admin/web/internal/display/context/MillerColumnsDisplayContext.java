@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
+import com.liferay.portal.kernel.servlet.taglib.ui.BreadcrumbEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -134,8 +135,7 @@ public class MillerColumnsDisplayContext {
 		).put(
 			"props",
 			HashMapBuilder.<String, Object>put(
-				"breadcrumbEntries",
-				_layoutsAdminDisplayContext.getBreadcrumbEntriesJSONArray()
+				"breadcrumbEntries", _getBreadcrumbEntriesJSONArray()
 			).put(
 				"getItemChildrenURL", getLayoutChildrenURL()
 			).put(
@@ -242,6 +242,24 @@ public class MillerColumnsDisplayContext {
 		}
 
 		return layoutsJSONArray;
+	}
+
+	private JSONArray _getBreadcrumbEntriesJSONArray() throws PortalException {
+		JSONArray breadcrumbEntriesJSONArray =
+			JSONFactoryUtil.createJSONArray();
+
+		for (BreadcrumbEntry breadcrumbEntry :
+				_layoutsAdminDisplayContext.getPortletBreadcrumbEntries()) {
+
+			breadcrumbEntriesJSONArray.put(
+				JSONUtil.put(
+					"title", breadcrumbEntry.getTitle()
+				).put(
+					"url", breadcrumbEntry.getURL()
+				));
+		}
+
+		return breadcrumbEntriesJSONArray;
 	}
 
 	private JSONObject _getFirstLayoutColumn(
