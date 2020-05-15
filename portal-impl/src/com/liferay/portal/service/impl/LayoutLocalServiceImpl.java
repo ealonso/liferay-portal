@@ -459,23 +459,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 			userId, layout, serviceContext.getAssetCategoryIds(),
 			serviceContext.getAssetTagNames());
 
-		// Draft layout
-
-		if (!system &&
-			(Objects.equals(type, LayoutConstants.TYPE_CONTENT) ||
-			 layout.isTypeAssetDisplay())) {
-
-			serviceContext.setModifiedDate(now);
-
-			addLayout(
-				userId, groupId, privateLayout, parentLayoutId,
-				classNameLocalService.getClassNameId(Layout.class),
-				layout.getPlid(), nameMap, titleMap, descriptionMap,
-				keywordsMap, robotsMap, type, typeSettings, true, true,
-				layout.getMasterLayoutPlid(), Collections.emptyMap(),
-				serviceContext);
-		}
-
 		return layoutLocalService.getLayout(layout.getPlid());
 	}
 
