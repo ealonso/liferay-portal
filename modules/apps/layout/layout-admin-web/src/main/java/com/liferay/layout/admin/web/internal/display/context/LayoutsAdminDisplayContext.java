@@ -677,7 +677,7 @@ public class LayoutsAdminDisplayContext {
 			return _parentLayoutId;
 		}
 
-		_parentLayoutId = Long.valueOf(0);
+		_parentLayoutId = 0L;
 
 		Layout layout = getSelLayout();
 
