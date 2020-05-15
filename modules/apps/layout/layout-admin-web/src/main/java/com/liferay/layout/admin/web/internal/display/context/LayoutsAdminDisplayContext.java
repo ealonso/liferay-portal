@@ -701,20 +701,66 @@ public class LayoutsAdminDisplayContext {
 
 		List<BreadcrumbEntry> breadcrumbEntries = new ArrayList<>();
 
-		JSONArray breadcrumbEntriesJSONArray = getBreadcrumbEntriesJSONArray();
+		boolean privatePages = isPrivateLayout();
 
-		for (int i = 0; i < breadcrumbEntriesJSONArray.length(); i++) {
-			JSONObject breadcrumbEntryJSONObject =
-				breadcrumbEntriesJSONArray.getJSONObject(i);
+		Layout selLayout = getSelLayout();
 
-			BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
-
-			breadcrumbEntry.setTitle(
-				breadcrumbEntryJSONObject.getString("title"));
-			breadcrumbEntry.setURL(breadcrumbEntryJSONObject.getString("url"));
-
-			breadcrumbEntries.add(breadcrumbEntry);
+		if (selLayout != null) {
+			privatePages = selLayout.isPrivateLayout();
 		}
+
+		BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
+
+		breadcrumbEntry.setTitle(LanguageUtil.get(httpServletRequest, "pages"));
+
+		PortletURL portletURL = _liferayPortletResponse.createRenderURL();
+
+		portletURL.setParameter("tabs1", getTabs1());
+		portletURL.setParameter(
+			"selPlid", String.valueOf(LayoutConstants.DEFAULT_PLID));
+
+		String displayStyle = getDisplayStyle();
+
+		if (Validator.isNotNull(displayStyle)) {
+			portletURL.setParameter("displayStyle", displayStyle);
+		}
+
+		portletURL.setParameter("firstColumn", Boolean.TRUE.toString());
+
+		breadcrumbEntry.setURL(portletURL.toString());
+
+		breadcrumbEntries.add(breadcrumbEntry);
+
+		if (isFirstColumn()) {
+			return breadcrumbEntries;
+		}
+
+		breadcrumbEntries.add(
+			_getBreadcrumbEntry(
+				LayoutConstants.DEFAULT_PLID, privatePages,
+				getTitle(privatePages)));
+
+		if ((getSelPlid() == LayoutConstants.DEFAULT_PLID) ||
+			(selLayout == null)) {
+
+			return breadcrumbEntries;
+		}
+
+		List<Layout> layouts = selLayout.getAncestors();
+
+		Collections.reverse(layouts);
+
+		for (Layout layout : layouts) {
+			breadcrumbEntries.add(
+				_getBreadcrumbEntry(
+					layout.getPlid(), layout.isPrivateLayout(),
+					layout.getName(themeDisplay.getLocale())));
+		}
+
+		breadcrumbEntries.add(
+			_getBreadcrumbEntry(
+				selLayout.getPlid(), selLayout.isPrivateLayout(),
+				selLayout.getName(themeDisplay.getLocale())));
 
 		return breadcrumbEntries;
 	}
@@ -1477,6 +1523,23 @@ public class LayoutsAdminDisplayContext {
 		_backURL = ParamUtil.getString(_liferayPortletRequest, "backURL");
 
 		return _backURL;
+	}
+
+	private BreadcrumbEntry _getBreadcrumbEntry(
+		long plid, boolean privateLayout, String title) {
+
+		BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
+
+		breadcrumbEntry.setTitle(title);
+
+		PortletURL portletURL = getPortletURL();
+
+		portletURL.setParameter("selPlid", String.valueOf(plid));
+		portletURL.setParameter("privateLayout", String.valueOf(privateLayout));
+
+		breadcrumbEntry.setURL(portletURL.toString());
+
+		return breadcrumbEntry;
 	}
 
 	private JSONObject _getBreadcrumbEntryJSONObject(
