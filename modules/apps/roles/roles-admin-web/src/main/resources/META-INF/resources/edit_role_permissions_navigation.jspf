@@ -116,18 +116,9 @@ PersonalMenuEntryHelper personalMenuEntryHelper = (PersonalMenuEntryHelper)reque
 						</a>
 
 						<div class="permission-navigation-item-content toggler-content toggler-content-expanded">
-							<ul class="nav nav-stacked permission-navigation-section">
-								<div class="permission-navigation-item-content">
-									<li class="nav-item permission-navigation-item-container">
-										<aui:a cssClass="nav-link permission-navigation-link" data="<%= data %>" href="<%= editPermissionsURL.toString() %>">
-											<liferay-ui:message key="general-permissions" />
-										</aui:a>
-									</li>
-								</div>
-							</ul>
 
 							<%
-							for (PanelCategory panelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.GLOBAL_MENU)) {
+							for (PanelCategory panelCategory : panelCategoryRegistry.getChildPanelCategories(PanelCategoryKeys.GLOBAL_MENU_APPLICATIONS)) {
 								List<PanelApp> panelApps = panelAppRegistry.getPanelApps(panelCategory);
 							%>
 
