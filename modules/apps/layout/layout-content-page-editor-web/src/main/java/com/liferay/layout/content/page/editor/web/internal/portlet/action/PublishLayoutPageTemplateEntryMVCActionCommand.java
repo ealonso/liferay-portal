@@ -17,6 +17,7 @@ package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListenerTracker;
+import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfigurationUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -94,9 +95,12 @@ public class PublishLayoutPageTemplateEntryMVCActionCommand
 			_layoutPageTemplateEntryLocalService.
 				fetchLayoutPageTemplateEntryByPlid(draftLayout.getClassPK());
 
-		LayoutStructureUtil.deleteMarkedForDeletionItems(
-			draftLayout.getCompanyId(), _contentPageEditorListenerTracker,
-			draftLayout.getGroupId(), draftLayout.getPlid(), _portletRegistry);
+		if (FFLayoutContentPageEditorConfigurationUtil.undoEnabled()) {
+			LayoutStructureUtil.deleteMarkedForDeletionItems(
+				draftLayout.getCompanyId(), _contentPageEditorListenerTracker,
+				draftLayout.getGroupId(), draftLayout.getPlid(),
+				_portletRegistry);
+		}
 
 		_layoutCopyHelper.copyLayout(draftLayout, layout);
 
