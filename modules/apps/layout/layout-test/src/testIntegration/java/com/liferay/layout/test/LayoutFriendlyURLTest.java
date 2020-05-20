@@ -447,6 +447,25 @@ public class LayoutFriendlyURLTest {
 	}
 
 	@Test
+	public void testSameNameDifferentFriendlyURL() throws Exception {
+		Map<Locale, String> nameMap = HashMapBuilder.put(
+			LocaleUtil.US, "Home"
+		).build();
+
+		Map<Locale, String> friendlyURLMap = HashMapBuilder.put(
+			LocaleUtil.US, "/home"
+		).build();
+
+		addLayout(_group.getGroupId(), false, nameMap, friendlyURLMap);
+
+		friendlyURLMap = HashMapBuilder.put(
+			LocaleUtil.US, "/home-private"
+		).build();
+
+		addLayout(_group.getGroupId(), true, nameMap, friendlyURLMap);
+	}
+
+	@Test
 	public void testValidFriendlyURLEndingWithLanguageId() throws Exception {
 		Map<Locale, String> friendlyURLMap = HashMapBuilder.put(
 			LocaleUtil.US, "/home/es"
@@ -527,13 +546,22 @@ public class LayoutFriendlyURLTest {
 			Map<Locale, String> friendlyURLMap)
 		throws Exception {
 
+		addLayout(
+			groupId, privateLayout, RandomTestUtil.randomLocaleStringMap(),
+			friendlyURLMap);
+	}
+
+	protected void addLayout(
+			long groupId, boolean privateLayout, Map<Locale, String> nameMap,
+			Map<Locale, String> friendlyURLMap)
+		throws Exception {
+
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(groupId);
 
 		LayoutLocalServiceUtil.addLayout(
 			TestPropsValues.getUserId(), groupId, privateLayout,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
-			RandomTestUtil.randomLocaleStringMap(),
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, nameMap,
 			RandomTestUtil.randomLocaleStringMap(),
 			RandomTestUtil.randomLocaleStringMap(),
 			RandomTestUtil.randomLocaleStringMap(),
