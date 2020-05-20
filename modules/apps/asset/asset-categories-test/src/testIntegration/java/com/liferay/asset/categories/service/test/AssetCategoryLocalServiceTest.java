@@ -29,12 +29,12 @@ import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -150,9 +150,9 @@ public class AssetCategoryLocalServiceTest {
 	private AssetCategory _addCategory(String title, Locale locale)
 		throws Exception {
 
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		titleMap.put(locale, title);
+		Map<Locale, String> titleMap = HashMapBuilder.put(
+			locale, title
+		).build();
 
 		return _assetCategoryLocalService.addCategory(
 			TestPropsValues.getUserId(), _group.getGroupId(), 0, titleMap,
@@ -164,9 +164,9 @@ public class AssetCategoryLocalServiceTest {
 			long categoryId, String title, Locale locale)
 		throws Exception {
 
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		titleMap.put(locale, title);
+		Map<Locale, String> titleMap = HashMapBuilder.put(
+			locale, title
+		).build();
 
 		return _assetCategoryLocalService.updateCategory(
 			TestPropsValues.getUserId(), categoryId, 0, titleMap, titleMap,

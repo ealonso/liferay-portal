@@ -108,10 +108,8 @@ public class AssetVocabularyLocalServiceImpl
 
 		Group group = groupLocalService.getGroup(groupId);
 
-		String defaultLanguageId = group.getDefaultLanguageId();
-
 		String name = titleMap.get(
-			LocaleUtil.fromLanguageId(defaultLanguageId));
+			LocaleUtil.fromLanguageId(group.getDefaultLanguageId()));
 
 		validate(groupId, name);
 
@@ -164,9 +162,7 @@ public class AssetVocabularyLocalServiceImpl
 
 		Group group = groupLocalService.getGroup(groupId);
 
-		String defaultLanguageId = group.getDefaultLanguageId();
-
-		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
+		Locale locale = LocaleUtil.fromLanguageId(group.getDefaultLanguageId());
 
 		Map<Locale, String> titleMap = HashMapBuilder.put(
 			locale, title
@@ -429,10 +425,8 @@ public class AssetVocabularyLocalServiceImpl
 
 		Group group = groupLocalService.getGroup(vocabulary.getGroupId());
 
-		String defaultLanguageId = group.getDefaultLanguageId();
-
 		String name = titleMap.get(
-			LocaleUtil.fromLanguageId(defaultLanguageId));
+			LocaleUtil.fromLanguageId(group.getDefaultLanguageId()));
 
 		if (!vocabularyName.equals(name)) {
 			validate(vocabulary.getGroupId(), name);

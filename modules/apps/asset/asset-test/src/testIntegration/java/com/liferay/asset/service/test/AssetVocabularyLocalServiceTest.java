@@ -27,12 +27,12 @@ import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -165,9 +165,9 @@ public class AssetVocabularyLocalServiceTest {
 	private AssetVocabulary _addVocabulary(String title, Locale locale)
 		throws Exception {
 
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		titleMap.put(locale, title);
+		Map<Locale, String> titleMap = HashMapBuilder.put(
+			locale, title
+		).build();
 
 		return _assetVocabularyLocalService.addVocabulary(
 			TestPropsValues.getUserId(), _group.getGroupId(), null, titleMap,
@@ -178,9 +178,9 @@ public class AssetVocabularyLocalServiceTest {
 			long vocabularyId, String title, Locale locale)
 		throws Exception {
 
-		Map<Locale, String> titleMap = new HashMap<>();
-
-		titleMap.put(locale, title);
+		Map<Locale, String> titleMap = HashMapBuilder.put(
+			locale, title
+		).build();
 
 		return _assetVocabularyLocalService.updateVocabulary(
 			vocabularyId, null, titleMap, titleMap, null, new ServiceContext());

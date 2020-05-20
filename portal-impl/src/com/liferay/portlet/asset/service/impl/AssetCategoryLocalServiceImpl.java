@@ -91,10 +91,8 @@ public class AssetCategoryLocalServiceImpl
 
 		Group group = groupLocalService.getGroup(groupId);
 
-		String defaultLanguageId = group.getDefaultLanguageId();
-
 		String name = titleMap.get(
-			LocaleUtil.fromLanguageId(defaultLanguageId));
+			LocaleUtil.fromLanguageId(group.getDefaultLanguageId()));
 
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
@@ -161,9 +159,7 @@ public class AssetCategoryLocalServiceImpl
 
 		Group group = groupLocalService.getGroup(groupId);
 
-		String defaultLanguageId = group.getDefaultLanguageId();
-
-		Locale locale = LocaleUtil.fromLanguageId(defaultLanguageId);
+		Locale locale = LocaleUtil.fromLanguageId(group.getDefaultLanguageId());
 
 		Map<Locale, String> titleMap = HashMapBuilder.put(
 			locale, title
@@ -619,14 +615,10 @@ public class AssetCategoryLocalServiceImpl
 		AssetCategory category = assetCategoryPersistence.findByPrimaryKey(
 			categoryId);
 
-		long groupId = category.getGroupId();
-
-		Group group = groupLocalService.getGroup(groupId);
-
-		String defaultLanguageId = group.getDefaultLanguageId();
+		Group group = groupLocalService.getGroup(category.getGroupId());
 
 		String name = titleMap.get(
-			LocaleUtil.fromLanguageId(defaultLanguageId));
+			LocaleUtil.fromLanguageId(group.getDefaultLanguageId()));
 
 		name = ModelHintsUtil.trimString(
 			AssetCategory.class.getName(), "name", name);
