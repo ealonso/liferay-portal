@@ -72,4 +72,8 @@ public interface FragmentComposition
 
 	public void setImagePreviewURL(String imagePreviewURL);
 
+	public String getIcon();
+
+	public void setIcon(String icon);
+
 }
