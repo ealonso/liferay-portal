@@ -1,5 +1,6 @@
 {
 	"fragmentEntryKey": "social",
+	"icon": "picture",
 	"name": "social",
 	"thumbnail": "social.png",
 	"type": "component"

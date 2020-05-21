@@ -1,5 +1,6 @@
 {
 	"fragmentEntryKey": "tabs",
+	"icon": "picture",
 	"name": "tabs",
 	"thumbnail": "tabs.png",
 	"type": "component"

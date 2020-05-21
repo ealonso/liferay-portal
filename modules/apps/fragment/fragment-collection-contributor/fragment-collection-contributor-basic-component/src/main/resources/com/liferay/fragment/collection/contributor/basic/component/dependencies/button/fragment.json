@@ -1,5 +1,6 @@
 {
 	"fragmentEntryKey": "button",
+	"icon": "picture",
 	"name": "button",
 	"thumbnail": "button.png",
 	"type": "component"
