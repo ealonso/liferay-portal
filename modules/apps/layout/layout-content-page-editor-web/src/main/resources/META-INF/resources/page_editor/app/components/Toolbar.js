@@ -15,7 +15,7 @@
 import ClayButton from '@clayui/button';
 import classNames from 'classnames';
 import {useIsMounted} from 'frontend-js-react-web';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import useLazy from '../../core/hooks/useLazy';
@@ -52,14 +52,6 @@ function ToolbarBody() {
 		segmentsExperimentStatus,
 		selectedViewportSize,
 	} = store;
-
-	const [enableDiscard, setEnableDiscard] = useState(false);
-
-	useEffect(() => {
-		const isConversionPage = config.pageType === PAGE_TYPES.conversion;
-
-		setEnableDiscard(network.lastFetch || config.draft || isConversionPage);
-	}, [network.lastFetch]);
 
 	const loading = useRef(() => {
 		Promise.all(
@@ -116,18 +108,6 @@ function ToolbarBody() {
 		}, [])
 	);
 
-	const handleDiscardDraft = (event) => {
-		if (
-			!confirm(
-				Liferay.Language.get(
-					'are-you-sure-you-want-to-discard-current-draft-and-apply-latest-published-changes'
-				)
-			)
-		) {
-			event.preventDefault();
-		}
-	};
-
 	const handleSubmit = (event) => {
 		if (
 			config.masterUsed &&
@@ -150,15 +130,6 @@ function ToolbarBody() {
 			selectItem(null);
 		}
 	};
-
-	let draftButtonLabel = Liferay.Language.get('discard-draft');
-
-	if (config.pageType === PAGE_TYPES.conversion) {
-		draftButtonLabel = Liferay.Language.get('discard-conversion-draft');
-	}
-	else if (config.singleSegmentsExperienceMode) {
-		draftButtonLabel = Liferay.Language.get('discard-variant');
-	}
 
 	let publishButtonLabel = Liferay.Language.get('publish');
 
@@ -237,27 +208,6 @@ function ToolbarBody() {
 			<ul className="navbar-nav" onClick={deselectItem}>
 				<NetworkStatusBar {...network} />
 				{config.undoEnabled && <Undo onUndo={onUndo} />}
-
-				<li className="nav-item">
-					<form action={config.discardDraftURL} method="POST">
-						<input
-							name={`${config.portletNamespace}redirect`}
-							type="hidden"
-							value={config.discardDraftRedirectURL}
-						/>
-
-						<ClayButton
-							className="btn btn-secondary mr-3"
-							disabled={!enableDiscard}
-							displayType="secondary"
-							onClick={handleDiscardDraft}
-							small
-							type="submit"
-						>
-							{draftButtonLabel}
-						</ClayButton>
-					</form>
-				</li>
 
 				<li className="nav-item">
 					<form action={config.publishURL} method="POST">
