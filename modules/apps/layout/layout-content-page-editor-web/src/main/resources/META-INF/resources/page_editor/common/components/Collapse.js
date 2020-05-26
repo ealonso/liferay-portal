@@ -45,7 +45,9 @@ export default function Collapse(props) {
 				)}
 				onClick={handleClick}
 			>
-				{props.label}
+				<span className="c-inner" tabIndex="-1">
+					{props.label}
+				</span>
 				<span className={`collapse-icon-${collapseIconClassName}`}>
 					<ClayIcon key={collapseIcon} symbol={collapseIcon} />
 				</span>
