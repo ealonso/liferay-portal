@@ -19,7 +19,7 @@ import {
 	DELETE_ITEM,
 	DUPLICATE_ITEM,
 	MOVE_ITEM,
-	UPDATE_COL_SIZE_START,
+	UPDATE_COL_SIZE,
 	UPDATE_EDITABLE_VALUES,
 	UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION,
 	UPDATE_ITEM_CONFIG,
@@ -40,7 +40,7 @@ const UNDO_SERVICES = {
 	[DUPLICATE_ITEM]: LayoutService.deleteItem,
 	[MOVE_ITEM]: LayoutService.updateLayoutData,
 	[SELECT_SEGMENTS_EXPERIENCE]: ExperienceService.selectExperience,
-	[UPDATE_COL_SIZE_START]: LayoutService.updateLayoutData,
+	[UPDATE_COL_SIZE]: LayoutService.updateLayoutData,
 	[UPDATE_EDITABLE_VALUES]: FragmentService.updateEditableValues,
 	[UPDATE_FRAGMENT_ENTRY_LINK_CONFIGURATION]:
 		FragmentService.updateConfigurationValues,
@@ -53,7 +53,7 @@ const getServiceBody = (dispatch, undo, undoState) => {
 		case ADD_ITEM:
 		case DELETE_ITEM:
 		case MOVE_ITEM:
-		case UPDATE_COL_SIZE_START:
+		case UPDATE_COL_SIZE:
 		case UPDATE_ITEM_CONFIG: {
 			return {
 				layoutData: undo.layoutData,
@@ -100,7 +100,7 @@ const updateUndoState = (serviceResponse, undo, undoState) => {
 		case ADD_ITEM:
 		case DELETE_ITEM:
 		case MOVE_ITEM:
-		case UPDATE_COL_SIZE_START:
+		case UPDATE_COL_SIZE:
 		case UPDATE_ITEM_CONFIG: {
 			return {...undoState, layoutData: undo.layoutData};
 		}
