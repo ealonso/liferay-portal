@@ -85,8 +85,12 @@ describe('FragmentsSidebar', () => {
 	});
 
 	it('expands a category on click and closes it when clicking it again', () => {
-		const {getByText, queryByText} = renderFragmentsSidebar();
-		const basicComponentsCollapse = getByText('Basic Components');
+		const {
+			getByLabelText,
+			getByText,
+			queryByText,
+		} = renderFragmentsSidebar();
+		const basicComponentsCollapse = getByLabelText('Basic Components');
 
 		fireEvent.click(basicComponentsCollapse);
 
@@ -94,7 +98,7 @@ describe('FragmentsSidebar', () => {
 			'true'
 		);
 
-		expect(getByText('Button'));
+		expect(getByText('Button')).toBeInTheDocument();
 
 		fireEvent.click(basicComponentsCollapse);
 
@@ -121,18 +125,14 @@ describe('FragmentsSidebar', () => {
 	});
 
 	it('expands all categories when you type something in search form and hides layout elements', () => {
-		const {
-			getByLabelText,
-			getByText,
-			queryByText,
-		} = renderFragmentsSidebar();
+		const {getByLabelText, queryByLabelText} = renderFragmentsSidebar();
 
 		userEvent.type(getByLabelText('search-form'), 'a');
 
 		expect(
-			getByText('Basic Components').getAttribute('aria-expanded')
+			getByLabelText('Basic Components').getAttribute('aria-expanded')
 		).toBe('true');
 
-		expect(queryByText('layout-elements')).not.toBeInTheDocument();
+		expect(queryByLabelText('layout-elements')).not.toBeInTheDocument();
 	});
 });

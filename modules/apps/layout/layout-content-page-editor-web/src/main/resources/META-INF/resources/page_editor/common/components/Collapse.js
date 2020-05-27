@@ -17,10 +17,13 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 
+import {useId} from '../../app/utils/useId';
+
 export default function Collapse(props) {
 	const [open, setOpen] = useState(props.open);
 	const collapseIcon = open ? 'angle-down' : 'angle-right';
 	const collapseIconClassName = open ? 'open' : 'closed';
+	const buttonLabelId = useId();
 
 	useEffect(() => {
 		setOpen(props.open);
@@ -34,6 +37,7 @@ export default function Collapse(props) {
 		<div className="page-editor__collapse panel-group panel-group-flush">
 			<button
 				aria-expanded={open}
+				aria-labelledby={buttonLabelId}
 				className={classNames(
 					'btn',
 					'btn-unstyled',
@@ -45,9 +49,10 @@ export default function Collapse(props) {
 				)}
 				onClick={handleClick}
 			>
-				<span className="c-inner" tabIndex="-1">
+				<span className="c-inner" id={buttonLabelId} tabIndex="-1">
 					{props.label}
 				</span>
+
 				<span className={`collapse-icon-${collapseIconClassName}`}>
 					<ClayIcon key={collapseIcon} symbol={collapseIcon} />
 				</span>

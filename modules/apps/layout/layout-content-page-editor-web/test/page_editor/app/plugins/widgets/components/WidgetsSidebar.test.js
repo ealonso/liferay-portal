@@ -97,8 +97,10 @@ describe('WidgetsSidebar', () => {
 	});
 
 	it('expands a category on click and closes it when clicking it again', () => {
-		const {getByText, queryByText} = render(<RenderWidgetsSidebar />);
-		const highlightedCategory = getByText('Highlighted');
+		const {getByLabelText, getByText, queryByText} = render(
+			<RenderWidgetsSidebar />
+		);
+		const highlightedCategory = getByLabelText('Highlighted');
 
 		fireEvent.click(highlightedCategory);
 
@@ -126,15 +128,15 @@ describe('WidgetsSidebar', () => {
 	});
 
 	it('expands all categories when you type something in search form', () => {
-		const {getByLabelText, getByText} = render(<RenderWidgetsSidebar />);
+		const {getByLabelText} = render(<RenderWidgetsSidebar />);
 
 		userEvent.type(getByLabelText('search-form'), 'a');
 
-		expect(getByText('Collaboration').getAttribute('aria-expanded')).toBe(
-			'true'
-		);
-		expect(getByText('Highlighted').getAttribute('aria-expanded')).toBe(
-			'true'
-		);
+		expect(
+			getByLabelText('Collaboration').getAttribute('aria-expanded')
+		).toBe('true');
+		expect(
+			getByLabelText('Highlighted').getAttribute('aria-expanded')
+		).toBe('true');
 	});
 });
