@@ -476,7 +476,7 @@ public class RolesAdminPortlet extends MVCPortlet {
 					selected, scope, groupIds);
 
 				if (selected &&
-					actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL)) {
+					actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL )) {
 
 					updateViewControlPanelPermission(
 						role, themeDisplay.getScopeGroupId(), selResource,

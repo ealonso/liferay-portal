@@ -182,7 +182,7 @@ RoleDisplayContext roleDisplayContext = new RoleDisplayContext(request, renderRe
 private String _getActionLabel(HttpServletRequest request, ThemeDisplay themeDisplay, String resourceName, String actionId) throws SystemException {
 	String actionLabel = null;
 
-	if (actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL)) {
+	if (actionId.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL )) {
 		PanelCategoryHelper panelCategoryHelper = (PanelCategoryHelper)request.getAttribute(ApplicationListWebKeys.PANEL_CATEGORY_HELPER);
 		PersonalMenuEntryHelper personalMenuEntryHelper = (PersonalMenuEntryHelper)request.getAttribute(ApplicationListWebKeys.PERSONAL_MENU_ENTRY_HELPER);
 

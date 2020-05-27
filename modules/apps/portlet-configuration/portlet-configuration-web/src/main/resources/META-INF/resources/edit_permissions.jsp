@@ -92,7 +92,7 @@ if (Validator.isNotNull(portletConfigurationPermissionsDisplayContext.getModelRe
 					ResourcePermissionUtil.populateResourcePermissionActionIds(portletConfigurationPermissionsDisplayContext.getGroupId(), role, resource, portletConfigurationPermissionsDisplayContext.getActions(), currentIndividualActions, currentGroupActions, currentGroupTemplateActions, currentCompanyActions);
 
 					for (String action : portletConfigurationPermissionsDisplayContext.getActions()) {
-						if (action.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL)) {
+						if (action.equals(ActionKeys.ACCESS_IN_CONTROL_PANEL )) {
 							continue;
 						}
 

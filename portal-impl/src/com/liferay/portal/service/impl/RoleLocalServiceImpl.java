@@ -1709,7 +1709,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			ResourceAction resourceAction =
 				resourceActionLocalService.fetchResourceAction(
-					portletId, ActionKeys.ACCESS_IN_CONTROL_PANEL);
+					portletId, ActionKeys.ACCESS_IN_CONTROL_PANEL );
 
 			if (resourceAction == null) {
 				continue;
@@ -1717,7 +1717,7 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			setRolePermissions(
 				role, portletId,
-				new String[] {ActionKeys.ACCESS_IN_CONTROL_PANEL});
+				new String[] {ActionKeys.ACCESS_IN_CONTROL_PANEL });
 		}
 	}
 

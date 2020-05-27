@@ -54,7 +54,7 @@ public class EditRedirectNotFoundEntryMVCActionCommand
 
 		PortletPermissionUtil.check(
 			themeDisplay.getPermissionChecker(), themeDisplay.getScopeGroupId(),
-			0, RedirectPortletKeys.REDIRECT, ActionKeys.ACCESS_IN_CONTROL_PANEL,
+			0, RedirectPortletKeys.REDIRECT, ActionKeys.ACCESS_IN_CONTROL_PANEL ,
 			true);
 
 		long redirectNotFoundEntryId = ParamUtil.getLong(

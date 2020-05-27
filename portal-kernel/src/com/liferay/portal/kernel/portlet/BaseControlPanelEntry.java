@@ -122,7 +122,7 @@ public abstract class BaseControlPanelEntry implements ControlPanelEntry {
 		List<String> resourceActions = ResourceActionsUtil.getResourceActions(
 			portlet.getPortletId());
 
-		if (resourceActions.contains(ActionKeys.ACCESS_IN_CONTROL_PANEL) &&
+		if (resourceActions.contains(ActionKeys.ACCESS_IN_CONTROL_PANEL ) &&
 			PortletPermissionUtil.contains(
 				permissionChecker, groupId, 0, portlet.getRootPortletId(),
 				ActionKeys.ACCESS_IN_CONTROL_PANEL, true)) {
