@@ -12,53 +12,39 @@
  * details.
  */
 
-package com.liferay.content.dashboard.web.internal.application.list;
+package com.liferay.product.navigation.control.panel.internal.application.list;
 
 import com.liferay.application.list.BasePanelCategory;
 import com.liferay.application.list.PanelCategory;
 import com.liferay.application.list.constants.PanelCategoryKeys;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 
 import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Cristina González
+ * @author Eudaldo Alonso
  */
 @Component(
 	immediate = true,
 	property = {
 		"panel.category.key=" + PanelCategoryKeys.GLOBAL_MENU_APPLICATIONS,
-		"panel.category.order:Integer=401"
+		"panel.category.order:Integer=50"
 	},
 	service = PanelCategory.class
 )
-public class ContentDashboardAdminPanelCategory extends BasePanelCategory {
-
-	public static final String CONTROL_PANEL_CONTENT_DASHBOARD_ADMIN =
-		"CONTROL_PANEL_CONTENT_DASHBOARD_ADMIN";
+public class ApplicationsContentPanelCategory extends BasePanelCategory {
 
 	@Override
 	public String getKey() {
-		return CONTROL_PANEL_CONTENT_DASHBOARD_ADMIN;
+		return PanelCategoryKeys.GLOBAL_MENU_APPLICATIONS_CONTENT;
 	}
 
 	@Override
 	public String getLabel(Locale locale) {
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			locale, getClass());
-
-		return ResourceBundleUtil.getString(
-			resourceBundle, "content-dashboard");
-	}
-
-	@Override
-	public boolean isShow(PermissionChecker permissionChecker, Group group) {
-		return true;
+		return LanguageUtil.get(
+			locale, "category.global_menu.applications.content");
 	}
 
 }
