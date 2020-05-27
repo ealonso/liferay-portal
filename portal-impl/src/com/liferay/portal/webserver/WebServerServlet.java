@@ -1510,7 +1510,7 @@ public class WebServerServlet extends HttpServlet {
 				throw new PrincipalException.MustHavePermission(
 					permissionChecker, FileEntry.class.getName(),
 					fileEntry.getFileEntryId(),
-					ActionKeys.ACCESS_IN_CONTROL_PANEL );
+					ActionKeys.ACCESS_IN_CONTROL_PANEL);
 			}
 		}
 	}
