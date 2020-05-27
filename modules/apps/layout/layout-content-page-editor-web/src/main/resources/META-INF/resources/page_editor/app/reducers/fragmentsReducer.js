@@ -12,7 +12,6 @@
  * details.
  */
 
-import {config} from '../../app/config/index';
 import {ADD_FRAGMENT_COMPOSITION, INIT} from '../actions/types';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
 
