@@ -14,7 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.info.list.renderer.InfoListItemStyle;
+import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.list.renderer.InfoListRenderer;
 import com.liferay.info.list.renderer.InfoListRendererTracker;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
@@ -43,11 +43,11 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET,
-		"mvc.command.name=/content_layout/get_available_list_item_styles"
+		"mvc.command.name=/content_layout/get_available_list_item_renderers"
 	},
 	service = MVCResourceCommand.class
 )
-public class GetAvailableListItemStylesMVCResourceCommand
+public class GetAvailableListItemRenderersMVCResourceCommand
 	extends BaseMVCResourceCommand {
 
 	@Override
@@ -62,19 +62,18 @@ public class GetAvailableListItemStylesMVCResourceCommand
 		InfoListRenderer infoListRenderer =
 			_infoListRendererTracker.getInfoListRenderer(listStyle);
 
-		List<InfoListItemStyle> infoListItemStyles =
-			infoListRenderer.getAvailableInfoListItemStyles();
+		List<InfoItemRenderer> infoItemRenderers =
+			infoListRenderer.getAvailableInfoItemRenderers();
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		for (InfoListItemStyle infoListItemStyle : infoListItemStyles) {
+		for (InfoItemRenderer infoItemRenderer : infoItemRenderers) {
 			jsonArray.put(
 				JSONUtil.put(
-					"label",
-					infoListItemStyle.getLabel(themeDisplay.getLocale())
+					"label", infoItemRenderer.getLabel(themeDisplay.getLocale())
 				).put(
-					"value", infoListItemStyle.getKey()
+					"value", infoItemRenderer.getKey()
 				));
 		}
 
