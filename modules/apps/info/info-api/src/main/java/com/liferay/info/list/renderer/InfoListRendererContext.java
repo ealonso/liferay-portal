@@ -28,6 +28,6 @@ public interface InfoListRendererContext {
 
 	public HttpServletResponse getHttpServletResponse();
 
-	public Optional<String> getListItemStyleKeyOptional();
+	public Optional<String> getListItemRendererKeyOptional();
 
 }
