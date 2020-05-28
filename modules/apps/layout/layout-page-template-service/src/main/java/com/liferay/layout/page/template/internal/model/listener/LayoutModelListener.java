@@ -14,15 +14,22 @@
 
 package com.liferay.layout.page.template.internal.model.listener;
 
+import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
-import com.liferay.petra.string.StringPool;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.portal.kernel.exception.ModelListenerException;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.Portal;
+
+import java.util.Collections;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,12 +46,18 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			return;
 		}
 
+		JSONObject dataJSONObject =
+			LayoutPageTemplateStructureHelperUtil.
+				generateContentLayoutStructure(
+					Collections.emptyList(),
+					_getLayoutPageTemplateEntryType(layout));
+
 		try {
 			_layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
 					layout.getUserId(), layout.getGroupId(),
 					_portal.getClassNameId(Layout.class), layout.getPlid(),
-					StringPool.BLANK,
+					dataJSONObject.toString(),
 					ServiceContextThreadLocal.getServiceContext());
 		}
 		catch (Exception exception) {
@@ -69,6 +82,39 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 				deleteLayoutPageTemplateStructure(layoutPageTemplateStructure);
 		}
 	}
+
+	private int _getLayoutPageTemplateEntryType(Layout layout) {
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.
+				fetchLayoutPageTemplateEntryByPlid(layout.getClassPK());
+
+		if (layoutPageTemplateEntry != null) {
+			return layoutPageTemplateEntry.getType();
+		}
+
+		Layout draftLayout = _layoutLocalService.fetchLayout(
+			_portal.getClassNameId(Layout.class), layout.getPlid());
+
+		if (draftLayout != null) {
+			LayoutPageTemplateEntry draftLayoutPageTemplateEntry =
+				_layoutPageTemplateEntryLocalService.
+					fetchLayoutPageTemplateEntryByPlid(
+						draftLayout.getClassPK());
+
+			if (draftLayoutPageTemplateEntry != null) {
+				return draftLayoutPageTemplateEntry.getType();
+			}
+		}
+
+		return LayoutPageTemplateEntryTypeConstants.TYPE_BASIC;
+	}
+
+	@Reference(unbind = "-")
+	private LayoutLocalService _layoutLocalService;
+
+	@Reference(unbind = "-")
+	private LayoutPageTemplateEntryLocalService
+		_layoutPageTemplateEntryLocalService;
 
 	@Reference(unbind = "-")
 	private LayoutPageTemplateStructureLocalService
