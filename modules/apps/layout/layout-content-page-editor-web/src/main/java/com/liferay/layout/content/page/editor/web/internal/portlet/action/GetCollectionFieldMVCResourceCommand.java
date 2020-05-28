@@ -88,6 +88,8 @@ public class GetCollectionFieldMVCResourceCommand
 		String listStyle = ParamUtil.getString(resourceRequest, "listStyle");
 		String listItemStyle = ParamUtil.getString(
 			resourceRequest, "listItemStyle");
+		String templateKey = ParamUtil.getString(
+			resourceRequest, "templateKey");
 		long segmentsExperienceId = ParamUtil.getLong(
 			resourceRequest, "segmentsExperienceId");
 		int size = ParamUtil.getInteger(resourceRequest, "size");
@@ -96,7 +98,7 @@ public class GetCollectionFieldMVCResourceCommand
 			jsonObject = _getCollectionFieldsJSONObject(
 				_portal.getHttpServletRequest(resourceRequest),
 				_portal.getHttpServletResponse(resourceResponse),
-				layoutObjectReference, listStyle, listItemStyle,
+				layoutObjectReference, listStyle, listItemStyle, templateKey,
 				themeDisplay.getLocale(), segmentsExperienceId, size);
 		}
 		catch (Exception exception) {
@@ -114,8 +116,8 @@ public class GetCollectionFieldMVCResourceCommand
 			HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse,
 			String layoutObjectReference, String listStyle,
-			String listItemStyle, Locale locale, long segmentsExperienceId,
-			int size)
+			String listItemStyle, String templateKey, Locale locale,
+			long segmentsExperienceId, int size)
 		throws PortalException {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -189,8 +191,9 @@ public class GetCollectionFieldMVCResourceCommand
 							new DefaultInfoListRendererContext(
 								httpServletRequest, pipingHttpServletResponse);
 
-					defaultInfoListRendererContext.setListItemStyleKey(
+					defaultInfoListRendererContext.setListItemRendererKey(
 						listItemStyle);
+					defaultInfoListRendererContext.setTemplateKey(templateKey);
 
 					infoListRenderer.render(
 						list, defaultInfoListRendererContext);
