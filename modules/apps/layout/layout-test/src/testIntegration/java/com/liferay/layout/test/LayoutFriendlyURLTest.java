@@ -15,27 +15,45 @@
 package com.liferay.layout.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
+import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.LayoutFriendlyURLException;
 import com.liferay.portal.kernel.exception.LayoutFriendlyURLsException;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -114,6 +132,97 @@ public class LayoutFriendlyURLTest {
 		).build();
 
 		addLayout(_group.getGroupId(), false, friendlyURLMap);
+	}
+
+	@Test
+	public void testDuplicateFriendlyURL() throws PortalException {
+		String originalName = PrincipalThreadLocal.getName();
+
+		try {
+			PrincipalThreadLocal.setName(TestPropsValues.getUserId());
+
+			ServiceContext serviceContext = new ServiceContext();
+
+			serviceContext.setScopeGroupId(_group.getGroupId());
+			serviceContext.setUserId(TestPropsValues.getUserId());
+			serviceContext.setCompanyId(_group.getCompanyId());
+			serviceContext.setAddGroupPermissions(true);
+			serviceContext.setAddGuestPermissions(true);
+			serviceContext.setDeriveDefaultPermissions(true);
+			serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+			serviceContext.setLanguageId(
+				LanguageUtil.getLanguageId(LocaleUtil.getSiteDefault()));
+
+			//log.debug("Hello from the testStuff Routine.");
+
+			Map<Locale, String> nameMap = _prepareLocaleMap("PageTitle");
+
+			LayoutPageTemplateCollection templateCollection =
+				_layoutPageTemplateCollectionLocalService.
+					addLayoutPageTemplateCollection(
+						TestPropsValues.getUserId(), _group.getGroupId(),
+						"TestTemplateCollection", "Test Template Collection",
+						serviceContext);
+
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_preparePageTemplateEntry(
+					"templateentry",
+					templateCollection.getLayoutPageTemplateCollectionId(),
+					serviceContext);
+
+			try {
+				final Layout finalLayout1 = _layoutLocalService.addLayout(
+					TestPropsValues.getUserId(), _group.getGroupId(), false, 0,
+					_portal.getClassNameId(LayoutPageTemplateEntry.class),
+					layoutPageTemplateEntry.getLayoutPageTemplateEntryId(),
+					nameMap, nameMap, new HashMap<>(), new HashMap<>(),
+					new HashMap<>(), "content", null, false, false,
+					_prepareLocaleMap("/somefriendlyurl"), 0, serviceContext);
+
+				TransactionCommitCallbackUtil.registerCallback(
+					() -> {
+						_copyLayout(finalLayout1);
+
+						_layoutLocalService.updateStatus(
+							TestPropsValues.getUserId(), finalLayout1.getPlid(),
+							WorkflowConstants.STATUS_APPROVED, serviceContext);
+
+						return null;
+					});
+			}
+			catch (PortalException portalException) {
+				//log.error(e.getMessage());
+			}
+
+			try {
+				final Layout finalLayout2 = _layoutLocalService.addLayout(
+					TestPropsValues.getUserId(), _group.getGroupId(), false, 0,
+					_portal.getClassNameId(LayoutPageTemplateEntry.class),
+					layoutPageTemplateEntry.getLayoutPageTemplateEntryId(),
+					nameMap, nameMap, new HashMap<>(), new HashMap<>(),
+					new HashMap<>(), "content", null, false, false,
+					_prepareLocaleMap("/pagetitle"), 0, serviceContext);
+
+				TransactionCommitCallbackUtil.registerCallback(
+					() -> {
+						_copyLayout(finalLayout2);
+
+						_layoutLocalService.updateStatus(
+							serviceContext.getUserId(), finalLayout2.getPlid(),
+							WorkflowConstants.STATUS_APPROVED, serviceContext);
+
+						return null;
+					});
+			}
+			catch (PortalException portalException) {
+				//log.error(e.getMessage());
+			}
+
+			//log.info("Done");
+		}
+		finally {
+			PrincipalThreadLocal.setName(originalName);
+		}
 	}
 
 	@Test
@@ -570,9 +679,79 @@ public class LayoutFriendlyURLTest {
 			friendlyURLMap, serviceContext);
 	}
 
+	private void _copyLayout(Layout layout) throws Exception {
+		Layout draftLayout = _layoutLocalService.fetchLayout(
+			_portal.getClassNameId(Layout.class), layout.getPlid());
+
+		if (draftLayout != null) {
+			_layoutCopyHelper.copyLayout(draftLayout, layout);
+		}
+
+		_layoutLocalService.updateLayout(
+			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
+			new Date());
+	}
+
+	private Map<Locale, String> _prepareLocaleMap(String values) {
+		Map<Locale, String> localeMap = new HashMap<>();
+
+		for (Locale locale :
+				LanguageUtil.getAvailableLocales(_group.getGroupId())) {
+
+			localeMap.put(locale, values);
+		}
+
+		localeMap.put(LocaleUtil.getSiteDefault(), values);
+
+		return localeMap;
+	}
+
+	private LayoutPageTemplateEntry _preparePageTemplateEntry(
+			String name, long layoutPageTemplateCollectionId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				layoutPageTemplateCollectionId, name,
+				LayoutPageTemplateEntryTypeConstants.TYPE_BASIC,
+				WorkflowConstants.STATUS_APPROVED, serviceContext);
+
+		long[] fragmentEntryIds = {};
+
+		return _layoutPageTemplateEntryLocalService.
+			updateLayoutPageTemplateEntry(
+				layoutPageTemplateEntry.getLayoutPageTemplateEntryId(), name,
+				fragmentEntryIds, StringPool.BLANK, serviceContext);
+	}
+
 	private Group _group;
+
+	@Inject
+	private GroupLocalService _groupLocalService;
 
 	@DeleteAfterTestRun
 	private final List<Group> _groups = new ArrayList<>();
+
+	@Inject
+	private LayoutCopyHelper _layoutCopyHelper;
+
+	@Inject
+	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private LayoutPageTemplateCollectionLocalService
+		_layoutPageTemplateCollectionLocalService;
+
+	@Inject
+	private LayoutPageTemplateEntryLocalService
+		_layoutPageTemplateEntryLocalService;
+
+	@Inject
+	private Portal _portal;
+
+	@Inject
+	private UserLocalService _userLocalService;
 
 }
