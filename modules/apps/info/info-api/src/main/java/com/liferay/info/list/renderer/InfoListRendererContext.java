@@ -19,9 +19,12 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * @author Pavel Savinov
  */
+@ProviderType
 public interface InfoListRendererContext {
 
 	public HttpServletRequest getHttpServletRequest();
@@ -29,5 +32,7 @@ public interface InfoListRendererContext {
 	public HttpServletResponse getHttpServletResponse();
 
 	public Optional<String> getListItemRendererKeyOptional();
+
+	public Optional<String> getTemplateKeyOptional();
 
 }
