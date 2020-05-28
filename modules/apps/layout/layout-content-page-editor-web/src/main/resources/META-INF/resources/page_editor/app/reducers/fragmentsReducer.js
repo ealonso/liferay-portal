@@ -90,7 +90,7 @@ export default function fragmentsReducer(fragments = [], action) {
 				name: Liferay.Language.get('layout-elements'),
 			});
 
-			if (contentDisplayCollection && config.fragmentPanelEnabled) {
+			if (contentDisplayCollection) {
 				newFragments.splice(2, 0, {
 					...contentDisplayCollection,
 
@@ -108,9 +108,6 @@ export default function fragmentsReducer(fragments = [], action) {
 						},
 					],
 				});
-			}
-			else {
-				newFragments.splice(2, 0, contentDisplayCollection);
 			}
 
 			return newFragments;
