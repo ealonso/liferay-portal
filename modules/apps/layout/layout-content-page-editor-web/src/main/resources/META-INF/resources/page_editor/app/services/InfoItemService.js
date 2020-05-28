@@ -70,14 +70,23 @@ export default {
 	/**
 	 * Get available list item renderers for the list style
 	 * @param {object} options
+	 * @param {string} options.itemSubtype itemSubtype
+	 * @param {string} options.itemType itemType
 	 * @param {string} options.listStyle listStyle
 	 * @param {function} options.onNetworkStatus
 	 */
-	getAvailableListItemRenderers({listStyle, onNetworkStatus}) {
+	getAvailableListItemRenderers({
+		itemSubtype,
+		itemType,
+		listStyle,
+		onNetworkStatus,
+	}) {
 		return serviceFetch(
 			config.getAvailableListItemRenderersURL,
 			{
 				body: {
+					itemSubtype,
+					itemType,
 					listStyle,
 				},
 			},
