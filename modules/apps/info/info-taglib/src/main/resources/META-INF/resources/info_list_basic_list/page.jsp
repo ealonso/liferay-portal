@@ -25,11 +25,24 @@
 			%>
 
 				<li>
+					<c:choose>
+						<c:when test="<%= (infoItemRenderer instanceof InfoItemTemplatedRenderer) && Validator.isNotNull(templateKey) %>">
 
-					<%
-					infoItemRenderer.render(infoListObject, request, response);
-					%>
+							<%
+							InfoItemTemplatedRenderer infoItemTemplatedRenderer = (InfoItemTemplatedRenderer)infoItemRenderer;
 
+							infoItemTemplatedRenderer.render(infoListObject, templateKey, request, response);
+							%>
+
+						</c:when>
+						<c:otherwise>
+
+							<%
+							infoItemRenderer.render(infoListObject, request, response);
+							%>
+
+						</c:otherwise>
+					</c:choose>
 				</li>
 
 			<%
@@ -46,11 +59,24 @@
 			%>
 
 				<li class="<%= listItemCssClass %>">
+					<c:choose>
+						<c:when test="<%= (infoItemRenderer instanceof InfoItemTemplatedRenderer) && Validator.isNotNull(templateKey) %>">
 
-					<%
-					infoItemRenderer.render(infoListObject, request, response);
-					%>
+							<%
+							InfoItemTemplatedRenderer infoItemTemplatedRenderer = (InfoItemTemplatedRenderer)infoItemRenderer;
 
+							infoItemTemplatedRenderer.render(infoListObject, templateKey, request, response);
+							%>
+
+						</c:when>
+						<c:otherwise>
+
+							<%
+							infoItemRenderer.render(infoListObject, request, response);
+							%>
+
+						</c:otherwise>
+					</c:choose>
 				</li>
 
 			<%
