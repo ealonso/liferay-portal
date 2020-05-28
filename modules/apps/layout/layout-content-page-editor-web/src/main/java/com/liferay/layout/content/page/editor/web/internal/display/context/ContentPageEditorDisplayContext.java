@@ -270,8 +270,9 @@ public class ContentPageEditorDisplayContext {
 				"getAssetMappingFieldsURL",
 				getResourceURL("/content_layout/get_asset_mapping_fields")
 			).put(
-				"getAvailableListItemStylesURL",
-				getResourceURL("/content_layout/get_available_list_item_styles")
+				"getAvailableListItemRenderersURL",
+				getResourceURL(
+					"/content_layout/get_available_list_item_renderers")
 			).put(
 				"getAvailableListRenderersURL",
 				getResourceURL("/content_layout/get_available_list_renderers")
