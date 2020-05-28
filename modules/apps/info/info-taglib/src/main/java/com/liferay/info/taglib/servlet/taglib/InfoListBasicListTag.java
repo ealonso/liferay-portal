@@ -44,6 +44,10 @@ public class InfoListBasicListTag extends IncludeTag {
 		return _listItemStyleKey;
 	}
 
+	public String getTemplateKey() {
+		return _templateKey;
+	}
+
 	public void setInfoListObjects(List<? extends Object> infoListObjects) {
 		_infoListObjects = infoListObjects;
 	}
@@ -66,6 +70,10 @@ public class InfoListBasicListTag extends IncludeTag {
 		super.setPageContext(pageContext);
 	}
 
+	public void setTemplateKey(String templateKey) {
+		_templateKey = templateKey;
+	}
+
 	@Override
 	protected void cleanUp() {
 		super.cleanUp();
@@ -73,6 +81,7 @@ public class InfoListBasicListTag extends IncludeTag {
 		_infoListObjects = null;
 		_itemRendererKey = null;
 		_listItemStyleKey = null;
+		_templateKey = null;
 	}
 
 	@Override
@@ -97,6 +106,8 @@ public class InfoListBasicListTag extends IncludeTag {
 			getInfoListObjects());
 		httpServletRequest.setAttribute(
 			"liferay-info:info-list-grid:listItemStyleKey", _listItemStyleKey);
+		httpServletRequest.setAttribute(
+			"liferay-info:info-list-grid:templateKey", _templateKey);
 	}
 
 	private InfoItemRenderer _getInfoItemRenderer() {
@@ -112,5 +123,6 @@ public class InfoListBasicListTag extends IncludeTag {
 	private List<? extends Object> _infoListObjects;
 	private String _itemRendererKey;
 	private String _listItemStyleKey;
+	private String _templateKey;
 
 }

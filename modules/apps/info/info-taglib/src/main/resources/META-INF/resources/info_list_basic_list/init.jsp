@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%@ page import="com.liferay.info.taglib.list.renderer.BasicListInfoListItemStyle" %><%@
-page import="com.liferay.portal.kernel.util.GetterUtil" %>
+page import="com.liferay.portal.kernel.util.Validator" %>
 
 <%@ page import="java.util.Objects" %>
 
