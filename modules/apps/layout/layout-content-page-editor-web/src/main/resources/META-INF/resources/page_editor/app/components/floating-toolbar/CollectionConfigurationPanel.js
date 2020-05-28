@@ -91,7 +91,7 @@ export const CollectionConfigurationPanel = ({item}) => {
 			item.config.listStyle &&
 			item.config.listStyle !== LIST_STYLE_GRID
 		) {
-			InfoItemService.getAvailableListItemStyles({
+			InfoItemService.getAvailableListItemRenderers({
 				listStyle: item.config.listStyle,
 			})
 				.then((response) => {
