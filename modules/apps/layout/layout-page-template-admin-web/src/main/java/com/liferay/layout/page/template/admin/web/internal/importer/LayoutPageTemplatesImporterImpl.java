@@ -1040,7 +1040,7 @@ public class LayoutPageTemplatesImporterImpl
 
 					_processPageElement(
 						layout, layoutStructure, childPageElement,
-                        layoutStructure.getMainItemId(), position,
+						layoutStructure.getMainItemId(), position,
 						warningMessages);
 
 					position++;
