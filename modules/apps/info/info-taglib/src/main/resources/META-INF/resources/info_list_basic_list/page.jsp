@@ -17,7 +17,7 @@
 <%@ include file="/info_list_basic_list/init.jsp" %>
 
 <c:choose>
-	<c:when test="<%= Objects.equals(infoListItemStyleKey, BasicListInfoListItemStyle.NUMBERED.getKey()) %>">
+	<c:when test="<%= Objects.equals(infoListStyleKey, BasicListInfoListStyle.NUMBERED.getKey()) %>">
 		<ol>
 
 			<%

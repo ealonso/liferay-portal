@@ -14,7 +14,7 @@
 
 package com.liferay.info.taglib.list.renderer;
 
-import com.liferay.info.list.renderer.InfoListItemStyle;
+import com.liferay.info.taglib.internal.list.renderer.BasicListInfoListStyle;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
 import com.liferay.portal.kernel.util.ResourceBundleLoaderUtil;
@@ -28,49 +28,28 @@ import org.osgi.framework.FrameworkUtil;
 /**
  * @author Pavel Savinov
  */
-public enum BasicListInfoListItemStyle {
+public interface InlineBasicInfoListRenderer<T>
+	extends BasicInfoListRenderer<T> {
 
-	BORDERED("bordered"), BULLETED("bulleted"), INLINE("inline"),
-	NUMBERED("numbered"), UNSTYLED("unstyled");
-
-	public InfoListItemStyle getInfoListItemStyle() {
-		return _infoListItemStyle;
-	}
-
-	public String getKey() {
-		return _key;
-	}
-
-	private BasicListInfoListItemStyle(String key) {
+	@Override
+	public default String getLabel(Locale locale) {
 		Bundle bundle = FrameworkUtil.getBundle(
-			BasicListInfoListItemStyle.class);
+			InlineBasicInfoListRenderer.class);
 
 		ResourceBundleLoader resourceBundleLoader =
 			ResourceBundleLoaderUtil.
 				getResourceBundleLoaderByBundleSymbolicName(
 					bundle.getSymbolicName());
 
-		_infoListItemStyle = new InfoListItemStyle() {
+		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
+			locale);
 
-			@Override
-			public String getKey() {
-				return key;
-			}
-
-			@Override
-			public String getLabel(Locale locale) {
-				ResourceBundle resourceBundle =
-					resourceBundleLoader.loadResourceBundle(locale);
-
-				return LanguageUtil.get(resourceBundle, key);
-			}
-
-		};
-
-		_key = key;
+		return LanguageUtil.get(resourceBundle, "inline-list");
 	}
 
-	private final InfoListItemStyle _infoListItemStyle;
-	private final String _key;
+	@Override
+	public default String getListStyle() {
+		return BasicListInfoListStyle.INLINE.getKey();
+	}
 
 }
