@@ -129,12 +129,12 @@ public class GetCollectionFieldMVCResourceCommandTest {
 			_mvcResourceCommand, "_getCollectionFieldsJSONObject",
 			new Class<?>[] {
 				HttpServletRequest.class, HttpServletResponse.class,
-				String.class, String.class, String.class, Locale.class,
-				long.class, int.class
+				String.class, String.class, String.class, String.class,
+				Locale.class, long.class, int.class
 			},
 			new MockHttpServletRequest(), new MockHttpServletResponse(),
 			layoutObjectReferenceJSONObject.toString(), StringPool.BLANK,
-			StringPool.BLANK, LocaleUtil.US, 0, 1);
+			StringPool.BLANK, StringPool.BLANK, LocaleUtil.US, 0, 1);
 
 		Assert.assertEquals(1, jsonObject.getInt("length"));
 
@@ -174,12 +174,12 @@ public class GetCollectionFieldMVCResourceCommandTest {
 			_mvcResourceCommand, "_getCollectionFieldsJSONObject",
 			new Class<?>[] {
 				HttpServletRequest.class, HttpServletResponse.class,
-				String.class, String.class, String.class, Locale.class,
-				long.class, int.class
+				String.class, String.class, String.class, String.class,
+				Locale.class, long.class, int.class
 			},
 			new MockHttpServletRequest(), new MockHttpServletResponse(),
 			layoutObjectReferenceJSONObject.toString(), StringPool.BLANK,
-			StringPool.BLANK, LocaleUtil.US, 0, 2);
+			StringPool.BLANK, StringPool.BLANK, LocaleUtil.US, 0, 2);
 
 		Assert.assertEquals(2, jsonObject.getInt("length"));
 
@@ -225,12 +225,12 @@ public class GetCollectionFieldMVCResourceCommandTest {
 			_mvcResourceCommand, "_getCollectionFieldsJSONObject",
 			new Class<?>[] {
 				HttpServletRequest.class, HttpServletResponse.class,
-				String.class, String.class, String.class, Locale.class,
-				long.class, int.class
+				String.class, String.class, String.class, String.class,
+				Locale.class, long.class, int.class
 			},
 			new MockHttpServletRequest(), new MockHttpServletResponse(),
 			layoutObjectReferenceJSONObject.toString(), StringPool.BLANK,
-			StringPool.BLANK, LocaleUtil.US, 0, 1);
+			StringPool.BLANK, StringPool.BLANK, LocaleUtil.US, 0, 1);
 
 		Assert.assertEquals(2, jsonObject.getInt("length"));
 
