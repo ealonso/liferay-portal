@@ -88,10 +88,12 @@ export const CollectionConfigurationPanel = ({item}) => {
 
 	useEffect(() => {
 		if (
-			item.config.listStyle &&
-			item.config.listStyle !== LIST_STYLE_GRID
+			(item.config.collection,
+			item.config.listStyle && item.config.listStyle !== LIST_STYLE_GRID)
 		) {
 			InfoItemService.getAvailableListItemRenderers({
+				itemSubtype: item.config.collection.itemSubtype,
+				itemType: item.config.collection.itemType,
 				listStyle: item.config.listStyle,
 			})
 				.then((response) => {
@@ -101,7 +103,7 @@ export const CollectionConfigurationPanel = ({item}) => {
 					setAvailableListItemStyles([]);
 				});
 		}
-	}, [item.config.listStyle]);
+	}, [item.config.collection, item.config.listStyle]);
 
 	return (
 		<>
@@ -163,19 +165,81 @@ export const CollectionConfigurationPanel = ({item}) => {
 								<label htmlFor={collectionListItemStyleId}>
 									{Liferay.Language.get('list-item-style')}
 								</label>
-								<ClaySelectWithOption
+								<select
 									aria-label={Liferay.Language.get(
 										'list-item-style'
 									)}
+									className="form-control"
 									id={collectionListItemStyleId}
-									onChange={({target: {value}}) =>
+									onChange={({target}) =>
 										handleConfigurationChanged({
-											listItemStyle: value,
+											listItemStyle:
+												target.options[
+													target.selectedIndex
+												].dataset.key,
+											templateKey:
+												target.options[
+													target.selectedIndex
+												].dataset.templateKey,
 										})
 									}
-									options={availableListItemStyles}
-									value={item.config.listItemStyle}
-								/>
+								>
+									{availableListItemStyles.map((entry) => {
+										if (entry.templates) {
+											return (
+												<optgroup
+													key={entry.label}
+													label={entry.label}
+												>
+													{entry.templates.map(
+														(template) => (
+															<option
+																data-key={
+																	template.key
+																}
+																data-template-key={
+																	template.templateKey
+																}
+																key={
+																	template.label
+																}
+																selected={
+																	item.config
+																		.listItemStyle ===
+																		template.key &&
+																	(!item
+																		.config
+																		.templateKey ||
+																		item
+																			.config
+																			.templateKey ===
+																			template.templateKey)
+																}
+															>
+																{template.label}
+															</option>
+														)
+													)}
+												</optgroup>
+											);
+										}
+										else {
+											return (
+												<option
+													data-key={entry.key}
+													key={entry.label}
+													selected={
+														item.config
+															.listItemStyle ===
+														entry.key
+													}
+												>
+													{entry.label}
+												</option>
+											);
+										}
+									})}
+								</select>
 							</ClayForm.Group>
 						)}
 

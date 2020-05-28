@@ -109,6 +109,10 @@ public class CollectionLayoutStructureItem extends LayoutStructureItem {
 		return _numberOfItems;
 	}
 
+	public String getTemplateKey() {
+		return _templateKey;
+	}
+
 	@Override
 	public int hashCode() {
 		return HashUtil.hash(0, getItemId());
@@ -141,6 +145,10 @@ public class CollectionLayoutStructureItem extends LayoutStructureItem {
 		_numberOfItems = numberOfItems;
 	}
 
+	public void setTemplateKey(String templateKey) {
+		_templateKey = templateKey;
+	}
+
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
 		if (itemConfigJSONObject.has("collection")) {
@@ -163,6 +171,10 @@ public class CollectionLayoutStructureItem extends LayoutStructureItem {
 		if (itemConfigJSONObject.has("numberOfItems")) {
 			setNumberOfItems(itemConfigJSONObject.getInt("numberOfItems"));
 		}
+
+		if (itemConfigJSONObject.has("templateKey")) {
+			setTemplateKey(itemConfigJSONObject.getString("templateKey"));
+		}
 	}
 
 	private JSONObject _collectionJSONObject;
@@ -170,5 +182,6 @@ public class CollectionLayoutStructureItem extends LayoutStructureItem {
 	private String _listStyle;
 	private int _numberOfColumns = 1;
 	private int _numberOfItems = 5;
+	private String _templateKey;
 
 }
