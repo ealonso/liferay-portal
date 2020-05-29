@@ -21,8 +21,6 @@ definition {
 			Site.viewCP(siteName = "Site Name");
 		}
 
-		GlobalMenu.gotoSite(site = "Site Name");
-
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
 			panel = "Site Administration",
