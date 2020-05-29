@@ -13,14 +13,14 @@ definition {
 			if ("${dropTarget}" == "Header") {
 				DragAndDrop.javaScriptDragAndDropToUp(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#HEADER_DROP_TARGET",
 					value1 = "");
 			}
 			else if ("${dropTarget}" == "Footer") {
 				DragAndDrop.javaScriptDragAndDropToObject(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 					value1 = "");
 			}
@@ -28,7 +28,7 @@ definition {
 		else {
 			DragAndDrop.javaScriptDragAndDropToObject(
 				key_fragmentName = "${fragmentName}",
-				locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 				locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 				value1 = "");
 		}
@@ -120,14 +120,14 @@ definition {
 			if ("${dropTarget}" == "Header") {
 				DragAndDrop.javaScriptDragAndDropToUp(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#HEADER_DROP_TARGET",
 					value1 = "");
 			}
 			else if ("${dropTarget}" == "Footer") {
 				DragAndDrop.javaScriptDragAndDropToObject(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 					value1 = "");
 			}
@@ -135,7 +135,7 @@ definition {
 		else {
 			DragAndDrop.javaScriptDragAndDropToObject(
 				key_fragmentName = "${fragmentName}",
-				locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 				locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 				value1 = "");
 		}
@@ -157,7 +157,7 @@ definition {
 
 		DragAndDrop.javaScriptDragAndDropToObject(
 			key_fragmentName = "${fragmentName}",
-			locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 			locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 			value1 = "");
 
@@ -208,14 +208,14 @@ definition {
 			if ("${dropTarget}" == "Header") {
 				DragAndDrop.javaScriptDragAndDropToUp(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#HEADER_DROP_TARGET",
 					value1 = "");
 			}
 			else if ("${dropTarget}" == "Footer") {
 				DragAndDrop.javaScriptDragAndDropToObject(
 					key_fragmentName = "${fragmentName}",
-					locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 					value1 = "");
 			}
@@ -223,7 +223,7 @@ definition {
 		else {
 			DragAndDrop.javaScriptDragAndDropToObject(
 				key_fragmentName = "${fragmentName}",
-				locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 				locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 				value1 = "");
 		}
@@ -249,23 +249,23 @@ definition {
 		if ("${scope}" == "Master") {
 			if ("${dropTarget}" == "Header") {
 				DragAndDrop.javaScriptDragAndDropToUp(
-					key_elementType = "Row",
-					locator1 = "PageEditor#SECTION_BUILDER_LAYOUT_ELEMENTS",
+					key_fragmentName = "Row",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#HEADER_DROP_TARGET",
 					value1 = "");
 			}
 			else if ("${dropTarget}" == "Footer") {
 				DragAndDrop.javaScriptDragAndDropToObject(
-					key_elementType = "Row",
-					locator1 = "PageEditor#SECTION_BUILDER_LAYOUT_ELEMENTS",
+					key_fragmentName = "Row",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 					value1 = "");
 			}
 		}
 		else {
 			DragAndDrop.javaScriptDragAndDropToObject(
-				key_elementType = "Row",
-				locator1 = "PageEditor#SECTION_BUILDER_LAYOUT_ELEMENTS",
+				key_fragmentName = "Row",
+				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 				locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 				value1 = "");
 		}
@@ -288,8 +288,8 @@ definition {
 		PageEditor.expandFragmentCollection(collectionName = "Layout Elements");
 
 		DragAndDrop.javaScriptDragAndDropToObject(
-			key_elementType = "Section",
-			locator1 = "PageEditor#SECTION_BUILDER_LAYOUT_ELEMENTS",
+			key_fragmentName = "Section",
+			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 			locator2 = "${dropTarget}",
 			value1 = "");
 
@@ -329,25 +329,25 @@ definition {
 			locator1 = "PageEditor#WIDGETS_APPLICATION_SEARCH_FIELD",
 			value1 = "${portletName}");
 
-		var key_portletName = "${portletName}";
+		var key_fragmentName = "${portletName}";
 
 		if ("${scope}" == "Master") {
 			if ("${dropTarget}" == "Header") {
 				DragAndDrop.javaScriptDragAndDropToUp(
-					locator1 = "PageEditor#WIDGETS_ADD_PORTLET_DRAG_BUTTON",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#HEADER_DROP_TARGET",
 					value1 = "");
 			}
 			else if ("${dropTarget}" == "Footer") {
 				DragAndDrop.javaScriptDragAndDropToObject(
-					locator1 = "PageEditor#WIDGETS_ADD_PORTLET_DRAG_BUTTON",
+					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 					locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 					value1 = "");
 			}
 		}
 		else {
 			DragAndDrop.javaScriptDragAndDropToObject(
-				locator1 = "PageEditor#WIDGETS_ADD_PORTLET_DRAG_BUTTON",
+				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 				locator2 = "PageEditor#FRAGMENT_DROP_TARGET",
 				value1 = "${portletName}");
 		}
@@ -1271,7 +1271,7 @@ definition {
 
 		DragAndDrop(
 			key_fragmentName = "${fragmentName}",
-			locator1 = "PageEditor#SECTION_BUILDER_FRAGMENTS",
+			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_ITEM",
 			locator2 = "PageEditor#OUTSIDE_OF_DROP_ZONE",
 			value1 = "");
 
