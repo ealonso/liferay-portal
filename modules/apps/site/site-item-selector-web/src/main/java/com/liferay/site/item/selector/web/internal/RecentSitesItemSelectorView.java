@@ -41,17 +41,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Julio Camarero
  */
-@Component(
-	property = "item.selector.view.order:Integer=100",
-	service = ItemSelectorView.class
-)
 public class RecentSitesItemSelectorView
 	implements ItemSelectorView<SiteItemSelectorCriterion> {
 
