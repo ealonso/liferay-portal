@@ -146,9 +146,14 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 		LayoutConversionResult layoutConversionResult =
 			_getLayoutConversionResult(draftLayout, locale);
 
-		_addOrUpdateLayoutPageTemplateStructure(
-			draftLayout, layoutConversionResult.getLayoutData(),
-			serviceContext);
+		LayoutData layoutData = layoutConversionResult.getLayoutData();
+
+		JSONObject layoutDataJSONObject = layoutData.getLayoutDataJSONObject();
+
+		_layoutPageTemplateStructureLocalService.
+			updateLayoutPageTemplateStructure(
+				layout.getGroupId(), _portal.getClassNameId(Layout.class),
+				layout.getPlid(), layoutDataJSONObject.toString());
 
 		_updatePortletDecorator(draftLayout);
 
