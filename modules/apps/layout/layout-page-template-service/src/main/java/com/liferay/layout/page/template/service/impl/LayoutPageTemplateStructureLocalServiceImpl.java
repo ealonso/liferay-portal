@@ -163,6 +163,10 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			groupId, classNameId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK,
@@ -180,6 +184,10 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			groupId, classNameId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
 	@Override
 	public LayoutPageTemplateStructure rebuildLayoutPageTemplateStructure(
 			long groupId, long classNameId, long classPK)
