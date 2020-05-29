@@ -15,7 +15,6 @@
 package com.liferay.layout.internal.util;
 
 import com.liferay.layout.exception.LayoutConvertException;
-import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.util.BulkLayoutConverter;
 import com.liferay.layout.util.LayoutCopyHelper;
@@ -213,32 +212,6 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 		return ArrayUtil.toLongArray(convertibleLayoutPlids);
 	}
 
-	private LayoutPageTemplateStructure _addOrUpdateLayoutPageTemplateStructure(
-			Layout layout, LayoutData layoutData, ServiceContext serviceContext)
-		throws PortalException {
-
-		JSONObject layoutDataJSONObject = layoutData.getLayoutDataJSONObject();
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			_layoutPageTemplateStructureLocalService.
-				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(), _portal.getClassNameId(Layout.class),
-					layout.getPlid());
-
-		if (layoutPageTemplateStructure == null) {
-			return _layoutPageTemplateStructureLocalService.
-				addLayoutPageTemplateStructure(
-					serviceContext.getUserId(), layout.getGroupId(),
-					_portal.getClassNameId(Layout.class), layout.getPlid(),
-					layoutDataJSONObject.toString(), serviceContext);
-		}
-
-		return _layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				layout.getGroupId(), _portal.getClassNameId(Layout.class),
-				layout.getPlid(), layoutDataJSONObject.toString());
-	}
-
 	private Layout _convertLayout(long plid) throws PortalException {
 		Layout layout = _layoutLocalService.getLayout(plid);
 
@@ -264,8 +237,16 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 			LayoutConversionResult layoutConversionResult =
 				_getLayoutConversionResult(layout, LocaleUtil.getSiteDefault());
 
-			_addOrUpdateLayoutPageTemplateStructure(
-				layout, layoutConversionResult.getLayoutData(), serviceContext);
+			LayoutData layoutData = layoutConversionResult.getLayoutData();
+
+			JSONObject layoutDataJSONObject =
+				layoutData.getLayoutDataJSONObject();
+
+			_layoutPageTemplateStructureLocalService.
+				addLayoutPageTemplateStructure(
+					serviceContext.getUserId(), layout.getGroupId(),
+					_portal.getClassNameId(Layout.class), layout.getPlid(),
+					layoutDataJSONObject.toString(), serviceContext);
 
 			layout = _layoutLocalService.updateType(
 				plid, LayoutConstants.TYPE_CONTENT);
