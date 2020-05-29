@@ -24,7 +24,9 @@ import java.util.List;
 
 /**
  * @author Jürgen
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  */
+@Deprecated
 public class LayoutPageTemplateStructureHelperUtil {
 
 	public static JSONObject generateContentLayoutStructure(
