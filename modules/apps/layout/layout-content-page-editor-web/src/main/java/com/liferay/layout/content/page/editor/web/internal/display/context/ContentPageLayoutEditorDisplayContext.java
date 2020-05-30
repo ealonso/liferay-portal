@@ -326,9 +326,7 @@ public class ContentPageLayoutEditorDisplayContext
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
 				fetchLayoutPageTemplateStructure(
-					themeDisplay.getScopeGroupId(),
-					PortalUtil.getClassNameId(Layout.class.getName()),
-					themeDisplay.getPlid(), true);
+					themeDisplay.getScopeGroupId(), themeDisplay.getPlid());
 
 		List<Map<String, Object>> layoutDataList = new ArrayList<>();
 

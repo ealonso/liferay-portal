@@ -174,10 +174,9 @@ public class LayoutPageTemplatesImporterImpl
 				parentLayoutStructureItem.getChildrenItemIds()));
 
 		_layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				layout.getGroupId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				layout.getPlid(), layoutStructure.toString());
+			updateLayoutPageTemplateStructureData(
+				layout.getGroupId(), layout.getPlid(),
+				layoutStructure.toString());
 
 		return fragmentEntryLinks;
 	}
@@ -1059,10 +1058,9 @@ public class LayoutPageTemplatesImporterImpl
 		}
 
 		_layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				layout.getGroupId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				layout.getPlid(), layoutStructure.toString());
+			updateLayoutPageTemplateStructureData(
+				layout.getGroupId(), layout.getPlid(),
+				layoutStructure.toString());
 
 		_updateLayouts(layoutPageTemplateEntry);
 	}

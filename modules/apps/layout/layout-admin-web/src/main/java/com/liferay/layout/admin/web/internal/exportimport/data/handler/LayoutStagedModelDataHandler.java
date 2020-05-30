@@ -2307,9 +2307,7 @@ public class LayoutStagedModelDataHandler
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(),
-					_portal.getClassNameId(Layout.class.getName()),
-					layout.getPlid());
+					layout.getGroupId(), layout.getPlid());
 
 		StagedModelDataHandlerUtil.exportReferenceStagedModel(
 			portletDataContext, layout, layoutPageTemplateStructure,

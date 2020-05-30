@@ -1414,7 +1414,7 @@ public class ContentPageEditorDisplayContext {
 		return languageDirection;
 	}
 
-	private LayoutStructure _getLayoutStructure() throws Exception {
+	private LayoutStructure _getLayoutStructure() {
 		if (_layoutStructure != null) {
 			return _layoutStructure;
 		}
@@ -1470,18 +1470,9 @@ public class ContentPageEditorDisplayContext {
 			return _masterLayoutStructure;
 		}
 
-		try {
-			_masterLayoutStructure = LayoutStructureUtil.getLayoutStructure(
-				getGroupId(), masterLayoutPageTemplateEntry.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT);
-
-			return _masterLayoutStructure;
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Unable to get master layout structure", exception);
-			}
-		}
+		_masterLayoutStructure = LayoutStructureUtil.getLayoutStructure(
+			getGroupId(), masterLayoutPageTemplateEntry.getPlid(),
+			SegmentsExperienceConstants.ID_DEFAULT);
 
 		return _masterLayoutStructure;
 	}

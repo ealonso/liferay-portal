@@ -150,9 +150,9 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 		JSONObject layoutDataJSONObject = layoutData.getLayoutDataJSONObject();
 
 		_layoutPageTemplateStructureLocalService.
-			updateLayoutPageTemplateStructure(
-				layout.getGroupId(), _portal.getClassNameId(Layout.class),
-				layout.getPlid(), layoutDataJSONObject.toString());
+			updateLayoutPageTemplateStructureData(
+				layout.getGroupId(), layout.getPlid(),
+				layoutDataJSONObject.toString());
 
 		_updatePortletDecorator(draftLayout);
 
@@ -245,8 +245,8 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 			_layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
 					serviceContext.getUserId(), layout.getGroupId(),
-					_portal.getClassNameId(Layout.class), layout.getPlid(),
-					layoutDataJSONObject.toString(), serviceContext);
+					layout.getPlid(), layoutDataJSONObject.toString(),
+					serviceContext);
 
 			layout = _layoutLocalService.updateType(
 				plid, LayoutConstants.TYPE_CONTENT);

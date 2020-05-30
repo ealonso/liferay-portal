@@ -29,9 +29,7 @@ import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +47,7 @@ public class LayoutStructureUtil {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, true);
+				fetchLayoutPageTemplateStructure(groupId, plid);
 
 		if (layoutPageTemplateStructure == null) {
 			return;
@@ -86,9 +82,8 @@ public class LayoutStructureUtil {
 			}
 
 			LayoutPageTemplateStructureLocalServiceUtil.
-				updateLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid,
+				updateLayoutPageTemplateStructureData(
+					groupId, plid,
 					layoutPageTemplateStructureRel.getSegmentsExperienceId(),
 					layoutStructure.toString());
 		}
@@ -119,23 +114,18 @@ public class LayoutStructureUtil {
 	}
 
 	public static LayoutStructure getLayoutStructure(
-			long groupId, long plid, long segmentsExperienceId)
-		throws PortalException {
+		long groupId, long plid, long segmentsExperienceId) {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(
-					groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-					plid, true);
+				fetchLayoutPageTemplateStructure(groupId, plid);
 
 		return LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
 	}
 
 	public static boolean isPortletMarkedForDeletion(
-			long groupId, long plid, String portletId,
-			long segmentsExperienceId)
-		throws PortalException {
+		long groupId, long plid, String portletId, long segmentsExperienceId) {
 
 		LayoutStructure layoutStructure = getLayoutStructure(
 			groupId, plid, segmentsExperienceId);
@@ -167,9 +157,8 @@ public class LayoutStructureUtil {
 		JSONObject dataJSONObject = layoutStructure.toJSONObject();
 
 		LayoutPageTemplateStructureServiceUtil.
-			updateLayoutPageTemplateStructure(
-				groupId, PortalUtil.getClassNameId(Layout.class.getName()),
-				plid, segmentsExperienceId, dataJSONObject.toString());
+			updateLayoutPageTemplateStructureData(
+				groupId, plid, segmentsExperienceId, dataJSONObject.toString());
 
 		return dataJSONObject;
 	}

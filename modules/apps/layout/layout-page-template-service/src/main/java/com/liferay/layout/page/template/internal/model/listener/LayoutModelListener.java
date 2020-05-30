@@ -55,8 +55,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		try {
 			_layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
-					layout.getUserId(), layout.getGroupId(),
-					_portal.getClassNameId(Layout.class), layout.getPlid(),
+					layout.getUserId(), layout.getGroupId(), layout.getPlid(),
 					dataJSONObject.toString(),
 					ServiceContextThreadLocal.getServiceContext());
 		}
@@ -74,8 +73,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				fetchLayoutPageTemplateStructure(
-					layout.getGroupId(), _portal.getClassNameId(Layout.class),
-					layout.getPlid());
+					layout.getGroupId(), layout.getPlid());
 
 		if (layoutPageTemplateStructure != null) {
 			_layoutPageTemplateStructureLocalService.

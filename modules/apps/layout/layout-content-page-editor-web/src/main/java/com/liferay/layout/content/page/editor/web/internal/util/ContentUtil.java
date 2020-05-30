@@ -422,9 +422,8 @@ public class ContentUtil {
 	}
 
 	private static Set<InfoDisplayObjectProvider<?>>
-			_getLayoutMappedInfoDisplayObjectProviders(
-				long groupId, long plid, Set<Long> mappedClassPKs)
-		throws PortalException {
+		_getLayoutMappedInfoDisplayObjectProviders(
+			long groupId, long plid, Set<Long> mappedClassPKs) {
 
 		LayoutStructure layoutStructure =
 			LayoutStructureUtil.getLayoutStructure(
