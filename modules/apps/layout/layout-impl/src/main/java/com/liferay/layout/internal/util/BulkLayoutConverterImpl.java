@@ -16,6 +16,7 @@ package com.liferay.layout.internal.util;
 
 import com.liferay.layout.exception.LayoutConvertException;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.layout.util.BulkLayoutConverter;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.template.LayoutConversionResult;
@@ -344,7 +345,17 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 				layout.getMasterLayoutPlid(), serviceContext);
 		}
 
+		JSONObject dataJSONObject =
+			LayoutPageTemplateStructureHelperUtil.
+				generateContentLayoutStructure(Collections.emptyList());
+
 		try {
+			_layoutPageTemplateStructureLocalService.
+				addLayoutPageTemplateStructure(
+					layout.getUserId(), layout.getGroupId(),
+					_portal.getClassNameId(Layout.class), layout.getPlid(),
+					dataJSONObject.toString(), serviceContext);
+
 			return _layoutCopyHelper.copyLayout(layout, draftLayout);
 		}
 		catch (Exception exception) {
