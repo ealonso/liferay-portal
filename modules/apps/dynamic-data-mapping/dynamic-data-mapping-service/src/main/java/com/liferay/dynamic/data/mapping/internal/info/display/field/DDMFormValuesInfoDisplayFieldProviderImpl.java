@@ -88,7 +88,7 @@ public class DDMFormValuesInfoDisplayFieldProviderImpl<T extends GroupedModel>
 
 			List<DDMFormFieldValue> ddmFormFieldsValues = entry.getValue();
 
-			if (Objects.equals(ddmFormField.getType(), "ddm-image") &&
+			if (Objects.equals(ddmFormField.getType(), "image") &&
 				(ddmFormFieldsValues.size() > 1)) {
 
 				ddmFormFieldsValues = Collections.singletonList(
@@ -201,7 +201,7 @@ public class DDMFormValuesInfoDisplayFieldProviderImpl<T extends GroupedModel>
 
 		String valueString = value.getString(locale);
 
-		if (Objects.equals(ddmFormFieldValue.getType(), "ddm-date")) {
+		if (Objects.equals(ddmFormFieldValue.getType(), "date")) {
 			try {
 				DateFormat dateFormat = DateFormat.getDateInstance(
 					DateFormat.SHORT, locale);
@@ -215,12 +215,12 @@ public class DDMFormValuesInfoDisplayFieldProviderImpl<T extends GroupedModel>
 				return valueString;
 			}
 		}
-		else if (Objects.equals(ddmFormFieldValue.getType(), "ddm-decimal")) {
+		else if (Objects.equals(ddmFormFieldValue.getType(), "numeric")) {
 			NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 
 			return numberFormat.format(GetterUtil.getDouble(valueString));
 		}
-		else if (Objects.equals(ddmFormFieldValue.getType(), "ddm-image")) {
+		else if (Objects.equals(ddmFormFieldValue.getType(), "image")) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 				valueString);
 
