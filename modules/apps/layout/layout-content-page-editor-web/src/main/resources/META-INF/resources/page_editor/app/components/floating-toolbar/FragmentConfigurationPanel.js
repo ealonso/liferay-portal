@@ -25,6 +25,7 @@ import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../config/constants/freema
 import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
 import {useDispatch, useSelector} from '../../store/index';
 import updateFragmentConfiguration from '../../thunks/updateFragmentConfiguration';
+import {getResponsiveConfig} from '../../utils/getResponsiveConfig';
 import {FRAGMENT_CONFIGURATION_FIELDS} from '../fragment-configuration-fields/index';
 
 const FieldSet = ({configurationValues, fields, label, onValueSelect}) => {
@@ -67,6 +68,10 @@ export const FragmentConfigurationPanel = ({item}) => {
 
 	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 
+	const selectedViewportSize = useSelector(
+		(state) => state.selectedViewportSize
+	);
+
 	const configuration = fragmentEntryLink.configuration;
 	const defaultConfigurationValues =
 		fragmentEntryLink.defaultConfigurationValues;
@@ -77,6 +82,7 @@ export const FragmentConfigurationPanel = ({item}) => {
 				configurationValues: defaultConfigurationValues,
 				fragmentEntryLink,
 				segmentsExperienceId,
+				selectedViewportSize,
 			})
 		);
 	};
@@ -85,7 +91,8 @@ export const FragmentConfigurationPanel = ({item}) => {
 		(name, value) => {
 			const configurationValues = getConfigurationValues(
 				defaultConfigurationValues,
-				fragmentEntryLink
+				fragmentEntryLink,
+				selectedViewportSize
 			);
 
 			const nextConfigurationValues = {
@@ -98,6 +105,7 @@ export const FragmentConfigurationPanel = ({item}) => {
 					configurationValues: nextConfigurationValues,
 					fragmentEntryLink,
 					segmentsExperienceId,
+					selectedViewportSize,
 				})
 			);
 		},
@@ -106,6 +114,7 @@ export const FragmentConfigurationPanel = ({item}) => {
 			dispatch,
 			fragmentEntryLink,
 			segmentsExperienceId,
+			selectedViewportSize,
 		]
 	);
 
@@ -116,7 +125,8 @@ export const FragmentConfigurationPanel = ({item}) => {
 					<FieldSet
 						configurationValues={getConfigurationValues(
 							defaultConfigurationValues,
-							fragmentEntryLink
+							fragmentEntryLink,
+							selectedViewportSize
 						)}
 						fields={fieldSet.fields}
 						key={index}
@@ -155,11 +165,18 @@ RestoreButton.propTypes = {
 	onRestoreButtonClick: PropTypes.func.isRequired,
 };
 
-function getConfigurationValues(defaultConfigurationValues, fragmentEntryLink) {
+function getConfigurationValues(
+	defaultConfigurationValues,
+	fragmentEntryLink,
+	selectedViewportSize
+) {
 	return {
 		...defaultConfigurationValues,
-		...fragmentEntryLink.editableValues[
-			FREEMARKER_FRAGMENT_ENTRY_PROCESSOR
-		],
+		...getResponsiveConfig(
+			fragmentEntryLink.editableValues[
+				FREEMARKER_FRAGMENT_ENTRY_PROCESSOR
+			],
+			selectedViewportSize
+		),
 	};
 }

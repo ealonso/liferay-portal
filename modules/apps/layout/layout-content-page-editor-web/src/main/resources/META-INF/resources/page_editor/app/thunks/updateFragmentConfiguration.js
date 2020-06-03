@@ -14,18 +14,25 @@
 
 import updateFragmentEntryLinkConfiguration from '../actions/updateFragmentEntryLinkConfiguration';
 import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../config/constants/freemarkerFragmentEntryProcessor';
+import {VIEWPORT_SIZES} from '../config/constants/viewportSizes';
 import FragmentService from '../services/FragmentService';
 
 export default function updateFragmentConfiguration({
 	configurationValues,
 	fragmentEntryLink,
 	isUndo = false,
+	selectedViewportSize,
 }) {
 	const {editableValues, fragmentEntryLinkId} = fragmentEntryLink;
 
 	const nextEditableValues = {
 		...editableValues,
-		[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR]: configurationValues,
+		[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR]: {
+			...editableValues[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR],
+			...(selectedViewportSize === VIEWPORT_SIZES.desktop
+				? configurationValues
+				: {[selectedViewportSize]: configurationValues}),
+		},
 	};
 
 	return (dispatch) => {
@@ -33,6 +40,7 @@ export default function updateFragmentConfiguration({
 			configurationValues: nextEditableValues,
 			fragmentEntryLinkId,
 			onNetworkStatus: dispatch,
+			selectedViewportSize,
 		}).then(({fragmentEntryLink, layoutData}) => {
 			dispatch(
 				updateFragmentEntryLinkConfiguration({

@@ -254,6 +254,7 @@ export default {
 		fragmentEntryLinkId,
 		onNetworkStatus,
 		segmentsExperienceId,
+		selectedViewportSize,
 	}) {
 		return serviceFetch(
 			config.renderFragmentEntryURL,
@@ -263,6 +264,7 @@ export default {
 					collectionItemClassPK,
 					fragmentEntryLinkId,
 					segmentsExperienceId,
+					selectedViewportSize,
 				},
 			},
 			onNetworkStatus
@@ -280,6 +282,7 @@ export default {
 		configurationValues,
 		fragmentEntryLinkId,
 		onNetworkStatus,
+		selectedViewportSize,
 	}) {
 		return serviceFetch(
 			config.updateConfigurationValuesURL,
@@ -287,6 +290,7 @@ export default {
 				body: {
 					editableValues: JSON.stringify(configurationValues),
 					fragmentEntryLinkId,
+					selectedViewportSize,
 				},
 			},
 			onNetworkStatus,

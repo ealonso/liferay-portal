@@ -120,13 +120,19 @@ const useRenderFragmentContent = () => {
 	const {className, classPK} = context.collectionItem || {};
 
 	return useCallback(
-		({fragmentEntryLinkId, onNetworkStatus, segmentsExperienceId}) => {
+		({
+			fragmentEntryLinkId,
+			onNetworkStatus,
+			segmentsExperienceId,
+			selectedViewportSize,
+		}) => {
 			return FragmentService.renderFragmentEntryLinkContent({
 				collectionItemClassName: className,
 				collectionItemClassPK: classPK,
 				fragmentEntryLinkId,
 				onNetworkStatus,
 				segmentsExperienceId,
+				selectedViewportSize,
 			}).then(({content}) => {
 				return {
 					collectionItemIndex: context.collectionItemIndex,

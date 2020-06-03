@@ -92,6 +92,10 @@ const FragmentContent = React.forwardRef(
 		const languageId = useSelector((state) => state.languageId);
 		const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 
+		const selectedViewportSize = useSelector(
+			(state) => state.selectedViewportSize
+		);
+
 		const defaultContent = getContent(fragmentEntryLink);
 		const [content, setContent] = useState(defaultContent);
 		const editableValues = fragmentEntryLink
@@ -103,6 +107,7 @@ const FragmentContent = React.forwardRef(
 				fragmentEntryLinkId,
 				onNetworkStatus: dispatch,
 				segmentsExperienceId,
+				selectedViewportSize,
 			}).then((action) => {
 				dispatch(
 					updateFragmentEntryLinkContent({
@@ -116,6 +121,7 @@ const FragmentContent = React.forwardRef(
 			fragmentEntryLinkId,
 			renderFragmentContent,
 			segmentsExperienceId,
+			selectedViewportSize,
 		]);
 
 		/**
