@@ -15,6 +15,7 @@
 package com.liferay.fragment.processor;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.Locale;
 import java.util.Map;
@@ -37,6 +38,11 @@ public class DefaultFragmentEntryProcessorContext
 		_httpServletResponse = httpServletResponse;
 		_mode = mode;
 		_locale = locale;
+	}
+
+	@Override
+	public Optional<JSONObject> getConfigurationJSONObjectOptional() {
+		return Optional.ofNullable(_configurationJSONObject);
 	}
 
 	@Override
@@ -86,6 +92,10 @@ public class DefaultFragmentEntryProcessorContext
 		return _segmentsExperienceIds;
 	}
 
+	public void setConfigurationJSONObject(JSONObject configurationJSONObject) {
+		_configurationJSONObject = configurationJSONObject;
+	}
+
 	public void setDisplayObject(Object object) {
 		_displayObject = object;
 	}
@@ -110,6 +120,7 @@ public class DefaultFragmentEntryProcessorContext
 		_segmentsExperienceIds = segmentsExperienceIds;
 	}
 
+	private JSONObject _configurationJSONObject;
 	private Object _displayObject;
 	private Map<String, Object> _fieldValues;
 	private final HttpServletRequest _httpServletRequest;

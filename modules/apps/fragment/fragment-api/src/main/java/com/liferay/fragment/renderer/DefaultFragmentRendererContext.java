@@ -16,6 +16,7 @@ package com.liferay.fragment.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.LocaleUtil;
 
 import java.util.Locale;
@@ -29,6 +30,11 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 
 	public DefaultFragmentRendererContext(FragmentEntryLink fragmentEntryLink) {
 		_fragmentEntryLink = fragmentEntryLink;
+	}
+
+	@Override
+	public Optional<JSONObject> getConfigurationJSONObjectOptional() {
+		return Optional.ofNullable(_configurationJSONObject);
 	}
 
 	@Override
@@ -75,6 +81,10 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		return _segmentsExperienceIds;
 	}
 
+	public void setConfigurationJSONObject(JSONObject configurationJSONObject) {
+		_configurationJSONObject = configurationJSONObject;
+	}
+
 	public void setDisplayObject(Object object) {
 		_displayObject = object;
 	}
@@ -107,6 +117,7 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		_segmentsExperienceIds = segmentsExperienceIds;
 	}
 
+	private JSONObject _configurationJSONObject;
 	private Object _displayObject;
 	private Map<String, Object> _fieldValues;
 	private final FragmentEntryLink _fragmentEntryLink;

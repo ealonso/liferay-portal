@@ -15,6 +15,7 @@
 package com.liferay.fragment.renderer;
 
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.Locale;
 import java.util.Map;
@@ -27,6 +28,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface FragmentRendererContext {
+
+	public Optional<JSONObject> getConfigurationJSONObjectOptional();
 
 	public Optional<Object> getDisplayObjectOptional();
 
