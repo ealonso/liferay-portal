@@ -147,11 +147,33 @@ public class FragmentEntryLinkUtil {
 			ItemSelector itemSelector, String portletId)
 		throws PortalException {
 
+		return getFragmentEntryLinkJSONObject(
+			actionRequest, actionResponse, fragmentEntryConfigurationParser,
+			fragmentEntryLink, null, fragmentCollectionContributorTracker,
+			fragmentRendererController, fragmentRendererTracker, itemSelector,
+			portletId);
+	}
+
+	public static JSONObject getFragmentEntryLinkJSONObject(
+			ActionRequest actionRequest, ActionResponse actionResponse,
+			FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
+			FragmentEntryLink fragmentEntryLink,
+			JSONObject fragmentEntryLinkConfigurationJSONObject,
+			FragmentCollectionContributorTracker
+				fragmentCollectionContributorTracker,
+			FragmentRendererController fragmentRendererController,
+			FragmentRendererTracker fragmentRendererTracker,
+			ItemSelector itemSelector, String portletId)
+		throws PortalException {
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		DefaultFragmentRendererContext defaultFragmentRendererContext =
 			new DefaultFragmentRendererContext(fragmentEntryLink);
+
+		defaultFragmentRendererContext.setConfigurationJSONObject(
+			fragmentEntryLinkConfigurationJSONObject);
 
 		defaultFragmentRendererContext.setLocale(themeDisplay.getLocale());
 		defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);

@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -112,10 +113,14 @@ public class FreeMarkerFragmentEntryProcessor
 
 		template.put(TemplateConstants.WRITER, unsyncStringWriter);
 
+		Optional<JSONObject> configurationJSONObjectOptional =
+			fragmentEntryProcessorContext.getConfigurationJSONObjectOptional();
+
 		JSONObject configurationValuesJSONObject =
-			_fragmentEntryConfigurationParser.getConfigurationJSONObject(
-				fragmentEntryLink.getConfiguration(),
-				fragmentEntryLink.getEditableValues());
+			configurationJSONObjectOptional.orElse(
+				_fragmentEntryConfigurationParser.getConfigurationJSONObject(
+					fragmentEntryLink.getConfiguration(),
+					fragmentEntryLink.getEditableValues()));
 
 		Map<String, Object> contextObjects = HashMapBuilder.<String, Object>put(
 			"configuration", configurationValuesJSONObject

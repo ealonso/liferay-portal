@@ -18,7 +18,6 @@ import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
-import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
@@ -30,6 +29,8 @@ import com.liferay.layout.content.page.editor.listener.ContentPageEditorListener
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListenerTracker;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
+import com.liferay.layout.responsive.ResponsiveLayoutStructureUtil;
+import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -42,10 +43,12 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -130,16 +133,38 @@ public class UpdateConfigurationValuesMVCActionCommand
 		String editableValues = ParamUtil.getString(
 			actionRequest, "editableValues");
 
+		String selectedViewportSize = ParamUtil.getString(
+			actionRequest, "selectedViewportSize");
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkService.updateFragmentEntryLink(
 				fragmentEntryLinkId, editableValues, true);
 
-		FragmentEntryProcessorContext fragmentEntryProcessorContext =
+		DefaultFragmentEntryProcessorContext fragmentEntryProcessorContext =
 			new DefaultFragmentEntryProcessorContext(
 				_portal.getHttpServletRequest(actionRequest),
 				_portal.getHttpServletResponse(actionResponse),
 				FragmentEntryLinkConstants.EDIT,
 				LocaleUtil.getMostRelevantLocale());
+
+		JSONObject configurationJSONObject =
+			_fragmentEntryConfigurationParser.getConfigurationJSONObject(
+				fragmentEntryLink.getConfiguration(),
+				fragmentEntryLink.getEditableValues());
+
+		if (Validator.isNotNull(selectedViewportSize) &&
+			!Objects.equals(
+				selectedViewportSize,
+				ViewportSize.DESKTOP.getViewportSizeId())) {
+
+			configurationJSONObject =
+				ResponsiveLayoutStructureUtil.
+					getResponsiveConfigurationJSONObject(
+						configurationJSONObject, selectedViewportSize);
+		}
+
+		fragmentEntryProcessorContext.setConfigurationJSONObject(
+			configurationJSONObject);
 
 		String processedHTML =
 			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
@@ -172,7 +197,7 @@ public class UpdateConfigurationValuesMVCActionCommand
 			FragmentEntryLinkUtil.getFragmentEntryLinkJSONObject(
 				actionRequest, actionResponse,
 				_fragmentEntryConfigurationParser, fragmentEntryLink,
-				_fragmentCollectionContributorTracker,
+				configurationJSONObject, _fragmentCollectionContributorTracker,
 				_fragmentRendererController, _fragmentRendererTracker,
 				_itemSelector, StringPool.BLANK));
 

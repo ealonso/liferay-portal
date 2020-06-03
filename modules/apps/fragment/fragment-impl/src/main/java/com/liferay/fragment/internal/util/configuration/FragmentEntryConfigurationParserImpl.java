@@ -24,6 +24,7 @@ import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverTracker;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactory;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactoryTracker;
+import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -101,22 +102,35 @@ public class FragmentEntryConfigurationParserImpl
 		List<FragmentConfigurationField> configurationFields =
 			getFragmentConfigurationFields(configuration);
 
-		for (FragmentConfigurationField configurationField :
-				configurationFields) {
+		_setConfigurationValues(
+			configurationFields, configurationValuesJSONObject,
+			configurationDefaultValuesJSONObject);
 
-			String name = configurationField.getName();
-
-			Object object = configurationValuesJSONObject.get(name);
-
-			if (Validator.isNull(object)) {
+		for (ViewportSize viewportSize : ViewportSize.values()) {
+			if (Objects.equals(viewportSize, ViewportSize.DESKTOP)) {
 				continue;
 			}
 
+			if (!configurationValuesJSONObject.has(
+					viewportSize.getViewportSizeId())) {
+
+				continue;
+			}
+
+			JSONObject viewportConfigurationValuesJSONObject =
+				configurationValuesJSONObject.getJSONObject(
+					viewportSize.getViewportSizeId());
+
+			JSONObject viewportConfigurationDefaultValuesJSONObject =
+				getConfigurationDefaultValuesJSONObject(configuration);
+
+			_setConfigurationValues(
+				configurationFields, viewportConfigurationValuesJSONObject,
+				viewportConfigurationDefaultValuesJSONObject);
+
 			configurationDefaultValuesJSONObject.put(
-				name,
-				getFieldValue(
-					configurationField,
-					configurationValuesJSONObject.getString(name)));
+				viewportSize.getViewportSizeId(),
+				viewportConfigurationDefaultValuesJSONObject);
 		}
 
 		return configurationDefaultValuesJSONObject;
@@ -638,6 +652,30 @@ public class FragmentEntryConfigurationParserImpl
 		}
 
 		return null;
+	}
+
+	private void _setConfigurationValues(
+		List<FragmentConfigurationField> configurationFields,
+		JSONObject configurationValuesJSONObject,
+		JSONObject configurationDefaultValuesJSONObject) {
+
+		for (FragmentConfigurationField configurationField :
+				configurationFields) {
+
+			String name = configurationField.getName();
+
+			Object object = configurationValuesJSONObject.get(name);
+
+			if (Validator.isNull(object)) {
+				continue;
+			}
+
+			configurationDefaultValuesJSONObject.put(
+				name,
+				getFieldValue(
+					configurationField,
+					configurationValuesJSONObject.getString(name)));
+		}
 	}
 
 	private static final String _CONTEXT_OBJECT_LIST_SUFFIX = "ObjectList";

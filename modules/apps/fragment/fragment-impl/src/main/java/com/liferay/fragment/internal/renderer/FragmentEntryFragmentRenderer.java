@@ -256,6 +256,12 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					fragmentRendererContext.getMode(),
 					fragmentRendererContext.getLocale());
 
+		Optional<JSONObject> configurationJSONObjectOptional =
+			fragmentRendererContext.getConfigurationJSONObjectOptional();
+
+		defaultFragmentEntryProcessorContext.setConfigurationJSONObject(
+			configurationJSONObjectOptional.orElse(null));
+
 		Optional<Object> displayObjectOptional =
 			fragmentRendererContext.getDisplayObjectOptional();
 
@@ -302,9 +308,13 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 				httpServletResponse);
 		}
 
-		JSONObject configurationJSONObject = JSONFactoryUtil.createJSONObject();
+		JSONObject configurationJSONObject =
+			configurationJSONObjectOptional.orElse(
+				JSONFactoryUtil.createJSONObject());
 
-		if (Validator.isNotNull(fragmentEntryLink.getConfiguration())) {
+		if ((configurationJSONObject.length() == 0) &&
+			Validator.isNotNull(fragmentEntryLink.getConfiguration())) {
+
 			configurationJSONObject =
 				_fragmentEntryConfigurationParser.getConfigurationJSONObject(
 					fragmentEntryLink.getConfiguration(),

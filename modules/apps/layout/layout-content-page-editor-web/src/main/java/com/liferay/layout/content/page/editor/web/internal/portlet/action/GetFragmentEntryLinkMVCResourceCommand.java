@@ -19,11 +19,14 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
+import com.liferay.layout.responsive.ResponsiveLayoutStructureUtil;
+import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
@@ -35,6 +38,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.Objects;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -75,6 +80,28 @@ public class GetFragmentEntryLinkMVCResourceCommand
 		if (fragmentEntryLink != null) {
 			DefaultFragmentRendererContext defaultFragmentRendererContext =
 				new DefaultFragmentRendererContext(fragmentEntryLink);
+
+			String selectedViewportSize = ParamUtil.getString(
+				resourceRequest, "selectedViewportSize");
+
+			JSONObject configurationJSONObject =
+				_fragmentEntryConfigurationParser.getConfigurationJSONObject(
+					fragmentEntryLink.getConfiguration(),
+					fragmentEntryLink.getEditableValues());
+
+			if (Validator.isNotNull(selectedViewportSize) &&
+				!Objects.equals(
+					selectedViewportSize,
+					ViewportSize.DESKTOP.getViewportSizeId())) {
+
+				configurationJSONObject =
+					ResponsiveLayoutStructureUtil.
+						getResponsiveConfigurationJSONObject(
+							configurationJSONObject, selectedViewportSize);
+			}
+
+			defaultFragmentRendererContext.setConfigurationJSONObject(
+				configurationJSONObject);
 
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)resourceRequest.getAttribute(
@@ -161,6 +188,9 @@ public class GetFragmentEntryLinkMVCResourceCommand
 		JSONPortletResponseUtil.writeJSON(
 			resourceRequest, resourceResponse, jsonObject);
 	}
+
+	@Reference
+	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
