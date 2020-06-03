@@ -72,6 +72,53 @@ public class ResponsiveLayoutStructureUtil {
 		return sb.toString();
 	}
 
+	public static JSONObject getResponsiveConfigurationJSONObject(
+		JSONObject fragmentEntryLinkConfigurationJSONObject,
+		String viewportSizeId) {
+
+		if (Objects.equals(
+				viewportSizeId, ViewportSize.DESKTOP.getViewportSizeId())) {
+
+			return fragmentEntryLinkConfigurationJSONObject;
+		}
+
+		if (fragmentEntryLinkConfigurationJSONObject.has(viewportSizeId)) {
+			return fragmentEntryLinkConfigurationJSONObject.getJSONObject(
+				viewportSizeId);
+		}
+
+		ViewportSize[] viewportSizes = ViewportSize.values();
+
+		Comparator<ViewportSize> comparator = Comparator.comparingInt(
+			ViewportSize::getOrder);
+
+		Arrays.sort(viewportSizes, comparator.reversed());
+
+		ViewportSize viewportSize = ViewportSize.DESKTOP;
+
+		for (ViewportSize currentViewportSize : viewportSizes) {
+			if (Objects.equals(
+					currentViewportSize.getViewportSizeId(), viewportSize)) {
+
+				viewportSize = currentViewportSize;
+
+				break;
+			}
+		}
+
+		for (ViewportSize currentViewportSize : viewportSizes) {
+			if (fragmentEntryLinkConfigurationJSONObject.has(
+					currentViewportSize.getViewportSizeId()) &&
+				(viewportSize.getOrder() < currentViewportSize.getOrder())) {
+
+				return fragmentEntryLinkConfigurationJSONObject.getJSONObject(
+					currentViewportSize.getViewportSizeId());
+			}
+		}
+
+		return fragmentEntryLinkConfigurationJSONObject;
+	}
+
 	public static Object getResponsivePropertyValue(
 		ViewportSize currentViewportSize,
 		Map<String, JSONObject> viewportSizeConfigurations, String propertyName,
