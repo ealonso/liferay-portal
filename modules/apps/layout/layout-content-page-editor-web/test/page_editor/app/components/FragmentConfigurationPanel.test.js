@@ -46,6 +46,7 @@ jest.mock(
 );
 
 const FRAGMENT_ENTRY_LINK_ID = '1';
+const SELECTED_VIEWPORT_SIZE = 'desktop';
 
 const defaultFragmentEntryLink = {
 	comments: [],
@@ -104,10 +105,12 @@ const mockDispatch = jest.fn((a) => {
 const renderConfigurationPanel = ({
 	segmentsExperienceId,
 	fragmentEntryLink = defaultFragmentEntryLink,
+	selectedViewportSize = SELECTED_VIEWPORT_SIZE,
 }) => {
 	const state = {
 		fragmentEntryLinks: {[FRAGMENT_ENTRY_LINK_ID]: fragmentEntryLink},
 		segmentsExperienceId,
+		selectedViewportSize,
 	};
 
 	return render(
@@ -269,6 +272,29 @@ describe('FragmentConfigurationPanel', () => {
 					[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR]: {
 						anotherThing: 'test',
 						headingLevel: 'h2',
+					},
+				},
+			})
+		);
+	});
+
+	it('prefix values when the viewport size is different from desktop', async () => {
+		const {getByLabelText} = renderConfigurationPanel({
+			selectedViewportSize: 'tablet',
+		});
+
+		const input = getByLabelText('Heading Level');
+
+		await fireEvent.change(input, {
+			target: {value: 'h2'},
+		});
+
+		expect(FragmentService.updateConfigurationValues).toBeCalledWith(
+			expect.objectContaining({
+				configurationValues: {
+					[EDITABLE_FRAGMENT_ENTRY_PROCESSOR]: {},
+					[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR]: {
+						['tablet']: {headingLevel: 'h2'},
 					},
 				},
 			})
