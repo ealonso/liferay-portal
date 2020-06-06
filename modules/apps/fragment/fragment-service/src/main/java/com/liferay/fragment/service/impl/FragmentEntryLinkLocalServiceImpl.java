@@ -71,6 +71,13 @@ import org.osgi.service.component.annotations.Reference;
 public class FragmentEntryLinkLocalServiceImpl
 	extends FragmentEntryLinkLocalServiceBaseImpl {
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addFragmentEntryLink(long, long, long, long, long, long,
+	 *             String, String, String, String, String, String, int, String,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public FragmentEntryLink addFragmentEntryLink(
 			long userId, long groupId, long originalFragmentEntryLinkId,
@@ -86,13 +93,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			editableValues, namespace, position, rendererKey, serviceContext);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #addFragmentEntryLink(long, long, long, long, long, long,
-	 *             long, String, String, String, String, String, String, int,
-	 *             String, ServiceContext)}
-	 */
-	@Deprecated
 	@Override
 	public FragmentEntryLink addFragmentEntryLink(
 			long userId, long groupId, long originalFragmentEntryLinkId,
@@ -250,6 +250,11 @@ public class FragmentEntryLinkLocalServiceImpl
 		return deletedFragmentEntryLinks;
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #deleteLayoutPageTemplateEntryFragmentEntryLinks(long, long)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
@@ -259,6 +264,11 @@ public class FragmentEntryLinkLocalServiceImpl
 			groupId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinksCountByPlid(long, long)}
+	 */
+	@Deprecated
 	@Override
 	public int getClassedModelFragmentEntryLinksCount(
 		long groupId, long classNameId, long classPK) {
@@ -286,6 +296,11 @@ public class FragmentEntryLinkLocalServiceImpl
 			groupId, fragmentEntryId, start, end, orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinksByPlid(long, long)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long classNameId, long classPK) {
@@ -293,6 +308,12 @@ public class FragmentEntryLinkLocalServiceImpl
 		return getFragmentEntryLinksByPlid(groupId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinks(long, long, int, int, int,
+	 *             OrderByComparator)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long fragmentEntryId, long classNameId,
@@ -304,6 +325,12 @@ public class FragmentEntryLinkLocalServiceImpl
 			orderByComparator);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinks(long, long, int, int,
+	 *             OrderByComparator)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long fragmentEntryId, long classNameId, int start,
@@ -341,6 +368,12 @@ public class FragmentEntryLinkLocalServiceImpl
 			groupId, segmentsExperienceId, plid);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinksBySegmentsExperienceId(long, long,
+	 *             long)}
+	 */
+	@Deprecated
 	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinksBySegmentsExperienceId(
 		long groupId, long segmentsExperienceId, long classNameId,
@@ -363,6 +396,11 @@ public class FragmentEntryLinkLocalServiceImpl
 			groupId, fragmentEntryId, layoutPageTemplateType);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinksCount(long, long)}
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntryLinksCount(
 		long groupId, long fragmentEntryId, long classNameId) {
@@ -370,6 +408,11 @@ public class FragmentEntryLinkLocalServiceImpl
 		return getFragmentEntryLinksCount(groupId, fragmentEntryId);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getFragmentEntryLinksCount(long, long, int)}
+	 */
+	@Deprecated
 	@Override
 	public int getFragmentEntryLinksCount(
 		long groupId, long fragmentEntryId, long classNameId,
@@ -405,6 +448,11 @@ public class FragmentEntryLinkLocalServiceImpl
 		_layoutLocalService.updateLayout(layout);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #updateClassedModel(long)}
+	 */
+	@Deprecated
 	@Override
 	public void updateClassedModel(long classNameId, long classPK)
 		throws PortalException {
@@ -425,6 +473,13 @@ public class FragmentEntryLinkLocalServiceImpl
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #updateFragmentEntryLink(long, long, long, long, long,
+	 *             String, String, String, String, String, String, int,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public FragmentEntryLink updateFragmentEntryLink(
 			long userId, long fragmentEntryLinkId,
@@ -506,6 +561,12 @@ public class FragmentEntryLinkLocalServiceImpl
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #updateFragmentEntryLinks(long, long, long, long[], String,
+	 *             ServiceContext)}
+	 */
+	@Deprecated
 	@Override
 	public void updateFragmentEntryLinks(
 			long userId, long groupId, long classNameId, long classPK,
