@@ -80,9 +80,29 @@ public class FragmentEntryLinkLocalServiceImpl
 			int position, String rendererKey, ServiceContext serviceContext)
 		throws PortalException {
 
-		User user = userLocalService.getUser(userId);
+		return addFragmentEntryLink(
+			userId, groupId, originalFragmentEntryLinkId, fragmentEntryId,
+			segmentsExperienceId, classPK, css, html, js, configuration,
+			editableValues, namespace, position, rendererKey, serviceContext);
+	}
 
-		_classNameLocalService.getClassName(classNameId);
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addFragmentEntryLink(long, long, long, long, long, long,
+	 *             long, String, String, String, String, String, String, int,
+	 *             String, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public FragmentEntryLink addFragmentEntryLink(
+			long userId, long groupId, long originalFragmentEntryLinkId,
+			long fragmentEntryId, long segmentsExperienceId, long plid,
+			String css, String html, String js, String configuration,
+			String editableValues, String namespace, int position,
+			String rendererKey, ServiceContext serviceContext)
+		throws PortalException {
+
+		User user = userLocalService.getUser(userId);
 
 		long fragmentEntryLinkId = counterLocalService.increment();
 
@@ -102,9 +122,9 @@ public class FragmentEntryLinkLocalServiceImpl
 			originalFragmentEntryLinkId);
 		fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
 		fragmentEntryLink.setSegmentsExperienceId(segmentsExperienceId);
-		fragmentEntryLink.setClassNameId(classNameId);
-		fragmentEntryLink.setClassPK(classPK);
-		fragmentEntryLink.setPlid(classPK);
+		fragmentEntryLink.setClassNameId(_portal.getClassNameId(Layout.class));
+		fragmentEntryLink.setClassPK(plid);
+		fragmentEntryLink.setPlid(plid);
 		fragmentEntryLink.setCss(css);
 
 		html = _replaceResources(fragmentEntryId, html);
@@ -155,29 +175,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			serviceContext.getCreateDate(new Date()));
 
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #addFragmentEntryLink(long, long, long, long, long, long,
-	 *             long, String, String, String, String, String, String, int,
-	 *             String, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public FragmentEntryLink addFragmentEntryLink(
-			long userId, long groupId, long originalFragmentEntryLinkId,
-			long fragmentEntryId, long classNameId, long classPK, String css,
-			String html, String js, String configuration, String editableValues,
-			String namespace, int position, String rendererKey,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		return addFragmentEntryLink(
-			userId, groupId, originalFragmentEntryLinkId, fragmentEntryId,
-			SegmentsExperienceConstants.ID_DEFAULT, classNameId, classPK, css,
-			html, js, configuration, editableValues, namespace, position,
-			rendererKey, serviceContext);
 	}
 
 	@Override
@@ -232,10 +229,10 @@ public class FragmentEntryLinkLocalServiceImpl
 	@Override
 	public List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			long groupId, long classNameId, long classPK) {
+			long groupId, long plid) {
 
-		List<FragmentEntryLink> fragmentEntryLinks = getFragmentEntryLinks(
-			groupId, classNameId, classPK);
+		List<FragmentEntryLink> fragmentEntryLinks =
+			getFragmentEntryLinksByPlid(groupId, plid);
 
 		if (ListUtil.isEmpty(fragmentEntryLinks)) {
 			return Collections.emptyList();
@@ -254,11 +251,30 @@ public class FragmentEntryLinkLocalServiceImpl
 	}
 
 	@Override
+	public List<FragmentEntryLink>
+		deleteLayoutPageTemplateEntryFragmentEntryLinks(
+			long groupId, long classNameId, long classPK) {
+
+		return deleteLayoutPageTemplateEntryFragmentEntryLinks(
+			groupId, classPK);
+	}
+
+	@Override
 	public int getClassedModelFragmentEntryLinksCount(
 		long groupId, long classNameId, long classPK) {
 
-		return fragmentEntryLinkPersistence.countByG_C_C(
-			groupId, classNameId, classPK);
+		return getFragmentEntryLinksCountByPlid(groupId, classPK);
+	}
+
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinks(
+		long groupId, long fragmentEntryId, int layoutPageTemplateType,
+		int start, int end,
+		OrderByComparator<FragmentEntryLink> orderByComparator) {
+
+		return fragmentEntryLinkFinder.findByG_F_P_L(
+			groupId, fragmentEntryId, layoutPageTemplateType, start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -274,8 +290,7 @@ public class FragmentEntryLinkLocalServiceImpl
 	public List<FragmentEntryLink> getFragmentEntryLinks(
 		long groupId, long classNameId, long classPK) {
 
-		return fragmentEntryLinkPersistence.findByG_C_C(
-			groupId, classNameId, classPK);
+		return getFragmentEntryLinksByPlid(groupId, classPK);
 	}
 
 	@Override
@@ -284,9 +299,9 @@ public class FragmentEntryLinkLocalServiceImpl
 		int layoutPageTemplateType, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkFinder.findByG_F_C_L(
-			groupId, fragmentEntryId, classNameId, layoutPageTemplateType,
-			start, end, orderByComparator);
+		return getFragmentEntryLinks(
+			groupId, fragmentEntryId, layoutPageTemplateType, start, end,
+			orderByComparator);
 	}
 
 	@Override
@@ -294,9 +309,8 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, long classNameId, int start,
 		int end, OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkFinder.findByG_F_C(
-			groupId, fragmentEntryId, classNameId, start, end,
-			orderByComparator);
+		return getFragmentEntryLinks(
+			groupId, fragmentEntryId, start, end, orderByComparator);
 	}
 
 	@Override
@@ -313,12 +327,27 @@ public class FragmentEntryLinkLocalServiceImpl
 	}
 
 	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinksByPlid(
+		long groupId, long plid) {
+
+		return fragmentEntryLinkPersistence.findByG_P(groupId, plid);
+	}
+
+	@Override
+	public List<FragmentEntryLink> getFragmentEntryLinksBySegmentsExperienceId(
+		long groupId, long segmentsExperienceId, long plid) {
+
+		return fragmentEntryLinkPersistence.findByG_S_P(
+			groupId, segmentsExperienceId, plid);
+	}
+
+	@Override
 	public List<FragmentEntryLink> getFragmentEntryLinksBySegmentsExperienceId(
 		long groupId, long segmentsExperienceId, long classNameId,
 		long classPK) {
 
-		return fragmentEntryLinkPersistence.findByG_S_C_C(
-			groupId, segmentsExperienceId, classNameId, classPK);
+		return getFragmentEntryLinksBySegmentsExperienceId(
+			groupId, segmentsExperienceId, classPK);
 	}
 
 	@Override
@@ -328,10 +357,17 @@ public class FragmentEntryLinkLocalServiceImpl
 
 	@Override
 	public int getFragmentEntryLinksCount(
+		long groupId, long fragmentEntryId, int layoutPageTemplateType) {
+
+		return fragmentEntryLinkFinder.countByG_F_P_L(
+			groupId, fragmentEntryId, layoutPageTemplateType);
+	}
+
+	@Override
+	public int getFragmentEntryLinksCount(
 		long groupId, long fragmentEntryId, long classNameId) {
 
-		return fragmentEntryLinkFinder.countByG_F_C(
-			groupId, fragmentEntryId, classNameId);
+		return getFragmentEntryLinksCount(groupId, fragmentEntryId);
 	}
 
 	@Override
@@ -339,8 +375,8 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, long classNameId,
 		int layoutPageTemplateType) {
 
-		return fragmentEntryLinkFinder.countByG_F_C_L(
-			groupId, fragmentEntryId, classNameId, layoutPageTemplateType);
+		return getFragmentEntryLinksCount(
+			groupId, fragmentEntryId, layoutPageTemplateType);
 	}
 
 	@Override
@@ -352,14 +388,13 @@ public class FragmentEntryLinkLocalServiceImpl
 	}
 
 	@Override
-	public void updateClassedModel(long classNameId, long classPK)
-		throws PortalException {
+	public int getFragmentEntryLinksCountByPlid(long groupId, long plid) {
+		return fragmentEntryLinkPersistence.countByG_P(groupId, plid);
+	}
 
-		if (classNameId != _portal.getClassNameId(Layout.class)) {
-			return;
-		}
-
-		Layout layout = _layoutLocalService.fetchLayout(classPK);
+	@Override
+	public void updateClassedModel(long plid) {
+		Layout layout = _layoutLocalService.fetchLayout(plid);
 
 		if (layout == null) {
 			return;
@@ -368,6 +403,13 @@ public class FragmentEntryLinkLocalServiceImpl
 		layout.setStatus(WorkflowConstants.STATUS_DRAFT);
 
 		_layoutLocalService.updateLayout(layout);
+	}
+
+	@Override
+	public void updateClassedModel(long classNameId, long classPK)
+		throws PortalException {
+
+		updateClassedModel(classPK);
 	}
 
 	@Override
@@ -392,9 +434,22 @@ public class FragmentEntryLinkLocalServiceImpl
 			int position, ServiceContext serviceContext)
 		throws PortalException {
 
-		User user = userLocalService.getUser(userId);
+		return updateFragmentEntryLink(
+			userId, fragmentEntryLinkId, originalFragmentEntryLinkId,
+			fragmentEntryId, classPK, css, html, js, configuration,
+			editableValues, namespace, position, serviceContext);
+	}
 
-		_classNameLocalService.getClassName(classNameId);
+	@Override
+	public FragmentEntryLink updateFragmentEntryLink(
+			long userId, long fragmentEntryLinkId,
+			long originalFragmentEntryLinkId, long fragmentEntryId, long plid,
+			String css, String html, String js, String configuration,
+			String editableValues, String namespace, int position,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		User user = userLocalService.getUser(userId);
 
 		FragmentEntryLink fragmentEntryLink = fetchFragmentEntryLink(
 			fragmentEntryLinkId);
@@ -406,9 +461,9 @@ public class FragmentEntryLinkLocalServiceImpl
 		fragmentEntryLink.setOriginalFragmentEntryLinkId(
 			originalFragmentEntryLinkId);
 		fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
-		fragmentEntryLink.setClassNameId(classNameId);
-		fragmentEntryLink.setClassPK(classPK);
-		fragmentEntryLink.setPlid(classPK);
+		fragmentEntryLink.setClassNameId(_portal.getClassNameId(Layout.class));
+		fragmentEntryLink.setClassPK(plid);
+		fragmentEntryLink.setPlid(plid);
 		fragmentEntryLink.setCss(css);
 		fragmentEntryLink.setHtml(html);
 		fragmentEntryLink.setJs(js);
@@ -445,9 +500,7 @@ public class FragmentEntryLinkLocalServiceImpl
 		fragmentEntryLink.setEditableValues(editableValues);
 
 		if (updateClassedModel) {
-			updateClassedModel(
-				fragmentEntryLink.getClassNameId(),
-				fragmentEntryLink.getClassPK());
+			updateClassedModel(fragmentEntryLink.getClassPK());
 		}
 
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
@@ -460,8 +513,18 @@ public class FragmentEntryLinkLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			groupId, classNameId, classPK);
+		updateFragmentEntryLinks(
+			userId, groupId, classPK, fragmentEntryIds, editableValues,
+			serviceContext);
+	}
+
+	@Override
+	public void updateFragmentEntryLinks(
+			long userId, long groupId, long plid, long[] fragmentEntryIds,
+			String editableValues, ServiceContext serviceContext)
+		throws PortalException {
+
+		deleteLayoutPageTemplateEntryFragmentEntryLinks(groupId, plid);
 
 		if (ArrayUtil.isEmpty(fragmentEntryIds)) {
 			return;
@@ -477,9 +540,9 @@ public class FragmentEntryLinkLocalServiceImpl
 
 			addFragmentEntryLink(
 				userId, groupId, 0, fragmentEntry.getFragmentEntryId(),
-				classNameId, classPK, fragmentEntry.getCss(),
-				fragmentEntry.getHtml(), fragmentEntry.getJs(),
-				fragmentEntry.getConfiguration(),
+				SegmentsExperienceConstants.ID_DEFAULT, plid,
+				fragmentEntry.getCss(), fragmentEntry.getHtml(),
+				fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
 				jsonObject.getString(String.valueOf(position)),
 				StringPool.BLANK, position++, null, serviceContext);
 		}
@@ -504,9 +567,7 @@ public class FragmentEntryLinkLocalServiceImpl
 		}
 
 		if (fragmentEntryLink != null) {
-			updateClassedModel(
-				fragmentEntryLink.getClassNameId(),
-				fragmentEntryLink.getClassPK());
+			updateClassedModel(fragmentEntryLink.getClassPK());
 		}
 	}
 
@@ -524,7 +585,7 @@ public class FragmentEntryLinkLocalServiceImpl
 			fragmentEntryLinkPersistence.findByG_F_C_C(
 				oldFragmentEntryLink.getGroupId(),
 				oldFragmentEntryLink.getFragmentEntryId(),
-				oldFragmentEntryLink.getClassNameId(),
+				_portal.getClassNameId(Layout.class),
 				oldFragmentEntryLink.getClassPK());
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
