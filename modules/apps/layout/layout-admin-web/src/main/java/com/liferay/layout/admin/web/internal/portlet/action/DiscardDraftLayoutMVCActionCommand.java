@@ -105,6 +105,8 @@ public class DiscardDraftLayoutMVCActionCommand
 			_fragmentEntryLinkLocalService.getFragmentEntryLinksCountByPlid(
 				layout.getGroupId(), layout.getPlid());
 
+		// TODO: layout.getClassNameId() == LayoutPageTemplateEntry.class cuando pasa esto??
+
 		if ((fragmentEntryLinksCount == 0) &&
 			(layout.getClassNameId() == _portal.getClassNameId(
 				LayoutPageTemplateEntry.class))) {
