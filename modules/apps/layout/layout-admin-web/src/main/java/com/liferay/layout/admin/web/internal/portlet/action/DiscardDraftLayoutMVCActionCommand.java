@@ -14,10 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.model.Layout;
@@ -101,24 +98,6 @@ public class DiscardDraftLayoutMVCActionCommand
 
 		Layout layout = _layoutLocalService.getLayout(draftLayout.getClassPK());
 
-		int fragmentEntryLinksCount =
-			_fragmentEntryLinkLocalService.getFragmentEntryLinksCountByPlid(
-				layout.getGroupId(), layout.getPlid());
-
-		if ((fragmentEntryLinksCount == 0) &&
-			(layout.getClassNameId() == _portal.getClassNameId(
-				LayoutPageTemplateEntry.class))) {
-
-			LayoutPageTemplateEntry layoutPageTemplateEntry =
-				_layoutPageTemplateEntryLocalService.
-					fetchLayoutPageTemplateEntry(layout.getClassPK());
-
-			if (layoutPageTemplateEntry != null) {
-				layout = _layoutLocalService.getLayout(
-					layoutPageTemplateEntry.getPlid());
-			}
-		}
-
 		LayoutPermissionUtil.check(
 			themeDisplay.getPermissionChecker(), layout.getPlid(),
 			ActionKeys.VIEW);
@@ -133,17 +112,10 @@ public class DiscardDraftLayoutMVCActionCommand
 	}
 
 	@Reference
-	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
-
-	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private LayoutPageTemplateEntryLocalService
-		_layoutPageTemplateEntryLocalService;
 
 	@Reference
 	private Portal _portal;
