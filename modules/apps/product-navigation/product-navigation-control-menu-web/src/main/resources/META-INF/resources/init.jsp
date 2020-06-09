@@ -28,6 +28,9 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
+
+<%@ page
+        import="com.liferay.product.navigation.control.menu.web.internal.display.context.AddContentPanelDisplayContext" %>
 <%@ page import="com.liferay.asset.constants.AssetWebKeys" %><%@
 page import="com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil" %><%@
 page import="com.liferay.asset.kernel.model.AssetEntry" %><%@

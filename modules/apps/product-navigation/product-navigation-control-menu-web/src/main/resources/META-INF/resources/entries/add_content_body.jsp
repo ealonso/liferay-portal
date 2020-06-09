@@ -40,6 +40,17 @@
 		</div>
 	</div>
 
+	<%
+	AddContentPanelDisplayContext addContentPanelDisplayContext = new AddContentPanelDisplayContext(request);
+	%>
+
+	<div>
+		<react:component
+			data="<%= addContentPanelDisplayContext.getAddContentPanelData() %>"
+			module="js/AddPanel"
+		/>
+	</div>
+
 	<aui:script>
 		var addToggle = document.getElementById('<%= portletNamespace %>addToggleId');
 
