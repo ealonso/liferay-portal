@@ -303,7 +303,7 @@ public class FragmentEntryLinkLocalServiceImpl
 		long groupId, long fragmentEntryId, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator) {
 
-		return fragmentEntryLinkFinder.findByG_F(
+		return getAllFragmentEntryLinksByFragmentEntryId(
 			groupId, fragmentEntryId, start, end, orderByComparator);
 	}
 
@@ -401,7 +401,8 @@ public class FragmentEntryLinkLocalServiceImpl
 	@Deprecated
 	@Override
 	public int getFragmentEntryLinksCount(long groupId, long fragmentEntryId) {
-		return fragmentEntryLinkFinder.countByG_F(groupId, fragmentEntryId);
+		return getAllFragmentEntryLinksCountByFragmentEntryId(
+			groupId, fragmentEntryId);
 	}
 
 	/**
