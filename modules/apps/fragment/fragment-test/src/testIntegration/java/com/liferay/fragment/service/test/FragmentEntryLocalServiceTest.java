@@ -970,6 +970,36 @@ public class FragmentEntryLocalServiceTest {
 		Assert.assertEquals(html, persistedFragmentEntry.getHtml());
 	}
 
+	@Test
+	public void testGetAllFragmentEntryLinksByFragmentEntryId()
+		throws Exception {
+	}
+
+	@Test
+	public void testGetAllFragmentEntryLinksCountByFragmentEntryId()
+		throws Exception {
+	}
+
+	@Test
+	public void testGetLayoutFragmentEntryLinksByFragmentEntryId()
+		throws Exception {
+	}
+
+	@Test
+	public void testGetLayoutFragmentEntryLinksCountByFragmentEntryId()
+		throws Exception {
+	}
+
+	@Test
+	public void testGetLayoutPageTemplateFragmentEntryLinksByFragmentEntryId()
+		throws Exception {
+	}
+
+	@Test
+	public void testGetLayoutPageTemplateFragmentEntryLinksCountByFragmentEntryId()
+		throws Exception {
+	}
+
 	private void _assertCopyFragmentEntry(
 		FragmentEntry fragmentEntry, FragmentEntry copyFragmentEntry) {
 
