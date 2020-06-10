@@ -21,6 +21,8 @@
 >
 
 	<%
+	AddContentPanelDisplayContext addContentPanelDisplayContext = new AddContentPanelDisplayContext(request);
+
 	String portletNamespace = PortalUtil.getPortletNamespace(ProductNavigationControlMenuPortletKeys.PRODUCT_NAVIGATION_CONTROL_MENU);
 	%>
 
@@ -37,18 +39,13 @@
 			</div>
 
 			<div class="sidebar-body"></div>
+			<div class="sidebar-content">
+				<react:component
+					data="<%= addContentPanelDisplayContext.getAddContentPanelData() %>"
+					module="js/AddPanel"
+				/>
+			</div>
 		</div>
-	</div>
-
-	<%
-	AddContentPanelDisplayContext addContentPanelDisplayContext = new AddContentPanelDisplayContext(request);
-	%>
-
-	<div>
-		<react:component
-			data="<%= addContentPanelDisplayContext.getAddContentPanelData() %>"
-			module="js/AddPanel"
-		/>
 	</div>
 
 	<aui:script>
