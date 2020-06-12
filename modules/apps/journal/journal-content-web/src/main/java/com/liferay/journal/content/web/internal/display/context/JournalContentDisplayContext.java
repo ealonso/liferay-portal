@@ -813,6 +813,16 @@ public class JournalContentDisplayContext {
 			articleDisplay.getResourcePrimKey());
 	}
 
+	public boolean isContentPage() {
+		Layout layout = _themeDisplay.getLayout();
+
+		if (layout.isTypeContent() || layout.isTypeAssetDisplay()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isDefaultTemplate() {
 		String ddmTemplateKey = ParamUtil.getString(
 			_portletRequest, "ddmTemplateKey");

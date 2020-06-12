@@ -154,7 +154,7 @@ if (journalContentDisplayContext.isShowArticle()) {
 						%>
 
 						<div class="<%= journalContentDisplayContext.isPreview() ? "p-1 preview-asset-entry" : StringPool.BLANK %>" <%= AUIUtil.buildData(data) %>>
-							<c:if test="<%= journalContentDisplayContext.isShowTitle() %>">
+							<c:if test="<%= journalContentDisplayContext.isShowTitle() && journalContentDisplayContext.isContentPage() %>">
 								<h2 class="portlet-title-text">
 									<%= articleDisplay.getTitle() %>
 								</h2>
