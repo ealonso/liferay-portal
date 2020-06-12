@@ -18,6 +18,42 @@ import 'product-navigation-control-menu/css/AddPanel.scss';
 
 import TabsPanel from './TabsPanel';
 
+const LAYOUT_DATA_ITEM_TYPES = {
+	fragment: 'fragment',
+};
+const CONTENT = [
+	{
+		icon: 'page-template',
+		itemId: '1',
+		title: 'Cheesecake Recipe',
+		type: 'Recipe Article',
+	},
+	{
+		icon: 'page-template',
+		itemId: '2',
+		title: 'Chez Marco Food',
+		type: 'Recipe Article',
+	},
+	{
+		icon: 'page-template',
+		itemId: '3',
+		title: 'Content Example Orange',
+		type: 'Blog Entry',
+	},
+	{
+		icon: 'page-template',
+		itemId: '4',
+		title: 'Content Example Template',
+		type: 'Blog Entry',
+	},
+	{
+		icon: 'page-template',
+		itemId: '5',
+		title: 'Content Example Template',
+		type: 'Blog Entry',
+	},
+];
+
 const AddPanel = ({widgets}) => {
 	const tabs = useMemo(
 		() => [
@@ -30,6 +66,10 @@ const AddPanel = ({widgets}) => {
 				label: Liferay.Language.get('widgets'),
 			},
 			{
+				collections: [{title: '$Recent'}].map((collection) => ({
+					children: CONTENT.map(normalizeContent),
+					label: collection.title,
+				})),
 				label: Liferay.Language.get('content'),
 			},
 		],
@@ -55,7 +95,16 @@ const normalizeWidget = (widget) => {
 		itemId: widget.portletId,
 		label: widget.title,
 		preview: '',
-		type: 'fragment',
+		type: LAYOUT_DATA_ITEM_TYPES.fragment,
+	};
+};
+
+const normalizeContent = (content) => {
+	return {
+		icon: content.icon,
+		itemId: content.itemId,
+		label: content.title,
+		type: content.type,
 	};
 };
 
