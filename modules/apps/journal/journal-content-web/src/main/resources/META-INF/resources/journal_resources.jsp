@@ -94,6 +94,8 @@ JournalArticle article = journalContentDisplayContext.getArticle();
 			<liferay-ui:message key="enable" />
 		</div>
 
+		<aui:input label="show-title" name="preferences--showTitle--" type="checkbox" value="<%= journalContentDisplayContext.isShowTitle() %>" />
+
 		<aui:input label="view-count-increment" name="preferences--enableViewCountIncrement--" type="checkbox" value="<%= journalContentDisplayContext.isEnableViewCountIncrement() %>" />
 	</clay:sheet-section>
 </c:if>

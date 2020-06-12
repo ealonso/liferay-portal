@@ -1026,6 +1026,20 @@ public class JournalContentDisplayContext {
 		return _showSelectArticleLink;
 	}
 
+	public boolean isShowTitle() {
+		if (_showTitle != null) {
+			return _showTitle;
+		}
+
+		PortletPreferences portletPreferences =
+			_portletRequest.getPreferences();
+
+		_showTitle = GetterUtil.getBoolean(
+			portletPreferences.getValue("showTitle", null), true);
+
+		return _showTitle;
+	}
+
 	private JournalContentDisplayContext(
 			PortletRequest portletRequest, PortletResponse portletResponse,
 			ThemeDisplay themeDisplay,
@@ -1188,6 +1202,7 @@ public class JournalContentDisplayContext {
 	private Boolean _showEditArticleIcon;
 	private Boolean _showEditTemplateIcon;
 	private Boolean _showSelectArticleLink;
+	private Boolean _showTitle;
 	private final ThemeDisplay _themeDisplay;
 	private List<UserToolAssetAddonEntry> _userToolAssetAddonEntries;
 
