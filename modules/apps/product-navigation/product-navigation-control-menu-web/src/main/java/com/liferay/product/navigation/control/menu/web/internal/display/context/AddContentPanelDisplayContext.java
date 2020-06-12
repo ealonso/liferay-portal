@@ -123,6 +123,8 @@ public class AddContentPanelDisplayContext {
 				return Collections.emptyList();
 			}
 		).put(
+			"namespace", _getNamespace()
+		).put(
 			"widgets",
 			() -> {
 				if (hasAddApplicationsPermission()) {
@@ -459,6 +461,14 @@ public class AddContentPanelDisplayContext {
 		_keywords = ParamUtil.getString(_httpServletRequest, "keywords");
 
 		return _keywords;
+	}
+
+	private String _getNamespace() {
+		PortletResponse portletResponse =
+			(PortletResponse)_httpServletRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_RESPONSE);
+
+		return portletResponse.getNamespace();
 	}
 
 	private String _getPortletCategoryTitle(PortletCategory portletCategory) {
