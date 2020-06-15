@@ -22,7 +22,7 @@ export const LAYOUT_DATA_ITEM_TYPES = {
 	fragment: 'fragment',
 };
 
-const AddPanel = ({contents, portletNamespace, widgets}) => {
+const AddPanel = ({addContentsURLs, contents, getContentsURL, portletNamespace, widgets}) => {
 	const tabs = useMemo(
 		() => [
 			{
