@@ -166,20 +166,27 @@ else {
 										}
 										%>
 
-										<div class="card card-horizontal taglib-horizontal-card">
-											<div class="card-body ">
-												<div class="card-col-field">
-													<clay:sticker
-														cssClass="sticker-static"
-														displayType="secondary"
-														icon="blogs"
-													/>
-												</div>
-
-												<div class="card-col-content card-col-gutters">
-													<span class="lfr-card-title-text text-truncate" id="<portlet:namespace />rootMenuItemName">
-														<%= HtmlUtil.escape(rootMenuItemName) %>
-													</span>
+										<div class="card card-horizontal card-type-directory">
+											<div class="card-body">
+												<div class="card-row">
+													<div class="autofit-col">
+														<clay:sticker
+															cssClass="sticker-static"
+															displayType="secondary"
+															icon="blogs"
+														/>
+													</div>
+													<div class="autofit-col autofit-col-expand autofit-col-gutters">
+														<section class="autofit-section">
+															<h3 class="card-title">
+																<span class="text-truncate-inline">
+																	<span class="text-truncate" id="<portlet:namespace />rootMenuItemName">
+																		<%= HtmlUtil.escape(rootMenuItemName) %>
+																	</span>
+																</span>
+															</h3>
+														</section>
+													</div>
 												</div>
 											</div>
 										</div>
