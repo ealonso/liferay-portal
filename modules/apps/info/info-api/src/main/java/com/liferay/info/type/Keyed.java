@@ -12,30 +12,17 @@
  * details.
  */
 
-package com.liferay.info.item.provider;
-
-import java.util.List;
-
-import org.osgi.annotation.versioning.ProviderType;
+package com.liferay.info.type;
 
 /**
- * @author Jürgen Kappler
  * @author Jorge Ferrer
  */
-@ProviderType
-public interface InfoItemServiceTracker {
+public interface Keyed {
 
-	public <P> List<P> getAllInfoItemServices(Class<P> serviceClass);
+	public default String getKey() {
+		Class<?> clazz = getClass();
 
-	public <P> List<P> getAllInfoItemServices(
-		Class<P> serviceClass, String itemClassName);
-
-	public <P> List<String> getInfoItemClassNames(Class<P> serviceClass);
-
-	public <P> P getInfoItemProviderByKey(
-		Class<P> serviceClass, String serviceKey);
-
-	public <P> P getInfoItemService(
-		Class<P> serviceClass, String itemClassName);
+		return clazz.getName();
+	}
 
 }
