@@ -33,16 +33,12 @@ const OPTIONS = [
 		label: Liferay.Util.sub(Liferay.Language.get('x-items'), 10),
 		value: 10,
 	},
-	{
-		label: Liferay.Util.sub(Liferay.Language.get('x-items'), 20),
-		value: 20,
-	},
 ];
 
 const ContentOptions = ({
 	addContentsURLs,
-	grid,
-	onChangeListMode,
+	displayGrid,
+	onChangeDisplayStyle,
 	onChangeSelect,
 	portletNamespace,
 }) => {
@@ -63,11 +59,11 @@ const ContentOptions = ({
 			<ClayButton
 				className="btn-monospaced sidebar-content__add-panel__content-options-list"
 				displayType="unstyled"
-				onClick={() => onChangeListMode(!grid)}
+				onClick={() => onChangeDisplayStyle(!displayGrid)}
 				small
 				title={Liferay.Language.get('display-style')}
 			>
-				<ClayIcon symbol={grid ? 'cards2' : 'list'} />
+				<ClayIcon symbol={displayGrid ? 'cards2' : 'list'} />
 				<span className="sr-only">
 					{Liferay.Language.get('display-style')}
 				</span>
