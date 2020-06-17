@@ -22,7 +22,7 @@ import selectCanUpdateLayoutContent from '../../selectors/selectCanUpdateLayoutC
 import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
 import {useSelector} from '../../store/index';
 import {useGetContent, useGetFieldValue} from '../CollectionItemContext';
-import {useFrameContext} from '../Frame';
+import {useGlobalContext} from '../GlobalContext';
 import Layout from '../Layout';
 import UnsafeHTML from '../UnsafeHTML';
 import {
@@ -40,7 +40,7 @@ const FragmentContent = React.forwardRef(
 	({fragmentEntryLinkId, itemId}, ref) => {
 		const isMounted = useIsMounted();
 		const editableProcessorUniqueId = useEditableProcessorUniqueId();
-		const frameContext = useFrameContext();
+		const globalContext = useGlobalContext();
 		const setEditableProcessorUniqueId = useSetEditableProcessorUniqueId();
 		const canUpdateLayoutContent = useSelector(
 			selectCanUpdateLayoutContent
@@ -194,7 +194,7 @@ const FragmentContent = React.forwardRef(
 						})}
 						contentRef={ref}
 						getPortals={getPortals}
-						globalContext={frameContext || window}
+						globalContext={globalContext}
 						markup={content}
 						onRender={onRender}
 					/>
