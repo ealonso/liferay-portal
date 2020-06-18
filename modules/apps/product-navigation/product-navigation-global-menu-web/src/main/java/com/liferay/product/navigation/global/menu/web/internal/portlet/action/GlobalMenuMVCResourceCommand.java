@@ -155,6 +155,8 @@ public class GlobalMenuMVCResourceCommand extends BaseMVCResourceCommand {
 		).put(
 			"portletNamespace", resourceResponse.getNamespace()
 		).put(
+			"selectedPortletId", themeDisplay.getPpid()
+		).put(
 			"sites",
 			_getSitesJSONObject(
 				httpServletRequest, resourceRequest, resourceResponse,
