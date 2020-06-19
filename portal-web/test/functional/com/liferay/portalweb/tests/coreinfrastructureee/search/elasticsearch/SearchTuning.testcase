@@ -24,7 +24,7 @@ definition {
 	test AssertCannotAddDuplicateQueriesAndAliases {
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Article");
@@ -53,7 +53,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		AssertElementNotPresent(
@@ -95,7 +95,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Article");
@@ -118,7 +118,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.delete(rowEntry = "Article");
@@ -137,7 +137,7 @@ definition {
 	test AssertResultRankingsMiscUI {
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		AssertElementNotPresent(locator1 = "Pagination#PAGINATION_BAR");
@@ -234,14 +234,14 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.addSynonymSet(synonyms = "Article,Journal");
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Article");
@@ -268,14 +268,14 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.deleteSynonymSet(synonymSet = "Article, Journal");
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -304,7 +304,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -335,7 +335,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -350,14 +350,14 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.addSynonymSet(synonyms = "Article,Journal");
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -398,7 +398,7 @@ definition {
 	test AssertSynonymBulkActions {
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		AssertElementNotPresent(locator1 = "Pagination#PAGINATION_BAR");
@@ -482,7 +482,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Article");
@@ -557,7 +557,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		Click(
@@ -633,7 +633,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "WC Title");
@@ -676,7 +676,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -713,7 +713,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -758,7 +758,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Article");
@@ -789,7 +789,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		LexiconEntry.gotoEntryMenuItem(
@@ -825,7 +825,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.addSynonymSet(synonyms = "banana,red apple,blue.berry!,&quot;xigua&quot;,fruit,sweet");
@@ -848,7 +848,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.editSynonymSet(
@@ -890,7 +890,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.addSynonymSet(synonyms = "red apple,citrus-orange");
@@ -915,7 +915,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Synonyms");
 
 		SearchTuning.deleteSynonymSet(synonymSet = "red apple, blue.berry!, &quot;xigua&quot;, fruit, sweet, pear");
@@ -940,7 +940,7 @@ definition {
 
 		GlobalMenu.gotoPortlet(
 			category = "Search Tuning",
-			panel = "Control Panel",
+			panel = "Applications",
 			portlet = "Result Rankings");
 
 		SearchTuning.addResultRanking(searchQuery = "Apple");
