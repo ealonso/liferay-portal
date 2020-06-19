@@ -14,6 +14,7 @@
 
 package com.liferay.asset.categories.selector.web.internal.display.context;
 
+import com.liferay.asset.categories.admin.web.constants.AssetCategoriesAdminPortletKeys;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
@@ -28,6 +29,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -39,6 +42,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -56,6 +61,31 @@ public class AssetCategoriesSelectorDisplayContext {
 		_httpServletRequest = httpServletRequest;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+	}
+
+	public String getAddCategoryURL() throws Exception {
+		PortletURL addCategoryURL = PortletURLFactoryUtil.create(
+			_renderRequest,
+			AssetCategoriesAdminPortletKeys.ASSET_CATEGORIES_ADMIN,
+			PortletRequest.RENDER_PHASE);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		addCategoryURL.setParameter("mvcPath", "/edit_category.jsp");
+		addCategoryURL.setParameter("itemSelectorEventName", getEventName());
+		addCategoryURL.setParameter("redirect", themeDisplay.getURLCurrent());
+
+		long[] vocabularyIds = getVocabularyIds();
+
+		if (vocabularyIds.length == 1) {
+			addCategoryURL.setParameter(
+				"vocabularyId", String.valueOf(vocabularyIds[0]));
+		}
+
+		addCategoryURL.setWindowState(LiferayWindowState.POP_UP);
+
+		return addCategoryURL.toString();
 	}
 
 	public JSONArray getCategoriesJSONArray() throws Exception {
