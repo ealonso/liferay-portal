@@ -20,12 +20,22 @@ import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSetEntry;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.field.InfoFormValues;
+import com.liferay.info.field.type.ImageInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.InfoItemClassPKReference;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
+import com.liferay.info.type.WebImage;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 
@@ -76,7 +86,8 @@ public class AssetEntryInfoItemFormProvider
 		return Arrays.asList(
 			_titleInfoField, _descriptionInfoField, _summaryInfoField,
 			_userNameInfoField, _createDateInfoField, _modifiedDateInfoField,
-			_expirationDateInfoField, _viewCountInfoField, _urlInfoField);
+			_expirationDateInfoField, _viewCountInfoField, _userProfileImage,
+			_urlInfoField);
 	}
 
 	private List<InfoFieldValue<Object>> _getAssetEntryInfoFieldValues(
@@ -102,7 +113,10 @@ public class AssetEntryInfoItemFormProvider
 				_getDateValue(assetEntry.getExpirationDate())),
 			new InfoFieldValue<>(
 				_viewCountInfoField, assetEntry.getViewCount()),
-			new InfoFieldValue<>(_urlInfoField, assetEntry.getUrl()));
+			new InfoFieldValue<>(_urlInfoField, assetEntry.getUrl()),
+			new InfoFieldValue<>(
+				_userProfileImage,
+				_getUserNameProfileImage(assetEntry.getUserId())));
 	}
 
 	private String _getDateValue(Date date) {
@@ -117,6 +131,48 @@ public class AssetEntryInfoItemFormProvider
 
 		return dateFormatDateTime.format(date);
 	}
+
+	private ThemeDisplay _getThemeDisplay() {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext != null) {
+			return serviceContext.getThemeDisplay();
+		}
+
+		return null;
+	}
+
+	private Object _getUserNameProfileImage(long userId) {
+		User user = _userLocalService.fetchUser(userId);
+
+		if (user == null) {
+			return null;
+		}
+
+		ThemeDisplay themeDisplay = _getThemeDisplay();
+
+		if (themeDisplay != null) {
+			try {
+				WebImage webImage = new WebImage(
+					user.getPortraitURL(themeDisplay));
+
+				webImage.setAlt(user.getFullName());
+
+				return webImage;
+			}
+			catch (PortalException portalException) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(portalException, portalException);
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		AssetEntryInfoItemFormProvider.class);
 
 	@Reference
 	private AssetEntryInfoItemFieldSetProvider
@@ -145,9 +201,17 @@ public class AssetEntryInfoItemFormProvider
 	private final InfoField _urlInfoField = new InfoField(
 		TextInfoFieldType.INSTANCE,
 		InfoLocalizedValue.localize(getClass(), "url"), "url");
+
+	@Reference
+	private UserLocalService _userLocalService;
+
 	private final InfoField _userNameInfoField = new InfoField(
 		TextInfoFieldType.INSTANCE,
 		InfoLocalizedValue.localize(getClass(), "user-name"), "userName");
+	private final InfoField _userProfileImage = new InfoField(
+		ImageInfoFieldType.INSTANCE,
+		InfoLocalizedValue.localize(getClass(), "user-profile-image"),
+		"userProfileImage");
 	private final InfoField _viewCountInfoField = new InfoField(
 		TextInfoFieldType.INSTANCE,
 		InfoLocalizedValue.localize(getClass(), "view-count"), "viewName");
