@@ -260,15 +260,22 @@ public class AssetCategoriesNavigationDisplayContext {
 			(ThemeDisplay)_httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		String title = HtmlUtil.escape(
-			assetVocabulary.getTitle(themeDisplay.getLanguageId()));
-
-		if (assetVocabulary.getGroupId() == themeDisplay.getCompanyGroupId()) {
-			title +=
-				" (" + LanguageUtil.get(_httpServletRequest, "global") + ")";
+		try {
+			return HtmlUtil.escape(
+				assetVocabulary.getUnambiguousTitle(
+					getAssetVocabularies(), themeDisplay.getScopeGroupId(),
+					themeDisplay.getLocale()));
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to get unambiguous title for asset vocabulary",
+					portalException);
+			}
 		}
 
-		return title;
+		return HtmlUtil.escape(
+			assetVocabulary.getTitle(themeDisplay.getLanguageId()));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
