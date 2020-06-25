@@ -13,11 +13,14 @@
  */
 
 import React, {useMemo, useState} from 'react';
-
-import 'product-navigation-control-menu/css/AddPanel.scss';
+import {DndProvider} from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import {AddPanelContextProvider} from './AddPanelContext';
+import DragAndDrop from './DragAndDrop';
 import TabsPanel from './TabsPanel';
+
+import 'product-navigation-control-menu/css/AddPanel.scss';
 
 export const LAYOUT_DATA_ITEM_TYPES = {
 	fragment: 'fragment',
@@ -73,7 +76,10 @@ const AddPanel = ({
 					widgets,
 				}}
 			>
-				<TabsPanel tabs={tabs} />
+				<DndProvider backend={HTML5Backend}>
+					<DragAndDrop />
+					<TabsPanel tabs={tabs} />
+				</DndProvider>
 			</AddPanelContextProvider>
 		</div>
 	);
@@ -96,6 +102,7 @@ const normalizeWidget = (widget) => {
 
 export const normalizeContent = (content) => {
 	return {
+		category: content.type,
 		data: {
 			className: content.className,
 			classPK: content.classPK,
@@ -104,9 +111,9 @@ export const normalizeContent = (content) => {
 			portletId: content.portletId,
 		},
 		icon: content.icon,
-		itemId: `${content.portletId}_${content.classPK}`,
+		itemId: content.portletId,
 		label: content.title,
-		type: content.type,
+		type: content.type.toLowerCase().replace(/ /g, '-'),
 	};
 };
 
