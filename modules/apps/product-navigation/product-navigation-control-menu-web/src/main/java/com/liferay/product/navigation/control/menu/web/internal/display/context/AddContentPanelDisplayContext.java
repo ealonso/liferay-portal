@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
@@ -71,6 +72,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -135,6 +137,10 @@ public class AddContentPanelDisplayContext {
 
 				return resourceURL.toString();
 			}
+		).put(
+			"languageDirection", _getLanguageDirection()
+		).put(
+			"languageId", _themeDisplay.getLanguageId()
 		).put(
 			"namespace", _getNamespace()
 		).put(
@@ -476,6 +482,20 @@ public class AddContentPanelDisplayContext {
 		_keywords = ParamUtil.getString(_httpServletRequest, "keywords");
 
 		return _keywords;
+	}
+
+	private Map<String, String> _getLanguageDirection() {
+		Map<String, String> languageDirection = new HashMap<>();
+		long groupId = ParamUtil.getLong(
+			_httpServletRequest, "groupId", _themeDisplay.getScopeGroupId());
+
+		for (Locale curLocale : LanguageUtil.getAvailableLocales(groupId)) {
+			languageDirection.put(
+				LocaleUtil.toLanguageId(curLocale),
+				LanguageUtil.get(curLocale, "lang.dir"));
+		}
+
+		return languageDirection;
 	}
 
 	private String _getNamespace() {
