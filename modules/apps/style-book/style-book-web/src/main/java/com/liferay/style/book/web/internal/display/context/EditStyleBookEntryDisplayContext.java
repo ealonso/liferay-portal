@@ -56,7 +56,7 @@ public class EditStyleBookEntryDisplayContext {
 		).build();
 	}
 
-	private String _getRedirect() {
+	public String getRedirect() {
 		String redirect = ParamUtil.getString(_httpServletRequest, "redirect");
 
 		if (Validator.isNotNull(redirect)) {
@@ -70,7 +70,7 @@ public class EditStyleBookEntryDisplayContext {
 		return portletURL.toString();
 	}
 
-	private StyleBookEntry _getStyleBookEntry() {
+	public StyleBookEntry getStyleBookEntry() {
 		if (_styleBookEntry != null) {
 			return _styleBookEntry;
 		}
@@ -93,7 +93,7 @@ public class EditStyleBookEntryDisplayContext {
 	}
 
 	private String _getStyleBookEntryTitle() {
-		StyleBookEntry styleBookEntry = _getStyleBookEntry();
+		StyleBookEntry styleBookEntry = getStyleBookEntry();
 
 		return styleBookEntry.getName();
 	}
@@ -102,7 +102,7 @@ public class EditStyleBookEntryDisplayContext {
 		PortletDisplay portletDisplay = _themeDisplay.getPortletDisplay();
 
 		portletDisplay.setShowBackIcon(true);
-		portletDisplay.setURLBack(_getRedirect());
+		portletDisplay.setURLBack(getRedirect());
 
 		_renderResponse.setTitle(_getStyleBookEntryTitle());
 	}

@@ -18,6 +18,8 @@
 
 <%
 EditStyleBookEntryDisplayContext editStyleBookEntryDisplayContext = new EditStyleBookEntryDisplayContext(request, renderResponse);
+
+StyleBookEntry styleBookEntry = editStyleBookEntryDisplayContext.getStyleBookEntry();
 %>
 
 <div>
@@ -26,3 +28,40 @@ EditStyleBookEntryDisplayContext editStyleBookEntryDisplayContext = new EditStyl
 		module="js/style-book-editor/StyleBookEditor"
 	/>
 </div>
+
+<portlet:actionURL name="/style_book/publish_style_book_entry" var="editStyleBookEntryURL" />
+
+<liferay-frontend:edit-form
+	action="<%= editStyleBookEntryURL %>"
+	name="fm"
+>
+	<aui:input name="styleBookEntryId" type="hidden" value="<%= styleBookEntry.getStyleBookEntryId() %>" />
+	<aui:input name="workflowAction" type="hidden" value="<%= WorkflowConstants.ACTION_PUBLISH %>" />
+	<aui:input name="redirect" type="hidden" value="<%= editStyleBookEntryDisplayContext.getRedirect() %>" />
+
+	<liferay-frontend:edit-form-body>
+		<aui:model-context bean="<%= styleBookEntry %>" model="<%= StyleBookEntry.class %>" />
+
+
+	</liferay-frontend:edit-form-body>
+
+	<liferay-frontend:edit-form-footer>
+		<aui:button type="submit" />
+
+		<aui:button id="saveDraftBtn" primary="<%= false %>" type="submit" value="save-as-draft" />
+
+		<aui:button href="<%= editStyleBookEntryDisplayContext.getRedirect() %>" type="cancel" />
+	</liferay-frontend:edit-form-footer>
+</liferay-frontend:edit-form>
+
+<script>
+	var saveDraftBtn = document.getElementById('<portlet:namespace />saveDraftBtn');
+
+	saveDraftBtn.addEventListener('click', function () {
+		var workflowActionInput = document.getElementById(
+				'<portlet:namespace />workflowAction'
+		);
+
+		workflowActionInput.value = '<%= WorkflowConstants.ACTION_SAVE_DRAFT %>';
+	});
+</script>

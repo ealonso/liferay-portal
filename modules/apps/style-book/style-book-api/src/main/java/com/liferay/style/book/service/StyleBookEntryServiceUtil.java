@@ -80,6 +80,20 @@ public class StyleBookEntryServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static com.liferay.style.book.model.StyleBookEntry publishDraft(
+			long styleBookEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().publishDraft(styleBookEntryId);
+	}
+
+	public static com.liferay.style.book.model.StyleBookEntry publishDraft(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().publishDraft(styleBookEntry);
+	}
+
 	public static com.liferay.style.book.model.StyleBookEntry
 			updateStyleBookEntry(long styleBookEntryId, long previewFileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {

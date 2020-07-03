@@ -28,6 +28,8 @@ page import="com.liferay.style.book.web.internal.display.context.EditStyleBookEn
 page import="com.liferay.style.book.web.internal.display.context.StyleBookDisplayContext" %><%@
 page import="com.liferay.style.book.web.internal.display.context.StyleBookManagementToolbarDisplayContext" %><%@
 page import="com.liferay.style.book.web.internal.servlet.taglib.clay.StyleBookVerticalCard" %>
+<%@ page import="com.liferay.style.book.model.StyleBookEntry" %>
+<%@ page import="com.liferay.portal.kernel.workflow.WorkflowConstants" %>
 
 <liferay-frontend:defineObjects />
 

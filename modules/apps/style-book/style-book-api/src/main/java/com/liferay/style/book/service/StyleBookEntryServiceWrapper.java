@@ -79,6 +79,22 @@ public class StyleBookEntryServiceWrapper
 	}
 
 	@Override
+	public com.liferay.style.book.model.StyleBookEntry publishDraft(
+			long styleBookEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryService.publishDraft(styleBookEntryId);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry publishDraft(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryService.publishDraft(styleBookEntry);
+	}
+
+	@Override
 	public com.liferay.style.book.model.StyleBookEntry updateStyleBookEntry(
 			long styleBookEntryId, long previewFileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
