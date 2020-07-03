@@ -3,6 +3,20 @@
 <model-hints>
 	<model name="com.liferay.style.book.model.StyleBookEntry">
 		<field name="mvccVersion" type="long" />
+		<field name="headId" type="long" />
+		<field name="styleBookEntryId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="name" type="String" />
+		<field name="styleBookEntryKey" type="String" />
+		<field name="previewFileEntryId" type="long" />
+	</model>
+	<model name="com.liferay.style.book.model.StyleBookEntryVersion">
+		<field name="styleBookEntryVersionId" type="long" />
+		<field name="version" type="int" />
 		<field name="styleBookEntryId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />

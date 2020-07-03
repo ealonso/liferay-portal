@@ -27,11 +27,14 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.version.VersionService;
+import com.liferay.portal.kernel.service.version.VersionServiceListener;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.style.book.model.StyleBookEntry;
+import com.liferay.style.book.model.StyleBookEntryVersion;
 
 import java.io.Serializable;
 
@@ -55,7 +58,8 @@ import org.osgi.annotation.versioning.ProviderType;
 	rollbackFor = {PortalException.class, SystemException.class}
 )
 public interface StyleBookEntryLocalService
-	extends BaseLocalService, PersistedModelLocalService {
+	extends BaseLocalService, PersistedModelLocalService,
+			VersionService<StyleBookEntry, StyleBookEntryVersion> {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -76,10 +80,25 @@ public interface StyleBookEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public StyleBookEntry addStyleBookEntry(StyleBookEntry styleBookEntry);
 
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public StyleBookEntry checkout(
+			StyleBookEntry publishedStyleBookEntry, int version)
+		throws PortalException;
+
 	public StyleBookEntry copyStyleBookEntry(
 			long userId, long groupId, long styleBookEntryId,
 			ServiceContext serviceContext)
 		throws PortalException;
+
+	/**
+	 * Creates a new style book entry. Does not add the style book entry to the database.
+	 *
+	 * @return the new style book entry
+	 */
+	@Override
+	@Transactional(enabled = false)
+	public StyleBookEntry create();
 
 	/**
 	 * @throws PortalException
@@ -87,14 +106,15 @@ public interface StyleBookEntryLocalService
 	public PersistedModel createPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
-	/**
-	 * Creates a new style book entry with the primary key. Does not add the style book entry to the database.
-	 *
-	 * @param styleBookEntryId the primary key for the new style book entry
-	 * @return the new style book entry
-	 */
-	@Transactional(enabled = false)
-	public StyleBookEntry createStyleBookEntry(long styleBookEntryId);
+	@Indexable(type = IndexableType.DELETE)
+	@Override
+	public StyleBookEntry delete(StyleBookEntry publishedStyleBookEntry)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.DELETE)
+	@Override
+	public StyleBookEntry deleteDraft(StyleBookEntry draftStyleBookEntry)
+		throws PortalException;
 
 	/**
 	 * @throws PortalException
@@ -123,6 +143,11 @@ public interface StyleBookEntryLocalService
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	public StyleBookEntry deleteStyleBookEntry(StyleBookEntry styleBookEntry)
+		throws PortalException;
+
+	@Override
+	public StyleBookEntryVersion deleteVersion(
+			StyleBookEntryVersion styleBookEntryVersion)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -194,6 +219,27 @@ public interface StyleBookEntryLocalService
 	public long dynamicQueryCount(
 		DynamicQuery dynamicQuery, Projection projection);
 
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry fetchDraft(long primaryKey);
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry fetchDraft(StyleBookEntry styleBookEntry);
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntryVersion fetchLatestVersion(
+		StyleBookEntry styleBookEntry);
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry fetchPublished(long primaryKey);
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry fetchPublished(StyleBookEntry styleBookEntry);
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public StyleBookEntry fetchStyleBookEntry(long styleBookEntryId);
 
@@ -203,6 +249,15 @@ public interface StyleBookEntryLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry getDraft(long primaryKey) throws PortalException;
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntry getDraft(StyleBookEntry styleBookEntry)
+		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -271,6 +326,37 @@ public interface StyleBookEntryLocalService
 	public StyleBookEntry getStyleBookEntry(long styleBookEntryId)
 		throws PortalException;
 
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public StyleBookEntryVersion getVersion(
+			StyleBookEntry styleBookEntry, int version)
+		throws PortalException;
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<StyleBookEntryVersion> getVersions(
+		StyleBookEntry styleBookEntry);
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public StyleBookEntry publishDraft(StyleBookEntry draftStyleBookEntry)
+		throws PortalException;
+
+	@Override
+	public void registerListener(
+		VersionServiceListener<StyleBookEntry, StyleBookEntryVersion>
+			versionServiceListener);
+
+	@Override
+	public void unregisterListener(
+		VersionServiceListener<StyleBookEntry, StyleBookEntryVersion>
+			versionServiceListener);
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public StyleBookEntry updateDraft(StyleBookEntry draftStyleBookEntry)
+		throws PortalException;
+
 	public StyleBookEntry updateStyleBookEntry(
 			long styleBookEntryId, long previewFileEntryId)
 		throws PortalException;
@@ -286,6 +372,8 @@ public interface StyleBookEntryLocalService
 	 * @return the style book entry that was updated
 	 */
 	@Indexable(type = IndexableType.REINDEX)
-	public StyleBookEntry updateStyleBookEntry(StyleBookEntry styleBookEntry);
+	public StyleBookEntry updateStyleBookEntry(
+			StyleBookEntry draftStyleBookEntry)
+		throws PortalException;
 
 }

@@ -57,6 +57,16 @@ public class StyleBookEntryLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.style.book.model.StyleBookEntry checkout(
+			com.liferay.style.book.model.StyleBookEntry publishedStyleBookEntry,
+			int version)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.checkout(
+			publishedStyleBookEntry, version);
+	}
+
+	@Override
 	public com.liferay.style.book.model.StyleBookEntry copyStyleBookEntry(
 			long userId, long groupId, long styleBookEntryId,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
@@ -64,6 +74,16 @@ public class StyleBookEntryLocalServiceWrapper
 
 		return _styleBookEntryLocalService.copyStyleBookEntry(
 			userId, groupId, styleBookEntryId, serviceContext);
+	}
+
+	/**
+	 * Creates a new style book entry. Does not add the style book entry to the database.
+	 *
+	 * @return the new style book entry
+	 */
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry create() {
+		return _styleBookEntryLocalService.create();
 	}
 
 	/**
@@ -77,18 +97,20 @@ public class StyleBookEntryLocalServiceWrapper
 		return _styleBookEntryLocalService.createPersistedModel(primaryKeyObj);
 	}
 
-	/**
-	 * Creates a new style book entry with the primary key. Does not add the style book entry to the database.
-	 *
-	 * @param styleBookEntryId the primary key for the new style book entry
-	 * @return the new style book entry
-	 */
 	@Override
-	public com.liferay.style.book.model.StyleBookEntry createStyleBookEntry(
-		long styleBookEntryId) {
+	public com.liferay.style.book.model.StyleBookEntry delete(
+			com.liferay.style.book.model.StyleBookEntry publishedStyleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _styleBookEntryLocalService.createStyleBookEntry(
-			styleBookEntryId);
+		return _styleBookEntryLocalService.delete(publishedStyleBookEntry);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry deleteDraft(
+			com.liferay.style.book.model.StyleBookEntry draftStyleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.deleteDraft(draftStyleBookEntry);
 	}
 
 	/**
@@ -131,6 +153,15 @@ public class StyleBookEntryLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _styleBookEntryLocalService.deleteStyleBookEntry(styleBookEntry);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntryVersion deleteVersion(
+			com.liferay.style.book.model.StyleBookEntryVersion
+				styleBookEntryVersion)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.deleteVersion(styleBookEntryVersion);
 	}
 
 	@Override
@@ -230,6 +261,42 @@ public class StyleBookEntryLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.style.book.model.StyleBookEntry fetchDraft(
+		long primaryKey) {
+
+		return _styleBookEntryLocalService.fetchDraft(primaryKey);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry fetchDraft(
+		com.liferay.style.book.model.StyleBookEntry styleBookEntry) {
+
+		return _styleBookEntryLocalService.fetchDraft(styleBookEntry);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntryVersion
+		fetchLatestVersion(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry) {
+
+		return _styleBookEntryLocalService.fetchLatestVersion(styleBookEntry);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry fetchPublished(
+		long primaryKey) {
+
+		return _styleBookEntryLocalService.fetchPublished(primaryKey);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry fetchPublished(
+		com.liferay.style.book.model.StyleBookEntry styleBookEntry) {
+
+		return _styleBookEntryLocalService.fetchPublished(styleBookEntry);
+	}
+
+	@Override
 	public com.liferay.style.book.model.StyleBookEntry fetchStyleBookEntry(
 		long styleBookEntryId) {
 
@@ -250,6 +317,21 @@ public class StyleBookEntryLocalServiceWrapper
 		getActionableDynamicQuery() {
 
 		return _styleBookEntryLocalService.getActionableDynamicQuery();
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry getDraft(long primaryKey)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.getDraft(primaryKey);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry getDraft(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.getDraft(styleBookEntry);
 	}
 
 	@Override
@@ -359,6 +441,59 @@ public class StyleBookEntryLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.style.book.model.StyleBookEntryVersion getVersion(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry,
+			int version)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.getVersion(styleBookEntry, version);
+	}
+
+	@Override
+	public java.util.List<com.liferay.style.book.model.StyleBookEntryVersion>
+		getVersions(
+			com.liferay.style.book.model.StyleBookEntry styleBookEntry) {
+
+		return _styleBookEntryLocalService.getVersions(styleBookEntry);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry publishDraft(
+			com.liferay.style.book.model.StyleBookEntry draftStyleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.publishDraft(draftStyleBookEntry);
+	}
+
+	@Override
+	public void registerListener(
+		com.liferay.portal.kernel.service.version.VersionServiceListener
+			<com.liferay.style.book.model.StyleBookEntry,
+			 com.liferay.style.book.model.StyleBookEntryVersion>
+				versionServiceListener) {
+
+		_styleBookEntryLocalService.registerListener(versionServiceListener);
+	}
+
+	@Override
+	public void unregisterListener(
+		com.liferay.portal.kernel.service.version.VersionServiceListener
+			<com.liferay.style.book.model.StyleBookEntry,
+			 com.liferay.style.book.model.StyleBookEntryVersion>
+				versionServiceListener) {
+
+		_styleBookEntryLocalService.unregisterListener(versionServiceListener);
+	}
+
+	@Override
+	public com.liferay.style.book.model.StyleBookEntry updateDraft(
+			com.liferay.style.book.model.StyleBookEntry draftStyleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _styleBookEntryLocalService.updateDraft(draftStyleBookEntry);
+	}
+
+	@Override
 	public com.liferay.style.book.model.StyleBookEntry updateStyleBookEntry(
 			long styleBookEntryId, long previewFileEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -384,9 +519,11 @@ public class StyleBookEntryLocalServiceWrapper
 	 */
 	@Override
 	public com.liferay.style.book.model.StyleBookEntry updateStyleBookEntry(
-		com.liferay.style.book.model.StyleBookEntry styleBookEntry) {
+			com.liferay.style.book.model.StyleBookEntry draftStyleBookEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _styleBookEntryLocalService.updateStyleBookEntry(styleBookEntry);
+		return _styleBookEntryLocalService.updateStyleBookEntry(
+			draftStyleBookEntry);
 	}
 
 	@Override

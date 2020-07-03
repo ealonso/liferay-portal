@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.style.book.model.StyleBookEntry;
 import com.liferay.style.book.model.StyleBookEntryModel;
 import com.liferay.style.book.model.StyleBookEntrySoap;
+import com.liferay.style.book.model.StyleBookEntryVersion;
 
 import java.io.Serializable;
 
@@ -73,7 +74,8 @@ public class StyleBookEntryModelImpl
 	public static final String TABLE_NAME = "StyleBookEntry";
 
 	public static final Object[][] TABLE_COLUMNS = {
-		{"mvccVersion", Types.BIGINT}, {"styleBookEntryId", Types.BIGINT},
+		{"mvccVersion", Types.BIGINT}, {"headId", Types.BIGINT},
+		{"head", Types.BOOLEAN}, {"styleBookEntryId", Types.BIGINT},
 		{"groupId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"name", Types.VARCHAR},
@@ -86,6 +88,8 @@ public class StyleBookEntryModelImpl
 
 	static {
 		TABLE_COLUMNS_MAP.put("mvccVersion", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("headId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("head", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("styleBookEntryId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("groupId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("companyId", Types.BIGINT);
@@ -98,7 +102,7 @@ public class StyleBookEntryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table StyleBookEntry (mvccVersion LONG default 0 not null,styleBookEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,name VARCHAR(75) null,styleBookEntryKey VARCHAR(75) null,previewFileEntryId LONG)";
+		"create table StyleBookEntry (mvccVersion LONG default 0 not null,headId LONG,head BOOLEAN,styleBookEntryId LONG not null primary key,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,name VARCHAR(75) null,styleBookEntryKey VARCHAR(75) null,previewFileEntryId LONG)";
 
 	public static final String TABLE_SQL_DROP = "drop table StyleBookEntry";
 
@@ -116,11 +120,15 @@ public class StyleBookEntryModelImpl
 
 	public static final long GROUPID_COLUMN_BITMASK = 1L;
 
-	public static final long NAME_COLUMN_BITMASK = 2L;
+	public static final long HEAD_COLUMN_BITMASK = 2L;
 
-	public static final long STYLEBOOKENTRYKEY_COLUMN_BITMASK = 4L;
+	public static final long HEADID_COLUMN_BITMASK = 4L;
 
-	public static final long CREATEDATE_COLUMN_BITMASK = 8L;
+	public static final long NAME_COLUMN_BITMASK = 8L;
+
+	public static final long STYLEBOOKENTRYKEY_COLUMN_BITMASK = 16L;
+
+	public static final long CREATEDATE_COLUMN_BITMASK = 32L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -150,6 +158,7 @@ public class StyleBookEntryModelImpl
 		StyleBookEntry model = new StyleBookEntryImpl();
 
 		model.setMvccVersion(soapModel.getMvccVersion());
+		model.setHeadId(soapModel.getHeadId());
 		model.setStyleBookEntryId(soapModel.getStyleBookEntryId());
 		model.setGroupId(soapModel.getGroupId());
 		model.setCompanyId(soapModel.getCompanyId());
@@ -315,6 +324,10 @@ public class StyleBookEntryModelImpl
 		attributeSetterBiConsumers.put(
 			"mvccVersion",
 			(BiConsumer<StyleBookEntry, Long>)StyleBookEntry::setMvccVersion);
+		attributeGetterFunctions.put("headId", StyleBookEntry::getHeadId);
+		attributeSetterBiConsumers.put(
+			"headId",
+			(BiConsumer<StyleBookEntry, Long>)StyleBookEntry::setHeadId);
 		attributeGetterFunctions.put(
 			"styleBookEntryId", StyleBookEntry::getStyleBookEntryId);
 		attributeSetterBiConsumers.put(
@@ -365,6 +378,45 @@ public class StyleBookEntryModelImpl
 			(Map)attributeSetterBiConsumers);
 	}
 
+	public boolean getHead() {
+		return _head;
+	}
+
+	@Override
+	public boolean isHead() {
+		return _head;
+	}
+
+	public boolean getOriginalHead() {
+		return _originalHead;
+	}
+
+	public void setHead(boolean head) {
+		_columnBitmask |= HEAD_COLUMN_BITMASK;
+
+		if (!_setOriginalHead) {
+			_setOriginalHead = true;
+
+			_originalHead = _head;
+		}
+
+		_head = head;
+	}
+
+	@Override
+	public void populateVersionModel(
+		StyleBookEntryVersion styleBookEntryVersion) {
+
+		styleBookEntryVersion.setGroupId(getGroupId());
+		styleBookEntryVersion.setCompanyId(getCompanyId());
+		styleBookEntryVersion.setUserId(getUserId());
+		styleBookEntryVersion.setUserName(getUserName());
+		styleBookEntryVersion.setCreateDate(getCreateDate());
+		styleBookEntryVersion.setName(getName());
+		styleBookEntryVersion.setStyleBookEntryKey(getStyleBookEntryKey());
+		styleBookEntryVersion.setPreviewFileEntryId(getPreviewFileEntryId());
+	}
+
 	@JSON
 	@Override
 	public long getMvccVersion() {
@@ -374,6 +426,36 @@ public class StyleBookEntryModelImpl
 	@Override
 	public void setMvccVersion(long mvccVersion) {
 		_mvccVersion = mvccVersion;
+	}
+
+	@JSON
+	@Override
+	public long getHeadId() {
+		return _headId;
+	}
+
+	@Override
+	public void setHeadId(long headId) {
+		_columnBitmask |= HEADID_COLUMN_BITMASK;
+
+		if (!_setOriginalHeadId) {
+			_setOriginalHeadId = true;
+
+			_originalHeadId = _headId;
+		}
+
+		if (headId >= 0) {
+			setHead(false);
+		}
+		else {
+			setHead(true);
+		}
+
+		_headId = headId;
+	}
+
+	public long getOriginalHeadId() {
+		return _originalHeadId;
 	}
 
 	@JSON
@@ -577,6 +659,7 @@ public class StyleBookEntryModelImpl
 		StyleBookEntryImpl styleBookEntryImpl = new StyleBookEntryImpl();
 
 		styleBookEntryImpl.setMvccVersion(getMvccVersion());
+		styleBookEntryImpl.setHeadId(getHeadId());
 		styleBookEntryImpl.setStyleBookEntryId(getStyleBookEntryId());
 		styleBookEntryImpl.setGroupId(getGroupId());
 		styleBookEntryImpl.setCompanyId(getCompanyId());
@@ -657,6 +740,15 @@ public class StyleBookEntryModelImpl
 	public void resetOriginalValues() {
 		StyleBookEntryModelImpl styleBookEntryModelImpl = this;
 
+		styleBookEntryModelImpl._originalHeadId =
+			styleBookEntryModelImpl._headId;
+
+		styleBookEntryModelImpl._setOriginalHeadId = false;
+
+		styleBookEntryModelImpl._originalHead = styleBookEntryModelImpl._head;
+
+		styleBookEntryModelImpl._setOriginalHead = false;
+
 		styleBookEntryModelImpl._originalGroupId =
 			styleBookEntryModelImpl._groupId;
 
@@ -676,6 +768,10 @@ public class StyleBookEntryModelImpl
 			new StyleBookEntryCacheModel();
 
 		styleBookEntryCacheModel.mvccVersion = getMvccVersion();
+
+		styleBookEntryCacheModel.headId = getHeadId();
+
+		styleBookEntryCacheModel.head = isHead();
 
 		styleBookEntryCacheModel.styleBookEntryId = getStyleBookEntryId();
 
@@ -794,6 +890,12 @@ public class StyleBookEntryModelImpl
 	}
 
 	private long _mvccVersion;
+	private long _headId;
+	private long _originalHeadId;
+	private boolean _setOriginalHeadId;
+	private boolean _head;
+	private boolean _originalHead;
+	private boolean _setOriginalHead;
 	private long _styleBookEntryId;
 	private long _groupId;
 	private long _originalGroupId;

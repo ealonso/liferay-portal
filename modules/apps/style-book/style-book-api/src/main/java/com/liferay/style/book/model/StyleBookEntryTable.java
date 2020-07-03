@@ -35,6 +35,10 @@ public class StyleBookEntryTable extends BaseTable<StyleBookEntryTable> {
 
 	public final Column<StyleBookEntryTable, Long> mvccVersion = createColumn(
 		"mvccVersion", Long.class, Types.BIGINT, Column.FLAG_NULLITY);
+	public final Column<StyleBookEntryTable, Long> headId = createColumn(
+		"headId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
+	public final Column<StyleBookEntryTable, Boolean> head = createColumn(
+		"head", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 	public final Column<StyleBookEntryTable, Long> styleBookEntryId =
 		createColumn(
 			"styleBookEntryId", Long.class, Types.BIGINT, Column.FLAG_PRIMARY);
