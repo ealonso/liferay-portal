@@ -81,10 +81,7 @@ public class StyleBookEntryLocalServiceImpl
 
 		validateStyleBookEntryKey(groupId, styleBookEntryKey);
 
-		long styleBookEntryId = counterLocalService.increment();
-
-		StyleBookEntry styleBookEntry = styleBookEntryPersistence.create(
-			styleBookEntryId);
+		StyleBookEntry styleBookEntry = create();
 
 		styleBookEntry.setGroupId(groupId);
 		styleBookEntry.setCompanyId(companyId);
@@ -94,7 +91,7 @@ public class StyleBookEntryLocalServiceImpl
 		styleBookEntry.setName(name);
 		styleBookEntry.setStyleBookEntryKey(styleBookEntryKey);
 
-		return styleBookEntryPersistence.update(styleBookEntry);
+		return updateDraft(styleBookEntry);
 	}
 
 	@Override
@@ -148,8 +145,8 @@ public class StyleBookEntryLocalServiceImpl
 	public StyleBookEntry fetchStyleBookEntry(
 		long groupId, String styleBookEntryKey) {
 
-		return styleBookEntryPersistence.fetchByG_SBEK(
-			groupId, _getStyleBookEntryKey(styleBookEntryKey));
+		return styleBookEntryPersistence.fetchByG_SBEK_First(
+			groupId, _getStyleBookEntryKey(styleBookEntryKey), null);
 	}
 
 	@Override
@@ -238,7 +235,7 @@ public class StyleBookEntryLocalServiceImpl
 
 		styleBookEntryKey = _getStyleBookEntryKey(styleBookEntryKey);
 
-		StyleBookEntry styleBookEntry = styleBookEntryPersistence.fetchByG_SBEK(
+		StyleBookEntry styleBookEntry = fetchStyleBookEntry(
 			groupId, styleBookEntryKey);
 
 		if (styleBookEntry != null) {
@@ -257,9 +254,8 @@ public class StyleBookEntryLocalServiceImpl
 		int count = 0;
 
 		while (true) {
-			StyleBookEntry styleBookEntry =
-				styleBookEntryPersistence.fetchByG_SBEK(
-					groupId, curStyleBookEntryKey);
+			StyleBookEntry styleBookEntry = fetchStyleBookEntry(
+				groupId, curStyleBookEntryKey);
 
 			if (styleBookEntry == null) {
 				return curStyleBookEntryKey;
