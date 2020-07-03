@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.style.book.service.StyleBookEntryService;
 import com.liferay.style.book.web.internal.constants.StyleBookPortletKeys;
 import com.liferay.style.book.web.internal.handler.StyleBookEntryExceptionRequestHandler;
@@ -81,9 +80,6 @@ public class UpdateStyleBookEntryMVCActionCommand extends BaseMVCActionCommand {
 				actionRequest, actionResponse, portalException);
 		}
 	}
-
-	@Reference
-	private Portal _portal;
 
 	@Reference
 	private StyleBookEntryExceptionRequestHandler
