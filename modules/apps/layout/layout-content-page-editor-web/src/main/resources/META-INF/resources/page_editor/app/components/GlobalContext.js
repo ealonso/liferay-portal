@@ -42,6 +42,8 @@ export default function GlobalContextProvider({children, useIframe}) {
 				iframeElement.contentDocument.getElementById('content');
 
 			if (element) {
+				iframeElement.contentDocument.head.innerHTML += `<link href="${config.getIframeContentCssURL}" rel="stylesheet" />`;
+
 				element.innerHTML = '';
 
 				iframeElement.contentWindow.requestAnimationFrame(() => {
