@@ -71,12 +71,19 @@ export default function TabsPanel({tabs}) {
 									}
 								>
 									<ul className="list-unstyled">
-										{collection.children.map((item) => (
-											<TabItem
-												item={item}
-												key={item.itemId}
-											/>
-										))}
+										{collection.children.map(
+											(item, index) => (
+												<React.Fragment key={index}>
+													<TabItem item={item} />
+													{item.portletItems
+														?.length && (
+														<TabPortletItem
+															item={item}
+														/>
+													)}
+												</React.Fragment>
+											)
+										)}
 									</ul>
 								</Collapse>
 							))}
@@ -87,3 +94,8 @@ export default function TabsPanel({tabs}) {
 		</>
 	);
 }
+
+const TabPortletItem = ({item}) =>
+	item.portletItems.map((portlet, index) => (
+		<TabItem indentation item={portlet} key={index} />
+	));
