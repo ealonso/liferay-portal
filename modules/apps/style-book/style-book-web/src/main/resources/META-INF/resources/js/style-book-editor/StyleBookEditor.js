@@ -12,10 +12,67 @@
  * details.
  */
 
-import React from 'react';
+import {fetch, objectToFormData} from 'frontend-js-web';
+import React, {useEffect, useState} from 'react';
 
-const StyleBookEditor = () => {
-	return <div className="style-boook-editor-container">Editor</div>;
+import PagePreview from './PagePreview';
+import Sidebar from './Sidebar';
+import {StyleBookContextProvider} from './StyleBookContext';
+
+const TOKEN_CATEGORIES = [
+	{
+		name: 'category1',
+		tokenSets: [
+			{name: 'General', tokens: [{name: 'portlet-topper-bg'}]},
+			{name: 'Colors', tokens: [{name: 'primary'}, {name: 'blue'}]},
+		],
+	},
+	{
+		name: 'category2',
+		tokenSets: [
+			{name: 'Custom', tokens: [{name: 'fontSize'}]},
+			{name: 'Colors', tokens: [{name: 'secondary'}, {name: 'blue'}]},
+		],
+	},
+];
+
+const StyleBookEditor = ({
+	namespace,
+	publishURL,
+	saveDraftURL,
+	tokenCategories,
+	tokenValues: initialTokenValues,
+} = {}) => {
+	const [tokenValues, setTokenValues] = useState(initialTokenValues);
+
+	useEffect(() => {
+		if (tokenValues === initialTokenValues) {
+			return;
+		}
+
+		const body = objectToFormData({
+			[`${namespace}tokenValues`]: JSON.stringify(tokenValues),
+		});
+
+		fetch(saveDraftURL, {body, method: 'post'});
+	}, [initialTokenValues, namespace, saveDraftURL, tokenValues]);
+
+	return (
+		<StyleBookContextProvider
+			value={{
+				publishURL,
+				saveDraftURL,
+				setTokenValues,
+				tokenCategories: TOKEN_CATEGORIES,
+				tokenValues,
+			}}
+		>
+			<div className="style-book-editor">
+				<PagePreview />
+				<Sidebar />
+			</div>
+		</StyleBookContextProvider>
+	);
 };
 
 export default StyleBookEditor;
