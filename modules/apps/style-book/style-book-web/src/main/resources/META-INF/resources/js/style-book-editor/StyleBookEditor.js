@@ -12,17 +12,35 @@
  * details.
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 
 import PagePreview from './PagePreview';
 import Sidebar from './Sidebar';
+import {StyleBookContextProvider} from './StyleBookContext';
 
-const StyleBookEditor = () => {
+const StyleBookEditor = ({
+	publishURL,
+	saveDraftURL,
+	tokenCategories,
+	tokenValues: initialTokenValues,
+}) => {
+	const [tokenValues, setTokenValues] = useState(initialTokenValues);
+
 	return (
-		<div className="style-book-editor">
-			<PagePreview />
-			<Sidebar />
-		</div>
+		<StyleBookContextProvider
+			value={{
+				publishURL,
+				saveDraftURL,
+				setTokenValues,
+				tokenCategories,
+				tokenValues,
+			}}
+		>
+			<div className="style-book-editor">
+				<PagePreview />
+				<Sidebar />
+			</div>
+		</StyleBookContextProvider>
 	);
 };
 
