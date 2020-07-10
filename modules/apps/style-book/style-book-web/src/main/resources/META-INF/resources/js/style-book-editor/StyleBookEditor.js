@@ -19,13 +19,30 @@ import PagePreview from './PagePreview';
 import Sidebar from './Sidebar';
 import {StyleBookContextProvider} from './StyleBookContext';
 
+const TOKEN_CATEGORIES = [
+	{
+		name: 'category1',
+		tokenSets: [
+			{name: 'General', tokens: [{name: 'portlet-topper-bg'}]},
+			{name: 'Colors', tokens: [{name: 'primary'}, {name: 'blue'}]},
+		],
+	},
+	{
+		name: 'category2',
+		tokenSets: [
+			{name: 'Custom', tokens: [{name: 'fontSize'}]},
+			{name: 'Colors', tokens: [{name: 'secondary'}, {name: 'blue'}]},
+		],
+	},
+];
+
 const StyleBookEditor = ({
 	namespace,
 	publishURL,
 	saveDraftURL,
 	tokenCategories,
 	tokenValues: initialTokenValues,
-}) => {
+} = {}) => {
 	const [tokenValues, setTokenValues] = useState(initialTokenValues);
 
 	useEffect(() => {
@@ -46,7 +63,7 @@ const StyleBookEditor = ({
 				publishURL,
 				saveDraftURL,
 				setTokenValues,
-				tokenCategories,
+				tokenCategories: TOKEN_CATEGORIES,
 				tokenValues,
 			}}
 		>
