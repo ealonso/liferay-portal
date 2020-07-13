@@ -19,20 +19,21 @@ import com.liferay.portal.kernel.exception.PortalException;
 /**
  * @author Jorge Ferrer
  */
-public class NoSuchClassTypeException extends PortalException {
+public class NoSuchFormVariationException extends PortalException {
 
-	public NoSuchClassTypeException(long classTypeId, Throwable cause) {
+	public NoSuchFormVariationException(
+		String formVariationKey, Throwable cause) {
+
 		super(
-			"Unable to get class type found with class type ID " + classTypeId,
-			cause);
+			"Unable to get form variation with key " + formVariationKey, cause);
 
-		_classTypeId = classTypeId;
+		_formVariationKey = formVariationKey;
 	}
 
-	public long getClassTypeId() {
-		return _classTypeId;
+	public String getFormVariationKey() {
+		return _formVariationKey;
 	}
 
-	private final long _classTypeId;
+	private final String _formVariationKey;
 
 }

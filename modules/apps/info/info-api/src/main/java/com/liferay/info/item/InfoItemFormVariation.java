@@ -12,27 +12,31 @@
  * details.
  */
 
-package com.liferay.info.exception;
+package com.liferay.info.item;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.info.localized.InfoLocalizedValue;
 
 /**
  * @author Jorge Ferrer
  */
-public class NoSuchClassTypeException extends PortalException {
+public class InfoItemFormVariation {
 
-	public NoSuchClassTypeException(long classTypeId, Throwable cause) {
-		super(
-			"Unable to get class type found with class type ID " + classTypeId,
-			cause);
+	public InfoItemFormVariation(
+		String key, InfoLocalizedValue<String> labelInfoLocalizedValue) {
 
-		_classTypeId = classTypeId;
+		_key = key;
+		_labelInfoLocalizedValue = labelInfoLocalizedValue;
 	}
 
-	public long getClassTypeId() {
-		return _classTypeId;
+	public String getKey() {
+		return _key;
 	}
 
-	private final long _classTypeId;
+	public InfoLocalizedValue<String> getLabelInfoLocalizedValue() {
+		return _labelInfoLocalizedValue;
+	}
+
+	private final String _key;
+	private final InfoLocalizedValue<String> _labelInfoLocalizedValue;
 
 }

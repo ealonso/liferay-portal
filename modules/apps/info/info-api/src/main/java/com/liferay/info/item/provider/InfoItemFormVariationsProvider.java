@@ -12,27 +12,18 @@
  * details.
  */
 
-package com.liferay.info.exception;
+package com.liferay.info.item.provider;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.info.item.InfoItemFormVariation;
+
+import java.util.Collection;
 
 /**
  * @author Jorge Ferrer
  */
-public class NoSuchClassTypeException extends PortalException {
+public interface InfoItemFormVariationsProvider<T> {
 
-	public NoSuchClassTypeException(long classTypeId, Throwable cause) {
-		super(
-			"Unable to get class type found with class type ID " + classTypeId,
-			cause);
-
-		_classTypeId = classTypeId;
-	}
-
-	public long getClassTypeId() {
-		return _classTypeId;
-	}
-
-	private final long _classTypeId;
+	public Collection<InfoItemFormVariation> getInfoItemFormVariations(
+		long[] scopeGroupIds);
 
 }
