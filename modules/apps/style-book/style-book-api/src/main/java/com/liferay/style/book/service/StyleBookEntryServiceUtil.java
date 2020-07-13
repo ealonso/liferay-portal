@@ -90,6 +90,13 @@ public class StyleBookEntryServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static com.liferay.style.book.model.StyleBookEntry publishDraft(
+			long styleBookEntryId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().publishDraft(styleBookEntryId);
+	}
+
 	public static com.liferay.style.book.model.StyleBookEntry
 			updateDefaultStyleBookEntry(
 				long styleBookEntryId, boolean defaultStyleBookEntry)
