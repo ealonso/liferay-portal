@@ -38,7 +38,9 @@ const TOKEN_CATEGORIES = [
 
 const StyleBookEditor = ({
 	namespace,
+	previewURL,
 	publishURL,
+	styleBookEntryId,
 	saveDraftURL,
 	tokenCategories = [],
 	tokenValues: initialTokenValues = {},
@@ -52,18 +54,27 @@ const StyleBookEditor = ({
 
 		const body = objectToFormData({
 			[`${namespace}tokenValues`]: JSON.stringify(tokenValues),
+			[`${namespace}styleBookEntryId`]: styleBookEntryId,
 		});
 
 		fetch(saveDraftURL, {body, method: 'post'});
-	}, [initialTokenValues, namespace, saveDraftURL, tokenValues]);
+	}, [
+		initialTokenValues,
+		namespace,
+		saveDraftURL,
+		styleBookEntryId,
+		tokenValues,
+	]);
 
 	return (
 		<StyleBookContextProvider
 			value={{
 				namespace,
+				previewURL,
 				publishURL,
 				saveDraftURL,
 				setTokenValues,
+				styleBookEntryId,
 				tokenCategories: TOKEN_CATEGORIES,
 				tokenValues,
 			}}
