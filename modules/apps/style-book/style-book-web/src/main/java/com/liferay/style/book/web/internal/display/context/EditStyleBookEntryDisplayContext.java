@@ -16,8 +16,11 @@ package com.liferay.style.book.web.internal.display.context;
 
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.style.book.model.StyleBookEntry;
@@ -51,6 +54,15 @@ public class EditStyleBookEntryDisplayContext {
 	public Map<String, Object> getStyleBookEditorData() {
 		return HashMapBuilder.<String, Object>put(
 			"namespace", _renderResponse.getNamespace()
+		).put(
+			"previewURL",
+			() -> {
+				String layoutURL = PortalUtil.getLayoutFriendlyURL(
+					_themeDisplay.getLayout(), _themeDisplay);
+
+				return HttpUtil.addParameter(
+					layoutURL, "p_l_mode", Constants.PREVIEW);
+			}
 		).put(
 			"publishURL",
 			() -> {
