@@ -63,7 +63,7 @@ definition {
 			structureDescription = "Structure Description",
 			structureName = "Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Text",
 			fieldFieldLabel = "Text",
 			fieldName = "Text");
@@ -257,7 +257,7 @@ definition {
 			structureDescription = "WC Structure Description",
 			structureName = "WC Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Text",
 			fieldFieldLabel = "Text",
 			fieldName = "Text");
@@ -492,7 +492,7 @@ definition {
 			structureDescription = "Structure Description",
 			structureName = "Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Text",
 			fieldFieldLabel = "Text",
 			fieldName = "Text");
@@ -1436,7 +1436,7 @@ definition {
 			structureDescription = "WC Structure Description",
 			structureName = "WC Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Text",
 			fieldFieldLabel = "Text",
 			fieldName = "Text");
@@ -2415,12 +2415,7 @@ definition {
 			structureDescription = "Structure Description",
 			structureName = "Structure Name");
 
-		for (var structureFieldName : list "Text,Text Box") {
-			DynamicDataMapping.addField(
-				field = "${structureFieldName}",
-				fieldFieldLabel = "${structureFieldName}",
-				fieldName = StringUtil.replace("${structureFieldName}", " ", ""));
-		}
+		DataEngine.addFields(fieldTypeList = "Text,Rich Text");
 
 		WebContentStructures.saveCP(structureName = "Structure Name");
 
@@ -2431,7 +2426,7 @@ definition {
 		WebContentTemplates.addCP(
 			structureName = "Structure Name",
 			templateDescription = "Template Description",
-			templateFieldNames = "Text,Text Box",
+			templateFieldNames = "Text,Rich Text",
 			templateName = "Template Name");
 
 		Navigator.openURL();
@@ -3740,7 +3735,7 @@ definition {
 			structureDescription = "Structure Description",
 			structureName = "Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Documents and Media",
 			fieldFieldLabel = "Documents and Media",
 			fieldName = "DocumentsandMedia");
@@ -3832,7 +3827,7 @@ definition {
 			structureDescription = "Structure Description",
 			structureName = "Structure Name");
 
-		DynamicDataMapping.addField(
+		DataEngine.addField(
 			field = "Image",
 			fieldFieldLabel = "Image",
 			fieldName = StringUtil.replace("Image", " ", ""));
