@@ -473,8 +473,20 @@ definition {
 
 	@priority = "5"
 	test ImportAndUseGlobalStructureAndTemplate {
-		property portal.acceptance = "true";
-		property testray.component.names = "Training";
+		WebContentNavigator.openWebContentAdmin(siteURLKey = "global");
+
+		NavItem.gotoStructures();
+
+		WebContentStructures.addCP(
+			structureDescription = "Global WC Structure Description",
+			structureName = "Global WC Structure Name");
+
+		DataEngine.addField(
+			fieldFieldLabel = "Text",
+			fieldName = "Text",
+			fieldType = "Text");
+
+		WebContentStructures.saveCP(structureName = "Global WC Structure Name");
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");
 
@@ -525,27 +537,38 @@ definition {
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "global");
 
+		NavItem.gotoTemplates();
+
+		WebContentTemplates.addCP(
+			structureName = "Global WC Structure Name",
+			templateDescription = "Global WC Template Description",
+			templateFieldNames = "Text",
+			templateName = "Global WC Template Name");
+
+		WebContentNavigator.openWebContentAdmin(siteURLKey = "global");
+
+		LAR.exportPortlet(larFileName = "structure-templates.lar");
+
+		WebContentNavigator.openWebContentAdmin(siteURLKey = "global");
+
 		LAR.importPortlet(larFileName = "structure-templates.lar");
 
 		WebContentNavigator.openWebContentAdmin(siteURLKey = "test-site-name");
 
-		WebContentNavigator.gotoAddWithStructureCP(structureName = "3 Column with Images");
+		WebContentNavigator.gotoAddWithStructureCP(structureName = "Global WC Structure Name");
 
 		WebContent.addWithStructureCP(
-			fieldName = "title",
-			webContentRichText = "Green Waste",
-			webContentRichTextList = "Mowed Lawns,Mulched Branches,Compost Bin",
-			webContentTitle = "Agricultural Science Front Page");
+			webContentText = "Green Waste",
+			webContentTitle = "Web Content Title");
 
 		PortletEntry.publish();
 
-		WebContent.viewTitle(webContentTitle = "Agricultural Science Front Page");
+		WebContent.viewTitle(webContentTitle = "Web Content Title");
 
 		WebContent.viewWithStructureCP(
-			fieldName = "title",
-			webContentRichText = "Green Waste",
-			webContentRichTextList = "Mowed Lawns,Mulched Branches,Compost Bin",
-			webContentTitle = "Agricultural Science Front Page");
+			fieldName = "text",
+			webContentText = "Green Waste",
+			webContentTitle = "Web Content Title");
 	}
 
 	@priority = "4"
