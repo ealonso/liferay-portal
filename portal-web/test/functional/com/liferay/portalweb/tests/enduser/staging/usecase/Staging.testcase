@@ -64,9 +64,8 @@ definition {
 			structureName = "Structure Name");
 
 		DataEngine.addField(
-			field = "Text",
 			fieldFieldLabel = "Text",
-			fieldName = "Text");
+			fieldType = "Text");
 
 		WebContentStructures.saveCP(structureName = "Structure Name");
 
@@ -258,9 +257,8 @@ definition {
 			structureName = "WC Structure Name");
 
 		DataEngine.addField(
-			field = "Text",
 			fieldFieldLabel = "Text",
-			fieldName = "Text");
+			fieldType = "Text");
 
 		WebContentStructures.saveCP(structureName = "WC Structure Name");
 
@@ -493,9 +491,8 @@ definition {
 			structureName = "Structure Name");
 
 		DataEngine.addField(
-			field = "Text",
 			fieldFieldLabel = "Text",
-			fieldName = "Text");
+			fieldType = "Text");
 
 		WebContentStructures.saveCP(structureName = "Structure Name");
 
@@ -1437,9 +1434,8 @@ definition {
 			structureName = "WC Structure Name");
 
 		DataEngine.addField(
-			field = "Text",
 			fieldFieldLabel = "Text",
-			fieldName = "Text");
+			fieldType = "Text");
 
 		DynamicDataMapping.editFieldPredefinedValue(
 			field = "Text",
@@ -3736,9 +3732,8 @@ definition {
 			structureName = "Structure Name");
 
 		DataEngine.addField(
-			field = "Documents and Media",
 			fieldFieldLabel = "Documents and Media",
-			fieldName = "DocumentsandMedia");
+			fieldType = "Documents and Media");
 
 		WebContentStructures.saveCP(structureName = "Structure Name");
 
@@ -3828,9 +3823,8 @@ definition {
 			structureName = "Structure Name");
 
 		DataEngine.addField(
-			field = "Image",
 			fieldFieldLabel = "Image",
-			fieldName = StringUtil.replace("Image", " ", ""));
+			fieldType = "Image");
 
 		DynamicDataMapping.selectDynamicDataMappingFrame();
 
