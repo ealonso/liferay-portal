@@ -22,6 +22,108 @@ import {config, initializeConfig} from './config';
 import {DRAFT_STATUS} from './constants/draftStatusConstants';
 import {useCloseProductMenu} from './useCloseProductMenu';
 
+const TOKEN_CATEGORIES = [
+	{
+		label: 'general',
+		name: 'general',
+		tokenSets: [
+			{
+				label: 'utility',
+				name: 'utility',
+				tokens: [
+					{
+						label: 'border-radius',
+						mappings: [
+							{type: 'cssVariable', value: 'border-radius'},
+						],
+						name: 'borderRadius',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'Number',
+					},
+					{
+						label: 'border-radius-sm',
+						mappings: [
+							{type: 'cssVariable', value: 'border-radius-sm'},
+						],
+						name: 'borderRadiusSm',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'Integer',
+					},
+					{
+						label: 'border-radius-lg',
+						mappings: [
+							{type: 'cssVariable', value: 'border-radius-lg'},
+						],
+						name: 'borderRadiusLg',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'Boolean',
+					},
+					{
+						label: 'border-radius-circle',
+						mappings: [
+							{
+								type: 'cssVariable',
+								value: 'border-radius-circle',
+							},
+						],
+						name: 'borderRadiusCircle',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'String',
+					},
+					{
+						label: 'rounded-pill',
+						mappings: [
+							{type: 'cssVariable', value: 'rounded-pill'},
+						],
+						name: 'roundedPill',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'String',
+					},
+					{
+						label: 'box-shadow',
+						mappings: [{type: 'cssVariable', value: 'box-shadow'}],
+						name: 'boxShadow',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'String',
+					},
+					{
+						label: 'box-shadow-sm',
+						mappings: [
+							{type: 'cssVariable', value: 'box-shadow-sm'},
+						],
+						name: 'boxShadowSm',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'String',
+						validValues: [
+							{label: 'big', value: 'big'},
+							{label: 'medium', value: 'medium'},
+							{label: 'small', value: 'small'},
+						],
+					},
+					{
+						editorType: 'ColorPicker',
+						label: 'portlet-topper-background',
+						mappings: [
+							{type: 'cssVariable', value: 'portlet-topper-bg'},
+						],
+						name: 'portlet-topper-bg',
+						tokenCategoryName: 'general',
+						tokenSetName: 'utility',
+						type: 'String',
+					},
+				],
+			},
+		],
+	},
+];
+
 const StyleBookEditor = ({tokenValues: initialTokenValues}) => {
 	useCloseProductMenu();
 
@@ -87,7 +189,8 @@ export default function ({
 		redirectURL,
 		saveDraftURL,
 		styleBookEntryId,
-		tokenCategories,
+		tokenCategories: TOKEN_CATEGORIES,
+		tokenCategories1: tokenCategories,
 	});
 
 	return <StyleBookEditor tokenValues={tokenValues} />;
