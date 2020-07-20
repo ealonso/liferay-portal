@@ -173,7 +173,7 @@
 <!--IMAGE_FIELD-->
 <tr>
 	<td>IMAGE_FIELD_SELECT</td>
-	<td>//div[contains(@id, JournalPortlet_Image)]//div[contains(@class, 'button-holder')]//span[contains(text(), 'Select')]</td>
+	<td>//div[@class='ddm-field']//button[contains(.,'Select')]</td>
 	<td></td>
 </tr>
 </tbody>
