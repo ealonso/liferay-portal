@@ -176,6 +176,12 @@
 	<td>//div[@class='ddm-field']//button[contains(.,'Select')]</td>
 	<td></td>
 </tr>
+<!--WC_FIELD-->
+<tr>
+	<td>WC_FIELD_SELECT</td>
+	<td>//div[@data-field-name='WebContent']//button[contains(.,'Select')]</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>
