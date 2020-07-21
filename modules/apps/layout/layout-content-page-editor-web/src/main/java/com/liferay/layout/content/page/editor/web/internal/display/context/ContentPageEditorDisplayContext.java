@@ -495,7 +495,7 @@ public class ContentPageEditorDisplayContext {
 	}
 
 	public List<Map<String, Object>> getSidebarPanels() {
-		return getSidebarPanels(false);
+		return getSidebarPanels(_getPageType());
 	}
 
 	public boolean isConversionDraft() {
@@ -591,9 +591,7 @@ public class ContentPageEditorDisplayContext {
 		return SegmentsExperienceConstants.ID_DEFAULT;
 	}
 
-	protected List<Map<String, Object>> getSidebarPanels(
-		boolean pageIsDisplayPage) {
-
+	protected List<Map<String, Object>> getSidebarPanels(int pageType) {
 		if (_sidebarPanels != null) {
 			return _sidebarPanels;
 		}
@@ -603,10 +601,9 @@ public class ContentPageEditorDisplayContext {
 		for (ContentPageEditorSidebarPanel contentPageEditorSidebarPanel :
 				_contentPageEditorSidebarPanels) {
 
-			if (!contentPageEditorSidebarPanel.isVisible(pageIsDisplayPage) ||
-				!contentPageEditorSidebarPanel.isVisible(
+			if (!contentPageEditorSidebarPanel.isVisible(
 					themeDisplay.getPermissionChecker(), themeDisplay.getPlid(),
-					pageIsDisplayPage)) {
+					pageType)) {
 
 				continue;
 			}
