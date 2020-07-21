@@ -226,9 +226,9 @@ definition {
 
 		WebContentNavigator.gotoEditStructure(structureName = "WC Structure Name");
 
-		//for (var structureFieldName : list "Text,Rich Text") {
-		//	DynamicDataMapping.editFieldLocalizable(fieldFieldLabel = "${structureFieldName}");
-		//}
+		for (var structureFieldName : list "Text,Rich Text") {
+			DynamicDataMapping.editFieldLocalizable(fieldFieldLabel = "${structureFieldName}");
+		}
 
 		WebContentStructures.saveCP();
 
@@ -942,7 +942,8 @@ definition {
 
 		DataEngine.addField(
 			fieldFieldLabel = "Image",
-			fieldType = "Image");
+			fieldType = "Image",
+			rowNum = "1");
 
 		WebContentStructures.saveCP(structureName = "WC Structure Name");
 
@@ -1681,9 +1682,8 @@ definition {
 			structureName = "WC Structure Name");
 
 		DataEngine.addField(
-			fieldFieldLabel = "HTML",
-			fieldType = "HTML",
-			structureFieldName = "HTML");
+			fieldFieldLabel = "Text",
+			fieldType = "Text");
 
 		WebContentStructures.saveCP(structureName = "WC Structure Name");
 
