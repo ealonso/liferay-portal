@@ -64,6 +64,10 @@ export default function PagePreview() {
 							'endNavigate',
 							loadTokenValues
 						);
+
+						registerNavigationListeners(
+							iframeRef.current.contentWindow
+						);
 					}
 					loadTokenValues(iframeRef.current, tokensValues);
 				}}
@@ -72,4 +76,46 @@ export default function PagePreview() {
 			/>
 		</div>
 	);
+}
+
+function registerNavigationListeners(window) {
+	if (window.Liferay.SPA && window.Liferay.SPA.app) {
+		window.Liferay.SPA.app.on('beforeNavigate', (event) => {
+			event.path = addPreviewParam(event.path);
+
+			return event;
+		});
+	}
+	else {
+		window.addEventListener(
+			'click',
+			(event) => {
+				const anchor = event.target.closest('[href]');
+
+				if (anchor && anchor.href && anchor.href !== 'javascript:;') {
+					event.preventDefault();
+					event.stopImmediatePropagation();
+
+					window.location.href = addPreviewParam(anchor.href);
+				}
+			},
+			true
+		);
+
+		window.addEventListener(
+			'submit',
+			(event) => {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			},
+			true
+		);
+	}
+}
+
+function addPreviewParam(href) {
+	const url = new URL(href);
+	url.searchParams.append('p_l_mode', 'preview');
+
+	return url.href;
 }
