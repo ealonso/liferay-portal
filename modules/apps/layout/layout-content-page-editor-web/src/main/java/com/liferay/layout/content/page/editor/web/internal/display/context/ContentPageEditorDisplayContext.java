@@ -62,6 +62,7 @@ import com.liferay.layout.content.page.editor.web.internal.util.layout.structure
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.layout.page.template.util.PaddingConverter;
 import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.layout.util.constants.LayoutConverterTypeConstants;
@@ -347,6 +348,8 @@ public class ContentPageEditorDisplayContext {
 				"markItemForDeletionURL",
 				getFragmentEntryActionURL(
 					"/content_layout/mark_item_for_deletion")
+			).put(
+				"masterLayouts", _getMasterLayouts()
 			).put(
 				"masterUsed", _isMasterUsed()
 			).put(
@@ -1508,6 +1511,35 @@ public class ContentPageEditorDisplayContext {
 		}
 
 		return mappedInfoItems;
+	}
+
+	private List<Map<String, Object>> _getMasterLayouts() {
+		ArrayList<Map<String, Object>> masterLayouts = new ArrayList<>();
+
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
+			LayoutPageTemplateEntryServiceUtil.getLayoutPageTemplateEntries(
+				themeDisplay.getScopeGroupId(),
+				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT,
+				WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS,
+				new LayoutPageTemplateEntryNameComparator(true));
+
+		for (LayoutPageTemplateEntry layoutPageTemplateEntry :
+				layoutPageTemplateEntries) {
+
+			masterLayouts.add(
+				HashMapBuilder.<String, Object>put(
+					"imagePreviewURL",
+					layoutPageTemplateEntry.getImagePreviewURL(themeDisplay)
+				).put(
+					"masterLayoutId",
+					layoutPageTemplateEntry.getLayoutPageTemplateEntryId()
+				).put(
+					"name", layoutPageTemplateEntry.getName()
+				).build());
+		}
+
+		return masterLayouts;
 	}
 
 	private LayoutStructure _getMasterLayoutStructure() {
