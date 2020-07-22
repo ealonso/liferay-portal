@@ -84,15 +84,15 @@ public class StyleBookEntryServiceSoap {
 
 	public static com.liferay.style.book.model.StyleBookEntrySoap
 			addStyleBookEntry(
-				long groupId, String name, String styleBookEntryKey,
-				String tokensValues,
+				long groupId, String frontendTokensValues, String name,
+				String styleBookEntryKey,
 				com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 
 		try {
 			com.liferay.style.book.model.StyleBookEntry returnValue =
 				StyleBookEntryServiceUtil.addStyleBookEntry(
-					groupId, name, styleBookEntryKey, tokensValues,
+					groupId, frontendTokensValues, name, styleBookEntryKey,
 					serviceContext);
 
 			return com.liferay.style.book.model.StyleBookEntrySoap.toSoapModel(
@@ -263,13 +263,13 @@ public class StyleBookEntryServiceSoap {
 
 	public static com.liferay.style.book.model.StyleBookEntrySoap
 			updateStyleBookEntry(
-				long styleBookEntryId, String name, String tokensValues)
+				long styleBookEntryId, String frontendTokensValues, String name)
 		throws RemoteException {
 
 		try {
 			com.liferay.style.book.model.StyleBookEntry returnValue =
 				StyleBookEntryServiceUtil.updateStyleBookEntry(
-					styleBookEntryId, name, tokensValues);
+					styleBookEntryId, frontendTokensValues, name);
 
 			return com.liferay.style.book.model.StyleBookEntrySoap.toSoapModel(
 				returnValue);
@@ -282,13 +282,14 @@ public class StyleBookEntryServiceSoap {
 	}
 
 	public static com.liferay.style.book.model.StyleBookEntrySoap
-			updateTokensValues(long styleBookEntryId, String tokensValue)
+			updateFrontendTokensValues(
+				long styleBookEntryId, String frontendTokensValues)
 		throws RemoteException {
 
 		try {
 			com.liferay.style.book.model.StyleBookEntry returnValue =
-				StyleBookEntryServiceUtil.updateTokensValues(
-					styleBookEntryId, tokensValue);
+				StyleBookEntryServiceUtil.updateFrontendTokensValues(
+					styleBookEntryId, frontendTokensValues);
 
 			return com.liferay.style.book.model.StyleBookEntrySoap.toSoapModel(
 				returnValue);
