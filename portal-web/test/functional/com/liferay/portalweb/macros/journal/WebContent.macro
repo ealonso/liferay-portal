@@ -525,7 +525,7 @@ definition {
 		if (isSet(webContentColor)) {
 			Click(
 				key_fieldName = "Color",
-				locator1 = "TextInput#DDM");
+				locator1 = "Button#COLOR_SELECT");
 
 			Click(
 				key_colorCode = "${webContentColor}",
