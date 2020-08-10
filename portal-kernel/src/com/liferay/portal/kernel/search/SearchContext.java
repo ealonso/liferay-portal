@@ -239,6 +239,10 @@ public class SearchContext implements Serializable {
 		return _includeFolders;
 	}
 
+	public boolean isIncludeInternalAssetCategories() {
+		return _includeInternalAssetCategories;
+	}
+
 	public boolean isIncludeLiveGroups() {
 		return _includeLiveGroups;
 	}
@@ -333,6 +337,13 @@ public class SearchContext implements Serializable {
 
 	public void setGroupIds(long[] groupIds) {
 		_groupIds = groupIds;
+	}
+
+	public void setIncludeInternalAssetCategories(
+		boolean includeInternalAssetCategories) {
+
+		_includeInternalAssetCategories =
+			includeInternalAssetCategories;
 	}
 
 	public void setIncludeAttachments(boolean includeAttachments) {
@@ -438,6 +449,7 @@ public class SearchContext implements Serializable {
 	private boolean _includeAttachments;
 	private boolean _includeDiscussions;
 	private boolean _includeFolders = true;
+	private boolean _includeInternalAssetCategories;
 	private boolean _includeLiveGroups = true;
 	private boolean _includeStagingGroups = true;
 	private String _keywords;
