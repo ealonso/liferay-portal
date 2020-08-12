@@ -86,6 +86,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsParamUtil;
@@ -433,7 +434,7 @@ public class AssetPublisherDisplayContext {
 			_assetEntryResults = _assetPublisherHelper.getAssetEntryResults(
 				getSearchContainer(), getAssetEntryQuery(),
 				_themeDisplay.getLayout(), _portletPreferences,
-				getPortletName(), _themeDisplay.getLocale(),
+				getPortletName(), LocaleUtil.getSiteDefault(),
 				_themeDisplay.getTimeZone(), _themeDisplay.getCompanyId(),
 				_themeDisplay.getScopeGroupId(), _themeDisplay.getUserId(),
 				getClassNameIds(), null);
