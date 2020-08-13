@@ -23,14 +23,15 @@ import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.ListUtil;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Rubén Pulido
@@ -58,16 +59,22 @@ public class AssetEntryAssetCategoriesBatchReindexer {
 			AssetCategory::getCategoryId
 		).toArray();
 
-		Set<AssetEntry> assetEntries = _getAssetEntriesByAssetCategoryIds(
+		Set<Long> assetEntryIds = _getAssetEntryIdsByAssetCategoryIds(
 			assetCategoryIds);
 
-		_assetEntryLocalService.reindex(ListUtil.fromCollection(assetEntries));
+		for (long assetEntryId : assetEntryIds) {
+			AssetEntry assetEntry = _assetEntryLocalService.fetchAssetEntry(
+				assetEntryId);
+
+			_assetEntryLocalService.reindex(
+				Collections.singletonList(assetEntry));
+		}
 	}
 
-	private Set<AssetEntry> _getAssetEntriesByAssetCategoryIds(
+	private Set<Long> _getAssetEntryIdsByAssetCategoryIds(
 		long[] assetCategoryIds) {
 
-		Set<AssetEntry> assetEntries = new HashSet<>();
+		Set<Long> assetEntryIds = new HashSet<>();
 
 		for (long assetCategoryId : assetCategoryIds) {
 			List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
@@ -78,16 +85,11 @@ public class AssetEntryAssetCategoriesBatchReindexer {
 			for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
 					assetEntryAssetCategoryRels) {
 
-				AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
-					assetEntryAssetCategoryRel.getAssetEntryId());
-
-				if (assetEntry != null) {
-					assetEntries.add(assetEntry);
-				}
+				assetEntryIds.add(assetEntryAssetCategoryRel.getAssetEntryId());
 			}
 		}
 
-		return assetEntries;
+		return assetEntryIds;
 	}
 
 	@Reference
