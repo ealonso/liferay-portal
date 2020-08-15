@@ -17,7 +17,6 @@ package com.liferay.asset.categories.internal.model.listener;
 import com.liferay.asset.categories.internal.search.AssetEntryAssetCategoriesBatchReindexer;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.portal.kernel.exception.ModelListenerException;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
 
@@ -35,12 +34,7 @@ public class AssetVocabularyModelListener
 	public void onAfterUpdate(AssetVocabulary assetVocabulary)
 		throws ModelListenerException {
 
-		try {
-			_assetEntryAssetCategoriesBatchReindexer.reindex(assetVocabulary);
-		}
-		catch (PortalException portalException) {
-			throw new ModelListenerException(portalException);
-		}
+		_assetEntryAssetCategoriesBatchReindexer.reindex(assetVocabulary);
 	}
 
 	@Reference
