@@ -14,6 +14,7 @@
 
 import React from 'react';
 
+import {useCollectionConfig} from '../../../../app/components/CollectionItemContext';
 import isMapped from '../../../../app/components/fragment-content/isMapped';
 import {BACKGROUND_IMAGE_FRAGMENT_ENTRY_PROCESSOR} from '../../../../app/config/constants/backgroundImageFragmentEntryProcessor';
 import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../../../app/config/constants/editableFragmentEntryProcessor';
@@ -25,6 +26,8 @@ import MappingSelector from '../../../../common/components/MappingSelector';
 import {getEditableItemPropTypes} from '../../../../prop-types/index';
 
 export function MappingPanel({item}) {
+	const collectionConfig = useCollectionConfig();
+
 	const {editableId, fragmentEntryLinkId, type} = item;
 
 	const dispatch = useDispatch();
@@ -69,11 +72,19 @@ export function MappingPanel({item}) {
 	};
 
 	return (
-		<MappingSelector
-			fieldType={type}
-			mappedItem={editableValue}
-			onMappingSelect={updateEditableValue}
-		/>
+		<>
+			{collectionConfig && (
+				<p className="page-editor__mapping-panel__helper text-secondary">
+					{Liferay.Language.get('collection-mapping-help')}
+				</p>
+			)}
+
+			<MappingSelector
+				fieldType={type}
+				mappedItem={editableValue}
+				onMappingSelect={updateEditableValue}
+			/>
+		</>
 	);
 }
 

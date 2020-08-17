@@ -95,7 +95,7 @@ function DataSetDisplay({
 		...currentViewProps
 	} = activeView;
 
-	const selectable = bulkActions?.length > 0 && selectedItemsKey;
+	const selectable = !!(bulkActions?.length && selectedItemsKey);
 
 	useEffect(() => {
 		if (
@@ -316,7 +316,6 @@ function DataSetDisplay({
 				filters={filters}
 				fluid={style === 'fluid'}
 				onFiltersChange={updateFilters}
-				selectable={selectable}
 				selectAllItems={() =>
 					selectItems(items.map((item) => item[selectedItemsKey]))
 				}

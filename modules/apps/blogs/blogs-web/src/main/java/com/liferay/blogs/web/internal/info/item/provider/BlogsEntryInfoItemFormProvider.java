@@ -25,10 +25,15 @@ import com.liferay.info.field.InfoFieldSetEntry;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.field.reader.InfoItemFieldReaderFieldSetProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.Set;
 
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
@@ -91,6 +96,18 @@ public class BlogsEntryInfoItemFormProvider
 	}
 
 	private InfoForm _getInfoForm(InfoFieldSet assetEntryInfoFieldSet) {
+		Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
+
+		InfoLocalizedValue.Builder infoLocalizedValueBuilder =
+			InfoLocalizedValue.builder();
+
+		for (Locale locale : availableLocales) {
+			infoLocalizedValueBuilder.value(
+				locale,
+				ResourceActionsUtil.getModelResource(
+					locale, BlogsEntry.class.getName()));
+		}
+
 		return InfoForm.builder(
 		).infoFieldSetEntries(
 			_getBlogsEntryInfoFieldSetEntries()
@@ -102,6 +119,8 @@ public class BlogsEntryInfoItemFormProvider
 		).infoFieldSetEntry(
 			_expandoInfoItemFieldSetProvider.getInfoFieldSet(
 				BlogsEntry.class.getName())
+		).labelInfoLocalizedValue(
+			infoLocalizedValueBuilder.build()
 		).name(
 			BlogsEntry.class.getName()
 		).build();

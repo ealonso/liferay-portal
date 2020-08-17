@@ -29,8 +29,13 @@ function getActiveFragmentEntryLink({
 }) {
 	if (highlightMessageId) {
 		return Object.values(fragmentEntryLinks).find((fragmentEntryLink) =>
-			fragmentEntryLink.comments.find(
-				(comment) => comment.commentId === highlightMessageId
+			fragmentEntryLink.comments.some(
+				(comment) =>
+					comment.commentId === highlightMessageId ||
+					comment.children?.some(
+						(childComment) =>
+							childComment.commentId === highlightMessageId
+					)
 			)
 		);
 	}
@@ -72,7 +77,7 @@ export default function CommentsSidebar() {
 		layoutData,
 	});
 
-	if (highlightMessageId) {
+	if (highlightMessageId && activeFragmentEntryLink) {
 		const activeItem = Object.values(layoutData.items).find(
 			(item) =>
 				item.config.fragmentEntryLinkId ===

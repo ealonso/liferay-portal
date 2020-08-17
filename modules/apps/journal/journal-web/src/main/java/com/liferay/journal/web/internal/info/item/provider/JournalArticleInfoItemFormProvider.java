@@ -29,13 +29,18 @@ import com.liferay.info.field.InfoFieldSetEntry;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.field.reader.InfoItemFieldReaderFieldSetProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.web.internal.info.item.JournalArticleInfoItemFields;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.Set;
 
 import org.osgi.framework.Constants;
 import org.osgi.service.component.annotations.Component;
@@ -118,6 +123,18 @@ public class JournalArticleInfoItemFormProvider
 			long ddmStructureId, InfoFieldSet assetEntryInfoFieldSet)
 		throws NoSuchFormVariationException {
 
+		Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
+
+		InfoLocalizedValue.Builder infoLocalizedValueBuilder =
+			InfoLocalizedValue.builder();
+
+		for (Locale locale : availableLocales) {
+			infoLocalizedValueBuilder.value(
+				locale,
+				ResourceActionsUtil.getModelResource(
+					locale, JournalArticle.class.getName()));
+		}
+
 		try {
 			return InfoForm.builder(
 			).infoFieldSetEntries(
@@ -142,6 +159,8 @@ public class JournalArticleInfoItemFormProvider
 								getInfoItemFieldSet(ddmStructureId));
 					}
 				}
+			).labelInfoLocalizedValue(
+				infoLocalizedValueBuilder.build()
 			).name(
 				JournalArticle.class.getName()
 			).build();

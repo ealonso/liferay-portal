@@ -324,7 +324,7 @@ definition {
 			fieldValue = "${videoLink}");
 
 		Click(
-			key_sidebarButton = "Page Structure",
+			key_sidebarButton = "Selection",
 			locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
 
 		PageEditor.waitForAutoSave();
@@ -567,7 +567,7 @@ definition {
 				value1 = "${numberOfTabs}");
 
 			Click(
-				key_sidebarButton = "Page Structure",
+				key_sidebarButton = "Selection",
 				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
 
 			AssertTextEquals(
@@ -626,12 +626,12 @@ definition {
 
 		Click.clickNoWaitForVisible(locator1 = "Fragment#FRAGMENT_HEADER");
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertClick(
-			key_navItem = "Configuration",
+			key_navItem = "General",
 			locator1 = "PageEditor#NAV_ITEM_BUTTON",
-			value1 = "Configuration");
+			value1 = "General");
 
 		Click(locator1 = "PageEditor#PLUS_ICON_BUTTON");
 
@@ -709,12 +709,12 @@ definition {
 			Click.clickNoWaitForVisible(locator1 = "Fragment#FRAGMENT_HEADER");
 		}
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertClick(
-			key_navItem = "Configuration",
+			key_navItem = "General",
 			locator1 = "PageEditor#NAV_ITEM_BUTTON",
-			value1 = "Configuration");
+			value1 = "General");
 
 		if (isSet(inCollectionDisplay)) {
 			Select(
@@ -844,7 +844,7 @@ definition {
 			fragmentName = "${fragmentName}",
 			id = "${id}");
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertClick(
 			key_navItem = "Image",
@@ -888,7 +888,7 @@ definition {
 				value1 = "${imageDescription}");
 
 			Click(
-				key_sidebarButton = "Page Structure",
+				key_sidebarButton = "Selection",
 				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
 
 			PageEditor.waitForAutoSave();
@@ -929,7 +929,7 @@ definition {
 			Click.clickNoWaitForVisible(locator1 = "PageEditor#LAYOUT_ELEMENTS_HEADER");
 		}
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		if ("${panel}" == "Styles") {
 			AssertClick(
@@ -1039,7 +1039,7 @@ definition {
 					value1 = "${borderWidth}");
 
 				Click(
-					key_sidebarButton = "Page Structure",
+					key_sidebarButton = "Selection",
 					locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
 
 				Pause(locator1 = "3000");
@@ -1140,7 +1140,7 @@ definition {
 					value1 = "${opacity}");
 
 				Click(
-					key_sidebarButton = "Page Structure",
+					key_sidebarButton = "Selection",
 					locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
 
 				Pause(locator1 = "3000");
@@ -1201,13 +1201,13 @@ definition {
 			Click.clickNoWaitForVisible(locator1 = "PageEditor#LAYOUT_ELEMENTS_HEADER");
 		}
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
-		if ("${panel}" == "Configuration") {
+		if ("${panel}" == "General") {
 			AssertClick(
-				key_navItem = "Configuration",
+				key_navItem = "General",
 				locator1 = "PageEditor#NAV_ITEM_BUTTON",
-				value1 = "Configuration");
+				value1 = "General");
 
 			if (isSet(columnCount)) {
 				Select(
@@ -1336,16 +1336,16 @@ definition {
 	macro gotoConfiguration {
 		PageEditor.clickConfigurableField(fragmentName = "${fragmentName}");
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertElementPresent(
 			key_nodeName = "${fragmentName}",
 			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_ACTIVE");
 
 		AssertClick(
-			key_navItem = "Configuration",
+			key_navItem = "General",
 			locator1 = "PageEditor#NAV_ITEM_BUTTON",
-			value1 = "Configuration");
+			value1 = "General");
 	}
 
 	macro gotoContentConfiguration {
@@ -1364,12 +1364,12 @@ definition {
 				locator1 = "Fragment#CONTENT_FRAGMENT_BODY");
 		}
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertClick(
-			key_navItem = "Configuration",
+			key_navItem = "General",
 			locator1 = "PageEditor#NAV_ITEM_BUTTON",
-			value1 = "Configuration");
+			value1 = "General");
 	}
 
 	macro gotoDuplicate {
@@ -1412,12 +1412,12 @@ definition {
 	macro gotoSelectPanel {
 		PageEditor.clickConfigurableField(fragmentName = "${fragmentName}");
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertClick(
-			key_navItem = "Configuration",
+			key_navItem = "General",
 			locator1 = "PageEditor#NAV_ITEM_BUTTON",
-			value1 = "Configuration");
+			value1 = "General");
 
 		Click(locator1 = "PageEditor#PLUS_ICON_BUTTON");
 
@@ -1427,7 +1427,7 @@ definition {
 	macro gotoStyle {
 		PageEditor.clickConfigurableField(fragmentName = "${fragmentName}");
 
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		AssertElementPresent(
 			key_nodeName = "${fragmentName}",
@@ -1478,7 +1478,7 @@ definition {
 	}
 
 	macro removeFragmentViaPageStructure {
-		PageEditor.gotoTab(tabName = "Page Structure");
+		PageEditor.gotoTab(tabName = "Selection");
 
 		if (IsElementNotPresent(key_nodeName = "${fragmentName}", locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_ACTIVE")) {
 			Click(
@@ -1541,30 +1541,30 @@ definition {
 		PageEditor.clickConfigurableField(fragmentName = "${fragmentName}");
 
 		AssertElementPresent(
-			key_tabName = "Page Structure",
+			key_tabName = "Selection",
 			locator1 = "PageEditor#FRAGMENT_SIDEBAR_TAB_BUTTON_ACTIVE");
 
 		AssertElementPresent(
 			key_nodeName = "${fragmentName}",
 			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_ACTIVE");
 
-		var style1 = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
+		var defaultHeight = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
 
-		echo("${style1}");
+		echo("### The default height of item configuration panel is ${defaultHeight}");
 
-		DragAndDrop.DragAndDropObject(
+		DragAndDrop.dragAndDrop(
 			locator1 = "PageEditor#CONFIGURATION_PANEL_HANDLE",
-			position = "${position}");
+			value1 = "${position}");
 
-		var style2 = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
+		Pause(locator1 = "3000");
 
-		echo("${style2}");
+		var updatedHeight = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
 
-		var style = MathUtil.difference("${style2}","${style1}");
+		echo("### The updated height of item configuration panel is ${updatedHeight}");
 
-		TestUtils.assertEquals(
-			actual = "${style}",
-			expected = "${value}");
+		TestUtils.assertNotEquals(
+			actual = "${updatedHeight}",
+			expected = "${defaultHeight}");
 	}
 
 	macro resolveComment {

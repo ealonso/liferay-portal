@@ -21,11 +21,13 @@ import com.liferay.content.dashboard.web.internal.item.ContentDashboardItem;
 import com.liferay.content.dashboard.web.internal.item.ContentDashboardItemFactory;
 import com.liferay.content.dashboard.web.internal.item.ContentDashboardItemFactoryTracker;
 import com.liferay.content.dashboard.web.internal.item.type.ContentDashboardItemType;
+import com.liferay.info.item.InfoItemReference;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.BrowserSnifferUtil;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.portlet.MockLiferayResourceRequest;
@@ -92,10 +94,13 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 
 		mockLiferayResourceRequest.setAttribute(WebKeys.LOCALE, LocaleUtil.US);
 
+		InfoItemReference infoItemReference =
+			contentDashboardItem.getInfoItemReference();
+
 		mockLiferayResourceRequest.addParameter(
-			"className", contentDashboardItem.getClassName());
+			"className", infoItemReference.getClassName());
 		mockLiferayResourceRequest.addParameter(
-			"classPK", String.valueOf(contentDashboardItem.getClassPK()));
+			"classPK", String.valueOf(infoItemReference.getClassPK()));
 
 		MockLiferayResourceResponse mockLiferayResourceResponse =
 			new MockLiferayResourceResponse();
@@ -119,11 +124,10 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 			categoriesJSONArray.toString());
 
 		Assert.assertEquals(
-			contentDashboardItem.getClassName(),
+			infoItemReference.getClassName(),
 			jsonObject.getString("className"));
 		Assert.assertEquals(
-			contentDashboardItem.getClassPK(), jsonObject.getLong("classPK"),
-			0);
+			infoItemReference.getClassPK(), jsonObject.getLong("classPK"), 0);
 
 		JSONArray tagsJSONArray = jsonObject.getJSONArray("tags");
 
@@ -203,16 +207,6 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 			}
 
 			@Override
-			public String getClassName() {
-				return className;
-			}
-
-			@Override
-			public Long getClassPK() {
-				return classPK;
-			}
-
-			@Override
 			public List<ContentDashboardItemAction>
 				getContentDashboardItemActions(
 					HttpServletRequest httpServletRequest,
@@ -251,17 +245,19 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 			}
 
 			@Override
-			public Date getExpirationDate() {
-				return new Date();
+			public Object getDisplayFieldValue(
+				String fieldName, Locale locale) {
+
+				return null;
+			}
+
+			@Override
+			public InfoItemReference getInfoItemReference() {
+				return new InfoItemReference(className, classPK);
 			}
 
 			@Override
 			public Date getModifiedDate() {
-				return new Date();
-			}
-
-			@Override
-			public Date getPublishDate() {
 				return new Date();
 			}
 
@@ -278,18 +274,6 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 			@Override
 			public long getUserId() {
 				return 0;
-			}
-
-			@Override
-			public String getUserName() {
-				return null;
-			}
-
-			@Override
-			public String getUserPortraitURL(
-				HttpServletRequest httpServletRequest) {
-
-				return null;
 			}
 
 			@Override
@@ -322,12 +306,14 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 
 					return Optional.ofNullable(
 						classPK -> {
+							InfoItemReference infoItemReference =
+								contentDashboardItem.getInfoItemReference();
+
 							if (Objects.equals(
 									className,
-									contentDashboardItem.getClassName()) &&
+									infoItemReference.getClassName()) &&
 								Objects.equals(
-									classPK,
-									contentDashboardItem.getClassPK())) {
+									classPK, infoItemReference.getClassPK())) {
 
 								return contentDashboardItem;
 							}
@@ -345,6 +331,10 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 		ReflectionTestUtil.setFieldValue(
 			_getContentDashboardItemInfoMVCResourceCommand, "_portal",
 			new PortalImpl());
+
+		ReflectionTestUtil.setFieldValue(
+			_getContentDashboardItemInfoMVCResourceCommand, "_userLocalService",
+			Mockito.mock(UserLocalService.class));
 	}
 
 	private GetContentDashboardItemInfoMVCResourceCommand

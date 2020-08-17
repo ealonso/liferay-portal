@@ -1074,6 +1074,22 @@ definition {
 			locator1 = "UsersAndOrganizationsEditUser#DETAILS_PROFILE_IMAGE");
 	}
 
+	macro confirmPassword {
+		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#CONFIRM_PASSWORD");
+
+		Click(locator1 = "TextInput#PASSWORD_CONFIRM");
+
+		Type(
+			locator1 = "TextInput#PASSWORD_CONFIRM",
+			value1 = "${password}");
+
+		Button.clickConfirm();
+
+		Alert.viewSuccessMessage();
+
+		WaitForLiferayEvent.initializeLiferayEventLog();
+	}
+
 	macro createAccount {
 		SignInNavigator.gotoCreateAccount();
 
@@ -1316,9 +1332,14 @@ definition {
 			Type(
 				locator1 = "TextInput#SCREEN_NAME",
 				value1 = "${userScreenNameEdit}");
-		}
 
-		PortletEntry.save();
+			Button.clickSave();
+
+			User.confirmPassword(password = "${password}");
+		}
+		else {
+			PortletEntry.save();
+		}
 	}
 
 	macro editDetailsViaProfile {
@@ -1363,7 +1384,9 @@ definition {
 			locator1 = "TextInput#EMAIL_ADDRESS",
 			value1 = "${userEmailAddress}");
 
-		PortletEntry.save();
+		Button.clickSave();
+
+		User.confirmPassword(password = "${password}");
 	}
 
 	macro editPasswordCP {

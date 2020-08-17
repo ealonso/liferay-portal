@@ -48,7 +48,9 @@ import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 
@@ -256,6 +258,16 @@ public class InfoDisplayContributorWrapper
 	private InfoForm _convertToInfoForm(
 		Set<InfoDisplayField> infoDisplayFields, String name, Object object) {
 
+		Set<Locale> availableLocales = LanguageUtil.getAvailableLocales();
+
+		InfoLocalizedValue.Builder infoLocalizedValueBuilder =
+			InfoLocalizedValue.builder();
+
+		for (Locale locale : availableLocales) {
+			infoLocalizedValueBuilder.value(
+				locale, ResourceActionsUtil.getModelResource(locale, name));
+		}
+
 		InfoForm.Builder infoFormBuilder = InfoForm.builder(
 		).infoFieldSetEntry(
 			consumer -> {
@@ -274,6 +286,10 @@ public class InfoDisplayContributorWrapper
 						).build());
 				}
 			}
+		).labelInfoLocalizedValue(
+			infoLocalizedValueBuilder.build()
+		).name(
+			name
 		);
 
 		if (Objects.equals(name, FileEntry.class.getName())) {
@@ -290,9 +306,7 @@ public class InfoDisplayContributorWrapper
 			}
 		}
 
-		return infoFormBuilder.name(
-			name
-		).build();
+		return infoFormBuilder.build();
 	}
 
 	private InfoItemFieldValues _convertToInfoItemFieldValues(

@@ -22,6 +22,7 @@ import com.liferay.content.dashboard.web.internal.item.ContentDashboardItem;
 import com.liferay.content.dashboard.web.internal.item.ContentDashboardItemFactory;
 import com.liferay.content.dashboard.web.internal.item.ContentDashboardItemFactoryTracker;
 import com.liferay.content.dashboard.web.internal.item.type.ContentDashboardItemType;
+import com.liferay.info.item.InfoItemReference;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -84,6 +86,8 @@ public class GetContentDashboardItemInfoMVCResourceCommand
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
+		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+			resourceRequest);
 		Locale locale = _portal.getLocale(resourceRequest);
 
 		try {
@@ -114,9 +118,9 @@ public class GetContentDashboardItemInfoMVCResourceCommand
 					"categories",
 					_getAssetCategoriesJSONArray(contentDashboardItem, locale)
 				).put(
-					"className", contentDashboardItem.getClassName()
+					"className", _getClassName(contentDashboardItem)
 				).put(
-					"classPK", contentDashboardItem.getClassPK()
+					"classPK", _getClassPK(contentDashboardItem)
 				).put(
 					"createDate",
 					_toString(contentDashboardItem.getCreateDate())
@@ -136,19 +140,20 @@ public class GetContentDashboardItemInfoMVCResourceCommand
 				).put(
 					"userId", contentDashboardItem.getUserId()
 				).put(
-					"userName", contentDashboardItem.getUserName()
+					"userName",
+					contentDashboardItem.getDisplayFieldValue(
+						"authorName", locale)
 				).put(
 					"userPortraitURL",
-					contentDashboardItem.getUserPortraitURL(
-						_portal.getHttpServletRequest(resourceRequest))
+					contentDashboardItem.getDisplayFieldValue(
+						"authorProfileImage", locale)
 				).put(
 					"versions",
 					_getVersionsJSONArray(contentDashboardItem, locale)
 				).put(
 					"viewURLs",
 					_getViewURLsJSONArray(
-						contentDashboardItem,
-						_portal.getHttpServletRequest(resourceRequest))
+						contentDashboardItem, httpServletRequest)
 				)
 			).orElseGet(
 				JSONFactoryUtil::createJSONObject
@@ -199,6 +204,20 @@ public class GetContentDashboardItemInfoMVCResourceCommand
 			stream.map(
 				AssetTag::getName
 			).toArray());
+	}
+
+	private String _getClassName(ContentDashboardItem<?> contentDashboardItem) {
+		InfoItemReference infoItemReference =
+			contentDashboardItem.getInfoItemReference();
+
+		return infoItemReference.getClassName();
+	}
+
+	private long _getClassPK(ContentDashboardItem<?> contentDashboardItem) {
+		InfoItemReference infoItemReference =
+			contentDashboardItem.getInfoItemReference();
+
+		return infoItemReference.getClassPK();
 	}
 
 	private JSONObject _getDataJSONObject(
@@ -332,5 +351,8 @@ public class GetContentDashboardItemInfoMVCResourceCommand
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private UserLocalService _userLocalService;
 
 }

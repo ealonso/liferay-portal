@@ -85,6 +85,11 @@ function loadFields({
 export default function ({fieldType, mappedItem, onMappingSelect}) {
 	const collectionConfig = useCollectionConfig();
 	const [collectionFieldSets, setCollectionFieldSets] = useState([]);
+	const [
+		collectionItemSubtypeLabel,
+		setCollectionItemSubtypeLabel,
+	] = useState('');
+	const [collectionItemTypeLabel, setCollectionItemTypeLabel] = useState('');
 
 	useEffect(() => {
 		if (!collectionConfig) {
@@ -100,7 +105,9 @@ export default function ({fieldType, mappedItem, onMappingSelect}) {
 			onNetworkStatus: () => {},
 		})
 			.then((response) => {
-				setCollectionFieldSets(response);
+				setCollectionFieldSets(response.mappingFields);
+				setCollectionItemSubtypeLabel(response.itemSubtypeLabel);
+				setCollectionItemTypeLabel(response.itemTypeLabel);
 			})
 			.catch((error) => {
 				if (process.env.NODE_ENV === 'development') {
@@ -110,21 +117,41 @@ export default function ({fieldType, mappedItem, onMappingSelect}) {
 	}, [collectionConfig, fieldType]);
 
 	return collectionConfig ? (
-		<MappingFieldSelect
-			fieldSets={collectionFieldSets}
-			fieldType={fieldType}
-			onValueSelect={(event) => {
-				if (event.target.value === UNMAPPED_OPTION.value) {
-					onMappingSelect({collectionFieldId: ''});
-				}
-				else {
-					onMappingSelect({
-						collectionFieldId: event.target.value,
-					});
-				}
-			}}
-			value={mappedItem.collectionFieldId}
-		/>
+		<>
+			{collectionItemTypeLabel && (
+				<p className="mb-2 page-editor__mapping-panel__type-label">
+					<span className="mr-1">
+						{Liferay.Language.get('item-type')}:
+					</span>
+					{collectionItemTypeLabel}
+				</p>
+			)}
+
+			{collectionItemSubtypeLabel && (
+				<p className="mb-2 page-editor__mapping-panel__type-label">
+					<span className="mr-1">
+						{Liferay.Language.get('item-subtype')}:
+					</span>
+					{collectionItemSubtypeLabel}
+				</p>
+			)}
+
+			<MappingFieldSelect
+				fieldSets={collectionFieldSets}
+				fieldType={fieldType}
+				onValueSelect={(event) => {
+					if (event.target.value === UNMAPPED_OPTION.value) {
+						onMappingSelect({collectionFieldId: ''});
+					}
+					else {
+						onMappingSelect({
+							collectionFieldId: event.target.value,
+						});
+					}
+				}}
+				value={mappedItem.collectionFieldId}
+			/>
+		</>
 	) : (
 		<MappingSelector
 			fieldType={fieldType}

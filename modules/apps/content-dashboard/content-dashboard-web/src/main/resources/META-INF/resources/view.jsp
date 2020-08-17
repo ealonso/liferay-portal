@@ -70,13 +70,18 @@ ContentDashboardAdminManagementToolbarDisplayContext contentDashboardAdminManage
 							className="com.liferay.content.dashboard.web.internal.item.ContentDashboardItem"
 							keyProperty="id"
 							modelVar="contentDashboardItem"
-							rowIdProperty="classPK"
 						>
 
 							<%
-							row.setData(HashMapBuilder.<String, Object>put(
-								"rowId", row.getRowId()
-							).build());
+							InfoItemReference infoItemReference = contentDashboardItem.getInfoItemReference();
+
+							String rowId = String.valueOf(infoItemReference.getClassPK());
+
+							row.setData(
+								HashMapBuilder.<String, Object>put(
+									"rowId", row.getRowId()
+								).build());
+							row.setRowId(rowId);
 							%>
 
 							<liferay-ui:search-container-column-text
@@ -106,7 +111,7 @@ ContentDashboardAdminManagementToolbarDisplayContext contentDashboardAdminManage
 								cssClass="text-center"
 								name="author"
 							>
-								<span class="lfr-portal-tooltip" title="<%= HtmlUtil.escape(contentDashboardItem.getUserName()) %>">
+								<span class="lfr-portal-tooltip" title="<%= HtmlUtil.escape(String.valueOf(contentDashboardItem.getDisplayFieldValue("authorName", locale))) %>">
 									<liferay-ui:user-portrait
 										userId="<%= contentDashboardItem.getUserId() %>"
 									/>
