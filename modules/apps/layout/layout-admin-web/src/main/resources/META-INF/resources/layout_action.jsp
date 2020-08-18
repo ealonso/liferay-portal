@@ -59,6 +59,13 @@ Layout curLayout = (Layout)row.getObject();
 		/>
 	</c:if>
 
+	<c:if test="<%= layoutsAdminDisplayContext.isShowAddChildPageAction(curLayout) %>">
+		<liferay-ui:icon
+			message="add-child-collection"
+			url="<%= layoutsAdminDisplayContext.getSelectLayoutCollectionURL(curLayout.getPlid(), null, curLayout.isPrivateLayout()) %>"
+		/>
+	</c:if>
+
 	<c:if test="<%= layoutsAdminDisplayContext.isShowCopyLayoutAction(curLayout) %>">
 		<liferay-ui:icon
 			cssClass='<%= liferayPortletResponse.getNamespace() + "copy-layout-action-option" %>'
