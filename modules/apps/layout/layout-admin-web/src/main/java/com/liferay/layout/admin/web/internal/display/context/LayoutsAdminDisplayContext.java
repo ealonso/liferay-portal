@@ -153,6 +153,16 @@ public class LayoutsAdminDisplayContext {
 						httpServletRequest, "public-collection-page"));
 			}
 		).add(
+			() -> isShowPublicPages(),
+			dropdownItem -> {
+				dropdownItem.setHref(
+					getSelectOtherLayoutTypeURL(
+						LayoutConstants.DEFAULT_PLID, false));
+				dropdownItem.setLabel(
+					LanguageUtil.get(
+						httpServletRequest, "public-other"));
+			}
+		).add(
 			dropdownItem -> {
 				dropdownItem.setHref(getSelectLayoutPageTemplateEntryURL(true));
 				dropdownItem.setLabel(
@@ -166,6 +176,15 @@ public class LayoutsAdminDisplayContext {
 				dropdownItem.setLabel(
 					LanguageUtil.get(
 						httpServletRequest, "private-collection-page"));
+			}
+		).add(
+			dropdownItem -> {
+				dropdownItem.setHref(
+					getSelectOtherLayoutTypeURL(
+						LayoutConstants.DEFAULT_PLID, true));
+				dropdownItem.setLabel(
+					LanguageUtil.get(
+						httpServletRequest, "private-other"));
 			}
 		).build();
 	}
@@ -978,6 +997,28 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		return selectLayoutPageTemplateEntryURL.toString();
+	}
+
+	public String getSelectOtherLayoutTypeURL(
+		long selPlid, boolean privateLayout) {
+
+		PortletURL selectOtherLayoutTypeURL =
+			_liferayPortletResponse.createRenderURL();
+
+		selectOtherLayoutTypeURL.setParameter(
+			"mvcPath", "/select_other_layout_type.jsp");
+		selectOtherLayoutTypeURL.setParameter(
+			"redirect", getRedirect());
+		selectOtherLayoutTypeURL.setParameter(
+			"backURL", themeDisplay.getURLCurrent());
+		selectOtherLayoutTypeURL.setParameter(
+			"groupId", String.valueOf(getSelGroupId()));
+		selectOtherLayoutTypeURL.setParameter(
+			"selPlid", String.valueOf(selPlid));
+		selectOtherLayoutTypeURL.setParameter(
+			"privateLayout", String.valueOf(privateLayout));
+
+		return selectOtherLayoutTypeURL.toString();
 	}
 
 	public Group getSelGroup() {

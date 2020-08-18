@@ -50,7 +50,6 @@ page import="com.liferay.layout.admin.web.internal.display.context.SelectThemeMa
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.CollectionProvidersVerticalCard" %><%@
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.CollectionsVerticalCard" %><%@
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.DefaultStylebookLayoutVerticalCard" %><%@
-page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.SelectBasicTemplatesHorizontalCard" %><%@
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.SelectBasicTemplatesVerticalCard" %><%@
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.SelectGlobalTemplatesVerticalCard" %><%@
 page import="com.liferay.layout.admin.web.internal.servlet.taglib.clay.SelectLayoutMasterLayoutVerticalCard" %><%@

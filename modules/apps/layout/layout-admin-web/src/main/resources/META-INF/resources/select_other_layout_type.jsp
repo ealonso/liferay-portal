@@ -30,7 +30,7 @@ if (Validator.isNull(backURL)) {
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(backURL);
 
-renderResponse.setTitle(LanguageUtil.get(request, "select-other"));
+renderResponse.setTitle(LanguageUtil.get(request, "select-master-page"));
 %>
 
 <clay:container-fluid
@@ -76,7 +76,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-other"));
 		function (event) {
 			Liferay.Util.openModal({
 				id: '<portlet:namespace />addLayoutDialog',
-				title: '<liferay-ui:message key="add-other" />',
+				title: '<liferay-ui:message key="add-collection-page" />',
 				url: event.delegateTarget.dataset.addLayoutUrl,
 			});
 		}

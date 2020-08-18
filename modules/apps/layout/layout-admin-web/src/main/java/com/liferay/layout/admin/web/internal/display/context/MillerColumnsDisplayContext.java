@@ -270,6 +270,22 @@ public class MillerColumnsDisplayContext {
 		);
 	}
 
+	private JSONObject _getAddChildOtherLayoutTypeActionJSONObject(
+		long plid, boolean privateLayout) {
+
+		return JSONUtil.put(
+			"id", "addOther"
+		).put(
+			"label", LanguageUtil.get(_httpServletRequest, "add-other")
+		).put(
+			"layoutAction", true
+		).put(
+			"url",
+			_layoutsAdminDisplayContext.getSelectOtherLayoutTypeURL(
+				plid, privateLayout)
+		);
+	}
+
 	private JSONObject _getAddLayoutCollectionActionJSONObject(
 		long plid, boolean privateLayout) {
 
@@ -371,6 +387,9 @@ public class MillerColumnsDisplayContext {
 			).put(
 				_getAddLayoutCollectionActionJSONObject(
 					LayoutConstants.DEFAULT_PLID, privatePages)
+			).put(
+				_getAddChildOtherLayoutTypeActionJSONObject(
+					LayoutConstants.DEFAULT_PLID, privatePages)
 			);
 		}
 
@@ -460,6 +479,9 @@ public class MillerColumnsDisplayContext {
 				_getAddChildPageActionJSONObject(layout, "layoutAction")
 			).put(
 				_getAddLayoutCollectionActionJSONObject(
+					layout.getPlid(), layout.isPrivateLayout())
+			).put(
+				_getAddChildOtherLayoutTypeActionJSONObject(
 					layout.getPlid(), layout.isPrivateLayout())
 			);
 		}

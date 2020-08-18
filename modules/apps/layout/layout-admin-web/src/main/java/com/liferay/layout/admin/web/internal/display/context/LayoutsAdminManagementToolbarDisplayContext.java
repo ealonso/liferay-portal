@@ -175,6 +175,20 @@ public class LayoutsAdminManagementToolbarDisplayContext
 			}
 		).addPrimaryDropdownItem(
 			() ->
+				_layoutsAdminDisplayContext.isShowPublicPages() &&
+				_layoutsAdminDisplayContext.isShowAddChildPageAction(
+					selLayout) &&
+				(!_layoutsAdminDisplayContext.isPrivateLayout() ||
+				 _layoutsAdminDisplayContext.isFirstColumn() ||
+				 !_layoutsAdminDisplayContext.hasLayouts()),
+			dropdownItem -> {
+				dropdownItem.setHref(
+					_layoutsAdminDisplayContext.getSelectOtherLayoutTypeURL(
+						selPlid, false));
+				dropdownItem.setLabel(_getOtherLayoutType(false));
+			}
+		).addPrimaryDropdownItem(
+			() ->
 				(_layoutsAdminDisplayContext.isShowAddChildPageAction(
 					selLayout) &&
 				 _layoutsAdminDisplayContext.isPrivateLayout()) ||
@@ -202,6 +216,19 @@ public class LayoutsAdminManagementToolbarDisplayContext
 						selPlid, null, true));
 				dropdownItem.setIcon("list");
 				dropdownItem.setLabel(_getCollectionLayoutLabel(true));
+			}
+		).addPrimaryDropdownItem(
+			() ->
+				(_layoutsAdminDisplayContext.isShowAddChildPageAction(
+					selLayout) &&
+				 _layoutsAdminDisplayContext.isPrivateLayout()) ||
+				_layoutsAdminDisplayContext.isFirstColumn() ||
+				!_layoutsAdminDisplayContext.hasLayouts(),
+			dropdownItem -> {
+				dropdownItem.setHref(
+					_layoutsAdminDisplayContext.getSelectOtherLayoutTypeURL(
+						selPlid, true));
+				dropdownItem.setLabel(_getOtherLayoutType(true));
 			}
 		).build();
 
@@ -342,6 +369,26 @@ public class LayoutsAdminManagementToolbarDisplayContext
 		}
 
 		return LanguageUtil.get(request, "public-page");
+	}
+
+	private String _getOtherLayoutType(boolean privateLayout) {
+		Layout layout = _layoutsAdminDisplayContext.getSelLayout();
+
+		if (layout != null) {
+			return LanguageUtil.format(
+				request, "add-child-other-of-x",
+				layout.getName(_themeDisplay.getLocale()));
+		}
+
+		if (_isSiteTemplate()) {
+			return LanguageUtil.get(request, "other");
+		}
+
+		if (privateLayout) {
+			return LanguageUtil.get(request, "private-other");
+		}
+
+		return LanguageUtil.get(request, "public-other");
 	}
 
 	private boolean _isSiteTemplate() {
