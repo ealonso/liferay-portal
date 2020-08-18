@@ -535,12 +535,12 @@
 						"store": true,
 						"type": "keyword"
 					},
-					"assetPrivateCategoryId": {
 						"store": true,
+					"assetInternalCategoryId": {
 						"type": "keyword"
 					},
-					"assetPrivateCategoryIds": {
 						"store": true,
+					"assetInternalCategoryIds": {
 						"type": "keyword"
 					},
 					"assetTagId": {
