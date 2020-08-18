@@ -141,7 +141,7 @@ public class LayoutsAdminManagementToolbarDisplayContext
 		Layout selLayout = _layoutsAdminDisplayContext.getSelLayout();
 		long selPlid = _layoutsAdminDisplayContext.getSelPlid();
 
-		return CreationMenuBuilder.addPrimaryDropdownItem(
+		CreationMenu creationMenu = CreationMenuBuilder.addPrimaryDropdownItem(
 			() ->
 				_layoutsAdminDisplayContext.isShowPublicPages() &&
 				_layoutsAdminDisplayContext.isShowAddChildPageAction(
@@ -155,6 +155,7 @@ public class LayoutsAdminManagementToolbarDisplayContext
 						getSelectLayoutPageTemplateEntryURL(
 							firstLayoutPageTemplateCollectionId, selPlid,
 							false));
+				dropdownItem.setIcon("page");
 				dropdownItem.setLabel(_getLabel(false));
 			}
 		).addPrimaryDropdownItem(
@@ -169,6 +170,7 @@ public class LayoutsAdminManagementToolbarDisplayContext
 				dropdownItem.setHref(
 					_layoutsAdminDisplayContext.getSelectLayoutCollectionURL(
 						selPlid, null, false));
+				dropdownItem.setIcon("list");
 				dropdownItem.setLabel(_getCollectionLayoutLabel(false));
 			}
 		).addPrimaryDropdownItem(
@@ -198,6 +200,10 @@ public class LayoutsAdminManagementToolbarDisplayContext
 				dropdownItem.setLabel(_getCollectionLayoutLabel(true));
 			}
 		).build();
+
+		creationMenu.setItemsIconAlignment("left");
+
+		return creationMenu;
 	}
 
 	@Override
