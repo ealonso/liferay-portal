@@ -186,6 +186,7 @@ public class LayoutsAdminManagementToolbarDisplayContext
 						getSelectLayoutPageTemplateEntryURL(
 							firstLayoutPageTemplateCollectionId, selPlid,
 							true));
+				dropdownItem.setIcon("page");
 				dropdownItem.setLabel(_getLabel(true));
 			}
 		).addPrimaryDropdownItem(
@@ -197,6 +198,7 @@ public class LayoutsAdminManagementToolbarDisplayContext
 				dropdownItem.setHref(
 					_layoutsAdminDisplayContext.getSelectLayoutCollectionURL(
 						selPlid, null, true));
+				dropdownItem.setIcon("list");
 				dropdownItem.setLabel(_getCollectionLayoutLabel(true));
 			}
 		).build();
