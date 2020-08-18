@@ -70,7 +70,7 @@ public class AssetCategoryDocumentContributor
 
 			if ((assetVocabulary != null) &&
 				(assetVocabulary.getVisibilityType() ==
-				 AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC)) {
+					AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC)) {
 
 				publicAssetCategories.add(assetCategory);
 			}
@@ -79,8 +79,7 @@ public class AssetCategoryDocumentContributor
 		long[] publicAssetCategoryIds = ListUtil.toLongArray(
 			publicAssetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
 
-		document.addKeyword(
-			Field.ASSET_CATEGORY_IDS, publicAssetCategoryIds);
+		document.addKeyword(Field.ASSET_CATEGORY_IDS, publicAssetCategoryIds);
 
 		addAssetCategoryTitles(
 			document, Field.ASSET_CATEGORY_TITLES, publicAssetCategories);

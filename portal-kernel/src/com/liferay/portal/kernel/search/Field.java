@@ -50,10 +50,6 @@ public class Field implements Serializable {
 
 	public static final String ASSET_CATEGORY_TITLES = "assetCategoryTitles";
 
-	public static final String ASSET_PARENT_CATEGORY_ID = "parentCategoryId";
-
-	public static final String ASSET_PARENT_CATEGORY_IDS = "parentCategoryIds";
-
 	public static final String ASSET_INTERNAL_CATEGORY_ID =
 		"assetInternalCategoryId";
 
@@ -65,6 +61,10 @@ public class Field implements Serializable {
 
 	public static final String ASSET_INTERNAL_CATEGORY_TITLES =
 		"assetInternalCategoryTitles";
+
+	public static final String ASSET_PARENT_CATEGORY_ID = "parentCategoryId";
+
+	public static final String ASSET_PARENT_CATEGORY_IDS = "parentCategoryIds";
 
 	public static final String ASSET_TAG_IDS = "assetTagIds";
 
