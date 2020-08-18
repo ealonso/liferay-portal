@@ -191,7 +191,9 @@ public class LayoutsAdminManagementToolbarDisplayContext
 			}
 		).addPrimaryDropdownItem(
 			() ->
-				_layoutsAdminDisplayContext.isPrivateLayout() ||
+				(_layoutsAdminDisplayContext.isShowAddChildPageAction(
+					selLayout) &&
+				 _layoutsAdminDisplayContext.isPrivateLayout()) ||
 				_layoutsAdminDisplayContext.isFirstColumn() ||
 				!_layoutsAdminDisplayContext.hasLayouts(),
 			dropdownItem -> {
