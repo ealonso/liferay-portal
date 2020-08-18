@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-List<Map<String, Object>> navigationSteps = (List<Map<String, Object>>)request.getAttribute("multi_step_nav_small.jsp-navigationSteps");
+List<NavigationStep> navigationSteps = (List<NavigationStep>)request.getAttribute("multi_step_nav_small.jsp-navigationSteps");
 %>
 
 <ol class="multi-step-indicator-label-top multi-step-nav multi-step-nav-collapse-sm">
@@ -26,28 +26,24 @@ List<Map<String, Object>> navigationSteps = (List<Map<String, Object>>)request.g
 	boolean activeReached = false;
 
 	for (int i = 0; i < navigationSteps.size(); i++) {
-		Map<String, Object> navigationStep = navigationSteps.get(i);
+		NavigationStep navigationStep = navigationSteps.get(i);
 
-		boolean active = GetterUtil.getBoolean(navigationStep.get("active"));
-		String label = GetterUtil.getString(navigationStep.get("label"));
-		String url = GetterUtil.getString(navigationStep.get("url"));
-
-		if (active) {
+		if (navigationStep.isActive()) {
 			activeReached = true;
 		}
 	%>
 
-		<li class="<%= active ? "active" : StringPool.BLANK %> <%= activeReached ? StringPool.BLANK : "multi-step-item-done" %> multi-step-item multi-step-item-expand">
+		<li class="<%= navigationStep.isActive() ? "active" : StringPool.BLANK %> <%= activeReached ? StringPool.BLANK : "multi-step-item-done" %> multi-step-item multi-step-item-expand">
 			<c:choose>
-				<c:when test="<%= i != (navigationStep.size() - 1) %>">
+				<c:when test="<%= i != (navigationSteps.size() - 1) %>">
 					<div class="multi-step-divider"></div>
 				</c:when>
 			</c:choose>
 
 			<div class="multi-step-indicator">
-				<div class="multi-step-indicator-label"><%= label %></div>
+				<div class="multi-step-indicator-label"><%= navigationStep.getLabel() %></div>
 
-				<a class="multi-step-icon" href="<%= url %>"></a>
+				<a class="multi-step-icon" href="<%= navigationStep.getUrl() %>"></a>
 			</div>
 		</li>
 
