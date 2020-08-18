@@ -1,0 +1,55 @@
+@import 'atlas-variables';
+
+$multiStepIconSize: 12px;
+$multiStepDividerSpacing: 8px;
+
+.multi-step-item {
+	&.active {
+		.multi-step-icon {
+			background-color: $primary;
+		}
+		.multi-step-indicator-label {
+			color: $dark;
+		}
+	}
+
+	&.multi-step-item-done .multi-step-icon {
+		background-color: $primary-l2;
+	}
+
+	.multi-step-icon {
+		background-color: $secondary-l2;
+		height: $multiStepIconSize;
+		width: $multiStepIconSize;
+	}
+
+	&.multi-step-item-expand {
+		flex-grow: 0;
+		width: calc(
+			#{$multiStepIconSize} + 104px + #{$multiStepDividerSpacing * 2}
+		);
+	}
+
+	.multi-step-divider {
+		background-color: $secondary-l3;
+		height: 2px;
+		margin-bottom: 0;
+		margin-left: calc(#{$multiStepIconSize} + #{$multiStepDividerSpacing});
+		margin-right: $multiStepDividerSpacing;
+		top: 7px;
+	}
+
+	.multi-step-indicator {
+		width: $multiStepIconSize;
+
+		&-label {
+			bottom: 1.25rem;
+			color: $secondary-l1;
+			font-size: 0.75rem;
+			left: 0;
+			max-width: none;
+			overflow: visible;
+			transform: translateX(calc(-50% + #{$multiStepIconSize / 2}));
+		}
+	}
+}
