@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Rubén Pulido
  */
 @Component(immediate = true, service = KeywordQueryContributor.class)
-public class AssetPrivateCategoryTitlesKeywordQueryContributor
+public class AssetInternalCategoryTitlesKeywordQueryContributor
 	implements KeywordQueryContributor {
 
 	@Override
@@ -51,7 +51,7 @@ public class AssetPrivateCategoryTitlesKeywordQueryContributor
 		queryHelper.addSearchTerm(
 			booleanQuery, searchContext,
 			localization.getLocalizedName(
-				Field.ASSET_PRIVATE_CATEGORY_TITLES,
+				Field.ASSET_INTERNAL_CATEGORY_TITLES,
 				LocaleUtil.toLanguageId(searchContext.getLocale())),
 			false);
 	}

@@ -535,11 +535,11 @@
 						"store": true,
 						"type": "keyword"
 					},
-					"assetPrivateCategoryId": {
+					"assetInternalCategoryId": {
 						"store": true,
 						"type": "keyword"
 					},
-					"assetPrivateCategoryIds": {
+					"assetInternalCategoryIds": {
 						"store": true,
 						"type": "keyword"
 					},
