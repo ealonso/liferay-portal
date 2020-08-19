@@ -1,3 +1,7 @@
+<%@ page import="com.liferay.layout.admin.web.internal.servlet.taglib.ui.NavigationStep" %>
+
+<%@ page import="java.util.Arrays" %>
+
 <%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
@@ -18,9 +22,16 @@
 
 <%
 SelectLayoutCollectionDisplayContext selectLayoutCollectionDisplayContext = (SelectLayoutCollectionDisplayContext)request.getAttribute(LayoutAdminWebKeys.SELECT_LAYOUT_COLLECTION_DISPLAY_CONTEXT);
+
+	request.setAttribute("multi_step_nav_small.jsp-navigationSteps", Arrays.asList(new NavigationStep(false, "Select Template", "www.example.com"), new NavigationStep(true, "Select Collection", "www.example.com"), new NavigationStep(false, "Configure Page", "www.example.com")));
 %>
 
 <div class="lfr-search-container-wrapper" id="<portlet:namespace/>collectionProviders">
+
+	<div style="padding-top: 30px; height: 66px; width: 100%; display: flex; justify-content: center; align-items: center; background: white;">
+		<liferay-util:include page="/multi_step_nav_small.jsp" servletContext="<%= application %>" />
+	</div>
+
 	<liferay-ui:search-container
 		id="entries"
 		searchContainer="<%= selectLayoutCollectionDisplayContext.getCollectionProvidersSearchContainer() %>"
