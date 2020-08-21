@@ -148,7 +148,8 @@ page import="com.liferay.segments.exception.RequiredSegmentsExperienceException"
 page import="com.liferay.site.navigation.model.SiteNavigationMenu" %><%@
 page import="com.liferay.sites.kernel.util.SitesUtil" %><%@
 page import="com.liferay.style.book.model.StyleBookEntry" %><%@
-page import="com.liferay.style.book.service.StyleBookEntryLocalServiceUtil" %>
+page import="com.liferay.style.book.service.StyleBookEntryLocalServiceUtil" %><%@
+page import="com.liferay.style.book.util.DefaultStyleBookEntryUtil" %>
 
 <%@ page import="java.util.List" %><%@
 page import="java.util.Locale" %><%@

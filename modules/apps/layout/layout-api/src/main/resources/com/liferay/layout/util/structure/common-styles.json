@@ -37,6 +37,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -75,6 +95,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -113,6 +153,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -151,6 +211,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			}
@@ -194,6 +274,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -232,6 +332,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -270,6 +390,26 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
 					}
 				]
 			},
@@ -308,6 +448,125 @@
 					{
 						"label": "5",
 						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			}
+		]
+	},
+	{
+		"label": "size",
+		"styles": [
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "width",
+				"name": "width",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "height",
+				"name": "height",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "min-width",
+				"name": "minWidth",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "max-width",
+				"name": "maxWidth",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "min-height",
+				"name": "minHeight",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "max-height",
+				"name": "maxHeight",
+				"responsive": false,
+				"type": "text"
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "visible",
+				"dependencies": [
+				],
+				"label": "overflow",
+				"name": "overflow",
+				"responsive": false,
+				"type": "select",
+				"validValues": [
+					{
+						"label": "visible",
+						"value": "visible"
+					},
+					{
+						"label": "hidden",
+						"value": "hidden"
+					},
+					{
+						"label": "scroll",
+						"value": "scroll"
+					},
+					{
+						"label": "auto",
+						"value": "auto"
 					}
 				]
 			}
@@ -417,7 +676,7 @@
 		"styles": [
 			{
 				"dataType": "string",
-				"defaultValue": "sans-serif",
+				"defaultValue": "fontFamilyBase",
 				"dependencies": [
 				],
 				"label": "font-family",
@@ -426,18 +685,25 @@
 				"type": "select",
 				"validValues": [
 					{
+						"frontendTokenName": "fontFamilySansSerif",
 						"label": "sans-serif",
-						"value": "sans-serif"
+						"value": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
 					},
 					{
+						"frontendTokenName": "fontFamilyMonospace",
 						"label": "monospace",
-						"value": "monospace"
+						"value": "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+					},
+					{
+						"frontendTokenName": "fontFamilyBase",
+						"label": "base",
+						"value": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
 					}
 				]
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "font-weight-normal",
+				"defaultValue": "fontWeightNormal",
 				"dependencies": [
 				],
 				"label": "font-weight",
@@ -446,30 +712,35 @@
 				"type": "select",
 				"validValues": [
 					{
+						"frontendTokenName": "fontWeightNormal",
 						"label": "normal",
-						"value": "font-weight-normal"
+						"value": "400"
 					},
 					{
+						"frontendTokenName": "fontWeightBold",
 						"label": "bold",
-						"value": "font-weight-bold"
+						"value": "700"
 					},
 					{
+						"frontendTokenName": "fontWeightBolder",
 						"label": "bolder",
-						"value": "font-weight-bolder"
+						"value": "900"
 					},
 					{
+						"frontendTokenName": "fontWeightLight",
 						"label": "light",
-						"value": "font-weight-light"
+						"value": "300"
 					},
 					{
+						"frontendTokenName": "fontWeightLighter",
 						"label": "lighter",
-						"value": "font-weight-lighter"
+						"value": "lighter"
 					}
 				]
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "medium",
+				"defaultValue": "fontSizeBase",
 				"dependencies": [
 				],
 				"label": "font-size",
@@ -478,27 +749,30 @@
 				"type": "select",
 				"validValues": [
 					{
+						"frontendTokenName": "fontSizeSm",
 						"label": "small",
-						"value": "small"
+						"value": "0.875rem"
 					},
 					{
-						"label": "medium",
-						"value": "medium"
+						"frontendTokenName": "fontSizeBase",
+						"label": "base",
+						"value": "0.875rem"
 					},
 					{
+						"frontendTokenName": "fontSizeLg",
 						"label": "large",
-						"value": "large"
+						"value": "1.125rem"
 					}
 				]
 			},
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
 				"label": "text-body",
 				"name": "textColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			},
 			{
 				"dataType": "string",
@@ -538,13 +812,13 @@
 		"label": "background",
 		"styles": [
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
 				"label": "background-color",
 				"name": "backgroundColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			},
 			{
 				"dataType": "object",
@@ -567,7 +841,6 @@
 				"defaultValue": 0,
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "border-width",
 				"name": "borderWidth",
 				"responsive": false,
@@ -580,10 +853,9 @@
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "rounded-0",
+				"defaultValue": "0",
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "border-radius",
 				"name": "borderRadius",
 				"responsive": false,
@@ -591,30 +863,38 @@
 				"validValues": [
 					{
 						"label": "none",
-						"value": "rounded-0"
+						"value": "0"
 					},
 					{
-						"label": "regular",
-						"value": "rounded"
+						"frontendTokenName": "borderRadiusSm",
+						"label": "border-radius-small",
+						"value": "0.1875rem"
 					},
 					{
-						"label": "pill",
-						"value": "rounded-pill"
+						"frontendTokenName": "borderRadiusLg",
+						"label": "border-radius-large",
+						"value": "0.375rem"
 					},
 					{
-						"label": "circle",
-						"value": "rounded-circle"
+						"frontendTokenName": "borderRadiusCircle",
+						"label": "border-radius-circle",
+						"value": "50%"
+					},
+					{
+						"frontendTokenName": "roundedPill",
+						"label": "rounded-pill",
+						"value": "50rem"
 					}
 				]
 			},
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
 				"label": "border-color",
 				"name": "borderColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			}
 		]
 	},
@@ -626,7 +906,6 @@
 				"defaultValue": 100,
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "opacity",
 				"name": "opacity",
 				"responsive": false,
@@ -639,10 +918,9 @@
 			},
 			{
 				"dataType": "object",
-				"defaultValue": "shadow-none",
+				"defaultValue": "none",
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "shadow",
 				"name": "shadow",
 				"responsive": false,
@@ -650,19 +928,22 @@
 				"validValues": [
 					{
 						"label": "none",
-						"value": "shadow-none"
+						"value": "none"
 					},
 					{
+						"frontendTokenName": "boxShadowSm",
 						"label": "small",
-						"value": "shadow-sm"
+						"value": "0 .125rem .25rem rgba(0, 0, 0, .075)"
 					},
 					{
+						"frontendTokenName": "boxShadow",
 						"label": "regular",
-						"value": "shadow"
+						"value": "0 .5rem 1rem rgba(0, 0, 0, .15)"
 					},
 					{
+						"frontendTokenName": "boxShadowLg",
 						"label": "large",
-						"value": "shadow-lg"
+						"value": "0 1rem 3rem rgba(0, 0, 0, .175)"
 					}
 				]
 			}

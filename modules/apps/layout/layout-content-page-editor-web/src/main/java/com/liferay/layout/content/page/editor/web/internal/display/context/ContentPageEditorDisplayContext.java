@@ -34,6 +34,8 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.comparator.FragmentCollectionContributorNameComparator;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.frontend.token.definition.FrontendTokenDefinition;
+import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
@@ -90,6 +92,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -106,6 +109,7 @@ import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
@@ -140,6 +144,7 @@ import com.liferay.portal.util.WebAppPool;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.style.book.model.StyleBookEntry;
 import com.liferay.style.book.service.StyleBookEntryLocalServiceUtil;
+import com.liferay.style.book.util.DefaultStyleBookEntryUtil;
 import com.liferay.style.book.util.comparator.StyleBookEntryNameComparator;
 
 import java.util.ArrayList;
@@ -191,6 +196,7 @@ public class ContentPageEditorDisplayContext {
 		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
 		FragmentRendererController fragmentRendererController,
 		FragmentRendererTracker fragmentRendererTracker,
+		FrontendTokenDefinitionRegistry frontendTokenDefinitionRegistry,
 		HttpServletRequest httpServletRequest,
 		InfoItemServiceTracker infoItemServiceTracker,
 		ItemSelector itemSelector,
@@ -206,6 +212,7 @@ public class ContentPageEditorDisplayContext {
 		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
 		_fragmentRendererController = fragmentRendererController;
 		_fragmentRendererTracker = fragmentRendererTracker;
+		_frontendTokenDefinitionRegistry = frontendTokenDefinitionRegistry;
 		_itemSelector = itemSelector;
 		_pageEditorConfiguration = pageEditorConfiguration;
 		_renderResponse = renderResponse;
@@ -282,7 +289,16 @@ public class ContentPageEditorDisplayContext {
 				LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale())
 			).put(
 				"defaultStyleBookEntryName",
-				() -> _getDefaultStyleBookEntryName()
+				() -> {
+					StyleBookEntry defaultStyleBookEntry =
+						_getDefaultStyleBookEntry();
+
+					if (defaultStyleBookEntry != null) {
+						return defaultStyleBookEntry.getName();
+					}
+
+					return null;
+				}
 			).put(
 				"deleteFragmentEntryLinkCommentURL",
 				getFragmentEntryActionURL(
@@ -313,6 +329,8 @@ public class ContentPageEditorDisplayContext {
 				"editFragmentEntryLinkURL",
 				getFragmentEntryActionURL(
 					"/content_layout/edit_fragment_entry_link")
+			).put(
+				"frontendTokens", _getFrontendTokensJSONObject()
 			).put(
 				"getAvailableListItemRenderersURL",
 				getResourceURL(
@@ -854,35 +872,16 @@ public class ContentPageEditorDisplayContext {
 		return _defaultConfigurations;
 	}
 
-	private String _getDefaultStyleBookEntryName() {
-		StyleBookEntry styleBookEntry = null;
-
-		Layout layout = themeDisplay.getLayout();
-
-		if (layout.getStyleBookEntryId() > 0) {
-			styleBookEntry = StyleBookEntryLocalServiceUtil.fetchStyleBookEntry(
-				layout.getStyleBookEntryId());
+	private StyleBookEntry _getDefaultStyleBookEntry() {
+		if (_defaultStyleBookEntry != null) {
+			return _defaultStyleBookEntry;
 		}
 
-		if ((styleBookEntry == null) && (layout.getMasterLayoutPlid() > 0)) {
-			Layout masterLayout = LayoutLocalServiceUtil.fetchLayout(
-				layout.getMasterLayoutPlid());
+		_defaultStyleBookEntry =
+			DefaultStyleBookEntryUtil.getDefaultStyleBookEntry(
+				themeDisplay.getLayout());
 
-			styleBookEntry = StyleBookEntryLocalServiceUtil.fetchStyleBookEntry(
-				masterLayout.getStyleBookEntryId());
-		}
-
-		if (styleBookEntry == null) {
-			styleBookEntry =
-				StyleBookEntryLocalServiceUtil.fetchDefaultStyleBookEntry(
-					layout.getGroupId());
-		}
-
-		if (styleBookEntry != null) {
-			return styleBookEntry.getName();
-		}
-
-		return null;
+		return _defaultStyleBookEntry;
 	}
 
 	private String _getDiscardDraftURL() {
@@ -1453,6 +1452,88 @@ public class ContentPageEditorDisplayContext {
 		_fragmentEntryLinks = fragmentEntryLinksMap;
 
 		return _fragmentEntryLinks;
+	}
+
+	private JSONObject _getFrontendTokensJSONObject() throws Exception {
+		JSONObject frontendTokensJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		JSONObject frontendTokenValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		StyleBookEntry styleBookEntry = _getDefaultStyleBookEntry();
+
+		if (styleBookEntry != null) {
+			frontendTokenValuesJSONObject = JSONFactoryUtil.createJSONObject(
+				styleBookEntry.getFrontendTokensValues());
+		}
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
+			themeDisplay.getSiteGroupId(), false);
+
+		FrontendTokenDefinition frontendTokenDefinition =
+			_frontendTokenDefinitionRegistry.getFrontendTokenDefinition(
+				layoutSet.getThemeId());
+
+		JSONObject frontendTokenDefinitionJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				frontendTokenDefinition.getJSON(themeDisplay.getLocale()));
+
+		JSONArray frontendTokenCategoriesJSONArray =
+			frontendTokenDefinitionJSONObject.getJSONArray(
+				"frontendTokenCategories");
+
+		for (int i = 0; i < frontendTokenCategoriesJSONArray.length(); i++) {
+			JSONObject frontendTokenCategoryJSONObject =
+				frontendTokenCategoriesJSONArray.getJSONObject(i);
+
+			JSONArray frontendTokenSetsJSONArray =
+				frontendTokenCategoryJSONObject.getJSONArray(
+					"frontendTokenSets");
+
+			for (int j = 0; j < frontendTokenSetsJSONArray.length(); j++) {
+				JSONObject frontendTokenSetJSONObject =
+					frontendTokenSetsJSONArray.getJSONObject(j);
+
+				JSONArray frontendTokensJSONArray =
+					frontendTokenSetJSONObject.getJSONArray("frontendTokens");
+
+				for (int k = 0; k < frontendTokensJSONArray.length(); k++) {
+					JSONObject frontendTokenJSONObject =
+						frontendTokensJSONArray.getJSONObject(k);
+
+					String name = frontendTokenJSONObject.getString("name");
+
+					JSONObject valueJSONObject =
+						frontendTokenValuesJSONObject.getJSONObject(name);
+
+					String value = StringPool.BLANK;
+
+					if (valueJSONObject != null) {
+						value = valueJSONObject.getString("value");
+					}
+					else {
+						value = frontendTokenJSONObject.getString(
+							"defaultValue");
+					}
+
+					frontendTokensJSONObject.put(
+						name,
+						HashMapBuilder.put(
+							"editorType",
+							frontendTokenJSONObject.get("editorType")
+						).put(
+							"label", frontendTokenJSONObject.get("label")
+						).put(
+							"name", name
+						).put(
+							"value", value
+						).build());
+				}
+			}
+		}
+
+		return frontendTokensJSONObject;
 	}
 
 	private ItemSelectorCriterion _getImageItemSelectorCriterion() {
@@ -2159,6 +2240,7 @@ public class ContentPageEditorDisplayContext {
 	private final List<ContentPageEditorSidebarPanel>
 		_contentPageEditorSidebarPanels;
 	private Map<String, Object> _defaultConfigurations;
+	private StyleBookEntry _defaultStyleBookEntry;
 	private final FFLayoutContentPageEditorConfiguration
 		_ffLayoutContentPageEditorConfiguration;
 	private final FragmentCollectionContributorTracker
@@ -2169,6 +2251,8 @@ public class ContentPageEditorDisplayContext {
 	private Map<String, Object> _fragmentEntryLinks;
 	private final FragmentRendererController _fragmentRendererController;
 	private final FragmentRendererTracker _fragmentRendererTracker;
+	private final FrontendTokenDefinitionRegistry
+		_frontendTokenDefinitionRegistry;
 	private Long _groupId;
 	private ItemSelectorCriterion _imageItemSelectorCriterion;
 	private final ItemSelector _itemSelector;

@@ -16,6 +16,8 @@ package com.liferay.layout.taglib.internal.display.context;
 
 import com.liferay.asset.info.display.contributor.util.ContentAccessor;
 import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.frontend.token.definition.FrontendTokenDefinition;
+import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.display.contributor.InfoDisplayContributor;
 import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
@@ -44,15 +46,18 @@ import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ClassedModel;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.portlet.PortletJSONUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -61,6 +66,8 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.style.book.model.StyleBookEntry;
+import com.liferay.style.book.util.DefaultStyleBookEntryUtil;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
 import java.util.ArrayList;
@@ -77,6 +84,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RenderFragmentLayoutDisplayContext {
 
 	public RenderFragmentLayoutDisplayContext(
+		FrontendTokenDefinitionRegistry frontendTokenDefinitionRegistry,
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse,
 		InfoDisplayContributorTracker infoDisplayContributorTracker,
@@ -85,6 +93,7 @@ public class RenderFragmentLayoutDisplayContext {
 		LayoutListRetrieverTracker layoutListRetrieverTracker,
 		ListObjectReferenceFactoryTracker listObjectReferenceFactoryTracker) {
 
+		_frontendTokenDefinitionRegistry = frontendTokenDefinitionRegistry;
 		_httpServletRequest = httpServletRequest;
 		_httpServletResponse = httpServletResponse;
 		_infoDisplayContributorTracker = infoDisplayContributorTracker;
@@ -92,6 +101,9 @@ public class RenderFragmentLayoutDisplayContext {
 		_infoListRendererTracker = infoListRendererTracker;
 		_layoutListRetrieverTracker = layoutListRetrieverTracker;
 		_listObjectReferenceFactoryTracker = listObjectReferenceFactoryTracker;
+
+		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	public List<Object> getCollection(
@@ -515,7 +527,7 @@ public class RenderFragmentLayoutDisplayContext {
 	}
 
 	public String getStyle(StyledLayoutStructureItem styledLayoutStructureItem)
-		throws PortalException {
+		throws Exception {
 
 		StringBundler styleSB = new StringBundler(48);
 
@@ -528,7 +540,9 @@ public class RenderFragmentLayoutDisplayContext {
 				styledLayoutStructureItem.getBackgroundColor())) {
 
 			styleSB.append("background-color: ");
-			styleSB.append(styledLayoutStructureItem.getBackgroundColor());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getBackgroundColor()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
@@ -542,7 +556,9 @@ public class RenderFragmentLayoutDisplayContext {
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getBorderColor())) {
 			styleSB.append("border-color: ");
-			styleSB.append(styledLayoutStructureItem.getBorderColor());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getBorderColor()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
@@ -554,13 +570,22 @@ public class RenderFragmentLayoutDisplayContext {
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getFontFamily())) {
 			styleSB.append("font-family: ");
-			styleSB.append(styledLayoutStructureItem.getFontFamily());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getFontFamily()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getFontSize())) {
 			styleSB.append("font-size: ");
-			styleSB.append(styledLayoutStructureItem.getFontSize());
+			styleSB.append(
+				getStyleFromStyleBook(styledLayoutStructureItem.getFontSize()));
+			styleSB.append(StringPool.SEMICOLON);
+		}
+
+		if (Validator.isNotNull(styledLayoutStructureItem.getHeight())) {
+			styleSB.append("height: ");
+			styleSB.append(styledLayoutStructureItem.getHeight());
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
@@ -572,25 +597,31 @@ public class RenderFragmentLayoutDisplayContext {
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getMaxHeight())) {
 			styleSB.append("max-height: ");
-			styleSB.append(styledLayoutStructureItem.getMaxHeight());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getMaxHeight()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getMaxWidth())) {
 			styleSB.append("max-width: ");
-			styleSB.append(styledLayoutStructureItem.getMaxWidth());
+			styleSB.append(
+				getStyleFromStyleBook(styledLayoutStructureItem.getMaxWidth()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getMinHeight())) {
 			styleSB.append("min-height: ");
-			styleSB.append(styledLayoutStructureItem.getMinHeight());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getMinHeight()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getMinWidth())) {
 			styleSB.append("min-width: ");
-			styleSB.append(styledLayoutStructureItem.getMinWidth());
+			styleSB.append(
+				getStyleFromStyleBook(styledLayoutStructureItem.getMinWidth()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
@@ -602,13 +633,22 @@ public class RenderFragmentLayoutDisplayContext {
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getOverflow())) {
 			styleSB.append("overflow: ");
-			styleSB.append(styledLayoutStructureItem.getOverflow());
+			styleSB.append(
+				getStyleFromStyleBook(styledLayoutStructureItem.getOverflow()));
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
 		if (Validator.isNotNull(styledLayoutStructureItem.getTextColor())) {
 			styleSB.append("color: ");
-			styleSB.append(styledLayoutStructureItem.getTextColor());
+			styleSB.append(
+				getStyleFromStyleBook(
+					styledLayoutStructureItem.getTextColor()));
+			styleSB.append(StringPool.SEMICOLON);
+		}
+
+		if (Validator.isNotNull(styledLayoutStructureItem.getWidth())) {
+			styleSB.append("width: ");
+			styleSB.append(styledLayoutStructureItem.getWidth());
 			styleSB.append(StringPool.SEMICOLON);
 		}
 
@@ -621,8 +661,15 @@ public class RenderFragmentLayoutDisplayContext {
 		return styleSB.toString();
 	}
 
+	public String getStyleFromStyleBook(String styleValue) throws Exception {
+		JSONObject frontendTokensValuesJSONObject =
+			_getFrontendTokensJSONObject();
+
+		return frontendTokensValuesJSONObject.getString(styleValue, styleValue);
+	}
+
 	private String _getBackgroundImage(JSONObject rowConfigJSONObject)
-		throws PortalException {
+		throws Exception {
 
 		if (rowConfigJSONObject == null) {
 			return StringPool.BLANK;
@@ -729,6 +776,79 @@ public class RenderFragmentLayoutDisplayContext {
 		return StringPool.BLANK;
 	}
 
+	private JSONObject _getFrontendTokensJSONObject() throws Exception {
+		JSONObject frontendTokensJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		StyleBookEntry styleBookEntry =
+			DefaultStyleBookEntryUtil.getDefaultStyleBookEntry(
+				_themeDisplay.getLayout());
+
+		JSONObject frontendTokenValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		if (styleBookEntry != null) {
+			frontendTokenValuesJSONObject = JSONFactoryUtil.createJSONObject(
+				styleBookEntry.getFrontendTokensValues());
+		}
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
+			_themeDisplay.getSiteGroupId(), false);
+
+		FrontendTokenDefinition frontendTokenDefinition =
+			_frontendTokenDefinitionRegistry.getFrontendTokenDefinition(
+				layoutSet.getThemeId());
+
+		JSONObject frontendTokenDefinitionJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				frontendTokenDefinition.getJSON(_themeDisplay.getLocale()));
+
+		JSONArray frontendTokenCategoriesJSONArray =
+			frontendTokenDefinitionJSONObject.getJSONArray(
+				"frontendTokenCategories");
+
+		for (int i = 0; i < frontendTokenCategoriesJSONArray.length(); i++) {
+			JSONObject frontendTokenCategoryJSONObject =
+				frontendTokenCategoriesJSONArray.getJSONObject(i);
+
+			JSONArray frontendTokenSetsJSONArray =
+				frontendTokenCategoryJSONObject.getJSONArray(
+					"frontendTokenSets");
+
+			for (int j = 0; j < frontendTokenSetsJSONArray.length(); j++) {
+				JSONObject frontendTokenSetJSONObject =
+					frontendTokenSetsJSONArray.getJSONObject(j);
+
+				JSONArray frontendTokensJSONArray =
+					frontendTokenSetJSONObject.getJSONArray("frontendTokens");
+
+				for (int k = 0; k < frontendTokensJSONArray.length(); k++) {
+					JSONObject frontendTokenJSONObject =
+						frontendTokensJSONArray.getJSONObject(k);
+
+					String name = frontendTokenJSONObject.getString("name");
+
+					JSONObject valueJSONObject =
+						frontendTokenValuesJSONObject.getJSONObject(name);
+
+					String value = StringPool.BLANK;
+
+					if (valueJSONObject != null) {
+						value = valueJSONObject.getString("value");
+					}
+					else {
+						value = frontendTokenJSONObject.getString(
+							"defaultValue");
+					}
+
+					frontendTokensJSONObject.put(name, value);
+				}
+			}
+		}
+
+		return frontendTokensJSONObject;
+	}
+
 	private ListObjectReference _getListObjectReference(
 		JSONObject collectionJSONObject) {
 
@@ -813,18 +933,15 @@ public class RenderFragmentLayoutDisplayContext {
 
 		_portlets = new ArrayList<>();
 
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)_httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
 		List<PortletPreferences> portletPreferencesList =
 			PortletPreferencesLocalServiceUtil.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
-				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, themeDisplay.getPlid());
+				PortletKeys.PREFS_OWNER_TYPE_LAYOUT, _themeDisplay.getPlid());
 
 		for (PortletPreferences portletPreferences : portletPreferencesList) {
 			Portlet portlet = PortletLocalServiceUtil.getPortletById(
-				themeDisplay.getCompanyId(), portletPreferences.getPortletId());
+				_themeDisplay.getCompanyId(),
+				portletPreferences.getPortletId());
 
 			_portlets.add(portlet);
 		}
@@ -835,6 +952,8 @@ public class RenderFragmentLayoutDisplayContext {
 	private static final Log _log = LogFactoryUtil.getLog(
 		RenderFragmentLayoutDisplayContext.class);
 
+	private final FrontendTokenDefinitionRegistry
+		_frontendTokenDefinitionRegistry;
 	private final HttpServletRequest _httpServletRequest;
 	private final HttpServletResponse _httpServletResponse;
 	private final InfoDisplayContributorTracker _infoDisplayContributorTracker;
@@ -844,5 +963,6 @@ public class RenderFragmentLayoutDisplayContext {
 	private final ListObjectReferenceFactoryTracker
 		_listObjectReferenceFactoryTracker;
 	private List<Portlet> _portlets;
+	private final ThemeDisplay _themeDisplay;
 
 }

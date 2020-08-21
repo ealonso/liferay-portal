@@ -12,50 +12,50 @@
  * details.
  */
 
+import ClayColorPicker from '@clayui/color-picker';
 import ClayForm from '@clayui/form';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ColorPalette from '../../../common/components/ColorPalette';
 import useControlledState from '../../../core/hooks/useControlledState';
 import {ConfigurationFieldPropTypes} from '../../../prop-types/index';
+import {config} from '../../config/index';
 
-export const ColorPaletteField = ({field, onValueSelect, value}) => {
-	const [nextValue, setNextValue] = useControlledState(
-		value && value.cssClass
-	);
+const COLOR_PICKER_TYPE = 'ColorPicker';
+
+export const ColorPickerField = ({field, onValueSelect, value}) => {
+	const frontendTokens = config.frontendTokens;
+
+	const [color, setColor] = useControlledState(frontendTokens[value]?.value);
+
+	const colorsToNames = Object.values(frontendTokens)
+		.filter((token) => token.editorType === COLOR_PICKER_TYPE)
+		.reduce((acc, token) => {
+			const tokenValue = token.value.replace('#', '');
+			acc[tokenValue] = token.name;
+
+			return acc;
+		}, {});
 
 	return (
-		<ClayForm.Group>
-			<ColorPalette
-				label={field.label}
-				onClear={() => {
-					setNextValue('');
+		<ClayForm.Group small>
+			<ClayColorPicker
+				colors={Object.keys(colorsToNames)}
+				onValueChange={(nextColor) => {
+					setColor(nextColor);
 
-					onValueSelect(field.name, '');
+					onValueSelect(field.name, colorsToNames[nextColor]);
 				}}
-				onColorSelect={(color, event) => {
-					setNextValue(color);
-
-					onValueSelect(field.name, {
-						color,
-						cssClass: color,
-						rgbValue: getComputedStyle(event.target)
-							.backgroundColor,
-					});
-				}}
-				selectedColor={nextValue}
+				showHex={true}
+				title={field.label}
+				value={color}
 			/>
 		</ClayForm.Group>
 	);
 };
 
-ColorPaletteField.propTypes = {
+ColorPickerField.propTypes = {
 	field: PropTypes.shape(ConfigurationFieldPropTypes).isRequired,
 	onValueSelect: PropTypes.func.isRequired,
-	value: PropTypes.shape({
-		color: PropTypes.string,
-		cssClass: PropTypes.string,
-		rgbValue: PropTypes.string,
-	}),
+	value: PropTypes.string,
 };
