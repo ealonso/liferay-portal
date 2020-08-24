@@ -157,7 +157,7 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "WC WebContent Title");
 
-		AssertVisible(locator1 = "Button#PREVIEW");
+		AssertVisible(locator1 = "//*[contains(@class,'image-picker-preview')]/img[contains(@src,'Document_1.jpg')]");
 	}
 
 	@description = "This is a use case for LPS-98619."
@@ -180,7 +180,7 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "WC WebContent Title");
 
-		AssertVisible(locator1 = "Button#PREVIEW");
+		AssertVisible(locator1 = "//*[contains(@class,'image-picker-preview')]/img[contains(@src,'Document_1.jpg')]");
 	}
 
 	@description = "This is a use case for LPS-98619."
@@ -203,7 +203,7 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "Web Content Title");
 
-		AssertVisible(locator1 = "Button#PREVIEW");
+		AssertVisible(locator1 = "//*[contains(@class,'image-picker-preview')]/img[contains(@src,'Document_1.jpg')]");
 	}
 
 }
