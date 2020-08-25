@@ -19,7 +19,6 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
-import com.liferay.layout.taglib.internal.display.context.RenderFragmentLayoutDisplayContext;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.layout.util.structure.DropZoneLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
@@ -134,18 +133,6 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			_getMainItemId(httpServletRequest));
 		httpServletRequest.setAttribute(
 			"liferay-layout:render-fragment-layout:mode", _mode);
-		httpServletRequest.setAttribute(
-			"liferay-layout:render-fragment-layout:" +
-				"renderFragmentLayoutDisplayContext",
-			new RenderFragmentLayoutDisplayContext(
-				ServletContextUtil.getFrontendTokenDefinitionRegistry(),
-				httpServletRequest,
-				(HttpServletResponse)pageContext.getResponse(),
-				ServletContextUtil.getInfoItemServiceTracker(),
-				ServletContextUtil.getInfoListRendererTracker(),
-				ServletContextUtil.getLayoutDisplayPageProviderTracker(),
-				ServletContextUtil.getLayoutListRetrieverTracker(),
-				ServletContextUtil.getListObjectReferenceFactoryTracker()));
 	}
 
 	private Layout _getLayout(HttpServletRequest httpServletRequest) {
