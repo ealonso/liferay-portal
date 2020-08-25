@@ -15,3 +15,11 @@
 --%>
 
 <%@ include file="/render_fragment_layout_structure_items/init.jsp" %>
+
+<%
+RenderFragmentLayoutStructureItemsDisplayContext renderFragmentLayoutStructureItemsDisplayContext = (RenderFragmentLayoutStructureItemsDisplayContext)request.getAttribute(RenderFragmentLayoutStructureItemsDisplayContext.class.getName());
+
+request.setAttribute("render_fragment_layout_structure_items.jsp-childrenItemIds", renderFragmentLayoutStructureItemsDisplayContext.getMainChildrenItemIds());
+%>
+
+<liferay-util:include page="/render_fragment_layout_structure_items/render_fragment_layout.jsp" servletContext="<%= application %>" />
