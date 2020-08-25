@@ -14,19 +14,19 @@
  */
 --%>
 
-<%@ include file="/render_fragment_layout/init.jsp" %>
+<%@ include file="/render_fragment_layout_structure_items/init.jsp" %>
 
 <%
-RenderFragmentLayoutDisplayContext renderFragmentLayoutDisplayContext = (RenderFragmentLayoutDisplayContext)request.getAttribute("liferay-layout:render-fragment-layout:renderFragmentLayoutDisplayContext");
+RenderFragmentLayoutStructureItemsDisplayContext renderFragmentLayoutStructureItemsDisplayContext = (RenderFragmentLayoutStructureItemsDisplayContext)request.getAttribute(RenderFragmentLayoutStructureItemsDisplayContext.class.getName());
 
-LayoutStructure layoutStructure = renderFragmentLayoutDisplayContext.getLayoutStructure();
+LayoutStructure layoutStructure = renderFragmentLayoutStructureItemsDisplayContext.getLayoutStructure();
 
-List<String> childrenItemIds = (List<String>)request.getAttribute("render_layout_structure.jsp-childrenItemIds");
+List<String> childrenItemIds = (List<String>)request.getAttribute("render_fragment_layout_structure_items.jsp-childrenItemIds");
 
 for (String childrenItemId : childrenItemIds) {
 	LayoutStructureItem layoutStructureItem = layoutStructure.getLayoutStructureItem(childrenItemId);
 
-	request.setAttribute("render_layout_structure.jsp-childrenItemIds", layoutStructureItem.getChildrenItemIds());
+	request.setAttribute("render_fragment_layout_structure_items.jsp-childrenItemIds", layoutStructureItem.getChildrenItemIds());
 %>
 
 	<c:choose>
@@ -35,15 +35,15 @@ for (String childrenItemId : childrenItemIds) {
 			<%
 			CollectionStyledLayoutStructureItem collectionStyledLayoutStructureItem = (CollectionStyledLayoutStructureItem)layoutStructureItem;
 
-			InfoListRenderer<Object> infoListRenderer = (InfoListRenderer<Object>)renderFragmentLayoutDisplayContext.getInfoListRenderer(collectionStyledLayoutStructureItem);
+			InfoListRenderer<Object> infoListRenderer = (InfoListRenderer<Object>)renderFragmentLayoutStructureItemsDisplayContext.getInfoListRenderer(collectionStyledLayoutStructureItem);
 			%>
 
-			<div class="<%= renderFragmentLayoutDisplayContext.getCssClass(collectionStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutDisplayContext.getStyle(collectionStyledLayoutStructureItem) %>">
+			<div class="<%= renderFragmentLayoutStructureItemsDisplayContext.getCssClass(collectionStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutStructureItemsDisplayContext.getStyle(collectionStyledLayoutStructureItem) %>">
 				<c:choose>
 					<c:when test="<%= infoListRenderer != null %>">
 
 						<%
-						infoListRenderer.render(renderFragmentLayoutDisplayContext.getCollection(collectionStyledLayoutStructureItem), renderFragmentLayoutDisplayContext.getInfoListRendererContext(collectionStyledLayoutStructureItem.getListItemStyle(), collectionStyledLayoutStructureItem.getTemplateKey()));
+						infoListRenderer.render(renderFragmentLayoutStructureItemsDisplayContext.getCollection(collectionStyledLayoutStructureItem), renderFragmentLayoutStructureItemsDisplayContext.getInfoListRendererContext(collectionStyledLayoutStructureItem.getListItemStyle(), collectionStyledLayoutStructureItem.getTemplateKey()));
 						%>
 
 					</c:when>
@@ -54,16 +54,16 @@ for (String childrenItemId : childrenItemIds) {
 							LayoutDisplayPageProvider<?> currentLayoutDisplayPageProvider = (LayoutDisplayPageProvider<?>)request.getAttribute(LayoutDisplayPageWebKeys.LAYOUT_DISPLAY_PAGE_PROVIDER);
 
 							try {
-								request.setAttribute(LayoutDisplayPageWebKeys.LAYOUT_DISPLAY_PAGE_PROVIDER, renderFragmentLayoutDisplayContext.getCollectionLayoutDisplayPageProvider(collectionStyledLayoutStructureItem));
+								request.setAttribute(LayoutDisplayPageWebKeys.LAYOUT_DISPLAY_PAGE_PROVIDER, renderFragmentLayoutStructureItemsDisplayContext.getCollectionLayoutDisplayPageProvider(collectionStyledLayoutStructureItem));
 
-								for (Object collectionObject : renderFragmentLayoutDisplayContext.getCollection(collectionStyledLayoutStructureItem)) {
+								for (Object collectionObject : renderFragmentLayoutStructureItemsDisplayContext.getCollection(collectionStyledLayoutStructureItem)) {
 									request.setAttribute(InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT, collectionObject);
 							%>
 
 									<clay:col
 										md="<%= String.valueOf(12 / collectionStyledLayoutStructureItem.getNumberOfColumns()) %>"
 									>
-										<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+										<liferay-util:include page="/render_fragment_layout_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 									</clay:col>
 
 							<%
@@ -90,7 +90,7 @@ for (String childrenItemId : childrenItemIds) {
 			<clay:col
 				cssClass="<%= ResponsiveLayoutStructureUtil.getColumnCssClass(columnLayoutStructureItem) %>"
 			>
-				<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+				<liferay-util:include page="/render_fragment_layout_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 			</clay:col>
 		</c:when>
 		<c:when test="<%= layoutStructureItem instanceof ContainerStyledLayoutStructureItem %>">
@@ -98,15 +98,15 @@ for (String childrenItemId : childrenItemIds) {
 			<%
 			ContainerStyledLayoutStructureItem containerStyledLayoutStructureItem = (ContainerStyledLayoutStructureItem)layoutStructureItem;
 
-			String containerLinkHref = renderFragmentLayoutDisplayContext.getContainerLinkHref(containerStyledLayoutStructureItem, request.getAttribute(InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT));
+			String containerLinkHref = renderFragmentLayoutStructureItemsDisplayContext.getContainerLinkHref(containerStyledLayoutStructureItem, request.getAttribute(InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT));
 			%>
 
-			<div class="<%= renderFragmentLayoutDisplayContext.getCssClass(containerStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutDisplayContext.getStyle(containerStyledLayoutStructureItem) %>">
+			<div class="<%= renderFragmentLayoutStructureItemsDisplayContext.getCssClass(containerStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutStructureItemsDisplayContext.getStyle(containerStyledLayoutStructureItem) %>">
 				<c:if test="<%= Validator.isNotNull(containerLinkHref) %>">
-					<a href="<%= containerLinkHref %>" style="color: inherit; text-decoration: none;" target="<%= renderFragmentLayoutDisplayContext.getContainerLinkTarget(containerStyledLayoutStructureItem) %>">
+					<a href="<%= containerLinkHref %>" style="color: inherit; text-decoration: none;" target="<%= renderFragmentLayoutStructureItemsDisplayContext.getContainerLinkTarget(containerStyledLayoutStructureItem) %>">
 				</c:if>
 
-				<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+				<liferay-util:include page="/render_fragment_layout_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 
 				<c:if test="<%= Validator.isNotNull(containerLinkHref) %>">
 					</a>
@@ -130,10 +130,10 @@ for (String childrenItemId : childrenItemIds) {
 
 			FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
 
-			DefaultFragmentRendererContext defaultFragmentRendererContext = renderFragmentLayoutDisplayContext.getDefaultFragmentRendererContext(fragmentEntryLink, fragmentStyledLayoutStructureItem.getItemId());
+			DefaultFragmentRendererContext defaultFragmentRendererContext = renderFragmentLayoutStructureItemsDisplayContext.getDefaultFragmentRendererContext(fragmentEntryLink, fragmentStyledLayoutStructureItem.getItemId());
 			%>
 
-			<div class="<%= renderFragmentLayoutDisplayContext.getCssClass(fragmentStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutDisplayContext.getStyle(fragmentStyledLayoutStructureItem) %>">
+			<div class="<%= renderFragmentLayoutStructureItemsDisplayContext.getCssClass(fragmentStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutStructureItemsDisplayContext.getStyle(fragmentStyledLayoutStructureItem) %>">
 				<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
 			</div>
 		</c:when>
@@ -162,7 +162,7 @@ for (String childrenItemId : childrenItemIds) {
 			}
 			%>
 
-			<div class="<%= renderFragmentLayoutDisplayContext.getCssClass(rowStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutDisplayContext.getStyle(rowStyledLayoutStructureItem) %>">
+			<div class="<%= renderFragmentLayoutStructureItemsDisplayContext.getCssClass(rowStyledLayoutStructureItem) %>" style="<%= renderFragmentLayoutStructureItemsDisplayContext.getStyle(rowStyledLayoutStructureItem) %>">
 				<c:choose>
 					<c:when test="<%= includeContainer %>">
 						<clay:container
@@ -172,7 +172,7 @@ for (String childrenItemId : childrenItemIds) {
 							<clay:row
 								cssClass="<%= ResponsiveLayoutStructureUtil.getRowCssClass(rowStyledLayoutStructureItem) %>"
 							>
-								<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+								<liferay-util:include page="/render_fragment_layout_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 							</clay:row>
 						</clay:container>
 					</c:when>
@@ -180,14 +180,14 @@ for (String childrenItemId : childrenItemIds) {
 						<clay:row
 							cssClass="<%= ResponsiveLayoutStructureUtil.getRowCssClass(rowStyledLayoutStructureItem) %>"
 						>
-							<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+							<liferay-util:include page="/render_fragment_layout_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 						</clay:row>
 					</c:otherwise>
 				</c:choose>
 			</div>
 		</c:when>
 		<c:otherwise>
-			<liferay-util:include page="/render_fragment_layout/render_layout_structure.jsp" servletContext="<%= application %>" />
+			<liferay-util:include page="/render_fragment_layout_structure_items_structure_items/render_layout_structure.jsp" servletContext="<%= application %>" />
 		</c:otherwise>
 	</c:choose>
 
