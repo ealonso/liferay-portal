@@ -88,6 +88,7 @@ List<SiteNavigationMenu> autoSiteNavigationMenus = layoutsAdminDisplayContext.ge
 								className="<%= Layout.class.getName() %>"
 								classPK="<%= 0 %>"
 								showOnlyRequiredVocabularies="<%= true %>"
+								visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 							/>
 						</c:when>
 						<c:otherwise>

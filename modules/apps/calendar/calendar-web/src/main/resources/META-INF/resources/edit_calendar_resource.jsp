@@ -118,6 +118,7 @@ String code = BeanParamUtil.getString(calendarResource, request, "code");
 				<liferay-asset:asset-categories-selector
 					className="<%= CalendarResource.class.getName() %>"
 					classPK="<%= calendarResourceId %>"
+					visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 				/>
 
 				<liferay-asset:asset-tags-selector

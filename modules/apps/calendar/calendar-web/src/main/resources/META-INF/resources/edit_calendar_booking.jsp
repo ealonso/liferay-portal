@@ -482,6 +482,7 @@ while (manageableCalendarsIterator.hasNext()) {
 						<liferay-asset:asset-categories-selector
 							className="<%= CalendarBooking.class.getName() %>"
 							classPK="<%= calendarBookingId %>"
+							visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 						/>
 
 						<liferay-asset:asset-tags-selector

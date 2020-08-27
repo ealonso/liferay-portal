@@ -34,6 +34,7 @@ Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 <liferay-asset:asset-categories-selector
 	className="<%= Layout.class.getName() %>"
 	classPK="<%= (selLayout != null) ? selLayout.getPrimaryKey() : 0 %>"
+	visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 />
 
 <liferay-asset:asset-tags-selector

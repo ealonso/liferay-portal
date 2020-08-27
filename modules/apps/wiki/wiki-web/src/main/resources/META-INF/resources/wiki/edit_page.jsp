@@ -275,6 +275,7 @@ if (portletTitleBasedNavigation) {
 						<liferay-asset:asset-categories-selector
 							className="<%= WikiPage.class.getName() %>"
 							classPK="<%= classPK %>"
+							visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 						/>
 
 						<liferay-asset:asset-tags-selector
