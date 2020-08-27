@@ -23,4 +23,8 @@ public class AssetVocabularyConstants {
 
 	public static final int VISIBILITY_TYPE_PUBLIC = 0;
 
+	public static final int[] VISIBILITY_TYPES = {
+		VISIBILITY_TYPE_INTERNAL, VISIBILITY_TYPE_PUBLIC
+	};
+
 }
