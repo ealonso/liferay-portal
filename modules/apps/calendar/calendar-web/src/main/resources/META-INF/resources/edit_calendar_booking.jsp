@@ -14,7 +14,9 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ taglib uri="http://java.sun.com/portlet" prefix="portlet" %>
+
+<%@ taglib uri="http://liferay.com/tld/asset" prefix="liferay-asset" %>
 
 <%
 String activeView = ParamUtil.getString(request, "activeView", defaultView);
@@ -482,6 +484,7 @@ while (manageableCalendarsIterator.hasNext()) {
 						<liferay-asset:asset-categories-selector
 							className="<%= CalendarBooking.class.getName() %>"
 							classPK="<%= calendarBookingId %>"
+							visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 						/>
 
 						<liferay-asset:asset-tags-selector

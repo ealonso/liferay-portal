@@ -34,6 +34,7 @@ Group liveGroup = (Group)request.getAttribute("site.liveGroup");
 <liferay-asset:asset-categories-selector
 	className="<%= Group.class.getName() %>"
 	classPK="<%= (liveGroup != null) ? liveGroup.getGroupId() : 0 %>"
+	visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 />
 
 <liferay-asset:asset-tags-selector

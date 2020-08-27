@@ -186,6 +186,7 @@ renderResponse.setTitle((entry != null) ? BlogsEntryUtil.getDisplayTitle(resourc
 					<liferay-asset:asset-categories-selector
 						className="<%= BlogsEntry.class.getName() %>"
 						classPK="<%= entryId %>"
+						visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 					/>
 
 					<liferay-asset:asset-tags-selector

@@ -33,6 +33,7 @@ AccountEntryDisplay accountEntryDisplay = (AccountEntryDisplay)request.getAttrib
 		<liferay-asset:asset-categories-selector
 			className="<%= AccountEntry.class.getName() %>"
 			classPK="<%= accountEntryDisplay.getAccountEntryId() %>"
+			visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 		/>
 	</div>
 

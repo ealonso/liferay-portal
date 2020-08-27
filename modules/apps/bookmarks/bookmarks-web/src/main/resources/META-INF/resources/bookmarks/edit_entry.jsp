@@ -159,6 +159,7 @@ renderResponse.setTitle(headerTitle);
 					<liferay-asset:asset-categories-selector
 						className="<%= BookmarksEntry.class.getName() %>"
 						classPK="<%= entryId %>"
+						visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 					/>
 
 					<liferay-asset:asset-tags-selector
