@@ -306,6 +306,7 @@ if (portletTitleBasedNavigation) {
 					<liferay-asset:asset-categories-selector
 						className="<%= MBMessage.class.getName() %>"
 						classPK="<%= (message != null) ? message.getMessageId() : 0 %>"
+						visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 					/>
 
 					<liferay-asset:asset-tags-selector

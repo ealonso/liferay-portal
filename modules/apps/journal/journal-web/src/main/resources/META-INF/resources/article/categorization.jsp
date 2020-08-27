@@ -65,6 +65,7 @@ DDMStructure ddmStructure = journalEditArticleDisplayContext.getDDMStructure();
 	classPK="<%= classPK %>"
 	classTypePK="<%= ddmStructure.getStructureId() %>"
 	ignoreRequestValue="<%= journalEditArticleDisplayContext.isChangeStructure() %>"
+	visibilityTypes="<%= AssetVocabularyConstants.VISIBILITY_TYPES %>"
 />
 
 <div class="border-0 mb-0 sheet-subtitle text-uppercase">
