@@ -479,7 +479,6 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 	private static final String _PAGE = "/asset_categories_selector/page.jsp";
 
 	private static final int[] _VISIBILITY_TYPES = {
-		AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL,
 		AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC
 	};
 
