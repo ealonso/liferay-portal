@@ -221,7 +221,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			sb.append("<script>(function() {");
 			sb.append("var fragmentElement = document.querySelector('#");
 			sb.append(fragmentIdSB.toString());
-			sb.append("'); var configuration = ");
+			sb.append("'); var fragmentNamespace = '");
+			sb.append(namespace);
+			sb.append("'; var configuration = ");
 			sb.append(configuration);
 			sb.append(";");
 			sb.append(js);
