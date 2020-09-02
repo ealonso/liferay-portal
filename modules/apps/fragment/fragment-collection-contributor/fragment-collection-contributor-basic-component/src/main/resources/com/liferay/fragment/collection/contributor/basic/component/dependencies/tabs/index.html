@@ -11,20 +11,20 @@
 			<span class="icon-caret-bottom"></span>
 		</button>
 
-		<div class="collapse navbar-collapse" id="navigationBarCollapse" style="z-index: 1;">
+		<div class="collapse navbar-collapse" id="${fragmentEntryLinkNamespace}navigationBarCollapse" style="z-index: 1;">
 			<ul class="navbar-nav" role="tablist">
 				[#list 0..configuration.numberOfTabs-1 as i]
 				<li class="nav-item" role="presentation">
 					<button
-						aria-controls="tabPanel${i+1}"
+						aria-controls="${fragmentEntryLinkNamespace}tabPanel${i+1}"
 						aria-selected="false"
 						class="nav-link"
-						id="tab${i+1}"
+						id="${fragmentEntryLinkNamespace}tab${i+1}"
 						role="tab"
 					>
 						<span
 							class="navbar-text-truncate"
-							data-lfr-editable-id="title${i+1}"
+							data-lfr-editable-id="${fragmentEntryLinkNamespace}title${i+1}"
 							data-lfr-editable-type="text"
 							tabindex="-1"
 						>
@@ -39,7 +39,7 @@
 
 	<div class="tab-panel">
 		[#list 0..configuration.numberOfTabs-1 as i]
-		<div aria-labelledby="tab${i+1}" class="tab-panel-item d-none" id="tabPanel${i+1}" role="tabpanel" tabindex="0">
+		<div aria-labelledby="${fragmentEntryLinkNamespace}tab${i+1}" class="tab-panel-item d-none" id="${fragmentEntryLinkNamespace}tabPanel${i+1}" role="tabpanel" tabindex="0">
 			<lfr-drop-zone></lfr-drop-zone>
 		</div>
 		[/#list]
