@@ -34,12 +34,12 @@ AssetListManagementToolbarDisplayContext assetListManagementToolbarDisplayContex
 </portlet:actionURL>
 
 <aui:form action="<%= deleteAssetListEntryURL %>" cssClass="container-fluid-1280" name="fm">
-	<liferay-ui:breadcrumb
-		showLayout="<%= false %>"
-	/>
-
 	<c:choose>
 		<c:when test="<%= assetListDisplayContext.getAssetListEntriesCount() > 0 %>">
+			<liferay-ui:breadcrumb
+				showLayout="<%= false %>"
+			/>
+
 			<liferay-ui:search-container
 				id="assetListEntries"
 				searchContainer="<%= assetListDisplayContext.getAssetListEntriesSearchContainer() %>"
