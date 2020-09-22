@@ -78,7 +78,7 @@ public class DummyHttpServletRequest implements HttpServletRequest {
 
 	@Override
 	public Enumeration<String> getAttributeNames() {
-		return null;
+		return Collections.enumeration(_attributes.keySet());
 	}
 
 	@Override
@@ -421,7 +421,7 @@ public class DummyHttpServletRequest implements HttpServletRequest {
 
 		@Override
 		public Enumeration<String> getAttributeNames() {
-			return null;
+			return Collections.enumeration(_attributes.keySet());
 		}
 
 		@Override
