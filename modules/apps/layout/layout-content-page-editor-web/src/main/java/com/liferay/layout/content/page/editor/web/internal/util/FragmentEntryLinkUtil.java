@@ -50,8 +50,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 
 /**
  * @author Eudaldo Alonso
@@ -138,7 +138,7 @@ public class FragmentEntryLinkUtil {
 	}
 
 	public static JSONObject getFragmentEntryLinkJSONObject(
-			ActionRequest actionRequest, ActionResponse actionResponse,
+			PortletRequest portletRequest, PortletResponse portletResponse,
 			FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
 			FragmentEntryLink fragmentEntryLink,
 			FragmentCollectionContributorTracker
@@ -148,7 +148,7 @@ public class FragmentEntryLinkUtil {
 			ItemSelector itemSelector, String portletId)
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		DefaultFragmentRendererContext defaultFragmentRendererContext =
@@ -201,8 +201,8 @@ public class FragmentEntryLinkUtil {
 			configuration);
 
 		FragmentEntryLinkItemSelectorUtil.addFragmentEntryLinkFieldsSelectorURL(
-			itemSelector, PortalUtil.getHttpServletRequest(actionRequest),
-			PortalUtil.getLiferayPortletResponse(actionResponse),
+			itemSelector, PortalUtil.getHttpServletRequest(portletRequest),
+			PortalUtil.getLiferayPortletResponse(portletResponse),
 			configurationJSONObject);
 
 		return JSONUtil.put(
@@ -211,8 +211,8 @@ public class FragmentEntryLinkUtil {
 			"content",
 			fragmentRendererController.render(
 				defaultFragmentRendererContext,
-				PortalUtil.getHttpServletRequest(actionRequest),
-				PortalUtil.getHttpServletResponse(actionResponse))
+				PortalUtil.getHttpServletRequest(portletRequest),
+				PortalUtil.getHttpServletResponse(portletResponse))
 		).put(
 			"defaultConfigurationValues",
 			fragmentEntryConfigurationParser.
