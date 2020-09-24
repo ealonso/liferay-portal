@@ -31,6 +31,7 @@ export function openImageSelector(callback, destroyedCallback = null) {
 			else {
 				const fileEntry = JSON.parse(value);
 
+				selectedImage.fileEntryId = fileEntry.fileEntryId;
 				selectedImage.title = fileEntry.title;
 				selectedImage.url = fileEntry.url;
 			}

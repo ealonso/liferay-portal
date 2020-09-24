@@ -105,7 +105,7 @@ export function ImagePropertiesPanel({item}) {
 		);
 	};
 
-	const onImageChange = (imageTitle, imageUrl) => {
+	const onImageChange = (imageTitle, imageUrl, fileEntryId) => {
 		const {editableValues} = state.fragmentEntryLinks[fragmentEntryLinkId];
 
 		const editableProcessorValues = editableValues[processorKey];
@@ -129,7 +129,10 @@ export function ImagePropertiesPanel({item}) {
 		nextEditableValue = {
 			...editableValue,
 			config: nextEditableValueConfig,
-			[state.languageId]: imageUrl,
+			[state.languageId]: {
+				fileEntryId,
+				url: imageUrl,
+			},
 		};
 
 		const nextEditableValues = {
@@ -159,7 +162,7 @@ export function ImagePropertiesPanel({item}) {
 				label={Liferay.Language.get('image')}
 				onClearButtonPressed={() => onImageChange('', '')}
 				onImageSelected={(image) =>
-					onImageChange(image.title, image.url)
+					onImageChange(image.title, image.url, image.fileEntryId)
 				}
 			/>
 
