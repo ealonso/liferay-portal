@@ -155,10 +155,13 @@ public class ImageEditableElementParser implements EditableElementParser {
 
 		Element replaceableElement = elements.get(0);
 
+		long fileEntryId = 0;
+
 		if (JSONUtil.isValid(value)) {
 			try {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(value);
 
+				fileEntryId = jsonObject.getLong("fileEntryId", 0);
 				value = jsonObject.getString("url");
 			}
 			catch (JSONException jsonException) {
@@ -169,6 +172,11 @@ public class ImageEditableElementParser implements EditableElementParser {
 		}
 
 		value = value.trim();
+
+		if (fileEntryId > 0) {
+			replaceableElement.attr(
+				"data-fileentryid", String.valueOf(fileEntryId));
+		}
 
 		if (Validator.isNotNull(value)) {
 			replaceableElement.attr("src", _html.unescape(value));
