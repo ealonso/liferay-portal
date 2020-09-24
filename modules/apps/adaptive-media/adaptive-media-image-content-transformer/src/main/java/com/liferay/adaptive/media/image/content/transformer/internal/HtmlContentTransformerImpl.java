@@ -81,7 +81,7 @@ public class HtmlContentTransformerImpl
 
 	private static final Pattern _pattern = Pattern.compile(
 		"<img [^>]*?\\s*" + AMImageHTMLConstants.ATTRIBUTE_NAME_FILE_ENTRY_ID +
-			"=\"(\\d+)\".*?/>",
+			"=\"(\\d+)\".*?/?>",
 		Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
 	@Reference
