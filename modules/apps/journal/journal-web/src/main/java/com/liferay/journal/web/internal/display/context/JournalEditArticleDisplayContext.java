@@ -90,14 +90,11 @@ public class JournalEditArticleDisplayContext {
 	}
 
 	public String getArticleId() {
-		if (_articleId != null) {
-			return _articleId;
+		if (_article == null) {
+			return null;
 		}
 
-		_articleId = BeanParamUtil.getString(
-			_article, _httpServletRequest, "articleId");
-
-		return _articleId;
+		return _article.getArticleId();
 	}
 
 	public Set<Locale> getAvailableLocales() {
@@ -777,7 +774,6 @@ public class JournalEditArticleDisplayContext {
 		JournalEditArticleDisplayContext.class);
 
 	private JournalArticle _article;
-	private String _articleId;
 	private Set<Locale> _availableLocales;
 	private Boolean _changeStructure;
 	private Long _classNameId;
