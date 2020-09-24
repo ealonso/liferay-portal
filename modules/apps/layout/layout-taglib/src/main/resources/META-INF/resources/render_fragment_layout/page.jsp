@@ -35,13 +35,19 @@ try {
 	request.setAttribute(WebKeys.SHOW_PORTLET_TOPPER, Boolean.TRUE);
 %>
 
-	<liferay-layout:render-layout-structure
-		fieldValues="<%= fieldValues %>"
-		layoutStructure="<%= layoutStructure %>"
-		mainItemId="<%= mainItemId %>"
-		mode="<%= mode %>"
-		showPreview="<%= showPreview %>"
-	/>
+	<liferay-util:buffer
+		var="pageContent"
+	>
+		<liferay-layout:render-layout-structure
+			fieldValues="<%= fieldValues %>"
+			layoutStructure="<%= layoutStructure %>"
+			mainItemId="<%= mainItemId %>"
+			mode="<%= mode %>"
+			showPreview="<%= showPreview %>"
+		/>
+	</liferay-util:buffer>
+
+	<%= renderFragmentLayoutDisplayContext.processAMImages(pageContent) %>
 
 <%
 }
