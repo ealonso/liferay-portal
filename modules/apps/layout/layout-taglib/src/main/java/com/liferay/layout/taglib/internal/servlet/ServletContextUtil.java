@@ -14,6 +14,7 @@
 
 package com.liferay.layout.taglib.internal.servlet;
 
+import com.liferay.adaptive.media.content.transformer.ContentTransformerHandler;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
@@ -42,6 +43,12 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  */
 @Component(immediate = true, service = {})
 public class ServletContextUtil {
+
+	public static final ContentTransformerHandler
+		getContentTransformerHandler() {
+
+		return _contentTransformerHandler;
+	}
 
 	public static final String getContextPath() {
 		return _servletContext.getContextPath();
@@ -134,6 +141,13 @@ public class ServletContextUtil {
 	}
 
 	@Reference(unbind = "-")
+	protected void setContentTransformerHandler(
+		ContentTransformerHandler contentTransformerHandler) {
+
+		_contentTransformerHandler = contentTransformerHandler;
+	}
+
+	@Reference(unbind = "-")
 	protected void setFragmentCollectionContributorTracker(
 		FragmentCollectionContributorTracker
 			fragmentCollectionContributorTracker) {
@@ -199,6 +213,7 @@ public class ServletContextUtil {
 		_servletContext = servletContext;
 	}
 
+	private static ContentTransformerHandler _contentTransformerHandler;
 	private static FragmentCollectionContributorTracker
 		_fragmentCollectionContributorTracker;
 	private static FragmentRendererTracker _fragmentRendererTracker;
