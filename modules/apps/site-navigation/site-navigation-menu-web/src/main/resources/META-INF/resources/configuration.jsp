@@ -399,10 +399,12 @@ else {
 				id: '<portlet:namespace />selectSiteNavigationMenu',
 				onSelect: function (selectedItem) {
 					if (selectedItem) {
-						navigationMenuName.innerText = selectedItem.name;
+						var itemValue = JSON.parse(selectedItem.value);
+
+						navigationMenuName.innerText = itemValue.name;
 						rootMenuItemIdInput.value = '0';
-						rootMenuItemNameSpan.innerText = selectedItem.name;
-						siteNavigationMenuIdInput.value = selectedItem.id;
+						rootMenuItemNameSpan.innerText = itemValue.name;
+						siteNavigationMenuIdInput.value = itemValue.id;
 
 						dom.toggleClasses(removeSiteNavigationMenu, 'hide');
 
