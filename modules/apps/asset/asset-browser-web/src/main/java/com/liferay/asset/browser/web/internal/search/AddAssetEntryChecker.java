@@ -17,7 +17,7 @@ package com.liferay.asset.browser.web.internal.search;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 
-import javax.portlet.RenderResponse;
+import javax.portlet.PortletResponse;
 
 /**
  * @author Jürgen Kappler
@@ -25,9 +25,9 @@ import javax.portlet.RenderResponse;
 public class AddAssetEntryChecker extends EmptyOnClickRowChecker {
 
 	public AddAssetEntryChecker(
-		RenderResponse renderResponse, long assetEntryId) {
+		PortletResponse portletResponse, long assetEntryId) {
 
-		super(renderResponse);
+		super(portletResponse);
 
 		_assetEntryId = assetEntryId;
 	}
