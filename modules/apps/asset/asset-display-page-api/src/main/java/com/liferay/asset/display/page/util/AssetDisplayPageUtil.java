@@ -36,11 +36,10 @@ public class AssetDisplayPageUtil {
 			AssetDisplayPageEntryLocalServiceUtil.fetchAssetDisplayPageEntry(
 				groupId, classNameId, classPK);
 
-		if ((assetDisplayPageEntry == null) ||
-			(assetDisplayPageEntry.getType() ==
-				AssetDisplayPageConstants.TYPE_NONE)) {
-
-			return null;
+		if (assetDisplayPageEntry == null) {
+			return LayoutPageTemplateEntryServiceUtil.
+				fetchDefaultLayoutPageTemplateEntry(
+					groupId, classNameId, classTypeId);
 		}
 
 		if (assetDisplayPageEntry.getType() ==
