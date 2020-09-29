@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.fragment.renderer.react.internal.renderer;
+package com.liferay.fragment.renderer.menu.display.internal.renderer;
 
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntry;
