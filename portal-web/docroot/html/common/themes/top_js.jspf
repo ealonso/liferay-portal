@@ -200,7 +200,7 @@
 				LayoutSEOLink layoutSEOLink = layoutSEOLinkManager.getCanonicalLayoutSEOLink(layout, themeDisplay.getLocale(), canonicalURL, PortalUtil.getAlternateURLs(canonicalURL, themeDisplay, layout));
 				%>
 
-				return '<%= HtmlUtil.escapeJS(layoutSEOLink.getHref()) %>';
+				return '<%= (layoutSEOLink != null) ? HtmlUtil.escapeJS(layoutSEOLink.getHref()) : StringPool.BLANK %>';
 			},
 			getCDNBaseURL: function() {
 				return '<%= themeDisplay.getCDNBaseURL() %>';
