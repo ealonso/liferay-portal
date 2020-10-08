@@ -16,7 +16,6 @@ package com.liferay.layout.admin.web.internal.exportimport.data.handler;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.util.DLURLHelper;
-import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
@@ -257,10 +256,6 @@ public class LayoutPageTemplateStructureRelStagedModelDataHandler
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;
-
-	@Reference(target = "(content.processor.type=DLReferences)")
-	private ExportImportContentProcessor<String>
-		_dlReferencesExportImportContentProcessor;
 
 	@Reference
 	private DLURLHelper _dlURLHelper;
