@@ -14,9 +14,6 @@
 
 package com.liferay.layout.internal.exportimport.data.handler;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
-import com.liferay.asset.kernel.model.AssetRenderer;
-import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
@@ -24,15 +21,18 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
+import com.liferay.info.item.ClassPKInfoItemIdentifier;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.StagedModel;
+import com.liferay.portal.kernel.model.WorkflowedModel;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.staging.StagingGroupHelperUtil;
@@ -90,24 +90,25 @@ public class LayoutClassedModelUsageStagedModelDataHandler
 		Element element = portletDataContext.getExportDataElement(
 			layoutClassedModelUsage);
 
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				layoutClassedModelUsage.getClassName());
-
 		StagingGroupHelper stagingGroupHelper =
 			StagingGroupHelperUtil.getStagingGroupHelper();
 
 		if (ExportImportThreadLocal.isStagingInProcess() &&
-			(assetRendererFactory != null) &&
-			stagingGroupHelper.isStagedPortlet(
+			stagingGroupHelper.isStagedPortletData(
 				portletDataContext.getScopeGroupId(),
-				assetRendererFactory.getPortletId())) {
+				layoutClassedModelUsage.getClassName())) {
 
-			AssetRenderer<?> assetRenderer = null;
+			Object object = null;
 
 			try {
-				assetRenderer = assetRendererFactory.getAssetRenderer(
-					layoutClassedModelUsage.getClassPK());
+				InfoItemObjectProvider<Object> infoItemObjectProvider =
+					_infoItemServiceTracker.getFirstInfoItemService(
+						InfoItemObjectProvider.class,
+						layoutClassedModelUsage.getClassName());
+
+				object = infoItemObjectProvider.getInfoItem(
+					new ClassPKInfoItemIdentifier(
+						layoutClassedModelUsage.getClassPK()));
 			}
 			catch (PortalException portalException) {
 				if (_log.isDebugEnabled()) {
@@ -115,15 +116,11 @@ public class LayoutClassedModelUsageStagedModelDataHandler
 				}
 			}
 
-			if ((assetRenderer != null) &&
-				(assetRenderer.getStatus() ==
-					WorkflowConstants.STATUS_APPROVED)) {
-
+			if ((object != null) && _isApproved(object)) {
 				StagedModelDataHandlerUtil.exportReferenceStagedModel(
 					portletDataContext, layoutClassedModelUsage,
-					(StagedModel)assetRenderer.getAssetObject(),
-					PortletDataContext.REFERENCE_TYPE_DEPENDENCY,
-					assetRendererFactory.getPortletId());
+					(StagedModel)object,
+					PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
 			}
 		}
 
@@ -221,8 +218,25 @@ public class LayoutClassedModelUsageStagedModelDataHandler
 		return _stagedModelRepository;
 	}
 
+	private boolean _isApproved(Object object) {
+		if (!(object instanceof WorkflowedModel)) {
+			return true;
+		}
+
+		WorkflowedModel workflowedModel = (WorkflowedModel)object;
+
+		if (workflowedModel.isApproved()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutClassedModelUsageStagedModelDataHandler.class);
+
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private Portal _portal;
