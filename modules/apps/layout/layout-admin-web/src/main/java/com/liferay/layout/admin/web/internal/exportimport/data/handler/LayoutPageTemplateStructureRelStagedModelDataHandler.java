@@ -14,6 +14,8 @@
 
 package com.liferay.layout.admin.web.internal.exportimport.data.handler;
 
+import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.util.DLURLHelper;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
@@ -23,6 +25,11 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.layout.util.structure.StyledLayoutStructureItem;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
@@ -72,13 +79,8 @@ public class LayoutPageTemplateStructureRelStagedModelDataHandler
 				segmentsExperience, PortletDataContext.REFERENCE_TYPE_STRONG);
 		}
 
-		String data =
-			_dlReferencesExportImportContentProcessor.
-				replaceExportContentReferences(
-					portletDataContext, layoutPageTemplateStructureRel,
-					layoutPageTemplateStructureRel.getData(), false, false);
-
-		layoutPageTemplateStructureRel.setData(data);
+		_exportBackgroundImages(
+			portletDataContext, layoutPageTemplateStructureRel);
 
 		portletDataContext.addClassedModel(
 			layoutPageTemplateStructureRelElement,
@@ -121,11 +123,8 @@ public class LayoutPageTemplateStructureRelStagedModelDataHandler
 		importedLayoutPageTemplateStructureRel.setSegmentsExperienceId(
 			segmentsExperienceId);
 
-		String data =
-			_dlReferencesExportImportContentProcessor.
-				replaceImportContentReferences(
-					portletDataContext, layoutPageTemplateStructureRel,
-					layoutPageTemplateStructureRel.getData());
+		String data = _importBackgroundImages(
+			portletDataContext, layoutPageTemplateStructureRel);
 
 		importedLayoutPageTemplateStructureRel.setData(data);
 
@@ -166,9 +165,105 @@ public class LayoutPageTemplateStructureRelStagedModelDataHandler
 		return _stagedModelRepository;
 	}
 
+	private void _exportBackgroundImages(
+			PortletDataContext portletDataContext,
+			LayoutPageTemplateStructureRel layoutPageTemplateStructureRel)
+		throws Exception {
+
+		LayoutStructure layoutStructure = LayoutStructure.of(
+			layoutPageTemplateStructureRel.getData());
+
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
+
+			JSONObject backgroundImageJSONObject =
+				_getBackgroundImageJSONObject(layoutStructureItem);
+
+			if (backgroundImageJSONObject == null) {
+				continue;
+			}
+
+			long fileEntryId = backgroundImageJSONObject.getLong("fileEntryId");
+
+			if (fileEntryId <= 0) {
+				continue;
+			}
+
+			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
+
+			if (!fileEntry.isInTrash()) {
+				StagedModelDataHandlerUtil.exportReferenceStagedModel(
+					portletDataContext, layoutPageTemplateStructureRel,
+					fileEntry, PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
+			}
+		}
+	}
+
+	private JSONObject _getBackgroundImageJSONObject(
+		LayoutStructureItem layoutStructureItem) {
+
+		if (!(layoutStructureItem instanceof StyledLayoutStructureItem)) {
+			return null;
+		}
+
+		StyledLayoutStructureItem styledLayoutStructureItem =
+			(StyledLayoutStructureItem)layoutStructureItem;
+
+		return styledLayoutStructureItem.getBackgroundImageJSONObject();
+	}
+
+	private String _importBackgroundImages(
+			PortletDataContext portletDataContext,
+			LayoutPageTemplateStructureRel layoutPageTemplateStructureRel)
+		throws Exception {
+
+		LayoutStructure layoutStructure = LayoutStructure.of(
+			layoutPageTemplateStructureRel.getData());
+
+		for (LayoutStructureItem layoutStructureItem :
+				layoutStructure.getLayoutStructureItems()) {
+
+			JSONObject backgroundImageJSONObject =
+				_getBackgroundImageJSONObject(layoutStructureItem);
+
+			if (backgroundImageJSONObject == null) {
+				continue;
+			}
+
+			long fileEntryId = backgroundImageJSONObject.getLong("fileEntryId");
+
+			if (fileEntryId <= 0) {
+				continue;
+			}
+
+			Map<Long, Long> primaryKeys =
+				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
+					FileEntry.class);
+
+			fileEntryId = MapUtil.getLong(
+				primaryKeys, fileEntryId, fileEntryId);
+
+			FileEntry fileEntry = _dlAppLocalService.getFileEntry(fileEntryId);
+
+			backgroundImageJSONObject.put(
+				"fileEntryId", fileEntryId
+			).put(
+				"url", _dlURLHelper.getImagePreviewURL(fileEntry, null)
+			);
+		}
+
+		return layoutStructure.toString();
+	}
+
+	@Reference
+	private DLAppLocalService _dlAppLocalService;
+
 	@Reference(target = "(content.processor.type=DLReferences)")
 	private ExportImportContentProcessor<String>
 		_dlReferencesExportImportContentProcessor;
+
+	@Reference
+	private DLURLHelper _dlURLHelper;
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
