@@ -211,8 +211,12 @@ public class FragmentEntryLinkExportImportContentProcessor
 			className = DLFileEntry.class.getName();
 		}
 
-		AssetEntry assetEntry = _assetEntryLocalService.getEntry(
+		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			className, classPK);
+
+		if (assetEntry == null) {
+			return;
+		}
 
 		AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
 
@@ -315,9 +319,19 @@ public class FragmentEntryLinkExportImportContentProcessor
 			}
 		}
 
+		// LPS-111037
+
+		String assetRendererFactoryByClassName = className;
+
+		if (Objects.equals(
+				assetRendererFactoryByClassName, FileEntry.class.getName())) {
+
+			assetRendererFactoryByClassName = DLFileEntry.class.getName();
+		}
+
 		AssetRendererFactory<?> assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				className);
+				assetRendererFactoryByClassName);
 
 		StagingGroupHelper stagingGroupHelper =
 			StagingGroupHelperUtil.getStagingGroupHelper();
