@@ -10,6 +10,7 @@
 	alt = ""
 	imageData = ""
 	name = languageUtil.get(locale, "drag-file-here")
+	message = ""
 />
 
 <#if fieldRawValue?has_content>
@@ -19,6 +20,7 @@
 		alt = fileJSONObject.getString("alt")
 		imageData = fileJSONObject.getString("data")
 		name = fileJSONObject.getString("name")
+		message = fileJSONObject.getString("message")
 	/>
 </#if>
 
@@ -30,7 +32,7 @@
 	cssClass="form-builder-field"
 	data=data
 >
-	<div class="form-group">
+	<div class="form-group ${(message?has_content)?string('has-warning', '')}">
 		<div class="hide" id="${portletNamespace}${namespacedFieldName}UploadContainer"></div>
 
 		<div class="hide" id="${portletNamespace}${namespacedFieldName}PreviewContainer">
@@ -55,6 +57,10 @@
 			type="hidden"
 			value=fieldRawValue
 		/>
+
+		<#if validator.isNotNull(message)>
+			<div class="form-feedback-item" id="${portletNamespace}${namespacedFieldName}Message">${message}</div>
+		</#if>
 
 		<div class="button-holder">
 			<@liferay_aui.button
