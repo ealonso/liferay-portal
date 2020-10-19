@@ -318,14 +318,6 @@ public interface ${entity.name}Model extends ${entity.getModelBaseInterfaceNames
 		</#if>
 
 		/**
-		 * Returns the trash entry created when this ${entity.humanName} was moved to the Recycle Bin. The trash entry may belong to one of the ancestors of this ${entity.humanName}.
-		 *
-		 * @return the trash entry created when this ${entity.humanName} was moved to the Recycle Bin
-		 */
-		@Override
-		public com.liferay.trash.kernel.model.TrashEntry getTrashEntry() throws PortalException;
-
-		/**
 		 * Returns the class primary key of the trash entry for this ${entity.humanName}.
 		 *
 		 * @return the class primary key of the trash entry for this ${entity.humanName}
@@ -334,36 +326,12 @@ public interface ${entity.name}Model extends ${entity.getModelBaseInterfaceNames
 		public long getTrashEntryClassPK();
 
 		/**
-		 * Returns the trash handler for this ${entity.humanName}.
-		 *
-		 * @return the trash handler for this ${entity.humanName}
-		 * @deprecated As of Judson (7.1.x), with no direct replacement
-		 */
-		@Deprecated
-		@Override
-		public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler();
-
-		/**
 		 * Returns <code>true</code> if this ${entity.humanName} is in the Recycle Bin.
 		 *
 		 * @return <code>true</code> if this ${entity.humanName} is in the Recycle Bin; <code>false</code> otherwise
 		 */
 		@Override
 		public boolean isInTrash();
-
-		/**
-		 * Returns <code>true</code> if the parent of this ${entity.humanName} is in the Recycle Bin.
-		 *
-		 * @return <code>true</code> if the parent of this ${entity.humanName} is in the Recycle Bin; <code>false</code> otherwise
-		 */
-		@Override
-		public boolean isInTrashContainer();
-
-		@Override
-		public boolean isInTrashExplicitly();
-
-		@Override
-		public boolean isInTrashImplicitly();
 	</#if>
 
 	<#if entity.isWorkflowEnabled()>

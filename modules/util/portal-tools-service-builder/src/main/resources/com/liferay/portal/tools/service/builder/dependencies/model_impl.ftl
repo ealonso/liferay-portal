@@ -1161,61 +1161,8 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		@Override
-		public com.liferay.trash.kernel.model.TrashEntry getTrashEntry() throws PortalException {
-			if (!isInTrash()) {
-				return null;
-			}
-
-			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
-
-			if (trashEntry != null) {
-				return trashEntry;
-			}
-
-			com.liferay.portal.kernel.trash.TrashHandler trashHandler = getTrashHandler();
-
-			if (Validator.isNotNull(trashHandler.getContainerModelClassName(getPrimaryKey()))) {
-				ContainerModel containerModel = null;
-
-				try {
-					containerModel = trashHandler.getParentContainerModel(this);
-				}
-				catch (NoSuchModelException noSuchModelException) {
-					return null;
-				}
-
-				while (containerModel != null) {
-					if (containerModel instanceof TrashedModel) {
-						TrashedModel trashedModel = (TrashedModel)containerModel;
-
-						return trashedModel.getTrashEntry();
-					}
-
-					trashHandler = com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.getTrashHandler(trashHandler.getContainerModelClassName(containerModel.getContainerModelId()));
-
-					if (trashHandler == null) {
-						return null;
-					}
-
-					containerModel = trashHandler.getContainerModel(containerModel.getParentContainerModelId());
-				}
-			}
-
-			return null;
-		}
-
-		@Override
 		public long getTrashEntryClassPK() {
 			return getPrimaryKey();
-		}
-
-		/**
-		* @deprecated As of Judson (7.1.x), with no direct replacement
-		*/
-		@Deprecated
-		@Override
-		public com.liferay.portal.kernel.trash.TrashHandler getTrashHandler() {
-			return com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil.getTrashHandler(getModelClassName());
 		}
 
 		@Override
@@ -1226,61 +1173,6 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			else {
 				return false;
 			}
-		}
-
-		@Override
-		public boolean isInTrashContainer() {
-			com.liferay.portal.kernel.trash.TrashHandler trashHandler = getTrashHandler();
-
-			if ((trashHandler == null) || Validator.isNull(trashHandler.getContainerModelClassName(getPrimaryKey()))) {
-				return false;
-			}
-
-			try {
-				ContainerModel containerModel = trashHandler.getParentContainerModel(this);
-
-				if (containerModel == null) {
-					return false;
-				}
-
-				if (containerModel instanceof TrashedModel) {
-					return ((TrashedModel)containerModel).isInTrash();
-				}
-			}
-			catch (Exception exception) {
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean isInTrashExplicitly() {
-			if (!isInTrash()) {
-				return false;
-			}
-
-			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
-
-			if (trashEntry != null) {
-				return true;
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean isInTrashImplicitly() {
-			if (!isInTrash()) {
-				return false;
-			}
-
-			com.liferay.trash.kernel.model.TrashEntry trashEntry = com.liferay.trash.kernel.service.TrashEntryLocalServiceUtil.fetchEntry(getModelClassName(), getTrashEntryClassPK());
-
-			if (trashEntry != null) {
-				return false;
-			}
-
-			return true;
 		}
 	</#if>
 
