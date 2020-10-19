@@ -23,7 +23,6 @@ import com.liferay.journal.util.comparator.ArticleDisplayDateComparator;
 import com.liferay.journal.util.comparator.ArticleIDComparator;
 import com.liferay.journal.util.comparator.ArticleModifiedDateComparator;
 import com.liferay.journal.util.comparator.ArticleReviewDateComparator;
-import com.liferay.journal.util.comparator.ArticleTitleComparator;
 import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -100,9 +99,6 @@ public class JournalPortletUtil {
 		}
 		else if (orderByCol.equals("review-date")) {
 			orderByComparator = new ArticleReviewDateComparator(orderByAsc);
-		}
-		else if (orderByCol.equals("title")) {
-			orderByComparator = new ArticleTitleComparator(orderByAsc);
 		}
 		else if (orderByCol.equals("version")) {
 			orderByComparator = new ArticleVersionComparator(orderByAsc);
