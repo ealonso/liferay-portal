@@ -31,7 +31,6 @@ import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestHelper;
 import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.dynamic.data.mapping.util.DDMXML;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.journal.util.JournalConverter;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.string.StringBundler;
@@ -290,22 +289,6 @@ public class JournalConverterUtilTest {
 	}
 
 	@Test
-	public void testGetDDMXSD() throws Exception {
-		String expectedXSD = read("test-ddm-structure-all-fields.xml");
-
-		DDMForm expectedDDMForm = deserialize(expectedXSD);
-
-		String actualXSD = _journalConverter.getDDMXSD(
-			read("test-journal-structure-all-fields.xml"));
-
-		validateDDMXSD(actualXSD);
-
-		DDMForm actualDDMForm = deserialize(actualXSD);
-
-		assertEquals(expectedDDMForm, actualDDMForm);
-	}
-
-	@Test
 	public void testGetFieldsFromContentWithBooleanElement() throws Exception {
 		Fields expectedFields = new Fields();
 
@@ -443,22 +426,6 @@ public class JournalConverterUtilTest {
 			_ddmStructure, content);
 
 		Assert.assertEquals(expectedFields, actualFields);
-	}
-
-	@Test
-	public void testGetJournalXSD() throws Exception {
-		String expectedXSD = read("test-journal-structure-all-fields.xml");
-
-		Map<String, Map<String, String>> expectedMap =
-			JournalTestUtil.getXsdMap(expectedXSD);
-
-		String actualXSD = _journalConverter.getJournalXSD(
-			read("test-ddm-structure-all-fields.xml"));
-
-		Map<String, Map<String, String>> actualMap = JournalTestUtil.getXsdMap(
-			actualXSD);
-
-		Assert.assertEquals(expectedMap, actualMap);
 	}
 
 	protected void assertEquals(

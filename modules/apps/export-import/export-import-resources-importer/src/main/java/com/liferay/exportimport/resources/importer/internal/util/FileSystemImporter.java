@@ -502,20 +502,7 @@ public class FileSystemImporter extends BaseImporter {
 
 		String content = StringUtil.read(inputStream);
 
-		DDMForm ddmForm = null;
-
-		if (language.equals(TemplateConstants.LANG_TYPE_XML)) {
-			if (isJournalStructureXSD(content)) {
-				content = journalConverter.getDDMXSD(content);
-			}
-
-			ddmxml.validateXML(content);
-
-			ddmForm = deserializeXSD(content);
-		}
-		else {
-			ddmForm = deserializeJSONDDMForm(content);
-		}
+		DDMForm ddmForm = deserializeJSONDDMForm(content);
 
 		DDMFormLayout ddmFormLayout = DDMUtil.getDefaultDDMFormLayout(ddmForm);
 
