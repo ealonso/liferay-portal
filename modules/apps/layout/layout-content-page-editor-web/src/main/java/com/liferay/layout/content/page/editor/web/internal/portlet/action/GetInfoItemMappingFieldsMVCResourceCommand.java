@@ -14,34 +14,23 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.info.field.InfoField;
-import com.liferay.info.field.InfoFieldSet;
-import com.liferay.info.field.InfoFieldSetEntry;
-import com.liferay.info.field.type.ImageInfoFieldType;
-import com.liferay.info.field.type.InfoFieldType;
-import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemIdentifier;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
-import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.layout.content.page.editor.web.internal.util.MappingContentUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.List;
-import java.util.Objects;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -126,85 +115,11 @@ public class GetInfoItemMappingFieldsMVCResourceCommand
 
 		String fieldType = ParamUtil.getString(resourceRequest, "fieldType");
 
-		JSONArray defaultFieldSetFieldsJSONArray =
-			JSONFactoryUtil.createJSONArray();
-
-		JSONArray fieldSetsJSONArray = JSONUtil.put(
-			JSONUtil.put("fields", defaultFieldSetFieldsJSONArray));
-
-		InfoForm infoForm = infoItemFormProvider.getInfoForm(infoItemObject);
-
-		for (InfoFieldSetEntry infoFieldSetEntry :
-				infoForm.getInfoFieldSetEntries()) {
-
-			if (infoFieldSetEntry instanceof InfoField) {
-				InfoField infoField = (InfoField)infoFieldSetEntry;
-
-				InfoFieldType infoFieldType = infoField.getInfoFieldType();
-
-				if (_isFieldMappable(infoField, fieldType)) {
-					defaultFieldSetFieldsJSONArray.put(
-						JSONUtil.put(
-							"key", infoField.getName()
-						).put(
-							"label",
-							infoField.getLabel(themeDisplay.getLocale())
-						).put(
-							"type", infoFieldType.getName()
-						));
-				}
-			}
-			else if (infoFieldSetEntry instanceof InfoFieldSet) {
-				JSONArray fieldSetFieldsJSONArray =
-					JSONFactoryUtil.createJSONArray();
-
-				InfoFieldSet infoFieldSet = (InfoFieldSet)infoFieldSetEntry;
-
-				List<InfoField> infoFields = ListUtil.filter(
-					infoFieldSet.getAllInfoFields(),
-					infoField -> _isFieldMappable(infoField, fieldType));
-
-				for (InfoField infoField : infoFields) {
-					InfoFieldType infoFieldType = infoField.getInfoFieldType();
-
-					fieldSetFieldsJSONArray.put(
-						JSONUtil.put(
-							"key", infoField.getName()
-						).put(
-							"label",
-							infoField.getLabel(themeDisplay.getLocale())
-						).put(
-							"type", infoFieldType.getName()
-						));
-				}
-
-				if (fieldSetFieldsJSONArray.length() > 0) {
-					fieldSetsJSONArray.put(
-						JSONUtil.put(
-							"fields", fieldSetFieldsJSONArray
-						).put(
-							"label",
-							infoFieldSet.getLabel(themeDisplay.getLocale())
-						));
-				}
-			}
-		}
-
 		JSONPortletResponseUtil.writeJSON(
-			resourceRequest, resourceResponse, fieldSetsJSONArray);
-	}
-
-	private boolean _isFieldMappable(InfoField infoField, String fieldType) {
-		boolean imageInfoFieldType =
-			infoField.getInfoFieldType() instanceof ImageInfoFieldType;
-
-		if (Objects.equals(fieldType, "background-image") ||
-			Objects.equals(fieldType, "image")) {
-
-			return imageInfoFieldType;
-		}
-
-		return !imageInfoFieldType;
+			resourceRequest, resourceResponse,
+			MappingContentUtil.getFieldSetsJSONArray(
+				fieldType, infoItemFormProvider.getInfoForm(infoItemObject),
+				themeDisplay.getLocale()));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
