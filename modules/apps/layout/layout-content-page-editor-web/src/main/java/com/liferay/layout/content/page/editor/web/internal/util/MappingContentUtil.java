@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.portlet.ResourceRequest;
@@ -42,6 +43,71 @@ import javax.portlet.ResourceRequest;
  * @author Eudaldo Alonso
  */
 public class MappingContentUtil {
+
+	public static JSONArray getFieldSetsJSONArray(
+		String fieldType, InfoForm infoForm, Locale locale) {
+
+		JSONArray defaultFieldSetFieldsJSONArray =
+			JSONFactoryUtil.createJSONArray();
+
+		JSONArray fieldSetsJSONArray = JSONUtil.put(
+			JSONUtil.put("fields", defaultFieldSetFieldsJSONArray));
+
+		for (InfoFieldSetEntry infoFieldSetEntry :
+				infoForm.getInfoFieldSetEntries()) {
+
+			if (infoFieldSetEntry instanceof InfoField) {
+				InfoField infoField = (InfoField)infoFieldSetEntry;
+
+				InfoFieldType infoFieldType = infoField.getInfoFieldType();
+
+				if (_isFieldMappable(infoField, fieldType)) {
+					defaultFieldSetFieldsJSONArray.put(
+						JSONUtil.put(
+							"key", infoField.getName()
+						).put(
+							"label", infoField.getLabel(locale)
+						).put(
+							"type", infoFieldType.getName()
+						));
+				}
+			}
+			else if (infoFieldSetEntry instanceof InfoFieldSet) {
+				JSONArray fieldSetFieldsJSONArray =
+					JSONFactoryUtil.createJSONArray();
+
+				InfoFieldSet infoFieldSet = (InfoFieldSet)infoFieldSetEntry;
+
+				List<InfoField> infoFields = ListUtil.filter(
+					infoFieldSet.getAllInfoFields(),
+					infoField -> _isFieldMappable(infoField, fieldType));
+
+				for (InfoField infoField : infoFields) {
+					InfoFieldType infoFieldType = infoField.getInfoFieldType();
+
+					fieldSetFieldsJSONArray.put(
+						JSONUtil.put(
+							"key", infoField.getName()
+						).put(
+							"label", infoField.getLabel(locale)
+						).put(
+							"type", infoFieldType.getName()
+						));
+				}
+
+				if (fieldSetFieldsJSONArray.length() > 0) {
+					fieldSetsJSONArray.put(
+						JSONUtil.put(
+							"fields", fieldSetFieldsJSONArray
+						).put(
+							"label", infoFieldSet.getLabel(locale)
+						));
+				}
+			}
+		}
+
+		return fieldSetsJSONArray;
+	}
 
 	public static JSONArray getMappingFieldsJSONArray(
 			String fieldType, String formVariationKey,
@@ -74,72 +140,11 @@ public class MappingContentUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		JSONArray defaultFieldSetFieldsJSONArray =
-			JSONFactoryUtil.createJSONArray();
-
-		JSONArray fieldSetsJSONArray = JSONUtil.put(
-			JSONUtil.put("fields", defaultFieldSetFieldsJSONArray));
-
 		InfoForm infoForm = infoItemFormProvider.getInfoForm(
 			formVariationKey, themeDisplay.getScopeGroupId());
 
-		for (InfoFieldSetEntry infoFieldSetEntry :
-				infoForm.getInfoFieldSetEntries()) {
-
-			if (infoFieldSetEntry instanceof InfoField) {
-				InfoField infoField = (InfoField)infoFieldSetEntry;
-
-				InfoFieldType infoFieldType = infoField.getInfoFieldType();
-
-				if (_isFieldMappable(infoField, fieldType)) {
-					defaultFieldSetFieldsJSONArray.put(
-						JSONUtil.put(
-							"key", infoField.getName()
-						).put(
-							"label",
-							infoField.getLabel(themeDisplay.getLocale())
-						).put(
-							"type", infoFieldType.getName()
-						));
-				}
-			}
-			else if (infoFieldSetEntry instanceof InfoFieldSet) {
-				JSONArray fieldSetFieldsJSONArray =
-					JSONFactoryUtil.createJSONArray();
-
-				InfoFieldSet infoFieldSet = (InfoFieldSet)infoFieldSetEntry;
-
-				List<InfoField> infoFields = ListUtil.filter(
-					infoFieldSet.getAllInfoFields(),
-					infoField -> _isFieldMappable(infoField, fieldType));
-
-				for (InfoField infoField : infoFields) {
-					InfoFieldType infoFieldType = infoField.getInfoFieldType();
-
-					fieldSetFieldsJSONArray.put(
-						JSONUtil.put(
-							"key", infoField.getName()
-						).put(
-							"label",
-							infoField.getLabel(themeDisplay.getLocale())
-						).put(
-							"type", infoFieldType.getName()
-						));
-				}
-
-				if (fieldSetFieldsJSONArray.length() > 0) {
-					fieldSetsJSONArray.put(
-						JSONUtil.put(
-							"fields", fieldSetFieldsJSONArray
-						).put(
-							"label",
-							infoFieldSet.getLabel(themeDisplay.getLocale())
-						));
-				}
-			}
-		}
-
-		return fieldSetsJSONArray;
+		return getFieldSetsJSONArray(
+			fieldType, infoForm, themeDisplay.getLocale());
 	}
 
 	private static boolean _isFieldMappable(
