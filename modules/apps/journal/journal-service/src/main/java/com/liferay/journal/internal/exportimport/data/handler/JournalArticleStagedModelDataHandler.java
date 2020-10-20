@@ -895,10 +895,6 @@ public class JournalArticleStagedModelDataHandler
 
 			JournalArticle importedArticle = null;
 
-			// Used when importing LARs with journal schemas under 1.1.0
-
-			_setLegacyValues(article);
-
 			if (portletDataContext.isDataStrategyMirror()) {
 				serviceContext.setUuid(article.getUuid());
 
@@ -1638,28 +1634,6 @@ public class JournalArticleStagedModelDataHandler
 					"Unable to send email notification for article " +
 						article.getArticleId());
 			}
-		}
-	}
-
-	/**
-	 * @deprecated As of Judson (7.1.x), only used for backwards compatibility
-	 *             with LARs that use journal schema under 1.1.0
-	 */
-	@Deprecated
-	private void _setLegacyValues(JournalArticle article) {
-		if (MapUtil.isEmpty(article.getTitleMap()) &&
-			Validator.isNotNull(article.getLegacyTitle())) {
-
-			article.setTitleMap(
-				LocalizationUtil.getLocalizationMap(article.getLegacyTitle()));
-		}
-
-		if (MapUtil.isEmpty(article.getDescriptionMap()) &&
-			Validator.isNotNull(article.getLegacyDescription())) {
-
-			article.setDescriptionMap(
-				LocalizationUtil.getLocalizationMap(
-					article.getLegacyDescription()));
 		}
 	}
 
