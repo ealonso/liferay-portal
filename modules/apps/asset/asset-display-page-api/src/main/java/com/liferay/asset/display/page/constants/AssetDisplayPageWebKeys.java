@@ -16,28 +16,8 @@ package com.liferay.asset.display.page.constants;
 
 /**
  * @author Jürgen Kappler
+ * @deprecated As of Mueller (7.4.x), with no direct replacement
  */
+@Deprecated
 public class AssetDisplayPageWebKeys {
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
-	 */
-	@Deprecated
-	public static final String CURRENT_I18N_LANGUAGE_ID =
-		"CURRENT_I18N_LANGUAGE_ID";
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static final String INFO_DISPLAY_OBJECT_PROVIDER =
-		"INFO_DISPLAY_OBJECT_PROVIDER";
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static final String INFO_EDIT_URL_PROVIDER =
-		"INFO_EDIT_URL_PROVIDER";
-
 }
