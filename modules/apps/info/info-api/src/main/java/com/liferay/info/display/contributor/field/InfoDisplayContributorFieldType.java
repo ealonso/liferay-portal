@@ -18,7 +18,9 @@ import java.util.Objects;
 
 /**
  * @author Jürgen Kappler
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  */
+@Deprecated
 public enum InfoDisplayContributorFieldType {
 
 	IMAGE("image"), TEXT("text"), URL("url");

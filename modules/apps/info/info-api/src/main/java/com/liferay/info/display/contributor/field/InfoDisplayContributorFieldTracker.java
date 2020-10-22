@@ -20,7 +20,9 @@ import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Jürgen Kappler
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  */
+@Deprecated
 @ProviderType
 public interface InfoDisplayContributorFieldTracker {
 

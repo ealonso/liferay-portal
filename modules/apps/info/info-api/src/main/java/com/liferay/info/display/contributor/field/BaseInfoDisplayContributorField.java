@@ -20,7 +20,9 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of Athanasius (7.3.x), with no direct replacement
  */
+@Deprecated
 public abstract class BaseInfoDisplayContributorField<T>
 	implements InfoDisplayContributorField<T> {
 
