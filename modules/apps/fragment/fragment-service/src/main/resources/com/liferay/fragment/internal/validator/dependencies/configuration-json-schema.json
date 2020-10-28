@@ -121,6 +121,7 @@
 						"collectionSelector",
 						"itemSelector",
 						"select",
+						"navigationMenuSelector",
 						"text"
 					],
 					"title": "The Type Schema",
