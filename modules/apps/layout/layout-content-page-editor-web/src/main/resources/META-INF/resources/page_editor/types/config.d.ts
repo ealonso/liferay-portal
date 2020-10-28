@@ -163,6 +163,7 @@ export interface Config {
 		};
 	};
 
+	siteNavigationMenuItemSelectorURL: string;
 	singleSegmentsExperienceMode: boolean;
 	stylebookEntryId: string;
 	styleBooks: Array<{
