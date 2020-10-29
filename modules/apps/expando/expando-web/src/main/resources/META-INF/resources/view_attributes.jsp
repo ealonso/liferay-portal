@@ -64,7 +64,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "view-at
 	<aui:input name="columnIds" type="hidden" />
 
 	<clay:container-fluid>
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

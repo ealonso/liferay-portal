@@ -84,7 +84,7 @@ SearchContainer<?> searchContainer = editPasswordPolicyAssignmentsManagementTool
 	<aui:input name="passwordPolicyId" type="hidden" value="<%= String.valueOf(passwordPolicy.getPasswordPolicyId()) %>" />
 
 	<div id="breadcrumb">
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

@@ -90,7 +90,7 @@ SearchContainer<?> searchContainer = new SearchContainer(renderRequest, itemSele
 		ItemSelectorRepositoryEntryBrowserUtil.addPortletBreadcrumbEntries(folderId, displayStyle, request, liferayPortletRequest, liferayPortletResponse, PortletURLUtil.clone(portletURL, liferayPortletResponse));
 	%>
 
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

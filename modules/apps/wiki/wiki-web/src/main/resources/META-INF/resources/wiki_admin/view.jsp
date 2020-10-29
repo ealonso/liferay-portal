@@ -116,7 +116,7 @@ WikiNodesManagementToolbarDisplayContext wikiNodesManagementToolbarDisplayContex
 		PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "wiki"), portletURL.toString());
 		%>
 
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

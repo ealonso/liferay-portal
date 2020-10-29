@@ -62,7 +62,7 @@ PortletURL portletURL = viewPasswordPoliciesManagementToolbarDisplayContext.getP
 	<aui:input name="redirect" type="hidden" value="<%= portletURL.toString() %>" />
 
 	<div id="breadcrumb">
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

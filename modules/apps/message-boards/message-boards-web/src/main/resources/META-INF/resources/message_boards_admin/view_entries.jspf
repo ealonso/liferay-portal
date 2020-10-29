@@ -54,7 +54,7 @@ MBCategoryDisplay categoryDisplay = new MBCategoryDisplay(scopeGroupId, category
 	MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
 	%>
 
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showCurrentGroup="<%= false %>"
 		showGuestGroup="<%= false %>"
 		showLayout="<%= false %>"

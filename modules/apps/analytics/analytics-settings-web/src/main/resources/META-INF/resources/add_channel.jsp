@@ -39,7 +39,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(resourceBundle, "
 			size="12"
 		>
 			<div id="breadcrumb">
-				<liferay-ui:breadcrumb
+				<liferay-site-navigation:breadcrumb
 					showCurrentGroup="<%= false %>"
 					showGuestGroup="<%= false %>"
 					showLayout="<%= false %>"

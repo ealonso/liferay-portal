@@ -69,7 +69,7 @@ StagingProcessesWebPublishTemplatesToolbarDisplayContext stagingProcessesWebPubl
 	cssClass="closed sidenav-container sidenav-right"
 	id='<%= liferayPortletResponse.getNamespace() + "infoPanelId" %>'
 >
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

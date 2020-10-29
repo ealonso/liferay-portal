@@ -22,7 +22,7 @@
 <clay:container-fluid
 	cssClass="container-view"
 >
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

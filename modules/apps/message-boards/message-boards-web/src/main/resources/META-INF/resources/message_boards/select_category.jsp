@@ -40,7 +40,7 @@ else {
 
 <clay:container-fluid>
 	<aui:form method="post" name="selectCategoryFm">
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"
 			showParentGroups="<%= false %>"

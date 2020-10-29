@@ -36,7 +36,7 @@ segmentsContextVocabularyConfigurationDisplayContext.addPortletBreadcrumbEntries
 		<clay:col
 			size="12"
 		>
-			<liferay-ui:breadcrumb
+			<liferay-site-navigation:breadcrumb
 				showCurrentGroup="<%= false %>"
 				showGuestGroup="<%= false %>"
 				showLayout="<%= false %>"

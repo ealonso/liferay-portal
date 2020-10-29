@@ -42,7 +42,7 @@ Role role = userGroupsDisplayContext.getRole();
 	<aui:input name="navigation" type="hidden" value="<%= userGroupsDisplayContext.getNavigation() %>" />
 	<aui:input name="roleId" type="hidden" value="<%= (role != null) ? role.getRoleId() : 0 %>" />
 
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

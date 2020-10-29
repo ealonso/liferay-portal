@@ -75,7 +75,7 @@ long[] groupIds = viewUADEntitiesDisplay.getGroupIds();
 		id='<%= liferayPortletResponse.getNamespace() + "infoPanelId" %>'
 	>
 		<div id="breadcrumb">
-			<liferay-ui:breadcrumb
+			<liferay-site-navigation:breadcrumb
 				showCurrentGroup="<%= false %>"
 				showGuestGroup="<%= false %>"
 				showLayout="<%= false %>"

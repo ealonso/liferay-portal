@@ -45,7 +45,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, editContactInformationDisplayConte
 
 	<clay:container-fluid>
 		<div class="sheet-lg" id="breadcrumb">
-			<liferay-ui:breadcrumb
+			<liferay-site-navigation:breadcrumb
 				showCurrentGroup="<%= false %>"
 				showGuestGroup="<%= false %>"
 				showLayout="<%= false %>"

@@ -35,7 +35,7 @@ boolean showStripeMessage = workflowDefinitionLinkDisplayContext.showStripeMessa
 		/>
 	</c:if>
 
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

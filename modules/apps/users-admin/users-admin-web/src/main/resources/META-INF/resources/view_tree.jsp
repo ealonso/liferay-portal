@@ -119,7 +119,7 @@ if (organization != null) {
 
 			<c:if test="<%= (portletName.equals(UsersAdminPortletKeys.USERS_ADMIN) && usersListView.equals(UserConstants.LIST_VIEW_TREE)) || portletName.equals(UsersAdminPortletKeys.MY_ORGANIZATIONS) %>">
 				<div id="breadcrumb">
-					<liferay-ui:breadcrumb
+					<liferay-site-navigation:breadcrumb
 						showCurrentGroup="<%= false %>"
 						showGuestGroup="<%= false %>"
 						showLayout="<%= false %>"

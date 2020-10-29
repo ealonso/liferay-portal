@@ -91,7 +91,7 @@ DLViewDisplayContext dlViewDisplayContext = new DLViewDisplayContext(dlAdminDisp
 							DLBreadcrumbUtil.addPortletBreadcrumbEntries(dlViewDisplayContext.getFolder(), request, liferayPortletResponse);
 							%>
 
-							<liferay-ui:breadcrumb
+							<liferay-site-navigation:breadcrumb
 								showCurrentGroup="<%= false %>"
 								showGuestGroup="<%= false %>"
 								showLayout="<%= false %>"

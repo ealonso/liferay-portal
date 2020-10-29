@@ -25,7 +25,7 @@ boolean privateLayout = ParamUtil.getBoolean(request, "privateLayout");
 	<clay:container-fluid
 		id='<%= liferayPortletResponse.getNamespace() + "processesContainer" %>'
 	>
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showLayout="<%= false %>"
 		/>
 

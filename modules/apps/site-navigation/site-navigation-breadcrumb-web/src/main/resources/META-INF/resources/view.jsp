@@ -16,7 +16,7 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:breadcrumb
+<liferay-site-navigation:breadcrumb
 	ddmTemplateGroupId="<%= siteNavigationBreadcrumbDisplayContext.getDisplayStyleGroupId() %>"
 	ddmTemplateKey="<%= siteNavigationBreadcrumbDisplayContext.getDDMTemplateKey() %>"
 	showCurrentGroup="<%= siteNavigationBreadcrumbDisplayContext.isShowCurrentGroup() %>"

@@ -191,7 +191,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 						MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
 						%>
 
-						<liferay-ui:breadcrumb
+						<liferay-site-navigation:breadcrumb
 							showCurrentGroup="<%= false %>"
 							showGuestGroup="<%= false %>"
 							showLayout="<%= false %>"
@@ -215,7 +215,7 @@ request.setAttribute("view.jsp-viewCategory", Boolean.TRUE.toString());
 									MBBreadcrumbUtil.addPortletBreadcrumbEntries(categoryId, request, renderResponse);
 									%>
 
-									<liferay-ui:breadcrumb
+									<liferay-site-navigation:breadcrumb
 										showCurrentGroup="<%= false %>"
 										showGuestGroup="<%= false %>"
 										showLayout="<%= false %>"

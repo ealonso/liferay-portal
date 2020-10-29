@@ -19,7 +19,7 @@
 <clay:container-fluid
 	id='<%= liferayPortletResponse.getNamespace() + "scheduledProcessesContainer" %>'
 >
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

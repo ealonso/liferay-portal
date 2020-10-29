@@ -90,7 +90,7 @@ PortletURL portletURL = editUserGroupAssignmentsManagementToolbarDisplayContext.
 	<aui:input name="removeUserIds" type="hidden" />
 
 	<div id="breadcrumb">
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

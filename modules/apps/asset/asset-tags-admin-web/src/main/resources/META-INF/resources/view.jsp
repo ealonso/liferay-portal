@@ -29,7 +29,7 @@ AssetTagsManagementToolbarDisplayContext assetTagsManagementToolbarDisplayContex
 </portlet:actionURL>
 
 <aui:form action="<%= deleteTagURL %>" cssClass="container-fluid container-fluid-max-xl" name="fm">
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

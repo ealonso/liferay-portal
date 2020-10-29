@@ -89,7 +89,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "bill-of-materials"));
 	commerceBOMAdminDisplayContext.addPortletBreadcrumbEntries();
 	%>
 
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showCurrentGroup="<%= false %>"
 		showGuestGroup="<%= false %>"
 		showLayout="<%= false %>"

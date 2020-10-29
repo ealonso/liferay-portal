@@ -91,7 +91,7 @@ kbObjectSearchContainer.setResults(results);
 		kbSelectParentDisplayContext.populatePortletBreadcrumbEntries(currentURLObj);
 		%>
 
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

@@ -25,6 +25,7 @@ taglib uri="http://liferay.com/tld/expando" prefix="liferay-expando" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/portlet" prefix="liferay-portlet" %><%@
 taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %><%@
+taglib uri="http://liferay.com/tld/site-navigation" prefix="liferay-site-navigation" %><%@
 taglib uri="http://liferay.com/tld/staging" prefix="liferay-staging" %><%@
 taglib uri="http://liferay.com/tld/text-localizer" prefix="liferay-text-localizer" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@

@@ -97,7 +97,7 @@ if (filterManageableOrganizations) {
 
 				<c:if test="<%= usersListView.equals(UserConstants.LIST_VIEW_FLAT_ORGANIZATIONS) %>">
 					<div id="breadcrumb">
-						<liferay-ui:breadcrumb
+						<liferay-site-navigation:breadcrumb
 							showCurrentGroup="<%= false %>"
 							showGuestGroup="<%= false %>"
 							showLayout="<%= false %>"

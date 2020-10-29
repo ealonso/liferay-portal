@@ -50,7 +50,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "new-cus
 %>
 
 <clay:container-fluid>
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showCurrentGroup="<%= false %>"
 		showGuestGroup="<%= false %>"
 		showLayout="<%= false %>"

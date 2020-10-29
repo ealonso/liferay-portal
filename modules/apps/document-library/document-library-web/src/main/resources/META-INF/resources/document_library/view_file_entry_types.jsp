@@ -35,7 +35,7 @@ DLViewFileEntryTypesDisplayContext dlViewFileEntryTypesDisplayContext = new DLVi
 <clay:container-fluid
 	cssClass="main-content-body"
 >
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

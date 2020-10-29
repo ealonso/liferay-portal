@@ -34,7 +34,7 @@ AssetListManagementToolbarDisplayContext assetListManagementToolbarDisplayContex
 </portlet:actionURL>
 
 <aui:form action="<%= deleteAssetListEntryURL %>" cssClass="container-fluid-1280" name="fm">
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showLayout="<%= false %>"
 	/>
 

@@ -34,7 +34,7 @@ if (folder != null) {
 
 <clay:container-fluid>
 	<aui:form method="post" name="selectFolderFm">
-		<liferay-ui:breadcrumb
+		<liferay-site-navigation:breadcrumb
 			showCurrentGroup="<%= false %>"
 			showGuestGroup="<%= false %>"
 			showLayout="<%= false %>"

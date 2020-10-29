@@ -116,7 +116,7 @@ else {
 </portlet:actionURL>
 
 <clay:container-fluid>
-	<liferay-ui:breadcrumb
+	<liferay-site-navigation:breadcrumb
 		showCurrentGroup="<%= false %>"
 		showGuestGroup="<%= false %>"
 		showLayout="<%= false %>"
