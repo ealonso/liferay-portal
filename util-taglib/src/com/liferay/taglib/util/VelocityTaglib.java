@@ -16,14 +16,9 @@ package com.liferay.taglib.util;
 
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.PortletProvider;
-import com.liferay.taglib.ui.AssetCategoriesSummaryTag;
-import com.liferay.taglib.ui.AssetTagsSummaryTag;
-import com.liferay.taglib.ui.BreadcrumbTag;
 import com.liferay.taglib.ui.IconTag;
-import com.liferay.taglib.ui.JournalArticleTag;
 import com.liferay.taglib.ui.RatingsTag;
 
-import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
 
 import javax.servlet.ServletContext;
@@ -61,36 +56,9 @@ public interface VelocityTaglib {
 			String queryString)
 		throws Exception;
 
-	public void assetCategoriesSummary(
-			String className, long classPK, String message,
-			PortletURL portletURL)
-		throws Exception;
-
-	public void assetTagsSummary(
-			String className, long classPK, String message,
-			String assetTagNames, PortletURL portletURL)
-		throws Exception;
-
-	public void breadcrumb() throws Exception;
-
-	public void breadcrumb(
-			long ddmTemplateGroupId, String ddmTemplateKey,
-			boolean showGuestGroup, boolean showParentGroups,
-			boolean showLayout, boolean showPortletBreadcrumb)
-		throws Exception;
-
 	public void doAsURL(long doAsUserId) throws Exception;
 
-	public AssetCategoriesSummaryTag<?> getAssetCategoriesSummaryTag()
-		throws Exception;
-
-	public AssetTagsSummaryTag<?> getAssetTagsSummaryTag() throws Exception;
-
-	public BreadcrumbTag getBreadcrumbTag() throws Exception;
-
 	public IconTag getIconTag() throws Exception;
-
-	public JournalArticleTag getJournalArticleTag() throws Exception;
 
 	public PageContext getPageContext();
 
@@ -109,10 +77,6 @@ public interface VelocityTaglib {
 		throws Exception;
 
 	public void include(String page) throws Exception;
-
-	public void journalArticle(
-			String articleId, long groupId, String ddmTemplateKey)
-		throws Exception;
 
 	public void language() throws Exception;
 
@@ -200,11 +164,6 @@ public interface VelocityTaglib {
 	public void runtime(
 			String portletName, String instanceId, String queryString,
 			String defaultPreferences)
-		throws Exception;
-
-	public void sitesDirectory() throws Exception;
-
-	public void sitesDirectory(String displayStyle, String sites)
 		throws Exception;
 
 	public void toggle(
