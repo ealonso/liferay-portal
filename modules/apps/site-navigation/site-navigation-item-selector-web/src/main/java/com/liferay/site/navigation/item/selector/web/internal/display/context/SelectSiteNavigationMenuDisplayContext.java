@@ -86,6 +86,15 @@ public class SelectSiteNavigationMenuDisplayContext {
 		return breadcrumbEntries;
 	}
 
+	public String getCurrentLevelTitle() throws Exception {
+		List<BreadcrumbEntry> breadcrumbEntries = getBreadcrumbEntries();
+
+		BreadcrumbEntry currentLevelBreadcrumbEntry = breadcrumbEntries.get(
+			breadcrumbEntries.size() - 1);
+
+		return currentLevelBreadcrumbEntry.getTitle();
+	}
+
 	public String getItemSelectedEventName() {
 		return _itemSelectedEventName;
 	}
