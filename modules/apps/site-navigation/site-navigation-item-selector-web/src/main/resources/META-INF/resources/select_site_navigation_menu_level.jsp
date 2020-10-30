@@ -27,9 +27,9 @@ SelectSiteNavigationMenuDisplayContext selectSiteNavigationMenuDisplayContext = 
 		/>
 
 		<clay:button
-			cssClass="selector-button"
-			data-parentSiteNavigationMenuItemId="<%= selectSiteNavigationMenuDisplayContext.getParentSiteNavigationMenuItemId() %>"
-			data-siteNavigationMenuId="<%= selectSiteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>"
+			cssClass="site-navigation-menu-selector"
+			data-parent-site-navigation-menu-item-id="<%= selectSiteNavigationMenuDisplayContext.getParentSiteNavigationMenuItemId() %>"
+			data-site-navigation-menu-id="<%= selectSiteNavigationMenuDisplayContext.getSiteNavigationMenuId() %>"
 			displayType="primary"
 			label='<%= LanguageUtil.get(resourceBundle, "select-level") %>'
 		/>
@@ -67,9 +67,18 @@ SelectSiteNavigationMenuDisplayContext selectSiteNavigationMenuDisplayContext = 
 	</liferay-ui:search-container>
 </div>
 
-<aui:script>
-	Liferay.Util.selectEntityHandler(
-		'#<portlet:namespace />siteNavigationMenuLevelSelector',
-		'<%= HtmlUtil.escapeJS(selectSiteNavigationMenuDisplayContext.getItemSelectedEventName()) %>'
-	);
-</aui:script>
+<liferay-frontend:component
+	componentId="SelectEntityHandler"
+	context='<%=
+		HashMapBuilder.<String, Object>put(
+			"buttonClass", ".site-navigation-menu-selector"
+		).put(
+			"containerId", liferayPortletResponse.getNamespace() + "siteNavigationMenuLevelSelector"
+		).put(
+			"eventName", selectSiteNavigationMenuDisplayContext.getItemSelectedEventName()
+		).put(
+			"returnType", SiteNavigationMenuItemSelectorReturnType.class.toString()
+		).build()
+	%>'
+	module="js/SelectEntityHandler"
+/>
