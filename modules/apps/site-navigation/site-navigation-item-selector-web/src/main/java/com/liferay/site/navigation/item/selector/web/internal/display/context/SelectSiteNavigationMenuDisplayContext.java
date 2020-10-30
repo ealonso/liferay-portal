@@ -72,6 +72,10 @@ public class SelectSiteNavigationMenuDisplayContext {
 	}
 
 	public List<BreadcrumbEntry> getBreadcrumbEntries() throws Exception {
+		if (_breadcrumbEntries != null) {
+			return _breadcrumbEntries;
+		}
+
 		List<BreadcrumbEntry> breadcrumbEntries = new ArrayList<>();
 
 		breadcrumbEntries.add(_getAllBreadcrumbEntry());
@@ -83,7 +87,9 @@ public class SelectSiteNavigationMenuDisplayContext {
 			breadcrumbEntries.addAll(_getSiteNavigationMenuBreadcrumbEntries());
 		}
 
-		return breadcrumbEntries;
+		_breadcrumbEntries = breadcrumbEntries;
+
+		return _breadcrumbEntries;
 	}
 
 	public String getCurrentLevelTitle() throws Exception {
@@ -403,6 +409,7 @@ public class SelectSiteNavigationMenuDisplayContext {
 		return siteNavigationItems;
 	}
 
+	private List<BreadcrumbEntry> _breadcrumbEntries;
 	private final HttpServletRequest _httpServletRequest;
 	private final String _itemSelectedEventName;
 	private Long _parentSiteNavigationMenuItemId;
