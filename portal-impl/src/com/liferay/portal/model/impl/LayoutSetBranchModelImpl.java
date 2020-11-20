@@ -163,12 +163,6 @@ public class LayoutSetBranchModelImpl
 	public static final long NAME_COLUMN_BITMASK = 4L;
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long PRIVATELAYOUT_COLUMN_BITMASK = 8L;
-
-	/**
 	 * Converts the soap model instance into a normal model instance.
 	 *
 	 * @param soapModel the soap model instance to convert
@@ -638,16 +632,6 @@ public class LayoutSetBranchModelImpl
 		}
 
 		_privateLayout = privateLayout;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public boolean getOriginalPrivateLayout() {
-		return GetterUtil.getBoolean(
-			this.<Boolean>getColumnOriginalValue("privateLayout"));
 	}
 
 	@JSON

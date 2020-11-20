@@ -1405,74 +1405,67 @@ public class LayoutFriendlyURLUtil {
 	}
 
 	/**
-	 * Returns all the layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns all the layout friendly urls where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @return the matching layout friendly urls
 	 */
-	public static List<LayoutFriendlyURL> findByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL) {
+	public static List<LayoutFriendlyURL> findByG_F(
+		long groupId, String friendlyURL) {
 
-		return getPersistence().findByG_P_F(
-			groupId, privateLayout, friendlyURL);
+		return getPersistence().findByG_F(groupId, friendlyURL);
 	}
 
 	/**
-	 * Returns a range of all the layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns a range of all the layout friendly urls where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutFriendlyURLModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param start the lower bound of the range of layout friendly urls
 	 * @param end the upper bound of the range of layout friendly urls (not inclusive)
 	 * @return the range of matching layout friendly urls
 	 */
-	public static List<LayoutFriendlyURL> findByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL, int start,
-		int end) {
+	public static List<LayoutFriendlyURL> findByG_F(
+		long groupId, String friendlyURL, int start, int end) {
 
-		return getPersistence().findByG_P_F(
-			groupId, privateLayout, friendlyURL, start, end);
+		return getPersistence().findByG_F(groupId, friendlyURL, start, end);
 	}
 
 	/**
-	 * Returns an ordered range of all the layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns an ordered range of all the layout friendly urls where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutFriendlyURLModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param start the lower bound of the range of layout friendly urls
 	 * @param end the upper bound of the range of layout friendly urls (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching layout friendly urls
 	 */
-	public static List<LayoutFriendlyURL> findByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL, int start,
-		int end, OrderByComparator<LayoutFriendlyURL> orderByComparator) {
+	public static List<LayoutFriendlyURL> findByG_F(
+		long groupId, String friendlyURL, int start, int end,
+		OrderByComparator<LayoutFriendlyURL> orderByComparator) {
 
-		return getPersistence().findByG_P_F(
-			groupId, privateLayout, friendlyURL, start, end, orderByComparator);
+		return getPersistence().findByG_F(
+			groupId, friendlyURL, start, end, orderByComparator);
 	}
 
 	/**
-	 * Returns an ordered range of all the layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns an ordered range of all the layout friendly urls where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>LayoutFriendlyURLModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param start the lower bound of the range of layout friendly urls
 	 * @param end the upper bound of the range of layout friendly urls (not inclusive)
@@ -1480,230 +1473,203 @@ public class LayoutFriendlyURLUtil {
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the ordered range of matching layout friendly urls
 	 */
-	public static List<LayoutFriendlyURL> findByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL, int start,
-		int end, OrderByComparator<LayoutFriendlyURL> orderByComparator,
+	public static List<LayoutFriendlyURL> findByG_F(
+		long groupId, String friendlyURL, int start, int end,
+		OrderByComparator<LayoutFriendlyURL> orderByComparator,
 		boolean useFinderCache) {
 
-		return getPersistence().findByG_P_F(
-			groupId, privateLayout, friendlyURL, start, end, orderByComparator,
+		return getPersistence().findByG_F(
+			groupId, friendlyURL, start, end, orderByComparator,
 			useFinderCache);
 	}
 
 	/**
-	 * Returns the first layout friendly url in the ordered set where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the first layout friendly url in the ordered set where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching layout friendly url
 	 * @throws NoSuchLayoutFriendlyURLException if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL findByG_P_F_First(
-			long groupId, boolean privateLayout, String friendlyURL,
+	public static LayoutFriendlyURL findByG_F_First(
+			long groupId, String friendlyURL,
 			OrderByComparator<LayoutFriendlyURL> orderByComparator)
 		throws com.liferay.portal.kernel.exception.
 			NoSuchLayoutFriendlyURLException {
 
-		return getPersistence().findByG_P_F_First(
-			groupId, privateLayout, friendlyURL, orderByComparator);
+		return getPersistence().findByG_F_First(
+			groupId, friendlyURL, orderByComparator);
 	}
 
 	/**
-	 * Returns the first layout friendly url in the ordered set where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the first layout friendly url in the ordered set where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching layout friendly url, or <code>null</code> if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL fetchByG_P_F_First(
-		long groupId, boolean privateLayout, String friendlyURL,
+	public static LayoutFriendlyURL fetchByG_F_First(
+		long groupId, String friendlyURL,
 		OrderByComparator<LayoutFriendlyURL> orderByComparator) {
 
-		return getPersistence().fetchByG_P_F_First(
-			groupId, privateLayout, friendlyURL, orderByComparator);
+		return getPersistence().fetchByG_F_First(
+			groupId, friendlyURL, orderByComparator);
 	}
 
 	/**
-	 * Returns the last layout friendly url in the ordered set where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the last layout friendly url in the ordered set where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching layout friendly url
 	 * @throws NoSuchLayoutFriendlyURLException if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL findByG_P_F_Last(
-			long groupId, boolean privateLayout, String friendlyURL,
+	public static LayoutFriendlyURL findByG_F_Last(
+			long groupId, String friendlyURL,
 			OrderByComparator<LayoutFriendlyURL> orderByComparator)
 		throws com.liferay.portal.kernel.exception.
 			NoSuchLayoutFriendlyURLException {
 
-		return getPersistence().findByG_P_F_Last(
-			groupId, privateLayout, friendlyURL, orderByComparator);
+		return getPersistence().findByG_F_Last(
+			groupId, friendlyURL, orderByComparator);
 	}
 
 	/**
-	 * Returns the last layout friendly url in the ordered set where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the last layout friendly url in the ordered set where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching layout friendly url, or <code>null</code> if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL fetchByG_P_F_Last(
-		long groupId, boolean privateLayout, String friendlyURL,
+	public static LayoutFriendlyURL fetchByG_F_Last(
+		long groupId, String friendlyURL,
 		OrderByComparator<LayoutFriendlyURL> orderByComparator) {
 
-		return getPersistence().fetchByG_P_F_Last(
-			groupId, privateLayout, friendlyURL, orderByComparator);
+		return getPersistence().fetchByG_F_Last(
+			groupId, friendlyURL, orderByComparator);
 	}
 
 	/**
-	 * Returns the layout friendly urls before and after the current layout friendly url in the ordered set where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the layout friendly urls before and after the current layout friendly url in the ordered set where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param layoutFriendlyURLId the primary key of the current layout friendly url
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next layout friendly url
 	 * @throws NoSuchLayoutFriendlyURLException if a layout friendly url with the primary key could not be found
 	 */
-	public static LayoutFriendlyURL[] findByG_P_F_PrevAndNext(
-			long layoutFriendlyURLId, long groupId, boolean privateLayout,
-			String friendlyURL,
+	public static LayoutFriendlyURL[] findByG_F_PrevAndNext(
+			long layoutFriendlyURLId, long groupId, String friendlyURL,
 			OrderByComparator<LayoutFriendlyURL> orderByComparator)
 		throws com.liferay.portal.kernel.exception.
 			NoSuchLayoutFriendlyURLException {
 
-		return getPersistence().findByG_P_F_PrevAndNext(
-			layoutFriendlyURLId, groupId, privateLayout, friendlyURL,
-			orderByComparator);
+		return getPersistence().findByG_F_PrevAndNext(
+			layoutFriendlyURLId, groupId, friendlyURL, orderByComparator);
 	}
 
 	/**
-	 * Removes all the layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; from the database.
+	 * Removes all the layout friendly urls where groupId = &#63; and friendlyURL = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 */
-	public static void removeByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL) {
-
-		getPersistence().removeByG_P_F(groupId, privateLayout, friendlyURL);
+	public static void removeByG_F(long groupId, String friendlyURL) {
+		getPersistence().removeByG_F(groupId, friendlyURL);
 	}
 
 	/**
-	 * Returns the number of layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63;.
+	 * Returns the number of layout friendly urls where groupId = &#63; and friendlyURL = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @return the number of matching layout friendly urls
 	 */
-	public static int countByG_P_F(
-		long groupId, boolean privateLayout, String friendlyURL) {
-
-		return getPersistence().countByG_P_F(
-			groupId, privateLayout, friendlyURL);
+	public static int countByG_F(long groupId, String friendlyURL) {
+		return getPersistence().countByG_F(groupId, friendlyURL);
 	}
 
 	/**
-	 * Returns the layout friendly url where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; and languageId = &#63; or throws a <code>NoSuchLayoutFriendlyURLException</code> if it could not be found.
+	 * Returns the layout friendly url where groupId = &#63; and friendlyURL = &#63; and languageId = &#63; or throws a <code>NoSuchLayoutFriendlyURLException</code> if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param languageId the language ID
 	 * @return the matching layout friendly url
 	 * @throws NoSuchLayoutFriendlyURLException if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL findByG_P_F_L(
-			long groupId, boolean privateLayout, String friendlyURL,
-			String languageId)
+	public static LayoutFriendlyURL findByG_F_L(
+			long groupId, String friendlyURL, String languageId)
 		throws com.liferay.portal.kernel.exception.
 			NoSuchLayoutFriendlyURLException {
 
-		return getPersistence().findByG_P_F_L(
-			groupId, privateLayout, friendlyURL, languageId);
+		return getPersistence().findByG_F_L(groupId, friendlyURL, languageId);
 	}
 
 	/**
-	 * Returns the layout friendly url where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; and languageId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout friendly url where groupId = &#63; and friendlyURL = &#63; and languageId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param languageId the language ID
 	 * @return the matching layout friendly url, or <code>null</code> if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL fetchByG_P_F_L(
-		long groupId, boolean privateLayout, String friendlyURL,
-		String languageId) {
+	public static LayoutFriendlyURL fetchByG_F_L(
+		long groupId, String friendlyURL, String languageId) {
 
-		return getPersistence().fetchByG_P_F_L(
-			groupId, privateLayout, friendlyURL, languageId);
+		return getPersistence().fetchByG_F_L(groupId, friendlyURL, languageId);
 	}
 
 	/**
-	 * Returns the layout friendly url where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; and languageId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout friendly url where groupId = &#63; and friendlyURL = &#63; and languageId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param languageId the language ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout friendly url, or <code>null</code> if a matching layout friendly url could not be found
 	 */
-	public static LayoutFriendlyURL fetchByG_P_F_L(
-		long groupId, boolean privateLayout, String friendlyURL,
-		String languageId, boolean useFinderCache) {
+	public static LayoutFriendlyURL fetchByG_F_L(
+		long groupId, String friendlyURL, String languageId,
+		boolean useFinderCache) {
 
-		return getPersistence().fetchByG_P_F_L(
-			groupId, privateLayout, friendlyURL, languageId, useFinderCache);
+		return getPersistence().fetchByG_F_L(
+			groupId, friendlyURL, languageId, useFinderCache);
 	}
 
 	/**
-	 * Removes the layout friendly url where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; and languageId = &#63; from the database.
+	 * Removes the layout friendly url where groupId = &#63; and friendlyURL = &#63; and languageId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param languageId the language ID
 	 * @return the layout friendly url that was removed
 	 */
-	public static LayoutFriendlyURL removeByG_P_F_L(
-			long groupId, boolean privateLayout, String friendlyURL,
-			String languageId)
+	public static LayoutFriendlyURL removeByG_F_L(
+			long groupId, String friendlyURL, String languageId)
 		throws com.liferay.portal.kernel.exception.
 			NoSuchLayoutFriendlyURLException {
 
-		return getPersistence().removeByG_P_F_L(
-			groupId, privateLayout, friendlyURL, languageId);
+		return getPersistence().removeByG_F_L(groupId, friendlyURL, languageId);
 	}
 
 	/**
-	 * Returns the number of layout friendly urls where groupId = &#63; and privateLayout = &#63; and friendlyURL = &#63; and languageId = &#63;.
+	 * Returns the number of layout friendly urls where groupId = &#63; and friendlyURL = &#63; and languageId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param friendlyURL the friendly url
 	 * @param languageId the language ID
 	 * @return the number of matching layout friendly urls
 	 */
-	public static int countByG_P_F_L(
-		long groupId, boolean privateLayout, String friendlyURL,
-		String languageId) {
+	public static int countByG_F_L(
+		long groupId, String friendlyURL, String languageId) {
 
-		return getPersistence().countByG_P_F_L(
-			groupId, privateLayout, friendlyURL, languageId);
+		return getPersistence().countByG_F_L(groupId, friendlyURL, languageId);
 	}
 
 	/**

@@ -537,79 +537,66 @@ public class LayoutSEOEntryUtil {
 	}
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry
 	 * @throws NoSuchEntryException if a matching layout seo entry could not be found
 	 */
-	public static LayoutSEOEntry findByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public static LayoutSEOEntry findByG_L(long groupId, long layoutId)
 		throws com.liferay.layout.seo.exception.NoSuchEntryException {
 
-		return getPersistence().findByG_P_L(groupId, privateLayout, layoutId);
+		return getPersistence().findByG_L(groupId, layoutId);
 	}
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
-	public static LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
-		return getPersistence().fetchByG_P_L(groupId, privateLayout, layoutId);
+	public static LayoutSEOEntry fetchByG_L(long groupId, long layoutId) {
+		return getPersistence().fetchByG_L(groupId, layoutId);
 	}
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
-	public static LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId,
-		boolean useFinderCache) {
+	public static LayoutSEOEntry fetchByG_L(
+		long groupId, long layoutId, boolean useFinderCache) {
 
-		return getPersistence().fetchByG_P_L(
-			groupId, privateLayout, layoutId, useFinderCache);
+		return getPersistence().fetchByG_L(groupId, layoutId, useFinderCache);
 	}
 
 	/**
-	 * Removes the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; from the database.
+	 * Removes the layout seo entry where groupId = &#63; and layoutId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the layout seo entry that was removed
 	 */
-	public static LayoutSEOEntry removeByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public static LayoutSEOEntry removeByG_L(long groupId, long layoutId)
 		throws com.liferay.layout.seo.exception.NoSuchEntryException {
 
-		return getPersistence().removeByG_P_L(groupId, privateLayout, layoutId);
+		return getPersistence().removeByG_L(groupId, layoutId);
 	}
 
 	/**
-	 * Returns the number of layout seo entries where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the number of layout seo entries where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the number of matching layout seo entries
 	 */
-	public static int countByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
-		return getPersistence().countByG_P_L(groupId, privateLayout, layoutId);
+	public static int countByG_L(long groupId, long layoutId) {
+		return getPersistence().countByG_L(groupId, layoutId);
 	}
 
 	/**

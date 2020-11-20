@@ -265,12 +265,11 @@ public class LayoutSEOEntryPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P_L() throws Exception {
-		_persistence.countByG_P_L(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
-			RandomTestUtil.nextLong());
+	public void testCountByG_L() throws Exception {
+		_persistence.countByG_L(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
-		_persistence.countByG_P_L(0L, RandomTestUtil.randomBoolean(), 0L);
+		_persistence.countByG_L(0L, 0L);
 	}
 
 	@Test
@@ -590,11 +589,6 @@ public class LayoutSEOEntryPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				layoutSEOEntry, "getColumnOriginalValue",
 				new Class<?>[] {String.class}, "groupId"));
-		Assert.assertEquals(
-			Boolean.valueOf(layoutSEOEntry.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				layoutSEOEntry, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
 		Assert.assertEquals(
 			Long.valueOf(layoutSEOEntry.getLayoutId()),
 			ReflectionTestUtil.<Long>invoke(

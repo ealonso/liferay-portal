@@ -1754,77 +1754,70 @@ public class JournalContentSearchPersistenceImpl
 	private static final String _FINDER_COLUMN_ARTICLEID_ARTICLEID_3 =
 		"(journalContentSearch.articleId IS NULL OR journalContentSearch.articleId = '')";
 
-	private FinderPath _finderPathWithPaginationFindByG_P;
-	private FinderPath _finderPathWithoutPaginationFindByG_P;
-	private FinderPath _finderPathCountByG_P;
+	private FinderPath _finderPathWithPaginationFindByGroupId;
+	private FinderPath _finderPathWithoutPaginationFindByGroupId;
+	private FinderPath _finderPathCountByGroupId;
 
 	/**
-	 * Returns all the journal content searches where groupId = &#63; and privateLayout = &#63;.
+	 * Returns all the journal content searches where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @return the matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P(
-		long groupId, boolean privateLayout) {
-
-		return findByG_P(
-			groupId, privateLayout, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	public List<JournalContentSearch> findByGroupId(long groupId) {
+		return findByGroupId(
+			groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the journal content searches where groupId = &#63; and privateLayout = &#63;.
+	 * Returns a range of all the journal content searches where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @return the range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P(
-		long groupId, boolean privateLayout, int start, int end) {
+	public List<JournalContentSearch> findByGroupId(
+		long groupId, int start, int end) {
 
-		return findByG_P(groupId, privateLayout, start, end, null);
+		return findByGroupId(groupId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P(
-		long groupId, boolean privateLayout, int start, int end,
+	public List<JournalContentSearch> findByGroupId(
+		long groupId, int start, int end,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		return findByG_P(
-			groupId, privateLayout, start, end, orderByComparator, true);
+		return findByGroupId(groupId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -1832,8 +1825,8 @@ public class JournalContentSearchPersistenceImpl
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P(
-		long groupId, boolean privateLayout, int start, int end,
+	public List<JournalContentSearch> findByGroupId(
+		long groupId, int start, int end,
 		OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean useFinderCache) {
 
@@ -1847,15 +1840,13 @@ public class JournalContentSearchPersistenceImpl
 			(orderByComparator == null)) {
 
 			if (useFinderCache && productionMode) {
-				finderPath = _finderPathWithoutPaginationFindByG_P;
-				finderArgs = new Object[] {groupId, privateLayout};
+				finderPath = _finderPathWithoutPaginationFindByGroupId;
+				finderArgs = new Object[] {groupId};
 			}
 		}
 		else if (useFinderCache && productionMode) {
-			finderPath = _finderPathWithPaginationFindByG_P;
-			finderArgs = new Object[] {
-				groupId, privateLayout, start, end, orderByComparator
-			};
+			finderPath = _finderPathWithPaginationFindByGroupId;
+			finderArgs = new Object[] {groupId, start, end, orderByComparator};
 		}
 
 		List<JournalContentSearch> list = null;
@@ -1866,10 +1857,7 @@ public class JournalContentSearchPersistenceImpl
 
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalContentSearch journalContentSearch : list) {
-					if ((groupId != journalContentSearch.getGroupId()) ||
-						(privateLayout !=
-							journalContentSearch.isPrivateLayout())) {
-
+					if (groupId != journalContentSearch.getGroupId()) {
 						list = null;
 
 						break;
@@ -1883,17 +1871,15 @@ public class JournalContentSearchPersistenceImpl
 
 			if (orderByComparator != null) {
 				sb = new StringBundler(
-					4 + (orderByComparator.getOrderByFields().length * 2));
+					3 + (orderByComparator.getOrderByFields().length * 2));
 			}
 			else {
-				sb = new StringBundler(4);
+				sb = new StringBundler(3);
 			}
 
 			sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_PRIVATELAYOUT_2);
+			sb.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
@@ -1916,8 +1902,6 @@ public class JournalContentSearchPersistenceImpl
 
 				queryPos.add(groupId);
 
-				queryPos.add(privateLayout);
-
 				list = (List<JournalContentSearch>)QueryUtil.list(
 					query, getDialect(), start, end);
 
@@ -1939,36 +1923,32 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching journal content search
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_First(
-			long groupId, boolean privateLayout,
+	public JournalContentSearch findByGroupId_First(
+			long groupId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_First(
-			groupId, privateLayout, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByGroupId_First(
+			groupId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(4);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append("}");
 
@@ -1976,20 +1956,19 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_First(
-		long groupId, boolean privateLayout,
+	public JournalContentSearch fetchByGroupId_First(
+		long groupId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		List<JournalContentSearch> list = findByG_P(
-			groupId, privateLayout, 0, 1, orderByComparator);
+		List<JournalContentSearch> list = findByGroupId(
+			groupId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -1999,36 +1978,32 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching journal content search
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_Last(
-			long groupId, boolean privateLayout,
+	public JournalContentSearch findByGroupId_Last(
+			long groupId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_Last(
-			groupId, privateLayout, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByGroupId_Last(
+			groupId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(6);
+		StringBundler sb = new StringBundler(4);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append("}");
 
@@ -2036,26 +2011,25 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_Last(
-		long groupId, boolean privateLayout,
+	public JournalContentSearch fetchByGroupId_Last(
+		long groupId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		int count = countByG_P(groupId, privateLayout);
+		int count = countByGroupId(groupId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<JournalContentSearch> list = findByG_P(
-			groupId, privateLayout, count - 1, count, orderByComparator);
+		List<JournalContentSearch> list = findByGroupId(
+			groupId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -2065,18 +2039,17 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63;.
 	 *
 	 * @param contentSearchId the primary key of the current journal content search
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next journal content search
 	 * @throws NoSuchContentSearchException if a journal content search with the primary key could not be found
 	 */
 	@Override
-	public JournalContentSearch[] findByG_P_PrevAndNext(
-			long contentSearchId, long groupId, boolean privateLayout,
+	public JournalContentSearch[] findByGroupId_PrevAndNext(
+			long contentSearchId, long groupId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
@@ -2090,15 +2063,15 @@ public class JournalContentSearchPersistenceImpl
 
 			JournalContentSearch[] array = new JournalContentSearchImpl[3];
 
-			array[0] = getByG_P_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout,
-				orderByComparator, true);
+			array[0] = getByGroupId_PrevAndNext(
+				session, journalContentSearch, groupId, orderByComparator,
+				true);
 
 			array[1] = journalContentSearch;
 
-			array[2] = getByG_P_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout,
-				orderByComparator, false);
+			array[2] = getByGroupId_PrevAndNext(
+				session, journalContentSearch, groupId, orderByComparator,
+				false);
 
 			return array;
 		}
@@ -2110,28 +2083,25 @@ public class JournalContentSearchPersistenceImpl
 		}
 	}
 
-	protected JournalContentSearch getByG_P_PrevAndNext(
+	protected JournalContentSearch getByGroupId_PrevAndNext(
 		Session session, JournalContentSearch journalContentSearch,
-		long groupId, boolean privateLayout,
-		OrderByComparator<JournalContentSearch> orderByComparator,
+		long groupId, OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean previous) {
 
 		StringBundler sb = null;
 
 		if (orderByComparator != null) {
 			sb = new StringBundler(
-				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
+				4 + (orderByComparator.getOrderByConditionFields().length * 3) +
 					(orderByComparator.getOrderByFields().length * 3));
 		}
 		else {
-			sb = new StringBundler(4);
+			sb = new StringBundler(3);
 		}
 
 		sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-		sb.append(_FINDER_COLUMN_G_P_GROUPID_2);
-
-		sb.append(_FINDER_COLUMN_G_P_PRIVATELAYOUT_2);
+		sb.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields =
@@ -2204,8 +2174,6 @@ public class JournalContentSearchPersistenceImpl
 
 		queryPos.add(groupId);
 
-		queryPos.add(privateLayout);
-
 		if (orderByComparator != null) {
 			for (Object orderByConditionValue :
 					orderByComparator.getOrderByConditionValues(
@@ -2226,31 +2194,28 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Removes all the journal content searches where groupId = &#63; and privateLayout = &#63; from the database.
+	 * Removes all the journal content searches where groupId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 */
 	@Override
-	public void removeByG_P(long groupId, boolean privateLayout) {
+	public void removeByGroupId(long groupId) {
 		for (JournalContentSearch journalContentSearch :
-				findByG_P(
-					groupId, privateLayout, QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null)) {
+				findByGroupId(
+					groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 
 			remove(journalContentSearch);
 		}
 	}
 
 	/**
-	 * Returns the number of journal content searches where groupId = &#63; and privateLayout = &#63;.
+	 * Returns the number of journal content searches where groupId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @return the number of matching journal content searches
 	 */
 	@Override
-	public int countByG_P(long groupId, boolean privateLayout) {
+	public int countByGroupId(long groupId) {
 		boolean productionMode = ctPersistenceHelper.isProductionMode(
 			JournalContentSearch.class);
 
@@ -2260,21 +2225,19 @@ public class JournalContentSearchPersistenceImpl
 		Long count = null;
 
 		if (productionMode) {
-			finderPath = _finderPathCountByG_P;
+			finderPath = _finderPathCountByGroupId;
 
-			finderArgs = new Object[] {groupId, privateLayout};
+			finderArgs = new Object[] {groupId};
 
 			count = (Long)finderCache.getResult(finderPath, finderArgs);
 		}
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(3);
+			StringBundler sb = new StringBundler(2);
 
 			sb.append(_SQL_COUNT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_PRIVATELAYOUT_2);
+			sb.append(_FINDER_COLUMN_GROUPID_GROUPID_2);
 
 			String sql = sb.toString();
 
@@ -2288,8 +2251,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				count = (Long)query.uniqueResult();
 
@@ -2308,11 +2269,8 @@ public class JournalContentSearchPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_P_GROUPID_2 =
-		"journalContentSearch.groupId = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_PRIVATELAYOUT_2 =
-		"journalContentSearch.privateLayout = ?";
+	private static final String _FINDER_COLUMN_GROUPID_GROUPID_2 =
+		"journalContentSearch.groupId = ?";
 
 	private FinderPath _finderPathWithPaginationFindByG_A;
 	private FinderPath _finderPathWithoutPaginationFindByG_A;
@@ -2916,58 +2874,51 @@ public class JournalContentSearchPersistenceImpl
 	private static final String _FINDER_COLUMN_G_A_ARTICLEID_3 =
 		"(journalContentSearch.articleId IS NULL OR journalContentSearch.articleId = '')";
 
-	private FinderPath _finderPathWithPaginationFindByG_P_L;
-	private FinderPath _finderPathWithoutPaginationFindByG_P_L;
-	private FinderPath _finderPathCountByG_P_L;
+	private FinderPath _finderPathWithPaginationFindByG_L;
+	private FinderPath _finderPathWithoutPaginationFindByG_L;
+	private FinderPath _finderPathCountByG_L;
 
 	/**
-	 * Returns all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns all the journal content searches where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
-		return findByG_P_L(
-			groupId, privateLayout, layoutId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+	public List<JournalContentSearch> findByG_L(long groupId, long layoutId) {
+		return findByG_L(
+			groupId, layoutId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns a range of all the journal content searches where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @return the range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_L(
-		long groupId, boolean privateLayout, long layoutId, int start,
-		int end) {
+	public List<JournalContentSearch> findByG_L(
+		long groupId, long layoutId, int start, int end) {
 
-		return findByG_P_L(groupId, privateLayout, layoutId, start, end, null);
+		return findByG_L(groupId, layoutId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
@@ -2975,24 +2926,22 @@ public class JournalContentSearchPersistenceImpl
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_L(
-		long groupId, boolean privateLayout, long layoutId, int start, int end,
+	public List<JournalContentSearch> findByG_L(
+		long groupId, long layoutId, int start, int end,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		return findByG_P_L(
-			groupId, privateLayout, layoutId, start, end, orderByComparator,
-			true);
+		return findByG_L(
+			groupId, layoutId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
@@ -3001,8 +2950,8 @@ public class JournalContentSearchPersistenceImpl
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_L(
-		long groupId, boolean privateLayout, long layoutId, int start, int end,
+	public List<JournalContentSearch> findByG_L(
+		long groupId, long layoutId, int start, int end,
 		OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean useFinderCache) {
 
@@ -3016,14 +2965,14 @@ public class JournalContentSearchPersistenceImpl
 			(orderByComparator == null)) {
 
 			if (useFinderCache && productionMode) {
-				finderPath = _finderPathWithoutPaginationFindByG_P_L;
-				finderArgs = new Object[] {groupId, privateLayout, layoutId};
+				finderPath = _finderPathWithoutPaginationFindByG_L;
+				finderArgs = new Object[] {groupId, layoutId};
 			}
 		}
 		else if (useFinderCache && productionMode) {
-			finderPath = _finderPathWithPaginationFindByG_P_L;
+			finderPath = _finderPathWithPaginationFindByG_L;
 			finderArgs = new Object[] {
-				groupId, privateLayout, layoutId, start, end, orderByComparator
+				groupId, layoutId, start, end, orderByComparator
 			};
 		}
 
@@ -3036,8 +2985,6 @@ public class JournalContentSearchPersistenceImpl
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalContentSearch journalContentSearch : list) {
 					if ((groupId != journalContentSearch.getGroupId()) ||
-						(privateLayout !=
-							journalContentSearch.isPrivateLayout()) ||
 						(layoutId != journalContentSearch.getLayoutId())) {
 
 						list = null;
@@ -3053,19 +3000,17 @@ public class JournalContentSearchPersistenceImpl
 
 			if (orderByComparator != null) {
 				sb = new StringBundler(
-					5 + (orderByComparator.getOrderByFields().length * 2));
+					4 + (orderByComparator.getOrderByFields().length * 2));
 			}
 			else {
-				sb = new StringBundler(5);
+				sb = new StringBundler(4);
 			}
 
 			sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_LAYOUTID_2);
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
@@ -3087,8 +3032,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -3113,37 +3056,33 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching journal content search
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_L_First(
-			long groupId, boolean privateLayout, long layoutId,
+	public JournalContentSearch findByG_L_First(
+			long groupId, long layoutId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_L_First(
-			groupId, privateLayout, layoutId, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByG_L_First(
+			groupId, layoutId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append(", layoutId=");
 		sb.append(layoutId);
@@ -3154,21 +3093,20 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_First(
-		long groupId, boolean privateLayout, long layoutId,
+	public JournalContentSearch fetchByG_L_First(
+		long groupId, long layoutId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		List<JournalContentSearch> list = findByG_P_L(
-			groupId, privateLayout, layoutId, 0, 1, orderByComparator);
+		List<JournalContentSearch> list = findByG_L(
+			groupId, layoutId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -3178,37 +3116,33 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching journal content search
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_L_Last(
-			long groupId, boolean privateLayout, long layoutId,
+	public JournalContentSearch findByG_L_Last(
+			long groupId, long layoutId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_L_Last(
-			groupId, privateLayout, layoutId, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByG_L_Last(
+			groupId, layoutId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(8);
+		StringBundler sb = new StringBundler(6);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append(", layoutId=");
 		sb.append(layoutId);
@@ -3219,28 +3153,26 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_Last(
-		long groupId, boolean privateLayout, long layoutId,
+	public JournalContentSearch fetchByG_L_Last(
+		long groupId, long layoutId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		int count = countByG_P_L(groupId, privateLayout, layoutId);
+		int count = countByG_L(groupId, layoutId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<JournalContentSearch> list = findByG_P_L(
-			groupId, privateLayout, layoutId, count - 1, count,
-			orderByComparator);
+		List<JournalContentSearch> list = findByG_L(
+			groupId, layoutId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -3250,20 +3182,18 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param contentSearchId the primary key of the current journal content search
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next journal content search
 	 * @throws NoSuchContentSearchException if a journal content search with the primary key could not be found
 	 */
 	@Override
-	public JournalContentSearch[] findByG_P_L_PrevAndNext(
-			long contentSearchId, long groupId, boolean privateLayout,
-			long layoutId,
+	public JournalContentSearch[] findByG_L_PrevAndNext(
+			long contentSearchId, long groupId, long layoutId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
@@ -3277,14 +3207,14 @@ public class JournalContentSearchPersistenceImpl
 
 			JournalContentSearch[] array = new JournalContentSearchImpl[3];
 
-			array[0] = getByG_P_L_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout, layoutId,
+			array[0] = getByG_L_PrevAndNext(
+				session, journalContentSearch, groupId, layoutId,
 				orderByComparator, true);
 
 			array[1] = journalContentSearch;
 
-			array[2] = getByG_P_L_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout, layoutId,
+			array[2] = getByG_L_PrevAndNext(
+				session, journalContentSearch, groupId, layoutId,
 				orderByComparator, false);
 
 			return array;
@@ -3297,9 +3227,9 @@ public class JournalContentSearchPersistenceImpl
 		}
 	}
 
-	protected JournalContentSearch getByG_P_L_PrevAndNext(
+	protected JournalContentSearch getByG_L_PrevAndNext(
 		Session session, JournalContentSearch journalContentSearch,
-		long groupId, boolean privateLayout, long layoutId,
+		long groupId, long layoutId,
 		OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean previous) {
 
@@ -3307,20 +3237,18 @@ public class JournalContentSearchPersistenceImpl
 
 		if (orderByComparator != null) {
 			sb = new StringBundler(
-				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
+				5 + (orderByComparator.getOrderByConditionFields().length * 3) +
 					(orderByComparator.getOrderByFields().length * 3));
 		}
 		else {
-			sb = new StringBundler(5);
+			sb = new StringBundler(4);
 		}
 
 		sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-		sb.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+		sb.append(_FINDER_COLUMN_G_L_GROUPID_2);
 
-		sb.append(_FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2);
-
-		sb.append(_FINDER_COLUMN_G_P_L_LAYOUTID_2);
+		sb.append(_FINDER_COLUMN_G_L_LAYOUTID_2);
 
 		if (orderByComparator != null) {
 			String[] orderByConditionFields =
@@ -3392,8 +3320,6 @@ public class JournalContentSearchPersistenceImpl
 		QueryPos queryPos = QueryPos.getInstance(query);
 
 		queryPos.add(groupId);
-
-		queryPos.add(privateLayout);
 
 		queryPos.add(layoutId);
 
@@ -3417,37 +3343,31 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Removes all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; from the database.
+	 * Removes all the journal content searches where groupId = &#63; and layoutId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 */
 	@Override
-	public void removeByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
+	public void removeByG_L(long groupId, long layoutId) {
 		for (JournalContentSearch journalContentSearch :
-				findByG_P_L(
-					groupId, privateLayout, layoutId, QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null)) {
+				findByG_L(
+					groupId, layoutId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+					null)) {
 
 			remove(journalContentSearch);
 		}
 	}
 
 	/**
-	 * Returns the number of journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the number of journal content searches where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the number of matching journal content searches
 	 */
 	@Override
-	public int countByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
+	public int countByG_L(long groupId, long layoutId) {
 		boolean productionMode = ctPersistenceHelper.isProductionMode(
 			JournalContentSearch.class);
 
@@ -3457,23 +3377,21 @@ public class JournalContentSearchPersistenceImpl
 		Long count = null;
 
 		if (productionMode) {
-			finderPath = _finderPathCountByG_P_L;
+			finderPath = _finderPathCountByG_L;
 
-			finderArgs = new Object[] {groupId, privateLayout, layoutId};
+			finderArgs = new Object[] {groupId, layoutId};
 
 			count = (Long)finderCache.getResult(finderPath, finderArgs);
 		}
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(4);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(_SQL_COUNT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_LAYOUTID_2);
 
 			String sql = sb.toString();
 
@@ -3487,8 +3405,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -3509,93 +3425,88 @@ public class JournalContentSearchPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_P_L_GROUPID_2 =
+	private static final String _FINDER_COLUMN_G_L_GROUPID_2 =
 		"journalContentSearch.groupId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2 =
-		"journalContentSearch.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_L_LAYOUTID_2 =
+	private static final String _FINDER_COLUMN_G_L_LAYOUTID_2 =
 		"journalContentSearch.layoutId = ?";
 
-	private FinderPath _finderPathWithPaginationFindByG_P_A;
-	private FinderPath _finderPathWithoutPaginationFindByG_P_A;
-	private FinderPath _finderPathCountByG_P_A;
+	private FinderPath _finderPathWithPaginationFindByG_L_P;
+	private FinderPath _finderPathWithoutPaginationFindByG_L_P;
+	private FinderPath _finderPathCountByG_L_P;
 
 	/**
-	 * Returns all the journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
+	 * Returns all the journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
+	 * @param layoutId the layout ID
+	 * @param portletId the portlet ID
 	 * @return the matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_A(
-		long groupId, boolean privateLayout, String articleId) {
+	public List<JournalContentSearch> findByG_L_P(
+		long groupId, long layoutId, String portletId) {
 
-		return findByG_P_A(
-			groupId, privateLayout, articleId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+		return findByG_L_P(
+			groupId, layoutId, portletId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
 	}
 
 	/**
-	 * Returns a range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
+	 * Returns a range of all the journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
+	 * @param layoutId the layout ID
+	 * @param portletId the portlet ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @return the range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_A(
-		long groupId, boolean privateLayout, String articleId, int start,
-		int end) {
+	public List<JournalContentSearch> findByG_L_P(
+		long groupId, long layoutId, String portletId, int start, int end) {
 
-		return findByG_P_A(groupId, privateLayout, articleId, start, end, null);
+		return findByG_L_P(groupId, layoutId, portletId, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
+	 * @param layoutId the layout ID
+	 * @param portletId the portlet ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_A(
-		long groupId, boolean privateLayout, String articleId, int start,
-		int end, OrderByComparator<JournalContentSearch> orderByComparator) {
+	public List<JournalContentSearch> findByG_L_P(
+		long groupId, long layoutId, String portletId, int start, int end,
+		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		return findByG_P_A(
-			groupId, privateLayout, articleId, start, end, orderByComparator,
-			true);
+		return findByG_L_P(
+			groupId, layoutId, portletId, start, end, orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
+	 * Returns an ordered range of all the journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
 	 * </p>
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
+	 * @param layoutId the layout ID
+	 * @param portletId the portlet ID
 	 * @param start the lower bound of the range of journal content searches
 	 * @param end the upper bound of the range of journal content searches (not inclusive)
 	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
@@ -3603,12 +3514,12 @@ public class JournalContentSearchPersistenceImpl
 	 * @return the ordered range of matching journal content searches
 	 */
 	@Override
-	public List<JournalContentSearch> findByG_P_A(
-		long groupId, boolean privateLayout, String articleId, int start,
-		int end, OrderByComparator<JournalContentSearch> orderByComparator,
+	public List<JournalContentSearch> findByG_L_P(
+		long groupId, long layoutId, String portletId, int start, int end,
+		OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean useFinderCache) {
 
-		articleId = Objects.toString(articleId, "");
+		portletId = Objects.toString(portletId, "");
 
 		boolean productionMode = ctPersistenceHelper.isProductionMode(
 			JournalContentSearch.class);
@@ -3620,14 +3531,14 @@ public class JournalContentSearchPersistenceImpl
 			(orderByComparator == null)) {
 
 			if (useFinderCache && productionMode) {
-				finderPath = _finderPathWithoutPaginationFindByG_P_A;
-				finderArgs = new Object[] {groupId, privateLayout, articleId};
+				finderPath = _finderPathWithoutPaginationFindByG_L_P;
+				finderArgs = new Object[] {groupId, layoutId, portletId};
 			}
 		}
 		else if (useFinderCache && productionMode) {
-			finderPath = _finderPathWithPaginationFindByG_P_A;
+			finderPath = _finderPathWithPaginationFindByG_L_P;
 			finderArgs = new Object[] {
-				groupId, privateLayout, articleId, start, end, orderByComparator
+				groupId, layoutId, portletId, start, end, orderByComparator
 			};
 		}
 
@@ -3640,10 +3551,9 @@ public class JournalContentSearchPersistenceImpl
 			if ((list != null) && !list.isEmpty()) {
 				for (JournalContentSearch journalContentSearch : list) {
 					if ((groupId != journalContentSearch.getGroupId()) ||
-						(privateLayout !=
-							journalContentSearch.isPrivateLayout()) ||
-						!articleId.equals(
-							journalContentSearch.getArticleId())) {
+						(layoutId != journalContentSearch.getLayoutId()) ||
+						!portletId.equals(
+							journalContentSearch.getPortletId())) {
 
 						list = null;
 
@@ -3666,677 +3576,19 @@ public class JournalContentSearchPersistenceImpl
 
 			sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_A_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_A_PRIVATELAYOUT_2);
-
-			boolean bindArticleId = false;
-
-			if (articleId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_3);
-			}
-			else {
-				bindArticleId = true;
-
-				sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_2);
-			}
-
-			if (orderByComparator != null) {
-				appendOrderByComparator(
-					sb, _ORDER_BY_ENTITY_ALIAS, orderByComparator);
-			}
-			else {
-				sb.append(JournalContentSearchModelImpl.ORDER_BY_JPQL);
-			}
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
-
-				if (bindArticleId) {
-					queryPos.add(articleId);
-				}
-
-				list = (List<JournalContentSearch>)QueryUtil.list(
-					query, getDialect(), start, end);
-
-				cacheResult(list);
-
-				if (useFinderCache && productionMode) {
-					finderCache.putResult(finderPath, finderArgs, list);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching journal content search
-	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
-	 */
-	@Override
-	public JournalContentSearch findByG_P_A_First(
-			long groupId, boolean privateLayout, String articleId,
-			OrderByComparator<JournalContentSearch> orderByComparator)
-		throws NoSuchContentSearchException {
-
-		JournalContentSearch journalContentSearch = fetchByG_P_A_First(
-			groupId, privateLayout, articleId, orderByComparator);
-
-		if (journalContentSearch != null) {
-			return journalContentSearch;
-		}
-
-		StringBundler sb = new StringBundler(8);
-
-		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		sb.append("groupId=");
-		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
-
-		sb.append(", articleId=");
-		sb.append(articleId);
-
-		sb.append("}");
-
-		throw new NoSuchContentSearchException(sb.toString());
-	}
-
-	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching journal content search, or <code>null</code> if a matching journal content search could not be found
-	 */
-	@Override
-	public JournalContentSearch fetchByG_P_A_First(
-		long groupId, boolean privateLayout, String articleId,
-		OrderByComparator<JournalContentSearch> orderByComparator) {
-
-		List<JournalContentSearch> list = findByG_P_A(
-			groupId, privateLayout, articleId, 0, 1, orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching journal content search
-	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
-	 */
-	@Override
-	public JournalContentSearch findByG_P_A_Last(
-			long groupId, boolean privateLayout, String articleId,
-			OrderByComparator<JournalContentSearch> orderByComparator)
-		throws NoSuchContentSearchException {
-
-		JournalContentSearch journalContentSearch = fetchByG_P_A_Last(
-			groupId, privateLayout, articleId, orderByComparator);
-
-		if (journalContentSearch != null) {
-			return journalContentSearch;
-		}
-
-		StringBundler sb = new StringBundler(8);
-
-		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		sb.append("groupId=");
-		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
-
-		sb.append(", articleId=");
-		sb.append(articleId);
-
-		sb.append("}");
-
-		throw new NoSuchContentSearchException(sb.toString());
-	}
-
-	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching journal content search, or <code>null</code> if a matching journal content search could not be found
-	 */
-	@Override
-	public JournalContentSearch fetchByG_P_A_Last(
-		long groupId, boolean privateLayout, String articleId,
-		OrderByComparator<JournalContentSearch> orderByComparator) {
-
-		int count = countByG_P_A(groupId, privateLayout, articleId);
-
-		if (count == 0) {
-			return null;
-		}
-
-		List<JournalContentSearch> list = findByG_P_A(
-			groupId, privateLayout, articleId, count - 1, count,
-			orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param contentSearchId the primary key of the current journal content search
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next journal content search
-	 * @throws NoSuchContentSearchException if a journal content search with the primary key could not be found
-	 */
-	@Override
-	public JournalContentSearch[] findByG_P_A_PrevAndNext(
-			long contentSearchId, long groupId, boolean privateLayout,
-			String articleId,
-			OrderByComparator<JournalContentSearch> orderByComparator)
-		throws NoSuchContentSearchException {
-
-		articleId = Objects.toString(articleId, "");
-
-		JournalContentSearch journalContentSearch = findByPrimaryKey(
-			contentSearchId);
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			JournalContentSearch[] array = new JournalContentSearchImpl[3];
-
-			array[0] = getByG_P_A_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout,
-				articleId, orderByComparator, true);
-
-			array[1] = journalContentSearch;
-
-			array[2] = getByG_P_A_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout,
-				articleId, orderByComparator, false);
-
-			return array;
-		}
-		catch (Exception exception) {
-			throw processException(exception);
-		}
-		finally {
-			closeSession(session);
-		}
-	}
-
-	protected JournalContentSearch getByG_P_A_PrevAndNext(
-		Session session, JournalContentSearch journalContentSearch,
-		long groupId, boolean privateLayout, String articleId,
-		OrderByComparator<JournalContentSearch> orderByComparator,
-		boolean previous) {
-
-		StringBundler sb = null;
-
-		if (orderByComparator != null) {
-			sb = new StringBundler(
-				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
-					(orderByComparator.getOrderByFields().length * 3));
-		}
-		else {
-			sb = new StringBundler(5);
-		}
-
-		sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
-
-		sb.append(_FINDER_COLUMN_G_P_A_GROUPID_2);
-
-		sb.append(_FINDER_COLUMN_G_P_A_PRIVATELAYOUT_2);
-
-		boolean bindArticleId = false;
-
-		if (articleId.isEmpty()) {
-			sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_3);
-		}
-		else {
-			bindArticleId = true;
-
-			sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_2);
-		}
-
-		if (orderByComparator != null) {
-			String[] orderByConditionFields =
-				orderByComparator.getOrderByConditionFields();
-
-			if (orderByConditionFields.length > 0) {
-				sb.append(WHERE_AND);
-			}
-
-			for (int i = 0; i < orderByConditionFields.length; i++) {
-				sb.append(_ORDER_BY_ENTITY_ALIAS);
-				sb.append(orderByConditionFields[i]);
-
-				if ((i + 1) < orderByConditionFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(WHERE_GREATER_THAN_HAS_NEXT);
-					}
-					else {
-						sb.append(WHERE_LESSER_THAN_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(WHERE_GREATER_THAN);
-					}
-					else {
-						sb.append(WHERE_LESSER_THAN);
-					}
-				}
-			}
-
-			sb.append(ORDER_BY_CLAUSE);
-
-			String[] orderByFields = orderByComparator.getOrderByFields();
-
-			for (int i = 0; i < orderByFields.length; i++) {
-				sb.append(_ORDER_BY_ENTITY_ALIAS);
-				sb.append(orderByFields[i]);
-
-				if ((i + 1) < orderByFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(ORDER_BY_ASC_HAS_NEXT);
-					}
-					else {
-						sb.append(ORDER_BY_DESC_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						sb.append(ORDER_BY_ASC);
-					}
-					else {
-						sb.append(ORDER_BY_DESC);
-					}
-				}
-			}
-		}
-		else {
-			sb.append(JournalContentSearchModelImpl.ORDER_BY_JPQL);
-		}
-
-		String sql = sb.toString();
-
-		Query query = session.createQuery(sql);
-
-		query.setFirstResult(0);
-		query.setMaxResults(2);
-
-		QueryPos queryPos = QueryPos.getInstance(query);
-
-		queryPos.add(groupId);
-
-		queryPos.add(privateLayout);
-
-		if (bindArticleId) {
-			queryPos.add(articleId);
-		}
-
-		if (orderByComparator != null) {
-			for (Object orderByConditionValue :
-					orderByComparator.getOrderByConditionValues(
-						journalContentSearch)) {
-
-				queryPos.add(orderByConditionValue);
-			}
-		}
-
-		List<JournalContentSearch> list = query.list();
-
-		if (list.size() == 2) {
-			return list.get(1);
-		}
-		else {
-			return null;
-		}
-	}
-
-	/**
-	 * Removes all the journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63; from the database.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 */
-	@Override
-	public void removeByG_P_A(
-		long groupId, boolean privateLayout, String articleId) {
-
-		for (JournalContentSearch journalContentSearch :
-				findByG_P_A(
-					groupId, privateLayout, articleId, QueryUtil.ALL_POS,
-					QueryUtil.ALL_POS, null)) {
-
-			remove(journalContentSearch);
-		}
-	}
-
-	/**
-	 * Returns the number of journal content searches where groupId = &#63; and privateLayout = &#63; and articleId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param articleId the article ID
-	 * @return the number of matching journal content searches
-	 */
-	@Override
-	public int countByG_P_A(
-		long groupId, boolean privateLayout, String articleId) {
-
-		articleId = Objects.toString(articleId, "");
-
-		boolean productionMode = ctPersistenceHelper.isProductionMode(
-			JournalContentSearch.class);
-
-		FinderPath finderPath = null;
-		Object[] finderArgs = null;
-
-		Long count = null;
-
-		if (productionMode) {
-			finderPath = _finderPathCountByG_P_A;
-
-			finderArgs = new Object[] {groupId, privateLayout, articleId};
-
-			count = (Long)finderCache.getResult(finderPath, finderArgs);
-		}
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append(_SQL_COUNT_JOURNALCONTENTSEARCH_WHERE);
-
-			sb.append(_FINDER_COLUMN_G_P_A_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_A_PRIVATELAYOUT_2);
-
-			boolean bindArticleId = false;
-
-			if (articleId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_3);
-			}
-			else {
-				bindArticleId = true;
-
-				sb.append(_FINDER_COLUMN_G_P_A_ARTICLEID_2);
-			}
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
-
-				if (bindArticleId) {
-					queryPos.add(articleId);
-				}
-
-				count = (Long)query.uniqueResult();
-
-				if (productionMode) {
-					finderCache.putResult(finderPath, finderArgs, count);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_G_P_A_GROUPID_2 =
-		"journalContentSearch.groupId = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_A_PRIVATELAYOUT_2 =
-		"journalContentSearch.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_A_ARTICLEID_2 =
-		"journalContentSearch.articleId = ?";
-
-	private static final String _FINDER_COLUMN_G_P_A_ARTICLEID_3 =
-		"(journalContentSearch.articleId IS NULL OR journalContentSearch.articleId = '')";
-
-	private FinderPath _finderPathWithPaginationFindByG_P_L_P;
-	private FinderPath _finderPathWithoutPaginationFindByG_P_L_P;
-	private FinderPath _finderPathCountByG_P_L_P;
-
-	/**
-	 * Returns all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param layoutId the layout ID
-	 * @param portletId the portlet ID
-	 * @return the matching journal content searches
-	 */
-	@Override
-	public List<JournalContentSearch> findByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId) {
-
-		return findByG_P_L_P(
-			groupId, privateLayout, layoutId, portletId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
-	}
-
-	/**
-	 * Returns a range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param layoutId the layout ID
-	 * @param portletId the portlet ID
-	 * @param start the lower bound of the range of journal content searches
-	 * @param end the upper bound of the range of journal content searches (not inclusive)
-	 * @return the range of matching journal content searches
-	 */
-	@Override
-	public List<JournalContentSearch> findByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		int start, int end) {
-
-		return findByG_P_L_P(
-			groupId, privateLayout, layoutId, portletId, start, end, null);
-	}
-
-	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param layoutId the layout ID
-	 * @param portletId the portlet ID
-	 * @param start the lower bound of the range of journal content searches
-	 * @param end the upper bound of the range of journal content searches (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching journal content searches
-	 */
-	@Override
-	public List<JournalContentSearch> findByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		int start, int end,
-		OrderByComparator<JournalContentSearch> orderByComparator) {
-
-		return findByG_P_L_P(
-			groupId, privateLayout, layoutId, portletId, start, end,
-			orderByComparator, true);
-	}
-
-	/**
-	 * Returns an ordered range of all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>JournalContentSearchModelImpl</code>.
-	 * </p>
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param layoutId the layout ID
-	 * @param portletId the portlet ID
-	 * @param start the lower bound of the range of journal content searches
-	 * @param end the upper bound of the range of journal content searches (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the ordered range of matching journal content searches
-	 */
-	@Override
-	public List<JournalContentSearch> findByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		int start, int end,
-		OrderByComparator<JournalContentSearch> orderByComparator,
-		boolean useFinderCache) {
-
-		portletId = Objects.toString(portletId, "");
-
-		boolean productionMode = ctPersistenceHelper.isProductionMode(
-			JournalContentSearch.class);
-
-		FinderPath finderPath = null;
-		Object[] finderArgs = null;
-
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-			(orderByComparator == null)) {
-
-			if (useFinderCache && productionMode) {
-				finderPath = _finderPathWithoutPaginationFindByG_P_L_P;
-				finderArgs = new Object[] {
-					groupId, privateLayout, layoutId, portletId
-				};
-			}
-		}
-		else if (useFinderCache && productionMode) {
-			finderPath = _finderPathWithPaginationFindByG_P_L_P;
-			finderArgs = new Object[] {
-				groupId, privateLayout, layoutId, portletId, start, end,
-				orderByComparator
-			};
-		}
-
-		List<JournalContentSearch> list = null;
-
-		if (useFinderCache && productionMode) {
-			list = (List<JournalContentSearch>)finderCache.getResult(
-				finderPath, finderArgs);
-
-			if ((list != null) && !list.isEmpty()) {
-				for (JournalContentSearch journalContentSearch : list) {
-					if ((groupId != journalContentSearch.getGroupId()) ||
-						(privateLayout !=
-							journalContentSearch.isPrivateLayout()) ||
-						(layoutId != journalContentSearch.getLayoutId()) ||
-						!portletId.equals(
-							journalContentSearch.getPortletId())) {
-
-						list = null;
-
-						break;
-					}
-				}
-			}
-		}
-
-		if (list == null) {
-			StringBundler sb = null;
-
-			if (orderByComparator != null) {
-				sb = new StringBundler(
-					6 + (orderByComparator.getOrderByFields().length * 2));
-			}
-			else {
-				sb = new StringBundler(6);
-			}
-
-			sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_LAYOUTID_2);
 
 			boolean bindPortletId = false;
 
 			if (portletId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_3);
 			}
 			else {
 				bindPortletId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_2);
 			}
 
 			if (orderByComparator != null) {
@@ -4359,8 +3611,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -4389,10 +3639,9 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -4400,28 +3649,24 @@ public class JournalContentSearchPersistenceImpl
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_L_P_First(
-			long groupId, boolean privateLayout, long layoutId,
-			String portletId,
+	public JournalContentSearch findByG_L_P_First(
+			long groupId, long layoutId, String portletId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_L_P_First(
-			groupId, privateLayout, layoutId, portletId, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByG_L_P_First(
+			groupId, layoutId, portletId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append(", layoutId=");
 		sb.append(layoutId);
@@ -4435,23 +3680,21 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the first journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the first journal content search in the ordered set where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_P_First(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
+	public JournalContentSearch fetchByG_L_P_First(
+		long groupId, long layoutId, String portletId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		List<JournalContentSearch> list = findByG_P_L_P(
-			groupId, privateLayout, layoutId, portletId, 0, 1,
-			orderByComparator);
+		List<JournalContentSearch> list = findByG_L_P(
+			groupId, layoutId, portletId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -4461,10 +3704,9 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -4472,28 +3714,24 @@ public class JournalContentSearchPersistenceImpl
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_L_P_Last(
-			long groupId, boolean privateLayout, long layoutId,
-			String portletId,
+	public JournalContentSearch findByG_L_P_Last(
+			long groupId, long layoutId, String portletId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_L_P_Last(
-			groupId, privateLayout, layoutId, portletId, orderByComparator);
+		JournalContentSearch journalContentSearch = fetchByG_L_P_Last(
+			groupId, layoutId, portletId, orderByComparator);
 
 		if (journalContentSearch != null) {
 			return journalContentSearch;
 		}
 
-		StringBundler sb = new StringBundler(10);
+		StringBundler sb = new StringBundler(8);
 
 		sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 		sb.append("groupId=");
 		sb.append(groupId);
-
-		sb.append(", privateLayout=");
-		sb.append(privateLayout);
 
 		sb.append(", layoutId=");
 		sb.append(layoutId);
@@ -4507,29 +3745,27 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the last journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the last journal content search in the ordered set where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_P_Last(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
+	public JournalContentSearch fetchByG_L_P_Last(
+		long groupId, long layoutId, String portletId,
 		OrderByComparator<JournalContentSearch> orderByComparator) {
 
-		int count = countByG_P_L_P(groupId, privateLayout, layoutId, portletId);
+		int count = countByG_L_P(groupId, layoutId, portletId);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<JournalContentSearch> list = findByG_P_L_P(
-			groupId, privateLayout, layoutId, portletId, count - 1, count,
-			orderByComparator);
+		List<JournalContentSearch> list = findByG_L_P(
+			groupId, layoutId, portletId, count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -4539,11 +3775,10 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the journal content searches before and after the current journal content search in the ordered set where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param contentSearchId the primary key of the current journal content search
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
@@ -4551,9 +3786,8 @@ public class JournalContentSearchPersistenceImpl
 	 * @throws NoSuchContentSearchException if a journal content search with the primary key could not be found
 	 */
 	@Override
-	public JournalContentSearch[] findByG_P_L_P_PrevAndNext(
-			long contentSearchId, long groupId, boolean privateLayout,
-			long layoutId, String portletId,
+	public JournalContentSearch[] findByG_L_P_PrevAndNext(
+			long contentSearchId, long groupId, long layoutId, String portletId,
 			OrderByComparator<JournalContentSearch> orderByComparator)
 		throws NoSuchContentSearchException {
 
@@ -4569,15 +3803,15 @@ public class JournalContentSearchPersistenceImpl
 
 			JournalContentSearch[] array = new JournalContentSearchImpl[3];
 
-			array[0] = getByG_P_L_P_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout, layoutId,
-				portletId, orderByComparator, true);
+			array[0] = getByG_L_P_PrevAndNext(
+				session, journalContentSearch, groupId, layoutId, portletId,
+				orderByComparator, true);
 
 			array[1] = journalContentSearch;
 
-			array[2] = getByG_P_L_P_PrevAndNext(
-				session, journalContentSearch, groupId, privateLayout, layoutId,
-				portletId, orderByComparator, false);
+			array[2] = getByG_L_P_PrevAndNext(
+				session, journalContentSearch, groupId, layoutId, portletId,
+				orderByComparator, false);
 
 			return array;
 		}
@@ -4589,9 +3823,9 @@ public class JournalContentSearchPersistenceImpl
 		}
 	}
 
-	protected JournalContentSearch getByG_P_L_P_PrevAndNext(
+	protected JournalContentSearch getByG_L_P_PrevAndNext(
 		Session session, JournalContentSearch journalContentSearch,
-		long groupId, boolean privateLayout, long layoutId, String portletId,
+		long groupId, long layoutId, String portletId,
 		OrderByComparator<JournalContentSearch> orderByComparator,
 		boolean previous) {
 
@@ -4599,30 +3833,28 @@ public class JournalContentSearchPersistenceImpl
 
 		if (orderByComparator != null) {
 			sb = new StringBundler(
-				7 + (orderByComparator.getOrderByConditionFields().length * 3) +
+				6 + (orderByComparator.getOrderByConditionFields().length * 3) +
 					(orderByComparator.getOrderByFields().length * 3));
 		}
 		else {
-			sb = new StringBundler(6);
+			sb = new StringBundler(5);
 		}
 
 		sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-		sb.append(_FINDER_COLUMN_G_P_L_P_GROUPID_2);
+		sb.append(_FINDER_COLUMN_G_L_P_GROUPID_2);
 
-		sb.append(_FINDER_COLUMN_G_P_L_P_PRIVATELAYOUT_2);
-
-		sb.append(_FINDER_COLUMN_G_P_L_P_LAYOUTID_2);
+		sb.append(_FINDER_COLUMN_G_L_P_LAYOUTID_2);
 
 		boolean bindPortletId = false;
 
 		if (portletId.isEmpty()) {
-			sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_3);
+			sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_3);
 		}
 		else {
 			bindPortletId = true;
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_2);
 		}
 
 		if (orderByComparator != null) {
@@ -4695,8 +3927,6 @@ public class JournalContentSearchPersistenceImpl
 		QueryPos queryPos = QueryPos.getInstance(query);
 
 		queryPos.add(groupId);
-
-		queryPos.add(privateLayout);
 
 		queryPos.add(layoutId);
 
@@ -4724,39 +3954,33 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Removes all the journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; from the database.
+	 * Removes all the journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 */
 	@Override
-	public void removeByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId) {
-
+	public void removeByG_L_P(long groupId, long layoutId, String portletId) {
 		for (JournalContentSearch journalContentSearch :
-				findByG_P_L_P(
-					groupId, privateLayout, layoutId, portletId,
-					QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+				findByG_L_P(
+					groupId, layoutId, portletId, QueryUtil.ALL_POS,
+					QueryUtil.ALL_POS, null)) {
 
 			remove(journalContentSearch);
 		}
 	}
 
 	/**
-	 * Returns the number of journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63;.
+	 * Returns the number of journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @return the number of matching journal content searches
 	 */
 	@Override
-	public int countByG_P_L_P(
-		long groupId, boolean privateLayout, long layoutId, String portletId) {
-
+	public int countByG_L_P(long groupId, long layoutId, String portletId) {
 		portletId = Objects.toString(portletId, "");
 
 		boolean productionMode = ctPersistenceHelper.isProductionMode(
@@ -4768,35 +3992,31 @@ public class JournalContentSearchPersistenceImpl
 		Long count = null;
 
 		if (productionMode) {
-			finderPath = _finderPathCountByG_P_L_P;
+			finderPath = _finderPathCountByG_L_P;
 
-			finderArgs = new Object[] {
-				groupId, privateLayout, layoutId, portletId
-			};
+			finderArgs = new Object[] {groupId, layoutId, portletId};
 
 			count = (Long)finderCache.getResult(finderPath, finderArgs);
 		}
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(5);
+			StringBundler sb = new StringBundler(4);
 
 			sb.append(_SQL_COUNT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_LAYOUTID_2);
 
 			boolean bindPortletId = false;
 
 			if (portletId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_3);
 			}
 			else {
 				bindPortletId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_PORTLETID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_PORTLETID_2);
 			}
 
 			String sql = sb.toString();
@@ -4811,8 +4031,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -4837,29 +4055,25 @@ public class JournalContentSearchPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_P_L_P_GROUPID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_GROUPID_2 =
 		"journalContentSearch.groupId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_PRIVATELAYOUT_2 =
-		"journalContentSearch.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_L_P_LAYOUTID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_LAYOUTID_2 =
 		"journalContentSearch.layoutId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_PORTLETID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_PORTLETID_2 =
 		"journalContentSearch.portletId = ?";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_PORTLETID_3 =
+	private static final String _FINDER_COLUMN_G_L_P_PORTLETID_3 =
 		"(journalContentSearch.portletId IS NULL OR journalContentSearch.portletId = '')";
 
-	private FinderPath _finderPathFetchByG_P_L_P_A;
-	private FinderPath _finderPathCountByG_P_L_P_A;
+	private FinderPath _finderPathFetchByG_L_P_A;
+	private FinderPath _finderPathCountByG_L_P_A;
 
 	/**
-	 * Returns the journal content search where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or throws a <code>NoSuchContentSearchException</code> if it could not be found.
+	 * Returns the journal content search where groupId = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or throws a <code>NoSuchContentSearchException</code> if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param articleId the article ID
@@ -4867,24 +4081,20 @@ public class JournalContentSearchPersistenceImpl
 	 * @throws NoSuchContentSearchException if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch findByG_P_L_P_A(
-			long groupId, boolean privateLayout, long layoutId,
-			String portletId, String articleId)
+	public JournalContentSearch findByG_L_P_A(
+			long groupId, long layoutId, String portletId, String articleId)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = fetchByG_P_L_P_A(
-			groupId, privateLayout, layoutId, portletId, articleId);
+		JournalContentSearch journalContentSearch = fetchByG_L_P_A(
+			groupId, layoutId, portletId, articleId);
 
 		if (journalContentSearch == null) {
-			StringBundler sb = new StringBundler(12);
+			StringBundler sb = new StringBundler(10);
 
 			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			sb.append("groupId=");
 			sb.append(groupId);
-
-			sb.append(", privateLayout=");
-			sb.append(privateLayout);
 
 			sb.append(", layoutId=");
 			sb.append(layoutId);
@@ -4908,29 +4118,25 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Returns the journal content search where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the journal content search where groupId = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param articleId the article ID
 	 * @return the matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_P_A(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		String articleId) {
+	public JournalContentSearch fetchByG_L_P_A(
+		long groupId, long layoutId, String portletId, String articleId) {
 
-		return fetchByG_P_L_P_A(
-			groupId, privateLayout, layoutId, portletId, articleId, true);
+		return fetchByG_L_P_A(groupId, layoutId, portletId, articleId, true);
 	}
 
 	/**
-	 * Returns the journal content search where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the journal content search where groupId = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param articleId the article ID
@@ -4938,9 +4144,9 @@ public class JournalContentSearchPersistenceImpl
 	 * @return the matching journal content search, or <code>null</code> if a matching journal content search could not be found
 	 */
 	@Override
-	public JournalContentSearch fetchByG_P_L_P_A(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		String articleId, boolean useFinderCache) {
+	public JournalContentSearch fetchByG_L_P_A(
+		long groupId, long layoutId, String portletId, String articleId,
+		boolean useFinderCache) {
 
 		portletId = Objects.toString(portletId, "");
 		articleId = Objects.toString(articleId, "");
@@ -4951,16 +4157,14 @@ public class JournalContentSearchPersistenceImpl
 		Object[] finderArgs = null;
 
 		if (useFinderCache && productionMode) {
-			finderArgs = new Object[] {
-				groupId, privateLayout, layoutId, portletId, articleId
-			};
+			finderArgs = new Object[] {groupId, layoutId, portletId, articleId};
 		}
 
 		Object result = null;
 
 		if (useFinderCache && productionMode) {
 			result = finderCache.getResult(
-				_finderPathFetchByG_P_L_P_A, finderArgs);
+				_finderPathFetchByG_L_P_A, finderArgs);
 		}
 
 		if (result instanceof JournalContentSearch) {
@@ -4968,7 +4172,6 @@ public class JournalContentSearchPersistenceImpl
 				(JournalContentSearch)result;
 
 			if ((groupId != journalContentSearch.getGroupId()) ||
-				(privateLayout != journalContentSearch.isPrivateLayout()) ||
 				(layoutId != journalContentSearch.getLayoutId()) ||
 				!Objects.equals(
 					portletId, journalContentSearch.getPortletId()) ||
@@ -4980,36 +4183,34 @@ public class JournalContentSearchPersistenceImpl
 		}
 
 		if (result == null) {
-			StringBundler sb = new StringBundler(7);
+			StringBundler sb = new StringBundler(6);
 
 			sb.append(_SQL_SELECT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_A_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_A_LAYOUTID_2);
 
 			boolean bindPortletId = false;
 
 			if (portletId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_PORTLETID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_A_PORTLETID_3);
 			}
 			else {
 				bindPortletId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_PORTLETID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_A_PORTLETID_2);
 			}
 
 			boolean bindArticleId = false;
 
 			if (articleId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_ARTICLEID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_A_ARTICLEID_3);
 			}
 			else {
 				bindArticleId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_ARTICLEID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_A_ARTICLEID_2);
 			}
 
 			String sql = sb.toString();
@@ -5024,8 +4225,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -5042,7 +4241,7 @@ public class JournalContentSearchPersistenceImpl
 				if (list.isEmpty()) {
 					if (useFinderCache && productionMode) {
 						finderCache.putResult(
-							_finderPathFetchByG_P_L_P_A, finderArgs, list);
+							_finderPathFetchByG_L_P_A, finderArgs, list);
 					}
 				}
 				else {
@@ -5070,41 +4269,37 @@ public class JournalContentSearchPersistenceImpl
 	}
 
 	/**
-	 * Removes the journal content search where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; from the database.
+	 * Removes the journal content search where groupId = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param articleId the article ID
 	 * @return the journal content search that was removed
 	 */
 	@Override
-	public JournalContentSearch removeByG_P_L_P_A(
-			long groupId, boolean privateLayout, long layoutId,
-			String portletId, String articleId)
+	public JournalContentSearch removeByG_L_P_A(
+			long groupId, long layoutId, String portletId, String articleId)
 		throws NoSuchContentSearchException {
 
-		JournalContentSearch journalContentSearch = findByG_P_L_P_A(
-			groupId, privateLayout, layoutId, portletId, articleId);
+		JournalContentSearch journalContentSearch = findByG_L_P_A(
+			groupId, layoutId, portletId, articleId);
 
 		return remove(journalContentSearch);
 	}
 
 	/**
-	 * Returns the number of journal content searches where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63;.
+	 * Returns the number of journal content searches where groupId = &#63; and layoutId = &#63; and portletId = &#63; and articleId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param portletId the portlet ID
 	 * @param articleId the article ID
 	 * @return the number of matching journal content searches
 	 */
 	@Override
-	public int countByG_P_L_P_A(
-		long groupId, boolean privateLayout, long layoutId, String portletId,
-		String articleId) {
+	public int countByG_L_P_A(
+		long groupId, long layoutId, String portletId, String articleId) {
 
 		portletId = Objects.toString(portletId, "");
 		articleId = Objects.toString(articleId, "");
@@ -5118,46 +4313,42 @@ public class JournalContentSearchPersistenceImpl
 		Long count = null;
 
 		if (productionMode) {
-			finderPath = _finderPathCountByG_P_L_P_A;
+			finderPath = _finderPathCountByG_L_P_A;
 
-			finderArgs = new Object[] {
-				groupId, privateLayout, layoutId, portletId, articleId
-			};
+			finderArgs = new Object[] {groupId, layoutId, portletId, articleId};
 
 			count = (Long)finderCache.getResult(finderPath, finderArgs);
 		}
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(6);
+			StringBundler sb = new StringBundler(5);
 
 			sb.append(_SQL_COUNT_JOURNALCONTENTSEARCH_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_A_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_P_A_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_P_A_LAYOUTID_2);
 
 			boolean bindPortletId = false;
 
 			if (portletId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_PORTLETID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_A_PORTLETID_3);
 			}
 			else {
 				bindPortletId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_PORTLETID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_A_PORTLETID_2);
 			}
 
 			boolean bindArticleId = false;
 
 			if (articleId.isEmpty()) {
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_ARTICLEID_3);
+				sb.append(_FINDER_COLUMN_G_L_P_A_ARTICLEID_3);
 			}
 			else {
 				bindArticleId = true;
 
-				sb.append(_FINDER_COLUMN_G_P_L_P_A_ARTICLEID_2);
+				sb.append(_FINDER_COLUMN_G_L_P_A_ARTICLEID_2);
 			}
 
 			String sql = sb.toString();
@@ -5172,8 +4363,6 @@ public class JournalContentSearchPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -5202,25 +4391,22 @@ public class JournalContentSearchPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_GROUPID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_A_GROUPID_2 =
 		"journalContentSearch.groupId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_PRIVATELAYOUT_2 =
-		"journalContentSearch.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_L_P_A_LAYOUTID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_A_LAYOUTID_2 =
 		"journalContentSearch.layoutId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_PORTLETID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_A_PORTLETID_2 =
 		"journalContentSearch.portletId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_PORTLETID_3 =
+	private static final String _FINDER_COLUMN_G_L_P_A_PORTLETID_3 =
 		"(journalContentSearch.portletId IS NULL OR journalContentSearch.portletId = '') AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_ARTICLEID_2 =
+	private static final String _FINDER_COLUMN_G_L_P_A_ARTICLEID_2 =
 		"journalContentSearch.articleId = ?";
 
-	private static final String _FINDER_COLUMN_G_P_L_P_A_ARTICLEID_3 =
+	private static final String _FINDER_COLUMN_G_L_P_A_ARTICLEID_3 =
 		"(journalContentSearch.articleId IS NULL OR journalContentSearch.articleId = '')";
 
 	public JournalContentSearchPersistenceImpl() {
@@ -5248,10 +4434,9 @@ public class JournalContentSearchPersistenceImpl
 			journalContentSearch.getPrimaryKey(), journalContentSearch);
 
 		finderCache.putResult(
-			_finderPathFetchByG_P_L_P_A,
+			_finderPathFetchByG_L_P_A,
 			new Object[] {
 				journalContentSearch.getGroupId(),
-				journalContentSearch.isPrivateLayout(),
 				journalContentSearch.getLayoutId(),
 				journalContentSearch.getPortletId(),
 				journalContentSearch.getArticleId()
@@ -5334,16 +4519,14 @@ public class JournalContentSearchPersistenceImpl
 
 		Object[] args = new Object[] {
 			journalContentSearchModelImpl.getGroupId(),
-			journalContentSearchModelImpl.isPrivateLayout(),
 			journalContentSearchModelImpl.getLayoutId(),
 			journalContentSearchModelImpl.getPortletId(),
 			journalContentSearchModelImpl.getArticleId()
 		};
 
+		finderCache.putResult(_finderPathCountByG_L_P_A, args, Long.valueOf(1));
 		finderCache.putResult(
-			_finderPathCountByG_P_L_P_A, args, Long.valueOf(1));
-		finderCache.putResult(
-			_finderPathFetchByG_P_L_P_A, args, journalContentSearchModelImpl);
+			_finderPathFetchByG_L_P_A, args, journalContentSearchModelImpl);
 	}
 
 	/**
@@ -5967,9 +5150,7 @@ public class JournalContentSearchPersistenceImpl
 			CTColumnResolutionType.STRICT, ctStrictColumnNames);
 
 		_uniqueIndexColumnNames.add(
-			new String[] {
-				"groupId", "privateLayout", "layoutId", "portletId", "articleId"
-			});
+			new String[] {"groupId", "layoutId", "portletId", "articleId"});
 	}
 
 	/**
@@ -6050,24 +5231,23 @@ public class JournalContentSearchPersistenceImpl
 			new String[] {String.class.getName()}, new String[] {"articleId"},
 			false);
 
-		_finderPathWithPaginationFindByG_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_P",
+		_finderPathWithPaginationFindByGroupId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByGroupId",
 			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Integer.class.getName(), Integer.class.getName(),
-				OrderByComparator.class.getName()
+				Long.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
 			},
-			new String[] {"groupId", "privateLayout"}, true);
+			new String[] {"groupId"}, true);
 
-		_finderPathWithoutPaginationFindByG_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_P",
-			new String[] {Long.class.getName(), Boolean.class.getName()},
-			new String[] {"groupId", "privateLayout"}, true);
+		_finderPathWithoutPaginationFindByGroupId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByGroupId",
+			new String[] {Long.class.getName()}, new String[] {"groupId"},
+			true);
 
-		_finderPathCountByG_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P",
-			new String[] {Long.class.getName(), Boolean.class.getName()},
-			new String[] {"groupId", "privateLayout"}, false);
+		_finderPathCountByGroupId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByGroupId",
+			new String[] {Long.class.getName()}, new String[] {"groupId"},
+			false);
 
 		_finderPathWithPaginationFindByG_A = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_A",
@@ -6088,107 +5268,66 @@ public class JournalContentSearchPersistenceImpl
 			new String[] {Long.class.getName(), String.class.getName()},
 			new String[] {"groupId", "articleId"}, false);
 
-		_finderPathWithPaginationFindByG_P_L = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_P_L",
+		_finderPathWithPaginationFindByG_L = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_L",
 			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId"}, true);
-
-		_finderPathWithoutPaginationFindByG_P_L = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_P_L",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId"}, true);
-
-		_finderPathCountByG_P_L = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P_L",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId"}, false);
-
-		_finderPathWithPaginationFindByG_P_A = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_P_A",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				String.class.getName(), Integer.class.getName(),
-				Integer.class.getName(), OrderByComparator.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "articleId"}, true);
-
-		_finderPathWithoutPaginationFindByG_P_A = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_P_A",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				String.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "articleId"}, true);
-
-		_finderPathCountByG_P_A = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P_A",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				String.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "articleId"}, false);
-
-		_finderPathWithPaginationFindByG_P_L_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_P_L_P",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), String.class.getName(),
+				Long.class.getName(), Long.class.getName(),
 				Integer.class.getName(), Integer.class.getName(),
 				OrderByComparator.class.getName()
 			},
-			new String[] {"groupId", "privateLayout", "layoutId", "portletId"},
-			true);
+			new String[] {"groupId", "layoutId"}, true);
 
-		_finderPathWithoutPaginationFindByG_P_L_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_P_L_P",
+		_finderPathWithoutPaginationFindByG_L = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_L",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			new String[] {"groupId", "layoutId"}, true);
+
+		_finderPathCountByG_L = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_L",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			new String[] {"groupId", "layoutId"}, false);
+
+		_finderPathWithPaginationFindByG_L_P = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByG_L_P",
 			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), String.class.getName()
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), Integer.class.getName(),
+				Integer.class.getName(), OrderByComparator.class.getName()
 			},
-			new String[] {"groupId", "privateLayout", "layoutId", "portletId"},
-			true);
+			new String[] {"groupId", "layoutId", "portletId"}, true);
 
-		_finderPathCountByG_P_L_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P_L_P",
+		_finderPathWithoutPaginationFindByG_L_P = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByG_L_P",
 			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), String.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId", "portletId"},
-			false);
-
-		_finderPathFetchByG_P_L_P_A = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByG_P_L_P_A",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), String.class.getName(),
+				Long.class.getName(), Long.class.getName(),
 				String.class.getName()
 			},
-			new String[] {
-				"groupId", "privateLayout", "layoutId", "portletId", "articleId"
-			},
-			true);
+			new String[] {"groupId", "layoutId", "portletId"}, true);
 
-		_finderPathCountByG_P_L_P_A = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P_L_P_A",
+		_finderPathCountByG_L_P = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_L_P",
 			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName(), String.class.getName(),
+				Long.class.getName(), Long.class.getName(),
 				String.class.getName()
 			},
+			new String[] {"groupId", "layoutId", "portletId"}, false);
+
+		_finderPathFetchByG_L_P_A = new FinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByG_L_P_A",
 			new String[] {
-				"groupId", "privateLayout", "layoutId", "portletId", "articleId"
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), String.class.getName()
 			},
+			new String[] {"groupId", "layoutId", "portletId", "articleId"},
+			true);
+
+		_finderPathCountByG_L_P_A = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_L_P_A",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(), String.class.getName()
+			},
+			new String[] {"groupId", "layoutId", "portletId", "articleId"},
 			false);
 	}
 

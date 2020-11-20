@@ -390,63 +390,54 @@ public interface LayoutSEOEntryPersistence
 	public int countByUuid_C(String uuid, long companyId);
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry
 	 * @throws NoSuchEntryException if a matching layout seo entry could not be found
 	 */
-	public LayoutSEOEntry findByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public LayoutSEOEntry findByG_L(long groupId, long layoutId)
 		throws NoSuchEntryException;
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
-	public LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId);
+	public LayoutSEOEntry fetchByG_L(long groupId, long layoutId);
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
-	public LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId,
-		boolean useFinderCache);
+	public LayoutSEOEntry fetchByG_L(
+		long groupId, long layoutId, boolean useFinderCache);
 
 	/**
-	 * Removes the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; from the database.
+	 * Removes the layout seo entry where groupId = &#63; and layoutId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the layout seo entry that was removed
 	 */
-	public LayoutSEOEntry removeByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public LayoutSEOEntry removeByG_L(long groupId, long layoutId)
 		throws NoSuchEntryException;
 
 	/**
-	 * Returns the number of layout seo entries where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the number of layout seo entries where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the number of matching layout seo entries
 	 */
-	public int countByG_P_L(long groupId, boolean privateLayout, long layoutId);
+	public int countByG_L(long groupId, long layoutId);
 
 	/**
 	 * Caches the layout seo entry in the entity cache if it is enabled.

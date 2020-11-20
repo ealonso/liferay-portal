@@ -279,26 +279,21 @@ public class LayoutFriendlyURLPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P_F() throws Exception {
-		_persistence.countByG_P_F(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(), "");
+	public void testCountByG_F() throws Exception {
+		_persistence.countByG_F(RandomTestUtil.nextLong(), "");
 
-		_persistence.countByG_P_F(0L, RandomTestUtil.randomBoolean(), "null");
+		_persistence.countByG_F(0L, "null");
 
-		_persistence.countByG_P_F(
-			0L, RandomTestUtil.randomBoolean(), (String)null);
+		_persistence.countByG_F(0L, (String)null);
 	}
 
 	@Test
-	public void testCountByG_P_F_L() throws Exception {
-		_persistence.countByG_P_F_L(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(), "", "");
+	public void testCountByG_F_L() throws Exception {
+		_persistence.countByG_F_L(RandomTestUtil.nextLong(), "", "");
 
-		_persistence.countByG_P_F_L(
-			0L, RandomTestUtil.randomBoolean(), "null", "null");
+		_persistence.countByG_F_L(0L, "null", "null");
 
-		_persistence.countByG_P_F_L(
-			0L, RandomTestUtil.randomBoolean(), (String)null, (String)null);
+		_persistence.countByG_F_L(0L, (String)null, (String)null);
 	}
 
 	@Test
@@ -633,11 +628,6 @@ public class LayoutFriendlyURLPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				layoutFriendlyURL, "getColumnOriginalValue",
 				new Class<?>[] {String.class}, "groupId"));
-		Assert.assertEquals(
-			Boolean.valueOf(layoutFriendlyURL.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				layoutFriendlyURL, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
 		Assert.assertEquals(
 			layoutFriendlyURL.getFriendlyURL(),
 			ReflectionTestUtil.invoke(

@@ -124,8 +124,7 @@ public interface LayoutSEOEntryLocalService
 	public LayoutSEOEntry deleteLayoutSEOEntry(long layoutSEOEntryId)
 		throws PortalException;
 
-	public void deleteLayoutSEOEntry(
-			long groupId, boolean privateLayout, long layoutId)
+	public void deleteLayoutSEOEntry(long groupId, long layoutId)
 		throws NoSuchEntryException;
 
 	public void deleteLayoutSEOEntry(String uuid, long groupId)

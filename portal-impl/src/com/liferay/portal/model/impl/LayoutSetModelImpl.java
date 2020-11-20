@@ -160,17 +160,11 @@ public class LayoutSetModelImpl
 	public static final long LOGOID_COLUMN_BITMASK = 8L;
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long PRIVATELAYOUT_COLUMN_BITMASK = 16L;
-
-	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long LAYOUTSETID_COLUMN_BITMASK = 32L;
+	public static final long LAYOUTSETID_COLUMN_BITMASK = 16L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -575,16 +569,6 @@ public class LayoutSetModelImpl
 		}
 
 		_privateLayout = privateLayout;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public boolean getOriginalPrivateLayout() {
-		return GetterUtil.getBoolean(
-			this.<Boolean>getColumnOriginalValue("privateLayout"));
 	}
 
 	@JSON

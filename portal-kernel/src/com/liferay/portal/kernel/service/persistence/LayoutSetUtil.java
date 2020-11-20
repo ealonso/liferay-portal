@@ -470,70 +470,6 @@ public class LayoutSetUtil {
 	}
 
 	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set
-	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
-	 */
-	public static LayoutSet findByG_P(long groupId, boolean privateLayout)
-		throws com.liferay.portal.kernel.exception.NoSuchLayoutSetException {
-
-		return getPersistence().findByG_P(groupId, privateLayout);
-	}
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	public static LayoutSet fetchByG_P(long groupId, boolean privateLayout) {
-		return getPersistence().fetchByG_P(groupId, privateLayout);
-	}
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	public static LayoutSet fetchByG_P(
-		long groupId, boolean privateLayout, boolean useFinderCache) {
-
-		return getPersistence().fetchByG_P(
-			groupId, privateLayout, useFinderCache);
-	}
-
-	/**
-	 * Removes the layout set where groupId = &#63; and privateLayout = &#63; from the database.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the layout set that was removed
-	 */
-	public static LayoutSet removeByG_P(long groupId, boolean privateLayout)
-		throws com.liferay.portal.kernel.exception.NoSuchLayoutSetException {
-
-		return getPersistence().removeByG_P(groupId, privateLayout);
-	}
-
-	/**
-	 * Returns the number of layout sets where groupId = &#63; and privateLayout = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the number of matching layout sets
-	 */
-	public static int countByG_P(long groupId, boolean privateLayout) {
-		return getPersistence().countByG_P(groupId, privateLayout);
-	}
-
-	/**
 	 * Returns all the layout sets where companyId = &#63; and layoutSetPrototypeUuid = &#63;.
 	 *
 	 * @param companyId the company ID
@@ -726,67 +662,59 @@ public class LayoutSetUtil {
 	}
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
+	 * Returns the layout set where logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set
 	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
 	 */
-	public static LayoutSet findByP_L(boolean privateLayout, long logoId)
+	public static LayoutSet findByLogoId(long logoId)
 		throws com.liferay.portal.kernel.exception.NoSuchLayoutSetException {
 
-		return getPersistence().findByP_L(privateLayout, logoId);
+		return getPersistence().findByLogoId(logoId);
 	}
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
-	public static LayoutSet fetchByP_L(boolean privateLayout, long logoId) {
-		return getPersistence().fetchByP_L(privateLayout, logoId);
+	public static LayoutSet fetchByLogoId(long logoId) {
+		return getPersistence().fetchByLogoId(logoId);
 	}
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
-	public static LayoutSet fetchByP_L(
-		boolean privateLayout, long logoId, boolean useFinderCache) {
-
-		return getPersistence().fetchByP_L(
-			privateLayout, logoId, useFinderCache);
+	public static LayoutSet fetchByLogoId(long logoId, boolean useFinderCache) {
+		return getPersistence().fetchByLogoId(logoId, useFinderCache);
 	}
 
 	/**
-	 * Removes the layout set where privateLayout = &#63; and logoId = &#63; from the database.
+	 * Removes the layout set where logoId = &#63; from the database.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the layout set that was removed
 	 */
-	public static LayoutSet removeByP_L(boolean privateLayout, long logoId)
+	public static LayoutSet removeByLogoId(long logoId)
 		throws com.liferay.portal.kernel.exception.NoSuchLayoutSetException {
 
-		return getPersistence().removeByP_L(privateLayout, logoId);
+		return getPersistence().removeByLogoId(logoId);
 	}
 
 	/**
-	 * Returns the number of layout sets where privateLayout = &#63; and logoId = &#63;.
+	 * Returns the number of layout sets where logoId = &#63;.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the number of matching layout sets
 	 */
-	public static int countByP_L(boolean privateLayout, long logoId) {
-		return getPersistence().countByP_L(privateLayout, logoId);
+	public static int countByLogoId(long logoId) {
+		return getPersistence().countByLogoId(logoId);
 	}
 
 	/**

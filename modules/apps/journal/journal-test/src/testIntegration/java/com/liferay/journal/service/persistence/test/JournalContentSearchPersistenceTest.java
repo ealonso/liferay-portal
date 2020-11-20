@@ -205,11 +205,10 @@ public class JournalContentSearchPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P() throws Exception {
-		_persistence.countByG_P(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
+	public void testCountByGroupId() throws Exception {
+		_persistence.countByGroupId(RandomTestUtil.nextLong());
 
-		_persistence.countByG_P(0L, RandomTestUtil.randomBoolean());
+		_persistence.countByGroupId(0L);
 	}
 
 	@Test
@@ -222,49 +221,31 @@ public class JournalContentSearchPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P_L() throws Exception {
-		_persistence.countByG_P_L(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
-			RandomTestUtil.nextLong());
+	public void testCountByG_L() throws Exception {
+		_persistence.countByG_L(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
-		_persistence.countByG_P_L(0L, RandomTestUtil.randomBoolean(), 0L);
+		_persistence.countByG_L(0L, 0L);
 	}
 
 	@Test
-	public void testCountByG_P_A() throws Exception {
-		_persistence.countByG_P_A(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(), "");
+	public void testCountByG_L_P() throws Exception {
+		_persistence.countByG_L_P(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(), "");
 
-		_persistence.countByG_P_A(0L, RandomTestUtil.randomBoolean(), "null");
+		_persistence.countByG_L_P(0L, 0L, "null");
 
-		_persistence.countByG_P_A(
-			0L, RandomTestUtil.randomBoolean(), (String)null);
+		_persistence.countByG_L_P(0L, 0L, (String)null);
 	}
 
 	@Test
-	public void testCountByG_P_L_P() throws Exception {
-		_persistence.countByG_P_L_P(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
-			RandomTestUtil.nextLong(), "");
+	public void testCountByG_L_P_A() throws Exception {
+		_persistence.countByG_L_P_A(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(), "", "");
 
-		_persistence.countByG_P_L_P(
-			0L, RandomTestUtil.randomBoolean(), 0L, "null");
+		_persistence.countByG_L_P_A(0L, 0L, "null", "null");
 
-		_persistence.countByG_P_L_P(
-			0L, RandomTestUtil.randomBoolean(), 0L, (String)null);
-	}
-
-	@Test
-	public void testCountByG_P_L_P_A() throws Exception {
-		_persistence.countByG_P_L_P_A(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
-			RandomTestUtil.nextLong(), "", "");
-
-		_persistence.countByG_P_L_P_A(
-			0L, RandomTestUtil.randomBoolean(), 0L, "null", "null");
-
-		_persistence.countByG_P_L_P_A(
-			0L, RandomTestUtil.randomBoolean(), 0L, (String)null, (String)null);
+		_persistence.countByG_L_P_A(0L, 0L, (String)null, (String)null);
 	}
 
 	@Test
@@ -594,11 +575,6 @@ public class JournalContentSearchPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				journalContentSearch, "getColumnOriginalValue",
 				new Class<?>[] {String.class}, "groupId"));
-		Assert.assertEquals(
-			Boolean.valueOf(journalContentSearch.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				journalContentSearch, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
 		Assert.assertEquals(
 			Long.valueOf(journalContentSearch.getLayoutId()),
 			ReflectionTestUtil.<Long>invoke(

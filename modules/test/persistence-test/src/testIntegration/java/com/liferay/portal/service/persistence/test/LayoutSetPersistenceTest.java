@@ -212,14 +212,6 @@ public class LayoutSetPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P() throws Exception {
-		_persistence.countByG_P(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
-
-		_persistence.countByG_P(0L, RandomTestUtil.randomBoolean());
-	}
-
-	@Test
 	public void testCountByC_L() throws Exception {
 		_persistence.countByC_L(RandomTestUtil.nextLong(), "");
 
@@ -229,11 +221,10 @@ public class LayoutSetPersistenceTest {
 	}
 
 	@Test
-	public void testCountByP_L() throws Exception {
-		_persistence.countByP_L(
-			RandomTestUtil.randomBoolean(), RandomTestUtil.nextLong());
+	public void testCountByLogoId() throws Exception {
+		_persistence.countByLogoId(RandomTestUtil.nextLong());
 
-		_persistence.countByP_L(RandomTestUtil.randomBoolean(), 0L);
+		_persistence.countByLogoId(0L);
 	}
 
 	@Test
@@ -529,22 +520,6 @@ public class LayoutSetPersistenceTest {
 	}
 
 	private void _assertOriginalValues(LayoutSet layoutSet) {
-		Assert.assertEquals(
-			Long.valueOf(layoutSet.getGroupId()),
-			ReflectionTestUtil.<Long>invoke(
-				layoutSet, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "groupId"));
-		Assert.assertEquals(
-			Boolean.valueOf(layoutSet.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				layoutSet, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
-
-		Assert.assertEquals(
-			Boolean.valueOf(layoutSet.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				layoutSet, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
 		Assert.assertEquals(
 			Long.valueOf(layoutSet.getLogoId()),
 			ReflectionTestUtil.<Long>invoke(

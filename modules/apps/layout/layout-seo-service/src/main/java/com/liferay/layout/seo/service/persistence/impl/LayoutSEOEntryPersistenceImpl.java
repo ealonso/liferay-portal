@@ -1462,36 +1462,30 @@ public class LayoutSEOEntryPersistenceImpl
 	private static final String _FINDER_COLUMN_UUID_C_COMPANYID_2 =
 		"layoutSEOEntry.companyId = ?";
 
-	private FinderPath _finderPathFetchByG_P_L;
-	private FinderPath _finderPathCountByG_P_L;
+	private FinderPath _finderPathFetchByG_L;
+	private FinderPath _finderPathCountByG_L;
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or throws a <code>NoSuchEntryException</code> if it could not be found.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry
 	 * @throws NoSuchEntryException if a matching layout seo entry could not be found
 	 */
 	@Override
-	public LayoutSEOEntry findByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public LayoutSEOEntry findByG_L(long groupId, long layoutId)
 		throws NoSuchEntryException {
 
-		LayoutSEOEntry layoutSEOEntry = fetchByG_P_L(
-			groupId, privateLayout, layoutId);
+		LayoutSEOEntry layoutSEOEntry = fetchByG_L(groupId, layoutId);
 
 		if (layoutSEOEntry == null) {
-			StringBundler sb = new StringBundler(8);
+			StringBundler sb = new StringBundler(6);
 
 			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
 			sb.append("groupId=");
 			sb.append(groupId);
-
-			sb.append(", privateLayout=");
-			sb.append(privateLayout);
 
 			sb.append(", layoutId=");
 			sb.append(layoutId);
@@ -1509,51 +1503,45 @@ public class LayoutSEOEntryPersistenceImpl
 	}
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
 	@Override
-	public LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
-
-		return fetchByG_P_L(groupId, privateLayout, layoutId, true);
+	public LayoutSEOEntry fetchByG_L(long groupId, long layoutId) {
+		return fetchByG_L(groupId, layoutId, true);
 	}
 
 	/**
-	 * Returns the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout seo entry where groupId = &#63; and layoutId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout seo entry, or <code>null</code> if a matching layout seo entry could not be found
 	 */
 	@Override
-	public LayoutSEOEntry fetchByG_P_L(
-		long groupId, boolean privateLayout, long layoutId,
-		boolean useFinderCache) {
+	public LayoutSEOEntry fetchByG_L(
+		long groupId, long layoutId, boolean useFinderCache) {
 
 		Object[] finderArgs = null;
 
 		if (useFinderCache) {
-			finderArgs = new Object[] {groupId, privateLayout, layoutId};
+			finderArgs = new Object[] {groupId, layoutId};
 		}
 
 		Object result = null;
 
 		if (useFinderCache) {
-			result = finderCache.getResult(_finderPathFetchByG_P_L, finderArgs);
+			result = finderCache.getResult(_finderPathFetchByG_L, finderArgs);
 		}
 
 		if (result instanceof LayoutSEOEntry) {
 			LayoutSEOEntry layoutSEOEntry = (LayoutSEOEntry)result;
 
 			if ((groupId != layoutSEOEntry.getGroupId()) ||
-				(privateLayout != layoutSEOEntry.isPrivateLayout()) ||
 				(layoutId != layoutSEOEntry.getLayoutId())) {
 
 				result = null;
@@ -1561,15 +1549,13 @@ public class LayoutSEOEntryPersistenceImpl
 		}
 
 		if (result == null) {
-			StringBundler sb = new StringBundler(5);
+			StringBundler sb = new StringBundler(4);
 
 			sb.append(_SQL_SELECT_LAYOUTSEOENTRY_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_LAYOUTID_2);
 
 			String sql = sb.toString();
 
@@ -1584,8 +1570,6 @@ public class LayoutSEOEntryPersistenceImpl
 
 				queryPos.add(groupId);
 
-				queryPos.add(privateLayout);
-
 				queryPos.add(layoutId);
 
 				List<LayoutSEOEntry> list = query.list();
@@ -1593,7 +1577,7 @@ public class LayoutSEOEntryPersistenceImpl
 				if (list.isEmpty()) {
 					if (useFinderCache) {
 						finderCache.putResult(
-							_finderPathFetchByG_P_L, finderArgs, list);
+							_finderPathFetchByG_L, finderArgs, list);
 					}
 				}
 				else {
@@ -1621,52 +1605,44 @@ public class LayoutSEOEntryPersistenceImpl
 	}
 
 	/**
-	 * Removes the layout seo entry where groupId = &#63; and privateLayout = &#63; and layoutId = &#63; from the database.
+	 * Removes the layout seo entry where groupId = &#63; and layoutId = &#63; from the database.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the layout seo entry that was removed
 	 */
 	@Override
-	public LayoutSEOEntry removeByG_P_L(
-			long groupId, boolean privateLayout, long layoutId)
+	public LayoutSEOEntry removeByG_L(long groupId, long layoutId)
 		throws NoSuchEntryException {
 
-		LayoutSEOEntry layoutSEOEntry = findByG_P_L(
-			groupId, privateLayout, layoutId);
+		LayoutSEOEntry layoutSEOEntry = findByG_L(groupId, layoutId);
 
 		return remove(layoutSEOEntry);
 	}
 
 	/**
-	 * Returns the number of layout seo entries where groupId = &#63; and privateLayout = &#63; and layoutId = &#63;.
+	 * Returns the number of layout seo entries where groupId = &#63; and layoutId = &#63;.
 	 *
 	 * @param groupId the group ID
-	 * @param privateLayout the private layout
 	 * @param layoutId the layout ID
 	 * @return the number of matching layout seo entries
 	 */
 	@Override
-	public int countByG_P_L(
-		long groupId, boolean privateLayout, long layoutId) {
+	public int countByG_L(long groupId, long layoutId) {
+		FinderPath finderPath = _finderPathCountByG_L;
 
-		FinderPath finderPath = _finderPathCountByG_P_L;
-
-		Object[] finderArgs = new Object[] {groupId, privateLayout, layoutId};
+		Object[] finderArgs = new Object[] {groupId, layoutId};
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs);
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(4);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(_SQL_COUNT_LAYOUTSEOENTRY_WHERE);
 
-			sb.append(_FINDER_COLUMN_G_P_L_GROUPID_2);
+			sb.append(_FINDER_COLUMN_G_L_GROUPID_2);
 
-			sb.append(_FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_G_P_L_LAYOUTID_2);
+			sb.append(_FINDER_COLUMN_G_L_LAYOUTID_2);
 
 			String sql = sb.toString();
 
@@ -1680,8 +1656,6 @@ public class LayoutSEOEntryPersistenceImpl
 				QueryPos queryPos = QueryPos.getInstance(query);
 
 				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(layoutId);
 
@@ -1700,13 +1674,10 @@ public class LayoutSEOEntryPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_G_P_L_GROUPID_2 =
+	private static final String _FINDER_COLUMN_G_L_GROUPID_2 =
 		"layoutSEOEntry.groupId = ? AND ";
 
-	private static final String _FINDER_COLUMN_G_P_L_PRIVATELAYOUT_2 =
-		"layoutSEOEntry.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_L_LAYOUTID_2 =
+	private static final String _FINDER_COLUMN_G_L_LAYOUTID_2 =
 		"layoutSEOEntry.layoutId = ?";
 
 	public LayoutSEOEntryPersistenceImpl() {
@@ -1743,10 +1714,9 @@ public class LayoutSEOEntryPersistenceImpl
 			layoutSEOEntry);
 
 		finderCache.putResult(
-			_finderPathFetchByG_P_L,
+			_finderPathFetchByG_L,
 			new Object[] {
-				layoutSEOEntry.getGroupId(), layoutSEOEntry.isPrivateLayout(),
-				layoutSEOEntry.getLayoutId()
+				layoutSEOEntry.getGroupId(), layoutSEOEntry.getLayoutId()
 			},
 			layoutSEOEntry);
 	}
@@ -1824,13 +1794,12 @@ public class LayoutSEOEntryPersistenceImpl
 
 		args = new Object[] {
 			layoutSEOEntryModelImpl.getGroupId(),
-			layoutSEOEntryModelImpl.isPrivateLayout(),
 			layoutSEOEntryModelImpl.getLayoutId()
 		};
 
-		finderCache.putResult(_finderPathCountByG_P_L, args, Long.valueOf(1));
+		finderCache.putResult(_finderPathCountByG_L, args, Long.valueOf(1));
 		finderCache.putResult(
-			_finderPathFetchByG_P_L, args, layoutSEOEntryModelImpl);
+			_finderPathFetchByG_L, args, layoutSEOEntryModelImpl);
 	}
 
 	/**
@@ -2353,21 +2322,15 @@ public class LayoutSEOEntryPersistenceImpl
 			new String[] {String.class.getName(), Long.class.getName()},
 			new String[] {"uuid_", "companyId"}, false);
 
-		_finderPathFetchByG_P_L = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByG_P_L",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId"}, true);
+		_finderPathFetchByG_L = new FinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByG_L",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			new String[] {"groupId", "layoutId"}, true);
 
-		_finderPathCountByG_P_L = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P_L",
-			new String[] {
-				Long.class.getName(), Boolean.class.getName(),
-				Long.class.getName()
-			},
-			new String[] {"groupId", "privateLayout", "layoutId"}, false);
+		_finderPathCountByG_L = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_L",
+			new String[] {Long.class.getName(), Long.class.getName()},
+			new String[] {"groupId", "layoutId"}, false);
 	}
 
 	@Deactivate

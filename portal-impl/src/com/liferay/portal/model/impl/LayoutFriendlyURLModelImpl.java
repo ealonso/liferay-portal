@@ -169,20 +169,14 @@ public class LayoutFriendlyURLModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long PRIVATELAYOUT_COLUMN_BITMASK = 32L;
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
-	 */
-	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 64L;
+	public static final long UUID_COLUMN_BITMASK = 32L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
 	 *		#getColumnBitmask(String)
 	 */
 	@Deprecated
-	public static final long LAYOUTFRIENDLYURLID_COLUMN_BITMASK = 128L;
+	public static final long LAYOUTFRIENDLYURLID_COLUMN_BITMASK = 64L;
 
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(
 		com.liferay.portal.util.PropsUtil.get(
@@ -644,16 +638,6 @@ public class LayoutFriendlyURLModelImpl
 		}
 
 		_privateLayout = privateLayout;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getColumnOriginalValue(String)}
-	 */
-	@Deprecated
-	public boolean getOriginalPrivateLayout() {
-		return GetterUtil.getBoolean(
-			this.<Boolean>getColumnOriginalValue("privateLayout"));
 	}
 
 	@Override

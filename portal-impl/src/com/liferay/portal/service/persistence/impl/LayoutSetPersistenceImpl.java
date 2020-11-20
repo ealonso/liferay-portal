@@ -1174,240 +1174,6 @@ public class LayoutSetPersistenceImpl
 		_FINDER_COLUMN_LAYOUTSETPROTOTYPEUUID_LAYOUTSETPROTOTYPEUUID_3 =
 			"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = '')";
 
-	private FinderPath _finderPathFetchByG_P;
-	private FinderPath _finderPathCountByG_P;
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set
-	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
-	 */
-	@Override
-	public LayoutSet findByG_P(long groupId, boolean privateLayout)
-		throws NoSuchLayoutSetException {
-
-		LayoutSet layoutSet = fetchByG_P(groupId, privateLayout);
-
-		if (layoutSet == null) {
-			StringBundler sb = new StringBundler(6);
-
-			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-			sb.append("groupId=");
-			sb.append(groupId);
-
-			sb.append(", privateLayout=");
-			sb.append(privateLayout);
-
-			sb.append("}");
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(sb.toString());
-			}
-
-			throw new NoSuchLayoutSetException(sb.toString());
-		}
-
-		return layoutSet;
-	}
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	@Override
-	public LayoutSet fetchByG_P(long groupId, boolean privateLayout) {
-		return fetchByG_P(groupId, privateLayout, true);
-	}
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	@Override
-	public LayoutSet fetchByG_P(
-		long groupId, boolean privateLayout, boolean useFinderCache) {
-
-		boolean productionMode = CTPersistenceHelperUtil.isProductionMode(
-			LayoutSet.class);
-
-		Object[] finderArgs = null;
-
-		if (useFinderCache && productionMode) {
-			finderArgs = new Object[] {groupId, privateLayout};
-		}
-
-		Object result = null;
-
-		if (useFinderCache && productionMode) {
-			result = FinderCacheUtil.getResult(
-				_finderPathFetchByG_P, finderArgs);
-		}
-
-		if (result instanceof LayoutSet) {
-			LayoutSet layoutSet = (LayoutSet)result;
-
-			if ((groupId != layoutSet.getGroupId()) ||
-				(privateLayout != layoutSet.isPrivateLayout())) {
-
-				result = null;
-			}
-		}
-
-		if (result == null) {
-			StringBundler sb = new StringBundler(4);
-
-			sb.append(_SQL_SELECT_LAYOUTSET_WHERE);
-
-			sb.append(_FINDER_COLUMN_G_P_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_PRIVATELAYOUT_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
-
-				List<LayoutSet> list = query.list();
-
-				if (list.isEmpty()) {
-					if (useFinderCache && productionMode) {
-						FinderCacheUtil.putResult(
-							_finderPathFetchByG_P, finderArgs, list);
-					}
-				}
-				else {
-					LayoutSet layoutSet = list.get(0);
-
-					result = layoutSet;
-
-					cacheResult(layoutSet);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		if (result instanceof List<?>) {
-			return null;
-		}
-		else {
-			return (LayoutSet)result;
-		}
-	}
-
-	/**
-	 * Removes the layout set where groupId = &#63; and privateLayout = &#63; from the database.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the layout set that was removed
-	 */
-	@Override
-	public LayoutSet removeByG_P(long groupId, boolean privateLayout)
-		throws NoSuchLayoutSetException {
-
-		LayoutSet layoutSet = findByG_P(groupId, privateLayout);
-
-		return remove(layoutSet);
-	}
-
-	/**
-	 * Returns the number of layout sets where groupId = &#63; and privateLayout = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the number of matching layout sets
-	 */
-	@Override
-	public int countByG_P(long groupId, boolean privateLayout) {
-		boolean productionMode = CTPersistenceHelperUtil.isProductionMode(
-			LayoutSet.class);
-
-		FinderPath finderPath = null;
-		Object[] finderArgs = null;
-
-		Long count = null;
-
-		if (productionMode) {
-			finderPath = _finderPathCountByG_P;
-
-			finderArgs = new Object[] {groupId, privateLayout};
-
-			count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs);
-		}
-
-		if (count == null) {
-			StringBundler sb = new StringBundler(3);
-
-			sb.append(_SQL_COUNT_LAYOUTSET_WHERE);
-
-			sb.append(_FINDER_COLUMN_G_P_GROUPID_2);
-
-			sb.append(_FINDER_COLUMN_G_P_PRIVATELAYOUT_2);
-
-			String sql = sb.toString();
-
-			Session session = null;
-
-			try {
-				session = openSession();
-
-				Query query = session.createQuery(sql);
-
-				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(groupId);
-
-				queryPos.add(privateLayout);
-
-				count = (Long)query.uniqueResult();
-
-				if (productionMode) {
-					FinderCacheUtil.putResult(finderPath, finderArgs, count);
-				}
-			}
-			catch (Exception exception) {
-				throw processException(exception);
-			}
-			finally {
-				closeSession(session);
-			}
-		}
-
-		return count.intValue();
-	}
-
-	private static final String _FINDER_COLUMN_G_P_GROUPID_2 =
-		"layoutSet.groupId = ? AND ";
-
-	private static final String _FINDER_COLUMN_G_P_PRIVATELAYOUT_2 =
-		"layoutSet.privateLayout = ?";
-
 	private FinderPath _finderPathWithPaginationFindByC_L;
 	private FinderPath _finderPathWithoutPaginationFindByC_L;
 	private FinderPath _finderPathCountByC_L;
@@ -2010,32 +1776,26 @@ public class LayoutSetPersistenceImpl
 	private static final String _FINDER_COLUMN_C_L_LAYOUTSETPROTOTYPEUUID_3 =
 		"(layoutSet.layoutSetPrototypeUuid IS NULL OR layoutSet.layoutSetPrototypeUuid = '')";
 
-	private FinderPath _finderPathFetchByP_L;
-	private FinderPath _finderPathCountByP_L;
+	private FinderPath _finderPathFetchByLogoId;
+	private FinderPath _finderPathCountByLogoId;
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
+	 * Returns the layout set where logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set
 	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
 	 */
 	@Override
-	public LayoutSet findByP_L(boolean privateLayout, long logoId)
-		throws NoSuchLayoutSetException {
-
-		LayoutSet layoutSet = fetchByP_L(privateLayout, logoId);
+	public LayoutSet findByLogoId(long logoId) throws NoSuchLayoutSetException {
+		LayoutSet layoutSet = fetchByLogoId(logoId);
 
 		if (layoutSet == null) {
-			StringBundler sb = new StringBundler(6);
+			StringBundler sb = new StringBundler(4);
 
 			sb.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-			sb.append("privateLayout=");
-			sb.append(privateLayout);
-
-			sb.append(", logoId=");
+			sb.append("logoId=");
 			sb.append(logoId);
 
 			sb.append("}");
@@ -2051,63 +1811,55 @@ public class LayoutSetPersistenceImpl
 	}
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
 	@Override
-	public LayoutSet fetchByP_L(boolean privateLayout, long logoId) {
-		return fetchByP_L(privateLayout, logoId, true);
+	public LayoutSet fetchByLogoId(long logoId) {
+		return fetchByLogoId(logoId, true);
 	}
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
 	@Override
-	public LayoutSet fetchByP_L(
-		boolean privateLayout, long logoId, boolean useFinderCache) {
-
+	public LayoutSet fetchByLogoId(long logoId, boolean useFinderCache) {
 		boolean productionMode = CTPersistenceHelperUtil.isProductionMode(
 			LayoutSet.class);
 
 		Object[] finderArgs = null;
 
 		if (useFinderCache && productionMode) {
-			finderArgs = new Object[] {privateLayout, logoId};
+			finderArgs = new Object[] {logoId};
 		}
 
 		Object result = null;
 
 		if (useFinderCache && productionMode) {
 			result = FinderCacheUtil.getResult(
-				_finderPathFetchByP_L, finderArgs);
+				_finderPathFetchByLogoId, finderArgs);
 		}
 
 		if (result instanceof LayoutSet) {
 			LayoutSet layoutSet = (LayoutSet)result;
 
-			if ((privateLayout != layoutSet.isPrivateLayout()) ||
-				(logoId != layoutSet.getLogoId())) {
-
+			if (logoId != layoutSet.getLogoId()) {
 				result = null;
 			}
 		}
 
 		if (result == null) {
-			StringBundler sb = new StringBundler(4);
+			StringBundler sb = new StringBundler(3);
 
 			sb.append(_SQL_SELECT_LAYOUTSET_WHERE);
 
-			sb.append(_FINDER_COLUMN_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_P_L_LOGOID_2);
+			sb.append(_FINDER_COLUMN_LOGOID_LOGOID_2);
 
 			String sql = sb.toString();
 
@@ -2120,8 +1872,6 @@ public class LayoutSetPersistenceImpl
 
 				QueryPos queryPos = QueryPos.getInstance(query);
 
-				queryPos.add(privateLayout);
-
 				queryPos.add(logoId);
 
 				List<LayoutSet> list = query.list();
@@ -2129,7 +1879,7 @@ public class LayoutSetPersistenceImpl
 				if (list.isEmpty()) {
 					if (useFinderCache && productionMode) {
 						FinderCacheUtil.putResult(
-							_finderPathFetchByP_L, finderArgs, list);
+							_finderPathFetchByLogoId, finderArgs, list);
 					}
 				}
 				else {
@@ -2138,13 +1888,11 @@ public class LayoutSetPersistenceImpl
 
 						if (_log.isWarnEnabled()) {
 							if (!productionMode || !useFinderCache) {
-								finderArgs = new Object[] {
-									privateLayout, logoId
-								};
+								finderArgs = new Object[] {logoId};
 							}
 
 							_log.warn(
-								"LayoutSetPersistenceImpl.fetchByP_L(boolean, long, boolean) with parameters (" +
+								"LayoutSetPersistenceImpl.fetchByLogoId(long, boolean) with parameters (" +
 									StringUtil.merge(finderArgs) +
 										") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
 						}
@@ -2174,30 +1922,28 @@ public class LayoutSetPersistenceImpl
 	}
 
 	/**
-	 * Removes the layout set where privateLayout = &#63; and logoId = &#63; from the database.
+	 * Removes the layout set where logoId = &#63; from the database.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the layout set that was removed
 	 */
 	@Override
-	public LayoutSet removeByP_L(boolean privateLayout, long logoId)
+	public LayoutSet removeByLogoId(long logoId)
 		throws NoSuchLayoutSetException {
 
-		LayoutSet layoutSet = findByP_L(privateLayout, logoId);
+		LayoutSet layoutSet = findByLogoId(logoId);
 
 		return remove(layoutSet);
 	}
 
 	/**
-	 * Returns the number of layout sets where privateLayout = &#63; and logoId = &#63;.
+	 * Returns the number of layout sets where logoId = &#63;.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the number of matching layout sets
 	 */
 	@Override
-	public int countByP_L(boolean privateLayout, long logoId) {
+	public int countByLogoId(long logoId) {
 		boolean productionMode = CTPersistenceHelperUtil.isProductionMode(
 			LayoutSet.class);
 
@@ -2207,21 +1953,19 @@ public class LayoutSetPersistenceImpl
 		Long count = null;
 
 		if (productionMode) {
-			finderPath = _finderPathCountByP_L;
+			finderPath = _finderPathCountByLogoId;
 
-			finderArgs = new Object[] {privateLayout, logoId};
+			finderArgs = new Object[] {logoId};
 
 			count = (Long)FinderCacheUtil.getResult(finderPath, finderArgs);
 		}
 
 		if (count == null) {
-			StringBundler sb = new StringBundler(3);
+			StringBundler sb = new StringBundler(2);
 
 			sb.append(_SQL_COUNT_LAYOUTSET_WHERE);
 
-			sb.append(_FINDER_COLUMN_P_L_PRIVATELAYOUT_2);
-
-			sb.append(_FINDER_COLUMN_P_L_LOGOID_2);
+			sb.append(_FINDER_COLUMN_LOGOID_LOGOID_2);
 
 			String sql = sb.toString();
 
@@ -2233,8 +1977,6 @@ public class LayoutSetPersistenceImpl
 				Query query = session.createQuery(sql);
 
 				QueryPos queryPos = QueryPos.getInstance(query);
-
-				queryPos.add(privateLayout);
 
 				queryPos.add(logoId);
 
@@ -2255,10 +1997,7 @@ public class LayoutSetPersistenceImpl
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_P_L_PRIVATELAYOUT_2 =
-		"layoutSet.privateLayout = ? AND ";
-
-	private static final String _FINDER_COLUMN_P_L_LOGOID_2 =
+	private static final String _FINDER_COLUMN_LOGOID_LOGOID_2 =
 		"layoutSet.logoId = ?";
 
 	public LayoutSetPersistenceImpl() {
@@ -2291,13 +2030,7 @@ public class LayoutSetPersistenceImpl
 			LayoutSetImpl.class, layoutSet.getPrimaryKey(), layoutSet);
 
 		FinderCacheUtil.putResult(
-			_finderPathFetchByG_P,
-			new Object[] {layoutSet.getGroupId(), layoutSet.isPrivateLayout()},
-			layoutSet);
-
-		FinderCacheUtil.putResult(
-			_finderPathFetchByP_L,
-			new Object[] {layoutSet.isPrivateLayout(), layoutSet.getLogoId()},
+			_finderPathFetchByLogoId, new Object[] {layoutSet.getLogoId()},
 			layoutSet);
 	}
 
@@ -2366,22 +2099,12 @@ public class LayoutSetPersistenceImpl
 	protected void cacheUniqueFindersCache(
 		LayoutSetModelImpl layoutSetModelImpl) {
 
-		Object[] args = new Object[] {
-			layoutSetModelImpl.getGroupId(),
-			layoutSetModelImpl.isPrivateLayout()
-		};
+		Object[] args = new Object[] {layoutSetModelImpl.getLogoId()};
 
-		FinderCacheUtil.putResult(_finderPathCountByG_P, args, Long.valueOf(1));
 		FinderCacheUtil.putResult(
-			_finderPathFetchByG_P, args, layoutSetModelImpl);
-
-		args = new Object[] {
-			layoutSetModelImpl.isPrivateLayout(), layoutSetModelImpl.getLogoId()
-		};
-
-		FinderCacheUtil.putResult(_finderPathCountByP_L, args, Long.valueOf(1));
+			_finderPathCountByLogoId, args, Long.valueOf(1));
 		FinderCacheUtil.putResult(
-			_finderPathFetchByP_L, args, layoutSetModelImpl);
+			_finderPathFetchByLogoId, args, layoutSetModelImpl);
 	}
 
 	/**
@@ -3012,8 +2735,6 @@ public class LayoutSetPersistenceImpl
 			CTColumnResolutionType.PK, Collections.singleton("layoutSetId"));
 		_ctColumnNamesMap.put(
 			CTColumnResolutionType.STRICT, ctStrictColumnNames);
-
-		_uniqueIndexColumnNames.add(new String[] {"groupId", "privateLayout"});
 	}
 
 	/**
@@ -3077,16 +2798,6 @@ public class LayoutSetPersistenceImpl
 			new String[] {String.class.getName()},
 			new String[] {"layoutSetPrototypeUuid"}, false);
 
-		_finderPathFetchByG_P = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByG_P",
-			new String[] {Long.class.getName(), Boolean.class.getName()},
-			new String[] {"groupId", "privateLayout"}, true);
-
-		_finderPathCountByG_P = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByG_P",
-			new String[] {Long.class.getName(), Boolean.class.getName()},
-			new String[] {"groupId", "privateLayout"}, false);
-
 		_finderPathWithPaginationFindByC_L = new FinderPath(
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByC_L",
 			new String[] {
@@ -3106,15 +2817,14 @@ public class LayoutSetPersistenceImpl
 			new String[] {Long.class.getName(), String.class.getName()},
 			new String[] {"companyId", "layoutSetPrototypeUuid"}, false);
 
-		_finderPathFetchByP_L = new FinderPath(
-			FINDER_CLASS_NAME_ENTITY, "fetchByP_L",
-			new String[] {Boolean.class.getName(), Long.class.getName()},
-			new String[] {"privateLayout", "logoId"}, true);
+		_finderPathFetchByLogoId = new FinderPath(
+			FINDER_CLASS_NAME_ENTITY, "fetchByLogoId",
+			new String[] {Long.class.getName()}, new String[] {"logoId"}, true);
 
-		_finderPathCountByP_L = new FinderPath(
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByP_L",
-			new String[] {Boolean.class.getName(), Long.class.getName()},
-			new String[] {"privateLayout", "logoId"}, false);
+		_finderPathCountByLogoId = new FinderPath(
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByLogoId",
+			new String[] {Long.class.getName()}, new String[] {"logoId"},
+			false);
 	}
 
 	public void destroy() {

@@ -329,56 +329,6 @@ public interface LayoutSetPersistence
 	public int countByLayoutSetPrototypeUuid(String layoutSetPrototypeUuid);
 
 	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set
-	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
-	 */
-	public LayoutSet findByG_P(long groupId, boolean privateLayout)
-		throws NoSuchLayoutSetException;
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	public LayoutSet fetchByG_P(long groupId, boolean privateLayout);
-
-	/**
-	 * Returns the layout set where groupId = &#63; and privateLayout = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @param useFinderCache whether to use the finder cache
-	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
-	 */
-	public LayoutSet fetchByG_P(
-		long groupId, boolean privateLayout, boolean useFinderCache);
-
-	/**
-	 * Removes the layout set where groupId = &#63; and privateLayout = &#63; from the database.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the layout set that was removed
-	 */
-	public LayoutSet removeByG_P(long groupId, boolean privateLayout)
-		throws NoSuchLayoutSetException;
-
-	/**
-	 * Returns the number of layout sets where groupId = &#63; and privateLayout = &#63;.
-	 *
-	 * @param groupId the group ID
-	 * @param privateLayout the private layout
-	 * @return the number of matching layout sets
-	 */
-	public int countByG_P(long groupId, boolean privateLayout);
-
-	/**
 	 * Returns all the layout sets where companyId = &#63; and layoutSetPrototypeUuid = &#63;.
 	 *
 	 * @param companyId the company ID
@@ -534,54 +484,47 @@ public interface LayoutSetPersistence
 	public int countByC_L(long companyId, String layoutSetPrototypeUuid);
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
+	 * Returns the layout set where logoId = &#63; or throws a <code>NoSuchLayoutSetException</code> if it could not be found.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set
 	 * @throws NoSuchLayoutSetException if a matching layout set could not be found
 	 */
-	public LayoutSet findByP_L(boolean privateLayout, long logoId)
-		throws NoSuchLayoutSetException;
+	public LayoutSet findByLogoId(long logoId) throws NoSuchLayoutSetException;
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
-	public LayoutSet fetchByP_L(boolean privateLayout, long logoId);
+	public LayoutSet fetchByLogoId(long logoId);
 
 	/**
-	 * Returns the layout set where privateLayout = &#63; and logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 * Returns the layout set where logoId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @param useFinderCache whether to use the finder cache
 	 * @return the matching layout set, or <code>null</code> if a matching layout set could not be found
 	 */
-	public LayoutSet fetchByP_L(
-		boolean privateLayout, long logoId, boolean useFinderCache);
+	public LayoutSet fetchByLogoId(long logoId, boolean useFinderCache);
 
 	/**
-	 * Removes the layout set where privateLayout = &#63; and logoId = &#63; from the database.
+	 * Removes the layout set where logoId = &#63; from the database.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the layout set that was removed
 	 */
-	public LayoutSet removeByP_L(boolean privateLayout, long logoId)
+	public LayoutSet removeByLogoId(long logoId)
 		throws NoSuchLayoutSetException;
 
 	/**
-	 * Returns the number of layout sets where privateLayout = &#63; and logoId = &#63;.
+	 * Returns the number of layout sets where logoId = &#63;.
 	 *
-	 * @param privateLayout the private layout
 	 * @param logoId the logo ID
 	 * @return the number of matching layout sets
 	 */
-	public int countByP_L(boolean privateLayout, long logoId);
+	public int countByLogoId(long logoId);
 
 	/**
 	 * Caches the layout set in the entity cache if it is enabled.

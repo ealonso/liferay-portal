@@ -111,11 +111,10 @@ public class LayoutSEOEntryLocalServiceUtil {
 		return getService().deleteLayoutSEOEntry(layoutSEOEntryId);
 	}
 
-	public static void deleteLayoutSEOEntry(
-			long groupId, boolean privateLayout, long layoutId)
+	public static void deleteLayoutSEOEntry(long groupId, long layoutId)
 		throws com.liferay.layout.seo.exception.NoSuchEntryException {
 
-		getService().deleteLayoutSEOEntry(groupId, privateLayout, layoutId);
+		getService().deleteLayoutSEOEntry(groupId, layoutId);
 	}
 
 	public static void deleteLayoutSEOEntry(String uuid, long groupId)

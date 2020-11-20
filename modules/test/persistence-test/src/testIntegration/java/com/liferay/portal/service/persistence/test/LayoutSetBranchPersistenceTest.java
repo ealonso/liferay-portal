@@ -230,32 +230,20 @@ public class LayoutSetBranchPersistenceTest {
 	}
 
 	@Test
-	public void testCountByG_P() throws Exception {
-		_persistence.countByG_P(
+	public void testCountByG_N() throws Exception {
+		_persistence.countByG_N(RandomTestUtil.nextLong(), "");
+
+		_persistence.countByG_N(0L, "null");
+
+		_persistence.countByG_N(0L, (String)null);
+	}
+
+	@Test
+	public void testCountByG_M() throws Exception {
+		_persistence.countByG_M(
 			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean());
 
-		_persistence.countByG_P(0L, RandomTestUtil.randomBoolean());
-	}
-
-	@Test
-	public void testCountByG_P_N() throws Exception {
-		_persistence.countByG_P_N(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(), "");
-
-		_persistence.countByG_P_N(0L, RandomTestUtil.randomBoolean(), "null");
-
-		_persistence.countByG_P_N(
-			0L, RandomTestUtil.randomBoolean(), (String)null);
-	}
-
-	@Test
-	public void testCountByG_P_M() throws Exception {
-		_persistence.countByG_P_M(
-			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
-			RandomTestUtil.randomBoolean());
-
-		_persistence.countByG_P_M(
-			0L, RandomTestUtil.randomBoolean(), RandomTestUtil.randomBoolean());
+		_persistence.countByG_M(0L, RandomTestUtil.randomBoolean());
 	}
 
 	@Test
@@ -570,11 +558,6 @@ public class LayoutSetBranchPersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				layoutSetBranch, "getColumnOriginalValue",
 				new Class<?>[] {String.class}, "groupId"));
-		Assert.assertEquals(
-			Boolean.valueOf(layoutSetBranch.getPrivateLayout()),
-			ReflectionTestUtil.<Boolean>invoke(
-				layoutSetBranch, "getColumnOriginalValue",
-				new Class<?>[] {String.class}, "privateLayout"));
 		Assert.assertEquals(
 			layoutSetBranch.getName(),
 			ReflectionTestUtil.invoke(

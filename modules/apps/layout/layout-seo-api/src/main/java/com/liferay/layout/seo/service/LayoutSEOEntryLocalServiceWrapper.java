@@ -113,12 +113,10 @@ public class LayoutSEOEntryLocalServiceWrapper
 	}
 
 	@Override
-	public void deleteLayoutSEOEntry(
-			long groupId, boolean privateLayout, long layoutId)
+	public void deleteLayoutSEOEntry(long groupId, long layoutId)
 		throws com.liferay.layout.seo.exception.NoSuchEntryException {
 
-		_layoutSEOEntryLocalService.deleteLayoutSEOEntry(
-			groupId, privateLayout, layoutId);
+		_layoutSEOEntryLocalService.deleteLayoutSEOEntry(groupId, layoutId);
 	}
 
 	@Override
