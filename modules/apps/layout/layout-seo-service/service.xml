@@ -38,9 +38,8 @@
 
 		<!-- Finder methods -->
 
-		<finder name="G_P_L" return-type="LayoutSEOEntry" unique="true">
+		<finder name="G_L" return-type="LayoutSEOEntry" unique="true">
 			<finder-column name="groupId" />
-			<finder-column name="privateLayout" />
 			<finder-column name="layoutId" />
 		</finder>
 
