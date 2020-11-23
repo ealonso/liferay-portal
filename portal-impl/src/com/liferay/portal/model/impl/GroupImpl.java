@@ -162,12 +162,7 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public long getDefaultPrivatePlid() {
-		return getDefaultPlid(true);
-	}
-
-	@Override
-	public long getDefaultPublicPlid() {
+	public long getDefaultPlid() {
 		return getDefaultPlid(false);
 	}
 
@@ -423,17 +418,10 @@ public class GroupImpl extends GroupBaseImpl {
 	public String getLogoURL(ThemeDisplay themeDisplay, boolean useDefault) {
 		long logoId = 0;
 
-		LayoutSet publicLayoutSet = getPublicLayoutSet();
+		LayoutSet publicLayoutSet = getLayoutSet();
 
 		if (publicLayoutSet.getLogoId() > 0) {
 			logoId = publicLayoutSet.getLogoId();
-		}
-		else {
-			LayoutSet privateLayoutSet = getPrivateLayoutSet();
-
-			if (privateLayoutSet.getLogoId() > 0) {
-				logoId = privateLayoutSet.getLogoId();
-			}
 		}
 
 		if ((logoId == 0) && !useDefault &&
@@ -519,49 +507,12 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public String getPathFriendlyURL(
-		boolean privateLayout, ThemeDisplay themeDisplay) {
-
-		if (privateLayout) {
-			if (isUser()) {
-				return themeDisplay.getPathFriendlyURLPrivateUser();
-			}
-
-			return themeDisplay.getPathFriendlyURLPrivateGroup();
-		}
-
+	public String getPathFriendlyURL(ThemeDisplay themeDisplay) {
 		return themeDisplay.getPathFriendlyURLPublic();
 	}
 
 	@Override
-	public LayoutSet getPrivateLayoutSet() {
-		LayoutSet layoutSet = null;
-
-		try {
-			layoutSet = LayoutSetLocalServiceUtil.getLayoutSet(
-				getGroupId(), true);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-		}
-
-		return layoutSet;
-	}
-
-	@Override
-	public int getPrivateLayoutsPageCount() {
-		try {
-			return LayoutLocalServiceUtil.getLayoutsCount(this, true);
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
-		}
-
-		return 0;
-	}
-
-	@Override
-	public LayoutSet getPublicLayoutSet() {
+	public LayoutSet getLayoutSet() {
 		LayoutSet layoutSet = null;
 
 		try {
@@ -576,9 +527,9 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public int getPublicLayoutsPageCount() {
+	public int getLayoutsPageCount() {
 		try {
-			return LayoutLocalServiceUtil.getLayoutsCount(this, false);
+			return LayoutLocalServiceUtil.getLayoutsCount(this);
 		}
 		catch (Exception exception) {
 			_log.error(exception, exception);
@@ -800,17 +751,8 @@ public class GroupImpl extends GroupBaseImpl {
 	}
 
 	@Override
-	public boolean hasPrivateLayouts() {
-		if (getPrivateLayoutsPageCount() > 0) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean hasPublicLayouts() {
-		if (getPublicLayoutsPageCount() > 0) {
+	public boolean hasLayouts() {
+		if (getLayoutsPageCount() > 0) {
 			return true;
 		}
 

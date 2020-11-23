@@ -297,7 +297,6 @@ public class GroupServiceSoap {
 	 * Returns the group's display URL.
 	 *
 	 * @param groupId the primary key of the group
-	 * @param privateLayout whether the layout set is private to the group
 	 * @param secureConnection whether the generated URL uses a secure
 	 connection
 	 * @return the group's display URL
@@ -305,12 +304,12 @@ public class GroupServiceSoap {
 	 found or if a portal exception occurred
 	 */
 	public static String getGroupDisplayURL(
-			long groupId, boolean privateLayout, boolean secureConnection)
+			long groupId, boolean secureConnection)
 		throws RemoteException {
 
 		try {
 			String returnValue = GroupServiceUtil.getGroupDisplayURL(
-				groupId, privateLayout, secureConnection);
+				groupId, secureConnection);
 
 			return returnValue;
 		}

@@ -36,7 +36,7 @@ public interface LayoutPermission {
 
 	public void check(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException;
 
 	public void check(
@@ -54,7 +54,7 @@ public interface LayoutPermission {
 
 	public boolean contains(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException;
 
 	public boolean contains(

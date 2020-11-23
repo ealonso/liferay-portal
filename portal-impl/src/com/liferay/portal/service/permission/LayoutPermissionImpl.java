@@ -97,11 +97,11 @@ public class LayoutPermissionImpl
 	@Override
 	public void check(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException {
 
 		if (!contains(
-				permissionChecker, groupId, privateLayout, layoutId,
+				permissionChecker, groupId, layoutId,
 				actionId)) {
 
 			throw new PrincipalException.MustHavePermission(
@@ -164,11 +164,11 @@ public class LayoutPermissionImpl
 	@Override
 	public boolean contains(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException {
 
 		Layout layout = LayoutLocalServiceUtil.getLayout(
-			groupId, privateLayout, layoutId);
+			groupId, layoutId);
 
 		return contains(permissionChecker, layout, actionId);
 	}
@@ -269,7 +269,7 @@ public class LayoutPermissionImpl
 
 			while (parentLayoutId != LayoutConstants.DEFAULT_PARENT_LAYOUT_ID) {
 				Layout parentLayout = LayoutLocalServiceUtil.getLayout(
-					layoutGroupId, layout.isPrivateLayout(), parentLayoutId);
+					layoutGroupId, parentLayoutId);
 
 				if (contains(permissionChecker, parentLayout, actionId)) {
 					return true;
@@ -518,8 +518,7 @@ public class LayoutPermissionImpl
 		// user
 
 		List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(
-			layout.getGroupId(), layout.isPrivateLayout(),
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
+			layout.getGroupId(), LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
 		for (Layout curLayout : layouts) {
 			if (containsWithoutViewableGroup(

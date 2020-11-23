@@ -435,8 +435,7 @@ public class GroupServiceHttp {
 	}
 
 	public static String getGroupDisplayURL(
-			HttpPrincipal httpPrincipal, long groupId, boolean privateLayout,
-			boolean secureConnection)
+			HttpPrincipal httpPrincipal, long groupId, boolean secureConnection)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
@@ -445,7 +444,7 @@ public class GroupServiceHttp {
 				_getGroupDisplayURLParameterTypes10);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, groupId, privateLayout, secureConnection);
+				methodKey, groupId, secureConnection);
 
 			Object returnObj = null;
 
@@ -1697,7 +1696,7 @@ public class GroupServiceHttp {
 		long.class, String.class
 	};
 	private static final Class<?>[] _getGroupDisplayURLParameterTypes10 =
-		new Class[] {long.class, boolean.class, boolean.class};
+		new Class[] {long.class, boolean.class};
 	private static final Class<?>[] _getGroupsParameterTypes11 = new Class[] {
 		long.class, long.class, boolean.class
 	};

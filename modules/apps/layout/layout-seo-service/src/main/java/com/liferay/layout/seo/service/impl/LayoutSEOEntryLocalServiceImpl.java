@@ -58,11 +58,10 @@ public class LayoutSEOEntryLocalServiceImpl
 
 	@Override
 	public void deleteLayoutSEOEntry(
-			long groupId, boolean privateLayout, long layoutId)
+			long groupId, long layoutId)
 		throws NoSuchEntryException {
 
-		layoutSEOEntryPersistence.removeByG_P_L(
-			groupId, privateLayout, layoutId);
+		layoutSEOEntryPersistence.removeByG_L(groupId, layoutId);
 	}
 
 	@Override
@@ -73,16 +72,13 @@ public class LayoutSEOEntryLocalServiceImpl
 	}
 
 	@Override
-	public LayoutSEOEntry fetchLayoutSEOEntry(
-		long groupId, boolean privateLayout, long layoutId) {
-
-		return layoutSEOEntryPersistence.fetchByG_P_L(
-			groupId, privateLayout, layoutId);
+	public LayoutSEOEntry fetchLayoutSEOEntry(long groupId, long layoutId) {
+		return layoutSEOEntryPersistence.fetchByG_L(groupId, layoutId);
 	}
 
 	@Override
 	public LayoutSEOEntry updateLayoutSEOEntry(
-			long userId, long groupId, boolean privateLayout, long layoutId,
+			long userId, long groupId, long layoutId,
 			boolean canonicalURLEnabled, Map<Locale, String> canonicalURLMap,
 			boolean openGraphDescriptionEnabled,
 			Map<Locale, String> openGraphDescriptionMap,
@@ -92,12 +88,12 @@ public class LayoutSEOEntryLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		LayoutSEOEntry layoutSEOEntry = layoutSEOEntryPersistence.fetchByG_P_L(
-			groupId, privateLayout, layoutId);
+		LayoutSEOEntry layoutSEOEntry = layoutSEOEntryPersistence.fetchByG_L(
+			groupId, layoutId);
 
 		if (layoutSEOEntry == null) {
 			return _addLayoutSEOEntry(
-				userId, groupId, privateLayout, layoutId, canonicalURLEnabled,
+				userId, groupId, layoutId, canonicalURLEnabled,
 				canonicalURLMap, openGraphDescriptionEnabled,
 				openGraphDescriptionMap, openGraphImageAltMap,
 				openGraphImageFileEntryId, openGraphTitleEnabled,
@@ -137,17 +133,17 @@ public class LayoutSEOEntryLocalServiceImpl
 
 	@Override
 	public LayoutSEOEntry updateLayoutSEOEntry(
-			long userId, long groupId, boolean privateLayout, long layoutId,
+			long userId, long groupId, long layoutId,
 			boolean canonicalURLEnabled, Map<Locale, String> canonicalURLMap,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		LayoutSEOEntry layoutSEOEntry = layoutSEOEntryPersistence.fetchByG_P_L(
-			groupId, privateLayout, layoutId);
+		LayoutSEOEntry layoutSEOEntry = layoutSEOEntryPersistence.fetchByG_L(
+			groupId, layoutId);
 
 		if (layoutSEOEntry == null) {
 			return _addLayoutSEOEntry(
-				userId, groupId, privateLayout, layoutId, canonicalURLEnabled,
+				userId, groupId, layoutId, canonicalURLEnabled,
 				canonicalURLMap, false, Collections.emptyMap(),
 				Collections.emptyMap(), 0, false, Collections.emptyMap(),
 				serviceContext);
@@ -161,7 +157,7 @@ public class LayoutSEOEntryLocalServiceImpl
 	}
 
 	private LayoutSEOEntry _addLayoutSEOEntry(
-			long userId, long groupId, boolean privateLayout, long layoutId,
+			long userId, long groupId, long layoutId,
 			boolean canonicalURLEnabled, Map<Locale, String> canonicalURLMap,
 			boolean openGraphDescriptionEnabled,
 			Map<Locale, String> openGraphDescriptionMap,
@@ -188,7 +184,6 @@ public class LayoutSEOEntryLocalServiceImpl
 		layoutSEOEntry.setCreateDate(now);
 		layoutSEOEntry.setModifiedDate(now);
 
-		layoutSEOEntry.setPrivateLayout(privateLayout);
 		layoutSEOEntry.setLayoutId(layoutId);
 		layoutSEOEntry.setCanonicalURLEnabled(canonicalURLEnabled);
 		layoutSEOEntry.setCanonicalURLMap(canonicalURLMap);

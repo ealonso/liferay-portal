@@ -130,17 +130,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 * Returns the object counter's name.
 	 *
 	 * @param  groupId the primary key of the group
-	 * @param  privateLayout whether layout is private to the group
 	 * @return the object counter's name
 	 */
-	public static String getCounterName(long groupId, boolean privateLayout) {
+	public static String getCounterName(long groupId) {
 		StringBundler sb = new StringBundler(5);
 
 		sb.append(Layout.class.getName());
 		sb.append(StringPool.POUND);
 		sb.append(groupId);
-		sb.append(StringPool.POUND);
-		sb.append(privateLayout);
 
 		return sb.toString();
 	}
@@ -157,7 +154,6 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	 *
 	 * @param  userId the primary key of the user
 	 * @param  groupId the primary key of the group
-	 * @param  privateLayout whether the layout is private to the group
 	 * @param  parentLayoutId the layout ID of the parent layout (optionally
 	 *         {@link LayoutConstants#DEFAULT_PARENT_LAYOUT_ID})
 	 * @param  classNameId the class name ID of the entity
@@ -198,7 +194,7 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public Layout addLayout(
-			long userId, long groupId, boolean privateLayout,
+			long userId, long groupId,
 			long parentLayoutId, long classNameId, long classPK,
 			Map<Locale, String> nameMap, Map<Locale, String> titleMap,
 			Map<Locale, String> descriptionMap, Map<Locale, String> keywordsMap,
@@ -210,9 +206,9 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		// Layout
 
 		User user = userPersistence.findByPrimaryKey(userId);
-		long layoutId = getNextLayoutId(groupId, privateLayout);
+		long layoutId = getNextLayoutId(groupId);
 		parentLayoutId = layoutLocalServiceHelper.getParentLayoutId(
-			groupId, privateLayout, parentLayoutId);
+			groupId, parentLayoutId);
 
 		String name = nameMap.get(LocaleUtil.getSiteDefault());
 

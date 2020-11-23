@@ -339,13 +339,8 @@ public class GroupWrapper
 	}
 
 	@Override
-	public long getDefaultPrivatePlid() {
-		return model.getDefaultPrivatePlid();
-	}
-
-	@Override
-	public long getDefaultPublicPlid() {
-		return model.getDefaultPublicPlid();
+	public long getDefaultPlid() {
+		return model.getDefaultPlid();
 	}
 
 	@Override
@@ -518,6 +513,16 @@ public class GroupWrapper
 	}
 
 	@Override
+	public LayoutSet getLayoutSet() {
+		return model.getLayoutSet();
+	}
+
+	@Override
+	public int getLayoutsPageCount() {
+		return model.getLayoutsPageCount();
+	}
+
+	@Override
 	public Group getLiveGroup() {
 		return model.getLiveGroup();
 	}
@@ -680,10 +685,9 @@ public class GroupWrapper
 
 	@Override
 	public String getPathFriendlyURL(
-		boolean privateLayout,
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay) {
 
-		return model.getPathFriendlyURL(privateLayout, themeDisplay);
+		return model.getPathFriendlyURL(themeDisplay);
 	}
 
 	/**
@@ -694,26 +698,6 @@ public class GroupWrapper
 	@Override
 	public long getPrimaryKey() {
 		return model.getPrimaryKey();
-	}
-
-	@Override
-	public LayoutSet getPrivateLayoutSet() {
-		return model.getPrivateLayoutSet();
-	}
-
-	@Override
-	public int getPrivateLayoutsPageCount() {
-		return model.getPrivateLayoutsPageCount();
-	}
-
-	@Override
-	public LayoutSet getPublicLayoutSet() {
-		return model.getPublicLayoutSet();
-	}
-
-	@Override
-	public int getPublicLayoutsPageCount() {
-		return model.getPublicLayoutsPageCount();
 	}
 
 	@Override
@@ -836,18 +820,13 @@ public class GroupWrapper
 	}
 
 	@Override
+	public boolean hasLayouts() {
+		return model.hasLayouts();
+	}
+
+	@Override
 	public boolean hasLocalOrRemoteStagingGroup() {
 		return model.hasLocalOrRemoteStagingGroup();
-	}
-
-	@Override
-	public boolean hasPrivateLayouts() {
-		return model.hasPrivateLayouts();
-	}
-
-	@Override
-	public boolean hasPublicLayouts() {
-		return model.hasPublicLayouts();
 	}
 
 	@Override

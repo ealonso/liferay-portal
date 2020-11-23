@@ -68,9 +68,7 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public int getChildrenWithLayoutsCount(boolean site);
 
-	public long getDefaultPrivatePlid();
-
-	public long getDefaultPublicPlid();
+	public long getDefaultPlid();
 
 	public java.util.List<Group> getDescendants(boolean site);
 
@@ -112,16 +110,11 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 		getParentLiveGroupTypeSettingsProperties();
 
 	public String getPathFriendlyURL(
-		boolean privateLayout,
 		com.liferay.portal.kernel.theme.ThemeDisplay themeDisplay);
 
-	public LayoutSet getPrivateLayoutSet();
+	public LayoutSet getLayoutSet();
 
-	public int getPrivateLayoutsPageCount();
-
-	public LayoutSet getPublicLayoutSet();
-
-	public int getPublicLayoutsPageCount();
+	public int getLayoutsPageCount();
 
 	public long getRemoteLiveGroupId();
 
@@ -150,9 +143,7 @@ public interface Group extends GroupModel, PersistedModel, TreeModel {
 
 	public boolean hasLocalOrRemoteStagingGroup();
 
-	public boolean hasPrivateLayouts();
-
-	public boolean hasPublicLayouts();
+	public boolean hasLayouts();
 
 	public boolean hasRemoteStagingGroup();
 

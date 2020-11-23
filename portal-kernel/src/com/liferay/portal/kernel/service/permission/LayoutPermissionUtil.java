@@ -42,11 +42,11 @@ public class LayoutPermissionUtil {
 
 	public static void check(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException {
 
 		getLayoutPermission().check(
-			permissionChecker, groupId, privateLayout, layoutId, actionId);
+			permissionChecker, groupId, layoutId, actionId);
 	}
 
 	public static void check(
@@ -75,11 +75,11 @@ public class LayoutPermissionUtil {
 
 	public static boolean contains(
 			PermissionChecker permissionChecker, long groupId,
-			boolean privateLayout, long layoutId, String actionId)
+			long layoutId, String actionId)
 		throws PortalException {
 
 		return getLayoutPermission().contains(
-			permissionChecker, groupId, privateLayout, layoutId, actionId);
+			permissionChecker, groupId, layoutId, actionId);
 	}
 
 	public static boolean contains(
