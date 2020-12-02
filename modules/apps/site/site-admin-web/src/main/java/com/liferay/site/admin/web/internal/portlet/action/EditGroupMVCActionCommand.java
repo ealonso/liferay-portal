@@ -14,6 +14,7 @@
 
 package com.liferay.site.admin.web.internal.portlet.action;
 
+import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -60,7 +61,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.liveusers.LiveUsers;
 import com.liferay.ratings.kernel.RatingsType;
 import com.liferay.site.admin.web.internal.constants.SiteAdminConstants;
-import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
 import com.liferay.site.initializer.SiteInitializer;
 import com.liferay.site.initializer.SiteInitializerRegistry;
 import com.liferay.site.util.GroupSearchProvider;
@@ -87,7 +87,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + SiteAdminPortletKeys.SITE_SETTINGS,
+		"javax.portlet.name=" + ConfigurationAdminPortletKeys.SITE_SETTINGS,
 		"mvc.command.name=/site_admin/edit_group"
 	},
 	service = MVCActionCommand.class
@@ -112,7 +112,8 @@ public class EditGroupMVCActionCommand extends BaseMVCActionCommand {
 
 				MultiSessionMessages.add(
 					actionRequest,
-					SiteAdminPortletKeys.SITE_SETTINGS + "requestProcessed");
+					ConfigurationAdminPortletKeys.SITE_SETTINGS +
+						"requestProcessed");
 			}
 
 			PortletURL siteAdministrationURL = _getSiteAdministrationURL(
@@ -151,8 +152,8 @@ public class EditGroupMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		return _portal.getControlPanelPortletURL(
-			actionRequest, group, SiteAdminPortletKeys.SITE_SETTINGS, 0, 0,
-			PortletRequest.RENDER_PHASE);
+			actionRequest, group, ConfigurationAdminPortletKeys.SITE_SETTINGS,
+			0, 0, PortletRequest.RENDER_PHASE);
 	}
 
 	private Group _updateGroup(ActionRequest actionRequest) throws Exception {
