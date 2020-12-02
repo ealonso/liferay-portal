@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.site.admin.web.internal.portlet;
+package com.liferay.configuration.admin.web.internal.portlet;
 
+import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.portal.kernel.portlet.BasePortletProvider;
 import com.liferay.portal.kernel.portlet.EditPortletProvider;
-import com.liferay.site.admin.web.internal.constants.SiteAdminPortletKeys;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -33,7 +33,7 @@ public class SiteSettingsEditPortletProvider
 
 	@Override
 	public String getPortletName() {
-		return SiteAdminPortletKeys.SITE_SETTINGS;
+		return ConfigurationAdminPortletKeys.SITE_SETTINGS;
 	}
 
 }
