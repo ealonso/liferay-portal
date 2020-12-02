@@ -44,6 +44,8 @@ LayoutSet privateLayoutSet = liveGroup.getPrivateLayoutSet();
 
 boolean readOnlyLocaleInput = false;
 
+SiteAdminConfiguration siteAdminConfiguration = ConfigurationProviderUtil.getSystemConfiguration(SiteAdminConfiguration.class);
+
 if ((publicLayoutSet.isLayoutSetPrototypeLinkEnabled() || privateLayoutSet.isLayoutSetPrototypeLinkEnabled()) && !siteAdminConfiguration.enableCustomLanguagesWithTemplatePropagation()) {
 	readOnlyLocaleInput = true;
 }
