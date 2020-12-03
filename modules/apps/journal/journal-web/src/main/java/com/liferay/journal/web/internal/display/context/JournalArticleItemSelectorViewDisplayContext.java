@@ -237,6 +237,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 			_portletURL,
 			PortalUtil.getLiferayPortletResponse(_portletResponse));
 
+		portletURL.setParameter("folderId", String.valueOf(_getFolderId()));
 		portletURL.setParameter("displayStyle", getDisplayStyle());
 		portletURL.setParameter(
 			"selectedTab",
@@ -288,13 +289,6 @@ public class JournalArticleItemSelectorViewDisplayContext {
 
 		articleAndFolderSearchContainer.setOrderByCol(_getOrderByCol());
 		articleAndFolderSearchContainer.setOrderByType(_getOrderByType());
-
-		PortletURL iteratorURL =
-			articleAndFolderSearchContainer.getIteratorURL();
-
-		iteratorURL.setParameter("folderId", String.valueOf(_getFolderId()));
-
-		articleAndFolderSearchContainer.setIteratorURL(iteratorURL);
 
 		if (isSearch()) {
 			List<Long> folderIds = new ArrayList<>(1);
