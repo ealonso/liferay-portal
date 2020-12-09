@@ -509,7 +509,7 @@ public class JournalConverterImpl implements JournalConverter {
 				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 					dynamicContentElement.getText());
 
-				Long classPK = jsonObject.getLong("classPK");
+				long classPK = jsonObject.getLong("classPK");
 
 				if (Validator.isNotNull(classPK)) {
 					JournalArticle article =
