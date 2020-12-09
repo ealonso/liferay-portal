@@ -488,7 +488,7 @@ public class JournalConverterImpl implements JournalConverter {
 
 				long classPK = jsonObject.getLong("classPK");
 
-				if (Validator.isNotNull(classPK)) {
+				if (classPK > 0) {
 					JournalArticle article =
 						_journalArticleLocalService.fetchLatestArticle(classPK);
 
