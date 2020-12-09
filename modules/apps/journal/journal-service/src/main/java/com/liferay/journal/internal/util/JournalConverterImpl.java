@@ -817,7 +817,9 @@ public class JournalConverterImpl implements JournalConverter {
 			}
 			catch (PortalException portalException) {
 				if (_log.isDebugEnabled()) {
-					_log.debug("Unable to get ddm form field for " + fieldName);
+					_log.debug(
+						"Unable to get ddm form field for " + fieldName,
+						portalException);
 				}
 			}
 		}
