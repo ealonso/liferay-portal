@@ -116,6 +116,10 @@ public class JournalEditDDMStructuresDisplayContext {
 			return DDMUtil.getDDMForm(script);
 		}
 		catch (Exception exception) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to get dynamic data mapping form", exception);
+			}
 		}
 
 		return null;
