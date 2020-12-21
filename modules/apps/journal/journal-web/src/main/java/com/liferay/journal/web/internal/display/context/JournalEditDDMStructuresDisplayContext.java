@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,13 @@ public class JournalEditDDMStructuresDisplayContext {
 
 	public DDMForm getDDMForm() {
 		try {
-			return DDMUtil.getDDMForm(getScript());
+			String script = getScript();
+
+			if (Validator.isNull(script)) {
+				return null;
+			}
+
+			return DDMUtil.getDDMForm(script);
 		}
 		catch (Exception exception) {
 		}
