@@ -163,7 +163,7 @@ public class JournalEditDDMStructuresDisplayContext {
 		return StringPool.BLANK;
 	}
 
-	public String getSaveButtonLabel() throws PortalException {
+	public String getSaveButtonLabel() {
 		return "save";
 	}
 
