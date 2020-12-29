@@ -1,0 +1,101 @@
+{
+	"availableLanguageIds": [
+		"en_US"
+	],
+	"defaultLanguageId": "en_US",
+	"fields": [
+		{
+			"dataType": "number",
+			"fieldNamespace": "ddm",
+			"indexType": "keyword",
+			"label": {
+				"en_US": "Number"
+			},
+			"localizable": true,
+			"name": "Numberf7ro",
+			"nestedFields": [
+				{
+					"dataType": "number",
+					"fieldNamespace": "ddm",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Number"
+					},
+					"localizable": true,
+					"name": "Numberer5s",
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"type": "ddm-number"
+				}
+			],
+			"predefinedValue": {
+				"en_US": ""
+			},
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"showLabel": true,
+			"tip": {
+				"en_US": ""
+			},
+			"type": "ddm-number"
+		},
+		{
+			"dataType": "string",
+			"indexType": "keyword",
+			"label": {
+				"en_US": "Text"
+			},
+			"localizable": true,
+			"name": "Text3zlo",
+			"nestedFields": [
+				{
+					"dataType": "string",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Text"
+					},
+					"localizable": true,
+					"name": "Textabs9",
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"type": "text"
+				}
+			],
+			"predefinedValue": {
+				"en_US": ""
+			},
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"showLabel": true,
+			"tip": {
+				"en_US": ""
+			},
+			"type": "text"
+		}
+	],
+	"successPage": {
+		"body": {
+		},
+		"enabled": false,
+		"title": {
+		}
+	}
+}

@@ -1,0 +1,200 @@
+{
+	"availableLanguageIds": [
+		"en_US"
+	],
+	"defaultLanguageId": "en_US",
+	"definitionSchemaVersion": "2.0",
+	"fields": [
+		{
+			"collapsible": false,
+			"ddmStructureId": "",
+			"ddmStructureLayoutId": "",
+			"fieldReference": "Field49071398",
+			"label": {
+				"en_US": "Fields Group"
+			},
+			"localizable": false,
+			"name": "Field49071398",
+			"nestedFields": [
+				{
+					"collapsible": false,
+					"ddmStructureId": "",
+					"ddmStructureLayoutId": "",
+					"fieldReference": "Field65212661",
+					"label": {
+						"en_US": "Fields Group"
+					},
+					"localizable": false,
+					"name": "Field65212661",
+					"nestedFields": [
+						{
+							"collapsible": false,
+							"ddmStructureId": "",
+							"ddmStructureLayoutId": "",
+							"fieldReference": "Field11014654",
+							"label": {
+								"en_US": "Fields Group"
+							},
+							"localizable": false,
+							"name": "Field11014654",
+							"nestedFields": [
+								{
+									"dataType": "string",
+									"fieldNamespace": "",
+									"fieldReference": "Field60254739",
+									"indexType": "keyword",
+									"label": {
+										"en_US": "Date"
+									},
+									"localizable": true,
+									"name": "Field60254739",
+									"nativeField": false,
+									"predefinedValue": {
+										"en_US": ""
+									},
+									"readOnly": false,
+									"repeatable": false,
+									"required": false,
+									"showLabel": true,
+									"tip": {
+										"en_US": ""
+									},
+									"type": "date",
+									"visibilityExpression": ""
+								}
+							],
+							"readOnly": false,
+							"repeatable": false,
+							"required": false,
+							"rows": "[{\"columns\":[{\"fields\":[],\"size\":12}]},{\"columns\":[{\"fields\":[\"Field60254739\"],\"size\":12}]}]",
+							"showLabel": true,
+							"type": "fieldset",
+							"upgradedStructure": false
+						},
+						{
+							"dataType": "integer",
+							"fieldNamespace": "",
+							"fieldReference": "Field66602401",
+							"indexType": "keyword",
+							"label": {
+								"en_US": "Numeric"
+							},
+							"localizable": true,
+							"name": "Field66602401",
+							"nativeField": false,
+							"placeholder": {
+								"en_US": ""
+							},
+							"predefinedValue": {
+								"en_US": ""
+							},
+							"readOnly": false,
+							"repeatable": false,
+							"required": false,
+							"showLabel": true,
+							"tip": {
+								"en_US": ""
+							},
+							"tooltip": {
+								"en_US": ""
+							},
+							"type": "numeric",
+							"visibilityExpression": ""
+						}
+					],
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"rows": "[{\"columns\":[{\"fields\":[\"Field66602401\"],\"size\":12}]},{\"columns\":[{\"fields\":[\"Field11014654\"],\"size\":12}]}]",
+					"showLabel": true,
+					"type": "fieldset",
+					"upgradedStructure": false
+				},
+				{
+					"autocomplete": false,
+					"dataSourceType": "manual",
+					"dataType": "string",
+					"ddmDataProviderInstanceId": "[]",
+					"ddmDataProviderInstanceOutput": "[]",
+					"displayStyle": "singleline",
+					"fieldNamespace": "",
+					"fieldReference": "Field85055735",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Text"
+					},
+					"localizable": true,
+					"name": "Field85055735",
+					"nativeField": false,
+					"placeholder": {
+						"en_US": ""
+					},
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"tooltip": {
+						"en_US": ""
+					},
+					"type": "text",
+					"visibilityExpression": ""
+				}
+			],
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"rows": "[{\"columns\":[{\"fields\":[\"Field85055735\"],\"size\":12}]},{\"columns\":[{\"fields\":[\"Field65212661\"],\"size\":12}]}]",
+			"showLabel": true,
+			"type": "fieldset",
+			"upgradedStructure": false
+		},
+		{
+			"autocomplete": false,
+			"dataSourceType": "manual",
+			"dataType": "string",
+			"ddmDataProviderInstanceId": "[]",
+			"ddmDataProviderInstanceOutput": "[]",
+			"displayStyle": "singleline",
+			"fieldNamespace": "",
+			"fieldReference": "Field30821690",
+			"indexType": "keyword",
+			"label": {
+				"en_US": "Text"
+			},
+			"localizable": true,
+			"name": "Field30821690",
+			"nativeField": false,
+			"placeholder": {
+				"en_US": ""
+			},
+			"predefinedValue": {
+				"en_US": ""
+			},
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"showLabel": true,
+			"tip": {
+				"en_US": ""
+			},
+			"tooltip": {
+				"en_US": ""
+			},
+			"type": "text",
+			"visibilityExpression": ""
+		}
+	],
+	"successPage": {
+		"body": {
+		},
+		"enabled": false,
+		"title": {
+		}
+	}
+}

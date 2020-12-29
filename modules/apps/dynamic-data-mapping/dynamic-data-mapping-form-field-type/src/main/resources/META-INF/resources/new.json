@@ -1,0 +1,186 @@
+{
+	"availableLanguageIds": [
+		"en_US"
+	],
+	"defaultLanguageId": "en_US",
+	"definitionSchemaVersion": "2.0",
+	"fields": [
+		{
+			"collapsible": false,
+			"ddmStructureId": "",
+			"ddmStructureLayoutId": "",
+			"fieldReference": "Field39263795",
+			"label": {
+				"en_US": "Fields Group"
+			},
+			"localizable": false,
+			"name": "Field39263795",
+			"nestedFields": [
+				{
+					"autocomplete": false,
+					"dataSourceType": "manual",
+					"dataType": "string",
+					"ddmDataProviderInstanceId": "[]",
+					"ddmDataProviderInstanceOutput": "[]",
+					"displayStyle": "singleline",
+					"fieldNamespace": "",
+					"fieldReference": "Field02644744",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Text"
+					},
+					"localizable": true,
+					"name": "Field02644744",
+					"nativeField": false,
+					"placeholder": {
+						"en_US": ""
+					},
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"tooltip": {
+						"en_US": ""
+					},
+					"type": "text",
+					"visibilityExpression": ""
+				},
+				{
+					"autocomplete": false,
+					"dataSourceType": "manual",
+					"dataType": "string",
+					"ddmDataProviderInstanceId": "[]",
+					"ddmDataProviderInstanceOutput": "[]",
+					"displayStyle": "singleline",
+					"fieldNamespace": "",
+					"fieldReference": "Field87137331",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Text"
+					},
+					"localizable": true,
+					"name": "Field87137331",
+					"nativeField": false,
+					"placeholder": {
+						"en_US": ""
+					},
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"tooltip": {
+						"en_US": ""
+					},
+					"type": "text",
+					"visibilityExpression": ""
+				}
+			],
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"rows": "[{\"columns\":[{\"fields\":[\"Field02644744\"],\"size\":12}]},{\"columns\":[{\"fields\":[\"Field87137331\"],\"size\":12}]}]",
+			"showLabel": true,
+			"type": "fieldset",
+			"upgradedStructure": false
+		},
+		{
+			"collapsible": false,
+			"ddmStructureId": "",
+			"ddmStructureLayoutId": "",
+			"fieldReference": "Field39032470",
+			"label": {
+				"en_US": "Fields Group"
+			},
+			"localizable": false,
+			"name": "Field39032470",
+			"nestedFields": [
+				{
+					"dataType": "integer",
+					"fieldNamespace": "",
+					"fieldReference": "Field11307091",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Numeric"
+					},
+					"localizable": true,
+					"name": "Field11307091",
+					"nativeField": false,
+					"placeholder": {
+						"en_US": ""
+					},
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"tooltip": {
+						"en_US": ""
+					},
+					"type": "numeric",
+					"visibilityExpression": ""
+				},
+				{
+					"dataType": "integer",
+					"fieldNamespace": "",
+					"fieldReference": "Field70010545",
+					"indexType": "keyword",
+					"label": {
+						"en_US": "Numeric"
+					},
+					"localizable": true,
+					"name": "Field70010545",
+					"nativeField": false,
+					"placeholder": {
+						"en_US": ""
+					},
+					"predefinedValue": {
+						"en_US": ""
+					},
+					"readOnly": false,
+					"repeatable": false,
+					"required": false,
+					"showLabel": true,
+					"tip": {
+						"en_US": ""
+					},
+					"tooltip": {
+						"en_US": ""
+					},
+					"type": "numeric",
+					"visibilityExpression": ""
+				}
+			],
+			"readOnly": false,
+			"repeatable": false,
+			"required": false,
+			"rows": "[{\"columns\":[{\"fields\":[\"Field11307091\"],\"size\":12}]},{\"columns\":[{\"fields\":[\"Field70010545\"],\"size\":12}]}]",
+			"showLabel": true,
+			"type": "fieldset",
+			"upgradedStructure": false
+		}
+	],
+	"successPage": {
+		"body": {
+		},
+		"enabled": false,
+		"title": {
+		}
+	}
+}
