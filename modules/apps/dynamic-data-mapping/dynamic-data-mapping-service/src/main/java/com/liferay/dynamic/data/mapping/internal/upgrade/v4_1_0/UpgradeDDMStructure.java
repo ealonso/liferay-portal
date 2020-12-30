@@ -270,7 +270,7 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 			"definitionSchemaVersion", "2.0"
 		).put(
 			"fields",
-			_upgradeFields(companyId, jsonObject.getJSONArray("fields"))
+			_upgradeFieldsType(companyId, jsonObject.getJSONArray("fields"))
 		);
 
 		return jsonObject.toString();
@@ -305,7 +305,8 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		);
 	}
 
-	private JSONArray _upgradeFields(long companyId, JSONArray fieldsJSONArray)
+	private JSONArray _upgradeFieldsType(
+			long companyId, JSONArray fieldsJSONArray)
 		throws Exception {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
@@ -378,7 +379,7 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 				if (jsonObject.has("nestedFields")) {
 					jsonObject.put(
 						"nestedFields",
-						_upgradeFields(
+						_upgradeFieldsType(
 							companyId,
 							jsonObject.getJSONArray("nestedFields")));
 				}

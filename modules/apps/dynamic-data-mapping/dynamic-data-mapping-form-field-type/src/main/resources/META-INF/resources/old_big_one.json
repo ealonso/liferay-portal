@@ -5,173 +5,173 @@
 	"defaultLanguageId": "en_US",
 	"fields": [
 		{
+			"dataType": "string",
+			"indexType": "keyword",
 			"label": {
 				"en_US": "Text"
 			},
-			"predefinedValue": {
-				"en_US": ""
-			},
-			"style": {
-				"en_US": ""
-			},
-			"tip": {
-				"en_US": ""
-			},
-			"dataType": "string",
-			"indexType": "keyword",
 			"localizable": true,
 			"name": "Text8xhy",
-			"readOnly": false,
-			"repeatable": true,
-			"required": false,
-			"showLabel": true,
-			"type": "text",
 			"nestedFields": [
 				{
-					"label": {
-						"en_US": "Integer"
-					},
-					"predefinedValue": {
-						"en_US": ""
-					},
-					"style": {
-						"en_US": ""
-					},
-					"tip": {
-						"en_US": ""
-					},
 					"dataType": "integer",
 					"fieldNamespace": "ddm",
 					"indexType": "keyword",
+					"label": {
+						"en_US": "Integer"
+					},
 					"localizable": true,
 					"name": "Integer3u12",
-					"readOnly": false,
-					"repeatable": true,
-					"required": false,
-					"showLabel": true,
-					"type": "ddm-integer",
 					"nestedFields": [
 						{
+							"dataType": "string",
+							"indexType": "keyword",
 							"label": {
 								"en_US": "Text"
 							},
+							"localizable": true,
+							"name": "Text3mmn",
 							"predefinedValue": {
 								"en_US": ""
 							},
+							"readOnly": false,
+							"repeatable": true,
+							"required": false,
+							"showLabel": true,
 							"style": {
 								"en_US": ""
 							},
 							"tip": {
 								"en_US": ""
 							},
-							"dataType": "string",
-							"indexType": "keyword",
-							"localizable": true,
-							"name": "Text3mmn",
-							"readOnly": false,
-							"repeatable": true,
-							"required": false,
-							"showLabel": true,
 							"type": "text"
 						}
-					]
-				},
-				{
-					"label": {
-						"en_US": "Date"
-					},
+					],
 					"predefinedValue": {
 						"en_US": ""
 					},
+					"readOnly": false,
+					"repeatable": true,
+					"required": false,
+					"showLabel": true,
 					"style": {
 						"en_US": ""
 					},
 					"tip": {
 						"en_US": ""
 					},
+					"type": "ddm-integer"
+				},
+				{
 					"dataType": "date",
 					"fieldNamespace": "ddm",
 					"indexType": "keyword",
+					"label": {
+						"en_US": "Date"
+					},
 					"localizable": true,
 					"name": "Dateq04u",
-					"readOnly": false,
-					"repeatable": true,
-					"required": false,
-					"showLabel": true,
-					"type": "ddm-date",
 					"nestedFields": [
 						{
+							"dataType": "string",
+							"indexType": "text",
 							"label": {
 								"en_US": "Text Box"
 							},
+							"localizable": true,
+							"name": "TextBox3aie",
 							"predefinedValue": {
 								"en_US": ""
 							},
+							"readOnly": false,
+							"repeatable": true,
+							"required": false,
+							"showLabel": true,
 							"style": {
 								"en_US": ""
 							},
 							"tip": {
 								"en_US": ""
 							},
-							"dataType": "string",
-							"indexType": "text",
-							"localizable": true,
-							"name": "TextBox3aie",
-							"readOnly": false,
-							"repeatable": true,
-							"required": false,
-							"showLabel": true,
 							"type": "textarea"
 						}
-					]
-				},
-				{
-					"label": {
-						"en_US": "Web Content"
-					},
+					],
 					"predefinedValue": {
 						"en_US": ""
 					},
+					"readOnly": false,
+					"repeatable": true,
+					"required": false,
+					"showLabel": true,
 					"style": {
 						"en_US": ""
 					},
 					"tip": {
 						"en_US": ""
 					},
+					"type": "ddm-date"
+				},
+				{
 					"dataType": "journal-article",
 					"fieldNamespace": "ddm",
 					"indexType": "keyword",
+					"label": {
+						"en_US": "Web Content"
+					},
 					"localizable": true,
 					"name": "WebContent49pu",
+					"predefinedValue": {
+						"en_US": ""
+					},
 					"readOnly": false,
 					"repeatable": true,
 					"required": false,
 					"showLabel": true,
+					"style": {
+						"en_US": ""
+					},
+					"tip": {
+						"en_US": ""
+					},
 					"type": "ddm-journal-article"
 				}
-			]
-		},
-		{
-			"label": {
-				"en_US": "Text"
-			},
+			],
 			"predefinedValue": {
 				"en_US": ""
 			},
+			"readOnly": false,
+			"repeatable": true,
+			"required": false,
+			"showLabel": true,
 			"style": {
 				"en_US": ""
 			},
 			"tip": {
 				"en_US": ""
 			},
+			"type": "text"
+		},
+		{
 			"dataType": "string",
 			"indexType": "keyword",
+			"label": {
+				"en_US": "Text"
+			},
 			"localizable": true,
 			"name": "Text76j3",
+			"predefinedValue": {
+				"en_US": ""
+			},
 			"readOnly": false,
 			"repeatable": true,
 			"required": false,
 			"showLabel": true,
+			"style": {
+				"en_US": ""
+			},
+			"tip": {
+				"en_US": ""
+			},
 			"type": "text"
 		}
 	]
