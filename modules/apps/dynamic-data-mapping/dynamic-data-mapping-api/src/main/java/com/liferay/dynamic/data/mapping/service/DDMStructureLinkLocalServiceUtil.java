@@ -262,17 +262,6 @@ public class DDMStructureLinkLocalServiceUtil {
 	}
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static java.util.List
-		<com.liferay.dynamic.data.mapping.model.DDMStructureLink>
-			getClassNameStructureLinks(long classNameId) {
-
-		return getService().getClassNameStructureLinks(classNameId);
-	}
-
-	/**
 	 * Returns the ddm structure link with the primary key.
 	 *
 	 * @param structureLinkId the primary key of the ddm structure link

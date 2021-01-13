@@ -340,17 +340,6 @@ public class DDMTemplateLinkLocalServiceUtil {
 		return getService().getTemplateLink(classNameId, classPK);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static java.util.List
-		<com.liferay.dynamic.data.mapping.model.DDMTemplateLink>
-			getTemplateLinks(long classNameId) {
-
-		return getService().getTemplateLinks(classNameId);
-	}
-
 	public static java.util.List
 		<com.liferay.dynamic.data.mapping.model.DDMTemplateLink>
 			getTemplateLinksByTemplateId(long templateId) {
