@@ -141,7 +141,7 @@ public class DDLRecordServiceTest {
 		DDMFormValues ddmFormValues = recordVersion.getDDMFormValues();
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			"Name");

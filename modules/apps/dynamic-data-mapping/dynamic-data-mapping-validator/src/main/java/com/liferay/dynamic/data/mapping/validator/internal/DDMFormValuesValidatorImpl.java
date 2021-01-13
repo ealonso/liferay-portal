@@ -82,7 +82,7 @@ public class DDMFormValuesValidatorImpl implements DDMFormValuesValidator {
 
 		traverseDDMFormFields(
 			ddmForm.getDDMFormFields(),
-			ddmFormValues.getDDMFormFieldValuesMap());
+			ddmFormValues.getDDMFormFieldValuesMap(false));
 
 		traverseDDMFormFieldValues(
 			ddmFormValues.getDDMFormFieldValues(),

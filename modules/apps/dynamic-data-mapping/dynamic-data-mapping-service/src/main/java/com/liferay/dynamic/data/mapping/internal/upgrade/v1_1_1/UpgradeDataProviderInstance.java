@@ -81,7 +81,7 @@ public class UpgradeDataProviderInstance extends UpgradeProcess {
 
 	protected void addDefaultOutputParameters(DDMFormValues ddmFormValues) {
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		if (!ddmFormFieldValuesMap.containsKey("key") ||
 			!ddmFormFieldValuesMap.containsKey("value")) {
@@ -108,7 +108,7 @@ public class UpgradeDataProviderInstance extends UpgradeProcess {
 
 	protected void addPaginationParameter(DDMFormValues ddmFormValues) {
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		if (ddmFormFieldValuesMap.containsKey("pagination")) {
 			return;
@@ -120,7 +120,7 @@ public class UpgradeDataProviderInstance extends UpgradeProcess {
 
 	protected void addStartEndParameters(DDMFormValues ddmFormValues) {
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		if (ddmFormFieldValuesMap.containsKey("paginationStartParameterName") ||
 			ddmFormFieldValuesMap.containsKey("paginationEndParameterName")) {

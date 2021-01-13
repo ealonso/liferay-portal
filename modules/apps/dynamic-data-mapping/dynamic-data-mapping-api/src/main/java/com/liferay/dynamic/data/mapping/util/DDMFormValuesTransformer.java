@@ -48,7 +48,7 @@ public class DDMFormValuesTransformer {
 
 		traverse(
 			ddmForm.getDDMFormFields(),
-			_ddmFormValues.getDDMFormFieldValuesMap());
+			_ddmFormValues.getDDMFormFieldValuesMap(false));
 	}
 
 	protected void performTransformation(

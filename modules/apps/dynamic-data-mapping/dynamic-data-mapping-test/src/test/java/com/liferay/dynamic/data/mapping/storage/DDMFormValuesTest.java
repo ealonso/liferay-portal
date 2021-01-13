@@ -44,7 +44,7 @@ public class DDMFormValuesTest extends BaseDDMTestCase {
 			createDDMFormFieldValue(fieldName, null));
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			fieldName);

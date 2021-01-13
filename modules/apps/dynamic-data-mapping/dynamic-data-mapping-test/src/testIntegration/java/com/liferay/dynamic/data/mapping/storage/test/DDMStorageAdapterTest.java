@@ -137,7 +137,7 @@ public class DDMStorageAdapterTest {
 
 	private boolean _containsValue(DDMFormValues ddmFormValues, String value) {
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			"TextField");

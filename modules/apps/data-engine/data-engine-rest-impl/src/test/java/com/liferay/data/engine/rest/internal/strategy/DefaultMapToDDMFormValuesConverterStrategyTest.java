@@ -315,7 +315,7 @@ public class DefaultMapToDDMFormValuesConverterStrategyTest
 				ddmForm, null);
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		Assert.assertEquals(
 			ddmFormFieldValuesMap.toString(), 2, ddmFormFieldValuesMap.size());
@@ -385,7 +385,7 @@ public class DefaultMapToDDMFormValuesConverterStrategyTest
 				ddmForm, LocaleUtil.BRAZIL);
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		Assert.assertEquals(
 			ddmFormFieldValuesMap.toString(), 2, ddmFormFieldValuesMap.size());

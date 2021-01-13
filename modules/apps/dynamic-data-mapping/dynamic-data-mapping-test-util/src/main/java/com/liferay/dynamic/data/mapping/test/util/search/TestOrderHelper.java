@@ -281,7 +281,7 @@ public abstract class TestOrderHelper {
 			ddmFormValuesReader.getDDMFormValues());
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		return ListUtil.toString(
 			ddmFormFieldValuesMap.get("name"),

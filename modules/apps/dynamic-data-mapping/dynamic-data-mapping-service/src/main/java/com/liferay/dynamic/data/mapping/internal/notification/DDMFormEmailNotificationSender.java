@@ -159,7 +159,7 @@ public class DDMFormEmailNotificationSender {
 
 		DDMFormValues ddmFormValues = ddmFormInstanceRecord.getDDMFormValues();
 
-		return ddmFormValues.getDDMFormFieldValuesMap();
+		return ddmFormValues.getDDMFormFieldValuesMap(false);
 	}
 
 	protected DDMFormLayout getDDMFormLayout(DDMFormInstance ddmFormInstance)

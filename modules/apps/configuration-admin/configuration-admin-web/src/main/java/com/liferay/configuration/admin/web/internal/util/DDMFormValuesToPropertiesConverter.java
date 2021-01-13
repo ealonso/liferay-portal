@@ -79,7 +79,7 @@ public class DDMFormValuesToPropertiesConverter {
 		_defaultLocale = ddmForm.getDefaultLocale();
 		_ddmFormFieldsMap = ddmForm.getDDMFormFieldsMap(false);
 
-		_ddmFormFieldValuesMap = ddmFormValues.getDDMFormFieldValuesMap();
+		_ddmFormFieldValuesMap = ddmFormValues.getDDMFormFieldValuesMap(false);
 	}
 
 	public Dictionary<String, Object> getProperties() {

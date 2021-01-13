@@ -149,7 +149,7 @@ public class DDMFormFieldTypeSettingsEvaluatorTest {
 				LocaleUtil.US);
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			"dataSourceType");
@@ -247,7 +247,7 @@ public class DDMFormFieldTypeSettingsEvaluatorTest {
 				LocaleUtil.US);
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			"dataSourceType");

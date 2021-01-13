@@ -159,7 +159,7 @@ public class DDMFieldSettingsDDMFormContextServlet
 		DDMFormValues ddmFormValues, String type) {
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		List<DDMFormFieldValue> ddmFormFieldValues = ddmFormFieldValuesMap.get(
 			"type");

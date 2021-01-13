@@ -402,7 +402,7 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		throws PortalException {
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		if (!ddmFormFieldValuesMap.containsKey("inputParameters")) {
 			return;
@@ -454,7 +454,7 @@ public class DDMDataProviderInstanceLocalServiceImpl
 		throws PortalException {
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		if (!ddmFormFieldValuesMap.containsKey("url")) {
 			return;

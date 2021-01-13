@@ -91,7 +91,7 @@ public class FileEntryMetadataOpenGraphTagsProviderTest {
 		);
 
 		Mockito.when(
-			_ddmFormValues.getDDMFormFieldValuesMap()
+			_ddmFormValues.getDDMFormFieldValuesMap(false)
 		).thenReturn(
 			Collections.singletonMap(
 				"TIFF_IMAGE_LENGTH", Collections.emptyList())
@@ -249,7 +249,7 @@ public class FileEntryMetadataOpenGraphTagsProviderTest {
 		);
 
 		Mockito.when(
-			_ddmFormValues.getDDMFormFieldValuesMap()
+			_ddmFormValues.getDDMFormFieldValuesMap(false)
 		).thenReturn(
 			Collections.emptyMap()
 		);
@@ -298,7 +298,7 @@ public class FileEntryMetadataOpenGraphTagsProviderTest {
 		);
 
 		Mockito.when(
-			_ddmFormValues.getDDMFormFieldValuesMap()
+			_ddmFormValues.getDDMFormFieldValuesMap(false)
 		).thenReturn(
 			Collections.singletonMap(
 				"TIFF_IMAGE_LENGTH",

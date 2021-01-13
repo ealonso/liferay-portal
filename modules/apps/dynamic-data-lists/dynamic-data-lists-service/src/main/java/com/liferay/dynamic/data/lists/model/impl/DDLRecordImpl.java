@@ -42,7 +42,7 @@ public class DDLRecordImpl extends DDLRecordBaseImpl {
 		DDMFormValues ddmFormValues = getDDMFormValues();
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		return ddmFormFieldValuesMap.get(fieldName);
 	}

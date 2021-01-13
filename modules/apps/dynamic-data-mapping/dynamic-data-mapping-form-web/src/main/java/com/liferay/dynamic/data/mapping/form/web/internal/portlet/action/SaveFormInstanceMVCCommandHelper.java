@@ -279,7 +279,7 @@ public class SaveFormInstanceMVCCommandHelper {
 		throws PortalException {
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			settingsDDMFormValues.getDDMFormFieldValuesMap();
+			settingsDDMFormValues.getDDMFormFieldValuesMap(false);
 
 		if (!ddmFormFieldValuesMap.containsKey("redirectURL")) {
 			return;

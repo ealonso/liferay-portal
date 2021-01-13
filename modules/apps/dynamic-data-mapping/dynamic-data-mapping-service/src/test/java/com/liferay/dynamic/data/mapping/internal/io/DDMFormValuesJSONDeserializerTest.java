@@ -75,7 +75,7 @@ public class DDMFormValuesJSONDeserializerTest extends BaseDDMTestCase {
 			serializedDDMFormValues, ddmForm);
 
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-			ddmFormValues.getDDMFormFieldValuesMap();
+			ddmFormValues.getDDMFormFieldValuesMap(false);
 
 		Assert.assertEquals(
 			ddmFormFieldValuesMap.toString(), 2, ddmFormFieldValuesMap.size());

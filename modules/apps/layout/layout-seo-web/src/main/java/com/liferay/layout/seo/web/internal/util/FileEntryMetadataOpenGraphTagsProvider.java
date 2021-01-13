@@ -90,7 +90,7 @@ public class FileEntryMetadataOpenGraphTagsProvider {
 			}
 
 			Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-				ddmFormValues.getDDMFormFieldValuesMap();
+				ddmFormValues.getDDMFormFieldValuesMap(false);
 
 			Optional<String> tiffImageLengthOptional =
 				_getDDMFormFieldsValueValue(
