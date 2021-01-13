@@ -5,6 +5,7 @@
 	<short-name>liferay-form</short-name>
 	<uri>http://liferay.com/tld/form</uri>
 	<tag>
+		<description>Deprecated as of 7.4.0, with no direct replacement.</description>
 		<name>ddm-form-builder</name>
 		<tag-class>com.liferay.dynamic.data.mapping.form.taglib.servlet.taglib.DDMFormBuilderTag</tag-class>
 		<body-content>JSP</body-content>
@@ -50,6 +51,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
+		<description>Deprecated as of 7.4.0, with no direct replacement.</description>
 		<name>ddm-form-renderer</name>
 		<tag-class>com.liferay.dynamic.data.mapping.form.taglib.servlet.taglib.DDMFormRendererTag</tag-class>
 		<body-content>JSP</body-content>

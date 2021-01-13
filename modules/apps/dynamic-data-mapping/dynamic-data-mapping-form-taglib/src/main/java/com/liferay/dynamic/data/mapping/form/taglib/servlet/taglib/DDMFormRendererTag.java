@@ -61,7 +61,9 @@ import javax.servlet.jsp.JspException;
 /**
  * @author Pedro Queiroz
  * @author Rafael Praxedes
+ * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
  */
+@Deprecated
 public class DDMFormRendererTag extends BaseDDMFormRendererTag {
 
 	@Override

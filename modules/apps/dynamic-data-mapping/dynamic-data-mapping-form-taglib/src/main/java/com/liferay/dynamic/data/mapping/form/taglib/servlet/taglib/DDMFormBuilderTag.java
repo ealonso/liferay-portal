@@ -27,7 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Rafael Praxedes
+ * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
  */
+@Deprecated
 public class DDMFormBuilderTag extends BaseDDMFormBuilderTag {
 
 	public String getDDMFormBuilderContext(
