@@ -125,6 +125,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -349,9 +350,11 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 					catch (MustNotDuplicateFieldName mndfn) {
 						throw new UpgradeException(
 							String.format(
-								"The field name '%s' from structure ID %d is " +
-									"defined more than once",
-								mndfn.getFieldName(), structureId));
+								"The field names '%s' from structure ID %d " +
+									"are defined more than once",
+								StringUtil.merge(
+									mndfn.getDuplicatedFieldNames()),
+								structureId));
 					}
 
 					long parentStructureId = rs.getLong("parentStructureId");
@@ -1559,7 +1562,8 @@ public class UpgradeDynamicDataMapping extends UpgradeProcess {
 		if (ddmFormFieldNames.contains(
 				StringUtil.toLowerCase(ddmFormField.getName()))) {
 
-			throw new MustNotDuplicateFieldName(ddmFormField.getName());
+			throw new MustNotDuplicateFieldName(
+				Collections.singleton(ddmFormField.getName()));
 		}
 
 		ddmFormFieldNames.add(StringUtil.toLowerCase(ddmFormField.getName()));

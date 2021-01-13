@@ -196,7 +196,6 @@ public class DDMFormFieldRenderingContext {
 		_properties.put("visible", visible);
 	}
 
-	private String _childElementsHTML;
 	private Fields _fields;
 	private HttpServletRequest _httpServletRequest;
 	private HttpServletResponse _httpServletResponse;

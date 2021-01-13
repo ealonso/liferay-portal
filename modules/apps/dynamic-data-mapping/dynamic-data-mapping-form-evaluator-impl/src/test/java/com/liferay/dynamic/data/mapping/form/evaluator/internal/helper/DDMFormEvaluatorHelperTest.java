@@ -75,6 +75,7 @@ import com.liferay.registry.RegistryUtil;
 import java.math.BigDecimal;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -610,7 +611,8 @@ public class DDMFormEvaluatorHelperTest extends PowerMockito {
 			createDDMFormField("field1", "numeric", FieldConstants.DOUBLE));
 		ddmForm.addDDMFormRule(
 			new DDMFormRule(
-				"equals(sum(getValue('field0'), 10), 28)",
+				Collections.singletonList(
+					"equals(sum(getValue('field0'), 10), 28)"),
 				"setValue('field1', getValue('field0'))"));
 
 		DDMFormValues ddmFormValues = DDMFormValuesTestUtil.createDDMFormValues(

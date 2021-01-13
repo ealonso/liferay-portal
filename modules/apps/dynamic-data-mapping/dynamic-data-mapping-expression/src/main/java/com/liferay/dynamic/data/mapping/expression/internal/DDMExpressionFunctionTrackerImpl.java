@@ -14,13 +14,11 @@
 
 package com.liferay.dynamic.data.mapping.expression.internal;
 
-import com.liferay.dynamic.data.mapping.expression.DDMExpressionFunction;
 import com.liferay.dynamic.data.mapping.expression.DDMExpressionFunctionFactory;
 import com.liferay.dynamic.data.mapping.expression.DDMExpressionFunctionTracker;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -61,26 +59,6 @@ public class DDMExpressionFunctionTrackerImpl
 		}
 
 		return ddmExpressionFunctionFactoriesMap;
-	}
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public Map<String, DDMExpressionFunction> getDDMExpressionFunctions(
-		Set<String> functionNames) {
-
-		return Collections.emptyMap();
-	}
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public void ungetDDMExpressionFunctions(
-		Map<String, DDMExpressionFunction> ddmExpressionFunctionsMap) {
 	}
 
 	@Activate

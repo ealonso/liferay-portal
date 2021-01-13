@@ -75,7 +75,8 @@ public class DDMFormInstanceFactory {
 
 			_ddmFormFactoryHelper = new DDMFormFactoryHelper(clazz);
 
-			_ddmFormFieldValuesMap = ddmFormValues.getDDMFormFieldValuesMap(false);
+			_ddmFormFieldValuesMap = ddmFormValues.getDDMFormFieldValuesMap(
+				false);
 		}
 
 		@Override

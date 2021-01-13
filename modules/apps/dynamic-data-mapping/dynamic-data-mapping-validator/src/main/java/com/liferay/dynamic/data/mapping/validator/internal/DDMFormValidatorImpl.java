@@ -169,7 +169,8 @@ public class DDMFormValidatorImpl implements DDMFormValidator {
 		if (ddmFormFieldNames.contains(
 				StringUtil.toLowerCase(ddmFormField.getName()))) {
 
-			throw new MustNotDuplicateFieldName(ddmFormField.getName());
+			throw new MustNotDuplicateFieldName(
+				Collections.singleton(ddmFormField.getName()));
 		}
 
 		ddmFormFieldNames.add(StringUtil.toLowerCase(ddmFormField.getName()));

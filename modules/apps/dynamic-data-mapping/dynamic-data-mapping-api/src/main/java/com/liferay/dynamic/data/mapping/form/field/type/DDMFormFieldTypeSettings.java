@@ -47,10 +47,7 @@ import com.liferay.petra.string.StringPool;
 )
 public interface DDMFormFieldTypeSettings {
 
-	@DDMFormField(
-		predefinedValue = "string", required = true,
-		visibilityExpression = "FALSE"
-	)
+	@DDMFormField(predefinedValue = "string", required = true)
 	public String dataType();
 
 	@DDMFormField(
@@ -61,12 +58,10 @@ public interface DDMFormFieldTypeSettings {
 		return StringPool.BLANK;
 	}
 
-	@DDMFormField(
-		label = "%field-name", required = true, visibilityExpression = "FALSE"
-	)
+	@DDMFormField(label = "%field-name", required = true)
 	public String name();
 
-	@DDMFormField(required = true, visibilityExpression = "FALSE")
+	@DDMFormField(required = true)
 	public String type();
 
 }

@@ -26,7 +26,7 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface DDMDataProviderOutputParametersSettings {
 
-	@DDMFormField(properties = "random=true", visibilityExpression = "FALSE")
+	@DDMFormField(properties = "random=true")
 	public String outputParameterId();
 
 	@DDMFormField(label = "%label", properties = "placeholder=%enter-a-label")

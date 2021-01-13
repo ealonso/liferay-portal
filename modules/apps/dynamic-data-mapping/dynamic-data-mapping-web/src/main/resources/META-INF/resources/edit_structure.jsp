@@ -268,37 +268,6 @@ if (Validator.isNotNull(requestUpdateStructureURL)) {
 						persistState="<%= true %>"
 						title='<%= LanguageUtil.get(request, "details") %>'
 					>
-						<clay:row
-							cssClass="lfr-ddm-types-form-column"
-						>
-							<c:choose>
-								<c:when test="<%= Validator.isNull(storageTypeValue) %>">
-									<clay:col
-										md="6"
-									>
-										<aui:field-wrapper>
-											<aui:select disabled="<%= structure != null %>" name="storageType">
-
-												<%
-												for (String storageType : ddmDisplayContext.getStorageTypes()) {
-												%>
-
-													<aui:option label="<%= storageType %>" value="<%= storageType %>" />
-
-												<%
-												}
-												%>
-
-											</aui:select>
-										</aui:field-wrapper>
-									</clay:col>
-								</c:when>
-								<c:otherwise>
-									<aui:input name="storageType" type="hidden" value="<%= storageTypeValue %>" />
-								</c:otherwise>
-							</c:choose>
-						</clay:row>
-
 						<c:if test="<%= !ddmDisplayContext.autogenerateStructureKey() %>">
 							<aui:input disabled="<%= (structure != null) ? true : false %>" label='<%= LanguageUtil.format(request, "x-key", HtmlUtil.escape(ddmDisplay.getStructureName(locale)), false) %>' name="structureKey" />
 						</c:if>

@@ -201,8 +201,9 @@ public class DDMStructureLocalServiceImpl
 		if (ddmFormLayout != null) {
 			DDMStructureLayout structureLayout =
 				_ddmStructureLayoutLocalService.addStructureLayout(
-					userId, groupId, structureVersion.getStructureVersionId(),
-					ddmFormLayout, serviceContext);
+					userId, groupId, 0, null,
+					structureVersion.getStructureVersionId(), ddmFormLayout,
+					serviceContext);
 
 			structureLayout.setClassNameId(structure.getClassNameId());
 			structureLayout.setStructureLayoutKey(structure.getStructureKey());
@@ -1688,8 +1689,8 @@ public class DDMStructureLocalServiceImpl
 		serviceContext.getUuid();
 
 		_ddmStructureLayoutLocalService.addStructureLayout(
-			structureVersion.getUserId(), structureVersion.getGroupId(),
-			structureVersion.getStructureVersionId(), ddmFormLayout,
+			structureVersion.getUserId(), structureVersion.getGroupId(), 0,
+			null, structureVersion.getStructureVersionId(), ddmFormLayout,
 			serviceContext);
 
 		if (!structureVersion.isApproved() && structureVersion.isPending()) {

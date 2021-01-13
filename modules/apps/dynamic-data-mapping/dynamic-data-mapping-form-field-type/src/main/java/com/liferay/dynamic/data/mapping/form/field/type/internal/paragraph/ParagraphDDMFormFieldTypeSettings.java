@@ -101,9 +101,7 @@ public interface ParagraphDDMFormFieldTypeSettings
 	)
 	public LocalizedValue text();
 
-	@DDMFormField(
-		dataType = "string", type = "validation", visibilityExpression = "FALSE"
-	)
+	@DDMFormField(dataType = "string", type = "validation")
 	@Override
 	public DDMFormFieldValidation validation();
 

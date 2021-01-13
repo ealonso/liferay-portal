@@ -292,10 +292,6 @@ public class DDMFormFieldFactoryHelper {
 	}
 
 	protected String getDDMFormFieldVisibilityExpression() {
-		if (Validator.isNotNull(_ddmFormField.visibilityExpression())) {
-			return _ddmFormField.visibilityExpression();
-		}
-
 		return StringUtil.toUpperCase(StringPool.TRUE);
 	}
 

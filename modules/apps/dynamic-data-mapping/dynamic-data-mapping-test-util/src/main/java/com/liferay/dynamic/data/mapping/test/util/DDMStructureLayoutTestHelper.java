@@ -40,8 +40,8 @@ public class DDMStructureLayoutTestHelper {
 		throws Exception {
 
 		return DDMStructureLayoutLocalServiceUtil.addStructureLayout(
-			TestPropsValues.getUserId(), _group.getGroupId(), structureId,
-			ddmFormLayout,
+			TestPropsValues.getUserId(), _group.getGroupId(), 0, null,
+			structureId, ddmFormLayout,
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 	}
 

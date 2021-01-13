@@ -57,6 +57,15 @@ public class DDMStructureLinkManagerImpl implements DDMStructureLinkManager {
 			classNameId, classPK);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
+	 */
+	@Deprecated
+	@Override
+	public List<DDMStructureLink> getClassNameStructureLinks(long classNameId) {
+		throw new UnsupportedOperationException();
+	}
+
 	@Override
 	public List<DDMStructureLink> getStructureLinks(long structureId) {
 		List<DDMStructureLink> ddmStructureLinks = new ArrayList<>();

@@ -24,12 +24,10 @@ import com.liferay.dynamic.data.mapping.expression.internal.functions.MaxFunctio
 import com.liferay.dynamic.data.mapping.expression.internal.functions.MultiplyFunction;
 import com.liferay.dynamic.data.mapping.expression.internal.functions.SquareFunction;
 import com.liferay.dynamic.data.mapping.expression.internal.functions.ZeroFunction;
-import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -161,19 +159,6 @@ public class DDMExpressionImplTest extends PowerMockito {
 						new ZeroFunction());
 				}
 
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return Collections.singletonMap("zero", new ZeroFunction());
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
-				}
-
 			});
 
 		Assert.assertEquals(BigDecimal.ZERO, ddmExpressionImpl.evaluate());
@@ -194,20 +179,6 @@ public class DDMExpressionImplTest extends PowerMockito {
 
 					return _createDDMExpressionFunctionFactory(
 						new MultiplyFunction());
-				}
-
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return Collections.singletonMap(
-						"multiply", new MultiplyFunction());
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
 				}
 
 			});
@@ -234,19 +205,6 @@ public class DDMExpressionImplTest extends PowerMockito {
 						new MaxFunction());
 				}
 
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return Collections.singletonMap("max", new MaxFunction());
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
-				}
-
 			});
 
 		BigDecimal bigDecimal = ddmExpressionImpl.evaluate();
@@ -270,25 +228,6 @@ public class DDMExpressionImplTest extends PowerMockito {
 					return _createDDMExpressionFunctionFactory(
 						new AbsFunction(), new AddFunction(),
 						new SquareFunction());
-				}
-
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return HashMapBuilder.<String, DDMExpressionFunction>put(
-						"abs", new AbsFunction()
-					).put(
-						"add", new AddFunction()
-					).put(
-						"square", new SquareFunction()
-					).build();
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
 				}
 
 			});
@@ -423,23 +362,6 @@ public class DDMExpressionImplTest extends PowerMockito {
 
 					return _createDDMExpressionFunctionFactory(
 						new AddFunction(), new MultiplyFunction());
-				}
-
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return HashMapBuilder.<String, DDMExpressionFunction>put(
-						"add", new AddFunction()
-					).put(
-						"multiply", new MultiplyFunction()
-					).build();
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
 				}
 
 			});

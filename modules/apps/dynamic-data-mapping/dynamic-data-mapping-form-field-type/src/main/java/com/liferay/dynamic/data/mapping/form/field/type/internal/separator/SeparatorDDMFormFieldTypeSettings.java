@@ -65,7 +65,7 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 public interface SeparatorDDMFormFieldTypeSettings
 	extends DefaultDDMFormFieldTypeSettings {
 
-	@DDMFormField(predefinedValue = "", visibilityExpression = "FALSE")
+	@DDMFormField(predefinedValue = "")
 	@Override
 	public String dataType();
 

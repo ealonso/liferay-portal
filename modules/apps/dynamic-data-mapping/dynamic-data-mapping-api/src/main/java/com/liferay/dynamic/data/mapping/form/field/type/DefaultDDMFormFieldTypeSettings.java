@@ -66,7 +66,7 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 public interface DefaultDDMFormFieldTypeSettings
 	extends DDMFormFieldTypeSettings {
 
-	@DDMFormField(visibilityExpression = "FALSE")
+	@DDMFormField
 	public String fieldNamespace();
 
 	@DDMFormField(
@@ -86,13 +86,10 @@ public interface DefaultDDMFormFieldTypeSettings
 	)
 	public LocalizedValue label();
 
-	@DDMFormField(
-		label = "%localizable", predefinedValue = "true",
-		visibilityExpression = "FALSE"
-	)
+	@DDMFormField(label = "%localizable", predefinedValue = "true")
 	public boolean localizable();
 
-	@DDMFormField(visibilityExpression = "FALSE")
+	@DDMFormField
 	public default boolean nativeField() {
 		return false;
 	}
@@ -107,7 +104,7 @@ public interface DefaultDDMFormFieldTypeSettings
 	)
 	public LocalizedValue predefinedValue();
 
-	@DDMFormField(label = "%read-only", visibilityExpression = "FALSE")
+	@DDMFormField(label = "%read-only")
 	public boolean readOnly();
 
 	@DDMFormField(label = "%repeatable", properties = "showAsSwitcher=true")
@@ -139,8 +136,7 @@ public interface DefaultDDMFormFieldTypeSettings
 		properties = {
 			"placeholder=%equals(Country, \"US\")",
 			"tooltip=%write-a-conditional-expression-to-control-whether-this-field-is-displayed"
-		},
-		visibilityExpression = "FALSE"
+		}
 	)
 	public String visibilityExpression();
 
