@@ -28,18 +28,4 @@ public interface DDMExpressionFunctionTracker {
 	public Map<String, DDMExpressionFunctionFactory>
 		getDDMExpressionFunctionFactories(Set<String> functionNames);
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
-	 */
-	@Deprecated
-	public Map<String, DDMExpressionFunction> getDDMExpressionFunctions(
-		Set<String> functionNames);
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), with no direct replacement
-	 */
-	@Deprecated
-	public void ungetDDMExpressionFunctions(
-		Map<String, DDMExpressionFunction> ddmExpressionFunctionsMap);
-
 }

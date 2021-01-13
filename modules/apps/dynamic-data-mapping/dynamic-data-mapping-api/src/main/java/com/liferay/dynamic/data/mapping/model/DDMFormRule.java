@@ -19,7 +19,6 @@ import com.liferay.petra.lang.HashUtil;
 import java.io.Serializable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,38 +48,6 @@ public class DDMFormRule implements Serializable {
 		_actions = actions;
 		_condition = condition;
 		_name = name;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #DDMFormRule(List, String)}
-	 */
-	@Deprecated
-	public DDMFormRule(String condition, List<String> actions) {
-		_condition = condition;
-		_actions = actions;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #DDMFormRule(List, String, LocalizedValue)}
-	 */
-	@Deprecated
-	public DDMFormRule(
-		String condition, List<String> actions, LocalizedValue name) {
-
-		_condition = condition;
-		_actions = actions;
-		_name = name;
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #DDMFormRule(List, String)}
-	 */
-	@Deprecated
-	public DDMFormRule(String condition, String... actions) {
-		this(Arrays.asList(actions), condition);
 	}
 
 	@Override

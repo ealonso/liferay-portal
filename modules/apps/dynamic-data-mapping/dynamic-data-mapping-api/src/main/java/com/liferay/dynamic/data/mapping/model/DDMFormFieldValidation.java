@@ -74,27 +74,8 @@ public class DDMFormFieldValidation implements Serializable {
 		return _ddmFormFieldValidationExpression;
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 *             #getErrorMessageLocalizedValue()}
-	 */
-	@Deprecated
-	public String getErrorMessage() {
-		return _errorMessageLocalizedValue.getString(
-			_errorMessageLocalizedValue.getDefaultLocale());
-	}
-
 	public LocalizedValue getErrorMessageLocalizedValue() {
 		return _errorMessageLocalizedValue;
-	}
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 *             #getDDMFormFieldValidationExpression()}
-	 */
-	@Deprecated
-	public String getExpression() {
-		return _expression;
 	}
 
 	public LocalizedValue getParameterLocalizedValue() {
@@ -116,34 +97,10 @@ public class DDMFormFieldValidation implements Serializable {
 		_ddmFormFieldValidationExpression = ddmFormFieldValidationExpression;
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 *             #setErrorMessageLocalizedValue(LocalizedValue)}
-	 */
-	@Deprecated
-	public void setErrorMessage(String errorMessage) {
-		LocalizedValue errorMessageLocalizedValue = new LocalizedValue();
-
-		errorMessageLocalizedValue.addString(
-			errorMessageLocalizedValue.getDefaultLocale(), errorMessage);
-
-		setErrorMessageLocalizedValue(errorMessageLocalizedValue);
-	}
-
 	public void setErrorMessageLocalizedValue(
 		LocalizedValue errorMessageLocalizedValue) {
 
 		_errorMessageLocalizedValue = errorMessageLocalizedValue;
-	}
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link
-	 *             #setDDMFormFieldValidationExpression(
-	 *             DDMFormFieldValidationExpression)}
-	 */
-	@Deprecated
-	public void setExpression(String expression) {
-		_expression = expression;
 	}
 
 	public void setParameterLocalizedValue(
@@ -155,7 +112,6 @@ public class DDMFormFieldValidation implements Serializable {
 	private DDMFormFieldValidationExpression _ddmFormFieldValidationExpression =
 		new DDMFormFieldValidationExpression();
 	private LocalizedValue _errorMessageLocalizedValue;
-	private String _expression;
 	private LocalizedValue _parameterLocalizedValue;
 
 }

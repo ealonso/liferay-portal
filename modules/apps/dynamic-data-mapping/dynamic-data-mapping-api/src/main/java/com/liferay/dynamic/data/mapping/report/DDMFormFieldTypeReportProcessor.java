@@ -31,18 +31,4 @@ public interface DDMFormFieldTypeReportProcessor {
 			"This method needs to be implemented");
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #process(DDMFormFieldValue, JSONObject, long, String)}
-	 */
-	@Deprecated
-	public default JSONObject process(
-			DDMFormFieldValue ddmFormFieldValue,
-			JSONObject ddmFormInstanceReportDataJSONObject,
-			String ddmFormInstanceReportEvent)
-		throws Exception {
-
-		return process(ddmFormFieldValue, null, 0, ddmFormInstanceReportEvent);
-	}
-
 }

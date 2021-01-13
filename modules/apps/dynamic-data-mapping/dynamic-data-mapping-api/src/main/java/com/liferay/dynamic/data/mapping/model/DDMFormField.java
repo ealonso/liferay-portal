@@ -40,7 +40,6 @@ import java.util.Objects;
 public class DDMFormField implements Serializable {
 
 	public DDMFormField() {
-		_ddmFormFieldRules = new ArrayList<>();
 		_nestedDDMFormFields = new ArrayList<>();
 		_properties = new LinkedHashMap<>();
 	}
@@ -50,15 +49,6 @@ public class DDMFormField implements Serializable {
 
 		setDDMFormFieldOptions(
 			new DDMFormFieldOptions(ddmFormField.getDDMFormFieldOptions()));
-
-		_ddmFormFieldRules = new ArrayList<>(
-			ddmFormField._ddmFormFieldRules.size());
-
-		for (DDMFormFieldRule ddmFormFieldRule :
-				ddmFormField._ddmFormFieldRules) {
-
-			addDDMFormFieldRule(new DDMFormFieldRule(ddmFormFieldRule));
-		}
 
 		DDMFormFieldValidation ddmFormFieldValidation =
 			ddmFormField.getDDMFormFieldValidation();
@@ -86,7 +76,6 @@ public class DDMFormField implements Serializable {
 	}
 
 	public DDMFormField(String name, String type) {
-		_ddmFormFieldRules = new ArrayList<>();
 		_nestedDDMFormFields = new ArrayList<>();
 		_properties = new LinkedHashMap<>();
 
@@ -103,14 +92,6 @@ public class DDMFormField implements Serializable {
 		setPredefinedValue(new LocalizedValue(locale));
 		setStyle(new LocalizedValue(locale));
 		setTip(new LocalizedValue(locale));
-	}
-
-	/**
-	 * @deprecated As of Judson (7.1.x), with no direct replacement
-	 */
-	@Deprecated
-	public void addDDMFormFieldRule(DDMFormFieldRule ddmFormFieldRule) {
-		_ddmFormFieldRules.add(ddmFormFieldRule);
 	}
 
 	public void addNestedDDMFormField(DDMFormField nestedDDMFormField) {
@@ -481,7 +462,6 @@ public class DDMFormField implements Serializable {
 	private static final String _DATA_SOURCE_TYPE_MANUAL = "manual";
 
 	private DDMForm _ddmForm;
-	private final List<DDMFormFieldRule> _ddmFormFieldRules;
 	private DDMFormLayout _ddmFormLayout;
 	private List<DDMFormField> _nestedDDMFormFields;
 	private final Map<String, Object> _properties;

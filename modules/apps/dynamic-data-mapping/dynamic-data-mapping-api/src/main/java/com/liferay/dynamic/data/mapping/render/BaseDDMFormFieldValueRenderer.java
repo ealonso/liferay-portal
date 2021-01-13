@@ -45,13 +45,4 @@ public abstract class BaseDDMFormFieldValueRenderer
 
 	protected abstract ValueAccessor getValueAccessor(Locale locale);
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getValueAccessor(Locale)}
-	 */
-	@Deprecated
-	protected ValueAccessor getValueAcessor(Locale locale) {
-		return getValueAccessor(locale);
-	}
-
 }
