@@ -220,6 +220,10 @@ const ModalContent = ({
 							)}
 							autoFocus
 							className="form-control-inline"
+							dir={
+								Liferay.Language.direction[editingLanguageId] ||
+								'ltr'
+							}
 							onChange={({target: {value}}) =>
 								setName({...name, [editingLanguageId]: value})
 							}
