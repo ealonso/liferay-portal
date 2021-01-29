@@ -14,7 +14,6 @@
 
 package com.liferay.dynamic.data.mapping.validator.internal;
 
-import com.liferay.dynamic.data.mapping.constants.DDMConstants;
 import com.liferay.dynamic.data.mapping.expression.CreateExpressionRequest;
 import com.liferay.dynamic.data.mapping.expression.DDMExpressionException;
 import com.liferay.dynamic.data.mapping.expression.DDMExpressionFactory;
@@ -342,13 +341,12 @@ public class DDMFormValidatorImpl implements DDMFormValidator {
 				ddmFormField.getType());
 		}
 
-		Set<String> ddmFormFieldTypeNames = new HashSet<>(
-			_ddmFormFieldTypeServicesTracker.getDDMFormFieldTypeNames());
+		com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType
+			ddmFormFieldType =
+				_ddmFormFieldTypeServicesTracker.getDDMFormFieldType(
+					ddmFormField.getType());
 
-		ddmFormFieldTypeNames.addAll(
-			SetUtil.fromArray(DDMConstants.SUPPORTED_DDM_FORM_FIELD_TYPES));
-
-		if (!ddmFormFieldTypeNames.contains(ddmFormField.getType())) {
+		if (ddmFormFieldType == null) {
 			throw new MustSetValidType(ddmFormField.getType());
 		}
 	}
