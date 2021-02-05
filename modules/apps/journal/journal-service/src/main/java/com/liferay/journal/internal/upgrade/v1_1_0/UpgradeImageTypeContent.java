@@ -31,7 +31,13 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.Node;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.kernel.xml.XPath;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -92,8 +98,8 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 
 				SaveImageFileEntryCallable saveImageFileEntryCallable =
 					new SaveImageFileEntryCallable(
-						articleImageId, folderId, groupId, resourcePrimKey,
-						userId);
+						articleImageId, _getFileEntryName(articleImageId),
+						folderId, groupId, resourcePrimKey, userId);
 
 				saveImageFileEntryCallables.add(saveImageFileEntryCallable);
 			}
@@ -131,6 +137,55 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 		}
 	}
 
+	private String _getFileEntryName(long articleImageId) throws Exception {
+		try (LoggingTimer loggingTimer = new LoggingTimer();
+			PreparedStatement ps1 = connection.prepareStatement(
+				"select content from JournalArticle where content like ?")) {
+
+			ps1.setLong(1, articleImageId);
+
+			try (ResultSet rs = ps1.executeQuery()) {
+				if (rs.next()) {
+					return _getFileEntryName(
+						articleImageId, rs.getString("content"));
+				}
+			}
+		}
+
+		return String.valueOf(articleImageId);
+	}
+
+	private String _getFileEntryName(long articleImageId, String content)
+		throws Exception {
+
+		Document contentDocument = SAXReaderUtil.read(content);
+
+		contentDocument = contentDocument.clone();
+
+		XPath xPath = SAXReaderUtil.createXPath(
+			"//dynamic-element[@type='image']");
+
+		List<Node> imageNodes = xPath.selectNodes(contentDocument);
+
+		for (Node imageNode : imageNodes) {
+			Element imageElement = (Element)imageNode;
+
+			List<Element> dynamicContentElements = imageElement.elements(
+				"dynamic-content");
+
+			for (Element dynamicContentElement : dynamicContentElements) {
+				long id = GetterUtil.getLong(
+					dynamicContentElement.attributeValue("id"));
+
+				if (id == articleImageId) {
+					return dynamicContentElement.attributeValue("name");
+				}
+			}
+		}
+
+		return String.valueOf(articleImageId);
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpgradeImageTypeContent.class);
 
@@ -142,10 +197,11 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 	private class SaveImageFileEntryCallable implements Callable<Boolean> {
 
 		public SaveImageFileEntryCallable(
-			long articleImageId, long folderId, long groupId,
+			long articleImageId, String fileName, long folderId, long groupId,
 			long resourcePrimaryKey, long userId) {
 
 			_articleImageId = articleImageId;
+			_fileName = fileName;
 			_folderId = folderId;
 			_groupId = groupId;
 			_resourcePrimaryKey = resourcePrimaryKey;
@@ -154,10 +210,8 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 
 		@Override
 		public Boolean call() throws Exception {
-			String fileName = String.valueOf(_articleImageId);
-
 			FileEntry fileEntry = _portletFileRepository.fetchPortletFileEntry(
-				_groupId, _folderId, fileName);
+				_groupId, _folderId, _fileName);
 
 			if (fileEntry != null) {
 				return null;
@@ -171,18 +225,18 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 				}
 
 				String mimeType = MimeTypesUtil.getContentType(
-					fileName + StringPool.PERIOD + image.getType());
+					_articleImageId + StringPool.PERIOD + image.getType());
 
 				_portletFileRepository.addPortletFileEntry(
 					_groupId, _userId, JournalArticle.class.getName(),
 					_resourcePrimaryKey, JournalConstants.SERVICE_NAME,
-					_folderId, image.getTextObj(), fileName, mimeType, false);
+					_folderId, image.getTextObj(), _fileName, mimeType, false);
 
 				_imageLocalService.deleteImage(image.getImageId());
 			}
 			catch (Exception exception) {
 				_log.error(
-					"Unable to add the journal article image " + fileName +
+					"Unable to add the journal article image " + _fileName +
 						" into the file repository",
 					exception);
 
@@ -193,6 +247,7 @@ public class UpgradeImageTypeContent extends UpgradeProcess {
 		}
 
 		private final long _articleImageId;
+		private final String _fileName;
 		private final long _folderId;
 		private final long _groupId;
 		private final long _resourcePrimaryKey;
