@@ -164,16 +164,15 @@ public class DDMDataDefinitionConverterImpl
 
 		return _createFieldSetDDMFormField(
 			StringPool.BLANK, StringPool.BLANK, defaultLocale, name,
-			nestedDDMFormFields, repeatable, false);
+			nestedDDMFormFields, repeatable);
 	}
 
 	private DDMFormField _createFieldSetDDMFormField(
 		String ddmStructureId, String ddmStructureLayoutId,
 		Locale defaultLocale, String name,
-		List<DDMFormField> nestedDDMFormFields, boolean repeatable,
-		boolean upgradedStructure) {
+		List<DDMFormField> nestedDDMFormFields, boolean repeatable) {
 
-		return new DDMFormField(name, "fieldset") {
+		return new DDMFormField() {
 			{
 				setLabel(
 					new LocalizedValue() {
@@ -181,15 +180,18 @@ public class DDMDataDefinitionConverterImpl
 							addString(defaultLocale, StringPool.BLANK);
 						}
 					});
+				setFieldReference(name);
 				setLocalizable(false);
+				setName(name);
 				setNestedDDMFormFields(nestedDDMFormFields);
 				setProperty("ddmStructureId", ddmStructureId);
 				setProperty("ddmStructureLayoutId", ddmStructureLayoutId);
-				setProperty("upgradedStructure", upgradedStructure);
+				setProperty("upgradedStructure", false);
 				setReadOnly(false);
 				setRepeatable(repeatable);
 				setRequired(false);
 				setShowLabel(false);
+				setType("fieldset");
 			}
 		};
 	}
@@ -547,7 +549,7 @@ public class DDMDataDefinitionConverterImpl
 				String.valueOf(parentStructureLayoutId),
 				ddmForm.getDefaultLocale(),
 				"parentStructureFieldSet" + parentStructureId,
-				Collections.emptyList(), false, true));
+				Collections.emptyList(), false));
 
 		ddmForm.setDDMFormFields(ddmFormFields);
 	}
