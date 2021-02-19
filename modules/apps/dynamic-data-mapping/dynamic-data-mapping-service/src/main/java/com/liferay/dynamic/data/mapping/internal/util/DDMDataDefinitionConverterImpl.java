@@ -595,12 +595,6 @@ public class DDMDataDefinitionConverterImpl
 
 		ddmFormField.setFieldNamespace(StringPool.BLANK);
 
-		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
-
-		ddmFormFieldOptions.addOptionLabel("Option", defaultLocale, "Option");
-
-		ddmFormField.setDDMFormFieldOptions(ddmFormFieldOptions);
-
 		ddmFormField.setProperty("autocomplete", false);
 		ddmFormField.setProperty("dataSourceType", "manual");
 		ddmFormField.setProperty("ddmDataProviderInstanceId", "[]");
