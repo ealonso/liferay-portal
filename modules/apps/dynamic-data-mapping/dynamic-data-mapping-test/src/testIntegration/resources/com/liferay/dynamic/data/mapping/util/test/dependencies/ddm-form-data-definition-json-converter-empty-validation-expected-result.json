@@ -20,14 +20,6 @@
 			},
 			"localizable": true,
 			"name": "Text13gq",
-			"options": [
-				{
-					"label": {
-						"en_US": "Option"
-					},
-					"value": "Option"
-				}
-			],
 			"placeholder": {
 				"en_US": ""
 			},
