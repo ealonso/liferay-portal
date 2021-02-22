@@ -84,15 +84,11 @@
 					"visibilityExpression": ""
 				}
 			],
-			"predefinedValue": {
-			},
 			"readOnly": false,
 			"repeatable": false,
 			"required": false,
 			"rows": "[{\"columns\":[{\"size\":12,\"fields\":[\"Text\"]}]},{\"columns\":[{\"size\":12,\"fields\":[\"Text\"]}]}]",
 			"showLabel": false,
-			"tip": {
-			},
 			"type": "fieldset",
 			"upgradedStructure": false
 		},
@@ -153,15 +149,11 @@
 					"visibilityExpression": ""
 				}
 			],
-			"predefinedValue": {
-			},
 			"readOnly": false,
 			"repeatable": false,
 			"required": false,
 			"rows": "[{\"columns\":[{\"size\":12,\"fields\":[\"Number\"]}]},{\"columns\":[{\"size\":12,\"fields\":[\"Number\"]}]}]",
 			"showLabel": false,
-			"tip": {
-			},
 			"type": "fieldset",
 			"upgradedStructure": false
 		}

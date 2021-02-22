@@ -15,16 +15,12 @@
 			},
 			"localizable": false,
 			"name": "parentStructureFieldSet1",
-			"predefinedValue": {
-			},
 			"readOnly": false,
 			"repeatable": false,
 			"required": false,
 			"showLabel": false,
-			"tip": {
-			},
 			"type": "fieldset",
-			"upgradedStructure": true
+			"upgradedStructure": false
 		},
 		{
 			"dataType": "string",
