@@ -26,6 +26,7 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleLocalService;
+import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.journal.util.JournalContent;
 import com.liferay.journal.util.JournalConverter;
@@ -502,11 +503,11 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 		document.addDate("displayDate", journalArticle.getDisplayDate());
 		document.addKeyword("head", JournalUtil.isHead(journalArticle));
 
-		boolean headListable = JournalUtil.isHeadListable(journalArticle);
+		boolean headListable = _isHeadListable(journalArticle);
 
 		document.addKeyword("headListable", headListable);
 
-		boolean latestArticle = JournalUtil.isLatestArticle(journalArticle);
+		boolean latestArticle = _isLatestArticle(journalArticle);
 
 		document.addKeyword("latest", latestArticle);
 
@@ -975,6 +976,40 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 		deleteDocument(
 			article.getCompanyId(), "UID=" + uidFactory.getUID(article));
+	}
+
+	private boolean _isHeadListable(JournalArticle article) {
+		JournalArticle latestArticle =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				article.getResourcePrimKey(),
+				new int[] {
+					WorkflowConstants.STATUS_APPROVED,
+					WorkflowConstants.STATUS_IN_TRASH,
+					WorkflowConstants.STATUS_SCHEDULED
+				});
+
+		if ((latestArticle != null) &&
+			(article.getId() == latestArticle.getId())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _isLatestArticle(JournalArticle article) {
+		JournalArticle latestArticle =
+			JournalArticleLocalServiceUtil.fetchLatestArticle(
+				article.getResourcePrimKey(), WorkflowConstants.STATUS_ANY,
+				false);
+
+		if ((latestArticle != null) &&
+			(article.getId() == latestArticle.getId())) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private void _reindexEveryVersionOfResourcePrimKey(long resourcePrimKey)

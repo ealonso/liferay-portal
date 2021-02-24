@@ -361,40 +361,6 @@ public class JournalUtil {
 		return false;
 	}
 
-	public static boolean isHeadListable(JournalArticle article) {
-		JournalArticle latestArticle =
-			JournalArticleLocalServiceUtil.fetchLatestArticle(
-				article.getResourcePrimKey(),
-				new int[] {
-					WorkflowConstants.STATUS_APPROVED,
-					WorkflowConstants.STATUS_IN_TRASH,
-					WorkflowConstants.STATUS_SCHEDULED
-				});
-
-		if ((latestArticle != null) &&
-			(article.getId() == latestArticle.getId())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public static boolean isLatestArticle(JournalArticle article) {
-		JournalArticle latestArticle =
-			JournalArticleLocalServiceUtil.fetchLatestArticle(
-				article.getResourcePrimKey(), WorkflowConstants.STATUS_ANY,
-				false);
-
-		if ((latestArticle != null) &&
-			(article.getId() == latestArticle.getId())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
 	public static String removeArticleLocale(
 		Document document, String content, String languageId) {
 
