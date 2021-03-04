@@ -24,10 +24,7 @@ import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
 import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.dynamic.data.mapping.util.DDMFieldsCounter;
-import com.liferay.journal.article.dynamic.data.mapping.form.field.type.constants.JournalArticleDDMFormFieldTypeConstants;
 import com.liferay.journal.exception.ArticleContentException;
-import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.util.JournalConverter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -36,7 +33,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -65,7 +61,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Marcellus Tavares
@@ -417,13 +412,6 @@ public class JournalConverterImpl implements JournalConverter {
 			return _getSelectValue(dynamicContentElement);
 		}
 
-		if (Objects.equals(
-				JournalArticleDDMFormFieldTypeConstants.JOURNAL_ARTICLE,
-				ddmFormField.getType())) {
-
-			return _getJournalArticleValue(dynamicContentElement);
-		}
-
 		return FieldConstants.getSerializable(
 			ddmFormField.getDataType(), dynamicContentElement.getText());
 	}
@@ -651,39 +639,6 @@ public class JournalConverterImpl implements JournalConverter {
 			ddmFormField.getDataType(), dynamicContentElement.getText());
 	}
 
-	private String _getJournalArticleValue(Element dynamicContentElement) {
-		try {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-				dynamicContentElement.getText());
-
-			if (!jsonObject.has("classNameId")) {
-				String className = jsonObject.getString("className");
-
-				jsonObject.put(
-					"classNameId", _portal.getClassNameId(className));
-			}
-
-			if (!jsonObject.has("title") || !jsonObject.has("titleMap")) {
-				JournalArticle journalArticle =
-					_journalArticleLocalService.fetchLatestArticle(
-						jsonObject.getLong("classPK"));
-
-				jsonObject.put(
-					"title", journalArticle.getTitle()
-				).put(
-					"titleMap",
-					JSONFactoryUtil.createJSONObject(
-						journalArticle.getTitleMap())
-				);
-			}
-
-			return jsonObject.toJSONString();
-		}
-		catch (JSONException jsonException) {
-			return dynamicContentElement.getText();
-		}
-	}
-
 	private String _getSelectValue(Element dynamicContentElement) {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
@@ -719,11 +674,5 @@ public class JournalConverterImpl implements JournalConverter {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalConverterImpl.class);
-
-	@Reference
-	private JournalArticleLocalService _journalArticleLocalService;
-
-	@Reference
-	private Portal _portal;
 
 }
