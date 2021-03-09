@@ -1547,20 +1547,20 @@ public class LayoutsAdminDisplayContext {
 	public boolean isShowPrivatePages() throws PortalException {
 		Group selGroup = getSelGroup();
 
-		if (selGroup.isUser()) {
-			if (!PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {
+		if (!selGroup.isUser()) {
+			return true;
+		}
+
+		if (!PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_ENABLED) {
+			return false;
+		}
+		else if (PropsValues.LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED) {
+			boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
+				selGroup.getClassPK(), selGroup.getCompanyId(),
+				RoleConstants.POWER_USER, true);
+
+			if (!hasPowerUserRole) {
 				return false;
-			}
-			else if (PropsValues.
-						LAYOUT_USER_PRIVATE_LAYOUTS_POWER_USER_REQUIRED) {
-
-				boolean hasPowerUserRole = RoleLocalServiceUtil.hasUserRole(
-					selGroup.getClassPK(), selGroup.getCompanyId(),
-					RoleConstants.POWER_USER, true);
-
-				if (!hasPowerUserRole) {
-					return false;
-				}
 			}
 		}
 
