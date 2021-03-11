@@ -276,22 +276,22 @@
 					"label": {
 						"en_US": "option 1"
 					},
-					"reference": "",
-					"value": "value 1"
+					"reference": "value1",
+					"value": "value1"
 				},
 				{
 					"label": {
 						"en_US": "option 2"
 					},
-					"reference": "",
-					"value": "value 2"
+					"reference": "value2",
+					"value": "value2"
 				},
 				{
 					"label": {
 						"en_US": "option 3"
 					},
-					"reference": "",
-					"value": "value 3"
+					"reference": "value3",
+					"value": "value3"
 				}
 			],
 			"predefinedValue": {
@@ -325,22 +325,22 @@
 					"label": {
 						"en_US": "option 1"
 					},
-					"reference": "",
-					"value": "value 1"
+					"reference": "value1",
+					"value": "value1"
 				},
 				{
 					"label": {
 						"en_US": "option 2"
 					},
-					"reference": "",
-					"value": "value 2"
+					"reference": "value2",
+					"value": "value2"
 				},
 				{
 					"label": {
 						"en_US": "option 3"
 					},
-					"reference": "",
-					"value": "value 3"
+					"reference": "value3",
+					"value": "value3"
 				}
 			],
 			"predefinedValue": {
