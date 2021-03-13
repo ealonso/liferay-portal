@@ -96,6 +96,12 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 			Map<String, Object> requestContext)
 		throws PortalException {
 
+		LayoutQueryStringComposite layoutQueryStringComposite =
+			_getPortletFriendlyURLMapperLayoutQueryStringComposite(
+				friendlyURL, params, requestContext);
+
+		friendlyURL = layoutQueryStringComposite.getFriendlyURL();
+
 		HttpServletRequest httpServletRequest =
 			(HttpServletRequest)requestContext.get("request");
 
@@ -158,7 +164,8 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 				layoutDisplayPageObjectProvider::getTitle),
 			httpServletRequest);
 
-		return portal.getLayoutActualURL(layout, mainPath);
+		return portal.getLayoutActualURL(layout, mainPath) +
+			layoutQueryStringComposite.getQueryString();
 	}
 
 	@Override
@@ -551,6 +558,12 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 
 	private String _getUrlTitle(String friendlyURL) {
 		String urlSeparator = _getURLSeparator(friendlyURL);
+
+		LayoutQueryStringComposite layoutQueryStringComposite =
+			_getPortletFriendlyURLMapperLayoutQueryStringComposite(
+				friendlyURL, new HashMap<>(), new HashMap<>());
+
+		friendlyURL = layoutQueryStringComposite.getFriendlyURL();
 
 		return friendlyURL.substring(urlSeparator.length());
 	}
