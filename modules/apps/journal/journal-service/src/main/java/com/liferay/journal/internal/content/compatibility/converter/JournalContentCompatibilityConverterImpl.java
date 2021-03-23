@@ -210,6 +210,13 @@ public class JournalContentCompatibilityConverterImpl
 			return _convertLinkToLayoutValue(defaultLocale, value);
 		}
 
+		if (Objects.equals(ddmFieldType, "checkbox") ||
+			Objects.equals(
+				ddmFieldType, DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE)) {
+
+			return value;
+		}
+
 		return value;
 	}
 

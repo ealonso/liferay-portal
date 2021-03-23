@@ -666,9 +666,17 @@ public class JournalTransformer {
 
 		if (Objects.equals(type, DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE)) {
 			try {
-				JSONArray nextJSONArray = JSONFactoryUtil.createJSONArray();
-
 				JSONArray jsonArray = JSONFactoryUtil.createJSONArray(data);
+
+				if (optionsReferences.size() == 1) {
+					if (jsonArray.length() == 1) {
+						return Boolean.TRUE.toString();
+					}
+
+					return StringPool.BLANK;
+				}
+
+				JSONArray nextJSONArray = JSONFactoryUtil.createJSONArray();
 
 				for (Object element : jsonArray) {
 					String optionValue = (String)element;
