@@ -17,9 +17,7 @@ package com.liferay.journal.internal.util;
 import com.liferay.dynamic.data.mapping.form.field.type.constants.DDMFormFieldTypeConstants;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
-import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
@@ -34,7 +32,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -54,7 +51,6 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -400,14 +396,6 @@ public class JournalConverterImpl implements JournalConverter {
 		DDMFormField ddmFormField, Element dynamicContentElement) {
 
 		if (Objects.equals(
-				DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE,
-				ddmFormField.getType())) {
-
-			return _getCheckboxMultipleValue(
-				ddmFormField, dynamicContentElement);
-		}
-
-		if (Objects.equals(
 				DDMFormFieldTypeConstants.SELECT, ddmFormField.getType())) {
 
 			return _getSelectValue(dynamicContentElement);
@@ -443,56 +431,17 @@ public class JournalConverterImpl implements JournalConverter {
 			String valueString = String.valueOf(fieldValue);
 
 			updateDynamicContentValue(
-				ddmFormField, dynamicContentElement, ddmFormField.getName(),
-				ddmFormField.getType(), valueString.trim(),
-				ddmFormField.isMultiple());
+				dynamicContentElement, ddmFormField.getType(),
+				valueString.trim(), ddmFormField.isMultiple());
 		}
 	}
 
 	protected void updateDynamicContentValue(
-		DDMFormField ddmFormField, Element dynamicContentElement,
-		String fieldName, String fieldType, String fieldValue,
+		Element dynamicContentElement, String fieldType, String fieldValue,
 		boolean multiple) {
 
-		if (Objects.equals(
-				DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE, fieldType)) {
-
-			try {
-				DDMFormFieldOptions ddmFormFieldOptions =
-					(DDMFormFieldOptions)ddmFormField.getProperty("options");
-
-				Map<String, LocalizedValue> options =
-					ddmFormFieldOptions.getOptions();
-
-				if (options.size() > 1) {
-					dynamicContentElement.addCDATA(fieldValue);
-
-					return;
-				}
-
-				JSONArray fieldValueJSONArray = JSONFactoryUtil.createJSONArray(
-					fieldValue);
-
-				if (fieldValueJSONArray.length() == 1) {
-					fieldValue = Boolean.TRUE.toString();
-				}
-				else {
-					fieldValue = StringPool.BLANK;
-				}
-			}
-			catch (PortalException portalException) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						"Unable to get dynamic data mapping form field for " +
-							fieldName,
-						portalException);
-				}
-			}
-
-			dynamicContentElement.addCDATA(fieldValue);
-		}
-		else if (Objects.equals(DDMFormFieldTypeConstants.SELECT, fieldType) &&
-				 Validator.isNotNull(fieldValue)) {
+		if (Objects.equals(DDMFormFieldTypeConstants.SELECT, fieldType) &&
+			Validator.isNotNull(fieldValue)) {
 
 			JSONArray jsonArray = null;
 
@@ -614,36 +563,6 @@ public class JournalConverterImpl implements JournalConverter {
 				availableLanguageIds, defaultLanguageId, ddmFields,
 				nestedDDMFormField, ddmStructure, dynamicElementElementsMap);
 		}
-	}
-
-	private Serializable _getCheckboxMultipleValue(
-		DDMFormField ddmFormField, Element dynamicContentElement) {
-
-		DDMFormFieldOptions ddmFormFieldOptions =
-			(DDMFormFieldOptions)ddmFormField.getProperty("options");
-
-		Map<String, LocalizedValue> options = ddmFormFieldOptions.getOptions();
-
-		if (options.size() == 1) {
-			if (GetterUtil.getBoolean(dynamicContentElement.getText())) {
-				Set<Map.Entry<String, LocalizedValue>> entrySet =
-					options.entrySet();
-
-				Iterator<Map.Entry<String, LocalizedValue>> iterator =
-					entrySet.iterator();
-
-				Map.Entry<String, LocalizedValue> entry = iterator.next();
-
-				return JSONUtil.putAll(
-					entry.getKey()
-				).toJSONString();
-			}
-
-			return StringPool.BLANK;
-		}
-
-		return FieldConstants.getSerializable(
-			ddmFormField.getDataType(), dynamicContentElement.getText());
 	}
 
 	private Map<String, List<Element>> _getDynamicElements(
