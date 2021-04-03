@@ -563,9 +563,17 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 			_getPortletFriendlyURLMapperLayoutQueryStringComposite(
 				friendlyURL, new HashMap<>(), new HashMap<>());
 
-		friendlyURL = layoutQueryStringComposite.getFriendlyURL();
+		String newFriendlyURL = layoutQueryStringComposite.getFriendlyURL();
 
-		return friendlyURL.substring(urlSeparator.length());
+		if (newFriendlyURL.startsWith(urlSeparator)) {
+			return newFriendlyURL.substring(urlSeparator.length());
+		}
+
+		if (friendlyURL.startsWith(urlSeparator)) {
+			return friendlyURL.substring(urlSeparator.length());
+		}
+
+		return StringPool.BLANK;
 	}
 
 	private long _getVersionClassPK(Map<String, String[]> params) {
