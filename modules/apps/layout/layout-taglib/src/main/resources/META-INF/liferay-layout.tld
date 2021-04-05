@@ -11,6 +11,11 @@
 	<short-name>liferay-layout</short-name>
 	<uri>http://liferay.com/tld/layout</uri>
 	<tag>
+		<name>css-wrapper</name>
+		<tag-class>com.liferay.layout.taglib.servlet.taglib.CSSWrapperTag</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+	<tag>
 		<name>layout-classed-model-usages-admin</name>
 		<tag-class>com.liferay.layout.taglib.servlet.taglib.LayoutClassedModelUsagesAdminTag</tag-class>
 		<body-content>JSP</body-content>
