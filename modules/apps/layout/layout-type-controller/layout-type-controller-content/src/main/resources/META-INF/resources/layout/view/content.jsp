@@ -60,6 +60,10 @@ RenderContentLayoutDisplayContext renderContentLayoutDisplayContext = new Render
 			<liferay-layout:render-fragment-layout
 				showPreview="<%= true %>"
 			/>
+
+			<liferay-layout:css-wrapper>
+				<p>Holi</p>
+			</liferay-layout:css-wrapper>
 		</div>
 	</c:otherwise>
 </c:choose>
