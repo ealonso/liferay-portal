@@ -104,45 +104,6 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 				LayoutLocalServiceHelper.class.getName());
 	}
 
-	public void deleteLayout(
-			LayoutLocalService layoutLocalService, Layout layout,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		long layoutSetBranchId = ParamUtil.getLong(
-			serviceContext, "layoutSetBranchId");
-
-		if (layoutSetBranchId > 0) {
-			LayoutRevisionLocalServiceUtil.deleteLayoutRevisions(
-				layoutSetBranchId, layout.getPlid());
-
-			List<LayoutRevision> notIncompleteLayoutRevisions =
-				LayoutRevisionUtil.findByP_NotS(
-					layout.getPlid(), WorkflowConstants.STATUS_INCOMPLETE);
-
-			if (notIncompleteLayoutRevisions.isEmpty()) {
-				LayoutRevisionLocalServiceUtil.deleteLayoutLayoutRevisions(
-					layout.getPlid());
-
-				doDeleteLayout(layoutLocalService, layout, serviceContext);
-			}
-		}
-		else {
-			doDeleteLayout(layoutLocalService, layout, serviceContext);
-		}
-	}
-
-	public void deleteLayout(
-			LayoutLocalService layoutLocalService, long groupId,
-			boolean privateLayout, long layoutId, ServiceContext serviceContext)
-		throws PortalException {
-
-		Layout layout = layoutLocalService.getLayout(
-			groupId, privateLayout, layoutId);
-
-		deleteLayout(layoutLocalService, layout, serviceContext);
-	}
-
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		_beanFactory = beanFactory;
@@ -427,51 +388,6 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 		return layout;
 	}
 
-	protected void doDeleteLayout(
-			LayoutLocalService layoutLocalService, Layout layout,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		boolean mergeLayoutPrototypesIsInProgress = false;
-
-		try {
-			mergeLayoutPrototypesIsInProgress =
-				MergeLayoutPrototypesThreadLocal.isInProgress();
-
-			MergeLayoutPrototypesThreadLocal.setInProgress(true);
-
-			SystemEventHierarchyEntry systemEventHierarchyEntry =
-				SystemEventHierarchyEntryThreadLocal.push(
-					Layout.class, layout.getPlid());
-
-			if (systemEventHierarchyEntry == null) {
-				layoutLocalService.deleteLayout(layout, serviceContext);
-			}
-			else {
-				try {
-					layoutLocalService.deleteLayout(layout, serviceContext);
-
-					systemEventHierarchyEntry =
-						SystemEventHierarchyEntryThreadLocal.peek();
-
-					SystemEventLocalServiceUtil.addSystemEvent(
-						0, layout.getGroupId(), Layout.class.getName(),
-						layout.getPlid(), layout.getUuid(), null,
-						SystemEventConstants.TYPE_DELETE,
-						systemEventHierarchyEntry.getExtraData());
-				}
-				finally {
-					SystemEventHierarchyEntryThreadLocal.pop(
-						Layout.class, layout.getPlid());
-				}
-			}
-		}
-		finally {
-			MergeLayoutPrototypesThreadLocal.setInProgress(
-				mergeLayoutPrototypesIsInProgress);
-		}
-	}
-
 	protected Layout getProxiedLayout(Layout layout) {
 		ObjectValuePair<ServiceContext, Map<Layout, Object>> objectValuePair =
 			ProxiedLayoutsThreadLocal.getProxiedLayouts();
@@ -689,29 +605,6 @@ public class LayoutLocalServiceStagingAdvice implements BeanFactoryAware {
 				methodName.equals("createLayout")) {
 
 				return _invoke(method, arguments);
-			}
-			else if (methodName.equals("deleteLayout")) {
-				if ((arguments.length == 2) &&
-					(arguments[0] instanceof Layout)) {
-
-					deleteLayout(
-						(LayoutLocalService)_targetObject, (Layout)arguments[0],
-						(ServiceContext)arguments[1]);
-				}
-				else if (arguments.length == 3) {
-					deleteLayout(
-						(LayoutLocalService)_targetObject, (Layout)arguments[0],
-						(ServiceContext)arguments[2]);
-				}
-				else if (arguments.length == 4) {
-					deleteLayout(
-						(LayoutLocalService)_targetObject, (Long)arguments[0],
-						(Boolean)arguments[1], (Long)arguments[2],
-						(ServiceContext)arguments[3]);
-				}
-				else {
-					return wrapReturnValue(_invoke(method, arguments), false);
-				}
 			}
 			else if (methodName.equals("getLayouts")) {
 				boolean showIncomplete = false;
