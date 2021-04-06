@@ -16,7 +16,6 @@ package com.liferay.site.admin.web.internal.portlet.action;
 
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.GroupNameException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -39,7 +38,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -238,15 +236,6 @@ public class EditGroupMVCActionCommand extends BaseMVCActionCommand {
 
 		typeSettingsUnicodeProperties.setProperty(
 			"customJspServletContextName", customJspServletContextName);
-
-		typeSettingsUnicodeProperties.setProperty(
-			"defaultSiteRoleIds",
-			ListUtil.toString(
-				ActionUtil.getRoleIds(actionRequest), StringPool.BLANK));
-		typeSettingsUnicodeProperties.setProperty(
-			"defaultTeamIds",
-			ListUtil.toString(
-				ActionUtil.getTeamIds(actionRequest), StringPool.BLANK));
 
 		UnicodeProperties formTypeSettingsUnicodeProperties =
 			PropertiesParamUtil.getProperties(
