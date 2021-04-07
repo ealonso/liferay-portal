@@ -54,8 +54,6 @@ import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletURL;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -81,22 +79,7 @@ public class EditGroupMVCActionCommand extends BaseMVCActionCommand {
 		Callable<Group> groupCallable = new GroupCallable(actionRequest);
 
 		try {
-			Group group = TransactionInvokerUtil.invoke(
-				_transactionConfig, groupCallable);
-
-			PortletURL siteAdministrationURL = _getSiteAdministrationURL(
-				actionRequest, group);
-
-			siteAdministrationURL.setParameter(
-				"redirect", siteAdministrationURL.toString());
-			siteAdministrationURL.setParameter(
-				"historyKey",
-				ActionUtil.getHistoryKey(actionRequest, actionResponse));
-
-			actionRequest.setAttribute(
-				WebKeys.REDIRECT, siteAdministrationURL.toString());
-
-			sendRedirect(actionRequest, actionResponse);
+			TransactionInvokerUtil.invoke(_transactionConfig, groupCallable);
 		}
 		catch (Throwable throwable) {
 			if (throwable instanceof Exception) {
@@ -105,23 +88,6 @@ public class EditGroupMVCActionCommand extends BaseMVCActionCommand {
 
 			throw new Exception(throwable);
 		}
-	}
-
-	private PortletURL _getSiteAdministrationURL(
-		ActionRequest actionRequest, Group group) {
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		Group scopeGroup = themeDisplay.getScopeGroup();
-
-		if (scopeGroup.isStagingGroup()) {
-			group = group.getStagingGroup();
-		}
-
-		return _portal.getControlPanelPortletURL(
-			actionRequest, group, ConfigurationAdminPortletKeys.SITE_SETTINGS,
-			0, 0, PortletRequest.RENDER_PHASE);
 	}
 
 	private Group _updateGroup(ActionRequest actionRequest) throws Exception {

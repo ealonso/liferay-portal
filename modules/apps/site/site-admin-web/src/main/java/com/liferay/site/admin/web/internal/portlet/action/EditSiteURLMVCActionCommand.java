@@ -25,13 +25,18 @@ import com.liferay.portal.kernel.service.LayoutSetService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Locale;
 import java.util.Set;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -112,6 +117,37 @@ public class EditSiteURLMVCActionCommand extends BaseMVCActionCommand {
 					actionRequest, "stagingPrivateVirtualHost",
 					availableLocales));
 		}
+
+		PortletURL siteAdministrationURL = _getSiteAdministrationURL(
+			actionRequest, liveGroup);
+
+		siteAdministrationURL.setParameter(
+			"redirect", siteAdministrationURL.toString());
+		siteAdministrationURL.setParameter(
+			"historyKey",
+			ActionUtil.getHistoryKey(actionRequest, actionResponse));
+
+		actionRequest.setAttribute(
+			WebKeys.REDIRECT, siteAdministrationURL.toString());
+
+		sendRedirect(actionRequest, actionResponse);
+	}
+
+	private PortletURL _getSiteAdministrationURL(
+		ActionRequest actionRequest, Group group) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Group scopeGroup = themeDisplay.getScopeGroup();
+
+		if (scopeGroup.isStagingGroup()) {
+			group = group.getStagingGroup();
+		}
+
+		return _portal.getControlPanelPortletURL(
+			actionRequest, group, ConfigurationAdminPortletKeys.SITE_SETTINGS,
+			0, 0, PortletRequest.RENDER_PHASE);
 	}
 
 	@Reference
@@ -122,5 +158,8 @@ public class EditSiteURLMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private LayoutSetService _layoutSetService;
+
+	@Reference
+	private Portal _portal;
 
 }
