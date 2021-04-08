@@ -45,7 +45,7 @@ public class ContentSharingSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "sharing";
 	}
 
 	@Override

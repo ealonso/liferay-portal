@@ -43,7 +43,7 @@ public class DefaultUserAssociationsSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "users";
 	}
 
 	@Override

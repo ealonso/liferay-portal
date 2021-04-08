@@ -51,7 +51,7 @@ public class SiteTemplateSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "other";
 	}
 
 	@Override

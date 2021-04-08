@@ -46,7 +46,7 @@ public class PagesSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "pages";
 	}
 
 	@Override

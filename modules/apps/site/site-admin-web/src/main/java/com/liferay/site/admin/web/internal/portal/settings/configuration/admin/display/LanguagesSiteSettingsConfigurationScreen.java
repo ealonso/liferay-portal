@@ -43,7 +43,7 @@ public class LanguagesSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "localization";
 	}
 
 	@Override

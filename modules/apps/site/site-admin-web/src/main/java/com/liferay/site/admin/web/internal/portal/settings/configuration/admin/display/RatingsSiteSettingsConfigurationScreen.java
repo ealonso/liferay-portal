@@ -46,7 +46,7 @@ public class RatingsSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "community-tools";
 	}
 
 	@Override

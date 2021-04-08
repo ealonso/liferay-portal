@@ -46,7 +46,7 @@ public class CustomFieldsSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "other";
 	}
 
 	@Override

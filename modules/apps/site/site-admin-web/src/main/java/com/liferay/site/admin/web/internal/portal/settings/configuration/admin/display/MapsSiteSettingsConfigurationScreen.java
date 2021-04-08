@@ -47,7 +47,7 @@ public class MapsSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "third-party-applications";
 	}
 
 	@Override

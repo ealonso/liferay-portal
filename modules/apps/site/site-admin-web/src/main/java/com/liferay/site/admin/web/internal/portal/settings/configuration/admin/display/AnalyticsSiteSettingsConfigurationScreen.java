@@ -46,7 +46,7 @@ public class AnalyticsSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "analytics";
 	}
 
 	@Override

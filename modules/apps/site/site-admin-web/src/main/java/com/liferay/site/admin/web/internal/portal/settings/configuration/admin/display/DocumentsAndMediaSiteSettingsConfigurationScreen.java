@@ -43,7 +43,7 @@ public class DocumentsAndMediaSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "documents-and-media";
 	}
 
 	@Override

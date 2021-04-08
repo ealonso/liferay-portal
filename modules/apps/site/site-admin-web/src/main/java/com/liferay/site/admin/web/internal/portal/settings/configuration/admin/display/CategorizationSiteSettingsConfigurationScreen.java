@@ -43,7 +43,7 @@ public class CategorizationSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "assets";
 	}
 
 	@Override

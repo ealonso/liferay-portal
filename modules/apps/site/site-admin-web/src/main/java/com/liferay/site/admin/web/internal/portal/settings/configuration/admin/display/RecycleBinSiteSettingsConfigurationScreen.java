@@ -45,7 +45,7 @@ public class RecycleBinSiteSettingsConfigurationScreen
 
 	@Override
 	public String getCategoryKey() {
-		return "site-configuration";
+		return "recycle-bin";
 	}
 
 	@Override
