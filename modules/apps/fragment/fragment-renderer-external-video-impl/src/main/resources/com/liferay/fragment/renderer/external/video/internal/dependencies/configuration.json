@@ -1,0 +1,13 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"label": "video",
+					"name": "videoURL",
+					"type": "text"
+				}
+			]
+		}
+	]
+}
