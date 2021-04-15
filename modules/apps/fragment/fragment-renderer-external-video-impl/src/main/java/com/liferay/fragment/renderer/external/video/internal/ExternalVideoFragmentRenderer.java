@@ -124,59 +124,48 @@ public class ExternalVideoFragmentRenderer implements FragmentRenderer {
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 			"content.Language", getClass());
 
+		String videoConfiguration =
+			(String)_fragmentEntryConfigurationParser.getFieldValue(
+				fragmentEntryLink.getConfiguration(),
+				fragmentEntryLink.getEditableValues(),
+				resourceBundle.getLocale(), "video");
+
 		try {
-			JSONObject videoJSONObject = JSONFactoryUtil.createJSONObject(
-				(String)_fragmentEntryConfigurationParser.getFieldValue(
-					fragmentEntryLink.getConfiguration(),
-					fragmentEntryLink.getEditableValues(),
-					resourceBundle.getLocale(), "video"));
+			JSONObject videoConfigurationJSONObject =
+				JSONFactoryUtil.createJSONObject(videoConfiguration);
 
-			String videoHTML = "";
-
-			if (videoJSONObject.has("url")) {
+			if (videoConfigurationJSONObject.has("url")) {
 				DLVideoExternalShortcut dlVideoExternalShortcut =
 					_dlVideoExternalShortcutResolver.resolve(
-						videoJSONObject.getString("url"));
+						videoConfigurationJSONObject.getString("url"));
 
-				videoHTML = dlVideoExternalShortcut.renderHTML(
+				String videoHTML = dlVideoExternalShortcut.renderHTML(
 					httpServletRequest);
+
+				_writeVideoHTML(
+					fragmentRendererContext, printWriter, videoHTML);
 			}
-			else if (videoJSONObject.has("fileEntryId")) {
+			else if (videoConfigurationJSONObject.has("fileEntryId")) {
+				long videoFileEntryId = videoConfigurationJSONObject.getLong(
+					"fileEntryId");
+
 				FileEntry videoFileEntry = _dlAppLocalService.getFileEntry(
-					videoJSONObject.getLong("fileEntryId"));
+					videoFileEntryId);
 
-				videoHTML = _dlVideoRenderer.renderHTML(
+				String videoHTML = _dlVideoRenderer.renderHTML(
 					videoFileEntry.getFileVersion(), httpServletRequest);
+
+				_writeVideoHTML(
+					fragmentRendererContext, printWriter, videoHTML);
 			}
-
-			printWriter.write("<div class=\"video-wrapper");
-
-			if (Objects.equals(
-					fragmentRendererContext.getMode(),
-					FragmentEntryLinkConstants.EDIT)) {
-
-				printWriter.write(" video-wrapper--edit-mode");
+			else {
+				_writePlaceholder(
+					fragmentRendererContext, printWriter, resourceBundle);
 			}
-
-			printWriter.write("\">" + videoHTML + "</div>");
 		}
 		catch (Exception exception) {
-			if (Objects.equals(
-					fragmentRendererContext.getMode(),
-					FragmentEntryLinkConstants.EDIT)) {
-
-				printWriter.write(
-					"<div class=\"alert alert-info error-message mb-0 pb-0\" " +
-						"role=\"alert\"><p>");
-				printWriter.write(
-					ResourceBundleUtil.getString(
-						resourceBundle, "please-enter-a-valid-video-url"));
-				printWriter.write("</p><p>");
-				printWriter.write(
-					ResourceBundleUtil.getString(
-						resourceBundle, "video-url-help"));
-				printWriter.write("</p></div>");
-			}
+			_writePlaceholder(
+				fragmentRendererContext, printWriter, resourceBundle);
 		}
 
 		printWriter.write("</div>");
@@ -191,6 +180,50 @@ public class ExternalVideoFragmentRenderer implements FragmentRenderer {
 		fragmentIdSB.append(fragmentEntryLink.getNamespace());
 
 		return fragmentIdSB.toString();
+	}
+
+	private void _writePlaceholder(
+		FragmentRendererContext fragmentRendererContext,
+		PrintWriter printWriter, ResourceBundle resourceBundle) {
+
+		if (Objects.equals(
+				fragmentRendererContext.getMode(),
+				FragmentEntryLinkConstants.EDIT)) {
+
+			printWriter.write(
+				"<div class=\"alert alert-info error-message mb-0 pb-0\" " +
+					"role=\"alert\"><p>");
+
+			printWriter.write(
+				Objects.requireNonNull(
+					ResourceBundleUtil.getString(
+						resourceBundle, "please-enter-a-valid-video-url")));
+
+			printWriter.write("</p><p>");
+
+			printWriter.write(
+				Objects.requireNonNull(
+					ResourceBundleUtil.getString(
+						resourceBundle, "video-url-help")));
+
+			printWriter.write("</p></div>");
+		}
+	}
+
+	private void _writeVideoHTML(
+		FragmentRendererContext fragmentRendererContext,
+		PrintWriter printWriter, String videoHTML) {
+
+		printWriter.write("<div class=\"video-wrapper");
+
+		if (Objects.equals(
+				fragmentRendererContext.getMode(),
+				FragmentEntryLinkConstants.EDIT)) {
+
+			printWriter.write(" video-wrapper--edit-mode");
+		}
+
+		printWriter.write("\">" + videoHTML + "</div>");
 	}
 
 	@Reference
