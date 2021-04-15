@@ -14,8 +14,10 @@
 
 package com.liferay.fragment.renderer.external.video.internal;
 
+import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.video.external.shortcut.DLVideoExternalShortcut;
 import com.liferay.document.library.video.external.shortcut.resolver.DLVideoExternalShortcutResolver;
+import com.liferay.document.library.video.renderer.DLVideoRenderer;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
@@ -27,6 +29,7 @@ import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -47,7 +50,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Pablo Molina
  */
-@Component(enabled = false, service = FragmentRenderer.class)
+@Component(enabled = true, service = FragmentRenderer.class)
 public class ExternalVideoFragmentRenderer implements FragmentRenderer {
 
 	@Override
@@ -122,17 +125,29 @@ public class ExternalVideoFragmentRenderer implements FragmentRenderer {
 			"content.Language", getClass());
 
 		try {
-			String videoURL =
+			JSONObject videoJSONObject = JSONFactoryUtil.createJSONObject(
 				(String)_fragmentEntryConfigurationParser.getFieldValue(
 					fragmentEntryLink.getConfiguration(),
 					fragmentEntryLink.getEditableValues(),
-					resourceBundle.getLocale(), "videoURL");
+					resourceBundle.getLocale(), "video"));
 
-			DLVideoExternalShortcut dlVideoExternalShortcut =
-				_dlVideoExternalShortcutResolver.resolve(videoURL);
+			String videoHTML = "";
 
-			String videoHTML = dlVideoExternalShortcut.renderHTML(
-				httpServletRequest);
+			if (videoJSONObject.has("url")) {
+				DLVideoExternalShortcut dlVideoExternalShortcut =
+					_dlVideoExternalShortcutResolver.resolve(
+						videoJSONObject.getString("url"));
+
+				videoHTML = dlVideoExternalShortcut.renderHTML(
+					httpServletRequest);
+			}
+			else if (videoJSONObject.has("fileEntryId")) {
+				FileEntry videoFileEntry = _dlAppLocalService.getFileEntry(
+					videoJSONObject.getLong("fileEntryId"));
+
+				videoHTML = _dlVideoRenderer.renderHTML(
+					videoFileEntry.getFileVersion(), httpServletRequest);
+			}
 
 			printWriter.write("<div class=\"video-wrapper");
 
@@ -179,7 +194,13 @@ public class ExternalVideoFragmentRenderer implements FragmentRenderer {
 	}
 
 	@Reference
+	private DLAppLocalService _dlAppLocalService;
+
+	@Reference
 	private DLVideoExternalShortcutResolver _dlVideoExternalShortcutResolver;
+
+	@Reference
+	private DLVideoRenderer _dlVideoRenderer;
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;

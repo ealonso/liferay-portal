@@ -4,8 +4,8 @@
 			"fields": [
 				{
 					"label": "video",
-					"name": "videoURL",
-					"type": "text"
+					"name": "video",
+					"type": "videoSelector"
 				}
 			]
 		}
