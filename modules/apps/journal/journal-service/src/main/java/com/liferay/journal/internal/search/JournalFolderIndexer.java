@@ -16,7 +16,6 @@ package com.liferay.journal.internal.search;
 
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalFolderLocalService;
-import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -38,7 +37,6 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.model.uid.UIDFactory;
 import com.liferay.trash.TrashHelper;
 
@@ -145,9 +143,6 @@ public class JournalFolderIndexer
 		}
 
 		document.addKeyword(Field.FOLDER_ID, folder.getParentFolderId());
-		document.addKeyword(
-			Field.TREE_PATH,
-			StringUtil.split(folder.getTreePath(), CharPool.SLASH));
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Document " + folder + " indexed successfully");
