@@ -4421,10 +4421,12 @@ public class PortalImpl implements Portal {
 		Layout layout = null;
 
 		if (Validator.isNotNull(friendlyURL)) {
-			layout = LayoutLocalServiceUtil.getFriendlyURLLayout(
+			layout = LayoutLocalServiceUtil.fetchLayoutByFriendlyURL(
 				groupId, privateLayout, friendlyURL);
 
-			if (Validator.isNotNull(layout.getSourcePrototypeLayoutUuid())) {
+			if ((layout != null) &&
+				Validator.isNotNull(layout.getSourcePrototypeLayoutUuid())) {
+
 				layout = LayoutLocalServiceUtil.getLayout(layout.getPlid());
 			}
 		}
