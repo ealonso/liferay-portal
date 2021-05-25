@@ -21,11 +21,9 @@ import com.liferay.asset.kernel.service.AssetVocabularyService;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
-import com.liferay.fragment.renderer.collection.filter.internal.configuration.FFFragmentRendererCollectionFilterConfiguration;
 import com.liferay.fragment.renderer.collection.filter.internal.constants.CollectionFilterFragmentRendererWebKeys;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -45,7 +43,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -55,16 +52,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Rubén Pulido
  */
-@Component(
-	configurationPid = "com.liferay.fragment.renderer.collection.filter.internal.configuration.FFFragmentRendererCollectionFilterConfiguration",
-	service = FragmentRenderer.class
-)
+@Component(service = FragmentRenderer.class)
 public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 
 	@Override
@@ -274,14 +267,6 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 		}
 	}
 
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_ffFragmentRendererCollectionFilterConfiguration =
-			ConfigurableUtil.createConfigurable(
-				FFFragmentRendererCollectionFilterConfiguration.class,
-				properties);
-	}
-
 	private JSONObject _filterTypeOptionsJSONObject(
 		JSONObject configurationJSONObject) {
 
@@ -352,9 +337,6 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private AssetVocabularyService _assetVocabularyService;
-
-	private volatile FFFragmentRendererCollectionFilterConfiguration
-		_ffFragmentRendererCollectionFilterConfiguration;
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;

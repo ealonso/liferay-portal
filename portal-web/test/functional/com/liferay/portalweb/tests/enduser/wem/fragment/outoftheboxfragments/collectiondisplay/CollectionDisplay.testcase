@@ -153,7 +153,6 @@ definition {
 	@priority = "5"
 	test AddCollectionDisplayWithCategoriesForThisItemToAnotherCollectionDisplayWithDynamicCollection {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a vocabulary") {
 			JSONCategory.addVocabulary(
@@ -393,7 +392,6 @@ definition {
 	@priority = "4"
 	test AddCollectionDisplayWithItemsWithThisCategoryToAnotherCollectionDisplayWithCategoriesForThisItem {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a vocabulary") {
 			JSONCategory.addVocabulary(
@@ -578,7 +576,6 @@ definition {
 	@priority = "5"
 	test AddCollectionDisplayWithManualCollectionToAnotherCollectionDisplayWithRecentContent {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a web content,a blogs entry and a document") {
 			JSONWebcontent.addWebContent(
@@ -731,7 +728,6 @@ definition {
 	@priority = "4"
 	test AddCollectionDisplayWithMostViewedAssetsToAnotherCollectionDisplayWithManualCollection {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a web content,a blogs entry and a document") {
 			JSONWebcontent.addWebContent(
@@ -889,7 +885,6 @@ definition {
 	@priority = "5"
 	test AddCollectionDisplayWithRelatedAssetsToAnotherCollectionDisplayWithHighestRatedAssets {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a web content,a blogs entry and a document") {
 			JSONWebcontent.addWebContent(
@@ -1129,7 +1124,6 @@ definition {
 	@priority = "4"
 	test AddCollectionDisplayWithRelatedAssetsToAnotherCollectionDisplayWithItemsWithThisCategory {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a display page template for Category") {
 			JSONLayoutpagetemplate.addDisplayPageTemplateEntry(
@@ -4755,7 +4749,6 @@ definition {
 	@priority = "5"
 	test ViewRelatedAssetsInCollectionDisplayWithNewRelatedAssets {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 		property testray.main.component.name = "Display Pages";
 
 		task ("Add a display page template for Web Content Article and Basic Web Content") {
@@ -5008,7 +5001,6 @@ definition {
 	@priority = "5"
 	test ViewRelatedCategoriesInCollectionDisplayWithCategoriesForThisItem {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a display page template for Web Content Article and Basic Web Content") {
 			JSONLayoutpagetemplate.addDisplayPageTemplateEntry(
