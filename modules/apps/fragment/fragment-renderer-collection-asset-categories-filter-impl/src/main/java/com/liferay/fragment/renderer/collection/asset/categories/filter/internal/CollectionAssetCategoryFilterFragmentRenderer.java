@@ -21,11 +21,9 @@ import com.liferay.asset.kernel.service.AssetVocabularyService;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
-import com.liferay.fragment.renderer.collection.asset.categories.filter.internal.configuration.FFFragmentRendererCollectionAssetCategoryFilterConfiguration;
 import com.liferay.fragment.renderer.collection.asset.categories.filter.internal.constants.CollectionAssetCategoryFilterFragmentRendererWebKeys;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -44,7 +42,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.RequestDispatcher;
@@ -53,16 +50,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Rubén Pulido
  */
-@Component(
-	configurationPid = "com.liferay.fragment.renderer.collection.asset.categories.filter.internal.configuration.FFFragmentRendererCollectionAssetCategoryFilterConfiguration",
-	service = FragmentRenderer.class
-)
+@Component(service = FragmentRenderer.class)
 public class CollectionAssetCategoryFilterFragmentRenderer
 	implements FragmentRenderer {
 
@@ -105,17 +98,6 @@ public class CollectionAssetCategoryFilterFragmentRenderer
 			"content.Language", getClass());
 
 		return LanguageUtil.get(resourceBundle, "collection-category-filter");
-	}
-
-	@Override
-	public boolean isSelectable(HttpServletRequest httpServletRequest) {
-		if (!_ffFragmentRendererCollectionAssetCategoryFilterConfiguration.
-				enabled()) {
-
-			return false;
-		}
-
-		return true;
 	}
 
 	@Override
@@ -250,15 +232,6 @@ public class CollectionAssetCategoryFilterFragmentRenderer
 		}
 	}
 
-	@Modified
-	protected void activate(Map<String, Object> properties) {
-		_ffFragmentRendererCollectionAssetCategoryFilterConfiguration =
-			ConfigurableUtil.createConfigurable(
-				FFFragmentRendererCollectionAssetCategoryFilterConfiguration.
-					class,
-				properties);
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		CollectionAssetCategoryFilterFragmentRenderer.class);
 
@@ -267,10 +240,6 @@ public class CollectionAssetCategoryFilterFragmentRenderer
 
 	@Reference
 	private AssetVocabularyService _assetVocabularyService;
-
-	private volatile
-		FFFragmentRendererCollectionAssetCategoryFilterConfiguration
-			_ffFragmentRendererCollectionAssetCategoryFilterConfiguration;
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
