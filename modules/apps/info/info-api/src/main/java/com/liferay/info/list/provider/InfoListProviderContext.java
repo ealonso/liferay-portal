@@ -39,6 +39,8 @@ public interface InfoListProviderContext {
 
 	public Optional<Layout> getLayoutOptional();
 
+	public Optional<long[]> getSegmentsEntryIdsOptional();
+
 	public User getUser();
 
 }

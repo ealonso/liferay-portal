@@ -69,6 +69,11 @@ public class DefaultInfoListProviderContext implements InfoListProviderContext {
 	}
 
 	@Override
+	public Optional<long[]> getSegmentsEntryIdsOptional() {
+		return Optional.ofNullable(_segmentsEntryIds);
+	}
+
+	@Override
 	public User getUser() {
 		return _user;
 	}
@@ -83,10 +88,15 @@ public class DefaultInfoListProviderContext implements InfoListProviderContext {
 		_layout = layout;
 	}
 
+	public void setSegmentsEntryIds(long[] segmentsEntryIds) {
+		_segmentsEntryIds = segmentsEntryIds;
+	}
+
 	private final Company _company;
 	private Group _group;
 	private InfoDisplayObjectProvider<?> _infoDisplayObjectProvider;
 	private Layout _layout;
+	private long[] _segmentsEntryIds;
 	private final User _user;
 
 }
