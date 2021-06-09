@@ -15,8 +15,8 @@
 package com.liferay.asset.internal.info.list.provider;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetEntryService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.util.AssetHelper;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -64,13 +65,13 @@ public class RelatedAssetsInfoListProvider
 			return Collections.emptyList();
 		}
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, pagination);
-
-		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
-
 		try {
-			return _assetEntryService.getEntries(assetEntryQuery);
+			Hits hits = _assetHelper.search(
+				getSearchContext(infoListProviderContext),
+				getAssetEntryQuery(infoListProviderContext, null),
+				pagination.getStart(), pagination.getEnd());
+
+			return _assetHelper.getAssetEntries(hits);
 		}
 		catch (Exception exception) {
 			_log.error("Unable to get asset entries", exception);
@@ -89,13 +90,12 @@ public class RelatedAssetsInfoListProvider
 			return 0;
 		}
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, null);
-
-		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
-
 		try {
-			return _assetEntryService.getEntriesCount(assetEntryQuery);
+			Long count = _assetHelper.searchCount(
+				getSearchContext(infoListProviderContext),
+				getAssetEntryQuery(infoListProviderContext, null));
+
+			return count.intValue();
 		}
 		catch (Exception exception) {
 			_log.error("Unable to get asset entries count", exception);
@@ -125,6 +125,19 @@ public class RelatedAssetsInfoListProvider
 		return false;
 	}
 
+	@Override
+	protected AssetEntryQuery getAssetEntryQuery(
+		InfoListProviderContext infoListProviderContext,
+		Pagination pagination) {
+
+		AssetEntryQuery assetEntryQuery = super.getAssetEntryQuery(
+			infoListProviderContext, pagination);
+
+		assetEntryQuery.setLinkedAssetEntryId(_getLayoutAssetEntryId());
+
+		return assetEntryQuery;
+	}
+
 	private long _getLayoutAssetEntryId() {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -146,6 +159,6 @@ public class RelatedAssetsInfoListProvider
 		RelatedAssetsInfoListProvider.class);
 
 	@Reference
-	private AssetEntryService _assetEntryService;
+	private AssetHelper _assetHelper;
 
 }
