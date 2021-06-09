@@ -90,11 +90,10 @@ public class RelatedAssetsInfoListProvider
 
 	@Override
 	protected AssetEntryQuery getAssetEntryQuery(
-		InfoListProviderContext infoListProviderContext,
-		Pagination pagination) {
+		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = super.getAssetEntryQuery(
-			infoListProviderContext, pagination);
+			infoListProviderContext);
 
 		assetEntryQuery.setLinkedAssetEntryId(_getLayoutAssetEntryId());
 

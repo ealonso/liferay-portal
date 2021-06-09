@@ -21,6 +21,7 @@ import com.liferay.asset.util.AssetHelper;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -59,7 +60,9 @@ public abstract class BaseAssetsInfoListProvider
 	public List<AssetEntry> getInfoList(
 		InfoListProviderContext infoListProviderContext) {
 
-		return getInfoList(infoListProviderContext, null, null);
+		return getInfoList(
+			infoListProviderContext,
+			Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS), null);
 	}
 
 	@Override
@@ -70,7 +73,7 @@ public abstract class BaseAssetsInfoListProvider
 		try {
 			Hits hits = assetHelper.search(
 				_getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(infoListProviderContext, null),
+				getAssetEntryQuery(infoListProviderContext),
 				pagination.getStart(), pagination.getEnd());
 
 			return assetHelper.getAssetEntries(hits);
@@ -89,7 +92,7 @@ public abstract class BaseAssetsInfoListProvider
 		try {
 			Long count = assetHelper.searchCount(
 				_getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(infoListProviderContext, null));
+				getAssetEntryQuery(infoListProviderContext));
 
 			return count.intValue();
 		}
@@ -109,8 +112,7 @@ public abstract class BaseAssetsInfoListProvider
 	}
 
 	protected AssetEntryQuery getAssetEntryQuery(
-		InfoListProviderContext infoListProviderContext,
-		Pagination pagination) {
+		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
@@ -144,11 +146,6 @@ public abstract class BaseAssetsInfoListProvider
 			Group group = groupOptional.get();
 
 			assetEntryQuery.setGroupIds(new long[] {group.getGroupId()});
-		}
-
-		if (pagination != null) {
-			assetEntryQuery.setStart(pagination.getStart());
-			assetEntryQuery.setEnd(pagination.getEnd());
 		}
 
 		assetEntryQuery.setOrderByCol1(getOrderByCol());
