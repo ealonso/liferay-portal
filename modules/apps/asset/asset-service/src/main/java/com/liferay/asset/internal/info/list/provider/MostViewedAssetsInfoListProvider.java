@@ -54,7 +54,7 @@ public class MostViewedAssetsInfoListProvider
 		Sort sort) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "viewCount", "DESC", pagination);
+			infoListProviderContext, "viewCount", pagination);
 
 		try {
 			return _assetEntryService.getEntries(assetEntryQuery);
@@ -71,7 +71,7 @@ public class MostViewedAssetsInfoListProvider
 		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "viewCount", "DESC", null);
+			infoListProviderContext, "viewCount", null);
 
 		try {
 			return _assetEntryService.getEntriesCount(assetEntryQuery);

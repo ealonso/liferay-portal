@@ -54,7 +54,7 @@ public class HighestRatedAssetsInfoListProvider
 		Sort sort) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "ratings", "DESC", pagination);
+			infoListProviderContext, "ratings", pagination);
 
 		try {
 			return _assetEntryService.getEntries(assetEntryQuery);
@@ -71,7 +71,7 @@ public class HighestRatedAssetsInfoListProvider
 		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "ratings", "DESC", null);
+			infoListProviderContext, "ratings", null);
 
 		try {
 			return _assetEntryService.getEntriesCount(assetEntryQuery);

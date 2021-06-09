@@ -58,7 +58,7 @@ public class RecentContentInfoListProvider
 			Hits hits = _assetHelper.search(
 				getSearchContext(infoListProviderContext),
 				getAssetEntryQuery(
-					infoListProviderContext, Field.MODIFIED_DATE, "DESC", null),
+					infoListProviderContext, Field.MODIFIED_DATE, null),
 				pagination.getStart(), pagination.getEnd());
 
 			return _assetHelper.getAssetEntries(hits);
@@ -78,8 +78,7 @@ public class RecentContentInfoListProvider
 			Long count = _assetHelper.searchCount(
 				getSearchContext(infoListProviderContext),
 				getAssetEntryQuery(
-					infoListProviderContext, Field.MODIFIED_DATE, "DESC",
-					null));
+					infoListProviderContext, Field.MODIFIED_DATE, null));
 
 			return count.intValue();
 		}

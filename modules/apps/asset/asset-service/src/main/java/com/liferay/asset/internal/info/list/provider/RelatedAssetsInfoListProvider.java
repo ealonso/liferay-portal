@@ -66,7 +66,7 @@ public class RelatedAssetsInfoListProvider
 		}
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, Field.MODIFIED_DATE, "DESC", pagination);
+			infoListProviderContext, Field.MODIFIED_DATE, pagination);
 
 		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
 
@@ -91,7 +91,7 @@ public class RelatedAssetsInfoListProvider
 		}
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, Field.MODIFIED_DATE, "DESC", null);
+			infoListProviderContext, Field.MODIFIED_DATE, null);
 
 		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
 

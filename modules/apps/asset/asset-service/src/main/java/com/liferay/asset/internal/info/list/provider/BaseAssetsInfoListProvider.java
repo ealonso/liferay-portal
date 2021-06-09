@@ -44,7 +44,7 @@ public abstract class BaseAssetsInfoListProvider {
 
 	protected AssetEntryQuery getAssetEntryQuery(
 		InfoListProviderContext infoListProviderContext, String orderByCol,
-		String orderByType, Pagination pagination) {
+		Pagination pagination) {
 
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
@@ -86,7 +86,7 @@ public abstract class BaseAssetsInfoListProvider {
 		}
 
 		assetEntryQuery.setOrderByCol1(orderByCol);
-		assetEntryQuery.setOrderByType1(orderByType);
+		assetEntryQuery.setOrderByType1("DESC");
 
 		assetEntryQuery.setOrderByCol2(Field.CREATE_DATE);
 		assetEntryQuery.setOrderByType2("DESC");
