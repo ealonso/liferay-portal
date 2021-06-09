@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -66,7 +65,7 @@ public class RelatedAssetsInfoListProvider
 		}
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, Field.MODIFIED_DATE, pagination);
+			infoListProviderContext, pagination);
 
 		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
 
@@ -91,7 +90,7 @@ public class RelatedAssetsInfoListProvider
 		}
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, Field.MODIFIED_DATE, null);
+			infoListProviderContext, null);
 
 		assetEntryQuery.setLinkedAssetEntryId(assetEntryId);
 

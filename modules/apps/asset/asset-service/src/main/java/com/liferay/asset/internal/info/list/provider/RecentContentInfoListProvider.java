@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 
 import java.util.Collections;
@@ -57,8 +56,7 @@ public class RecentContentInfoListProvider
 		try {
 			Hits hits = _assetHelper.search(
 				getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(
-					infoListProviderContext, Field.MODIFIED_DATE, null),
+				getAssetEntryQuery(infoListProviderContext, null),
 				pagination.getStart(), pagination.getEnd());
 
 			return _assetHelper.getAssetEntries(hits);
@@ -77,8 +75,7 @@ public class RecentContentInfoListProvider
 		try {
 			Long count = _assetHelper.searchCount(
 				getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(
-					infoListProviderContext, Field.MODIFIED_DATE, null));
+				getAssetEntryQuery(infoListProviderContext, null));
 
 			return count.intValue();
 		}

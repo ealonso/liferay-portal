@@ -54,7 +54,7 @@ public class HighestRatedAssetsInfoListProvider
 		Sort sort) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "ratings", pagination);
+			infoListProviderContext, pagination);
 
 		try {
 			return _assetEntryService.getEntries(assetEntryQuery);
@@ -71,7 +71,7 @@ public class HighestRatedAssetsInfoListProvider
 		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "ratings", null);
+			infoListProviderContext, null);
 
 		try {
 			return _assetEntryService.getEntriesCount(assetEntryQuery);
@@ -89,6 +89,11 @@ public class HighestRatedAssetsInfoListProvider
 			_resourceBundleLoader.loadResourceBundle(locale);
 
 		return LanguageUtil.get(resourceBundle, "highest-rated-assets");
+	}
+
+	@Override
+	protected String getOrderByCol() {
+		return "ratings";
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

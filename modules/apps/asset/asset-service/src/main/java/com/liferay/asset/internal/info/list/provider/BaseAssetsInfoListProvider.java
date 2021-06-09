@@ -43,7 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 public abstract class BaseAssetsInfoListProvider {
 
 	protected AssetEntryQuery getAssetEntryQuery(
-		InfoListProviderContext infoListProviderContext, String orderByCol,
+		InfoListProviderContext infoListProviderContext,
 		Pagination pagination) {
 
 		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
@@ -85,13 +85,17 @@ public abstract class BaseAssetsInfoListProvider {
 			assetEntryQuery.setEnd(pagination.getEnd());
 		}
 
-		assetEntryQuery.setOrderByCol1(orderByCol);
+		assetEntryQuery.setOrderByCol1(getOrderByCol());
 		assetEntryQuery.setOrderByType1("DESC");
 
 		assetEntryQuery.setOrderByCol2(Field.CREATE_DATE);
 		assetEntryQuery.setOrderByType2("DESC");
 
 		return assetEntryQuery;
+	}
+
+	protected String getOrderByCol() {
+		return Field.MODIFIED_DATE;
 	}
 
 	protected SearchContext getSearchContext(
@@ -122,7 +126,7 @@ public abstract class BaseAssetsInfoListProvider {
 			user.getUserId());
 
 		searchContext.setSorts(
-			SortFactoryUtil.create(Field.MODIFIED_DATE, Sort.LONG_TYPE, true),
+			SortFactoryUtil.create(getOrderByCol(), Sort.LONG_TYPE, true),
 			SortFactoryUtil.create(Field.CREATE_DATE, Sort.LONG_TYPE, true));
 
 		return searchContext;

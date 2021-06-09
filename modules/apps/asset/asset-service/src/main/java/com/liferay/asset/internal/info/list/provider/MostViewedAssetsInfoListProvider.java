@@ -54,7 +54,7 @@ public class MostViewedAssetsInfoListProvider
 		Sort sort) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "viewCount", pagination);
+			infoListProviderContext, pagination);
 
 		try {
 			return _assetEntryService.getEntries(assetEntryQuery);
@@ -71,7 +71,7 @@ public class MostViewedAssetsInfoListProvider
 		InfoListProviderContext infoListProviderContext) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, "viewCount", null);
+			infoListProviderContext, null);
 
 		try {
 			return _assetEntryService.getEntriesCount(assetEntryQuery);
@@ -89,6 +89,11 @@ public class MostViewedAssetsInfoListProvider
 			_resourceBundleLoader.loadResourceBundle(locale);
 
 		return LanguageUtil.get(resourceBundle, "most-viewed-assets");
+	}
+
+	@Override
+	protected String getOrderByCol() {
+		return "viewCount";
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
