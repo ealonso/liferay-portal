@@ -20,7 +20,6 @@ import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -28,7 +27,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,8 +68,8 @@ public class RelatedAssetsInfoListProvider
 	}
 
 	@Override
-	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "related-assets");
+	public String getLabelKey() {
+		return "related-assets";
 	}
 
 	@Override

@@ -16,14 +16,8 @@ package com.liferay.asset.internal.info.list.provider;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.info.list.provider.InfoListProvider;
-import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
-
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Pavel Savinov
@@ -33,19 +27,8 @@ public class HighestRatedAssetsInfoListProvider
 	extends BaseAssetsInfoListProvider implements InfoListProvider<AssetEntry> {
 
 	@Override
-	public String getLabel(Locale locale) {
-		ResourceBundle resourceBundle =
-			_resourceBundleLoader.loadResourceBundle(locale);
-
-		return LanguageUtil.get(resourceBundle, "highest-rated-assets");
+	public String getLabelKey() {
+		return "highest-rated-assets";
 	}
-
-	@Override
-	protected String getOrderByCol() {
-		return "ratings";
-	}
-
-	@Reference(target = "(bundle.symbolic.name=com.liferay.asset.service)")
-	private ResourceBundleLoader _resourceBundleLoader;
 
 }

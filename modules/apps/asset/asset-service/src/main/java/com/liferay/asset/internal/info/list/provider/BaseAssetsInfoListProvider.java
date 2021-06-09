@@ -21,12 +21,14 @@ import com.liferay.asset.util.AssetHelper;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -41,7 +43,9 @@ import com.liferay.portal.kernel.util.Portal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Reference;
 
@@ -96,6 +100,14 @@ public abstract class BaseAssetsInfoListProvider
 		return 0;
 	}
 
+	@Override
+	public String getLabel(Locale locale) {
+		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
+			locale);
+
+		return LanguageUtil.get(resourceBundle, getLabelKey());
+	}
+
 	protected AssetEntryQuery getAssetEntryQuery(
 		InfoListProviderContext infoListProviderContext,
 		Pagination pagination) {
@@ -148,6 +160,8 @@ public abstract class BaseAssetsInfoListProvider
 		return assetEntryQuery;
 	}
 
+	protected abstract String getLabelKey();
+
 	protected String getOrderByCol() {
 		return Field.MODIFIED_DATE;
 	}
@@ -191,6 +205,9 @@ public abstract class BaseAssetsInfoListProvider
 
 	@Reference
 	protected Portal portal;
+
+	@Reference(target = "(bundle.symbolic.name=com.liferay.asset.service)")
+	protected ResourceBundleLoader resourceBundleLoader;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseAssetsInfoListProvider.class);
