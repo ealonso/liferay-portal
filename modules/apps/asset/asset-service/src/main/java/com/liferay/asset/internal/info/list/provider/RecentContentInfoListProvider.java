@@ -15,7 +15,6 @@
 package com.liferay.asset.internal.info.list.provider;
 
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
@@ -55,13 +54,12 @@ public class RecentContentInfoListProvider
 		InfoListProviderContext infoListProviderContext, Pagination pagination,
 		Sort sort) {
 
-		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			infoListProviderContext, Field.MODIFIED_DATE, "DESC", pagination);
-
 		try {
 			Hits hits = _assetHelper.search(
-				getSearchContext(infoListProviderContext), assetEntryQuery,
-				assetEntryQuery.getStart(), assetEntryQuery.getEnd());
+				getSearchContext(infoListProviderContext),
+				getAssetEntryQuery(
+					infoListProviderContext, Field.MODIFIED_DATE, "DESC", null),
+				pagination.getStart(), pagination.getEnd());
 
 			return _assetHelper.getAssetEntries(hits);
 		}
