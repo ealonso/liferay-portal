@@ -16,16 +16,12 @@ package com.liferay.asset.internal.info.list.provider;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
-import com.liferay.asset.util.AssetHelper;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -38,7 +34,6 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -46,13 +41,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = InfoListProvider.class)
 public class RelatedAssetsInfoListProvider
 	extends BaseAssetsInfoListProvider implements InfoListProvider<AssetEntry> {
-
-	@Override
-	public List<AssetEntry> getInfoList(
-		InfoListProviderContext infoListProviderContext) {
-
-		return getInfoList(infoListProviderContext, null, null);
-	}
 
 	@Override
 	public List<AssetEntry> getInfoList(
@@ -65,19 +53,7 @@ public class RelatedAssetsInfoListProvider
 			return Collections.emptyList();
 		}
 
-		try {
-			Hits hits = _assetHelper.search(
-				getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(infoListProviderContext, null),
-				pagination.getStart(), pagination.getEnd());
-
-			return _assetHelper.getAssetEntries(hits);
-		}
-		catch (Exception exception) {
-			_log.error("Unable to get asset entries", exception);
-		}
-
-		return Collections.emptyList();
+		return super.getInfoList(infoListProviderContext, pagination, sort);
 	}
 
 	@Override
@@ -90,18 +66,7 @@ public class RelatedAssetsInfoListProvider
 			return 0;
 		}
 
-		try {
-			Long count = _assetHelper.searchCount(
-				getSearchContext(infoListProviderContext),
-				getAssetEntryQuery(infoListProviderContext, null));
-
-			return count.intValue();
-		}
-		catch (Exception exception) {
-			_log.error("Unable to get asset entries count", exception);
-		}
-
-		return 0;
+		return super.getInfoListCount(infoListProviderContext);
 	}
 
 	@Override
@@ -154,11 +119,5 @@ public class RelatedAssetsInfoListProvider
 
 		return 0;
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		RelatedAssetsInfoListProvider.class);
-
-	@Reference
-	private AssetHelper _assetHelper;
 
 }

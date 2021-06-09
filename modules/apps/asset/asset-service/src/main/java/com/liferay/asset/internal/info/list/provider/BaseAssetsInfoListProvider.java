@@ -15,14 +15,20 @@
 package com.liferay.asset.internal.info.list.provider;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.asset.util.AssetHelper;
+import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.Pagination;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -32,7 +38,9 @@ import com.liferay.portal.kernel.search.SortFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Reference;
@@ -40,7 +48,53 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Pavel Savinov
  */
-public abstract class BaseAssetsInfoListProvider {
+public abstract class BaseAssetsInfoListProvider
+	implements InfoListProvider<AssetEntry> {
+
+	@Override
+	public List<AssetEntry> getInfoList(
+		InfoListProviderContext infoListProviderContext) {
+
+		return getInfoList(infoListProviderContext, null, null);
+	}
+
+	@Override
+	public List<AssetEntry> getInfoList(
+		InfoListProviderContext infoListProviderContext, Pagination pagination,
+		com.liferay.info.sort.Sort sort) {
+
+		try {
+			Hits hits = assetHelper.search(
+				getSearchContext(infoListProviderContext),
+				getAssetEntryQuery(infoListProviderContext, null),
+				pagination.getStart(), pagination.getEnd());
+
+			return assetHelper.getAssetEntries(hits);
+		}
+		catch (Exception exception) {
+			_log.error("Unable to get asset entries", exception);
+		}
+
+		return Collections.emptyList();
+	}
+
+	@Override
+	public int getInfoListCount(
+		InfoListProviderContext infoListProviderContext) {
+
+		try {
+			Long count = assetHelper.searchCount(
+				getSearchContext(infoListProviderContext),
+				getAssetEntryQuery(infoListProviderContext, null));
+
+			return count.intValue();
+		}
+		catch (Exception exception) {
+			_log.error("Unable to get asset entries count", exception);
+		}
+
+		return 0;
+	}
 
 	protected AssetEntryQuery getAssetEntryQuery(
 		InfoListProviderContext infoListProviderContext,
@@ -133,6 +187,12 @@ public abstract class BaseAssetsInfoListProvider {
 	}
 
 	@Reference
+	protected AssetHelper assetHelper;
+
+	@Reference
 	protected Portal portal;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseAssetsInfoListProvider.class);
 
 }
