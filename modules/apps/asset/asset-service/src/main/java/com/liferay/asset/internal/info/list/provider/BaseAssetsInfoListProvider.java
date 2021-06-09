@@ -69,7 +69,7 @@ public abstract class BaseAssetsInfoListProvider
 
 		try {
 			Hits hits = assetHelper.search(
-				getSearchContext(infoListProviderContext),
+				_getSearchContext(infoListProviderContext),
 				getAssetEntryQuery(infoListProviderContext, null),
 				pagination.getStart(), pagination.getEnd());
 
@@ -88,7 +88,7 @@ public abstract class BaseAssetsInfoListProvider
 
 		try {
 			Long count = assetHelper.searchCount(
-				getSearchContext(infoListProviderContext),
+				_getSearchContext(infoListProviderContext),
 				getAssetEntryQuery(infoListProviderContext, null));
 
 			return count.intValue();
@@ -166,7 +166,16 @@ public abstract class BaseAssetsInfoListProvider
 		return Field.MODIFIED_DATE;
 	}
 
-	protected SearchContext getSearchContext(
+	@Reference
+	protected AssetHelper assetHelper;
+
+	@Reference
+	protected Portal portal;
+
+	@Reference(target = "(bundle.symbolic.name=com.liferay.asset.service)")
+	protected ResourceBundleLoader resourceBundleLoader;
+
+	private SearchContext _getSearchContext(
 			InfoListProviderContext infoListProviderContext)
 		throws Exception {
 
@@ -199,15 +208,6 @@ public abstract class BaseAssetsInfoListProvider
 
 		return searchContext;
 	}
-
-	@Reference
-	protected AssetHelper assetHelper;
-
-	@Reference
-	protected Portal portal;
-
-	@Reference(target = "(bundle.symbolic.name=com.liferay.asset.service)")
-	protected ResourceBundleLoader resourceBundleLoader;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseAssetsInfoListProvider.class);
