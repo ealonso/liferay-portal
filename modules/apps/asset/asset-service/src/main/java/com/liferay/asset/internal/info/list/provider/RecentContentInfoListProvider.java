@@ -24,22 +24,13 @@ import com.liferay.info.sort.Sort;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchContextFactory;
-import com.liferay.portal.kernel.search.SortFactoryUtil;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.osgi.service.component.annotations.Component;
@@ -69,7 +60,7 @@ public class RecentContentInfoListProvider
 
 		try {
 			Hits hits = _assetHelper.search(
-				_getSearchContext(infoListProviderContext), assetEntryQuery,
+				getSearchContext(infoListProviderContext), assetEntryQuery,
 				assetEntryQuery.getStart(), assetEntryQuery.getEnd());
 
 			return _assetHelper.getAssetEntries(hits);
@@ -87,7 +78,7 @@ public class RecentContentInfoListProvider
 
 		try {
 			Long count = _assetHelper.searchCount(
-				_getSearchContext(infoListProviderContext),
+				getSearchContext(infoListProviderContext),
 				getAssetEntryQuery(
 					infoListProviderContext, Field.MODIFIED_DATE, "DESC",
 					null));
@@ -107,44 +98,6 @@ public class RecentContentInfoListProvider
 			_resourceBundleLoader.loadResourceBundle(locale);
 
 		return LanguageUtil.get(resourceBundle, "recent-content");
-	}
-
-	private SearchContext _getSearchContext(
-			InfoListProviderContext infoListProviderContext)
-		throws Exception {
-
-		Company company = infoListProviderContext.getCompany();
-
-		long groupId = company.getGroupId();
-
-		Optional<Group> groupOptional =
-			infoListProviderContext.getGroupOptional();
-
-		if (groupOptional.isPresent()) {
-			Group group = groupOptional.get();
-
-			groupId = group.getGroupId();
-		}
-
-		User user = infoListProviderContext.getUser();
-
-		Optional<Layout> layoutOptional =
-			infoListProviderContext.getLayoutOptional();
-
-		SearchContext searchContext = SearchContextFactory.getInstance(
-			new long[0], new String[0], new HashMap<>(), company.getCompanyId(),
-			null, layoutOptional.orElse(null), null, groupId, null,
-			user.getUserId());
-
-		searchContext.setSorts(
-			SortFactoryUtil.create(
-				Field.MODIFIED_DATE,
-				com.liferay.portal.kernel.search.Sort.LONG_TYPE, true),
-			SortFactoryUtil.create(
-				Field.CREATE_DATE,
-				com.liferay.portal.kernel.search.Sort.LONG_TYPE, true));
-
-		return searchContext;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
