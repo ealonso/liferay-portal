@@ -23,7 +23,10 @@ import java.util.Locale;
 
 /**
  * @author Jorge Ferrer
+ * @deprecated As of Athanasius (7.3.x), replaced by {@link
+ *             InfoItemListProvider}
  */
+@Deprecated
 public interface InfoListProvider<T> extends Keyed {
 
 	public List<T> getInfoList(InfoListProviderContext infoListProviderContext);
