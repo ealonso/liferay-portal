@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.info.list.provider.CollectionQuery;
 import com.liferay.info.list.provider.InfoItemRelatedListProvider;
 import com.liferay.info.list.provider.InfoListProvider;
 import com.liferay.info.list.provider.InfoListProviderContext;
@@ -182,17 +183,23 @@ public class LayoutListRetrieverTest {
 		implements InfoItemRelatedListProvider<AssetEntry, AssetTag> {
 
 		@Override
-		public String getLabel(Locale locale) {
-			return StringPool.BLANK;
+		public InfoPage<AssetTag> getInfoPage(CollectionQuery collectionQuery) {
+			Object object = collectionQuery.getRelatedObject();
+
+			if (!(object instanceof AssetEntry)) {
+				return InfoPage.of(
+					Collections.emptyList(), collectionQuery.getPagination(),
+					0);
+			}
+
+			AssetEntry assetEntry = (AssetEntry)object;
+
+			return InfoPage.of(assetEntry.getTags());
 		}
 
 		@Override
-		public InfoPage<AssetTag> getRelatedItemsInfoPage(
-			AssetEntry assetEntry,
-			InfoListProviderContext infoListProviderContext,
-			Pagination pagination, Sort sort) {
-
-			return InfoPage.of(assetEntry.getTags());
+		public String getLabel(Locale locale) {
+			return StringPool.BLANK;
 		}
 
 	}

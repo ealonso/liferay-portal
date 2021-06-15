@@ -19,8 +19,8 @@ import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalServic
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.info.list.provider.CollectionQuery;
 import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -47,25 +48,17 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
 	implements InfoItemRelatedListProvider<AssetCategory, AssetEntry> {
 
 	@Override
-	public String getLabel(Locale locale) {
-		Bundle bundle = FrameworkUtil.getBundle(getClass());
+	public InfoPage<AssetEntry> getInfoPage(CollectionQuery collectionQuery) {
+		Object object = collectionQuery.getRelatedObject();
 
-		ResourceBundleLoader resourceBundleLoader =
-			ResourceBundleLoaderUtil.
-				getResourceBundleLoaderByBundleSymbolicName(
-					bundle.getSymbolicName());
+		if (!(object instanceof AssetCategory)) {
+			return InfoPage.of(
+				Collections.emptyList(), collectionQuery.getPagination(), 0);
+		}
 
-		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
-			locale);
+		AssetCategory assetCategory = (AssetCategory)object;
 
-		return LanguageUtil.get(resourceBundle, "items-with-this-category");
-	}
-
-	@Override
-	public InfoPage<AssetEntry> getRelatedItemsInfoPage(
-		AssetCategory assetCategory,
-		InfoListProviderContext infoListProviderContext, Pagination pagination,
-		Sort sort) {
+		Pagination pagination = collectionQuery.getPagination();
 
 		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
 			_assetEntryAssetCategoryRelLocalService.
@@ -99,6 +92,8 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
 
 						@Override
 						public boolean isAscending() {
+							Sort sort = collectionQuery.getSort();
+
 							if (sort == null) {
 								return true;
 							}
@@ -131,6 +126,21 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
 				_assetEntryAssetCategoryRelLocalService.
 					getAssetEntryAssetCategoryRelsCountByAssetCategoryId(
 						assetCategory.getCategoryId()));
+	}
+
+	@Override
+	public String getLabel(Locale locale) {
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		ResourceBundleLoader resourceBundleLoader =
+			ResourceBundleLoaderUtil.
+				getResourceBundleLoaderByBundleSymbolicName(
+					bundle.getSymbolicName());
+
+		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
+			locale);
+
+		return LanguageUtil.get(resourceBundle, "items-with-this-category");
 	}
 
 	@Reference

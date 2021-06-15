@@ -18,8 +18,8 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.info.list.provider.CollectionQuery;
 import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.util.Collections;
 import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
@@ -46,29 +47,36 @@ public class RelatedAssetsInfoItemRelatedListProvider
 	implements InfoItemRelatedListProvider<AssetEntry, AssetEntry> {
 
 	@Override
-	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "related-assets");
-	}
+	public InfoPage<AssetEntry> getInfoPage(CollectionQuery collectionQuery) {
+		Object object = collectionQuery.getRelatedObject();
 
-	@Override
-	public InfoPage<AssetEntry> getRelatedItemsInfoPage(
-		AssetEntry assetEntry, InfoListProviderContext infoListProviderContext,
-		Pagination pagination, Sort sort) {
+		if (!(object instanceof AssetEntry)) {
+			return InfoPage.of(
+				Collections.emptyList(), collectionQuery.getPagination(), 0);
+		}
+
+		AssetEntry assetEntry = (AssetEntry)object;
 
 		try {
 			AssetEntryQuery assetEntryQuery = _getAssetEntryQuery(
-				assetEntry.getCompanyId(), assetEntry.getGroupId(), pagination,
-				sort);
+				assetEntry.getCompanyId(), assetEntry.getGroupId(),
+				collectionQuery.getPagination(), collectionQuery.getSort());
 
 			assetEntryQuery.setLinkedAssetEntryId(assetEntry.getEntryId());
 
 			return InfoPage.of(
-				_assetEntryService.getEntries(assetEntryQuery), pagination,
-				() -> _getTotalCount(assetEntry, sort));
+				_assetEntryService.getEntries(assetEntryQuery),
+				collectionQuery.getPagination(),
+				() -> _getTotalCount(assetEntry, collectionQuery.getSort()));
 		}
 		catch (PortalException portalException) {
 			return ReflectionUtil.throwException(portalException);
 		}
+	}
+
+	@Override
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "related-assets");
 	}
 
 	private AssetEntryQuery _getAssetEntryQuery(
