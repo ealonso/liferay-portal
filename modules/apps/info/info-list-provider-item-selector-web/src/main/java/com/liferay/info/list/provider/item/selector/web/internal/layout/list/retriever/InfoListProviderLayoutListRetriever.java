@@ -18,19 +18,16 @@ import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.InfoRequestItemProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.filter.PropertyInfoItemServiceFilter;
-import com.liferay.info.list.provider.DefaultInfoListProviderContext;
-import com.liferay.info.list.provider.FilteredInfoListProvider;
-import com.liferay.info.list.provider.InfoListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
+import com.liferay.info.list.provider.CollectionQuery;
+import com.liferay.info.list.provider.InfoItemListProvider;
 import com.liferay.info.list.provider.InfoListProviderTracker;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
+import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.layout.list.retriever.KeyListObjectReference;
 import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverContext;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -59,48 +56,35 @@ public class InfoListProviderLayoutListRetriever
 		KeyListObjectReference keyListObjectReference,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
-		InfoListProvider<Object> infoListProvider =
-			(InfoListProvider<Object>)
-				_infoListProviderTracker.getInfoListProvider(
-					keyListObjectReference.getKey());
+		InfoItemListProvider<?, ?> infoItemListProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemListProvider.class, keyListObjectReference.getKey());
 
-		if (infoListProvider == null) {
+		if (infoItemListProvider == null) {
 			return Collections.emptyList();
 		}
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		Group group = _groupLocalService.fetchGroup(
-			serviceContext.getScopeGroupId());
-
-		User user = _userLocalService.fetchUser(
-			PrincipalThreadLocal.getUserId());
-
-		InfoListProviderContext infoListProviderContext =
-			new DefaultInfoListProviderContext(group, user);
-
 		Optional<Pagination> paginationOptional =
 			layoutListRetrieverContext.getPaginationOptional();
 
-		Pagination pagination = paginationOptional.orElse(
-			Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS));
+		CollectionQuery collectionQuery = CollectionQuery.builder(
+		).setGroup(
+			_groupLocalService.fetchGroup(serviceContext.getScopeGroupId())
+		).setPagination(
+			paginationOptional.orElse(
+				Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
+		).setInfoFilter(
+			_getInfoFilter(infoItemListProvider, layoutListRetrieverContext)
+		).setUser(
+			_userLocalService.fetchUser(PrincipalThreadLocal.getUserId())
+		).build();
 
-		if (infoListProvider instanceof FilteredInfoListProvider) {
-			FilteredInfoListProvider<Object, InfoFilter>
-				filteredInfoListProvider =
-					(FilteredInfoListProvider<Object, InfoFilter>)
-						infoListProvider;
+		InfoPage infoPage = infoItemListProvider.getInfoPage(collectionQuery);
 
-			return filteredInfoListProvider.getInfoList(
-				infoListProviderContext,
-				_getInfoFilter(
-					filteredInfoListProvider, layoutListRetrieverContext),
-				pagination, null);
-		}
-
-		return infoListProvider.getInfoList(
-			infoListProviderContext, pagination, null);
+		return infoPage.getPageItems();
 	}
 
 	@Override
@@ -108,43 +92,39 @@ public class InfoListProviderLayoutListRetriever
 		KeyListObjectReference keyListObjectReference,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
-		InfoListProvider<?> infoListProvider =
-			_infoListProviderTracker.getInfoListProvider(
-				keyListObjectReference.getKey());
+		InfoItemListProvider<?, ?> infoItemListProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemListProvider.class, keyListObjectReference.getKey());
 
-		if (infoListProvider == null) {
+		if (infoItemListProvider == null) {
 			return 0;
 		}
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
-		Group group = _groupLocalService.fetchGroup(
-			serviceContext.getScopeGroupId());
+		Optional<Pagination> paginationOptional =
+			layoutListRetrieverContext.getPaginationOptional();
 
-		User user = _userLocalService.fetchUser(
-			PrincipalThreadLocal.getUserId());
+		CollectionQuery collectionQuery = CollectionQuery.builder(
+		).setGroup(
+			_groupLocalService.fetchGroup(serviceContext.getScopeGroupId())
+		).setPagination(
+			paginationOptional.orElse(
+				Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
+		).setInfoFilter(
+			_getInfoFilter(infoItemListProvider, layoutListRetrieverContext)
+		).setUser(
+			_userLocalService.fetchUser(PrincipalThreadLocal.getUserId())
+		).build();
 
-		InfoListProviderContext infoListProviderContext =
-			new DefaultInfoListProviderContext(group, user);
+		InfoPage infoPage = infoItemListProvider.getInfoPage(collectionQuery);
 
-		if (infoListProvider instanceof FilteredInfoListProvider) {
-			FilteredInfoListProvider<Object, InfoFilter>
-				filteredInfoListProvider =
-					(FilteredInfoListProvider<Object, InfoFilter>)
-						infoListProvider;
-
-			return filteredInfoListProvider.getInfoListCount(
-				infoListProviderContext,
-				_getInfoFilter(
-					filteredInfoListProvider, layoutListRetrieverContext));
-		}
-
-		return infoListProvider.getInfoListCount(infoListProviderContext);
+		return infoPage.getTotalCount();
 	}
 
 	private InfoFilter _getInfoFilter(
-		FilteredInfoListProvider<Object, InfoFilter> filteredInfoListProvider,
+		InfoItemListProvider<?, ?> infoItemListProvider,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
 		Optional<HttpServletRequest> httpServletRequestOptional =
@@ -157,8 +137,7 @@ public class InfoListProviderLayoutListRetriever
 			return null;
 		}
 
-		Class<?> infoFilterClass =
-			filteredInfoListProvider.getInfoFilterClass();
+		Class<?> infoFilterClass = infoItemListProvider.getInfoFilterClass();
 
 		InfoRequestItemProvider<InfoFilter> infoRequestItemProvider =
 			_infoItemServiceTracker.getFirstInfoItemService(
