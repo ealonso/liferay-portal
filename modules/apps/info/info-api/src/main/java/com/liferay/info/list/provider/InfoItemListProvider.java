@@ -14,6 +14,7 @@
 
 package com.liferay.info.list.provider;
 
+import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.type.Keyed;
 import com.liferay.info.type.Labeled;
@@ -22,10 +23,15 @@ import com.liferay.petra.reflect.GenericUtil;
 /**
  * @author Jorge Ferrer
  */
-public interface InfoItemListProvider<R> extends Keyed, Labeled {
+public interface InfoItemListProvider<R, F extends InfoFilter>
+	extends Keyed, Labeled {
 
 	public default Class<? extends R> getCollectionItemClass() {
 		return (Class<? extends R>)GenericUtil.getGenericClass(this, 1);
+	}
+
+	public default Class<F> getInfoFilterClass() {
+		return (Class<F>)GenericUtil.getGenericClass(this, 1);
 	}
 
 	public InfoPage<? extends R> getInfoPage(CollectionQuery collectionQuery);
