@@ -94,8 +94,8 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return GetterUtil.getString(_getStyleProperty("borderRadius"));
 	}
 
-	public int getBorderWidth() {
-		return GetterUtil.getInteger(_getStyleProperty("borderWidth"));
+	public String getBorderWidth() {
+		return GetterUtil.getString(_getStyleProperty("borderWidth"));
 	}
 
 	public String getContentDisplay() {
@@ -152,20 +152,20 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return GetterUtil.getString(_getStyleProperty("justify"));
 	}
 
-	public int getMarginBottom() {
-		return GetterUtil.getInteger(_getStyleProperty("marginBottom"), -1);
+	public String getMarginBottom() {
+		return GetterUtil.getString(_getStyleProperty("marginBottom"));
 	}
 
-	public int getMarginLeft() {
-		return GetterUtil.getInteger(_getStyleProperty("marginLeft"), -1);
+	public String getMarginLeft() {
+		return GetterUtil.getString(_getStyleProperty("marginLeft"));
 	}
 
-	public int getMarginRight() {
-		return GetterUtil.getInteger(_getStyleProperty("marginRight"), -1);
+	public String getMarginRight() {
+		return GetterUtil.getString(_getStyleProperty("marginRight"));
 	}
 
-	public int getMarginTop() {
-		return GetterUtil.getInteger(_getStyleProperty("marginTop"), -1);
+	public String getMarginTop() {
+		return GetterUtil.getString(_getStyleProperty("marginTop"));
 	}
 
 	public String getMaxHeight() {
@@ -184,28 +184,28 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return GetterUtil.getString(_getStyleProperty("minWidth"));
 	}
 
-	public int getOpacity() {
-		return GetterUtil.getInteger(_getStyleProperty("opacity"), -1);
+	public String getOpacity() {
+		return GetterUtil.getString(_getStyleProperty("opacity"));
 	}
 
 	public String getOverflow() {
 		return GetterUtil.getString(_getStyleProperty("overflow"));
 	}
 
-	public int getPaddingBottom() {
-		return GetterUtil.getInteger(_getStyleProperty("paddingBottom"), -1);
+	public String getPaddingBottom() {
+		return GetterUtil.getString(_getStyleProperty("paddingBottom"));
 	}
 
-	public int getPaddingLeft() {
-		return GetterUtil.getInteger(_getStyleProperty("paddingLeft"), -1);
+	public String getPaddingLeft() {
+		return GetterUtil.getString(_getStyleProperty("paddingLeft"));
 	}
 
-	public int getPaddingRight() {
-		return GetterUtil.getInteger(_getStyleProperty("paddingRight"), -1);
+	public String getPaddingRight() {
+		return GetterUtil.getString(_getStyleProperty("paddingRight"));
 	}
 
-	public int getPaddingTop() {
-		return GetterUtil.getInteger(_getStyleProperty("paddingTop"), -1);
+	public String getPaddingTop() {
+		return GetterUtil.getString(_getStyleProperty("paddingTop"));
 	}
 
 	public String getShadow() {

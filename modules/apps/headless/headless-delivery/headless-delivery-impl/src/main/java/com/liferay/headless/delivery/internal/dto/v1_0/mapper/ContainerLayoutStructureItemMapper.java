@@ -29,6 +29,7 @@ import com.liferay.layout.page.template.util.ShadowConverter;
 import com.liferay.layout.util.structure.ContainerStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -156,28 +157,37 @@ public class ContainerLayoutStructureItemMapper
 				borderRadius = BorderRadius.create(
 					BorderRadiusConverter.convertToExternalValue(
 						containerStyledLayoutStructureItem.getBorderRadius()));
-				borderWidth =
-					containerStyledLayoutStructureItem.getBorderWidth();
+				borderWidth = GetterUtil.getInteger(
+					containerStyledLayoutStructureItem.getBorderWidth());
 				justify = Justify.create(
 					JustifyConverter.convertToExternalValue(
 						containerStyledLayoutStructureItem.getJustify()));
 				marginBottom = MarginConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getMarginBottom());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getMarginBottom()));
 				marginLeft = MarginConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getMarginLeft());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getMarginLeft()));
 				marginRight = MarginConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getMarginRight());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getMarginRight()));
 				marginTop = MarginConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getMarginTop());
-				opacity = containerStyledLayoutStructureItem.getOpacity();
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getMarginTop()));
+				opacity = GetterUtil.getInteger(
+					containerStyledLayoutStructureItem.getOpacity(), 100);
 				paddingBottom = PaddingConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getPaddingBottom());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getPaddingBottom()));
 				paddingLeft = PaddingConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getPaddingLeft());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getPaddingLeft()));
 				paddingRight = PaddingConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getPaddingRight());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getPaddingRight()));
 				paddingTop = PaddingConverter.convertToExternalValue(
-					containerStyledLayoutStructureItem.getPaddingTop());
+					GetterUtil.getInteger(
+						containerStyledLayoutStructureItem.getPaddingTop()));
 				shadow = Shadow.create(
 					ShadowConverter.convertToExternalValue(
 						containerStyledLayoutStructureItem.getShadow()));
