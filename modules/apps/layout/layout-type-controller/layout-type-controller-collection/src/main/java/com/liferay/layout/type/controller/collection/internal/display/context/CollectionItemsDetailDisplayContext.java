@@ -17,14 +17,17 @@ package com.liferay.layout.type.controller.collection.internal.display.context;
 import com.liferay.asset.list.asset.entry.provider.AssetListAssetEntryProvider;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryLocalService;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.filter.ScopeInfoFilter;
 import com.liferay.info.item.InfoItemServiceTracker;
-import com.liferay.info.list.provider.DefaultInfoListProviderContext;
-import com.liferay.info.list.provider.InfoListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
+import com.liferay.info.pagination.InfoPage;
 import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayRenderRequest;
 import com.liferay.portal.kernel.portlet.LiferayRenderResponse;
@@ -81,7 +84,7 @@ public class CollectionItemsDetailDisplayContext {
 				collectionType,
 				InfoListProviderItemSelectorReturnType.class.getName())) {
 
-			return _getInfoListProviderItemCount(collectionPK);
+			return _getInfoCollectionProviderItemCount(collectionPK);
 		}
 		else if (Objects.equals(
 					collectionType,
@@ -143,30 +146,54 @@ public class CollectionItemsDetailDisplayContext {
 			assetListEntry, 0);
 	}
 
-	private long _getInfoListProviderItemCount(String collectionPK) {
-		List<InfoListProvider<?>> infoListProviders =
-			(List<InfoListProvider<?>>)
+	private long _getInfoCollectionProviderItemCount(String collectionPK) {
+		List<InfoCollectionProvider<?>> infoCollectionProviders =
+			(List<InfoCollectionProvider<?>>)
 				(List<?>)_infoItemServiceTracker.getAllInfoItemServices(
-					InfoListProvider.class);
+					InfoCollectionProvider.class);
 
-		Stream<InfoListProvider<?>> stream = infoListProviders.stream();
+		Stream<InfoCollectionProvider<?>> stream =
+			infoCollectionProviders.stream();
 
-		Optional<InfoListProvider<?>> infoListProviderOptional = stream.filter(
-			infoListProvider -> Objects.equals(
-				infoListProvider.getKey(), collectionPK)
-		).findFirst();
+		Optional<InfoCollectionProvider<?>> infoCollectionProviderOptional =
+			stream.filter(
+				infoCollectionProvider -> Objects.equals(
+					infoCollectionProvider.getKey(), collectionPK)
+			).findFirst();
 
-		if (!infoListProviderOptional.isPresent()) {
+		if (!infoCollectionProviderOptional.isPresent()) {
 			return 0;
 		}
 
-		InfoListProvider<?> infoListProvider = infoListProviderOptional.get();
+		InfoCollectionProvider<?> infoCollectionProvider =
+			infoCollectionProviderOptional.get();
 
-		InfoListProviderContext infoListProviderContext =
-			new DefaultInfoListProviderContext(
-				_themeDisplay.getScopeGroup(), _themeDisplay.getUser());
+		InfoPage<?> infoPage = infoCollectionProvider.getInfoPage(
+			CollectionQuery.builder(
+			).setInfoFilter(
+				new ScopeInfoFilter() {
 
-		return infoListProvider.getInfoListCount(infoListProviderContext);
+					@Override
+					public Company getCompany() {
+						return _themeDisplay.getCompany();
+					}
+
+					@Override
+					public Group getGroup() {
+						return _themeDisplay.getScopeGroup();
+					}
+
+					@Override
+					public Layout getLayout() {
+						return _themeDisplay.getLayout();
+					}
+
+				}
+			).setUser(
+				_themeDisplay.getUser()
+			).build());
+
+		return infoPage.getTotalCount();
 	}
 
 	private final AssetListAssetEntryProvider _assetListAssetEntryProvider;
