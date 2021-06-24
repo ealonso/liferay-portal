@@ -58,7 +58,7 @@ public class InfoItemSelectorTrackerImpl implements InfoItemSelectorTracker {
 	public Set<String> getInfoItemSelectorsClassNames() {
 		return new HashSet(
 			_infoItemServiceTracker.getInfoItemClassNames(
-				InfoListProvider.class));
+				InfoItemSelector.class));
 	}
 
 	@Reference
