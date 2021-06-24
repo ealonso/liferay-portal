@@ -14,23 +14,26 @@
 
 package com.liferay.info.list.provider.item.selector.web.internal.layout.list.retriever;
 
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.InfoRequestItemProvider;
+import com.liferay.info.filter.ScopeInfoFilter;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.filter.PropertyInfoItemServiceFilter;
-import com.liferay.info.list.provider.DefaultInfoListProviderContext;
-import com.liferay.info.list.provider.FilteredInfoListProvider;
-import com.liferay.info.list.provider.InfoListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
+import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.layout.list.retriever.KeyListObjectReference;
 import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverContext;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -58,48 +61,56 @@ public class InfoCollectionProviderLayoutListRetriever
 		KeyListObjectReference keyListObjectReference,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
-		InfoListProvider<Object> infoListProvider =
-			(InfoListProvider<Object>)
+		InfoCollectionProvider<Object> infoCollectionProvider =
+			(InfoCollectionProvider<Object>)
 				_infoItemServiceTracker.getInfoItemService(
-					InfoListProvider.class, keyListObjectReference.getKey());
+					InfoCollectionProvider.class,
+					keyListObjectReference.getKey());
 
-		if (infoListProvider == null) {
+		if (infoCollectionProvider == null) {
 			return Collections.emptyList();
 		}
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		Group group = _groupLocalService.fetchGroup(
-			serviceContext.getScopeGroupId());
-
-		User user = _userLocalService.fetchUser(
-			PrincipalThreadLocal.getUserId());
-
-		InfoListProviderContext infoListProviderContext =
-			new DefaultInfoListProviderContext(group, user);
+		InfoPage<?> infoPage = null;
 
 		Optional<Pagination> paginationOptional =
 			layoutListRetrieverContext.getPaginationOptional();
 
-		Pagination pagination = paginationOptional.orElse(
-			Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS));
+		if (infoCollectionProvider instanceof FilteredInfoCollectionProvider) {
+			FilteredInfoCollectionProvider<Object, InfoFilter>
+				filteredInfoCollectionProvider =
+					(FilteredInfoCollectionProvider<Object, InfoFilter>)
+						infoCollectionProvider;
 
-		if (infoListProvider instanceof FilteredInfoListProvider) {
-			FilteredInfoListProvider<Object, InfoFilter>
-				filteredInfoListProvider =
-					(FilteredInfoListProvider<Object, InfoFilter>)
-						infoListProvider;
-
-			return filteredInfoListProvider.getInfoList(
-				infoListProviderContext,
-				_getInfoFilter(
-					filteredInfoListProvider, layoutListRetrieverContext),
-				pagination, null);
+			infoPage = filteredInfoCollectionProvider.getInfoPage(
+				CollectionQuery.builder(
+				).setInfoFilter(
+					_getInfoFilter(
+						filteredInfoCollectionProvider,
+						layoutListRetrieverContext)
+				).setPagination(
+					paginationOptional.orElse(
+						Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
+				).setUser(
+					_userLocalService.fetchUser(
+						PrincipalThreadLocal.getUserId())
+				).build());
+		}
+		else {
+			infoPage = infoCollectionProvider.getInfoPage(
+				CollectionQuery.builder(
+				).setInfoFilter(
+					new InfoCollectionProviderLayoutListRetrieverFilter()
+				).setPagination(
+					paginationOptional.orElse(
+						Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
+				).setUser(
+					_userLocalService.fetchUser(
+						PrincipalThreadLocal.getUserId())
+				).build());
 		}
 
-		return infoListProvider.getInfoList(
-			infoListProviderContext, pagination, null);
+		return (List<Object>)infoPage.getPageItems();
 	}
 
 	@Override
@@ -107,43 +118,50 @@ public class InfoCollectionProviderLayoutListRetriever
 		KeyListObjectReference keyListObjectReference,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
-		InfoListProvider<?> infoListProvider =
+		InfoCollectionProvider<?> infoCollectionProvider =
 			_infoItemServiceTracker.getInfoItemService(
-				InfoListProvider.class, keyListObjectReference.getKey());
+				InfoCollectionProvider.class, keyListObjectReference.getKey());
 
-		if (infoListProvider == null) {
+		if (infoCollectionProvider == null) {
 			return 0;
 		}
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		InfoPage<?> infoPage = null;
 
-		Group group = _groupLocalService.fetchGroup(
-			serviceContext.getScopeGroupId());
+		if (infoCollectionProvider instanceof FilteredInfoCollectionProvider) {
+			FilteredInfoCollectionProvider<Object, InfoFilter>
+				filteredInfoCollectionProvider =
+					(FilteredInfoCollectionProvider<Object, InfoFilter>)
+						infoCollectionProvider;
 
-		User user = _userLocalService.fetchUser(
-			PrincipalThreadLocal.getUserId());
-
-		InfoListProviderContext infoListProviderContext =
-			new DefaultInfoListProviderContext(group, user);
-
-		if (infoListProvider instanceof FilteredInfoListProvider) {
-			FilteredInfoListProvider<Object, InfoFilter>
-				filteredInfoListProvider =
-					(FilteredInfoListProvider<Object, InfoFilter>)
-						infoListProvider;
-
-			return filteredInfoListProvider.getInfoListCount(
-				infoListProviderContext,
-				_getInfoFilter(
-					filteredInfoListProvider, layoutListRetrieverContext));
+			infoPage = infoCollectionProvider.getInfoPage(
+				CollectionQuery.builder(
+				).setInfoFilter(
+					_getInfoFilter(
+						filteredInfoCollectionProvider,
+						layoutListRetrieverContext)
+				).setUser(
+					_userLocalService.fetchUser(
+						PrincipalThreadLocal.getUserId())
+				).build());
+		}
+		else {
+			infoPage = infoCollectionProvider.getInfoPage(
+				CollectionQuery.builder(
+				).setInfoFilter(
+					new InfoCollectionProviderLayoutListRetrieverFilter()
+				).setUser(
+					_userLocalService.fetchUser(
+						PrincipalThreadLocal.getUserId())
+				).build());
 		}
 
-		return infoListProvider.getInfoListCount(infoListProviderContext);
+		return infoPage.getTotalCount();
 	}
 
 	private InfoFilter _getInfoFilter(
-		FilteredInfoListProvider<Object, InfoFilter> filteredInfoListProvider,
+		FilteredInfoCollectionProvider<Object, InfoFilter>
+			filteredInfoCollectionProvider,
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
 		Optional<HttpServletRequest> httpServletRequestOptional =
@@ -157,7 +175,7 @@ public class InfoCollectionProviderLayoutListRetriever
 		}
 
 		Class<?> infoFilterClass =
-			filteredInfoListProvider.getInfoFilterClass();
+			filteredInfoCollectionProvider.getInfoFilterClass();
 
 		InfoRequestItemProvider<InfoFilter> infoRequestItemProvider =
 			_infoItemServiceTracker.getFirstInfoItemService(
@@ -169,6 +187,9 @@ public class InfoCollectionProviderLayoutListRetriever
 	}
 
 	@Reference
+	private CompanyLocalService _companyLocalService;
+
+	@Reference
 	private GroupLocalService _groupLocalService;
 
 	@Reference
@@ -176,5 +197,33 @@ public class InfoCollectionProviderLayoutListRetriever
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	private class InfoCollectionProviderLayoutListRetrieverFilter
+		implements ScopeInfoFilter {
+
+		@Override
+		public Company getCompany() {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			return _companyLocalService.fetchCompany(
+				serviceContext.getCompanyId());
+		}
+
+		@Override
+		public Group getGroup() {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			return _groupLocalService.fetchGroup(
+				serviceContext.getScopeGroupId());
+		}
+
+		@Override
+		public Layout getLayout() {
+			return null;
+		}
+
+	}
 
 }
