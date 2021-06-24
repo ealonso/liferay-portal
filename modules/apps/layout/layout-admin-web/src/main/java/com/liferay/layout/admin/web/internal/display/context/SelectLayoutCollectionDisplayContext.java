@@ -19,6 +19,7 @@ import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.list.provider.DefaultInfoListProviderContext;
@@ -74,22 +75,23 @@ public class SelectLayoutCollectionDisplayContext {
 			_httpServletRequest);
 	}
 
-	public SearchContainer<InfoListProvider<?>>
+	public SearchContainer<InfoCollectionProvider<?>>
 		getCollectionProvidersSearchContainer() {
 
-		SearchContainer<InfoListProvider<?>> searchContainer =
+		SearchContainer<InfoCollectionProvider<?>> searchContainer =
 			new SearchContainer<>(
 				_liferayPortletRequest, getPortletURL(), null,
 				LanguageUtil.get(
 					_httpServletRequest, "there-are-no-collection-providers"));
 
-		List<InfoListProvider<?>> infoListProviders = _getInfoListProviders();
+		List<InfoCollectionProvider<?>> infoCollectionProviders =
+			_getInfoCollectionProviders();
 
 		searchContainer.setResults(
 			ListUtil.subList(
-				infoListProviders, searchContainer.getStart(),
+				infoCollectionProviders, searchContainer.getStart(),
 				searchContainer.getEnd()));
-		searchContainer.setTotal(infoListProviders.size());
+		searchContainer.setTotal(infoCollectionProviders.size());
 
 		return searchContainer;
 	}
@@ -239,11 +241,11 @@ public class SelectLayoutCollectionDisplayContext {
 		return infoItemClassNames;
 	}
 
-	private List<InfoListProvider<?>> _getInfoListProviders() {
-		List<InfoListProvider<?>> infoListProviders =
-			(List<InfoListProvider<?>>)
+	private List<InfoCollectionProvider<?>> _getInfoCollectionProviders() {
+		List<InfoCollectionProvider<?>> infoCollectionProviders =
+			(List<InfoCollectionProvider<?>>)
 				(List<?>)_infoItemServiceTracker.getAllInfoItemServices(
-					InfoListProvider.class);
+					InfoCollectionProvider.class);
 
 		DefaultInfoListProviderContext defaultInfoListProviderContext =
 			new DefaultInfoListProviderContext(
@@ -252,14 +254,14 @@ public class SelectLayoutCollectionDisplayContext {
 		defaultInfoListProviderContext.setLayout(_themeDisplay.getLayout());
 
 		return ListUtil.filter(
-			infoListProviders,
-			infoListProvider -> {
+			infoCollectionProviders,
+			infoCollectionProvider -> {
 				try {
-					String label = infoListProvider.getLabel(
+					String label = infoCollectionProvider.getLabel(
 						_themeDisplay.getLocale());
 
 					if (Validator.isNotNull(label) &&
-						infoListProvider.isAvailable(
+						infoCollectionProvider.isAvailable(
 							defaultInfoListProviderContext)) {
 
 						return true;
