@@ -46,10 +46,13 @@ import com.liferay.asset.publisher.web.internal.util.AssetPublisherCustomizer;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.asset.util.AssetPublisherAddItemHolder;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.info.filter.ScopeInfoFilter;
 import com.liferay.info.item.InfoItemServiceTracker;
-import com.liferay.info.list.provider.DefaultInfoListProviderContext;
 import com.liferay.info.list.provider.InfoListProvider;
+import com.liferay.info.pagination.InfoPage;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
 import com.liferay.item.selector.criteria.info.item.criterion.InfoListItemSelectorCriterion;
@@ -67,6 +70,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -341,18 +346,14 @@ public class AssetPublisherDisplayContext {
 					return Collections.emptyList();
 				}
 
-				InfoListProvider<AssetEntry> infoListProvider =
-					(InfoListProvider<AssetEntry>)
+				InfoCollectionProvider<AssetEntry> infoCollectionProvider =
+					(InfoCollectionProvider<AssetEntry>)
 						_infoItemServiceTracker.getInfoItemService(
-							InfoListProvider.class, infoListProviderKey);
+							InfoCollectionProvider.class, infoListProviderKey);
 
-				if (infoListProvider == null) {
+				if (infoCollectionProvider == null) {
 					return Collections.emptyList();
 				}
-
-				DefaultInfoListProviderContext defaultInfoListProviderContext =
-					new DefaultInfoListProviderContext(
-						_themeDisplay.getScopeGroup(), _themeDisplay.getUser());
 
 				LayoutDisplayPageObjectProvider<?>
 					layoutDisplayPageObjectProvider =
@@ -361,18 +362,37 @@ public class AssetPublisherDisplayContext {
 								LayoutDisplayPageWebKeys.
 									LAYOUT_DISPLAY_PAGE_OBJECT_PROVIDER);
 
-				InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
-					_getInfoDisplayObjectProvider(
-						layoutDisplayPageObjectProvider);
-
 				defaultInfoListProviderContext.setInfoDisplayObjectProvider(
-					infoDisplayObjectProvider);
+					_getInfoDisplayObjectProvider(
+						layoutDisplayPageObjectProvider));
 
-				defaultInfoListProviderContext.setLayout(
-					_themeDisplay.getLayout());
+				InfoPage infoPage = infoCollectionProvider.getInfoPage(
+					CollectionQuery.builder(
+					).setInfoFilter(
+						new ScopeInfoFilter() {
 
-				assetEntries = infoListProvider.getInfoList(
-					defaultInfoListProviderContext);
+							@Override
+							public Company getCompany() {
+								return _themeDisplay.getCompany();
+							}
+
+							@Override
+							public Group getGroup() {
+								return _themeDisplay.getScopeGroup();
+							}
+
+							@Override
+							public Layout getLayout() {
+								return _themeDisplay.getLayout();
+							}
+
+						}
+					).setUser(
+						_themeDisplay.getUser()
+					).build()
+				);
+
+				assetEntries = (List<AssetEntry>)infoPage.getPageItems();
 			}
 
 			if (assetEntries.isEmpty() ||
