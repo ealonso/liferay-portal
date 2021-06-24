@@ -19,6 +19,8 @@ import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
 import com.liferay.portal.kernel.model.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,8 +33,8 @@ public class CollectionQuery {
 		return new Builder();
 	}
 
-	public Optional<InfoFilter> getInfoFilterOptional() {
-		return Optional.of(_builder._infoFilter);
+	public Optional<List<InfoFilter>> getInfoFiltersOptional() {
+		return Optional.of(_builder._infoFilters);
 	}
 
 	public Optional<Pagination> getPaginationOptional() {
@@ -53,8 +55,8 @@ public class CollectionQuery {
 			return new CollectionQuery(this);
 		}
 
-		public Builder setInfoFilter(InfoFilter infoFilter) {
-			_infoFilter = infoFilter;
+		public Builder addInfoFilter(InfoFilter infoFilter) {
+			_infoFilters.add(infoFilter);
 
 			return this;
 		}
@@ -77,7 +79,7 @@ public class CollectionQuery {
 			return this;
 		}
 
-		private InfoFilter _infoFilter;
+		private List<InfoFilter> _infoFilters = new ArrayList<>();
 		private Pagination _pagination;
 		private Sort _sort;
 		private User _user;

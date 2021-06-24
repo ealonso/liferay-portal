@@ -170,7 +170,7 @@ public class CollectionItemsDetailDisplayContext {
 
 		InfoPage<?> infoPage = infoCollectionProvider.getInfoPage(
 			CollectionQuery.builder(
-			).setInfoFilter(
+			).addInfoFilter(
 				new ScopeInfoFilter() {
 
 					@Override

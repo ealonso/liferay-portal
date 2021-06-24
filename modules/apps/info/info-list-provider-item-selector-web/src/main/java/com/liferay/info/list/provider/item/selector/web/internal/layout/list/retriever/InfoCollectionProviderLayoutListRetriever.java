@@ -84,10 +84,12 @@ public class InfoCollectionProviderLayoutListRetriever
 
 			infoPage = filteredInfoCollectionProvider.getInfoPage(
 				CollectionQuery.builder(
-				).setInfoFilter(
+				).addInfoFilter(
 					_getInfoFilter(
 						filteredInfoCollectionProvider,
 						layoutListRetrieverContext)
+				).addInfoFilter(
+					new InfoCollectionProviderScopeInfoFilter()
 				).setPagination(
 					paginationOptional.orElse(
 						Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
@@ -99,8 +101,8 @@ public class InfoCollectionProviderLayoutListRetriever
 		else {
 			infoPage = infoCollectionProvider.getInfoPage(
 				CollectionQuery.builder(
-				).setInfoFilter(
-					new InfoCollectionProviderLayoutListRetrieverFilter()
+				).addInfoFilter(
+					new InfoCollectionProviderScopeInfoFilter()
 				).setPagination(
 					paginationOptional.orElse(
 						Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS))
@@ -136,10 +138,12 @@ public class InfoCollectionProviderLayoutListRetriever
 
 			infoPage = infoCollectionProvider.getInfoPage(
 				CollectionQuery.builder(
-				).setInfoFilter(
+				).addInfoFilter(
 					_getInfoFilter(
 						filteredInfoCollectionProvider,
 						layoutListRetrieverContext)
+				).addInfoFilter(
+					new InfoCollectionProviderScopeInfoFilter()
 				).setUser(
 					_userLocalService.fetchUser(
 						PrincipalThreadLocal.getUserId())
@@ -148,8 +152,8 @@ public class InfoCollectionProviderLayoutListRetriever
 		else {
 			infoPage = infoCollectionProvider.getInfoPage(
 				CollectionQuery.builder(
-				).setInfoFilter(
-					new InfoCollectionProviderLayoutListRetrieverFilter()
+				).addInfoFilter(
+					new InfoCollectionProviderScopeInfoFilter()
 				).setUser(
 					_userLocalService.fetchUser(
 						PrincipalThreadLocal.getUserId())
@@ -198,7 +202,7 @@ public class InfoCollectionProviderLayoutListRetriever
 	@Reference
 	private UserLocalService _userLocalService;
 
-	private class InfoCollectionProviderLayoutListRetrieverFilter
+	private class InfoCollectionProviderScopeInfoFilter
 		implements ScopeInfoFilter {
 
 		@Override

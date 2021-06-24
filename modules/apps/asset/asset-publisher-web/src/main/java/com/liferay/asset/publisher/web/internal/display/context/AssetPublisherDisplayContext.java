@@ -368,7 +368,7 @@ public class AssetPublisherDisplayContext {
 
 				InfoPage infoPage = infoCollectionProvider.getInfoPage(
 					CollectionQuery.builder(
-					).setInfoFilter(
+					).addInfoFilter(
 						new ScopeInfoFilter() {
 
 							@Override
