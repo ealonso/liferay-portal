@@ -31,9 +31,9 @@ import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
+import com.liferay.info.list.provider.item.selector.criterion.InfoCollectionProviderItemSelectorCriterion;
 import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorCriterion;
 import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorReturnType;
-import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorCriterion;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.info.list.renderer.DefaultInfoListRendererContext;
 import com.liferay.info.list.renderer.InfoListRenderer;
@@ -279,15 +279,15 @@ public class GetCollectionFieldMVCResourceCommand
 		infoListItemSelectorCriterion.setItemTypes(
 			_getInfoItemFormProviderClassNames());
 
-		InfoListProviderItemSelectorCriterion
-			infoListProviderItemSelectorCriterion =
-				new InfoListProviderItemSelectorCriterion();
+		InfoCollectionProviderItemSelectorCriterion
+			infoCollectionProviderItemSelectorCriterion =
+				new InfoCollectionProviderItemSelectorCriterion();
 
-		infoListProviderItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			new InfoListProviderItemSelectorReturnType());
-		infoListProviderItemSelectorCriterion.setItemTypes(
+		infoCollectionProviderItemSelectorCriterion.
+			setDesiredItemSelectorReturnTypes(
+				new InfoListProviderItemSelectorReturnType());
+		infoCollectionProviderItemSelectorCriterion.setItemTypes(
 			_getInfoItemFormProviderClassNames());
-		infoListProviderItemSelectorCriterion.setPlid(plid);
 
 		InfoItemRelatedListProviderItemSelectorCriterion
 			infoItemRelatedListProviderItemSelectorCriterion =
@@ -315,7 +315,7 @@ public class GetCollectionFieldMVCResourceCommand
 		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
 			namespace + "selectInfoList", infoListItemSelectorCriterion,
-			infoListProviderItemSelectorCriterion,
+			infoCollectionProviderItemSelectorCriterion,
 			infoItemRelatedListProviderItemSelectorCriterion);
 
 		if (infoListSelectorURL == null) {
