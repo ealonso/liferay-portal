@@ -16,11 +16,16 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+
+import java.util.List;
 
 import javax.portlet.PortletURL;
 
@@ -43,6 +48,23 @@ public class TemplateManagementToolbarDisplayContext
 			templatesSearchContainer);
 
 		_tabs1 = tabs1;
+	}
+
+	@Override
+	public List<DropdownItem> getActionDropdownItems() {
+		return DropdownItemListBuilder.add(
+			dropdownItem -> {
+				dropdownItem.putData("action", _DELETE_SELECTED_TEMPLATES);
+				dropdownItem.setIcon("times-circle");
+				dropdownItem.setLabel(
+					LanguageUtil.get(httpServletRequest, "delete"));
+				dropdownItem.setQuickAction(true);
+			}
+		).build();
+	}
+
+	public String getAvailableActions(DDMTemplate ddmTemplate) {
+		return _DELETE_SELECTED_TEMPLATES;
 	}
 
 	@Override
@@ -77,6 +99,9 @@ public class TemplateManagementToolbarDisplayContext
 	public String getSearchContainerId() {
 		return "ddmTemplates";
 	}
+
+	private static final String _DELETE_SELECTED_TEMPLATES =
+		"deleteSelectedTemplates";
 
 	private final String _tabs1;
 
