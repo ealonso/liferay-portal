@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.template.web.internal.util.TemplatesUtil;
 
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class TemplateManagementToolbarDisplayContext
 
 	@Override
 	public CreationMenu getCreationMenu() {
-		return  CreationMenuBuilder.addDropdownItem(
+		CreationMenu creationMenu = CreationMenuBuilder.addDropdownItem(
 			dropdownItem -> {
 				dropdownItem.setData(
 					HashMapBuilder.<String, Object>put(
@@ -115,8 +116,14 @@ public class TemplateManagementToolbarDisplayContext
 					LanguageUtil.get(httpServletRequest, "add"));
 			}
 		).build();
-	}
 
+		creationMenu.put(
+			"mappingTypes",
+			TemplatesUtil.getMappingTypesJSONArray(
+				_tabs1, _themeDisplay.getLocale()));
+
+		return creationMenu;
+	}
 
 	@Override
 	public String getDefaultEventHandler() {
