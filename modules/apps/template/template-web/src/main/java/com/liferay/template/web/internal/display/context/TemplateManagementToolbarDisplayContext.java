@@ -16,6 +16,8 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -24,6 +26,9 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 
@@ -48,6 +53,9 @@ public class TemplateManagementToolbarDisplayContext
 			templatesSearchContainer);
 
 		_tabs1 = tabs1;
+
+		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 	}
 
 	@Override
@@ -84,6 +92,33 @@ public class TemplateManagementToolbarDisplayContext
 	}
 
 	@Override
+	public CreationMenu getCreationMenu() {
+		return  CreationMenuBuilder.addDropdownItem(
+			dropdownItem -> {
+				dropdownItem.setData(
+					HashMapBuilder.<String, Object>put(
+						"action", "addTemplate"
+					).put(
+						"addTemplatsURL",
+						PortletURLBuilder.createActionURL(
+							liferayPortletResponse
+						).setActionName(
+							"/template/add_template"
+						).setBackURL(
+							_themeDisplay.getURLCurrent()
+						).setParameter(
+							"_tabs1", _tabs1
+						).buildString()
+					).build());
+
+				dropdownItem.setLabel(
+					LanguageUtil.get(httpServletRequest, "add"));
+			}
+		).build();
+	}
+
+
+	@Override
 	public String getDefaultEventHandler() {
 		return "TEMPLATE_MANAGEMENT_TOOLBAR_DEFAULT_EVENT_HANDLER";
 	}
@@ -104,5 +139,6 @@ public class TemplateManagementToolbarDisplayContext
 		"deleteSelectedTemplates";
 
 	private final String _tabs1;
+	private final ThemeDisplay _themeDisplay;
 
 }
