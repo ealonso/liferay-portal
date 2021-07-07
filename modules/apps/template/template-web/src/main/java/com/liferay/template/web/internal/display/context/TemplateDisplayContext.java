@@ -15,6 +15,8 @@
 package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -47,6 +49,30 @@ public class TemplateDisplayContext {
 
 		_httpServletRequest = PortalUtil.getHttpServletRequest(
 			_liferayPortletRequest);
+	}
+
+	public List<DropdownItem> getDDMTemplateActionDropdownItems(
+		DDMTemplate ddmTemplate) {
+
+		return Collections.emptyList();
+	}
+
+	public String getEditURL(DDMTemplate ddmTemplate) {
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			"/edit_template.jsp"
+		).setParameter(
+			"classNameId", ddmTemplate.getClassNameId()
+		).setParameter(
+			"classPK", ddmTemplate.getClassPK()
+		).setParameter(
+			"groupId", ddmTemplate.getGroupId()
+		).setParameter(
+			"templateId", ddmTemplate.getTemplateId()
+		).setParameter(
+			"type", ddmTemplate.getType()
+		).buildString();
 	}
 
 	public List<NavigationItem> getNavigationItems() {
