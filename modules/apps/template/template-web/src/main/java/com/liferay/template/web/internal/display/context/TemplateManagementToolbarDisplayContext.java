@@ -120,7 +120,8 @@ public class TemplateManagementToolbarDisplayContext
 		creationMenu.put(
 			"mappingTypes",
 			TemplatesUtil.getMappingTypesJSONArray(
-				_tabs1, _themeDisplay.getLocale()));
+				_tabs1, _themeDisplay.getScopeGroupId(),
+				_themeDisplay.getLocale()));
 
 		return creationMenu;
 	}

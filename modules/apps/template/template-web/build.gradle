@@ -8,7 +8,9 @@ dependencies {
 	compileOnly project(":apps:dynamic-data-mapping:dynamic-data-mapping-api")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-clay")
+	compileOnly project(":apps:info:info-api")
 	compileOnly project(":apps:petra:petra-portlet-url-builder")
+	compileOnly project(":apps:portlet-display-template:portlet-display-template-api")
 	compileOnly project(":core:petra:petra-function")
 	compileOnly project(":core:petra:petra-string")
 }
