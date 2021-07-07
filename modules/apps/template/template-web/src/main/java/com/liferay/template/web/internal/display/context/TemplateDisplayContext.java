@@ -15,7 +15,6 @@
 package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
-import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
@@ -26,6 +25,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.templates.web.internal.util.TemplateActionDropdownItemsProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,9 +52,14 @@ public class TemplateDisplayContext {
 	}
 
 	public List<DropdownItem> getDDMTemplateActionDropdownItems(
-		DDMTemplate ddmTemplate) {
+			DDMTemplate ddmTemplate)
+		throws Exception {
 
-		return Collections.emptyList();
+		TemplateActionDropdownItemsProvider ddmTemplateActionDropdownItems =
+			new TemplateActionDropdownItemsProvider(
+				ddmTemplate, _httpServletRequest, _liferayPortletResponse);
+
+		return ddmTemplateActionDropdownItems.getActionDropdownItems();
 	}
 
 	public String getEditURL(DDMTemplate ddmTemplate) {
