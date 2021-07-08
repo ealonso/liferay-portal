@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.asset.categories.info.list.provider.test;
+package com.liferay.asset.categories.info.collection.provider.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
@@ -21,14 +21,14 @@ import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
 import com.liferay.info.pagination.InfoPage;
-import com.liferay.info.pagination.Pagination;
 import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -54,7 +54,7 @@ import org.junit.runner.RunWith;
  * @author Jürgen Kappler
  */
 @RunWith(Arquillian.class)
-public class AssetCategoriesForAssetEntryInfoItemRelatedListProviderTest {
+public class AssetCategoriesForAssetEntryRelatedInfoItemCollectionProviderTest {
 
 	@ClassRule
 	@Rule
@@ -99,25 +99,27 @@ public class AssetCategoriesForAssetEntryInfoItemRelatedListProviderTest {
 			_portal.getClassNameId(JournalArticle.class.getName()),
 			journalArticle.getResourcePrimKey());
 
-		String infoRelatedListProviderClassName =
-			"com.liferay.asset.categories.admin.web.internal.info.list." +
-				"provider." +
-					"AssetCategoriesForAssetEntryInfoItemRelatedListProvider";
+		StringBundler sb = new StringBundler(4);
 
-		InfoItemRelatedListProvider<AssetEntry, AssetCategory>
-			infoItemRelatedListProvider =
+		sb.append("com.liferay.asset.categories.admin.web.internal.info.");
+		sb.append("collection.provider.");
+		sb.append("AssetCategoriesForAssetEntryRelatedInfoItemCollection");
+		sb.append("Provider");
+
+		RelatedInfoItemCollectionProvider<AssetEntry, AssetCategory>
+			relatedInfoItemCollectionProvider =
 				_infoItemServiceTracker.getInfoItemService(
-					InfoItemRelatedListProvider.class,
-					infoRelatedListProviderClassName);
+					RelatedInfoItemCollectionProvider.class, sb.toString());
 
-		Assert.assertNotNull(infoItemRelatedListProvider);
+		Assert.assertNotNull(relatedInfoItemCollectionProvider);
 
-		Pagination pagination = Pagination.of(
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		CollectionQuery collectionQuery = new CollectionQuery();
 
-		InfoPage<? extends AssetCategory> relatedItemsInfoPage =
-			infoItemRelatedListProvider.getRelatedItemsInfoPage(
-				assetEntry, null, pagination, null);
+		collectionQuery.setRelatedItem(assetEntry);
+
+		InfoPage<AssetCategory> relatedItemsInfoPage =
+			relatedInfoItemCollectionProvider.getCollectionInfoPage(
+				collectionQuery);
 
 		Assert.assertNotNull(relatedItemsInfoPage);
 
