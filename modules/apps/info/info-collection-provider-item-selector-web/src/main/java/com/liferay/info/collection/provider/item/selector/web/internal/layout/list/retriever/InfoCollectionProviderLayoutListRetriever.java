@@ -60,7 +60,18 @@ public class InfoCollectionProviderLayoutListRetriever
 			return Collections.emptyList();
 		}
 
+		Optional<Object> contextObjectOptional =
+			layoutListRetrieverContext.getContextObjectOptional();
+
+		Object relatedItem = contextObjectOptional.orElse(null);
+
+		if (relatedItem == null) {
+			return Collections.emptyList();
+		}
+
 		CollectionQuery collectionQuery = new CollectionQuery();
+
+		collectionQuery.setRelatedItem(relatedItem);
 
 		Optional<Pagination> paginationOptional =
 			layoutListRetrieverContext.getPaginationOptional();
@@ -98,7 +109,18 @@ public class InfoCollectionProviderLayoutListRetriever
 			return 0;
 		}
 
+		Optional<Object> contextObjectOptional =
+			layoutListRetrieverContext.getContextObjectOptional();
+
+		Object relatedItem = contextObjectOptional.orElse(null);
+
+		if (relatedItem == null) {
+			return 0;
+		}
+
 		CollectionQuery collectionQuery = new CollectionQuery();
+
+		collectionQuery.setRelatedItem(relatedItem);
 
 		if (infoCollectionProvider instanceof FilteredInfoCollectionProvider) {
 			FilteredInfoCollectionProvider<Object, InfoFilter>
