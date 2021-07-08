@@ -32,8 +32,6 @@ import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorCriterion;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorReturnType;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.info.list.renderer.DefaultInfoListRendererContext;
 import com.liferay.info.list.renderer.InfoListRenderer;
@@ -327,14 +325,6 @@ public class GetCollectionFieldMVCResourceCommand
 		infoCollectionProviderItemSelectorCriterion.setItemTypes(
 			_getInfoItemFormProviderClassNames());
 
-		InfoItemRelatedListProviderItemSelectorCriterion
-			infoItemRelatedListProviderItemSelectorCriterion =
-				new InfoItemRelatedListProviderItemSelectorCriterion();
-
-		infoItemRelatedListProviderItemSelectorCriterion.
-			setDesiredItemSelectorReturnTypes(
-				new InfoItemRelatedListProviderItemSelectorReturnType());
-
 		List<String> sourceItemTypes = new ArrayList<>();
 
 		sourceItemTypes.add(itemType);
@@ -347,14 +337,13 @@ public class GetCollectionFieldMVCResourceCommand
 			sourceItemTypes.add(AssetEntry.class.getName());
 		}
 
-		infoItemRelatedListProviderItemSelectorCriterion.setSourceItemTypes(
+		infoCollectionProviderItemSelectorCriterion.setSourceItemTypes(
 			sourceItemTypes);
 
 		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
 			namespace + "selectInfoList", infoListItemSelectorCriterion,
-			infoCollectionProviderItemSelectorCriterion,
-			infoItemRelatedListProviderItemSelectorCriterion);
+			infoCollectionProviderItemSelectorCriterion);
 
 		if (infoListSelectorURL == null) {
 			return StringPool.BLANK;

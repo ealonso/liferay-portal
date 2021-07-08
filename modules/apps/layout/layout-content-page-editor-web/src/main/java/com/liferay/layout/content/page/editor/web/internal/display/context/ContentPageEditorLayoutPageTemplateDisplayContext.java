@@ -25,18 +25,20 @@ import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
+import com.liferay.info.collection.provider.item.selector.criterion.InfoCollectionProviderItemSelectorCriterion;
 import com.liferay.info.item.InfoItemClassDetails;
 import com.liferay.info.item.InfoItemFormVariation;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemDetailsProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorCriterion;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorReturnType;
+import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.item.selector.criteria.InfoItemItemSelectorReturnType;
+import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
 import com.liferay.item.selector.criteria.info.item.criterion.InfoItemItemSelectorCriterion;
+import com.liferay.item.selector.criteria.info.item.criterion.InfoListItemSelectorCriterion;
 import com.liferay.layout.content.page.editor.sidebar.panel.ContentPageEditorSidebarPanel;
 import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration;
 import com.liferay.layout.content.page.editor.web.internal.configuration.PageEditorConfiguration;
@@ -51,10 +53,10 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.HashMapBuilder;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -152,20 +154,27 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 	protected List<ItemSelectorCriterion>
 		getCollectionItemSelectorCriterions() {
 
-		List<ItemSelectorCriterion> collectionItemSelectorCriterions =
-			super.getCollectionItemSelectorCriterions();
-
 		if (!_pageIsDisplayPage) {
-			return collectionItemSelectorCriterions;
+			return super.getCollectionItemSelectorCriterions();
 		}
 
-		InfoItemRelatedListProviderItemSelectorCriterion
-			infoItemRelatedListProviderItemSelectorCriterion =
-				new InfoItemRelatedListProviderItemSelectorCriterion();
+		InfoListItemSelectorCriterion infoListItemSelectorCriterion =
+			new InfoListItemSelectorCriterion();
 
-		infoItemRelatedListProviderItemSelectorCriterion.
+		infoListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			new InfoListItemSelectorReturnType());
+		infoListItemSelectorCriterion.setItemTypes(
+			getInfoItemFormProviderClassNames());
+
+		InfoCollectionProviderItemSelectorCriterion
+			infoCollectionProviderItemSelectorCriterion =
+				new InfoCollectionProviderItemSelectorCriterion();
+
+		infoCollectionProviderItemSelectorCriterion.
 			setDesiredItemSelectorReturnTypes(
-				new InfoItemRelatedListProviderItemSelectorReturnType());
+				new InfoListProviderItemSelectorReturnType());
+		infoCollectionProviderItemSelectorCriterion.setItemTypes(
+			getInfoItemFormProviderClassNames());
 
 		List<String> sourceItemTypes = new ArrayList<>();
 
@@ -191,13 +200,12 @@ public class ContentPageEditorLayoutPageTemplateDisplayContext
 			sourceItemTypes.add(AssetEntry.class.getName());
 		}
 
-		infoItemRelatedListProviderItemSelectorCriterion.setSourceItemTypes(
+		infoCollectionProviderItemSelectorCriterion.setSourceItemTypes(
 			sourceItemTypes);
 
-		return ListUtil.concat(
-			collectionItemSelectorCriterions,
-			Collections.singletonList(
-				infoItemRelatedListProviderItemSelectorCriterion));
+		return Arrays.asList(
+			infoListItemSelectorCriterion,
+			infoCollectionProviderItemSelectorCriterion);
 	}
 
 	private JSONObject _addDisplayPageMappingFields(
