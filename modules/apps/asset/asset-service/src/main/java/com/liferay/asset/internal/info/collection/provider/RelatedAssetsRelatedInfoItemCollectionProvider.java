@@ -12,14 +12,15 @@
  * details.
  */
 
-package com.liferay.asset.internal.info.list.provider;
+package com.liferay.asset.internal.info.collection.provider;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -32,7 +33,9 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.util.Collections;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -41,9 +44,9 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  * @author Jorge Ferrer
  */
-@Component(immediate = true, service = InfoItemRelatedListProvider.class)
-public class RelatedAssetsInfoItemRelatedListProvider
-	implements InfoItemRelatedListProvider<AssetEntry, AssetEntry> {
+@Component(immediate = true, service = InfoCollectionProvider.class)
+public class RelatedAssetsRelatedInfoItemCollectionProvider
+	implements RelatedInfoItemCollectionProvider<AssetEntry, AssetEntry> {
 
 	@Override
 	public String getLabel(Locale locale) {
@@ -51,20 +54,34 @@ public class RelatedAssetsInfoItemRelatedListProvider
 	}
 
 	@Override
-	public InfoPage<AssetEntry> getRelatedItemsInfoPage(
-		AssetEntry assetEntry, InfoListProviderContext infoListProviderContext,
-		Pagination pagination, Sort sort) {
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		Optional<Object> relatedItemOptional =
+			collectionQuery.getRelatedItemOptional();
+
+		Object relatedItem = relatedItemOptional.orElse(null);
+
+		if (!(relatedItem instanceof AssetEntry)) {
+			return InfoPage.of(
+				Collections.emptyList(), collectionQuery.getPagination(), 0);
+		}
+
+		AssetEntry assetEntry = (AssetEntry)relatedItem;
+
+		Optional<Sort> sortOptional = collectionQuery.getSortOptional();
 
 		try {
 			AssetEntryQuery assetEntryQuery = _getAssetEntryQuery(
-				assetEntry.getCompanyId(), assetEntry.getGroupId(), pagination,
-				sort);
+				assetEntry.getCompanyId(), assetEntry.getGroupId(),
+				collectionQuery.getPagination(), sortOptional.orElse(null));
 
 			assetEntryQuery.setLinkedAssetEntryId(assetEntry.getEntryId());
 
 			return InfoPage.of(
-				_assetEntryService.getEntries(assetEntryQuery), pagination,
-				() -> _getTotalCount(assetEntry, sort));
+				_assetEntryService.getEntries(assetEntryQuery),
+				collectionQuery.getPagination(),
+				() -> _getTotalCount(assetEntry, sortOptional.orElse(null)));
 		}
 		catch (PortalException portalException) {
 			return ReflectionUtil.throwException(portalException);

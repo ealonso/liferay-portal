@@ -12,15 +12,16 @@
  * details.
  */
 
-package com.liferay.asset.categories.admin.web.internal.info.list.provider;
+package com.liferay.asset.categories.admin.web.internal.info.collection.provider;
 
 import com.liferay.asset.entry.rel.model.AssetEntryAssetCategoryRel;
 import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalService;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -30,8 +31,10 @@ import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.osgi.framework.Bundle;
@@ -42,9 +45,9 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Jürgen Kappler
  */
-@Component(immediate = true, service = InfoItemRelatedListProvider.class)
-public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
-	implements InfoItemRelatedListProvider<AssetCategory, AssetEntry> {
+@Component(immediate = true, service = InfoCollectionProvider.class)
+public class AssetEntriesWithSameAssetCategoryRelatedInfoItemCollectionProvider
+	implements RelatedInfoItemCollectionProvider<AssetCategory, AssetEntry> {
 
 	@Override
 	public String getLabel(Locale locale) {
@@ -62,10 +65,22 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
 	}
 
 	@Override
-	public InfoPage<AssetEntry> getRelatedItemsInfoPage(
-		AssetCategory assetCategory,
-		InfoListProviderContext infoListProviderContext, Pagination pagination,
-		Sort sort) {
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		Optional<Object> relatedItemOptional =
+			collectionQuery.getRelatedItemOptional();
+
+		Object relatedItem = relatedItemOptional.orElse(null);
+
+		if (!(relatedItem instanceof AssetCategory)) {
+			return InfoPage.of(
+				Collections.emptyList(), collectionQuery.getPagination(), 0);
+		}
+
+		AssetCategory assetCategory = (AssetCategory)relatedItem;
+
+		Pagination pagination = collectionQuery.getPagination();
 
 		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
 			_assetEntryAssetCategoryRelLocalService.
@@ -99,9 +114,14 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProvider
 
 						@Override
 						public boolean isAscending() {
-							if (sort == null) {
+							Optional<Sort> sortOptional =
+								collectionQuery.getSortOptional();
+
+							if (!sortOptional.isPresent()) {
 								return true;
 							}
+
+							Sort sort = sortOptional.get();
 
 							if (sort.isReverse()) {
 								return false;
