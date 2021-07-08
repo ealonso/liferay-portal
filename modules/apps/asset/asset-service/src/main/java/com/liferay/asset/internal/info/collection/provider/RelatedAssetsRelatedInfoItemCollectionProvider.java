@@ -49,11 +49,6 @@ public class RelatedAssetsRelatedInfoItemCollectionProvider
 	implements RelatedInfoItemCollectionProvider<AssetEntry, AssetEntry> {
 
 	@Override
-	public String getLabel(Locale locale) {
-		return LanguageUtil.get(locale, "related-assets");
-	}
-
-	@Override
 	public InfoPage<AssetEntry> getCollectionInfoPage(
 		CollectionQuery collectionQuery) {
 
@@ -86,6 +81,11 @@ public class RelatedAssetsRelatedInfoItemCollectionProvider
 		catch (PortalException portalException) {
 			return ReflectionUtil.throwException(portalException);
 		}
+	}
+
+	@Override
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "related-assets");
 	}
 
 	private AssetEntryQuery _getAssetEntryQuery(

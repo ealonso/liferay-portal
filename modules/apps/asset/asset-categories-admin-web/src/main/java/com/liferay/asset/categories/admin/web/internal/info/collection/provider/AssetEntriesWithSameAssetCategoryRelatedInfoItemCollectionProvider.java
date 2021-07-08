@@ -50,21 +50,6 @@ public class AssetEntriesWithSameAssetCategoryRelatedInfoItemCollectionProvider
 	implements RelatedInfoItemCollectionProvider<AssetCategory, AssetEntry> {
 
 	@Override
-	public String getLabel(Locale locale) {
-		Bundle bundle = FrameworkUtil.getBundle(getClass());
-
-		ResourceBundleLoader resourceBundleLoader =
-			ResourceBundleLoaderUtil.
-				getResourceBundleLoaderByBundleSymbolicName(
-					bundle.getSymbolicName());
-
-		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
-			locale);
-
-		return LanguageUtil.get(resourceBundle, "items-with-this-category");
-	}
-
-	@Override
 	public InfoPage<AssetEntry> getCollectionInfoPage(
 		CollectionQuery collectionQuery) {
 
@@ -151,6 +136,21 @@ public class AssetEntriesWithSameAssetCategoryRelatedInfoItemCollectionProvider
 				_assetEntryAssetCategoryRelLocalService.
 					getAssetEntryAssetCategoryRelsCountByAssetCategoryId(
 						assetCategory.getCategoryId()));
+	}
+
+	@Override
+	public String getLabel(Locale locale) {
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		ResourceBundleLoader resourceBundleLoader =
+			ResourceBundleLoaderUtil.
+				getResourceBundleLoaderByBundleSymbolicName(
+					bundle.getSymbolicName());
+
+		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
+			locale);
+
+		return LanguageUtil.get(resourceBundle, "items-with-this-category");
 	}
 
 	@Reference
