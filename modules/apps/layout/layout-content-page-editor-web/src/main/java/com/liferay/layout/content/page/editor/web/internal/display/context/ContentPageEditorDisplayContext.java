@@ -690,7 +690,7 @@ public class ContentPageEditorDisplayContext {
 		infoListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new InfoListItemSelectorReturnType());
 		infoListItemSelectorCriterion.setItemTypes(
-			_getInfoItemFormProviderClassNames());
+			getInfoItemFormProviderClassNames());
 
 		InfoCollectionProviderItemSelectorCriterion
 			infoCollectionProviderItemSelectorCriterion =
@@ -700,7 +700,7 @@ public class ContentPageEditorDisplayContext {
 			setDesiredItemSelectorReturnTypes(
 				new InfoListProviderItemSelectorReturnType());
 		infoCollectionProviderItemSelectorCriterion.setItemTypes(
-			_getInfoItemFormProviderClassNames());
+			getInfoItemFormProviderClassNames());
 
 		return Arrays.asList(
 			infoListItemSelectorCriterion,
@@ -735,6 +735,19 @@ public class ContentPageEditorDisplayContext {
 			httpServletRequest, "groupId", themeDisplay.getScopeGroupId());
 
 		return _groupId;
+	}
+
+	protected List<String> getInfoItemFormProviderClassNames() {
+		List<String> infoItemClassNames =
+			infoItemServiceTracker.getInfoItemClassNames(
+				InfoItemFormProvider.class);
+
+		if (infoItemClassNames.contains(FileEntry.class.getName())) {
+			infoItemClassNames.add(DLFileEntryConstants.getClassName());
+			infoItemClassNames.remove(FileEntry.class.getName());
+		}
+
+		return infoItemClassNames;
 	}
 
 	protected String getResourceURL(String resourceID) {
@@ -1657,19 +1670,6 @@ public class ContentPageEditorDisplayContext {
 		_imageItemSelectorCriterion = itemSelectorCriterion;
 
 		return _imageItemSelectorCriterion;
-	}
-
-	private List<String> _getInfoItemFormProviderClassNames() {
-		List<String> infoItemClassNames =
-			infoItemServiceTracker.getInfoItemClassNames(
-				InfoItemFormProvider.class);
-
-		if (infoItemClassNames.contains(FileEntry.class.getName())) {
-			infoItemClassNames.add(DLFileEntryConstants.getClassName());
-			infoItemClassNames.remove(FileEntry.class.getName());
-		}
-
-		return infoItemClassNames;
 	}
 
 	private String _getInfoItemSelectorURL() {
