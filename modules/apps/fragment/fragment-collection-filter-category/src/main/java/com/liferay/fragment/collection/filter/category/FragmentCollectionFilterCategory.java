@@ -32,6 +32,13 @@ public class FragmentCollectionFilterCategory
 	implements FragmentCollectionFilter {
 
 	@Override
+	public String getCollectionFilterModulePath() {
+		// Need to tell the loader that this script should be available
+		// to use as Liferay.Loader.require
+		return "fragment-collection-filter-category@1.0.0/index.js";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		return LanguageUtil.get(locale, "category");
 	}

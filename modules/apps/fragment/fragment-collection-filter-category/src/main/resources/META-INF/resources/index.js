@@ -12,17 +12,10 @@
  * details.
  */
 
-package com.liferay.fragment.collection.filter;
+const FragmentCollectionFilterCategory = {
+	handleSelect() {
+		console.log('category');
+	},
+};
 
-import java.util.Locale;
-
-/**
- * @author Pablo Molina
- */
-public interface FragmentCollectionFilter {
-
-	public String getCollectionFilterModulePath();
-
-	public String getLabel(Locale locale);
-
-}
+export default FragmentCollectionFilterCategory;
