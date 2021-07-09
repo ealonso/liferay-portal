@@ -50,6 +50,9 @@ public class DDMTemplateModelPreFilterContributor
 			booleanFilter, searchContext, Field.CLASS_NAME_ID, "classNameIds");
 		addRequiredTerms(
 			booleanFilter, searchContext, Field.CLASS_PK, "classPKs");
+		addRequiredTerms(
+			booleanFilter, searchContext, "resourceClassNameId",
+			"resourceClassNameIds");
 
 		addRequiredTerm(booleanFilter, searchContext, "language");
 		addRequiredTerm(booleanFilter, searchContext, "mode");
