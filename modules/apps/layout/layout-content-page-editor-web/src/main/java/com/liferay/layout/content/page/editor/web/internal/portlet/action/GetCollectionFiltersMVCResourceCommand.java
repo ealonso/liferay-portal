@@ -64,8 +64,11 @@ public class GetCollectionFiltersMVCResourceCommand
 			fragmentCollectionFiltersJSONArray.put(
 				JSONUtil.put(
 					"label",
-					fragmentCollectionFilter.getLabel(
-						themeDisplay.getLocale())));
+					fragmentCollectionFilter.getLabel(themeDisplay.getLocale())
+				).put(
+					"modulePath",
+					fragmentCollectionFilter.getCollectionFilterModulePath()
+				));
 		}
 
 		JSONPortletResponseUtil.writeJSON(

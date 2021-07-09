@@ -14,6 +14,7 @@
 
 import {CategoryTreeNodeSelectorField} from './CategoryTreeNodeSelectorField';
 import {CheckboxField} from './CheckboxField';
+import {CollectionFilterSelectorField} from './CollectionFilterSelectorField';
 import {CollectionSelectorField} from './CollectionSelectorField';
 import {ColorPaletteField} from './ColorPaletteField';
 import {ColorPickerField} from './ColorPickerField';
@@ -27,6 +28,7 @@ import {VideoSelectorField} from './VideoSelectorField';
 export const FRAGMENT_CONFIGURATION_FIELDS = {
 	categoryTreeNodeSelector: CategoryTreeNodeSelectorField,
 	checkbox: CheckboxField,
+	collectionFilterSelector: CollectionFilterSelectorField,
 	collectionSelector: CollectionSelectorField,
 	colorPalette: ColorPaletteField,
 	colorPicker: ColorPickerField,

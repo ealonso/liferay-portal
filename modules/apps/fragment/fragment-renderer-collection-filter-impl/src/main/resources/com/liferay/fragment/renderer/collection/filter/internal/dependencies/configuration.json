@@ -5,7 +5,7 @@
 				{
 					"label": "source",
 					"name": "source",
-					"type": "categoryTreeNodeSelector"
+					"type": "collectionFilterSelector"
 				},
 				{
 					"defaultValue": false,

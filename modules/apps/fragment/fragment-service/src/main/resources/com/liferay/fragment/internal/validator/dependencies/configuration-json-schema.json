@@ -135,6 +135,7 @@
 					"enum": [
 						"categoryTreeNodeSelector",
 						"checkbox",
+						"collectionFilterSelector",
 						"colorPalette",
 						"colorPicker",
 						"collectionSelector",
