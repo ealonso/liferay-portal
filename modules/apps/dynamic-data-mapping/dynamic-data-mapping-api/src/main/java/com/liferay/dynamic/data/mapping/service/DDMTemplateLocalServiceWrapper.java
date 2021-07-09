@@ -1266,6 +1266,55 @@ public class DDMTemplateLocalServiceWrapper
 	}
 
 	/**
+	 * Returns an ordered range of all the templates matching the group IDs,
+	 * class name IDs, class PK, resource class name IDs, type, and mode, and
+	 *  matching the keywords in the template names and descriptions.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end -
+	 * start</code> instances. <code>start</code> and <code>end</code> are not
+	 * primary keys, they are indexes in the result set. Thus, <code>0</code>
+	 * refers to the first result in the set. Setting both <code>start</code>
+	 * and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full
+	 * result set.
+	 * </p>
+	 *
+	 * @param companyId the primary key of the template's company
+	 * @param groupIds the primary keys of the groups
+	 * @param classNameIds the primary keys of the entity's instances the
+	 templates are related to
+	 * @param classPKs the primary keys of the template's related entities
+	 * @param resourceClassNameIds the primary keys of the class names for
+	 template's resource models
+	 * @param keywords the keywords (space separated), which may occur in the
+	 template's name or description (optionally <code>null</code>)
+	 * @param type the template's type (optionally <code>null</code>). For more
+	 information, see DDMTemplateConstants in the
+	 dynamic-data-mapping-api module.
+	 * @param mode the template's mode (optionally <code>null</code>). For more
+	 information, see DDMTemplateConstants in the
+	 dynamic-data-mapping-api module.
+	 * @param start the lower bound of the range of templates to return
+	 * @param end the upper bound of the range of templates to return (not
+	 inclusive)
+	 * @param orderByComparator the comparator to order the templates
+	 (optionally <code>null</code>)
+	 * @return the matching templates ordered by the comparator
+	 */
+	@Override
+	public java.util.List<DDMTemplate> search(
+		long companyId, long[] groupIds, long[] classNameIds, long[] classPKs,
+		long[] resourceClassNameIds, String keywords, String type, String mode,
+		int status, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator<DDMTemplate>
+			orderByComparator) {
+
+		return _ddmTemplateLocalService.search(
+			companyId, groupIds, classNameIds, classPKs, resourceClassNameIds,
+			keywords, type, mode, status, start, end, orderByComparator);
+	}
+
+	/**
 	 * Returns the number of templates matching the group, class name ID, class
 	 * PK, type, mode, and status, and matching the keywords in the template
 	 * names and descriptions.
@@ -1418,6 +1467,39 @@ public class DDMTemplateLocalServiceWrapper
 		return _ddmTemplateLocalService.searchCount(
 			companyId, groupIds, classNameIds, classPKs, resourceClassNameId,
 			name, description, type, mode, language, status, andOperator);
+	}
+
+	/**
+	 * Returns the number of templates matching the group IDs, class name IDs,
+	 * class PK, resource class name IDs, type, and mode, and matching the
+	 * keywords in the template names and descriptions.
+	 *
+	 * @param companyId the primary key of the template's company
+	 * @param groupIds the primary keys of the groups
+	 * @param classNameIds the primary keys of the entity's instances the
+	 templates are related to
+	 * @param classPKs the primary keys of the template's related entities
+	 * @param resourceClassNameIds the primary keys of the class names for
+	 template's resource models
+	 * @param keywords the keywords (space separated), which may occur in the
+	 template's name or description (optionally <code>null</code>)
+	 * @param type the template's type (optionally <code>null</code>). For more
+	 information, see DDMTemplateConstants in the
+	 dynamic-data-mapping-api module.
+	 * @param mode the template's mode (optionally <code>null</code>). For more
+	 information, see DDMTemplateConstants in the
+	 dynamic-data-mapping-api module.
+	 * @return the number of matching templates
+	 */
+	@Override
+	public int searchCount(
+		long companyId, long[] groupIds, long[] classNameIds, long[] classPKs,
+		long[] resourceClassNameIds, String keywords, String type, String mode,
+		int status) {
+
+		return _ddmTemplateLocalService.searchCount(
+			companyId, groupIds, classNameIds, classPKs, resourceClassNameIds,
+			keywords, type, mode, status);
 	}
 
 	/**
