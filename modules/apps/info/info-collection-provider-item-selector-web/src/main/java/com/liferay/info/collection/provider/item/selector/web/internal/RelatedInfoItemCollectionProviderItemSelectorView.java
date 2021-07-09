@@ -14,10 +14,10 @@
 
 package com.liferay.info.collection.provider.item.selector.web.internal;
 
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
+import com.liferay.info.collection.provider.item.selector.criterion.RelatedInfoItemCollectionProviderItemSelectorCriterion;
 import com.liferay.info.item.InfoItemServiceTracker;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorCriterion;
-import com.liferay.info.list.provider.item.selector.criterion.InfoItemRelatedListProviderItemSelectorReturnType;
+import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
 import com.liferay.item.selector.ItemSelectorViewDescriptor;
@@ -60,13 +60,14 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = ItemSelectorView.class)
 public class RelatedInfoItemCollectionProviderItemSelectorView
 	implements ItemSelectorView
-		<InfoItemRelatedListProviderItemSelectorCriterion> {
+		<RelatedInfoItemCollectionProviderItemSelectorCriterion> {
 
 	@Override
-	public Class<? extends InfoItemRelatedListProviderItemSelectorCriterion>
-		getItemSelectorCriterionClass() {
+	public Class
+		<? extends RelatedInfoItemCollectionProviderItemSelectorCriterion>
+			getItemSelectorCriterionClass() {
 
-		return InfoItemRelatedListProviderItemSelectorCriterion.class;
+		return RelatedInfoItemCollectionProviderItemSelectorCriterion.class;
 	}
 
 	@Override
@@ -86,30 +87,31 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 	@Override
 	public void renderHTML(
 			ServletRequest servletRequest, ServletResponse servletResponse,
-			InfoItemRelatedListProviderItemSelectorCriterion
-				infoItemRelatedListProviderItemSelectorCriterion,
+			RelatedInfoItemCollectionProviderItemSelectorCriterion
+				relatedInfoItemCollectionProviderItemSelectorCriterion,
 			PortletURL portletURL, String itemSelectedEventName, boolean search)
 		throws IOException, ServletException {
 
 		_itemSelectorViewDescriptorRenderer.renderHTML(
 			servletRequest, servletResponse,
-			infoItemRelatedListProviderItemSelectorCriterion, portletURL,
+			relatedInfoItemCollectionProviderItemSelectorCriterion, portletURL,
 			itemSelectedEventName, search,
 			new InfoItemRelatedItemsProviderItemSelectorViewDescriptor(
 				(HttpServletRequest)servletRequest,
-				infoItemRelatedListProviderItemSelectorCriterion, portletURL));
+				relatedInfoItemCollectionProviderItemSelectorCriterion,
+				portletURL));
 	}
 
 	private static final List<ItemSelectorReturnType>
 		_supportedItemSelectorReturnTypes = Collections.singletonList(
-			new InfoItemRelatedListProviderItemSelectorReturnType());
+			new InfoListProviderItemSelectorReturnType());
 
 	@Reference
 	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private ItemSelectorViewDescriptorRenderer
-		<InfoItemRelatedListProviderItemSelectorCriterion>
+		<RelatedInfoItemCollectionProviderItemSelectorCriterion>
 			_itemSelectorViewDescriptorRenderer;
 
 	@Reference
@@ -125,23 +127,24 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 
 	private class InfoItemRelatedItemsProviderItemSelectorViewDescriptor
 		implements ItemSelectorViewDescriptor
-			<InfoItemRelatedListProvider<?, ?>> {
+			<RelatedInfoItemCollectionProvider<?, ?>> {
 
 		public InfoItemRelatedItemsProviderItemSelectorViewDescriptor(
 			HttpServletRequest httpServletRequest,
-			InfoItemRelatedListProviderItemSelectorCriterion
-				infoItemRelatedListProviderItemSelectorCriterion,
+			RelatedInfoItemCollectionProviderItemSelectorCriterion
+				relatedInfoItemCollectionProviderItemSelectorCriterion,
 			PortletURL portletURL) {
 
 			_httpServletRequest = httpServletRequest;
-			_infoItemRelatedListProviderItemSelectorCriterion =
-				infoItemRelatedListProviderItemSelectorCriterion;
+			_relatedInfoItemCollectionProviderItemSelectorCriterion =
+				relatedInfoItemCollectionProviderItemSelectorCriterion;
 			_portletURL = portletURL;
 		}
 
 		@Override
 		public ItemDescriptor getItemDescriptor(
-			InfoItemRelatedListProvider<?, ?> infoItemRelatedItemsProvider) {
+			RelatedInfoItemCollectionProvider<?, ?>
+				relatedInfoItemCollectionProvider) {
 
 			return new ItemDescriptor() {
 
@@ -158,9 +161,8 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 				@Override
 				public String getPayload() {
 					Class<?> relatedItemClass =
-						infoItemRelatedItemsProvider.getRelatedItemClass();
-					Class<?> sourceItemClass =
-						infoItemRelatedItemsProvider.getSourceItemClass();
+						relatedInfoItemCollectionProvider.getRelatedItemClass();
+
 					ThemeDisplay themeDisplay =
 						(ThemeDisplay)_httpServletRequest.getAttribute(
 							WebKeys.THEME_DISPLAY);
@@ -168,12 +170,14 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 					return JSONUtil.put(
 						"itemType", relatedItemClass.getName()
 					).put(
-						"key", infoItemRelatedItemsProvider.getKey()
+						"key", relatedInfoItemCollectionProvider.getKey()
 					).put(
-						"sourceItemType", sourceItemClass.getName()
+						"sourceItemType",
+						relatedInfoItemCollectionProvider.
+							getCollectionItemClassName()
 					).put(
 						"title",
-						infoItemRelatedItemsProvider.getLabel(
+						relatedInfoItemCollectionProvider.getLabel(
 							themeDisplay.getLocale())
 					).toString();
 				}
@@ -181,7 +185,7 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 				@Override
 				public String getSubtitle(Locale locale) {
 					Class<?> relatedItemClass =
-						infoItemRelatedItemsProvider.getRelatedItemClass();
+						relatedInfoItemCollectionProvider.getRelatedItemClass();
 
 					return ResourceActionsUtil.getModelResource(
 						locale, relatedItemClass.getName());
@@ -189,7 +193,7 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 
 				@Override
 				public String getTitle(Locale locale) {
-					return infoItemRelatedItemsProvider.getLabel(locale);
+					return relatedInfoItemCollectionProvider.getLabel(locale);
 				}
 
 			};
@@ -197,11 +201,11 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 
 		@Override
 		public ItemSelectorReturnType getItemSelectorReturnType() {
-			return new InfoItemRelatedListProviderItemSelectorReturnType();
+			return new InfoListProviderItemSelectorReturnType();
 		}
 
 		@Override
-		public SearchContainer<InfoItemRelatedListProvider<?, ?>>
+		public SearchContainer<RelatedInfoItemCollectionProvider<?, ?>>
 			getSearchContainer() {
 
 			PortletRequest portletRequest =
@@ -215,25 +219,25 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 				"content.Language", themeDisplay.getLocale(), getClass());
 
-			SearchContainer<InfoItemRelatedListProvider<?, ?>> searchContainer =
-				new SearchContainer<>(
+			SearchContainer<RelatedInfoItemCollectionProvider<?, ?>>
+				searchContainer = new SearchContainer<>(
 					portletRequest, _portletURL, null,
 					_language.get(
 						resourceBundle,
 						"there-are-no-related-items-collection-providers"));
 
-			List<InfoItemRelatedListProvider<?, ?>> itemRelatedItemsProviders =
-				new ArrayList<>();
+			List<RelatedInfoItemCollectionProvider<?, ?>>
+				itemRelatedItemsProviders = new ArrayList<>();
 
 			List<String> itemTypes =
-				_infoItemRelatedListProviderItemSelectorCriterion.
+				_relatedInfoItemCollectionProviderItemSelectorCriterion.
 					getSourceItemTypes();
 
 			for (String itemType : itemTypes) {
 				itemRelatedItemsProviders.addAll(
 					_infoItemServiceTracker.getAllInfoItemServices(
-						(Class<InfoItemRelatedListProvider<?, ?>>)
-							(Class<?>)InfoItemRelatedListProvider.class,
+						(Class<RelatedInfoItemCollectionProvider<?, ?>>)
+							(Class<?>)RelatedInfoItemCollectionProvider.class,
 						itemType));
 			}
 
@@ -252,9 +256,9 @@ public class RelatedInfoItemCollectionProviderItemSelectorView
 		}
 
 		private final HttpServletRequest _httpServletRequest;
-		private final InfoItemRelatedListProviderItemSelectorCriterion
-			_infoItemRelatedListProviderItemSelectorCriterion;
 		private final PortletURL _portletURL;
+		private final RelatedInfoItemCollectionProviderItemSelectorCriterion
+			_relatedInfoItemCollectionProviderItemSelectorCriterion;
 
 	}
 
