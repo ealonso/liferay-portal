@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.OrderByComparator;
@@ -162,6 +163,25 @@ public class DDMSearchHelper {
 		int status, int start, int end,
 		OrderByComparator<DDMTemplate> orderByComparator) {
 
+		long[] resourceClassNameIds = null;
+
+		if (resourceClassNameId > 0) {
+			resourceClassNameIds = new long[] {resourceClassNameId};
+		}
+
+		return buildTemplateSearchContext(
+			companyId, groupIds, userId, classNameIds, classPKs,
+			resourceClassNameIds, name, description, type, mode, language,
+			status, start, end, orderByComparator);
+	}
+
+	public SearchContext buildTemplateSearchContext(
+		long companyId, long[] groupIds, long userId, long[] classNameIds,
+		long[] classPKs, long[] resourceClassNameIds, String name,
+		String description, String type, String mode, String language,
+		int status, int start, int end,
+		OrderByComparator<DDMTemplate> orderByComparator) {
+
 		SearchContext searchContext = new SearchContext();
 
 		searchContext.setAttribute(Field.DESCRIPTION, description);
@@ -171,19 +191,10 @@ public class DDMSearchHelper {
 		searchContext.setAttribute("classPKs", classPKs);
 		searchContext.setAttribute("language", language);
 		searchContext.setAttribute("mode", mode);
-		searchContext.setAttribute("resourceClassNameId", resourceClassNameId);
+		searchContext.setAttribute(
+			"resourceClassNameIds", resourceClassNameIds);
 
-		try {
-			searchContext.setAttribute(
-				"resourcePermissionName",
-				_ddmPermissionSupport.getTemplateModelResourceName(
-					resourceClassNameId));
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception, exception);
-			}
-		}
+		_setResourcePermissionNames(searchContext, resourceClassNameIds);
 
 		searchContext.setAttribute("type", type);
 		searchContext.setCompanyId(companyId);
@@ -212,6 +223,18 @@ public class DDMSearchHelper {
 			companyId, groupIds, 0, classNameIds, classPKs, resourceClassNameId,
 			name, description, type, mode, language, status, start, end,
 			orderByComparator);
+	}
+
+	public SearchContext buildTemplateSearchContext(
+		long companyId, long[] groupIds, long[] classNameIds, long[] classPKs,
+		long[] resourceClassNameIds, String name, String description,
+		String type, String mode, String language, int status, int start,
+		int end, OrderByComparator<DDMTemplate> orderByComparator) {
+
+		return buildTemplateSearchContext(
+			companyId, groupIds, 0, classNameIds, classPKs,
+			resourceClassNameIds, name, description, type, mode, language,
+			status, start, end, orderByComparator);
 	}
 
 	public <T> List<T> doSearch(
@@ -285,6 +308,36 @@ public class DDMSearchHelper {
 		).toArray(
 			Sort[]::new
 		);
+	}
+
+	private void _setResourcePermissionNames(
+		SearchContext searchContext, long[] resourceClassNameIds) {
+
+		if (ArrayUtil.isNotEmpty(resourceClassNameIds)) {
+			List<String> resourcePermissionNamesList = new ArrayList<>();
+
+			for (long resourceClassNameId : resourceClassNameIds) {
+				try {
+					resourcePermissionNamesList.add(
+						_ddmPermissionSupport.getTemplateModelResourceName(
+							resourceClassNameId));
+				}
+				catch (Exception exception) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(exception, exception);
+					}
+				}
+			}
+
+			Stream<String> resourcePermissionNamesStream =
+				resourcePermissionNamesList.stream();
+
+			String[] resourcePermissionNamesArray =
+				resourcePermissionNamesStream.toArray(String[]::new);
+
+			searchContext.setAttribute(
+				"resourcePermissionNames", resourcePermissionNamesArray);
+		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
