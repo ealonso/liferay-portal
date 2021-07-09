@@ -502,10 +502,34 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		searchContext.setAttribute(
 			"searchPermissionContext", searchPermissionContext);
 
-		return _getPermissionFilter(
-			companyId, searchGroupIds, userId, permissionChecker,
-			_getPermissionName(searchContext, className),
-			searchPermissionContext);
+		String[] permissionNamesArray = _getPermissionNamesArray(
+			searchContext, className);
+
+		if (permissionNamesArray.length == 1) {
+			return _getPermissionFilter(
+				companyId, searchGroupIds, userId, permissionChecker,
+				permissionNamesArray[0], searchPermissionContext);
+		}
+
+		BooleanFilter booleanFilter = new BooleanFilter();
+
+		for (String permissionName : permissionNamesArray) {
+			BooleanFilter permissionNameBooleanFilter = _getPermissionFilter(
+				companyId, searchGroupIds, userId, permissionChecker,
+				permissionName, searchPermissionContext);
+
+			if (permissionNameBooleanFilter != null) {
+				booleanFilter.add(
+					permissionNameBooleanFilter, BooleanClauseOccur.SHOULD);
+			}
+			else {
+				booleanFilter.add(
+					new TermFilter("resourcePermissionName", permissionName),
+					BooleanClauseOccur.SHOULD);
+			}
+		}
+
+		return booleanFilter;
 	}
 
 	private BooleanFilter _getPermissionFilter(
@@ -603,11 +627,23 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 		return booleanFilter;
 	}
 
-	private String _getPermissionName(
+	private String[] _getPermissionNamesArray(
 		SearchContext searchContext, String defaultValue) {
 
-		return GetterUtil.getString(
-			searchContext.getAttribute("resourcePermissionName"), defaultValue);
+		String[] resourcePermissionNamesArray = GetterUtil.getStringValues(
+			searchContext.getAttribute("resourcePermissionNames"));
+
+		if (ArrayUtil.isEmpty(resourcePermissionNamesArray)) {
+			String resourcePermissionName = GetterUtil.getString(
+				searchContext.getAttribute("resourcePermissionName"),
+				defaultValue);
+
+			resourcePermissionNamesArray = new String[] {
+				resourcePermissionName
+			};
+		}
+
+		return resourcePermissionNamesArray;
 	}
 
 	private static final String _NULL_SEARCH_PERMISSION_CONTEXT =
