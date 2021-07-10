@@ -559,7 +559,6 @@ definition {
 	@priority = "4"
 	test ViewMappedContentOfPreviewCategoryItemInCollectionDisplayWithItemsWithThisCategory {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a vocabulary") {
 			JSONCategory.addVocabulary(
@@ -1137,7 +1136,6 @@ definition {
 	@priority = "4"
 	test ViewRelatedCategoriesOfPreviewItemInCollectionDisplayWithCategoriesForThisItem {
 		property osgi.module.configuration.file.names = "com.liferay.layout.content.page.editor.web.internal.configuration.FFLayoutContentPageEditorConfiguration.config";
-		property osgi.module.configurations = "relatedItemCollectionProvidersEnabled=&quot;true&quot;";
 
 		task ("Add a vocabulary") {
 			JSONCategory.addVocabulary(

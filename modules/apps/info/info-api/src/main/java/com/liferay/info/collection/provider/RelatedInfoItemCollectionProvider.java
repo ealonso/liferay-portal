@@ -12,22 +12,25 @@
  * details.
  */
 
-package com.liferay.fragment.renderer.collection.filter.internal.configuration;
+package com.liferay.info.collection.provider;
 
-import aQute.bnd.annotation.metatype.Meta;
-
-import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
+import com.liferay.info.type.Keyed;
+import com.liferay.info.type.Labeled;
+import com.liferay.petra.reflect.GenericUtil;
 
 /**
- * @author Rubén Pulido
+ * @author Eudaldo Alonso
  */
-@ExtendedObjectClassDefinition(generateUI = false)
-@Meta.OCD(
-	id = "com.liferay.fragment.renderer.collection.filter.internal.configuration.FFFragmentRendererCollectionFilterConfiguration"
-)
-public interface FFFragmentRendererCollectionFilterConfiguration {
+public interface RelatedInfoItemCollectionProvider<S, R>
+	extends InfoCollectionProvider<R>, Keyed, Labeled {
 
-	@Meta.AD(deflt = "false", required = false)
-	public boolean enabled();
+	public default Class<?> getRelatedItemClass() {
+		return GenericUtil.getGenericClass(this);
+	}
+
+	@Override
+	public default Class<?> getCollectionItemClass() {
+		return GenericUtil.getGenericClass(this, 1);
+	}
 
 }

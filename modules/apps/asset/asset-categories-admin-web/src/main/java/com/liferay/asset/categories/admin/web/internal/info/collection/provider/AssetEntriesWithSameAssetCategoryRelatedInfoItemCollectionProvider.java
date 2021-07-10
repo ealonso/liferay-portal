@@ -12,15 +12,16 @@
  * details.
  */
 
-package com.liferay.asset.categories.admin.web.internal.info.list.provider;
+package com.liferay.asset.categories.admin.web.internal.info.collection.provider;
 
 import com.liferay.asset.entry.rel.model.AssetEntryAssetCategoryRel;
 import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalService;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
-import com.liferay.info.list.provider.InfoListProviderContext;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -30,8 +31,10 @@ import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoaderUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.osgi.framework.Bundle;
@@ -42,9 +45,98 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Jürgen Kappler
  */
-@Component(immediate = true, service = InfoItemRelatedListProvider.class)
-public class AssetCategoriesForAssetEntryInfoItemRelatedListProvider
-	implements InfoItemRelatedListProvider<AssetEntry, AssetCategory> {
+@Component(immediate = true, service = InfoCollectionProvider.class)
+public class AssetEntriesWithSameAssetCategoryRelatedInfoItemCollectionProvider
+	implements RelatedInfoItemCollectionProvider<AssetCategory, AssetEntry> {
+
+	@Override
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		Optional<Object> relatedItemOptional =
+			collectionQuery.getRelatedItemOptional();
+
+		Object relatedItem = relatedItemOptional.orElse(null);
+
+		if (!(relatedItem instanceof AssetCategory)) {
+			return InfoPage.of(
+				Collections.emptyList(), collectionQuery.getPagination(), 0);
+		}
+
+		AssetCategory assetCategory = (AssetCategory)relatedItem;
+
+		Pagination pagination = collectionQuery.getPagination();
+
+		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
+			_assetEntryAssetCategoryRelLocalService.
+				getAssetEntryAssetCategoryRelsByAssetCategoryId(
+					assetCategory.getCategoryId(), pagination.getStart(),
+					pagination.getEnd(),
+					new OrderByComparator<AssetEntryAssetCategoryRel>() {
+
+						@Override
+						public int compare(
+							AssetEntryAssetCategoryRel
+								assetEntryAssetCategoryRel1,
+							AssetEntryAssetCategoryRel
+								assetEntryAssetCategoryRel2) {
+
+							int value = Long.compare(
+								assetEntryAssetCategoryRel1.getAssetEntryId(),
+								assetEntryAssetCategoryRel2.getAssetEntryId());
+
+							if (isAscending()) {
+								return value;
+							}
+
+							return Math.negateExact(value);
+						}
+
+						@Override
+						public String[] getOrderByFields() {
+							return new String[] {"assetEntryId"};
+						}
+
+						@Override
+						public boolean isAscending() {
+							Optional<Sort> sortOptional =
+								collectionQuery.getSortOptional();
+
+							if (!sortOptional.isPresent()) {
+								return true;
+							}
+
+							Sort sort = sortOptional.get();
+
+							if (sort.isReverse()) {
+								return false;
+							}
+
+							return true;
+						}
+
+					});
+
+		List<AssetEntry> assetEntries = new ArrayList<>();
+
+		for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
+				assetEntryAssetCategoryRels) {
+
+			AssetEntry assetEntry = _assetEntryLocalService.fetchAssetEntry(
+				assetEntryAssetCategoryRel.getAssetEntryId());
+
+			if (assetEntry != null) {
+				assetEntries.add(assetEntry);
+			}
+		}
+
+		return InfoPage.of(
+			assetEntries, pagination,
+			() ->
+				_assetEntryAssetCategoryRelLocalService.
+					getAssetEntryAssetCategoryRelsCountByAssetCategoryId(
+						assetCategory.getCategoryId()));
+	}
 
 	@Override
 	public String getLabel(Locale locale) {
@@ -58,87 +150,14 @@ public class AssetCategoriesForAssetEntryInfoItemRelatedListProvider
 		ResourceBundle resourceBundle = resourceBundleLoader.loadResourceBundle(
 			locale);
 
-		return LanguageUtil.get(resourceBundle, "categories-for-this-item");
+		return LanguageUtil.get(resourceBundle, "items-with-this-category");
 	}
-
-	@Override
-	public InfoPage<AssetCategory> getRelatedItemsInfoPage(
-		AssetEntry assetEntry, InfoListProviderContext infoListProviderContext,
-		Pagination pagination, Sort sort) {
-
-		List<AssetEntryAssetCategoryRel> assetEntryAssetCategoryRels =
-			_assetEntryAssetCategoryRelLocalService.
-				getAssetEntryAssetCategoryRelsByAssetEntryId(
-					assetEntry.getEntryId(), pagination.getStart(),
-					pagination.getEnd(),
-					new OrderByComparator<AssetEntryAssetCategoryRel>() {
-
-						@Override
-						public int compare(
-							AssetEntryAssetCategoryRel
-								assetEntryAssetCategoryRel1,
-							AssetEntryAssetCategoryRel
-								assetEntryAssetCategoryRel2) {
-
-							int value = Long.compare(
-								assetEntryAssetCategoryRel1.
-									getAssetCategoryId(),
-								assetEntryAssetCategoryRel2.
-									getAssetCategoryId());
-
-							if (isAscending()) {
-								return value;
-							}
-
-							return Math.negateExact(value);
-						}
-
-						@Override
-						public String[] getOrderByFields() {
-							return new String[] {"assetCategoryId"};
-						}
-
-						@Override
-						public boolean isAscending() {
-							if (sort == null) {
-								return true;
-							}
-
-							if (sort.isReverse()) {
-								return false;
-							}
-
-							return true;
-						}
-
-					});
-
-		List<AssetCategory> categories = new ArrayList<>();
-
-		for (AssetEntryAssetCategoryRel assetEntryAssetCategoryRel :
-				assetEntryAssetCategoryRels) {
-
-			AssetCategory category = _assetCategoryLocalService.fetchCategory(
-				assetEntryAssetCategoryRel.getAssetCategoryId());
-
-			if (category != null) {
-				categories.add(category);
-			}
-		}
-
-		return InfoPage.of(
-			categories, pagination,
-			() ->
-				_assetEntryAssetCategoryRelLocalService.
-					getAssetEntryAssetCategoryRelsCount(
-						assetEntry.getEntryId()));
-	}
-
-	@Reference
-	private AssetCategoryLocalService _assetCategoryLocalService;
 
 	@Reference
 	private AssetEntryAssetCategoryRelLocalService
 		_assetEntryAssetCategoryRelLocalService;
+
+	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
 
 }

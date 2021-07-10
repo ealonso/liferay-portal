@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.asset.categories.info.list.provider.test;
+package com.liferay.asset.categories.info.collection.provider.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
@@ -20,14 +20,13 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
+import com.liferay.info.collection.provider.CollectionQuery;
+import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
-import com.liferay.info.list.provider.InfoItemRelatedListProvider;
 import com.liferay.info.pagination.InfoPage;
-import com.liferay.info.pagination.Pagination;
 import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -53,7 +52,8 @@ import org.junit.runner.RunWith;
  * @author Jürgen Kappler
  */
 @RunWith(Arquillian.class)
-public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProviderTest {
+public class
+	AssetEntriesWithSameAssetCategoryRelatedInfoItemCollectionProviderTest {
 
 	@ClassRule
 	@Rule
@@ -93,24 +93,25 @@ public class AssetEntriesWithSameAssetCategoryInfoItemRelatedListProviderTest {
 
 		StringBundler sb = new StringBundler(4);
 
-		sb.append("com.liferay.asset.categories.admin.web.internal.info.list.");
-		sb.append("provider.");
-		sb.append("AssetEntriesWithSameAssetCategoryInfoItemRelatedList");
+		sb.append("com.liferay.asset.categories.admin.web.internal.info.");
+		sb.append("collection.provider.");
+		sb.append("AssetEntriesWithSameAssetCategoryRelatedInfoItemCollection");
 		sb.append("Provider");
 
-		InfoItemRelatedListProvider<AssetCategory, AssetEntry>
-			infoItemRelatedListProvider =
+		RelatedInfoItemCollectionProvider<AssetCategory, AssetEntry>
+			relatedInfoItemCollectionProvider =
 				_infoItemServiceTracker.getInfoItemService(
-					InfoItemRelatedListProvider.class, sb.toString());
+					RelatedInfoItemCollectionProvider.class, sb.toString());
 
-		Assert.assertNotNull(infoItemRelatedListProvider);
+		Assert.assertNotNull(relatedInfoItemCollectionProvider);
 
-		Pagination pagination = Pagination.of(
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+		CollectionQuery collectionQuery = new CollectionQuery();
+
+		collectionQuery.setRelatedItem(assetCategory);
 
 		InfoPage<? extends AssetEntry> relatedItemsInfoPage =
-			infoItemRelatedListProvider.getRelatedItemsInfoPage(
-				assetCategory, null, pagination, null);
+			relatedInfoItemCollectionProvider.getCollectionInfoPage(
+				collectionQuery);
 
 		Assert.assertNotNull(relatedItemsInfoPage);
 

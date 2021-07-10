@@ -38,6 +38,10 @@ public class InfoCollectionProviderItemSelectorCriterion
 		return _itemTypes;
 	}
 
+	public List<String> getSourceItemTypes() {
+		return _sourceItemTypes;
+	}
+
 	public void setItemType(String itemType) {
 		_itemTypes.add(itemType);
 	}
@@ -46,6 +50,11 @@ public class InfoCollectionProviderItemSelectorCriterion
 		_itemTypes = itemTypes;
 	}
 
+	public void setSourceItemTypes(List<String> sourceItemTypes) {
+		_sourceItemTypes = sourceItemTypes;
+	}
+
 	private List<String> _itemTypes = new ArrayList<>();
+	private List<String> _sourceItemTypes = new ArrayList<>();
 
 }
