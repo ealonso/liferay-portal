@@ -15,14 +15,17 @@
 package com.liferay.dynamic.data.mapping.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.exception.TemplateCreationDisabledException;
 import com.liferay.dynamic.data.mapping.exception.TemplateDuplicateTemplateKeyException;
 import com.liferay.dynamic.data.mapping.exception.TemplateNameException;
 import com.liferay.dynamic.data.mapping.exception.TemplateScriptException;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
-import com.liferay.dynamic.data.mapping.util.comparator.TemplateIdComparator;
+import com.liferay.journal.model.JournalArticle;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.test.util.ConfigurationTemporarySwapper;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -39,11 +42,12 @@ import com.liferay.portal.search.test.util.SearchTestRule;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +57,17 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
+
+	public static final String ASSET_PUBLISHER_TEMPLATE_NAME =
+		"Asset Publisher template name";
+
+	public static final String JOURNAL_ARTICLE_TEMPLATE_NAME =
+		"JournalArticle template name";
+
+	public static final String PORTLET_DISPLAY_TEMPLATE_CLASS_NAME =
+		"com.liferay.portlet.display.template.PortletDisplayTemplate";
+
+	public static final String RECORD_TEMPLATE_NAME = "Record template name";
 
 	@ClassRule
 	@Rule
@@ -241,6 +256,173 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 	}
 
 	@Test
+	public void testSearchByKeywordsMultipleResourceClassNameId()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		List<DDMTemplate> templatesList = DDMTemplateLocalServiceUtil.search(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, null,
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(templatesList.toString(), 2, templatesList.size());
+
+		Stream<DDMTemplate> templatesStream = templatesList.stream();
+
+		Optional<DDMTemplate> unexpectedDDMTemplateOptional =
+			templatesStream.filter(
+				ddmTemplate ->
+					ddmTemplate.getResourceClassNameId() !=
+						portletDisplayTemplateClassNameId
+			).filter(
+				ddmTemplate ->
+					ddmTemplate.getResourceClassNameId() !=
+						journalArticleClassNameId
+			).findFirst();
+
+		Assert.assertFalse(
+			"Unexpected template resourceClassNameId",
+			unexpectedDDMTemplateOptional.isPresent());
+	}
+
+	@Test
+	public void testSearchByKeywordsMultipleResourceClassNameIdSpecificClassNameId()
+		throws Exception {
+
+		long assetEntryClassNameId = PortalUtil.getClassNameId(
+			AssetEntry.class);
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			assetEntryClassNameId, 0, portletDisplayTemplateClassNameId,
+			ASSET_PUBLISHER_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		List<DDMTemplate> templatesList = DDMTemplateLocalServiceUtil.search(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			new long[] {assetEntryClassNameId}, null,
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(templatesList.toString(), 1, templatesList.size());
+
+		DDMTemplate ddmTemplate = templatesList.get(0);
+
+		Assert.assertEquals(
+			"Asset Publisher Template template is not search result",
+			assetEntryClassNameId, ddmTemplate.getClassNameId());
+	}
+
+	@Test
+	public void testSearchByKeywordsMultipleResourceClassNameIdSpecificClassPK()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
+			group.getGroupId(), journalArticleClassNameId, "BASIC-WEB-CONTENT",
+			true);
+
+		long structureId = ddmStructure.getStructureId();
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), structureId,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		List<DDMTemplate> templatesList = DDMTemplateLocalServiceUtil.search(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, new long[] {structureId},
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(templatesList.toString(), 1, templatesList.size());
+
+		DDMTemplate ddmTemplate = templatesList.get(0);
+
+		Assert.assertEquals(
+			"Journal Article template is not search result", structureId,
+			ddmTemplate.getClassPK());
+	}
+
+	@Test
+	public void testSearchByKeywordsNullResourceClassNameIds()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		List<DDMTemplate> templatesList = DDMTemplateLocalServiceUtil.search(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, null, null, "template", null, null,
+			WorkflowConstants.STATUS_APPROVED, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+
+		Assert.assertEquals(templatesList.toString(), 3, templatesList.size());
+	}
+
+	@Test
 	public void testSearchByName() throws Exception {
 		addDisplayTemplate(
 			_classNameId, _resourceClassNameId, "Event",
@@ -281,29 +463,6 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 			QueryUtil.ALL_POS, null);
 
 		Assert.assertEquals(templates.toString(), 2, templates.size());
-	}
-
-	@Ignore
-	@Test
-	public void testSearchByNameAndDescription2() throws Exception {
-		addDisplayTemplate(
-			_classNameId, 0, _resourceClassNameId, "Event", "Event",
-			WorkflowConstants.STATUS_APPROVED);
-		addDisplayTemplate(
-			_classNameId, 0, _resourceClassNameId, "Contact", "Contact",
-			WorkflowConstants.STATUS_APPROVED);
-		addDisplayTemplate(
-			_classNameId, 0, _resourceClassNameId, "Meeting", "Meeting",
-			WorkflowConstants.STATUS_APPROVED);
-
-		List<DDMTemplate> templates = DDMTemplateLocalServiceUtil.search(
-			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
-			null, null, _resourceClassNameId, "Event", "Meeting", null, null,
-			null, WorkflowConstants.STATUS_APPROVED, false, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, new TemplateIdComparator(true));
-
-		Assert.assertEquals("Event", getTemplateName(templates.get(0)));
-		Assert.assertEquals("Meeting", getTemplateName(templates.get(1)));
 	}
 
 	@Test
@@ -450,6 +609,140 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 			WorkflowConstants.STATUS_APPROVED);
 
 		Assert.assertEquals(initialCount + 1, count);
+	}
+
+	@Test
+	public void testSearchCountByKeywordsMultipleResourceClassNameId()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		int count = DDMTemplateLocalServiceUtil.searchCount(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, null,
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(2, count);
+	}
+
+	@Test
+	public void testSearchCountByKeywordsMultipleResourceClassNameIdSpecificClassNameId()
+		throws Exception {
+
+		long assetEntryClassNameId = PortalUtil.getClassNameId(
+			AssetEntry.class);
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			assetEntryClassNameId, 0, portletDisplayTemplateClassNameId,
+			ASSET_PUBLISHER_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		int count = DDMTemplateLocalServiceUtil.searchCount(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			new long[] {assetEntryClassNameId}, null,
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(1, count);
+	}
+
+	@Test
+	public void testSearchCountByKeywordsMultipleResourceClassNameIdSpecificClassPK()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
+			group.getGroupId(), journalArticleClassNameId, "BASIC-WEB-CONTENT",
+			true);
+
+		long structureId = ddmStructure.getStructureId();
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), structureId,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		int count = DDMTemplateLocalServiceUtil.searchCount(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, new long[] {structureId},
+			new long[] {
+				journalArticleClassNameId, portletDisplayTemplateClassNameId
+			},
+			"template", null, null, WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(1, count);
+	}
+
+	@Test
+	public void testSearchCountByKeywordsNullResourceClassNameIds()
+		throws Exception {
+
+		long journalArticleClassNameId = PortalUtil.getClassNameId(
+			JournalArticle.class);
+		long portletDisplayTemplateClassNameId = PortalUtil.getClassNameId(
+			PORTLET_DISPLAY_TEMPLATE_CLASS_NAME);
+
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(DDMStructure.class), 0,
+			journalArticleClassNameId, JOURNAL_ARTICLE_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			PortalUtil.getClassNameId(AssetEntry.class), 0,
+			portletDisplayTemplateClassNameId, ASSET_PUBLISHER_TEMPLATE_NAME,
+			null, WorkflowConstants.STATUS_APPROVED);
+		addDisplayTemplate(
+			_classNameId, 0, _resourceClassNameId, RECORD_TEMPLATE_NAME, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		int count = DDMTemplateLocalServiceUtil.searchCount(
+			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
+			null, null, null, "template", null, null,
+			WorkflowConstants.STATUS_APPROVED);
+
+		Assert.assertEquals(3, count);
 	}
 
 	@Test
