@@ -143,6 +143,11 @@ public class TemplateManagementToolbarDisplayContext
 		return "ddmTemplates";
 	}
 
+	@Override
+	protected String[] getOrderByKeys() {
+		return new String[] {"id", "modified-date"};
+	}
+
 	private static final String _DELETE_SELECTED_TEMPLATES =
 		"deleteSelectedTemplates";
 

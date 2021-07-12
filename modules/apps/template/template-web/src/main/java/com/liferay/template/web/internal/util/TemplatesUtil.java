@@ -14,6 +14,7 @@
 
 package com.liferay.template.web.internal.util;
 
+import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.InfoItemClassDetails;
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
@@ -137,6 +139,91 @@ public class TemplatesUtil {
 		return null;
 	}
 
+	public static long[] getResourceClassNameIdsArray(String currentTab) {
+		if (Objects.equals(TemplatesWebKeys.WIDGET_TEMPLATES, currentTab)) {
+			return new long[] {
+				_classNameLocalService.getClassNameId(
+					PortletDisplayTemplate.class)
+			};
+		}
+
+		if (Objects.equals(
+				TemplatesWebKeys.INFORMATION_TEMPLATES, currentTab)) {
+
+			Stream<InfoItemFormProvider<?>> infoItemFormProviderStream =
+				_getDisplayableInfoItemFormProviderList().stream();
+
+			return infoItemFormProviderStream.map(
+				InfoItemFormProvider::getInfoForm
+			).map(
+				InfoForm::getName
+			).map(
+				className -> _classNameLocalService.getClassNameId(className)
+			).mapToLong(
+				l -> l
+			).toArray();
+		}
+
+		return new long[] {0};
+	}
+
+	public static long[] getTemplateClassNameIdsArray(
+		long groupId, long[] resourceClassNameIdsArray) {
+
+		if (resourceClassNameIdsArray.length == 0) {
+			return new long[] {0};
+		}
+
+		LongStream resourceClassNameLongStream = Arrays.stream(
+			resourceClassNameIdsArray);
+
+		Stream<Long> resourceClassNameStream =
+			resourceClassNameLongStream.boxed();
+
+		return resourceClassNameStream.map(
+			resourceClassNameId -> _classNameLocalService.fetchClassName(
+				resourceClassNameId)
+		).filter(
+			Objects::nonNull
+		).flatMap(
+			className -> _getClassNameIdsStream(
+				className.getClassName(), groupId)
+		).mapToLong(
+			l -> l
+		).distinct(
+		).toArray();
+	}
+
+	public static long[] getTemplateClassPKsArray(
+		long groupId, long[] resourceClassNameIdsArray) {
+
+		if (resourceClassNameIdsArray.length == 0) {
+			return new long[] {0};
+		}
+
+		LongStream resourceClassNameLongStream = Arrays.stream(
+			resourceClassNameIdsArray);
+
+		Stream<Long> resourceClassNameStream =
+			resourceClassNameLongStream.boxed();
+
+		return resourceClassNameStream.map(
+			resourceClassNameId -> _classNameLocalService.fetchClassName(
+				resourceClassNameId)
+		).filter(
+			Objects::nonNull
+		).flatMap(
+			className -> _getClassPKsStream(className.getClassName(), groupId)
+		).mapToLong(
+			l -> l
+		).distinct(
+		).toArray();
+	}
+
+	public static String getTemplateType() {
+		return DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY;
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		_classNameLocalService = null;
@@ -182,7 +269,73 @@ public class TemplatesUtil {
 		return classNameId;
 	}
 
-private static List<InfoItemFormProvider>
+	private static Stream<Long> _getClassNameIdsStream(
+		String resourceClassName, long groupId) {
+
+		if (Objects.equals(
+				resourceClassName, PortletDisplayTemplate.class.getName())) {
+
+			LongStream classNameIdsLongStream = Arrays.stream(
+				TemplateHandlerRegistryUtil.getClassNameIds());
+
+			return classNameIdsLongStream.boxed();
+		}
+
+		InfoItemFormVariationsProvider infoItemFormVariationsProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormVariationsProvider.class, resourceClassName);
+
+		if (infoItemFormVariationsProvider != null) {
+			Collection<InfoItemFormVariation> infoItemFormVariationCollection =
+				infoItemFormVariationsProvider.getInfoItemFormVariations(
+					groupId);
+
+			if (!infoItemFormVariationCollection.isEmpty()) {
+				return Stream.of(
+					_classNameLocalService.getClassNameId(DDMStructure.class));
+			}
+		}
+
+		return Stream.of(0L);
+	}
+
+	private static Stream<Long> _getClassPKsStream(
+		String resourceClassName, long groupId) {
+
+		List<Long> classPKsList = new ArrayList<>();
+
+		classPKsList.add(0L);
+
+		if (!Objects.equals(
+				resourceClassName, PortletDisplayTemplate.class.getName())) {
+
+			InfoItemFormVariationsProvider infoItemFormVariationsProvider =
+				_infoItemServiceTracker.getFirstInfoItemService(
+					InfoItemFormVariationsProvider.class, resourceClassName);
+
+			if (infoItemFormVariationsProvider != null) {
+				Collection<InfoItemFormVariation>
+					infoItemFormVariationCollection =
+						infoItemFormVariationsProvider.
+							getInfoItemFormVariations(groupId);
+
+				Stream<InfoItemFormVariation> infoItemFormVariationStream =
+					infoItemFormVariationCollection.stream();
+
+				infoItemFormVariationStream.map(
+					InfoItemFormVariation::getKey
+				).map(
+					Long::valueOf
+				).forEach(
+					classPK -> classPKsList.add(classPK)
+				);
+			}
+		}
+
+		return classPKsList.stream();
+	}
+
+	private static List<InfoItemFormProvider<?>>
 		_getDisplayableInfoItemFormProviderList() {
 
 		List<InfoItemClassDetails> infoItemClassDetailsList =
@@ -194,9 +347,10 @@ private static List<InfoItemFormProvider>
 
 		return infoItemClassDetailsStream.map(
 			infoItemClassDetails ->
-				_infoItemServiceTracker.getFirstInfoItemService(
-					InfoItemFormProvider.class,
-					infoItemClassDetails.getClassName())
+				(InfoItemFormProvider<?>)
+					_infoItemServiceTracker.getFirstInfoItemService(
+						InfoItemFormProvider.class,
+						infoItemClassDetails.getClassName())
 		).collect(
 			Collectors.toList()
 		);
