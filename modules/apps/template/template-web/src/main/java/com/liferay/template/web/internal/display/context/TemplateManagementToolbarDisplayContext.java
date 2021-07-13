@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.template.web.internal.util.TemplatesUtil;
 
@@ -46,14 +47,12 @@ public class TemplateManagementToolbarDisplayContext
 	public TemplateManagementToolbarDisplayContext(
 		HttpServletRequest httpServletRequest,
 		LiferayPortletRequest liferayPortletRequest,
-		LiferayPortletResponse liferayPortletResponse, String tabs1,
+		LiferayPortletResponse liferayPortletResponse,
 		SearchContainer<DDMTemplate> templatesSearchContainer) {
 
 		super(
 			httpServletRequest, liferayPortletRequest, liferayPortletResponse,
 			templatesSearchContainer);
-
-		_tabs1 = tabs1;
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -82,8 +81,6 @@ public class TemplateManagementToolbarDisplayContext
 			getPortletURL()
 		).setKeywords(
 			StringPool.BLANK
-		).setTabs1(
-			_tabs1
 		).buildString();
 	}
 
@@ -107,8 +104,6 @@ public class TemplateManagementToolbarDisplayContext
 							"/template/add_template"
 						).setBackURL(
 							_themeDisplay.getURLCurrent()
-						).setParameter(
-							"_tabs1", _tabs1
 						).buildString()
 					).build());
 
@@ -120,7 +115,7 @@ public class TemplateManagementToolbarDisplayContext
 		creationMenu.put(
 			"mappingTypes",
 			TemplatesUtil.getMappingTypesJSONArray(
-				_tabs1, _themeDisplay.getScopeGroupId(),
+				_getTabs1(), _themeDisplay.getScopeGroupId(),
 				_themeDisplay.getLocale()));
 
 		return creationMenu;
@@ -148,10 +143,21 @@ public class TemplateManagementToolbarDisplayContext
 		return new String[] {"id", "modified-date"};
 	}
 
+	private String _getTabs1() {
+		if (_tabs1 != null) {
+			return _tabs1;
+		}
+
+		_tabs1 = ParamUtil.getString(
+			liferayPortletRequest, "tabs1", "information-templates");
+
+		return _tabs1;
+	}
+
 	private static final String _DELETE_SELECTED_TEMPLATES =
 		"deleteSelectedTemplates";
 
-	private final String _tabs1;
+	private String _tabs1;
 	private final ThemeDisplay _themeDisplay;
 
 }

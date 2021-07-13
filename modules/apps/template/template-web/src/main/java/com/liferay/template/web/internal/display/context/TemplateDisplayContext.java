@@ -204,19 +204,18 @@ public class TemplateDisplayContext {
 			_themeDisplay.getScopeGroupId(), resourceClassNameIdsArray);
 
 		List<DDMTemplate> results = DDMTemplateServiceUtil.search(
-				_themeDisplay.getCompanyId(), groupIds, classNameIdsArray,
-				classPKsArray, resourceClassNameIdsArray, getKeywords(),
-				TemplatesUtil.getTemplateType(), StringPool.BLANK,
-				WorkflowConstants.STATUS_ANY,
-				ddmTemplateSearchContainer.getStart(),
-				ddmTemplateSearchContainer.getEnd(),
-				ddmTemplateSearchContainer.getOrderByComparator());
+			_themeDisplay.getCompanyId(), groupIds, classNameIdsArray,
+			classPKsArray, resourceClassNameIdsArray, getKeywords(),
+			TemplatesUtil.getTemplateType(), StringPool.BLANK,
+			WorkflowConstants.STATUS_ANY, ddmTemplateSearchContainer.getStart(),
+			ddmTemplateSearchContainer.getEnd(),
+			ddmTemplateSearchContainer.getOrderByComparator());
 
 		int total = DDMTemplateServiceUtil.searchCount(
-				_themeDisplay.getCompanyId(), groupIds, classNameIdsArray,
-				classPKsArray, resourceClassNameIdsArray, getKeywords(),
-				TemplatesUtil.getTemplateType(), StringPool.BLANK,
-				WorkflowConstants.STATUS_ANY);
+			_themeDisplay.getCompanyId(), groupIds, classNameIdsArray,
+			classPKsArray, resourceClassNameIdsArray, getKeywords(),
+			TemplatesUtil.getTemplateType(), StringPool.BLANK,
+			WorkflowConstants.STATUS_ANY);
 
 		ddmTemplateSearchContainer.setResults(results);
 		ddmTemplateSearchContainer.setTotal(total);
@@ -242,6 +241,17 @@ public class TemplateDisplayContext {
 		).build();
 	}
 
+	private String _getTabs1() {
+		if (_tabs1 != null) {
+			return _tabs1;
+		}
+
+		_tabs1 = ParamUtil.getString(
+			_liferayPortletRequest, "tabs1", "information-templates");
+
+		return _tabs1;
+	}
+
 	private OrderByComparator<DDMTemplate> _getTemplateOrderByComparator() {
 		boolean orderByAsc = false;
 
@@ -259,17 +269,6 @@ public class TemplateDisplayContext {
 		}
 
 		return orderByComparator;
-	}
-
-	private String _getTabs1() {
-		if (_tabs1 != null) {
-			return _tabs1;
-		}
-
-		_tabs1 = ParamUtil.getString(
-			_liferayPortletRequest, "tabs1", "information-templates");
-
-		return _tabs1;
 	}
 
 	private SearchContainer<DDMTemplate> _ddmTemplateSearchContainer;

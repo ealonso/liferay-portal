@@ -17,12 +17,13 @@ package com.liferay.document.library.web.internal.security.permission;
 import com.liferay.dynamic.data.mapping.util.DDMTemplatePermissionSupport;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
-import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
+import com.liferay.portal.kernel.service.ResourceActionLocalService;
+
+import java.util.List;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-
-import java.util.List;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Lourdes Fernández Besada
@@ -44,22 +45,26 @@ public class FileEntryDDMTemplatePermissionSupport
 
 	@Activate
 	protected void activate() {
-		List<String> actions = ResourceActionsUtil.getModelResourceActions(_RESOURCE_NAME);
+		List<String> actions = ResourceActionsUtil.getModelResourceActions(
+			_RESOURCE_NAME);
 
 		if (actions.isEmpty()) {
-			ResourceActionLocalServiceUtil.addResourceAction(
+			_resourceActionLocalServiceUtil.addResourceAction(
 				_RESOURCE_NAME, ActionKeys.DELETE, 2);
-			ResourceActionLocalServiceUtil.addResourceAction(
+			_resourceActionLocalServiceUtil.addResourceAction(
 				_RESOURCE_NAME, ActionKeys.PERMISSIONS, 4);
-			ResourceActionLocalServiceUtil.addResourceAction(
+			_resourceActionLocalServiceUtil.addResourceAction(
 				_RESOURCE_NAME, ActionKeys.UPDATE, 8);
-			ResourceActionLocalServiceUtil.addResourceAction(
+			_resourceActionLocalServiceUtil.addResourceAction(
 				_RESOURCE_NAME, ActionKeys.VIEW, 1);
 		}
 	}
 
-	private final static String _RESOURCE_NAME =
-		"com.liferay.dynamic.data.mapping.model.DDMTemplate-"
-			+ "com.liferay.portal.kernel.repository.model.FileEntry";
+	private static final String _RESOURCE_NAME =
+		"com.liferay.dynamic.data.mapping.model.DDMTemplate-" +
+			"com.liferay.portal.kernel.repository.model.FileEntry";
+
+	@Reference
+	private static ResourceActionLocalService _resourceActionLocalServiceUtil;
 
 }

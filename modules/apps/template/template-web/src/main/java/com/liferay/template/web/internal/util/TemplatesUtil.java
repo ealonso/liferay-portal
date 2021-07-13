@@ -32,7 +32,7 @@ import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.template.comparator.TemplateHandlerComparator;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
-import com.liferay.template.web.internal.constants.TemplatesWebKeys;
+import com.liferay.template.web.internal.constants.TemplateWebKeys;
 import com.liferay.template.web.internal.info.item.capability.TemplateInfoItemCapability;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class TemplatesUtil {
 	public static JSONArray getMappingTypesJSONArray(
 		String currentTab, long groupId, Locale locale) {
 
-		if (Objects.equals(TemplatesWebKeys.WIDGET_TEMPLATES, currentTab)) {
+		if (Objects.equals(TemplateWebKeys.WIDGET_TEMPLATES, currentTab)) {
 			JSONArray mappingSubtypesJSONArray =
 				JSONFactoryUtil.createJSONArray();
 
@@ -96,9 +96,7 @@ public class TemplatesUtil {
 				));
 		}
 
-		if (Objects.equals(
-				TemplatesWebKeys.INFORMATION_TEMPLATES, currentTab)) {
-
+		if (Objects.equals(TemplateWebKeys.INFORMATION_TEMPLATES, currentTab)) {
 			JSONArray mappingTypesJSONArray = JSONFactoryUtil.createJSONArray();
 
 			for (InfoItemFormProvider<?> infoItemFormProvider :
@@ -140,16 +138,14 @@ public class TemplatesUtil {
 	}
 
 	public static long[] getResourceClassNameIdsArray(String currentTab) {
-		if (Objects.equals(TemplatesWebKeys.WIDGET_TEMPLATES, currentTab)) {
+		if (Objects.equals(TemplateWebKeys.WIDGET_TEMPLATES, currentTab)) {
 			return new long[] {
 				_classNameLocalService.getClassNameId(
 					PortletDisplayTemplate.class)
 			};
 		}
 
-		if (Objects.equals(
-				TemplatesWebKeys.INFORMATION_TEMPLATES, currentTab)) {
-
+		if (Objects.equals(TemplateWebKeys.INFORMATION_TEMPLATES, currentTab)) {
 			Stream<InfoItemFormProvider<?>> infoItemFormProviderStream =
 				_getDisplayableInfoItemFormProviderList().stream();
 

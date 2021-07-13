@@ -22,7 +22,7 @@
 />
 
 <%
-TemplateManagementToolbarDisplayContext templateManagementToolbarDisplayContext = new TemplateManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, templateDisplayContext.getTabs1(), templateDisplayContext.getTemplateSearchContainer());
+TemplateManagementToolbarDisplayContext templateManagementToolbarDisplayContext = new TemplateManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, templateDisplayContext.getTemplateSearchContainer());
 %>
 
 <clay:management-toolbar
