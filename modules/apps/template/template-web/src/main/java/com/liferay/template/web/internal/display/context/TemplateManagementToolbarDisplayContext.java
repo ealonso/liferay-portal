@@ -115,7 +115,7 @@ public class TemplateManagementToolbarDisplayContext
 
 	@Override
 	protected String[] getOrderByKeys() {
-		return new String[] {"id", "modified-date"};
+		return new String[] {"modified-date", "id"};
 	}
 
 	private final ThemeDisplay _themeDisplay;
