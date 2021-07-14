@@ -73,15 +73,15 @@ TemplateManagementToolbarDisplayContext templateManagementToolbarDisplayContext 
 				/>
 
 				<liferay-ui:search-container-column-text
-						cssClass="table-cell-expand-smallest"
-						name="type"
-						value="<%= HtmlUtil.escape(templateDisplayContext.getDDMTemplateType(ddmTemplate)) %>"
+					cssClass="table-cell-expand-smallest"
+					name="type"
+					value="<%= HtmlUtil.escape(templateDisplayContext.getDDMTemplateType(ddmTemplate)) %>"
 				/>
 
 				<liferay-ui:search-container-column-text
-						cssClass="table-cell-expand-smallest"
-						name="scope"
-						value="<%= HtmlUtil.escape(templateDisplayContext.getDDMTemplateScope(ddmTemplate)) %>"
+					cssClass="table-cell-expand-smallest"
+					name="scope"
+					value="<%= HtmlUtil.escape(templateDisplayContext.getDDMTemplateScope(ddmTemplate)) %>"
 				/>
 
 				<liferay-ui:search-container-column-date

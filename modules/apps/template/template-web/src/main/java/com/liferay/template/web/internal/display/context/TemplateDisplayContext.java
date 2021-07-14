@@ -45,7 +45,6 @@ import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.template.web.internal.util.TemplateActionDropdownItemsProvider;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import javax.portlet.PortletURL;
@@ -82,6 +81,15 @@ public class TemplateDisplayContext {
 		return ddmTemplateActionDropdownItems.getActionDropdownItems();
 	}
 
+	public String getDDMTemplateScope(DDMTemplate ddmTemplate)
+		throws PortalException {
+
+		Group group = GroupLocalServiceUtil.getGroup(ddmTemplate.getGroupId());
+
+		return LanguageUtil.get(
+			_httpServletRequest, group.getScopeLabel(_themeDisplay));
+	}
+
 	public String getDDMTemplateType(DDMTemplate ddmTemplate) {
 		String type = ddmTemplate.getType();
 
@@ -90,19 +98,10 @@ public class TemplateDisplayContext {
 		}
 
 		TemplateHandler templateHandler =
-				TemplateHandlerRegistryUtil.getTemplateHandler(
-						ddmTemplate.getClassNameId());
+			TemplateHandlerRegistryUtil.getTemplateHandler(
+				ddmTemplate.getClassNameId());
 
 		return templateHandler.getName(_themeDisplay.getLocale());
-	}
-
-	public String getDDMTemplateScope(DDMTemplate ddmTemplate)
-		throws PortalException {
-
-		Group group = GroupLocalServiceUtil.getGroup(ddmTemplate.getGroupId());
-
-		return LanguageUtil.get(_httpServletRequest,
-			group.getScopeLabel(_themeDisplay));
 	}
 
 	public String getKeywords() {
