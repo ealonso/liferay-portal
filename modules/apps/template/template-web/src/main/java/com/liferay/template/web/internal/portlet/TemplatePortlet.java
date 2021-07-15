@@ -14,13 +14,18 @@
 
 package com.liferay.template.web.internal.portlet;
 
+import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.template.web.internal.constants.TemplatePortletKeys;
+import com.liferay.template.web.internal.display.context.InformationTemplatesTemplateDisplayContext;
 import com.liferay.template.web.internal.display.context.TemplateDisplayContext;
 
 import java.io.IOException;
+
+import java.util.Objects;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -59,14 +64,32 @@ public class TemplatePortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		String tabs1 = ParamUtil.getString(
+			renderRequest, "tabs1", "information-templates");
+
+		if (Objects.equals(tabs1, "information-templates")) {
+			renderRequest.setAttribute(
+				WebKeys.PORTLET_DISPLAY_CONTEXT,
+				new InformationTemplatesTemplateDisplayContext(
+					_portal.getLiferayPortletRequest(renderRequest),
+					_portal.getLiferayPortletResponse(renderResponse)));
+		}
+		else {
+			renderRequest.setAttribute(
+				WebKeys.PORTLET_DISPLAY_CONTEXT,
+				new TemplateDisplayContext(
+					_portal.getLiferayPortletRequest(renderRequest),
+					_portal.getLiferayPortletResponse(renderResponse)));
+		}
+
 		renderRequest.setAttribute(
-			WebKeys.PORTLET_DISPLAY_CONTEXT,
-			new TemplateDisplayContext(
-				_portal.getLiferayPortletRequest(renderRequest),
-				_portal.getLiferayPortletResponse(renderResponse)));
+			InfoItemServiceTracker.class.getName(), _infoItemServiceTracker);
 
 		super.render(renderRequest, renderResponse);
 	}
+
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private Portal _portal;

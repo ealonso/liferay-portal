@@ -60,11 +60,11 @@ public class TemplateDisplayContext {
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
-		_liferayPortletRequest = liferayPortletRequest;
+		this.liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
 		_httpServletRequest = PortalUtil.getHttpServletRequest(
-			_liferayPortletRequest);
+			liferayPortletRequest);
 
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -136,7 +136,7 @@ public class TemplateDisplayContext {
 
 		SearchContainer<DDMTemplate> ddmTemplateSearchContainer =
 			new SearchContainer<>(
-				_liferayPortletRequest, _getPortletURL(), null,
+				liferayPortletRequest, _getPortletURL(), null,
 				"there-are-no-templates");
 
 		ddmTemplateSearchContainer.setOrderByCol(_getOrderByCol());
@@ -148,21 +148,18 @@ public class TemplateDisplayContext {
 
 		List<DDMTemplate> results = DDMTemplateServiceUtil.search(
 			_themeDisplay.getCompanyId(),
-			new long[] {_themeDisplay.getScopeGroupId()},
-			TemplateHandlerRegistryUtil.getClassNameIds(), null,
-			PortalUtil.getClassNameId(PortletDisplayTemplate.class),
-			_getKeywords(), StringPool.BLANK, StringPool.BLANK,
-			WorkflowConstants.STATUS_ANY, ddmTemplateSearchContainer.getStart(),
+			new long[] {_themeDisplay.getScopeGroupId()}, getClassNameIds(),
+			null, getResourceClassNameId(), _getKeywords(), StringPool.BLANK,
+			StringPool.BLANK, WorkflowConstants.STATUS_ANY,
+			ddmTemplateSearchContainer.getStart(),
 			ddmTemplateSearchContainer.getEnd(),
 			ddmTemplateSearchContainer.getOrderByComparator());
 
 		int total = DDMTemplateServiceUtil.searchCount(
 			_themeDisplay.getCompanyId(),
-			new long[] {_themeDisplay.getScopeGroupId()},
-			TemplateHandlerRegistryUtil.getClassNameIds(), null,
-			PortalUtil.getClassNameId(PortletDisplayTemplate.class),
-			_getKeywords(), StringPool.BLANK, StringPool.BLANK,
-			WorkflowConstants.STATUS_ANY);
+			new long[] {_themeDisplay.getScopeGroupId()}, getClassNameIds(),
+			null, getResourceClassNameId(), _getKeywords(), StringPool.BLANK,
+			StringPool.BLANK, WorkflowConstants.STATUS_ANY);
 
 		ddmTemplateSearchContainer.setResults(results);
 		ddmTemplateSearchContainer.setTotal(total);
@@ -171,6 +168,16 @@ public class TemplateDisplayContext {
 
 		return _ddmTemplateSearchContainer;
 	}
+
+	protected long[] getClassNameIds() {
+		return TemplateHandlerRegistryUtil.getClassNameIds();
+	}
+
+	protected long getResourceClassNameId() {
+		return PortalUtil.getClassNameId(PortletDisplayTemplate.class);
+	}
+
+	protected final LiferayPortletRequest liferayPortletRequest;
 
 	private String _getKeywords() {
 		if (_keywords != null) {
@@ -220,7 +227,7 @@ public class TemplateDisplayContext {
 		}
 
 		_tabs1 = ParamUtil.getString(
-			_liferayPortletRequest, "tabs1", "information-templates");
+			liferayPortletRequest, "tabs1", "information-templates");
 
 		return _tabs1;
 	}
@@ -247,7 +254,6 @@ public class TemplateDisplayContext {
 	private SearchContainer<DDMTemplate> _ddmTemplateSearchContainer;
 	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
-	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private String _orderByCol;
 	private String _orderByType;

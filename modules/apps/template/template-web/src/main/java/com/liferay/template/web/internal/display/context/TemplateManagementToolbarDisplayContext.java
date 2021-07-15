@@ -16,17 +16,21 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
 
@@ -46,14 +50,16 @@ public class TemplateManagementToolbarDisplayContext
 		HttpServletRequest httpServletRequest,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		SearchContainer<DDMTemplate> templateSearchContainer) {
+		TemplateDisplayContext templateDisplayContext) {
 
 		super(
 			httpServletRequest, liferayPortletRequest, liferayPortletResponse,
-			templateSearchContainer);
+			templateDisplayContext.getTemplateSearchContainer());
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		_templateDisplayContext = templateDisplayContext;
 	}
 
 	@Override
@@ -97,6 +103,36 @@ public class TemplateManagementToolbarDisplayContext
 	}
 
 	@Override
+	public CreationMenu getCreationMenu() {
+		CreationMenu creationMenu = new CreationMenu();
+
+		InfoItemServiceTracker infoItemServiceTracker =
+			(InfoItemServiceTracker)liferayPortletRequest.getAttribute(
+				InfoItemServiceTracker.class.getName());
+
+		List<String> infoItemClassNames =
+			infoItemServiceTracker.getInfoItemClassNames(
+				InfoItemFormProvider.class);
+
+		for (String infoItemClassName : infoItemClassNames) {
+			creationMenu.addDropdownItem(
+				dropdownItem -> {
+					dropdownItem.setHref(
+						liferayPortletResponse.createRenderURL(), "mvcPath",
+						"/edit_ddm_template.jsp", "classNameId",
+						PortalUtil.getClassNameId(infoItemClassName),
+						"resourceClassNameId",
+						_templateDisplayContext.getResourceClassNameId());
+					dropdownItem.setLabel(
+						ResourceActionsUtil.getModelResource(
+							_themeDisplay.getLocale(), infoItemClassName));
+				});
+		}
+
+		return creationMenu;
+	}
+
+	@Override
 	public String getDefaultEventHandler() {
 		return "TEMPLATE_MANAGEMENT_TOOLBAR_DEFAULT_EVENT_HANDLER";
 	}
@@ -118,6 +154,7 @@ public class TemplateManagementToolbarDisplayContext
 		return new String[] {"modified-date", "id"};
 	}
 
+	private final TemplateDisplayContext _templateDisplayContext;
 	private final ThemeDisplay _themeDisplay;
 
 }
