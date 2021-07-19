@@ -23,6 +23,9 @@ import java.util.Collection;
  */
 public interface InfoItemFormVariationsProvider<T> {
 
+	public InfoItemFormVariation getInfoItemFormVariation(
+		long groupId, String itemSubtype);
+
 	public Collection<InfoItemFormVariation> getInfoItemFormVariations(
 		long groupId);
 
