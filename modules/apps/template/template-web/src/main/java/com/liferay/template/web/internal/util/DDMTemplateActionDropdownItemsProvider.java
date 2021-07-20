@@ -56,6 +56,11 @@ public class DDMTemplateActionDropdownItemsProvider {
 		return DropdownItemListBuilder.add(
 			() -> DDMTemplatePermission.contains(
 				_themeDisplay.getPermissionChecker(), _ddmTemplate,
+				ActionKeys.UPDATE),
+			_getEditDDMTemplateActionUnsafeConsumer()
+		).add(
+			() -> DDMTemplatePermission.contains(
+				_themeDisplay.getPermissionChecker(), _ddmTemplate,
 				ActionKeys.PERMISSIONS),
 			_getPermissionsDDMTemplateActionUnsafeConsumer()
 		).add(
@@ -109,6 +114,22 @@ public class DDMTemplateActionDropdownItemsProvider {
 				).buildString());
 			dropdownItem.setLabel(
 				LanguageUtil.get(_httpServletRequest, "delete"));
+		};
+	}
+
+	private UnsafeConsumer<DropdownItem, Exception>
+		_getEditDDMTemplateActionUnsafeConsumer() {
+
+		return dropdownItem -> {
+			dropdownItem.setHref(
+				PortletURLBuilder.createRenderURL(
+					_liferayPortletResponse
+				).build(),
+				"redirect", _themeDisplay.getURLCurrent(), "ddmTemplateId",
+				_ddmTemplate.getTemplateId(), "mvcPath",
+				"/edit_ddm_template.jsp");
+			dropdownItem.setLabel(
+				LanguageUtil.get(_httpServletRequest, "edit"));
 		};
 	}
 
