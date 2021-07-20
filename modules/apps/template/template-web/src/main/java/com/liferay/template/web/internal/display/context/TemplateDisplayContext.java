@@ -14,6 +14,7 @@
 
 package com.liferay.template.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
@@ -57,8 +58,11 @@ import javax.servlet.http.HttpServletRequest;
 public class TemplateDisplayContext {
 
 	public TemplateDisplayContext(
+		DDMWebConfiguration ddmWebConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
+
+		_ddmWebConfiguration = ddmWebConfiguration;
 
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
@@ -76,7 +80,8 @@ public class TemplateDisplayContext {
 		DDMTemplateActionDropdownItemsProvider
 			ddmTemplateActionDropdownItemsProvider =
 				new DDMTemplateActionDropdownItemsProvider(
-					ddmTemplate, _httpServletRequest, _liferayPortletResponse);
+					ddmTemplate, _httpServletRequest, _liferayPortletResponse,
+						_ddmWebConfiguration.enableTemplateCreation());
 
 		return ddmTemplateActionDropdownItemsProvider.getActionDropdownItems();
 	}
@@ -243,6 +248,7 @@ public class TemplateDisplayContext {
 	}
 
 	private SearchContainer<DDMTemplate> _ddmTemplateSearchContainer;
+	private final DDMWebConfiguration _ddmWebConfiguration;
 	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;
