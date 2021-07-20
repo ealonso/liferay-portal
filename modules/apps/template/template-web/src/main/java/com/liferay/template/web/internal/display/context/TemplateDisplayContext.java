@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
@@ -44,6 +45,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.template.constants.TemplatePortletKeys;
+import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
 import com.liferay.template.web.internal.util.DDMTemplateActionDropdownItemsProvider;
 
 import java.util.List;
@@ -85,6 +87,27 @@ public class TemplateDisplayContext {
 					_isAddDDMTemplateEnable());
 
 		return ddmTemplateActionDropdownItemsProvider.getActionDropdownItems();
+	}
+
+	public String getDDMTemplateEditURL(DDMTemplate ddmTemplate)
+		throws PortalException {
+
+		if (!DDMTemplatePermission.contains(
+				_themeDisplay.getPermissionChecker(), ddmTemplate,
+				ActionKeys.UPDATE)) {
+
+			return StringPool.BLANK;
+		}
+
+		return PortletURLBuilder.createRenderURL(
+			_liferayPortletResponse
+		).setMVCPath(
+			"/edit_ddm_template.jsp"
+		).setRedirect(
+			_themeDisplay.getURLCurrent()
+		).setParameter(
+			"ddmTemplateId", ddmTemplate.getTemplateId()
+		).buildString();
 	}
 
 	public String getDDMTemplateScope(DDMTemplate ddmTemplate)
