@@ -161,6 +161,9 @@ public class InfoCollectionProviderItemSelectorView
 							WebKeys.THEME_DISPLAY);
 
 					return JSONUtil.put(
+						"itemSubtype",
+						infoCollectionProvider.getCollectionItemSubtype()
+					).put(
 						"itemType",
 						infoCollectionProvider.getCollectionItemClassName()
 					).put(

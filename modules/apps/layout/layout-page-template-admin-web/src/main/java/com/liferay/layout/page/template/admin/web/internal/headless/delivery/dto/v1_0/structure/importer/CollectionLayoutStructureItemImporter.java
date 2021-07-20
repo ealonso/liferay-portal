@@ -211,6 +211,8 @@ public class CollectionLayoutStructureItemImporter
 		}
 
 		return JSONUtil.put(
+			"itemSubtype", infoCollectionProvider.getCollectionItemSubtype()
+		).put(
 			"itemType", infoCollectionProvider.getCollectionItemClassName()
 		).put(
 			"key", className
