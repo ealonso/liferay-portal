@@ -126,11 +126,7 @@ public class TemplateDisplayContext {
 			return type;
 		}
 
-		TemplateHandler templateHandler =
-			TemplateHandlerRegistryUtil.getTemplateHandler(
-				ddmTemplate.getClassNameId());
-
-		return templateHandler.getName(_themeDisplay.getLocale());
+		return getTemplateType(ddmTemplate.getClassNameId());
 	}
 
 	public List<NavigationItem> getNavigationItems() {
@@ -197,6 +193,13 @@ public class TemplateDisplayContext {
 		_ddmTemplateSearchContainer = ddmTemplateSearchContainer;
 
 		return _ddmTemplateSearchContainer;
+	}
+
+	public String getTemplateType(long classNameId) {
+		TemplateHandler templateHandler =
+			TemplateHandlerRegistryUtil.getTemplateHandler(classNameId);
+
+		return templateHandler.getName(_themeDisplay.getLocale());
 	}
 
 	private String _getKeywords() {
