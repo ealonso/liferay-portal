@@ -24,6 +24,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.PortletDataHandler;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.exportimport.kernel.lar.PortletDataHandlerControl;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
@@ -144,6 +145,25 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		actionableDynamicQuery.performActions();
 
 		return getExportDataRootElementString(rootElement);
+	}
+
+	@Override
+	protected PortletPreferences doImportData(
+			PortletDataContext portletDataContext, String portletId,
+			PortletPreferences portletPreferences, String data)
+		throws Exception {
+
+		Element ddmTemplatesElement =
+			portletDataContext.getImportDataGroupElement(DDMTemplate.class);
+
+		List<Element> ddmTemplateElements = ddmTemplatesElement.elements();
+
+		for (Element ddmTemplateElement : ddmTemplateElements) {
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, ddmTemplateElement);
+		}
+
+		return null;
 	}
 
 	@Override
