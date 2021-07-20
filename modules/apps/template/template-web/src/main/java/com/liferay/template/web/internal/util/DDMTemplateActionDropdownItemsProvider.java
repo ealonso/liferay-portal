@@ -54,6 +54,11 @@ public class DDMTemplateActionDropdownItemsProvider {
 
 	public List<DropdownItem> getActionDropdownItems() throws Exception {
 		return DropdownItemListBuilder.add(
+			() -> DDMTemplatePermission.contains(
+				_themeDisplay.getPermissionChecker(), _ddmTemplate,
+				ActionKeys.PERMISSIONS),
+			_getPermissionsDDMTemplateActionUnsafeConsumer()
+		).add(
 			() ->
 				_addDDMTemplateEnable &&
 				DDMTemplatePermission.containsAddTemplatePermission(
@@ -67,11 +72,6 @@ public class DDMTemplateActionDropdownItemsProvider {
 				_themeDisplay.getPermissionChecker(), _ddmTemplate,
 				ActionKeys.DELETE),
 			_getDeleteDDMTemplateActionUnsafeConsumer()
-		).add(
-			() -> DDMTemplatePermission.contains(
-				_themeDisplay.getPermissionChecker(), _ddmTemplate,
-				ActionKeys.PERMISSIONS),
-			_getPermissionsDDMTemplateActionUnsafeConsumer()
 		).build();
 	}
 
