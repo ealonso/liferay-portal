@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.template.comparator.TemplateHandlerComparator;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -38,6 +37,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
+import com.liferay.template.web.internal.util.TemplateUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -183,8 +183,8 @@ public class TemplateManagementToolbarDisplayContext
 	private List<TemplateHandler> _getPortletDisplayTemplateHandlers(
 		Locale locale) {
 
-		List<TemplateHandler> templateHandlersList =
-			TemplateHandlerRegistryUtil.getTemplateHandlers();
+		List<TemplateHandler> templateHandlersList = TemplateUtil
+			.getPortletDisplayTemplateHandlers();
 
 		ListUtil.sort(
 			templateHandlersList, new TemplateHandlerComparator(locale));
