@@ -197,7 +197,7 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		for (StagedModelType stagedModelType : _getStagedModelTypes()) {
 			ActionableDynamicQuery actionableDynamicQuery =
-					_getDDMTemplateActionableDynamicQuery(
+				_getDDMTemplateActionableDynamicQuery(
 					portletDataContext,
 					new Long[] {stagedModelType.getReferrerClassNameId()},
 					stagedModelType);
@@ -208,14 +208,14 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 	@Reference(unbind = "-")
 	protected void setDDMTemplateLocalService(
-			DDMTemplateLocalService ddmTemplateLocalService) {
+		DDMTemplateLocalService ddmTemplateLocalService) {
 
 		_ddmTemplateLocalService = ddmTemplateLocalService;
 	}
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
 	protected void setModuleServiceLifecycle(
-			ModuleServiceLifecycle moduleServiceLifecycle) {
+		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
 	private ActionableDynamicQuery _getDDMTemplateActionableDynamicQuery(
