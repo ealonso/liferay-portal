@@ -22,12 +22,17 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.result.display.context.SearchResultSummaryDisplayContext;
 import com.liferay.portal.search.web.internal.search.results.configuration.SearchResultsPortletInstanceConfiguration;
+import com.liferay.staging.StagingGroupHelper;
+import com.liferay.staging.StagingGroupHelperUtil;
 
 import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -112,6 +117,35 @@ public class SearchResultsPortletDisplayContext implements Serializable {
 
 	public boolean isRenderNothing() {
 		return _renderNothing;
+	}
+
+	public boolean isShowLayoutsWarningMessage(
+		PortletPreferences portletPreferences) {
+
+		StagingGroupHelper stagingGroupHelper =
+			StagingGroupHelperUtil.getStagingGroupHelper();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)_httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		long groupId = themeDisplay.getScopeGroupId();
+
+		if (stagingGroupHelper.isLiveGroup(groupId) ||
+			stagingGroupHelper.isRemoteLiveGroup(groupId)) {
+
+			return false;
+		}
+
+		SearchResultsPortletPreferences searchResultsPortletPreferences =
+			new SearchResultsPortletPreferencesImpl(
+				Optional.ofNullable(portletPreferences));
+
+		if (searchResultsPortletPreferences.isDisplayLayoutWarningInStaging()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public void setDocuments(List<Document> documents) {

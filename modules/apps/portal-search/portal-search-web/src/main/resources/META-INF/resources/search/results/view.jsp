@@ -89,3 +89,13 @@ SearchContainer<Document> searchContainer = searchResultsPortletDisplayContext.g
 		</aui:form>
 	</c:otherwise>
 </c:choose>
+
+<c:if test="<%= searchResultsPortletDisplayContext.isShowLayoutsWarningMessage(portletPreferences) %>">
+	<div class="alert alert-warning">
+		<span class="alert-indicator">
+			<aui:icon image="warning" markupView="lexicon" />
+		</span>
+
+		<liferay-ui:message key="you-are-visualizing-search-results-with-staging-enabled" />
+	</div>
+</c:if>
