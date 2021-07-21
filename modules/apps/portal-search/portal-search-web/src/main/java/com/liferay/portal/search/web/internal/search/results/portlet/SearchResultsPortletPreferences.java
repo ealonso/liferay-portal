@@ -24,6 +24,10 @@ public interface SearchResultsPortletPreferences {
 	public static final String PREFERENCE_KEY_DISPLAY_IN_DOCUMENT_FORM =
 		"displayInDocumentForm";
 
+	public static final String
+		PREFERENCE_KEY_DISPLAY_LAYOUT_WARNING_IN_STAGING =
+			"displayLayoutWarningInStaging";
+
 	public static final String PREFERENCE_KEY_FEDERATED_SEARCH_KEY =
 		"federatedSearchKey";
 
@@ -59,6 +63,8 @@ public interface SearchResultsPortletPreferences {
 	public String getPaginationStartParameterName();
 
 	public boolean isDisplayInDocumentForm();
+
+	public boolean isDisplayLayoutWarningInStaging();
 
 	public boolean isHighlightEnabled();
 

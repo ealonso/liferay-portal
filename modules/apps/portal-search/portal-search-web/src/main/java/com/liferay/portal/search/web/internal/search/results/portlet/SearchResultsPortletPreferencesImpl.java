@@ -94,6 +94,14 @@ public class SearchResultsPortletPreferencesImpl
 	}
 
 	@Override
+	public boolean isDisplayLayoutWarningInStaging() {
+		return _portletPreferencesHelper.getBoolean(
+			SearchResultsPortletPreferences.
+				PREFERENCE_KEY_DISPLAY_LAYOUT_WARNING_IN_STAGING,
+			true);
+	}
+
+	@Override
 	public boolean isHighlightEnabled() {
 		return _portletPreferencesHelper.getBoolean(
 			SearchResultsPortletPreferences.PREFERENCE_KEY_HIGHLIGHT_ENABLED,
