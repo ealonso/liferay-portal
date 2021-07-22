@@ -50,6 +50,7 @@ const EDITABLE_TYPE_ICONS = {
 
 const LAYOUT_DATA_ITEM_TYPE_ICONS = {
 	[LAYOUT_DATA_ITEM_TYPES.collection]: 'list',
+	[LAYOUT_DATA_ITEM_TYPES.collectionFilter]: 'filter',
 	[LAYOUT_DATA_ITEM_TYPES.collectionItem]: 'document',
 	[LAYOUT_DATA_ITEM_TYPES.container]: 'container',
 	[LAYOUT_DATA_ITEM_TYPES.dropZone]: 'box-container',

@@ -14,6 +14,7 @@
 
 export const LAYOUT_DATA_ITEM_TYPES = {
 	collection: 'collection',
+	collectionFilter: 'collection-filter',
 	collectionItem: 'collection-item',
 	column: 'column',
 	container: 'container',

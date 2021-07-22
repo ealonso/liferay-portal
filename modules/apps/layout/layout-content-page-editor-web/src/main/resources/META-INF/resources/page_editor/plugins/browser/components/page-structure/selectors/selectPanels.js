@@ -19,6 +19,7 @@ import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../app/config/constants/layout
 import {VIEWPORT_SIZES} from '../../../../../app/config/constants/viewportSizes';
 import selectCanUpdateEditables from '../../../../../app/selectors/selectCanUpdateEditables';
 import selectCanUpdateItemConfiguration from '../../../../../app/selectors/selectCanUpdateItemConfiguration';
+import CollectionFilterGeneralPanel from '../components/item-configuration-panels/CollectionFilterGeneralPanel';
 import {CollectionGeneralPanel} from '../components/item-configuration-panels/CollectionGeneralPanel';
 import ContainerGeneralPanel from '../components/item-configuration-panels/ContainerGeneralPanel';
 import {ContainerStylesPanel} from '../components/item-configuration-panels/ContainerStylesPanel';
@@ -31,6 +32,7 @@ import {RowGeneralPanel} from '../components/item-configuration-panels/RowGenera
 import {RowStylesPanel} from '../components/item-configuration-panels/RowStylesPanel';
 
 export const PANEL_IDS = {
+	collectionFilterGeneral: 'collectionFilterGeneral',
 	collectionGeneral: 'collectionGeneral',
 	containerGeneral: 'containerGeneral',
 	containerStyles: 'containerStyles',
@@ -46,6 +48,11 @@ export const PANEL_IDS = {
 export const PANELS = {
 	[PANEL_IDS.collectionGeneral]: {
 		component: CollectionGeneralPanel,
+		label: Liferay.Language.get('general'),
+		priority: 0,
+	},
+	[PANEL_IDS.collectionFilterGeneral]: {
+		component: CollectionFilterGeneralPanel,
 		label: Liferay.Language.get('general'),
 		priority: 0,
 	},
@@ -148,6 +155,13 @@ export const selectPanels = (
 	else if (activeItem.type === LAYOUT_DATA_ITEM_TYPES.collection) {
 		panelsIds = {
 			[PANEL_IDS.collectionGeneral]:
+				state.selectedViewportSize === VIEWPORT_SIZES.desktop &&
+				canUpdateItemConfiguration,
+		};
+	}
+	else if (activeItem.type === LAYOUT_DATA_ITEM_TYPES.collectionFilter) {
+		panelsIds = {
+			[PANEL_IDS.collectionFilterGeneral]:
 				state.selectedViewportSize === VIEWPORT_SIZES.desktop &&
 				canUpdateItemConfiguration,
 		};
