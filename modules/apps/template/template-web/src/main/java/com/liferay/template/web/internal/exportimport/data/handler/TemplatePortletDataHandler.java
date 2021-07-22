@@ -100,6 +100,11 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
+	public String getNamespace() {
+		return NAMESPACE;
+	}
+
+	@Override
 	public String getSchemaVersion() {
 		return SCHEMA_VERSION;
 	}
