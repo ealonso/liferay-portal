@@ -56,6 +56,7 @@ export interface Config {
 
 	changeMasterLayoutURL: string;
 	changeStyleBookEntryURL: string;
+	collectionFilterEnabled: boolean;
 	collectionSelectorURL: string;
 
 	commonStyles: Array<{
