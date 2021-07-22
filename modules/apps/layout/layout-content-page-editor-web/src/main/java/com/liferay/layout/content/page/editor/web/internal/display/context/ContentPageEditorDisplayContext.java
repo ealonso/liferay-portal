@@ -276,6 +276,10 @@ public class ContentPageEditorDisplayContext {
 				_ffLayoutContentPageEditorConfiguration.
 					collectionDisplayFragmentPaginationEnabled()
 			).put(
+				"collectionFilterEnabled",
+				_ffLayoutContentPageEditorConfiguration.
+					collectionFilterEnabled()
+			).put(
 				"collectionSelectorURL", _getCollectionSelectorURL()
 			).put(
 				"commonStyles",

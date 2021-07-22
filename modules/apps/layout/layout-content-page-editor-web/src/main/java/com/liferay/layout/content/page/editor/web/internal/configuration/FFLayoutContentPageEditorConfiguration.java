@@ -30,4 +30,7 @@ public interface FFLayoutContentPageEditorConfiguration {
 	@Meta.AD(deflt = "false", required = false)
 	public boolean collectionDisplayFragmentPaginationEnabled();
 
+	@Meta.AD(deflt = "false", required = false)
+	public boolean collectionFilterEnabled();
+
 }
