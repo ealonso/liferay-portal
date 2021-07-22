@@ -36,6 +36,7 @@ import {useSelector} from '../contexts/StoreContext';
 import {deepEqual} from '../utils/checkDeepEqual';
 import FragmentWithControls from './layout-data-items/FragmentWithControls';
 import {
+	CollectionFilterWithControls,
 	CollectionItemWithControls,
 	CollectionWithControls,
 	ColumnWithControls,
@@ -47,6 +48,7 @@ import {
 
 const LAYOUT_DATA_ITEMS = {
 	[LAYOUT_DATA_ITEM_TYPES.collection]: CollectionWithControls,
+	[LAYOUT_DATA_ITEM_TYPES.collectionFilter]: CollectionFilterWithControls,
 	[LAYOUT_DATA_ITEM_TYPES.collectionItem]: CollectionItemWithControls,
 	[LAYOUT_DATA_ITEM_TYPES.column]: ColumnWithControls,
 	[LAYOUT_DATA_ITEM_TYPES.container]: ContainerWithControls,

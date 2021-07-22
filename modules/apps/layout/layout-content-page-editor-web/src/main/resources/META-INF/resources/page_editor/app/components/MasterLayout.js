@@ -25,10 +25,17 @@ import {useSelectItem} from '../contexts/ControlsContext';
 import {useSelector} from '../contexts/StoreContext';
 import Layout from './Layout';
 import FragmentContent from './fragment-content/FragmentContent';
-import {Collection, Column, Container, Row} from './layout-data-items/index';
+import {
+	Collection,
+	CollectionFilter,
+	Column,
+	Container,
+	Row,
+} from './layout-data-items/index';
 
 const LAYOUT_DATA_ITEMS = {
 	[LAYOUT_DATA_ITEM_TYPES.collection]: Collection,
+	[LAYOUT_DATA_ITEM_TYPES.collectionFilter]: CollectionFilter,
 	[LAYOUT_DATA_ITEM_TYPES.collectionItem]: CollectionItem,
 	[LAYOUT_DATA_ITEM_TYPES.column]: MasterColumn,
 	[LAYOUT_DATA_ITEM_TYPES.container]: Container,

@@ -14,6 +14,7 @@
 
 export const LAYOUT_DATA_ITEM_TYPE_LABELS = {
 	collection: Liferay.Language.get('collection-display'),
+	collectionFilter: Liferay.Language.get('collection-filter'),
 	collectionItem: Liferay.Language.get('collection-item'),
 	column: Liferay.Language.get('module'),
 	container: Liferay.Language.get('container'),
