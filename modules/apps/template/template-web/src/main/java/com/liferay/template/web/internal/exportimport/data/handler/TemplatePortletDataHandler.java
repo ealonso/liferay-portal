@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.template.constants.TemplatePortletKeys;
+import com.liferay.template.web.internal.constants.TemplateConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,8 +106,18 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	}
 
 	@Override
+	public String getResourceName() {
+		return TemplateConstants.RESOURCE_NAME;
+	}
+
+	@Override
 	public String getSchemaVersion() {
 		return SCHEMA_VERSION;
+	}
+
+	@Override
+	public String getServiceName() {
+		return TemplateConstants.SERVICE_NAME;
 	}
 
 	@Activate
