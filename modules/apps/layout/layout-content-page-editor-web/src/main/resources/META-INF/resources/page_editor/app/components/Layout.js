@@ -222,6 +222,12 @@ function LayoutDataItemContent({item, layoutData}) {
 	const Component = LAYOUT_DATA_ITEMS[item.type];
 	const componentRef = useRef(null);
 
+	if (!Component && process.env.NODE_ENV === 'development') {
+		console.error(
+			`There is no component for LayoutData item type ${item.type}`
+		);
+	}
+
 	return (
 		<>
 			<LayoutDataItemInteractionFilter
