@@ -15,6 +15,7 @@
 import {ADD_FRAGMENT_COMPOSITION, INIT} from '../actions/types';
 import {LAYOUT_DATA_ITEM_TYPE_LABELS} from '../config/constants/layoutDataItemTypeLabels';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
+import {config} from '../config/index';
 
 const CONTENT_DISPLAY_COLLECTION_ID = 'content-display';
 
@@ -116,7 +117,25 @@ export default function fragmentsReducer(fragments = [], action) {
 						label: Liferay.Language.get('collection-display'),
 						type: LAYOUT_DATA_ITEM_TYPES.collection,
 					},
-				],
+				].concat(
+					config.collectionFilterEnabled
+						? [
+								{
+									data: {
+										itemType:
+											LAYOUT_DATA_ITEM_TYPES.collectionFilter,
+									},
+									icon: 'filter',
+									itemId: 'collection-filter',
+									label: Liferay.Language.get(
+										'collection-filter'
+									),
+									type:
+										LAYOUT_DATA_ITEM_TYPES.collectionFilter,
+								},
+						  ]
+						: []
+				),
 			});
 
 			return newFragments;
