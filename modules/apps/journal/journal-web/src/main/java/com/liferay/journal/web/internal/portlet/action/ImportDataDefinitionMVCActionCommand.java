@@ -52,7 +52,7 @@ import org.osgi.service.component.annotations.Reference;
 	},
 	service = MVCActionCommand.class
 )
-public class ImportDataDefinitionMVCResourceCommand
+public class ImportDataDefinitionMVCActionCommand
 	extends BaseTransactionalMVCActionCommand {
 
 	@Override
@@ -121,7 +121,7 @@ public class ImportDataDefinitionMVCResourceCommand
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		ImportDataDefinitionMVCResourceCommand.class);
+		ImportDataDefinitionMVCActionCommand.class);
 
 	@Reference
 	private DataDefinitionResource.Factory _dataDefinitionResourceFactory;
