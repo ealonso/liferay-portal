@@ -54,11 +54,6 @@ public class WidgetTemplatesTemplateDisplayContext
 	}
 
 	@Override
-	public String getAddPermissionActionId() {
-		return ActionKeys.ADD_PORTLET_DISPLAY_TEMPLATE;
-	}
-
-	@Override
 	public long[] getClassNameIds() {
 		if (_classNameIds != null) {
 			return _classNameIds;
@@ -88,14 +83,6 @@ public class WidgetTemplatesTemplateDisplayContext
 			PortletDisplayTemplate.class);
 
 		return _resourceClassNameId;
-	}
-
-	@Override
-	public String getResourceName(long classNameId) {
-		TemplateHandler templateHandler =
-			TemplateHandlerRegistryUtil.getTemplateHandler(classNameId);
-
-		return templateHandler.getResourceName();
 	}
 
 	@Override
