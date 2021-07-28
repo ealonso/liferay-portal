@@ -50,11 +50,6 @@ public class InformationTemplatesTemplateDisplayContext
 	}
 
 	@Override
-	public String getAddPermissionActionId() {
-		return DDMActionKeys.ADD_TEMPLATE;
-	}
-
-	@Override
 	public long[] getClassNameIds() {
 		if (_classNameIds != null) {
 			return _classNameIds;
@@ -83,11 +78,6 @@ public class InformationTemplatesTemplateDisplayContext
 			InfoItemFormProvider.class);
 
 		return _resourceClassNameId;
-	}
-
-	@Override
-	public String getResourceName(long classNameId) {
-		return TemplatePortletKeys.TEMPLATE;
 	}
 
 	@Override
