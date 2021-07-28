@@ -69,7 +69,7 @@ public abstract class BaseTemplateDisplayContext
 
 		_ddmWebConfiguration = ddmWebConfiguration;
 		this.liferayPortletRequest = liferayPortletRequest;
-		_liferayPortletResponse = liferayPortletResponse;
+		this.liferayPortletResponse = liferayPortletResponse;
 
 		_httpServletRequest = PortalUtil.getHttpServletRequest(
 			liferayPortletRequest);
@@ -98,7 +98,7 @@ public abstract class BaseTemplateDisplayContext
 			ddmTemplateActionDropdownItemsProvider =
 				new DDMTemplateActionDropdownItemsProvider(
 					isAddDDMTemplateEnabled(), ddmTemplate, _httpServletRequest,
-					_liferayPortletResponse, getTabs1());
+					liferayPortletResponse, getTabs1());
 
 		return ddmTemplateActionDropdownItemsProvider.getActionDropdownItems();
 	}
@@ -114,7 +114,7 @@ public abstract class BaseTemplateDisplayContext
 		}
 
 		return PortletURLBuilder.createRenderURL(
-			_liferayPortletResponse
+			liferayPortletResponse
 		).setMVCPath(
 			"/edit_ddm_template.jsp"
 		).setRedirect(
@@ -141,7 +141,7 @@ public abstract class BaseTemplateDisplayContext
 				navigationItem.setActive(
 					Objects.equals(getTabs1(), "information-templates"));
 				navigationItem.setHref(
-					_liferayPortletResponse.createRenderURL(), "tabs1",
+					liferayPortletResponse.createRenderURL(), "tabs1",
 					"information-templates");
 				navigationItem.setLabel(
 					LanguageUtil.get(
@@ -152,7 +152,7 @@ public abstract class BaseTemplateDisplayContext
 				navigationItem.setActive(
 					Objects.equals(getTabs1(), "widget-templates"));
 				navigationItem.setHref(
-					_liferayPortletResponse.createRenderURL(), "tabs1",
+					liferayPortletResponse.createRenderURL(), "tabs1",
 					"widget-templates");
 				navigationItem.setLabel(
 					LanguageUtil.get(_httpServletRequest, "widget-templates"));
@@ -190,7 +190,7 @@ public abstract class BaseTemplateDisplayContext
 			_getTemplateOrderByComparator());
 		ddmTemplateSearchContainer.setOrderByType(_getOrderByType());
 		ddmTemplateSearchContainer.setRowChecker(
-			new EmptyOnClickRowChecker(_liferayPortletResponse));
+			new EmptyOnClickRowChecker(liferayPortletResponse));
 
 		ddmTemplateSearchContainer.setResults(
 			DDMTemplateServiceUtil.search(
@@ -257,6 +257,7 @@ public abstract class BaseTemplateDisplayContext
 	}
 
 	protected final LiferayPortletRequest liferayPortletRequest;
+	protected final LiferayPortletResponse liferayPortletResponse;
 	protected final ThemeDisplay themeDisplay;
 
 	private String _getKeywords() {
@@ -295,7 +296,7 @@ public abstract class BaseTemplateDisplayContext
 
 	private PortletURL _getPortletURL() {
 		return PortletURLBuilder.createRenderURL(
-			_liferayPortletResponse
+			liferayPortletResponse
 		).setTabs1(
 			getTabs1()
 		).buildPortletURL();
@@ -327,7 +328,6 @@ public abstract class BaseTemplateDisplayContext
 	private final DDMWebConfiguration _ddmWebConfiguration;
 	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
-	private final LiferayPortletResponse _liferayPortletResponse;
 	private String _orderByCol;
 	private String _orderByType;
 	private String _tabs1;
