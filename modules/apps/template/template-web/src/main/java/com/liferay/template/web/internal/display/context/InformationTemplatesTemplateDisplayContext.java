@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.template.constants.TemplatePortletKeys;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -161,7 +162,9 @@ public class InformationTemplatesTemplateDisplayContext
 			Collectors.toList()
 		);
 
-		infoForms.sort(Comparator.comparing(infoForm -> infoForm.getName()));
+		infoForms.sort(
+			Comparator.comparing(
+				infoForm -> infoForm.getLabel(themeDisplay.getLocale())));
 
 		for (InfoForm infoForm : infoForms) {
 			JSONArray itemSubtypesJSONArray = JSONFactoryUtil.createJSONArray();
@@ -171,9 +174,19 @@ public class InformationTemplatesTemplateDisplayContext
 					InfoItemFormVariationsProvider.class, infoForm.getName());
 
 			if (infoItemFormVariationsProvider != null) {
-				Collection<InfoItemFormVariation> infoItemFormVariations =
-					infoItemFormVariationsProvider.getInfoItemFormVariations(
-						themeDisplay.getScopeGroupId());
+				Collection<InfoItemFormVariation>
+					unsortedInfoItemFormVariations =
+						infoItemFormVariationsProvider.
+							getInfoItemFormVariations(
+								themeDisplay.getScopeGroupId());
+
+				List<InfoItemFormVariation> infoItemFormVariations =
+					new ArrayList<>(unsortedInfoItemFormVariations);
+
+				infoItemFormVariations.sort(
+					Comparator.comparing(
+						infoItemFormVariation -> infoItemFormVariation.getLabel(
+							themeDisplay.getLocale())));
 
 				for (InfoItemFormVariation infoItemFormVariation :
 						infoItemFormVariations) {
