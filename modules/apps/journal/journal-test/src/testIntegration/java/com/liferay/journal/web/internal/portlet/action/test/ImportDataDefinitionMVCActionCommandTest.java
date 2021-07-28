@@ -15,32 +15,22 @@
 package com.liferay.journal.web.internal.portlet.action.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.petra.string.StringPool;
+import com.liferay.data.engine.rest.resource.exception.DataDefinitionValidationException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.servlet.SessionMessages;
-import com.liferay.portal.kernel.test.portlet.MockLiferayPortletActionRequest;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.File;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import org.junit.Assert;
+import java.io.InputStream;
+
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockMultipartHttpServletRequest;
 
 /**
  * @author Rodrigo Paulino
@@ -53,110 +43,32 @@ public class ImportDataDefinitionMVCActionCommandTest {
 	public static final LiferayIntegrationTestRule liferayIntegrationTestRule =
 		new LiferayIntegrationTestRule();
 
-	@Test
+	@Test(expected = NullPointerException.class)
 	public void testProcessActionWithInvalidDataDefinition() throws Exception {
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
-			_createMockLiferayPortletActionRequest(
-				"invalid_data_definition.json", "Imported Structure");
-
-		_mvcActionCommand.processAction(mockLiferayPortletActionRequest, null);
-
-		_assertFailure(mockLiferayPortletActionRequest);
+		ReflectionTestUtil.invoke(
+			_mvcActionCommand, "importDataDefinition",
+			new Class<?>[] {String.class, String.class, ThemeDisplay.class},
+			_read("invalid_data_definition.json"), "Imported Structure",
+			_getThemeDisplay());
 	}
 
-	@Test
+	@Test(expected = DataDefinitionValidationException.MustSetValidName.class)
 	public void testProcessActionWithoutName() throws Exception {
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
-			_createMockLiferayPortletActionRequest(
-				"valid_data_definition.json", null);
-
-		_mvcActionCommand.processAction(mockLiferayPortletActionRequest, null);
-
-		_assertFailure(mockLiferayPortletActionRequest);
+		ReflectionTestUtil.invoke(
+			_mvcActionCommand, "importDataDefinition",
+			new Class<?>[] {String.class, String.class, ThemeDisplay.class},
+			_read("valid_data_definition.json"), null, _getThemeDisplay());
 	}
 
 	@Test
 	public void testProcessActionWithValidDataDefinitionAndName()
 		throws Exception {
 
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
-			_createMockLiferayPortletActionRequest(
-				"valid_data_definition.json", "Imported Structure");
-
-		_mvcActionCommand.processAction(mockLiferayPortletActionRequest, null);
-
-		Assert.assertNotNull(
-			SessionMessages.get(
-				mockLiferayPortletActionRequest,
-				"importDataDefinitionSuccessMessage"));
-	}
-
-	private void _assertFailure(
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest) {
-
-		Assert.assertNotNull(
-			SessionMessages.get(
-				mockLiferayPortletActionRequest,
-				_portal.getPortletId(mockLiferayPortletActionRequest) +
-					SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE));
-		Assert.assertNotNull(
-			SessionErrors.get(
-				mockLiferayPortletActionRequest,
-				"importDataDefinitionErrorMessage"));
-	}
-
-	private MockLiferayPortletActionRequest
-			_createMockLiferayPortletActionRequest(String fileName, String name)
-		throws Exception {
-
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
-			new MockLiferayPortletActionRequest(
-				_createMockMultipartHttpServletRequest(fileName));
-
-		mockLiferayPortletActionRequest.addParameter("name", name);
-		mockLiferayPortletActionRequest.setAttribute(
-			WebKeys.THEME_DISPLAY, _getThemeDisplay());
-
-		return mockLiferayPortletActionRequest;
-	}
-
-	private MockMultipartHttpServletRequest
-			_createMockMultipartHttpServletRequest(String fileName)
-		throws Exception {
-
-		MockMultipartHttpServletRequest mockMultipartHttpServletRequest =
-			new MockMultipartHttpServletRequest();
-
-		Class<?> clazz = getClass();
-
-		byte[] bytes = _file.getBytes(
-			clazz.getResourceAsStream("dependencies/" + fileName));
-
-		mockMultipartHttpServletRequest.addFile(
-			new MockMultipartFile(fileName, bytes));
-
-		mockMultipartHttpServletRequest.setCharacterEncoding(StringPool.UTF8);
-
-		String boundary = "WebKitFormBoundary" + StringUtil.randomString();
-
-		mockMultipartHttpServletRequest.setContent(
-			_getContent(boundary, bytes, fileName));
-		mockMultipartHttpServletRequest.setContentType(
-			MediaType.MULTIPART_FORM_DATA_VALUE + "; boundary=" + boundary);
-
-		return mockMultipartHttpServletRequest;
-	}
-
-	private byte[] _getContent(String boundary, byte[] bytes, String fileName) {
-		String start = StringBundler.concat(
-			StringPool.DOUBLE_DASH, boundary,
-			"\r\nContent-Disposition:form-data;name=\"jsonFile\";filename=\"",
-			fileName, "\";\r\nContent-type:application/json\r\n\r\n");
-
-		String end = StringBundler.concat(
-			"\r\n--", boundary, StringPool.DOUBLE_DASH);
-
-		return ArrayUtil.append(start.getBytes(), bytes, end.getBytes());
+		ReflectionTestUtil.invoke(
+			_mvcActionCommand, "importDataDefinition",
+			new Class<?>[] {String.class, String.class, ThemeDisplay.class},
+			_read("valid_data_definition.json"), "Imported Structure",
+			_getThemeDisplay());
 	}
 
 	private ThemeDisplay _getThemeDisplay() throws Exception {
@@ -169,13 +81,16 @@ public class ImportDataDefinitionMVCActionCommandTest {
 		return themeDisplay;
 	}
 
-	@Inject
-	private File _file;
+	private String _read(String fileName) throws Exception {
+		Class<?> clazz = getClass();
+
+		InputStream inputStream = clazz.getResourceAsStream(
+			"dependencies/" + fileName);
+
+		return StringUtil.read(inputStream);
+	}
 
 	@Inject(filter = "mvc.command.name=/journal/import_data_definition")
 	private MVCActionCommand _mvcActionCommand;
-
-	@Inject
-	private Portal _portal;
 
 }
