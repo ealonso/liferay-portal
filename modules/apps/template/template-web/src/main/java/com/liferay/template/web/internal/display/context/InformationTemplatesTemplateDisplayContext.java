@@ -17,8 +17,10 @@ package com.liferay.template.web.internal.display.context;
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -96,7 +98,19 @@ public class InformationTemplatesTemplateDisplayContext
 
 	@Override
 	protected CreationMenu buildCreationMenu() {
-		return null;
+		if (!containsAddPortletDisplayTemplatePermission(
+				TemplatePortletKeys.TEMPLATE, DDMActionKeys.ADD_TEMPLATE)) {
+
+			return null;
+		}
+
+		return CreationMenuBuilder.addDropdownItem(
+			dropdownItem -> {
+				dropdownItem.putData("action", "addInformationTemplate");
+				dropdownItem.setLabel(
+					LanguageUtil.get(themeDisplay.getLocale(), "add"));
+			}
+		).build();
 	}
 
 	private long[] _classNameIds;
