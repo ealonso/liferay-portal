@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -34,7 +33,6 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.upload.UploadPortletRequestImpl;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -90,11 +88,20 @@ public class ImportDataDefinitionMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		UploadPortletRequest uploadPortletRequest = _getUploadPortletRequest(
-			actionRequest);
+		String name = ParamUtil.getString(actionRequest, "name");
 
-		JSONObject jsonObject = _jsonFactory.createJSONObject(
-			FileUtil.read(uploadPortletRequest.getFile("jsonFile")));
+		importDataDefinition(
+			_getJSONFileContent(actionRequest), name, themeDisplay);
+
+		SessionMessages.add(
+			actionRequest, "importDataDefinitionSuccessMessage");
+	}
+
+	protected void importDataDefinition(
+			String jsonFileContent, String name, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		JSONObject jsonObject = _jsonFactory.createJSONObject(jsonFileContent);
 
 		DataDefinition dataDefinition = DataDefinition.toDTO(
 			jsonObject.getString("dataDefinition"));
@@ -103,8 +110,7 @@ public class ImportDataDefinitionMVCActionCommand
 			DataLayout.toDTO(jsonObject.getString("dataLayout")));
 		dataDefinition.setName(
 			HashMapBuilder.<String, Object>put(
-				String.valueOf(themeDisplay.getSiteDefaultLocale()),
-				ParamUtil.getString(actionRequest, "name")
+				String.valueOf(themeDisplay.getSiteDefaultLocale()), name
 			).build());
 
 		DataDefinitionResource.Builder dataDefinitionResourcedBuilder =
@@ -117,23 +123,15 @@ public class ImportDataDefinitionMVCActionCommand
 
 		dataDefinitionResource.postSiteDataDefinitionByContentType(
 			themeDisplay.getScopeGroupId(), "journal", dataDefinition);
-
-		SessionMessages.add(
-			actionRequest, "importDataDefinitionSuccessMessage");
 	}
 
-	private UploadPortletRequest _getUploadPortletRequest(
-		ActionRequest actionRequest) {
+	private String _getJSONFileContent(ActionRequest actionRequest)
+		throws Exception {
 
-		LiferayPortletRequest liferayPortletRequest =
-			_portal.getLiferayPortletRequest(actionRequest);
+		UploadPortletRequest uploadPortletRequest =
+			_portal.getUploadPortletRequest(actionRequest);
 
-		return new UploadPortletRequestImpl(
-			_portal.getUploadServletRequest(
-				liferayPortletRequest.getHttpServletRequest()),
-			liferayPortletRequest,
-			_portal.getPortletNamespace(
-				liferayPortletRequest.getPortletName()));
+		return FileUtil.read(uploadPortletRequest.getFile("jsonFile"));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
