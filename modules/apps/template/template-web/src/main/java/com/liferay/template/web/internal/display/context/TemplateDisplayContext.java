@@ -39,6 +39,8 @@ public interface TemplateDisplayContext {
 
 	public CreationMenu getCreationMenu();
 
+	public DDMTemplate getDDMTemplate();
+
 	public List<DropdownItem> getDDMTemplateActionDropdownItems(
 			DDMTemplate ddmTemplate)
 		throws Exception;
