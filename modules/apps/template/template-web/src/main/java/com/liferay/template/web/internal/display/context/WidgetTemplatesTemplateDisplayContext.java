@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.template.comparator.TemplateHandlerComparator;
@@ -174,6 +175,13 @@ public class WidgetTemplatesTemplateDisplayContext
 		}
 
 		return script;
+	}
+
+	@Override
+	protected String[] getTemplateLanguageTypes() {
+		return new String[] {
+			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_VM
+		};
 	}
 
 	private long[] _classNameIds;

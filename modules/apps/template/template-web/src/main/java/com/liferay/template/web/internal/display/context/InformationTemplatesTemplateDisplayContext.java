@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -141,6 +142,11 @@ public class InformationTemplatesTemplateDisplayContext
 	@Override
 	protected String getDefaultScript(long classNameId) {
 		return "<#-- Empty script -->";
+	}
+
+	@Override
+	protected String[] getTemplateLanguageTypes() {
+		return new String[] {TemplateConstants.LANG_TYPE_FTL};
 	}
 
 	private JSONArray _getItemTypesJSONArray() {

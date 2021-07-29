@@ -377,9 +377,7 @@ public abstract class BaseTemplateDisplayContext
 		return _language;
 	}
 
-	protected String[] getTemplateLanguageTypes() {
-		return new String[] {TemplateConstants.LANG_TYPE_FTL};
-	}
+	protected abstract String[] getTemplateLanguageTypes();
 
 	protected final LiferayPortletRequest liferayPortletRequest;
 	protected final LiferayPortletResponse liferayPortletResponse;
