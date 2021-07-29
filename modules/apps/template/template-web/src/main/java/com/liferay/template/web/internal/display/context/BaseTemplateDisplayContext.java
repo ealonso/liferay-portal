@@ -26,7 +26,6 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -52,9 +51,7 @@ import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.template.TemplateVariableDefinition;
 import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -66,6 +63,7 @@ import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
 import com.liferay.template.web.internal.util.DDMTemplateActionDropdownItemsProvider;
+import com.liferay.template.web.internal.util.TemplateUtil;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -316,7 +314,9 @@ public abstract class BaseTemplateDisplayContext
 
 				templateVariableDefinitionJSONArray.put(
 					JSONUtil.put(
-						"content", _getDataContent(templateVariableDefinition)
+						"content",
+						TemplateUtil.getDataContent(
+							templateVariableDefinition, getLanguage())
 					).put(
 						"label",
 						LanguageUtil.get(
@@ -328,13 +328,9 @@ public abstract class BaseTemplateDisplayContext
 						templateVariableDefinition.isRepeatable()
 					).put(
 						"tooltip",
-						StringBundler.concat(
-							"<p>",
-							HtmlUtil.escape(
-								LanguageUtil.get(
-									_httpServletRequest, resourceBundle,
-									templateVariableDefinition.getHelp())),
-							"</p>")
+						TemplateUtil.getPaletteItemTitle(
+							_httpServletRequest, resourceBundle,
+							templateVariableDefinition)
 					));
 			}
 
@@ -466,29 +462,6 @@ public abstract class BaseTemplateDisplayContext
 		return JSONFactoryUtil.createJSONObject(
 			_ddmTemplateHelper.getAutocompleteJSON(
 				_httpServletRequest, getLanguage()));
-	}
-
-	private String _getDataContent(
-		TemplateVariableDefinition templateVariableDefinition) {
-
-		String content = StringPool.BLANK;
-
-		try {
-			String[] generateCode = templateVariableDefinition.generateCode(
-				getLanguage());
-
-			if (ArrayUtil.isNotEmpty(generateCode)) {
-				content =
-					templateVariableDefinition.generateCode(getLanguage())[0];
-			}
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception.getMessage(), exception);
-			}
-		}
-
-		return content;
 	}
 
 	private String _getEditorMode() {
