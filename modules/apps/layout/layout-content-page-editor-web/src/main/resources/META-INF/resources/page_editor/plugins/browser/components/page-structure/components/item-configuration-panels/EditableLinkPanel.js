@@ -76,15 +76,11 @@ export default function EditableLinkPanel({item}) {
 			setLinkValue({
 				...linkConfig,
 				href:
+					linkConfig.href?.[languageId] ||
+					linkConfig.href?.[config.defaultLanguageId] ||
 					linkConfig.href ||
-					linkConfig[languageId]?.href ||
-					linkConfig[config.defaultLanguageId]?.href ||
 					'',
-				target:
-					linkConfig.target ||
-					linkConfig[languageId]?.target ||
-					linkConfig[config.defaultLanguageId]?.target ||
-					'',
+				target: linkConfig.target || '',
 			});
 		}
 		else {
@@ -109,10 +105,11 @@ export default function EditableLinkPanel({item}) {
 			if (Object.keys(nextLinkConfig).length) {
 				nextConfig = {
 					...nextConfig,
-					[languageId]: {
-						href: nextLinkConfig.href,
-						target: nextLinkConfig.target || '',
+					href: {
+						...(linkConfig.href || {}),
+						[languageId]: nextLinkConfig.href,
 					},
+					target: nextLinkConfig.target || '',
 				};
 			}
 		}
