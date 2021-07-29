@@ -26,6 +26,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -45,21 +47,32 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.template.TemplateConstants;
+import com.liferay.portal.kernel.template.TemplateHandler;
+import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
+import com.liferay.portal.kernel.template.TemplateVariableDefinition;
+import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
 import com.liferay.template.web.internal.util.DDMTemplateActionDropdownItemsProvider;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletURL;
 
@@ -283,7 +296,71 @@ public abstract class BaseTemplateDisplayContext
 	public abstract String getTemplateTypeLocalizedLabel(long classNameId);
 
 	public JSONArray getTemplateVariableGroupJSONArray() throws Exception {
-		return JSONFactoryUtil.createJSONArray();
+		JSONArray templateVariableGroupJSONArray =
+			JSONFactoryUtil.createJSONArray();
+
+		ResourceBundle resourceBundle = _getResourceBundle();
+
+		for (TemplateVariableGroup templateVariableGroup :
+				getTemplateVariableGroups()) {
+
+			if (templateVariableGroup.isEmpty()) {
+				continue;
+			}
+
+			JSONArray templateVariableDefinitionJSONArray =
+				JSONFactoryUtil.createJSONArray();
+
+			for (TemplateVariableDefinition templateVariableDefinition :
+					templateVariableGroup.getTemplateVariableDefinitions()) {
+
+				templateVariableDefinitionJSONArray.put(
+					JSONUtil.put(
+						"content", _getDataContent(templateVariableDefinition)
+					).put(
+						"label",
+						LanguageUtil.get(
+							_httpServletRequest, resourceBundle,
+							templateVariableDefinition.getLabel())
+					).put(
+						"repeatable",
+						templateVariableDefinition.isCollection() ||
+						templateVariableDefinition.isRepeatable()
+					).put(
+						"tooltip",
+						StringBundler.concat(
+							"<p>",
+							HtmlUtil.escape(
+								LanguageUtil.get(
+									_httpServletRequest, resourceBundle,
+									templateVariableDefinition.getHelp())),
+							"</p>")
+					));
+			}
+
+			templateVariableGroupJSONArray.put(
+				JSONUtil.put(
+					"items", templateVariableDefinitionJSONArray
+				).put(
+					"label",
+					LanguageUtil.get(
+						_httpServletRequest, resourceBundle,
+						templateVariableGroup.getLabel())
+				));
+		}
+
+		return templateVariableGroupJSONArray;
+	}
+
+	public Collection<TemplateVariableGroup> getTemplateVariableGroups()
+		throws Exception {
+
+		Map<String, TemplateVariableGroup> templateVariableGroups =
+			TemplateContextHelper.getTemplateVariableGroups(
+				getClassNameId(), getClassPK(), getLanguage(),
+				themeDisplay.getLocale());
+
+		return templateVariableGroups.values();
 	}
 
 	public boolean isAddDDMTemplateEnabled() {
@@ -389,6 +466,29 @@ public abstract class BaseTemplateDisplayContext
 				_httpServletRequest, getLanguage()));
 	}
 
+	private String _getDataContent(
+		TemplateVariableDefinition templateVariableDefinition) {
+
+		String content = StringPool.BLANK;
+
+		try {
+			String[] generateCode = templateVariableDefinition.generateCode(
+				getLanguage());
+
+			if (ArrayUtil.isNotEmpty(generateCode)) {
+				content =
+					templateVariableDefinition.generateCode(getLanguage())[0];
+			}
+		}
+		catch (Exception exception) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(exception.getMessage(), exception);
+			}
+		}
+
+		return content;
+	}
+
 	private String _getEditorMode() {
 		if (Objects.equals(getLanguage(), "ftl")) {
 			return "ftl";
@@ -437,6 +537,19 @@ public abstract class BaseTemplateDisplayContext
 		).setTabs1(
 			getTabs1()
 		).buildPortletURL();
+	}
+
+	private ResourceBundle _getResourceBundle() {
+		TemplateHandler templateHandler =
+			TemplateHandlerRegistryUtil.getTemplateHandler(getClassNameId());
+
+		Class<?> clazz = getClass();
+
+		if (templateHandler != null) {
+			clazz = templateHandler.getClass();
+		}
+
+		return ResourceBundleUtil.getBundle(themeDisplay.getLocale(), clazz);
 	}
 
 	private String _getScript() {
