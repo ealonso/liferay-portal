@@ -49,7 +49,7 @@ public interface TemplateDisplayContext {
 
 	public SearchContainer<DDMTemplate> getTemplateSearchContainer();
 
-	public String getTemplateType(long classNameId);
+	public String getTemplateTypeLocalizedLabel(long classNameId);
 
 	public boolean isAddDDMTemplateEnabled();
 
