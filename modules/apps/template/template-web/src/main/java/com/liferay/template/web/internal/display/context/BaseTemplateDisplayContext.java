@@ -310,6 +310,17 @@ public abstract class BaseTemplateDisplayContext
 		return false;
 	}
 
+	protected long getClassNameId() {
+		if (_classNameId != null) {
+			return _classNameId;
+		}
+
+		_classNameId = BeanParamUtil.getLong(
+			getDDMTemplate(), _httpServletRequest, "classNameId");
+
+		return _classNameId;
+	}
+
 	protected long getClassPK() {
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
@@ -346,9 +357,7 @@ public abstract class BaseTemplateDisplayContext
 		return _ddmTemplateId;
 	}
 
-	protected String getDefaultScript() {
-		return "<#-- Empty script-->";
-	}
+	protected abstract String getDefaultScript(long classNameId);
 
 	protected String getLanguage() {
 		if (_language != null) {
@@ -445,7 +454,7 @@ public abstract class BaseTemplateDisplayContext
 			getDDMTemplate(), _httpServletRequest, "script");
 
 		if (Validator.isNull(script)) {
-			script = getDefaultScript();
+			script = getDefaultScript(getClassNameId());
 		}
 
 		String scriptContent = ParamUtil.getString(
@@ -494,6 +503,7 @@ public abstract class BaseTemplateDisplayContext
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseTemplateDisplayContext.class);
 
+	private Long _classNameId;
 	private DDMTemplate _ddmTemplate;
 	private final DDMTemplateHelper _ddmTemplateHelper;
 	private Long _ddmTemplateId;
