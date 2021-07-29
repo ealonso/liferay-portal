@@ -16,6 +16,7 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.dynamic.data.mapping.util.comparator.TemplateIdComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.TemplateModifiedDateComparator;
@@ -25,19 +26,26 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -48,6 +56,7 @@ import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.web.internal.security.permissions.resource.DDMTemplatePermission;
 import com.liferay.template.web.internal.util.DDMTemplateActionDropdownItemsProvider;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -99,6 +108,48 @@ public abstract class BaseTemplateDisplayContext
 					liferayPortletResponse, getTabs1());
 
 		return ddmTemplateActionDropdownItemsProvider.getActionDropdownItems();
+	}
+
+	public HashMap<String, Object> getDDMTemplateEditorContext()
+		throws Exception {
+
+		return HashMapBuilder.<String, Object>put(
+			"editorAutocompleteData", _getAutocompleteJSONObject()
+		).put(
+			"editorMode", _getEditorMode()
+		).put(
+			"propertiesViewURL",
+			() -> PortletURLBuilder.createRenderURL(
+				liferayPortletResponse
+			).setMVCPath(
+				"/ddm_template_properties.jsp"
+			).setParameter(
+				"classPK", getClassPK()
+			).setParameter(
+				"ddmTemplateId", getDDMTemplateId()
+			).setWindowState(
+				LiferayWindowState.EXCLUSIVE
+			).buildString()
+		).put(
+			"script", _getScript()
+		).put(
+			"showCacheableWarning", false
+		).put(
+			"showLanguageChangeWarning", _getShowLanguageChangeWarning()
+		).put(
+			"showPropertiesPanel",
+			() -> {
+				DDMTemplate ddmTemplate = getDDMTemplate();
+
+				if ((ddmTemplate == null) || (ddmTemplate.getClassPK() <= 0)) {
+					return true;
+				}
+
+				return false;
+			}
+		).put(
+			"templateVariableGroups", getTemplateVariableGroupJSONArray()
+		).build();
 	}
 
 	public String getDDMTemplateEditURL(DDMTemplate ddmTemplate)
@@ -213,6 +264,10 @@ public abstract class BaseTemplateDisplayContext
 
 	public abstract String getTemplateTypeLocalizedLabel(long classNameId);
 
+	public JSONArray getTemplateVariableGroupJSONArray() throws Exception {
+		return JSONFactoryUtil.createJSONArray();
+	}
+
 	public boolean isAddDDMTemplateEnabled() {
 		if (!_ddmWebConfiguration.enableTemplateCreation()) {
 			return false;
@@ -252,9 +307,77 @@ public abstract class BaseTemplateDisplayContext
 		return false;
 	}
 
+	protected long getClassPK() {
+		return 0;
+	}
+
+	protected DDMTemplate getDDMTemplate() {
+		if (_ddmTemplate != null) {
+			return _ddmTemplate;
+		}
+
+		if (getDDMTemplateId() <= 0) {
+			return _ddmTemplate;
+		}
+
+		_ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(
+			getDDMTemplateId());
+
+		return _ddmTemplate;
+	}
+
+	protected long getDDMTemplateId() {
+		if (_ddmTemplateId != null) {
+			return _ddmTemplateId;
+		}
+
+		_ddmTemplateId = ParamUtil.getLong(
+			_httpServletRequest, "ddmTemplateId");
+
+		return _ddmTemplateId;
+	}
+
+	protected String getDefaultScript() {
+		return "<#-- Empty script-->";
+	}
+
+	protected String getLanguage() {
+		if (_language != null) {
+			return _language;
+		}
+
+		String language = TemplateConstants.LANG_TYPE_FTL;
+
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if (ddmTemplate != null) {
+			language = ddmTemplate.getLanguage();
+		}
+
+		_language = language;
+
+		return _language;
+	}
+
+	protected String[] getTemplateLanguageTypes() {
+		return new String[] {TemplateConstants.LANG_TYPE_FTL};
+	}
+
 	protected final LiferayPortletRequest liferayPortletRequest;
 	protected final LiferayPortletResponse liferayPortletResponse;
 	protected final ThemeDisplay themeDisplay;
+
+	private JSONObject _getAutocompleteJSONObject() throws Exception {
+		return JSONFactoryUtil.createJSONObject();
+	}
+
+	private String _getEditorMode() {
+		if (Objects.equals(getLanguage(), "ftl")) {
+			return "ftl";
+		}
+
+		return "velocity";
+	}
 
 	private String _getKeywords() {
 		if (_keywords != null) {
@@ -298,6 +421,46 @@ public abstract class BaseTemplateDisplayContext
 		).buildPortletURL();
 	}
 
+	private String _getScript() {
+		if (_script != null) {
+			return _script;
+		}
+
+		_language = BeanParamUtil.getString(
+			getDDMTemplate(), _httpServletRequest, "language",
+			TemplateConstants.LANG_TYPE_FTL);
+
+		String script = BeanParamUtil.getString(
+			getDDMTemplate(), _httpServletRequest, "script");
+
+		if (Validator.isNull(script)) {
+			script = getDefaultScript();
+		}
+
+		String scriptContent = ParamUtil.getString(
+			_httpServletRequest, "scriptContent");
+
+		if (Validator.isNotNull(scriptContent)) {
+			script = scriptContent;
+		}
+
+		_script = script;
+
+		return _script;
+	}
+
+	private boolean _getShowLanguageChangeWarning() {
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if ((ddmTemplate != null) && (getTemplateLanguageTypes().length > 1) &&
+			!Objects.equals(ddmTemplate.getLanguage(), getLanguage())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private OrderByComparator<DDMTemplate> _getTemplateOrderByComparator() {
 		OrderByComparator<DDMTemplate> orderByComparator = null;
 
@@ -320,12 +483,16 @@ public abstract class BaseTemplateDisplayContext
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseTemplateDisplayContext.class);
 
+	private DDMTemplate _ddmTemplate;
+	private Long _ddmTemplateId;
 	private SearchContainer<DDMTemplate> _ddmTemplateSearchContainer;
 	private final DDMWebConfiguration _ddmWebConfiguration;
 	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
+	private String _language;
 	private String _orderByCol;
 	private String _orderByType;
+	private String _script;
 	private String _tabs1;
 
 }
