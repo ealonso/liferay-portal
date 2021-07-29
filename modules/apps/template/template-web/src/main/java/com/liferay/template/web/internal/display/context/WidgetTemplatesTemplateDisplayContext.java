@@ -16,6 +16,7 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -42,13 +43,15 @@ public class WidgetTemplatesTemplateDisplayContext
 	extends BaseTemplateDisplayContext {
 
 	public WidgetTemplatesTemplateDisplayContext(
+		DDMTemplateHelper ddmTemplateHelper,
 		DDMWebConfiguration ddmWebConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
 		PortletDisplayTemplate portletDisplayTemplate) {
 
 		super(
-			ddmWebConfiguration, liferayPortletRequest, liferayPortletResponse);
+			ddmTemplateHelper, ddmWebConfiguration, liferayPortletRequest,
+			liferayPortletResponse);
 
 		_portletDisplayTemplate = portletDisplayTemplate;
 	}

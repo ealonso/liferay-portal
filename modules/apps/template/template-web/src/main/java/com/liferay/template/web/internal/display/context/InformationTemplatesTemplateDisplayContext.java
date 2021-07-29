@@ -16,6 +16,7 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.info.form.InfoForm;
@@ -52,13 +53,15 @@ public class InformationTemplatesTemplateDisplayContext
 	extends BaseTemplateDisplayContext {
 
 	public InformationTemplatesTemplateDisplayContext(
+		DDMTemplateHelper ddmTemplateHelper,
 		DDMWebConfiguration ddmWebConfiguration,
 		InfoItemServiceTracker infoItemServiceTracker,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
 		super(
-			ddmWebConfiguration, liferayPortletRequest, liferayPortletResponse);
+			ddmTemplateHelper, ddmWebConfiguration, liferayPortletRequest,
+			liferayPortletResponse);
 
 		_infoItemServiceTracker = infoItemServiceTracker;
 	}
