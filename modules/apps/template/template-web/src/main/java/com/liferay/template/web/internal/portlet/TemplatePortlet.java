@@ -15,6 +15,7 @@
 package com.liferay.template.web.internal.portlet;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -81,7 +82,8 @@ public class TemplatePortlet extends MVCPortlet {
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new InformationTemplatesTemplateDisplayContext(
-					_ddmWebConfiguration, _infoItemServiceTracker,
+					_ddmTemplateHelper, _ddmWebConfiguration,
+					_infoItemServiceTracker,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
 		}
@@ -89,7 +91,7 @@ public class TemplatePortlet extends MVCPortlet {
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new WidgetTemplatesTemplateDisplayContext(
-					_ddmWebConfiguration,
+					_ddmTemplateHelper, _ddmWebConfiguration,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
 					_portletDisplayTemplate));
@@ -104,6 +106,9 @@ public class TemplatePortlet extends MVCPortlet {
 		_ddmWebConfiguration = ConfigurableUtil.createConfigurable(
 			DDMWebConfiguration.class, properties);
 	}
+
+	@Reference
+	private DDMTemplateHelper _ddmTemplateHelper;
 
 	private volatile DDMWebConfiguration _ddmWebConfiguration;
 
