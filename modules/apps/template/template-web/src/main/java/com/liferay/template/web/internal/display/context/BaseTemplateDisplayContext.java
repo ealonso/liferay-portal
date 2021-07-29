@@ -357,7 +357,7 @@ public abstract class BaseTemplateDisplayContext
 
 		Map<String, TemplateVariableGroup> templateVariableGroups =
 			TemplateContextHelper.getTemplateVariableGroups(
-				getClassNameId(), getClassPK(), getLanguage(),
+				getTemplateHandlerClassNameId(), getClassPK(), getLanguage(),
 				themeDisplay.getLocale());
 
 		return templateVariableGroups.values();
@@ -453,6 +453,8 @@ public abstract class BaseTemplateDisplayContext
 
 		return _language;
 	}
+
+	protected abstract long getTemplateHandlerClassNameId();
 
 	protected abstract String[] getTemplateLanguageTypes();
 
