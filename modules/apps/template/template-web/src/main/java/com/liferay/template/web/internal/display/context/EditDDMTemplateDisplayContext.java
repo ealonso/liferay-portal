@@ -14,13 +14,16 @@
 
 package com.liferay.template.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -34,6 +37,7 @@ import com.liferay.portal.kernel.template.TemplateVariableGroup;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -41,8 +45,12 @@ import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.template.web.internal.util.TemplateDDMTemplateUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
@@ -56,6 +64,14 @@ public class EditDDMTemplateDisplayContext {
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 
+		_ddmGroupServiceConfiguration =
+			(DDMGroupServiceConfiguration)liferayPortletRequest.getAttribute(
+				DDMGroupServiceConfiguration.class.getName());
+		_ddmTemplateHelper =
+			(DDMTemplateHelper)liferayPortletRequest.getAttribute(
+				DDMTemplateHelper.class.getName());
+		_httpServletRequest = PortalUtil.getHttpServletRequest(
+			liferayPortletRequest);
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
@@ -88,6 +104,10 @@ public class EditDDMTemplateDisplayContext {
 
 	public Map<String, Object> getDDMTemplateEditorContext() throws Exception {
 		return HashMapBuilder.<String, Object>put(
+			"editorAutocompleteData", _getAutocompleteJSONObject()
+		).put(
+			"editorMode", _getEditorMode()
+		).put(
 			"propertiesViewURL",
 			() -> PortletURLBuilder.createRenderURL(
 				_liferayPortletResponse
@@ -105,12 +125,30 @@ public class EditDDMTemplateDisplayContext {
 				LiferayWindowState.EXCLUSIVE
 			).buildString()
 		).put(
+			"script", _getScript()
+		).put(
+			"showLanguageChangeWarning", _getShowLanguageChangeWarning()
+		).put(
 			"templateVariableGroups", _getTemplateVariableGroupJSONArray()
 		).build();
 	}
 
 	public String getLanguageType() {
-		return StringPool.BLANK;
+		if (_language != null) {
+			return _language;
+		}
+
+		String language = TemplateConstants.LANG_TYPE_FTL;
+
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if (ddmTemplate != null) {
+			language = ddmTemplate.getLanguage();
+		}
+
+		_language = language;
+
+		return _language;
 	}
 
 	public String[] getLanguageTypes() {
@@ -277,17 +315,116 @@ public class EditDDMTemplateDisplayContext {
 
 		Map<String, TemplateVariableGroup> templateVariableGroups =
 			TemplateContextHelper.getTemplateVariableGroups(
-				getClassNameId(), _getClassPK(), getLanguageType(),
-				_themeDisplay.getLocale());
+				getTemplateHandlerClassNameId(), getClassPK(),
+				getLanguageType(), _themeDisplay.getLocale());
+
+		templateVariableGroups.putAll(getAdditionalTemplateVariableGroups());
 
 		return templateVariableGroups.values();
 	}
 
+	public String[] imageExtensions() {
+		return _ddmGroupServiceConfiguration.smallImageExtensions();
+	}
+
+	public long smallImageMaxSize() {
+		return _ddmGroupServiceConfiguration.smallImageMaxSize();
+	}
+
+	protected Map<String, TemplateVariableGroup>
+		getAdditionalTemplateVariableGroups() {
+
+		return Collections.emptyMap();
+	}
+
+	protected long getClassPK() {
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if (ddmTemplate != null) {
+			return ddmTemplate.getClassPK();
+		}
+
+		return 0;
+	}
+
+	protected String getDefaultScript(long classNameId) {
+		return StringPool.BLANK;
+	}
+
+	protected long getTemplateHandlerClassNameId() {
+		return getClassNameId();
+	}
+
+	protected String[] getTemplateLanguageTypes() {
+		return new String[] {TemplateConstants.LANG_TYPE_FTL};
+	}
+
+	private JSONObject _getAutocompleteJSONObject() throws Exception {
+		return JSONFactoryUtil.createJSONObject(
+			_ddmTemplateHelper.getAutocompleteJSON(
+				_httpServletRequest, getLanguageType()));
+	}
+
+	private String _getEditorMode() {
+		if (Objects.equals(
+				getLanguageType(), TemplateConstants.LANG_TYPE_FTL)) {
+
+			return TemplateConstants.LANG_TYPE_FTL;
+		}
+
+		return TemplateConstants.LANG_TYPE_VM;
+	}
+
+	private String _getScript() {
+		if (_script != null) {
+			return _script;
+		}
+
+		_language = BeanParamUtil.getString(
+			getDDMTemplate(), _httpServletRequest, "language",
+			TemplateConstants.LANG_TYPE_FTL);
+
+		String script = BeanParamUtil.getString(
+			getDDMTemplate(), _httpServletRequest, "script");
+
+		if (Validator.isNull(script)) {
+			script = getDefaultScript(getClassNameId());
+		}
+
+		String scriptContent = ParamUtil.getString(
+			_httpServletRequest, "scriptContent");
+
+		if (Validator.isNotNull(scriptContent)) {
+			script = scriptContent;
+		}
+
+		_script = script;
+
+		return _script;
+	}
+
+	private boolean _getShowLanguageChangeWarning() {
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if ((ddmTemplate != null) && (getTemplateLanguageTypes().length > 1) &&
+			!Objects.equals(ddmTemplate.getLanguage(), getLanguageType())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private Long _classNameId;
+	private final DDMGroupServiceConfiguration _ddmGroupServiceConfiguration;
 	private DDMTemplate _ddmTemplate;
+	private final DDMTemplateHelper _ddmTemplateHelper;
 	private Long _ddmTemplateId;
+	private final HttpServletRequest _httpServletRequest;
+	private String _language;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private String _script;
 	private Boolean _smallImage;
 	private String _smallImageSource;
 	private String _tabs1;

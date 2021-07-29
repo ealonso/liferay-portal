@@ -34,6 +34,7 @@ page import="com.liferay.petra.string.StringBundler" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
+page import="com.liferay.portal.kernel.template.TemplateConstants" %><%@
 page import="com.liferay.portal.kernel.util.HashMapBuilder" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.LocaleUtil" %><%@
@@ -46,7 +47,9 @@ page import="com.liferay.template.web.internal.display.context.InformationTempla
 page import="com.liferay.template.web.internal.display.context.WidgetTemplatesManagementToolbarDisplayContext" %><%@
 page import="com.liferay.template.web.internal.display.context.WidgetTemplatesTemplateDisplayContext" %>
 
-<%@ page import="java.util.Objects" %>
+<%@ page import="java.util.Arrays" %><%@
+page import="java.util.List" %><%@
+page import="java.util.Objects" %>
 
 <liferay-frontend:defineObjects />
 

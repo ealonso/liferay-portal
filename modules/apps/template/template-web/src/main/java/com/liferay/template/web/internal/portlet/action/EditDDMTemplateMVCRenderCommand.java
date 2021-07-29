@@ -16,6 +16,7 @@ package com.liferay.template.web.internal.portlet.action;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMConstants;
+import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
@@ -59,6 +60,8 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 			_getDDMGroupServiceConfiguration(themeDisplay.getScopeGroupId()));
 
 		renderRequest.setAttribute(
+			DDMTemplateHelper.class.getName(), _ddmTemplateHelper);
+		renderRequest.setAttribute(
 			WebKeys.PORTLET_DISPLAY_CONTEXT,
 			new EditDDMTemplateDisplayContext(
 				_portal.getLiferayPortletRequest(renderRequest),
@@ -83,6 +86,9 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 
 	@Reference
 	private ConfigurationProvider _configurationProvider;
+
+	@Reference
+	private DDMTemplateHelper _ddmTemplateHelper;
 
 	private Portal _portal;
 
