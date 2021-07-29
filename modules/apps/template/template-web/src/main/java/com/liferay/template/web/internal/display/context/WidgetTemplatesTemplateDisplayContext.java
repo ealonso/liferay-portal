@@ -162,6 +162,20 @@ public class WidgetTemplatesTemplateDisplayContext
 		return creationMenu;
 	}
 
+	@Override
+	protected String getDefaultScript(long classNameId) {
+		TemplateHandler templateHandler =
+			TemplateHandlerRegistryUtil.getTemplateHandler(classNameId);
+
+		String script = "<#-- Empty script -->";
+
+		if (templateHandler != null) {
+			script = templateHandler.getTemplatesHelpContent(getLanguage());
+		}
+
+		return script;
+	}
+
 	private long[] _classNameIds;
 	private final PortletDisplayTemplate _portletDisplayTemplate;
 	private Long _resourceClassNameId;

@@ -138,6 +138,11 @@ public class InformationTemplatesTemplateDisplayContext
 		).build();
 	}
 
+	@Override
+	protected String getDefaultScript(long classNameId) {
+		return "<#-- Empty script -->";
+	}
+
 	private JSONArray _getItemTypesJSONArray() {
 		JSONArray itemTypesJSONArray = JSONFactoryUtil.createJSONArray();
 
