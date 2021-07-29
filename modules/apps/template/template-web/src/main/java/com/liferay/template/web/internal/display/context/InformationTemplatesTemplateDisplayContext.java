@@ -145,6 +145,11 @@ public class InformationTemplatesTemplateDisplayContext
 	}
 
 	@Override
+	protected long getTemplateHandlerClassNameId() {
+		return getResourceClassNameId();
+	}
+
+	@Override
 	protected String[] getTemplateLanguageTypes() {
 		return new String[] {TemplateConstants.LANG_TYPE_FTL};
 	}

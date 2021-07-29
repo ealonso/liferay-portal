@@ -178,6 +178,11 @@ public class WidgetTemplatesTemplateDisplayContext
 	}
 
 	@Override
+	protected long getTemplateHandlerClassNameId() {
+		return getClassNameId();
+	}
+
+	@Override
 	protected String[] getTemplateLanguageTypes() {
 		return new String[] {
 			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_VM
