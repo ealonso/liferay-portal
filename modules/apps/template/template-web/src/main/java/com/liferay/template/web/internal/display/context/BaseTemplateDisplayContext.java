@@ -100,6 +100,21 @@ public abstract class BaseTemplateDisplayContext
 		return buildCreationMenu();
 	}
 
+	public DDMTemplate getDDMTemplate() {
+		if (_ddmTemplate != null) {
+			return _ddmTemplate;
+		}
+
+		if (getDDMTemplateId() <= 0) {
+			return _ddmTemplate;
+		}
+
+		_ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(
+			getDDMTemplateId());
+
+		return _ddmTemplate;
+	}
+
 	public List<DropdownItem> getDDMTemplateActionDropdownItems(
 			DDMTemplate ddmTemplate)
 		throws Exception {
@@ -329,21 +344,6 @@ public abstract class BaseTemplateDisplayContext
 		}
 
 		return 0;
-	}
-
-	protected DDMTemplate getDDMTemplate() {
-		if (_ddmTemplate != null) {
-			return _ddmTemplate;
-		}
-
-		if (getDDMTemplateId() <= 0) {
-			return _ddmTemplate;
-		}
-
-		_ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(
-			getDDMTemplateId());
-
-		return _ddmTemplate;
 	}
 
 	protected long getDDMTemplateId() {
