@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil;
 import com.liferay.dynamic.data.mapping.util.comparator.TemplateIdComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.TemplateModifiedDateComparator;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
@@ -28,11 +29,14 @@ import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -77,6 +81,14 @@ public abstract class BaseTemplateDisplayContext
 	public abstract String getAddPermissionActionId();
 
 	public abstract long[] getClassNameIds();
+
+	public CreationMenu getCreationMenu() {
+		if (!isAddDDMTemplateEnabled()) {
+			return null;
+		}
+
+		return buildCreationMenu();
+	}
 
 	public List<DropdownItem> getDDMTemplateActionDropdownItems(
 			DDMTemplate ddmTemplate)
@@ -221,6 +233,29 @@ public abstract class BaseTemplateDisplayContext
 		return false;
 	}
 
+	protected abstract CreationMenu buildCreationMenu();
+
+	protected boolean containsAddPortletDisplayTemplatePermission(
+		String resourceName, String actionId) {
+
+		try {
+			return PortletPermissionUtil.contains(
+				themeDisplay.getPermissionChecker(),
+				themeDisplay.getScopeGroupId(), themeDisplay.getLayout(),
+				resourceName, actionId, false, false);
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Unable to check permission for resource name " +
+						resourceName,
+					portalException);
+			}
+		}
+
+		return false;
+	}
+
 	protected final LiferayPortletRequest liferayPortletRequest;
 	protected final ThemeDisplay themeDisplay;
 
@@ -284,6 +319,9 @@ public abstract class BaseTemplateDisplayContext
 
 		return orderByComparator;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseTemplateDisplayContext.class);
 
 	private SearchContainer<DDMTemplate> _ddmTemplateSearchContainer;
 	private final DDMWebConfiguration _ddmWebConfiguration;

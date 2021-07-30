@@ -15,6 +15,7 @@
 package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -95,6 +96,11 @@ public class WidgetTemplatesTemplateDisplayContext
 			TemplateHandlerRegistryUtil.getTemplateHandler(classNameId);
 
 		return templateHandler.getName(themeDisplay.getLocale());
+	}
+
+	@Override
+	protected CreationMenu buildCreationMenu() {
+		return null;
 	}
 
 	private long[] _classNameIds;
