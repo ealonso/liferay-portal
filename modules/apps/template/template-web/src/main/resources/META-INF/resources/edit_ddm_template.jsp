@@ -91,6 +91,7 @@ else {
 
 			<react:component
 				componentId="ddmTemplateEditor"
+				data="<%= templateDisplayContext.getDDMTemplateEditorContext() %>"
 				module="js/ddm_template_editor/components/App"
 			/>
 		</div>
