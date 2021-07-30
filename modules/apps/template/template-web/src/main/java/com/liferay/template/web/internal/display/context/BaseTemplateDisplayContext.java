@@ -177,7 +177,7 @@ public abstract class BaseTemplateDisplayContext
 				return false;
 			}
 		).put(
-			"templateVariableGroups", getTemplateVariableGroupJSONArray()
+			"templateVariableGroups", _getTemplateVariableGroupJSONArray()
 		).build();
 	}
 
@@ -292,61 +292,6 @@ public abstract class BaseTemplateDisplayContext
 	}
 
 	public abstract String getTemplateTypeLocalizedLabel(long classNameId);
-
-	public JSONArray getTemplateVariableGroupJSONArray() throws Exception {
-		JSONArray templateVariableGroupJSONArray =
-			JSONFactoryUtil.createJSONArray();
-
-		ResourceBundle resourceBundle = _getResourceBundle();
-
-		for (TemplateVariableGroup templateVariableGroup :
-				getTemplateVariableGroups()) {
-
-			if (templateVariableGroup.isEmpty()) {
-				continue;
-			}
-
-			JSONArray templateVariableDefinitionJSONArray =
-				JSONFactoryUtil.createJSONArray();
-
-			for (TemplateVariableDefinition templateVariableDefinition :
-					templateVariableGroup.getTemplateVariableDefinitions()) {
-
-				templateVariableDefinitionJSONArray.put(
-					JSONUtil.put(
-						"content",
-						TemplateUtil.getDataContent(
-							templateVariableDefinition, getLanguage())
-					).put(
-						"label",
-						LanguageUtil.get(
-							_httpServletRequest, resourceBundle,
-							templateVariableDefinition.getLabel())
-					).put(
-						"repeatable",
-						templateVariableDefinition.isCollection() ||
-						templateVariableDefinition.isRepeatable()
-					).put(
-						"tooltip",
-						TemplateUtil.getPaletteItemTitle(
-							_httpServletRequest, resourceBundle,
-							templateVariableDefinition)
-					));
-			}
-
-			templateVariableGroupJSONArray.put(
-				JSONUtil.put(
-					"items", templateVariableDefinitionJSONArray
-				).put(
-					"label",
-					LanguageUtil.get(
-						_httpServletRequest, resourceBundle,
-						templateVariableGroup.getLabel())
-				));
-		}
-
-		return templateVariableGroupJSONArray;
-	}
 
 	public Collection<TemplateVariableGroup> getTemplateVariableGroups()
 		throws Exception {
@@ -584,6 +529,61 @@ public abstract class BaseTemplateDisplayContext
 		}
 
 		return orderByComparator;
+	}
+
+	private JSONArray _getTemplateVariableGroupJSONArray() throws Exception {
+		JSONArray templateVariableGroupJSONArray =
+			JSONFactoryUtil.createJSONArray();
+
+		ResourceBundle resourceBundle = _getResourceBundle();
+
+		for (TemplateVariableGroup templateVariableGroup :
+				getTemplateVariableGroups()) {
+
+			if (templateVariableGroup.isEmpty()) {
+				continue;
+			}
+
+			JSONArray templateVariableDefinitionJSONArray =
+				JSONFactoryUtil.createJSONArray();
+
+			for (TemplateVariableDefinition templateVariableDefinition :
+					templateVariableGroup.getTemplateVariableDefinitions()) {
+
+				templateVariableDefinitionJSONArray.put(
+					JSONUtil.put(
+						"content",
+						TemplateUtil.getDataContent(
+							templateVariableDefinition, getLanguage())
+					).put(
+						"label",
+						LanguageUtil.get(
+							_httpServletRequest, resourceBundle,
+							templateVariableDefinition.getLabel())
+					).put(
+						"repeatable",
+						templateVariableDefinition.isCollection() ||
+						templateVariableDefinition.isRepeatable()
+					).put(
+						"tooltip",
+						TemplateUtil.getPaletteItemTitle(
+							_httpServletRequest, resourceBundle,
+							templateVariableDefinition)
+					));
+			}
+
+			templateVariableGroupJSONArray.put(
+				JSONUtil.put(
+					"items", templateVariableDefinitionJSONArray
+				).put(
+					"label",
+					LanguageUtil.get(
+						_httpServletRequest, resourceBundle,
+						templateVariableGroup.getLabel())
+				));
+		}
+
+		return templateVariableGroupJSONArray;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
