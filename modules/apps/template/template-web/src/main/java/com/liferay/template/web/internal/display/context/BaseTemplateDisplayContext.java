@@ -66,6 +66,7 @@ import com.liferay.template.web.internal.util.DDMTemplateActionDropdownItemsProv
 import com.liferay.template.web.internal.util.TemplateUtil;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -301,6 +302,8 @@ public abstract class BaseTemplateDisplayContext
 				getTemplateHandlerClassNameId(), getClassPK(), getLanguage(),
 				themeDisplay.getLocale());
 
+		templateVariableGroups.putAll(getAdditionalTemplateVariableGroups());
+
 		return templateVariableGroups.values();
 	}
 
@@ -332,8 +335,8 @@ public abstract class BaseTemplateDisplayContext
 				resourceName, actionId, false, false);
 		}
 		catch (PortalException portalException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
+			if (log.isDebugEnabled()) {
+				log.debug(
 					"Unable to check permission for resource name " +
 						resourceName,
 					portalException);
@@ -341,6 +344,12 @@ public abstract class BaseTemplateDisplayContext
 		}
 
 		return false;
+	}
+
+	protected Map<String, TemplateVariableGroup>
+		getAdditionalTemplateVariableGroups() {
+
+		return Collections.emptyMap();
 	}
 
 	protected long getClassNameId() {
@@ -398,6 +407,9 @@ public abstract class BaseTemplateDisplayContext
 	protected abstract long getTemplateHandlerClassNameId();
 
 	protected abstract String[] getTemplateLanguageTypes();
+
+	protected static final Log log = LogFactoryUtil.getLog(
+		BaseTemplateDisplayContext.class);
 
 	protected final LiferayPortletRequest liferayPortletRequest;
 	protected final LiferayPortletResponse liferayPortletResponse;
@@ -585,9 +597,6 @@ public abstract class BaseTemplateDisplayContext
 
 		return templateVariableGroupJSONArray;
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		BaseTemplateDisplayContext.class);
 
 	private Long _classNameId;
 	private DDMTemplate _ddmTemplate;

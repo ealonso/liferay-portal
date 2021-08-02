@@ -16,15 +16,23 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
+import com.liferay.dynamic.data.mapping.template.DDMTemplateVariableCodeHandler;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
+import com.liferay.info.exception.NoSuchFormVariationException;
+import com.liferay.info.field.InfoField;
+import com.liferay.info.field.InfoFieldSet;
+import com.liferay.info.field.InfoFieldSetEntry;
+import com.liferay.info.field.type.InfoFieldType;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.InfoItemFormVariation;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
@@ -33,16 +41,22 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.template.TemplateConstants;
+import com.liferay.portal.kernel.template.TemplateVariableCodeHandler;
+import com.liferay.portal.kernel.template.TemplateVariableGroup;
+import com.liferay.portal.kernel.templateparser.TemplateNode;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.template.constants.TemplatePortletKeys;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -137,6 +151,90 @@ public class InformationTemplatesTemplateDisplayContext
 					LanguageUtil.get(themeDisplay.getLocale(), "add"));
 			}
 		).build();
+	}
+
+	@Override
+	protected Map<String, TemplateVariableGroup>
+		getAdditionalTemplateVariableGroups() {
+
+		String itemClassName = PortalUtil.getClassName(getClassNameId());
+
+		InfoItemFormProvider<?> infoItemFormProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormProvider.class, itemClassName);
+
+		if (infoItemFormProvider == null) {
+			if (log.isWarnEnabled()) {
+				log.warn(
+					"Unable to get info item form provider for class " +
+						itemClassName);
+			}
+
+			return Collections.emptyMap();
+		}
+
+		String formVariationKey = StringPool.BLANK;
+
+		if (getClassPK() > 0) {
+			formVariationKey = String.valueOf(getClassPK());
+		}
+
+		InfoForm infoForm = null;
+
+		try {
+			infoForm = infoItemFormProvider.getInfoForm(
+				formVariationKey, themeDisplay.getScopeGroupId());
+		}
+		catch (NoSuchFormVariationException noSuchFormVariationException) {
+			if (log.isDebugEnabled()) {
+				log.debug(
+					StringBundler.concat(
+						"Unable to get info form for class ", itemClassName,
+						" and variation: ", formVariationKey, " and groupId: ",
+						themeDisplay.getScopeGroupId()),
+					noSuchFormVariationException);
+			}
+		}
+
+		if (infoForm == null) {
+			if (log.isWarnEnabled()) {
+				log.warn("Unable to get info form for class " + itemClassName);
+			}
+
+			return Collections.emptyMap();
+		}
+
+		Map<String, TemplateVariableGroup> additionalTemplateVariableGroups =
+			new TreeMap<>();
+
+		for (InfoFieldSetEntry infoFieldSetEntry :
+				infoForm.getInfoFieldSetEntries()) {
+
+			if (infoFieldSetEntry instanceof InfoFieldSet) {
+				InfoFieldSet infoFieldSet = (InfoFieldSet)infoFieldSetEntry;
+
+				TemplateVariableGroup templateVariableGroup =
+					new TemplateVariableGroup(
+						infoFieldSet.getLabel(themeDisplay.getLocale()));
+
+				for (InfoField infoField : infoFieldSet.getAllInfoFields()) {
+					InfoFieldType infoFieldType = infoField.getInfoFieldType();
+
+					templateVariableGroup.addFieldVariable(
+						infoField.getLabel(themeDisplay.getLocale()),
+						TemplateNode.class, infoField.getName(),
+						infoField.getLabel(themeDisplay.getLocale()),
+						infoFieldType.getName(), infoField.isMultivalued(),
+						_templateVariableCodeHandler);
+				}
+
+				additionalTemplateVariableGroups.put(
+					infoFieldSet.getLabel(themeDisplay.getLocale()),
+					templateVariableGroup);
+			}
+		}
+
+		return additionalTemplateVariableGroups;
 	}
 
 	@Override
@@ -239,5 +337,14 @@ public class InformationTemplatesTemplateDisplayContext
 	private long[] _classNameIds;
 	private final InfoItemServiceTracker _infoItemServiceTracker;
 	private Long _resourceClassNameId;
+	private final TemplateVariableCodeHandler _templateVariableCodeHandler =
+		new DDMTemplateVariableCodeHandler(
+			InformationTemplatesTemplateDisplayContext.class.getClassLoader(),
+			"com/liferay/template/web/internal/portlet/template/dependencies/",
+			SetUtil.fromArray(
+				new String[] {
+					"boolean", "date", "document-library", "geolocation",
+					"image", "journal-article", "link-to-page"
+				}));
 
 }
