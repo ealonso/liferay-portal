@@ -14,6 +14,7 @@
 
 package com.liferay.template.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMActionKeys;
 import com.liferay.dynamic.data.mapping.template.DDMTemplateVariableCodeHandler;
@@ -68,6 +69,7 @@ public class InformationTemplatesTemplateDisplayContext
 	extends BaseTemplateDisplayContext {
 
 	public InformationTemplatesTemplateDisplayContext(
+		DDMGroupServiceConfiguration ddmGroupServiceConfiguration,
 		DDMTemplateHelper ddmTemplateHelper,
 		DDMWebConfiguration ddmWebConfiguration,
 		InfoItemServiceTracker infoItemServiceTracker,
@@ -75,8 +77,8 @@ public class InformationTemplatesTemplateDisplayContext
 		LiferayPortletResponse liferayPortletResponse) {
 
 		super(
-			ddmTemplateHelper, ddmWebConfiguration, liferayPortletRequest,
-			liferayPortletResponse);
+			ddmGroupServiceConfiguration, ddmTemplateHelper,
+			ddmWebConfiguration, liferayPortletRequest, liferayPortletResponse);
 
 		_infoItemServiceTracker = infoItemServiceTracker;
 	}
