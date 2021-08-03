@@ -12,7 +12,7 @@
  * details.
  */
 
-import {fetch, objectToFormData} from 'frontend-js-web';
+import {createPortletURL, fetch, objectToFormData} from 'frontend-js-web';
 
 import {
 	getFilterFragmentCollections,
@@ -49,7 +49,14 @@ export function onCollectionFilterChange(filterFragmentEntryLinkId, value) {
 					targetCollectionId,
 				})
 
-				fetch('GET_TARGET_COLLECTION_HTML', {
+				let url = createPortletURL(
+					themeDisplay.getPathMain() +
+					'/portal/layout/render_collection'
+				);
+
+				fetch(
+					url.toString(),
+					{
 					body: objectToFormData({
 						filterValue: Object.fromEntries(
 							Array.from(filterValueMap)
