@@ -12,7 +12,7 @@
  * details.
  */
 
-import {fetch, objectToFormData} from 'frontend-js-web';
+import {createPortletURL, fetch, objectToFormData} from 'frontend-js-web';
 
 import {
 	getFilterFragmentCollections,
@@ -43,19 +43,24 @@ export function onCollectionFilterChange(filterFragmentEntryLinkId, value) {
 				);
 
 				console.log({
-					filterValue: Object.fromEntries(
-						Array.from(filterValueMap)
-					),
+					filterValue: Object.fromEntries(Array.from(filterValueMap)),
 					targetCollectionId,
-				})
+				});
 
-				fetch('GET_TARGET_COLLECTION_HTML', {
+				const url = createPortletURL(
+					themeDisplay.getPathMain() +
+						'/portal/layout/render_collection'
+				);
+
+				fetch(url.toString(), {
 					body: objectToFormData({
+						fragmentEntryLinkId: filterFragmentEntryLinkId,
 						filterValue: Object.fromEntries(
 							Array.from(filterValueMap)
 						),
-						targetCollectionId,
+						mainItemId: targetCollectionId,
 					}),
+					method: 'POST',
 				})
 					.then((response) => {
 						if (response.status >= 400 || response.status < 200) {
