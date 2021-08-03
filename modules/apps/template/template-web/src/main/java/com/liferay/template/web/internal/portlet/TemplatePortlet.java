@@ -14,11 +14,17 @@
 
 package com.liferay.template.web.internal.portlet;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
+import com.liferay.dynamic.data.mapping.constants.DDMConstants;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.settings.GroupServiceSettingsLocator;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -77,6 +83,12 @@ public class TemplatePortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		DDMGroupServiceConfiguration ddmGroupServiceConfiguration =
+			_getDDMGroupServiceConfiguration(themeDisplay.getScopeGroupId());
+
 		String tabs1 = ParamUtil.getString(
 			renderRequest, "tabs1", "information-templates");
 
@@ -84,8 +96,8 @@ public class TemplatePortlet extends MVCPortlet {
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new InformationTemplatesTemplateDisplayContext(
-					_ddmTemplateHelper, _ddmWebConfiguration,
-					_infoItemServiceTracker,
+					ddmGroupServiceConfiguration, _ddmTemplateHelper,
+					_ddmWebConfiguration, _infoItemServiceTracker,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
 		}
@@ -93,7 +105,8 @@ public class TemplatePortlet extends MVCPortlet {
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new WidgetTemplatesTemplateDisplayContext(
-					_ddmTemplateHelper, _ddmWebConfiguration,
+					ddmGroupServiceConfiguration, _ddmTemplateHelper,
+					_ddmWebConfiguration,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
 					_portletDisplayTemplate));
@@ -108,6 +121,23 @@ public class TemplatePortlet extends MVCPortlet {
 		_ddmWebConfiguration = ConfigurableUtil.createConfigurable(
 			DDMWebConfiguration.class, properties);
 	}
+
+	private DDMGroupServiceConfiguration _getDDMGroupServiceConfiguration(
+		long groupId) {
+
+		try {
+			return _configurationProvider.getConfiguration(
+				DDMGroupServiceConfiguration.class,
+				new GroupServiceSettingsLocator(
+					groupId, DDMConstants.SERVICE_NAME));
+		}
+		catch (ConfigurationException configurationException) {
+			throw new RuntimeException(configurationException);
+		}
+	}
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference
 	private DDMTemplateHelper _ddmTemplateHelper;

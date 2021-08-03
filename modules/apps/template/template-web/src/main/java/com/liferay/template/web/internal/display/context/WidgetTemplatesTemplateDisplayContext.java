@@ -14,6 +14,7 @@
 
 package com.liferay.template.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
@@ -44,6 +45,7 @@ public class WidgetTemplatesTemplateDisplayContext
 	extends BaseTemplateDisplayContext {
 
 	public WidgetTemplatesTemplateDisplayContext(
+		DDMGroupServiceConfiguration ddmGroupServiceConfiguration,
 		DDMTemplateHelper ddmTemplateHelper,
 		DDMWebConfiguration ddmWebConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
@@ -51,9 +53,10 @@ public class WidgetTemplatesTemplateDisplayContext
 		PortletDisplayTemplate portletDisplayTemplate) {
 
 		super(
-			ddmTemplateHelper, ddmWebConfiguration, liferayPortletRequest,
-			liferayPortletResponse);
+			ddmGroupServiceConfiguration, ddmTemplateHelper,
+			ddmWebConfiguration, liferayPortletRequest, liferayPortletResponse);
 
+		_ddmWebConfiguration = ddmWebConfiguration;
 		_portletDisplayTemplate = portletDisplayTemplate;
 	}
 
@@ -190,6 +193,7 @@ public class WidgetTemplatesTemplateDisplayContext
 	}
 
 	private long[] _classNameIds;
+	private final DDMWebConfiguration _ddmWebConfiguration;
 	private final PortletDisplayTemplate _portletDisplayTemplate;
 	private Long _resourceClassNameId;
 

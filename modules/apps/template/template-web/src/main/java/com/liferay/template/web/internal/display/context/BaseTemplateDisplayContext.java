@@ -14,6 +14,7 @@
 
 package com.liferay.template.web.internal.display.context;
 
+import com.liferay.dynamic.data.mapping.configuration.DDMGroupServiceConfiguration;
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
@@ -85,11 +86,13 @@ public abstract class BaseTemplateDisplayContext
 	implements TemplateDisplayContext {
 
 	public BaseTemplateDisplayContext(
+		DDMGroupServiceConfiguration ddmGroupServiceConfiguration,
 		DDMTemplateHelper ddmTemplateHelper,
 		DDMWebConfiguration ddmWebConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
+		_ddmGroupServiceConfiguration = ddmGroupServiceConfiguration;
 		_ddmTemplateHelper = ddmTemplateHelper;
 		_ddmWebConfiguration = ddmWebConfiguration;
 		this.liferayPortletRequest = liferayPortletRequest;
@@ -599,6 +602,7 @@ public abstract class BaseTemplateDisplayContext
 	}
 
 	private Long _classNameId;
+	private final DDMGroupServiceConfiguration _ddmGroupServiceConfiguration;
 	private DDMTemplate _ddmTemplate;
 	private final DDMTemplateHelper _ddmTemplateHelper;
 	private Long _ddmTemplateId;
