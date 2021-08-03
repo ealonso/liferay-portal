@@ -168,6 +168,10 @@ public abstract class BaseTemplateDisplayContext
 				liferayPortletResponse
 			).setMVCPath(
 				"/ddm_template_properties.jsp"
+			).setTabs1(
+				getTabs1()
+			).setParameter(
+				"classNameId", getClassNameId()
 			).setParameter(
 				"classPK", getClassPK()
 			).setParameter(
