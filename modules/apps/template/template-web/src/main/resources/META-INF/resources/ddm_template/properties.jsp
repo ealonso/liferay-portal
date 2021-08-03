@@ -76,6 +76,7 @@ DDMTemplate ddmTemplate = editDDMTemplateDisplayContext.getDDMTemplate();
 
 		<portlet:resourceURL id="/template/get_ddm_template" var="getTemplateURL">
 			<portlet:param name="ddmTemplateId" value="<%= String.valueOf(ddmTemplate.getTemplateId()) %>" />
+			<portlet:param name="mvcPath" value="/blank.jsp" />
 		</portlet:resourceURL>
 
 		<aui:input name="url" type="resource" value="<%= getTemplateURL %>" />
