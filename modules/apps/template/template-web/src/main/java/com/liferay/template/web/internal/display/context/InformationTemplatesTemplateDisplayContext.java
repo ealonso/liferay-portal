@@ -57,6 +57,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -130,6 +131,25 @@ public class InformationTemplatesTemplateDisplayContext
 			InfoItemFormProvider.class);
 
 		return _resourceClassNameId;
+	}
+
+	@Override
+	public String getTemplateSubtypeLocalizedLabel() {
+		return Optional.ofNullable(
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormVariationsProvider.class,
+				PortalUtil.getClassName(getClassNameId()))
+		).map(
+			infoItemFormVariationsProvider ->
+				infoItemFormVariationsProvider.getInfoItemFormVariation(
+					themeDisplay.getScopeGroupId(),
+					String.valueOf(getClassPK()))
+		).map(
+			infoItemFormVariation -> infoItemFormVariation.getLabel(
+				themeDisplay.getLocale())
+		).orElse(
+			StringPool.BLANK
+		);
 	}
 
 	@Override

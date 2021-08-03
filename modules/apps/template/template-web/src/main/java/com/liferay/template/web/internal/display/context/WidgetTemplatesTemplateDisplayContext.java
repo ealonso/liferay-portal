@@ -61,6 +61,11 @@ public class WidgetTemplatesTemplateDisplayContext
 	}
 
 	@Override
+	public boolean autogenerateTemplateKey() {
+		return _ddmWebConfiguration.autogenerateTemplateKey();
+	}
+
+	@Override
 	public long[] getClassNameIds() {
 		if (_classNameIds != null) {
 			return _classNameIds;
