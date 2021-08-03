@@ -105,6 +105,18 @@ public abstract class BaseTemplateDisplayContext
 			WebKeys.THEME_DISPLAY);
 	}
 
+	@Override
+	public long getClassNameId() {
+		if (_classNameId != null) {
+			return _classNameId;
+		}
+
+		_classNameId = BeanParamUtil.getLong(
+			getDDMTemplate(), _httpServletRequest, "classNameId");
+
+		return _classNameId;
+	}
+
 	public abstract long[] getClassNameIds();
 
 	public CreationMenu getCreationMenu() {
@@ -217,6 +229,25 @@ public abstract class BaseTemplateDisplayContext
 			_httpServletRequest, group.getScopeLabel(themeDisplay));
 	}
 
+	@Override
+	public String getLanguage() {
+		if (_language != null) {
+			return _language;
+		}
+
+		String language = TemplateConstants.LANG_TYPE_FTL;
+
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if (ddmTemplate != null) {
+			language = ddmTemplate.getLanguage();
+		}
+
+		_language = language;
+
+		return _language;
+	}
+
 	public List<NavigationItem> getNavigationItems() {
 		return NavigationItemListBuilder.add(
 			navigationItem -> {
@@ -243,6 +274,42 @@ public abstract class BaseTemplateDisplayContext
 	}
 
 	public abstract long getResourceClassNameId();
+
+	@Override
+	public String getSmallImageSource() {
+		if (Validator.isNotNull(_smallImageSource)) {
+			return _smallImageSource;
+		}
+
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		if (ddmTemplate == null) {
+			_smallImageSource = "none";
+
+			return _smallImageSource;
+		}
+
+		_smallImageSource = ParamUtil.getString(
+			_httpServletRequest, "smallImageSource");
+
+		if (Validator.isNotNull(_smallImageSource)) {
+			return _smallImageSource;
+		}
+
+		if (!ddmTemplate.isSmallImage()) {
+			_smallImageSource = "none";
+		}
+		else if (Validator.isNotNull(ddmTemplate.getSmallImageURL())) {
+			_smallImageSource = "url";
+		}
+		else if ((ddmTemplate.getSmallImageId() > 0) &&
+				 Validator.isNull(ddmTemplate.getSmallImageURL())) {
+
+			_smallImageSource = "file";
+		}
+
+		return _smallImageSource;
+	}
 
 	public String getTabs1() {
 		if (_tabs1 != null) {
@@ -310,6 +377,11 @@ public abstract class BaseTemplateDisplayContext
 		return templateVariableGroups.values();
 	}
 
+	@Override
+	public String[] imageExtensions() {
+		return _ddmGroupServiceConfiguration.smallImageExtensions();
+	}
+
 	public boolean isAddDDMTemplateEnabled() {
 		if (!_ddmWebConfiguration.enableTemplateCreation()) {
 			return false;
@@ -324,6 +396,23 @@ public abstract class BaseTemplateDisplayContext
 		}
 
 		return false;
+	}
+
+	@Override
+	public boolean isSmallImage() {
+		if (_smallImage != null) {
+			return _smallImage;
+		}
+
+		_smallImage = BeanParamUtil.getBoolean(
+			getDDMTemplate(), _httpServletRequest, "smallImage");
+
+		return _smallImage;
+	}
+
+	@Override
+	public long smallImageMaxSize() {
+		return _ddmGroupServiceConfiguration.smallImageMaxSize();
 	}
 
 	protected abstract CreationMenu buildCreationMenu();
@@ -355,17 +444,6 @@ public abstract class BaseTemplateDisplayContext
 		return Collections.emptyMap();
 	}
 
-	protected long getClassNameId() {
-		if (_classNameId != null) {
-			return _classNameId;
-		}
-
-		_classNameId = BeanParamUtil.getLong(
-			getDDMTemplate(), _httpServletRequest, "classNameId");
-
-		return _classNameId;
-	}
-
 	protected long getClassPK() {
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
@@ -388,24 +466,6 @@ public abstract class BaseTemplateDisplayContext
 	}
 
 	protected abstract String getDefaultScript(long classNameId);
-
-	protected String getLanguage() {
-		if (_language != null) {
-			return _language;
-		}
-
-		String language = TemplateConstants.LANG_TYPE_FTL;
-
-		DDMTemplate ddmTemplate = getDDMTemplate();
-
-		if (ddmTemplate != null) {
-			language = ddmTemplate.getLanguage();
-		}
-
-		_language = language;
-
-		return _language;
-	}
 
 	protected abstract long getTemplateHandlerClassNameId();
 
@@ -614,6 +674,8 @@ public abstract class BaseTemplateDisplayContext
 	private String _orderByCol;
 	private String _orderByType;
 	private String _script;
+	private Boolean _smallImage;
+	private String _smallImageSource;
 	private String _tabs1;
 
 }

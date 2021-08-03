@@ -18,6 +18,7 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 
@@ -31,9 +32,15 @@ import java.util.Map;
  */
 public interface TemplateDisplayContext {
 
+	public default boolean autogenerateTemplateKey() {
+		return false;
+	}
+
 	public default Map<String, Object> getAdditionalProps() {
 		return Collections.emptyMap();
 	}
+
+	public long getClassNameId();
 
 	public long[] getClassNameIds();
 
@@ -54,16 +61,30 @@ public interface TemplateDisplayContext {
 	public String getDDMTemplateScope(DDMTemplate ddmTemplate)
 		throws PortalException;
 
+	public String getLanguage();
+
 	public List<NavigationItem> getNavigationItems();
 
 	public long getResourceClassNameId();
+
+	public String getSmallImageSource();
 
 	public String getTabs1();
 
 	public SearchContainer<DDMTemplate> getTemplateSearchContainer();
 
+	public default String getTemplateSubtypeLocalizedLabel() {
+		return StringPool.BLANK;
+	}
+
 	public String getTemplateTypeLocalizedLabel(long classNameId);
 
+	public String[] imageExtensions();
+
 	public boolean isAddDDMTemplateEnabled();
+
+	public boolean isSmallImage();
+
+	public long smallImageMaxSize();
 
 }
