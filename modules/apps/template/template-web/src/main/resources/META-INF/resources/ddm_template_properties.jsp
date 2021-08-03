@@ -76,8 +76,8 @@ String templateSubtypeLocalizedLabel = templateDisplayContext.getTemplateSubtype
 	<c:if test="<%= ddmTemplate != null %>">
 		<aui:input helpMessage="template-key-help" name="templateKey" type="resource" value="<%= ddmTemplate.getTemplateKey() %>" />
 
-		<portlet:resourceURL id="/dynamic_data_mapping/get_template" var="getTemplateURL">
-			<portlet:param name="templateId" value="<%= String.valueOf(ddmTemplate.getTemplateId()) %>" />
+		<portlet:resourceURL id="/template/get_ddm_template" var="getTemplateURL">
+			<portlet:param name="ddmTemplateId" value="<%= String.valueOf(ddmTemplate.getTemplateId()) %>" />
 		</portlet:resourceURL>
 
 		<aui:input name="url" type="resource" value="<%= getTemplateURL.toString() %>" />
