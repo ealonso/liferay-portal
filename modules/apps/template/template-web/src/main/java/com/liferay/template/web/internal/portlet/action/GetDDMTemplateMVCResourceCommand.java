@@ -14,16 +14,16 @@
 
 package com.liferay.template.web.internal.portlet.action;
 
-import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateService;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.template.constants.TemplatePortletKeys;
+
+import java.util.Objects;
 
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
@@ -59,21 +59,13 @@ public class GetDDMTemplateMVCResourceCommand implements MVCResourceCommand {
 
 			String script = ddmTemplate.getScript();
 
-			String contentType = null;
+			String contentType = ContentTypes.TEXT_PLAIN_UTF8;
 
-			String type = ddmTemplate.getType();
+			if (Objects.equals(
+					ddmTemplate.getLanguage(),
+					TemplateConstants.LANG_TYPE_XSL)) {
 
-			String language = GetterUtil.getString(
-				ddmTemplate.getLanguage(), TemplateConstants.LANG_TYPE_VM);
-
-			if (type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
-				contentType = ContentTypes.APPLICATION_JSON;
-			}
-			else if (language.equals(TemplateConstants.LANG_TYPE_XSL)) {
 				contentType = ContentTypes.TEXT_XML_UTF8;
-			}
-			else {
-				contentType = ContentTypes.TEXT_PLAIN_UTF8;
 			}
 
 			PortletResponseUtil.sendFile(
