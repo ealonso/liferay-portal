@@ -42,7 +42,7 @@ for (String childrenItemId : childrenItemIds) {
 			boolean paginationEnabled = FFRenderLayoutStructureConfigurationUtil.collectionDisplayFragmentPaginationEnabled() && (Objects.equals(paginationType, "numeric") || Objects.equals(paginationType, "simple"));
 			%>
 
-			<div class="<%= renderLayoutStructureDisplayContext.getCssClass(collectionStyledLayoutStructureItem) %>" style="<%= renderLayoutStructureDisplayContext.getStyle(collectionStyledLayoutStructureItem) %>">
+			<div class="<%= renderLayoutStructureDisplayContext.getCssClass(collectionStyledLayoutStructureItem) %>" data-collection-display-item-id="<%= collectionStyledLayoutStructureItem.getItemId() %>" style="<%= renderLayoutStructureDisplayContext.getStyle(collectionStyledLayoutStructureItem) %>">
 				<c:choose>
 					<c:when test="<%= infoListRenderer != null %>">
 
