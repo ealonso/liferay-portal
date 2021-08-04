@@ -14,8 +14,9 @@
 
 import ClayButton from '@clayui/button';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
+import {onCollectionFilterChange} from '@liferay/fragment-renderer-collection-filter-impl';
 import PropTypes from 'prop-types';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 export default function SelectCategory({
 	assetCategories,
@@ -52,18 +53,25 @@ export default function SelectCategory({
 	}, [searchValue, assetCategories]);
 
 	const onSelectedClick = (selected, id) => {
+		let nextCategoryIds = setSelectedCategoryIds;
+
 		if (selected && singleSelection) {
-			onApply([id]);
-			setSelectedCategoryIds([id]);
+			nextCategoryIds = [id];
 		}
 		else if (selected) {
-			setSelectedCategoryIds([...selectedCategoryIds, id]);
+			nextCategoryIds = [...nextCategoryIds, id];
 		}
 		else {
-			setSelectedCategoryIds(
-				selectedCategoryIds.filter((category) => category !== id)
+			nextCategoryIds = nextCategoryIds.filter(
+				(category) => category !== id
 			);
 		}
+
+		onCollectionFilterChange(fragmentEntryLinkId, {
+			categoryIds: nextCategoryIds,
+		});
+
+		setSelectedCategoryIds(nextCategoryIds);
 	};
 
 	const items = singleSelection
@@ -89,26 +97,6 @@ export default function SelectCategory({
 				type: 'checkbox',
 		  }));
 
-	const editMode = useMemo(
-		() => document.body.classList.contains('has-edit-mode-menu'),
-		[]
-	);
-
-	const onApply = (selectedCategoryIds) => {
-		if (!editMode) {
-			const queryParamName = `categoryId_${fragmentEntryLinkId}`;
-			const search = new URLSearchParams(window.location.search);
-
-			search.delete(queryParamName);
-
-			selectedCategoryIds.forEach((id) => {
-				search.append(queryParamName, id);
-			});
-
-			window.location.search = search;
-		}
-	};
-
 	let label = Liferay.Language.get('select');
 
 	if (selectedCategoryIds.length === 1) {
@@ -126,16 +114,6 @@ export default function SelectCategory({
 
 	return (
 		<ClayDropDownWithItems
-			footerContent={
-				singleSelection ? null : (
-					<ClayButton
-						onClick={() => onApply(selectedCategoryIds)}
-						small
-					>
-						{Liferay.Language.get('apply')}
-					</ClayButton>
-				)
-			}
 			items={items}
 			onSearchValueChange={setSearchValue}
 			searchValue={searchValue}
