@@ -39,13 +39,13 @@ export const getTargetCollectionFilterValueMap = (targetCollectionId) => {
 };
 
 /**
- * @param {string} targetCollectionId
  * @param {string} filterFragmentEntryLinkId
+ * @param {string} targetCollectionId
  * @param {*} value
  */
 export const setTargetCollectionFilterValue = (
-	targetCollectionId,
 	filterFragmentEntryLinkId,
+	targetCollectionId,
 	value
 ) => {
 	const filterValueMap = getTargetCollectionFilterValueMap(

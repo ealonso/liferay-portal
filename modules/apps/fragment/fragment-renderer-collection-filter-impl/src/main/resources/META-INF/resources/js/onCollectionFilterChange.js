@@ -28,8 +28,8 @@ export function onCollectionFilterChange(filterFragmentEntryLinkId, value) {
 	getFilterFragmentCollections(filterFragmentEntryLinkId).forEach(
 		(targetCollectionId) => {
 			setTargetCollectionFilterValue(
-				targetCollectionId,
 				filterFragmentEntryLinkId,
+				targetCollectionId,
 				value
 			);
 
@@ -49,10 +49,10 @@ export function onCollectionFilterChange(filterFragmentEntryLinkId, value) {
 
 				fetch(url.toString(), {
 					body: objectToFormData({
-						fragmentEntryLinkId: filterFragmentEntryLinkId,
 						filterValue: Object.fromEntries(
 							Array.from(filterValueMap)
 						),
+						fragmentEntryLinkId: filterFragmentEntryLinkId,
 						mainItemId: targetCollectionId,
 					}),
 					method: 'POST',
