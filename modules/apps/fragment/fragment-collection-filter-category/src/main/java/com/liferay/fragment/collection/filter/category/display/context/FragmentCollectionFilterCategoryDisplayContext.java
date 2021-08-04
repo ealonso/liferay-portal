@@ -115,6 +115,12 @@ public class FragmentCollectionFilterCategoryDisplayContext {
 		for (AssetCategory assetCategory : _getAssetCategories()) {
 			dropdownItemListWrapper.add(
 				dropdownItem -> {
+					dropdownItem.setData(
+						HashMapBuilder.<String, Object>put(
+							"categoryId",
+							String.valueOf(assetCategory.getCategoryId())
+						).build());
+
 					if (!Objects.equals(
 							ParamUtil.getString(
 								_httpServletRequest, "p_l_mode"),

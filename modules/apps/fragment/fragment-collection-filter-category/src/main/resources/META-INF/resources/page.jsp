@@ -23,10 +23,12 @@
 <c:choose>
 	<c:when test="<%= fragmentCollectionFilterCategoryDisplayContext.isSingleSelection() %>">
 		<clay:dropdown-menu
+			additionalProps="<%= fragmentCollectionFilterCategoryDisplayContext.getProps() %>"
 			cssClass="bg-light font-weight-bold form-control form-control-select form-control-sm text-left w-100"
 			displayType="secondary"
 			dropdownItems="<%= fragmentCollectionFilterCategoryDisplayContext.getDropdownItems() %>"
 			label="<%= fragmentCollectionFilterCategoryDisplayContext.getSelectedAssetCategoryTitle() %>"
+			propsTransformer="js/SingleSelectionDropdownPropsTransformer"
 			title="<%= fragmentCollectionFilterCategoryDisplayContext.getAssetCategoryTreeNodeTitle() %>"
 		/>
 	</c:when>

@@ -14,8 +14,9 @@
 
 import ClayButton from '@clayui/button';
 import {ClayDropDownWithItems} from '@clayui/drop-down';
+import {onCollectionFilterChange} from '@liferay/fragment-renderer-collection-filter-impl';
 import PropTypes from 'prop-types';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 export default function MultiSelectCategory({
 	assetCategories,
@@ -51,14 +52,15 @@ export default function MultiSelectCategory({
 	}, [searchValue, assetCategories]);
 
 	const onSelectedClick = (selected, id) => {
-		if (selected) {
-			setSelectedCategoryIds([...selectedCategoryIds, id]);
-		}
-		else {
-			setSelectedCategoryIds(
-				selectedCategoryIds.filter((category) => category !== id)
-			);
-		}
+		const nextCategoryIds = selected
+			? [...selectedCategoryIds, id]
+			: selectedCategoryIds.filter((category) => category !== id);
+
+		onCollectionFilterChange(fragmentEntryLinkId, {
+			categoryIds: nextCategoryIds,
+		});
+
+		setSelectedCategoryIds(nextCategoryIds);
 	};
 
 	const items = filteredCategories.map((category) => ({
@@ -67,26 +69,6 @@ export default function MultiSelectCategory({
 		onChange: (selected) => onSelectedClick(selected, category.id),
 		type: 'checkbox',
 	}));
-
-	const editMode = useMemo(
-		() => document.body.classList.contains('has-edit-mode-menu'),
-		[]
-	);
-
-	const onApply = () => {
-		if (!editMode) {
-			const queryParamName = `categoryId_${fragmentEntryLinkId}`;
-			const search = new URLSearchParams(window.location.search);
-
-			search.delete(queryParamName);
-
-			selectedCategoryIds.forEach((id) => {
-				search.append(queryParamName, id);
-			});
-
-			window.location.search = search;
-		}
-	};
 
 	let label = Liferay.Language.get('select');
 
@@ -105,11 +87,6 @@ export default function MultiSelectCategory({
 
 	return (
 		<ClayDropDownWithItems
-			footerContent={
-				<ClayButton onClick={onApply} small>
-					{Liferay.Language.get('apply')}
-				</ClayButton>
-			}
 			items={items}
 			onSearchValueChange={setSearchValue}
 			searchValue={searchValue}
