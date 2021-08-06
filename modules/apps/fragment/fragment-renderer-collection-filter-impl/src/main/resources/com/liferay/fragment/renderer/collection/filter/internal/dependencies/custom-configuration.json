@@ -1,0 +1,14 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"defaultValue": "",
+					"label": "target-collections",
+					"name": "targetCollections",
+					"type": "text"
+				}
+			]
+		}
+	]
+}
