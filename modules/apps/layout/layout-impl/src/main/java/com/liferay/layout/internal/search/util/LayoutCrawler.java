@@ -62,8 +62,6 @@ public class LayoutCrawler {
 		).build();
 
 		try {
-			InetAddress inetAddress = _portal.getPortalServerInetAddress(false);
-
 			ThemeDisplay themeDisplay = new ThemeDisplay();
 
 			Company company = _companyLocalService.getCompany(
@@ -76,7 +74,7 @@ public class LayoutCrawler {
 			themeDisplay.setLayoutSet(layout.getLayoutSet());
 			themeDisplay.setLocale(locale);
 			themeDisplay.setScopeGroupId(layout.getGroupId());
-			themeDisplay.setServerName(inetAddress.getHostName());
+			themeDisplay.setServerName(company.getVirtualHostname());
 			themeDisplay.setServerPort(
 				_portal.getPortalServerPort(_isHttpsEnabled()));
 			themeDisplay.setSiteGroupId(layout.getGroupId());
@@ -91,7 +89,7 @@ public class LayoutCrawler {
 			BasicClientCookie basicClientCookie = new BasicClientCookie(
 				CookieKeys.GUEST_LANGUAGE_ID, LocaleUtil.toLanguageId(locale));
 
-			basicClientCookie.setDomain(inetAddress.getHostName());
+			basicClientCookie.setDomain(company.getVirtualHostname());
 
 			cookieStore.addCookie(basicClientCookie);
 
