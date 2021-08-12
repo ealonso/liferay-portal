@@ -58,7 +58,8 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 
 		renderRequest.setAttribute(
 			DDMTemplateHelper.class.getName(), _ddmTemplateHelper);
-		
+
+		String jspPath = "/edit_ddm_template.jsp";
 		boolean renderPropertiesPanel = ParamUtil.getBoolean(
 			renderRequest, "renderPropertiesPanel");
 		String tabs1 = ParamUtil.getString(
@@ -73,6 +74,11 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 				new InformationTemplatesEditDDMTemplateDisplayContext(
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
+
+			if (renderPropertiesPanel) {
+				jspPath =
+					"/ddm_template/edit_information_template_properties.jsp";
+			}
 		}
 		else if (Objects.equals(tabs1, "widget-templates")) {
 			renderRequest.setAttribute(
@@ -82,13 +88,13 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 				new WidgetTemplatesEditDDMTemplateDisplayContext(
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
-		}
-			
-		if (renderPropertiesPanel) {
-			return "/ddm_template/edit_properties.jsp";
+
+			if (renderPropertiesPanel) {
+				jspPath = "/ddm_template/edit_widget_template_properties.jsp";
+			}
 		}
 
-		return "/edit_ddm_template.jsp";
+		return jspPath;
 	}
 
 	@Activate
