@@ -117,8 +117,8 @@ public class EditDDMTemplateDisplayContext {
 			"propertiesViewURL",
 			() -> PortletURLBuilder.createRenderURL(
 				_liferayPortletResponse
-			).setMVCPath(
-				"/ddm_template/edit_properties.jsp"
+			).setMVCRenderCommandName(
+				"/template/edit_ddm_template"
 			).setTabs1(
 				getTabs1()
 			).setParameter(
@@ -127,6 +127,8 @@ public class EditDDMTemplateDisplayContext {
 				"classPK", getClassPK()
 			).setParameter(
 				"ddmTemplateId", getDDMTemplateId()
+			).setParameter(
+				"renderPropertiesPanel", true
 			).setWindowState(
 				LiferayWindowState.EXCLUSIVE
 			).buildString()

@@ -58,7 +58,9 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 
 		renderRequest.setAttribute(
 			DDMTemplateHelper.class.getName(), _ddmTemplateHelper);
-
+		
+		boolean renderPropertiesPanel = ParamUtil.getBoolean(
+			renderRequest, "renderPropertiesPanel");
 		String tabs1 = ParamUtil.getString(
 			renderRequest, "tabs1", "information-templates");
 
@@ -80,6 +82,10 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 				new WidgetTemplatesEditDDMTemplateDisplayContext(
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
+		}
+			
+		if (renderPropertiesPanel) {
+			return "/ddm_template/edit_properties.jsp";
 		}
 
 		return "/edit_ddm_template.jsp";
