@@ -67,10 +67,6 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 
 	@Override
 	public boolean isSelectable(HttpServletRequest httpServletRequest) {
-		if (!_ffFragmentRendererCollectionFilterConfiguration.enabled()) {
-			return false;
-		}
-
 		return true;
 	}
 
