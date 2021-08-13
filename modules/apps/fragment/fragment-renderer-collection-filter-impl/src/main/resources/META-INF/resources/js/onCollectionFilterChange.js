@@ -12,8 +12,6 @@
  * details.
  */
 
-import {createPortletURL, fetch, objectToFormData} from 'frontend-js-web';
-
 import {
 	getFilterFragmentCollections,
 	getTargetCollectionFilterValueMap,
@@ -33,57 +31,21 @@ export function onCollectionFilterChange(filterFragmentEntryLinkId, value) {
 				value
 			);
 
-			const element = document.querySelector(
-				`[data-collection-display-item-id="${targetCollectionId}"]`
+			const filterValueMap = getTargetCollectionFilterValueMap(
+				targetCollectionId
 			);
 
-			if (element) {
-				const filterValueMap = getTargetCollectionFilterValueMap(
-					targetCollectionId
-				);
+			const search = new URLSearchParams(window.location.search);
 
-				const url = createPortletURL(
-					themeDisplay.getPathMain() +
-						'/portal/layout/render_collection'
-				);
+			Array.from(filterValueMap).forEach(
+				([fragmentEntryLinkId, value]) => {
+					search.append(
+						`categoryId_${fragmentEntryLinkId}`,
+						Object.values(value).toString());
+				}
+			);
 
-				fetch(url.toString(), {
-					body: objectToFormData({
-						collectionItemId: targetCollectionId,
-						filterValues: JSON.stringify(
-							Array.from(filterValueMap)
-								.map(([fragmentEntryLinkId, value]) => ({ fragmentEntryLinkId, value }))
-						),
-					}),
-					method: 'POST',
-				})
-					.then((response) => {
-						if (response.status >= 400 || response.status < 200) {
-							throw new Error(response);
-						}
-
-						return response.text();
-					})
-					.then((html) => {
-						if (!html) {
-							throw new Error();
-						}
-
-						element.innerHTML = html;
-					})
-					.catch(() => {
-						if (process.env.NODE_ENV === 'development') {
-							console.error(
-								`Could not update collection "${targetCollectionId}"`
-							);
-						}
-					});
-			}
-			else if (process.env.NODE_ENV === 'development') {
-				console.error(
-					`Cannot find collection display for itemId "${targetCollectionId}" linked to filter "${filterFragmentEntryLinkId}"`
-				);
-			}
+			window.location.search = search;
 		}
 	);
 }
