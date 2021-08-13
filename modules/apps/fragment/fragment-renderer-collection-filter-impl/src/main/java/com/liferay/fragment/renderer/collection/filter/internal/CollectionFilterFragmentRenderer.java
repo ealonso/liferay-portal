@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -39,6 +41,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,12 +126,32 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse) {
 
-		FragmentCollectionFilter fragmentCollectionFilter =
-			_fragmentCollectionFilterTracker.getFragmentCollectionFilter(
-				"category");
+		try {
+			httpServletRequest.setAttribute(
+				FragmentCollectionFilter.class.getName(),
+				_fragmentCollectionFilterTracker.getFragmentCollectionFilter(
+					"category"));
+			httpServletRequest.setAttribute(
+				FragmentRendererContext.class.getName(),
+				fragmentRendererContext);
 
-		fragmentCollectionFilter.render(
-			fragmentRendererContext, httpServletRequest, httpServletResponse);
+			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+				"content.Language", fragmentRendererContext.getLocale(),
+				getClass());
+
+			httpServletRequest.setAttribute(
+				"targetCollections",
+				_getTargetCollections(fragmentRendererContext, resourceBundle));
+
+			RequestDispatcher requestDispatcher =
+				_servletContext.getRequestDispatcher("/page.jsp");
+
+			requestDispatcher.include(httpServletRequest, httpServletResponse);
+		}
+		catch (Exception exception) {
+			_log.error(
+				"Unable to render collection filter fragment", exception);
+		}
 	}
 
 	@Modified
@@ -200,6 +223,31 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 			return null;
 		}
 	}
+
+	private String _getTargetCollections(
+		FragmentRendererContext fragmentRendererContext,
+		ResourceBundle resourceBundle) {
+
+		FragmentEntryLink fragmentEntryLink =
+			fragmentRendererContext.getFragmentEntryLink();
+
+		if (fragmentEntryLink == null) {
+			return null;
+		}
+
+		String customConfiguration = StringUtil.read(
+			getClass(),
+			"/com/liferay/fragment/renderer/collection/filter/internal" +
+				"/dependencies/custom-configuration.json");
+
+		return GetterUtil.getString(
+			_fragmentEntryConfigurationParser.getFieldValue(
+				customConfiguration, fragmentEntryLink.getEditableValues(),
+				resourceBundle.getLocale(), "targetCollections"));
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CollectionFilterFragmentRenderer.class);
 
 	private volatile FFFragmentRendererCollectionFilterConfiguration
 		_ffFragmentRendererCollectionFilterConfiguration;
