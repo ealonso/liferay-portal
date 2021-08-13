@@ -285,6 +285,10 @@ public class InfoCollectionProviderLayoutListRetriever
 				new PropertyInfoItemServiceFilter(
 					"infoFilterKey", infoFilterClass.getName()));
 
+		if (infoRequestItemProvider != null) {
+			return null;
+		}
+
 		return infoRequestItemProvider.create(httpServletRequest);
 	}
 
