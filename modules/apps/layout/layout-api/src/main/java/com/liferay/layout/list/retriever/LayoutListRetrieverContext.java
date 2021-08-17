@@ -37,6 +37,8 @@ public interface LayoutListRetrieverContext {
 
 	public Optional<Map<String, String[]>> getConfigurationOptional();
 
+	public Optional<Map<String, String[]>> getFilterValues();
+
 	public Optional<Object> getContextObjectOptional();
 
 	public Optional<HttpServletRequest> getHttpServletRequestOptional();

@@ -12,25 +12,17 @@
  * details.
  */
 
-package com.liferay.info.collection.provider;
+package com.liferay.info.filter;
 
-import com.liferay.info.filter.InfoFilter;
-import com.liferay.petra.reflect.GenericUtil;
+import com.liferay.info.type.Keyed;
+
+import java.util.Map;
 
 /**
  * @author Eudaldo Alonso
  */
-public interface FilteredInfoCollectionProvider<T, F extends InfoFilter>
-	extends InfoCollectionProvider<T> {
+public interface InfoFilterProvider<T extends InfoFilter> extends Keyed {
 
-	public default Class<F> getInfoFilterClass() {
-		return (Class<F>)GenericUtil.getGenericClass(this, 1);
-	}
-
-	public default String getInfoFilterClassName() {
-		Class<?> clazz = getInfoFilterClass();
-
-		return clazz.getName();
-	}
+	public T create(Map<String, String[]> values);
 
 }
