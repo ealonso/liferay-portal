@@ -18,11 +18,18 @@ import com.liferay.fragment.collection.filter.FragmentCollectionFilter;
 import com.liferay.fragment.collection.filter.category.display.context.FragmentCollectionFilterCategoryDisplayContext;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -35,12 +42,33 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Pablo Molina
  */
-@Component(
-	immediate = true, property = "fragment.collection.filter.key=category",
-	service = FragmentCollectionFilter.class
-)
+@Component(immediate = true, service = FragmentCollectionFilter.class)
 public class FragmentCollectionFilterCategory
 	implements FragmentCollectionFilter {
+
+	@Override
+	public JSONObject getConfiguration() {
+		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+			"content.Language", LocaleUtil.getMostRelevantLocale(), getClass());
+
+		try {
+			String json = StringUtil.read(
+				getClass(),
+				"/com/liferay/fragment/collection/filter/category" +
+					"/dependencies/configuration.json");
+
+			return JSONFactoryUtil.createJSONObject(
+				_fragmentEntryConfigurationParser.translateConfiguration(
+					JSONFactoryUtil.createJSONObject(json), resourceBundle));
+		}
+		catch (JSONException jsonException) {
+			return JSONFactoryUtil.createJSONObject();
+		}
+	}
+
+	public String getFilterKey() {
+		return "category";
+	}
 
 	@Override
 	public String getLabel(Locale locale) {

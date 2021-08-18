@@ -16,8 +16,9 @@ import ClayButton from '@clayui/button';
 import ClayDropDown from '@clayui/drop-down';
 import ClayForm, {ClayCheckbox} from '@clayui/form';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
+import {SelectField} from '../../../../../../app/components/fragment-configuration-fields/SelectField';
 import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../app/config/constants/freemarkerFragmentEntryProcessor';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../../app/config/constants/layoutDataItemTypes';
 import {useHoverItem} from '../../../../../../app/contexts/ControlsContext';
@@ -27,11 +28,12 @@ import {
 	useSelectorCallback,
 } from '../../../../../../app/contexts/StoreContext';
 import selectLanguageId from '../../../../../../app/selectors/selectLanguageId';
-import updateFragmentConfiguration from '../../../../../../app/thunks/updateFragmentConfiguration';
+import CollectionService from '../../../../../../app/services/CollectionService';
 import {isLayoutDataItemDeleted} from '../../../../../../app/utils/isLayoutDataItemDeleted';
+import updateConfigurationValue from '../../../../../../app/utils/updateConfigurationValue';
 import {useId} from '../../../../../../app/utils/useId';
 import getLayoutDataItemPropTypes from '../../../../../../prop-types/getLayoutDataItemPropTypes';
-import {FragmentGeneralPanel} from './FragmentGeneralPanel';
+import {FieldSet} from './FieldSet';
 
 const selectConfiguredCollectionDisplays = (state) =>
 	Object.values(state.layoutData.items).filter(
@@ -157,18 +159,33 @@ export const CollectionFilterGeneralPanel = ({item}) => {
 		fragmentEntryLink.editableValues[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR] ||
 		{};
 
-	const onValueSelect = (name, value) =>
-		dispatch(
-			updateFragmentConfiguration({
-				configurationValues: {
-					...(configurationValues || {}),
-					...(fragmentEntryLink.defaultConfigurationValues || {}),
-					[name]: value,
-				},
+	const [collectionFilters, setCollectionFilters] = useState(null);
+
+	const selectedFilter = collectionFilters?.[configurationValues['filter']];
+
+	useEffect(() => {
+		if (hasConfiguredCollections && !collectionFilters) {
+			CollectionService.getCollectionFilters().then(
+				(collectionFilters) => {
+					setCollectionFilters(collectionFilters);
+				}
+			);
+		}
+	}, [hasConfiguredCollections, collectionFilters]);
+
+	const onValueSelect = useCallback(
+		(name, value) => {
+			updateConfigurationValue({
+				configuration: selectedFilter?.configuration,
+				dispatch,
 				fragmentEntryLink,
 				languageId,
-			})
-		);
+				name,
+				value,
+			});
+		},
+		[dispatch, selectedFilter, fragmentEntryLink, languageId]
+	);
 
 	if (!hasConfiguredCollections) {
 		return (
@@ -187,7 +204,43 @@ export const CollectionFilterGeneralPanel = ({item}) => {
 				value={configurationValues.targetCollections}
 			/>
 
-			<FragmentGeneralPanel item={item} />
+			{collectionFilters && Object.keys(collectionFilters).length > 0 && (
+				<SelectField
+					field={{
+						label: Liferay.Language.get('filter'),
+						name: 'filter',
+						typeOptions: {
+							validValues: [
+								{
+									label: Liferay.Language.get('none'),
+									value: '',
+								},
+								...Object.values(
+									collectionFilters
+								).map(({key, label}) => ({label, value: key})),
+							],
+						},
+					}}
+					onValueSelect={onValueSelect}
+					value={configurationValues['filter']}
+				/>
+			)}
+
+			{selectedFilter?.configuration &&
+				selectedFilter.configuration.fieldSets
+					?.filter((fieldSet) => fieldSet.fields.length)
+					.map((fieldSet, index) => (
+						<FieldSet
+							fields={fieldSet.fields}
+							key={`${fieldSet.label || ''}-${index}`}
+							label={fieldSet.label}
+							languageId={languageId}
+							onValueSelect={(name, value) =>
+								onValueSelect(name, value)
+							}
+							values={configurationValues}
+						/>
+					))}
 		</>
 	);
 };
