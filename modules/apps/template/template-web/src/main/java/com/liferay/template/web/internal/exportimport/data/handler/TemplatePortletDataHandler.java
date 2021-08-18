@@ -240,6 +240,14 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 				dynamicQuery.add(classPKProperty.eq(0L));
 
+				Property resourceClassNameIdProperty =
+					PropertyFactoryUtil.forName("resourceClassNameId");
+
+				dynamicQuery.add(
+					resourceClassNameIdProperty.eq(
+						_portal.getClassNameId(
+							PortletDisplayTemplate.class.getName())));
+
 				Property typeProperty = PropertyFactoryUtil.forName("type");
 
 				dynamicQuery.add(
