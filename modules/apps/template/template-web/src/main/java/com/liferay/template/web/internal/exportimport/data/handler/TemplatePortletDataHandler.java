@@ -127,12 +127,15 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
-		List<Long> classNameIds = _getClassNameIds(portletDataContext);
+		List<Long> portletDisplayTemplateSelectedClassNameIds =
+			_getPortletDisplayTemplateSelectedClassNameIds(portletDataContext);
 
-		if (!classNameIds.isEmpty()) {
+		if (!portletDisplayTemplateSelectedClassNameIds.isEmpty()) {
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
-					portletDataContext, classNameIds.toArray(new Long[0]),
+					portletDataContext,
+					portletDisplayTemplateSelectedClassNameIds.toArray(
+						new Long[0]),
 					new StagedModelType(
 						_portal.getClassNameId(DDMTemplate.class),
 						StagedModelType.REFERRER_CLASS_NAME_ID_ALL));
@@ -297,6 +300,33 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				DDMTemplate.class.getName(),
 				PortletDisplayTemplate.class.getName())
 		};
+	}
+
+	private List<Long> _getPortletDisplayTemplateSelectedClassNameIds(
+		PortletDataContext portletDataContext) {
+
+		List<Long> classNameIds = new ArrayList<>();
+
+		for (TemplateHandler templateHandler :
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
+
+			ClassName className = _classNameLocalService.fetchClassName(
+				templateHandler.getClassName());
+
+			if (className == null) {
+				continue;
+			}
+
+			if (portletDataContext.getBooleanParameter(
+					NAMESPACE,
+					templateHandler.getName(LocaleUtil.getSiteDefault()))) {
+
+				classNameIds.add(
+					_portal.getClassNameId(templateHandler.getClassName()));
+			}
+		}
+
+		return classNameIds;
 	}
 
 	private StagedModelType[] _getStagedModelTypes() {
