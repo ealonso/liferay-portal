@@ -131,6 +131,10 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 			_fragmentCollectionFilterTracker.getFragmentCollectionFilter(
 				"category");
 
+		if (fragmentCollectionFilter == null) {
+			return;
+		}
+
 		fragmentCollectionFilter.render(
 			fragmentRendererContext, httpServletRequest, httpServletResponse);
 	}
