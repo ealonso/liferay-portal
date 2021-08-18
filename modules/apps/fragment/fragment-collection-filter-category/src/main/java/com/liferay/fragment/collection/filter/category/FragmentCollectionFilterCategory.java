@@ -85,8 +85,8 @@ public class FragmentCollectionFilterCategory
 			httpServletRequest.setAttribute(
 				FragmentCollectionFilterCategoryDisplayContext.class.getName(),
 				new FragmentCollectionFilterCategoryDisplayContext(
-					_fragmentEntryConfigurationParser, fragmentRendererContext,
-					httpServletRequest));
+					_fragmentEntryConfigurationParser,
+					fragmentRendererContext));
 
 			RequestDispatcher requestDispatcher =
 				_servletContext.getRequestDispatcher("/page.jsp");

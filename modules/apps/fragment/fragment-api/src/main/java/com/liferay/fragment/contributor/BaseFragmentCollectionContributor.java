@@ -214,10 +214,12 @@ public abstract class BaseFragmentCollectionContributor
 				fragmentEntryList.add(fragmentEntry);
 			}
 
-			while (fragmentCompositionsEnumeration.hasMoreElements()) {
-				URL url = fragmentCompositionsEnumeration.nextElement();
+			if (fragmentCompositionsEnumeration != null) {
+				while (fragmentCompositionsEnumeration.hasMoreElements()) {
+					URL url = fragmentCompositionsEnumeration.nextElement();
 
-				_fragmentCompositions.add(_getFragmentComposition(url));
+					_fragmentCompositions.add(_getFragmentComposition(url));
+				}
 			}
 		}
 		catch (Exception exception) {

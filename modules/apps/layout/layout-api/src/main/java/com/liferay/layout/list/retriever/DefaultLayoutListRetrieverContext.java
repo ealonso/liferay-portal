@@ -57,6 +57,11 @@ public class DefaultLayoutListRetrieverContext
 	}
 
 	@Override
+	public Optional<Map<String, String[]>> getFilterValues() {
+		return Optional.ofNullable(_filterValues);
+	}
+
+	@Override
 	public Optional<long[]> getSegmentsEntryIdsOptional() {
 		return Optional.ofNullable(_segmentsEntryIds);
 	}
@@ -115,7 +120,12 @@ public class DefaultLayoutListRetrieverContext
 		_segmentsExperienceIds = segmentsExperienceIds;
 	}
 
+	public void setFilterValues(Map<String, String[]> filterValues) {
+		_filterValues = filterValues;
+	}
+
 	private long[][] _assetCategoryIds;
+	private Map<String, String[]> _filterValues;
 	private Map<String, String[]> _configuration;
 	private Object _contextObject;
 	private HttpServletRequest _httpServletRequest;

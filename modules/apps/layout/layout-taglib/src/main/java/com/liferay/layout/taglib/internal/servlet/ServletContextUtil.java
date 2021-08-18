@@ -18,6 +18,7 @@ import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
+import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.list.renderer.InfoListRendererTracker;
@@ -50,6 +51,12 @@ public class ServletContextUtil {
 
 	public static String getContextPath() {
 		return _servletContext.getContextPath();
+
+
+	}
+
+	public static FragmentEntryConfigurationParser getFragmentEntryConfigurationParser() {
+		return _fragmentEntryConfigurationParser;
 	}
 
 	public static FragmentCollectionContributorTracker
@@ -253,6 +260,13 @@ public class ServletContextUtil {
 		_segmentsEntryRetriever = segmentsEntryRetriever;
 	}
 
+	@Reference(unbind = "-")
+	protected void setFragmentEntryConfigurationParser(
+		FragmentEntryConfigurationParser fragmentEntryConfigurationParser) {
+
+		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
+	}
+
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.layout.taglib)",
 		unbind = "-"
@@ -276,6 +290,7 @@ public class ServletContextUtil {
 	private static LayoutDisplayPageProviderTracker
 		_layoutDisplayPageProviderTracker;
 	private static LayoutListRetrieverTracker _layoutListRetrieverTracker;
+	private static FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 	private static ListObjectReferenceFactoryTracker
 		_listObjectReferenceFactoryTracker;
 	private static RequestContextMapper _requestContextMapper;
