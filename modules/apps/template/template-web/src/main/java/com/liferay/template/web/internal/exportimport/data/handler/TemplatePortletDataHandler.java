@@ -27,6 +27,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandlerControl;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.staging.Staging;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -39,6 +40,7 @@ import com.liferay.portal.kernel.template.TemplateHandlerRegistry;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.web.internal.portlet.template.InformationTemplatesTemplateHandler;
 
@@ -261,14 +263,12 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	}
 
 	private PortletDataHandlerControl[] _getPortletDataHandlerControls() {
-		List<PortletDataHandlerControl> portletDataHandlerControls =
-			new ArrayList<>();
-
-		portletDataHandlerControls.add(
-			new PortletDataHandlerBoolean(NAMESPACE, "template", true, true));
+		List<PortletDataHandlerControl>
+			portletDisplayTemplatesPortletDataHandlerControls =
+				new ArrayList<>();
 
 		for (TemplateHandler templateHandler :
-				_templateHandlerRegistry.getTemplateHandlers()) {
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
 
 			ClassName className = _classNameLocalService.fetchClassName(
 				templateHandler.getClassName());
@@ -277,7 +277,7 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				continue;
 			}
 
-			portletDataHandlerControls.add(
+			portletDisplayTemplatesPortletDataHandlerControls.add(
 				new PortletDataHandlerBoolean(
 					NAMESPACE,
 					templateHandler.getName(LocaleUtil.getSiteDefault()), true,
@@ -285,8 +285,18 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 					className.getValue()));
 		}
 
-		return portletDataHandlerControls.toArray(
-			new PortletDataHandlerControl[0]);
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "information-templates", true, false, null,
+				DDMTemplate.class.getName(),
+				InfoItemFormProvider.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "widget-templates", true, false,
+				portletDisplayTemplatesPortletDataHandlerControls.toArray(
+					new PortletDataHandlerControl[0]),
+				DDMTemplate.class.getName(),
+				PortletDisplayTemplate.class.getName())
+		};
 	}
 
 	private StagedModelType[] _getStagedModelTypes() {
@@ -320,6 +330,9 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private PortletDisplayTemplate _portletDisplayTemplate;
 
 	private StagedModelType[] _stagedModelTypes;
 
