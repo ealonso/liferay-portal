@@ -33,6 +33,7 @@ import {
 import selectCanConfigureWidgets from '../../selectors/selectCanConfigureWidgets';
 import selectLanguageId from '../../selectors/selectLanguageId';
 import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
+import { deepEqual } from '../../utils/checkDeepEqual';
 import resolveEditableConfig from '../../utils/editable-value/resolveEditableConfig';
 import resolveEditableValue from '../../utils/editable-value/resolveEditableValue';
 import {getFrontendTokenValue} from '../../utils/getFrontendTokenValue';
@@ -121,7 +122,7 @@ const FragmentContent = ({
 	const editables = useSelectorCallback(
 		(state) =>
 			Object.values(state.editables?.[toControlsId(item.itemId)] || {}),
-		[item, toControlsId]
+		[item, toControlsId], deepEqual
 	);
 
 	/**
