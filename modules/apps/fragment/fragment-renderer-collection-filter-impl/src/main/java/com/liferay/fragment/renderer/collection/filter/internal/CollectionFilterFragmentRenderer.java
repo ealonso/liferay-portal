@@ -93,6 +93,7 @@ public class CollectionFilterFragmentRenderer implements FragmentRenderer {
 					}
 				).build());
 			componentTag.setModule("js/CollectionFilterRegister");
+			componentTag.setServletContext(_servletContext);
 
 			PageContext pageContext = PageContextFactoryUtil.create(
 				httpServletRequest, httpServletResponse);
