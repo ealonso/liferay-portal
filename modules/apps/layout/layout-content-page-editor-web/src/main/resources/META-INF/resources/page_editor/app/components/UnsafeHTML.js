@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import RawDOM from '../../common/components/RawDOM';
+import isNullOrUndefined from '../utils/isNullOrUndefined';
 
 /**
  * DOM node which will be manually updated and injects
@@ -33,7 +34,7 @@ export default class UnsafeHTML extends React.PureComponent {
 			this._syncRefProps();
 
 			if (
-				!this.state.ref.innerHTML ||
+				isNullOrUndefined(this.state.ref.innerHTML) ||
 				prevProps.markup !== this.props.markup
 			) {
 				this._syncRefContent();
