@@ -200,6 +200,14 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			return;
 		}
 
+		ActionableDynamicQuery informationTemplatesActionableDynamicQuery =
+			_getDDMTemplateActionableDynamicQuery(
+				portletDataContext, null, null,
+				_getInfoItemFormProviderClassNameId(),
+				_getInformationTemplatesStagedModelType());
+
+		informationTemplatesActionableDynamicQuery.performCount();
+
 		for (StagedModelType stagedModelType :
 				_getPortletDisplayTemplatesStagedModelTypes()) {
 
