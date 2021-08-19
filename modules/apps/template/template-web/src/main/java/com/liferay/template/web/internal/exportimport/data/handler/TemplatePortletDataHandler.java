@@ -167,6 +167,9 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		List<Long> portletDisplayTemplateSelectedClassNameIds =
 			_getPortletDisplayTemplateSelectedClassNameIds(portletDataContext);
 
+		boolean informationTemplatesSelected = _isInformationTemplatesSelected(
+			portletDataContext);
+
 		Element ddmTemplatesElement =
 			portletDataContext.getImportDataGroupElement(DDMTemplate.class);
 
@@ -177,8 +180,16 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				"resource-class-name");
 
 			if (Objects.equals(
-					PortletDisplayTemplate.class.getName(),
-					resourceClassName)) {
+					InfoItemFormProvider.class.getName(), resourceClassName)) {
+
+				if (informationTemplatesSelected) {
+					StagedModelDataHandlerUtil.importStagedModel(
+						portletDataContext, ddmTemplateElement);
+				}
+			}
+			else if (Objects.equals(
+						PortletDisplayTemplate.class.getName(),
+						resourceClassName)) {
 
 				long classNameId = _portal.getClassNameId(
 					ddmTemplateElement.attributeValue("attached-class-name"));
