@@ -333,9 +333,19 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		long ddmTemplateClassNameId = _portal.getClassNameId(DDMTemplate.class);
 
-		for (long classNameId : _templateHandlerRegistry.getClassNameIds()) {
+		for (TemplateHandler templateHandler :
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
+
+			ClassName className = _classNameLocalService.fetchClassName(
+				templateHandler.getClassName());
+
+			if (className == null) {
+				continue;
+			}
+
 			stagedModelTypes.add(
-				new StagedModelType(ddmTemplateClassNameId, classNameId));
+				new StagedModelType(
+					ddmTemplateClassNameId, className.getClassNameId()));
 		}
 
 		_stagedModelTypes = stagedModelTypes.toArray(new StagedModelType[0]);
