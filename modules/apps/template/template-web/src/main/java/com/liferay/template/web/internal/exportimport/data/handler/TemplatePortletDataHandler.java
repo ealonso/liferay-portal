@@ -137,8 +137,9 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 					portletDataContext,
 					portletDisplayTemplateSelectedClassNameIds.toArray(
 						new Long[0]),
+					new Long[] {0L}, _getPortletDisplayTemplateClassNameId(),
 					new StagedModelType(
-						_portal.getClassNameId(DDMTemplate.class),
+						_getDDMTemplateClassNameId(),
 						StagedModelType.REFERRER_CLASS_NAME_ID_ALL));
 
 			actionableDynamicQuery.performActions();
@@ -205,8 +206,8 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
 					portletDataContext,
-					new Long[] {stagedModelType.getReferrerClassNameId()},
-					stagedModelType);
+					new Long[] {stagedModelType.getReferrerClassNameId()}, null,
+					_getPortletDisplayTemplateClassNameId(), stagedModelType);
 
 			actionableDynamicQuery.performCount();
 		}
@@ -219,6 +220,7 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 	private ActionableDynamicQuery _getDDMTemplateActionableDynamicQuery(
 		PortletDataContext portletDataContext, Long[] classNameIds,
+		Long[] classPKs, long resourceClassNameId,
 		StagedModelType stagedModelType) {
 
 		ExportActionableDynamicQuery exportActionableDynamicQuery =
@@ -232,23 +234,25 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			dynamicQuery -> {
 				addCriteriaMethod.addCriteria(dynamicQuery);
 
-				Property classNameIdProperty = PropertyFactoryUtil.forName(
-					"classNameId");
+				if (classNameIds != null) {
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+						"classNameId");
 
-				dynamicQuery.add(classNameIdProperty.in(classNameIds));
+					dynamicQuery.add(classNameIdProperty.in(classNameIds));
+				}
 
-				Property classPKProperty = PropertyFactoryUtil.forName(
-					"classPK");
+				if (classPKs != null) {
+					Property classPKProperty = PropertyFactoryUtil.forName(
+						"classPK");
 
-				dynamicQuery.add(classPKProperty.eq(0L));
+					dynamicQuery.add(classPKProperty.in(classPKs));
+				}
 
 				Property resourceClassNameIdProperty =
 					PropertyFactoryUtil.forName("resourceClassNameId");
 
 				dynamicQuery.add(
-					resourceClassNameIdProperty.eq(
-						_portal.getClassNameId(
-							PortletDisplayTemplate.class.getName())));
+					resourceClassNameIdProperty.eq(resourceClassNameId));
 
 				Property typeProperty = PropertyFactoryUtil.forName("type");
 
@@ -330,6 +334,17 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				DDMTemplate.class.getName(),
 				PortletDisplayTemplate.class.getName())
 		};
+	}
+
+	private long _getPortletDisplayTemplateClassNameId() {
+		if (_portletDisplayTemplateClassNameId != null) {
+			return _portletDisplayTemplateClassNameId;
+		}
+
+		_portletDisplayTemplateClassNameId = _portal.getClassNameId(
+			PortletDisplayTemplate.class);
+
+		return _portletDisplayTemplateClassNameId;
 	}
 
 	private List<Long> _getPortletDisplayTemplateSelectedClassNameIds(
@@ -429,6 +444,7 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	@Reference
 	private PortletDisplayTemplate _portletDisplayTemplate;
 
+	private Long _portletDisplayTemplateClassNameId;
 	private List<StagedModelType> _portletDisplayTemplatesStagedModelTypes;
 	private StagedModelType[] _stagedModelTypes;
 
