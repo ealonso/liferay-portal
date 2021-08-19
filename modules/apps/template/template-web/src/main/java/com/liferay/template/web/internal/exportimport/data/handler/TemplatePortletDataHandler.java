@@ -131,6 +131,16 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		List<Long> portletDisplayTemplateSelectedClassNameIds =
 			_getPortletDisplayTemplateSelectedClassNameIds(portletDataContext);
 
+		if (_isInformationTemplatesSelected(portletDataContext)) {
+			ActionableDynamicQuery actionableDynamicQuery =
+				_getDDMTemplateActionableDynamicQuery(
+					portletDataContext, null, null,
+					_getInfoItemFormProviderClassNameId(),
+					_getInformationTemplatesStagedModelType());
+
+			actionableDynamicQuery.performActions();
+		}
+
 		if (!portletDisplayTemplateSelectedClassNameIds.isEmpty()) {
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
@@ -437,6 +447,13 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		_stagedModelTypes = stagedModelTypes.toArray(new StagedModelType[0]);
 
 		return _stagedModelTypes;
+	}
+
+	private boolean _isInformationTemplatesSelected(
+		PortletDataContext portletDataContext) {
+
+		return portletDataContext.getBooleanParameter(
+			NAMESPACE, "information-templates");
 	}
 
 	@Reference
