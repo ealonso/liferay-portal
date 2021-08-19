@@ -112,9 +112,17 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		for (long classNameId : _templateHandlerRegistry.getClassNameIds()) {
-			_ddmTemplateLocalService.deleteTemplates(
-				portletDataContext.getScopeGroupId(), classNameId);
+		for (DDMTemplate ddmTemplate :
+				_ddmTemplateLocalService.getTemplatesByGroupId(
+					portletDataContext.getScopeGroupId())) {
+
+			if ((_getInfoItemFormProviderClassNameId() ==
+					ddmTemplate.getResourceClassNameId()) ||
+				(_getPortletDisplayTemplateClassNameId() ==
+					ddmTemplate.getResourceClassNameId())) {
+
+				_ddmTemplateLocalService.deleteTemplate(ddmTemplate);
+			}
 		}
 
 		return portletPreferences;
