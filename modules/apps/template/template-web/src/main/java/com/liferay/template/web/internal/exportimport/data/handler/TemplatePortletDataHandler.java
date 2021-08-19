@@ -199,7 +199,9 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			return;
 		}
 
-		for (StagedModelType stagedModelType : _getStagedModelTypes()) {
+		for (StagedModelType stagedModelType :
+				_getPortletDisplayTemplatesStagedModelTypes()) {
+
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
 					portletDataContext,
@@ -258,6 +260,39 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		exportActionableDynamicQuery.setStagedModelType(stagedModelType);
 
 		return exportActionableDynamicQuery;
+	}
+
+	private long _getDDMTemplateClassNameId() {
+		if (_ddmTemplateClassNameId != null) {
+			return _ddmTemplateClassNameId;
+		}
+
+		_ddmTemplateClassNameId = _portal.getClassNameId(DDMTemplate.class);
+
+		return _ddmTemplateClassNameId;
+	}
+
+	private long _getInfoItemFormProviderClassNameId() {
+		if (_infoItemFormProviderClassNameId != null) {
+			return _infoItemFormProviderClassNameId;
+		}
+
+		_infoItemFormProviderClassNameId = _portal.getClassNameId(
+			InfoItemFormProvider.class);
+
+		return _infoItemFormProviderClassNameId;
+	}
+
+	private StagedModelType _getInformationTemplatesStagedModelType() {
+		if (_informationTemplatesStagedModelType != null) {
+			return _informationTemplatesStagedModelType;
+		}
+
+		_informationTemplatesStagedModelType = new StagedModelType(
+			_getDDMTemplateClassNameId(),
+			_getInfoItemFormProviderClassNameId());
+
+		return _informationTemplatesStagedModelType;
 	}
 
 	private PortletDataHandlerControl[] _getPortletDataHandlerControls() {
@@ -324,14 +359,17 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		return classNameIds;
 	}
 
-	private StagedModelType[] _getStagedModelTypes() {
-		if (_stagedModelTypes != null) {
-			return _stagedModelTypes;
+	private List<StagedModelType>
+		_getPortletDisplayTemplatesStagedModelTypes() {
+
+		if (_portletDisplayTemplatesStagedModelTypes != null) {
+			return _portletDisplayTemplatesStagedModelTypes;
 		}
 
-		List<StagedModelType> stagedModelTypes = new ArrayList<>();
+		List<StagedModelType> portletDisplayTemplateStagedModelTypes =
+			new ArrayList<>();
 
-		long ddmTemplateClassNameId = _portal.getClassNameId(DDMTemplate.class);
+		long ddmTemplateClassNameId = _getDDMTemplateClassNameId();
 
 		for (TemplateHandler templateHandler :
 				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
@@ -343,10 +381,27 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				continue;
 			}
 
-			stagedModelTypes.add(
+			portletDisplayTemplateStagedModelTypes.add(
 				new StagedModelType(
 					ddmTemplateClassNameId, className.getClassNameId()));
 		}
+
+		_portletDisplayTemplatesStagedModelTypes =
+			portletDisplayTemplateStagedModelTypes;
+
+		return _portletDisplayTemplatesStagedModelTypes;
+	}
+
+	private StagedModelType[] _getStagedModelTypes() {
+		if (_stagedModelTypes != null) {
+			return _stagedModelTypes;
+		}
+
+		List<StagedModelType> stagedModelTypes = new ArrayList<>();
+
+		stagedModelTypes.addAll(_getPortletDisplayTemplatesStagedModelTypes());
+
+		stagedModelTypes.add(_getInformationTemplatesStagedModelType());
 
 		_stagedModelTypes = stagedModelTypes.toArray(new StagedModelType[0]);
 
@@ -356,8 +411,13 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
 
+	private Long _ddmTemplateClassNameId;
+
 	@Reference
 	private DDMTemplateLocalService _ddmTemplateLocalService;
+
+	private Long _infoItemFormProviderClassNameId;
+	private StagedModelType _informationTemplatesStagedModelType;
 
 	@Reference
 	private InformationTemplatesTemplateHandler
@@ -369,6 +429,7 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 	@Reference
 	private PortletDisplayTemplate _portletDisplayTemplate;
 
+	private List<StagedModelType> _portletDisplayTemplatesStagedModelTypes;
 	private StagedModelType[] _stagedModelTypes;
 
 	@Reference
