@@ -232,7 +232,15 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		exportActionableDynamicQuery.setAddCriteriaMethod(
 			dynamicQuery -> {
-				addCriteriaMethod.addCriteria(dynamicQuery);
+				if (resourceClassNameId !=
+						_getInfoItemFormProviderClassNameId()) {
+
+					addCriteriaMethod.addCriteria(dynamicQuery);
+				}
+				else {
+					portletDataContext.addDateRangeCriteria(
+						dynamicQuery, "modifiedDate");
+				}
 
 				if (classNameIds != null) {
 					Property classNameIdProperty = PropertyFactoryUtil.forName(
