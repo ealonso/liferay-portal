@@ -797,27 +797,8 @@ public class AssetListAssetEntryProviderImpl
 	}
 
 	private List<AssetEntry> _getManualAssetEntries(
-		AssetListEntry assetListEntry, long[] segmentsEntryIds, int start,
-		int end) {
-
-		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels =
-			_getAssetListEntryAssetEntryRels(
-				assetListEntry, segmentsEntryIds, start, end);
-
-		return ListUtil.toList(
-			assetListEntryAssetEntryRels,
-			assetListEntryAssetEntryRel -> _assetEntryLocalService.fetchEntry(
-				assetListEntryAssetEntryRel.getAssetEntryId()));
-	}
-
-	private List<AssetEntry> _getManualAssetEntries(
 		AssetListEntry assetListEntry, long[] segmentsEntryIds,
 		long[][] assetCategoryIds, int start, int end) {
-
-		if (ArrayUtil.isEmpty(assetCategoryIds)) {
-			return _getManualAssetEntries(
-				assetListEntry, segmentsEntryIds, start, end);
-		}
 
 		SearchContext searchContext = new SearchContext();
 
