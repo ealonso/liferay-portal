@@ -21,7 +21,6 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
-import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.list.asset.entry.provider.AssetListAssetEntryProvider;
@@ -847,16 +846,6 @@ public class AssetListAssetEntryProviderImpl
 		AssetListEntry assetListEntry, long[] segmentsEntryIds,
 		long[][] assetCategoryIds) {
 
-		if (ArrayUtil.isEmpty(assetCategoryIds)) {
-			return _assetListEntryAssetEntryRelLocalService.
-				getAssetListEntryAssetEntryRelsCount(
-					assetListEntry.getAssetListEntryId(),
-					new long[] {
-						_getFirstSegmentsEntryId(
-							assetListEntry, segmentsEntryIds)
-					});
-		}
-
 		SearchContext searchContext = new SearchContext();
 
 		List<AssetListEntryAssetEntryRel> assetListEntryAssetEntryRels =
@@ -1145,9 +1134,6 @@ public class AssetListAssetEntryProviderImpl
 
 	@Reference
 	private AssetCategoryLocalService _assetCategoryLocalService;
-
-	@Reference
-	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
 	private AssetHelper _assetHelper;
