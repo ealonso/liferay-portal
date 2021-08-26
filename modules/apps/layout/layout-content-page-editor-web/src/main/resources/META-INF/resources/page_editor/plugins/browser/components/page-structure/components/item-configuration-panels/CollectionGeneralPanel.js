@@ -176,6 +176,15 @@ export const CollectionGeneralPanel = ({item}) => {
 			numberOfItemsPerPage: event.target.value,
 		});
 
+	const handleCollectionSelect = (collection = {}) => {
+		handleConfigurationChanged({
+			collection: Object.keys(collection).length ? collection : null,
+			listItemStyle: null,
+			listStyle: LIST_STYLE_GRID,
+			templateKey: null,
+		});
+	};
+
 	const shouldPreventCollectionSelect = () => {
 		const state = getState();
 
@@ -377,16 +386,7 @@ export const CollectionGeneralPanel = ({item}) => {
 				collectionItem={item.config.collection}
 				itemSelectorURL={config.collectionSelectorURL}
 				label={Liferay.Language.get('collection')}
-				onCollectionSelect={(collection = {}) =>
-					handleConfigurationChanged({
-						collection: Object.keys(collection).length
-							? collection
-							: null,
-						listItemStyle: null,
-						listStyle: LIST_STYLE_GRID,
-						templateKey: null,
-					})
-				}
+				onCollectionSelect={handleCollectionSelect}
 				optionsMenuItems={optionsMenuItems}
 				shouldPreventCollectionSelect={shouldPreventCollectionSelect}
 			/>
