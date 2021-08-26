@@ -102,4 +102,12 @@ export default {
 			onNetworkStatus
 		);
 	},
+
+	getCollectionSupportedFilters(collections) {
+		return serviceFetch(config.getCollectionSupportedFiltersURL, {
+			body: {
+				collections: JSON.stringify(collections),
+			},
+		});
+	},
 };

@@ -103,398 +103,55 @@ public class GetCollectionSupportedFiltersMVCResourceCommand
 			ResourceRequest resourceRequest, ResourceResponse resourceResponse)
 		throws Exception {
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		String collections =
+			ParamUtil.getString(resourceRequest, "collections");
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray(collections);
 
-		String languageId = ParamUtil.getString(
-			resourceRequest, "languageId", themeDisplay.getLanguageId());
-
-		int activePage = ParamUtil.getInteger(resourceRequest, "activePage");
-		String layoutObjectReference = ParamUtil.getString(
-			resourceRequest, "layoutObjectReference");
-		String listStyle = ParamUtil.getString(resourceRequest, "listStyle");
-		String listItemStyle = ParamUtil.getString(
-			resourceRequest, "listItemStyle");
-		int numberOfItems = ParamUtil.getInteger(
-			resourceRequest, "numberOfItems");
-
-		int numberOfItemsPerPage = ParamUtil.getInteger(
-			resourceRequest, "numberOfItemsPerPage");
-
-		if (numberOfItemsPerPage >
-				PropsValues.SEARCH_CONTAINER_PAGE_MAX_DELTA) {
-
-			numberOfItemsPerPage = PropsValues.SEARCH_CONTAINER_PAGE_MAX_DELTA;
+		/* Ejemplo de jsonArray que llega
+		*
+		* [
+	{
+		"collectionId": "fd85edee-e5f5-545f-faac-712724c2742a",
+		"layoutObjectReference": {
+			"itemType": "com.liferay.asset.kernel.model.AssetEntry",
+			"title": "Most Viewed Assets",
+			"type": "com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType",
+			"key": "com.liferay.asset.internal.info.collection.provider.MostViewedAssetsInfoCollectionProvider"
 		}
-
-		String paginationType = ParamUtil.getString(
-			resourceRequest, "paginationType");
-		String templateKey = ParamUtil.getString(
-			resourceRequest, "templateKey");
-
-		try {
-			jsonObject = _getCollectionFieldsJSONObject(
-				_portal.getHttpServletRequest(resourceRequest),
-				_portal.getHttpServletResponse(resourceResponse), activePage,
-				languageId, layoutObjectReference, listStyle, listItemStyle,
-				resourceResponse.getNamespace(), numberOfItems,
-				numberOfItemsPerPage, paginationType, templateKey);
+	},
+	{
+		"collectionId": "627d0038-0258-44aa-1bd1-cee6de63f40f",
+		"layoutObjectReference": {
+			"itemType": "com.liferay.asset.kernel.model.AssetEntry",
+			"title": "Highest Rated Assets",
+			"type": "com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType",
+			"key": "com.liferay.asset.internal.info.collection.provider.HighestRatedAssetsInfoCollectionProvider"
 		}
-		catch (Exception exception) {
-			_log.error("Unable to get collection field", exception);
-
-			jsonObject.put(
-				"error",
-				LanguageUtil.get(
-					themeDisplay.getRequest(), "an-unexpected-error-occurred"));
+	},
+	{
+		"collectionId": "e846085e-e496-7ed1-77a5-22ebfb5d504e",
+		"layoutObjectReference": {
+			"itemType": "com.liferay.asset.kernel.model.AssetEntry",
+			"title": "Recent Content",
+			"type": "com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType",
+			"key": "com.liferay.asset.internal.info.collection.provider.RecentContentInfoCollectionProvider"
 		}
-
-		JSONPortletResponseUtil.writeJSON(
-			resourceRequest, resourceResponse, jsonObject);
 	}
+]
+* * */
 
-	private JSONObject _getCollectionFieldsJSONObject(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse, int activePage,
-			String languageId, String layoutObjectReference, String listStyle,
-			String listItemStyle, String namespace, int numberOfItems,
-			int numberOfItemsPerPage, String paginationType, String templateKey)
-		throws PortalException {
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		JSONObject layoutObjectReferenceJSONObject =
-			JSONFactoryUtil.createJSONObject(layoutObjectReference);
+		// Lo que deberia devolver:
 
-		String type = layoutObjectReferenceJSONObject.getString("type");
-
-		LayoutListRetriever<?, ListObjectReference> layoutListRetriever =
-			(LayoutListRetriever<?, ListObjectReference>)
-				_layoutListRetrieverTracker.getLayoutListRetriever(type);
-
-		if (layoutListRetriever != null) {
-			ListObjectReferenceFactory<?> listObjectReferenceFactory =
-				_listObjectReferenceFactoryTracker.getListObjectReference(type);
-
-			if (listObjectReferenceFactory != null) {
-				DefaultLayoutListRetrieverContext
-					defaultLayoutListRetrieverContext =
-						new DefaultLayoutListRetrieverContext();
-
-				defaultLayoutListRetrieverContext.setConfiguration(
-					LayoutObjectReferenceUtil.getConfiguration(
-						layoutObjectReferenceJSONObject));
-
-				Object infoItem = _getInfoItem(httpServletRequest);
-
-				if (infoItem != null) {
-					defaultLayoutListRetrieverContext.setContextObject(
-						infoItem);
-				}
-
-				ListObjectReference listObjectReference =
-					listObjectReferenceFactory.getListObjectReference(
-						layoutObjectReferenceJSONObject);
-
-				int end = numberOfItems;
-				int start = 0;
-
-				int listCount = layoutListRetriever.getListCount(
-					listObjectReference, defaultLayoutListRetrieverContext);
-
-				if (Objects.equals(paginationType, "numeric") ||
-					Objects.equals(paginationType, "simple")) {
-
-					if (activePage < 1) {
-						activePage = 1;
-					}
-
-					end = Math.min(
-						Math.min(
-							activePage * numberOfItemsPerPage, numberOfItems),
-						listCount);
-
-					start = (activePage - 1) * numberOfItemsPerPage;
-				}
-
-				defaultLayoutListRetrieverContext.setPagination(
-					Pagination.of(end, start));
-
-				// LPS-111037
-
-				String itemType = listObjectReference.getItemType();
-
-				if (Objects.equals(
-						DLFileEntryConstants.getClassName(), itemType)) {
-
-					itemType = FileEntry.class.getName();
-				}
-
-				InfoItemFieldValuesProvider<Object>
-					infoItemFieldValuesProvider =
-						(InfoItemFieldValuesProvider<Object>)
-							_infoItemServiceTracker.getFirstInfoItemService(
-								InfoItemFieldValuesProvider.class, itemType);
-
-				if (infoItemFieldValuesProvider == null) {
-					if (_log.isWarnEnabled()) {
-						_log.warn(
-							"Unable to get info item form provider for class " +
-								itemType);
-					}
-
-					return JSONFactoryUtil.createJSONObject();
-				}
-
-				JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-				List<Object> list = layoutListRetriever.getList(
-					listObjectReference, defaultLayoutListRetrieverContext);
-
-				for (Object object : list) {
-					jsonArray.put(
-						_getDisplayObjectJSONObject(
-							infoItemFieldValuesProvider, object,
-							LocaleUtil.fromLanguageId(languageId)));
-				}
-
-				InfoListRenderer<Object> infoListRenderer =
-					(InfoListRenderer<Object>)
-						_infoListRendererTracker.getInfoListRenderer(listStyle);
-
-				if (infoListRenderer != null) {
-					UnsyncStringWriter unsyncStringWriter =
-						new UnsyncStringWriter();
-
-					HttpServletResponse pipingHttpServletResponse =
-						new PipingServletResponse(
-							httpServletResponse, unsyncStringWriter);
-
-					DefaultInfoListRendererContext
-						defaultInfoListRendererContext =
-							new DefaultInfoListRendererContext(
-								httpServletRequest, pipingHttpServletResponse);
-
-					defaultInfoListRendererContext.setListItemRendererKey(
-						listItemStyle);
-					defaultInfoListRendererContext.setTemplateKey(templateKey);
-
-					infoListRenderer.render(
-						list, defaultInfoListRendererContext);
-
-					jsonObject.put("content", unsyncStringWriter.toString());
-				}
-
-				jsonObject.put(
-					"customCollectionSelectorURL",
-					_getCustomCollectionSelectorURL(
-						httpServletRequest, itemType, namespace)
-				).put(
-					"items", jsonArray
-				).put(
-					"length",
-					layoutListRetriever.getListCount(
-						listObjectReference, defaultLayoutListRetrieverContext)
-				).put(
-					"totalNumberOfItems", Math.min(listCount, numberOfItems)
-				);
-			}
-		}
-
-		return jsonObject;
-	}
-
-	private String _getCustomCollectionSelectorURL(
-		HttpServletRequest httpServletRequest, String itemType,
-		String namespace) {
-
-		InfoListItemSelectorCriterion infoListItemSelectorCriterion =
-			new InfoListItemSelectorCriterion();
-
-		infoListItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			new InfoListItemSelectorReturnType());
-		infoListItemSelectorCriterion.setItemTypes(
-			_getInfoItemFormProviderClassNames());
-
-		InfoCollectionProviderItemSelectorCriterion
-			infoCollectionProviderItemSelectorCriterion =
-				new InfoCollectionProviderItemSelectorCriterion();
-
-		infoCollectionProviderItemSelectorCriterion.
-			setDesiredItemSelectorReturnTypes(
-				new InfoListProviderItemSelectorReturnType());
-		infoCollectionProviderItemSelectorCriterion.setItemTypes(
-			_getInfoItemFormProviderClassNames());
-
-		RelatedInfoItemCollectionProviderItemSelectorCriterion
-			relatedInfoItemCollectionProviderItemSelectorCriterion =
-				new RelatedInfoItemCollectionProviderItemSelectorCriterion();
-
-		relatedInfoItemCollectionProviderItemSelectorCriterion.
-			setDesiredItemSelectorReturnTypes(
-				new InfoListProviderItemSelectorReturnType());
-
-		List<String> sourceItemTypes = new ArrayList<>();
-
-		sourceItemTypes.add(itemType);
-
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				itemType);
-
-		if (assetRendererFactory != null) {
-			sourceItemTypes.add(AssetEntry.class.getName());
-		}
-
-		relatedInfoItemCollectionProviderItemSelectorCriterion.
-			setSourceItemTypes(sourceItemTypes);
-
-		PortletURL infoListSelectorURL = _itemSelector.getItemSelectorURL(
-			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
-			namespace + "selectInfoList", infoListItemSelectorCriterion,
-			infoCollectionProviderItemSelectorCriterion,
-			relatedInfoItemCollectionProviderItemSelectorCriterion);
-
-		if (infoListSelectorURL == null) {
-			return StringPool.BLANK;
-		}
-
-		return infoListSelectorURL.toString();
-	}
-
-	private JSONObject _getDisplayObjectJSONObject(
-		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider,
-		Object object, Locale locale) {
-
-		JSONObject displayObjectJSONObject = JSONFactoryUtil.createJSONObject();
-
-		InfoItemFieldValues infoItemFieldValues =
-			infoItemFieldValuesProvider.getInfoItemFieldValues(object);
-
-		for (InfoFieldValue<Object> infoFieldValue :
-				infoItemFieldValues.getInfoFieldValues()) {
-
-			Object value = infoFieldValue.getValue(locale);
-
-			if (value instanceof ContentAccessor) {
-				ContentAccessor contentAccessor = (ContentAccessor)value;
-
-				value = contentAccessor.getContent();
-			}
-
-			if (value instanceof WebImage) {
-				WebImage webImage = (WebImage)value;
-
-				value = webImage.toJSONObject();
-
-				long fileEntryId = _getFileEntryId(webImage);
-
-				if (fileEntryId != 0) {
-					JSONObject valueJSONObject = (JSONObject)value;
-
-					valueJSONObject.put(
-						"fileEntryId", String.valueOf(fileEntryId));
-				}
-			}
-			else {
-				value = _fragmentEntryProcessorHelper.formatMappedValue(
-					value, locale);
-			}
-
-			InfoField infoField = infoFieldValue.getInfoField();
-
-			displayObjectJSONObject.put(infoField.getName(), value);
-		}
-
-		InfoItemReference infoItemReference =
-			infoItemFieldValues.getInfoItemReference();
-
-		if (infoItemReference != null) {
-			displayObjectJSONObject.put(
-				"className", infoItemReference.getClassName()
-			).put(
-				"classNameId",
-				_portal.getClassNameId(infoItemReference.getClassName())
-			).put(
-				"classPK", infoItemReference.getClassPK()
-			);
-		}
-
-		return displayObjectJSONObject;
-	}
-
-	private long _getFileEntryId(WebImage webImage) {
-		InfoItemReference infoItemReference = webImage.getInfoItemReference();
-
-		if ((infoItemReference == null) ||
-			!Objects.equals(
-				infoItemReference.getClassName(), FileEntry.class.getName())) {
-
-			return 0;
-		}
-
-		InfoItemIdentifier fileEntryInfoItemIdentifier =
-			infoItemReference.getInfoItemIdentifier();
-
-		if (!(fileEntryInfoItemIdentifier instanceof
-				ClassPKInfoItemIdentifier)) {
-
-			return 0;
-		}
-
-		ClassPKInfoItemIdentifier classPKInfoItemIdentifier =
-			(ClassPKInfoItemIdentifier)fileEntryInfoItemIdentifier;
-
-		return classPKInfoItemIdentifier.getClassPK();
-	}
-
-	private Object _getInfoItem(HttpServletRequest httpServletRequest) {
-		long classNameId = ParamUtil.getLong(httpServletRequest, "classNameId");
-		long classPK = ParamUtil.getLong(httpServletRequest, "classPK");
-
-		if ((classNameId <= 0) && (classPK <= 0)) {
-			return null;
-		}
-
-		InfoItemObjectProvider<Object> infoItemObjectProvider =
-			(InfoItemObjectProvider<Object>)
-				_infoItemServiceTracker.getFirstInfoItemService(
-					InfoItemObjectProvider.class,
-					_portal.getClassName(classNameId));
-
-		if (infoItemObjectProvider == null) {
-			return null;
-		}
-
-		ClassPKInfoItemIdentifier classPKInfoItemIdentifier =
-			new ClassPKInfoItemIdentifier(classPK);
-
-		try {
-			return infoItemObjectProvider.getInfoItem(
-				classPKInfoItemIdentifier);
-		}
-		catch (NoSuchInfoItemException noSuchInfoItemException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(noSuchInfoItemException, noSuchInfoItemException);
-			}
-		}
-
-		return null;
-	}
-
-	private List<String> _getInfoItemFormProviderClassNames() {
-		List<String> infoItemClassNames =
-			_infoItemServiceTracker.getInfoItemClassNames(
-				InfoItemFormProvider.class);
-
-		if (infoItemClassNames.contains(FileEntry.class.getName())) {
-			infoItemClassNames.add(DLFileEntryConstants.getClassName());
-			infoItemClassNames.remove(FileEntry.class.getName());
-		}
-
-		return infoItemClassNames;
+		/*
+		{
+			"e846085e-e496-7ed1-77a5-22ebfb5d504e": ["keywords", "category"],
+			"627d0038-0258-44aa-1bd1-cee6de63f40f": ["keywords"],
+			"fd85edee-e5f5-545f-faac-712724c2742a": []
+		 */
+		System.out.println(jsonArray);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
