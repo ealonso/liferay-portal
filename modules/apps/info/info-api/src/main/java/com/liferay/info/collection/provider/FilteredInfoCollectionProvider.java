@@ -17,6 +17,8 @@ package com.liferay.info.collection.provider;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.petra.reflect.GenericUtil;
 
+import java.util.List;
+
 /**
  * @author Eudaldo Alonso
  */
@@ -32,5 +34,7 @@ public interface FilteredInfoCollectionProvider<T, F extends InfoFilter>
 
 		return clazz.getName();
 	}
+
+	public List<String> getSupportedFilters();
 
 }
