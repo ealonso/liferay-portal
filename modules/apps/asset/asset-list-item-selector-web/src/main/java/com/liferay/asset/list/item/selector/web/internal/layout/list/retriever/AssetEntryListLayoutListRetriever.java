@@ -20,6 +20,9 @@ import com.liferay.asset.list.asset.entry.provider.AssetListAssetEntryProvider;
 import com.liferay.asset.list.info.filter.AssetEntryListInfoFilter;
 import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryLocalService;
+import com.liferay.info.collection.filter.type.CategoriesInfoCollectionFilterType;
+import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
+import com.liferay.info.collection.filter.type.KeywordsInfoCollectionFilterType;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.InfoFilterProvider;
 import com.liferay.info.item.InfoItemServiceTracker;
@@ -32,6 +35,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +126,13 @@ public class AssetEntryListLayoutListRetriever
 			assetEntryListInfoFilter.getKeywords(), StringPool.BLANK);
 	}
 
+	@Override
+	public List<InfoCollectionFilterType> getSupportedInfoCollectionFilterTypes(
+		ClassedModelListObjectReference classedModelListObjectReference) {
+
+		return _supportedInfoCollectionFilterTypes;
+	}
+
 	private AssetEntryListInfoFilter _getAssetEntryListInfoFilter(
 		LayoutListRetrieverContext layoutListRetrieverContext) {
 
@@ -163,6 +174,11 @@ public class AssetEntryListLayoutListRetriever
 
 		return assetObjects;
 	}
+
+	private static final List<InfoCollectionFilterType>
+		_supportedInfoCollectionFilterTypes = Arrays.asList(
+			new CategoriesInfoCollectionFilterType(),
+			new KeywordsInfoCollectionFilterType());
 
 	@Reference
 	private AssetListAssetEntryProvider _assetListAssetEntryProvider;
