@@ -82,6 +82,13 @@ public class TemplateInfoItemFieldSetProviderImpl
 		).build();
 	}
 
+	@Override
+	public List<InfoFieldValue<Object>> getInfoFieldValues(
+		String itemClassName, Object itemObject, String itemVariationKey) {
+
+		return Collections.emptyList();
+	}
+
 	private List<DDMTemplate> _getDDMTemplates(
 		String itemClassName, String itemVariationKey) {
 
