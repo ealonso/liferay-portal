@@ -83,6 +83,34 @@ public class BlogsEntryInfoItemFieldValuesProvider
 		}
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		BlogsEntry blogsEntry) {
+
+		try {
+			return InfoItemFieldValues.builder(
+			).infoFieldValues(
+				_getBlogsEntryInfoFieldValues(blogsEntry)
+			).infoFieldValues(
+				_assetEntryInfoItemFieldSetProvider.getInfoFieldValues(
+					BlogsEntry.class.getName(), blogsEntry.getEntryId())
+			).infoFieldValues(
+				_expandoInfoItemFieldSetProvider.getInfoFieldValues(
+					BlogsEntry.class.getName(), blogsEntry)
+			).infoFieldValues(
+				_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+					BlogsEntry.class.getName(), blogsEntry)
+			).infoItemReference(
+				new InfoItemReference(
+					BlogsEntry.class.getName(), blogsEntry.getEntryId())
+			).build();
+		}
+		catch (NoSuchInfoItemException noSuchInfoItemException) {
+			throw new RuntimeException(
+				"Caught unexpected exception", noSuchInfoItemException);
+		}
+	}
+
 	private List<InfoFieldValue<Object>> _getBlogsEntryInfoFieldValues(
 		BlogsEntry blogsEntry) {
 

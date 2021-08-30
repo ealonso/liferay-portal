@@ -72,6 +72,22 @@ public class AssetCategoryInfoItemFieldValuesProvider
 		).build();
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		AssetCategory assetCategory) {
+
+		return InfoItemFieldValues.builder(
+		).infoFieldValues(
+			_getAssetCategoryInfoFieldValues(assetCategory)
+		).infoFieldValues(
+			_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+				AssetCategory.class.getName(), assetCategory)
+		).infoItemReference(
+			new InfoItemReference(
+				AssetCategory.class.getName(), assetCategory.getCategoryId())
+		).build();
+	}
+
 	private List<InfoFieldValue<Object>> _getAssetCategoryInfoFieldValues(
 		AssetCategory assetCategory) {
 

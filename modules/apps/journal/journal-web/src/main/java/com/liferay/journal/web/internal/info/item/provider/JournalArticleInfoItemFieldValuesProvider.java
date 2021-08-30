@@ -118,6 +118,40 @@ public class JournalArticleInfoItemFieldValuesProvider
 		}
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		JournalArticle journalArticle) {
+
+		try {
+			return InfoItemFieldValues.builder(
+			).infoFieldValues(
+				_getJournalArticleInfoFieldValues(journalArticle)
+			).infoFieldValues(
+				_assetEntryInfoItemFieldSetProvider.getInfoFieldValues(
+					JournalArticle.class.getName(),
+					journalArticle.getResourcePrimKey())
+			).infoFieldValues(
+				_expandoInfoItemFieldSetProvider.getInfoFieldValues(
+					JournalArticle.class.getName(), journalArticle)
+			).infoFieldValues(
+				_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+					JournalArticle.class.getName(), journalArticle)
+			).infoFieldValues(
+				_getDDMStructureInfoFieldValues(journalArticle)
+			).infoFieldValues(
+				_getDDMTemplateInfoFieldValues(journalArticle)
+			).infoItemReference(
+				new InfoItemReference(
+					JournalArticle.class.getName(),
+					journalArticle.getResourcePrimKey())
+			).build();
+		}
+		catch (NoSuchInfoItemException noSuchInfoItemException) {
+			throw new RuntimeException(
+				"Caught unexpected exception", noSuchInfoItemException);
+		}
+	}
+
 	private List<InfoFieldValue<Object>> _getDDMStructureInfoFieldValues(
 		JournalArticle article) {
 

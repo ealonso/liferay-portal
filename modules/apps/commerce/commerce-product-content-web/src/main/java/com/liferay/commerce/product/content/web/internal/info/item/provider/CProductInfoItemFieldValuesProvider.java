@@ -67,6 +67,25 @@ public class CProductInfoItemFieldValuesProvider
 		).build();
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		CProduct cProduct) {
+
+		return InfoItemFieldValues.builder(
+		).infoFieldValues(
+			_getCProductInfoFieldValues(cProduct)
+		).infoFieldValues(
+			_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+				CProduct.class.getName(), cProduct)
+		).infoFieldValues(
+			_templateInfoItemFieldSetProvider.getInfoFieldValues(
+				CProduct.class.getName(), cProduct, "0")
+		).infoItemReference(
+			new InfoItemReference(
+				CProduct.class.getName(), cProduct.getCProductId())
+		).build();
+	}
+
 	private List<InfoFieldValue<Object>> _getCProductInfoFieldValues(
 		CProduct cProduct) {
 

@@ -73,6 +73,26 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		).build();
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		ObjectEntry objectEntry) {
+
+		return InfoItemFieldValues.builder(
+		).infoFieldValues(
+			_getObjectEntryInfoFieldValues(objectEntry)
+		).infoFieldValues(
+			_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+				ObjectEntry.class.getName(), objectEntry)
+		).infoFieldValues(
+			_templateInfoItemFieldSetProvider.getInfoFieldValues(
+				ObjectEntry.class.getName(), objectEntry,
+				String.valueOf(objectEntry.getObjectDefinitionId()))
+		).infoItemReference(
+			new InfoItemReference(
+				ObjectEntry.class.getName(), objectEntry.getObjectEntryId())
+		).build();
+	}
+
 	private String _getDisplayPageURL(
 			ObjectEntry objectEntry, ThemeDisplay themeDisplay)
 		throws PortalException {

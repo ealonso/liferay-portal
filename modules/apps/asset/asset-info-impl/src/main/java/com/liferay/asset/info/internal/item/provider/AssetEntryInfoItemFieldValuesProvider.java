@@ -70,6 +70,21 @@ public class AssetEntryInfoItemFieldValuesProvider
 		).build();
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		AssetEntry assetEntry) {
+
+		return InfoItemFieldValues.builder(
+		).infoFieldValues(
+			_assetEntryInfoItemFieldSetProvider.getInfoFieldValues(assetEntry)
+		).infoFieldValues(
+			_getAssetEntryInfoFieldValues(assetEntry)
+		).infoItemReference(
+			new InfoItemReference(
+				AssetEntry.class.getName(), assetEntry.getEntryId())
+		).build();
+	}
+
 	private List<InfoFieldValue<Object>> _getAssetEntryInfoFieldValues(
 		AssetEntry assetEntry) {
 

@@ -96,6 +96,34 @@ public class FileEntryInfoItemFieldValuesProvider
 		}
 	}
 
+	@Override
+	public InfoItemFieldValues getTemplateInfoItemFieldValues(
+		FileEntry fileEntry) {
+
+		try {
+			return InfoItemFieldValues.builder(
+			).infoFieldValues(
+				_getFileEntryInfoFieldValues(fileEntry)
+			).infoFieldValues(
+				_getAssetEntryInfoFieldValues(fileEntry)
+			).infoFieldValues(
+				_getDDMStructureInfoFieldValues(fileEntry)
+			).infoFieldValues(
+				_getExpandoInfoFieldValues(fileEntry)
+			).infoFieldValues(
+				_infoItemFieldReaderFieldSetProvider.getInfoFieldValues(
+					FileEntry.class.getName(), fileEntry)
+			).infoItemReference(
+				new InfoItemReference(
+					FileEntry.class.getName(), fileEntry.getFileEntryId())
+			).build();
+		}
+		catch (PortalException portalException) {
+			throw new RuntimeException(
+				"Caught unexpected exception", portalException);
+		}
+	}
+
 	private List<InfoFieldValue<Object>> _getAssetEntryInfoFieldValues(
 			FileEntry fileEntry)
 		throws NoSuchInfoItemException {
