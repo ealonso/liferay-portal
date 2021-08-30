@@ -15,14 +15,19 @@
 package com.liferay.asset.list.internal.info.filter;
 
 import com.liferay.asset.list.info.filter.AssetEntryListInfoFilter;
+import com.liferay.info.collection.filter.type.CategoriesInfoCollectionFilterType;
+import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
+import com.liferay.info.collection.filter.type.KeywordsInfoCollectionFilterType;
 import com.liferay.info.filter.InfoFilterProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,6 +50,13 @@ public class AssetEntryListInfoFilterProvider
 		assetEntryListInfoFilter.setKeywords(_getKeywords(values));
 
 		return assetEntryListInfoFilter;
+	}
+
+	@Override
+	public List<InfoCollectionFilterType>
+		getSupportedInfoCollectionFilterTypes() {
+
+		return _supportedInfoCollectionFilterTypes;
 	}
 
 	private long[][] _getAssetCategoryIds(Map<String, String[]> values) {
@@ -78,5 +90,10 @@ public class AssetEntryListInfoFilterProvider
 
 		return StringUtil.merge(keywordsSet, StringPool.SPACE);
 	}
+
+	private static final List<InfoCollectionFilterType>
+		_supportedInfoCollectionFilterTypes = Arrays.asList(
+			new CategoriesInfoCollectionFilterType(),
+			new KeywordsInfoCollectionFilterType());
 
 }
