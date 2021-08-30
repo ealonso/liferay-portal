@@ -44,4 +44,8 @@ public interface InfoItemFieldValuesProvider<T> {
 
 	public InfoItemFieldValues getInfoItemFieldValues(T t);
 
+	public default InfoItemFieldValues getTemplateInfoItemFieldValues(T t) {
+		return getInfoItemFieldValues(t);
+	}
+
 }
