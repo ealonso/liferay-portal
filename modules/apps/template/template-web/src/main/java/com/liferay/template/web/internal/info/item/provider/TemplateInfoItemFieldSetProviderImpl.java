@@ -18,6 +18,7 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.InfoFieldValue;
+import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -54,7 +55,9 @@ public class TemplateInfoItemFieldSetProviderImpl
 			consumer -> {
 				for (TemplateInfoItemFieldReader templateInfoItemFieldReader :
 						_getTemplateInfoItemFieldReaders(
-							itemClassName, itemVariationKey)) {
+							itemClassName, itemVariationKey,
+							InfoItemFieldValues.builder(
+							).build())) {
 
 					consumer.accept(templateInfoItemFieldReader.getInfoField());
 				}
@@ -74,7 +77,9 @@ public class TemplateInfoItemFieldSetProviderImpl
 
 		for (TemplateInfoItemFieldReader templateInfoItemFieldReader :
 				_getTemplateInfoItemFieldReaders(
-					itemClassName, itemVariationKey)) {
+					itemClassName, itemVariationKey,
+					InfoItemFieldValues.builder(
+					).build())) {
 
 			InfoFieldValue<Object> infoFieldValue = new InfoFieldValue<>(
 				templateInfoItemFieldReader.getInfoField(),
@@ -98,7 +103,8 @@ public class TemplateInfoItemFieldSetProviderImpl
 	}
 
 	private List<TemplateInfoItemFieldReader> _getTemplateInfoItemFieldReaders(
-		String itemClassName, String itemVariationKey) {
+		String itemClassName, String itemVariationKey,
+		InfoItemFieldValues infoItemFieldValues) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -124,7 +130,8 @@ public class TemplateInfoItemFieldSetProviderImpl
 					ddmTemplate.getResourceClassNameId() ==
 						_getInfoItemFormProviderClassNameId()
 			).map(
-				ddmTemplate -> new TemplateInfoItemFieldReader(ddmTemplate)
+				ddmTemplate -> new TemplateInfoItemFieldReader(
+					ddmTemplate, infoItemFieldValues)
 			).collect(
 				Collectors.toList()
 			);
