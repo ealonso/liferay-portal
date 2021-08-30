@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 import com.liferay.template.web.internal.info.item.field.reader.TemplateInfoItemFieldReader;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +70,20 @@ public class TemplateInfoItemFieldSetProviderImpl
 	public List<InfoFieldValue<Object>> getInfoFieldValues(
 		String itemClassName, Object itemObject, String itemVariationKey) {
 
-		return Collections.emptyList();
+		List<InfoFieldValue<Object>> infoFieldValues = new ArrayList<>();
+
+		for (TemplateInfoItemFieldReader templateInfoItemFieldReader :
+				_getTemplateInfoItemFieldReaders(
+					itemClassName, itemVariationKey)) {
+
+			InfoFieldValue<Object> infoFieldValue = new InfoFieldValue<>(
+				templateInfoItemFieldReader.getInfoField(),
+				templateInfoItemFieldReader.getValue(itemObject));
+
+			infoFieldValues.add(infoFieldValue);
+		}
+
+		return infoFieldValues;
 	}
 
 	private long _getInfoItemFormProviderClassNameId() {
