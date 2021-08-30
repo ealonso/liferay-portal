@@ -16,9 +16,8 @@ package com.liferay.template.web.internal.info.item.provider;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
-import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSet;
-import com.liferay.info.field.type.TextInfoFieldType;
+import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -26,9 +25,9 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
+import com.liferay.template.web.internal.info.item.field.reader.TemplateInfoItemFieldReader;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,27 +51,11 @@ public class TemplateInfoItemFieldSetProviderImpl
 		return InfoFieldSet.builder(
 		).infoFieldSetEntry(
 			consumer -> {
-				for (DDMTemplate ddmTemplate :
-						_getDDMTemplates(itemClassName, itemVariationKey)) {
+				for (TemplateInfoItemFieldReader templateInfoItemFieldReader :
+						_getTemplateInfoItemFieldReaders(
+							itemClassName, itemVariationKey)) {
 
-					InfoLocalizedValue<String> labelInfoLocalizedValue =
-						InfoLocalizedValue.<String>builder(
-						).value(
-							LocaleUtil.getDefault(),
-							ddmTemplate.getName(LocaleUtil.getDefault())
-						).defaultLocale(
-							LocaleUtil.getDefault()
-						).build();
-
-					consumer.accept(
-						InfoField.builder(
-						).infoFieldType(
-							TextInfoFieldType.INSTANCE
-						).name(
-							"informationTemplate_" + ddmTemplate.getTemplateId()
-						).labelInfoLocalizedValue(
-							labelInfoLocalizedValue
-						).build());
+					consumer.accept(templateInfoItemFieldReader.getInfoField());
 				}
 			}
 		).labelInfoLocalizedValue(
@@ -89,7 +72,18 @@ public class TemplateInfoItemFieldSetProviderImpl
 		return Collections.emptyList();
 	}
 
-	private List<DDMTemplate> _getDDMTemplates(
+	private long _getInfoItemFormProviderClassNameId() {
+		if (_infoItemFormProviderClassNameId != null) {
+			return _infoItemFormProviderClassNameId;
+		}
+
+		_infoItemFormProviderClassNameId = _portal.getClassNameId(
+			InfoItemFormProvider.class.getName());
+
+		return _infoItemFormProviderClassNameId;
+	}
+
+	private List<TemplateInfoItemFieldReader> _getTemplateInfoItemFieldReaders(
 		String itemClassName, String itemVariationKey) {
 
 		ServiceContext serviceContext =
@@ -115,6 +109,8 @@ public class TemplateInfoItemFieldSetProviderImpl
 				ddmTemplate ->
 					ddmTemplate.getResourceClassNameId() ==
 						_getInfoItemFormProviderClassNameId()
+			).map(
+				ddmTemplate -> new TemplateInfoItemFieldReader(ddmTemplate)
 			).collect(
 				Collectors.toList()
 			);
@@ -123,17 +119,6 @@ public class TemplateInfoItemFieldSetProviderImpl
 			throw new RuntimeException(
 				"Caught unexpected exception", portalException);
 		}
-	}
-
-	private long _getInfoItemFormProviderClassNameId() {
-		if (_infoItemFormProviderClassNameId != null) {
-			return _infoItemFormProviderClassNameId;
-		}
-
-		_infoItemFormProviderClassNameId = _portal.getClassNameId(
-			InfoItemFormProvider.class.getName());
-
-		return _infoItemFormProviderClassNameId;
 	}
 
 	@Reference
