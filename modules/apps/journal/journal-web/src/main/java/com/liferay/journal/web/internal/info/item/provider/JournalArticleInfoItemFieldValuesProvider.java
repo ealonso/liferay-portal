@@ -56,6 +56,7 @@ import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,6 +104,8 @@ public class JournalArticleInfoItemFieldValuesProvider
 				_getDDMStructureInfoFieldValues(journalArticle)
 			).infoFieldValues(
 				_getDDMTemplateInfoFieldValues(journalArticle)
+			).infoFieldValues(
+				_getTemplateInfoFieldValues(journalArticle)
 			).infoItemReference(
 				new InfoItemReference(
 					JournalArticle.class.getName(),
@@ -382,6 +385,16 @@ public class JournalArticleInfoItemFieldValuesProvider
 		return _userLocalService.fetchUser(journalArticle.getUserId());
 	}
 
+	private List<InfoFieldValue<Object>> _getTemplateInfoFieldValues(
+		JournalArticle journalArticle) {
+
+		DDMStructure ddmStructure = journalArticle.getDDMStructure();
+
+		return _templateInfoItemFieldSetProvider.getInfoFieldValues(
+			JournalArticle.class.getName(), journalArticle,
+			String.valueOf(ddmStructure.getStructureId()));
+	}
+
 	private String _getTemplateKey(DDMTemplate ddmTemplate) {
 		String templateKey = ddmTemplate.getTemplateKey();
 
@@ -437,6 +450,9 @@ public class JournalArticleInfoItemFieldValuesProvider
 
 	@Reference
 	private JournalConverter _journalConverter;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 	@Reference
 	private UserLocalService _userLocalService;
