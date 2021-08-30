@@ -17,6 +17,7 @@ package com.liferay.info.collection.provider.item.selector.web.internal.layout.l
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
@@ -213,6 +214,46 @@ public class InfoCollectionProviderLayoutListRetriever
 			collectionQuery);
 
 		return infoPage.getTotalCount();
+	}
+
+	@Override
+	public List<InfoCollectionFilterType> getSupportedInfoCollectionFilterTypes(
+		KeyListObjectReference keyListObjectReference) {
+
+		InfoCollectionProvider<Object> infoCollectionProvider =
+			_infoItemServiceTracker.getInfoItemService(
+				InfoCollectionProvider.class, keyListObjectReference.getKey());
+
+		if (infoCollectionProvider == null) {
+			infoCollectionProvider = _infoItemServiceTracker.getInfoItemService(
+				RelatedInfoItemCollectionProvider.class,
+				keyListObjectReference.getKey());
+		}
+
+		if (infoCollectionProvider == null) {
+			return Collections.emptyList();
+		}
+
+		if (infoCollectionProvider instanceof FilteredInfoCollectionProvider) {
+			FilteredInfoCollectionProvider<Object, InfoFilter>
+				filteredInfoCollectionProvider =
+					(FilteredInfoCollectionProvider<Object, InfoFilter>)
+						infoCollectionProvider;
+
+			InfoFilterProvider<?> infoFilterProvider =
+				_infoItemServiceTracker.getFirstInfoItemService(
+					InfoFilterProvider.class,
+					filteredInfoCollectionProvider.getInfoFilterClassName());
+
+			if (infoFilterProvider != null) {
+				return infoFilterProvider.
+					getSupportedInfoCollectionFilterTypes();
+			}
+
+			return null;
+		}
+
+		return Collections.emptyList();
 	}
 
 	private AssetEntry _getAssetEntryOptional(Object contextObject) {
