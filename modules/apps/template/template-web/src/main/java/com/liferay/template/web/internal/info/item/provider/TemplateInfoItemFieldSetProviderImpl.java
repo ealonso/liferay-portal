@@ -19,6 +19,8 @@ import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.item.InfoItemFieldValues;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -73,13 +75,24 @@ public class TemplateInfoItemFieldSetProviderImpl
 	public List<InfoFieldValue<Object>> getInfoFieldValues(
 		String itemClassName, Object itemObject, String itemVariationKey) {
 
+		InfoItemFieldValues infoItemFieldValues = InfoItemFieldValues.builder(
+		).build();
+
+		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFieldValuesProvider.class, itemClassName);
+
+		if (infoItemFieldValuesProvider != null) {
+			infoItemFieldValues =
+				infoItemFieldValuesProvider.getTemplateInfoItemFieldValues(
+					itemObject);
+		}
+
 		List<InfoFieldValue<Object>> infoFieldValues = new ArrayList<>();
 
 		for (TemplateInfoItemFieldReader templateInfoItemFieldReader :
 				_getTemplateInfoItemFieldReaders(
-					itemClassName, itemVariationKey,
-					InfoItemFieldValues.builder(
-					).build())) {
+					itemClassName, itemVariationKey, infoItemFieldValues)) {
 
 			InfoFieldValue<Object> infoFieldValue = new InfoFieldValue<>(
 				templateInfoItemFieldReader.getInfoField(),
@@ -146,6 +159,9 @@ public class TemplateInfoItemFieldSetProviderImpl
 	private DDMTemplateLocalService _ddmTemplateLocalService;
 
 	private Long _infoItemFormProviderClassNameId;
+
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private Portal _portal;
