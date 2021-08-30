@@ -20,6 +20,8 @@ import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.item.field.reader.LocalizedInfoItemFieldReader;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.template.web.internal.portlet.template.TemplateDisplayTemplateTransformer;
 
@@ -74,10 +76,20 @@ public class TemplateInfoItemFieldReader
 	@Override
 	public Object getValue(Object model, Locale locale) {
 		TemplateDisplayTemplateTransformer templateDisplayTemplateTransformer =
-			new TemplateDisplayTemplateTransformer( _ddmTemplate);
-	
-		return templateDisplayTemplateTransformer.transform();
+			new TemplateDisplayTemplateTransformer(_ddmTemplate);
+
+		try {
+			return templateDisplayTemplateTransformer.transform();
+		}
+		catch (Exception exception) {
+			_log.error("Unable to transform template", exception);
+		}
+
+		return StringPool.BLANK;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		TemplateInfoItemFieldReader.class);
 
 	private final DDMTemplate _ddmTemplate;
 

@@ -15,7 +15,13 @@
 package com.liferay.template.web.internal.portlet.template;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
-import com.liferay.petra.string.StringPool;
+import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.template.TemplateHandler;
+import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.templateparser.Transformer;
 
@@ -28,8 +34,23 @@ public class TemplateDisplayTemplateTransformer {
 		_ddmTemplate = ddmTemplate;
 	}
 
-	public String transform()  {
-		return StringPool.BLANK;
+	public String transform() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
+		Transformer transformer = TransformerHolder.getTransformer();
+
+		TemplateHandler templateHandler =
+			TemplateHandlerRegistryUtil.getTemplateHandler(
+				InfoItemFormProvider.class.getName());
+
+		return transformer.transform(
+			themeDisplay, templateHandler.getCustomContextObjects(),
+			_ddmTemplate.getScript(), _ddmTemplate.getLanguage(),
+			new UnsyncStringWriter(), themeDisplay.getRequest(),
+			themeDisplay.getResponse());
 	}
 
 	private final DDMTemplate _ddmTemplate;
