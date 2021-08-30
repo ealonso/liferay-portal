@@ -63,7 +63,11 @@ public class AssetEntryListInfoFilterProvider
 		Set<long[]> assetCategoryIdsSet = new HashSet<>();
 
 		for (Map.Entry<String, String[]> entry : values.entrySet()) {
-			if (!StringUtil.startsWith(entry.getKey(), "category_")) {
+			if (!StringUtil.startsWith(
+					entry.getKey(),
+					CategoriesInfoCollectionFilterType.FILTER_TYPE +
+						StringPool.UNDERLINE)) {
+
 				continue;
 			}
 
@@ -81,7 +85,11 @@ public class AssetEntryListInfoFilterProvider
 		Set<String> keywordsSet = new HashSet<>();
 
 		for (Map.Entry<String, String[]> entry : values.entrySet()) {
-			if (!StringUtil.startsWith(entry.getKey(), "keywords_")) {
+			if (!StringUtil.startsWith(
+					entry.getKey(),
+					KeywordsInfoCollectionFilterType.FILTER_TYPE +
+						StringPool.UNDERLINE)) {
+
 				continue;
 			}
 
