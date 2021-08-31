@@ -15,11 +15,12 @@
 import ClayButton from '@clayui/button';
 import ClayDropDown from '@clayui/drop-down';
 import ClayForm, {ClayCheckbox} from '@clayui/form';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {LAYOUT_DATA_ITEM_TYPES} from '../../config/constants/layoutDataItemTypes';
 import {useHoverItem} from '../../contexts/ControlsContext';
-import {useSelectorCallback} from '../../contexts/StoreContext';
+import {useSelector, useSelectorCallback} from '../../contexts/StoreContext';
+import CollectionService from '../../services/CollectionService';
 import {isLayoutDataItemDeleted} from '../../utils/isLayoutDataItemDeleted';
 import {useId} from '../../utils/useId';
 
@@ -73,17 +74,28 @@ export function TargetCollectionsField({onValueSelect, value}) {
 		}
 	};
 
-	const items = useSelectorCallback(
-		(state) =>
-			selectConfiguredCollectionDisplays(state).map((item) => ({
-				checked: nextValue.includes(item.itemId),
-				label: item.config.collection.title,
-				onChange: (checked) => handleChange(item.itemId, checked),
-				type: 'checkbox',
-				value: item.itemId,
-			})),
-		[nextValue]
+	const targetCollectionItems = useSelector(
+		selectConfiguredCollectionDisplays
 	);
+
+	const items = targetCollectionItems.map((item) => ({
+		checked: nextValue.includes(item.itemId),
+		label: item.config.collection.title,
+		onChange: (checked) => handleChange(item.itemId, checked),
+		type: 'checkbox',
+		value: item.itemId,
+	}));
+
+	const [supportedFilters, setSupportedFilters] = useState({});
+
+	useEffect(() => {
+		CollectionService.getCollectionSupportedFilters(
+			targetCollectionItems.map((item) => ({
+				collectionId: item.itemId,
+				layoutObjectReference: item.config?.collection,
+			}))
+		);
+	}, []);
 
 	return (
 		<ClayForm.Group className="mt-1">
