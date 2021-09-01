@@ -31,8 +31,9 @@ public class CollectionQuery {
 		return Optional.ofNullable(_configuration);
 	}
 
-	public Optional<InfoFilter> getInfoFilterOptional() {
-		return Optional.ofNullable(_infoFilter);
+	public <T> Optional<T> getInfoFilterOptional(Class<T> t) {
+		return Optional.ofNullable(
+			(T)_infoFilters.getOrDefault(t.getName(), null));
 	}
 
 	public Pagination getPagination() {
@@ -55,8 +56,8 @@ public class CollectionQuery {
 		_configuration = configuration;
 	}
 
-	public void setInfoFilter(InfoFilter infoFilter) {
-		_infoFilter = infoFilter;
+	public void setInfoFilters(Map<String, InfoFilter> infoFilters) {
+		_infoFilters = infoFilters;
 	}
 
 	public void setPagination(Pagination pagination) {
@@ -72,7 +73,7 @@ public class CollectionQuery {
 	}
 
 	private Map<String, String[]> _configuration;
-	private InfoFilter _infoFilter;
+	private Map<String, InfoFilter> _infoFilters;
 	private Pagination _pagination;
 	private Object _relatedItemObject;
 	private Sort _sort;

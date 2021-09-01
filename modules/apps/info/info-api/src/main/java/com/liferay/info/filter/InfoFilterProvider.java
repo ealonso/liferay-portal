@@ -14,10 +14,8 @@
 
 package com.liferay.info.filter;
 
-import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
 import com.liferay.info.type.Keyed;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,8 +24,5 @@ import java.util.Map;
 public interface InfoFilterProvider<T extends InfoFilter> extends Keyed {
 
 	public T create(Map<String, String[]> values);
-
-	public List<InfoCollectionFilterType>
-		getSupportedInfoCollectionFilterTypes();
 
 }

@@ -14,7 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
+import com.liferay.info.filter.InfoFilter;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverTracker;
@@ -87,16 +87,15 @@ public class GetCollectionSupportedFiltersMVCResourceCommand
 				continue;
 			}
 
-			List<InfoCollectionFilterType> supportedInfoCollectionFilterTypes =
-				layoutListRetriever.getSupportedInfoCollectionFilterTypes(
+			List<InfoFilter> supportedInfoFilters =
+				layoutListRetriever.getSupportedInfoFilters(
 					listObjectReferenceFactory.getListObjectReference(
 						jsonObject));
 
 			jsonObject.put(
 				collectionJSONObject.getString("collectionId"),
 				JSONUtil.toJSONArray(
-					supportedInfoCollectionFilterTypes,
-					InfoCollectionFilterType::getFilterType));
+					supportedInfoFilters, InfoFilter::getFilterType));
 		}
 
 		JSONPortletResponseUtil.writeJSON(

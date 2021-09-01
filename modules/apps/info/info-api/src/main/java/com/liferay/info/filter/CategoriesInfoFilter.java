@@ -12,19 +12,28 @@
  * details.
  */
 
-package com.liferay.info.collection.filter.type;
+package com.liferay.info.filter;
 
 /**
  * @author Eudaldo Alonso
  */
-public class KeywordsInfoCollectionFilterType
-	implements InfoCollectionFilterType {
+public class CategoriesInfoFilter implements InfoFilter {
 
-	public static final String FILTER_TYPE = "keywords";
+	public static final String FILTER_TYPE = "category";
+
+	public long[][] getAssetCategoryIds() {
+		return _assetCategoryIds;
+	}
 
 	@Override
 	public String getFilterType() {
 		return FILTER_TYPE;
 	}
+
+	public void setAssetCategoryIds(long[][] assetCategoryIds) {
+		_assetCategoryIds = assetCategoryIds;
+	}
+
+	private long[][] _assetCategoryIds;
 
 }

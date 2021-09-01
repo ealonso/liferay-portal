@@ -14,7 +14,7 @@
 
 package com.liferay.layout.list.retriever;
 
-import com.liferay.info.collection.filter.type.InfoCollectionFilterType;
+import com.liferay.info.filter.InfoFilter;
 import com.liferay.item.selector.ItemSelectorReturnType;
 
 import java.util.Collections;
@@ -35,7 +35,7 @@ public interface LayoutListRetriever
 	public int getListCount(
 		S s, LayoutListRetrieverContext layoutListRetrieverContext);
 
-	public default List<InfoCollectionFilterType> getSupportedInfoCollectionFilterTypes(S s) {
+	public default List<InfoFilter> getSupportedInfoFilters(S s) {
 		return Collections.emptyList();
 	}
 

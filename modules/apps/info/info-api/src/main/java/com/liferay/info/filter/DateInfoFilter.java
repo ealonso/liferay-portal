@@ -12,13 +12,18 @@
  * details.
  */
 
-package com.liferay.info.collection.filter.type;
+package com.liferay.info.filter;
 
 /**
  * @author Eudaldo Alonso
  */
-public interface InfoCollectionFilterType {
+public class DateInfoFilter implements InfoFilter {
 
-	public String getFilterType();
+	public static final String FILTER_TYPE = "date";
+
+	@Override
+	public String getFilterType() {
+		return FILTER_TYPE;
+	}
 
 }
