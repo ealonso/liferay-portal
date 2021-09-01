@@ -1647,18 +1647,6 @@ public class PortletWrapper
 	}
 
 	/**
-	 * Returns the trash handler instances of the portlet.
-	 *
-	 * @return the trash handler instances of the portlet
-	 */
-	@Override
-	public java.util.List<com.liferay.portal.kernel.trash.TrashHandler>
-		getTrashHandlerInstances() {
-
-		return model.getTrashHandlerInstances();
-	}
-
-	/**
 	 * Returns <code>true</code> if the portlet is an undeployed portlet.
 	 *
 	 * @return <code>true</code> if the portlet is a placeholder of an

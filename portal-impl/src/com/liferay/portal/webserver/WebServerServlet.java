@@ -1274,7 +1274,7 @@ public class WebServerServlet extends HttpServlet {
 		}
 
 		if (fileEntry.isInTrash()) {
-			fileName = _trashTitleResolver.getOriginalTitle(fileName);
+			return;
 		}
 
 		httpServletResponse.addHeader(
@@ -1755,8 +1755,7 @@ public class WebServerServlet extends HttpServlet {
 				throw new NoSuchFileEntryException();
 			}
 
-			return PortletProviderUtil.getPortletId(
-				TrashEntry.class.getName(), PortletProvider.Action.VIEW);
+			return null;
 		}
 
 		Group group = GroupLocalServiceUtil.getGroup(fileEntry.getGroupId());

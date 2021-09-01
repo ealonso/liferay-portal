@@ -39,11 +39,15 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.constants.TrashActionKeys;
+import com.liferay.trash.constants.TrashEntryConstants;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.trash.constants.TrashEntryConstants;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
@@ -236,7 +240,7 @@ public class JournalArticleTrashHandler extends BaseJournalTrashHandler {
 			return false;
 		}
 
-		return !article.isInTrashContainer();
+		return !_trashHelper.isInTrashContainer(article);
 	}
 
 	@Override
@@ -452,5 +456,8 @@ public class JournalArticleTrashHandler extends BaseJournalTrashHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 }

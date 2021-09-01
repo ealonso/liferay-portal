@@ -26,6 +26,11 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.trash.TrashRenderer;
@@ -60,7 +65,7 @@ public class TrashedModelDocumentContributor
 		TrashEntry trashEntry = null;
 
 		try {
-			trashEntry = trashedModel.getTrashEntry();
+			trashEntry = _trashHelper.getTrashEntry(trashedModel);
 		}
 		catch (PortalException portalException) {
 			if (_log.isDebugEnabled()) {
@@ -100,7 +105,7 @@ public class TrashedModelDocumentContributor
 				Field.REMOVED_BY_USER_NAME, trashEntry.getUserName(), true);
 
 			if (trashedModel.isInTrash() &&
-				!trashedModel.isInTrashExplicitly()) {
+				!_trashHelper.isInTrashExplicitly(trashedModel)) {
 
 				document.addKeyword(
 					Field.ROOT_ENTRY_CLASS_NAME, trashEntry.getClassName());
@@ -109,8 +114,8 @@ public class TrashedModelDocumentContributor
 			}
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			baseModel.getModelClassName());
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+			trashedModel.getModelClassName());
 
 		try {
 			TrashRenderer trashRenderer = null;
@@ -141,6 +146,12 @@ public class TrashedModelDocumentContributor
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		TrashedModelDocumentContributor.class);
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	private UserLocalService _userLocalService;
 

@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Repository;
-import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -176,36 +175,6 @@ public class DLFileShortcutLocalServiceImpl
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public void deleteFileShortcut(DLFileShortcut fileShortcut)
 		throws PortalException {
-
-		// File shortcut
-
-		dlFileShortcutPersistence.remove(fileShortcut);
-
-		// Resources
-
-		_resourceLocalService.deleteResource(
-			fileShortcut.getCompanyId(), DLFileShortcutConstants.getClassName(),
-			ResourceConstants.SCOPE_INDIVIDUAL,
-			fileShortcut.getFileShortcutId());
-
-		// Asset
-
-		_assetEntryLocalService.deleteEntry(
-			DLFileShortcutConstants.getClassName(),
-			fileShortcut.getFileShortcutId());
-
-		// Trash
-
-		if (fileShortcut.isInTrashExplicitly()) {
-			_trashEntryLocalService.deleteEntry(
-				DLFileShortcutConstants.getClassName(),
-				fileShortcut.getFileShortcutId());
-		}
-		else {
-			_trashVersionLocalService.deleteTrashVersion(
-				DLFileShortcutConstants.getClassName(),
-				fileShortcut.getFileShortcutId());
-		}
 	}
 
 	@Override
@@ -237,15 +206,6 @@ public class DLFileShortcutLocalServiceImpl
 	public void deleteFileShortcuts(
 			long groupId, long folderId, boolean includeTrashedEntries)
 		throws PortalException {
-
-		List<DLFileShortcut> fileShortcuts =
-			dlFileShortcutPersistence.findByG_F(groupId, folderId);
-
-		for (DLFileShortcut fileShortcut : fileShortcuts) {
-			if (includeTrashedEntries || !fileShortcut.isInTrashExplicitly()) {
-				dlFileShortcutLocalService.deleteFileShortcut(fileShortcut);
-			}
-		}
 	}
 
 	@Override

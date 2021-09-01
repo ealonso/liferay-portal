@@ -23,11 +23,13 @@ import com.liferay.message.boards.model.MBThread;
 import com.liferay.message.boards.model.MBTreeWalker;
 import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
 import com.liferay.message.boards.service.MBMessageServiceUtil;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.trash.BaseJSPTrashRenderer;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.renderer.BaseJSPTrashRenderer;
 
 import java.util.Locale;
 
@@ -74,6 +76,11 @@ public class MBThreadTrashRenderer extends BaseJSPTrashRenderer {
 		HttpServletRequest httpServletRequest, String template) {
 
 		return "/message_boards/view_message_content.jsp";
+	}
+
+	@Override
+	public String getNewName(String oldName, String token) {
+		return StringBundler.concat(oldName, StringPool.SPACE, token);
 	}
 
 	@Override

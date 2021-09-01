@@ -80,8 +80,6 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -94,6 +92,8 @@ import com.liferay.portal.repository.portletrepository.PortletRepository;
 import com.liferay.portal.util.RepositoryUtil;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
 import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -708,7 +708,7 @@ public class FileEntryStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			DLFileEntry.class.getName());
 
 		if (trashHandler.isRestorable(existingFileEntry.getFileEntryId())) {
@@ -1315,6 +1315,9 @@ public class FileEntryStagedModelDataHandler
 
 	@Reference
 	private StorageEngine _storageEngine;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	@Reference
 	private TrashHelper _trashHelper;

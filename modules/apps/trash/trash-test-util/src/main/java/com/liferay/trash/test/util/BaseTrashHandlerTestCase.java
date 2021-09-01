@@ -36,14 +36,16 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.test.util.SearchTestRule;
+import com.liferay.portal.test.rule.Inject;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.service.TrashEntryLocalServiceUtil;
 import com.liferay.trash.service.TrashEntryServiceUtil;
@@ -3377,7 +3379,7 @@ public abstract class BaseTrashHandlerTestCase {
 	}
 
 	protected TrashHandler getTrashHandler(String className) {
-		return TrashHandlerRegistryUtil.getTrashHandler(className);
+		return _trashHandlerRegistry.getTrashHandler(className);
 	}
 
 	protected abstract String getUniqueTitle(BaseModel<?> baseModel);
@@ -3402,7 +3404,7 @@ public abstract class BaseTrashHandlerTestCase {
 		if (classedModel instanceof TrashedModel) {
 			TrashedModel trashedModel = (TrashedModel)classedModel;
 
-			return trashedModel.isInTrashContainer();
+			return _trashHelper.isInTrashContainer(trashedModel);
 		}
 
 		return false;
@@ -3437,5 +3439,11 @@ public abstract class BaseTrashHandlerTestCase {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		BaseTrashHandlerTestCase.class);
+
+	@Inject
+	private TrashHandlerRegistry _trashHandlerRegistry;
+
+	@Inject
+	private TrashHelper _trashHelper;
 
 }

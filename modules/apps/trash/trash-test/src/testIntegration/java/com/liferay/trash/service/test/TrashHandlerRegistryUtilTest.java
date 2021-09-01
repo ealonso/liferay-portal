@@ -16,9 +16,10 @@ package com.liferay.trash.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.trash.service.test.trashhandlerresgistryutil.TestTrashHandler;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class TrashHandlerRegistryUtilTest {
 
 	@Test
 	public void testGetTrashHandler() {
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			TestTrashHandler.class.getName());
 
 		Class<?> clazz = trashHandler.getClass();
@@ -53,7 +54,7 @@ public class TrashHandlerRegistryUtilTest {
 	@Test
 	public void testGetTrashHandlers() {
 		List<TrashHandler> trashHandlers =
-			TrashHandlerRegistryUtil.getTrashHandlers();
+			_trashHandlerRegistry.getTrashHandlers();
 
 		boolean exists = false;
 
@@ -72,5 +73,8 @@ public class TrashHandlerRegistryUtilTest {
 		Assert.assertTrue(
 			TestTrashHandler.class.getName() + " is not registered", exists);
 	}
+
+	@Inject
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

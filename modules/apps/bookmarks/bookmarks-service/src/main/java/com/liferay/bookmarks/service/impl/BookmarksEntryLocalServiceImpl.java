@@ -76,6 +76,7 @@ import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.social.kernel.service.SocialActivityLocalService;
 import com.liferay.subscription.service.SubscriptionLocalService;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.model.TrashEntry;
@@ -183,7 +184,9 @@ public class BookmarksEntryLocalServiceImpl
 			groupId, folderId);
 
 		for (BookmarksEntry entry : entries) {
-			if (includeTrashedEntries || !entry.isInTrashExplicitly()) {
+			if (includeTrashedEntries ||
+				!_trashHelper.isInTrashExplicitly(entry)) {
+
 				bookmarksEntryLocalService.deleteEntry(entry);
 			}
 		}
@@ -230,7 +233,7 @@ public class BookmarksEntryLocalServiceImpl
 
 		// Trash
 
-		if (entry.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(entry)) {
 			_trashEntryLocalService.deleteEntry(
 				BookmarksEntry.class.getName(), entry.getEntryId());
 		}
@@ -384,7 +387,7 @@ public class BookmarksEntryLocalServiceImpl
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (entry.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(entry)) {
 			restoreEntryFromTrash(userId, entryId);
 		}
 		else {
@@ -918,6 +921,9 @@ public class BookmarksEntryLocalServiceImpl
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;

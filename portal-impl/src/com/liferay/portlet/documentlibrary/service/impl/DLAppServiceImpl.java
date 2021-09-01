@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.repository.InvalidRepositoryIdException;
 import com.liferay.portal.kernel.repository.Repository;
 import com.liferay.portal.kernel.repository.RepositoryException;
 import com.liferay.portal.kernel.repository.RepositoryProvider;
-import com.liferay.portal.kernel.repository.capabilities.TrashCapability;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileShortcut;
 import com.liferay.portal.kernel.repository.model.FileVersion;
@@ -841,33 +840,6 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	 */
 	@Override
 	public void deleteFolder(long folderId) throws PortalException {
-		Repository repository = repositoryProvider.getFolderRepository(
-			folderId);
-
-		Folder folder = repository.getFolder(folderId);
-
-		if (repository.isCapabilityProvided(TrashCapability.class)) {
-			TrashCapability trashCapability = repository.getCapability(
-				TrashCapability.class);
-
-			if (trashCapability.isInTrash(folder)) {
-				_trashEntryService.deleteEntry(
-					DLFolderConstants.getClassName(), folder.getFolderId());
-
-				return;
-			}
-		}
-
-		List<FileEntry> fileEntries = repository.getRepositoryFileEntries(
-			0, folderId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
-
-		for (FileEntry fileEntry : fileEntries) {
-			_dlAppHelperLocalService.deleteFileEntry(fileEntry);
-		}
-
-		repository.deleteFolder(folderId);
-
-		_dlAppHelperLocalService.deleteFolder(folder);
 	}
 
 	/**
@@ -883,24 +855,6 @@ public class DLAppServiceImpl extends DLAppServiceBaseImpl {
 	public void deleteFolder(
 			long repositoryId, long parentFolderId, String name)
 		throws PortalException {
-
-		Repository repository = getRepository(repositoryId);
-
-		Folder folder = repository.getFolder(parentFolderId, name);
-
-		if (repository.isCapabilityProvided(TrashCapability.class)) {
-			TrashCapability trashCapability = repository.getCapability(
-				TrashCapability.class);
-
-			if (trashCapability.isInTrash(folder)) {
-				_trashEntryService.deleteEntry(
-					DLFolderConstants.getClassName(), folder.getFolderId());
-
-				return;
-			}
-		}
-
-		repository.deleteFolder(parentFolderId, name);
 	}
 
 	/**

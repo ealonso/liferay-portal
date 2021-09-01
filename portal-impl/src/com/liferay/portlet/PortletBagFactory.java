@@ -49,7 +49,6 @@ import com.liferay.portal.kernel.security.permission.propagator.PermissionPropag
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
@@ -191,9 +190,6 @@ public class PortletBagFactory {
 			bundleContext, portlet, properties, serviceRegistrations);
 
 		_registerPermissionPropagators(
-			bundleContext, portlet, properties, serviceRegistrations);
-
-		_registerTrashHandlerInstances(
 			bundleContext, portlet, properties, serviceRegistrations);
 
 		_registerWorkflowHandlerInstances(
@@ -752,24 +748,6 @@ public class PortletBagFactory {
 			ServiceRegistration<?> serviceRegistration =
 				bundleContext.registerService(
 					TemplateHandler.class, templateHandler, properties);
-
-			serviceRegistrations.add(serviceRegistration);
-		}
-	}
-
-	private void _registerTrashHandlerInstances(
-			BundleContext bundleContext, Portlet portlet,
-			Dictionary<String, Object> properties,
-			List<ServiceRegistration<?>> serviceRegistrations)
-		throws Exception {
-
-		for (String trashHandlerClass : portlet.getTrashHandlerClasses()) {
-			TrashHandler trashHandlerInstance = _newInstance(
-				TrashHandler.class, trashHandlerClass);
-
-			ServiceRegistration<?> serviceRegistration =
-				bundleContext.registerService(
-					TrashHandler.class, trashHandlerInstance, properties);
 
 			serviceRegistrations.add(serviceRegistration);
 		}

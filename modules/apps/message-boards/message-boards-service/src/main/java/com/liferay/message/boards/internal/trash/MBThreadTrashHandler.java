@@ -35,13 +35,14 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.trash.TrashRendererFactory;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.constants.TrashActionKeys;
+import com.liferay.trash.handler.BaseTrashHandler;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.renderer.TrashRenderer;
+import com.liferay.trash.renderer.TrashRendererFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,11 +190,6 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
-	public boolean isMovable() {
-		return true;
-	}
-
-	@Override
 	public boolean isMovable(long classPK) throws PortalException {
 		MBThread thread = _mbThreadLocalService.getThread(classPK);
 
@@ -223,7 +219,7 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 			return false;
 		}
 
-		return !thread.isInTrashContainer();
+		return !_trashHelper.isInTrashContainer(thread);
 	}
 
 	@Override
@@ -348,6 +344,9 @@ public class MBThreadTrashHandler extends BaseTrashHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	private TrashRendererFactory _trashRendererFactory;
 

@@ -40,19 +40,20 @@ import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.SystemEventLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
-import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashVersion;
 import com.liferay.trash.model.impl.TrashEntryImpl;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.trash.service.base.TrashEntryLocalServiceBaseImpl;
 import com.liferay.trash.service.persistence.TrashVersionPersistence;
 
@@ -110,7 +111,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 			return trashEntry;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			className);
 
 		SystemEvent systemEvent = trashHandler.addDeletionSystemEvent(
@@ -183,7 +184,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 				if (createDate.before(date) || !_isTrashEnabled(group)) {
 					TrashHandler trashHandler =
-						TrashHandlerRegistryUtil.getTrashHandler(
+						_trashHandlerRegistry.getTrashHandler(
 							trashEntry.getClassName());
 
 					if (trashHandler != null) {
@@ -217,8 +218,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 			if (deleteTrashedModels) {
 				TrashHandler trashHandler =
-					TrashHandlerRegistryUtil.getTrashHandler(
-						entry.getClassName());
+					_trashHandlerRegistry.getTrashHandler(entry.getClassName());
 
 				if (trashHandler != null) {
 					try {
@@ -506,7 +506,7 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 				entry.setCreateDate(removedDate);
 
 				TrashHandler trashHandler =
-					TrashHandlerRegistryUtil.getTrashHandler(entryClassName);
+					_trashHandlerRegistry.getTrashHandler(entryClassName);
 
 				TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
 					classPK);
@@ -577,5 +577,11 @@ public class TrashEntryLocalServiceImpl extends TrashEntryLocalServiceBaseImpl {
 
 	@Reference
 	private UserLocalService _userLocalService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 }

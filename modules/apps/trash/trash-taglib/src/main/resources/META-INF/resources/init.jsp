@@ -39,7 +39,7 @@ page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.taglib.aui.AUIUtil" %><%@
-page import="com.liferay.trash.kernel.model.TrashEntry" %>
+page import="com.liferay.trash.model.TrashEntry" %>
 
 <%@ page import="java.util.List" %><%@
 page import="java.util.Objects" %>

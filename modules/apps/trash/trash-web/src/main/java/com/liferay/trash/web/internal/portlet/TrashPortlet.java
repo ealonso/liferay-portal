@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -33,7 +31,9 @@ import com.liferay.portal.model.adapter.ModelAdapterUtil;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.constants.TrashEntryConstants;
 import com.liferay.trash.constants.TrashPortletKeys;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.service.TrashEntryLocalService;
 import com.liferay.trash.service.TrashEntryService;
@@ -194,12 +194,9 @@ public class TrashPortlet extends MVCPortlet {
 						new ObjectValuePair<>(
 							entry.getClassName(), entry.getClassPK()));
 				}
-				catch (com.liferay.trash.exception.RestoreEntryException
-							restoreEntryException) {
-
+				catch (RestoreEntryException restoreEntryException) {
 					if (restoreEntryException.getType() !=
-							com.liferay.trash.exception.RestoreEntryException.
-								NOT_RESTORABLE) {
+							RestoreEntryException.NOT_RESTORABLE) {
 
 						throw restoreEntryException;
 					}
@@ -323,14 +320,12 @@ public class TrashPortlet extends MVCPortlet {
 		TrashEntry entry = _trashEntryLocalService.fetchTrashEntry(
 			trashEntryId);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			entry.getClassName());
 
 		try {
 			trashHandler.checkRestorableEntry(
-				ModelAdapterUtil.adapt(
-					com.liferay.trash.kernel.model.TrashEntry.class, entry),
-				TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
+				entry, TrashEntryConstants.DEFAULT_CONTAINER_ID, newName);
 		}
 		catch (RestoreEntryException restoreEntryException) {
 			actionRequest.setAttribute(
@@ -356,7 +351,7 @@ public class TrashPortlet extends MVCPortlet {
 
 			sendRedirect(actionRequest, actionResponse);
 
-			throw new com.liferay.trash.exception.RestoreEntryException(
+			throw new RestoreEntryException(
 				restoreEntryException.getType(),
 				restoreEntryException.getCause());
 		}
@@ -367,6 +362,9 @@ public class TrashPortlet extends MVCPortlet {
 
 	private TrashEntryLocalService _trashEntryLocalService;
 	private TrashEntryService _trashEntryService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	@Reference
 	private TrashHelper _trashHelper;

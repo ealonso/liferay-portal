@@ -18,17 +18,17 @@ import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.NoSuchModelException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
-import com.liferay.portal.kernel.trash.TrashRenderer;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
@@ -39,8 +39,11 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashVersion;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.trash.service.TrashEntryLocalService;
 import com.liferay.trash.service.TrashVersionLocalService;
 
@@ -84,8 +87,8 @@ public class TrashHelperImpl implements TrashHelper {
 		TrashRenderer trashRenderer = null;
 
 		if (Validator.isNotNull(className) && (classPK > 0)) {
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(className);
+			TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+				className);
 
 			trashRenderer = trashHandler.getTrashRenderer(classPK);
 		}
@@ -123,6 +126,64 @@ public class TrashHelperImpl implements TrashHelper {
 	}
 
 	@Override
+	public TrashEntry getTrashEntry(TrashedModel trashedModel)
+		throws PortalException {
+
+		if (!trashedModel.isInTrash()) {
+			return null;
+		}
+
+		TrashEntry trashEntry = _trashEntryLocalService.fetchEntry(
+			trashedModel.getModelClassName(),
+			trashedModel.getTrashEntryClassPK());
+
+		if (trashEntry != null) {
+			return trashEntry;
+		}
+
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+			trashedModel.getModelClassName());
+
+		if (Validator.isNotNull(
+				trashHandler.getContainerModelClassName(
+					trashedModel.getPrimaryKey()))) {
+
+			ContainerModel containerModel = null;
+
+			try {
+				containerModel = trashHandler.getParentContainerModel(
+					trashedModel);
+			}
+			catch (NoSuchModelException noSuchModelException) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(noSuchModelException, noSuchModelException);
+				}
+
+				return null;
+			}
+
+			while (containerModel != null) {
+				if (containerModel instanceof TrashedModel) {
+					return getTrashEntry((TrashedModel)containerModel);
+				}
+
+				trashHandler = _trashHandlerRegistry.getTrashHandler(
+					trashHandler.getContainerModelClassName(
+						containerModel.getContainerModelId()));
+
+				if (trashHandler == null) {
+					return null;
+				}
+
+				containerModel = trashHandler.getContainerModel(
+					containerModel.getParentContainerModelId());
+			}
+		}
+
+		return null;
+	}
+
+	@Override
 	public String getTrashTitle(long entryId) {
 		return _getTrashTitle(entryId, _TRASH_PREFIX);
 	}
@@ -133,17 +194,16 @@ public class TrashHelperImpl implements TrashHelper {
 			long classPK)
 		throws PortalException {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			className);
 
 		if (trashHandler.isInTrashContainer(classPK)) {
-			com.liferay.trash.kernel.model.TrashEntry trashEntry =
-				trashHandler.getTrashEntry(classPK);
+			TrashEntry trashEntry = trashHandler.getTrashEntry(classPK);
 
 			className = trashEntry.getClassName();
 			classPK = trashEntry.getClassPK();
 
-			trashHandler = TrashHandlerRegistryUtil.getTrashHandler(className);
+			trashHandler = _trashHandlerRegistry.getTrashHandler(className);
 		}
 
 		TrashRenderer trashRenderer = trashHandler.getTrashRenderer(classPK);
@@ -183,6 +243,74 @@ public class TrashHelperImpl implements TrashHelper {
 		portletURL.setParameter("showAssetMetadata", Boolean.TRUE.toString());
 
 		return portletURL;
+	}
+
+	@Override
+	public boolean isInTrashContainer(TrashedModel trashedModel) {
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+			trashedModel.getModelClassName());
+
+		if ((trashHandler == null) ||
+			Validator.isNull(
+				trashHandler.getContainerModelClassName(
+					trashedModel.getPrimaryKey()))) {
+
+			return false;
+		}
+
+		try {
+			ContainerModel containerModel =
+				trashHandler.getParentContainerModel(trashedModel);
+
+			if (containerModel == null) {
+				return false;
+			}
+
+			if (containerModel instanceof TrashedModel) {
+				TrashedModel containerTrashedModel =
+					(TrashedModel)containerModel;
+
+				return containerTrashedModel.isInTrash();
+			}
+		}
+		catch (Exception exception) {
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isInTrashExplicitly(TrashedModel trashedModel) {
+		if (!trashedModel.isInTrash()) {
+			return false;
+		}
+
+		TrashEntry trashEntry = _trashEntryLocalService.fetchEntry(
+			trashedModel.getModelClassName(),
+			trashedModel.getTrashEntryClassPK());
+
+		if (trashEntry != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isInTrashImplicitly(TrashedModel trashedModel) {
+		if (!trashedModel.isInTrash()) {
+			return false;
+		}
+
+		TrashEntry trashEntry = _trashEntryLocalService.fetchEntry(
+			trashedModel.getModelClassName(),
+			trashedModel.getTrashEntryClassPK());
+
+		if (trashEntry != null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -273,6 +401,9 @@ public class TrashHelperImpl implements TrashHelper {
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;

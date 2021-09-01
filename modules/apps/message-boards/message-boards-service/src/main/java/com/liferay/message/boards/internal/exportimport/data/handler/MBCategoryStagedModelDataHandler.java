@@ -26,10 +26,10 @@ import com.liferay.message.boards.service.MBCategoryLocalService;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.util.List;
 import java.util.Map;
@@ -210,7 +210,7 @@ public class MBCategoryStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			MBCategory.class.getName());
 
 		if (trashHandler.isRestorable(existingCategory.getCategoryId())) {
@@ -228,5 +228,8 @@ public class MBCategoryStagedModelDataHandler
 	}
 
 	private MBCategoryLocalService _mbCategoryLocalService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

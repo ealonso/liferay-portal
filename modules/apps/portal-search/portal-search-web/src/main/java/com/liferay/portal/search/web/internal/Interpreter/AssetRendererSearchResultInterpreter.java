@@ -27,11 +27,11 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.web.interpreter.SearchResultInterpreter;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.util.Locale;
 
@@ -41,6 +41,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Wade Cao
@@ -511,9 +512,8 @@ public class AssetRendererSearchResultInterpreter
 			deleted = true;
 		}
 		else {
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					document.getString(Field.ENTRY_CLASS_NAME));
+			TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+				document.getString(Field.ENTRY_CLASS_NAME));
 
 			if (trashHandler != null) {
 				deleted = trashHandler.isInTrash(
@@ -592,5 +592,8 @@ public class AssetRendererSearchResultInterpreter
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetRendererSearchResultInterpreter.class);
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

@@ -39,7 +39,6 @@ import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.security.permission.propagator.PermissionPropagator;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.webdav.WebDAVStorage;
@@ -470,20 +469,6 @@ public class PortletBagImpl implements PortletBag {
 	}
 
 	@Override
-	public List<TrashHandler> getTrashHandlerInstances() {
-		if (_trashHandlerInstances == null) {
-			synchronized (this) {
-				if (_trashHandlerInstances == null) {
-					_trashHandlerInstances = ServiceTrackerListFactory.open(
-						_bundleContext, TrashHandler.class, _filterString);
-				}
-			}
-		}
-
-		return _toList(_trashHandlerInstances);
-	}
-
-	@Override
 	public List<URLEncoder> getURLEncoderInstances() {
 		if (_urlEncoderInstances == null) {
 			synchronized (this) {
@@ -639,7 +624,6 @@ public class PortletBagImpl implements PortletBag {
 		_stagedModelDataHandlerInstances;
 	private volatile ServiceTrackerList<TemplateHandler>
 		_templateHandlerInstances;
-	private volatile ServiceTrackerList<TrashHandler> _trashHandlerInstances;
 	private volatile ServiceTrackerList<URLEncoder> _urlEncoderInstances;
 	private volatile ServiceTrackerList<UserNotificationDefinition>
 		_userNotificationDefinitionInstances;

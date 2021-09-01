@@ -428,20 +428,6 @@ public abstract class BaseSocialActivityInterpreter
 			String className, long classPK, ServiceContext serviceContext)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			className);
-
-		if ((trashHandler != null) && trashHandler.isInTrash(classPK)) {
-			PortletURL portletURL = _trashHelper.getViewContentURL(
-				serviceContext.getRequest(), className, classPK);
-
-			if (portletURL == null) {
-				return null;
-			}
-
-			return portletURL.toString();
-		}
-
 		return null;
 	}
 

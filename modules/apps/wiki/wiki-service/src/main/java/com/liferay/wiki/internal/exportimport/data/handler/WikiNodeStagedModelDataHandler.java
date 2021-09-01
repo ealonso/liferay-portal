@@ -22,9 +22,9 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.wiki.configuration.WikiGroupServiceConfiguration;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.service.WikiNodeLocalService;
@@ -194,7 +194,7 @@ public class WikiNodeStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			WikiNode.class.getName());
 
 		if (trashHandler.isRestorable(existingNode.getNodeId())) {
@@ -229,6 +229,9 @@ public class WikiNodeStagedModelDataHandler
 			portletDataContext, node,
 			StringBundler.concat(nodeName, StringPool.SPACE, count), ++count);
 	}
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	@Reference
 	private WikiGroupServiceConfiguration _wikiGroupServiceConfiguration;

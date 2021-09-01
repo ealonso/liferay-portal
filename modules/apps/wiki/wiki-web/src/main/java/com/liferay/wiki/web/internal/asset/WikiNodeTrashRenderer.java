@@ -14,9 +14,11 @@
 
 package com.liferay.wiki.web.internal.asset;
 
-import com.liferay.portal.kernel.trash.BaseTrashRenderer;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.trash.TrashHelper;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.model.WikiNode;
 
@@ -31,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Eudaldo Alonso
  */
-public class WikiNodeTrashRenderer extends BaseTrashRenderer {
+public class WikiNodeTrashRenderer implements TrashRenderer {
 
 	public static final String TYPE = "wiki_node";
 
@@ -53,6 +55,11 @@ public class WikiNodeTrashRenderer extends BaseTrashRenderer {
 	@Override
 	public String getIconCssClass() {
 		return "folder";
+	}
+
+	@Override
+	public String getNewName(String oldName, String token) {
+		return StringBundler.concat(oldName, StringPool.SPACE, token);
 	}
 
 	@Override

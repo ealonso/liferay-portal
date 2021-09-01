@@ -52,6 +52,7 @@ import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
 import com.liferay.social.kernel.model.SocialActivityConstants;
 import com.liferay.social.kernel.service.SocialActivityLocalService;
 import com.liferay.subscription.service.SubscriptionLocalService;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.model.TrashEntry;
@@ -153,7 +154,9 @@ public class BookmarksFolderLocalServiceImpl
 			folder.getGroupId(), folder.getFolderId());
 
 		for (BookmarksFolder curFolder : folders) {
-			if (includeTrashedEntries || !curFolder.isInTrashExplicitly()) {
+			if (includeTrashedEntries ||
+				!_trashHelper.isInTrashExplicitly(curFolder)) {
+
 				bookmarksFolderLocalService.deleteFolder(curFolder);
 			}
 		}
@@ -198,7 +201,7 @@ public class BookmarksFolderLocalServiceImpl
 
 		// Trash
 
-		if (folder.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(folder)) {
 			_trashEntryLocalService.deleteEntry(
 				BookmarksFolder.class.getName(), folder.getFolderId());
 		}
@@ -415,7 +418,7 @@ public class BookmarksFolderLocalServiceImpl
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (folder.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(folder)) {
 			restoreFolderFromTrash(userId, folderId);
 		}
 		else {
@@ -890,7 +893,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				BookmarksEntry entry = (BookmarksEntry)object;
 
-				if (!entry.isInTrashImplicitly()) {
+				if (!_trashHelper.isInTrashImplicitly(entry)) {
 					continue;
 				}
 
@@ -936,7 +939,7 @@ public class BookmarksFolderLocalServiceImpl
 
 				BookmarksFolder folder = (BookmarksFolder)object;
 
-				if (!folder.isInTrashImplicitly()) {
+				if (!_trashHelper.isInTrashImplicitly(folder)) {
 					continue;
 				}
 
@@ -1016,6 +1019,9 @@ public class BookmarksFolderLocalServiceImpl
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;

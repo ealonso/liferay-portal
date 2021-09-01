@@ -99,9 +99,7 @@ public class MBCategoryTrashHandlerTest
 		try {
 			super.testTrashParentAndBaseModel();
 		}
-		catch (com.liferay.trash.kernel.exception.TrashEntryException
-					trashEntryException) {
-
+		catch (TrashEntryException trashEntryException) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(trashEntryException);
 			}
@@ -116,9 +114,7 @@ public class MBCategoryTrashHandlerTest
 		try {
 			super.testTrashParentAndRestoreParentAndBaseModel();
 		}
-		catch (com.liferay.trash.kernel.exception.RestoreEntryException
-					restoreEntryException) {
-
+		catch (RestoreEntryException restoreEntryException) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(restoreEntryException);
 			}

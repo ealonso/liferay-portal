@@ -262,11 +262,7 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			DLFolder dlFolder, boolean includeTrashedEntries)
 		throws PortalException {
 
-		deleteSubfolders(dlFolder, includeTrashedEntries);
-
-		deleteFolderDependencies(dlFolder, includeTrashedEntries);
-
-		return dlFolder;
+		return null;
 	}
 
 	@Indexable(type = IndexableType.DELETE)
@@ -367,6 +363,23 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 	@Override
 	public long getFolderId(long companyId, long folderId) {
 		return getFolderId(dlFolderPersistence, companyId, folderId);
+	}
+
+	@Override
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden) {
+
+		return dlFolderPersistence.findByG_M_LikeT_H(
+			groupId, mountPoint, treePath, hidden);
+	}
+
+	@Override
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden,
+		int status) {
+
+		return dlFolderPersistence.findByG_M_LikeT_H_NotS(
+			groupId, mountPoint, treePath, hidden, status);
 	}
 
 	@Override
@@ -1248,29 +1261,6 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 			if (workflowDefinitionLink != null) {
 				_workflowDefinitionLinkLocalService.
 					deleteWorkflowDefinitionLink(workflowDefinitionLink);
-			}
-		}
-	}
-
-	protected void deleteSubfolders(
-			DLFolder dlFolder, boolean includeTrashedEntries)
-		throws PortalException {
-
-		RepositoryEventTrigger repositoryEventTrigger =
-			RepositoryUtil.getRepositoryEventTrigger(
-				dlFolder.getRepositoryId());
-
-		List<DLFolder> dlFolders = dlFolderPersistence.findByG_P(
-			dlFolder.getGroupId(), dlFolder.getFolderId());
-
-		for (DLFolder curDLFolder : dlFolders) {
-			if (includeTrashedEntries || !curDLFolder.isInTrashExplicitly()) {
-				repositoryEventTrigger.trigger(
-					RepositoryEventType.Delete.class, Folder.class,
-					new LiferayFolder(curDLFolder));
-
-				dlFolderLocalService.deleteFolder(
-					curDLFolder, includeTrashedEntries);
 			}
 		}
 	}

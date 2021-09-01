@@ -38,8 +38,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
@@ -287,7 +285,7 @@ public class FragmentEntryProcessorHelperImpl
 			return null;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			className);
 
 		if ((trashHandler != null) && trashHandler.isInTrash(classPK)) {
@@ -510,5 +508,8 @@ public class FragmentEntryProcessorHelperImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

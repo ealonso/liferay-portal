@@ -18,11 +18,13 @@ import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFileShortcut;
 import com.liferay.document.library.kernel.model.DLFileShortcutConstants;
-import com.liferay.portal.kernel.trash.BaseTrashRenderer;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
-import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
+import com.liferay.trash.renderer.TrashRenderer;
 
 import java.util.Locale;
 
@@ -35,13 +37,17 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Adolfo Pérez
  */
-public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
+public class DLFileShortcutTrashRenderer implements TrashRenderer {
 
 	public DLFileShortcutTrashRenderer(
-		DLFileShortcut dlFileShortcut, TrashHelper trashHelper) {
+		DLFileShortcut dlFileShortcut,
+		TrashHandlerRegistry trashHandlerRegistryUtil,
+		TrashHelper trashHelper) {
 
 		_dlFileShortcut = dlFileShortcut;
 		_trashHelper = trashHelper;
+
+		_trashHandlerRegistry = trashHandlerRegistryUtil;
 	}
 
 	@Override
@@ -52,6 +58,16 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 	@Override
 	public long getClassPK() {
 		return _dlFileShortcut.getFileShortcutId();
+	}
+
+	@Override
+	public String getIconCssClass() throws PortalException {
+		return StringPool.BLANK;
+	}
+
+	@Override
+	public String getNewName(String oldName, String token) {
+		return StringBundler.concat(oldName, StringPool.SPACE, token);
 	}
 
 	@Override
@@ -82,7 +98,7 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 			HttpServletResponse httpServletResponse, String template)
 		throws Exception {
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			DLFileEntryConstants.getClassName());
 
 		TrashRenderer trashRenderer = trashHandler.getTrashRenderer(
@@ -93,6 +109,7 @@ public class DLFileShortcutTrashRenderer extends BaseTrashRenderer {
 	}
 
 	private final DLFileShortcut _dlFileShortcut;
+	private final TrashHandlerRegistry _trashHandlerRegistry;
 	private final TrashHelper _trashHelper;
 
 }

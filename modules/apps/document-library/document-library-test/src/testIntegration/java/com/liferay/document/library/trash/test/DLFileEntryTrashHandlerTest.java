@@ -42,8 +42,6 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -53,6 +51,8 @@ import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.trash.TrashHelper;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 import com.liferay.trash.test.util.BaseTrashHandlerTestCase;
 import com.liferay.trash.test.util.DefaultWhenIsAssetable;
 import com.liferay.trash.test.util.DefaultWhenIsIndexableBaseModel;
@@ -201,7 +201,7 @@ public class DLFileEntryTrashHandlerTest
 
 		moveBaseModelToTrash(dlFileEntry.getFileEntryId());
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			getBaseModelClassName());
 
 		String title = RandomTestUtil.randomString();
@@ -228,9 +228,7 @@ public class DLFileEntryTrashHandlerTest
 		try {
 			super.testTrashParentAndBaseModel();
 		}
-		catch (com.liferay.trash.kernel.exception.TrashEntryException
-					trashEntryException) {
-
+		catch (TrashEntryException trashEntryException) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(trashEntryException);
 			}
@@ -245,9 +243,7 @@ public class DLFileEntryTrashHandlerTest
 		try {
 			super.testTrashParentAndRestoreParentAndBaseModel();
 		}
-		catch (com.liferay.trash.kernel.exception.RestoreEntryException
-					restoreEntryException) {
-
+		catch (RestoreEntryException restoreEntryException) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(restoreEntryException);
 			}
@@ -394,6 +390,9 @@ public class DLFileEntryTrashHandlerTest
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLFileEntryTrashHandlerTest.class);
+
+	@Inject
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	@Inject
 	private TrashHelper _trashHelper;

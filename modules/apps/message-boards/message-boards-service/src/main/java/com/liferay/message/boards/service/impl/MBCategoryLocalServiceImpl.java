@@ -45,8 +45,9 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.ratings.kernel.service.RatingsStatsLocalService;
 import com.liferay.subscription.service.SubscriptionLocalService;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.exception.TrashEntryException;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.model.TrashEntry;
 import com.liferay.trash.model.TrashVersion;
 import com.liferay.trash.service.TrashEntryLocalService;
@@ -245,7 +246,9 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 			category.getGroupId(), category.getCategoryId());
 
 		for (MBCategory curCategory : categories) {
-			if (includeTrashedEntries || !curCategory.isInTrashExplicitly()) {
+			if (includeTrashedEntries ||
+				!_trashHelper.isInTrashExplicitly(curCategory)) {
+
 				mbCategoryLocalService.deleteCategory(
 					curCategory, includeTrashedEntries);
 			}
@@ -290,7 +293,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 		// Trash
 
-		if (category.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(category)) {
 			_trashEntryLocalService.deleteEntry(
 				MBCategory.class.getName(), category.getCategoryId());
 		}
@@ -630,7 +633,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (category.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(category)) {
 			restoreCategoryFromTrash(userId, categoryId);
 		}
 		else {
@@ -1046,7 +1049,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				MBThread thread = (MBThread)object;
 
-				if (!thread.isInTrashImplicitly()) {
+				if (!_trashHelper.isInTrashImplicitly(thread)) {
 					continue;
 				}
 
@@ -1083,7 +1086,7 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 				MBCategory category = (MBCategory)object;
 
-				if (!category.isInTrashImplicitly()) {
+				if (!_trashHelper.isInTrashImplicitly(category)) {
 					continue;
 				}
 
@@ -1173,6 +1176,9 @@ public class MBCategoryLocalServiceImpl extends MBCategoryLocalServiceBaseImpl {
 
 	@Reference
 	private TrashEntryLocalService _trashEntryLocalService;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	@Reference
 	private TrashVersionLocalService _trashVersionLocalService;

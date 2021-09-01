@@ -33,14 +33,15 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.trash.TrashRendererFactory;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.constants.TrashActionKeys;
+import com.liferay.trash.handler.BaseTrashHandler;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.renderer.TrashRenderer;
+import com.liferay.trash.renderer.TrashRendererFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -304,11 +305,6 @@ public class MBCategoryTrashHandler extends BaseTrashHandler {
 	}
 
 	@Override
-	public boolean isMovable() {
-		return true;
-	}
-
-	@Override
 	public boolean isMovable(long classPK) throws PortalException {
 		MBCategory category = _mbCategoryLocalService.getCategory(classPK);
 
@@ -344,7 +340,7 @@ public class MBCategoryTrashHandler extends BaseTrashHandler {
 			return false;
 		}
 
-		return !category.isInTrashContainer();
+		return !_trashHelper.isInTrashContainer(category);
 	}
 
 	@Override
@@ -458,6 +454,9 @@ public class MBCategoryTrashHandler extends BaseTrashHandler {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 	private TrashRendererFactory _trashRendererFactory;
 

@@ -20,7 +20,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.BaseTrashHandler;
+import com.liferay.trash.handler.BaseTrashHandler;
+import com.liferay.trash.util.TrashHelperUtil;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
@@ -66,7 +67,7 @@ public abstract class BaseWikiTrashHandler extends BaseTrashHandler {
 			WikiPage parentPage = page.getParentPage();
 
 			while (parentPage != null) {
-				if (parentPage.isInTrashExplicitly()) {
+				if (TrashHelperUtil.isInTrashExplicitly(parentPage)) {
 					return WikiPage.class.getName();
 				}
 

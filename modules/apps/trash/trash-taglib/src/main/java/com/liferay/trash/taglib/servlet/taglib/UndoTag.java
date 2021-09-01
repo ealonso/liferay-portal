@@ -30,8 +30,12 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.util.IncludeTag;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.trash.taglib.internal.servlet.ServletContextUtil;
+import com.liferay.trash.util.TrashHandlerRegistryUtil;
+import com.liferay.trash.util.TrashHelperUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;

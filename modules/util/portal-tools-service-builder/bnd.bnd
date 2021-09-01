@@ -76,7 +76,6 @@ Main-Class: com.liferay.portal.tools.service.builder.ServiceBuilder
 	@com.liferay.portal.impl-*.jar!/com/liferay/portlet/mobiledevicerules/service.xml,\
 	@com.liferay.portal.impl-*.jar!/com/liferay/portlet/ratings/service.xml,\
 	@com.liferay.portal.impl-*.jar!/com/liferay/portlet/social/service.xml,\
-	@com.liferay.portal.impl-*.jar!/com/liferay/portlet/trash/service.xml,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/bean/BeanProperties.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/bean/BeanPropertiesUtil.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/change/tracking/CTAware.class,\

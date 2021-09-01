@@ -69,7 +69,6 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.comment.CommentManagerUtil;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
@@ -666,35 +665,6 @@ public class DLFileEntryLocalServiceImpl
 	public void deleteFileEntries(
 			long groupId, long folderId, boolean includeTrashedEntries)
 		throws PortalException {
-
-		RepositoryEventTrigger repositoryEventTrigger =
-			getFolderRepositoryEventTrigger(groupId, folderId);
-
-		ActionableDynamicQuery actionableDynamicQuery =
-			dlFileEntryLocalService.getActionableDynamicQuery();
-
-		actionableDynamicQuery.setAddCriteriaMethod(
-			dynamicQuery -> {
-				Property folderIdproperty = PropertyFactoryUtil.forName(
-					"folderId");
-
-				dynamicQuery.add(folderIdproperty.eq(folderId));
-			});
-		actionableDynamicQuery.setGroupId(groupId);
-		actionableDynamicQuery.setPerformActionMethod(
-			(DLFileEntry dlFileEntry) -> {
-				if (includeTrashedEntries ||
-					!dlFileEntry.isInTrashExplicitly()) {
-
-					repositoryEventTrigger.trigger(
-						RepositoryEventType.Delete.class, FileEntry.class,
-						new LiferayFileEntry(dlFileEntry));
-
-					dlFileEntryLocalService.deleteFileEntry(dlFileEntry);
-				}
-			});
-
-		actionableDynamicQuery.performActions();
 	}
 
 	@Indexable(type = IndexableType.DELETE)
@@ -973,40 +943,6 @@ public class DLFileEntryLocalServiceImpl
 	public void deleteRepositoryFileEntries(
 			long repositoryId, long folderId, boolean includeTrashedEntries)
 		throws PortalException {
-
-		RepositoryEventTrigger repositoryEventTrigger =
-			RepositoryUtil.getRepositoryEventTrigger(repositoryId);
-
-		int total = dlFileEntryPersistence.countByR_F(repositoryId, folderId);
-
-		IntervalActionProcessor<Void> intervalActionProcessor =
-			new IntervalActionProcessor<>(total);
-
-		intervalActionProcessor.setPerformIntervalActionMethod(
-			(start, end) -> {
-				List<DLFileEntry> dlFileEntries =
-					dlFileEntryPersistence.findByR_F(
-						repositoryId, folderId, start, end);
-
-				for (DLFileEntry dlFileEntry : dlFileEntries) {
-					if (includeTrashedEntries ||
-						!dlFileEntry.isInTrashExplicitly()) {
-
-						repositoryEventTrigger.trigger(
-							RepositoryEventType.Delete.class, FileEntry.class,
-							new LiferayFileEntry(dlFileEntry));
-
-						dlFileEntryLocalService.deleteFileEntry(dlFileEntry);
-					}
-					else {
-						intervalActionProcessor.incrementStart();
-					}
-				}
-
-				return null;
-			});
-
-		intervalActionProcessor.performIntervalActions();
 	}
 
 	@Override
@@ -2245,17 +2181,6 @@ public class DLFileEntryLocalServiceImpl
 				companyId, ddmStructures, fileEntryId, toFileVersionId,
 				ddmFormValuesMap, serviceContext);
 		}
-	}
-
-	protected RepositoryEventTrigger getFolderRepositoryEventTrigger(
-			long groupId, long folderId)
-		throws PortalException {
-
-		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			return RepositoryUtil.getFolderRepositoryEventTrigger(folderId);
-		}
-
-		return RepositoryUtil.getRepositoryEventTrigger(groupId);
 	}
 
 	protected String getNextVersion(

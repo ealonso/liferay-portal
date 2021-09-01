@@ -38,8 +38,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -48,6 +46,9 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
 import com.liferay.ratings.kernel.model.RatingsEntry;
 import com.liferay.ratings.kernel.service.RatingsEntryLocalService;
+import com.liferay.trash.TrashHelper;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -432,9 +433,8 @@ public class MBMessageStagedModelDataHandler
 		long userId = portletDataContext.getUserId(message.getUserUuid());
 
 		if (existingMessage.isInTrash()) {
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					MBMessage.class.getName());
+			TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+				MBMessage.class.getName());
 
 			if (trashHandler.isRestorable(existingMessage.getMessageId())) {
 				trashHandler.restoreTrashEntry(
@@ -442,12 +442,11 @@ public class MBMessageStagedModelDataHandler
 			}
 		}
 
-		if (existingMessage.isInTrashContainer()) {
+		if (_trashHelper.isInTrashContainer(existingMessage)) {
 			MBThread existingThread = existingMessage.getThread();
 
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					MBThread.class.getName());
+			TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+				MBThread.class.getName());
 
 			if (trashHandler.isRestorable(existingThread.getThreadId())) {
 				trashHandler.restoreTrashEntry(
@@ -586,5 +585,11 @@ public class MBMessageStagedModelDataHandler
 
 	@Reference
 	private RatingsEntryLocalService _ratingsEntryLocalService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 }

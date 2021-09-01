@@ -61,7 +61,6 @@ import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -2051,22 +2050,6 @@ public class PortletImpl extends PortletBaseImpl {
 	@Override
 	public List<String> getTrashHandlerClasses() {
 		return _trashHandlerClasses;
-	}
-
-	/**
-	 * Returns the trash handler instances of the portlet.
-	 *
-	 * @return the trash handler instances of the portlet
-	 */
-	@Override
-	public List<TrashHandler> getTrashHandlerInstances() {
-		if (_trashHandlerClasses.isEmpty()) {
-			return null;
-		}
-
-		PortletBag portletBag = PortletBagPool.get(getRootPortletId());
-
-		return portletBag.getTrashHandlerInstances();
 	}
 
 	/**

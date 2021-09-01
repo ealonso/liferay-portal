@@ -102,6 +102,8 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portlet.documentlibrary.lar.FileEntryUtil;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.io.File;
 import java.io.InputStream;
@@ -1161,8 +1163,8 @@ public class JournalArticleStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			JournalArticle.class.getName());
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+			existingArticle.getModelClassName());
 
 		if (trashHandler.isRestorable(existingArticle.getResourcePrimKey())) {
 			trashHandler.restoreTrashEntry(
@@ -1842,6 +1844,9 @@ public class JournalArticleStagedModelDataHandler
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 	private UserLocalService _userLocalService;
 

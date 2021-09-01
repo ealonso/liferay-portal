@@ -62,8 +62,6 @@ import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.taglib.ui.AssetAddonEntry;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -79,7 +77,10 @@ import com.liferay.portlet.LiferayPortletUtil;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.staging.StagingGroupHelperUtil;
 import com.liferay.trash.constants.TrashActionKeys;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.util.TrashHandlerRegistryUtil;
+import com.liferay.trash.util.TrashHelperUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -777,7 +778,7 @@ public class JournalContentDisplayContext {
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
 			JournalArticle.class.getName());
 
-		TrashEntry trashEntry = selectedArticle.getTrashEntry();
+		TrashEntry trashEntry = TrashHelperUtil.getTrashEntry(selectedArticle);
 
 		return trashHandler.hasTrashPermission(
 			_themeDisplay.getPermissionChecker(), 0, trashEntry.getClassPK(),

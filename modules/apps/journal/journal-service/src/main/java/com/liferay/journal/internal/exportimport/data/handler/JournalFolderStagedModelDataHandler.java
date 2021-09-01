@@ -39,6 +39,8 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -243,8 +245,8 @@ public class JournalFolderStagedModelDataHandler
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
-			JournalFolder.class.getName());
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+			existingFolder.getModelClassName());
 
 		if (trashHandler.isRestorable(existingFolder.getFolderId())) {
 			trashHandler.restoreTrashEntry(
@@ -339,5 +341,8 @@ public class JournalFolderStagedModelDataHandler
 
 	private DDMStructureLocalService _ddmStructureLocalService;
 	private JournalFolderLocalService _journalFolderLocalService;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

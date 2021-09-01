@@ -49,13 +49,14 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermissionUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.trash.TrashHelper;
 import com.liferay.trash.constants.TrashActionKeys;
 import com.liferay.trash.constants.TrashEntryConstants;
-import com.liferay.trash.kernel.exception.RestoreEntryException;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
+import com.liferay.trash.model.TrashEntry;
 
 import javax.portlet.PortletRequest;
 
@@ -259,7 +260,7 @@ public class DLFileEntryTrashHandler extends BaseDLTrashHandler {
 			return false;
 		}
 
-		return !dlFileEntry.isInTrashContainer();
+		return !_trashHelper.isInTrashContainer(dlFileEntry);
 	}
 
 	@Override
@@ -294,9 +295,8 @@ public class DLFileEntryTrashHandler extends BaseDLTrashHandler {
 		if ((dlFileEntry.getClassNameId() > 0) &&
 			(dlFileEntry.getClassPK() > 0)) {
 
-			TrashHandler trashHandler =
-				TrashHandlerRegistryUtil.getTrashHandler(
-					dlFileEntry.getClassName());
+			TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
+				dlFileEntry.getClassName());
 
 			trashHandler.restoreRelatedTrashEntry(getClassName(), classPK);
 
@@ -517,5 +517,11 @@ public class DLFileEntryTrashHandler extends BaseDLTrashHandler {
 		target = "(model.class.name=com.liferay.portal.kernel.repository.model.Folder)"
 	)
 	private ModelResourcePermission<Folder> _folderModelResourcePermission;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
+
+	@Reference
+	private TrashHelper _trashHelper;
 
 }

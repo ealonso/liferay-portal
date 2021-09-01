@@ -1130,14 +1130,6 @@ public interface Portlet extends PersistedModel, PortletModel {
 	public java.util.List<String> getTrashHandlerClasses();
 
 	/**
-	 * Returns the trash handler instances of the portlet.
-	 *
-	 * @return the trash handler instances of the portlet
-	 */
-	public java.util.List<com.liferay.portal.kernel.trash.TrashHandler>
-		getTrashHandlerInstances();
-
-	/**
 	 * Returns <code>true</code> if the portlet is an undeployed portlet.
 	 *
 	 * @return <code>true</code> if the portlet is a placeholder of an

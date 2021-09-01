@@ -16,8 +16,8 @@ package com.liferay.message.boards.web.internal.trash;
 
 import com.liferay.message.boards.service.MBCategoryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.trash.TrashRendererFactory;
+import com.liferay.trash.renderer.TrashRenderer;
+import com.liferay.trash.renderer.TrashRendererFactory;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

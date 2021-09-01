@@ -47,10 +47,7 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = {
-		"model.class.name=com.liferay.trash.kernel.model.TrashEntry",
-		"model.class.name=com.liferay.trash.model.TrashEntry"
-	},
+	property = "model.class.name=com.liferay.trash.model.TrashEntry",
 	service = ViewPortletProvider.class
 )
 public class TrashViewPortletProvider

@@ -584,7 +584,9 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 			page.getNodeId(), page.getTitle());
 
 		for (WikiPage childPage : childPages) {
-			if (childPage.isApproved() || childPage.isInTrashImplicitly()) {
+			if (childPage.isApproved() ||
+				_trashHelper.isInTrashImplicitly(childPage)) {
+
 				wikiPageLocalService.deletePage(childPage);
 			}
 			else {
@@ -599,7 +601,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 		for (WikiPage redirectorPage : redirectorPages) {
 			if (redirectorPage.isApproved() ||
-				redirectorPage.isInTrashImplicitly()) {
+				_trashHelper.isInTrashImplicitly(redirectorPage)) {
 
 				wikiPageLocalService.deletePage(redirectorPage);
 			}
@@ -684,7 +686,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 		// Trash
 
 		if (page.isInTrash()) {
-			if (page.isInTrashExplicitly()) {
+			if (_trashHelper.isInTrashExplicitly(page)) {
 				page.setTitle(_trashHelper.getOriginalTitle(page.getTitle()));
 
 				_trashEntryLocalService.deleteEntry(
@@ -1620,7 +1622,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (page.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(page)) {
 			_movePageFromTrash(userId, page, newNodeId, newParentTitle);
 		}
 		else {
@@ -1911,7 +1913,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (page.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(page)) {
 			_movePageFromTrash(
 				userId, page, page.getNodeId(), page.getParentTitle());
 		}
@@ -2529,7 +2531,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			childPage = wikiPagePersistence.update(childPage);
 
-			if (childPage.isInTrashImplicitly()) {
+			if (_trashHelper.isInTrashImplicitly(childPage)) {
 				_moveDependentFromTrash(
 					childPage, newParentPage.getNodeId(),
 					newParentPage.getTitle());
@@ -2690,7 +2692,7 @@ public class WikiPageLocalServiceImpl extends WikiPageLocalServiceBaseImpl {
 
 			redirectorPage = wikiPagePersistence.update(redirectorPage);
 
-			if (redirectorPage.isInTrashImplicitly()) {
+			if (_trashHelper.isInTrashImplicitly(redirectorPage)) {
 				_moveDependentFromTrash(
 					redirectorPage, newRedirectPage.getNodeId(),
 					redirectorPage.getParentTitle());

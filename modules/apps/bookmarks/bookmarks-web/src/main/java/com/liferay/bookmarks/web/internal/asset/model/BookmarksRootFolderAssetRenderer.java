@@ -19,7 +19,7 @@ import com.liferay.asset.kernel.model.BaseJSPAssetRenderer;
 import com.liferay.bookmarks.model.BookmarksFolder;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.trash.TrashRenderer;
+import com.liferay.trash.renderer.TrashRenderer;
 
 import java.util.Locale;
 

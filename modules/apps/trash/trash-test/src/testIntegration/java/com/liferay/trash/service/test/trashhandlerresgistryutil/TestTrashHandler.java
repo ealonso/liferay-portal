@@ -21,9 +21,9 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.renderer.TrashRenderer;
 
 import java.util.List;
 
@@ -215,15 +215,6 @@ public class TestTrashHandler implements TrashHandler {
 		return false;
 	}
 
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link #isDeletable(long)}
-	 */
-	@Deprecated
-	@Override
-	public boolean isDeletable() {
-		return false;
-	}
-
 	@Override
 	public boolean isDeletable(long classPK) {
 		return false;
@@ -236,15 +227,6 @@ public class TestTrashHandler implements TrashHandler {
 
 	@Override
 	public boolean isInTrashContainer(long classPK) {
-		return false;
-	}
-
-	/**
-	 * @deprecated As of Mueller (7.2.x), replaced by {@link #isMovable(long)}
-	 */
-	@Deprecated
-	@Override
-	public boolean isMovable() {
 		return false;
 	}
 

@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.search.OpenSearch;
 import com.liferay.portal.kernel.security.permission.propagator.PermissionPropagator;
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
-import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.webdav.WebDAVStorage;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.xmlrpc.Method;
@@ -107,8 +106,6 @@ public interface PortletBag extends Cloneable {
 	public List<StagedModelDataHandler<?>> getStagedModelDataHandlerInstances();
 
 	public List<TemplateHandler> getTemplateHandlerInstances();
-
-	public List<TrashHandler> getTrashHandlerInstances();
 
 	public List<URLEncoder> getURLEncoderInstances();
 

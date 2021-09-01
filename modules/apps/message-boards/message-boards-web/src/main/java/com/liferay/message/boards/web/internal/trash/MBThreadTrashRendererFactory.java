@@ -17,8 +17,8 @@ package com.liferay.message.boards.web.internal.trash;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.message.boards.service.MBThreadLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.trash.TrashRenderer;
-import com.liferay.portal.kernel.trash.TrashRendererFactory;
+import com.liferay.trash.renderer.TrashRenderer;
+import com.liferay.trash.renderer.TrashRendererFactory;
 
 import javax.servlet.ServletContext;
 

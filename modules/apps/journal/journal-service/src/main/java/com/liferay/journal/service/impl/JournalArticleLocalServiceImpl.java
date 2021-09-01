@@ -1326,7 +1326,9 @@ public class JournalArticleLocalServiceImpl
 
 		// Trash
 
-		if (article.isInTrash() && (article.getTrashEntry() != null)) {
+		if (article.isInTrash() &&
+			(_trashHelper.getTrashEntry(article) != null)) {
+
 			_trashVersionLocalService.deleteTrashVersion(
 				JournalArticle.class.getName(), article.getId());
 		}
@@ -1609,7 +1611,9 @@ public class JournalArticleLocalServiceImpl
 					articleResources.add(articleResource);
 				}
 
-				if (includeTrashedEntries || !article.isInTrashExplicitly()) {
+				if (includeTrashedEntries ||
+					!_trashHelper.isInTrashExplicitly(article)) {
+
 					journalArticleLocalService.deleteArticle(
 						article, null, null);
 				}
@@ -4101,7 +4105,7 @@ public class JournalArticleLocalServiceImpl
 				RestoreEntryException.INVALID_STATUS);
 		}
 
-		if (article.isInTrashExplicitly()) {
+		if (_trashHelper.isInTrashExplicitly(article)) {
 			article = restoreArticleFromTrash(userId, article);
 		}
 		else {

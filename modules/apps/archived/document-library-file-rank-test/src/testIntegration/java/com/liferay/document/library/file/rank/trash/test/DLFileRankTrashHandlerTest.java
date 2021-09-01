@@ -31,12 +31,12 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.util.List;
 
@@ -112,7 +112,7 @@ public class DLFileRankTrashHandlerTest {
 		Folder folder = addFolder(
 			group, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, serviceContext);
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			DLFileEntry.class.getName());
 
 		FileEntry fileEntry = null;
@@ -166,5 +166,8 @@ public class DLFileRankTrashHandlerTest {
 
 	@Inject
 	private static DLFileRankLocalService _dlFileRankLocalService;
+
+	@Inject
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

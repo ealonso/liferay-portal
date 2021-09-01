@@ -44,6 +44,11 @@ import com.liferay.trash.constants.TrashActionKeys;
 import com.liferay.trash.constants.TrashEntryConstants;
 import com.liferay.trash.kernel.exception.RestoreEntryException;
 import com.liferay.trash.kernel.model.TrashEntry;
+import com.liferay.trash.constants.TrashEntryConstants;
+import com.liferay.trash.exception.RestoreEntryException;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.model.TrashEntry;
+import com.liferay.trash.renderer.TrashRenderer;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.engine.WikiEngineRenderer;
 import com.liferay.wiki.model.WikiNode;
@@ -142,11 +147,11 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 			try {
 				WikiPage parentPage = page.getParentPage();
 
-				while (parentPage.isInTrashImplicitly()) {
+				while (_trashHelper.isInTrashImplicitly(parentPage)) {
 					parentPage = parentPage.getParentPage();
 				}
 
-				if (parentPage.isInTrashExplicitly()) {
+				if (_trashHelper.isInTrashExplicitly(parentPage)) {
 					return parentPage;
 				}
 			}
@@ -316,11 +321,6 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 	}
 
 	@Override
-	public boolean isMovable() {
-		return false;
-	}
-
-	@Override
 	public boolean isRestorable(long classPK) throws PortalException {
 		WikiPage page = _wikiPageLocalService.getLatestPage(
 			classPK, WorkflowConstants.STATUS_ANY, false);
@@ -332,7 +332,7 @@ public class WikiPageTrashHandler extends BaseWikiTrashHandler {
 			return false;
 		}
 
-		return !page.isInTrashContainer();
+		return !_trashHelper.isInTrashContainer(page);
 	}
 
 	@Override

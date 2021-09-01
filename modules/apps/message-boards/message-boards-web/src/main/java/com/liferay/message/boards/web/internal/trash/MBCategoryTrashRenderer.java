@@ -17,8 +17,10 @@ package com.liferay.message.boards.web.internal.trash;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.message.boards.model.MBCategory;
-import com.liferay.portal.kernel.trash.BaseTrashRenderer;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.trash.renderer.TrashRenderer;
 
 import java.util.Locale;
 
@@ -31,7 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Eduardo García
  */
-public class MBCategoryTrashRenderer extends BaseTrashRenderer {
+public class MBCategoryTrashRenderer implements TrashRenderer {
 
 	public static final String TYPE = "category";
 
@@ -52,6 +54,11 @@ public class MBCategoryTrashRenderer extends BaseTrashRenderer {
 	@Override
 	public String getIconCssClass() {
 		return "comments";
+	}
+
+	@Override
+	public String getNewName(String oldName, String token) {
+		return StringBundler.concat(oldName, StringPool.SPACE, token);
 	}
 
 	@Override

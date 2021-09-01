@@ -33,7 +33,7 @@ import org.osgi.annotation.versioning.ProviderType;
 public interface DefaultKeywordQueryConfiguration {
 
 	@Meta.AD(
-		deflt = "com.liferay.asset.kernel.model.AssetCategory|com.liferay.asset.kernel.model.AssetEntry|com.liferay.asset.kernel.model.AssetTag|com.liferay.asset.kernel.model.AssetVocabulary|com.liferay.portal.kernel.model.Contact|com.liferay.portal.kernel.model.Organization|com.liferay.portal.kernel.model.User|com.liferay.trash.kernel.model.TrashEntry",
+		deflt = "com.liferay.asset.kernel.model.AssetCategory|com.liferay.asset.kernel.model.AssetEntry|com.liferay.asset.kernel.model.AssetTag|com.liferay.asset.kernel.model.AssetVocabulary|com.liferay.portal.kernel.model.Contact|com.liferay.portal.kernel.model.Organization|com.liferay.portal.kernel.model.User|com.liferay.trash.model.TrashEntry",
 		description = "disabled-entry-class-names-help",
 		name = "disabled-entry-class-names", required = false
 	)

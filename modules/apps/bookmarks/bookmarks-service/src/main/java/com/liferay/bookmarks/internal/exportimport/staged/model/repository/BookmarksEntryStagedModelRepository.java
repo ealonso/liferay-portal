@@ -26,8 +26,8 @@ import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.trash.TrashHandler;
-import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
+import com.liferay.trash.handler.TrashHandler;
+import com.liferay.trash.handler.TrashHandlerRegistry;
 
 import java.util.List;
 
@@ -153,7 +153,7 @@ public class BookmarksEntryStagedModelRepository
 			return;
 		}
 
-		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
+		TrashHandler trashHandler = _trashHandlerRegistry.getTrashHandler(
 			BookmarksEntry.class.getName());
 
 		try {
@@ -205,5 +205,8 @@ public class BookmarksEntryStagedModelRepository
 
 	@Reference
 	private StagedModelRepositoryHelper _stagedModelRepositoryHelper;
+
+	@Reference
+	private TrashHandlerRegistry _trashHandlerRegistry;
 
 }

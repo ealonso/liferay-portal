@@ -16,8 +16,11 @@ package com.liferay.exportimport.web.internal.trash;
 
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.web.internal.constants.ExportImportWebKeys;
-import com.liferay.portal.kernel.trash.BaseJSPTrashRenderer;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.trash.renderer.BaseJSPTrashRenderer;
 
 import java.util.Locale;
 
@@ -52,10 +55,20 @@ public class ExportImportConfigurationTrashRenderer
 	}
 
 	@Override
+	public String getIconCssClass() throws PortalException {
+		return StringPool.BLANK;
+	}
+
+	@Override
 	public String getJspPath(
 		HttpServletRequest httpServletRequest, String template) {
 
 		return "/view_configuration.jsp";
+	}
+
+	@Override
+	public String getNewName(String oldName, String token) {
+		return StringBundler.concat(oldName, StringPool.SPACE, token);
 	}
 
 	@Override

@@ -14,26 +14,19 @@
 
 package com.liferay.portal.kernel.model;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.trash.kernel.model.TrashEntry;
-
 /**
  * @author Zsolt Berentey
  */
 public interface TrashedModel {
 
-	public int getStatus();
+	public String getModelClassName();
 
-	public TrashEntry getTrashEntry() throws PortalException;
+	public long getPrimaryKey();
+
+	public int getStatus();
 
 	public long getTrashEntryClassPK();
 
 	public boolean isInTrash();
-
-	public boolean isInTrashContainer();
-
-	public boolean isInTrashExplicitly();
-
-	public boolean isInTrashImplicitly();
 
 }
