@@ -19,11 +19,13 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLinkLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
 import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
 import com.liferay.portal.kernel.comment.CommentManager;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -35,13 +37,17 @@ import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -209,6 +215,28 @@ public class FragmentEntryLinkModelListener
 		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
 			fragmentEntryLink.getGroupId(),
 			_portal.getClassNameId(DDMStructure.class), ddmTemplateKey);
+
+		if (ddmTemplate == null) {
+			List<DDMTemplate> templates = _ddmTemplateLocalService.getTemplates(
+				fragmentEntryLink.getCompanyId(),
+				ArrayUtil.append(
+					_portal.getAncestorSiteGroupIds(
+						fragmentEntryLink.getGroupId()),
+					new long[] {fragmentEntryLink.getGroupId()}),
+				null, null,
+				_portal.getClassNameId(InfoItemFormProvider.class.getName()),
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+			Stream<DDMTemplate> templatesStream = templates.stream();
+
+			ddmTemplate = templatesStream.filter(
+				currentDDMTemplate -> Objects.equals(
+					ddmTemplateKey, currentDDMTemplate.getTemplateKey())
+			).findFirst(
+			).orElse(
+				null
+			);
+		}
 
 		if (ddmTemplate == null) {
 			return;
