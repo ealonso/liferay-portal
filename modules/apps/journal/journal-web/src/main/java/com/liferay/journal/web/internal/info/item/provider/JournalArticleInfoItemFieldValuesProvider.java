@@ -103,8 +103,6 @@ public class JournalArticleInfoItemFieldValuesProvider
 					JournalArticle.class.getName(), journalArticle)
 			).infoFieldValues(
 				_getDDMStructureInfoFieldValues(journalArticle)
-			).infoFieldValues(
-				_getDDMTemplateInfoFieldValues(journalArticle)
 			).infoItemReference(
 				new InfoItemReference(
 					JournalArticle.class.getName(),
@@ -171,27 +169,6 @@ public class JournalArticleInfoItemFieldValuesProvider
 		catch (PortalException portalException) {
 			throw new RuntimeException(portalException);
 		}
-	}
-
-	private List<InfoFieldValue<Object>> _getDDMTemplateInfoFieldValues(
-		JournalArticle journalArticle) {
-
-		List<InfoFieldValue<Object>> infoFieldValues = new ArrayList<>();
-
-		DDMStructure ddmStructure = journalArticle.getDDMStructure();
-
-		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
-
-		ddmTemplates.forEach(
-			ddmTemplate -> {
-				String fieldName = _getTemplateKey(ddmTemplate);
-
-				infoFieldValues.add(
-					_getJournalTemplateInfoFieldValue(
-						ddmTemplate, fieldName, journalArticle));
-			});
-
-		return infoFieldValues;
 	}
 
 	private String _getDisplayPageURL(
@@ -422,13 +399,6 @@ public class JournalArticleInfoItemFieldValuesProvider
 		journalArticle = articles.get(0);
 
 		return _userLocalService.fetchUser(journalArticle.getUserId());
-	}
-
-	private String _getTemplateKey(DDMTemplate ddmTemplate) {
-		String templateKey = ddmTemplate.getTemplateKey();
-
-		return PortletDisplayTemplate.DISPLAY_STYLE_PREFIX +
-			templateKey.replaceAll("\\W", "_");
 	}
 
 	private ThemeDisplay _getThemeDisplay() {
