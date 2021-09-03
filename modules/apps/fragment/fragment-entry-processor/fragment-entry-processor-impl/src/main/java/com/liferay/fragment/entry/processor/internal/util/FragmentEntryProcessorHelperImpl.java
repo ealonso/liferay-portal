@@ -394,6 +394,12 @@ public class FragmentEntryProcessorHelperImpl
 			infoItemFieldValues.getInfoFieldValue(fieldId);
 
 		if (infoFieldValue == null) {
+			infoFieldValue =
+				infoItemFieldValuesProvider.getTemplatedInfoFieldValue(
+					object, fieldId);
+		}
+
+		if (infoFieldValue == null) {
 			return null;
 		}
 
