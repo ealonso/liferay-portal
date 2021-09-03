@@ -56,6 +56,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,10 +133,6 @@ public class JournalArticleInfoItemFieldValuesProvider
 		Stream<DDMTemplate> ddmTemplatesStream = ddmTemplates.stream();
 
 		DDMTemplate ddmTemplate = ddmTemplatesStream.filter(
-			currentDDMTemplate ->
-				currentDDMTemplate.getResourceClassNameId() ==
-					_portal.getClassNameId(JournalArticle.class.getName())
-		).filter(
 			currentDDMTemplate -> Objects.equals(
 				fieldName, _getFieldName(currentDDMTemplate))
 		).findAny(
@@ -144,8 +141,15 @@ public class JournalArticleInfoItemFieldValuesProvider
 		);
 
 		if (ddmTemplate != null) {
-			return _getJournalTemplateInfoFieldValue(
-				ddmTemplate, fieldName, journalArticle);
+			if (ddmTemplate.getResourceClassNameId() == _portal.getClassNameId(
+					JournalArticle.class.getName())) {
+
+				return _getJournalTemplateInfoFieldValue(
+					ddmTemplate, fieldName, journalArticle);
+			}
+
+			return _templateInfoItemFieldSetProvider.getInfoFieldValue(
+				ddmTemplate, journalArticle);
 		}
 
 		return null;
@@ -452,6 +456,9 @@ public class JournalArticleInfoItemFieldValuesProvider
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 	@Reference
 	private UserLocalService _userLocalService;
