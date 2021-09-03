@@ -25,6 +25,13 @@ public interface InfoItemFieldValuesProvider<T> {
 	public default InfoFieldValue<Object> getInfoFieldValue(
 		T t, String fieldName) {
 
+		InfoFieldValue<Object> infoFieldValue = getTemplatedInfoFieldValue(
+			t, fieldName);
+
+		if (infoFieldValue != null) {
+			return infoFieldValue;
+		}
+
 		InfoItemFieldValues infoItemFieldValues = getInfoItemFieldValues(t);
 
 		return infoItemFieldValues.getInfoFieldValue(fieldName);
@@ -43,5 +50,11 @@ public interface InfoItemFieldValuesProvider<T> {
 	}
 
 	public InfoItemFieldValues getInfoItemFieldValues(T t);
+
+	public default InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		T t, String fieldName) {
+
+		return null;
+	}
 
 }
