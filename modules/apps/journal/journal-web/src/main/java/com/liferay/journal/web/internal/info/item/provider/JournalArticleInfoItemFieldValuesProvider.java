@@ -53,12 +53,15 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -114,6 +117,42 @@ public class JournalArticleInfoItemFieldValuesProvider
 		}
 	}
 
+	public InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		JournalArticle journalArticle, String fieldName) {
+
+		if ((fieldName == null) ||
+			!fieldName.startsWith(
+				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+
+			return null;
+		}
+
+		DDMStructure ddmStructure = journalArticle.getDDMStructure();
+
+		List<DDMTemplate> ddmTemplates = ddmStructure.getTemplates();
+
+		Stream<DDMTemplate> ddmTemplatesStream = ddmTemplates.stream();
+
+		DDMTemplate ddmTemplate = ddmTemplatesStream.filter(
+			currentDDMTemplate ->
+				currentDDMTemplate.getResourceClassNameId() ==
+					_portal.getClassNameId(JournalArticle.class.getName())
+		).filter(
+			currentDDMTemplate -> Objects.equals(
+				fieldName, _getFieldName(currentDDMTemplate))
+		).findAny(
+		).orElse(
+			null
+		);
+
+		if (ddmTemplate != null) {
+			return _getJournalTemplateInfoFieldValue(
+				ddmTemplate, fieldName, journalArticle);
+		}
+
+		return null;
+	}
+
 	private List<InfoFieldValue<Object>> _getDDMStructureInfoFieldValues(
 		JournalArticle article) {
 
@@ -162,6 +201,13 @@ public class JournalArticleInfoItemFieldValuesProvider
 		return _assetDisplayPageFriendlyURLProvider.getFriendlyURL(
 			JournalArticle.class.getName(), journalArticle.getResourcePrimKey(),
 			themeDisplay);
+	}
+
+	private String _getFieldName(DDMTemplate ddmTemplate) {
+		String templateKey = ddmTemplate.getTemplateKey();
+
+		return PortletDisplayTemplate.DISPLAY_STYLE_PREFIX +
+			templateKey.replaceAll("\\W", "_");
 	}
 
 	private List<InfoFieldValue<Object>> _getJournalArticleInfoFieldValues(
@@ -433,6 +479,9 @@ public class JournalArticleInfoItemFieldValuesProvider
 
 	@Reference
 	private JournalConverter _journalConverter;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private UserLocalService _userLocalService;
