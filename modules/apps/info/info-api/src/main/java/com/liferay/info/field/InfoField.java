@@ -143,6 +143,10 @@ public class InfoField<T extends InfoFieldType> implements InfoFieldSetEntry {
 		return _builder._multivalued;
 	}
 
+	public boolean isTemplated() {
+		return _builder._templated;
+	}
+
 	@Override
 	public String toString() {
 		return StringBundler.concat(
@@ -171,6 +175,7 @@ public class InfoField<T extends InfoFieldType> implements InfoFieldSetEntry {
 		private boolean _localizable;
 		private boolean _multivalued;
 		private String _name;
+		private boolean _templated;
 
 	}
 
@@ -209,6 +214,12 @@ public class InfoField<T extends InfoFieldType> implements InfoFieldSetEntry {
 
 		public FinalStep<T> multivalued(boolean multivalued) {
 			_builder._multivalued = multivalued;
+
+			return this;
+		}
+
+		public FinalStep<T> templated(boolean templated) {
+			_builder._templated = templated;
 
 			return this;
 		}
