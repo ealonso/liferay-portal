@@ -171,14 +171,16 @@ public class InformationTemplatesEditDDMTemplateDisplayContext
 					infoFieldSet.getLabel(_themeDisplay.getLocale()));
 
 			for (InfoField<?> infoField : infoFieldSet.getAllInfoFields()) {
-				InfoFieldType infoFieldType = infoField.getInfoFieldType();
+				if (!infoField.isTemplated()) {
+					InfoFieldType infoFieldType = infoField.getInfoFieldType();
 
-				templateVariableGroup.addFieldVariable(
-					infoField.getLabel(_themeDisplay.getLocale()),
-					TemplateNode.class, infoField.getName(),
-					infoField.getLabel(_themeDisplay.getLocale()),
-					infoFieldType.getName(), infoField.isMultivalued(),
-					_templateVariableCodeHandler);
+					templateVariableGroup.addFieldVariable(
+						infoField.getLabel(_themeDisplay.getLocale()),
+						TemplateNode.class, infoField.getName(),
+						infoField.getLabel(_themeDisplay.getLocale()),
+						infoFieldType.getName(), infoField.isMultivalued(),
+						_templateVariableCodeHandler);
+				}
 			}
 
 			templateVariableGroups.add(templateVariableGroup);
