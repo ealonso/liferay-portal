@@ -7,6 +7,7 @@ Export-Package:\
 	com.liferay.template.exception,\
 	com.liferay.template.info.item.capability,\
 	com.liferay.template.info.item.provider,\
+	com.liferay.template.info.item.renderer,\
 	com.liferay.template.model,\
 	com.liferay.template.service,\
 	com.liferay.template.service.persistence
