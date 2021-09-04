@@ -16,6 +16,7 @@ package com.liferay.journal.web.internal.info.item.renderer;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
@@ -51,29 +52,10 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
 		JournalArticle journalArticle, Locale locale) {
 
-		List<InfoItemRendererTemplate> infoItemRendererTemplates =
-			new ArrayList<>();
-
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
 
-		for (DDMTemplate ddmTemplate : ddmStructure.getTemplates()) {
-			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId()) ||
-				(!Objects.equals(
-					ddmTemplate.getClassNameId(),
-					_portal.getClassNameId(DDMStructure.class.getName())) &&
-				 !Objects.equals(
-					 ddmTemplate.getClassNameId(),
-					 _portal.getClassNameId(JournalArticle.class.getName())))) {
-
-				continue;
-			}
-
-			infoItemRendererTemplates.add(
-				new InfoItemRendererTemplate(
-					ddmTemplate.getName(locale), ddmTemplate.getTemplateKey()));
-		}
-
-		return infoItemRendererTemplates;
+		return _getInfoItemRendererTemplates(
+			locale, ddmStructure.getTemplates());
 	}
 
 	@Override
@@ -84,9 +66,10 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			return Collections.emptyList();
 		}
 
-		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			JournalArticle.class.getName(), GetterUtil.getLong(classTypeKey),
-			locale);
+		return _getInfoItemRendererTemplates(
+			locale,
+			_ddmTemplateLocalService.getTemplates(
+				GetterUtil.getLong(classTypeKey)));
 	}
 
 	@Override
@@ -127,6 +110,35 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			JournalArticle.class.getName(), journalArticle, templateKey,
 			httpServletRequest, httpServletResponse);
 	}
+
+	private List<InfoItemRendererTemplate> _getInfoItemRendererTemplates(
+		Locale locale, List<DDMTemplate> templates) {
+
+		List<InfoItemRendererTemplate> infoItemRendererTemplates =
+			new ArrayList<>();
+
+		for (DDMTemplate ddmTemplate : templates) {
+			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId()) ||
+				(!Objects.equals(
+					ddmTemplate.getClassNameId(),
+					_portal.getClassNameId(DDMStructure.class.getName())) &&
+				 !Objects.equals(
+					 ddmTemplate.getClassNameId(),
+					 _portal.getClassNameId(JournalArticle.class.getName())))) {
+
+				continue;
+			}
+
+			infoItemRendererTemplates.add(
+				new InfoItemRendererTemplate(
+					ddmTemplate.getName(locale), ddmTemplate.getTemplateKey()));
+		}
+
+		return infoItemRendererTemplates;
+	}
+
+	@Reference
+	private DDMTemplateLocalService _ddmTemplateLocalService;
 
 	@Reference
 	private Portal _portal;
