@@ -16,7 +16,9 @@ package com.liferay.template.web.internal.info.item.renderer;
 
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
+import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
@@ -29,6 +31,9 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
+import com.liferay.template.web.internal.portlet.template.TemplateDisplayTemplateTransformer;
+
+import java.io.Writer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +41,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -99,6 +107,58 @@ public class TemplateInfoItemTemplatedRendererImpl
 		return LanguageUtil.get(locale, "information-templates");
 	}
 
+	@Override
+	public void renderTemplate(
+		String className, Object itemObject, String templateKey,
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			return;
+		}
+
+		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
+			serviceContext.getScopeGroupId(), _portal.getClassNameId(className),
+			templateKey);
+
+		if (ddmTemplate == null) {
+			return;
+		}
+
+		try {
+			InfoItemFieldValues infoItemFieldValues =
+				InfoItemFieldValues.builder(
+				).build();
+
+			InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
+				_infoItemServiceTracker.getFirstInfoItemService(
+					InfoItemFieldValuesProvider.class, className);
+
+			if (infoItemFieldValuesProvider != null) {
+				infoItemFieldValues =
+					infoItemFieldValuesProvider.getInfoItemFieldValues(
+						itemObject);
+			}
+
+			TemplateDisplayTemplateTransformer
+				templateDisplayTemplateTransformer =
+					new TemplateDisplayTemplateTransformer(
+						ddmTemplate, infoItemFieldValues);
+
+			String content = templateDisplayTemplateTransformer.transform(
+				serviceContext.getLocale());
+
+			Writer writer = httpServletResponse.getWriter();
+
+			writer.write(content);
+		}
+		catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
+	}
 
 	private List<DDMTemplate> _getDDMTemplates(String className, long classPK) {
 		ServiceContext serviceContext =

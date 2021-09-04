@@ -19,6 +19,9 @@ import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import java.util.List;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author Lourdes Fernández Besada
  */
@@ -43,5 +46,10 @@ public interface TemplateInfoItemTemplatedRenderer {
 		String className, String classTypeKey, Locale locale);
 
 	public String getLabel(Locale locale);
+
+	public void renderTemplate(
+		String className, Object itemObject, String templateKey,
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse);
 
 }
