@@ -27,6 +27,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandlerControl;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.staging.Staging;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
@@ -39,10 +40,13 @@ import com.liferay.portal.kernel.template.TemplateHandlerRegistry;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.template.constants.TemplatePortletKeys;
+import com.liferay.template.web.internal.portlet.template.InformationTemplatesTemplateHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.PortletPreferences;
 
@@ -108,9 +112,17 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences)
 		throws Exception {
 
-		for (long classNameId : _templateHandlerRegistry.getClassNameIds()) {
-			_ddmTemplateLocalService.deleteTemplates(
-				portletDataContext.getScopeGroupId(), classNameId);
+		for (DDMTemplate ddmTemplate :
+				_ddmTemplateLocalService.getTemplatesByGroupId(
+					portletDataContext.getScopeGroupId())) {
+
+			if ((_getInfoItemFormProviderClassNameId() ==
+					ddmTemplate.getResourceClassNameId()) ||
+				(_getPortletDisplayTemplateClassNameId() ==
+					ddmTemplate.getResourceClassNameId())) {
+
+				_ddmTemplateLocalService.deleteTemplate(ddmTemplate);
+			}
 		}
 
 		return portletPreferences;
@@ -124,14 +136,28 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		Element rootElement = addExportDataRootElement(portletDataContext);
 
-		List<Long> classNameIds = _getClassNameIds(portletDataContext);
+		List<Long> portletDisplayTemplateSelectedClassNameIds =
+			_getPortletDisplayTemplateSelectedClassNameIds(portletDataContext);
 
-		if (!classNameIds.isEmpty()) {
+		if (_isInformationTemplatesSelected(portletDataContext)) {
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
-					portletDataContext, classNameIds.toArray(new Long[0]),
+					portletDataContext, null, null,
+					_getInfoItemFormProviderClassNameId(),
+					_getInformationTemplatesStagedModelType());
+
+			actionableDynamicQuery.performActions();
+		}
+
+		if (!portletDisplayTemplateSelectedClassNameIds.isEmpty()) {
+			ActionableDynamicQuery actionableDynamicQuery =
+				_getDDMTemplateActionableDynamicQuery(
+					portletDataContext,
+					portletDisplayTemplateSelectedClassNameIds.toArray(
+						new Long[0]),
+					new Long[] {0L}, _getPortletDisplayTemplateClassNameId(),
 					new StagedModelType(
-						_portal.getClassNameId(DDMTemplate.class),
+						_getDDMTemplateClassNameId(),
 						StagedModelType.REFERRER_CLASS_NAME_ID_ALL));
 
 			actionableDynamicQuery.performActions();
@@ -146,7 +172,11 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			PortletPreferences portletPreferences, String data)
 		throws Exception {
 
-		List<Long> classNameIds = _getClassNameIds(portletDataContext);
+		List<Long> portletDisplayTemplateSelectedClassNameIds =
+			_getPortletDisplayTemplateSelectedClassNameIds(portletDataContext);
+
+		boolean informationTemplatesSelected = _isInformationTemplatesSelected(
+			portletDataContext);
 
 		Element ddmTemplatesElement =
 			portletDataContext.getImportDataGroupElement(DDMTemplate.class);
@@ -154,12 +184,30 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		List<Element> ddmTemplateElements = ddmTemplatesElement.elements();
 
 		for (Element ddmTemplateElement : ddmTemplateElements) {
-			long classNameId = _portal.getClassNameId(
-				ddmTemplateElement.attributeValue("attached-class-name"));
+			String resourceClassName = ddmTemplateElement.attributeValue(
+				"resource-class-name");
 
-			if (classNameIds.contains(classNameId)) {
-				StagedModelDataHandlerUtil.importStagedModel(
-					portletDataContext, ddmTemplateElement);
+			if (Objects.equals(
+					InfoItemFormProvider.class.getName(), resourceClassName)) {
+
+				if (informationTemplatesSelected) {
+					StagedModelDataHandlerUtil.importStagedModel(
+						portletDataContext, ddmTemplateElement);
+				}
+			}
+			else if (Objects.equals(
+						PortletDisplayTemplate.class.getName(),
+						resourceClassName)) {
+
+				long classNameId = _portal.getClassNameId(
+					ddmTemplateElement.attributeValue("attached-class-name"));
+
+				if (portletDisplayTemplateSelectedClassNameIds.contains(
+						classNameId)) {
+
+					StagedModelDataHandlerUtil.importStagedModel(
+						portletDataContext, ddmTemplateElement);
+				}
 			}
 		}
 
@@ -181,12 +229,22 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 			return;
 		}
 
-		for (StagedModelType stagedModelType : _getStagedModelTypes()) {
+		ActionableDynamicQuery informationTemplatesActionableDynamicQuery =
+			_getDDMTemplateActionableDynamicQuery(
+				portletDataContext, null, null,
+				_getInfoItemFormProviderClassNameId(),
+				_getInformationTemplatesStagedModelType());
+
+		informationTemplatesActionableDynamicQuery.performCount();
+
+		for (StagedModelType stagedModelType :
+				_getPortletDisplayTemplatesStagedModelTypes()) {
+
 			ActionableDynamicQuery actionableDynamicQuery =
 				_getDDMTemplateActionableDynamicQuery(
 					portletDataContext,
-					new Long[] {stagedModelType.getReferrerClassNameId()},
-					stagedModelType);
+					new Long[] {stagedModelType.getReferrerClassNameId()}, null,
+					_getPortletDisplayTemplateClassNameId(), stagedModelType);
 
 			actionableDynamicQuery.performCount();
 		}
@@ -197,11 +255,150 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		ModuleServiceLifecycle moduleServiceLifecycle) {
 	}
 
-	private List<Long> _getClassNameIds(PortletDataContext portletDataContext) {
+	private ActionableDynamicQuery _getDDMTemplateActionableDynamicQuery(
+		PortletDataContext portletDataContext, Long[] classNameIds,
+		Long[] classPKs, long resourceClassNameId,
+		StagedModelType stagedModelType) {
+
+		ExportActionableDynamicQuery exportActionableDynamicQuery =
+			_ddmTemplateLocalService.getExportActionableDynamicQuery(
+				portletDataContext);
+
+		ActionableDynamicQuery.AddCriteriaMethod addCriteriaMethod =
+			exportActionableDynamicQuery.getAddCriteriaMethod();
+
+		exportActionableDynamicQuery.setAddCriteriaMethod(
+			dynamicQuery -> {
+				if (resourceClassNameId !=
+						_getInfoItemFormProviderClassNameId()) {
+
+					addCriteriaMethod.addCriteria(dynamicQuery);
+				}
+				else {
+					portletDataContext.addDateRangeCriteria(
+						dynamicQuery, "modifiedDate");
+				}
+
+				if (classNameIds != null) {
+					Property classNameIdProperty = PropertyFactoryUtil.forName(
+						"classNameId");
+
+					dynamicQuery.add(classNameIdProperty.in(classNameIds));
+				}
+
+				if (classPKs != null) {
+					Property classPKProperty = PropertyFactoryUtil.forName(
+						"classPK");
+
+					dynamicQuery.add(classPKProperty.in(classPKs));
+				}
+
+				Property resourceClassNameIdProperty =
+					PropertyFactoryUtil.forName("resourceClassNameId");
+
+				dynamicQuery.add(
+					resourceClassNameIdProperty.eq(resourceClassNameId));
+
+				Property typeProperty = PropertyFactoryUtil.forName("type");
+
+				dynamicQuery.add(
+					typeProperty.eq(
+						DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY));
+			});
+
+		exportActionableDynamicQuery.setStagedModelType(stagedModelType);
+
+		return exportActionableDynamicQuery;
+	}
+
+	private long _getDDMTemplateClassNameId() {
+		if (_ddmTemplateClassNameId != null) {
+			return _ddmTemplateClassNameId;
+		}
+
+		_ddmTemplateClassNameId = _portal.getClassNameId(DDMTemplate.class);
+
+		return _ddmTemplateClassNameId;
+	}
+
+	private long _getInfoItemFormProviderClassNameId() {
+		if (_infoItemFormProviderClassNameId != null) {
+			return _infoItemFormProviderClassNameId;
+		}
+
+		_infoItemFormProviderClassNameId = _portal.getClassNameId(
+			InfoItemFormProvider.class);
+
+		return _infoItemFormProviderClassNameId;
+	}
+
+	private StagedModelType _getInformationTemplatesStagedModelType() {
+		if (_informationTemplatesStagedModelType != null) {
+			return _informationTemplatesStagedModelType;
+		}
+
+		_informationTemplatesStagedModelType = new StagedModelType(
+			_getDDMTemplateClassNameId(),
+			_getInfoItemFormProviderClassNameId());
+
+		return _informationTemplatesStagedModelType;
+	}
+
+	private PortletDataHandlerControl[] _getPortletDataHandlerControls() {
+		List<PortletDataHandlerControl>
+			portletDisplayTemplatesPortletDataHandlerControls =
+				new ArrayList<>();
+
+		for (TemplateHandler templateHandler :
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
+
+			ClassName className = _classNameLocalService.fetchClassName(
+				templateHandler.getClassName());
+
+			if (className == null) {
+				continue;
+			}
+
+			portletDisplayTemplatesPortletDataHandlerControls.add(
+				new PortletDataHandlerBoolean(
+					NAMESPACE,
+					templateHandler.getName(LocaleUtil.getSiteDefault()), true,
+					false, null, DDMTemplate.class.getName(),
+					className.getValue()));
+		}
+
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "information-templates", true, false, null,
+				DDMTemplate.class.getName(),
+				InfoItemFormProvider.class.getName()),
+			new PortletDataHandlerBoolean(
+				NAMESPACE, "widget-templates", true, false,
+				portletDisplayTemplatesPortletDataHandlerControls.toArray(
+					new PortletDataHandlerControl[0]),
+				DDMTemplate.class.getName(),
+				PortletDisplayTemplate.class.getName())
+		};
+	}
+
+	private long _getPortletDisplayTemplateClassNameId() {
+		if (_portletDisplayTemplateClassNameId != null) {
+			return _portletDisplayTemplateClassNameId;
+		}
+
+		_portletDisplayTemplateClassNameId = _portal.getClassNameId(
+			PortletDisplayTemplate.class);
+
+		return _portletDisplayTemplateClassNameId;
+	}
+
+	private List<Long> _getPortletDisplayTemplateSelectedClassNameIds(
+		PortletDataContext portletDataContext) {
+
 		List<Long> classNameIds = new ArrayList<>();
 
 		for (TemplateHandler templateHandler :
-				_templateHandlerRegistry.getTemplateHandlers()) {
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
 
 			ClassName className = _classNameLocalService.fetchClassName(
 				templateHandler.getClassName());
@@ -222,52 +419,20 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 		return classNameIds;
 	}
 
-	private ActionableDynamicQuery _getDDMTemplateActionableDynamicQuery(
-		PortletDataContext portletDataContext, Long[] classNameIds,
-		StagedModelType stagedModelType) {
+	private List<StagedModelType>
+		_getPortletDisplayTemplatesStagedModelTypes() {
 
-		ExportActionableDynamicQuery exportActionableDynamicQuery =
-			_ddmTemplateLocalService.getExportActionableDynamicQuery(
-				portletDataContext);
+		if (_portletDisplayTemplatesStagedModelTypes != null) {
+			return _portletDisplayTemplatesStagedModelTypes;
+		}
 
-		ActionableDynamicQuery.AddCriteriaMethod addCriteriaMethod =
-			exportActionableDynamicQuery.getAddCriteriaMethod();
-
-		exportActionableDynamicQuery.setAddCriteriaMethod(
-			dynamicQuery -> {
-				addCriteriaMethod.addCriteria(dynamicQuery);
-
-				Property classNameIdProperty = PropertyFactoryUtil.forName(
-					"classNameId");
-
-				dynamicQuery.add(classNameIdProperty.in(classNameIds));
-
-				Property classPKProperty = PropertyFactoryUtil.forName(
-					"classPK");
-
-				dynamicQuery.add(classPKProperty.eq(0L));
-
-				Property typeProperty = PropertyFactoryUtil.forName("type");
-
-				dynamicQuery.add(
-					typeProperty.eq(
-						DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY));
-			});
-
-		exportActionableDynamicQuery.setStagedModelType(stagedModelType);
-
-		return exportActionableDynamicQuery;
-	}
-
-	private PortletDataHandlerControl[] _getPortletDataHandlerControls() {
-		List<PortletDataHandlerControl> portletDataHandlerControls =
+		List<StagedModelType> portletDisplayTemplateStagedModelTypes =
 			new ArrayList<>();
 
-		portletDataHandlerControls.add(
-			new PortletDataHandlerBoolean(NAMESPACE, "template", true, true));
+		long ddmTemplateClassNameId = _getDDMTemplateClassNameId();
 
 		for (TemplateHandler templateHandler :
-				_templateHandlerRegistry.getTemplateHandlers()) {
+				_portletDisplayTemplate.getPortletDisplayTemplateHandlers()) {
 
 			ClassName className = _classNameLocalService.fetchClassName(
 				templateHandler.getClassName());
@@ -276,16 +441,15 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 				continue;
 			}
 
-			portletDataHandlerControls.add(
-				new PortletDataHandlerBoolean(
-					NAMESPACE,
-					templateHandler.getName(LocaleUtil.getSiteDefault()), true,
-					false, null, DDMTemplate.class.getName(),
-					className.getValue()));
+			portletDisplayTemplateStagedModelTypes.add(
+				new StagedModelType(
+					ddmTemplateClassNameId, className.getClassNameId()));
 		}
 
-		return portletDataHandlerControls.toArray(
-			new PortletDataHandlerControl[0]);
+		_portletDisplayTemplatesStagedModelTypes =
+			portletDisplayTemplateStagedModelTypes;
+
+		return _portletDisplayTemplatesStagedModelTypes;
 	}
 
 	private StagedModelType[] _getStagedModelTypes() {
@@ -295,27 +459,45 @@ public class TemplatePortletDataHandler extends BasePortletDataHandler {
 
 		List<StagedModelType> stagedModelTypes = new ArrayList<>();
 
-		long ddmTemplateClassNameId = _portal.getClassNameId(DDMTemplate.class);
+		stagedModelTypes.addAll(_getPortletDisplayTemplatesStagedModelTypes());
 
-		for (long classNameId : _templateHandlerRegistry.getClassNameIds()) {
-			stagedModelTypes.add(
-				new StagedModelType(ddmTemplateClassNameId, classNameId));
-		}
+		stagedModelTypes.add(_getInformationTemplatesStagedModelType());
 
 		_stagedModelTypes = stagedModelTypes.toArray(new StagedModelType[0]);
 
 		return _stagedModelTypes;
 	}
 
+	private boolean _isInformationTemplatesSelected(
+		PortletDataContext portletDataContext) {
+
+		return portletDataContext.getBooleanParameter(
+			NAMESPACE, "information-templates");
+	}
+
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
+
+	private Long _ddmTemplateClassNameId;
 
 	@Reference
 	private DDMTemplateLocalService _ddmTemplateLocalService;
 
+	private Long _infoItemFormProviderClassNameId;
+	private StagedModelType _informationTemplatesStagedModelType;
+
+	@Reference
+	private InformationTemplatesTemplateHandler
+		_informationTemplatesTemplateHandler;
+
 	@Reference
 	private Portal _portal;
 
+	@Reference
+	private PortletDisplayTemplate _portletDisplayTemplate;
+
+	private Long _portletDisplayTemplateClassNameId;
+	private List<StagedModelType> _portletDisplayTemplatesStagedModelTypes;
 	private StagedModelType[] _stagedModelTypes;
 
 	@Reference
