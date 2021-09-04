@@ -18,8 +18,11 @@ import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -31,6 +34,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -61,6 +66,39 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 		return infoItemRendererTemplates;
 	}
+
+	@Override
+	public String getInfoItemRendererTemplatesGroupLabel(
+		String className, String classTypeKey, Locale locale) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			return StringPool.BLANK;
+		}
+
+		return Optional.ofNullable(
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormVariationsProvider.class, className)
+		).map(
+			infoItemFormVariationsProvider ->
+				infoItemFormVariationsProvider.getInfoItemFormVariation(
+					serviceContext.getScopeGroupId(), classTypeKey)
+		).filter(
+			Objects::nonNull
+		).map(
+			infoItemFormVariation -> infoItemFormVariation.getLabel(locale)
+		).orElse(
+			getLabel(locale)
+		);
+	}
+
+	@Override
+	public String getLabel(Locale locale) {
+		return LanguageUtil.get(locale, "information-templates");
+	}
+
 
 	private List<DDMTemplate> _getDDMTemplates(String className, long classPK) {
 		ServiceContext serviceContext =
