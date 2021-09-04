@@ -29,7 +29,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
@@ -37,6 +39,8 @@ import com.liferay.template.web.internal.info.item.field.reader.TemplateInfoItem
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -102,6 +106,53 @@ public class TemplateInfoItemFieldSetProviderImpl
 		return new InfoFieldValue<>(
 			templateInfoItemFieldReader.getInfoField(),
 			templateInfoItemFieldReader.getValue(itemObject));
+	}
+
+	@Override
+	public InfoFieldValue<Object> getInfoFieldValue(
+		String className, Object itemObject, String fieldName) {
+
+		if ((fieldName == null) ||
+			!fieldName.startsWith(
+				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+
+			return null;
+		}
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			return null;
+		}
+
+		List<DDMTemplate> templates = _ddmTemplateLocalService.getTemplates(
+			serviceContext.getCompanyId(),
+			ArrayUtil.append(
+				_portal.getAncestorSiteGroupIds(
+					serviceContext.getScopeGroupId()),
+				new long[] {serviceContext.getScopeGroupId()}),
+			new long[] {_portal.getClassNameId(className)}, null,
+			_portal.getClassNameId(InfoItemFormProvider.class.getName()),
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+
+		Stream<DDMTemplate> templatesStream = templates.stream();
+
+		DDMTemplate ddmTemplate = templatesStream.filter(
+			currentDDMTemplate -> Objects.equals(
+				fieldName,
+				TemplateInfoItemFieldReader.getFieldName(
+					currentDDMTemplate.getTemplateKey()))
+		).findFirst(
+		).orElse(
+			null
+		);
+
+		if (ddmTemplate == null) {
+			return null;
+		}
+
+		return getInfoFieldValue(ddmTemplate, itemObject);
 	}
 
 	private List<DDMTemplate> _getDDMTemplates(String className, long classPK)
