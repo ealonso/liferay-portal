@@ -38,6 +38,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,14 @@ public class AssetCategoryInfoItemFieldValuesProvider
 			new InfoItemReference(
 				AssetCategory.class.getName(), assetCategory.getCategoryId())
 		).build();
+	}
+
+	@Override
+	public InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		AssetCategory assetCategory, String fieldName) {
+
+		return _templateInfoItemFieldSetProvider.getInfoFieldValue(
+			AssetCategory.class.getName(), assetCategory, fieldName);
 	}
 
 	private List<InfoFieldValue<Object>> _getAssetCategoryInfoFieldValues(
@@ -190,5 +199,8 @@ public class AssetCategoryInfoItemFieldValuesProvider
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 }
