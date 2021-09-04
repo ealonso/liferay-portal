@@ -33,6 +33,12 @@ public interface TemplateInfoItemTemplatedRenderer {
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
 		String className, long classPK, Locale locale);
 
+	public default String getInfoItemRendererTemplatesGroupLabel(
+		String className, Locale locale) {
+
+		return getInfoItemRendererTemplatesGroupLabel(className, "0", locale);
+	}
+
 	public String getInfoItemRendererTemplatesGroupLabel(
 		String className, String classTypeKey, Locale locale);
 
