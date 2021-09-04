@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,14 @@ public class BlogsEntryInfoItemFieldValuesProvider
 			throw new RuntimeException(
 				"Caught unexpected exception", noSuchInfoItemException);
 		}
+	}
+
+	@Override
+	public InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		BlogsEntry blogsEntry, String fieldName) {
+
+		return _templateInfoItemFieldSetProvider.getInfoFieldValue(
+			BlogsEntry.class.getName(), blogsEntry, fieldName);
 	}
 
 	private List<InfoFieldValue<Object>> _getBlogsEntryInfoFieldValues(
@@ -226,6 +235,9 @@ public class BlogsEntryInfoItemFieldValuesProvider
 	@Reference
 	private InfoItemFieldReaderFieldSetProvider
 		_infoItemFieldReaderFieldSetProvider;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 	@Reference
 	private UserLocalService _userLocalService;
