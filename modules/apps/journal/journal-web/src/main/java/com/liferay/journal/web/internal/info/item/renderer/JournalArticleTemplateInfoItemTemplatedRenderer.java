@@ -15,14 +15,17 @@
 package com.liferay.journal.web.internal.info.item.renderer;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -47,11 +50,22 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
 		JournalArticle journalArticle, Locale locale) {
 
+		List<InfoItemRendererTemplate> infoItemRendererTemplates =
+			new ArrayList<>();
+
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
 
-		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			JournalArticle.class.getName(), ddmStructure.getStructureId(),
-			locale);
+		for (DDMTemplate ddmTemplate : ddmStructure.getTemplates()) {
+			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId())) {
+				continue;
+			}
+
+			infoItemRendererTemplates.add(
+				new InfoItemRendererTemplate(
+					ddmTemplate.getName(locale), ddmTemplate.getTemplateKey()));
+		}
+
+		return infoItemRendererTemplates;
 	}
 
 	@Override
@@ -107,6 +121,9 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			JournalArticle.class.getName(), journalArticle, templateKey,
 			httpServletRequest, httpServletResponse);
 	}
+
+	@Reference
+	private StagingGroupHelper _stagingGroupHelper;
 
 	@Reference
 	private TemplateInfoItemTemplatedRenderer
