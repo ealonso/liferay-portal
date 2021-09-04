@@ -14,8 +14,17 @@
 
 package com.liferay.template.info.item.renderer;
 
+import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
+
+import java.util.List;
+import java.util.Locale;
+
 /**
  * @author Lourdes Fernández Besada
  */
 public interface TemplateInfoItemTemplatedRenderer {
+
+	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
+		String className, long classPK, Locale locale);
+
 }
