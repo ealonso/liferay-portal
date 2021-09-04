@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,6 +92,14 @@ public class FileEntryInfoItemFieldValuesProvider
 			throw new RuntimeException(
 				"Caught unexpected exception", portalException);
 		}
+	}
+
+	@Override
+	public InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		FileEntry fileEntry, String fieldName) {
+
+		return _templateInfoItemFieldSetProvider.getInfoFieldValue(
+			FileEntry.class.getName(), fileEntry, fieldName);
 	}
 
 	private List<InfoFieldValue<Object>> _getAssetEntryInfoFieldValues(
@@ -336,6 +345,9 @@ public class FileEntryInfoItemFieldValuesProvider
 	@Reference
 	private InfoItemFieldReaderFieldSetProvider
 		_infoItemFieldReaderFieldSetProvider;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 	@Reference
 	private UserLocalService _userLocalService;
