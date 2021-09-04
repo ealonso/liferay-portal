@@ -21,6 +21,7 @@ import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
@@ -56,7 +57,14 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
 
 		for (DDMTemplate ddmTemplate : ddmStructure.getTemplates()) {
-			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId())) {
+			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId()) ||
+				(!Objects.equals(
+					ddmTemplate.getClassNameId(),
+					_portal.getClassNameId(DDMStructure.class.getName())) &&
+				 !Objects.equals(
+					 ddmTemplate.getClassNameId(),
+					 _portal.getClassNameId(JournalArticle.class.getName())))) {
+
 				continue;
 			}
 
@@ -121,6 +129,9 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			JournalArticle.class.getName(), journalArticle, templateKey,
 			httpServletRequest, httpServletResponse);
 	}
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;
