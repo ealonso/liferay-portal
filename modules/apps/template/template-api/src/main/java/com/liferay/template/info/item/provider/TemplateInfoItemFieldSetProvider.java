@@ -32,4 +32,7 @@ public interface TemplateInfoItemFieldSetProvider {
 	public InfoFieldValue<Object> getInfoFieldValue(
 		DDMTemplate ddmTemplate, Object itemObject);
 
+	public InfoFieldValue<Object> getInfoFieldValue(
+		String className, Object itemObject, String fieldName);
+
 }
