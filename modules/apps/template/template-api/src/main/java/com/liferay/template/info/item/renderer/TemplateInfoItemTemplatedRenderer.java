@@ -24,6 +24,12 @@ import java.util.Locale;
  */
 public interface TemplateInfoItemTemplatedRenderer {
 
+	public default List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
+		String className, Locale locale) {
+
+		return getInfoItemRendererTemplates(className, 0, locale);
+	}
+
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
 		String className, long classPK, Locale locale);
 
