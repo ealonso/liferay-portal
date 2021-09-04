@@ -95,9 +95,7 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
 
-		return getInfoItemRendererTemplatesGroupLabel(
-			JournalArticle.class.getName(),
-			String.valueOf(ddmStructure.getStructureId()), locale);
+		return ddmStructure.getName(locale);
 	}
 
 	public String getInfoItemRendererTemplatesGroupLabel(
