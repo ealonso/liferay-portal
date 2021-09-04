@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.vulcan.util.TransformUtil;
+import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.io.Serializable;
 
@@ -72,6 +73,14 @@ public class ObjectEntryInfoItemFieldValuesProvider
 			new InfoItemReference(
 				ObjectEntry.class.getName(), objectEntry.getObjectEntryId())
 		).build();
+	}
+
+	@Override
+	public InfoFieldValue<Object> getTemplatedInfoFieldValue(
+		ObjectEntry objectEntry, String fieldName) {
+
+		return _templateInfoItemFieldSetProvider.getInfoFieldValue(
+			ObjectEntry.class.getName(), objectEntry, fieldName);
 	}
 
 	private String _getDisplayPageURL(
@@ -235,6 +244,9 @@ public class ObjectEntryInfoItemFieldValuesProvider
 
 	@Reference
 	private ObjectFieldLocalService _objectFieldLocalService;
+
+	@Reference
+	private TemplateInfoItemFieldSetProvider _templateInfoItemFieldSetProvider;
 
 	@Reference
 	private UserLocalService _userLocalService;
