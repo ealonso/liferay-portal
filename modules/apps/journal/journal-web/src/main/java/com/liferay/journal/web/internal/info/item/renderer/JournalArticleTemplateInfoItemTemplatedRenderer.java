@@ -21,9 +21,12 @@ import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
 
@@ -108,9 +111,27 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			return;
 		}
 
-		_templateInfoItemTemplatedRenderer.renderTemplate(
-			JournalArticle.class.getName(), journalArticle, templateKey,
-			httpServletRequest, httpServletResponse);
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			return;
+		}
+
+		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
+			serviceContext.getScopeGroupId(),
+			_portal.getClassNameId(DDMStructure.class), templateKey);
+
+		if (ddmTemplate != null) {
+			_renderJournalTemplate(
+				journalArticle, templateKey, httpServletRequest,
+				httpServletResponse);
+		}
+		else {
+			_templateInfoItemTemplatedRenderer.renderTemplate(
+				JournalArticle.class.getName(), journalArticle, templateKey,
+				httpServletRequest, httpServletResponse);
+		}
 	}
 
 	@Reference(
