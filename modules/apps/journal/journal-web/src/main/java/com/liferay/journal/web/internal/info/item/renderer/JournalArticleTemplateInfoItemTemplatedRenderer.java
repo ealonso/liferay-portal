@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -111,6 +113,13 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 			httpServletRequest, httpServletResponse);
 	}
 
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.journal.web)", unbind = "-"
+	)
+	public void setServletContext(ServletContext servletContext) {
+		_servletContext = servletContext;
+	}
+
 	private List<InfoItemRendererTemplate> _getInfoItemRendererTemplates(
 		Locale locale, List<DDMTemplate> templates) {
 
@@ -137,11 +146,34 @@ public class JournalArticleTemplateInfoItemTemplatedRenderer
 		return infoItemRendererTemplates;
 	}
 
+	private void _renderJournalTemplate(
+		JournalArticle article, String templateKey,
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
+		try {
+			httpServletRequest.setAttribute(WebKeys.JOURNAL_ARTICLE, article);
+			httpServletRequest.setAttribute(
+				WebKeys.JOURNAL_TEMPLATE_ID, templateKey);
+
+			RequestDispatcher requestDispatcher =
+				_servletContext.getRequestDispatcher(
+					"/info/item/renderer/ddm_template_article_renderer.jsp");
+
+			requestDispatcher.include(httpServletRequest, httpServletResponse);
+		}
+		catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+
 	@Reference
 	private DDMTemplateLocalService _ddmTemplateLocalService;
 
 	@Reference
 	private Portal _portal;
+
+	private ServletContext _servletContext;
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;
