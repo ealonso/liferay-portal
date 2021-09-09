@@ -329,6 +329,8 @@ public class JournalArticleInfoItemFieldValuesProvider
 				fieldName
 			).labelInfoLocalizedValue(
 				InfoLocalizedValue.localize(getClass(), fieldName)
+			).templated(
+				true
 			).build(),
 			() -> {
 				ThemeDisplay themeDisplay = _getThemeDisplay();

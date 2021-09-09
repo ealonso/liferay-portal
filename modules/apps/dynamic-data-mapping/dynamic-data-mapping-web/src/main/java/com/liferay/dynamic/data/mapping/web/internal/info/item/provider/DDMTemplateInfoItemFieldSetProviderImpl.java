@@ -69,6 +69,8 @@ public class DDMTemplateInfoItemFieldSetProviderImpl
 						).labelInfoLocalizedValue(
 							InfoLocalizedValue.localize(
 								getClass(), ddmTemplate.getName(locale))
+						).templated(
+							true
 						).build()
 					).forEach(
 						unsafeConsumer::accept

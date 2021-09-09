@@ -72,6 +72,8 @@ public class TemplateInfoItemFieldReader
 			).defaultLocale(
 				LocaleUtil.getDefault()
 			).build()
+		).templated(
+			true
 		).build();
 	}
 
