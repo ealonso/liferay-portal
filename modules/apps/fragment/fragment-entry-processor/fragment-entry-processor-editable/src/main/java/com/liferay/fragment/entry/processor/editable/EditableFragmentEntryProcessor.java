@@ -43,6 +43,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -215,6 +216,27 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 						mappedValueConfigJSONObject.put(
 							"fileEntryId", fileEntryId);
+					}
+
+					Optional<Map<String, Object>> fieldValuesOptional =
+						fragmentEntryProcessorContext.getFieldValuesOptional();
+
+					if (fieldValuesOptional.isPresent() &&
+						value.startsWith("ddmTemplate_")) {
+
+						Map<String, Object> fieldValues =
+							fieldValuesOptional.get();
+
+						if (!fieldValues.containsKey(value)) {
+							Object templatedFieldValue =
+								_fragmentEntryProcessorHelper.
+									getTemplatedInfoItemFieldValue(
+										value, fragmentEntryProcessorContext);
+
+							if (templatedFieldValue != null) {
+								fieldValues.put(value, templatedFieldValue);
+							}
+						}
 					}
 
 					value = StringUtil.replace(
