@@ -148,6 +148,11 @@ public interface FragmentEntryProcessorHelper {
 			int previewType)
 		throws PortalException;
 
+	public Object getTemplatedInfoItemFieldValue(
+			String fieldId,
+			FragmentEntryProcessorContext fragmentEntryProcessorContext)
+		throws PortalException;
+
 	public boolean isAssetDisplayPage(String mode);
 
 	public boolean isMapped(JSONObject jsonObject);
