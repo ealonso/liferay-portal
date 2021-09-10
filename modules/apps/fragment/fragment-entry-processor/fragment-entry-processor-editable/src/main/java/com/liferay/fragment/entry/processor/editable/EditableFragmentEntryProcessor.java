@@ -37,12 +37,14 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.template.constants.TemplateKeys;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -215,6 +217,27 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 						mappedValueConfigJSONObject.put(
 							"fileEntryId", fileEntryId);
+					}
+
+					Optional<Map<String, Object>> fieldValuesOptional =
+						fragmentEntryProcessorContext.getFieldValuesOptional();
+
+					if (fieldValuesOptional.isPresent() &&
+						value.startsWith(TemplateKeys.DDMTEMPLATE_PREFIX)) {
+
+						Map<String, Object> fieldValues =
+							fieldValuesOptional.get();
+
+						if (!fieldValues.containsKey(value)) {
+							Object templatedFieldValue =
+								_fragmentEntryProcessorHelper.
+									getTemplatedInfoItemFieldValue(
+										value, fragmentEntryProcessorContext);
+
+							if (templatedFieldValue != null) {
+								fieldValues.put(value, templatedFieldValue);
+							}
+						}
 					}
 
 					value = StringUtil.replace(
