@@ -20,10 +20,12 @@ import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
+import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.formatter.InfoCollectionTextFormatter;
 import com.liferay.info.formatter.InfoTextFormatter;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
+import com.liferay.info.item.InfoItemDetails;
 import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.InfoItemIdentifier;
 import com.liferay.info.item.InfoItemReference;
@@ -529,6 +531,61 @@ public class FragmentEntryProcessorHelperImpl
 			"This method is deprecated and replaced by " +
 				"com.liferay.fragment.entry.processor.helper." +
 					"FragmentEntryProcessorHelper.getMappedInfoItemFieldValue");
+	}
+
+	@Override
+	public Object getTemplatedInfoItemFieldValue(
+			String fieldId,
+			FragmentEntryProcessorContext fragmentEntryProcessorContext)
+		throws PortalException {
+
+		if (!fieldId.startsWith("ddmTemplate_")) {
+			return null;
+		}
+
+		HttpServletRequest httpServletRequest =
+			fragmentEntryProcessorContext.getHttpServletRequest();
+
+		if (httpServletRequest == null) {
+			return null;
+		}
+
+		Object infoItem = httpServletRequest.getAttribute(
+			InfoDisplayWebKeys.INFO_ITEM);
+		InfoItemDetails infoItemDetails =
+			(InfoItemDetails)httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_ITEM_DETAILS);
+
+		if ((infoItem == null) || (infoItemDetails == null)) {
+			return null;
+		}
+
+		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
+			(InfoItemFieldValuesProvider<Object>)
+				_infoItemServiceTracker.getFirstInfoItemService(
+					InfoItemFieldValuesProvider.class,
+					infoItemDetails.getClassName());
+
+		if (infoItemFieldValuesProvider == null) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to get info item form provider for class " +
+						infoItemDetails.getClassName());
+			}
+
+			return null;
+		}
+
+		InfoFieldValue<Object> infoFieldValue =
+			infoItemFieldValuesProvider.getTemplatedInfoFieldValue(
+				infoItem, fieldId);
+
+		if (infoFieldValue == null) {
+			return null;
+		}
+
+		return infoFieldValue.getValue(
+			fragmentEntryProcessorContext.getLocale());
 	}
 
 	@Override
