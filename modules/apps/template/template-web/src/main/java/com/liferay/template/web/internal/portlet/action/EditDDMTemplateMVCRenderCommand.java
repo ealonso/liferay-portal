@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.template.constants.TemplatePortletKeys;
+import com.liferay.template.web.internal.configuration.TemplateConfiguration;
 import com.liferay.template.web.internal.display.context.InformationTemplatesEditDDMTemplateDisplayContext;
 import com.liferay.template.web.internal.display.context.WidgetTemplatesEditDDMTemplateDisplayContext;
 
@@ -48,7 +49,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Eudaldo Alonso
  */
 @Component(
-	configurationPid = "com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration",
+	configurationPid = {
+		"com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration",
+		"com.liferay.template.web.internal.configuration.TemplateConfiguration"
+	},
 	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
 	property = {
 		"javax.portlet.name=" + TemplatePortletKeys.TEMPLATE,
@@ -90,6 +94,8 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 			renderRequest.setAttribute(
 				DDMWebConfiguration.class.getName(), _ddmWebConfiguration);
 			renderRequest.setAttribute(
+				TemplateConfiguration.class.getName(), _templateConfiguration);
+			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new WidgetTemplatesEditDDMTemplateDisplayContext(
 					_portal.getLiferayPortletRequest(renderRequest),
@@ -104,6 +110,8 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 	protected void activate(Map<String, Object> properties) {
 		_ddmWebConfiguration = ConfigurableUtil.createConfigurable(
 			DDMWebConfiguration.class, properties);
+		_templateConfiguration = ConfigurableUtil.createConfigurable(
+			TemplateConfiguration.class, properties);
 	}
 
 	private DDMGroupServiceConfiguration _getDDMGroupServiceConfiguration(
@@ -133,5 +141,7 @@ public class EditDDMTemplateMVCRenderCommand implements MVCRenderCommand {
 
 	@Reference
 	private Portal _portal;
+
+	private volatile TemplateConfiguration _templateConfiguration;
 
 }
