@@ -18,6 +18,7 @@ import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -55,10 +56,16 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 
 	@Override
 	public String[] getLanguageTypes() {
+		String[] allowedTemplateLanguageTypes = {
+			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_VM
+		};
+
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
-		String[] languageTypes =
-			_templateConfiguration.widgetTemplateLanguageTypes();
+		String[] languageTypes = ArrayUtil.filter(
+			_templateConfiguration.widgetTemplateLanguageTypes(),
+			templateLanguageType -> ArrayUtil.contains(
+				allowedTemplateLanguageTypes, templateLanguageType));
 
 		if ((ddmTemplate != null) &&
 			!ArrayUtil.contains(languageTypes, ddmTemplate.getLanguage())) {
