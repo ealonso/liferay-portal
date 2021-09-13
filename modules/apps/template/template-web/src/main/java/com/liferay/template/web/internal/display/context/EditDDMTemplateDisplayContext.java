@@ -290,10 +290,6 @@ public class EditDDMTemplateDisplayContext {
 		return getClassNameId();
 	}
 
-	protected String[] getTemplateLanguageTypes() {
-		return new String[] {TemplateConstants.LANG_TYPE_FTL};
-	}
-
 	protected Collection<TemplateVariableGroup> getTemplateVariableGroups()
 		throws Exception {
 
@@ -404,7 +400,7 @@ public class EditDDMTemplateDisplayContext {
 	private boolean _isShowLanguageChangeWarning() {
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
-		if ((ddmTemplate != null) && (getTemplateLanguageTypes().length > 1) &&
+		if ((ddmTemplate != null) && (getLanguageTypes().length > 1) &&
 			!Objects.equals(ddmTemplate.getLanguage(), getLanguageType())) {
 
 			return true;
