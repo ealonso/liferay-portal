@@ -16,6 +16,7 @@ package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.template.TemplateConstants;
@@ -52,6 +53,19 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 	@Override
 	public boolean autogenerateTemplateKey() {
 		return _ddmWebConfiguration.autogenerateTemplateKey();
+	}
+
+	@Override
+	public String getLanguageType() {
+		if (_languageType != null) {
+			return _languageType;
+		}
+
+		_languageType = BeanParamUtil.getString(
+			getDDMTemplate(), httpServletRequest, "language",
+			TemplateConstants.LANG_TYPE_FTL);
+
+		return _languageType;
 	}
 
 	@Override
@@ -98,6 +112,7 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 	}
 
 	private final DDMWebConfiguration _ddmWebConfiguration;
+	private String _languageType;
 	private final TemplateConfiguration _templateConfiguration;
 	private final ThemeDisplay _themeDisplay;
 

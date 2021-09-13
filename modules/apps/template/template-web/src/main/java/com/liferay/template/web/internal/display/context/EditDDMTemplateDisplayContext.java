@@ -71,7 +71,7 @@ public class EditDDMTemplateDisplayContext {
 		_ddmTemplateHelper =
 			(DDMTemplateHelper)liferayPortletRequest.getAttribute(
 				DDMTemplateHelper.class.getName());
-		_httpServletRequest = PortalUtil.getHttpServletRequest(
+		httpServletRequest = PortalUtil.getHttpServletRequest(
 			liferayPortletRequest);
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -108,7 +108,7 @@ public class EditDDMTemplateDisplayContext {
 			"editorAutocompleteData",
 			JSONFactoryUtil.createJSONObject(
 				_ddmTemplateHelper.getAutocompleteJSON(
-					_httpServletRequest, getLanguageType()))
+					httpServletRequest, getLanguageType()))
 		).put(
 			"editorMode",
 			() -> {
@@ -178,11 +178,11 @@ public class EditDDMTemplateDisplayContext {
 		}
 
 		PortletConfig portletConfig =
-			(PortletConfig)_httpServletRequest.getAttribute(
+			(PortletConfig)httpServletRequest.getAttribute(
 				JavaConstants.JAVAX_PORTLET_CONFIG);
 
 		_refererWebDAVToken = ParamUtil.getString(
-			_httpServletRequest, "refererWebDAVToken",
+			httpServletRequest, "refererWebDAVToken",
 			portletConfig.getInitParameter("refererWebDAVToken"));
 
 		return _refererWebDAVToken;
@@ -301,20 +301,22 @@ public class EditDDMTemplateDisplayContext {
 		return templateVariableGroups.values();
 	}
 
+	protected final HttpServletRequest httpServletRequest;
+
 	private String _getScript() {
 		if (_script != null) {
 			return _script;
 		}
 
 		String script = BeanParamUtil.getString(
-			getDDMTemplate(), _httpServletRequest, "script");
+			getDDMTemplate(), httpServletRequest, "script");
 
 		if (Validator.isNull(script)) {
 			script = getDefaultScript();
 		}
 
 		String scriptContent = ParamUtil.getString(
-			_httpServletRequest, "scriptContent");
+			httpServletRequest, "scriptContent");
 
 		if (Validator.isNotNull(scriptContent)) {
 			script = scriptContent;
@@ -410,7 +412,6 @@ public class EditDDMTemplateDisplayContext {
 	private DDMTemplate _ddmTemplate;
 	private final DDMTemplateHelper _ddmTemplateHelper;
 	private Long _ddmTemplateId;
-	private final HttpServletRequest _httpServletRequest;
 	private String _languageType;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
