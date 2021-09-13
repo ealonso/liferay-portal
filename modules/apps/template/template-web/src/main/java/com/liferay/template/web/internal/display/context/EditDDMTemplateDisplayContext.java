@@ -306,10 +306,6 @@ public class EditDDMTemplateDisplayContext {
 			return _script;
 		}
 
-		_languageType = BeanParamUtil.getString(
-			getDDMTemplate(), _httpServletRequest, "language",
-			TemplateConstants.LANG_TYPE_FTL);
-
 		String script = BeanParamUtil.getString(
 			getDDMTemplate(), _httpServletRequest, "script");
 
