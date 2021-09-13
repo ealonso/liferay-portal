@@ -15,11 +15,13 @@
 package com.liferay.template.web.internal.display.context;
 
 import com.liferay.dynamic.data.mapping.configuration.DDMWebConfiguration;
+import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.template.web.internal.configuration.TemplateConfiguration;
 
@@ -53,8 +55,20 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 
 	@Override
 	public String[] getLanguageTypes() {
-		return _templateConfiguration.widgetTemplateLanguageTypes();
-}
+		DDMTemplate ddmTemplate = getDDMTemplate();
+
+		String[] languageTypes =
+			_templateConfiguration.widgetTemplateLanguageTypes();
+
+		if ((ddmTemplate != null) &&
+			!ArrayUtil.contains(languageTypes, ddmTemplate.getLanguage())) {
+
+			languageTypes = ArrayUtil.append(
+				languageTypes, ddmTemplate.getLanguage());
+		}
+
+		return languageTypes;
+	}
 
 	@Override
 	public String getTemplateTypeLabel() {
