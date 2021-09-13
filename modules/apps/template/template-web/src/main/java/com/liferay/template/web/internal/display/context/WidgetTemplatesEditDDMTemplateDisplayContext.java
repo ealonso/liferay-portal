@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.template.TemplateHandlerRegistryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.template.web.internal.configuration.TemplateConfiguration;
 
 /**
  * @author Eudaldo Alonso
@@ -38,6 +39,9 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 		_ddmWebConfiguration =
 			(DDMWebConfiguration)liferayPortletRequest.getAttribute(
 				DDMWebConfiguration.class.getName());
+		_templateConfiguration =
+			(TemplateConfiguration)liferayPortletRequest.getAttribute(
+				TemplateConfiguration.class.getName());
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
@@ -46,6 +50,11 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 	public boolean autogenerateTemplateKey() {
 		return _ddmWebConfiguration.autogenerateTemplateKey();
 	}
+
+	@Override
+	public String[] getLanguageTypes() {
+		return _templateConfiguration.widgetTemplateLanguageTypes();
+}
 
 	@Override
 	public String getTemplateTypeLabel() {
@@ -68,6 +77,7 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 	}
 
 	private final DDMWebConfiguration _ddmWebConfiguration;
+	private final TemplateConfiguration _templateConfiguration;
 	private final ThemeDisplay _themeDisplay;
 
 }
