@@ -69,16 +69,16 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 
 	@Override
 	public String[] getLanguageTypes() {
-		String[] allowedTemplateLanguageTypes = {
-			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_VM
-		};
-
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
 		String[] languageTypes = ArrayUtil.filter(
 			_templateConfiguration.widgetTemplatesLanguageTypes(),
-			templateLanguageType -> ArrayUtil.contains(
-				allowedTemplateLanguageTypes, templateLanguageType));
+			languageType -> ArrayUtil.contains(
+				new String[] {
+					TemplateConstants.LANG_TYPE_FTL,
+					TemplateConstants.LANG_TYPE_VM
+				},
+				languageType));
 
 		if ((ddmTemplate != null) &&
 			!ArrayUtil.contains(languageTypes, ddmTemplate.getLanguage())) {
