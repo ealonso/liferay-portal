@@ -28,9 +28,9 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface TemplateConfiguration {
 
 	@Meta.AD(
-		deflt = "ftl", description = "widget-template-language-types-help",
-		name = "widget-template-language-types", required = false
+		deflt = "ftl", description = "widget-templates-language-types-help",
+		name = "widget-templates-language-types", required = false
 	)
-	public String[] widgetTemplateLanguageTypes();
+	public String[] widgetTemplatesLanguageTypes();
 
 }

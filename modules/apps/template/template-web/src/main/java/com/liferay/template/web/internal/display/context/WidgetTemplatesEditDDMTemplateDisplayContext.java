@@ -76,7 +76,7 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 		DDMTemplate ddmTemplate = getDDMTemplate();
 
 		String[] languageTypes = ArrayUtil.filter(
-			_templateConfiguration.widgetTemplateLanguageTypes(),
+			_templateConfiguration.widgetTemplatesLanguageTypes(),
 			templateLanguageType -> ArrayUtil.contains(
 				allowedTemplateLanguageTypes, templateLanguageType));
 
