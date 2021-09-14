@@ -82,25 +82,20 @@ public class EditDDMTemplatePropertiesMVCRenderCommand
 
 		if (Objects.equals(tabs1, "information-templates")) {
 			renderRequest.setAttribute(
-				InfoItemServiceTracker.class.getName(),
-				_infoItemServiceTracker);
-
-			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new InformationTemplatesEditDDMTemplateDisplayContext(
+					_infoItemServiceTracker,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse)));
 		}
 		else if (Objects.equals(tabs1, "widget-templates")) {
 			renderRequest.setAttribute(
-				DDMWebConfiguration.class.getName(), _ddmWebConfiguration);
-			renderRequest.setAttribute(
-				TemplateConfiguration.class.getName(), _templateConfiguration);
-			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
 				new WidgetTemplatesEditDDMTemplateDisplayContext(
+					_ddmWebConfiguration,
 					_portal.getLiferayPortletRequest(renderRequest),
-					_portal.getLiferayPortletResponse(renderResponse)));
+					_portal.getLiferayPortletResponse(renderResponse),
+					_templateConfiguration));
 
 			return "/ddm_template/edit_widget_template_properties.jsp";
 		}

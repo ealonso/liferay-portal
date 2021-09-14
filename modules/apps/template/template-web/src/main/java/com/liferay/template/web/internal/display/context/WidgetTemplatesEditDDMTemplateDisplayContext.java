@@ -35,17 +35,16 @@ public class WidgetTemplatesEditDDMTemplateDisplayContext
 	extends EditDDMTemplateDisplayContext {
 
 	public WidgetTemplatesEditDDMTemplateDisplayContext(
+		DDMWebConfiguration ddmWebConfiguration,
 		LiferayPortletRequest liferayPortletRequest,
-		LiferayPortletResponse liferayPortletResponse) {
+		LiferayPortletResponse liferayPortletResponse,
+		TemplateConfiguration templateConfiguration) {
 
 		super(liferayPortletRequest, liferayPortletResponse);
 
-		_ddmWebConfiguration =
-			(DDMWebConfiguration)liferayPortletRequest.getAttribute(
-				DDMWebConfiguration.class.getName());
-		_templateConfiguration =
-			(TemplateConfiguration)liferayPortletRequest.getAttribute(
-				TemplateConfiguration.class.getName());
+		_ddmWebConfiguration = ddmWebConfiguration;
+		_templateConfiguration = templateConfiguration;
+
 		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 	}
