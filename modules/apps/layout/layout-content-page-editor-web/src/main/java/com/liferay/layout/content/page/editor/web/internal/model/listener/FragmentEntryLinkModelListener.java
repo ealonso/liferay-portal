@@ -40,7 +40,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.template.constants.TemplateKeys;
 
 import java.util.Iterator;
 import java.util.List;
@@ -203,14 +203,12 @@ public class FragmentEntryLinkModelListener
 		FragmentEntryLink fragmentEntryLink, String editableKey,
 		String mappedField) {
 
-		if (!mappedField.startsWith(
-				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
-
+		if (!mappedField.startsWith(TemplateKeys.DDMTEMPLATE_PREFIX)) {
 			return;
 		}
 
 		String ddmTemplateKey = mappedField.substring(
-			PortletDisplayTemplate.DISPLAY_STYLE_PREFIX.length());
+			TemplateKeys.DDMTEMPLATE_PREFIX.length());
 
 		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
 			fragmentEntryLink.getGroupId(),

@@ -31,8 +31,8 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.staging.StagingGroupHelper;
+import com.liferay.template.constants.TemplateKeys;
 import com.liferay.template.constants.TemplatePortletKeys;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 import com.liferay.template.web.internal.info.item.field.reader.TemplateInfoItemFieldReader;
@@ -113,8 +113,7 @@ public class TemplateInfoItemFieldSetProviderImpl
 		String className, Object itemObject, String fieldName) {
 
 		if ((fieldName == null) ||
-			!fieldName.startsWith(
-				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+			!fieldName.startsWith(TemplateKeys.DDMTEMPLATE_PREFIX)) {
 
 			return null;
 		}

@@ -66,7 +66,7 @@ DDMTemplate portletDisplayDDMTemplate = (DDMTemplate)request.getAttribute("lifer
 					%>'
 					label="<%= HtmlUtil.escape(ddmTemplate.getName(locale)) %>"
 					selected="<%= (portletDisplayDDMTemplate != null) && (ddmTemplate.getTemplateId() == portletDisplayDDMTemplate.getTemplateId()) %>"
-					value="<%= PortletDisplayTemplate.DISPLAY_STYLE_PREFIX + HtmlUtil.escape(ddmTemplate.getTemplateKey()) %>"
+					value="<%= TemplateKeys.DDMTEMPLATE_PREFIX + HtmlUtil.escape(ddmTemplate.getTemplateKey()) %>"
 				/>
 
 			<%
