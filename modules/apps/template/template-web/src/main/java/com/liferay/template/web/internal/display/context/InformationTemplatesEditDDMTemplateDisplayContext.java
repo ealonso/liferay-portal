@@ -39,7 +39,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.template.constants.TemplateKeys;
 import com.liferay.template.model.TemplateEntry;
 import com.liferay.template.service.TemplateEntryLocalServiceUtil;
 
@@ -174,8 +174,7 @@ public class InformationTemplatesEditDDMTemplateDisplayContext
 
 			for (InfoField<?> infoField : infoFieldSet.getAllInfoFields()) {
 				if (!StringUtil.startsWith(
-					infoField.getName(),
-					PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+						infoField.getName(), TemplateKeys.DDMTEMPLATE_PREFIX)) {
 
 					InfoFieldType infoFieldType = infoField.getInfoFieldType();
 

@@ -67,8 +67,8 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
+import com.liferay.template.constants.TemplateKeys;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -479,8 +479,7 @@ public class LayoutsSEODisplayContext {
 			).stream(
 			).filter(
 				infoField -> !StringUtil.startsWith(
-					infoField.getName(),
-					PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)
+					infoField.getName(), TemplateKeys.DDMTEMPLATE_PREFIX)
 			).map(
 				infoField -> JSONUtil.put(
 					"key", infoField.getName()

@@ -55,7 +55,7 @@ import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portlet.display.template.PortletDisplayTemplate;
+import com.liferay.template.constants.TemplateKeys;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
 import java.util.ArrayList;
@@ -120,8 +120,7 @@ public class JournalArticleInfoItemFieldValuesProvider
 		JournalArticle journalArticle, String fieldName) {
 
 		if ((fieldName == null) ||
-			!fieldName.startsWith(
-				PortletDisplayTemplate.DISPLAY_STYLE_PREFIX)) {
+			!fieldName.startsWith(TemplateKeys.DDMTEMPLATE_PREFIX)) {
 
 			return null;
 		}
@@ -187,7 +186,7 @@ public class JournalArticleInfoItemFieldValuesProvider
 	private String _getFieldName(DDMTemplate ddmTemplate) {
 		String templateKey = ddmTemplate.getTemplateKey();
 
-		return PortletDisplayTemplate.DISPLAY_STYLE_PREFIX +
+		return TemplateKeys.DDMTEMPLATE_PREFIX +
 			templateKey.replaceAll("\\W", "_");
 	}
 
