@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
@@ -57,12 +58,15 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 	@Override
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
-		String className, long classPK, Locale locale) {
+		String infoItemClassName, String infoItemFormVariationKey,
+		Locale locale) {
 
 		List<InfoItemRendererTemplate> infoItemRendererTemplates =
 			new ArrayList<>();
 
-		for (DDMTemplate ddmTemplate : _getDDMTemplates(className, classPK)) {
+		for (DDMTemplate ddmTemplate :
+				_getDDMTemplates(infoItemClassName, infoItemFormVariationKey)) {
+
 			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId())) {
 				continue;
 			}
@@ -77,7 +81,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 	@Override
 	public String getInfoItemRendererTemplatesGroupLabel(
-		String className, String classTypeKey, Locale locale) {
+		String infoItemClassName, String classTypeKey, Locale locale) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -88,7 +92,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 		return Optional.ofNullable(
 			_infoItemServiceTracker.getFirstInfoItemService(
-				InfoItemFormVariationsProvider.class, className)
+				InfoItemFormVariationsProvider.class, infoItemClassName)
 		).map(
 			infoItemFormVariationsProvider ->
 				infoItemFormVariationsProvider.getInfoItemFormVariation(
@@ -109,7 +113,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 	@Override
 	public void renderTemplate(
-		String className, Object itemObject, String templateKey,
+		String infoItemClassName, Object itemObject, String templateKey,
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse) {
 
@@ -121,8 +125,8 @@ public class TemplateInfoItemTemplatedRendererImpl
 		}
 
 		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
-			serviceContext.getScopeGroupId(), _portal.getClassNameId(className),
-			templateKey);
+			serviceContext.getScopeGroupId(),
+			_portal.getClassNameId(infoItemClassName), templateKey);
 
 		if (ddmTemplate == null) {
 			return;
@@ -135,7 +139,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 			InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
 				_infoItemServiceTracker.getFirstInfoItemService(
-					InfoItemFieldValuesProvider.class, className);
+					InfoItemFieldValuesProvider.class, infoItemClassName);
 
 			if (infoItemFieldValuesProvider != null) {
 				infoItemFieldValues =
@@ -160,7 +164,9 @@ public class TemplateInfoItemTemplatedRendererImpl
 		}
 	}
 
-	private List<DDMTemplate> _getDDMTemplates(String className, long classPK) {
+	private List<DDMTemplate> _getDDMTemplates(
+		String infoItemClassName, String infoItemFormVariationKey) {
+
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
@@ -174,8 +180,8 @@ public class TemplateInfoItemTemplatedRendererImpl
 				_portal.getAncestorSiteGroupIds(
 					serviceContext.getScopeGroupId()),
 				new long[] {serviceContext.getScopeGroupId()}),
-			new long[] {_portal.getClassNameId(className)},
-			new long[] {classPK},
+			new long[] {_portal.getClassNameId(infoItemClassName)},
+			new long[] {GetterUtil.getLong(infoItemFormVariationKey)},
 			_portal.getClassNameId(InfoItemFormProvider.class.getName()),
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}

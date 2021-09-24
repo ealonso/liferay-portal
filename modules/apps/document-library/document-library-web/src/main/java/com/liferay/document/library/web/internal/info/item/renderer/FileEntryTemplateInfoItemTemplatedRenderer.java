@@ -19,7 +19,6 @@ import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
 
@@ -52,8 +51,8 @@ public class FileEntryTemplateInfoItemTemplatedRenderer
 
 			return _templateInfoItemTemplatedRenderer.
 				getInfoItemRendererTemplates(
-					FileEntry.class.getName(), dlFileEntry.getFileEntryTypeId(),
-					locale);
+					FileEntry.class.getName(),
+					String.valueOf(dlFileEntry.getFileEntryTypeId()), locale);
 		}
 
 		return Collections.emptyList();
@@ -68,8 +67,7 @@ public class FileEntryTemplateInfoItemTemplatedRenderer
 		}
 
 		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			FileEntry.class.getName(), GetterUtil.getLong(classTypeKey),
-			locale);
+			FileEntry.class.getName(), classTypeKey, locale);
 	}
 
 	@Override

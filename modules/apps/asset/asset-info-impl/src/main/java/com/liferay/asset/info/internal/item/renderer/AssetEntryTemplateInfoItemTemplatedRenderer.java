@@ -18,7 +18,6 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
 
@@ -59,8 +58,7 @@ public class AssetEntryTemplateInfoItemTemplatedRenderer
 		}
 
 		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			AssetEntry.class.getName(), GetterUtil.getLong(classTypeKey),
-			locale);
+			AssetEntry.class.getName(), classTypeKey, locale);
 	}
 
 	@Override

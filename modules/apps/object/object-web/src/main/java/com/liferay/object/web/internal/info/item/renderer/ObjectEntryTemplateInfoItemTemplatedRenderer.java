@@ -18,7 +18,6 @@ import com.liferay.info.item.renderer.InfoItemRenderer;
 import com.liferay.info.item.renderer.InfoItemTemplatedRenderer;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.object.model.ObjectEntry;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
 
@@ -47,8 +46,8 @@ public class ObjectEntryTemplateInfoItemTemplatedRenderer
 		ObjectEntry objectEntry, Locale locale) {
 
 		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			ObjectEntry.class.getName(), objectEntry.getObjectDefinitionId(),
-			locale);
+			ObjectEntry.class.getName(),
+			String.valueOf(objectEntry.getObjectDefinitionId()), locale);
 	}
 
 	@Override
@@ -60,8 +59,7 @@ public class ObjectEntryTemplateInfoItemTemplatedRenderer
 		}
 
 		return _templateInfoItemTemplatedRenderer.getInfoItemRendererTemplates(
-			ObjectEntry.class.getName(), GetterUtil.getLong(classTypeKey),
-			locale);
+			ObjectEntry.class.getName(), classTypeKey, locale);
 	}
 
 	@Override
