@@ -15,6 +15,7 @@
 package com.liferay.template.info.item.renderer;
 
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
+import com.liferay.petra.string.StringPool;
 
 import java.util.List;
 import java.util.Locale;
@@ -28,27 +29,31 @@ import javax.servlet.http.HttpServletResponse;
 public interface TemplateInfoItemTemplatedRenderer {
 
 	public default List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
-		String className, Locale locale) {
+		String infoItemClassName, Locale locale) {
 
-		return getInfoItemRendererTemplates(className, 0, locale);
+		return getInfoItemRendererTemplates(
+			infoItemClassName, StringPool.BLANK, locale);
 	}
 
 	public List<InfoItemRendererTemplate> getInfoItemRendererTemplates(
-		String className, long classPK, Locale locale);
+		String infoItemClassName, String infoItemFormVariationKey,
+		Locale locale);
 
 	public default String getInfoItemRendererTemplatesGroupLabel(
-		String className, Locale locale) {
+		String infoItemClassName, Locale locale) {
 
-		return getInfoItemRendererTemplatesGroupLabel(className, "0", locale);
+		return getInfoItemRendererTemplatesGroupLabel(
+			infoItemClassName, StringPool.BLANK, locale);
 	}
 
 	public String getInfoItemRendererTemplatesGroupLabel(
-		String className, String classTypeKey, Locale locale);
+		String infoItemClassName, String infoItemFormVariationKey,
+		Locale locale);
 
 	public String getLabel(Locale locale);
 
 	public void renderTemplate(
-		String className, Object itemObject, String templateKey,
+		String infoItemClassName, Object itemObject, String templateKey,
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse);
 
