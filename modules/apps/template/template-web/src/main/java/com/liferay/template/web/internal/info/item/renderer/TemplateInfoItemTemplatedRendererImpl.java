@@ -19,7 +19,6 @@ import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
 import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
-import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.petra.string.StringPool;
@@ -27,11 +26,12 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.template.info.item.renderer.TemplateInfoItemTemplatedRenderer;
+import com.liferay.template.model.TemplateEntry;
+import com.liferay.template.service.TemplateEntryLocalService;
 import com.liferay.template.web.internal.portlet.template.TemplateDisplayTemplateTransformer;
 
 import java.io.Writer;
@@ -64,16 +64,21 @@ public class TemplateInfoItemTemplatedRendererImpl
 		List<InfoItemRendererTemplate> infoItemRendererTemplates =
 			new ArrayList<>();
 
-		for (DDMTemplate ddmTemplate :
-				_getDDMTemplates(infoItemClassName, infoItemFormVariationKey)) {
+		for (TemplateEntry templateEntry :
+				_getTemplateEntries(
+					infoItemClassName, infoItemFormVariationKey)) {
 
-			if (_stagingGroupHelper.isLiveGroup(ddmTemplate.getGroupId())) {
+			if (_stagingGroupHelper.isLiveGroup(templateEntry.getGroupId())) {
 				continue;
 			}
 
+			DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchDDMTemplate(
+				templateEntry.getDDMTemplateId());
+
 			infoItemRendererTemplates.add(
 				new InfoItemRendererTemplate(
-					ddmTemplate.getName(locale), ddmTemplate.getTemplateKey()));
+					ddmTemplate.getName(locale),
+					String.valueOf(templateEntry.getTemplateEntryId())));
 		}
 
 		return infoItemRendererTemplates;
@@ -81,7 +86,8 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 	@Override
 	public String getInfoItemRendererTemplatesGroupLabel(
-		String infoItemClassName, String classTypeKey, Locale locale) {
+		String infoItemClassName, String infoItemFormVariationKey,
+		Locale locale) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -96,7 +102,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 		).map(
 			infoItemFormVariationsProvider ->
 				infoItemFormVariationsProvider.getInfoItemFormVariation(
-					serviceContext.getScopeGroupId(), classTypeKey)
+					serviceContext.getScopeGroupId(), infoItemFormVariationKey)
 		).filter(
 			Objects::nonNull
 		).map(
@@ -124,11 +130,11 @@ public class TemplateInfoItemTemplatedRendererImpl
 			return;
 		}
 
-		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchTemplate(
-			serviceContext.getScopeGroupId(),
-			_portal.getClassNameId(infoItemClassName), templateKey);
+		TemplateEntry templateEntry =
+			_templateEntryLocalService.fetchTemplateEntry(
+				GetterUtil.getLong(templateKey));
 
-		if (ddmTemplate == null) {
+		if (templateEntry == null) {
 			return;
 		}
 
@@ -150,7 +156,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 			TemplateDisplayTemplateTransformer
 				templateDisplayTemplateTransformer =
 					new TemplateDisplayTemplateTransformer(
-						ddmTemplate, infoItemFieldValues);
+						templateEntry, infoItemFieldValues);
 
 			String content = templateDisplayTemplateTransformer.transform(
 				serviceContext.getLocale());
@@ -164,7 +170,7 @@ public class TemplateInfoItemTemplatedRendererImpl
 		}
 	}
 
-	private List<DDMTemplate> _getDDMTemplates(
+	private List<TemplateEntry> _getTemplateEntries(
 		String infoItemClassName, String infoItemFormVariationKey) {
 
 		ServiceContext serviceContext =
@@ -174,16 +180,10 @@ public class TemplateInfoItemTemplatedRendererImpl
 			return Collections.emptyList();
 		}
 
-		return _ddmTemplateLocalService.getTemplates(
-			serviceContext.getCompanyId(),
-			ArrayUtil.append(
-				_portal.getAncestorSiteGroupIds(
-					serviceContext.getScopeGroupId()),
-				new long[] {serviceContext.getScopeGroupId()}),
-			new long[] {_portal.getClassNameId(infoItemClassName)},
-			new long[] {GetterUtil.getLong(infoItemFormVariationKey)},
-			_portal.getClassNameId(InfoItemFormProvider.class.getName()),
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		return _templateEntryLocalService.getTemplateEntries(
+			serviceContext.getScopeGroupId(), infoItemClassName,
+			infoItemFormVariationKey, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			null);
 	}
 
 	@Reference
@@ -197,5 +197,8 @@ public class TemplateInfoItemTemplatedRendererImpl
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;
+
+	@Reference
+	private TemplateEntryLocalService _templateEntryLocalService;
 
 }
