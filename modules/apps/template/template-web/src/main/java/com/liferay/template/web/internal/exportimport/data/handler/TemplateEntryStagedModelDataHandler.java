@@ -101,20 +101,6 @@ public class TemplateEntryStagedModelDataHandler
 	}
 
 	protected ServiceContext createServiceContext(
-		PortletDataContext portletDataContext, DDMTemplate ddmTemplate) {
-
-		ServiceContext serviceContext = new ServiceContext();
-
-		serviceContext.setAddGroupPermissions(true);
-		serviceContext.setAddGuestPermissions(true);
-		serviceContext.setCreateDate(ddmTemplate.getCreateDate());
-		serviceContext.setModifiedDate(ddmTemplate.getModifiedDate());
-		serviceContext.setScopeGroupId(portletDataContext.getScopeGroupId());
-
-		return serviceContext;
-	}
-
-	protected ServiceContext createServiceContext(
 		PortletDataContext portletDataContext, TemplateEntry templateEntry) {
 
 		ServiceContext serviceContext = new ServiceContext();
