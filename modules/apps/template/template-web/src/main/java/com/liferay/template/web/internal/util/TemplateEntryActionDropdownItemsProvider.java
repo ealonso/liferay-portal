@@ -180,6 +180,10 @@ public class TemplateEntryActionDropdownItemsProvider {
 		DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(
 			_templateEntry.getDDMTemplateId());
 
+		if (ddmTemplate == null) {
+			return null;
+		}
+
 		String permissionsDisplayPageURL = PermissionsURLTag.doTag(
 			StringPool.BLANK, DDMTemplate.class.getName(),
 			ddmTemplate.getName(_themeDisplay.getLocale()), null,

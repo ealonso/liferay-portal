@@ -56,13 +56,19 @@ InformationTemplatesManagementToolbarDisplayContext informationTemplatesManageme
 					).build());
 
 				DDMTemplate ddmTemplate = DDMTemplateLocalServiceUtil.fetchDDMTemplate(templateEntry.getDDMTemplateId());
+
+				String name = StringPool.BLANK;
+
+				if (ddmTemplate != null) {
+					name = HtmlUtil.escape(ddmTemplate.getName(locale));
+				}
 				%>
 
 				<liferay-ui:search-container-column-text
 					cssClass="table-cell-expand table-title"
 					href="<%= informationTemplatesTemplateDisplayContext.getTemplateEntryEditURL(templateEntry) %>"
 					name="name"
-					value="<%= HtmlUtil.escape(ddmTemplate.getName(locale)) %>"
+					value="<%= name %>"
 				/>
 
 				<liferay-ui:search-container-column-text

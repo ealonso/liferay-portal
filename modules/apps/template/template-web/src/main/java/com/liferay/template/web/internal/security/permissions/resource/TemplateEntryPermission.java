@@ -38,6 +38,10 @@ public class TemplateEntryPermission {
 		DDMTemplate ddmTemplate = _ddmTemplateLocalService.fetchDDMTemplate(
 			templateEntry.getDDMTemplateId());
 
+		if (ddmTemplate == null) {
+			return false;
+		}
+
 		return _ddmTemplateModelResourcePermission.contains(
 			permissionChecker, ddmTemplate, actionId);
 	}
