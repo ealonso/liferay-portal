@@ -48,21 +48,6 @@ else if (group.isStagingGroup()) {
 }
 %>
 
-<c:if test="<%= liveGroup.isStaged() && !liveGroup.isStagedPortlet(portlet.getRootPortletId()) %>">
-	<c:choose>
-		<c:when test="<%= !liveGroup.isStagedRemotely() && inStaging %>">
-			<div class="alert alert-warning lfr-portlet-message-staging-alert">
-				<liferay-ui:message key="this-portlet-is-not-staged-local-alert" />
-			</div>
-		</c:when>
-		<c:when test="<%= liveGroup.isStagedRemotely() && themeDisplay.isSignedIn() %>">
-			<div class="alert alert-warning lfr-portlet-message-staging-alert">
-				<liferay-ui:message key="this-portlet-is-not-staged-remote-alert" />
-			</div>
-		</c:when>
-	</c:choose>
-</c:if>
-
 <c:if test='<%= MultiSessionMessages.contains(renderRequest, "requestProcessed") && !MultiSessionMessages.contains(renderRequest, portlet.getPortletId() + SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_SUCCESS_MESSAGE) %>'>
 
 	<%
@@ -99,4 +84,35 @@ else if (group.isStagingGroup()) {
 
 <c:if test="<%= !MultiSessionErrors.isHideDefaultErrorMessage(renderRequest, portlet.getPortletId()) %>">
 	<liferay-ui:error embed="<%= false %>" />
+</c:if>
+
+<c:if test="<%= liveGroup.isStaged() && !liveGroup.isStagedPortlet(portlet.getRootPortletId()) %>">
+
+	<%
+	String message = StringPool.BLANK;
+
+	if (!liveGroup.isStagedRemotely() && inStaging) {
+		message = LanguageUtil.get(request, "this-portlet-is-not-staged-local-alert");
+	}
+	else if (liveGroup.isStagedRemotely() && themeDisplay.isSignedIn()) {
+		message = LanguageUtil.get(request, "this-portlet-is-not-staged-remote-alert");
+	}
+	%>
+
+	<c:if test="<%= Validator.isNotNull(message) %>">
+		<aui:script use="liferay-notification">
+			new Liferay.Notification({
+				closeable: true,
+				delay: {
+					hide: 5000,
+					show: 0,
+				},
+				duration: 1000,
+				message: '<%= HtmlUtil.escapeJS(message) %>',
+				render: true,
+				title: '<liferay-ui:message key="warning" />',
+				type: 'warning',
+			});
+		</aui:script>
+	</c:if>
 </c:if>
