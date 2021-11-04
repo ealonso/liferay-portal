@@ -14,6 +14,7 @@
 
 package com.liferay.segments.web.internal.product.navigation.control.menu;
 
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.security.permission.resource.LayoutContentModelResourcePermission;
@@ -35,6 +36,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.web.internal.display.context.SegmentsExperienceSelectorDisplayContext;
@@ -91,7 +93,9 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 			_segmentsExperienceLocalService.getSegmentsExperiences(
 				themeDisplay.getScopeGroupId(),
 				_portal.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true);
+				themeDisplay.getPlid(), true,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					themeDisplay.getLayoutSet(), themeDisplay.getUser()));
 
 		if (ListUtil.isEmpty(segmentsExperiences)) {
 			return false;
@@ -110,15 +114,12 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 		String className = (String)httpServletRequest.getAttribute(
 			ContentPageEditorWebKeys.CLASS_NAME);
 
-		if (Objects.equals(
-				className, LayoutPageTemplateEntry.class.getName())) {
-
-			return false;
-		}
-
 		Layout layout = themeDisplay.getLayout();
 
-		if (!layout.isTypeContent() || !SitesUtil.isLayoutUpdateable(layout)) {
+		if (Objects.equals(
+				className, LayoutPageTemplateEntry.class.getName()) ||
+			!layout.isTypeContent() || !SitesUtil.isLayoutUpdateable(layout)) {
+
 			return false;
 		}
 
@@ -166,7 +167,8 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 		httpServletRequest.setAttribute(
 			SegmentsExperienceSelectorDisplayContext.class.getName(),
-			new SegmentsExperienceSelectorDisplayContext(httpServletRequest));
+			new SegmentsExperienceSelectorDisplayContext(
+				httpServletRequest, _segmentsExperienceStagingHelper));
 
 		return super.include(httpServletRequest, httpServletResponse, jspPath);
 	}
@@ -188,5 +190,11 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
+
+	@Reference
+	private Staging _staging;
 
 }

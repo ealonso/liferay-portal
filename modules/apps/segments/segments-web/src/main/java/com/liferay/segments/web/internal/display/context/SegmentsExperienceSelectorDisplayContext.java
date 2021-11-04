@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
@@ -52,9 +53,11 @@ import javax.servlet.http.HttpServletRequest;
 public class SegmentsExperienceSelectorDisplayContext {
 
 	public SegmentsExperienceSelectorDisplayContext(
-		HttpServletRequest httpServletRequest) {
+		HttpServletRequest httpServletRequest,
+		SegmentsExperienceStagingHelper segmentsExperienceStagingHelper) {
 
 		_httpServletRequest = httpServletRequest;
+		_segmentsExperienceStagingHelper = segmentsExperienceStagingHelper;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -70,7 +73,9 @@ public class SegmentsExperienceSelectorDisplayContext {
 			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
 				_themeDisplay.getScopeGroupId(),
 				PortalUtil.getClassNameId(Layout.class.getName()),
-				_themeDisplay.getPlid(), true);
+				_themeDisplay.getPlid(), true,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					_themeDisplay.getLayoutSet(), _themeDisplay.getUser()));
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			if ((segmentsExperience.getPriority() <
@@ -278,6 +283,8 @@ public class SegmentsExperienceSelectorDisplayContext {
 		SegmentsExperienceSelectorDisplayContext.class);
 
 	private final HttpServletRequest _httpServletRequest;
+	private final SegmentsExperienceStagingHelper
+		_segmentsExperienceStagingHelper;
 	private final ThemeDisplay _themeDisplay;
 
 }

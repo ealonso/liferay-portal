@@ -68,6 +68,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsPortletKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperimentRel;
@@ -114,6 +115,7 @@ public class ContentPageLayoutEditorDisplayContext
 		ItemSelector itemSelector,
 		PageEditorConfiguration pageEditorConfiguration,
 		PortletRequest portletRequest, RenderResponse renderResponse,
+		SegmentsExperienceStagingHelper segmentsExperienceStagingHelper,
 		StagingGroupHelper stagingGroupHelper) {
 
 		super(
@@ -125,6 +127,8 @@ public class ContentPageLayoutEditorDisplayContext
 			httpServletRequest, infoItemServiceTracker, itemSelector,
 			pageEditorConfiguration, portletRequest, renderResponse,
 			stagingGroupHelper);
+
+		_segmentsExperienceStagingHelper = segmentsExperienceStagingHelper;
 	}
 
 	@Override
@@ -177,7 +181,7 @@ public class ContentPageLayoutEditorDisplayContext
 		stateContext.put(
 			"availableSegmentsExperiences",
 			SegmentsExperienceUtil.getAvailableSegmentsExperiences(
-				httpServletRequest));
+				httpServletRequest, _segmentsExperienceStagingHelper));
 		stateContext.put("layoutDataList", _getLayoutDataList());
 		stateContext.put(
 			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId()));
@@ -717,6 +721,8 @@ public class ContentPageLayoutEditorDisplayContext
 	private Boolean _lockedSegmentsExperience;
 	private Long _segmentsEntryId;
 	private Long _segmentsExperienceId;
+	private final SegmentsExperienceStagingHelper
+		_segmentsExperienceStagingHelper;
 	private Boolean _showSegmentsExperiences;
 
 }
