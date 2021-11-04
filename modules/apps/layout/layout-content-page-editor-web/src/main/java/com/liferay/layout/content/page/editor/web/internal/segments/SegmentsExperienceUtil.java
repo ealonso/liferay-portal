@@ -15,6 +15,7 @@
 package com.liferay.layout.content.page.editor.web.internal.segments;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
+import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
@@ -107,11 +109,16 @@ public class SegmentsExperienceUtil {
 		String layoutFullURL = PortalUtil.getLayoutFullURL(
 			layout, themeDisplay);
 
+		LayoutSet layoutSet = themeDisplay.getLayoutSet();
+
+		long layoutSetBranchId = StagingUtil.getRecentLayoutSetBranchId(
+			themeDisplay.getUser(), layoutSet.getLayoutSetId());
+
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceServiceUtil.getSegmentsExperiences(
 				themeDisplay.getScopeGroupId(),
 				PortalUtil.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true);
+				themeDisplay.getPlid(), true, layoutSetBranchId);
 
 		boolean addedDefault = false;
 
