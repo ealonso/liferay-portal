@@ -29,6 +29,7 @@ import com.liferay.segments.SegmentsEntryRetriever;
 import com.liferay.segments.configuration.provider.SegmentsConfigurationProvider;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.context.RequestContextMapper;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.processor.SegmentsExperienceRequestProcessorRegistry;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
@@ -156,8 +157,10 @@ public class SegmentsServicePreAction extends Action {
 			_getSegmentsExperienceIds(
 				httpServletRequest, httpServletResponse, layout.getGroupId(),
 				themeDisplay.getUserId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				layout.getPlid()));
+				_segmentsExperienceStagingHelper.getClassNameId(
+					themeDisplay.getLayout()),
+				_segmentsExperienceStagingHelper.getClassPK(
+					themeDisplay.getLayout())));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -181,5 +184,8 @@ public class SegmentsServicePreAction extends Action {
 	@Reference
 	private SegmentsExperienceRequestProcessorRegistry
 		_segmentsExperienceRequestProcessorRegistry;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 }
