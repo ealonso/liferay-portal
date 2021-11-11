@@ -347,6 +347,21 @@ public class SegmentsExperienceLocalServiceImpl
 	}
 
 	@Override
+	public void deleteSegmentsExperiences(long groupId, long layoutSetBranchId)
+		throws PortalException {
+
+		// Segments experiences
+
+		List<SegmentsExperience> segmentsExperiences =
+			segmentsExperiencePersistence.findByG_L(groupId, layoutSetBranchId);
+
+		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
+			segmentsExperienceLocalService.deleteSegmentsExperience(
+				segmentsExperience);
+		}
+	}
+
+	@Override
 	public void deleteSegmentsExperiences(
 			long groupId, long classNameId, long classPK)
 		throws PortalException {
