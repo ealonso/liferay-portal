@@ -18,10 +18,20 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortlet
 import com.liferay.layout.content.page.editor.web.internal.segments.SegmentsExperienceUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.service.SegmentsExperienceService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -48,13 +58,17 @@ public class UpdateSegmentsExperiencePriorityMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId");
 
-		int newPriority = ParamUtil.getInteger(actionRequest, "newPriority");
+		String direction = ParamUtil.getString(actionRequest, "direction");
 
-		_segmentsExperienceService.updateSegmentsExperiencePriority(
-			segmentsExperienceId, newPriority);
+		_updateSegmentsExperiencePriority(
+			themeDisplay.getScopeGroupId(), themeDisplay.getPlid(),
+			segmentsExperienceId, direction);
 
 		return JSONUtil.put(
 			"availableSegmentsExperiences",
@@ -62,8 +76,111 @@ public class UpdateSegmentsExperiencePriorityMVCActionCommand
 				_portal.getHttpServletRequest(actionRequest)));
 	}
 
+	private List<SegmentsExperience> _getSegmentsExperiences(
+			long groupId, long plid)
+		throws Exception {
+
+		List<SegmentsExperience> availableSegmentsExperiences =
+			new ArrayList<>();
+
+		List<SegmentsExperience> segmentsExperiences =
+			_segmentsExperienceLocalService.getSegmentsExperiences(
+				groupId, _portal.getClassNameId(Layout.class.getName()), plid,
+				true);
+
+		boolean addedDefault = false;
+
+		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
+			if ((segmentsExperience.getPriority() <
+					SegmentsExperienceConstants.PRIORITY_DEFAULT) &&
+				!addedDefault) {
+
+				SegmentsExperience defaultSegmentsExperience =
+					_segmentsExperienceLocalService.createSegmentsExperience(
+						SegmentsExperienceConstants.ID_DEFAULT);
+
+				defaultSegmentsExperience.setPriority(
+					SegmentsExperienceConstants.PRIORITY_DEFAULT);
+
+				availableSegmentsExperiences.add(defaultSegmentsExperience);
+
+				addedDefault = true;
+			}
+
+			availableSegmentsExperiences.add(segmentsExperience);
+		}
+
+		if (!addedDefault) {
+			SegmentsExperience defaultSegmentsExperience =
+				_segmentsExperienceLocalService.createSegmentsExperience(
+					SegmentsExperienceConstants.ID_DEFAULT);
+
+			defaultSegmentsExperience.setPriority(
+				SegmentsExperienceConstants.PRIORITY_DEFAULT);
+
+			availableSegmentsExperiences.add(defaultSegmentsExperience);
+		}
+
+		return availableSegmentsExperiences;
+	}
+
+	private void _updateSegmentsExperiencePriority(
+			long groupId, long plid, long segmentsExperienceId,
+			String direction)
+		throws Exception {
+
+		List<SegmentsExperience> segmentsExperiences = _getSegmentsExperiences(
+			groupId, plid);
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperienceId);
+
+		int index = segmentsExperiences.indexOf(segmentsExperience);
+
+		if (Objects.equals(direction, "up")) {
+			for (int i = index - 1; i >= 0; i--) {
+				SegmentsExperience targetSegmentsExperience =
+					segmentsExperiences.get(i);
+
+				_segmentsExperienceService.updateSegmentsExperiencePriority(
+					segmentsExperienceId,
+					targetSegmentsExperience.getPriority());
+
+				if ((targetSegmentsExperience.getSegmentsExperienceId() ==
+						SegmentsExperienceConstants.ID_DEFAULT) ||
+					(segmentsExperience.getLayoutSetBranchId() ==
+						targetSegmentsExperience.getLayoutSetBranchId())) {
+
+					return;
+				}
+			}
+		}
+		else if (Objects.equals(direction, "down")) {
+			for (int i = index + 1; i < segmentsExperiences.size(); i++) {
+				SegmentsExperience targetSegmentsExperience =
+					segmentsExperiences.get(i);
+
+				_segmentsExperienceService.updateSegmentsExperiencePriority(
+					segmentsExperienceId,
+					targetSegmentsExperience.getPriority());
+
+				if ((targetSegmentsExperience.getSegmentsExperienceId() ==
+						SegmentsExperienceConstants.ID_DEFAULT) ||
+					(segmentsExperience.getLayoutSetBranchId() ==
+						targetSegmentsExperience.getLayoutSetBranchId())) {
+
+					return;
+				}
+			}
+		}
+	}
+
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private SegmentsExperienceService _segmentsExperienceService;

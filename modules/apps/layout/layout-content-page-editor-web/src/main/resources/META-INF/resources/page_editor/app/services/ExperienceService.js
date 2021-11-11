@@ -127,15 +127,15 @@ export default {
 	 * Asks backend to update an experience priority
 	 * @param {object} options
 	 * @param {object} options.body
-	 * @param {number} options.body.newPriority Priority to update the experience
+	 * @param {number} options.body.direction Direction to update the experience
 	 * @param {string} options.body.segmentsExperienceId Id of the experience to be updated
 	 * @param {function} options.dispatch
 	 */
 	updateExperiencePriority({body, dispatch}) {
-		const {newPriority, segmentsExperienceId} = body;
+		const {direction, segmentsExperienceId} = body;
 
 		const payload = {
-			newPriority,
+			direction,
 			segmentsExperienceId,
 		};
 

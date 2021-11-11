@@ -38,37 +38,6 @@ import {
 import ExperienceModal from './ExperienceModal';
 import ExperiencesList from './ExperiencesList';
 
-/**
- * It produces an object with a target and subtarget keys indicating what experiences
- * should change to change the priority of target priority.
- */
-function getUpdateExperiencePriorityTargets(
-	orderedExperiences,
-	targetExperienceId,
-	direction
-) {
-	const targetIndex = orderedExperiences.findIndex(
-		(experience) => experience.segmentsExperienceId === targetExperienceId
-	);
-
-	let subtargetIndex;
-
-	if (direction === 'up') {
-		subtargetIndex = targetIndex - 1;
-	}
-	else {
-		subtargetIndex = targetIndex + 1;
-	}
-
-	const subtargetExperience = orderedExperiences[subtargetIndex];
-	const targetExperience = orderedExperiences[targetIndex];
-
-	return {
-		priority: subtargetExperience.priority,
-		segmentsExperienceId: targetExperience.segmentsExperienceId,
-	};
-}
-
 const ExperienceSelector = ({
 	experiences,
 	segments,
@@ -309,23 +278,21 @@ const ExperienceSelector = ({
 	};
 
 	const decreasePriority = (id) => {
-		const target = getUpdateExperiencePriorityTargets(
-			experiences,
-			id,
-			'down'
+		dispatch(
+			updateExperiencePriority({
+				direction: 'down',
+				segmentsExperienceId: id,
+			})
 		);
-
-		dispatch(updateExperiencePriority(target));
 	};
 
 	const increasePriority = (id) => {
-		const target = getUpdateExperiencePriorityTargets(
-			experiences,
-			id,
-			'up'
+		dispatch(
+			updateExperiencePriority({
+				direction: 'up',
+				segmentsExperienceId: id,
+			})
 		);
-
-		dispatch(updateExperiencePriority(target));
 	};
 
 	return (
