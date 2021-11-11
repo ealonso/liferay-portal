@@ -158,6 +158,7 @@ public class SegmentsExperienceStagedModelDataHandler
 			portletDataContext.getCompanyId());
 		importedSegmentsExperience.setSegmentsEntryId(segmentsEntryId);
 		importedSegmentsExperience.setClassPK(referenceClassPK);
+		importedSegmentsExperience.setLayoutSetBranchId(0);
 
 		SegmentsExperience existingSegmentsExperience =
 			_stagedModelRepository.fetchStagedModelByUuidAndGroupId(
