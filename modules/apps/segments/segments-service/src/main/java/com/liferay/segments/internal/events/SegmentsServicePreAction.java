@@ -14,6 +14,7 @@
 
 package com.liferay.segments.internal.events;
 
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -32,9 +34,13 @@ import com.liferay.segments.configuration.SegmentsConfiguration;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.context.RequestContextMapper;
+import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.processor.SegmentsExperienceRequestProcessorRegistry;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.LongStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -112,13 +118,48 @@ public class SegmentsServicePreAction extends Action {
 			return;
 		}
 
+		long[] segmentsExperienceIds = _getSegmentsExperienceIds(
+			httpServletRequest, httpServletResponse, layout.getGroupId(),
+			themeDisplay.getUserId(),
+			_portal.getClassNameId(Layout.class.getName()), layout.getPlid());
+
 		httpServletRequest.setAttribute(
 			SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS,
-			_getSegmentsExperienceIds(
-				httpServletRequest, httpServletResponse, layout.getGroupId(),
-				themeDisplay.getUserId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				layout.getPlid()));
+			_filterSegmentsExperienceIdsByLayoutSetBranchId(
+				segmentsExperienceIds, themeDisplay));
+	}
+
+	private long[] _filterSegmentsExperienceIdsByLayoutSetBranchId(
+		long[] segmentsExperienceIds, ThemeDisplay themeDisplay) {
+
+		LongStream longStream = Arrays.stream(segmentsExperienceIds);
+
+		LayoutSet layoutSet = themeDisplay.getLayoutSet();
+
+		long layoutSetBranchId = _staging.getRecentLayoutSetBranchId(
+			themeDisplay.getUser(), layoutSet.getLayoutSetId());
+
+		return longStream.filter(
+			segmentsExperienceId -> {
+				if (segmentsExperienceId ==
+						SegmentsExperienceConstants.ID_DEFAULT) {
+
+					return true;
+				}
+
+				SegmentsExperience segmentsExperience =
+					SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+						segmentsExperienceId);
+
+				if (segmentsExperience.getLayoutSetBranchId() ==
+						layoutSetBranchId) {
+
+					return true;
+				}
+
+				return false;
+			}
+		).toArray();
 	}
 
 	private long[] _getSegmentsExperienceIds(
@@ -173,5 +214,8 @@ public class SegmentsServicePreAction extends Action {
 		_segmentsExperienceRequestProcessorRegistry;
 
 	private ServiceRegistration<LifecycleAction> _serviceRegistration;
+
+	@Reference
+	private Staging _staging;
 
 }
