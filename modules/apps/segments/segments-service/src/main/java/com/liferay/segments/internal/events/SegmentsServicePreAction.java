@@ -32,9 +32,14 @@ import com.liferay.segments.configuration.SegmentsConfiguration;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.context.RequestContextMapper;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
+import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.processor.SegmentsExperienceRequestProcessorRegistry;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.LongStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -92,6 +97,37 @@ public class SegmentsServicePreAction extends Action {
 		}
 	}
 
+	private long[] _filterSegmentsExperienceIdsByLayoutSetBranchId(
+		long[] segmentsExperienceIds, ThemeDisplay themeDisplay) {
+
+		LongStream longStream = Arrays.stream(segmentsExperienceIds);
+
+		return longStream.filter(
+			segmentsExperienceId -> {
+				if (segmentsExperienceId ==
+						SegmentsExperienceConstants.ID_DEFAULT) {
+
+					return true;
+				}
+
+				SegmentsExperience segmentsExperience =
+					SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+						segmentsExperienceId);
+
+				if (segmentsExperience.getLayoutSetBranchId() ==
+						_segmentsExperienceStagingHelper.
+							getRecentLayoutSetBranchId(
+								themeDisplay.getLayoutSet(),
+								themeDisplay.getUser())) {
+
+					return true;
+				}
+
+				return false;
+			}
+		).toArray();
+	}
+
 	private long[] _getSegmentsExperienceIds(
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse, long groupId, long userId,
@@ -147,13 +183,15 @@ public class SegmentsServicePreAction extends Action {
 			return;
 		}
 
+		long[] segmentsExperienceIds = _getSegmentsExperienceIds(
+			httpServletRequest, httpServletResponse, layout.getGroupId(),
+			themeDisplay.getUserId(),
+			_portal.getClassNameId(Layout.class.getName()), layout.getPlid());
+
 		httpServletRequest.setAttribute(
 			SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS,
-			_getSegmentsExperienceIds(
-				httpServletRequest, httpServletResponse, layout.getGroupId(),
-				themeDisplay.getUserId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				layout.getPlid()));
+			_filterSegmentsExperienceIdsByLayoutSetBranchId(
+				segmentsExperienceIds, themeDisplay));
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -171,6 +209,9 @@ public class SegmentsServicePreAction extends Action {
 	@Reference
 	private SegmentsExperienceRequestProcessorRegistry
 		_segmentsExperienceRequestProcessorRegistry;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	private ServiceRegistration<LifecycleAction> _serviceRegistration;
 
