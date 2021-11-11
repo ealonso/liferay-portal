@@ -16,13 +16,13 @@ import ExperienceService from '../../../app/services/ExperienceService';
 import updateExperiencesListAction from '../actions/updateExperiencesList';
 
 export default function updateExperiencePriority({
-	priority,
+	direction,
 	segmentsExperienceId,
 }) {
 	return (dispatch) => {
 		return ExperienceService.updateExperiencePriority({
 			body: {
-				newPriority: priority,
+				direction,
 				segmentsExperienceId,
 			},
 			dispatch,
