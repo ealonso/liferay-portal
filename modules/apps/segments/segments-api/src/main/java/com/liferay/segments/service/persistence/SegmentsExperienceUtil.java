@@ -1026,6 +1026,281 @@ public class SegmentsExperienceUtil {
 	}
 
 	/**
+	 * Returns all the segments experiences where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_L(
+		long groupId, long layoutSetBranchId) {
+
+		return getPersistence().findByG_L(groupId, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_L(
+		long groupId, long layoutSetBranchId, int start, int end) {
+
+		return getPersistence().findByG_L(
+			groupId, layoutSetBranchId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_L(
+		long groupId, long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().findByG_L(
+			groupId, layoutSetBranchId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_L(
+		long groupId, long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByG_L(
+			groupId, layoutSetBranchId, start, end, orderByComparator,
+			useFinderCache);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_L_First(
+			long groupId, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_L_First(
+			groupId, layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_L_First(
+		long groupId, long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_L_First(
+			groupId, layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_L_Last(
+			long groupId, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_L_Last(
+			groupId, layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_L_Last(
+		long groupId, long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_L_Last(
+			groupId, layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] findByG_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_L_PrevAndNext(
+			segmentsExperienceId, groupId, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns all the segments experiences that the user has permission to view where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_L(
+		long groupId, long layoutSetBranchId) {
+
+		return getPersistence().filterFindByG_L(groupId, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences that the user has permission to view where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_L(
+		long groupId, long layoutSetBranchId, int start, int end) {
+
+		return getPersistence().filterFindByG_L(
+			groupId, layoutSetBranchId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences that the user has permissions to view where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_L(
+		long groupId, long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().filterFindByG_L(
+			groupId, layoutSetBranchId, start, end, orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set of segments experiences that the user has permission to view where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] filterFindByG_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().filterFindByG_L_PrevAndNext(
+			segmentsExperienceId, groupId, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Removes all the segments experiences where groupId = &#63; and layoutSetBranchId = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 */
+	public static void removeByG_L(long groupId, long layoutSetBranchId) {
+		getPersistence().removeByG_L(groupId, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences
+	 */
+	public static int countByG_L(long groupId, long layoutSetBranchId) {
+		return getPersistence().countByG_L(groupId, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences that the user has permission to view where groupId = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences that the user has permission to view
+	 */
+	public static int filterCountByG_L(long groupId, long layoutSetBranchId) {
+		return getPersistence().filterCountByG_L(groupId, layoutSetBranchId);
+	}
+
+	/**
 	 * Returns all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63;.
 	 *
 	 * @param groupId the group ID
@@ -2710,6 +2985,339 @@ public class SegmentsExperienceUtil {
 	}
 
 	/**
+	 * Returns all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return getPersistence().findByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		int start, int end) {
+
+		return getPersistence().findByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().findByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId, start, end,
+			orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_C_C_L_First(
+			long groupId, long classNameId, long classPK,
+			long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_L_First(
+			groupId, classNameId, classPK, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_C_C_L_First(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_C_C_L_First(
+			groupId, classNameId, classPK, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_C_C_L_Last(
+			long groupId, long classNameId, long classPK,
+			long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_L_Last(
+			groupId, classNameId, classPK, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_C_C_L_Last(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_C_C_L_Last(
+			groupId, classNameId, classPK, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] findByG_C_C_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long classNameId,
+			long classPK, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_L_PrevAndNext(
+			segmentsExperienceId, groupId, classNameId, classPK,
+			layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns all the segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return getPersistence().filterFindByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		int start, int end) {
+
+		return getPersistence().filterFindByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId, start, end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences that the user has permissions to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId,
+		int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().filterFindByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId, start, end,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set of segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] filterFindByG_C_C_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long classNameId,
+			long classPK, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().filterFindByG_C_C_L_PrevAndNext(
+			segmentsExperienceId, groupId, classNameId, classPK,
+			layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 */
+	public static void removeByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		getPersistence().removeByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences
+	 */
+	public static int countByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return getPersistence().countByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences that the user has permission to view
+	 */
+	public static int filterCountByG_C_C_L(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return getPersistence().filterCountByG_C_C_L(
+			groupId, classNameId, classPK, layoutSetBranchId);
+	}
+
+	/**
 	 * Returns all the segments experiences where groupId = &#63; and segmentsEntryId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63;.
 	 *
 	 * @param groupId the group ID
@@ -3272,6 +3880,364 @@ public class SegmentsExperienceUtil {
 
 		return getPersistence().filterCountByG_S_C_C_A(
 			groupId, segmentsEntryIds, classNameId, classPK, active);
+	}
+
+	/**
+	 * Returns all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId) {
+
+		return getPersistence().findByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId, int start, int end) {
+
+		return getPersistence().findByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId, start,
+			end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().findByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId, start,
+			end, orderByComparator);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param useFinderCache whether to use the finder cache
+	 * @return the ordered range of matching segments experiences
+	 */
+	public static List<SegmentsExperience> findByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator,
+		boolean useFinderCache) {
+
+		return getPersistence().findByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId, start,
+			end, orderByComparator, useFinderCache);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_C_C_A_L_First(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_A_L_First(
+			groupId, classNameId, classPK, active, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the first segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_C_C_A_L_First(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_C_C_A_L_First(
+			groupId, classNameId, classPK, active, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience
+	 * @throws NoSuchExperienceException if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience findByG_C_C_A_L_Last(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_A_L_Last(
+			groupId, classNameId, classPK, active, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the last segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching segments experience, or <code>null</code> if a matching segments experience could not be found
+	 */
+	public static SegmentsExperience fetchByG_C_C_A_L_Last(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().fetchByG_C_C_A_L_Last(
+			groupId, classNameId, classPK, active, layoutSetBranchId,
+			orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] findByG_C_C_A_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long classNameId,
+			long classPK, boolean active, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().findByG_C_C_A_L_PrevAndNext(
+			segmentsExperienceId, groupId, classNameId, classPK, active,
+			layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Returns all the segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId) {
+
+		return getPersistence().filterFindByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns a range of all the segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @return the range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId, int start, int end) {
+
+		return getPersistence().filterFindByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId, start,
+			end);
+	}
+
+	/**
+	 * Returns an ordered range of all the segments experiences that the user has permissions to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to <code>QueryUtil#ALL_POS</code> will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent, then the query will include the default ORDER BY logic from <code>SegmentsExperienceModelImpl</code>.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param start the lower bound of the range of segments experiences
+	 * @param end the upper bound of the range of segments experiences (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching segments experiences that the user has permission to view
+	 */
+	public static List<SegmentsExperience> filterFindByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId, int start, int end,
+		OrderByComparator<SegmentsExperience> orderByComparator) {
+
+		return getPersistence().filterFindByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId, start,
+			end, orderByComparator);
+	}
+
+	/**
+	 * Returns the segments experiences before and after the current segments experience in the ordered set of segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param segmentsExperienceId the primary key of the current segments experience
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next segments experience
+	 * @throws NoSuchExperienceException if a segments experience with the primary key could not be found
+	 */
+	public static SegmentsExperience[] filterFindByG_C_C_A_L_PrevAndNext(
+			long segmentsExperienceId, long groupId, long classNameId,
+			long classPK, boolean active, long layoutSetBranchId,
+			OrderByComparator<SegmentsExperience> orderByComparator)
+		throws com.liferay.segments.exception.NoSuchExperienceException {
+
+		return getPersistence().filterFindByG_C_C_A_L_PrevAndNext(
+			segmentsExperienceId, groupId, classNameId, classPK, active,
+			layoutSetBranchId, orderByComparator);
+	}
+
+	/**
+	 * Removes all the segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 */
+	public static void removeByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId) {
+
+		getPersistence().removeByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences
+	 */
+	public static int countByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId) {
+
+		return getPersistence().countByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
+	}
+
+	/**
+	 * Returns the number of segments experiences that the user has permission to view where groupId = &#63; and classNameId = &#63; and classPK = &#63; and active = &#63; and layoutSetBranchId = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param classNameId the class name ID
+	 * @param classPK the class pk
+	 * @param active the active
+	 * @param layoutSetBranchId the layout set branch ID
+	 * @return the number of matching segments experiences that the user has permission to view
+	 */
+	public static int filterCountByG_C_C_A_L(
+		long groupId, long classNameId, long classPK, boolean active,
+		long layoutSetBranchId) {
+
+		return getPersistence().filterCountByG_C_C_A_L(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
 	}
 
 	/**

@@ -158,6 +158,8 @@ public class SegmentsExperiencePersistenceTest {
 
 		newSegmentsExperience.setActive(RandomTestUtil.randomBoolean());
 
+		newSegmentsExperience.setLayoutSetBranchId(RandomTestUtil.nextLong());
+
 		newSegmentsExperience.setTypeSettings(RandomTestUtil.randomString());
 
 		newSegmentsExperience.setLastPublishDate(RandomTestUtil.nextDate());
@@ -221,6 +223,9 @@ public class SegmentsExperiencePersistenceTest {
 			existingSegmentsExperience.isActive(),
 			newSegmentsExperience.isActive());
 		Assert.assertEquals(
+			existingSegmentsExperience.getLayoutSetBranchId(),
+			newSegmentsExperience.getLayoutSetBranchId());
+		Assert.assertEquals(
 			existingSegmentsExperience.getTypeSettings(),
 			newSegmentsExperience.getTypeSettings());
 		Assert.assertEquals(
@@ -280,6 +285,14 @@ public class SegmentsExperiencePersistenceTest {
 	}
 
 	@Test
+	public void testCountByG_L() throws Exception {
+		_persistence.countByG_L(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
+
+		_persistence.countByG_L(0L, 0L);
+	}
+
+	@Test
 	public void testCountByG_C_C() throws Exception {
 		_persistence.countByG_C_C(
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
@@ -334,6 +347,15 @@ public class SegmentsExperiencePersistenceTest {
 	}
 
 	@Test
+	public void testCountByG_C_C_L() throws Exception {
+		_persistence.countByG_C_C_L(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
+
+		_persistence.countByG_C_C_L(0L, 0L, 0L, 0L);
+	}
+
+	@Test
 	public void testCountByG_S_C_C_A() throws Exception {
 		_persistence.countByG_S_C_C_A(
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
@@ -351,6 +373,17 @@ public class SegmentsExperiencePersistenceTest {
 			new long[] {RandomTestUtil.nextLong(), 0L},
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
 			RandomTestUtil.randomBoolean());
+	}
+
+	@Test
+	public void testCountByG_C_C_A_L() throws Exception {
+		_persistence.countByG_C_C_A_L(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.randomBoolean(),
+			RandomTestUtil.nextLong());
+
+		_persistence.countByG_C_C_A_L(
+			0L, 0L, 0L, RandomTestUtil.randomBoolean(), 0L);
 	}
 
 	@Test
@@ -390,8 +423,8 @@ public class SegmentsExperiencePersistenceTest {
 			"companyId", true, "userId", true, "userName", true, "createDate",
 			true, "modifiedDate", true, "segmentsEntryId", true,
 			"segmentsExperienceKey", true, "classNameId", true, "classPK", true,
-			"name", true, "priority", true, "active", true, "typeSettings",
-			true, "lastPublishDate", true);
+			"name", true, "priority", true, "active", true, "layoutSetBranchId",
+			true, "typeSettings", true, "lastPublishDate", true);
 	}
 
 	@Test
@@ -751,6 +784,8 @@ public class SegmentsExperiencePersistenceTest {
 		segmentsExperience.setPriority(RandomTestUtil.nextInt());
 
 		segmentsExperience.setActive(RandomTestUtil.randomBoolean());
+
+		segmentsExperience.setLayoutSetBranchId(RandomTestUtil.nextLong());
 
 		segmentsExperience.setTypeSettings(RandomTestUtil.randomString());
 

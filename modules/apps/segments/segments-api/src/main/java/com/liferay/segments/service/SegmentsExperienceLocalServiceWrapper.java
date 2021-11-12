@@ -44,6 +44,21 @@ public class SegmentsExperienceLocalServiceWrapper
 	public SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
 			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.util.UnicodeProperties
+				typeSettingsUnicodeProperties,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
@@ -64,6 +79,21 @@ public class SegmentsExperienceLocalServiceWrapper
 		return _segmentsExperienceLocalService.addSegmentsExperience(
 			segmentsEntryId, classNameId, classPK, nameMap, active,
 			typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, int priority,
+			boolean active, long layoutSetBranchId,
+			com.liferay.portal.kernel.util.UnicodeProperties
+				typeSettingsUnicodeProperties,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, priority, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
 	}
 
 	@Override
@@ -110,6 +140,21 @@ public class SegmentsExperienceLocalServiceWrapper
 
 		return _segmentsExperienceLocalService.addSegmentsExperience(
 			segmentsExperience);
+	}
+
+	@Override
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.util.UnicodeProperties
+				typeSettingsUnicodeProperties,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.appendSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
 	}
 
 	@Override
@@ -222,6 +267,14 @@ public class SegmentsExperienceLocalServiceWrapper
 
 		return _segmentsExperienceLocalService.deleteSegmentsExperience(
 			segmentsExperience);
+	}
+
+	@Override
+	public void deleteSegmentsExperiences(long groupId, long layoutSetBranchId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_segmentsExperienceLocalService.deleteSegmentsExperiences(
+			groupId, layoutSetBranchId);
 	}
 
 	@Override
@@ -508,6 +561,24 @@ public class SegmentsExperienceLocalServiceWrapper
 		return _segmentsExperienceLocalService.getSegmentsExperiences(
 			groupId, classNameId, classPK, active, start, end,
 			orderByComparator);
+	}
+
+	@Override
+	public java.util.List<SegmentsExperience> getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.getSegmentsExperiences(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
+	}
+
+	@Override
+	public java.util.List<SegmentsExperience> getSegmentsExperiences(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return _segmentsExperienceLocalService.getSegmentsExperiences(
+			groupId, classNameId, classPK, layoutSetBranchId);
 	}
 
 	@Override
