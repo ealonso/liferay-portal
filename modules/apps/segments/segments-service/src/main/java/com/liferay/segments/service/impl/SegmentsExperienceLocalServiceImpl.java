@@ -458,6 +458,26 @@ public class SegmentsExperienceLocalServiceImpl
 
 	@Override
 	public List<SegmentsExperience> getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId)
+		throws PortalException {
+
+		return segmentsExperiencePersistence.findByG_C_C_A_L(
+			groupId, classNameId, _getPublishedLayoutClassPK(classPK), active,
+			layoutSetBranchId);
+	}
+
+	@Override
+	public List<SegmentsExperience> getSegmentsExperiences(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId) {
+
+		return segmentsExperiencePersistence.findByG_C_C_L(
+			groupId, classNameId, _getPublishedLayoutClassPK(classPK),
+			layoutSetBranchId);
+	}
+
+	@Override
+	public List<SegmentsExperience> getSegmentsExperiences(
 		long groupId, long[] segmentsEntryIds, long classNameId, long classPK,
 		boolean active) {
 
