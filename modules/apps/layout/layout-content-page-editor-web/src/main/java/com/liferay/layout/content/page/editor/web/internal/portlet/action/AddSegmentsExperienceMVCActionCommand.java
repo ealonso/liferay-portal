@@ -14,6 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
@@ -34,6 +35,8 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -154,6 +157,12 @@ public class AddSegmentsExperienceMVCActionCommand
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		long layoutSetBranchId = _getLayoutSetBranchId(
+			classPK, themeDisplay.getUser());
+
 		if (segmentsExperiment != null) {
 			long segmentsEntryId = SegmentsEntryConstants.ID_DEFAULT;
 
@@ -172,7 +181,7 @@ public class AddSegmentsExperienceMVCActionCommand
 				Collections.singletonMap(
 					LocaleUtil.getSiteDefault(),
 					ParamUtil.getString(actionRequest, "name")),
-				false, serviceContext);
+				false, layoutSetBranchId, serviceContext);
 		}
 
 		return _segmentsExperienceService.addSegmentsExperience(
@@ -182,7 +191,7 @@ public class AddSegmentsExperienceMVCActionCommand
 				LocaleUtil.getSiteDefault(),
 				ParamUtil.getString(actionRequest, "name")),
 			ParamUtil.getBoolean(actionRequest, "active", true),
-			serviceContext);
+			layoutSetBranchId, serviceContext);
 	}
 
 	private SegmentsExperimentRel _addSegmentsExperimentRel(
@@ -243,6 +252,15 @@ public class AddSegmentsExperienceMVCActionCommand
 
 		return JSONFactoryUtil.createJSONObject(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
+	}
+
+	private long _getLayoutSetBranchId(long plid, User user) {
+		Layout layout = _layoutLocalService.fetchLayout(plid);
+
+		LayoutSet layoutSet = layout.getLayoutSet();
+
+		return _staging.getRecentLayoutSetBranchId(
+			user, layoutSet.getLayoutSetId());
 	}
 
 	private SegmentsExperiment _getSegmentsExperiment(
@@ -342,5 +360,8 @@ public class AddSegmentsExperienceMVCActionCommand
 
 	@Reference
 	private SegmentsExperimentService _segmentsExperimentService;
+
+	@Reference
+	private Staging _staging;
 
 }
