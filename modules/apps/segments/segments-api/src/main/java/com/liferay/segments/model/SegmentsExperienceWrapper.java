@@ -62,6 +62,7 @@ public class SegmentsExperienceWrapper
 		attributes.put("name", getName());
 		attributes.put("priority", getPriority());
 		attributes.put("active", isActive());
+		attributes.put("layoutSetBranchId", getLayoutSetBranchId());
 		attributes.put("typeSettings", getTypeSettings());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
@@ -172,6 +173,12 @@ public class SegmentsExperienceWrapper
 
 		if (active != null) {
 			setActive(active);
+		}
+
+		Long layoutSetBranchId = (Long)attributes.get("layoutSetBranchId");
+
+		if (layoutSetBranchId != null) {
+			setLayoutSetBranchId(layoutSetBranchId);
 		}
 
 		String typeSettings = (String)attributes.get("typeSettings");
@@ -290,6 +297,16 @@ public class SegmentsExperienceWrapper
 	@Override
 	public Date getLastPublishDate() {
 		return model.getLastPublishDate();
+	}
+
+	/**
+	 * Returns the layout set branch ID of this segments experience.
+	 *
+	 * @return the layout set branch ID of this segments experience
+	 */
+	@Override
+	public long getLayoutSetBranchId() {
+		return model.getLayoutSetBranchId();
 	}
 
 	/**
@@ -613,6 +630,16 @@ public class SegmentsExperienceWrapper
 	@Override
 	public void setLastPublishDate(Date lastPublishDate) {
 		model.setLastPublishDate(lastPublishDate);
+	}
+
+	/**
+	 * Sets the layout set branch ID of this segments experience.
+	 *
+	 * @param layoutSetBranchId the layout set branch ID of this segments experience
+	 */
+	@Override
+	public void setLayoutSetBranchId(long layoutSetBranchId) {
+		model.setLayoutSetBranchId(layoutSetBranchId);
 	}
 
 	/**

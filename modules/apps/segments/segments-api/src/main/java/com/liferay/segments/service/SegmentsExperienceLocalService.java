@@ -77,6 +77,13 @@ public interface SegmentsExperienceLocalService
 	 */
 	public SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			UnicodeProperties typeSettingsUnicodeProperties,
+			ServiceContext serviceContext)
+		throws PortalException;
+
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
 			Map<Locale, String> nameMap, boolean active,
 			ServiceContext serviceContext)
 		throws PortalException;
@@ -84,6 +91,14 @@ public interface SegmentsExperienceLocalService
 	public SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
 			Map<Locale, String> nameMap, boolean active,
+			UnicodeProperties typeSettingsUnicodeProperties,
+			ServiceContext serviceContext)
+		throws PortalException;
+
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, int priority, boolean active,
+			long layoutSetBranchId,
 			UnicodeProperties typeSettingsUnicodeProperties,
 			ServiceContext serviceContext)
 		throws PortalException;
@@ -114,6 +129,13 @@ public interface SegmentsExperienceLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public SegmentsExperience addSegmentsExperience(
 		SegmentsExperience segmentsExperience);
+
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			UnicodeProperties typeSettingsUnicodeProperties,
+			ServiceContext serviceContext)
+		throws PortalException;
 
 	public SegmentsExperience appendSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
@@ -185,6 +207,9 @@ public interface SegmentsExperienceLocalService
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public SegmentsExperience deleteSegmentsExperience(
 			SegmentsExperience segmentsExperience)
+		throws PortalException;
+
+	public void deleteSegmentsExperiences(long groupId, long layoutSetBranchId)
 		throws PortalException;
 
 	public void deleteSegmentsExperiences(
@@ -367,6 +392,16 @@ public interface SegmentsExperienceLocalService
 	public List<SegmentsExperience> getSegmentsExperiences(
 		long groupId, long classNameId, long classPK, boolean active, int start,
 		int end, OrderByComparator<SegmentsExperience> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SegmentsExperience> getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<SegmentsExperience> getSegmentsExperiences(
+		long groupId, long classNameId, long classPK, long layoutSetBranchId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<SegmentsExperience> getSegmentsExperiences(

@@ -451,6 +451,20 @@ public interface SegmentsExperienceModel
 	public void setActive(boolean active);
 
 	/**
+	 * Returns the layout set branch ID of this segments experience.
+	 *
+	 * @return the layout set branch ID of this segments experience
+	 */
+	public long getLayoutSetBranchId();
+
+	/**
+	 * Sets the layout set branch ID of this segments experience.
+	 *
+	 * @param layoutSetBranchId the layout set branch ID of this segments experience
+	 */
+	public void setLayoutSetBranchId(long layoutSetBranchId);
+
+	/**
 	 * Returns the type settings of this segments experience.
 	 *
 	 * @return the type settings of this segments experience

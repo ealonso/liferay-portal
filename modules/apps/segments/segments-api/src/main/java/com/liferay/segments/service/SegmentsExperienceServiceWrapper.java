@@ -42,6 +42,34 @@ public class SegmentsExperienceServiceWrapper
 	public SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
 			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceService.addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.util.UnicodeProperties
+				typeSettingsUnicodeProperties,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceService.addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
@@ -62,6 +90,34 @@ public class SegmentsExperienceServiceWrapper
 		return _segmentsExperienceService.addSegmentsExperience(
 			segmentsEntryId, classNameId, classPK, nameMap, active,
 			typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceService.appendSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
+			long layoutSetBranchId,
+			com.liferay.portal.kernel.util.UnicodeProperties
+				typeSettingsUnicodeProperties,
+			com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceService.appendSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
 	}
 
 	@Override
@@ -146,6 +202,16 @@ public class SegmentsExperienceServiceWrapper
 		return _segmentsExperienceService.getSegmentsExperiences(
 			groupId, classNameId, classPK, active, start, end,
 			orderByComparator);
+	}
+
+	@Override
+	public java.util.List<SegmentsExperience> getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active,
+			long layoutSetBranchId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceService.getSegmentsExperiences(
+			groupId, classNameId, classPK, active, layoutSetBranchId);
 	}
 
 	@Override

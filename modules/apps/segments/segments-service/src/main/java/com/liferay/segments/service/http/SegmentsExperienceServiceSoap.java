@@ -71,6 +71,33 @@ public class SegmentsExperienceServiceSoap {
 			addSegmentsExperience(
 				long segmentsEntryId, long classNameId, long classPK,
 				String[] nameMapLanguageIds, String[] nameMapValues,
+				boolean active, long layoutSetBranchId,
+				com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+
+		try {
+			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
+				nameMapLanguageIds, nameMapValues);
+
+			com.liferay.segments.model.SegmentsExperience returnValue =
+				SegmentsExperienceServiceUtil.addSegmentsExperience(
+					segmentsEntryId, classNameId, classPK, nameMap, active,
+					layoutSetBranchId, serviceContext);
+
+			return com.liferay.segments.model.SegmentsExperienceSoap.
+				toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.segments.model.SegmentsExperienceSoap
+			addSegmentsExperience(
+				long segmentsEntryId, long classNameId, long classPK,
+				String[] nameMapLanguageIds, String[] nameMapValues,
 				boolean active,
 				com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
@@ -83,6 +110,33 @@ public class SegmentsExperienceServiceSoap {
 				SegmentsExperienceServiceUtil.addSegmentsExperience(
 					segmentsEntryId, classNameId, classPK, nameMap, active,
 					serviceContext);
+
+			return com.liferay.segments.model.SegmentsExperienceSoap.
+				toSoapModel(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.segments.model.SegmentsExperienceSoap
+			appendSegmentsExperience(
+				long segmentsEntryId, long classNameId, long classPK,
+				String[] nameMapLanguageIds, String[] nameMapValues,
+				boolean active, long layoutSetBranchId,
+				com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+
+		try {
+			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
+				nameMapLanguageIds, nameMapValues);
+
+			com.liferay.segments.model.SegmentsExperience returnValue =
+				SegmentsExperienceServiceUtil.appendSegmentsExperience(
+					segmentsEntryId, classNameId, classPK, nameMap, active,
+					layoutSetBranchId, serviceContext);
 
 			return com.liferay.segments.model.SegmentsExperienceSoap.
 				toSoapModel(returnValue);
@@ -214,6 +268,29 @@ public class SegmentsExperienceServiceSoap {
 					SegmentsExperienceServiceUtil.getSegmentsExperiences(
 						groupId, classNameId, classPK, active, start, end,
 						orderByComparator);
+
+			return com.liferay.segments.model.SegmentsExperienceSoap.
+				toSoapModels(returnValue);
+		}
+		catch (Exception exception) {
+			_log.error(exception, exception);
+
+			throw new RemoteException(exception.getMessage());
+		}
+	}
+
+	public static com.liferay.segments.model.SegmentsExperienceSoap[]
+			getSegmentsExperiences(
+				long groupId, long classNameId, long classPK, boolean active,
+				long layoutSetBranchId)
+		throws RemoteException {
+
+		try {
+			java.util.List<com.liferay.segments.model.SegmentsExperience>
+				returnValue =
+					SegmentsExperienceServiceUtil.getSegmentsExperiences(
+						groupId, classNameId, classPK, active,
+						layoutSetBranchId);
 
 			return com.liferay.segments.model.SegmentsExperienceSoap.
 				toSoapModels(returnValue);

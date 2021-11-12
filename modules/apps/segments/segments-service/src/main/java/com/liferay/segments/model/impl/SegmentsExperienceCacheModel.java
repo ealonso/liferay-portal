@@ -78,7 +78,7 @@ public class SegmentsExperienceCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(39);
+		StringBundler sb = new StringBundler(41);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -114,6 +114,8 @@ public class SegmentsExperienceCacheModel
 		sb.append(priority);
 		sb.append(", active=");
 		sb.append(active);
+		sb.append(", layoutSetBranchId=");
+		sb.append(layoutSetBranchId);
 		sb.append(", typeSettings=");
 		sb.append(typeSettings);
 		sb.append(", lastPublishDate=");
@@ -186,6 +188,7 @@ public class SegmentsExperienceCacheModel
 
 		segmentsExperienceImpl.setPriority(priority);
 		segmentsExperienceImpl.setActive(active);
+		segmentsExperienceImpl.setLayoutSetBranchId(layoutSetBranchId);
 
 		if (typeSettings == null) {
 			segmentsExperienceImpl.setTypeSettings("");
@@ -236,6 +239,8 @@ public class SegmentsExperienceCacheModel
 		priority = objectInput.readInt();
 
 		active = objectInput.readBoolean();
+
+		layoutSetBranchId = objectInput.readLong();
 		typeSettings = objectInput.readUTF();
 		lastPublishDate = objectInput.readLong();
 	}
@@ -295,6 +300,8 @@ public class SegmentsExperienceCacheModel
 
 		objectOutput.writeBoolean(active);
 
+		objectOutput.writeLong(layoutSetBranchId);
+
 		if (typeSettings == null) {
 			objectOutput.writeUTF("");
 		}
@@ -322,6 +329,7 @@ public class SegmentsExperienceCacheModel
 	public String name;
 	public int priority;
 	public boolean active;
+	public long layoutSetBranchId;
 	public String typeSettings;
 	public long lastPublishDate;
 

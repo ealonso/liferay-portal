@@ -20,10 +20,14 @@ create index IX_A4591B8D on SegmentsEntryRole (segmentsEntryId, ctCollectionId);
 create unique index IX_2876B1F2 on SegmentsEntryRole (segmentsEntryId, roleId, ctCollectionId);
 
 create index IX_99B31F58 on SegmentsExperience (groupId, classNameId, classPK, active_, ctCollectionId);
+create index IX_AD6260E9 on SegmentsExperience (groupId, classNameId, classPK, active_, layoutSetBranchId, ctCollectionId);
 create index IX_B42F674D on SegmentsExperience (groupId, classNameId, classPK, ctCollectionId);
+create index IX_B9BCE2D4 on SegmentsExperience (groupId, classNameId, classPK, layoutSetBranchId, ctCollectionId);
 create unique index IX_8AD425 on SegmentsExperience (groupId, classNameId, classPK, priority, ctCollectionId);
 create index IX_874CAE78 on SegmentsExperience (groupId, ctCollectionId);
+create index IX_1A233DC9 on SegmentsExperience (groupId, layoutSetBranchId, ctCollectionId);
 create index IX_F48D81CF on SegmentsExperience (groupId, segmentsEntryId, classNameId, classPK, active_, ctCollectionId);
+create index IX_40936512 on SegmentsExperience (groupId, segmentsEntryId, classNameId, classPK, active_, layoutSetBranchId, ctCollectionId);
 create index IX_D78112F6 on SegmentsExperience (groupId, segmentsEntryId, classNameId, classPK, ctCollectionId);
 create unique index IX_789CF949 on SegmentsExperience (groupId, segmentsExperienceKey[$COLUMN_LENGTH:75$], ctCollectionId);
 create index IX_BAA8E72B on SegmentsExperience (segmentsEntryId, ctCollectionId);
