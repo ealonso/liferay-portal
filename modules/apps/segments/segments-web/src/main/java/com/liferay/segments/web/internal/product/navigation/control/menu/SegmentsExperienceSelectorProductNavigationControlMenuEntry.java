@@ -14,6 +14,7 @@
 
 package com.liferay.segments.web.internal.product.navigation.control.menu;
 
+import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.security.permission.resource.LayoutContentModelResourcePermission;
@@ -21,6 +22,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -83,11 +85,18 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
+		Layout layout = themeDisplay.getLayout();
+
+		LayoutSet layoutSet = layout.getLayoutSet();
+
+		long layoutSetBranchId = _staging.getRecentLayoutSetBranchId(
+			themeDisplay.getUser(), layoutSet.getLayoutSetId());
+
 		List<SegmentsExperience> segmentsExperiences =
 			_segmentsExperienceLocalService.getSegmentsExperiences(
 				themeDisplay.getScopeGroupId(),
 				_portal.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true);
+				themeDisplay.getPlid(), true, layoutSetBranchId);
 
 		if (ListUtil.isEmpty(segmentsExperiences)) {
 			return false;
@@ -107,14 +116,9 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 			ContentPageEditorWebKeys.CLASS_NAME);
 
 		if (Objects.equals(
-				className, LayoutPageTemplateEntry.class.getName())) {
+				className, LayoutPageTemplateEntry.class.getName()) ||
+			!layout.isTypeContent() || !SitesUtil.isLayoutUpdateable(layout)) {
 
-			return false;
-		}
-
-		Layout layout = themeDisplay.getLayout();
-
-		if (!layout.isTypeContent() || !SitesUtil.isLayoutUpdateable(layout)) {
 			return false;
 		}
 
@@ -171,5 +175,8 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private Staging _staging;
 
 }

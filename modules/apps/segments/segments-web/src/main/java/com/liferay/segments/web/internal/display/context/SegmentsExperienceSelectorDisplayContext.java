@@ -14,12 +14,14 @@
 
 package com.liferay.segments.web.internal.display.context;
 
+import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -56,11 +58,16 @@ public class SegmentsExperienceSelectorDisplayContext {
 		JSONArray segmentsExperiencesJSONArray =
 			JSONFactoryUtil.createJSONArray();
 
+		LayoutSet layoutSet = _themeDisplay.getLayoutSet();
+
+		long layoutSetBranchId = StagingUtil.getRecentLayoutSetBranchId(
+			_themeDisplay.getUser(), layoutSet.getLayoutSetId());
+
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
 				_themeDisplay.getScopeGroupId(),
 				PortalUtil.getClassNameId(Layout.class.getName()),
-				_themeDisplay.getPlid(), true);
+				_themeDisplay.getPlid(), true, layoutSetBranchId);
 
 		boolean addedDefault = false;
 
