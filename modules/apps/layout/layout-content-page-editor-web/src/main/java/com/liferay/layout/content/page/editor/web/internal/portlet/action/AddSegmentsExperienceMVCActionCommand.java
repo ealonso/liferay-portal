@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
 import com.liferay.segments.model.SegmentsExperimentRel;
@@ -154,6 +155,9 @@ public class AddSegmentsExperienceMVCActionCommand
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		if (segmentsExperiment != null) {
 			long segmentsEntryId = SegmentsEntryConstants.ID_DEFAULT;
 
@@ -172,7 +176,10 @@ public class AddSegmentsExperienceMVCActionCommand
 				Collections.singletonMap(
 					LocaleUtil.getSiteDefault(),
 					ParamUtil.getString(actionRequest, "name")),
-				false, serviceContext);
+				false,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					themeDisplay.getLayoutSet(), themeDisplay.getUser()),
+				serviceContext);
 		}
 
 		return _segmentsExperienceService.addSegmentsExperience(
@@ -182,6 +189,8 @@ public class AddSegmentsExperienceMVCActionCommand
 				LocaleUtil.getSiteDefault(),
 				ParamUtil.getString(actionRequest, "name")),
 			ParamUtil.getBoolean(actionRequest, "active", true),
+			_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+				themeDisplay.getLayoutSet(), themeDisplay.getUser()),
 			serviceContext);
 	}
 
@@ -336,6 +345,9 @@ public class AddSegmentsExperienceMVCActionCommand
 
 	@Reference
 	private SegmentsExperienceService _segmentsExperienceService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference
 	private SegmentsExperimentRelService _segmentsExperimentRelService;
