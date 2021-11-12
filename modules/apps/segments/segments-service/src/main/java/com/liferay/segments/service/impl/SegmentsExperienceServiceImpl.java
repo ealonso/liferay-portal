@@ -53,6 +53,37 @@ public class SegmentsExperienceServiceImpl
 	@Override
 	public SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, new UnicodeProperties(true), serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			UnicodeProperties typeSettingsUnicodeProperties,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		if (!_hasUpdateLayoutPermission(_getPublishedLayoutClassPK(classPK))) {
+			_portletResourcePermission.check(
+				getPermissionChecker(), serviceContext.getScopeGroupId(),
+				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES);
+		}
+
+		return segmentsExperienceLocalService.addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience addSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
 			Map<Locale, String> nameMap, boolean active,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -70,15 +101,40 @@ public class SegmentsExperienceServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		return addSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active, 0,
+			typeSettingsUnicodeProperties, serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		return appendSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active,
+			layoutSetBranchId, new UnicodeProperties(true), serviceContext);
+	}
+
+	@Override
+	public SegmentsExperience appendSegmentsExperience(
+			long segmentsEntryId, long classNameId, long classPK,
+			Map<Locale, String> nameMap, boolean active, long layoutSetBranchId,
+			UnicodeProperties typeSettingsUnicodeProperties,
+			ServiceContext serviceContext)
+		throws PortalException {
+
 		if (!_hasUpdateLayoutPermission(_getPublishedLayoutClassPK(classPK))) {
 			_portletResourcePermission.check(
 				getPermissionChecker(), serviceContext.getScopeGroupId(),
 				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES);
 		}
 
-		return segmentsExperienceLocalService.addSegmentsExperience(
+		return segmentsExperienceLocalService.appendSegmentsExperience(
 			segmentsEntryId, classNameId, classPK, nameMap, active,
-			typeSettingsUnicodeProperties, serviceContext);
+			layoutSetBranchId, typeSettingsUnicodeProperties, serviceContext);
 	}
 
 	@Override
@@ -101,14 +157,8 @@ public class SegmentsExperienceServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		if (!_hasUpdateLayoutPermission(_getPublishedLayoutClassPK(classPK))) {
-			_portletResourcePermission.check(
-				getPermissionChecker(), serviceContext.getScopeGroupId(),
-				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES);
-		}
-
-		return segmentsExperienceLocalService.appendSegmentsExperience(
-			segmentsEntryId, classNameId, classPK, nameMap, active,
+		return appendSegmentsExperience(
+			segmentsEntryId, classNameId, classPK, nameMap, active, 0,
 			typeSettingsUnicodeProperties, serviceContext);
 	}
 
