@@ -50,6 +50,7 @@ public class SegmentsExperienceSoap implements Serializable {
 		soapModel.setName(model.getName());
 		soapModel.setPriority(model.getPriority());
 		soapModel.setActive(model.isActive());
+		soapModel.setLayoutSetBranchId(model.getLayoutSetBranchId());
 		soapModel.setTypeSettings(model.getTypeSettings());
 		soapModel.setLastPublishDate(model.getLastPublishDate());
 
@@ -254,6 +255,14 @@ public class SegmentsExperienceSoap implements Serializable {
 		_active = active;
 	}
 
+	public long getLayoutSetBranchId() {
+		return _layoutSetBranchId;
+	}
+
+	public void setLayoutSetBranchId(long layoutSetBranchId) {
+		_layoutSetBranchId = layoutSetBranchId;
+	}
+
 	public String getTypeSettings() {
 		return _typeSettings;
 	}
@@ -287,6 +296,7 @@ public class SegmentsExperienceSoap implements Serializable {
 	private String _name;
 	private int _priority;
 	private boolean _active;
+	private long _layoutSetBranchId;
 	private String _typeSettings;
 	private Date _lastPublishDate;
 

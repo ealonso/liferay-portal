@@ -94,7 +94,8 @@ public class SegmentsExperienceModelImpl
 		{"segmentsExperienceKey", Types.VARCHAR}, {"classNameId", Types.BIGINT},
 		{"classPK", Types.BIGINT}, {"name", Types.VARCHAR},
 		{"priority", Types.INTEGER}, {"active_", Types.BOOLEAN},
-		{"typeSettings", Types.VARCHAR}, {"lastPublishDate", Types.TIMESTAMP}
+		{"layoutSetBranchId", Types.BIGINT}, {"typeSettings", Types.VARCHAR},
+		{"lastPublishDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -118,12 +119,13 @@ public class SegmentsExperienceModelImpl
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("priority", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("active_", Types.BOOLEAN);
+		TABLE_COLUMNS_MAP.put("layoutSetBranchId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("typeSettings", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table SegmentsExperience (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,segmentsExperienceId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,segmentsEntryId LONG,segmentsExperienceKey VARCHAR(75) null,classNameId LONG,classPK LONG,name STRING null,priority INTEGER,active_ BOOLEAN,typeSettings VARCHAR(75) null,lastPublishDate DATE null,primary key (segmentsExperienceId, ctCollectionId))";
+		"create table SegmentsExperience (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,segmentsExperienceId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,segmentsEntryId LONG,segmentsExperienceKey VARCHAR(75) null,classNameId LONG,classPK LONG,name STRING null,priority INTEGER,active_ BOOLEAN,layoutSetBranchId LONG,typeSettings VARCHAR(75) null,lastPublishDate DATE null,primary key (segmentsExperienceId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table SegmentsExperience";
 
@@ -173,25 +175,31 @@ public class SegmentsExperienceModelImpl
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long PRIORITY_COLUMN_BITMASK = 32L;
+	public static final long LAYOUTSETBRANCHID_COLUMN_BITMASK = 32L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SEGMENTSENTRYID_COLUMN_BITMASK = 64L;
+	public static final long PRIORITY_COLUMN_BITMASK = 64L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long SEGMENTSEXPERIENCEKEY_COLUMN_BITMASK = 128L;
+	public static final long SEGMENTSENTRYID_COLUMN_BITMASK = 128L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
 	 */
 	@Deprecated
-	public static final long UUID_COLUMN_BITMASK = 256L;
+	public static final long SEGMENTSEXPERIENCEKEY_COLUMN_BITMASK = 256L;
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)}
+	 */
+	@Deprecated
+	public static final long UUID_COLUMN_BITMASK = 512L;
 
 	/**
 	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
@@ -239,6 +247,7 @@ public class SegmentsExperienceModelImpl
 		model.setName(soapModel.getName());
 		model.setPriority(soapModel.getPriority());
 		model.setActive(soapModel.isActive());
+		model.setLayoutSetBranchId(soapModel.getLayoutSetBranchId());
 		model.setTypeSettings(soapModel.getTypeSettings());
 		model.setLastPublishDate(soapModel.getLastPublishDate());
 
@@ -495,6 +504,12 @@ public class SegmentsExperienceModelImpl
 			"active",
 			(BiConsumer<SegmentsExperience, Boolean>)
 				SegmentsExperience::setActive);
+		attributeGetterFunctions.put(
+			"layoutSetBranchId", SegmentsExperience::getLayoutSetBranchId);
+		attributeSetterBiConsumers.put(
+			"layoutSetBranchId",
+			(BiConsumer<SegmentsExperience, Long>)
+				SegmentsExperience::setLayoutSetBranchId);
 		attributeGetterFunctions.put(
 			"typeSettings", SegmentsExperience::getTypeSettings);
 		attributeSetterBiConsumers.put(
@@ -1012,6 +1027,31 @@ public class SegmentsExperienceModelImpl
 
 	@JSON
 	@Override
+	public long getLayoutSetBranchId() {
+		return _layoutSetBranchId;
+	}
+
+	@Override
+	public void setLayoutSetBranchId(long layoutSetBranchId) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_layoutSetBranchId = layoutSetBranchId;
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnOriginalValue(String)}
+	 */
+	@Deprecated
+	public long getOriginalLayoutSetBranchId() {
+		return GetterUtil.getLong(
+			this.<Long>getColumnOriginalValue("layoutSetBranchId"));
+	}
+
+	@JSON
+	@Override
 	public String getTypeSettings() {
 		if (_typeSettings == null) {
 			return "";
@@ -1195,6 +1235,7 @@ public class SegmentsExperienceModelImpl
 		segmentsExperienceImpl.setName(getName());
 		segmentsExperienceImpl.setPriority(getPriority());
 		segmentsExperienceImpl.setActive(isActive());
+		segmentsExperienceImpl.setLayoutSetBranchId(getLayoutSetBranchId());
 		segmentsExperienceImpl.setTypeSettings(getTypeSettings());
 		segmentsExperienceImpl.setLastPublishDate(getLastPublishDate());
 
@@ -1242,6 +1283,8 @@ public class SegmentsExperienceModelImpl
 			this.<Integer>getColumnOriginalValue("priority"));
 		segmentsExperienceImpl.setActive(
 			this.<Boolean>getColumnOriginalValue("active_"));
+		segmentsExperienceImpl.setLayoutSetBranchId(
+			this.<Long>getColumnOriginalValue("layoutSetBranchId"));
 		segmentsExperienceImpl.setTypeSettings(
 			this.<String>getColumnOriginalValue("typeSettings"));
 		segmentsExperienceImpl.setLastPublishDate(
@@ -1409,6 +1452,8 @@ public class SegmentsExperienceModelImpl
 
 		segmentsExperienceCacheModel.active = isActive();
 
+		segmentsExperienceCacheModel.layoutSetBranchId = getLayoutSetBranchId();
+
 		segmentsExperienceCacheModel.typeSettings = getTypeSettings();
 
 		String typeSettings = segmentsExperienceCacheModel.typeSettings;
@@ -1537,6 +1582,7 @@ public class SegmentsExperienceModelImpl
 	private String _nameCurrentLanguageId;
 	private int _priority;
 	private boolean _active;
+	private long _layoutSetBranchId;
 	private String _typeSettings;
 	private Date _lastPublishDate;
 
@@ -1588,6 +1634,7 @@ public class SegmentsExperienceModelImpl
 		_columnOriginalValues.put("name", _name);
 		_columnOriginalValues.put("priority", _priority);
 		_columnOriginalValues.put("active_", _active);
+		_columnOriginalValues.put("layoutSetBranchId", _layoutSetBranchId);
 		_columnOriginalValues.put("typeSettings", _typeSettings);
 		_columnOriginalValues.put("lastPublishDate", _lastPublishDate);
 	}
@@ -1648,9 +1695,11 @@ public class SegmentsExperienceModelImpl
 
 		columnBitmasks.put("active_", 65536L);
 
-		columnBitmasks.put("typeSettings", 131072L);
+		columnBitmasks.put("layoutSetBranchId", 131072L);
 
-		columnBitmasks.put("lastPublishDate", 262144L);
+		columnBitmasks.put("typeSettings", 262144L);
+
+		columnBitmasks.put("lastPublishDate", 524288L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}
