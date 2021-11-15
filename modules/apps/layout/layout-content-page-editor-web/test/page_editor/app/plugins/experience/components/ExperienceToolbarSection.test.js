@@ -316,7 +316,7 @@ describe('ExperienceToolbarSection', () => {
 			expect.stringContaining(MOCK_UPDATE_PRIORITY_URL),
 			expect.objectContaining({
 				body: expect.objectContaining({
-					newPriority: 3,
+					direction: 'up',
 					segmentsExperienceId: 'test-experience-id-02',
 				}),
 			}),
@@ -392,7 +392,7 @@ describe('ExperienceToolbarSection', () => {
 			expect.stringContaining(MOCK_UPDATE_PRIORITY_URL),
 			expect.objectContaining({
 				body: expect.objectContaining({
-					newPriority: 1,
+					direction: 'down',
 					segmentsExperienceId: 'test-experience-id-01',
 				}),
 			}),
