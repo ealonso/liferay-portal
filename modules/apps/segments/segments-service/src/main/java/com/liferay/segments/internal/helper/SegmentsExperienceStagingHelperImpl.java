@@ -14,27 +14,58 @@
 
 package com.liferay.segments.internal.helper;
 
+import com.liferay.exportimport.kernel.staging.Staging;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
+import com.liferay.segments.internal.configuration.FFSegmentsExperienceStagingConfiguration;
 
+import java.util.Map;
+
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
  */
-@Component(immediate = true, service = SegmentsExperienceStagingHelper.class)
+@Component(
+	configurationPid = "com.liferay.segments.internal.configuration.FFSegmentsExperienceStagingConfiguration",
+	immediate = true, service = SegmentsExperienceStagingHelper.class
+)
 public class SegmentsExperienceStagingHelperImpl
 	implements SegmentsExperienceStagingHelper {
 
 	@Override
 	public long getRecentLayoutSetBranchId(LayoutSet layoutSet, User user) {
+		if (isPageVersioningEnabled()) {
+			return _staging.getRecentLayoutSetBranchId(
+				user, layoutSet.getLayoutSetId());
+		}
+
 		return 0;
 	}
 
 	@Override
 	public boolean isPageVersioningEnabled() {
-		return false;
+		return _ffSegmentsExperienceStagingConfiguration.
+			pageVersioningEnabled();
 	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_ffSegmentsExperienceStagingConfiguration =
+			ConfigurableUtil.createConfigurable(
+				FFSegmentsExperienceStagingConfiguration.class, properties);
+	}
+
+	private volatile FFSegmentsExperienceStagingConfiguration
+		_ffSegmentsExperienceStagingConfiguration;
+
+	@Reference
+	private Staging _staging;
 
 }
