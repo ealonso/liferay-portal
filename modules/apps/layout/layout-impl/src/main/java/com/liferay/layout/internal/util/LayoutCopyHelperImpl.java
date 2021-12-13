@@ -72,6 +72,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.exportimport.staging.StagingAdvicesThreadLocal;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.sites.kernel.util.Sites;
@@ -104,8 +105,9 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 
 		List<Long> segmentsExperiencesIds = ListUtil.toList(
 			_segmentsExperienceLocalService.getSegmentsExperiences(
-				sourceLayout.getGroupId(), _portal.getClassNameId(Layout.class),
-				sourceLayout.getPlid()),
+				sourceLayout.getGroupId(),
+				_segmentsExperienceStagingHelper.getClassNameId(sourceLayout),
+				_segmentsExperienceStagingHelper.getClassPK(sourceLayout)),
 			SegmentsExperience.SEGMENTS_EXPERIENCE_ID_ACCESSOR);
 
 		return copyLayout(
@@ -903,6 +905,9 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference
 	private Sites _sites;
