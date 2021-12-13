@@ -14,7 +14,6 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
@@ -35,8 +34,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -49,6 +46,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
 import com.liferay.segments.model.SegmentsExperimentRel;
@@ -160,9 +158,6 @@ public class AddSegmentsExperienceMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		long layoutSetBranchId = _getLayoutSetBranchId(
-			classPK, themeDisplay.getUser());
-
 		if (segmentsExperiment != null) {
 			long segmentsEntryId = SegmentsEntryConstants.ID_DEFAULT;
 
@@ -181,7 +176,10 @@ public class AddSegmentsExperienceMVCActionCommand
 				Collections.singletonMap(
 					LocaleUtil.getSiteDefault(),
 					ParamUtil.getString(actionRequest, "name")),
-				false, layoutSetBranchId, serviceContext);
+				false,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					themeDisplay.getLayoutSet(), themeDisplay.getUser()),
+				serviceContext);
 		}
 
 		return _segmentsExperienceService.addSegmentsExperience(
@@ -191,7 +189,9 @@ public class AddSegmentsExperienceMVCActionCommand
 				LocaleUtil.getSiteDefault(),
 				ParamUtil.getString(actionRequest, "name")),
 			ParamUtil.getBoolean(actionRequest, "active", true),
-			layoutSetBranchId, serviceContext);
+			_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+				themeDisplay.getLayoutSet(), themeDisplay.getUser()),
+			serviceContext);
 	}
 
 	private SegmentsExperimentRel _addSegmentsExperimentRel(
@@ -252,15 +252,6 @@ public class AddSegmentsExperienceMVCActionCommand
 
 		return JSONFactoryUtil.createJSONObject(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
-	}
-
-	private long _getLayoutSetBranchId(long plid, User user) {
-		Layout layout = _layoutLocalService.fetchLayout(plid);
-
-		LayoutSet layoutSet = layout.getLayoutSet();
-
-		return _staging.getRecentLayoutSetBranchId(
-			user, layoutSet.getLayoutSetId());
 	}
 
 	private SegmentsExperiment _getSegmentsExperiment(
@@ -356,12 +347,12 @@ public class AddSegmentsExperienceMVCActionCommand
 	private SegmentsExperienceService _segmentsExperienceService;
 
 	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
+
+	@Reference
 	private SegmentsExperimentRelService _segmentsExperimentRelService;
 
 	@Reference
 	private SegmentsExperimentService _segmentsExperimentService;
-
-	@Reference
-	private Staging _staging;
 
 }

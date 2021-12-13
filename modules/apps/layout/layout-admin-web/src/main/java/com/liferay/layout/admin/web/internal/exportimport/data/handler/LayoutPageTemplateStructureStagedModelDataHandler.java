@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.segments.constants.SegmentsEntryConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
@@ -162,6 +163,19 @@ public class LayoutPageTemplateStructureStagedModelDataHandler
 					layoutPageTemplateStructure.
 						getLayoutPageTemplateStructureId());
 
+		if (!_segmentsExperienceStagingHelper.isPageVersioningEnabled()) {
+			for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
+					layoutPageTemplateStructureRels) {
+
+				StagedModelDataHandlerUtil.exportReferenceStagedModel(
+					portletDataContext, layoutPageTemplateStructure,
+					layoutPageTemplateStructureRel,
+					PortletDataContext.REFERENCE_TYPE_CHILD);
+			}
+
+			return;
+		}
+
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
@@ -249,6 +263,9 @@ public class LayoutPageTemplateStructureStagedModelDataHandler
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference(
 		target = "(model.class.name=com.liferay.layout.page.template.model.LayoutPageTemplateStructure)",

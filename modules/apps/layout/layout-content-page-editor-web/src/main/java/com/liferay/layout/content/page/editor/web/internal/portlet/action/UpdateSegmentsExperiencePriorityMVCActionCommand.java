@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.service.SegmentsExperienceService;
@@ -73,7 +74,8 @@ public class UpdateSegmentsExperiencePriorityMVCActionCommand
 		return JSONUtil.put(
 			"availableSegmentsExperiences",
 			SegmentsExperienceUtil.getAvailableSegmentsExperiences(
-				_portal.getHttpServletRequest(actionRequest)));
+				_portal.getHttpServletRequest(actionRequest),
+				_segmentsExperienceStagingHelper));
 	}
 
 	private List<SegmentsExperience> _getSegmentsExperiences(
@@ -184,5 +186,8 @@ public class UpdateSegmentsExperiencePriorityMVCActionCommand
 
 	@Reference
 	private SegmentsExperienceService _segmentsExperienceService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 }

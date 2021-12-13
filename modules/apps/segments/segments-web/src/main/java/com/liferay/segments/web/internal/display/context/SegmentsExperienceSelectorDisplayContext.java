@@ -14,14 +14,12 @@
 
 package com.liferay.segments.web.internal.display.context;
 
-import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -31,6 +29,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsEntryLocalServiceUtil;
@@ -46,9 +45,11 @@ import javax.servlet.http.HttpServletRequest;
 public class SegmentsExperienceSelectorDisplayContext {
 
 	public SegmentsExperienceSelectorDisplayContext(
-		HttpServletRequest httpServletRequest) {
+		HttpServletRequest httpServletRequest,
+		SegmentsExperienceStagingHelper segmentsExperienceStagingHelper) {
 
 		_httpServletRequest = httpServletRequest;
+		_segmentsExperienceStagingHelper = segmentsExperienceStagingHelper;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -58,16 +59,13 @@ public class SegmentsExperienceSelectorDisplayContext {
 		JSONArray segmentsExperiencesJSONArray =
 			JSONFactoryUtil.createJSONArray();
 
-		LayoutSet layoutSet = _themeDisplay.getLayoutSet();
-
-		long layoutSetBranchId = StagingUtil.getRecentLayoutSetBranchId(
-			_themeDisplay.getUser(), layoutSet.getLayoutSetId());
-
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
 				_themeDisplay.getScopeGroupId(),
 				PortalUtil.getClassNameId(Layout.class.getName()),
-				_themeDisplay.getPlid(), true, layoutSetBranchId);
+				_themeDisplay.getPlid(), true,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					_themeDisplay.getLayoutSet(), _themeDisplay.getUser()));
 
 		boolean addedDefault = false;
 
@@ -231,6 +229,8 @@ public class SegmentsExperienceSelectorDisplayContext {
 	}
 
 	private final HttpServletRequest _httpServletRequest;
+	private final SegmentsExperienceStagingHelper
+		_segmentsExperienceStagingHelper;
 	private final ThemeDisplay _themeDisplay;
 
 }

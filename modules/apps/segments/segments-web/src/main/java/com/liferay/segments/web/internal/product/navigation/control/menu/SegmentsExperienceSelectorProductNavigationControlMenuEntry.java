@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -37,6 +36,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.web.internal.display.context.SegmentsExperienceSelectorDisplayContext;
@@ -89,18 +89,13 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		Layout layout = themeDisplay.getLayout();
-
-		LayoutSet layoutSet = layout.getLayoutSet();
-
-		long layoutSetBranchId = _staging.getRecentLayoutSetBranchId(
-			themeDisplay.getUser(), layoutSet.getLayoutSetId());
-
 		List<SegmentsExperience> segmentsExperiences =
 			_segmentsExperienceLocalService.getSegmentsExperiences(
 				themeDisplay.getScopeGroupId(),
 				_portal.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true, layoutSetBranchId);
+				themeDisplay.getPlid(), true,
+				_segmentsExperienceStagingHelper.getRecentLayoutSetBranchId(
+					themeDisplay.getLayoutSet(), themeDisplay.getUser()));
 
 		if (ListUtil.isEmpty(segmentsExperiences)) {
 			return false;
@@ -118,6 +113,8 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 		String className = (String)httpServletRequest.getAttribute(
 			ContentPageEditorWebKeys.CLASS_NAME);
+
+		Layout layout = themeDisplay.getLayout();
 
 		if (Objects.equals(
 				className, LayoutPageTemplateEntry.class.getName()) ||
@@ -170,7 +167,8 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 		httpServletRequest.setAttribute(
 			SegmentsExperienceSelectorDisplayContext.class.getName(),
-			new SegmentsExperienceSelectorDisplayContext(httpServletRequest));
+			new SegmentsExperienceSelectorDisplayContext(
+				httpServletRequest, _segmentsExperienceStagingHelper));
 
 		return super.include(httpServletRequest, httpServletResponse, jspPath);
 	}
@@ -192,6 +190,9 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference
 	private Staging _staging;

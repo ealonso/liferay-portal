@@ -14,7 +14,6 @@
 
 package com.liferay.segments.internal.events;
 
-import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
@@ -23,7 +22,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -34,6 +32,7 @@ import com.liferay.segments.configuration.SegmentsConfiguration;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.context.RequestContextMapper;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.processor.SegmentsExperienceRequestProcessorRegistry;
 import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
@@ -134,11 +133,6 @@ public class SegmentsServicePreAction extends Action {
 
 		LongStream longStream = Arrays.stream(segmentsExperienceIds);
 
-		LayoutSet layoutSet = themeDisplay.getLayoutSet();
-
-		long layoutSetBranchId = _staging.getRecentLayoutSetBranchId(
-			themeDisplay.getUser(), layoutSet.getLayoutSetId());
-
 		return longStream.filter(
 			segmentsExperienceId -> {
 				if (segmentsExperienceId ==
@@ -152,7 +146,10 @@ public class SegmentsServicePreAction extends Action {
 						segmentsExperienceId);
 
 				if (segmentsExperience.getLayoutSetBranchId() ==
-						layoutSetBranchId) {
+						_segmentsExperienceStagingHelper.
+							getRecentLayoutSetBranchId(
+								themeDisplay.getLayoutSet(),
+								themeDisplay.getUser())) {
 
 					return true;
 				}
@@ -213,9 +210,9 @@ public class SegmentsServicePreAction extends Action {
 	private SegmentsExperienceRequestProcessorRegistry
 		_segmentsExperienceRequestProcessorRegistry;
 
-	private ServiceRegistration<LifecycleAction> _serviceRegistration;
-
 	@Reference
-	private Staging _staging;
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
+
+	private ServiceRegistration<LifecycleAction> _serviceRegistration;
 
 }
