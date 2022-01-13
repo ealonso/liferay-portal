@@ -31,8 +31,7 @@ String name = ParamUtil.getString(request, "name");
 	<portlet:param name="fieldsNamespace" value="<%= fieldsNamespace %>" />
 </liferay-portlet:resourceURL>
 
-<aui:form action="<%= structureFieldURL %>" disabled="<%= !name.equals(ddmStructureFieldName) %>" name='<%= name + "fieldForm" %>' onSubmit="event.preventDefault()">
-	<aui:input disabled="<%= true %>" name="buttonId" type="hidden" value='<%= liferayPortletResponse.getNamespace() + "applyButton" + name %>' />
+<aui:form action="<%= structureFieldURL %>" name="fieldForm" onSubmit="event.preventDefault()">
 
 	<%
 	com.liferay.dynamic.data.mapping.storage.Field ddmField = new com.liferay.dynamic.data.mapping.storage.Field();

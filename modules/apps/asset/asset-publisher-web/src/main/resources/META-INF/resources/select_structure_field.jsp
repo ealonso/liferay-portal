@@ -17,18 +17,25 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String portletResource = ParamUtil.getString(request, "portletResource");
 String className = ParamUtil.getString(request, "className");
 long classTypeId = ParamUtil.getLong(request, "classTypeId");
 String ddmStructureFieldName = ParamUtil.getString(request, "ddmStructureFieldName");
-Serializable ddmStructureFieldValue = ParamUtil.getString(request, "ddmStructureFieldValue");
+String ddmStructureFieldValue = ParamUtil.getString(request, "ddmStructureFieldValue");
 String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "selectDDMStructureField");
 
 AssetRendererFactory<?> assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 
 ClassTypeReader classTypeReader = assetRendererFactory.getClassTypeReader();
 
-ClassType classType = classTypeReader.getClassType(classTypeId, locale);
+ClassType classType = classTypeReader.getClassType(classTypeId, themeDisplay.getLocale());
+
+List<SelectOption> selectOptions = new ArrayList<>();
+
+selectOptions.add(new SelectOption(LanguageUtil.get(themeDisplay.getLocale(), "none"), StringPool.BLANK));
+
+for (ClassTypeField classTypeField : classType.getClassTypeFields()) {
+	selectOptions.add(new SelectOption(classTypeField.getLabel(), classTypeField.getName()));
+}
 %>
 
 <div class="alert alert-danger hide" id="<portlet:namespace />message">
@@ -38,92 +45,37 @@ ClassType classType = classTypeReader.getClassType(classTypeId, locale);
 <clay:container-fluid
 	id='<%= liferayPortletResponse.getNamespace() + "selectDDMStructureFieldForm" %>'
 >
-	<liferay-ui:search-container
-		iteratorURL='<%=
-			PortletURLBuilder.createRenderURL(
-				renderResponse
-			).setMVCPath(
-				"/select_structure_field.jsp"
-			).setPortletResource(
-				portletResource
-			).setParameter(
-				"className", className
-			).setParameter(
-				"classTypeId", classTypeId
-			).setParameter(
-				"eventName", eventName
-			).buildPortletURL()
-		%>'
-		total="<%= classType.getClassTypeFieldsCount() %>"
-	>
-		<liferay-ui:search-container-results
-			results="<%= classType.getClassTypeFields(searchContainer.getStart(), searchContainer.getEnd()) %>"
-		/>
+	<clay:select
+		id='<%= liferayPortletResponse.getNamespace() + "fieldName" %>'
+		label="select"
+		name="fieldName"
+		options="<%= selectOptions %>"
+	/>
 
-		<liferay-ui:search-container-row
-			className="com.liferay.asset.kernel.model.ClassTypeField"
-			modelVar="field"
-		>
+	<div id="<portlet:namespace />selectDDMStructureFieldContainer"></div>
 
-			<%
-			String label = field.getLabel();
-			String name = field.getName();
-			%>
-
-			<liferay-ui:search-container-column-text>
-				<input data-button-id="<%= liferayPortletResponse.getNamespace() + "applyButton" + name %>" data-form-id="<%= liferayPortletResponse.getNamespace() + name + "fieldForm" %>" name="<portlet:namespace />selectStructureFieldSubtype" type="radio" <%= name.equals(ddmStructureFieldName) ? "checked" : StringPool.BLANK %> />
-			</liferay-ui:search-container-column-text>
-
-			<%
-			String fieldsNamespace = StringUtil.randomId();
-			%>
-
-			<liferay-ui:search-container-column-text
-				name="field"
-			>
-				<liferay-util:include page="/select_structure_field_item.jsp" servletContext="<%= application %>">
-					<liferay-util:param name="portletResource" value="<%= portletResource %>" />
-					<liferay-util:param name="classTypeId" value="<%= String.valueOf(classTypeId) %>" />
-					<liferay-util:param name="ddmStructureFieldName" value="<%= ddmStructureFieldName %>" />
-					<liferay-util:param name="ddmStructureFieldValue" value="<%= String.valueOf(ddmStructureFieldValue) %>" />
-					<liferay-util:param name="name" value="<%= name %>" />
-					<liferay-util:param name="fieldsNamespace" value="<%= fieldsNamespace %>" />
-				</liferay-util:include>
-			</liferay-ui:search-container-column-text>
-
-			<liferay-ui:search-container-column-text>
-				<aui:button
-					cssClass="selector-button"
-					data='<%=
-						HashMapBuilder.<String, Object>put(
-							"fieldsnamespace", fieldsNamespace
-						).put(
-							"form", liferayPortletResponse.getNamespace() + name + "fieldForm"
-						).put(
-							"label", label
-						).put(
-							"name", name
-						).put(
-							"value",
-							JSONUtil.put(
-								"ddmStructureFieldName", ddmStructureFieldName
-							).put(
-								"ddmStructureFieldValue", ddmStructureFieldValue
-							)
-						).build()
-					%>'
-					disabled="<%= name.equals(ddmStructureFieldName) ? false : true %>"
-					id='<%= "applyButton" + name %>'
-					value="apply"
-				/>
-			</liferay-ui:search-container-column-text>
-		</liferay-ui:search-container-row>
-
-		<liferay-ui:search-iterator
-			markupView="lexicon"
-		/>
-	</liferay-ui:search-container>
+	<clay:button
+		displayType="primary"
+		id='<%= liferayPortletResponse.getNamespace() + "applyButton" %>'
+		label="apply"
+		type="button"
+	/>
 </clay:container-fluid>
+
+<%
+ResourceURL getFieldItemURL = renderResponse.createResourceURL();
+
+getFieldItemURL.setParameter("className", className);
+getFieldItemURL.setParameter("classTypeId", String.valueOf(classTypeId));
+getFieldItemURL.setParameter("ddmStructureFieldName", ddmStructureFieldName);
+getFieldItemURL.setParameter("ddmStructureFieldValue", ddmStructureFieldValue);
+
+String fieldsNamespace = StringUtil.randomId();
+
+getFieldItemURL.setParameter("fieldsnamespace", fieldsNamespace);
+
+getFieldItemURL.setResourceID("/asset_publisher/get_field_item");
+%>
 
 <liferay-frontend:component
 	componentId='<%= liferayPortletResponse.getNamespace() + "selectStructureField" %>'
@@ -132,6 +84,10 @@ ClassType classType = classTypeReader.getClassType(classTypeId, locale);
 			"assetClassName", assetPublisherWebHelper.getClassName(assetRendererFactory)
 		).put(
 			"eventName", HtmlUtil.escapeJS(eventName)
+		).put(
+			"fieldsnamespace", fieldsNamespace
+		).put(
+			"getFieldItemURL", getFieldItemURL.toString()
 		).build()
 	%>'
 	module="js/SelectStructureField"
