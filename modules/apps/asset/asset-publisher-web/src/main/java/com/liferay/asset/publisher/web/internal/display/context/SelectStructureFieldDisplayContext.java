@@ -19,16 +19,25 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassType;
 import com.liferay.asset.kernel.model.ClassTypeField;
 import com.liferay.asset.kernel.model.ClassTypeReader;
+import com.liferay.asset.publisher.constants.AssetPublisherWebKeys;
+import com.liferay.asset.publisher.web.internal.helper.AssetPublisherWebHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.portlet.RenderResponse;
+import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -38,12 +47,37 @@ import javax.servlet.http.HttpServletRequest;
 public class SelectStructureFieldDisplayContext {
 
 	public SelectStructureFieldDisplayContext(
-		HttpServletRequest httpServletRequest) {
+		HttpServletRequest httpServletRequest, RenderResponse renderResponse) {
 
 		_httpServletRequest = httpServletRequest;
+		_renderResponse = renderResponse;
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+	}
+
+	public Map<String, Object> getComponentContextData() {
+		return HashMapBuilder.<String, Object>put(
+			"assetClassName",
+			() -> {
+				AssetPublisherWebHelper assetPublisherWebHelper =
+					(AssetPublisherWebHelper)_httpServletRequest.getAttribute(
+						AssetPublisherWebKeys.ASSET_PUBLISHER_WEB_HELPER);
+
+				AssetRendererFactory<?> assetRendererFactory =
+					AssetRendererFactoryRegistryUtil.
+						getAssetRendererFactoryByClassName(_getClassName());
+
+				return assetPublisherWebHelper.getClassName(
+					assetRendererFactory);
+			}
+		).put(
+			"eventName", HtmlUtil.escapeJS(_getEventName())
+		).put(
+			"fieldsnamespace", _getFieldsNamespace()
+		).put(
+			"getFieldItemURL", _getFieldItemURL()
+		).build();
 	}
 
 	public List<SelectOption> getSelectOptions() throws PortalException {
@@ -93,9 +127,75 @@ public class SelectStructureFieldDisplayContext {
 		return _classTypeId;
 	}
 
+	private String _getDDMStructureFieldName() {
+		if (_ddmStructureFieldName != null) {
+			return _ddmStructureFieldName;
+		}
+
+		_ddmStructureFieldName = ParamUtil.getString(
+			_httpServletRequest, "ddmStructureFieldName");
+
+		return _ddmStructureFieldName;
+	}
+
+	private String _getDDMStructureFieldValue() {
+		if (_ddmStructureFieldValue != null) {
+			return _ddmStructureFieldValue;
+		}
+
+		_ddmStructureFieldValue = ParamUtil.getString(
+			_httpServletRequest, "ddmStructureFieldValue");
+
+		return _ddmStructureFieldValue;
+	}
+
+	private String _getEventName() {
+		if (_eventName != null) {
+			return _eventName;
+		}
+
+		_eventName = ParamUtil.getString(
+			_httpServletRequest, "eventName",
+			_renderResponse.getNamespace() + "selectDDMStructureField");
+
+		return _eventName;
+	}
+
+	private String _getFieldItemURL() {
+		ResourceURL getFieldItemURL = _renderResponse.createResourceURL();
+
+		getFieldItemURL.setParameter("className", _getClassName());
+		getFieldItemURL.setParameter(
+			"classTypeId", String.valueOf(_getClassTypeId()));
+		getFieldItemURL.setParameter(
+			"ddmStructureFieldName", _getDDMStructureFieldName());
+		getFieldItemURL.setParameter(
+			"ddmStructureFieldValue", _getDDMStructureFieldValue());
+		getFieldItemURL.setParameter("fieldsnamespace", _getFieldsNamespace());
+
+		getFieldItemURL.setResourceID("/asset_publisher/get_field_item");
+
+		return getFieldItemURL.toString();
+	}
+
+	private String _getFieldsNamespace() {
+		if (_fieldsNamespace != null) {
+			return _fieldsNamespace;
+		}
+
+		_fieldsNamespace = StringUtil.randomId();
+
+		return _fieldsNamespace;
+	}
+
 	private String _className;
 	private Long _classTypeId;
+	private String _ddmStructureFieldName;
+	private String _ddmStructureFieldValue;
+	private String _eventName;
+	private String _fieldsNamespace;
 	private final HttpServletRequest _httpServletRequest;
+	private final RenderResponse _renderResponse;
 	private final ThemeDisplay _themeDisplay;
 
 }
