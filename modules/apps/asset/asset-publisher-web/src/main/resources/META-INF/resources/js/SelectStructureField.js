@@ -21,8 +21,8 @@ import {
 
 export default function ({
 	assetClassName,
- 	ddmStructureFieldName,
- 	ddmStructureFieldValue,
+	ddmStructureFieldName,
+	ddmStructureFieldValue,
 	eventName,
 	fieldsnamespace,
 	getFieldItemURL,
