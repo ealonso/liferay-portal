@@ -21,22 +21,22 @@ import {
 
 export default function ({
 	assetClassName,
-	ddmStructureFieldName,
-	ddmStructureFieldValue,
 	eventName,
-	fieldsnamespace,
 	getFieldItemURL,
 	namespace,
 }) {
-	const componentId = `${namespace}${fieldsnamespace}ddmForm`;
+	const fieldNameSelector = document.getElementById(
+		`${namespace}fieldName`
+	);
 	const selectDDMStructureFieldForm = document.getElementById(
 		`${namespace}selectDDMStructureFieldForm`
 	);
 
 	const eventDelegates = [];
 
-	const onClickApplyButton = function () {
-		const ddmForm = Liferay.component(componentId);
+	const onSubmitForm = function (event) {
+		event.preventDefault();
+		const ddmForm = Liferay.component(`${namespace}ddmForm`);
 
 		ddmForm.updateDDMFormInputValue();
 
@@ -57,6 +57,8 @@ export default function ({
 						data: {
 							className: assetClassName,
 							displayValue: response.displayValue,
+							label: fieldNameSelector.options[fieldNameSelector.selectedIndex].label,
+							name: fieldNameSelector.value,
 							value: response.value,
 						},
 					});
@@ -72,8 +74,8 @@ export default function ({
 	const clickSubmitForm = delegate(
 		selectDDMStructureFieldForm,
 		'click',
-		`#${namespace}applyButton`,
-		onClickApplyButton
+		'.selector-button',
+		onSubmitForm
 	);
 
 	eventDelegates.push(clickSubmitForm);
@@ -83,10 +85,6 @@ export default function ({
 	);
 
 	const onChangeField = () => {
-		const fieldNameSelector = document.getElementById(
-			`${namespace}fieldName`
-		);
-
 		if (fieldNameSelector.value !== '') {
 			fetch(getFieldItemURL, {
 				body: objectToFormData({
@@ -99,16 +97,6 @@ export default function ({
 					selectDDMStructureFieldContainer.innerHTML = response;
 
 					runScriptsInElement(selectDDMStructureFieldContainer);
-
-					Liferay.componentReady(componentId).then(() => {
-						const initialDDMForm = Liferay.component(componentId);
-
-						initialDDMForm.get('fields').forEach((field) => {
-							if (field.get('name') === ddmStructureFieldName) {
-								field.setValue(ddmStructureFieldValue);
-							}
-						});
-					});
 				});
 		}
 		else {

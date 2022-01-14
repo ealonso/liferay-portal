@@ -35,13 +35,6 @@ SelectStructureFieldDisplayContext selectStructureFieldDisplayContext = new Sele
 	/>
 
 	<div id="<portlet:namespace />selectDDMStructureFieldContainer"></div>
-
-	<clay:button
-		displayType="primary"
-		id='<%= liferayPortletResponse.getNamespace() + "applyButton" %>'
-		label="apply"
-		type="button"
-	/>
 </clay:container-fluid>
 
 <liferay-frontend:component

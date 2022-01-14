@@ -20,7 +20,6 @@
 long classTypeId = ParamUtil.getLong(request, "classTypeId");
 String ddmStructureFieldName = ParamUtil.getString(request, "ddmStructureFieldName");
 Serializable ddmStructureFieldValue = ParamUtil.getString(request, "ddmStructureFieldValue");
-String fieldsNamespace = ParamUtil.getString(request, "fieldsNamespace");
 String name = ParamUtil.getString(request, "name");
 %>
 
@@ -28,7 +27,6 @@ String name = ParamUtil.getString(request, "name");
 	<portlet:param name="portletResource" value='<%= ParamUtil.getString(request, "portletResource") %>' />
 	<portlet:param name="structureId" value="<%= String.valueOf(classTypeId) %>" />
 	<portlet:param name="name" value="<%= name %>" />
-	<portlet:param name="fieldsNamespace" value="<%= fieldsNamespace %>" />
 </liferay-portlet:resourceURL>
 
 <aui:form action="<%= structureFieldURL %>" name="fieldForm" onSubmit="event.preventDefault()">
@@ -49,6 +47,13 @@ String name = ParamUtil.getString(request, "name");
 		classNameId="<%= PortalUtil.getClassNameId(DDMStructure.class) %>"
 		classPK="<%= classTypeId %>"
 		field="<%= ddmField %>"
-		fieldsNamespace="<%= fieldsNamespace %>"
+	/>
+
+	<clay:button
+		cssClass="selector-button"
+		displayType="primary"
+		id='<%= liferayPortletResponse.getNamespace() + "applyButton" %>'
+		label="apply"
+		type="submit"
 	/>
 </aui:form>
