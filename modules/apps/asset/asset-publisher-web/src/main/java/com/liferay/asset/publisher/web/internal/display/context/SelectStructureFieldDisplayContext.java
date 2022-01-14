@@ -74,8 +74,6 @@ public class SelectStructureFieldDisplayContext {
 		).put(
 			"eventName", HtmlUtil.escapeJS(_getEventName())
 		).put(
-			"fieldsnamespace", _getFieldsNamespace()
-		).put(
 			"getFieldItemURL", _getFieldItemURL()
 		).build();
 	}
@@ -171,21 +169,10 @@ public class SelectStructureFieldDisplayContext {
 			"ddmStructureFieldName", _getDDMStructureFieldName());
 		getFieldItemURL.setParameter(
 			"ddmStructureFieldValue", _getDDMStructureFieldValue());
-		getFieldItemURL.setParameter("fieldsnamespace", _getFieldsNamespace());
 
 		getFieldItemURL.setResourceID("/asset_publisher/get_field_item");
 
 		return getFieldItemURL.toString();
-	}
-
-	private String _getFieldsNamespace() {
-		if (_fieldsNamespace != null) {
-			return _fieldsNamespace;
-		}
-
-		_fieldsNamespace = StringUtil.randomId();
-
-		return _fieldsNamespace;
 	}
 
 	private String _className;
@@ -193,7 +180,6 @@ public class SelectStructureFieldDisplayContext {
 	private String _ddmStructureFieldName;
 	private String _ddmStructureFieldValue;
 	private String _eventName;
-	private String _fieldsNamespace;
 	private final HttpServletRequest _httpServletRequest;
 	private final RenderResponse _renderResponse;
 	private final ThemeDisplay _themeDisplay;
