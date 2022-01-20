@@ -54,6 +54,17 @@ String name = ParamUtil.getString(request, "name");
 		displayType="primary"
 		id='<%= liferayPortletResponse.getNamespace() + "applyButton" %>'
 		label="apply"
-		type="submit"
 	/>
 </aui:form>
+
+<aui:script>
+	Liferay.componentReady('<portlet:namespace />ddmForm').then(() => {
+		const initialDDMForm = Liferay.component('<portlet:namespace />ddmForm');
+
+		initialDDMForm.get('fields').forEach((field) => {
+			if (field.get('name') === '<%=ddmStructureFieldName %>') {
+				field.setValue('<%=ddmStructureFieldValue %>');
+			}
+		});
+	});
+</aui:script>
