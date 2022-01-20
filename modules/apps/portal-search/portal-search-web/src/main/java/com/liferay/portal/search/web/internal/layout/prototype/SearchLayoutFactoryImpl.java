@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -66,24 +65,6 @@ public class SearchLayoutFactoryImpl implements SearchLayoutFactory {
 
 		optional.ifPresent(
 			layoutPrototype -> createSearchLayout(group, layoutPrototype));
-	}
-
-	@Override
-	public void createSearchLayoutPrototype(Company company) {
-		long companyId = company.getCompanyId();
-
-		try {
-			createSearchLayoutPrototype(
-				companyId, userLocalService.getDefaultUserId(companyId),
-				_getSearchTitleLocalizationMap(),
-				_getSearchDescriptionLocalizationMap());
-		}
-		catch (RuntimeException runtimeException) {
-			throw runtimeException;
-		}
-		catch (Exception exception) {
-			throw new SystemException(exception);
-		}
 	}
 
 	protected void createSearchLayout(
