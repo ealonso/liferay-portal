@@ -21,6 +21,7 @@ import com.liferay.asset.kernel.model.ClassTypeField;
 import com.liferay.asset.kernel.model.ClassTypeReader;
 import com.liferay.asset.util.AssetRendererFactoryClassProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
+import com.liferay.petra.portlet.url.builder.ResourceURLBuilder;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
@@ -85,17 +86,21 @@ public class SelectStructureFieldDisplayContext {
 			"getFieldItemURL",
 			() -> {
 				LiferayPortletURL getFieldItemURL =
-					(LiferayPortletURL)_renderResponse.createResourceURL();
+					(LiferayPortletURL)ResourceURLBuilder.createResourceURL(
+						_renderResponse
+					).setParameter(
+						"className", _getClassName()
+					).setParameter(
+						"classTypeId", String.valueOf(_getClassTypeId())
+					).setParameter(
+						"ddmStructureFieldName", _getDDMStructureFieldName()
+					).setParameter(
+						"ddmStructureFieldValue", _getDDMStructureFieldValue()
+					).setResourceID(
+						"/asset_list/get_field_item"
+					).buildResourceURL();
 
 				getFieldItemURL.setCopyCurrentRenderParameters(false);
-				getFieldItemURL.setParameter("className", _getClassName());
-				getFieldItemURL.setParameter(
-					"classTypeId", String.valueOf(_getClassTypeId()));
-				getFieldItemURL.setParameter(
-					"ddmStructureFieldName", _getDDMStructureFieldName());
-				getFieldItemURL.setParameter(
-					"ddmStructureFieldValue", _getDDMStructureFieldValue());
-				getFieldItemURL.setResourceID("/asset_list/get_field_item");
 
 				return getFieldItemURL.toString();
 			}
@@ -104,13 +109,17 @@ public class SelectStructureFieldDisplayContext {
 
 	public String getFieldValueURL() {
 		LiferayPortletURL getFieldValueURL =
-			(LiferayPortletURL)_renderResponse.createResourceURL();
+			(LiferayPortletURL)ResourceURLBuilder.createResourceURL(
+				_renderResponse
+			).setParameter(
+				"classTypeId", String.valueOf(_getClassTypeId())
+			).setParameter(
+				"className", _getClassName()
+			).setResourceID(
+				"/asset_list/get_field_value"
+			).buildResourceURL();
 
 		getFieldValueURL.setCopyCurrentRenderParameters(false);
-		getFieldValueURL.setParameter("className", _getClassName());
-		getFieldValueURL.setParameter(
-			"classTypeId", String.valueOf(_getClassTypeId()));
-		getFieldValueURL.setResourceID("/asset_list/get_field_value");
 
 		return getFieldValueURL.toString();
 	}
