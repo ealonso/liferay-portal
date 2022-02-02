@@ -43,12 +43,10 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.ExpandoQueryContributor;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
@@ -71,11 +69,9 @@ import com.liferay.portal.search.batch.BatchIndexingHelper;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.localization.SearchLocalizationHelper;
 import com.liferay.portal.search.model.uid.UIDFactory;
-import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.trash.TrashHelper;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -145,41 +141,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
-
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.ARTICLE_ID, false);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.CLASS_PK, false);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.CONTENT);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.DESCRIPTION);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.ENTRY_CLASS_PK, false);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.TITLE);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.USER_NAME, false);
-
-		LinkedHashMap<String, Object> params =
-			(LinkedHashMap<String, Object>)searchContext.getAttribute("params");
-
-		if (params != null) {
-			String expandoAttributes = (String)params.get("expandoAttributes");
-
-			if (Validator.isNotNull(expandoAttributes)) {
-				_expandoQueryContributor.contribute(
-					expandoAttributes, searchQuery,
-					new String[] {JournalArticle.class.getName()},
-					searchContext);
-			}
-		}
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		String[] localizedFieldNames =
-			_searchLocalizationHelper.getLocalizedFieldNames(
-				new String[] {Field.CONTENT, Field.DESCRIPTION, Field.TITLE},
-				searchContext);
-
-		queryConfig.addHighlightFieldNames(localizedFieldNames);
 	}
 
 	@Override
@@ -835,10 +796,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	private ConfigurationProvider _configurationProvider;
 	private DDMIndexer _ddmIndexer;
 	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Reference
-	private ExpandoQueryContributor _expandoQueryContributor;
-
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
 
 	@Reference
@@ -868,9 +825,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	@Reference
 	private Portal _portal;
-
-	@Reference
-	private QueryHelper _queryHelper;
 
 	@Reference
 	private SearchLocalizationHelper _searchLocalizationHelper;
