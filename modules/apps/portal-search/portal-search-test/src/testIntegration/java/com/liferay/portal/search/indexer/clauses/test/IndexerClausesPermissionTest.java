@@ -344,7 +344,9 @@ public class IndexerClausesPermissionTest {
 	@Inject
 	protected ComplexQueryPartBuilderFactory complexQueryPartBuilderFactory;
 
-	@Inject(filter = "component.name=*.JournalArticleIndexer")
+	@Inject(
+		filter = "indexer.class.name=com.liferay.journal.model.JournalArticle"
+	)
 	protected Indexer<JournalArticle> journalArticleIndexer;
 
 	@Inject
