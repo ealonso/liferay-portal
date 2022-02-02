@@ -14,11 +14,25 @@
 
 package com.liferay.journal.internal.search.spi.model.query.contributor;
 
+import com.liferay.journal.model.JournalArticle;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.ExpandoQueryContributor;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.localization.SearchLocalizationHelper;
+import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
 
+import java.util.LinkedHashMap;
+
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Lourdes Fernández Besada
@@ -35,6 +49,114 @@ public class JournalArticleKeywordQueryContributor
 	public void contribute(
 		String keywords, BooleanQuery booleanQuery,
 		KeywordQueryContributorHelper keywordQueryContributorHelper) {
+
+		SearchContext searchContext =
+			keywordQueryContributorHelper.getSearchContext();
+
+		_queryHelper.addSearchTerm(
+			booleanQuery, searchContext, Field.ARTICLE_ID, false);
+		_queryHelper.addSearchTerm(
+			booleanQuery, searchContext, Field.CLASS_PK, false);
+		_addSearchLocalizedTerm(booleanQuery, searchContext, Field.CONTENT);
+		_addSearchLocalizedTerm(booleanQuery, searchContext, Field.DESCRIPTION);
+		_queryHelper.addSearchTerm(
+			booleanQuery, searchContext, Field.ENTRY_CLASS_PK, false);
+		_addSearchLocalizedTerm(booleanQuery, searchContext, Field.TITLE);
+		_queryHelper.addSearchTerm(
+			booleanQuery, searchContext, Field.USER_NAME, false);
+
+		LinkedHashMap<String, Object> params =
+			(LinkedHashMap<String, Object>)searchContext.getAttribute("params");
+
+		if (params != null) {
+			String expandoAttributes = (String)params.get("expandoAttributes");
+
+			if (Validator.isNotNull(expandoAttributes)) {
+				_expandoQueryContributor.contribute(
+					expandoAttributes, booleanQuery,
+					new String[] {JournalArticle.class.getName()},
+					searchContext);
+			}
+		}
+
+		QueryConfig queryConfig = searchContext.getQueryConfig();
+
+		String[] localizedFieldNames =
+			_searchLocalizationHelper.getLocalizedFieldNames(
+				new String[] {Field.CONTENT, Field.DESCRIPTION, Field.TITLE},
+				searchContext);
+
+		queryConfig.addHighlightFieldNames(localizedFieldNames);
 	}
+
+	private void _addLocalizedFields(
+			BooleanQuery searchQuery, String fieldName, String value,
+			SearchContext searchContext)
+		throws Exception {
+
+		String[] localizedFieldNames =
+			_searchLocalizationHelper.getLocalizedFieldNames(
+				new String[] {fieldName}, searchContext);
+
+		for (String localizedFieldName : localizedFieldNames) {
+			searchQuery.addTerm(localizedFieldName, value, false);
+		}
+	}
+
+	private void _addLocalizedQuery(
+			BooleanQuery searchQuery, BooleanQuery localizedQuery,
+			SearchContext searchContext)
+		throws Exception {
+
+		BooleanClauseOccur booleanClauseOccur = BooleanClauseOccur.SHOULD;
+
+		if (searchContext.isAndSearch()) {
+			booleanClauseOccur = BooleanClauseOccur.MUST;
+		}
+
+		searchQuery.add(localizedQuery, booleanClauseOccur);
+	}
+
+	private void _addSearchLocalizedTerm(
+			BooleanQuery searchQuery, SearchContext searchContext,
+			String fieldName)
+		throws Exception {
+
+		if (Validator.isBlank(fieldName)) {
+			return;
+		}
+
+		String value = GetterUtil.getString(
+			searchContext.getAttribute(fieldName));
+
+		if (Validator.isBlank(value)) {
+			value = searchContext.getKeywords();
+		}
+
+		if (Validator.isBlank(value)) {
+			return;
+		}
+
+		if (Validator.isBlank(searchContext.getKeywords())) {
+			BooleanQuery localizedQuery = new BooleanQueryImpl();
+
+			_addLocalizedFields(
+				localizedQuery, fieldName, value, searchContext);
+
+			_addLocalizedQuery(searchQuery, localizedQuery, searchContext);
+		}
+		else {
+			_addLocalizedFields(searchQuery, fieldName, value, searchContext);
+		}
+	}
+
+	@Reference
+	private ExpandoQueryContributor _expandoQueryContributor;
+
+	@Reference
+	private QueryHelper _queryHelper;
+
+	@Reference
+	private SearchLocalizationHelper _searchLocalizationHelper;
 
 }
