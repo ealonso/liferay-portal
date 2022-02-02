@@ -163,35 +163,13 @@ public class JournalArticleModelIndexerWriterContributor
 	}
 
 	@Override
+	public void modelDeleted(JournalArticle journalArticle) {
+		_reindexOtherArticleVersions(journalArticle);
+	}
+
+	@Override
 	public void modelIndexed(JournalArticle journalArticle) {
-		if (_portal.getClassNameId(DDMStructure.class) ==
-				journalArticle.getClassNameId()) {
-
-			return;
-		}
-
-		List<JournalArticle> articles = _journalArticleLocalService.getArticles(
-			journalArticle.getGroupId(), journalArticle.getArticleId(),
-			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			new ArticleVersionComparator());
-
-		Indexer<JournalArticle> indexer =
-			IndexerRegistryUtil.nullSafeGetIndexer(JournalArticle.class);
-
-		Stream<JournalArticle> stream = articles.stream();
-
-		stream.filter(
-			article -> !Objects.equals(article.getId(), journalArticle.getId())
-		).forEach(
-			article -> {
-				try {
-					indexer.reindex(article, false);
-				}
-				catch (SearchException searchException) {
-					throw new SystemException(searchException);
-				}
-			}
-		);
+		_reindexOtherArticleVersions(journalArticle);
 	}
 
 	private JournalArticle _fetchLatestIndexableArticleVersion(
@@ -229,6 +207,31 @@ public class JournalArticleModelIndexerWriterContributor
 		}
 
 		return false;
+	}
+
+	private void _reindexOtherArticleVersions(JournalArticle journalArticle) {
+		List<JournalArticle> articles = _journalArticleLocalService.getArticles(
+			journalArticle.getGroupId(), journalArticle.getArticleId(),
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			new ArticleVersionComparator());
+
+		Indexer<JournalArticle> indexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(JournalArticle.class);
+
+		Stream<JournalArticle> stream = articles.stream();
+
+		stream.filter(
+			article -> !Objects.equals(article.getId(), journalArticle.getId())
+		).forEach(
+			article -> {
+				try {
+					indexer.reindex(article, false);
+				}
+				catch (SearchException searchException) {
+					throw new SystemException(searchException);
+				}
+			}
+		);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
