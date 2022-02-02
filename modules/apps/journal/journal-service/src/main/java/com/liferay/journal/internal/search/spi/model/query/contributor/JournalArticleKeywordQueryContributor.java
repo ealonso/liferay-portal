@@ -15,10 +15,14 @@
 package com.liferay.journal.internal.search.spi.model.query.contributor;
 
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.ExpandoQueryContributor;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
@@ -90,23 +94,21 @@ public class JournalArticleKeywordQueryContributor
 	}
 
 	private void _addLocalizedFields(
-			BooleanQuery searchQuery, String fieldName, String value,
-			SearchContext searchContext)
-		throws Exception {
+		BooleanQuery booleanQuery, String fieldName, String value,
+		SearchContext searchContext) {
 
 		String[] localizedFieldNames =
 			_searchLocalizationHelper.getLocalizedFieldNames(
 				new String[] {fieldName}, searchContext);
 
 		for (String localizedFieldName : localizedFieldNames) {
-			searchQuery.addTerm(localizedFieldName, value, false);
+			_addTerm(booleanQuery, localizedFieldName, value);
 		}
 	}
 
 	private void _addLocalizedQuery(
-			BooleanQuery searchQuery, BooleanQuery localizedQuery,
-			SearchContext searchContext)
-		throws Exception {
+		BooleanQuery booleanQuery, BooleanQuery localizedQuery,
+		SearchContext searchContext) {
 
 		BooleanClauseOccur booleanClauseOccur = BooleanClauseOccur.SHOULD;
 
@@ -114,13 +116,24 @@ public class JournalArticleKeywordQueryContributor
 			booleanClauseOccur = BooleanClauseOccur.MUST;
 		}
 
-		searchQuery.add(localizedQuery, booleanClauseOccur);
+		try {
+			booleanQuery.add(localizedQuery, booleanClauseOccur);
+		}
+		catch (ParseException parseException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					StringBundler.concat(
+						"Unable to add localized localizedQuery:",
+						localizedQuery, " booleanClauseOccur:",
+						booleanClauseOccur),
+					parseException);
+			}
+		}
 	}
 
 	private void _addSearchLocalizedTerm(
-			BooleanQuery searchQuery, SearchContext searchContext,
-			String fieldName)
-		throws Exception {
+		BooleanQuery booleanQuery, SearchContext searchContext,
+		String fieldName) {
 
 		if (Validator.isBlank(fieldName)) {
 			return;
@@ -143,12 +156,32 @@ public class JournalArticleKeywordQueryContributor
 			_addLocalizedFields(
 				localizedQuery, fieldName, value, searchContext);
 
-			_addLocalizedQuery(searchQuery, localizedQuery, searchContext);
+			_addLocalizedQuery(booleanQuery, localizedQuery, searchContext);
 		}
 		else {
-			_addLocalizedFields(searchQuery, fieldName, value, searchContext);
+			_addLocalizedFields(booleanQuery, fieldName, value, searchContext);
 		}
 	}
+
+	private void _addTerm(
+		BooleanQuery booleanQuery, String field, String value) {
+
+		try {
+			booleanQuery.addTerm(field, value, false);
+		}
+		catch (ParseException parseException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					StringBundler.concat(
+						"Unable to add search term to query field:", field,
+						" value:", value, " like:", false),
+					parseException);
+			}
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalArticleKeywordQueryContributor.class);
 
 	@Reference
 	private ExpandoQueryContributor _expandoQueryContributor;
