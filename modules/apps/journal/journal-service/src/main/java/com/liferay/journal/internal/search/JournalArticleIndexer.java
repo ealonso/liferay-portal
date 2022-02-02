@@ -166,8 +166,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 				Field.CLASS_NAME_ID, classNameId.toString());
 		}
 
-		addStatus(contextBooleanFilter, searchContext);
-
 		long[] classTypeIds = searchContext.getClassTypeIds();
 
 		if (ArrayUtil.isNotEmpty(classTypeIds)) {
