@@ -72,6 +72,8 @@ public class JournalArticleModelDocumentContributor
 
 		document.addKeywordSortable(Field.ARTICLE_ID, articleId);
 
+		document.addKeyword(Field.UUID, journalArticle.getUuid());
+
 		Localization localization = LocalizationUtil.getLocalization();
 
 		String[] contentAvailableLanguageIds =
