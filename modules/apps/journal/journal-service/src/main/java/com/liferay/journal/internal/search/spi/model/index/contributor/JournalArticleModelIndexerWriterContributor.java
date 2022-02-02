@@ -49,9 +49,9 @@ public class JournalArticleModelIndexerWriterContributor
 
 	@Override
 	public BatchIndexingActionable getBatchIndexingActionable() {
-		return dynamicQueryBatchIndexingActionableFactory.
+		return _dynamicQueryBatchIndexingActionableFactory.
 			getBatchIndexingActionable(
-				journalArticleLocalService.
+				_journalArticleLocalService.
 					getIndexableActionableDynamicQuery());
 	}
 
@@ -61,10 +61,10 @@ public class JournalArticleModelIndexerWriterContributor
 	}
 
 	@Reference
-	protected DynamicQueryBatchIndexingActionableFactory
-		dynamicQueryBatchIndexingActionableFactory;
+	private DynamicQueryBatchIndexingActionableFactory
+		_dynamicQueryBatchIndexingActionableFactory;
 
 	@Reference
-	protected JournalArticleLocalService journalArticleLocalService;
+	private JournalArticleLocalService _journalArticleLocalService;
 
 }
