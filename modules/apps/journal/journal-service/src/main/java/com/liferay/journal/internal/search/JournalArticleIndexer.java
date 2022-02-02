@@ -16,20 +16,15 @@ package com.liferay.journal.internal.search;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
-import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
-import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMIndexer;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
-import com.liferay.journal.internal.util.JournalUtil;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.journal.util.JournalContent;
 import com.liferay.journal.util.JournalConverter;
-import com.liferay.petra.string.CharPool;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
@@ -65,12 +60,9 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.Localization;
-import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.batch.BatchIndexingHelper;
@@ -327,146 +319,7 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	protected Document doGetDocument(JournalArticle journalArticle)
 		throws Exception {
 
-		if (_log.isDebugEnabled()) {
-			_log.debug("Indexing article " + journalArticle);
-		}
-
-		Document document = getBaseModelDocument(CLASS_NAME, journalArticle);
-
-		uidFactory.setUID(journalArticle, document);
-
-		String articleId = journalArticle.getArticleId();
-
-		if (journalArticle.isInTrash()) {
-			articleId = _trashHelper.getOriginalTitle(articleId);
-		}
-
-		document.addKeywordSortable(Field.ARTICLE_ID, articleId);
-
-		Localization localization = LocalizationUtil.getLocalization();
-
-		String[] contentAvailableLanguageIds =
-			localization.getAvailableLanguageIds(journalArticle.getDocument());
-
-		DDMStructure ddmStructure = _ddmStructureLocalService.fetchStructure(
-			_portal.getSiteGroupId(journalArticle.getGroupId()),
-			_portal.getClassNameId(JournalArticle.class),
-			journalArticle.getDDMStructureKey(), true);
-
-		if (ddmStructure != null) {
-			for (String contentAvailableLanguageId :
-					contentAvailableLanguageIds) {
-
-				String content = _extractDDMContent(
-					journalArticle, ddmStructure, contentAvailableLanguageId);
-
-				document.addText(
-					localization.getLocalizedName(
-						Field.CONTENT, contentAvailableLanguageId),
-					content);
-			}
-		}
-
-		String[] descriptionAvailableLanguageIds =
-			localization.getAvailableLanguageIds(
-				journalArticle.getDescriptionMapAsXML());
-
-		for (String descriptionAvailableLanguageId :
-				descriptionAvailableLanguageIds) {
-
-			String description = _html.stripHtml(
-				journalArticle.getDescription(descriptionAvailableLanguageId));
-
-			document.addText(
-				localization.getLocalizedName(
-					Field.DESCRIPTION, descriptionAvailableLanguageId),
-				description);
-		}
-
-		document.addDate(Field.DISPLAY_DATE, journalArticle.getDisplayDate());
-		document.addDate(
-			Field.EXPIRATION_DATE, journalArticle.getExpirationDate());
-		document.addKeyword(Field.FOLDER_ID, journalArticle.getFolderId());
-		document.addKeyword(Field.LAYOUT_UUID, journalArticle.getLayoutUuid());
-
-		String[] titleAvailableLanguageIds =
-			localization.getAvailableLanguageIds(
-				journalArticle.getTitleMapAsXML());
-
-		for (String titleAvailableLanguageId : titleAvailableLanguageIds) {
-			String title = journalArticle.getTitle(titleAvailableLanguageId);
-
-			document.addText(
-				localization.getLocalizedName(
-					Field.TITLE, titleAvailableLanguageId),
-				title);
-		}
-
-		document.addKeyword(
-			Field.TREE_PATH,
-			StringUtil.split(journalArticle.getTreePath(), CharPool.SLASH));
-		document.addKeyword(Field.VERSION, journalArticle.getVersion());
-
-		document.addKeyword(
-			"ddmStructureKey", journalArticle.getDDMStructureKey());
-		document.addKeyword(
-			"ddmTemplateKey", journalArticle.getDDMTemplateKey());
-
-		String defaultLanguageId = localization.getDefaultLanguageId(
-			journalArticle.getDocument());
-
-		document.addText("defaultLanguageId", defaultLanguageId);
-
-		document.addDate("displayDate", journalArticle.getDisplayDate());
-		document.addKeyword("head", JournalUtil.isHead(journalArticle));
-
-		boolean headListable = JournalUtil.isHeadListable(journalArticle);
-
-		document.addKeyword("headListable", headListable);
-
-		boolean latestArticle = JournalUtil.isLatestArticle(journalArticle);
-
-		document.addKeyword("latest", latestArticle);
-
-		// Scheduled listable articles should be visible in asset browser
-
-		if (journalArticle.isScheduled() && headListable) {
-			boolean visible = GetterUtil.getBoolean(document.get("visible"));
-
-			if (!visible) {
-				document.addKeyword("visible", true);
-			}
-		}
-
-		for (String titleAvailableLanguageId : titleAvailableLanguageIds) {
-			try {
-				document.addKeywordSortable(
-					localization.getLocalizedName(
-						"urlTitle", titleAvailableLanguageId),
-					journalArticle.getUrlTitle(
-						LocaleUtil.fromLanguageId(titleAvailableLanguageId)));
-			}
-			catch (PortalException portalException) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(
-						StringBundler.concat(
-							"Unable to get friendly URL for article ID ",
-							journalArticle.getId(), " and language ID ",
-							titleAvailableLanguageId),
-						portalException);
-				}
-			}
-		}
-
-		if (ddmStructure != null) {
-			_addDDMStructureAttributes(ddmStructure, document, journalArticle);
-		}
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("Document " + journalArticle + " indexed successfully");
-		}
-
-		return document;
+		return null;
 	}
 
 	@Override
@@ -645,33 +498,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	@Reference
 	protected UIDFactory uidFactory;
 
-	private void _addDDMStructureAttributes(
-		DDMStructure ddmStructure, Document document, JournalArticle article) {
-
-		document.addKeyword(Field.CLASS_TYPE_ID, ddmStructure.getStructureId());
-
-		DDMFormValues ddmFormValues = null;
-
-		try {
-			Fields fields = _journalConverter.getDDMFields(
-				ddmStructure, article.getDocument());
-
-			ddmFormValues = _fieldsToDDMFormValuesConverter.convert(
-				ddmStructure, fields);
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception, exception);
-			}
-
-			return;
-		}
-
-		if (ddmFormValues != null) {
-			_ddmIndexer.addAttributes(document, ddmStructure, ddmFormValues);
-		}
-	}
-
 	private void _addLocalizedFields(
 			BooleanQuery searchQuery, String fieldName, String value,
 			SearchContext searchContext)
@@ -742,34 +568,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 		deleteDocument(
 			article.getCompanyId(), "UID=" + uidFactory.getUID(article));
-	}
-
-	private String _extractDDMContent(
-		JournalArticle article, DDMStructure ddmStructure, String languageId) {
-
-		DDMFormValues ddmFormValues = null;
-
-		try {
-			Fields fields = _journalConverter.getDDMFields(
-				ddmStructure, article.getDocument());
-
-			ddmFormValues = _fieldsToDDMFormValuesConverter.convert(
-				ddmStructure, fields);
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception, exception);
-			}
-
-			return StringPool.BLANK;
-		}
-
-		if (ddmFormValues == null) {
-			return StringPool.BLANK;
-		}
-
-		return _ddmIndexer.extractIndexableAttributes(
-			ddmStructure, ddmFormValues, LocaleUtil.fromLanguageId(languageId));
 	}
 
 	private JournalArticle _fetchLatestIndexableArticleVersion(
