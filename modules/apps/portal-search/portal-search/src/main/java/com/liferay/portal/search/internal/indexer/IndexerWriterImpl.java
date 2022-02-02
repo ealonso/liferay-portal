@@ -98,6 +98,8 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 		String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
 
 		delete(companyId, uid);
+
+		_modelIndexerWriterContributor.modelDeleted(baseModel);
 	}
 
 	@Override
