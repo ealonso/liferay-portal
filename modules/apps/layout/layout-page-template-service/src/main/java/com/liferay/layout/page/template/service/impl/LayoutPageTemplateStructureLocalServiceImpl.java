@@ -235,29 +235,10 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 
 		// Layout page template structure rel
 
-		LayoutPageTemplateStructureRel layoutPageTemplateStructureRel =
-			_layoutPageTemplateStructureRelLocalService.
-				fetchLayoutPageTemplateStructureRel(
-					layoutPageTemplateStructure.
-						getLayoutPageTemplateStructureId(),
-					segmentsExperienceId);
-
-		if (layoutPageTemplateStructureRel == null) {
-			_layoutPageTemplateStructureRelLocalService.
-				addLayoutPageTemplateStructureRel(
-					PrincipalThreadLocal.getUserId(), groupId,
-					layoutPageTemplateStructure.
-						getLayoutPageTemplateStructureId(),
-					segmentsExperienceId, data,
-					ServiceContextThreadLocal.getServiceContext());
-		}
-		else {
-			_layoutPageTemplateStructureRelLocalService.
-				updateLayoutPageTemplateStructureRel(
-					layoutPageTemplateStructure.
-						getLayoutPageTemplateStructureId(),
-					segmentsExperienceId, data);
-		}
+		_layoutPageTemplateStructureRelLocalService.
+			updateLayoutPageTemplateStructureRel(
+				layoutPageTemplateStructure.getLayoutPageTemplateStructureId(),
+				segmentsExperienceId, data);
 
 		_updateLayoutStatus(PrincipalThreadLocal.getUserId(), plid);
 
