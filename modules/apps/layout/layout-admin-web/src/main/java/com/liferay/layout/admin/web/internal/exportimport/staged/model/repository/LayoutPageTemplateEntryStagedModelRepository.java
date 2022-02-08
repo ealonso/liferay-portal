@@ -23,6 +23,7 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServ
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 
 import java.util.List;
@@ -70,9 +71,9 @@ public class LayoutPageTemplateEntryStagedModelRepository
 			layoutPageTemplateEntry.getClassTypeId(),
 			layoutPageTemplateEntry.getName(),
 			layoutPageTemplateEntry.getType(),
+			layoutPageTemplateEntry.getPreviewFileEntryId(),
 			layoutPageTemplateEntry.isDefaultTemplate(),
-			layoutPageTemplateEntry.getLayoutPrototypeId(),
-			layoutPageTemplateEntry.getPreviewFileEntryId(), plid,
+			layoutPageTemplateEntry.getLayoutPrototypeId(), plid, 0,
 			layoutPageTemplateEntry.getStatus(), serviceContext);
 	}
 
@@ -181,6 +182,9 @@ public class LayoutPageTemplateEntryStagedModelRepository
 		return _layoutPageTemplateEntryLocalService.
 			updateLayoutPageTemplateEntry(existingLayoutPageTemplateEntry);
 	}
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private LayoutPageTemplateEntryLocalService
