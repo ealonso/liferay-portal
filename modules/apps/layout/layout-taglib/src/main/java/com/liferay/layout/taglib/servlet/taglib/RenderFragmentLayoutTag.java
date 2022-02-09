@@ -201,7 +201,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 		}
 
 		return masterLayoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
+			SegmentsExperienceConstants.KEY_DEFAULT);
 	}
 
 	private long _getPlid(HttpServletRequest httpServletRequest) {
