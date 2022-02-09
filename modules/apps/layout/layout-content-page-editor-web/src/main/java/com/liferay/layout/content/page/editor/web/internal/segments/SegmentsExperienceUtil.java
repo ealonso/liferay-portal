@@ -43,15 +43,12 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
-import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsExperimentConstants;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
@@ -113,20 +110,7 @@ public class SegmentsExperienceUtil {
 				PortalUtil.getClassNameId(Layout.class.getName()),
 				themeDisplay.getPlid(), true);
 
-		boolean addedDefault = false;
-
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
-			if ((segmentsExperience.getPriority() <
-					SegmentsExperienceConstants.PRIORITY_DEFAULT) &&
-				!addedDefault) {
-
-				availableSegmentsExperiences.put(
-					String.valueOf(SegmentsExperienceConstants.ID_DEFAULT),
-					_getDefaultExperience(themeDisplay, layoutFullURL));
-
-				addedDefault = true;
-			}
-
 			availableSegmentsExperiences.put(
 				String.valueOf(segmentsExperience.getSegmentsExperienceId()),
 				HashMapBuilder.<String, Object>put(
@@ -153,12 +137,6 @@ public class SegmentsExperienceUtil {
 						themeDisplay, layoutFullURL,
 						segmentsExperience.getSegmentsExperienceId())
 				).build());
-		}
-
-		if (!addedDefault) {
-			availableSegmentsExperiences.put(
-				String.valueOf(SegmentsExperienceConstants.ID_DEFAULT),
-				_getDefaultExperience(themeDisplay, layoutFullURL));
 		}
 
 		return availableSegmentsExperiences;
@@ -206,27 +184,6 @@ public class SegmentsExperienceUtil {
 		).build();
 	}
 
-	public static boolean hasDefaultSegmentsExperienceLockedSegmentsExperiment(
-			ThemeDisplay themeDisplay)
-		throws Exception {
-
-		Optional<SegmentsExperiment> segmentsExperimentOptional =
-			_getSegmentsExperimentOptional(
-				themeDisplay, SegmentsExperienceConstants.ID_DEFAULT);
-
-		if (!segmentsExperimentOptional.isPresent()) {
-			return false;
-		}
-
-		SegmentsExperiment segmentsExperiment =
-			segmentsExperimentOptional.get();
-
-		List<Integer> lockedStatusValuesList = ListUtil.fromArray(
-			SegmentsExperimentConstants.Status.getLockedStatusValues());
-
-		return lockedStatusValuesList.contains(segmentsExperiment.getStatus());
-	}
-
 	private static void _copyLayoutData(
 			long plid, CommentManager commentManager, long groupId,
 			PortletRegistry portletRegistry, long sourceSegmentsExperienceId,
@@ -263,36 +220,6 @@ public class SegmentsExperienceUtil {
 				fragmentEntryLink.getNamespace(),
 				newFragmentEntryLink.getNamespace(), plid, portletId);
 		}
-	}
-
-	private static HashMap<String, Object> _getDefaultExperience(
-			ThemeDisplay themeDisplay, String layoutFullURL)
-		throws Exception {
-
-		return HashMapBuilder.<String, Object>put(
-			"hasLockedSegmentsExperiment",
-			hasDefaultSegmentsExperienceLockedSegmentsExperiment(themeDisplay)
-		).put(
-			"name",
-			SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-				themeDisplay.getLocale())
-		).put(
-			"priority", SegmentsExperienceConstants.PRIORITY_DEFAULT
-		).put(
-			"segmentsEntryId", String.valueOf(SegmentsEntryConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperienceId",
-			String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperimentStatus",
-			getSegmentsExperimentStatus(
-				themeDisplay, SegmentsExperienceConstants.ID_DEFAULT)
-		).put(
-			"segmentsExperimentURL",
-			_getSegmentsExperimentURL(
-				themeDisplay, layoutFullURL,
-				SegmentsExperienceConstants.ID_DEFAULT)
-		).build();
 	}
 
 	private static String _getNewEditableValues(

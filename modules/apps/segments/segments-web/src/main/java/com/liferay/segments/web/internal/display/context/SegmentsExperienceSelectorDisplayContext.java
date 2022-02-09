@@ -64,8 +64,6 @@ public class SegmentsExperienceSelectorDisplayContext {
 		JSONArray segmentsExperiencesJSONArray =
 			JSONFactoryUtil.createJSONArray();
 
-		boolean addedDefault = false;
-
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
 				_themeDisplay.getScopeGroupId(),
@@ -73,23 +71,8 @@ public class SegmentsExperienceSelectorDisplayContext {
 				_themeDisplay.getPlid(), true);
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
-			if ((segmentsExperience.getPriority() <
-					SegmentsExperienceConstants.PRIORITY_DEFAULT) &&
-				!addedDefault) {
-
-				segmentsExperiencesJSONArray.put(
-					_getDefaultSegmentsExperienceJSONObject());
-
-				addedDefault = true;
-			}
-
 			segmentsExperiencesJSONArray.put(
 				_getSegmentsExperienceJSONObject(segmentsExperience));
-		}
-
-		if (!addedDefault) {
-			segmentsExperiencesJSONArray.put(
-				_getDefaultSegmentsExperienceJSONObject());
 		}
 
 		_calculateActiveSegmentsExperiencesJSONArray(
@@ -157,27 +140,6 @@ public class SegmentsExperienceSelectorDisplayContext {
 				break;
 			}
 		}
-	}
-
-	private JSONObject _getDefaultSegmentsExperienceJSONObject() {
-		return JSONUtil.put(
-			"segmentsEntryId", SegmentsEntryConstants.ID_DEFAULT
-		).put(
-			"segmentsEntryName",
-			SegmentsEntryConstants.getDefaultSegmentsEntryName(
-				_themeDisplay.getLocale())
-		).put(
-			"segmentsExperienceId", SegmentsExperienceConstants.ID_DEFAULT
-		).put(
-			"segmentsExperienceName",
-			SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-				_themeDisplay.getLocale())
-		).put(
-			"url",
-			HttpUtil.setParameter(
-				PortalUtil.getCurrentURL(_httpServletRequest),
-				"segmentsExperienceId", SegmentsExperienceConstants.ID_DEFAULT)
-		);
 	}
 
 	private JSONObject _getFirstSegmentsExperienceJSONObject(

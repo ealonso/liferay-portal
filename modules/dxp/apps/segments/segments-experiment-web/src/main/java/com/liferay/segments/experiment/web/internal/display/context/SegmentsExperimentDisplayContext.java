@@ -369,25 +369,6 @@ public class SegmentsExperimentDisplayContext {
 				));
 		}
 
-		segmentsExperiencesJSONArray.put(
-			JSONUtil.put(
-				"name",
-				SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-					locale)
-			).put(
-				"segmentsExperienceId",
-				String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-			).put(
-				"segmentsExperiment",
-				SegmentsExperimentUtil.toSegmentsExperimentJSONObject(
-					locale,
-					_getActiveSegmentsExperimentOptional(
-						SegmentsExperienceConstants.ID_DEFAULT
-					).orElse(
-						null
-					))
-			));
-
 		return segmentsExperiencesJSONArray;
 	}
 
