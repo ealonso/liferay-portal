@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
  */
 public class SegmentsExperienceConstants {
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
+	 */
+	@Deprecated
 	public static final long ID_DEFAULT = 0;
 
 	/**
