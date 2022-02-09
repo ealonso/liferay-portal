@@ -797,8 +797,7 @@ public class ContentPageEditorDisplayContext {
 		if (_segmentsExperienceId == -1) {
 			long[] segmentsExperienceIds = GetterUtil.getLongValues(
 				httpServletRequest.getAttribute(
-					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
 			if (segmentsExperienceIds.length > 0) {
 				_segmentsExperienceId = segmentsExperienceIds[0];

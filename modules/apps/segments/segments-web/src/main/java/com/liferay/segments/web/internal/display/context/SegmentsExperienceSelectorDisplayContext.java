@@ -88,8 +88,7 @@ public class SegmentsExperienceSelectorDisplayContext {
 		if (segmentsExperienceId == -1) {
 			long[] segmentsExperienceIds = GetterUtil.getLongValues(
 				_httpServletRequest.getAttribute(
-					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
 			if (segmentsExperienceIds.length > 0) {
 				segmentsExperienceId = segmentsExperienceIds[0];
