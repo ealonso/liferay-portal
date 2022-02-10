@@ -44,8 +44,7 @@ public class LayoutSegmentsExperienceInfoItemFormProvider
 	@Override
 	public InfoForm getInfoForm(SegmentsExperience segmentsExperience) {
 		return _layoutInfoItemFormProviderHelper.getInfoForm(
-			_getLayout(segmentsExperience),
-			segmentsExperience.getSegmentsExperienceId());
+			_getLayout(segmentsExperience), segmentsExperience);
 	}
 
 	@Activate

@@ -23,9 +23,11 @@ import com.liferay.layout.admin.web.internal.info.item.LayoutInfoItemFields;
 import com.liferay.layout.admin.web.internal.util.InfoFieldUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Adolfo Pérez
@@ -45,15 +47,20 @@ public class LayoutInfoItemFormProviderHelper {
 		).build();
 	}
 
-	public InfoForm getInfoForm(Layout layout, long segmentsExperienceId) {
+	public InfoForm getInfoForm(
+		Layout layout, SegmentsExperience segmentsExperience) {
+
 		if (!layout.isTypeContent()) {
 			return getInfoForm();
 		}
 
-		if (segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT) {
+		if (Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			return InfoForm.builder(
 			).infoFieldSetEntry(
-				_getLayoutInfoFieldSet(layout, segmentsExperienceId)
+				_getLayoutInfoFieldSet(layout, segmentsExperience)
 			).build();
 		}
 
@@ -61,7 +68,7 @@ public class LayoutInfoItemFormProviderHelper {
 		).infoFieldSetEntry(
 			_getBasicInformationInfoFieldSet()
 		).infoFieldSetEntry(
-			_getLayoutInfoFieldSet(layout, segmentsExperienceId)
+			_getLayoutInfoFieldSet(layout, segmentsExperience)
 		).build();
 	}
 
@@ -77,25 +84,26 @@ public class LayoutInfoItemFormProviderHelper {
 	}
 
 	private InfoFieldSet _getLayoutInfoFieldSet(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
 		return InfoFieldSet.builder(
 		).labelInfoLocalizedValue(
 			InfoLocalizedValue.localize(getClass(), "inline-content")
 		).infoFieldSetEntries(
-			_getLayoutInfoFieldSetEntries(layout, segmentsExperienceId)
+			_getLayoutInfoFieldSetEntries(layout, segmentsExperience)
 		).name(
 			"inline-content"
 		).build();
 	}
 
 	private List<InfoFieldSetEntry> _getLayoutInfoFieldSetEntries(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
 		List<InfoFieldSetEntry> infoFieldSetEntries = new ArrayList<>();
 
 		InfoFieldUtil.forEachInfoField(
-			_fragmentRendererController, layout, segmentsExperienceId,
+			_fragmentRendererController, layout,
+			segmentsExperience.getSegmentsExperienceId(),
 			(name, infoField, unsafeSupplier) -> infoFieldSetEntries.add(
 				infoField));
 

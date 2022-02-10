@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Adolfo Pérez
@@ -48,14 +49,19 @@ public class LayoutInfoItemFieldValuesProviderHelper {
 	}
 
 	public InfoItemFieldValues getInfoItemFieldValues(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
-		if (segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT) {
+		if (!Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			return InfoItemFieldValues.builder(
 			).infoFieldValues(
-				_getLayoutInfoFieldValues(layout, segmentsExperienceId)
+				_getLayoutInfoFieldValues(layout, segmentsExperience)
 			).infoItemReference(
-				_getInfoItemReference(layout, segmentsExperienceId)
+				new InfoItemReference(
+					SegmentsExperience.class.getName(),
+					segmentsExperience.getSegmentsExperienceId())
 			).build();
 		}
 
@@ -70,22 +76,12 @@ public class LayoutInfoItemFieldValuesProviderHelper {
 					layout.getNameMap()
 				).build())
 		).infoFieldValues(
-			_getLayoutInfoFieldValues(layout, segmentsExperienceId)
+			_getLayoutInfoFieldValues(layout, segmentsExperience)
 		).infoItemReference(
-			_getInfoItemReference(layout, segmentsExperienceId)
+			new InfoItemReference(
+				SegmentsExperience.class.getName(),
+				segmentsExperience.getSegmentsExperienceId())
 		).build();
-	}
-
-	private InfoItemReference _getInfoItemReference(
-		Layout layout, long segmentsExperienceId) {
-
-		if (segmentsExperienceId == SegmentsExperienceConstants.ID_DEFAULT) {
-			return new InfoItemReference(
-				Layout.class.getName(), layout.getPlid());
-		}
-
-		return new InfoItemReference(
-			SegmentsExperience.class.getName(), segmentsExperienceId);
 	}
 
 	private InfoLocalizedValue<String> _getInfoLocalizedValue(
@@ -128,13 +124,14 @@ public class LayoutInfoItemFieldValuesProviderHelper {
 	}
 
 	private List<InfoFieldValue<Object>> _getLayoutInfoFieldValues(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
 		try {
 			List<InfoFieldValue<Object>> infoFieldValues = new ArrayList<>();
 
 			InfoFieldUtil.forEachInfoField(
-				_fragmentRendererController, layout, segmentsExperienceId,
+				_fragmentRendererController, layout,
+				segmentsExperience.getSegmentsExperienceId(),
 				(name, infoField, unsafeSupplier) -> infoFieldValues.add(
 					new InfoFieldValue<>(
 						infoField,

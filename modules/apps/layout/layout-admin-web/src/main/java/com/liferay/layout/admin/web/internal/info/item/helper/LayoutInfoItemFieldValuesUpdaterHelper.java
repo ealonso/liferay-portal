@@ -32,10 +32,12 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,17 +56,17 @@ public class LayoutInfoItemFieldValuesUpdaterHelper {
 
 	public Layout updateFromInfoItemFieldValues(
 		Layout layout, InfoItemFieldValues infoItemFieldValues,
-		long segmentsExperienceId) {
+		SegmentsExperience segmentsExperience) {
 
 		_updateFragmentEntryLinks(infoItemFieldValues);
 
 		if (layout.isDraftLayout()) {
 			_updateLayout(
 				_layoutLocalService.fetchLayout(layout.getClassPK()),
-				infoItemFieldValues, segmentsExperienceId);
+				infoItemFieldValues, segmentsExperience);
 		}
 
-		return _updateLayout(layout, infoItemFieldValues, segmentsExperienceId);
+		return _updateLayout(layout, infoItemFieldValues, segmentsExperience);
 	}
 
 	private JSONObject _createEditableValuesJSONObject(
@@ -174,13 +176,16 @@ public class LayoutInfoItemFieldValuesUpdaterHelper {
 
 	private Layout _updateLayout(
 		Layout layout, InfoItemFieldValues infoItemFieldValues,
-		long segmentsExperienceId) {
+		SegmentsExperience segmentsExperience) {
 
 		if (layout == null) {
 			return null;
 		}
 
-		if (segmentsExperienceId == SegmentsExperienceConstants.ID_DEFAULT) {
+		if (Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			layout.setNameMap(
 				_getFieldMap(
 					LayoutInfoItemFields.nameInfoField.getName(),
