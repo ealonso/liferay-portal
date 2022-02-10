@@ -93,8 +93,7 @@ public class TranslateMVCRenderCommand implements MVCRenderCommand {
 
 		try {
 			long segmentsExperienceId = ParamUtil.getLong(
-				renderRequest, "segmentsExperienceId",
-				SegmentsExperienceConstants.ID_DEFAULT);
+				renderRequest, "segmentsExperienceId");
 
 			TranslationRequestHelper translationRequestHelper =
 				new TranslationRequestHelper(
