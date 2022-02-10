@@ -605,17 +605,6 @@ public class LayoutPageTemplateEntryLocalServiceUtil {
 			layoutPageTemplateEntryId, name);
 	}
 
-	public static LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
-			long layoutPageTemplateEntryId, String name,
-			long[] fragmentEntryIds, String editableValues,
-			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalException {
-
-		return getService().updateLayoutPageTemplateEntry(
-			layoutPageTemplateEntryId, name, fragmentEntryIds, editableValues,
-			serviceContext);
-	}
-
 	public static LayoutPageTemplateEntry updateStatus(
 			long userId, long layoutPageTemplateEntryId, int status)
 		throws PortalException {
