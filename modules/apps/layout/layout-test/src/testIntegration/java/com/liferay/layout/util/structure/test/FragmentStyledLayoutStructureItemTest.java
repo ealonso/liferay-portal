@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -48,6 +49,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.Set;
 
@@ -96,9 +99,14 @@ public class FragmentStyledLayoutStructureItemTest {
 				0, FragmentConstants.TYPE_COMPONENT,
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+
 		_fragmentEntryLink = _fragmentEntryLinkService.addFragmentEntryLink(
 			_group.getGroupId(), 0, fragmentEntry.getFragmentEntryId(),
-			SegmentsExperienceConstants.ID_DEFAULT, _layout.getPlid(),
+			segmentsExperience.getSegmentsExperienceId(), _layout.getPlid(),
 			fragmentEntry.getCss(), fragmentEntry.getHtml(),
 			fragmentEntry.getJs(), fragmentEntry.getConfiguration(), null,
 			StringPool.BLANK, 0, null, serviceContext);
@@ -111,7 +119,7 @@ public class FragmentStyledLayoutStructureItemTest {
 			_fragmentEntryLinkService.addFragmentEntryLink(
 				_group.getGroupId(), 0,
 				contributedFragmentEntry.getFragmentEntryId(),
-				SegmentsExperienceConstants.ID_DEFAULT, _layout.getPlid(),
+				segmentsExperience.getSegmentsExperienceId(), _layout.getPlid(),
 				contributedFragmentEntry.getCss(),
 				contributedFragmentEntry.getHtml(),
 				contributedFragmentEntry.getJs(),
@@ -241,5 +249,8 @@ public class FragmentStyledLayoutStructureItemTest {
 	@Inject
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }
