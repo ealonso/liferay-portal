@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsEntryLocalServiceUtil;
@@ -117,42 +116,16 @@ public class ExportTranslationDisplayContext {
 			return null;
 		}
 
-		Map<String, String> defaultExperience = HashMapBuilder.put(
-			"label",
-			SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-				_themeDisplay.getLocale())
-		).put(
-			"segment",
-			_getSegmentsEntryName(
-				SegmentsEntryConstants.ID_DEFAULT, _themeDisplay.getLocale())
-		).put(
-			"value",
-			String.valueOf((Object)SegmentsExperienceConstants.ID_DEFAULT)
-		).build();
-
 		List<Map<String, String>> experiences = new ArrayList<>();
 
 		if (!_ffLayoutExperienceSelectorConfiguration.enabled()) {
-			experiences.add(defaultExperience);
-
 			return experiences;
 		}
 
 		List<SegmentsExperience> segmentsExperiences =
 			_getSegmentsExperiences();
 
-		boolean addedDefault = false;
-
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
-			if ((segmentsExperience.getPriority() <
-					SegmentsExperienceConstants.PRIORITY_DEFAULT) &&
-				!addedDefault) {
-
-				experiences.add(defaultExperience);
-
-				addedDefault = true;
-			}
-
 			experiences.add(
 				HashMapBuilder.put(
 					"label",
@@ -166,10 +139,6 @@ public class ExportTranslationDisplayContext {
 					"value",
 					String.valueOf(segmentsExperience.getSegmentsExperienceId())
 				).build());
-		}
-
-		if (!addedDefault) {
-			experiences.add(defaultExperience);
 		}
 
 		return experiences;
