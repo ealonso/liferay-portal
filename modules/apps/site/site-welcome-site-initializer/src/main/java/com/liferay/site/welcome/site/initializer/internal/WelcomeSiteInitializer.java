@@ -143,6 +143,9 @@ public class WelcomeSiteInitializer implements SiteInitializer {
 
 		ServiceContext serviceContext = new ServiceContext();
 
+		serviceContext.setScopeGroupId(groupId);
+		serviceContext.setUserId(user.getUserId());
+
 		Layout layout = _layoutLocalService.addLayout(
 			user.getUserId(), group.getGroupId(), false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
