@@ -43,24 +43,18 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.ExpandoQueryContributor;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.search.filter.QueryFilter;
-import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -68,27 +62,16 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.batch.BatchIndexingHelper;
-import com.liferay.portal.search.filter.DateRangeFilterBuilder;
-import com.liferay.portal.search.filter.FilterBuilders;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.localization.SearchLocalizationHelper;
 import com.liferay.portal.search.model.uid.UIDFactory;
-import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.trash.TrashHelper;
 
-import java.io.Serializable;
-
-import java.text.Format;
-
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -154,178 +137,10 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	}
 
 	@Override
-	public void postProcessContextBooleanFilter(
-			BooleanFilter contextBooleanFilter, SearchContext searchContext)
-		throws Exception {
-
-		Long classNameId = (Long)searchContext.getAttribute(
-			Field.CLASS_NAME_ID);
-
-		if ((classNameId != null) && (classNameId != 0)) {
-			contextBooleanFilter.addRequiredTerm(
-				Field.CLASS_NAME_ID, classNameId.toString());
-		}
-
-		addStatus(contextBooleanFilter, searchContext);
-
-		long[] classTypeIds = searchContext.getClassTypeIds();
-
-		if (ArrayUtil.isNotEmpty(classTypeIds)) {
-			TermsFilter classTypeIdsTermsFilter = new TermsFilter(
-				Field.CLASS_TYPE_ID);
-
-			classTypeIdsTermsFilter.addValues(
-				ArrayUtil.toStringArray(classTypeIds));
-
-			contextBooleanFilter.add(
-				classTypeIdsTermsFilter, BooleanClauseOccur.MUST);
-		}
-
-		String ddmStructureFieldName = (String)searchContext.getAttribute(
-			"ddmStructureFieldName");
-		Serializable ddmStructureFieldValue = searchContext.getAttribute(
-			"ddmStructureFieldValue");
-
-		if (Validator.isNotNull(ddmStructureFieldName) &&
-			Validator.isNotNull(ddmStructureFieldValue)) {
-
-			Locale locale = searchContext.getLocale();
-
-			long[] groupIds = searchContext.getGroupIds();
-
-			if (ArrayUtil.isNotEmpty(groupIds)) {
-				try {
-					locale = _portal.getSiteDefaultLocale(groupIds[0]);
-				}
-				catch (PortalException portalException) {
-					if (_log.isDebugEnabled()) {
-						_log.debug(
-							portalException.getMessage(), portalException);
-					}
-				}
-			}
-
-			try {
-				QueryFilter queryFilter =
-					_ddmIndexer.createFieldValueQueryFilter(
-						ddmStructureFieldName, ddmStructureFieldValue, locale);
-
-				contextBooleanFilter.add(queryFilter, BooleanClauseOccur.MUST);
-			}
-			catch (Exception exception) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(exception.getMessage(), exception);
-				}
-			}
-		}
-
-		String ddmStructureKey = (String)searchContext.getAttribute(
-			"ddmStructureKey");
-
-		if (Validator.isNotNull(ddmStructureKey)) {
-			contextBooleanFilter.addRequiredTerm(
-				"ddmStructureKey", ddmStructureKey);
-		}
-
-		String ddmTemplateKey = (String)searchContext.getAttribute(
-			"ddmTemplateKey");
-
-		if (Validator.isNotNull(ddmTemplateKey)) {
-			contextBooleanFilter.addRequiredTerm(
-				"ddmTemplateKey", ddmTemplateKey);
-		}
-
-		boolean head = GetterUtil.getBoolean(
-			searchContext.getAttribute("head"), Boolean.TRUE);
-		boolean latest = GetterUtil.getBoolean(
-			searchContext.getAttribute("latest"));
-		boolean relatedClassName = GetterUtil.getBoolean(
-			searchContext.getAttribute("relatedClassName"));
-		boolean showNonindexable = GetterUtil.getBoolean(
-			searchContext.getAttribute("showNonindexable"));
-
-		if (latest && !relatedClassName && !showNonindexable) {
-			contextBooleanFilter.addRequiredTerm("latest", Boolean.TRUE);
-		}
-		else if (head && !relatedClassName && !showNonindexable) {
-			contextBooleanFilter.addRequiredTerm("head", Boolean.TRUE);
-		}
-
-		if (latest && !relatedClassName && showNonindexable) {
-			contextBooleanFilter.addRequiredTerm("latest", Boolean.TRUE);
-		}
-		else if (!relatedClassName && showNonindexable) {
-			contextBooleanFilter.addRequiredTerm("headListable", Boolean.TRUE);
-		}
-
-		boolean filterExpired = GetterUtil.getBoolean(
-			searchContext.getAttribute("filterExpired"));
-
-		if (!filterExpired) {
-			return;
-		}
-
-		DateRangeFilterBuilder dateRangeFilterBuilder =
-			_filterBuilders.dateRangeFilterBuilder();
-
-		dateRangeFilterBuilder.setFieldName(Field.EXPIRATION_DATE);
-
-		String formatPattern = PropsUtil.get(
-			PropsKeys.INDEX_DATE_FORMAT_PATTERN);
-
-		dateRangeFilterBuilder.setFormat(formatPattern);
-
-		Format dateFormat = FastDateFormatFactoryUtil.getSimpleDateFormat(
-			formatPattern);
-
-		dateRangeFilterBuilder.setFrom(dateFormat.format(new Date()));
-
-		dateRangeFilterBuilder.setIncludeLower(false);
-		dateRangeFilterBuilder.setIncludeUpper(false);
-
-		contextBooleanFilter.add(dateRangeFilterBuilder.build());
-	}
-
-	@Override
 	public void postProcessSearchQuery(
 			BooleanQuery searchQuery, BooleanFilter fullQueryBooleanFilter,
 			SearchContext searchContext)
 		throws Exception {
-
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.ARTICLE_ID, false);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.CLASS_PK, false);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.CONTENT);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.DESCRIPTION);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.ENTRY_CLASS_PK, false);
-		_addSearchLocalizedTerm(searchQuery, searchContext, Field.TITLE);
-		_queryHelper.addSearchTerm(
-			searchQuery, searchContext, Field.USER_NAME, false);
-
-		LinkedHashMap<String, Object> params =
-			(LinkedHashMap<String, Object>)searchContext.getAttribute("params");
-
-		if (params != null) {
-			String expandoAttributes = (String)params.get("expandoAttributes");
-
-			if (Validator.isNotNull(expandoAttributes)) {
-				_expandoQueryContributor.contribute(
-					expandoAttributes, searchQuery,
-					new String[] {JournalArticle.class.getName()},
-					searchContext);
-			}
-		}
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		String[] localizedFieldNames =
-			_searchLocalizationHelper.getLocalizedFieldNames(
-				new String[] {Field.CONTENT, Field.DESCRIPTION, Field.TITLE},
-				searchContext);
-
-		queryConfig.addHighlightFieldNames(localizedFieldNames);
 	}
 
 	@Override
@@ -981,14 +796,7 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	private ConfigurationProvider _configurationProvider;
 	private DDMIndexer _ddmIndexer;
 	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Reference
-	private ExpandoQueryContributor _expandoQueryContributor;
-
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
-
-	@Reference
-	private FilterBuilders _filterBuilders;
 
 	@Reference
 	private Html _html;
@@ -1017,9 +825,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	@Reference
 	private Portal _portal;
-
-	@Reference
-	private QueryHelper _queryHelper;
 
 	@Reference
 	private SearchLocalizationHelper _searchLocalizationHelper;
