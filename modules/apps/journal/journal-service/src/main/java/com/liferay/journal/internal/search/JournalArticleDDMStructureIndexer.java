@@ -19,6 +19,7 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleResource;
+import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -128,11 +129,19 @@ public class JournalArticleDDMStructureIndexer implements DDMStructureIndexer {
 						resourcePrimKeyProperty.in(journalArticleDynamicQuery));
 				});
 			actionableDynamicQuery.setPerformActionMethod(
-				(JournalArticleResource article) -> {
+				(JournalArticleResource journalArticleResource) -> {
+					JournalArticle journalArticle =
+						_journalArticleLocalService.fetchJournalArticle(
+							journalArticleResource.getResourcePrimKey());
+
+					if (journalArticle == null) {
+						journalArticle =
+							_journalArticleLocalService.fetchLatestArticle(
+								journalArticleResource.getResourcePrimKey());
+					}
+
 					try {
-						indexer.reindex(
-							indexer.getClassName(),
-							article.getResourcePrimKey());
+						indexer.reindex(journalArticle);
 					}
 					catch (Exception exception) {
 						throw new PortalException(exception);
@@ -182,5 +191,8 @@ public class JournalArticleDDMStructureIndexer implements DDMStructureIndexer {
 
 	@Reference
 	private IndexStatusManager _indexStatusManager;
+
+	@Reference
+	private JournalArticleLocalService _journalArticleLocalService;
 
 }
