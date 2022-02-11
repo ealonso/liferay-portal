@@ -205,6 +205,11 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 	@Override
 	public void reindex(T baseModel) {
+		reindex(baseModel, true);
+	}
+
+	@Override
+	public void reindex(T baseModel, boolean notify) {
 		if (!isEnabled() || (baseModel == null)) {
 			return;
 		}
@@ -230,7 +235,9 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 			}
 		}
 
-		_modelIndexerWriterContributor.modelIndexed(baseModel);
+		if (notify) {
+			_modelIndexerWriterContributor.modelIndexed(baseModel);
+		}
 	}
 
 	@Override
