@@ -20,12 +20,18 @@ import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalArticleResource;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.service.JournalArticleResourceLocalService;
+import com.liferay.journal.util.comparator.ArticleVersionComparator;
 import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -35,6 +41,10 @@ import com.liferay.portal.search.batch.DynamicQueryBatchIndexingActionableFactor
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.index.contributor.helper.IndexerWriterMode;
 import com.liferay.portal.search.spi.model.index.contributor.helper.ModelIndexerWriterDocumentHelper;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -150,6 +160,38 @@ public class JournalArticleModelIndexerWriterContributor
 		}
 
 		return IndexerWriterMode.DELETE;
+	}
+
+	@Override
+	public void modelIndexed(JournalArticle journalArticle) {
+		if (_portal.getClassNameId(DDMStructure.class) ==
+				journalArticle.getClassNameId()) {
+
+			return;
+		}
+
+		List<JournalArticle> articles = _journalArticleLocalService.getArticles(
+			journalArticle.getGroupId(), journalArticle.getArticleId(),
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS,
+			new ArticleVersionComparator());
+
+		Indexer<JournalArticle> indexer =
+			IndexerRegistryUtil.nullSafeGetIndexer(JournalArticle.class);
+
+		Stream<JournalArticle> stream = articles.stream();
+
+		stream.filter(
+			article -> !Objects.equals(article.getId(), journalArticle.getId())
+		).forEach(
+			article -> {
+				try {
+					indexer.reindex(article, false);
+				}
+				catch (SearchException searchException) {
+					throw new SystemException(searchException);
+				}
+			}
+		);
 	}
 
 	private JournalArticle _fetchLatestIndexableArticleVersion(
