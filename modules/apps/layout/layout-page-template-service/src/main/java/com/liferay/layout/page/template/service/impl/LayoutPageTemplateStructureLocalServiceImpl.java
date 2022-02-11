@@ -250,9 +250,15 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			long groupId, long plid, String data)
 		throws PortalException {
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				groupId, SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), plid);
+
 		return layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				groupId, plid, SegmentsExperienceConstants.ID_DEFAULT, data);
+				groupId, plid, segmentsExperience.getSegmentsExperienceId(),
+				data);
 	}
 
 	private int _getLayoutPageTemplateEntryType(Layout layout) {

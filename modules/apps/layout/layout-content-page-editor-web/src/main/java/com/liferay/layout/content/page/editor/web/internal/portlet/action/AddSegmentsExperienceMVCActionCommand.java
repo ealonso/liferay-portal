@@ -44,11 +44,10 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
 import com.liferay.segments.model.SegmentsExperimentRel;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.service.SegmentsExperienceService;
 import com.liferay.segments.service.SegmentsExperimentRelService;
 import com.liferay.segments.service.SegmentsExperimentService;
@@ -95,7 +94,7 @@ public class AddSegmentsExperienceMVCActionCommand
 			themeDisplay.getPlid(), segmentsExperiment, serviceContext);
 
 		long baseSegmentsExperienceId = _getBaseSegmentsExperienceId(
-			segmentsExperiment);
+			segmentsExperiment, themeDisplay);
 
 		SegmentsExperienceUtil.copySegmentsExperienceData(
 			themeDisplay.getPlid(), _commentManager,
@@ -155,20 +154,12 @@ public class AddSegmentsExperienceMVCActionCommand
 		throws PortalException {
 
 		if (segmentsExperiment != null) {
-			long segmentsEntryId = SegmentsEntryConstants.ID_DEFAULT;
-
-			if (segmentsExperiment.getSegmentsExperienceId() !=
-					SegmentsExperienceConstants.ID_DEFAULT) {
-
-				SegmentsExperience segmentsExperience =
-					_segmentsExperienceService.getSegmentsExperience(
-						segmentsExperiment.getSegmentsExperienceId());
-
-				segmentsEntryId = segmentsExperience.getSegmentsEntryId();
-			}
+			SegmentsExperience segmentsExperience =
+				_segmentsExperienceService.getSegmentsExperience(
+					segmentsExperiment.getSegmentsExperienceId());
 
 			return _segmentsExperienceService.appendSegmentsExperience(
-				segmentsEntryId, classNameId, classPK,
+				segmentsExperience.getSegmentsEntryId(), classNameId, classPK,
 				Collections.singletonMap(
 					LocaleUtil.getSiteDefault(),
 					ParamUtil.getString(actionRequest, "name")),
@@ -197,10 +188,19 @@ public class AddSegmentsExperienceMVCActionCommand
 	}
 
 	private long _getBaseSegmentsExperienceId(
-		SegmentsExperiment segmentsExperiment) {
+			SegmentsExperiment segmentsExperiment, ThemeDisplay themeDisplay)
+		throws PortalException {
 
 		if (segmentsExperiment == null) {
-			return SegmentsExperienceConstants.ID_DEFAULT;
+			List<SegmentsExperience> segmentsExperiences =
+				_segmentsExperienceLocalService.getSegmentsExperiences(
+					themeDisplay.getScopeGroupId(),
+					_portal.getClassNameId(Layout.class.getName()),
+					themeDisplay.getPlid(), true);
+
+			SegmentsExperience segmentsExperience = segmentsExperiences.get(0);
+
+			return segmentsExperience.getSegmentsExperienceId();
 		}
 
 		return segmentsExperiment.getSegmentsExperienceId();
@@ -333,6 +333,9 @@ public class AddSegmentsExperienceMVCActionCommand
 
 	@Reference
 	private PortletRegistry _portletRegistry;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private SegmentsExperienceService _segmentsExperienceService;

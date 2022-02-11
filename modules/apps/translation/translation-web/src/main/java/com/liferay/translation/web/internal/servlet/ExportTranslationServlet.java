@@ -34,8 +34,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
-import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.translation.exporter.TranslationInfoItemFieldValuesExporter;
 import com.liferay.translation.exporter.TranslationInfoItemFieldValuesExporterTracker;
@@ -103,21 +101,10 @@ public class ExportTranslationServlet extends HttpServlet {
 					translationRequestHelper));
 
 			for (long classPK : classPKs) {
-				if ((classPK == SegmentsExperienceConstants.ID_DEFAULT) &&
-					className.equals(SegmentsExperience.class.getName())) {
-
-					_addZipEntry(
-						zipWriter, translationRequestHelper.getModelClassName(),
-						translationRequestHelper.getModelClassPK(),
-						exportMimeType, sourceLanguageId, targetLanguageIds,
-						_portal.getLocale(httpServletRequest));
-				}
-				else {
-					_addZipEntry(
-						zipWriter, className, classPK, exportMimeType,
-						sourceLanguageId, targetLanguageIds,
-						_portal.getLocale(httpServletRequest));
-				}
+				_addZipEntry(
+					zipWriter, className, classPK, exportMimeType,
+					sourceLanguageId, targetLanguageIds,
+					_portal.getLocale(httpServletRequest));
 			}
 
 			try (InputStream inputStream = new FileInputStream(

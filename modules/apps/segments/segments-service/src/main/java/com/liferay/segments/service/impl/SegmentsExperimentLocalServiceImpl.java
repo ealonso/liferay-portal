@@ -599,9 +599,7 @@ public class SegmentsExperimentLocalServiceImpl
 		SegmentsExperimentConstants.Status statusObject =
 			SegmentsExperimentConstants.Status.valueOf(status);
 
-		if ((segmentsExperiment.getSegmentsExperienceId() !=
-				SegmentsExperienceConstants.ID_DEFAULT) &&
-			(statusObject == SegmentsExperimentConstants.Status.COMPLETED) &&
+		if ((statusObject == SegmentsExperimentConstants.Status.COMPLETED) &&
 			(winnerSegmentsExperienceId !=
 				segmentsExperiment.getSegmentsExperienceId())) {
 

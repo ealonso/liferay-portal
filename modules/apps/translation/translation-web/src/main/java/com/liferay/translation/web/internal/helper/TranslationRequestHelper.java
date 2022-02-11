@@ -19,10 +19,8 @@ import com.liferay.info.item.GroupKeyInfoItemIdentifier;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.translator.InfoItemIdentifierTranslator;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.model.SegmentsExperience;
 
 import javax.portlet.PortletRequest;
@@ -52,22 +50,10 @@ public class TranslationRequestHelper {
 	}
 
 	public String getClassName(long segmentsExperienceId) {
-		if (segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT) {
-			return SegmentsExperience.class.getName();
-		}
-
-		return getModelClassName();
+		return SegmentsExperience.class.getName();
 	}
 
 	public String getClassName(long[] segmentsExperienceIds) {
-		if (ArrayUtil.isEmpty(segmentsExperienceIds) ||
-			((segmentsExperienceIds.length == 1) &&
-			 (segmentsExperienceIds[0] ==
-				 SegmentsExperienceConstants.ID_DEFAULT))) {
-
-			return getModelClassName();
-		}
-
 		return SegmentsExperience.class.getName();
 	}
 
@@ -81,25 +67,11 @@ public class TranslationRequestHelper {
 		return _classNameId;
 	}
 
-	public long getClassPK(long segmentsExperienceId) throws PortalException {
-		if (segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT) {
-			return segmentsExperienceId;
-		}
-
-		return getModelClassPK();
+	public long getClassPK(long segmentsExperienceId) {
+		return segmentsExperienceId;
 	}
 
-	public long[] getClassPKs(long[] segmentsExperienceIds)
-		throws PortalException {
-
-		if (ArrayUtil.isEmpty(segmentsExperienceIds) ||
-			((segmentsExperienceIds.length == 1) &&
-			 (segmentsExperienceIds[0] ==
-				 SegmentsExperienceConstants.ID_DEFAULT))) {
-
-			return getModelClassPKs();
-		}
-
+	public long[] getClassPKs(long[] segmentsExperienceIds) {
 		return segmentsExperienceIds;
 	}
 

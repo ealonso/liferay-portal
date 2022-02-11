@@ -21,7 +21,10 @@ import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import org.apache.felix.service.command.Descriptor;
 
@@ -57,14 +60,18 @@ public class LayoutOSGiCommands {
 				" does not have a layout page template structure";
 		}
 
-		long segmentsExperienceId = SegmentsExperienceConstants.ID_DEFAULT;
-
 		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(segmentsExperienceId));
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), plid);
 
 		return _layoutStructureItemJSONSerializer.toJSONString(
 			layout, layoutStructure.getMainItemId(), false, false,
-			segmentsExperienceId);
+			segmentsExperience.getSegmentsExperienceId());
 	}
 
 	@Reference
@@ -77,5 +84,11 @@ public class LayoutOSGiCommands {
 	@Reference
 	private LayoutStructureItemJSONSerializer
 		_layoutStructureItemJSONSerializer;
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

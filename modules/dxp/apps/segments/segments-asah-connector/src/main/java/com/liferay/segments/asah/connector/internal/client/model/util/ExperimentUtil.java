@@ -135,36 +135,25 @@ public class ExperimentUtil {
 				segmentsExperiment.getWinnerSegmentsExperienceKey());
 		}
 
-		if (segmentsExperiment.getSegmentsExperienceId() ==
-				SegmentsExperienceConstants.ID_DEFAULT) {
+		SegmentsExperience segmentsExperience =
+			segmentsExperienceLocalService.getSegmentsExperience(
+				segmentsExperiment.getSegmentsExperienceId());
 
-			experiment.setDXPExperienceId(
-				SegmentsExperienceConstants.KEY_DEFAULT);
-			experiment.setDXPExperienceName(defaultSegmentsExperienceName);
+		experiment.setDXPExperienceId(
+			segmentsExperience.getSegmentsExperienceKey());
+		experiment.setDXPExperienceName(segmentsExperience.getName(locale));
+
+		SegmentsEntry segmentsEntry =
+			segmentsEntryLocalService.fetchSegmentsEntry(
+				segmentsExperience.getSegmentsEntryId());
+
+		if (segmentsEntry == null) {
 			experiment.setDXPSegmentId(SegmentsEntryConstants.KEY_DEFAULT);
 			experiment.setDXPSegmentName(defaultSegmentsEntryName);
 		}
 		else {
-			SegmentsExperience segmentsExperience =
-				segmentsExperienceLocalService.getSegmentsExperience(
-					segmentsExperiment.getSegmentsExperienceId());
-
-			experiment.setDXPExperienceId(
-				segmentsExperience.getSegmentsExperienceKey());
-			experiment.setDXPExperienceName(segmentsExperience.getName(locale));
-
-			SegmentsEntry segmentsEntry =
-				segmentsEntryLocalService.fetchSegmentsEntry(
-					segmentsExperience.getSegmentsEntryId());
-
-			if (segmentsEntry == null) {
-				experiment.setDXPSegmentId(SegmentsEntryConstants.KEY_DEFAULT);
-				experiment.setDXPSegmentName(defaultSegmentsEntryName);
-			}
-			else {
-				experiment.setDXPSegmentId(segmentsEntry.getSegmentsEntryKey());
-				experiment.setDXPSegmentName(segmentsEntry.getName(locale));
-			}
+			experiment.setDXPSegmentId(segmentsEntry.getSegmentsEntryKey());
+			experiment.setDXPSegmentName(segmentsEntry.getName(locale));
 		}
 
 		return experiment;

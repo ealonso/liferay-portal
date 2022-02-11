@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.experiment.web.internal.constants.SegmentsExperimentWebKeys;
 import com.liferay.segments.experiment.web.internal.util.SegmentsExperimentUtil;
@@ -86,17 +85,11 @@ public class SegmentsExperimentAnalyticsTopHeadDynamicInclude
 	}
 
 	private String _getSegmentsExperienceKey(long[] segmentsExperienceIds) {
-		if (segmentsExperienceIds.length > 0) {
-			SegmentsExperience segmentsExperience =
-				_segmentsExperienceLocalService.fetchSegmentsExperience(
-					segmentsExperienceIds[0]);
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperienceIds[0]);
 
-			if (segmentsExperience != null) {
-				return segmentsExperience.getSegmentsExperienceKey();
-			}
-		}
-
-		return SegmentsExperienceConstants.KEY_DEFAULT;
+		return segmentsExperience.getSegmentsExperienceKey();
 	}
 
 	private Map<String, String> _getValues(

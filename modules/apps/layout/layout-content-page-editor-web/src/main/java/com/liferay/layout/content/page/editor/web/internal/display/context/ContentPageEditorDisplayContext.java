@@ -799,12 +799,7 @@ public class ContentPageEditorDisplayContext {
 				httpServletRequest.getAttribute(
 					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
-			if (segmentsExperienceIds.length > 0) {
-				_segmentsExperienceId = segmentsExperienceIds[0];
-			}
-			else {
-				_segmentsExperienceId = SegmentsExperienceConstants.ID_DEFAULT;
-			}
+			_segmentsExperienceId = segmentsExperienceIds[0];
 		}
 
 		return _segmentsExperienceId;
