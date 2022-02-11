@@ -300,7 +300,9 @@ public class IndexerClausesExpandoTest {
 	@Inject
 	protected ExpandoTableLocalService expandoTableLocalService;
 
-	@Inject(filter = "component.name=*.JournalArticleIndexer")
+	@Inject(
+		filter = "indexer.class.name=com.liferay.journal.model.JournalArticle"
+	)
 	protected Indexer<JournalArticle> journalArticleIndexer;
 
 	@Inject
