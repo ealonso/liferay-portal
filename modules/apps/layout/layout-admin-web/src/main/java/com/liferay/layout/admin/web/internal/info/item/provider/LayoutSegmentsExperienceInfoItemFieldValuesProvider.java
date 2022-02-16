@@ -41,8 +41,7 @@ public class LayoutSegmentsExperienceInfoItemFieldValuesProvider
 		SegmentsExperience segmentsExperience) {
 
 		return _layoutInfoItemFieldValuesProviderHelper.getInfoItemFieldValues(
-			_getLayout(segmentsExperience),
-			segmentsExperience.getSegmentsExperienceId());
+			_getLayout(segmentsExperience), segmentsExperience);
 	}
 
 	@Activate
