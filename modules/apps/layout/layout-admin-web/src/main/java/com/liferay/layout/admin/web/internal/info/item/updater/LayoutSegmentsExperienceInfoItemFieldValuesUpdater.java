@@ -46,7 +46,7 @@ public class LayoutSegmentsExperienceInfoItemFieldValuesUpdater
 
 		_layoutInfoItemFieldValuesUpdaterHelper.updateFromInfoItemFieldValues(
 			_getLayout(segmentsExperience), infoItemFieldValues,
-			segmentsExperience.getSegmentsExperienceId());
+			segmentsExperience);
 
 		return segmentsExperience;
 	}

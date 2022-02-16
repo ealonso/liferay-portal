@@ -19,7 +19,10 @@ import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.layout.admin.web.internal.info.item.helper.LayoutInfoItemFieldValuesProviderHelper;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -35,8 +38,14 @@ public class LayoutInfoItemFieldValuesProvider
 
 	@Override
 	public InfoItemFieldValues getInfoItemFieldValues(Layout layout) {
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class.getName()),
+				layout.getPlid());
+
 		return _layoutInfoItemFieldValuesProviderHelper.getInfoItemFieldValues(
-			layout, SegmentsExperienceConstants.ID_DEFAULT);
+			layout, segmentsExperience);
 	}
 
 	@Activate
@@ -52,5 +61,11 @@ public class LayoutInfoItemFieldValuesProvider
 
 	private volatile LayoutInfoItemFieldValuesProviderHelper
 		_layoutInfoItemFieldValuesProviderHelper;
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }
