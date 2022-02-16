@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Adolfo Pérez
@@ -48,14 +49,18 @@ public class LayoutInfoItemFieldValuesProviderHelper {
 	}
 
 	public InfoItemFieldValues getInfoItemFieldValues(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
-		if (segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT) {
+		if (!Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			return InfoItemFieldValues.builder(
 			).infoFieldValues(
-				_getLayoutInfoFieldValues(layout, segmentsExperienceId)
+				_getLayoutInfoFieldValues(
+					layout, segmentsExperience.getSegmentsExperienceId())
 			).infoItemReference(
-				_getInfoItemReference(layout, segmentsExperienceId)
+				_getInfoItemReference(layout, segmentsExperience)
 			).build();
 		}
 
@@ -70,22 +75,27 @@ public class LayoutInfoItemFieldValuesProviderHelper {
 					layout.getNameMap()
 				).build())
 		).infoFieldValues(
-			_getLayoutInfoFieldValues(layout, segmentsExperienceId)
+			_getLayoutInfoFieldValues(
+				layout, segmentsExperience.getSegmentsExperienceId())
 		).infoItemReference(
-			_getInfoItemReference(layout, segmentsExperienceId)
+			_getInfoItemReference(layout, segmentsExperience)
 		).build();
 	}
 
 	private InfoItemReference _getInfoItemReference(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
-		if (segmentsExperienceId == SegmentsExperienceConstants.ID_DEFAULT) {
+		if (Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			return new InfoItemReference(
 				Layout.class.getName(), layout.getPlid());
 		}
 
 		return new InfoItemReference(
-			SegmentsExperience.class.getName(), segmentsExperienceId);
+			SegmentsExperience.class.getName(),
+			segmentsExperience.getSegmentsExperienceId());
 	}
 
 	private InfoLocalizedValue<String> _getInfoLocalizedValue(
