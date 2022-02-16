@@ -42,8 +42,7 @@ public class LayoutSegmentsExperienceInfoItemLanguagesProvider
 		throws PortalException {
 
 		return _layoutInfoItemLanguagesProviderHelper.getAvailableLanguageIds(
-			_getLayout(segmentsExperience),
-			segmentsExperience.getSegmentsExperienceId());
+			_getLayout(segmentsExperience), segmentsExperience);
 	}
 
 	@Override
