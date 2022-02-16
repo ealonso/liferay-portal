@@ -23,11 +23,13 @@ import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -44,7 +46,7 @@ public class LayoutInfoItemLanguagesProviderHelper {
 	}
 
 	public String[] getAvailableLanguageIds(
-			Layout layout, long segmentsExperienceId)
+			Layout layout, SegmentsExperience segmentsExperience)
 		throws PortalException {
 
 		if (!layout.isTypeAssetDisplay() && !layout.isTypeContent()) {
@@ -57,7 +59,7 @@ public class LayoutInfoItemLanguagesProviderHelper {
 			layout.getGroupId());
 
 		List<FragmentEntryLink> fragmentEntryLinks = _getFragmentEntryLinks(
-			layout, segmentsExperienceId);
+			layout, segmentsExperience);
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 			JSONObject editableValuesJSONObject =
@@ -82,16 +84,20 @@ public class LayoutInfoItemLanguagesProviderHelper {
 	}
 
 	private List<FragmentEntryLink> _getFragmentEntryLinks(
-		Layout layout, long segmentsExperienceId) {
+		Layout layout, SegmentsExperience segmentsExperience) {
 
-		if (segmentsExperienceId == SegmentsExperienceConstants.ID_DEFAULT) {
+		if (Objects.equals(
+				segmentsExperience.getSegmentsExperienceKey(),
+				SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 			return _fragmentEntryLinkLocalService.getFragmentEntryLinksByPlid(
 				layout.getGroupId(), layout.getPlid());
 		}
 
 		return _fragmentEntryLinkLocalService.
 			getFragmentEntryLinksBySegmentsExperienceId(
-				layout.getGroupId(), segmentsExperienceId, layout.getPlid());
+				layout.getGroupId(),
+				segmentsExperience.getSegmentsExperienceId(), layout.getPlid());
 	}
 
 	private Set<String> _getTranslatableFragmentLanguagesIds(
