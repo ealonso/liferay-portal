@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,7 +104,13 @@ public class ExportTranslationServlet extends HttpServlet {
 					translationRequestHelper));
 
 			for (long classPK : classPKs) {
-				if ((classPK == SegmentsExperienceConstants.ID_DEFAULT) &&
+				SegmentsExperience segmentsExperience =
+					_segmentsExperienceLocalService.fetchSegmentsExperience(
+						classPK);
+
+				if (Objects.equals(
+						segmentsExperience.getSegmentsExperienceKey(),
+						SegmentsExperienceConstants.KEY_DEFAULT) &&
 					className.equals(SegmentsExperience.class.getName())) {
 
 					_addZipEntry(
