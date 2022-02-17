@@ -19,7 +19,6 @@ import com.liferay.info.item.GroupKeyInfoItemIdentifier;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.translator.InfoItemIdentifierTranslator;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
@@ -60,10 +59,9 @@ public class TranslationRequestHelper {
 	}
 
 	public String getClassName(long[] segmentsExperienceIds) {
-		if (ArrayUtil.isEmpty(segmentsExperienceIds) ||
-			((segmentsExperienceIds.length == 1) &&
-			 (segmentsExperienceIds[0] ==
-				 SegmentsExperienceConstants.ID_DEFAULT))) {
+		if ((segmentsExperienceIds.length == 1) &&
+			(segmentsExperienceIds[0] ==
+				SegmentsExperienceConstants.ID_DEFAULT)) {
 
 			return getModelClassName();
 		}
@@ -92,10 +90,9 @@ public class TranslationRequestHelper {
 	public long[] getClassPKs(long[] segmentsExperienceIds)
 		throws PortalException {
 
-		if (ArrayUtil.isEmpty(segmentsExperienceIds) ||
-			((segmentsExperienceIds.length == 1) &&
-			 (segmentsExperienceIds[0] ==
-				 SegmentsExperienceConstants.ID_DEFAULT))) {
+		if ((segmentsExperienceIds.length == 1) &&
+			(segmentsExperienceIds[0] ==
+				SegmentsExperienceConstants.ID_DEFAULT)) {
 
 			return getModelClassPKs();
 		}
