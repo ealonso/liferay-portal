@@ -32,6 +32,9 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 import com.liferay.translation.constants.TranslationActionKeys;
 import com.liferay.translation.security.permission.TranslationPermission;
 import com.liferay.translation.url.provider.TranslationURLProvider;
@@ -119,6 +122,9 @@ public class LayoutActionDropdownItemsProvider {
 
 										return portletDisplay.getId();
 									}
+								).setParameter(
+									"segmentsExperienceId",
+									_getDefaultSegmentsExperienceId(layout)
 								).buildString());
 							dropdownItem.setLabel(
 								LanguageUtil.get(
@@ -430,6 +436,16 @@ public class LayoutActionDropdownItemsProvider {
 				dropdownGroupItem.setSeparator(true);
 			}
 		).build();
+	}
+
+	private long _getDefaultSegmentsExperienceId(Layout layout) {
+		SegmentsExperience segmentsExperience =
+			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class.getName()),
+				layout.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
 	}
 
 	private boolean _hasScopeGroup(Layout layout) throws Exception {
