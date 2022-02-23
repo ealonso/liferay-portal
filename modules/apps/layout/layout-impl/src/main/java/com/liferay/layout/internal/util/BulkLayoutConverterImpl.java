@@ -281,13 +281,16 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 						" is not convertible");
 			}
 
+			_getOrCreateDraftLayout(layout, serviceContext);
+
 			LayoutConversionResult layoutConversionResult =
 				layoutConverter.convert(layout, LocaleUtil.getSiteDefault());
 
 			_addOrUpdateLayoutPageTemplateStructure(
 				layout, layoutConversionResult.getLayoutData(), serviceContext);
 
-			_getOrCreateDraftLayout(layout, serviceContext);
+			layout = _layoutLocalService.updateType(
+				plid, LayoutConstants.TYPE_CONTENT);
 
 			return _layoutLocalService.updateLayout(
 				layout.getGroupId(), layout.isPrivateLayout(),

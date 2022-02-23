@@ -137,6 +137,11 @@ public class AddFragmentCompositionMVCActionCommandTest {
 				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		mockLiferayPortletActionRequest.addParameter(
 			"fragmentCollectionId", String.valueOf(0));
 		mockLiferayPortletActionRequest.addParameter(
 			"name", RandomTestUtil.randomString());
@@ -182,6 +187,12 @@ public class AddFragmentCompositionMVCActionCommandTest {
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
 				SegmentsExperienceConstants.KEY_DEFAULT));
+
+		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 
 		FragmentCollection newFragmentCollection =
 			_fragmentCollectionLocalService.addFragmentCollection(
@@ -341,6 +352,11 @@ public class AddFragmentCompositionMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest();
 
 		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		mockLiferayPortletActionRequest.addParameter(
 			"description", RandomTestUtil.randomString());
 		mockLiferayPortletActionRequest.addParameter(
 			"fragmentCollectionId",
@@ -410,6 +426,12 @@ public class AddFragmentCompositionMVCActionCommandTest {
 	public void testAddFragmentCompositionWithThumbnail() throws Exception {
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			_getMockLiferayPortletActionRequest();
+
+		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.

@@ -37,9 +37,11 @@ import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.service.SegmentsExperimentLocalService;
 import com.liferay.segments.service.SegmentsExperimentRelLocalService;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import javax.servlet.http.Cookie;
@@ -145,7 +147,13 @@ public class SegmentsExperimentSegmentsExperienceRequestProcessor
 			httpServletRequest, httpServletResponse,
 			themeDisplay.getURLCurrent());
 
-		segmentsExperienceId = segmentsExperienceIds[0];
+		LongStream longStream = Arrays.stream(segmentsExperienceIds);
+
+		segmentsExperienceId = longStream.findFirst(
+		).orElse(
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				classPK)
+		);
 
 		List<SegmentsExperiment> segmentsExperiments =
 			_segmentsExperimentLocalService.

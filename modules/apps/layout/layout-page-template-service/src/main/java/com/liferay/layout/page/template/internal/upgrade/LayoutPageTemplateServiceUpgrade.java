@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.upgrade.MVCCVersionUpgradeProcess;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 import com.liferay.portal.upgrade.step.util.UpgradeStepFactory;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -78,7 +79,7 @@ public class LayoutPageTemplateServiceUpgrade
 			"2.0.0", "2.1.0",
 			new LayoutUpgradeProcess(
 				_fragmentEntryLinkLocalService, _layoutLocalService,
-				_layoutPrototypeLocalService));
+				_layoutPrototypeLocalService, _segmentsExperienceLocalService));
 
 		registry.register(
 			"2.1.0", "3.0.0",
@@ -123,8 +124,8 @@ public class LayoutPageTemplateServiceUpgrade
 		registry.register(
 			"3.2.0", "3.3.0",
 			new LayoutPageTemplateStructureRelUpgradeProcess(
-				_fragmentEntryLinkLocalService,
-				_portletPreferencesLocalService));
+				_fragmentEntryLinkLocalService, _portletPreferencesLocalService,
+				_segmentsExperienceLocalService));
 
 		registry.register(
 			"3.3.0", "3.3.1",
@@ -188,5 +189,8 @@ public class LayoutPageTemplateServiceUpgrade
 
 	@Reference
 	private ResourcePermissionLocalService _resourcePermissionLocalService;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

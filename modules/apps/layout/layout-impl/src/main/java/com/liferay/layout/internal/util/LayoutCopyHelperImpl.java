@@ -731,6 +731,19 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				_segmentsExperienceLocalService.fetchSegmentsExperience(
 					segmentsExperienceId);
 
+			if (Objects.equals(
+					segmentsExperience.getSegmentsExperienceKey(),
+					SegmentsExperienceConstants.KEY_DEFAULT)) {
+
+				segmentsExperienceIdsMap.put(
+					segmentsExperience.getSegmentsExperienceId(),
+					_segmentsExperienceLocalService.
+						fetchDefaultSegmentsExperienceId(
+							targetLayout.getPlid()));
+
+				continue;
+			}
+
 			SegmentsExperience newSegmentsExperience =
 				(SegmentsExperience)segmentsExperience.clone();
 

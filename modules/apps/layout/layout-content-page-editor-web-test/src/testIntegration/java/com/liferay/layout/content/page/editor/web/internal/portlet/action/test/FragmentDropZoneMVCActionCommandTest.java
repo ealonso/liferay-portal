@@ -65,6 +65,7 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 
@@ -129,6 +130,11 @@ public class FragmentDropZoneMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
 		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		actionRequest.addParameter(
 			"fragmentEntryKey", _fragmentEntry.getFragmentEntryKey());
 		actionRequest.addParameter(
 			"itemType", LayoutDataItemTypeConstants.TYPE_FRAGMENT);
@@ -176,6 +182,11 @@ public class FragmentDropZoneMVCActionCommandTest {
 		MockLiferayPortletActionRequest actionRequest =
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
+		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		actionRequest.addParameter(
 			"fragmentEntryKey", _fragmentEntry.getFragmentEntryKey());
 		actionRequest.addParameter(
@@ -290,6 +301,11 @@ public class FragmentDropZoneMVCActionCommandTest {
 		MockLiferayPortletActionRequest actionRequest =
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
+		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		actionRequest.addParameter(
 			"fragmentEntryKey", _fragmentEntry.getFragmentEntryKey());
 		actionRequest.addParameter(
@@ -515,6 +531,9 @@ public class FragmentDropZoneMVCActionCommandTest {
 		_layoutPageTemplateStructureLocalService;
 
 	private LayoutStructure _layoutStructure;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Inject
 	private ThemeLocalService _themeLocalService;

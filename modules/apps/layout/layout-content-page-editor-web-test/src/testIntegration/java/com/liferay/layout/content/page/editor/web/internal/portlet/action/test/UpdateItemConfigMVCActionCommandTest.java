@@ -51,6 +51,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portletmvc4spring.test.mock.web.portlet.MockActionRequest;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.io.InputStream;
 
@@ -248,6 +249,11 @@ public class UpdateItemConfigMVCActionCommandTest {
 			_objectMapper.readTree(_read("row_item_config.json")),
 			_objectMapper.readTree(jsonObject.toString()));
 
+		mockActionRequest.setParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		mockActionRequest.setParameter("itemConfig", _read(itemConfigFile));
 		mockActionRequest.setParameter(
 			"itemId", layoutStructureItem.getItemId());
@@ -287,5 +293,8 @@ public class UpdateItemConfigMVCActionCommandTest {
 	private MVCActionCommand _mvcActionCommand;
 
 	private ObjectMapper _objectMapper;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

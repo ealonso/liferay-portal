@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -221,12 +222,21 @@ public class BulkLayoutConverterTest {
 				_group.getGroupId()));
 	}
 
+	private Layout _addLayout(Group group) throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				TestPropsValues.getGroupId(), TestPropsValues.getUserId());
+
+		return _layoutLocalService.addLayout(
+			TestPropsValues.getUserId(), group.getGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
+			StringPool.BLANK, serviceContext);
+	}
+
 	private void _addLayouts() throws Exception {
-		_contentLayout = LayoutTestUtil.addLayout(_group);
-
-		_contentLayout.setType(LayoutConstants.TYPE_CONTENT);
-
-		_contentLayout = _layoutLocalService.updateLayout(_contentLayout);
+		_contentLayout = _addLayout(_group);
 
 		_corruptedLayout = LayoutTestUtil.addLayout(_group);
 

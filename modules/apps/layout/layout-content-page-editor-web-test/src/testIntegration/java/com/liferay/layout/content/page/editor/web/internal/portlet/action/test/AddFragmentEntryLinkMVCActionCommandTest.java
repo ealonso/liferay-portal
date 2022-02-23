@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 
@@ -94,6 +95,11 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest(_company.getGroupId());
 
 		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		actionRequest.addParameter(
 			"fragmentEntryKey", fragmentEntry.getFragmentEntryKey());
 
 		FragmentEntryLink fragmentEntryLink = ReflectionTestUtil.invoke(
@@ -122,6 +128,11 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 		MockLiferayPortletActionRequest actionRequest =
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
+		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		actionRequest.addParameter(
 			"fragmentEntryKey", fragmentEntry.getFragmentEntryKey());
 
@@ -167,6 +178,11 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
 		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		actionRequest.addParameter(
 			"fragmentEntryKey", fragmentEntry.getFragmentEntryKey());
 
 		ReflectionTestUtil.invoke(
@@ -188,6 +204,11 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 		MockLiferayPortletActionRequest actionRequest =
 			_getMockLiferayPortletActionRequest(_group.getGroupId());
 
+		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		actionRequest.addParameter(
 			"fragmentEntryKey", RandomTestUtil.randomString());
 
@@ -286,5 +307,8 @@ public class AddFragmentEntryLinkMVCActionCommandTest {
 		filter = "mvc.command.name=/layout_content_page_editor/add_fragment_entry_link"
 	)
 	private MVCActionCommand _mvcActionCommand;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

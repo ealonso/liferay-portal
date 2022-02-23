@@ -975,8 +975,8 @@ public class LayoutPageTemplatesImporterImpl
 			long layoutPageTemplateCollectionId,
 			LayoutPageTemplateEntry layoutPageTemplateEntry, String name,
 			PageDefinition pageDefinition, int layoutPageTemplateEntryType,
-			boolean overwrite, long segmentsExperienceId,
-			ZipEntry thumbnailZipEntry, String zipPath, ZipFile zipFile)
+			boolean overwrite, ZipEntry thumbnailZipEntry, String zipPath,
+			ZipFile zipFile)
 		throws Exception {
 
 		try {
@@ -1023,7 +1023,8 @@ public class LayoutPageTemplatesImporterImpl
 
 				_processPageDefinition(
 					layoutPageTemplateEntry, pageDefinition,
-					segmentsExperienceId, warningMessages);
+					_getDefaultSegmentsExperienceId(layoutPageTemplateEntry),
+					warningMessages);
 
 				long previewFileEntryId = _getPreviewFileEntryId(
 					groupId,
@@ -1600,7 +1601,6 @@ public class LayoutPageTemplatesImporterImpl
 				_layoutPageTemplateEntry, pageTemplate.getName(),
 				_pageTemplateEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_BASIC, _overwrite,
-				_getDefaultSegmentsExperienceId(_layoutPageTemplateEntry),
 				_pageTemplateEntry.getThumbnailZipEntry(),
 				_pageTemplateEntry.getZipPath(), _zipFile);
 
@@ -1654,9 +1654,7 @@ public class LayoutPageTemplatesImporterImpl
 				displayPageTemplate.getName(),
 				_displayPageTemplateEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE,
-				_overwrite,
-				_getDefaultSegmentsExperienceId(layoutPageTemplateEntry),
-				_displayPageTemplateEntry.getThumbnailZipEntry(),
+				_overwrite, _displayPageTemplateEntry.getThumbnailZipEntry(),
 				_displayPageTemplateEntry.getZipPath(), _zipFile);
 
 			boolean defaultTemplate = GetterUtil.getBoolean(
@@ -1747,9 +1745,7 @@ public class LayoutPageTemplatesImporterImpl
 				0, 0, _groupId, 0, layoutPageTemplateEntry,
 				masterPage.getName(), _masterPageEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT,
-				_overwrite,
-				_getDefaultSegmentsExperienceId(layoutPageTemplateEntry),
-				_masterPageEntry.getThumbnailZipEntry(),
+				_overwrite, _masterPageEntry.getThumbnailZipEntry(),
 				_masterPageEntry.getZipPath(), _zipFile);
 
 			return null;

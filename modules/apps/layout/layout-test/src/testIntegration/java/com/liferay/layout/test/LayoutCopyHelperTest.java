@@ -356,8 +356,6 @@ public class LayoutCopyHelperTest {
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
 
-		ServiceContextThreadLocal.pushServiceContext(serviceContext);
-
 		return _layoutLocalService.addLayout(
 			TestPropsValues.getUserId(), _group.getGroupId(), false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,

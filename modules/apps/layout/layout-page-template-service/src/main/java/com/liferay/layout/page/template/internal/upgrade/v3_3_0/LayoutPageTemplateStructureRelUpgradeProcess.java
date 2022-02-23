@@ -32,6 +32,9 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,6 +43,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,10 +55,12 @@ public class LayoutPageTemplateStructureRelUpgradeProcess
 
 	public LayoutPageTemplateStructureRelUpgradeProcess(
 		FragmentEntryLinkLocalService fragmentEntryLinkLocalService,
-		PortletPreferencesLocalService portletPreferencesLocalService) {
+		PortletPreferencesLocalService portletPreferencesLocalService,
+		SegmentsExperienceLocalService segmentsExperienceLocalService) {
 
 		_fragmentEntryLinkLocalService = fragmentEntryLinkLocalService;
 		_portletPreferencesLocalService = portletPreferencesLocalService;
+		_segmentsExperienceLocalService = segmentsExperienceLocalService;
 	}
 
 	@Override
@@ -155,11 +161,18 @@ public class LayoutPageTemplateStructureRelUpgradeProcess
 				continue;
 			}
 
-			if (segmentsExperienceId == _SEGMENTS_EXPERIENCE_ID_DEFAULT) {
+			SegmentsExperience segmentsExperience =
+				_segmentsExperienceLocalService.fetchSegmentsExperience(
+					segmentsExperienceId);
+
+			if (Objects.equals(
+					segmentsExperience.getSegmentsExperienceKey(),
+					SegmentsExperienceConstants.KEY_DEFAULT)) {
+
 				fragmentEntryLink.setEditableValues(
 					EditableValuesTransformerUtil.getEditableValues(
 						fragmentEntryLink.getEditableValues(),
-						segmentsExperienceId));
+						_SEGMENTS_EXPERIENCE_ID_DEFAULT));
 
 				_fragmentEntryLinkLocalService.updateFragmentEntryLink(
 					fragmentEntryLink);
@@ -265,5 +278,7 @@ public class LayoutPageTemplateStructureRelUpgradeProcess
 		_portletPreferencesLocalService;
 	private final Map<Long, List<PortletPreferences>> _portletPreferencesMap =
 		new HashMap<>();
+	private final SegmentsExperienceLocalService
+		_segmentsExperienceLocalService;
 
 }
