@@ -15,19 +15,13 @@
 package com.liferay.layout.page.template.service.impl;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
-import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
-import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
-import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLocalService;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateStructureLocalServiceBaseImpl;
-import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
@@ -163,52 +157,6 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 	}
 
 	@Override
-	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
-			long groupId, long plid, boolean rebuildStructure)
-		throws PortalException {
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			fetchLayoutPageTemplateStructure(groupId, plid);
-
-		if ((layoutPageTemplateStructure != null) || !rebuildStructure) {
-			return layoutPageTemplateStructure;
-		}
-
-		return layoutPageTemplateStructureLocalService.
-			rebuildLayoutPageTemplateStructure(groupId, plid);
-	}
-
-	@Override
-	public LayoutPageTemplateStructure rebuildLayoutPageTemplateStructure(
-			long groupId, long plid)
-		throws PortalException {
-
-		List<FragmentEntryLink> fragmentEntryLinks =
-			_fragmentEntryLinkLocalService.getFragmentEntryLinksByPlid(
-				groupId, plid);
-
-		JSONObject jsonObject =
-			LayoutPageTemplateStructureHelperUtil.
-				generateContentLayoutStructure(
-					fragmentEntryLinks,
-					_getLayoutPageTemplateEntryType(
-						_layoutLocalService.getLayout(plid)));
-
-		LayoutPageTemplateStructure layoutPageTemplateStructure =
-			fetchLayoutPageTemplateStructure(groupId, plid);
-
-		if (layoutPageTemplateStructure != null) {
-			return updateLayoutPageTemplateStructureData(
-				groupId, plid, jsonObject.toString());
-		}
-
-		return addLayoutPageTemplateStructure(
-			PrincipalThreadLocal.getUserId(), groupId, plid,
-			SegmentsExperienceConstants.ID_DEFAULT, jsonObject.toString(),
-			ServiceContextThreadLocal.getServiceContext());
-	}
-
-	@Override
 	public LayoutPageTemplateStructure updateLayoutPageTemplateStructureData(
 			long groupId, long plid, long segmentsExperienceId, String data)
 		throws PortalException {
@@ -266,31 +214,6 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 				groupId, plid, SegmentsExperienceConstants.ID_DEFAULT, data);
 	}
 
-	private int _getLayoutPageTemplateEntryType(Layout layout) {
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			_layoutPageTemplateEntryLocalService.
-				fetchLayoutPageTemplateEntryByPlid(layout.getClassPK());
-
-		if (layoutPageTemplateEntry != null) {
-			return layoutPageTemplateEntry.getType();
-		}
-
-		Layout draftLayout = layout.fetchDraftLayout();
-
-		if (draftLayout != null) {
-			LayoutPageTemplateEntry draftLayoutPageTemplateEntry =
-				_layoutPageTemplateEntryLocalService.
-					fetchLayoutPageTemplateEntryByPlid(
-						draftLayout.getClassPK());
-
-			if (draftLayoutPageTemplateEntry != null) {
-				return draftLayoutPageTemplateEntry.getType();
-			}
-		}
-
-		return LayoutPageTemplateEntryTypeConstants.TYPE_BASIC;
-	}
-
 	private void _updateLayoutStatus(long userId, long plid)
 		throws PortalException {
 
@@ -304,10 +227,6 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private LayoutPageTemplateEntryLocalService
-		_layoutPageTemplateEntryLocalService;
 
 	@Reference
 	private LayoutPageTemplateStructureRelLocalService
