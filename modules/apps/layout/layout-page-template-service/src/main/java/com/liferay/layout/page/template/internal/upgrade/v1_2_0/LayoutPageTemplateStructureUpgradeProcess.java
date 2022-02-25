@@ -18,7 +18,8 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.util.LayoutPageTemplateStructureHelperUtil;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
@@ -68,8 +69,32 @@ public class LayoutPageTemplateStructureUpgradeProcess extends UpgradeProcess {
 			_fragmentEntryLinkLocalService.getFragmentEntryLinks(
 				groupId, classNameId, classPK);
 
-		return LayoutPageTemplateStructureHelperUtil.
-			generateContentLayoutStructure(fragmentEntryLinks);
+		if (fragmentEntryLinks.isEmpty()) {
+			LayoutStructure layoutStructure = new LayoutStructure();
+
+			layoutStructure.addRootLayoutStructureItem();
+
+			return layoutStructure.toJSONObject();
+		}
+
+		LayoutStructure layoutStructure = new LayoutStructure();
+
+		LayoutStructureItem rootLayoutStructureItem =
+			layoutStructure.addRootLayoutStructureItem();
+
+		LayoutStructureItem containerStyledLayoutStructureItem =
+			layoutStructure.addContainerStyledLayoutStructureItem(
+				rootLayoutStructureItem.getItemId(), 0);
+
+		for (int i = 0; i < fragmentEntryLinks.size(); i++) {
+			FragmentEntryLink fragmentEntryLink = fragmentEntryLinks.get(i);
+
+			layoutStructure.addFragmentStyledLayoutStructureItem(
+				fragmentEntryLink.getFragmentEntryLinkId(),
+				containerStyledLayoutStructureItem.getItemId(), i);
+		}
+
+		return layoutStructure.toJSONObject();
 	}
 
 	private void _updateLayoutPageTemplateStructure(
