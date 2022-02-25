@@ -88,8 +88,8 @@ public interface LayoutPageTemplateStructureLocalService
 		LayoutPageTemplateStructure layoutPageTemplateStructure);
 
 	public LayoutPageTemplateStructure addLayoutPageTemplateStructure(
-			long userId, long groupId, long plid, String data,
-			ServiceContext serviceContext)
+			long userId, long groupId, long plid, long segmentsExperienceId,
+			String data, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**
@@ -230,11 +230,6 @@ public interface LayoutPageTemplateStructureLocalService
 	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
 		long groupId, long plid);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
-			long groupId, long plid, boolean rebuildStructure)
-		throws PortalException;
-
 	/**
 	 * Returns the layout page template structure matching the UUID and group.
 	 *
@@ -347,10 +342,6 @@ public interface LayoutPageTemplateStructureLocalService
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException;
-
-	public LayoutPageTemplateStructure rebuildLayoutPageTemplateStructure(
-			long groupId, long plid)
 		throws PortalException;
 
 	/**

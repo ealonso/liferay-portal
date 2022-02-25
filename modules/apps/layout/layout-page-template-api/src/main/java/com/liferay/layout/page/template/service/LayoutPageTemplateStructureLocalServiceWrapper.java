@@ -62,13 +62,15 @@ public class LayoutPageTemplateStructureLocalServiceWrapper
 
 	@Override
 	public LayoutPageTemplateStructure addLayoutPageTemplateStructure(
-			long userId, long groupId, long plid, String data,
+			long userId, long groupId, long plid, long segmentsExperienceId,
+			String data,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _layoutPageTemplateStructureLocalService.
 			addLayoutPageTemplateStructure(
-				userId, groupId, plid, data, serviceContext);
+				userId, groupId, plid, segmentsExperienceId, data,
+				serviceContext);
 	}
 
 	/**
@@ -277,15 +279,6 @@ public class LayoutPageTemplateStructureLocalServiceWrapper
 			fetchLayoutPageTemplateStructure(groupId, plid);
 	}
 
-	@Override
-	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
-			long groupId, long plid, boolean rebuildStructure)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _layoutPageTemplateStructureLocalService.
-			fetchLayoutPageTemplateStructure(groupId, plid, rebuildStructure);
-	}
-
 	/**
 	 * Returns the layout page template structure matching the UUID and group.
 	 *
@@ -451,15 +444,6 @@ public class LayoutPageTemplateStructureLocalServiceWrapper
 
 		return _layoutPageTemplateStructureLocalService.getPersistedModel(
 			primaryKeyObj);
-	}
-
-	@Override
-	public LayoutPageTemplateStructure rebuildLayoutPageTemplateStructure(
-			long groupId, long plid)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _layoutPageTemplateStructureLocalService.
-			rebuildLayoutPageTemplateStructure(groupId, plid);
 	}
 
 	/**
