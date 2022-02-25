@@ -286,28 +286,6 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				fetchLayoutPageTemplateStructure(
 					sourceLayout.getGroupId(), sourceLayout.getPlid());
 
-		if (layoutPageTemplateStructure == null) {
-			LayoutPageTemplateStructure targetLayoutPageTemplateStructure =
-				_layoutPageTemplateStructureLocalService.
-					fetchLayoutPageTemplateStructure(
-						targetLayout.getGroupId(), targetLayout.getPlid());
-
-			if (targetLayoutPageTemplateStructure != null) {
-				_layoutPageTemplateStructureLocalService.
-					deleteLayoutPageTemplateStructure(
-						targetLayoutPageTemplateStructure);
-			}
-
-			_fragmentEntryLinkLocalService.
-				deleteLayoutPageTemplateEntryFragmentEntryLinks(
-					targetLayout.getGroupId(), targetLayout.getPlid());
-
-			layoutPageTemplateStructure =
-				_layoutPageTemplateStructureLocalService.
-					rebuildLayoutPageTemplateStructure(
-						sourceLayout.getGroupId(), sourceLayout.getPlid());
-		}
-
 		List<FragmentEntryLink> fragmentEntryLinks =
 			_fragmentEntryLinkLocalService.
 				getFragmentEntryLinksBySegmentsExperienceId(
