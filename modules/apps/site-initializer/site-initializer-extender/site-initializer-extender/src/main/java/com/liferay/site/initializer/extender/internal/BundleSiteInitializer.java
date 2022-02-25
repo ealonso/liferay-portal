@@ -1709,8 +1709,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 				LayoutPageTemplateStructure layoutPageTemplateStructure =
 					_layoutPageTemplateStructureLocalService.
 						fetchLayoutPageTemplateStructure(
-							draftLayout.getGroupId(), draftLayout.getPlid(),
-							true);
+							draftLayout.getGroupId(), draftLayout.getPlid());
 
 				LayoutStructure layoutStructure = LayoutStructure.of(
 					layoutPageTemplateStructure.getData(

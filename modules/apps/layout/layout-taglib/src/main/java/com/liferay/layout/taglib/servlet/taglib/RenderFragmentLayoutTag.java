@@ -150,7 +150,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 			LayoutPageTemplateStructure layoutPageTemplateStructure =
 				LayoutPageTemplateStructureLocalServiceUtil.
 					fetchLayoutPageTemplateStructure(
-						layout.getGroupId(), layout.getPlid(), true);
+						layout.getGroupId(), layout.getPlid());
 
 			String data = layoutPageTemplateStructure.getData(
 				_getSegmentsExperienceId());

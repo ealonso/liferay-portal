@@ -249,7 +249,7 @@ public class AddCollectionLayoutMVCActionCommand
 			LayoutPageTemplateStructure layoutPageTemplateStructure =
 				_layoutPageTemplateStructureLocalService.
 					fetchLayoutPageTemplateStructure(
-						layout.getGroupId(), layout.getPlid(), true);
+						layout.getGroupId(), layout.getPlid());
 
 			LayoutStructure layoutStructure = LayoutStructure.of(
 				layoutPageTemplateStructure.getData(

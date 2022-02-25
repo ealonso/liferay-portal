@@ -50,11 +50,7 @@ public class LayoutStructureUtil {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(groupId, plid, true);
-
-		if (layoutPageTemplateStructure == null) {
-			return;
-		}
+				fetchLayoutPageTemplateStructure(groupId, plid);
 
 		List<LayoutPageTemplateStructureRel> layoutPageTemplateStructureRels =
 			LayoutPageTemplateStructureRelLocalServiceUtil.
@@ -169,7 +165,7 @@ public class LayoutStructureUtil {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(groupId, plid, true);
+				fetchLayoutPageTemplateStructure(groupId, plid);
 
 		return LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceId));
@@ -181,7 +177,7 @@ public class LayoutStructureUtil {
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			LayoutPageTemplateStructureLocalServiceUtil.
-				fetchLayoutPageTemplateStructure(groupId, plid, true);
+				fetchLayoutPageTemplateStructure(groupId, plid);
 
 		return LayoutStructure.of(
 			layoutPageTemplateStructure.getData(segmentsExperienceKey));
