@@ -301,7 +301,7 @@ public class CollectionStyledLayoutStructureItem
 
 	private JSONObject _collectionJSONObject;
 	private boolean _displayAllItems;
-	private boolean _displayAllPages;
+	private boolean _displayAllPages = true;
 	private String _listItemStyle;
 	private String _listStyle;
 	private int _numberOfColumns = 1;
