@@ -95,7 +95,7 @@ public class SegmentsExperimentLocalServiceTest {
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
 			StringPool.BLANK,
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		ServiceContextThreadLocal.pushServiceContext(new ServiceContext());
 	}
