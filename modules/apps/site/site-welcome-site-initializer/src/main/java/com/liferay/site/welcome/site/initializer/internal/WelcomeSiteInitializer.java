@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
+import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.model.Repository;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
@@ -388,6 +389,11 @@ public class WelcomeSiteInitializer implements SiteInitializer {
 
 	@Reference
 	private LayoutSetLocalService _layoutSetLocalService;
+
+	@Reference(
+		target = "(layout.model.key=com.liferay.layout.page.template.internal.model.listener.LayoutModelListener)"
+	)
+	private ModelListener<Layout> _modelListener;
 
 	@Reference
 	private PortletFileRepository _portletFileRepository;

@@ -54,7 +54,11 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Jürgen Kappler
  */
-@Component(service = ModelListener.class)
+@Component(
+	immediate = true,
+	property = "layout.model.key=com.liferay.layout.page.template.internal.model.listener.LayoutModelListener",
+	service = ModelListener.class
+)
 public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
