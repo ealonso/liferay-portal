@@ -14,6 +14,7 @@
 
 package com.liferay.layout.util.structure;
 
+import com.liferay.layout.configuration.FFCollectionStyledLayoutStructureItemConfigurationUtil;
 import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
 import com.liferay.petra.lang.HashUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -28,6 +29,13 @@ public class CollectionStyledLayoutStructureItem
 
 	public CollectionStyledLayoutStructureItem(String parentItemId) {
 		super(parentItemId);
+
+		if (FFCollectionStyledLayoutStructureItemConfigurationUtil.
+				paginationImprovementsEnabled()) {
+
+			_numberOfItemsPerPage = 20;
+			_paginationType = "Numeric";
+		}
 	}
 
 	@Override
@@ -301,7 +309,7 @@ public class CollectionStyledLayoutStructureItem
 
 	private JSONObject _collectionJSONObject;
 	private boolean _displayAllItems;
-	private boolean _displayAllPages;
+	private boolean _displayAllPages = true;
 	private String _listItemStyle;
 	private String _listStyle;
 	private int _numberOfColumns = 1;
