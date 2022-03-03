@@ -133,11 +133,15 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 				deleteLayoutPageTemplateStructure(layoutPageTemplateStructure);
 		}
 
-		if (!layout.isTypeContent()) {
-			return;
-		}
-
 		try {
+			_segmentsExperienceLocalService.deleteSegmentsExperiences(
+				layout.getGroupId(), _portal.getClassNameId(Layout.class),
+				layout.getPlid());
+
+			if (!layout.isTypeContent()) {
+				return;
+			}
+
 			Indexer<Layout> indexer = IndexerRegistryUtil.getIndexer(
 				Layout.class);
 
