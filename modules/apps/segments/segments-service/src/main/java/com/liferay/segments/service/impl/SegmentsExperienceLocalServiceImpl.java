@@ -770,8 +770,8 @@ public class SegmentsExperienceLocalServiceImpl
 
 		if (segmentsExperience != null) {
 			throw new SegmentsExperiencePriorityException(
-				"A segments experience with the priority " + priority +
-					" already exists");
+				"A segments experience with the priority " + priority + "," +
+					classPK + "," + groupId + " already exists");
 		}
 	}
 
