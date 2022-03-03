@@ -293,7 +293,7 @@ public class WelcomeSiteInitializer implements SiteInitializer {
 
 			LayoutStructure layoutStructure = LayoutStructure.of(
 				layoutPageTemplateStructure.getData(
-					SegmentsExperienceConstants.ID_DEFAULT));
+					SegmentsExperienceConstants.KEY_DEFAULT));
 
 			Class<?> clazz = getClass();
 

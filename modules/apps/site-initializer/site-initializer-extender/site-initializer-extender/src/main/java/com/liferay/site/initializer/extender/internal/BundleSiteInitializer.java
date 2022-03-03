@@ -1266,7 +1266,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 
 				LayoutStructure layoutStructure = LayoutStructure.of(
 					layoutPageTemplateStructure.getData(
-						SegmentsExperienceConstants.ID_DEFAULT));
+						SegmentsExperienceConstants.KEY_DEFAULT));
 
 				JSONArray jsonArray = pageElementJSONObject.getJSONArray(
 					"pageElements");
