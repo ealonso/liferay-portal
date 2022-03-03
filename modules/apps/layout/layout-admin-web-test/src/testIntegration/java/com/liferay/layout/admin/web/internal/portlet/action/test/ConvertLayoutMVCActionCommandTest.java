@@ -196,7 +196,7 @@ public class ConvertLayoutMVCActionCommandTest {
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		Assert.assertNotNull(layoutStructure.getMainItemId());
 

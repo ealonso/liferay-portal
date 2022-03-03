@@ -133,7 +133,7 @@ public class UpdateItemConfigMVCActionCommandTest {
 
 		return LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT));
 	}
 
 	private MockActionRequest _getMockActionrequest() {

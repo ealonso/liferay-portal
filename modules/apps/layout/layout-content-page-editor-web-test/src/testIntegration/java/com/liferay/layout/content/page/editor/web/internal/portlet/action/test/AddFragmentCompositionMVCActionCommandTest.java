@@ -131,7 +131,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		mockLiferayPortletActionRequest.addParameter(
 			"fragmentCollectionId", String.valueOf(0));
@@ -178,7 +178,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		FragmentCollection newFragmentCollection =
 			_fragmentCollectionLocalService.addFragmentCollection(
@@ -412,7 +412,7 @@ public class AddFragmentCompositionMVCActionCommandTest {
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getData(
-				SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		FragmentCollection newFragmentCollection =
 			_fragmentCollectionLocalService.addFragmentCollection(

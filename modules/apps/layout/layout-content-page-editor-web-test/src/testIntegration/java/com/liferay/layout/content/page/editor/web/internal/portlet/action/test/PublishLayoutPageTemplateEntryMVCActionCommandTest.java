@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.Collections;
@@ -164,7 +165,9 @@ public class PublishLayoutPageTemplateEntryMVCActionCommandTest {
 				fetchLayoutPageTemplateStructure(
 					_group.getGroupId(), layout.getPlid());
 
-		return LayoutStructure.of(layoutPageTemplateStructure.getData(0));
+		return LayoutStructure.of(
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 	}
 
 	@DeleteAfterTestRun

@@ -231,9 +231,11 @@ public class ExportImportDisplayPagesTest {
 					layoutPageTemplateEntry2.getPlid());
 
 		LayoutStructure layoutStructure1 = LayoutStructure.of(
-			layoutPageTemplateStructure1.getData(0));
+			layoutPageTemplateStructure1.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 		LayoutStructure layoutStructure2 = LayoutStructure.of(
-			layoutPageTemplateStructure2.getData(0));
+			layoutPageTemplateStructure2.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		_validateRootLayoutStructureItem(
 			(RootLayoutStructureItem)

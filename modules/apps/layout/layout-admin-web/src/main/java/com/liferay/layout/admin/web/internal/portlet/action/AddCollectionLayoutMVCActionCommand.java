@@ -253,7 +253,7 @@ public class AddCollectionLayoutMVCActionCommand
 
 			LayoutStructure layoutStructure = LayoutStructure.of(
 				layoutPageTemplateStructure.getData(
-					SegmentsExperienceConstants.ID_DEFAULT));
+					SegmentsExperienceConstants.KEY_DEFAULT));
 
 			_layoutPageTemplatesImporter.importPageElement(
 				layout, layoutStructure, layoutStructure.getMainItemId(),

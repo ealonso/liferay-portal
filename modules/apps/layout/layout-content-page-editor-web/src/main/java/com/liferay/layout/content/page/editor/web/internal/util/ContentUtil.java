@@ -611,7 +611,7 @@ public class ContentUtil {
 
 		LayoutStructure layoutStructure =
 			LayoutStructureUtil.getLayoutStructure(
-				groupId, plid, SegmentsExperienceConstants.ID_DEFAULT);
+				groupId, plid, SegmentsExperienceConstants.KEY_DEFAULT);
 
 		return _getLayoutMappedLayoutDisplayPageObjectProviders(
 			layoutStructure, mappedClassPKs);

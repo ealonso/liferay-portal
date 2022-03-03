@@ -381,7 +381,7 @@ public class GetPageContentMVCResourceCommandTest {
 					_group.getGroupId(), _layout.getPlid());
 
 		String data = layoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
+			SegmentsExperienceConstants.KEY_DEFAULT);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(data);
 

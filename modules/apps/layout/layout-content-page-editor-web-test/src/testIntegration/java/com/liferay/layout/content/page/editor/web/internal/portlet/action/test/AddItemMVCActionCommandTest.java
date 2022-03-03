@@ -89,7 +89,7 @@ public class AddItemMVCActionCommandTest {
 					_group.getGroupId(), _layout.getPlid());
 
 		String data = layoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
+			SegmentsExperienceConstants.KEY_DEFAULT);
 
 		_layoutStructure = LayoutStructure.of(data);
 	}

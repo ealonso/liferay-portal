@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterContext;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -115,7 +116,8 @@ public class DisplayPageTemplateDTOConverter
 						}
 
 						LayoutStructure layoutStructure = LayoutStructure.of(
-							layoutPageTemplateStructure.getData(0L));
+							layoutPageTemplateStructure.getData(
+								SegmentsExperienceConstants.KEY_DEFAULT));
 
 						return dtoConverter.toDTO(
 							dtoConverterContext, layoutStructure);
