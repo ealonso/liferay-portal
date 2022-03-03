@@ -63,7 +63,7 @@ public class PortletLayoutDisplayContext {
 					masterLayoutPageTemplateEntry.getPlid());
 
 		String data = masterLayoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
+			SegmentsExperienceConstants.KEY_DEFAULT);
 
 		if (Validator.isNull(data)) {
 			_layoutStructure = _getDefaultMasterLayoutStructure();
