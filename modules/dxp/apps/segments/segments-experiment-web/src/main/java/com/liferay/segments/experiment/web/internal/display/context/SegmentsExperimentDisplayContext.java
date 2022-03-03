@@ -38,7 +38,6 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsExperimentConstants;
 import com.liferay.segments.constants.SegmentsPortletKeys;
 import com.liferay.segments.constants.SegmentsWebKeys;
@@ -58,7 +57,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import javax.portlet.RenderResponse;
@@ -369,25 +367,6 @@ public class SegmentsExperimentDisplayContext {
 				));
 		}
 
-		segmentsExperiencesJSONArray.put(
-			JSONUtil.put(
-				"name",
-				SegmentsExperienceConstants.getDefaultSegmentsExperienceName(
-					locale)
-			).put(
-				"segmentsExperienceId",
-				String.valueOf(SegmentsExperienceConstants.ID_DEFAULT)
-			).put(
-				"segmentsExperiment",
-				SegmentsExperimentUtil.toSegmentsExperimentJSONObject(
-					locale,
-					_getActiveSegmentsExperimentOptional(
-						SegmentsExperienceConstants.ID_DEFAULT
-					).orElse(
-						null
-					))
-			));
-
 		return segmentsExperiencesJSONArray;
 	}
 
@@ -495,15 +474,11 @@ public class SegmentsExperimentDisplayContext {
 			_segmentsExperienceId = selectedSegmentsExperienceId;
 		}
 		else {
-			LongStream longStream = Arrays.stream(
-				GetterUtil.getLongValues(
-					_httpServletRequest.getAttribute(
-						SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS)));
+			long[] segmentsExperienceIds = GetterUtil.getLongValues(
+				_httpServletRequest.getAttribute(
+					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
-			_segmentsExperienceId = longStream.findFirst(
-			).orElse(
-				SegmentsExperienceConstants.ID_DEFAULT
-			);
+			_segmentsExperienceId = segmentsExperienceIds[0];
 		}
 
 		return _segmentsExperienceId;

@@ -26,8 +26,12 @@ import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,8 +108,9 @@ public class LayoutColumn {
 		FragmentEntryLink fragmentEntryLink =
 			FragmentEntryLinkLocalServiceUtil.addFragmentEntryLink(
 				serviceContext.getUserId(), serviceContext.getScopeGroupId(), 0,
-				0, 0, _layout.getPlid(), StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, StringPool.BLANK,
+				0, _getDefaultSegmentsExperienceId(_layout), _layout.getPlid(),
+				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK,
 				JSONUtil.put(
 					"instanceId", PortletIdCodec.decodeInstanceId(portletId)
 				).put(
@@ -114,6 +119,16 @@ public class LayoutColumn {
 				StringPool.BLANK, 0, null, serviceContext);
 
 		_fragmentEntryLinkIds.add(fragmentEntryLink.getFragmentEntryLinkId());
+	}
+
+	private long _getDefaultSegmentsExperienceId(Layout layout) {
+		SegmentsExperience segmentsExperience =
+			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class.getName()),
+				layout.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
 	}
 
 	private List<String> _getNestedColumnIds(String portletId) {

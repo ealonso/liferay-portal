@@ -92,6 +92,8 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.style.book.model.StyleBookEntry;
 import com.liferay.style.book.service.StyleBookEntryLocalService;
 
@@ -180,7 +182,7 @@ public class LayoutPageTemplatesImporterImpl
 
 		return _importPageElement(
 			consumer, layout, layoutStructure, parentItemId, pageElementJSON,
-			position);
+			position, _getDefaultSegmentsExperienceId(layout));
 	}
 
 	@Override
@@ -206,7 +208,7 @@ public class LayoutPageTemplatesImporterImpl
 
 		return _importPageElement(
 			consumer, layout, layoutStructure, parentItemId, pageElementJSON,
-			position);
+			position, segmentsExperienceId);
 	}
 
 	private void _deleteExistingPortletPreferences(long plid) {
@@ -233,6 +235,25 @@ public class LayoutPageTemplatesImporterImpl
 
 		return new PageTemplateCollectionEntry(
 			_PAGE_TEMPLATE_COLLECTION_KEY_DEFAULT, pageTemplateCollection);
+	}
+
+	private long _getDefaultSegmentsExperienceId(Layout layout) {
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class.getName()),
+				layout.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
+	}
+
+	private long _getDefaultSegmentsExperienceId(
+		LayoutPageTemplateEntry layoutPageTemplateEntry) {
+
+		Layout layout = _layoutLocalService.fetchLayout(
+			layoutPageTemplateEntry.getPlid());
+
+		return _getDefaultSegmentsExperienceId(layout);
 	}
 
 	private List<DisplayPageTemplateEntry> _getDisplayPageTemplateEntries(
@@ -807,7 +828,7 @@ public class LayoutPageTemplatesImporterImpl
 	private List<FragmentEntryLink> _importPageElement(
 			Consumer<LayoutStructure> consumer, Layout layout,
 			LayoutStructure layoutStructure, String parentItemId,
-			String pageElementJSON, int position)
+			String pageElementJSON, int position, long segmentsExperienceId)
 		throws Exception {
 
 		PageElement pageElement = _objectMapper.readValue(
@@ -818,7 +839,8 @@ public class LayoutPageTemplatesImporterImpl
 		_processPageElement(
 			layout, layoutStructure,
 			LayoutStructureConstants.LATEST_PAGE_DEFINITION_VERSION,
-			pageElement, parentItemId, position, warningMessages);
+			pageElement, parentItemId, position, segmentsExperienceId,
+			warningMessages);
 
 		List<FragmentEntryLink> fragmentEntryLinks = new ArrayList<>();
 
@@ -953,8 +975,8 @@ public class LayoutPageTemplatesImporterImpl
 			long layoutPageTemplateCollectionId,
 			LayoutPageTemplateEntry layoutPageTemplateEntry, String name,
 			PageDefinition pageDefinition, int layoutPageTemplateEntryType,
-			boolean overwrite, ZipEntry thumbnailZipEntry, String zipPath,
-			ZipFile zipFile)
+			boolean overwrite, long segmentsExperienceId,
+			ZipEntry thumbnailZipEntry, String zipPath, ZipFile zipFile)
 		throws Exception {
 
 		try {
@@ -1000,7 +1022,8 @@ public class LayoutPageTemplatesImporterImpl
 				Set<String> warningMessages = new HashSet<>();
 
 				_processPageDefinition(
-					layoutPageTemplateEntry, pageDefinition, warningMessages);
+					layoutPageTemplateEntry, pageDefinition,
+					segmentsExperienceId, warningMessages);
 
 				long previewFileEntryId = _getPreviewFileEntryId(
 					groupId,
@@ -1100,7 +1123,8 @@ public class LayoutPageTemplatesImporterImpl
 
 	private void _processPageDefinition(
 			LayoutPageTemplateEntry layoutPageTemplateEntry,
-			PageDefinition pageDefinition, Set<String> warningMessages)
+			PageDefinition pageDefinition, long segmentsExperienceId,
+			Set<String> warningMessages)
 		throws Exception {
 
 		Layout layout = _layoutLocalService.getLayout(
@@ -1128,7 +1152,7 @@ public class LayoutPageTemplatesImporterImpl
 							layout, layoutStructure, pageDefinitionVersion,
 							childPageElement,
 							rootLayoutStructureItem.getItemId(), position,
-							warningMessages)) {
+							segmentsExperienceId, warningMessages)) {
 
 						position++;
 					}
@@ -1150,7 +1174,8 @@ public class LayoutPageTemplatesImporterImpl
 	private boolean _processPageElement(
 			Layout layout, LayoutStructure layoutStructure,
 			double pageDefinitionVersion, PageElement pageElement,
-			String parentItemId, int position, Set<String> warningMessages)
+			String parentItemId, int position, long segmentsExperienceId,
+			Set<String> warningMessages)
 		throws Exception {
 
 		LayoutStructureItemImporter layoutStructureItemImporter =
@@ -1164,7 +1189,8 @@ public class LayoutPageTemplatesImporterImpl
 				layoutStructureItemImporter.addLayoutStructureItem(
 					layoutStructure,
 					new LayoutStructureItemImporterContext(
-						layout, pageDefinitionVersion, parentItemId, position),
+						layout, pageDefinitionVersion, parentItemId, position,
+						segmentsExperienceId),
 					pageElement, warningMessages);
 		}
 		else if (pageElement.getType() == PageElement.Type.ROOT) {
@@ -1188,7 +1214,7 @@ public class LayoutPageTemplatesImporterImpl
 			if (_processPageElement(
 					layout, layoutStructure, pageDefinitionVersion,
 					childPageElement, layoutStructureItem.getItemId(),
-					childPosition, warningMessages)) {
+					childPosition, segmentsExperienceId, warningMessages)) {
 
 				childPosition++;
 			}
@@ -1283,9 +1309,14 @@ public class LayoutPageTemplatesImporterImpl
 				deleteLayoutPageTemplateStructure(layoutPageTemplateStructure);
 		}
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), layout.getPlid());
+
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
 			layout.getUserId(), layout.getGroupId(), layout.getPlid(),
-			SegmentsExperienceConstants.ID_DEFAULT, jsonObject.toString(),
+			segmentsExperience.getSegmentsExperienceId(), jsonObject.toString(),
 			ServiceContextThreadLocal.getServiceContext());
 	}
 
@@ -1466,6 +1497,9 @@ public class LayoutPageTemplatesImporterImpl
 	private PortletPreferencesLocalService _portletPreferencesLocalService;
 
 	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
 	private StyleBookEntryLocalService _styleBookEntryLocalService;
 
 	@Reference
@@ -1566,6 +1600,7 @@ public class LayoutPageTemplatesImporterImpl
 				_layoutPageTemplateEntry, pageTemplate.getName(),
 				_pageTemplateEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_BASIC, _overwrite,
+				_getDefaultSegmentsExperienceId(_layoutPageTemplateEntry),
 				_pageTemplateEntry.getThumbnailZipEntry(),
 				_pageTemplateEntry.getZipPath(), _zipFile);
 
@@ -1619,7 +1654,9 @@ public class LayoutPageTemplatesImporterImpl
 				displayPageTemplate.getName(),
 				_displayPageTemplateEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE,
-				_overwrite, _displayPageTemplateEntry.getThumbnailZipEntry(),
+				_overwrite,
+				_getDefaultSegmentsExperienceId(layoutPageTemplateEntry),
+				_displayPageTemplateEntry.getThumbnailZipEntry(),
 				_displayPageTemplateEntry.getZipPath(), _zipFile);
 
 			boolean defaultTemplate = GetterUtil.getBoolean(
@@ -1710,7 +1747,9 @@ public class LayoutPageTemplatesImporterImpl
 				0, 0, _groupId, 0, layoutPageTemplateEntry,
 				masterPage.getName(), _masterPageEntry.getPageDefinition(),
 				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT,
-				_overwrite, _masterPageEntry.getThumbnailZipEntry(),
+				_overwrite,
+				_getDefaultSegmentsExperienceId(layoutPageTemplateEntry),
+				_masterPageEntry.getThumbnailZipEntry(),
 				_masterPageEntry.getZipPath(), _zipFile);
 
 			return null;

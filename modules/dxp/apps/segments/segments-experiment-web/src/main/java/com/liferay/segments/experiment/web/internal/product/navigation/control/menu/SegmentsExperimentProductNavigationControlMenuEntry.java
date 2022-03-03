@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsPortletKeys;
 import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.experiment.web.internal.util.SegmentsExperimentUtil;
@@ -53,13 +52,11 @@ import com.liferay.taglib.util.BodyBottomTag;
 import java.io.IOException;
 import java.io.Writer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.stream.LongStream;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -276,15 +273,11 @@ public class SegmentsExperimentProductNavigationControlMenuEntry
 	private long _getSegmentsExperienceId(
 		HttpServletRequest httpServletRequest) {
 
-		LongStream longStream = Arrays.stream(
-			GetterUtil.getLongValues(
-				httpServletRequest.getAttribute(
-					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS)));
+		long[] segmentsExperienceIds = GetterUtil.getLongValues(
+			httpServletRequest.getAttribute(
+				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
-		return longStream.findFirst(
-		).orElse(
-			SegmentsExperienceConstants.ID_DEFAULT
-		);
+		return segmentsExperienceIds[0];
 	}
 
 	private void _processBodyBottomTagBody(PageContext pageContext) {

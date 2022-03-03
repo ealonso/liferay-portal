@@ -15,7 +15,6 @@
 package com.liferay.segments.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -435,23 +434,18 @@ public class SegmentsExperimentLocalServiceTest {
 
 	@Test
 	public void testGetSegmentsEntrySegmentsExperiments() throws Exception {
-		long classNameId = _classNameLocalService.getClassNameId(
-			Layout.class.getName());
-
-		Layout layout = LayoutTestUtil.addLayout(_group);
-
 		SegmentsEntry segmentsEntry = SegmentsTestUtil.addSegmentsEntry(
 			_group.getGroupId());
 
 		SegmentsExperience segmentsExperience1 =
 			SegmentsTestUtil.addSegmentsExperience(
 				_group.getGroupId(), segmentsEntry.getSegmentsEntryId(),
-				classNameId, layout.getPlid());
+				_classNameId, _layout.getPlid());
 
 		SegmentsExperience segmentsExperience2 =
 			SegmentsTestUtil.addSegmentsExperience(
 				_group.getGroupId(), segmentsEntry.getSegmentsEntryId(),
-				classNameId, layout.getPlid());
+				_classNameId, _layout.getPlid());
 
 		SegmentsExperiment segmentsExperiment1 = _addSegmentsExperiment(
 			segmentsExperience1);
@@ -483,22 +477,24 @@ public class SegmentsExperimentLocalServiceTest {
 
 	@Test
 	public void testGetSegmentsExperiments() throws Exception {
-		long classNameId = _classNameLocalService.getClassNameId(
-			Layout.class.getName());
-		Layout layout = LayoutTestUtil.addLayout(_group);
+		SegmentsExperience defaultSegmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_classNameId, _layout.getPlid());
 
 		SegmentsExperiment segmentsExperimentDefault =
 			SegmentsTestUtil.addSegmentsExperiment(
-				_group.getGroupId(), SegmentsExperienceConstants.ID_DEFAULT,
-				classNameId, layout.getPlid());
+				_group.getGroupId(),
+				defaultSegmentsExperience.getSegmentsExperienceId(),
+				_classNameId, _layout.getPlid());
 
 		SegmentsExperience segmentsExperience1 =
 			SegmentsTestUtil.addSegmentsExperience(
-				_group.getGroupId(), classNameId, layout.getPlid());
+				_group.getGroupId(), _classNameId, _layout.getPlid());
 
 		SegmentsExperience segmentsExperience2 =
 			SegmentsTestUtil.addSegmentsExperience(
-				_group.getGroupId(), classNameId, layout.getPlid());
+				_group.getGroupId(), _classNameId, _layout.getPlid());
 
 		SegmentsExperiment segmentsExperiment1 = _addSegmentsExperiment(
 			segmentsExperience1);
@@ -508,7 +504,7 @@ public class SegmentsExperimentLocalServiceTest {
 
 		List<SegmentsExperiment> segmentsExperiments =
 			_segmentsExperimentLocalService.getSegmentsExperiments(
-				layout.getGroupId(), classNameId, layout.getPlid());
+				_layout.getGroupId(), _classNameId, _layout.getPlid());
 
 		Assert.assertEquals(
 			segmentsExperiments.toString(), 3, segmentsExperiments.size());
@@ -968,9 +964,15 @@ public class SegmentsExperimentLocalServiceTest {
 				new UnicodeProperties(true),
 				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
+		SegmentsExperience defaultSegmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_classNameId, _layout.getPlid());
+
 		SegmentsExperiment segmentsExperiment =
 			SegmentsTestUtil.addSegmentsExperiment(
-				_group.getGroupId(), SegmentsExperienceConstants.ID_DEFAULT,
+				_group.getGroupId(),
+				defaultSegmentsExperience.getSegmentsExperienceId(),
 				_classNameId, _layout.getPlid());
 
 		SegmentsExperience variantSegmentsExperience =

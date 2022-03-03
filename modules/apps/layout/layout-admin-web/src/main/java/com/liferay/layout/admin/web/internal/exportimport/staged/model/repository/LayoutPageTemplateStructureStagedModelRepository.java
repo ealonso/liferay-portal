@@ -23,8 +23,12 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocal
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 
@@ -58,11 +62,19 @@ public class LayoutPageTemplateStructureStagedModelRepository
 			serviceContext.setUuid(layoutPageTemplateStructure.getUuid());
 		}
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				serviceContext.getScopeGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class),
+				layoutPageTemplateStructure.getPlid());
+
 		return _layoutPageTemplateStructureLocalService.
 			addLayoutPageTemplateStructure(
 				userId, serviceContext.getScopeGroupId(),
 				layoutPageTemplateStructure.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT, null, serviceContext);
+				segmentsExperience.getSegmentsExperienceId(), null,
+				serviceContext);
 	}
 
 	@Override
@@ -157,6 +169,12 @@ public class LayoutPageTemplateStructureStagedModelRepository
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private StagedModelRepositoryHelper _stagedModelRepositoryHelper;

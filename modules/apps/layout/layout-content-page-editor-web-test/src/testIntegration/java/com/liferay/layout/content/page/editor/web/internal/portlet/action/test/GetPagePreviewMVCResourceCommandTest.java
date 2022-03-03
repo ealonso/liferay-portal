@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -60,6 +61,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -158,9 +161,14 @@ public class GetPagePreviewMVCResourceCommandTest {
 				0, FragmentConstants.TYPE_COMPONENT,
 				WorkflowConstants.STATUS_APPROVED, _serviceContext);
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
 		_fragmentEntryLink = _fragmentEntryLinkService.addFragmentEntryLink(
 			_group.getGroupId(), 0, fragmentEntry.getFragmentEntryId(),
-			SegmentsExperienceConstants.ID_DEFAULT, layout.getPlid(),
+			segmentsExperience.getSegmentsExperienceId(), layout.getPlid(),
 			fragmentEntry.getCss(), fragmentEntry.getHtml(),
 			fragmentEntry.getJs(), fragmentEntry.getConfiguration(), null,
 			StringPool.BLANK, 0, null, _serviceContext);
@@ -171,7 +179,7 @@ public class GetPagePreviewMVCResourceCommandTest {
 					_group.getGroupId(), layout.getPlid());
 
 		String data = layoutPageTemplateStructure.getData(
-			SegmentsExperienceConstants.ID_DEFAULT);
+			segmentsExperience.getSegmentsExperienceId());
 
 		LayoutStructure layoutStructure = LayoutStructure.of(data);
 
@@ -182,7 +190,7 @@ public class GetPagePreviewMVCResourceCommandTest {
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				_group.getGroupId(), layout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutStructure.toString());
 
 		_themeDisplay.setLayout(layout);
@@ -267,6 +275,9 @@ public class GetPagePreviewMVCResourceCommandTest {
 
 	@Inject
 	private PortletLocalService _portletLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 	private ThemeDisplay _themeDisplay;

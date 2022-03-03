@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -60,6 +61,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 
@@ -104,22 +107,6 @@ public class ResponsiveLayoutStructureUtilTest {
 			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
 			StringPool.BLANK, serviceContext);
 
-		FragmentEntry fragmentEntry =
-			_fragmentEntryLocalService.addFragmentEntry(
-				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				StringUtil.randomString(), StringUtil.randomString(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				RandomTestUtil.randomString(), false, "{fieldSets: []}", null,
-				0, FragmentConstants.TYPE_COMPONENT,
-				WorkflowConstants.STATUS_APPROVED, serviceContext);
-
-		_fragmentEntryLink = _fragmentEntryLinkService.addFragmentEntryLink(
-			_group.getGroupId(), 0, fragmentEntry.getFragmentEntryId(),
-			SegmentsExperienceConstants.ID_DEFAULT, _layout.getPlid(),
-			fragmentEntry.getCss(), fragmentEntry.getHtml(),
-			fragmentEntry.getJs(), fragmentEntry.getConfiguration(), null,
-			StringPool.BLANK, 0, null, serviceContext);
-
 		_themeDisplay = new ThemeDisplay();
 
 		_themeDisplay.setCompany(
@@ -161,14 +148,39 @@ public class ResponsiveLayoutStructureUtilTest {
 			layoutStructure.addColumnLayoutStructureItem(
 				rowStyledLayoutStructureItem.getItemId(), 0);
 
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
+
+		FragmentEntry fragmentEntry =
+			_fragmentEntryLocalService.addFragmentEntry(
+				TestPropsValues.getUserId(), _group.getGroupId(), 0,
+				StringUtil.randomString(), StringUtil.randomString(),
+				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+				RandomTestUtil.randomString(), false, "{fieldSets: []}", null,
+				0, FragmentConstants.TYPE_COMPONENT,
+				WorkflowConstants.STATUS_APPROVED, serviceContext);
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+
+		FragmentEntryLink fragmentEntryLink =
+			_fragmentEntryLinkService.addFragmentEntryLink(
+				_group.getGroupId(), 0, fragmentEntry.getFragmentEntryId(),
+				segmentsExperience.getSegmentsExperienceId(), _layout.getPlid(),
+				fragmentEntry.getCss(), fragmentEntry.getHtml(),
+				fragmentEntry.getJs(), fragmentEntry.getConfiguration(), null,
+				StringPool.BLANK, 0, null, serviceContext);
+
 		layoutStructure.addFragmentStyledLayoutStructureItem(
-			_fragmentEntryLink.getFragmentEntryLinkId(),
+			fragmentEntryLink.getFragmentEntryLinkId(),
 			columnLayoutStructureItem.getItemId(), 0);
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				_layout.getGroupId(), _layout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutStructure.toString());
 
 		MockHttpServletRequest httpServletRequest =
@@ -288,8 +300,6 @@ public class ResponsiveLayoutStructureUtilTest {
 	@Inject
 	private CompanyLocalService _companyLocalService;
 
-	private FragmentEntryLink _fragmentEntryLink;
-
 	@Inject
 	private FragmentEntryLinkService _fragmentEntryLinkService;
 
@@ -307,6 +317,9 @@ public class ResponsiveLayoutStructureUtilTest {
 	@Inject
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ThemeDisplay _themeDisplay;
 

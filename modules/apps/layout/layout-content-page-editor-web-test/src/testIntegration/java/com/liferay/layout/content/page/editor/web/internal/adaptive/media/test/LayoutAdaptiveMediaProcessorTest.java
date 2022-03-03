@@ -55,12 +55,15 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -236,6 +239,11 @@ public class LayoutAdaptiveMediaProcessorTest {
 			_fragmentCollectionContributorTracker.getFragmentEntry(
 				"BASIC_COMPONENT-image");
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+
 		FileEntry fileEntry = _dlAppLocalService.addFileEntry(
 			null, TestPropsValues.getUserId(), _group.getGroupId(),
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
@@ -258,7 +266,7 @@ public class LayoutAdaptiveMediaProcessorTest {
 
 		_fragmentEntryLink = _fragmentEntryLinkService.addFragmentEntryLink(
 			_group.getGroupId(), 0, fragmentEntry.getFragmentEntryId(),
-			SegmentsExperienceConstants.ID_DEFAULT, _layout.getPlid(),
+			segmentsExperience.getSegmentsExperienceId(), _layout.getPlid(),
 			fragmentEntry.getCss(), fragmentEntry.getHtml(),
 			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
 			editableValuesJSONObject.toString(), StringPool.BLANK, 0, null,
@@ -282,7 +290,7 @@ public class LayoutAdaptiveMediaProcessorTest {
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				_group.getGroupId(), _layout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutStructure.toString());
 
 		_themeDisplay.setLayout(_layout);
@@ -323,6 +331,9 @@ public class LayoutAdaptiveMediaProcessorTest {
 	@Inject
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 	private ThemeDisplay _themeDisplay;

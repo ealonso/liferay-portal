@@ -41,12 +41,15 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -111,10 +114,15 @@ public class FragmentEntryProcessorDropZoneTest {
 			layoutStructure.addFragmentDropZoneLayoutStructureItem(
 				fragmentStyledLayoutStructureItem.getItemId(), 0);
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				_group.getGroupId(), _layout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutStructure.toString());
 
 		String processedHTML = _getProcessedHTML(
@@ -204,6 +212,9 @@ public class FragmentEntryProcessorDropZoneTest {
 	@Inject
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 

@@ -58,6 +58,8 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -219,18 +221,24 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 				fetchLayoutPageTemplateStructure(
 					layout.getGroupId(), layout.getPlid());
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), layout.getPlid());
+
 		if (layoutPageTemplateStructure == null) {
 			return _layoutPageTemplateStructureLocalService.
 				addLayoutPageTemplateStructure(
 					serviceContext.getUserId(), layout.getGroupId(),
-					layout.getPlid(), SegmentsExperienceConstants.ID_DEFAULT,
+					layout.getPlid(),
+					segmentsExperience.getSegmentsExperienceId(),
 					layoutDataJSONObject.toString(), serviceContext);
 		}
 
 		return _layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				layout.getGroupId(), layout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutDataJSONObject.toString());
 	}
 
@@ -445,6 +453,9 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 	@Reference
 	private PortletPreferenceValueLocalService
 		_portletPreferenceValueLocalService;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;

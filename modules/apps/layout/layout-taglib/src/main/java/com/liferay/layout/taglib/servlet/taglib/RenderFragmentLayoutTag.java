@@ -230,8 +230,7 @@ public class RenderFragmentLayoutTag extends IncludeTag {
 
 		long[] segmentsExperienceIds = GetterUtil.getLongValues(
 			httpServletRequest.getAttribute(
-				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-			new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS));
 
 		return segmentsExperienceIds[0];
 	}
