@@ -47,12 +47,15 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.awt.image.BufferedImage;
 
@@ -141,9 +144,17 @@ public class LayoutCopyHelperTest {
 			layoutStructure.addContainerStyledLayoutStructureItem(
 				layoutStructure.getMainItemId(), 0);
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				sourceLayout.getGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class),
+				sourceLayout.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
-				sourceLayout.getUserId(), sourceLayout.getGroupId(), 0, 0, 0,
+				sourceLayout.getUserId(), sourceLayout.getGroupId(), 0, 0,
+				segmentsExperience.getSegmentsExperienceId(),
 				sourceLayout.getPlid(), StringPool.BLANK, StringPool.BLANK,
 				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
 				StringPool.BLANK, 0, null, _serviceContext);
@@ -153,7 +164,8 @@ public class LayoutCopyHelperTest {
 			containerLayoutStructureItem.getItemId(), 0);
 
 		fragmentEntryLink = _fragmentEntryLinkLocalService.addFragmentEntryLink(
-			sourceLayout.getUserId(), sourceLayout.getGroupId(), 0, 0, 0,
+			sourceLayout.getUserId(), sourceLayout.getGroupId(), 0, 0,
+			segmentsExperience.getSegmentsExperienceId(),
 			sourceLayout.getPlid(), StringPool.BLANK, StringPool.BLANK,
 			StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
 			StringPool.BLANK, 0, null, _serviceContext);
@@ -165,7 +177,7 @@ public class LayoutCopyHelperTest {
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				sourceLayout.getGroupId(), sourceLayout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				layoutStructure.toString());
 
 		Layout targetLayout = _addContentLayout();
@@ -383,6 +395,9 @@ public class LayoutCopyHelperTest {
 		filter = "javax.portlet.name=" + LayoutPortletKeys.LAYOUT_TEST_PORTLET
 	)
 	private final Portlet _portlet = null;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 

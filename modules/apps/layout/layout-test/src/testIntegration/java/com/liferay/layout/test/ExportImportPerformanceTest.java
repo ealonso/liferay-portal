@@ -69,6 +69,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -77,6 +78,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.sites.kernel.util.SitesUtil;
 
 import java.io.Closeable;
@@ -335,6 +338,12 @@ public class ExportImportPerformanceTest {
 			return;
 		}
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				draftLayout.getGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), draftLayout.getPlid());
+
 		for (int i = 0; i < _fragmentEntryLinksPerLayout; i++) {
 			FragmentEntry fragmentEntry =
 				_fragmentCollectionContributorTracker.getFragmentEntry(
@@ -342,9 +351,11 @@ public class ExportImportPerformanceTest {
 
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				fragmentEntry.getFragmentEntryId(), 0, draftLayout.getPlid(),
-				fragmentEntry.getCss(), fragmentEntry.getHtml(),
-				fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
+				fragmentEntry.getFragmentEntryId(),
+				segmentsExperience.getSegmentsExperienceId(),
+				draftLayout.getPlid(), fragmentEntry.getCss(),
+				fragmentEntry.getHtml(), fragmentEntry.getJs(),
+				fragmentEntry.getConfiguration(),
 				StringUtil.replace(
 					_TMPL_FRAGMENT_EDITABLE_VALUES, "${", "}",
 					HashMapBuilder.put(
@@ -390,7 +401,8 @@ public class ExportImportPerformanceTest {
 				PortletIdCodec.encode(JournalPortletKeys.JOURNAL, instanceId));
 
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
-				TestPropsValues.getUserId(), _group.getGroupId(), 0, 0, 0,
+				TestPropsValues.getUserId(), _group.getGroupId(), 0, 0,
+				segmentsExperience.getSegmentsExperienceId(),
 				draftLayout.getPlid(), StringPool.BLANK, StringPool.BLANK,
 				StringPool.BLANK, StringPool.BLANK,
 				StringUtil.replace(
@@ -406,7 +418,7 @@ public class ExportImportPerformanceTest {
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
 				_group.getGroupId(), draftLayout.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT,
+				segmentsExperience.getSegmentsExperienceId(),
 				_generateContentLayoutStructureJSONObject(draftLayout));
 
 		_layoutCopyHelper.copyLayout(draftLayout, layout);
@@ -616,6 +628,9 @@ public class ExportImportPerformanceTest {
 
 	@Inject
 	private Portal _portal;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 

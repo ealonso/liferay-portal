@@ -95,7 +95,9 @@ public class FragmentLayoutStructureItemImporter
 		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
 			layoutStructureItemImporterContext.getLayout(),
 			layoutStructureItemImporterContext, pageElement,
-			layoutStructureItemImporterContext.getPosition(), warningMessages);
+			layoutStructureItemImporterContext.getPosition(),
+			layoutStructureItemImporterContext.getSegmentsExperienceId(),
+			warningMessages);
 
 		if (fragmentEntryLink == null) {
 			return null;
@@ -183,7 +185,8 @@ public class FragmentLayoutStructureItemImporter
 			Layout layout,
 			LayoutStructureItemImporterContext
 				layoutStructureItemImporterContext,
-			PageElement pageElement, int position, Set<String> warningMessages)
+			PageElement pageElement, int position, long segmentsExperienceId,
+			Set<String> warningMessages)
 		throws Exception {
 
 		Map<String, Object> definitionMap = getDefinitionMap(
@@ -295,10 +298,11 @@ public class FragmentLayoutStructureItemImporter
 
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
-				layout.getUserId(), layout.getGroupId(), 0, fragmentEntryId, 0,
-				layout.getPlid(), css, html, js, configuration,
-				jsonObject.toString(), StringUtil.randomId(), position,
-				fragmentKey, ServiceContextThreadLocal.getServiceContext());
+				layout.getUserId(), layout.getGroupId(), 0, fragmentEntryId,
+				segmentsExperienceId, layout.getPlid(), css, html, js,
+				configuration, jsonObject.toString(), StringUtil.randomId(),
+				position, fragmentKey,
+				ServiceContextThreadLocal.getServiceContext());
 
 		List<Object> widgetInstances = (List<Object>)definitionMap.get(
 			"widgetInstances");

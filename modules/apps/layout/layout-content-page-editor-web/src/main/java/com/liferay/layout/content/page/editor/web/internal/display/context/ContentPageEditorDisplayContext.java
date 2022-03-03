@@ -114,6 +114,8 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
@@ -135,8 +137,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.util.PropsValues;
+import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
-import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 import com.liferay.site.navigation.item.selector.SiteNavigationMenuItemSelectorReturnType;
@@ -808,17 +810,42 @@ public class ContentPageEditorDisplayContext {
 		}
 
 		if (_segmentsExperienceId == -1) {
-			long[] segmentsExperienceIds = GetterUtil.getLongValues(
-				httpServletRequest.getAttribute(
-					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+			_segmentsExperienceId =
+				com.liferay.segments.util.SegmentsExperienceUtil.
+					getSegmentsExperienceId(httpServletRequest);
+		}
 
-			if (segmentsExperienceIds.length > 0) {
-				_segmentsExperienceId = segmentsExperienceIds[0];
+		if (_segmentsExperienceId <= 0) {
+			SegmentsExperience segmentsExperience =
+				SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+					getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+					PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
+			if (segmentsExperience == null) {
+				try {
+					ServiceContext serviceContext =
+						ServiceContextFactory.getInstance(portletRequest);
+
+					SegmentsExperienceLocalServiceUtil.addSegmentsExperience(
+						serviceContext.getUserId(), getGroupId(),
+						SegmentsEntryConstants.ID_DEFAULT,
+						SegmentsExperienceConstants.KEY_DEFAULT,
+						PortalUtil.getClassNameId(Layout.class),
+						themeDisplay.getPlid(),
+						Collections.singletonMap(
+							LocaleUtil.getSiteDefault(),
+							LanguageUtil.get(
+								LocaleUtil.getSiteDefault(),
+								"default-experience-name")),
+						0, true, new UnicodeProperties(true), serviceContext);
+				}
+				catch (Exception exception) {
+					throw new RuntimeException(exception);
+				}
 			}
-			else {
-				_segmentsExperienceId = SegmentsExperienceConstants.ID_DEFAULT;
-			}
+
+			_segmentsExperienceId =
+				segmentsExperience.getSegmentsExperienceId();
 		}
 
 		return _segmentsExperienceId;
@@ -1981,7 +2008,7 @@ public class ContentPageEditorDisplayContext {
 		try {
 			_masterLayoutStructure = LayoutStructureUtil.getLayoutStructure(
 				getGroupId(), masterLayoutPageTemplateEntry.getPlid(),
-				SegmentsExperienceConstants.ID_DEFAULT);
+				SegmentsExperienceConstants.KEY_DEFAULT);
 
 			return _masterLayoutStructure;
 		}

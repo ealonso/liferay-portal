@@ -26,6 +26,7 @@ import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.layout.util.structure.RootLayoutStructureItem;
 import com.liferay.layout.util.structure.RowStyledLayoutStructureItem;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -46,14 +47,20 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -124,16 +131,44 @@ public class ConvertLayoutMVCActionCommandTest {
 				LayoutTypePortletConstants.LAYOUT_TEMPLATE_ID, "1_column"
 			).buildString());
 
+		SegmentsExperience segmentsExperience = _addDefaultSegmentsExperience(
+			originalLayout);
+
 		_layoutPageTemplateStructureLocalService.addLayoutPageTemplateStructure(
 			TestPropsValues.getUserId(), _group.getGroupId(),
-			originalLayout.getPlid(), SegmentsExperienceConstants.ID_DEFAULT,
-			StringPool.BLANK, _serviceContext);
+			originalLayout.getPlid(),
+			segmentsExperience.getSegmentsExperienceId(), StringPool.BLANK,
+			_serviceContext);
 
 		_mvcActionCommand.processAction(
 			_getMockLiferayPortletActionRequest(originalLayout.getPlid()),
 			new MockLiferayPortletActionResponse());
 
 		_validateLayoutConversion(originalLayout);
+	}
+
+	private SegmentsExperience _addDefaultSegmentsExperience(Layout layout)
+		throws Exception {
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), layout.getPlid());
+
+		if (segmentsExperience != null) {
+			return segmentsExperience;
+		}
+
+		return _segmentsExperienceLocalService.addSegmentsExperience(
+			TestPropsValues.getUserId(), layout.getGroupId(),
+			SegmentsEntryConstants.ID_DEFAULT,
+			SegmentsExperienceConstants.KEY_DEFAULT,
+			_portal.getClassNameId(Layout.class), layout.getPlid(),
+			Collections.singletonMap(
+				LocaleUtil.getSiteDefault(),
+				LanguageUtil.get(
+					LocaleUtil.getSiteDefault(), "default-experience-name")),
+			0, true, new UnicodeProperties(true), _serviceContext);
 	}
 
 	private MockLiferayPortletActionRequest _getMockLiferayPortletActionRequest(
@@ -335,6 +370,9 @@ public class ConvertLayoutMVCActionCommandTest {
 
 	@Inject
 	private Portal _portal;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 

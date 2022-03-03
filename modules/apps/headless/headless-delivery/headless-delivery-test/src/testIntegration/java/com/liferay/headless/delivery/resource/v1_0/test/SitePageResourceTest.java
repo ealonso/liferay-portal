@@ -89,7 +89,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		SitePage sitePage =
 			sitePageResource.getSiteSitePageExperienceExperienceKey(
 				testGroup.getGroupId(), friendlyURL.substring(1),
-				String.valueOf(SegmentsExperienceConstants.ID_DEFAULT));
+				SegmentsExperienceConstants.KEY_DEFAULT);
 
 		Assert.assertNotNull(sitePage);
 		Assert.assertNotNull(sitePage.getExperience());
@@ -308,12 +308,17 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 				fetchLayoutPageTemplateStructure(
 					testGroup.getGroupId(), layout.getPlid());
 
+		SegmentsExperience defaultSegmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				testGroup.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), layout.getPlid());
+
 		LayoutPageTemplateStructureRel layoutPageTemplateStructureRel =
 			_layoutPageTemplateStructureRelLocalService.
 				fetchLayoutPageTemplateStructureRel(
 					layoutPageTemplateStructure.
 						getLayoutPageTemplateStructureId(),
-					SegmentsExperienceConstants.ID_DEFAULT);
+					defaultSegmentsExperience.getSegmentsExperienceId());
 
 		layoutPageTemplateStructureRel.setSegmentsExperienceId(
 			segmentsExperience.getSegmentsExperienceId());
