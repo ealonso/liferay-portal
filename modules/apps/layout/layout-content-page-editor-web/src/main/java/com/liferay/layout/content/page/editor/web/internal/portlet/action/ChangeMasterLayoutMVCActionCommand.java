@@ -98,7 +98,7 @@ public class ChangeMasterLayoutMVCActionCommand
 		LayoutStructure layoutStructure =
 			LayoutStructureUtil.getLayoutStructure(
 				themeDisplay.getScopeGroupId(), masterLayoutPlid,
-				SegmentsExperienceConstants.ID_DEFAULT);
+				SegmentsExperienceConstants.KEY_DEFAULT);
 
 		List<FragmentEntryLink> fragmentEntryLinks =
 			_fragmentEntryLinkLocalService.getFragmentEntryLinksByPlid(
