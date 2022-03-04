@@ -52,6 +52,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -96,6 +97,16 @@ public class LayoutCrawlerTest {
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
 			StringPool.BLANK, serviceContext);
+
+		Layout draftLayout = _layout.fetchDraftLayout();
+
+		UnicodeProperties typeSettingsPropertiesUnicodeProperties =
+			draftLayout.getTypeSettingsProperties();
+
+		typeSettingsPropertiesUnicodeProperties.setProperty(
+			"published", Boolean.TRUE.toString());
+
+		_layoutLocalService.updateLayout(draftLayout);
 
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.addFragmentEntry(
