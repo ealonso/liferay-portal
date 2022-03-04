@@ -77,6 +77,7 @@ public class DefaultSegmentsExperienceRequestProcessorTest {
 
 		SegmentsExperience segmentsExperience =
 			_segmentsExperienceLocalService.addSegmentsExperience(
+				TestPropsValues.getUserId(), _group.getGroupId(),
 				segmentsEntry.getSegmentsEntryId(), classNameId,
 				layout.getPlid(), RandomTestUtil.randomLocaleStringMap(), 0,
 				true, new UnicodeProperties(true),
@@ -146,6 +147,7 @@ public class DefaultSegmentsExperienceRequestProcessorTest {
 
 		SegmentsExperience segmentsExperience =
 			_segmentsExperienceLocalService.addSegmentsExperience(
+				TestPropsValues.getUserId(), _group.getGroupId(),
 				segmentsEntry.getSegmentsEntryId(), classNameId,
 				layout.getPlid(), RandomTestUtil.randomLocaleStringMap(), 0,
 				true, new UnicodeProperties(true),
