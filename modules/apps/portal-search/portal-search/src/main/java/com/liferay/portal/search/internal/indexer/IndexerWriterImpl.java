@@ -98,6 +98,8 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 		String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
 
 		delete(companyId, uid);
+
+		_modelIndexerWriterContributor.modelDeleted(baseModel);
 	}
 
 	@Override
@@ -205,6 +207,11 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 	@Override
 	public void reindex(T baseModel) {
+		reindex(baseModel, true);
+	}
+
+	@Override
+	public void reindex(T baseModel, boolean notify) {
 		if (!isEnabled() || (baseModel == null)) {
 			return;
 		}
@@ -222,7 +229,12 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 				document, _modelSearchSettings.isCommitImmediately());
 		}
 		else if (indexerWriterMode == IndexerWriterMode.DELETE) {
-			delete(baseModel);
+			long companyId = _modelIndexerWriterContributor.getCompanyId(
+				baseModel);
+
+			String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
+
+			delete(companyId, uid);
 		}
 		else if (indexerWriterMode == IndexerWriterMode.SKIP) {
 			if (_log.isDebugEnabled()) {
@@ -230,7 +242,9 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 			}
 		}
 
-		_modelIndexerWriterContributor.modelIndexed(baseModel);
+		if (notify) {
+			_modelIndexerWriterContributor.modelIndexed(baseModel);
+		}
 	}
 
 	@Override
