@@ -53,6 +53,9 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.segments.exception.NoSuchExperienceException;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -86,6 +89,8 @@ public class FragmentEntryLinkLocalServiceImpl
 			String editableValues, String namespace, int position,
 			String rendererKey, ServiceContext serviceContext)
 		throws PortalException {
+
+		_validateSegmentsExperience(segmentsExperienceId);
 
 		User user = _userLocalService.getUser(userId);
 
@@ -704,6 +709,18 @@ public class FragmentEntryLinkLocalServiceImpl
 		_layoutLocalService.updateLayout(layout);
 	}
 
+	private void _validateSegmentsExperience(long segmentsExperienceId)
+		throws NoSuchExperienceException {
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperienceId);
+
+		if (segmentsExperience == null) {
+			throw new NoSuchExperienceException();
+		}
+	}
+
 	private static final String[] _FRAGMENT_ENTRY_PROCESSOR_KEYS = {
 		"com.liferay.fragment.entry.processor.editable." +
 			"EditableFragmentEntryProcessor"
@@ -738,6 +755,9 @@ public class FragmentEntryLinkLocalServiceImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;
