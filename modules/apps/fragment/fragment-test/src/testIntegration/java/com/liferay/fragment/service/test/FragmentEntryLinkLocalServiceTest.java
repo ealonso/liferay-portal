@@ -64,6 +64,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.exception.NoSuchExperienceException;
 
 import java.io.InputStream;
 
@@ -288,6 +289,19 @@ public class FragmentEntryLinkLocalServiceTest {
 			_EDITABLE_PROCESSOR_KEY);
 
 		Assert.assertEquals(3, editableJSONObject.length());
+	}
+
+	@Test(expected = NoSuchExperienceException.class)
+	public void testAddFragmentEntryLinkWithNoSegmentsExperience()
+		throws Exception {
+
+		_fragmentEntryLinkLocalService.addFragmentEntryLink(
+			TestPropsValues.getUserId(), _group.getGroupId(), 0,
+			_fragmentEntry.getFragmentEntryId(), 0, _layout.getPlid(),
+			_fragmentEntry.getCss(), _fragmentEntry.getHtml(),
+			_fragmentEntry.getJs(), _fragmentEntry.getConfiguration(),
+			_read("editable-values-light-modified.json"), StringPool.BLANK, 0,
+			null, _serviceContext);
 	}
 
 	@Test
