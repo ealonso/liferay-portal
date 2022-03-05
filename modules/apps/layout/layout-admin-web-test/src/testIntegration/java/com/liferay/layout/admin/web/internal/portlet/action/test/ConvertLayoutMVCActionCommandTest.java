@@ -150,22 +150,17 @@ public class ConvertLayoutMVCActionCommandTest {
 	private SegmentsExperience _addDefaultSegmentsExperience(Layout layout)
 		throws Exception {
 
-		long classPK = layout.getPlid();
-
-		if (layout.isDraftLayout()) {
-			classPK = layout.getClassPK();
-		}
-
 		SegmentsExperience segmentsExperience =
 			_segmentsExperienceLocalService.fetchSegmentsExperience(
 				layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
-				_portal.getClassNameId(Layout.class), classPK);
+				_portal.getClassNameId(Layout.class), layout.getPlid());
 
 		if (segmentsExperience != null) {
 			return segmentsExperience;
 		}
 
 		return _segmentsExperienceLocalService.addSegmentsExperience(
+			TestPropsValues.getUserId(), layout.getGroupId(),
 			SegmentsEntryConstants.ID_DEFAULT,
 			SegmentsExperienceConstants.KEY_DEFAULT,
 			_portal.getClassNameId(Layout.class), layout.getPlid(),

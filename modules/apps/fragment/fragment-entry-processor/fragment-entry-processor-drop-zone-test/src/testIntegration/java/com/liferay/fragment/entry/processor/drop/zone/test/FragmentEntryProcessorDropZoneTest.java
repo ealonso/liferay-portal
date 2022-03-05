@@ -103,7 +103,13 @@ public class FragmentEntryProcessorDropZoneTest {
 			layoutStructure.addContainerStyledLayoutStructureItem(
 				rootLayoutStructureItem.getItemId(), 0);
 
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink();
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
+
+		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
+			segmentsExperience.getSegmentsExperienceId());
 
 		LayoutStructureItem fragmentStyledLayoutStructureItem =
 			layoutStructure.addFragmentStyledLayoutStructureItem(
@@ -113,11 +119,6 @@ public class FragmentEntryProcessorDropZoneTest {
 		LayoutStructureItem fragmentDropZoneLayoutStructureItem =
 			layoutStructure.addFragmentDropZoneLayoutStructureItem(
 				fragmentStyledLayoutStructureItem.getItemId(), 0);
-
-		SegmentsExperience segmentsExperience =
-			_segmentsExperienceLocalService.fetchSegmentsExperience(
-				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
-				PortalUtil.getClassNameId(Layout.class), _layout.getPlid());
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
@@ -141,7 +142,9 @@ public class FragmentEntryProcessorDropZoneTest {
 					LocaleUtil.getMostRelevantLocale())));
 	}
 
-	private FragmentEntryLink _addFragmentEntryLink() throws Exception {
+	private FragmentEntryLink _addFragmentEntryLink(long segmentsExperienceId)
+		throws Exception {
+
 		FragmentCollection fragmentCollection =
 			_fragmentCollectionService.addFragmentCollection(
 				_group.getGroupId(), "Fragment Collection", StringPool.BLANK,
@@ -158,8 +161,8 @@ public class FragmentEntryProcessorDropZoneTest {
 
 		return _fragmentEntryLinkLocalService.addFragmentEntryLink(
 			TestPropsValues.getUserId(), _group.getGroupId(), 0,
-			fragmentEntry.getFragmentEntryId(), 0, _layout.getPlid(),
-			fragmentEntry.getCss(), fragmentEntry.getHtml(),
+			fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
+			_layout.getPlid(), fragmentEntry.getCss(), fragmentEntry.getHtml(),
 			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
 			StringPool.BLANK, StringPool.BLANK, 0, null, _serviceContext);
 	}
