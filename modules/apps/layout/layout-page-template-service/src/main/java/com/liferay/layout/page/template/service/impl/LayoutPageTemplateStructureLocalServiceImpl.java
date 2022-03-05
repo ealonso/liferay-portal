@@ -205,18 +205,19 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 				_portal.getClassNameId(Layout.class), plid);
 
 		if (segmentsExperience == null) {
-			_segmentsExperienceLocalService.addSegmentsExperience(
-				PrincipalThreadLocal.getUserId(), groupId,
-				SegmentsEntryConstants.ID_DEFAULT,
-				SegmentsExperienceConstants.KEY_DEFAULT,
-				_portal.getClassNameId(Layout.class), plid,
-				Collections.singletonMap(
-					LocaleUtil.getSiteDefault(),
-					LanguageUtil.get(
+			segmentsExperience =
+				_segmentsExperienceLocalService.addSegmentsExperience(
+					PrincipalThreadLocal.getUserId(), groupId,
+					SegmentsEntryConstants.ID_DEFAULT,
+					SegmentsExperienceConstants.KEY_DEFAULT,
+					_portal.getClassNameId(Layout.class), plid,
+					Collections.singletonMap(
 						LocaleUtil.getSiteDefault(),
-						"default-experience-name")),
-				0, true, new UnicodeProperties(true),
-				ServiceContextThreadLocal.getServiceContext());
+						LanguageUtil.get(
+							LocaleUtil.getSiteDefault(),
+							"default-experience-name")),
+					0, true, new UnicodeProperties(true),
+					ServiceContextThreadLocal.getServiceContext());
 		}
 
 		return addLayoutPageTemplateStructure(
