@@ -172,7 +172,8 @@ const History = ({actions = [], type, onHistoryItemClick}) => {
 					store.availableSegmentsExperiences,
 			})}
 
-			{action.type !== SELECT_SEGMENTS_EXPERIENCE &&
+			{action.segmentsExperienceId &&
+			 	action.type !== SELECT_SEGMENTS_EXPERIENCE &&
 				action.segmentsExperienceId !==
 					config.defaultSegmentsExperienceId &&
 				!config.singleSegmentsExperienceMode && (

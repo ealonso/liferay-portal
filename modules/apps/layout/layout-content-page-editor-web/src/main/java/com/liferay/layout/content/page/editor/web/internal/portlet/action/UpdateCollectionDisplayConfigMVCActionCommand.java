@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -39,6 +40,9 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +76,8 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 			WebKeys.THEME_DISPLAY);
 
 		long segmentsExperienceId = ParamUtil.getLong(
-			actionRequest, "segmentsExperienceId");
+			actionRequest, "segmentsExperienceId",
+			_getDefaultSegmentsExperienceId(themeDisplay));
 		String itemConfig = ParamUtil.getString(actionRequest, "itemConfig");
 		String itemId = ParamUtil.getString(actionRequest, "itemId");
 		String languageId = ParamUtil.getString(
@@ -203,6 +208,16 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 			actionRequest, actionResponse, jsonObject);
 	}
 
+	private long _getDefaultSegmentsExperienceId(ThemeDisplay themeDisplay) {
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				themeDisplay.getSiteGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), themeDisplay.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
+	}
+
 	private static final String
 		_KEY_COLLECTION_APPLIED_FILTERS_FRAGMENT_RENDERER =
 			"com.liferay.fragment.renderer.collection.filter.internal." +
@@ -230,5 +245,8 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }
