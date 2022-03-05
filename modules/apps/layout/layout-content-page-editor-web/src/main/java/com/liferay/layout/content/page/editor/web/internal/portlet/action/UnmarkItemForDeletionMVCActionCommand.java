@@ -18,15 +18,21 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortlet
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Víctor Galán
@@ -51,7 +57,9 @@ public class UnmarkItemForDeletionMVCActionCommand
 			WebKeys.THEME_DISPLAY);
 
 		long segmentsExperienceId = ParamUtil.getLong(
-			actionRequest, "segmentsExperienceId");
+			actionRequest, "segmentsExperienceId",
+			_getDefaultSegmentsExperienceId(themeDisplay));
+
 		String itemId = ParamUtil.getString(actionRequest, "itemId");
 
 		return JSONUtil.put(
@@ -63,5 +71,21 @@ public class UnmarkItemForDeletionMVCActionCommand
 					layoutStructure.unmarkLayoutStructureItemForDeletion(
 						itemId)));
 	}
+
+	private long _getDefaultSegmentsExperienceId(ThemeDisplay themeDisplay) {
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				themeDisplay.getSiteGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), themeDisplay.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
+	}
+
+	@Reference
+	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

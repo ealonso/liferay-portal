@@ -66,7 +66,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsPortletKeys;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
@@ -150,9 +149,6 @@ public class ContentPageLayoutEditorDisplayContext
 		configContext.put(
 			"defaultSegmentsEntryId", SegmentsEntryConstants.ID_DEFAULT);
 		configContext.put(
-			"defaultSegmentsExperienceId",
-			String.valueOf(_getDefaultSegmentsExperienceId()));
-		configContext.put(
 			"deleteSegmentsExperienceURL",
 			getFragmentEntryActionURL(
 				"/layout_content_page_editor/delete_segments_experience"));
@@ -174,10 +170,6 @@ public class ContentPageLayoutEditorDisplayContext
 		Map<String, Object> stateContext =
 			(Map<String, Object>)editorContext.get("state");
 
-		stateContext.put(
-			"availableSegmentsExperiences",
-			SegmentsExperienceUtil.getAvailableSegmentsExperiences(
-				httpServletRequest));
 		stateContext.put("layoutDataList", _getLayoutDataList());
 		stateContext.put(
 			"segmentsExperienceId", String.valueOf(getSegmentsExperienceId()));
@@ -346,17 +338,6 @@ public class ContentPageLayoutEditorDisplayContext
 			).build());
 
 		return availableSegmentsEntries;
-	}
-
-	private long _getDefaultSegmentsExperienceId() {
-		SegmentsExperience segmentsExperience =
-			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
-				themeDisplay.getScopeGroupId(),
-				SegmentsExperienceConstants.KEY_DEFAULT,
-				PortalUtil.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid());
-
-		return segmentsExperience.getSegmentsExperienceId();
 	}
 
 	private String _getEditSegmentsEntryURL() throws Exception {

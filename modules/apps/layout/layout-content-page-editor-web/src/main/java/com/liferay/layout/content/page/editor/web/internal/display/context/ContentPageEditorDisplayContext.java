@@ -63,6 +63,7 @@ import com.liferay.layout.content.page.editor.web.internal.configuration.FFLayou
 import com.liferay.layout.content.page.editor.web.internal.configuration.PageEditorConfiguration;
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorActionKeys;
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorConstants;
+import com.liferay.layout.content.page.editor.web.internal.segments.SegmentsExperienceUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkItemSelectorUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.MappingContentUtil;
@@ -290,6 +291,9 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"defaultLanguageId",
 				LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale())
+			).put(
+				"defaultSegmentsExperienceId",
+				String.valueOf(_getDefaultSegmentsExperienceId())
 			).put(
 				"defaultStyleBookEntryImagePreviewURL",
 				() -> {
@@ -638,6 +642,10 @@ public class ContentPageEditorDisplayContext {
 		).put(
 			"state",
 			HashMapBuilder.<String, Object>put(
+				"availableSegmentsExperiences",
+				SegmentsExperienceUtil.getAvailableSegmentsExperiences(
+					httpServletRequest)
+			).put(
 				"collections", _getFragmentCollections(true, false)
 			).put(
 				"fragmentEntryLinks", _getFragmentEntryLinks()
@@ -1083,6 +1091,17 @@ public class ContentPageEditorDisplayContext {
 				themeDisplay.getLayout());
 
 		return _defaultMasterStyleBookEntry;
+	}
+
+	private long _getDefaultSegmentsExperienceId() {
+		SegmentsExperience segmentsExperience =
+			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
+				themeDisplay.getScopeGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class.getName()),
+				themeDisplay.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
 	}
 
 	private StyleBookEntry _getDefaultStyleBookEntry() {
