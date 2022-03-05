@@ -329,6 +329,12 @@ public class SegmentsExperienceLocalServiceWrapper
 	}
 
 	@Override
+	public long fetchDefaultSegmentsExperienceId(long plid) {
+		return _segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+			plid);
+	}
+
+	@Override
 	public SegmentsExperience fetchSegmentsExperience(
 		long segmentsExperienceId) {
 
