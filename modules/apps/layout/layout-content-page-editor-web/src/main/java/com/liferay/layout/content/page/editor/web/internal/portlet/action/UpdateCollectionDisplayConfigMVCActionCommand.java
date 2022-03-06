@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -46,6 +47,9 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -72,7 +76,8 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 			WebKeys.THEME_DISPLAY);
 
 		long segmentsExperienceId = ParamUtil.getLong(
-			actionRequest, "segmentsExperienceId");
+			actionRequest, "segmentsExperienceId",
+			_getDefaultSegmentsExperienceId(themeDisplay));
 		String itemConfig = ParamUtil.getString(actionRequest, "itemConfig");
 		String itemId = ParamUtil.getString(actionRequest, "itemId");
 		String languageId = ParamUtil.getString(
@@ -218,6 +223,19 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpdateCollectionDisplayConfigMVCActionCommand.class);
+
+	private long _getDefaultSegmentsExperienceId(ThemeDisplay themeDisplay) {
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				themeDisplay.getSiteGroupId(),
+				SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), themeDisplay.getPlid());
+
+		return segmentsExperience.getSegmentsExperienceId();
+	}
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
