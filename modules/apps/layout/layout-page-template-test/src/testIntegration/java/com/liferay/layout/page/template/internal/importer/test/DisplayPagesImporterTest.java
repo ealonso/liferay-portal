@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.zip.ZipWriterFactoryUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,7 +191,8 @@ public class DisplayPagesImporterTest {
 		Assert.assertNotNull(layoutPageTemplateStructure);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(0));
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		LayoutStructureItem mainLayoutStructureItem =
 			layoutStructure.getMainLayoutStructureItem();
@@ -374,7 +376,8 @@ public class DisplayPagesImporterTest {
 		Assert.assertNotNull(layoutPageTemplateStructure);
 
 		LayoutStructure layoutStructure = LayoutStructure.of(
-			layoutPageTemplateStructure.getData(0));
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		Assert.assertNotNull(layoutStructure.getMainLayoutStructureItem());
 	}
