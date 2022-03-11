@@ -65,6 +65,7 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
@@ -75,6 +76,8 @@ import com.liferay.portal.vulcan.dto.converter.DTOConverterContext;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -629,14 +632,22 @@ public class PageDefinitionDTOConverterTest {
 			String fileName, Map<String, String> valuesMap)
 		throws Exception {
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				_group.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
+				PortalUtil.getClassNameId(Layout.class),
+				_layoutPageTemplateEntry.getPlid());
+
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				updateLayoutPageTemplateStructureData(
 					_group.getGroupId(), _layoutPageTemplateEntry.getPlid(),
-					SegmentsExperienceConstants.ID_DEFAULT,
+					segmentsExperience.getSegmentsExperienceId(),
 					StringUtil.replace(_read(fileName), "${", "}", valuesMap));
 
-		return LayoutStructure.of(layoutPageTemplateStructure.getData(0L));
+		return LayoutStructure.of(
+			layoutPageTemplateStructure.getData(
+				segmentsExperience.getSegmentsExperienceId()));
 	}
 
 	private PageDefinition _getPageDefinition(
@@ -676,13 +687,17 @@ public class PageDefinitionDTOConverterTest {
 				configuration, null, 0, FragmentConstants.TYPE_COMPONENT,
 				WorkflowConstants.STATUS_APPROVED, _serviceContext);
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layoutPageTemplateEntry.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				fragmentEntry.getFragmentEntryId(), 0, layout.getPlid(),
-				StringPool.BLANK, html, StringPool.BLANK, configuration,
-				_read(editableValuesFileName), StringPool.BLANK, 0, null,
-				_serviceContext);
+				fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
+				layout.getPlid(), StringPool.BLANK, html, StringPool.BLANK,
+				configuration, _read(editableValuesFileName), StringPool.BLANK,
+				0, null, _serviceContext);
 
 		LayoutStructure layoutStructure = _getLayoutStructure(
 			"layout_data_fragment.json",
@@ -878,6 +893,9 @@ public class PageDefinitionDTOConverterTest {
 	@Inject
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 

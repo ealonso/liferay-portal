@@ -28,6 +28,7 @@ import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
@@ -37,10 +38,16 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -192,9 +199,30 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 				_generateContentLayoutStructureData(groupId, plid));
 		}
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				groupId, SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), plid);
+
+		if (segmentsExperience == null) {
+			segmentsExperience =
+				_segmentsExperienceLocalService.addSegmentsExperience(
+					PrincipalThreadLocal.getUserId(), groupId,
+					SegmentsEntryConstants.ID_DEFAULT,
+					SegmentsExperienceConstants.KEY_DEFAULT,
+					_portal.getClassNameId(Layout.class), plid,
+					Collections.singletonMap(
+						LocaleUtil.getSiteDefault(),
+						LanguageUtil.get(
+							LocaleUtil.getSiteDefault(),
+							"default-experience-name")),
+					0, true, new UnicodeProperties(true),
+					ServiceContextThreadLocal.getServiceContext());
+		}
+
 		return addLayoutPageTemplateStructure(
 			PrincipalThreadLocal.getUserId(), groupId, plid,
-			SegmentsExperienceConstants.ID_DEFAULT,
+			segmentsExperience.getSegmentsExperienceId(),
 			_generateContentLayoutStructureData(groupId, plid),
 			ServiceContextThreadLocal.getServiceContext());
 	}
@@ -252,9 +280,15 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			long groupId, long plid, String data)
 		throws PortalException {
 
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				groupId, SegmentsExperienceConstants.KEY_DEFAULT,
+				_portal.getClassNameId(Layout.class), plid);
+
 		return layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				groupId, plid, SegmentsExperienceConstants.ID_DEFAULT, data);
+				groupId, plid, segmentsExperience.getSegmentsExperienceId(),
+				data);
 	}
 
 	private String _generateContentLayoutStructureData(long groupId, long plid)
@@ -358,6 +392,9 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;

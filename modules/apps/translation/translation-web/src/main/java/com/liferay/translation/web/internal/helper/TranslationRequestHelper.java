@@ -58,7 +58,8 @@ public class TranslationRequestHelper {
 			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
 				segmentsExperienceId);
 
-		if (Objects.equals(
+		if ((segmentsExperience != null) &&
+			Objects.equals(
 				segmentsExperience.getSegmentsExperienceKey(),
 				SegmentsExperienceConstants.KEY_DEFAULT)) {
 
@@ -74,7 +75,8 @@ public class TranslationRequestHelper {
 				SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
 					segmentsExperienceIds[0]);
 
-			if (Objects.equals(
+			if ((segmentsExperience == null) ||
+				Objects.equals(
 					segmentsExperience.getSegmentsExperienceKey(),
 					SegmentsExperienceConstants.KEY_DEFAULT)) {
 
@@ -100,7 +102,8 @@ public class TranslationRequestHelper {
 			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
 				segmentsExperienceId);
 
-		if (Objects.equals(
+		if ((segmentsExperience != null) &&
+			Objects.equals(
 				segmentsExperience.getSegmentsExperienceKey(),
 				SegmentsExperienceConstants.KEY_DEFAULT)) {
 
@@ -118,7 +121,8 @@ public class TranslationRequestHelper {
 				SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
 					segmentsExperienceIds[0]);
 
-			if (Objects.equals(
+			if ((segmentsExperience == null) ||
+				Objects.equals(
 					segmentsExperience.getSegmentsExperienceKey(),
 					SegmentsExperienceConstants.KEY_DEFAULT)) {
 

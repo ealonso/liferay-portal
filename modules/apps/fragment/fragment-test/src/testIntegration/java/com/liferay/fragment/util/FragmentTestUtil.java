@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 
 import java.util.Date;
 
@@ -94,10 +95,13 @@ public class FragmentTestUtil {
 
 		return FragmentEntryLinkLocalServiceUtil.addFragmentEntryLink(
 			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(), 0,
-			fragmentEntry.getFragmentEntryId(), 0, plid, fragmentEntry.getCss(),
-			fragmentEntry.getHtml(), fragmentEntry.getJs(),
-			fragmentEntry.getConfiguration(), StringPool.BLANK,
-			StringPool.BLANK, 1, StringPool.BLANK, serviceContext);
+			fragmentEntry.getFragmentEntryId(),
+			SegmentsExperienceLocalServiceUtil.fetchDefaultSegmentsExperienceId(
+				plid),
+			plid, fragmentEntry.getCss(), fragmentEntry.getHtml(),
+			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
+			StringPool.BLANK, StringPool.BLANK, 1, StringPool.BLANK,
+			serviceContext);
 	}
 
 	public static FragmentEntryLink addFragmentEntryLink(
@@ -112,10 +116,13 @@ public class FragmentTestUtil {
 
 		return FragmentEntryLinkLocalServiceUtil.addFragmentEntryLink(
 			TestPropsValues.getUserId(), groupId, 0,
-			fragmentEntry.getFragmentEntryId(), 0, plid, fragmentEntry.getCss(),
-			fragmentEntry.getHtml(), fragmentEntry.getJs(),
-			fragmentEntry.getConfiguration(), StringPool.BLANK,
-			StringPool.BLANK, 1, StringPool.BLANK, serviceContext);
+			fragmentEntry.getFragmentEntryId(),
+			SegmentsExperienceLocalServiceUtil.fetchDefaultSegmentsExperienceId(
+				plid),
+			plid, fragmentEntry.getCss(), fragmentEntry.getHtml(),
+			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
+			StringPool.BLANK, StringPool.BLANK, 1, StringPool.BLANK,
+			serviceContext);
 	}
 
 	public static FragmentEntryLink fetchFragmentEntryLink(

@@ -29,6 +29,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -41,6 +43,7 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PersistenceTestRule;
 import com.liferay.portal.test.rule.TransactionalTestRule;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -90,7 +93,9 @@ public class FragmentEntryLinkServiceTest {
 
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkService.addFragmentEntryLink(
-				_group.getGroupId(), 0, _fragmentEntry.getFragmentEntryId(), 0,
+				_group.getGroupId(), 0, _fragmentEntry.getFragmentEntryId(),
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid()),
 				_layout.getPlid(), css, html, js, configuration,
 				StringPool.BLANK, StringPool.BLANK, 0, null, serviceContext);
 
@@ -140,6 +145,19 @@ public class FragmentEntryLinkServiceTest {
 			editableValues, persistedFragmentEntryLink.getEditableValues());
 	}
 
+	private Layout _addLayout() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				TestPropsValues.getGroupId(), TestPropsValues.getUserId());
+
+		return _layoutLocalService.addLayout(
+			TestPropsValues.getUserId(), _group.getGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
+			StringPool.BLANK, serviceContext);
+	}
+
 	private String _createEditableValues() {
 		JSONObject jsonObject = JSONUtil.put(
 			RandomTestUtil.randomString(), RandomTestUtil.randomString());
@@ -159,5 +177,11 @@ public class FragmentEntryLinkServiceTest {
 	private Group _group;
 
 	private Layout _layout;
+
+	@Inject
+	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

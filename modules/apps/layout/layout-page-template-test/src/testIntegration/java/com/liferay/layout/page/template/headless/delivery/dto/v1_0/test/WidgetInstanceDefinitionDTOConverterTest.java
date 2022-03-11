@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,11 +141,15 @@ public class WidgetInstanceDefinitionDTOConverterTest {
 			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
 			StringPool.BLANK, _serviceContext);
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				layout.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				_serviceContext.getUserId(), _serviceContext.getScopeGroupId(),
-				0, 0, 0, layout.getPlid(), StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, StringPool.BLANK,
+				0, 0, segmentsExperienceId, layout.getPlid(), StringPool.BLANK,
+				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
 				editableValueJSONObject.toString(), namespace, 0, null,
 				_serviceContext);
 
@@ -276,6 +281,9 @@ public class WidgetInstanceDefinitionDTOConverterTest {
 
 	@Inject
 	private RoleLocalService _roleLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private ServiceContext _serviceContext;
 	private final List<ServiceRegistration<?>> _serviceRegistrations =

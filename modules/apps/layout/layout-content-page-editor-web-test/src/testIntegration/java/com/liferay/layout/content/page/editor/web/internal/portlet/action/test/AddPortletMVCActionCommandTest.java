@@ -60,6 +60,7 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 import java.util.Locale;
@@ -117,6 +118,11 @@ public class AddPortletMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest();
 
 		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		mockLiferayPortletActionRequest.addParameter(
 			"portletId", JournalPortletKeys.JOURNAL);
 
 		ReflectionTestUtil.invoke(
@@ -141,6 +147,11 @@ public class AddPortletMVCActionCommandTest {
 			_getMockLiferayPortletActionRequest();
 
 		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		mockLiferayPortletActionRequest.addParameter(
 			"portletId", RandomTestUtil.randomString());
 
 		ReflectionTestUtil.invoke(
@@ -155,6 +166,11 @@ public class AddPortletMVCActionCommandTest {
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			_getMockLiferayPortletActionRequest();
 
+		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		mockLiferayPortletActionRequest.addParameter(
 			"portletId", BlogsPortletKeys.BLOGS);
 
@@ -178,6 +194,11 @@ public class AddPortletMVCActionCommandTest {
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			_getMockLiferayPortletActionRequest();
 
+		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		mockLiferayPortletActionRequest.addParameter(
 			"portletId", JournalPortletKeys.JOURNAL);
 
@@ -222,6 +243,11 @@ public class AddPortletMVCActionCommandTest {
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			_getMockLiferayPortletActionRequest();
 
+		mockLiferayPortletActionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		mockLiferayPortletActionRequest.addParameter(
 			"parentItemId", _layoutStructure.getMainItemId());
 		mockLiferayPortletActionRequest.addParameter(
@@ -364,5 +390,8 @@ public class AddPortletMVCActionCommandTest {
 
 	@Inject
 	private Portal _portal;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }

@@ -97,6 +97,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.io.InputStream;
 
@@ -196,13 +197,18 @@ public class FragmentEntryProcessorEditableTest {
 		ServiceContext serviceContext = new MockServiceContext(
 			_layout, _getThemeDisplay());
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layout.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				fragmentEntry.getFragmentEntryId(), 0, _layout.getPlid(),
-				fragmentEntry.getCss(), fragmentEntry.getHtml(),
-				fragmentEntry.getJs(), StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, 0, null, serviceContext);
+				fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
+				_layout.getPlid(), fragmentEntry.getCss(),
+				fragmentEntry.getHtml(), fragmentEntry.getJs(),
+				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK, 0, null,
+				serviceContext);
 
 		List<PortletPreferences> portletPreferencesList =
 			_portletPreferencesLocalService.getPortletPreferences(
@@ -257,10 +263,14 @@ public class FragmentEntryProcessorEditableTest {
 
 		FragmentEntry fragmentEntry = _addFragmentEntry("fragment_entry.html");
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layout.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				fragmentEntry.getFragmentEntryId(), 0,
+				fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
 				TestPropsValues.getPlid(), fragmentEntry.getCss(),
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
 				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK, 0, null,
@@ -670,7 +680,7 @@ public class FragmentEntryProcessorEditableTest {
 		return _layoutLocalService.addLayout(
 			TestPropsValues.getUserId(), groupId, false,
 			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, name, null,
-			RandomTestUtil.randomString(), LayoutConstants.TYPE_PORTLET, false,
+			RandomTestUtil.randomString(), LayoutConstants.TYPE_CONTENT, false,
 			friendlyURL, ServiceContextTestUtil.getServiceContext());
 	}
 
@@ -734,10 +744,14 @@ public class FragmentEntryProcessorEditableTest {
 
 		FragmentEntry fragmentEntry = _addFragmentEntry(htmlFileName);
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layout.getPlid());
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
 				TestPropsValues.getUserId(), _group.getGroupId(), 0,
-				fragmentEntry.getFragmentEntryId(), 0,
+				fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
 				TestPropsValues.getPlid(), fragmentEntry.getCss(),
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
 				StringPool.BLANK, editableValues, StringPool.BLANK, 0, null,
@@ -983,6 +997,9 @@ public class FragmentEntryProcessorEditableTest {
 	private PortletPreferencesLocalService _portletPreferencesLocalService;
 
 	private String _processedHTML;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Inject
 	private ThemeLocalService _themeLocalService;

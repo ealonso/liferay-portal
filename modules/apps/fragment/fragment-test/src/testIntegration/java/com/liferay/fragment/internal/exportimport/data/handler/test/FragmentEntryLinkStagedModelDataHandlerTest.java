@@ -28,7 +28,10 @@ import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.StagedModel;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
@@ -38,6 +41,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 import java.util.Map;
@@ -119,12 +123,17 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 			ServiceContextTestUtil.getServiceContext(
 				stagingGroup.getGroupId(), TestPropsValues.getUserId());
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layout.getPlid());
+
 		StagedModel stagedModel =
 			_fragmentEntryLinkLocalService.addFragmentEntryLink(
-				TestPropsValues.getUserId(), stagingGroup.getGroupId(), 0, 0, 0,
-				stagingGroup.getDefaultPublicPlid(), StringPool.BLANK, "html",
-				StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
-				StringPool.BLANK, 0, StringPool.BLANK, serviceContext);
+				TestPropsValues.getUserId(), stagingGroup.getGroupId(), 0, 0,
+				segmentsExperienceId, stagingGroup.getDefaultPublicPlid(),
+				StringPool.BLANK, "html", StringPool.BLANK, StringPool.BLANK,
+				StringPool.BLANK, StringPool.BLANK, 0, StringPool.BLANK,
+				serviceContext);
 
 		try {
 			exportImportStagedModel(stagedModel);
@@ -198,13 +207,17 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 				FragmentConstants.TYPE_COMPONENT,
 				WorkflowConstants.STATUS_APPROVED, serviceContext);
 
+		long segmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				_layout.getPlid());
+
 		return _fragmentEntryLinkLocalService.addFragmentEntryLink(
 			TestPropsValues.getUserId(), serviceContext.getScopeGroupId(), 0,
-			fragmentEntry.getFragmentEntryId(), 0, group.getDefaultPublicPlid(),
-			fragmentEntry.getCss(), fragmentEntry.getHtml(),
-			fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
-			StringPool.BLANK, StringPool.BLANK, 1, StringPool.BLANK,
-			serviceContext);
+			fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
+			group.getDefaultPublicPlid(), fragmentEntry.getCss(),
+			fragmentEntry.getHtml(), fragmentEntry.getJs(),
+			fragmentEntry.getConfiguration(), StringPool.BLANK,
+			StringPool.BLANK, 1, StringPool.BLANK, serviceContext);
 	}
 
 	@Override
@@ -248,6 +261,19 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 			fragmentEntryLink.getPosition());
 	}
 
+	private Layout _addLayout(Group group) throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				TestPropsValues.getGroupId(), TestPropsValues.getUserId());
+
+		return _layoutLocalService.addLayout(
+			TestPropsValues.getUserId(), group.getGroupId(), false,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			StringPool.BLANK, LayoutConstants.TYPE_CONTENT, false,
+			StringPool.BLANK, serviceContext);
+	}
+
 	private String _read(String fileName) throws Exception {
 		return new String(
 			FileUtil.getBytes(getClass(), "dependencies/" + fileName));
@@ -258,5 +284,13 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 
 	@Inject
 	private FragmentEntryLocalService _fragmentEntryLocalService;
+
+	private Layout _layout;
+
+	@Inject
+	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 }
