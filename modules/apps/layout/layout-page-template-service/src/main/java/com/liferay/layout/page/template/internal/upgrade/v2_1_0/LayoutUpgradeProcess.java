@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.sql.PreparedStatement;
@@ -151,9 +153,17 @@ public class LayoutUpgradeProcess extends UpgradeProcess {
 
 				Layout draftLayout = _layoutLocalService.fetchDraftLayout(plid);
 
-				long segmentsExperienceId =
-					_segmentsExperienceLocalService.
-						fetchDefaultSegmentsExperienceId(plid);
+				long segmentsExperienceId = 0;
+
+				SegmentsExperience segmentsExperience =
+					_segmentsExperienceLocalService.fetchSegmentsExperience(
+						groupId, SegmentsExperienceConstants.KEY_DEFAULT,
+						PortalUtil.getClassNameId(Layout.class), plid);
+
+				if (segmentsExperience != null) {
+					segmentsExperienceId =
+						segmentsExperience.getSegmentsExperienceId();
+				}
 
 				for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 					fragmentEntryLink.setClassNameId(

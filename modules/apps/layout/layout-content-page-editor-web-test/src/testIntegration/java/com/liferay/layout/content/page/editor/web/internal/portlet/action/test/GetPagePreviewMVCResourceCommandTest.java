@@ -209,6 +209,13 @@ public class GetPagePreviewMVCResourceCommandTest {
 		mockLiferayResourceRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, _themeDisplay);
 
+		mockLiferayResourceRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(
+						_fragmentEntryLink.getPlid())));
+
 		MockHttpServletRequest httpServletRequest =
 			(MockHttpServletRequest)
 				mockLiferayResourceRequest.getHttpServletRequest();

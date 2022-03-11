@@ -63,6 +63,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.io.File;
@@ -233,9 +234,11 @@ public class ExportImportLayoutPageTemplateEntriesTest {
 					layoutPageTemplateEntry2.getPlid());
 
 		LayoutStructure layoutStructure1 = LayoutStructure.of(
-			layoutPageTemplateStructure1.getData(0));
+			layoutPageTemplateStructure1.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 		LayoutStructure layoutStructure2 = LayoutStructure.of(
-			layoutPageTemplateStructure2.getData(0));
+			layoutPageTemplateStructure2.getData(
+				SegmentsExperienceConstants.KEY_DEFAULT));
 
 		ContainerStyledLayoutStructureItem containerStyledLayoutStructureItem1 =
 			_getContainerLayoutStructureItem(layoutStructure1);

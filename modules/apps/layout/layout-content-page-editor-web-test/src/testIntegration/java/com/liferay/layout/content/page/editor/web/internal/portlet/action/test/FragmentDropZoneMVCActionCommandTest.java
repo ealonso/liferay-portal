@@ -224,6 +224,11 @@ public class FragmentDropZoneMVCActionCommandTest {
 			_group.getGroupId());
 
 		actionRequest.addParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
+		actionRequest.addParameter(
 			"itemType", LayoutDataItemTypeConstants.TYPE_CONTAINER);
 		actionRequest.addParameter("parentItemId", childrenItemIds.get(0));
 		actionRequest.addParameter("position", "0");

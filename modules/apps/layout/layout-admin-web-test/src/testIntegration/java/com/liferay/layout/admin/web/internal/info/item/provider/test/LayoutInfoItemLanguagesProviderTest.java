@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
+<<<<<<< HEAD
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -32,6 +33,8 @@ import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+=======
+>>>>>>> f21e87c36e48 (LPS-X wip)
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
@@ -256,6 +259,7 @@ public class LayoutInfoItemLanguagesProviderTest {
 	@Inject
 	private Language _language;
 
+<<<<<<< HEAD
 	private Layout _layout;
 
 	@Inject
@@ -266,4 +270,6 @@ public class LayoutInfoItemLanguagesProviderTest {
 
 	private ServiceContext _serviceContext;
 
+=======
+>>>>>>> f21e87c36e48 (LPS-X wip)
 }

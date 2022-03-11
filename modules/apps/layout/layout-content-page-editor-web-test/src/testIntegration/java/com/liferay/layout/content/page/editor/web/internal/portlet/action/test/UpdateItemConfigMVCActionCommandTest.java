@@ -206,6 +206,11 @@ public class UpdateItemConfigMVCActionCommandTest {
 			_objectMapper.readTree(_read("column_item_config.json")),
 			_objectMapper.readTree(jsonObject.toString()));
 
+		mockActionRequest.setParameter(
+			"segmentsExperienceId",
+			String.valueOf(
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(_layout.getPlid())));
 		mockActionRequest.setParameter("itemConfig", _read(itemConfigfile));
 		mockActionRequest.setParameter(
 			"itemId", layoutStructureItem.getItemId());

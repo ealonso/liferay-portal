@@ -82,7 +82,7 @@ public class UpdateItemConfigMVCActionCommand extends BaseMVCActionCommand {
 		JSONPortletResponseUtil.writeJSON(
 			actionRequest, actionResponse, jsonObject);
 	}
-
+	
 	private static final Log _log = LogFactoryUtil.getLog(
 		UpdateItemConfigMVCActionCommand.class);
 
