@@ -290,6 +290,12 @@ public class ContentPageEditorDisplayContext {
 				"defaultLanguageId",
 				LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale())
 			).put(
+				"defaultSegmentsExperienceId",
+				String.valueOf(
+					SegmentsExperienceLocalServiceUtil.
+						fetchDefaultSegmentsExperienceId(
+							themeDisplay.getPlid()))
+			).put(
 				"defaultStyleBookEntryImagePreviewURL",
 				() -> {
 					StyleBookEntry defaultStyleBookEntry =
@@ -670,6 +676,8 @@ public class ContentPageEditorDisplayContext {
 					ContentPageEditorActionKeys.UPDATE_LAYOUT_CONTENT,
 					_hasUpdateContentPermissions()
 				).build()
+			).put(
+				"segmentsExperienceId", getSegmentsExperienceId()
 			).build()
 		).build();
 	}
