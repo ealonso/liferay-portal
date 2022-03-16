@@ -15,6 +15,9 @@
 package com.liferay.segments.internal.upgrade;
 
 import com.liferay.counter.kernel.service.CounterLocalService;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.upgrade.CTModelUpgradeProcess;
 import com.liferay.portal.kernel.upgrade.MVCCVersionUpgradeProcess;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
@@ -69,9 +72,25 @@ public class SegmentsServiceUpgrade implements UpgradeStepRegistrator {
 			"2.3.0", "2.4.0",
 			new com.liferay.segments.internal.upgrade.v2_4_0.
 				SchemaUpgradeProcess());
+
+		registry.register(
+			"2.4.0", "2.5.0",
+			new com.liferay.segments.internal.upgrade.v2_5_0.
+				SegmentsExperienceUpgradeProcess(
+					_classNameLocalService, _counterLocalService,
+					_layoutLocalService, _resourceLocalService));
 	}
 
 	@Reference
+	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
 	private CounterLocalService _counterLocalService;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private ResourceLocalService _resourceLocalService;
 
 }
