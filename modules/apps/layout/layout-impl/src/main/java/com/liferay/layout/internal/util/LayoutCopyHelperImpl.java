@@ -62,7 +62,6 @@ import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CopyLayoutThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -108,15 +107,11 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				sourceLayout.getGroupId(), _portal.getClassNameId(Layout.class),
 				sourceLayout.getPlid());
 
-		List<Long> segmentsExperiencesIds = ListUtil.toList(
+		long[] segmentsExperiencesIds = ListUtil.toLongArray(
 			segmentsExperiences,
 			SegmentsExperience.SEGMENTS_EXPERIENCE_ID_ACCESSOR);
 
-		segmentsExperiencesIds.add(0, SegmentsExperienceConstants.ID_DEFAULT);
-
-		return copyLayout(
-			ArrayUtil.toLongArray(segmentsExperiencesIds), sourceLayout,
-			targetLayout);
+		return copyLayout(segmentsExperiencesIds, sourceLayout, targetLayout);
 	}
 
 	@Override
