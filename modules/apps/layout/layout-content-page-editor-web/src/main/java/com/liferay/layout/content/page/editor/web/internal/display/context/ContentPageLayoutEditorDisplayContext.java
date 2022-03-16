@@ -66,7 +66,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsEntryConstants;
-import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.constants.SegmentsPortletKeys;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
@@ -171,10 +170,6 @@ public class ContentPageLayoutEditorDisplayContext
 		Map<String, Object> stateContext =
 			(Map<String, Object>)editorContext.get("state");
 
-		stateContext.put(
-			"availableSegmentsExperiences",
-			SegmentsExperienceUtil.getAvailableSegmentsExperiences(
-				httpServletRequest));
 		stateContext.put("layoutDataList", _getLayoutDataList());
 		stateContext.put(
 			"segmentsExperimentStatus",
@@ -204,9 +199,7 @@ public class ContentPageLayoutEditorDisplayContext
 			PortalUtil.getOriginalServletRequest(httpServletRequest),
 			"segmentsExperienceId", -1);
 
-		if ((_segmentsExperienceId != -1) &&
-			(_segmentsExperienceId != SegmentsExperienceConstants.ID_DEFAULT)) {
-
+		if (_segmentsExperienceId != -1) {
 			_segmentsExperienceId = Optional.ofNullable(
 				SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
 					_segmentsExperienceId)
@@ -626,20 +619,11 @@ public class ContentPageLayoutEditorDisplayContext
 			return _lockedSegmentsExperience;
 		}
 
-		if (SegmentsExperienceConstants.ID_DEFAULT == segmentsExperienceId) {
-			_lockedSegmentsExperience =
-				SegmentsExperienceUtil.
-					hasDefaultSegmentsExperienceLockedSegmentsExperiment(
-						themeDisplay);
-		}
-		else {
-			SegmentsExperience segmentsExperience =
-				SegmentsExperienceLocalServiceUtil.getSegmentsExperience(
-					segmentsExperienceId);
+		SegmentsExperience segmentsExperience =
+			SegmentsExperienceLocalServiceUtil.getSegmentsExperience(
+				segmentsExperienceId);
 
-			_lockedSegmentsExperience =
-				segmentsExperience.hasSegmentsExperiment();
-		}
+		_lockedSegmentsExperience = segmentsExperience.hasSegmentsExperiment();
 
 		return _lockedSegmentsExperience;
 	}

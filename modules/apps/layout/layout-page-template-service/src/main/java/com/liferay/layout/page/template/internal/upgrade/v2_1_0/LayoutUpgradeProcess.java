@@ -31,6 +31,9 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,11 +53,13 @@ public class LayoutUpgradeProcess extends UpgradeProcess {
 	public LayoutUpgradeProcess(
 		FragmentEntryLinkLocalService fragmentEntryLinkLocalService,
 		LayoutLocalService layoutLocalService,
-		LayoutPrototypeLocalService layoutPrototypeLocalService) {
+		LayoutPrototypeLocalService layoutPrototypeLocalService,
+		SegmentsExperienceLocalService segmentsExperienceLocalService) {
 
 		_fragmentEntryLinkLocalService = fragmentEntryLinkLocalService;
 		_layoutLocalService = layoutLocalService;
 		_layoutPrototypeLocalService = layoutPrototypeLocalService;
+		_segmentsExperienceLocalService = segmentsExperienceLocalService;
 	}
 
 	@Override
@@ -148,6 +153,18 @@ public class LayoutUpgradeProcess extends UpgradeProcess {
 
 				Layout draftLayout = _layoutLocalService.fetchDraftLayout(plid);
 
+				long segmentsExperienceId = 0;
+
+				SegmentsExperience segmentsExperience =
+					_segmentsExperienceLocalService.fetchSegmentsExperience(
+						groupId, SegmentsExperienceConstants.KEY_DEFAULT,
+						PortalUtil.getClassNameId(Layout.class), plid);
+
+				if (segmentsExperience != null) {
+					segmentsExperienceId =
+						segmentsExperience.getSegmentsExperienceId();
+				}
+
 				for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
 					fragmentEntryLink.setClassNameId(
 						PortalUtil.getClassNameId(Layout.class));
@@ -159,9 +176,10 @@ public class LayoutUpgradeProcess extends UpgradeProcess {
 
 					_fragmentEntryLinkLocalService.addFragmentEntryLink(
 						draftLayout.getUserId(), draftLayout.getGroupId(), 0,
-						fragmentEntryLink.getFragmentEntryId(), 0,
-						draftLayout.getPlid(), fragmentEntryLink.getCss(),
-						fragmentEntryLink.getHtml(), fragmentEntryLink.getJs(),
+						fragmentEntryLink.getFragmentEntryId(),
+						segmentsExperienceId, draftLayout.getPlid(),
+						fragmentEntryLink.getCss(), fragmentEntryLink.getHtml(),
+						fragmentEntryLink.getJs(),
 						fragmentEntryLink.getConfiguration(),
 						fragmentEntryLink.getEditableValues(), StringPool.BLANK,
 						fragmentEntryLink.getPosition(), null, serviceContext);
@@ -181,5 +199,7 @@ public class LayoutUpgradeProcess extends UpgradeProcess {
 	private final FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 	private final LayoutLocalService _layoutLocalService;
 	private final LayoutPrototypeLocalService _layoutPrototypeLocalService;
+	private final SegmentsExperienceLocalService
+		_segmentsExperienceLocalService;
 
 }

@@ -29,6 +29,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -50,13 +52,18 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TreeMapBuilder;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.segments.constants.SegmentsEntryConstants;
+import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -875,6 +882,18 @@ public class LayoutConverterTest {
 				Boolean.FALSE.toString()
 			).buildString());
 
+		_segmentsExperienceLocalService.addSegmentsExperience(
+			PrincipalThreadLocal.getUserId(), _group.getGroupId(),
+			SegmentsEntryConstants.ID_DEFAULT,
+			SegmentsExperienceConstants.KEY_DEFAULT,
+			PortalUtil.getClassNameId(Layout.class), layout.getPlid(),
+			Collections.singletonMap(
+				LocaleUtil.getSiteDefault(),
+				LanguageUtil.get(
+					LocaleUtil.getSiteDefault(), "default-experience-name")),
+			0, true, new UnicodeProperties(true),
+			ServiceContextThreadLocal.getServiceContext());
+
 		for (Map<String, String[]> portletIdsMap : portletIdsMaps) {
 			Set<Map.Entry<String, String[]>> entries = portletIdsMap.entrySet();
 
@@ -1189,6 +1208,9 @@ public class LayoutConverterTest {
 
 	@Inject
 	private PortletLocalService _portletLocalService;
+
+	@Inject
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	private final List<ServiceRegistration<?>> _serviceRegistrations =
 		new CopyOnWriteArrayList<>();

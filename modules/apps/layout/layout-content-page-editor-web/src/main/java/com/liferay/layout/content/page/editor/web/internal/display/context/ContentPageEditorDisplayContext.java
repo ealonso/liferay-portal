@@ -137,9 +137,9 @@ import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
-import com.liferay.segments.constants.SegmentsWebKeys;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
+import com.liferay.segments.util.SegmentsExperienceUtil;
 import com.liferay.site.navigation.item.selector.SiteNavigationMenuItemSelectorReturnType;
 import com.liferay.site.navigation.item.selector.criterion.SiteNavigationMenuItemSelectorCriterion;
 import com.liferay.staging.StagingGroupHelper;
@@ -642,6 +642,11 @@ public class ContentPageEditorDisplayContext {
 		).put(
 			"state",
 			HashMapBuilder.<String, Object>put(
+				"availableSegmentsExperiences",
+				com.liferay.layout.content.page.editor.web.internal.segments.
+					SegmentsExperienceUtil.getAvailableSegmentsExperiences(
+						httpServletRequest)
+			).put(
 				"collections", _getFragmentCollections(true, false)
 			).put(
 				"fragmentEntryLinks", _getFragmentEntryLinks()
@@ -818,17 +823,13 @@ public class ContentPageEditorDisplayContext {
 		}
 
 		if (_segmentsExperienceId == -1) {
-			long[] segmentsExperienceIds = GetterUtil.getLongValues(
-				httpServletRequest.getAttribute(
-					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
-				new long[] {SegmentsExperienceConstants.ID_DEFAULT});
+			_segmentsExperienceId =
+				SegmentsExperienceUtil.getSegmentsExperienceId(
+					httpServletRequest);
+		}
 
-			if (segmentsExperienceIds.length > 0) {
-				_segmentsExperienceId = segmentsExperienceIds[0];
-			}
-			else {
-				_segmentsExperienceId = SegmentsExperienceConstants.ID_DEFAULT;
-			}
+		if (_segmentsExperienceId <= 0) {
+			_segmentsExperienceId = _getDefaultSegmentsExperienceId();
 		}
 
 		return _segmentsExperienceId;
@@ -1060,6 +1061,11 @@ public class ContentPageEditorDisplayContext {
 				themeDisplay.getLayout());
 
 		return _defaultMasterStyleBookEntry;
+	}
+
+	private long _getDefaultSegmentsExperienceId() {
+		return SegmentsExperienceLocalServiceUtil.
+			fetchDefaultSegmentsExperienceId(themeDisplay.getPlid());
 	}
 
 	private StyleBookEntry _getDefaultStyleBookEntry() {
