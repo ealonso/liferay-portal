@@ -315,7 +315,9 @@ public abstract class BaseDBProcess implements DBProcess {
 		throws Exception {
 
 		try (Statement statement = connection.createStatement()) {
-			statement.setFetchSize(_UPGRADE_CONCURRENT_FETCH_SIZE);
+			statement.setFetchSize(
+				GetterUtil.getInteger(
+					PropsUtil.get(PropsKeys.UPGRADE_CONCURRENT_FETCH_SIZE)));
 
 			try (ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 				_processConcurrently(
@@ -396,8 +398,10 @@ public abstract class BaseDBProcess implements DBProcess {
 						return null;
 					});
 
-				if (futures.size() >=
-						_UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE) {
+				if (futures.size() >= GetterUtil.getInteger(
+						PropsUtil.get(
+							PropsKeys.
+								UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE))) {
 
 					for (Future<Void> curFuture : futures) {
 						curFuture.get();
@@ -427,15 +431,6 @@ public abstract class BaseDBProcess implements DBProcess {
 			ReflectionUtil.throwException(throwable);
 		}
 	}
-
-	private static final int _UPGRADE_CONCURRENT_FETCH_SIZE =
-		GetterUtil.getInteger(
-			PropsUtil.get(PropsKeys.UPGRADE_CONCURRENT_FETCH_SIZE));
-
-	private static final int _UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE =
-		GetterUtil.getInteger(
-			PropsUtil.get(
-				PropsKeys.UPGRADE_CONCURRENT_PROCESS_FUTURE_LIST_MAX_SIZE));
 
 	private static final Log _log = LogFactoryUtil.getLog(BaseDBProcess.class);
 
