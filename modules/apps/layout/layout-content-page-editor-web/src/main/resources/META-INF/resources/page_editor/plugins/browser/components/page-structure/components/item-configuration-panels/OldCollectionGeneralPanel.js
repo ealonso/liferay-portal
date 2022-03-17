@@ -451,26 +451,46 @@ export function OldCollectionGeneralPanel({item}) {
 							</ClayForm.Group>
 
 							{item.config.listStyle === LIST_STYLE_GRID && (
-								<ClayForm.Group small>
-									<label htmlFor={collectionLayoutId}>
-										{Liferay.Language.get('layout')}
-									</label>
+								<>
+									<ClayForm.Group small>
+										<label htmlFor={collectionLayoutId}>
+											{Liferay.Language.get('layout')}
+										</label>
 
-									<ClaySelectWithOption
-										aria-label={Liferay.Language.get(
-											'layout'
-										)}
-										id={collectionLayoutId}
-										onChange={(event) =>
-											handleConfigurationChanged({
-												numberOfColumns:
-													event.target.value,
-											})
-										}
-										options={LAYOUT_OPTIONS}
-										value={item.config.numberOfColumns}
-									/>
-								</ClayForm.Group>
+										<ClaySelectWithOption
+											aria-label={Liferay.Language.get(
+												'layout'
+											)}
+											id={collectionLayoutId}
+											onChange={(event) =>
+												handleConfigurationChanged({
+													numberOfColumns:
+														event.target.value,
+												})
+											}
+											options={LAYOUT_OPTIONS}
+											value={item.config.numberOfColumns}
+										/>
+									</ClayForm.Group>
+
+									{config.featureFlagLps119551 && (
+										<ClayForm.Group small>
+											<ClayCheckbox
+												checked={item.config.gutters}
+												label={Liferay.Language.get(
+													'show-gutter'
+												)}
+												onChange={({
+													target: {checked},
+												}) =>
+													handleConfigurationChanged({
+														gutters: checked,
+													})
+												}
+											/>
+										</ClayForm.Group>
+									)}
+								</>
 							)}
 
 							{item.config.listStyle !== LIST_STYLE_GRID &&
