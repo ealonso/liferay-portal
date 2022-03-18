@@ -74,7 +74,10 @@ public class CollectionStyledLayoutStructureItem
 				collectionStyledLayoutStructureItem._paginationType) ||
 			!Objects.equals(
 				_showAllItems,
-				collectionStyledLayoutStructureItem._showAllItems)) {
+				collectionStyledLayoutStructureItem._showAllItems) ||
+			!Objects.equals(
+				_verticalAlignment,
+				collectionStyledLayoutStructureItem._verticalAlignment)) {
 
 			return false;
 		}
@@ -116,6 +119,8 @@ public class CollectionStyledLayoutStructureItem
 			"showAllItems", _showAllItems
 		).put(
 			"templateKey", _templateKey
+		).put(
+			"verticalAlignment", _verticalAlignment
 		);
 	}
 
@@ -154,6 +159,10 @@ public class CollectionStyledLayoutStructureItem
 
 	public String getTemplateKey() {
 		return _templateKey;
+	}
+
+	public String getVerticalAlignment() {
+		return _verticalAlignment;
 	}
 
 	@Override
@@ -254,6 +263,10 @@ public class CollectionStyledLayoutStructureItem
 		_templateKey = templateKey;
 	}
 
+	public void setVerticalAlignment(String verticalAlignment) {
+		_verticalAlignment = verticalAlignment;
+	}
+
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
 		super.updateItemConfig(itemConfigJSONObject);
@@ -313,6 +326,11 @@ public class CollectionStyledLayoutStructureItem
 		if (itemConfigJSONObject.has("templateKey")) {
 			setTemplateKey(itemConfigJSONObject.getString("templateKey"));
 		}
+
+		if (itemConfigJSONObject.has("verticalAlignment")) {
+			setVerticalAlignment(
+				itemConfigJSONObject.getString("verticalAlignment"));
+		}
 	}
 
 	private JSONObject _collectionJSONObject;
@@ -328,5 +346,6 @@ public class CollectionStyledLayoutStructureItem
 	private String _paginationType;
 	private boolean _showAllItems;
 	private String _templateKey;
+	private String _verticalAlignment = "start";
 
 }

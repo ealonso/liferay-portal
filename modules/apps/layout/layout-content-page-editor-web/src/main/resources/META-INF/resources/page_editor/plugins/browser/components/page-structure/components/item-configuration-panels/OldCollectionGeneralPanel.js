@@ -126,6 +126,12 @@ const ERROR_MESSAGES = {
 	noItems: Liferay.Language.get('this-collection-has-no-items'),
 };
 
+const VERTICAL_ALIGNMENT_OPTIONS = [
+	{label: Liferay.Language.get('top'), value: 'start'},
+	{label: Liferay.Language.get('middle'), value: 'center'},
+	{label: Liferay.Language.get('bottom'), value: 'end'},
+];
+
 export function OldCollectionGeneralPanel({item}) {
 	const [availableListItemStyles, setAvailableListItemStyles] = useState([]);
 	const [availableListStyles, setAvailableListStyles] = useState([
@@ -474,21 +480,57 @@ export function OldCollectionGeneralPanel({item}) {
 									</ClayForm.Group>
 
 									{config.featureFlagLps119551 && (
-										<ClayForm.Group small>
-											<ClayCheckbox
-												checked={item.config.gutters}
-												label={Liferay.Language.get(
-													'show-gutter'
-												)}
-												onChange={({
-													target: {checked},
-												}) =>
-													handleConfigurationChanged({
-														gutters: checked,
-													})
-												}
-											/>
-										</ClayForm.Group>
+										<>
+											<ClayForm.Group small>
+												<ClayCheckbox
+													checked={
+														item.config.gutters
+													}
+													label={Liferay.Language.get(
+														'show-gutter'
+													)}
+													onChange={({
+														target: {checked},
+													}) =>
+														handleConfigurationChanged(
+															{
+																gutters: checked,
+															}
+														)
+													}
+												/>
+											</ClayForm.Group>
+											<ClayForm.Group small>
+												<label
+													htmlFor={collectionLayoutId}
+												>
+													{Liferay.Language.get(
+														'vertical-alignment'
+													)}
+												</label>
+
+												<ClaySelectWithOption
+													id={collectionLayoutId}
+													onChange={(event) => {
+														handleConfigurationChanged(
+															{
+																verticalAlignment:
+																	event.target
+																		.value,
+															}
+														);
+													}}
+													options={
+														VERTICAL_ALIGNMENT_OPTIONS
+													}
+													value={
+														item.config
+															.verticalAlignment ||
+														''
+													}
+												/>
+											</ClayForm.Group>
+										</>
 									)}
 								</>
 							)}
