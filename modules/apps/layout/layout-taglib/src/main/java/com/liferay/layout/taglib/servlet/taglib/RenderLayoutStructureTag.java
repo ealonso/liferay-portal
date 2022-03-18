@@ -46,6 +46,7 @@ import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.layout.util.structure.RootLayoutStructureItem;
 import com.liferay.layout.util.structure.RowStyledLayoutStructureItem;
+import com.liferay.layout.util.structure.StyledLayoutStructureItem;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -60,7 +61,9 @@ import com.liferay.portal.kernel.service.LayoutTemplateLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
@@ -148,6 +151,13 @@ public class RenderLayoutStructureTag extends IncludeTag {
 			renderLayoutStructureDisplayContext);
 
 		return SKIP_BODY;
+	}
+
+	private String _getLayoutMode() {
+		HttpServletRequest httpServletRequest = getRequest();
+
+		return ParamUtil.getString(
+			httpServletRequest, "p_l_mode", Constants.VIEW);
 	}
 
 	private void _renderCollectionStyledLayoutStructureItem(
@@ -668,6 +678,17 @@ public class RenderLayoutStructureTag extends IncludeTag {
 		for (String childrenItemId : childrenItemIds) {
 			LayoutStructureItem layoutStructureItem =
 				_layoutStructure.getLayoutStructureItem(childrenItemId);
+
+			if (layoutStructureItem instanceof StyledLayoutStructureItem) {
+				StyledLayoutStructureItem styledLayoutStructureItem =
+					(StyledLayoutStructureItem)layoutStructureItem;
+
+				if (Objects.equals(_getLayoutMode(), Constants.SEARCH) &&
+					styledLayoutStructureItem.isNonindexed()) {
+
+					continue;
+				}
+			}
 
 			if (layoutStructureItem instanceof
 					CollectionStyledLayoutStructureItem) {
