@@ -77,10 +77,10 @@ public class LayoutCrawlerImpl implements LayoutCrawler {
 		ThemeDisplay themeDisplay = _getThemeDisplay(
 			layout, locale, inetAddress, company);
 
-		String layoutFullURL = _portal.getLayoutFullURL(layout, themeDisplay);
-
 		options.setLocation(
-			_http.addParameter(layoutFullURL, "p_l_mode", Constants.SEARCH));
+			_http.addParameter(
+				_portal.getLayoutFullURL(layout, themeDisplay), "p_l_mode",
+				Constants.SEARCH));
 
 		String response = _http.URLtoString(options);
 
