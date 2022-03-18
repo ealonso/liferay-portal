@@ -67,7 +67,7 @@ describe('TextField', () => {
 		expect(updateItemConfig).toBeCalledWith(
 			expect.objectContaining({
 				itemConfig: {
-					nonIndexed: true,
+					nonindexed: true,
 				},
 			})
 		);
@@ -78,7 +78,7 @@ describe('TextField', () => {
 			items: {
 				'parent-id': {
 					config: {
-						nonIndexed: true,
+						nonindexed: true,
 					},
 					itemId: 'parent-id',
 				},

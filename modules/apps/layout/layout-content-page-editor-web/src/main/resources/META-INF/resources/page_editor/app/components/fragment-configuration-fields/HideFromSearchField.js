@@ -27,7 +27,7 @@ function hasHiddenAncestor(layoutData, item) {
 		return false;
 	}
 
-	return parent.config.nonIndexed || hasHiddenAncestor(layoutData, parent);
+	return parent.config.nonindexed || hasHiddenAncestor(layoutData, parent);
 }
 
 export function HideFromSearchField({item}) {
@@ -42,7 +42,7 @@ export function HideFromSearchField({item}) {
 			disabled={hiddenAncestor}
 			field={{
 				label: Liferay.Language.get('hide-from-site-search-results'),
-				name: 'nonIndexed',
+				name: 'nonindexed',
 			}}
 			onValueSelect={(name, value) => {
 				const itemConfig = {[name]: value};
@@ -55,7 +55,7 @@ export function HideFromSearchField({item}) {
 					})
 				);
 			}}
-			value={hiddenAncestor || item.config.nonIndexed}
+			value={hiddenAncestor || item.config.nonindexed}
 		/>
 	);
 }
