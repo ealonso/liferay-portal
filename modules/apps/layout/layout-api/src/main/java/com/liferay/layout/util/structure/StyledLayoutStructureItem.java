@@ -125,7 +125,11 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 
 	@Override
 	public JSONObject getItemConfigJSONObject() {
-		JSONObject jsonObject = JSONUtil.put("styles", stylesJSONObject);
+		JSONObject jsonObject = JSONUtil.put(
+			"nonindexed", _nonindexed
+		).put(
+			"styles", stylesJSONObject
+		);
 
 		for (ViewportSize viewportSize : ViewportSize.values()) {
 			if (viewportSize.equals(ViewportSize.DESKTOP)) {
@@ -229,8 +233,20 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return HashUtil.hash(0, getItemId());
 	}
 
+	public boolean isNonindexed() {
+		return _nonindexed;
+	}
+
+	public void setNonindexed(boolean nonindexed) {
+		_nonindexed = nonindexed;
+	}
+
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
+		if (itemConfigJSONObject.has("nonindexed")) {
+			setNonindexed(itemConfigJSONObject.getBoolean("nonindexed"));
+		}
+
 		try {
 			_updateItemConfigValues(stylesJSONObject, itemConfigJSONObject);
 
@@ -412,5 +428,7 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		StyledLayoutStructureItem.class);
+
+	private boolean _nonindexed;
 
 }
