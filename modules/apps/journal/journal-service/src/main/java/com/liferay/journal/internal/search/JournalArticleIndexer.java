@@ -150,10 +150,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	@Override
 	protected void doDelete(JournalArticle journalArticle) throws Exception {
-		_deleteDocument(journalArticle);
-
-		_reindexEveryVersionOfResourcePrimKey(
-			journalArticle.getResourcePrimKey());
 	}
 
 	@Override
