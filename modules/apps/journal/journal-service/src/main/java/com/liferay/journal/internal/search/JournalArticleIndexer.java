@@ -225,9 +225,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
-		long companyId = GetterUtil.getLong(ids[0]);
-
-		_reindexArticles(companyId);
 	}
 
 	protected boolean isIndexAllArticleVersions() {
@@ -311,82 +308,6 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 		}
 
 		return latestIndexableArticle;
-	}
-
-	private void _reindexArticles(long companyId) throws Exception {
-		IndexableActionableDynamicQuery indexableActionableDynamicQuery;
-
-		if (isIndexAllArticleVersions()) {
-			indexableActionableDynamicQuery =
-				_journalArticleLocalService.
-					getIndexableActionableDynamicQuery();
-
-			indexableActionableDynamicQuery.setAddCriteriaMethod(
-				dynamicQuery -> {
-					Property property = PropertyFactoryUtil.forName(
-						"classNameId");
-
-					dynamicQuery.add(
-						property.ne(
-							_portal.getClassNameId(DDMStructure.class)));
-				});
-			indexableActionableDynamicQuery.setInterval(
-				_batchIndexingHelper.getBulkSize(
-					JournalArticle.class.getName()));
-			indexableActionableDynamicQuery.setPerformActionMethod(
-				(JournalArticle article) -> {
-					try {
-						indexableActionableDynamicQuery.addDocuments(
-							getDocument(article));
-					}
-					catch (PortalException portalException) {
-						if (_log.isWarnEnabled()) {
-							_log.warn(
-								"Unable to index journal article " +
-									article.getId(),
-								portalException);
-						}
-					}
-				});
-		}
-		else {
-			indexableActionableDynamicQuery =
-				_journalArticleResourceLocalService.
-					getIndexableActionableDynamicQuery();
-
-			indexableActionableDynamicQuery.setInterval(
-				_batchIndexingHelper.getBulkSize(
-					JournalArticleResource.class.getName()));
-
-			indexableActionableDynamicQuery.setPerformActionMethod(
-				(JournalArticleResource articleResource) -> {
-					JournalArticle latestIndexableArticle =
-						_fetchLatestIndexableArticleVersion(
-							articleResource.getResourcePrimKey());
-
-					if (latestIndexableArticle == null) {
-						return;
-					}
-
-					try {
-						indexableActionableDynamicQuery.addDocuments(
-							getDocument(latestIndexableArticle));
-					}
-					catch (PortalException portalException) {
-						if (_log.isWarnEnabled()) {
-							_log.warn(
-								"Unable to index journal article " +
-									latestIndexableArticle.getId(),
-								portalException);
-						}
-					}
-				});
-		}
-
-		indexableActionableDynamicQuery.setCompanyId(companyId);
-		indexableActionableDynamicQuery.setSearchEngineId(getSearchEngineId());
-
-		indexableActionableDynamicQuery.performActions();
 	}
 
 	private void _reindexEveryVersionOfResourcePrimKey(long resourcePrimKey)
