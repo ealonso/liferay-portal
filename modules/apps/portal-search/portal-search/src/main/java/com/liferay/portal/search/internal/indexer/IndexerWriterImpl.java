@@ -229,7 +229,12 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 				document, _modelSearchSettings.isCommitImmediately());
 		}
 		else if (indexerWriterMode == IndexerWriterMode.DELETE) {
-			delete(baseModel);
+			long companyId = _modelIndexerWriterContributor.getCompanyId(
+				baseModel);
+
+			String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
+
+			delete(companyId, uid);
 		}
 		else if (indexerWriterMode == IndexerWriterMode.SKIP) {
 			if (_log.isDebugEnabled()) {
