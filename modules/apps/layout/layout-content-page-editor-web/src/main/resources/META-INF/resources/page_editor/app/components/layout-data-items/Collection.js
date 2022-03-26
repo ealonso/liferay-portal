@@ -407,7 +407,7 @@ const Collection = React.memo(
 						<Grid
 							child={child}
 							collection={collection}
-							collectionConfig={collectionConfig}
+							collectionConfig={responsiveConfig}
 							collectionId={item.itemId}
 							collectionLength={collection.items.length}
 							customCollectionSelectorURL={
