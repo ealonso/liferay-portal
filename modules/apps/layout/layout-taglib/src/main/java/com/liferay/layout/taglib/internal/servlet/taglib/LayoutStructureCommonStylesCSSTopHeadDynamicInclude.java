@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -105,8 +106,8 @@ public class LayoutStructureCommonStylesCSSTopHeadDynamicInclude
 
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
-		printWriter.print("<style id=\"layout-common-styles\"");
-		printWriter.print(" data-senna-track=\"temporary\" ");
+		printWriter.print("<style id=\"layout-common-styles\" ");
+		printWriter.print("data-senna-track=\"temporary\" ");
 		printWriter.print("type=\"text/css\">\n");
 
 		JSONObject frontendTokensJSONObject = _getFrontendTokensJSONObject(
@@ -118,7 +119,8 @@ public class LayoutStructureCommonStylesCSSTopHeadDynamicInclude
 			layoutStructure.getLayoutStructureItems();
 
 		for (ViewportSize viewportSize : _sortedViewportSizes) {
-			StringBundler cssSB = new StringBundler();
+			StringBundler cssSB = new StringBundler(
+				layoutStructureItems.size());
 
 			for (LayoutStructureItem layoutStructureItem :
 					layoutStructureItems) {
@@ -140,7 +142,6 @@ public class LayoutStructureCommonStylesCSSTopHeadDynamicInclude
 				printWriter.print("@media screen and (max-width: ");
 				printWriter.print(viewportSize.getMaxWidth());
 				printWriter.print("px) {");
-
 				printWriter.print(cssSB);
 				printWriter.print(StringPool.CLOSE_CURLY_BRACE);
 			}
@@ -307,41 +308,47 @@ public class LayoutStructureCommonStylesCSSTopHeadDynamicInclude
 			return StringPool.BLANK;
 		}
 
-		StringBundler cssSB = new StringBundler(74);
-
 		List<String> availableStyleNames = _getAvailableStyleNames();
+
+		availableStyleNames = ListUtil.filter(
+			availableStyleNames,
+			styleName -> {
+				String value = stylesJSONObject.getString(styleName);
+
+				if (!_includeStyles(
+						styledLayoutStructureItem, styleName, value,
+						viewportSize)) {
+
+					return false;
+				}
+
+				return true;
+			}
+		);
+
+		if (availableStyleNames.isEmpty()) {
+			return StringPool.BLANK;
+		}
+
+		StringBundler cssRuleSB = new StringBundler(
+			(availableStyleNames.size() * 2) + 5);
+
+		cssRuleSB.append(".lfr-layout-structure-item-");
+		cssRuleSB.append(layoutStructureItem.getItemId());
+		cssRuleSB.append(" {\n");
 
 		for (String styleName : availableStyleNames) {
 			String value = stylesJSONObject.getString(styleName);
 
-			if (!_includeStyles(
-					styledLayoutStructureItem, styleName, value,
-					viewportSize)) {
-
-				continue;
-			}
-
-			cssSB.append(
+			cssRuleSB.append(
 				StringUtil.replace(
 					CommonStylesUtil.getCSSTemplate(styleName), "{value}",
 					_getStyleValue(
 						frontendTokensJSONObject, styledLayoutStructureItem,
 						styleName, value)));
-			cssSB.append(StringPool.NEW_LINE);
+			cssRuleSB.append(StringPool.NEW_LINE);
 		}
 
-		String css = cssSB.toString();
-
-		if (Validator.isNull(css)) {
-			return StringPool.BLANK;
-		}
-
-		StringBundler cssRuleSB = new StringBundler(5);
-
-		cssRuleSB.append(".lfr-layout-structure-item-");
-		cssRuleSB.append(layoutStructureItem.getItemId());
-		cssRuleSB.append(" {\n");
-		cssRuleSB.append(css);
 		cssRuleSB.append("}\n");
 
 		return cssRuleSB.toString();
