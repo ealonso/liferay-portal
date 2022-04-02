@@ -109,8 +109,8 @@ public class SegmentsServicePreAction extends Action {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if ((layout == null) || !layout.isTypeContent() ||
-			layout.isTypeControlPanel()) {
+		if ((layout == null) || !layout.isTypeAssetDisplay() ||
+			!layout.isTypeContent() || layout.isTypeControlPanel()) {
 
 			return;
 		}
