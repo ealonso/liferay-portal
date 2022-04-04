@@ -21,12 +21,14 @@ import com.liferay.exportimport.data.handler.base.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.staged.model.repository.StagedModelRepository;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -104,14 +106,10 @@ public class LayoutClassedModelUsageStagedModelDataHandler
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				layoutClassedModelUsage.getClassName());
 
-		StagingGroupHelper stagingGroupHelper =
-			StagingGroupHelperUtil.getStagingGroupHelper();
-
 		if (ExportImportThreadLocal.isStagingInProcess() &&
 			(assetRendererFactory != null) &&
-			stagingGroupHelper.isStagedPortlet(
-				portletDataContext.getScopeGroupId(),
-				assetRendererFactory.getPortletId())) {
+			_isImportPortletData(
+				portletDataContext, assetRendererFactory.getPortletId())) {
 
 			AssetRenderer<?> assetRenderer = null;
 
@@ -271,6 +269,25 @@ public class LayoutClassedModelUsageStagedModelDataHandler
 		getStagedModelRepository() {
 
 		return _stagedModelRepository;
+	}
+
+	private boolean _isImportPortletData(
+		PortletDataContext portletDataContext, String portletId) {
+
+		StagingGroupHelper stagingGroupHelper =
+			StagingGroupHelperUtil.getStagingGroupHelper();
+
+		if (!stagingGroupHelper.isStagedPortlet(
+				portletDataContext.getScopeGroupId(), portletId) ||
+			!MapUtil.getBoolean(
+				portletDataContext.getParameterMap(),
+				PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE +
+					portletId)) {
+
+			return false;
+		}
+
+		return true;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
