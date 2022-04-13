@@ -28,7 +28,7 @@ import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Collection;
@@ -80,7 +80,7 @@ public class GetAvailableInfoItemFormProvidersMVCResourceCommand
 				).put(
 					"value",
 					String.valueOf(
-						PortalUtil.getClassNameId(
+						_portal.getClassNameId(
 							infoItemClassDetails.getClassName()))
 				));
 		}
@@ -129,5 +129,8 @@ public class GetAvailableInfoItemFormProvidersMVCResourceCommand
 
 	@Reference
 	private InfoItemServiceTracker _infoItemServiceTracker;
+
+	@Reference
+	private Portal _portal;
 
 }
