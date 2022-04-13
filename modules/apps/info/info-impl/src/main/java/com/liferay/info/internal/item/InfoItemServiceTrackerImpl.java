@@ -299,8 +299,8 @@ public class InfoItemServiceTrackerImpl implements InfoItemServiceTracker {
 								key = keyedService.getKey();
 							}
 							else {
-								Class<?> clazz =
-									serviceClass.getClass();
+								Class<?> clazz = serviceClass.getClass();
+
 								key = clazz.getName();
 							}
 

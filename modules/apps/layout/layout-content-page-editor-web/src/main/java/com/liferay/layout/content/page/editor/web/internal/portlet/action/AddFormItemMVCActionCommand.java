@@ -21,12 +21,11 @@ import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.object.service.ObjectEntryService;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -63,11 +62,7 @@ public class AddFormItemMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
-		String classTypeId = ParamUtil.getString(actionRequest, "classTypeId");
 
 		String className = _portal.getClassName(classNameId);
 
@@ -79,6 +74,11 @@ public class AddFormItemMVCActionCommand extends BaseMVCActionCommand {
 			return;
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String classTypeId = ParamUtil.getString(actionRequest, "classTypeId");
+
 		InfoForm infoForm = infoItemFormProvider.getInfoForm(
 			classTypeId, themeDisplay.getScopeGroupId());
 
@@ -86,7 +86,7 @@ public class AddFormItemMVCActionCommand extends BaseMVCActionCommand {
 
 		Map<String, Serializable> values = new HashMap<>();
 
-		for (InfoField infoField : infoFields) {
+		for (InfoField<?> infoField : infoFields) {
 			String name = infoField.getName();
 
 			String value = ParamUtil.getString(actionRequest, name);
@@ -99,7 +99,7 @@ public class AddFormItemMVCActionCommand extends BaseMVCActionCommand {
 		String objectEntryId = StringUtil.split(className, StringPool.POUND)[1];
 
 		_objectEntryService.addObjectEntry(
-			0, Long.parseLong(objectEntryId), values,
+			0, GetterUtil.getLong(objectEntryId), values,
 			ServiceContextFactory.getInstance(actionRequest));
 
 		sendRedirect(
@@ -107,9 +107,6 @@ public class AddFormItemMVCActionCommand extends BaseMVCActionCommand {
 			_portal.getLayoutRelativeURL(
 				themeDisplay.getLayout(), themeDisplay));
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		AddFormItemMVCActionCommand.class);
 
 	@Reference
 	private InfoItemServiceTracker _infoItemServiceTracker;

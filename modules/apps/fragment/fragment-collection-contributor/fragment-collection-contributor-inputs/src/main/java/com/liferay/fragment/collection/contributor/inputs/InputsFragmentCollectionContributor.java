@@ -26,8 +26,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pablo Molina
  */
 @Component(
-	enabled = false,
-	property = "fragment.collection.key=INPUTS",
+	enabled = false, property = "fragment.collection.key=INPUTS",
 	service = FragmentCollectionContributor.class
 )
 public class InputsFragmentCollectionContributor
