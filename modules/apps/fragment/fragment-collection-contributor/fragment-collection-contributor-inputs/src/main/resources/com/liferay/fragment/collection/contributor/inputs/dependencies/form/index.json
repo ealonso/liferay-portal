@@ -1,0 +1,36 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"dataType": "string",
+					"name": "classNameId",
+					"type": "text"
+				},
+				{
+					"dataType": "string",
+					"label": "classTypeId",
+					"name": "classTypeId",
+					"type": "text"
+				},
+				{
+					"dataType": "string",
+					"defaultValue": "post",
+					"label": "method",
+					"name": "method",
+					"type": "select",
+					"typeOptions": {
+						"validValues": [
+							{
+								"value": "post"
+							},
+							{
+								"value": "get"
+							}
+						]
+					}
+				}
+			]
+		}
+	]
+}
