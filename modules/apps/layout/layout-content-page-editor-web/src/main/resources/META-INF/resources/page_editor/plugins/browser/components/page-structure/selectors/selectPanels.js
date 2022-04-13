@@ -16,6 +16,7 @@ import {COLLECTION_APPLIED_FILTERS_FRAGMENT_ENTRY_KEY} from '../../../../../app/
 import {COLLECTION_FILTER_FRAGMENT_ENTRY_KEY} from '../../../../../app/config/constants/collectionFilterFragmentEntryKey';
 import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../app/config/constants/editableFragmentEntryProcessor';
 import {EDITABLE_TYPES} from '../../../../../app/config/constants/editableTypes';
+import {FORM_FRAGMENT_KEY} from '../../../../../app/config/constants/formFragmentKey';
 import {ITEM_TYPES} from '../../../../../app/config/constants/itemTypes';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../app/config/constants/layoutDataItemTypes';
 import {VIEWPORT_SIZES} from '../../../../../app/config/constants/viewportSizes';
@@ -28,6 +29,7 @@ import ContainerAdvancedPanel from '../components/item-configuration-panels/Cont
 import ContainerGeneralPanel from '../components/item-configuration-panels/ContainerGeneralPanel';
 import {ContainerStylesPanel} from '../components/item-configuration-panels/ContainerStylesPanel';
 import EditableLinkPanel from '../components/item-configuration-panels/EditableLinkPanel';
+import {FormGeneralPanel} from '../components/item-configuration-panels/FormGeneralPanel';
 import {FragmentAdvancedPanel} from '../components/item-configuration-panels/FragmentAdvancedPanel';
 import {FragmentGeneralPanel} from '../components/item-configuration-panels/FragmentGeneralPanel';
 import {FragmentStylesPanel} from '../components/item-configuration-panels/FragmentStylesPanel';
@@ -41,6 +43,7 @@ import {CollectionGeneralPanel} from '../components/item-configuration-panels/co
 const FRAGMENT_WITH_CUSTOM_PANEL = [
 	COLLECTION_FILTER_FRAGMENT_ENTRY_KEY,
 	COLLECTION_APPLIED_FILTERS_FRAGMENT_ENTRY_KEY,
+	FORM_FRAGMENT_KEY,
 ];
 
 export const PANEL_IDS = {
@@ -52,6 +55,7 @@ export const PANEL_IDS = {
 	containerStyles: 'containerStyles',
 	editableLink: 'editableLink',
 	editableMapping: 'editableMapping',
+	formGeneral: 'formGeneral',
 	fragmentAdvanced: 'fragmentAdvanced',
 	fragmentGeneral: 'fragmentGeneral',
 	fragmentStyles: 'fragmentStyles',
@@ -101,6 +105,11 @@ export const PANELS = {
 		component: MappingPanel,
 		label: Liferay.Language.get('mapping'),
 		priority: 1,
+	},
+	[PANEL_IDS.formGeneral]: {
+		component: FormGeneralPanel,
+		label: Liferay.Language.get('general'),
+		priority: 2,
 	},
 	[PANEL_IDS.fragmentAdvanced]: {
 		component: FragmentAdvancedPanel,
@@ -230,6 +239,9 @@ export function selectPanels(activeItemId, activeItemType, state) {
 				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
 			[PANEL_IDS.collectionFilterGeneral]:
 				fragmentEntryKey === COLLECTION_FILTER_FRAGMENT_ENTRY_KEY &&
+				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
+			[PANEL_IDS.formGeneral]:
+				fragmentEntryKey === FORM_FRAGMENT_KEY &&
 				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
 		};
 	}
