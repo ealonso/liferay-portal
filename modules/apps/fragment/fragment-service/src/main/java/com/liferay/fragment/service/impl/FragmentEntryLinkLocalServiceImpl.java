@@ -248,20 +248,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		return deletedFragmentEntryLinks;
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #deleteLayoutPageTemplateEntryFragmentEntryLinks(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public List<FragmentEntryLink>
-		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			long groupId, long classNameId, long classPK) {
-
-		return deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			groupId, classPK);
-	}
-
 	@Override
 	public List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
@@ -303,19 +289,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		return fragmentEntryLinkFinder.countByG_F(groupId, fragmentEntryId);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getFragmentEntryLinksCountByPlid(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public int getClassedModelFragmentEntryLinksCount(
-		long groupId, long classNameId, long classPK) {
-
-		return fragmentEntryLinkPersistence.countByG_C_C(
-			groupId, classNameId, classPK);
-	}
-
 	@Override
 	public FragmentEntryLink getFragmentEntryLink(
 		long groupId, long originalFragmentEntryLinkId, long plid) {
@@ -340,19 +313,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			ListUtil.toLongArray(
 				fragmentEntries, FragmentEntry.FRAGMENT_ENTRY_ID_ACCESSOR),
 			start, end, orderByComparator);
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getFragmentEntryLinksByPlid(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public List<FragmentEntryLink> getFragmentEntryLinks(
-		long groupId, long classNameId, long classPK) {
-
-		return fragmentEntryLinkPersistence.findByG_C_C(
-			groupId, classNameId, classPK);
 	}
 
 	@Override
