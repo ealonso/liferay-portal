@@ -99,6 +99,18 @@ export default function fragmentsReducer(fragments = [], action) {
 							],
 						type: 'row',
 					},
+					{
+						data: {
+							itemType: LAYOUT_DATA_ITEM_TYPES.form,
+						},
+						icon: 'forms',
+						itemId: 'form',
+						label:
+							LAYOUT_DATA_ITEM_TYPE_LABELS[
+								LAYOUT_DATA_ITEM_TYPES.form
+							],
+						type: 'form',
+					},
 				],
 				name: Liferay.Language.get('layout-elements'),
 			});

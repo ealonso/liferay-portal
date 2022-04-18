@@ -12,4 +12,14 @@
  * details.
  */
 
-export const FORM_FRAGMENT_KEY = 'INPUTS-form';
+import React from 'react';
+
+import Container from './Container';
+
+const Form = React.forwardRef((props, ref) => (
+	<form onSubmit={(event) => event.preventDefault()} ref={ref}>
+		<Container {...props} />
+	</form>
+));
+
+export default Form;

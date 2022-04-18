@@ -16,7 +16,6 @@ import {COLLECTION_APPLIED_FILTERS_FRAGMENT_ENTRY_KEY} from '../../../../../app/
 import {COLLECTION_FILTER_FRAGMENT_ENTRY_KEY} from '../../../../../app/config/constants/collectionFilterFragmentEntryKey';
 import {EDITABLE_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../app/config/constants/editableFragmentEntryProcessor';
 import {EDITABLE_TYPES} from '../../../../../app/config/constants/editableTypes';
-import {FORM_FRAGMENT_KEY} from '../../../../../app/config/constants/formFragmentKey';
 import {FRAGMENT_TYPES} from '../../../../../app/config/constants/fragmentTypes';
 import {ITEM_TYPES} from '../../../../../app/config/constants/itemTypes';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../app/config/constants/layoutDataItemTypes';
@@ -45,7 +44,6 @@ import {CollectionGeneralPanel} from '../components/item-configuration-panels/co
 const FRAGMENT_WITH_CUSTOM_PANEL = [
 	COLLECTION_FILTER_FRAGMENT_ENTRY_KEY,
 	COLLECTION_APPLIED_FILTERS_FRAGMENT_ENTRY_KEY,
-	FORM_FRAGMENT_KEY,
 ];
 
 export const PANEL_IDS = {
@@ -227,6 +225,13 @@ export function selectPanels(activeItemId, activeItemType, state) {
 			[PANEL_IDS.containerStyles]: true,
 		};
 	}
+	else if (activeItem.type === LAYOUT_DATA_ITEM_TYPES.form) {
+		panelsIds = {
+			[PANEL_IDS.formGeneral]:
+				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
+			[PANEL_IDS.containerStyles]: true,
+		};
+	}
 	else if (activeItem.type === LAYOUT_DATA_ITEM_TYPES.fragment) {
 		const {fragmentEntryKey, fragmentType} = state.fragmentEntryLinks[
 			activeItem.config.fragmentEntryLinkId
@@ -246,9 +251,6 @@ export function selectPanels(activeItemId, activeItemType, state) {
 				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
 			[PANEL_IDS.collectionFilterGeneral]:
 				fragmentEntryKey === COLLECTION_FILTER_FRAGMENT_ENTRY_KEY &&
-				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
-			[PANEL_IDS.formGeneral]:
-				fragmentEntryKey === FORM_FRAGMENT_KEY &&
 				state.selectedViewportSize === VIEWPORT_SIZES.desktop,
 			[PANEL_IDS.formInputGeneral]:
 				fragmentType === FRAGMENT_TYPES.input &&
