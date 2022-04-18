@@ -12,38 +12,21 @@
  * details.
  */
 
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {SelectField} from '../../../../../../app/components/fragment-configuration-fields/SelectField';
-import {COMMON_STYLES_ROLES} from '../../../../../../app/config/constants/commonStylesRoles';
-import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../app/config/constants/freemarkerFragmentEntryProcessor';
-import {config} from '../../../../../../app/config/index';
 import {
 	useDispatch,
 	useSelector,
-	useSelectorCallback,
 } from '../../../../../../app/contexts/StoreContext';
+import selectSegmentsExperienceId from '../../../../../../app/selectors/selectSegmentsExperienceId';
 import InfoItemService from '../../../../../../app/services/InfoItemService';
-import updateFragmentConfiguration from '../../../../../../app/thunks/updateFragmentConfiguration';
-import {getResponsiveConfig} from '../../../../../../app/utils/getResponsiveConfig';
-import Collapse from '../../../../../../common/components/Collapse';
-import {CommonStyles} from './CommonStyles';
+import updateItemConfig from '../../../../../../app/thunks/updateItemConfig';
 
 export function FormGeneralPanel({item}) {
-	const [availableItemTypes, setItemTypes] = React.useState([]);
-
-	const selectedViewportSize = useSelector(
-		(state) => state.selectedViewportSize
-	);
-
-	const languageId = useSelector((state) => state.languageId);
-
+	const [availableItemTypes, setItemTypes] = useState([]);
 	const dispatch = useDispatch();
-
-	const fragmentEntryLink = useSelectorCallback(
-		(state) => state.fragmentEntryLinks[item.config.fragmentEntryLinkId],
-		[item.config.fragmentEntryLinkId]
-	);
+	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 
 	useEffect(() => {
 		InfoItemService.getAvailableInfoItemFormProviders().then(
@@ -60,138 +43,62 @@ export function FormGeneralPanel({item}) {
 	}, []);
 
 	const onValueSelect = useCallback(
-		(pairs) => {
-			updateConfigurationValues({
-				dispatch,
-				fragmentEntryLink,
-				languageId,
-				pairs,
-			});
-		},
-		[dispatch, fragmentEntryLink, languageId]
+		(nextConfig) =>
+			dispatch(
+				updateItemConfig({
+					itemConfig: nextConfig,
+					itemId: item.itemId,
+					segmentsExperienceId,
+				})
+			),
+		[dispatch, item.itemId, segmentsExperienceId]
 	);
 
-	const itemConfig = getResponsiveConfig(item.config, selectedViewportSize);
-
-	const configurationValues =
-		fragmentEntryLink.editableValues[FREEMARKER_FRAGMENT_ENTRY_PROCESSOR] ||
-		{};
-
-	const classNameId = configurationValues.classNameId;
-
 	const selectedItemType = availableItemTypes.find(
-		({value}) => value === classNameId
+		({value}) => value === item.config.classNameId
 	);
 
 	return (
-		<>
-			<Collapse
-				label={Liferay.Language.get('form-container-options')}
-				open
-			>
-				<div className="mb-3">
-					{availableItemTypes.length > 0 && (
-						<SelectField
-							disabled={availableItemTypes.length === 0}
-							field={{
-								label: Liferay.Language.get('item-type'),
-								name: 'classNameId',
-								typeOptions: {
-									validValues: availableItemTypes,
+		<div className="mb-3">
+			{availableItemTypes.length > 0 && (
+				<SelectField
+					disabled={availableItemTypes.length === 0}
+					field={{
+						label: Liferay.Language.get('item-type'),
+						name: 'classNameId',
+						typeOptions: {
+							validValues: availableItemTypes,
+						},
+					}}
+					onValueSelect={(_name, classNameId) =>
+						onValueSelect({classNameId, classTypeId: 0})
+					}
+					value={item.config.classNameId}
+				/>
+			)}
+
+			{selectedItemType?.subtypes?.length > 0 && (
+				<SelectField
+					disabled={availableItemTypes.length === 0}
+					field={{
+						label: Liferay.Language.get('item-type'),
+						name: 'classTypeId',
+						typeOptions: {
+							validValues: [
+								{
+									label: Liferay.Language.get('none'),
+									value: '',
 								},
-							}}
-							onValueSelect={(name, value) =>
-								onValueSelect([
-									{name, value},
-									{name: 'classTypeId', value: 0},
-									{
-										name: 'actionURL',
-										value: config.addFormItemURL,
-									},
-								])
-							}
-							value={classNameId}
-						/>
-					)}
-
-					{selectedItemType?.subtypes?.length > 0 && (
-						<SelectField
-							disabled={availableItemTypes.length === 0}
-							field={{
-								label: Liferay.Language.get('item-type'),
-								name: 'classTypeId',
-								typeOptions: {
-									validValues: [
-										{
-											label: Liferay.Language.get('none'),
-											value: '',
-										},
-										...selectedItemType?.subtypes,
-									],
-								},
-							}}
-							onValueSelect={(name, value) =>
-								onValueSelect([{name, value}])
-							}
-							value={classNameId}
-						/>
-					)}
-				</div>
-			</Collapse>
-
-			<CommonStyles
-				commonStylesValues={itemConfig}
-				item={item}
-				role={COMMON_STYLES_ROLES.general}
-			/>
-		</>
-	);
-}
-
-function updateConfigurationValues({
-	configuration,
-	dispatch,
-	fragmentEntryLink,
-	languageId,
-	pairs,
-}) {
-	const configurationValues =
-		fragmentEntryLink.editableValues?.[
-			FREEMARKER_FRAGMENT_ENTRY_PROCESSOR
-		] ?? {};
-
-	const localizable =
-		configuration?.fieldSets?.some((fieldSet) =>
-			fieldSet.fields.some(
-				(field) => field.name === name && field.localizable
-			)
-		) ?? false;
-
-	const currentValue = configurationValues[name];
-
-	let nextConfigurationValues = {
-		...configurationValues,
-	};
-
-	for (const {name, value} of pairs) {
-		nextConfigurationValues = {
-			...nextConfigurationValues,
-			[name]: localizable
-				? {
-						...(typeof currentValue === 'object'
-							? currentValue
-							: {[config.defaultLanguageId]: currentValue}),
-						[languageId]: value,
-				  }
-				: value,
-		};
-	}
-
-	dispatch(
-		updateFragmentConfiguration({
-			configurationValues: nextConfigurationValues,
-			fragmentEntryLink,
-			languageId,
-		})
+								...selectedItemType?.subtypes,
+							],
+						},
+					}}
+					onValueSelect={(_name, classTypeId) =>
+						onValueSelect({...item.config, classTypeId})
+					}
+					value={item.config.classTypeId}
+				/>
+			)}
+		</div>
 	);
 }

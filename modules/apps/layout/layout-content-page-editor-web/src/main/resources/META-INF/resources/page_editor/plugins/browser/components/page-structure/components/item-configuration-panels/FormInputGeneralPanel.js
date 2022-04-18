@@ -16,7 +16,6 @@ import ClayLoadingIndicator from '@clayui/loading-indicator';
 import React, {useEffect, useMemo, useState} from 'react';
 
 import {EDITABLE_TYPES} from '../../../../../../app/config/constants/editableTypes';
-import {FORM_FRAGMENT_KEY} from '../../../../../../app/config/constants/formFragmentKey';
 import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../app/config/constants/freemarkerFragmentEntryProcessor';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../../app/config/constants/layoutDataItemTypes';
 import {config} from '../../../../../../app/config/index';
@@ -53,24 +52,13 @@ export function FormInputGeneralPanel({item}) {
 		const findFormConfiguration = (childItem) => {
 			const parentItem = layoutData.items[childItem?.parentId];
 
-			if (!parentItem) {
-				return null;
-			}
-
-			const fragmentEntryLink =
-				parentItem.type === LAYOUT_DATA_ITEM_TYPES.fragment
-					? fragmentEntryLinks[parentItem.config?.fragmentEntryLinkId]
-					: null;
-
-			return fragmentEntryLink?.fragmentEntryKey === FORM_FRAGMENT_KEY
-				? fragmentEntryLink.editableValues[
-						FREEMARKER_FRAGMENT_ENTRY_PROCESSOR
-				  ]
+			return parentItem?.type === LAYOUT_DATA_ITEM_TYPES.form
+				? parentItem.config
 				: findFormConfiguration(parentItem);
 		};
 
 		return findFormConfiguration(layoutDataItem);
-	}, [fragmentEntryLinks, layoutData, layoutDataItem]);
+	}, [layoutData, layoutDataItem]);
 
 	const handleValueSelect = (event) =>
 		dispatch(
