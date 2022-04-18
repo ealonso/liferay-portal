@@ -12,10 +12,4 @@
  * details.
  */
 
-/**
- * Available fragment types
- */
-export const FRAGMENT_TYPES = {
-	composition: 'composition',
-	input: 'input',
-};
+export const FORM_FRAGMENT_KEY = 'INPUTS-form';

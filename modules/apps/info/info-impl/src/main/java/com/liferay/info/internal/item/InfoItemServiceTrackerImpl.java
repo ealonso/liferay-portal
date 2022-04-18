@@ -291,12 +291,17 @@ public class InfoItemServiceTrackerImpl implements InfoItemServiceTracker {
 					ServiceReferenceMapperFactory.create(
 						bundleContext,
 						(service, emitter) -> {
-							String key = serviceClass.getName();
+							String key;
 
 							if (service instanceof Keyed) {
 								Keyed keyedService = (Keyed)service;
 
 								key = keyedService.getKey();
+							}
+							else {
+								Class<?> clazz =
+									serviceClass.getClass();
+								key = clazz.getName();
 							}
 
 							emitter.emit(key);
