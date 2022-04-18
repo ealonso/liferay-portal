@@ -38,6 +38,8 @@ import com.liferay.headless.delivery.client.resource.v1_0.StructuredContentResou
 import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolder;
+import com.liferay.journal.service.JournalFolderLocalService;
+import com.liferay.journal.test.util.JournalFolderFixture;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -123,9 +125,12 @@ public class StructuredContentResourceTest
 
 		_addDDMTemplate(_irrelevantDDMStructure);
 
-		_irrelevantJournalFolder = JournalTestUtil.addFolder(
+		_journalFolderFixture = new JournalFolderFixture(
+			_journalFolderLocalService);
+
+		_irrelevantJournalFolder = _journalFolderFixture.addFolder(
 			irrelevantGroup.getGroupId(), RandomTestUtil.randomString());
-		_journalFolder = JournalTestUtil.addFolder(
+		_journalFolder = _journalFolderFixture.addFolder(
 			testGroup.getGroupId(), RandomTestUtil.randomString());
 		_layout = LayoutTestUtil.addTypeContentLayout(testGroup);
 		_localizedDDMStructure = _addDDMStructure(
@@ -1037,6 +1042,11 @@ public class StructuredContentResourceTest
 	private DDMStructure _irrelevantDDMStructure;
 	private JournalFolder _irrelevantJournalFolder;
 	private JournalFolder _journalFolder;
+	private JournalFolderFixture _journalFolderFixture;
+
+	@Inject
+	private JournalFolderLocalService _journalFolderLocalService;
+
 	private Layout _layout;
 
 	@Inject

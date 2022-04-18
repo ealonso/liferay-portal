@@ -17,9 +17,12 @@ package com.liferay.headless.delivery.resource.v1_0.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.headless.delivery.client.dto.v1_0.StructuredContentFolder;
 import com.liferay.journal.model.JournalFolder;
-import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.journal.service.JournalFolderLocalService;
+import com.liferay.journal.test.util.JournalFolderFixture;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.test.rule.Inject;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
 
 /**
@@ -28,6 +31,15 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class StructuredContentFolderResourceTest
 	extends BaseStructuredContentFolderResourceTestCase {
+
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+
+		_journalFolderFixture = new JournalFolderFixture(
+			_journalFolderLocalService);
+	}
 
 	@Override
 	protected String[] getAdditionalAssertFieldNames() {
@@ -69,7 +81,7 @@ public class StructuredContentFolderResourceTest
 			testGetStructuredContentFolderStructuredContentFoldersPage_getIrrelevantParentStructuredContentFolderId()
 		throws Exception {
 
-		JournalFolder journalFolder = JournalTestUtil.addFolder(
+		JournalFolder journalFolder = _journalFolderFixture.addFolder(
 			irrelevantGroup.getGroupId(), RandomTestUtil.randomString());
 
 		return journalFolder.getFolderId();
@@ -80,7 +92,7 @@ public class StructuredContentFolderResourceTest
 			testGetStructuredContentFolderStructuredContentFoldersPage_getParentStructuredContentFolderId()
 		throws Exception {
 
-		JournalFolder journalFolder = JournalTestUtil.addFolder(
+		JournalFolder journalFolder = _journalFolderFixture.addFolder(
 			testGroup.getGroupId(), RandomTestUtil.randomString());
 
 		return journalFolder.getFolderId();
@@ -109,5 +121,10 @@ public class StructuredContentFolderResourceTest
 
 		return testDepotEntry.getDepotEntryId();
 	}
+
+	private JournalFolderFixture _journalFolderFixture;
+
+	@Inject
+	private JournalFolderLocalService _journalFolderLocalService;
 
 }
