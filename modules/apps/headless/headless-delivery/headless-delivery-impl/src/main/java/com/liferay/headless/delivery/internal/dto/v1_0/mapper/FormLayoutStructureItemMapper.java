@@ -20,8 +20,10 @@ import com.liferay.headless.delivery.dto.v1_0.PageElement;
 import com.liferay.headless.delivery.dto.v1_0.PageFormDefinition;
 import com.liferay.layout.util.structure.FormLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.util.Portal;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -49,8 +51,8 @@ public class FormLayoutStructureItemMapper
 					{
 						formType = new FormType() {
 							{
-								className =
-									formLayoutStructureItem.getClassName();
+								className = _portal.getClassName(
+									formLayoutStructureItem.getClassNameId());
 							}
 						};
 
@@ -77,5 +79,8 @@ public class FormLayoutStructureItemMapper
 			}
 		};
 	}
+
+	@Reference
+	private Portal _portal;
 
 }
