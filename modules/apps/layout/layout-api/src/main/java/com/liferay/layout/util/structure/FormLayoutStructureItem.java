@@ -43,7 +43,8 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 		FormLayoutStructureItem formLayoutStructureItem =
 			(FormLayoutStructureItem)object;
 
-		if (!Objects.equals(_className, formLayoutStructureItem._className) ||
+		if (!Objects.equals(
+				_classNameId, formLayoutStructureItem._classNameId) ||
 			!Objects.equals(
 				_classTypeId, formLayoutStructureItem._classTypeId)) {
 
@@ -53,8 +54,8 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 		return super.equals(object);
 	}
 
-	public String getClassName() {
-		return _className;
+	public long getClassNameId() {
+		return _classNameId;
 	}
 
 	public long getClassTypeId() {
@@ -64,7 +65,7 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 	@Override
 	public JSONObject getItemConfigJSONObject() {
 		return JSONUtil.put(
-			"className", _className
+			"classNameId", _classNameId
 		).put(
 			"classTypeId", _classTypeId
 		);
@@ -80,8 +81,8 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 		return HashUtil.hash(0, getItemId());
 	}
 
-	public void setClassName(String className) {
-		_className = className;
+	public void setClassNameId(long classNameId) {
+		_classNameId = classNameId;
 	}
 
 	public void setClassTypeId(long classTypeId) {
@@ -90,8 +91,8 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
-		if (itemConfigJSONObject.has("className")) {
-			setClassName(itemConfigJSONObject.getString("className"));
+		if (itemConfigJSONObject.has("classNameIdId")) {
+			setClassNameId(itemConfigJSONObject.getLong("classNameId"));
 		}
 
 		if (itemConfigJSONObject.has("classTypeId")) {
@@ -99,7 +100,7 @@ public class FormLayoutStructureItem extends LayoutStructureItem {
 		}
 	}
 
-	private String _className;
+	private long _classNameId;
 	private long _classTypeId;
 
 }
