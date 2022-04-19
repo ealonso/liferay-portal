@@ -43,7 +43,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.props.test.util.PropsTemporarySwapper;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
@@ -191,17 +190,7 @@ public class AddItemMVCActionCommandTest {
 	public void testAddItemToLayoutDataItemTypeRowMobileLandscapeConfig()
 		throws Exception {
 
-		try (PropsTemporarySwapper propsTemporarySwapper =
-				new PropsTemporarySwapper("feature.flag.LPS-119551", "false")) {
-
-			_assertMobileLandscapeConfig(null, null);
-		}
-
-		try (PropsTemporarySwapper propsTemporarySwapper =
-				new PropsTemporarySwapper("feature.flag.LPS-119551", "true")) {
-
-			_assertMobileLandscapeConfig(1, 12);
-		}
+		_assertMobileLandscapeConfig(1, 12);
 	}
 
 	private void _assertMobileLandscapeConfig(
