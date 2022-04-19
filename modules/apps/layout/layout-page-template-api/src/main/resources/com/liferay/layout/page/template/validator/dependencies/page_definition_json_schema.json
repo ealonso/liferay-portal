@@ -1043,6 +1043,22 @@
 					"if": {
 						"properties": {
 							"type": {
+								"const": "Form"
+							}
+						}
+					},
+					"then": {
+						"properties": {
+							"definition": {
+								"$ref": "#/definitions/PageFormDefinition"
+							}
+						}
+					}
+				},
+				{
+					"if": {
+						"properties": {
+							"type": {
 								"const": "Fragment"
 							}
 						}
@@ -1169,6 +1185,11 @@
 				"type"
 			],
 			"title": "The PageElement Schema",
+			"type": "object"
+		},
+		"PageFormDefinition": {
+			"additionalProperties": false,
+			"title": "The PageFormDefinition Schema",
 			"type": "object"
 		},
 		"PageFragmentInstanceDefinition": {

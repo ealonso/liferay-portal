@@ -18,6 +18,7 @@ import com.liferay.asset.categories.item.selector.AssetCategoryTreeNodeItemSelec
 import com.liferay.asset.categories.item.selector.criterion.AssetCategoryTreeNodeItemSelectorCriterion;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
+import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
@@ -230,6 +231,10 @@ public class ContentPageEditorDisplayContext {
 		return HashMapBuilder.<String, Object>put(
 			"config",
 			HashMapBuilder.<String, Object>put(
+				"addFormItemURL",
+				getFragmentEntryActionURL(
+					"/layout_content_page_editor/add_form_item")
+			).put(
 				"addFragmentCompositionURL",
 				getFragmentEntryActionURL(
 					"/layout_content_page_editor/add_fragment_composition")
@@ -357,6 +362,9 @@ public class ContentPageEditorDisplayContext {
 				"featureFlagLps132571",
 				GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-132571"))
 			).put(
+				"featureFlagLps150277",
+				GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-150277"))
+			).put(
 				"fragmentAdvancedOptionsEnabled",
 				_ffLayoutContentPageEditorConfiguration.
 					fragmentAdvancedOptionsEnabled()
@@ -384,6 +392,11 @@ public class ContentPageEditorDisplayContext {
 				_getResourceURL(
 					"/layout_content_page_editor" +
 						"/get_available_image_configurations")
+			).put(
+				"getAvailableInfoItemFormProviders",
+				_getResourceURL(
+					"/layout_content_page_editor" +
+						"/get_available_info_item_form_providers")
 			).put(
 				"getAvailableListItemRenderersURL",
 				_getResourceURL(
@@ -1619,6 +1632,9 @@ public class ContentPageEditorDisplayContext {
 						"fragmentEntryLinkId",
 						String.valueOf(
 							fragmentEntryLink.getFragmentEntryLinkId())
+					).put(
+						"fragmentType",
+						FragmentConstants.getTypeLabel(fragmentEntry.getType())
 					).put(
 						"masterLayout",
 						layout.getMasterLayoutPlid() ==
