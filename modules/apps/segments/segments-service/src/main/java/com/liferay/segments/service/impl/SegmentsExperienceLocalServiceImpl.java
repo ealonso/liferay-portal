@@ -629,7 +629,7 @@ public class SegmentsExperienceLocalServiceImpl
 	private void _updateSegmentExperiencesPriority(
 		SegmentsExperience segmentsExperience) {
 
-		if (segmentsExperience.getPriority() >= 0) {
+		if (segmentsExperience.getPriority() > 0) {
 			List<SegmentsExperience> segmentsExperiences = new ArrayList<>(
 				segmentsExperiencePersistence.findByG_C_C_GtP(
 					segmentsExperience.getGroupId(),
@@ -655,6 +655,28 @@ public class SegmentsExperienceLocalServiceImpl
 				segmentsExperiences, lowestPriority - 1, -1);
 
 			segmentsExperiencePersistence.flush();
+
+			_updateSegmentExperiencesPriority(
+				segmentsExperiences, highestPriority - 1, -1);
+
+			segmentsExperiencePersistence.flush();
+		}
+		else if (segmentsExperience.getPriority() == 0) {
+			List<SegmentsExperience> segmentsExperiences = new ArrayList<>(
+				segmentsExperiencePersistence.findByG_C_C_GtP(
+					segmentsExperience.getGroupId(),
+					segmentsExperience.getClassNameId(),
+					segmentsExperience.getClassPK(),
+					segmentsExperience.getPriority()));
+
+			if (ListUtil.isEmpty(segmentsExperiences)) {
+				return;
+			}
+
+			int highestPriority = _getHighestPriority(
+				segmentsExperience.getGroupId(),
+				segmentsExperience.getClassNameId(),
+				segmentsExperience.getClassPK());
 
 			_updateSegmentExperiencesPriority(
 				segmentsExperiences, highestPriority - 1, -1);
