@@ -651,8 +651,6 @@ public class SegmentsExperienceLocalServiceImpl
 				segmentsExperiencePersistence.update(curSegmentsExperience);
 			}
 		}
-
-		segmentsExperiencePersistence.flush();
 	}
 
 	private void _validateName(Map<Locale, String> nameMap)

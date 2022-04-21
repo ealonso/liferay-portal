@@ -458,6 +458,10 @@ public class SegmentsExperienceLocalServiceTest {
 		_segmentsExperienceLocalService.deleteSegmentsExperience(
 			zeroPrioritySegmentsExperience.getSegmentsExperienceId());
 
+		segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperience.getSegmentsExperienceId());
+
 		Assert.assertEquals(
 			_PRIORITY_DEFAULT, segmentsExperience.getPriority());
 	}
