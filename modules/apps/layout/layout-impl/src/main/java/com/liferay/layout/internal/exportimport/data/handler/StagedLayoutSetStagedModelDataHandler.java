@@ -903,14 +903,18 @@ public class StagedLayoutSetStagedModelDataHandler
 				Sites.MERGE_FAIL_FRIENDLY_URL_LAYOUTS);
 
 		if (Validator.isNull(mergeFailFriendlyURLLayouts)) {
-			boolean changed = false;
-
 			LayoutSet stagedLayoutSet = importedLayoutSet.getLayoutSet();
+
+			Theme importedTheme = stagedLayoutSet.getTheme();
+
+			if (importedTheme == null) {
+				return;
+			}
+
+			boolean changed = false;
 
 			UnicodeProperties importedSettingsUnicodeProperties =
 				stagedLayoutSet.getSettingsProperties();
-
-			Theme importedTheme = stagedLayoutSet.getTheme();
 
 			Map<String, ThemeSetting> themeSettings =
 				importedTheme.getConfigurableSettings();
