@@ -1,0 +1,18 @@
+<div class="forms-radio-cards">
+	[#list fragmentInputContext.optionList as option]
+		<label>
+			<input class="input-input" name="${fragmentInputContext.name}" type="radio" value="${option.value}" />
+
+			<span class="input-span">${option.label}</span>
+		</label>
+	[/#list]
+
+	[#list fragmentInputContext.errorList as error]
+		<!-- Ignore errors from other inputs -->
+		[#if error.inputName == fragmentInputContext.name]
+			<strong role="alert">
+				${error.title}: ${error.description}
+			</strong>
+		[/#if]
+	[/#list]
+</div>

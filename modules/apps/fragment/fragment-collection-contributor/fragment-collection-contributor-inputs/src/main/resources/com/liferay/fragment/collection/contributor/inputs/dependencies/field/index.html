@@ -1,0 +1,16 @@
+<div class="form-group forms-field">
+	<label>
+		<span data-lfr-editable-type="text" data-lfr-editable-id="label">Input label</span>
+
+		<input class="form-control" type="${configuration.inputType}" value="${fragmentInputContext.value}" />
+	</label>
+
+	[#list fragmentInputContext.errorList as error]
+		<!-- Ignore errors from other inputs -->
+		[#if error.inputName == fragmentInputContext.name]
+			<strong role="alert">
+				${error.title}: ${error.description}
+			</strong>
+		[/#if]
+	[/#list]
+</div>
