@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.web.internal.info.field.converter;
 import com.liferay.dynamic.data.mapping.form.field.type.constants.DDMFormFieldTypeConstants;
 import com.liferay.dynamic.data.mapping.info.field.converter.DDMFormFieldInfoFieldConverter;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
+import com.liferay.dynamic.data.mapping.model.DDMFormFieldOptions;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
@@ -27,12 +28,16 @@ import com.liferay.info.field.type.GridInfoFieldType;
 import com.liferay.info.field.type.ImageInfoFieldType;
 import com.liferay.info.field.type.InfoFieldType;
 import com.liferay.info.field.type.NumberInfoFieldType;
+import com.liferay.info.field.type.OptionInfoFieldType;
 import com.liferay.info.field.type.RadioInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.localized.InfoLocalizedValue;
+import com.liferay.info.localized.bundle.FunctionInfoLocalizedValue;
 import com.liferay.portal.kernel.util.GetterUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
@@ -80,6 +85,9 @@ public class DDMFormFieldInfoFieldConverterImpl
 				DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE)) {
 
 			finalStep.attribute(SelectInfoFieldType.MULTIPLE, true);
+			finalStep.attribute(
+				SelectInfoFieldType.OPTIONS,
+				_getInfoFieldOptions(ddmFormField));
 		}
 
 		if (Objects.equals(
@@ -90,10 +98,14 @@ public class DDMFormFieldInfoFieldConverterImpl
 		}
 
 		if (Objects.equals(
-				ddmFormField.getType(), DDMFormFieldTypeConstants.SELECT) &&
-			GetterUtil.getBoolean(ddmFormField.getProperty("multiple"))) {
+				ddmFormField.getType(), DDMFormFieldTypeConstants.SELECT)) {
 
-			finalStep.attribute(SelectInfoFieldType.MULTIPLE, true);
+			finalStep.attribute(
+				SelectInfoFieldType.MULTIPLE,
+				GetterUtil.getBoolean(ddmFormField.getProperty("multiple")));
+			finalStep.attribute(
+				SelectInfoFieldType.OPTIONS,
+				_getInfoFieldOptions(ddmFormField));
 		}
 
 		if (Objects.equals(
@@ -105,6 +117,13 @@ public class DDMFormFieldInfoFieldConverterImpl
 		}
 
 		if (Objects.equals(
+				ddmFormField.getType(), DDMFormFieldTypeConstants.RADIO)) {
+
+			finalStep.attribute(
+				RadioInfoFieldType.OPTIONS, _getInfoFieldOptions(ddmFormField));
+		}
+
+		if (Objects.equals(
 				ddmFormField.getType(), DDMFormFieldTypeConstants.RICH_TEXT)) {
 
 			finalStep.attribute(TextInfoFieldType.HTML, true);
@@ -112,6 +131,27 @@ public class DDMFormFieldInfoFieldConverterImpl
 		}
 
 		return finalStep;
+	}
+
+	private List<OptionInfoFieldType.Options> _getInfoFieldOptions(
+		DDMFormField ddmFormField) {
+
+		List<OptionInfoFieldType.Options> options = new ArrayList<>();
+
+		DDMFormFieldOptions ddmFormFieldOptions =
+			ddmFormField.getDDMFormFieldOptions();
+
+		for (String value : ddmFormFieldOptions.getOptionsValues()) {
+			LocalizedValue localizedValue = ddmFormFieldOptions.getOptionLabels(
+				value);
+
+			options.add(
+				new OptionInfoFieldType.Options(
+					new FunctionInfoLocalizedValue<>(localizedValue::getString),
+					value));
+		}
+
+		return options;
 	}
 
 	private InfoFieldType _getInfoFieldType(DDMFormField ddmFormField) {
