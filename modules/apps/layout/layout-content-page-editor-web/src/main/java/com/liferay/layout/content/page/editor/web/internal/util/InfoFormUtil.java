@@ -20,6 +20,7 @@ import com.liferay.info.field.InfoFieldSetEntry;
 import com.liferay.info.field.type.BooleanInfoFieldType;
 import com.liferay.info.field.type.InfoFieldType;
 import com.liferay.info.field.type.NumberInfoFieldType;
+import com.liferay.info.field.type.OptionInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.form.InfoForm;
@@ -114,10 +115,10 @@ public class InfoFormUtil {
 		);
 
 		if (infoFieldType instanceof SelectInfoFieldType) {
-			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
+			Optional<List<OptionInfoFieldType.Options>> optionsOptional =
 				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
 
-			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
+			List<OptionInfoFieldType.Options> options = optionsOptional.orElse(
 				Collections.emptyList());
 
 			try {
@@ -137,7 +138,7 @@ public class InfoFormUtil {
 						JSONUtil.toJSONArray(
 							options,
 							option -> JSONUtil.put(
-								"label", String.valueOf(option.getLabel())
+								"label", String.valueOf(option.getLabel(locale))
 							).put(
 								"value", String.valueOf(option.getValue())
 							))
