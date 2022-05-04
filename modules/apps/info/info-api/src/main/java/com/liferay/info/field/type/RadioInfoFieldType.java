@@ -14,12 +14,18 @@
 
 package com.liferay.info.field.type;
 
+import java.util.Collection;
+
 /**
  * @author Alicia Garcia
  */
-public class RadioInfoFieldType implements InfoFieldType {
+public class RadioInfoFieldType implements OptionInfoFieldType {
 
 	public static final RadioInfoFieldType INSTANCE = new RadioInfoFieldType();
+
+	public static final Attribute
+		<RadioInfoFieldType, Collection<OptionInfoFieldType.Options>> OPTIONS =
+			new Attribute<>();
 
 	@Override
 	public String getName() {
