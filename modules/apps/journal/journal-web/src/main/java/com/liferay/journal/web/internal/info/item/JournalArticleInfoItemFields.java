@@ -144,6 +144,8 @@ public class JournalArticleInfoItemFields {
 			TextInfoFieldType.INSTANCE
 		).name(
 			"title"
+		).required(
+			true
 		).labelInfoLocalizedValue(
 			InfoLocalizedValue.localize(
 				JournalArticleInfoItemFields.class, "title")
