@@ -20,11 +20,14 @@ import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSet;
+import com.liferay.info.field.type.OptionInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.KeywordsInfoFilter;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.localized.InfoLocalizedValue;
+import com.liferay.info.localized.bundle.FunctionInfoLocalizedValue;
+import com.liferay.info.localized.bundle.ResourceBundleInfoLocalizedValue;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.list.type.service.ListTypeEntryLocalService;
@@ -39,7 +42,6 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
@@ -338,28 +340,25 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		return null;
 	}
 
-	private List<SelectInfoFieldType.Option> _getOptions(
+	private List<OptionInfoFieldType.Options> _getOptions(
 		ObjectField objectField) {
 
-		List<SelectInfoFieldType.Option> options = new ArrayList<>();
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		List<OptionInfoFieldType.Options> options = new ArrayList<>();
 
 		options.add(
-			new SelectInfoFieldType.Option(
-				LanguageUtil.get(
-					serviceContext.getLocale(), "choose-an-option"),
+			new OptionInfoFieldType.Options(
+				new ResourceBundleInfoLocalizedValue(
+					getClass(), "choose-an-option"),
 				""));
 
 		if (Objects.equals(objectField.getDBType(), "Boolean")) {
 			options.add(
-				new SelectInfoFieldType.Option(
-					LanguageUtil.get(serviceContext.getLocale(), "true"),
+				new OptionInfoFieldType.Options(
+					new ResourceBundleInfoLocalizedValue(getClass(), "true"),
 					"true"));
 			options.add(
-				new SelectInfoFieldType.Option(
-					LanguageUtil.get(serviceContext.getLocale(), "false"),
+				new OptionInfoFieldType.Options(
+					new ResourceBundleInfoLocalizedValue(getClass(), "false"),
 					"false"));
 		}
 		else if (objectField.getListTypeDefinitionId() != 0) {
@@ -368,8 +367,9 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 					_listTypeEntryLocalService.getListTypeEntries(
 						objectField.getListTypeDefinitionId(),
 						QueryUtil.ALL_POS, QueryUtil.ALL_POS),
-					listTypeEntry -> new SelectInfoFieldType.Option(
-						listTypeEntry.getName(serviceContext.getLocale()),
+					listTypeEntry -> new OptionInfoFieldType.Options(
+						new FunctionInfoLocalizedValue<>(
+							listTypeEntry::getName),
 						listTypeEntry.getKey())));
 		}
 
