@@ -1513,7 +1513,20 @@ public class ContentPageEditorDisplayContext {
 			PortalUtil.getLiferayPortletResponse(_renderResponse);
 
 		try {
+			LayoutStructure layoutStructure = _getLayoutStructure();
+
 			for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
+				LayoutStructureItem layoutStructureItem =
+					layoutStructure.getLayoutStructureItemByFragmentEntryLinkId(
+						fragmentEntryLink.getFragmentEntryLinkId());
+
+				if ((layoutStructureItem != null) &&
+					layoutStructure.isItemMarkedForDeletion(
+						layoutStructureItem.getItemId())) {
+
+					continue;
+				}
+
 				DefaultFragmentRendererContext fragmentRendererContext =
 					new DefaultFragmentRendererContext(fragmentEntryLink);
 
@@ -1522,7 +1535,7 @@ public class ContentPageEditorDisplayContext {
 						LayoutStructureUtil.
 							getCollectionStyledLayoutStructureItemIds(
 								fragmentEntryLink.getFragmentEntryLinkId(),
-								_getLayoutStructure()));
+								layoutStructure));
 				fragmentRendererContext.setLocale(themeDisplay.getLocale());
 				fragmentRendererContext.setMode(
 					FragmentEntryLinkConstants.EDIT);
