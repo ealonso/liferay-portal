@@ -30,6 +30,7 @@ import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemDetailsProvider;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
+import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.layout.display.page.LayoutDisplayPageProvider;
 import com.liferay.layout.display.page.LayoutDisplayPageProviderTracker;
@@ -183,9 +184,12 @@ public class GetFragmentEntryLinkMVCResourceCommand
 		themeDisplay.setIsolated(true);
 
 		try {
-			String content = _fragmentRendererController.render(
-				defaultFragmentRendererContext, httpServletRequest,
-				_portal.getHttpServletResponse(resourceResponse));
+			String content = FragmentEntryLinkUtil.getFragmentEntryLinkContent(
+				httpServletRequest,
+				_portal.getHttpServletResponse(resourceResponse),
+				_infoItemServiceTracker, fragmentEntryLink,
+				defaultFragmentRendererContext, _fragmentRendererController,
+				segmentsExperienceId);
 
 			jsonObject.put(
 				"content", content
