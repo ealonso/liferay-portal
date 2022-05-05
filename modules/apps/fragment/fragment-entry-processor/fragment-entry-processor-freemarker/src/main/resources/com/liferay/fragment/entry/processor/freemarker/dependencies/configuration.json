@@ -1,0 +1,46 @@
+{
+	"fieldSets": [
+		{
+			"fields": [
+				{
+					"defaultValue": false,
+					"label": "mark-as-required",
+					"name": "inputRequired",
+					"type": "checkbox"
+				},
+				{
+					"defaultValue": true,
+					"label": "show-label",
+					"name": "inputShowLabel",
+					"type": "checkbox",
+					"typeOptions": {
+						"displayType": "toggle"
+					}
+				},
+				{
+					"defaultValue": "",
+					"label": "label",
+					"localizable": true,
+					"name": "inputLabel",
+					"type": "text"
+				},
+				{
+					"defaultValue": true,
+					"label": "show-help-text",
+					"name": "inputShowHelpText",
+					"type": "checkbox",
+					"typeOptions": {
+						"displayType": "toggle"
+					}
+				},
+				{
+					"defaultValue": "",
+					"label": "help-text",
+					"localizable": true,
+					"name": "inputHelpText",
+					"type": "text"
+				}
+			]
+		}
+	]
+}
