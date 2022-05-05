@@ -27,6 +27,10 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.PaginationBarTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.RowTag;
 import com.liferay.frontend.taglib.servlet.taglib.ComponentTag;
 import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.exception.NoSuchFormVariationException;
+import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.list.renderer.DefaultInfoListRendererContext;
 import com.liferay.info.list.renderer.InfoListRenderer;
 import com.liferay.layout.display.page.LayoutDisplayPageProvider;
@@ -69,6 +73,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
@@ -163,6 +168,32 @@ public class RenderLayoutStructureTag extends IncludeTag {
 
 	protected static final String LAYOUT_STRUCTURE =
 		RenderLayoutStructureTag.class.getName() + "#LAYOUT_STRUCTURE";
+
+	private InfoForm _getInfoForm(
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem) {
+
+		InfoItemServiceTracker infoItemServiceTracker =
+			ServletContextUtil.getInfoItemServiceTracker();
+
+		InfoItemFormProvider<Object> infoItemFormProvider =
+			infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormProvider.class,
+				PortalUtil.getClassName(
+					formStyledLayoutStructureItem.getClassNameId()));
+
+		if (infoItemFormProvider != null) {
+			try {
+				return infoItemFormProvider.getInfoForm(
+					String.valueOf(
+						formStyledLayoutStructureItem.getClassTypeId()));
+			}
+			catch (NoSuchFormVariationException noSuchFormVariationException) {
+				return null;
+			}
+		}
+
+		return null;
+	}
 
 	private String _getLayoutMode() {
 		HttpServletRequest httpServletRequest = getRequest();
@@ -869,9 +900,21 @@ public class RenderLayoutStructureTag extends IncludeTag {
 					continue;
 				}
 
-				_renderFormStyledLayoutStructureItem(
-					layoutStructureItem, collectionElementIndex,
-					renderLayoutStructureDisplayContext);
+				HttpServletRequest httpServletRequest = getRequest();
+
+				try {
+					httpServletRequest.setAttribute(
+						InfoDisplayWebKeys.INFO_FORM,
+						_getInfoForm(formStyledLayoutStructureItem));
+
+					_renderFormStyledLayoutStructureItem(
+						layoutStructureItem, collectionElementIndex,
+						renderLayoutStructureDisplayContext);
+				}
+				finally {
+					httpServletRequest.removeAttribute(
+						InfoDisplayWebKeys.INFO_FORM);
+				}
 			}
 			else if (layoutStructureItem instanceof
 						FragmentStyledLayoutStructureItem) {

@@ -65,6 +65,7 @@ import com.liferay.layout.content.page.editor.web.internal.constants.ContentPage
 import com.liferay.layout.content.page.editor.web.internal.constants.ContentPageEditorConstants;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkItemSelectorUtil;
+import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.MappingContentUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.StyleBookEntryUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
@@ -1540,9 +1541,13 @@ public class ContentPageEditorDisplayContext {
 				fragmentRendererContext.setMode(
 					FragmentEntryLinkConstants.EDIT);
 
-				String content = _fragmentRendererController.render(
-					fragmentRendererContext, httpServletRequest,
-					PortalUtil.getHttpServletResponse(_renderResponse));
+				String content =
+					FragmentEntryLinkUtil.getFragmentEntryLinkContent(
+						httpServletRequest,
+						PortalUtil.getHttpServletResponse(_renderResponse),
+						infoItemServiceTracker, fragmentEntryLink,
+						fragmentRendererContext, _fragmentRendererController,
+						getSegmentsExperienceId());
 
 				String configuration =
 					_fragmentRendererController.getConfiguration(

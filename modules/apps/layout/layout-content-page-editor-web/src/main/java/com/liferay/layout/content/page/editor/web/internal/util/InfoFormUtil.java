@@ -14,6 +14,7 @@
 
 package com.liferay.layout.content.page.editor.web.internal.util;
 
+import com.liferay.info.exception.NoSuchFormVariationException;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.InfoFieldSetEntry;
@@ -24,12 +25,16 @@ import com.liferay.info.field.type.OptionInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
+import com.liferay.layout.util.structure.FormStyledLayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -88,6 +93,34 @@ public class InfoFormUtil {
 		}
 
 		return JSONUtil.put("fieldSets", fieldSetsJSONArray);
+	}
+
+	public static InfoForm getInfoForm(
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem,
+		InfoItemServiceTracker infoItemServiceTracker) {
+
+		if (formStyledLayoutStructureItem == null) {
+			return null;
+		}
+
+		InfoItemFormProvider<Object> infoItemFormProvider =
+			infoItemServiceTracker.getFirstInfoItemService(
+				InfoItemFormProvider.class,
+				PortalUtil.getClassName(
+					formStyledLayoutStructureItem.getClassNameId()));
+
+		if (infoItemFormProvider != null) {
+			try {
+				return infoItemFormProvider.getInfoForm(
+					String.valueOf(
+						formStyledLayoutStructureItem.getClassTypeId()));
+			}
+			catch (NoSuchFormVariationException noSuchFormVariationException) {
+				return null;
+			}
+		}
+
+		return null;
 	}
 
 	private static String _getDataType(InfoFieldType infoFieldType) {
