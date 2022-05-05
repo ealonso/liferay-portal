@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.product.navigation.control.menu.BaseJSPProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.manager.SegmentsExperienceManager;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.segments.web.internal.display.context.SegmentsExperienceSelectorDisplayContext;
@@ -104,8 +105,11 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 		long segmentsExperiencesCount =
 			_segmentsExperienceLocalService.getSegmentsExperiencesCount(
 				themeDisplay.getScopeGroupId(),
-				_portal.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true);
+				_segmentsExperienceStagingHelper.getClassNameId(
+					themeDisplay.getLayout()),
+				_segmentsExperienceStagingHelper.getClassPK(
+					themeDisplay.getLayout()),
+				true);
 
 		if (segmentsExperiencesCount <= 1) {
 			return false;
@@ -162,8 +166,8 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 			SegmentsExperienceSelectorDisplayContext.class.getName(),
 			new SegmentsExperienceSelectorDisplayContext(
 				httpServletRequest,
-				new SegmentsExperienceManager(
-					_segmentsExperienceLocalService)));
+				new SegmentsExperienceManager(_segmentsExperienceLocalService),
+				_segmentsExperienceStagingHelper));
 
 		return super.include(httpServletRequest, httpServletResponse, jspPath);
 	}
@@ -185,6 +189,9 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference
 	private Sites _sites;

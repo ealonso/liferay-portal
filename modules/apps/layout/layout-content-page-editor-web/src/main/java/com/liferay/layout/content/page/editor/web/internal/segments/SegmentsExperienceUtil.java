@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.segments.constants.SegmentsExperimentConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
 import com.liferay.segments.service.SegmentsExperienceServiceUtil;
@@ -87,7 +88,8 @@ public class SegmentsExperienceUtil {
 	}
 
 	public static Map<String, Object> getAvailableSegmentsExperiences(
-			HttpServletRequest httpServletRequest)
+			HttpServletRequest httpServletRequest,
+			SegmentsExperienceStagingHelper segmentsExperienceStagingHelper)
 		throws Exception {
 
 		ThemeDisplay themeDisplay =
@@ -105,8 +107,8 @@ public class SegmentsExperienceUtil {
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceServiceUtil.getSegmentsExperiences(
 				themeDisplay.getScopeGroupId(),
-				PortalUtil.getClassNameId(Layout.class.getName()),
-				themeDisplay.getPlid(), true);
+				segmentsExperienceStagingHelper.getClassNameId(draftLayout),
+				segmentsExperienceStagingHelper.getClassPK(draftLayout), true);
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			availableSegmentsExperiences.put(

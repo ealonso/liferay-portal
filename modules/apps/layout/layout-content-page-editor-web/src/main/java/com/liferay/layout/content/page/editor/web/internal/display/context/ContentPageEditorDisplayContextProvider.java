@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.segments.configuration.provider.SegmentsConfigurationProvider;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.manager.SegmentsExperienceManager;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.staging.StagingGroupHelper;
@@ -82,7 +83,7 @@ public class ContentPageEditorDisplayContextProvider {
 				_pageEditorConfiguration, portletRequest, renderResponse,
 				_segmentsConfigurationProvider,
 				new SegmentsExperienceManager(_segmentsExperienceLocalService),
-				_stagingGroupHelper);
+				_segmentsExperienceStagingHelper, _stagingGroupHelper);
 		}
 
 		long classPK = GetterUtil.getLong(
@@ -182,6 +183,9 @@ public class ContentPageEditorDisplayContextProvider {
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	private volatile ServiceTrackerList<ContentPageEditorSidebarPanel>
 		_serviceTrackerList;

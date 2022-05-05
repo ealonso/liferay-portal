@@ -22,13 +22,13 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.manager.SegmentsExperienceManager;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
@@ -51,10 +51,12 @@ public class SegmentsExperienceSelectorDisplayContext {
 
 	public SegmentsExperienceSelectorDisplayContext(
 		HttpServletRequest httpServletRequest,
-		SegmentsExperienceManager segmentsExperienceManager) {
+		SegmentsExperienceManager segmentsExperienceManager,
+		SegmentsExperienceStagingHelper segmentsExperienceStagingHelper) {
 
 		_httpServletRequest = httpServletRequest;
 		_segmentsExperienceManager = segmentsExperienceManager;
+		_segmentsExperienceStagingHelper = segmentsExperienceStagingHelper;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -67,8 +69,11 @@ public class SegmentsExperienceSelectorDisplayContext {
 		List<SegmentsExperience> segmentsExperiences =
 			SegmentsExperienceLocalServiceUtil.getSegmentsExperiences(
 				_themeDisplay.getScopeGroupId(),
-				PortalUtil.getClassNameId(Layout.class.getName()),
-				_themeDisplay.getPlid(), true);
+				_segmentsExperienceStagingHelper.getClassNameId(
+					_themeDisplay.getLayout()),
+				_segmentsExperienceStagingHelper.getClassPK(
+					_themeDisplay.getLayout()),
+				true);
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			segmentsExperiencesJSONArray.put(
@@ -219,6 +224,8 @@ public class SegmentsExperienceSelectorDisplayContext {
 
 	private final HttpServletRequest _httpServletRequest;
 	private final SegmentsExperienceManager _segmentsExperienceManager;
+	private final SegmentsExperienceStagingHelper
+		_segmentsExperienceStagingHelper;
 	private final ThemeDisplay _themeDisplay;
 
 }
