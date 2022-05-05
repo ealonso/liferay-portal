@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.entry.processor.freemarker;
 
+import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.freemarker.internal.configuration.FreeMarkerFragmentEntryProcessorConfiguration;
@@ -25,6 +26,13 @@ import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.field.InfoField;
+import com.liferay.info.field.type.OptionInfoFieldType;
+import com.liferay.info.field.type.RadioInfoFieldType;
+import com.liferay.info.field.type.SelectInfoFieldType;
+import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringPool;
@@ -43,11 +51,16 @@ import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,7 +110,10 @@ public class FreeMarkerFragmentEntryProcessor
 			return html;
 		}
 
-		if (fragmentEntryProcessorContext.getHttpServletRequest() == null) {
+		HttpServletRequest httpServletRequest =
+			fragmentEntryProcessorContext.getHttpServletRequest();
+
+		if (httpServletRequest == null) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
 					"HTTP servlet request is not set in the fragment entry " +
@@ -147,9 +163,26 @@ public class FreeMarkerFragmentEntryProcessor
 			).build());
 
 		if (_isInputFragmentEntryType(fragmentEntryLink)) {
+			InfoField infoField = null;
+
+			InfoForm infoForm = (InfoForm)httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_FORM);
+
+			if (infoForm != null) {
+				String fieldName = GetterUtil.getString(
+					_fragmentEntryConfigurationParser.
+						getConfigurationFieldValue(
+							fragmentEntryLink.getEditableValues(),
+							"inputFieldId",
+							FragmentConfigurationFieldDataType.STRING));
+
+				infoField = infoForm.getInfoField(fieldName);
+			}
+
 			template.put(
 				"input",
-				new InputTemplateNode("label", "name", false, "type", "value"));
+				_toInputTemplateNode(
+					infoField, fragmentEntryProcessorContext.getLocale()));
 		}
 
 		template.prepareTaglib(
@@ -290,6 +323,47 @@ public class FreeMarkerFragmentEntryProcessor
 		return false;
 	}
 
+	private InputTemplateNode _toInputTemplateNode(
+		InfoField infoField, Locale locale) {
+
+		if (infoField == null) {
+			return new InputTemplateNode(
+				"label", "name", false, "type", "value");
+		}
+
+		InputTemplateNode inputTemplateNode = new InputTemplateNode(
+			infoField.getLabel(locale), infoField.getName(),
+			infoField.isRequired(), StringPool.BLANK, StringPool.BLANK);
+
+		if (infoField.getInfoFieldType() == RadioInfoFieldType.INSTANCE) {
+			Optional<List<OptionInfoFieldType.Options>> optionsOptional =
+				infoField.getAttributeOptional(RadioInfoFieldType.OPTIONS);
+
+			List<OptionInfoFieldType.Options> options = optionsOptional.orElse(
+				new ArrayList<>());
+
+			for (OptionInfoFieldType.Options option : options) {
+				inputTemplateNode.addOption(
+					option.getLabel(locale), option.getValue());
+			}
+		}
+
+		if (infoField.getInfoFieldType() == SelectInfoFieldType.INSTANCE) {
+			Optional<List<OptionInfoFieldType.Options>> optionsOptional =
+				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
+
+			List<OptionInfoFieldType.Options> options = optionsOptional.orElse(
+				new ArrayList<>());
+
+			for (OptionInfoFieldType.Options option : options) {
+				inputTemplateNode.addOption(
+					option.getLabel(locale), option.getValue());
+			}
+		}
+
+		return inputTemplateNode;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		FreeMarkerFragmentEntryProcessor.class);
 
@@ -305,5 +379,8 @@ public class FreeMarkerFragmentEntryProcessor
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
+
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 }
