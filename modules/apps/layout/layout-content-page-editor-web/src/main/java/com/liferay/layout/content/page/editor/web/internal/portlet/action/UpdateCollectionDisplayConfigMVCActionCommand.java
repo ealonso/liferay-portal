@@ -20,8 +20,10 @@ import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
+import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -159,10 +161,12 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 			fragmentEntryLinksJSONArray.put(
 				JSONUtil.put(
 					"content",
-					_fragmentRendererController.render(
-						defaultFragmentRendererContext,
+					FragmentEntryLinkUtil.getFragmentEntryLinkContent(
 						_portal.getHttpServletRequest(actionRequest),
-						_portal.getHttpServletResponse(actionResponse))
+						_portal.getHttpServletResponse(actionResponse),
+						_infoItemServiceTracker, fragmentEntryLink,
+						defaultFragmentRendererContext,
+						_fragmentRendererController, segmentsExperienceId)
 				).put(
 					"editableValues", editableValuesJSONObject
 				).put(
@@ -227,6 +231,9 @@ public class UpdateCollectionDisplayConfigMVCActionCommand
 
 	@Reference
 	private FragmentRendererController _fragmentRendererController;
+
+	@Reference
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@Reference
 	private Portal _portal;
