@@ -56,12 +56,6 @@ public class JournalHelperUtil {
 		return _journalHelper.getArticleLayout(layoutUuid, groupId);
 	}
 
-	public static List<JournalArticle> getArticles(Hits hits)
-		throws PortalException {
-
-		return _journalHelper.getArticles(hits);
-	}
-
 	public static int getRestrictionType(long folderId) {
 		return _journalHelper.getRestrictionType(folderId);
 	}

@@ -27,18 +27,6 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>layout-icon</name>
-		<tag-class>com.liferay.taglib.theme.LayoutIconTag</tag-class>
-		<body-content>empty</body-content>
-		<description>Deprecated as of 7.2.0, with no direct replacement.</description>
-		<attribute>
-			<name>layout</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-			<description>The page to get the icon for.</description>
-		</attribute>
-	</tag>
-	<tag>
 		<name>meta-tags</name>
 		<tag-class>com.liferay.taglib.theme.MetaTagsTag</tag-class>
 		<body-content>JSP</body-content>

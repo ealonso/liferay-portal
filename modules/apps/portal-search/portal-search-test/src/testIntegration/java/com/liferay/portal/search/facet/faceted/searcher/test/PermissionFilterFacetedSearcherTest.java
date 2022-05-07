@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactory;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -49,14 +48,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.osgi.service.cm.ConfigurationAdmin;
 
 /**
  * @author Bryan Engler
@@ -68,24 +64,9 @@ public class PermissionFilterFacetedSearcherTest
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new LiferayIntegrationTestRule();
-
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-
-		_originalPermissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
-	}
-
-	@After
-	@Override
-	public void tearDown() throws Exception {
-		super.tearDown();
-
-		PermissionThreadLocal.setPermissionChecker(_originalPermissionChecker);
-	}
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(),
+			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@Test
 	public void testDecrementFrequencyCount() throws Exception {
@@ -151,9 +132,7 @@ public class PermissionFilterFacetedSearcherTest
 		return folder;
 	}
 
-	protected ServiceContext createServiceContext(Group group, User user)
-		throws Exception {
-
+	protected ServiceContext createServiceContext(Group group, User user) {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				group.getCompanyId(), group.getGroupId(), user.getUserId());
@@ -175,9 +154,6 @@ public class PermissionFilterFacetedSearcherTest
 	protected static AssetEntriesFacetFactory assetEntriesFacetFactory;
 
 	@Inject
-	protected static ConfigurationAdmin configurationAdmin;
-
-	@Inject
 	protected static JournalArticleLocalService journalArticleLocalService;
 
 	@Inject
@@ -191,7 +167,5 @@ public class PermissionFilterFacetedSearcherTest
 
 	@DeleteAfterTestRun
 	private final List<JournalFolder> _folders = new ArrayList<>();
-
-	private PermissionChecker _originalPermissionChecker;
 
 }

@@ -23,16 +23,6 @@
 		</attribute>
 	</tag>
 	<tag>
-		<name>layout-icon</name>
-		<tag-class>com.liferay.taglib.theme.LayoutIconTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<name>layout</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
 		<name>meta-tags</name>
 		<tag-class>com.liferay.taglib.theme.MetaTagsTag</tag-class>
 		<body-content>JSP</body-content>
