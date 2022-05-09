@@ -448,6 +448,10 @@ public class ContentPageEditorDisplayContext {
 						layoutURL, "p_l_mode", Constants.PREVIEW);
 				}
 			).put(
+				"getInfoItemFieldTypeURL",
+				_getResourceURL(
+					"/layout_content_page_editor/get_info_item_field_type")
+			).put(
 				"getInfoItemFieldValueURL",
 				_getResourceURL(
 					"/layout_content_page_editor/get_info_item_field_value")
