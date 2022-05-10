@@ -17,6 +17,7 @@
 <%@ include file="/html/common/init.jsp" %>
 
 <%@ page import="com.liferay.portal.client.extension.ThemeClientExtensionsUtil" %><%@
+page import="com.liferay.portal.kernel.client.extension.ThemeCSSURLs" %><%@
 page import="com.liferay.portal.kernel.client.extension.ThemeClientExtensions" %><%@
 page import="com.liferay.portal.kernel.model.Portlet" %><%@
 page import="com.liferay.portal.kernel.model.portlet.PortletDependency" %><%@

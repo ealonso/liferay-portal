@@ -14,17 +14,13 @@
 
 package com.liferay.portal.kernel.client.extension;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * @author Iván Zaera Avellón
  */
-public interface ThemeClientExtensions {
+public interface ThemeCSSURLs {
 
-	public ThemeCSSURLs getThemeCSSURLs(HttpServletRequest httpServletRequest);
+	public String getMain();
 
-	public List<String> getThemeJSURLs(HttpServletRequest httpServletRequest);
+	public String getPortal();
 
 }

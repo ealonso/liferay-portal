@@ -18,6 +18,7 @@ import com.liferay.client.extension.constants.ClientExtensionConstants;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.service.ClientExtensionEntryLocalService;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.client.extension.ThemeCSSURLs;
 import com.liferay.portal.kernel.client.extension.ThemeClientExtensions;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -37,12 +38,41 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 /**
  * @author Iván Zaera Avellón
  */
-@Component(service = ThemeClientExtensions.class)
+@Component(immediate = true, service = ThemeClientExtensions.class)
 public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
+
+	@Override
+	public ThemeCSSURLs getThemeCSSURLs(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		return new ThemeCSSURLs() {
+
+			@Override
+			public String getMain() {
+				return HtmlUtil.escapeAttribute(
+					_portal.getStaticResourceURL(
+						httpServletRequest,
+						themeDisplay.getPathThemeCss() + "/main.css"));
+			}
+
+			@Override
+			public String getPortal() {
+				return HtmlUtil.escapeAttribute(
+					_portal.getStaticResourceURL(
+						httpServletRequest,
+						themeDisplay.getPathThemeCss() + "/clay.css"));
+			}
+
+		};
+	}
 
 	@Override
 	public List<String> getThemeJSURLs(HttpServletRequest httpServletRequest) {
@@ -89,8 +119,12 @@ public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
 		}
 	}
 
-	@Reference
-	private ClientExtensionEntryLocalService _clientExtensionEntryLocalService;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC
+	)
+	private volatile ClientExtensionEntryLocalService
+		_clientExtensionEntryLocalService;
 
 	@Reference
 	private Portal _portal;
