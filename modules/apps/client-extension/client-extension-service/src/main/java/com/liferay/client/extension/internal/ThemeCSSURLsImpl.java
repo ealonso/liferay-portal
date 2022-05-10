@@ -12,24 +12,31 @@
  * details.
  */
 
-export default function propsTransformer({portletNamespace, ...otherProps}) {
-	return {
-		...otherProps,
-		onChange: (event) => {
-			const {value} = event.currentTarget;
+package com.liferay.client.extension.internal;
 
-			document
-				.querySelectorAll(`fieldset[id*='${portletNamespace}_type_']`)
-				.forEach((fieldset) => {
-					fieldset.classList.add('d-none');
-					fieldset.setAttribute('disabled', true);
+import com.liferay.portal.kernel.client.extension.ThemeCSSURLs;
 
-					if (fieldset.id.includes('_' + value)) {
-						fieldset.classList.remove('d-none');
-						fieldset.removeAttribute('disabled');
-					}
-				});
-		},
-		portletNamespace,
-	};
+/**
+ * @author Iván Zaera Avellón
+ */
+public class ThemeCSSURLsImpl implements ThemeCSSURLs {
+
+	public ThemeCSSURLsImpl(String main, String portal) {
+		_main = main;
+		_portal = portal;
+	}
+
+	@Override
+	public String getMain() {
+		return _main;
+	}
+
+	@Override
+	public String getPortal() {
+		return _portal;
+	}
+
+	private final String _main;
+	private final String _portal;
+
 }

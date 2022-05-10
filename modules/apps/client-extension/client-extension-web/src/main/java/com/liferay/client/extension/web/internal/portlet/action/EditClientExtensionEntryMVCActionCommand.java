@@ -128,6 +128,24 @@ public class EditClientExtensionEntryMVCActionCommand
 				ParamUtil.getString(actionRequest, "iFrameURL"), instanceable,
 				nameMap, portletCategoryName, properties, sourceCodeURL);
 		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_CSS)) {
+			_clientExtensionEntryService.addThemeCSSClientExtensionEntry(
+				description, nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
+				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
+		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_FAVICON)) {
+			_clientExtensionEntryService.addThemeFaviconClientExtensionEntry(
+				description, nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeFaviconURL"));
+		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_JS)) {
+			_clientExtensionEntryService.addThemeJSClientExtensionEntry(
+				description, nameMap, properties, sourceCodeURL,
+				StringUtil.merge(
+					ParamUtil.getStringValues(actionRequest, "themeJSURLs"),
+					StringPool.NEW_LINE));
+		}
 	}
 
 	private ClientExtensionEntry _getClientExtensionEntry(
@@ -190,6 +208,36 @@ public class EditClientExtensionEntryMVCActionCommand
 				friendlyURLMapping,
 				ParamUtil.getString(actionRequest, "iFrameURL"), nameMap,
 				portletCategoryName, properties, sourceCodeURL);
+		}
+		else if (Objects.equals(
+					clientExtensionEntry.getType(),
+					ClientExtensionConstants.TYPE_THEME_CSS)) {
+
+			_clientExtensionEntryService.updateThemeCSSClientExtensionEntry(
+				clientExtensionEntry.getClientExtensionEntryId(), description,
+				nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
+				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
+		}
+		else if (Objects.equals(
+					clientExtensionEntry.getType(),
+					ClientExtensionConstants.TYPE_THEME_FAVICON)) {
+
+			_clientExtensionEntryService.updateThemeFaviconClientExtensionEntry(
+				clientExtensionEntry.getClientExtensionEntryId(), description,
+				nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeFaviconURL"));
+		}
+		else if (Objects.equals(
+					clientExtensionEntry.getType(),
+					ClientExtensionConstants.TYPE_THEME_JS)) {
+
+			_clientExtensionEntryService.updateThemeJSClientExtensionEntry(
+				clientExtensionEntry.getClientExtensionEntryId(), description,
+				nameMap, properties, sourceCodeURL,
+				StringUtil.merge(
+					ParamUtil.getStringValues(actionRequest, "themeJSURLs"),
+					StringPool.NEW_LINE));
 		}
 	}
 

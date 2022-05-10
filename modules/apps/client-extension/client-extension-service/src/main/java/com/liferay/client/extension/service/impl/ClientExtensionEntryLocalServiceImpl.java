@@ -21,6 +21,9 @@ import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementH
 import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementURLsException;
 import com.liferay.client.extension.exception.ClientExtensionEntryFriendlyURLMappingException;
 import com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException;
+import com.liferay.client.extension.exception.ClientExtensionEntryThemeCSSURLException;
+import com.liferay.client.extension.exception.ClientExtensionEntryThemeFaviconURLException;
+import com.liferay.client.extension.exception.ClientExtensionEntryThemeJSURLsException;
 import com.liferay.client.extension.exception.DuplicateClientExtensionEntryExternalReferenceCodeException;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.service.base.ClientExtensionEntryLocalServiceBaseImpl;
@@ -265,6 +268,125 @@ public class ClientExtensionEntryLocalServiceImpl
 			nameMap, portletCategoryName, properties, sourceCodeURL);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		long clientExtensionEntryId = counterLocalService.increment();
+
+		User user = _userLocalService.getUser(userId);
+
+		_validateThemeCSSURLs(themeCSSMainURL, themeCSSPortalURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(clientExtensionEntryId);
+
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeCSSMainURL(themeCSSMainURL);
+		clientExtensionEntry.setThemeCSSPortalURL(themeCSSPortalURL);
+		clientExtensionEntry.setType(ClientExtensionConstants.TYPE_THEME_CSS);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		long clientExtensionEntryId = counterLocalService.increment();
+
+		User user = _userLocalService.getUser(userId);
+
+		_validateThemeFaviconURL(themeFaviconURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(clientExtensionEntryId);
+
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeFaviconURL(themeFaviconURL);
+		clientExtensionEntry.setType(
+			ClientExtensionConstants.TYPE_THEME_FAVICON);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addThemeJSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeJSURLs)
+		throws PortalException {
+
+		long clientExtensionEntryId = counterLocalService.increment();
+
+		User user = _userLocalService.getUser(userId);
+
+		themeJSURLs = StringUtil.trim(themeJSURLs);
+
+		_validateThemeJS(themeJSURLs);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(clientExtensionEntryId);
+
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeJSURLs(themeJSURLs);
+		clientExtensionEntry.setType(ClientExtensionConstants.TYPE_THEME_JS);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public ClientExtensionEntry deleteClientExtensionEntry(
@@ -307,6 +429,13 @@ public class ClientExtensionEntryLocalServiceImpl
 		_serviceRegistrationsMaps.put(
 			clientExtensionEntry.getClientExtensionEntryId(),
 			_clientExtensionEntryDeployer.deploy(clientExtensionEntry));
+	}
+
+	@Override
+	public List<ClientExtensionEntry> getClientExtensionEntries(
+		long companyId, String type) {
+
+		return clientExtensionEntryPersistence.findByC_T(companyId, type);
 	}
 
 	@Override
@@ -531,6 +660,106 @@ public class ClientExtensionEntryLocalServiceImpl
 		return clientExtensionEntryPersistence.update(clientExtensionEntry);
 	}
 
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		_validateThemeCSSURLs(themeCSSMainURL, themeCSSPortalURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.findByPrimaryKey(
+				clientExtensionEntryId);
+
+		clientExtensionEntryLocalService.undeployClientExtensionEntry(
+			clientExtensionEntry);
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeCSSMainURL(themeCSSMainURL);
+		clientExtensionEntry.setThemeCSSPortalURL(themeCSSPortalURL);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		_validateThemeFaviconURL(themeFaviconURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.findByPrimaryKey(
+				clientExtensionEntryId);
+
+		clientExtensionEntryLocalService.undeployClientExtensionEntry(
+			clientExtensionEntry);
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeFaviconURL(themeFaviconURL);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry updateThemeJSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
+		throws PortalException {
+
+		themeJSURLs = StringUtil.trim(themeJSURLs);
+
+		_validateThemeJS(themeJSURLs);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.findByPrimaryKey(
+				clientExtensionEntryId);
+
+		clientExtensionEntryLocalService.undeployClientExtensionEntry(
+			clientExtensionEntry);
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeJSURLs(themeJSURLs);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
@@ -751,6 +980,41 @@ public class ClientExtensionEntryLocalServiceImpl
 		if (!Validator.isUrl(iFrameURL)) {
 			throw new ClientExtensionEntryIFrameURLException(
 				"Invalid IFrame URL " + iFrameURL);
+		}
+	}
+
+	private void _validateThemeCSSURLs(
+			String themeCSSMainURL, String themeCSSPortalURL)
+		throws PortalException {
+
+		if (!Validator.isUrl(themeCSSMainURL)) {
+			throw new ClientExtensionEntryThemeCSSURLException(
+				"Invalid Theme CSS Main URL " + themeCSSMainURL);
+		}
+
+		if (!Validator.isUrl(themeCSSPortalURL)) {
+			throw new ClientExtensionEntryThemeCSSURLException(
+				"Invalid Theme CSS Portal URL " + themeCSSPortalURL);
+		}
+	}
+
+	private void _validateThemeFaviconURL(String themeFaviconURL)
+		throws PortalException {
+
+		if (!Validator.isUrl(themeFaviconURL)) {
+			throw new ClientExtensionEntryThemeFaviconURLException(
+				"Invalid Theme Favicon URL " + themeFaviconURL);
+		}
+	}
+
+	private void _validateThemeJS(String themeJSURLs) throws PortalException {
+		if (Validator.isNotNull(themeJSURLs)) {
+			for (String themeJSURL : themeJSURLs.split(StringPool.NEW_LINE)) {
+				if (!Validator.isUrl(themeJSURL, true)) {
+					throw new ClientExtensionEntryThemeJSURLsException(
+						"Invalid Theme JS URL " + themeJSURL);
+				}
+			}
 		}
 	}
 

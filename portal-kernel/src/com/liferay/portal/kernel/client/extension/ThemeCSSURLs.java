@@ -12,24 +12,15 @@
  * details.
  */
 
-export default function propsTransformer({portletNamespace, ...otherProps}) {
-	return {
-		...otherProps,
-		onChange: (event) => {
-			const {value} = event.currentTarget;
+package com.liferay.portal.kernel.client.extension;
 
-			document
-				.querySelectorAll(`fieldset[id*='${portletNamespace}_type_']`)
-				.forEach((fieldset) => {
-					fieldset.classList.add('d-none');
-					fieldset.setAttribute('disabled', true);
+/**
+ * @author Iván Zaera Avellón
+ */
+public interface ThemeCSSURLs {
 
-					if (fieldset.id.includes('_' + value)) {
-						fieldset.classList.remove('d-none');
-						fieldset.removeAttribute('disabled');
-					}
-				});
-		},
-		portletNamespace,
-	};
+	public String getMain();
+
+	public String getPortal();
+
 }
