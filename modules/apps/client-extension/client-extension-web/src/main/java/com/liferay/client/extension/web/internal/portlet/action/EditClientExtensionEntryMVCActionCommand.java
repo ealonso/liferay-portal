@@ -128,6 +128,12 @@ public class EditClientExtensionEntryMVCActionCommand
 				ParamUtil.getString(actionRequest, "iFrameURL"), instanceable,
 				nameMap, portletCategoryName, properties, sourceCodeURL);
 		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_CSS)) {
+			_clientExtensionEntryService.addThemeCSSClientExtensionEntry(
+				description, nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
+				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
+		}
 		else if (type.equals(ClientExtensionConstants.TYPE_THEME_JS)) {
 			_clientExtensionEntryService.addThemeJSClientExtensionEntry(
 				description, nameMap, properties, sourceCodeURL,
@@ -197,6 +203,16 @@ public class EditClientExtensionEntryMVCActionCommand
 				friendlyURLMapping,
 				ParamUtil.getString(actionRequest, "iFrameURL"), nameMap,
 				portletCategoryName, properties, sourceCodeURL);
+		}
+		else if (Objects.equals(
+					clientExtensionEntry.getType(),
+					ClientExtensionConstants.TYPE_THEME_CSS)) {
+
+			_clientExtensionEntryService.updateThemeCSSClientExtensionEntry(
+				clientExtensionEntry.getClientExtensionEntryId(), description,
+				nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
+				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
 		}
 		else if (Objects.equals(
 					clientExtensionEntry.getType(),

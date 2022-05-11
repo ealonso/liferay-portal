@@ -57,6 +57,9 @@ public class ClientExtensionFDSEntry {
 		else if (type.equals(ClientExtensionConstants.TYPE_IFRAME)) {
 			return LanguageUtil.get(_locale, "iframe");
 		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_CSS)) {
+			return LanguageUtil.get(_locale, "theme-css");
+		}
 		else if (type.equals(ClientExtensionConstants.TYPE_THEME_JS)) {
 			return LanguageUtil.get(_locale, "theme-js");
 		}

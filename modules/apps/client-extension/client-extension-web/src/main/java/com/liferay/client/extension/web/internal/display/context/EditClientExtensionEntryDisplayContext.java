@@ -236,6 +236,11 @@ public class EditClientExtensionEntryDisplayContext {
 				isEditingClientExtensionEntryType(
 					ClientExtensionConstants.TYPE_IFRAME)),
 			new SelectOption(
+				LanguageUtil.get(httpServletRequest, "theme-css"),
+				ClientExtensionConstants.TYPE_THEME_CSS,
+				isEditingClientExtensionEntryType(
+					ClientExtensionConstants.TYPE_THEME_CSS)),
+			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "theme-js"),
 				ClientExtensionConstants.TYPE_THEME_JS,
 				isEditingClientExtensionEntryType(

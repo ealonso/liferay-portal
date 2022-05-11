@@ -40,6 +40,7 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 	<liferay-ui:error exception="<%= ClientExtensionEntryCustomElementURLsException.class %>" message="please-enter-valid-remote-app-urls" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryFriendlyURLMappingException.class %>" message="please-enter-a-valid-friendly-url-mapping" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryIFrameURLException.class %>" message="please-enter-a-unique-remote-app-url" />
+	<liferay-ui:error exception="<%= ClientExtensionEntryThemeCSSURLException.class %>" message="please-enter-a-valid-url" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryThemeJSURLsException.class %>" message="please-enter-a-valid-url" />
 
 	<aui:model-context bean="<%= editClientExtensionEntryDisplayContext.getClientExtensionEntry() %>" model="<%= ClientExtensionEntry.class %>" />
@@ -127,6 +128,20 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 					%>
 
 				</div>
+			</liferay-frontend:fieldset>
+
+			<liferay-frontend:fieldset
+				cssClass='<%= editClientExtensionEntryDisplayContext.isEditingClientExtensionEntryType(ClientExtensionConstants.TYPE_THEME_CSS) ? StringPool.BLANK : "d-none" %>'
+				disabled="<%= !editClientExtensionEntryDisplayContext.isEditingClientExtensionEntryType(ClientExtensionConstants.TYPE_THEME_CSS) %>"
+				id='<%= liferayPortletResponse.getNamespace() + "_type_themeCSS" %>'
+			>
+				<aui:input label="main-url" name="themeCSSMainURL">
+					<aui:validator name="urlAllowRelative" />
+				</aui:input>
+
+				<aui:input label="portal-url" name="themeCSSPortalURL">
+					<aui:validator name="urlAllowRelative" />
+				</aui:input>
 			</liferay-frontend:fieldset>
 
 			<liferay-frontend:fieldset
