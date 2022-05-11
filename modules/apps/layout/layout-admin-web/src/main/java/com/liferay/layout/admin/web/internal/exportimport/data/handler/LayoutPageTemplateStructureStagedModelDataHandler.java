@@ -25,10 +25,20 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLocalService;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutBranch;
+import com.liferay.portal.kernel.model.LayoutSetBranch;
+import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.LayoutSetBranchLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
+import com.liferay.segments.model.SegmentsExperience;
+import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import java.util.List;
 import java.util.Map;
@@ -156,13 +166,51 @@ public class LayoutPageTemplateStructureStagedModelDataHandler
 					layoutPageTemplateStructure.
 						getLayoutPageTemplateStructureId());
 
+		Layout layout = _layoutLocalService.fetchLayout(
+			layoutPageTemplateStructure.getPlid());
+
+		if (!_segmentsExperienceStagingHelper.isPageVersioningEnabled(layout)) {
+			for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
+					layoutPageTemplateStructureRels) {
+
+				StagedModelDataHandlerUtil.exportReferenceStagedModel(
+					portletDataContext, layoutPageTemplateStructure,
+					layoutPageTemplateStructureRel,
+					PortletDataContext.REFERENCE_TYPE_CHILD);
+			}
+
+			return;
+		}
+
+		long classNameId = _portal.getClassNameId(Layout.class);
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		long layoutSetBranchId = GetterUtil.getLong(
+			serviceContext.getAttribute("layoutSetBranchId"));
+
+		LayoutSetBranch layoutSetBranch =
+			_layoutSetBranchLocalService.fetchLayoutSetBranch(
+				layoutSetBranchId);
+
+		if ((layoutSetBranch != null) && !layoutSetBranch.isMaster()) {
+			classNameId = _portal.getClassNameId(LayoutBranch.class);
+		}
+
 		for (LayoutPageTemplateStructureRel layoutPageTemplateStructureRel :
 				layoutPageTemplateStructureRels) {
 
-			StagedModelDataHandlerUtil.exportReferenceStagedModel(
-				portletDataContext, layoutPageTemplateStructure,
-				layoutPageTemplateStructureRel,
-				PortletDataContext.REFERENCE_TYPE_CHILD);
+			SegmentsExperience segmentsExperience =
+				_segmentsExperienceLocalService.fetchSegmentsExperience(
+					layoutPageTemplateStructureRel.getSegmentsExperienceId());
+
+			if (segmentsExperience.getClassNameId() == classNameId) {
+				StagedModelDataHandlerUtil.exportReferenceStagedModel(
+					portletDataContext, layoutPageTemplateStructure,
+					layoutPageTemplateStructureRel,
+					PortletDataContext.REFERENCE_TYPE_CHILD);
+			}
 		}
 	}
 
@@ -211,6 +259,9 @@ public class LayoutPageTemplateStructureStagedModelDataHandler
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
 	@Reference
+	private LayoutLocalService _layoutLocalService;
+
+	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
 
@@ -219,7 +270,16 @@ public class LayoutPageTemplateStructureStagedModelDataHandler
 		_layoutPageTemplateStructureRelLocalService;
 
 	@Reference
+	private LayoutSetBranchLocalService _layoutSetBranchLocalService;
+
+	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 	@Reference(
 		target = "(model.class.name=com.liferay.layout.page.template.model.LayoutPageTemplateStructure)",
