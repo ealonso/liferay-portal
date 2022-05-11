@@ -36,6 +36,7 @@ import com.liferay.segments.exception.LockedSegmentsExperimentException;
 import com.liferay.segments.exception.RequiredSegmentsExperienceException;
 import com.liferay.segments.exception.SegmentsExperienceNameException;
 import com.liferay.segments.exception.SegmentsExperiencePriorityException;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.model.SegmentsExperiment;
 import com.liferay.segments.service.base.SegmentsExperienceLocalServiceBaseImpl;
@@ -309,7 +310,8 @@ public class SegmentsExperienceLocalServiceImpl
 
 		SegmentsExperience segmentsExperience = fetchSegmentsExperience(
 			layout.getGroupId(), SegmentsExperienceConstants.KEY_DEFAULT,
-			classNameLocalService.getClassNameId(Layout.class), plid);
+			_segmentsExperienceStagingHelper.getClassNameId(layout),
+			_segmentsExperienceStagingHelper.getClassPK(layout));
 
 		if (segmentsExperience == null) {
 			return SegmentsExperienceConstants.ID_DEFAULT;
@@ -725,5 +727,8 @@ public class SegmentsExperienceLocalServiceImpl
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
 
 }
