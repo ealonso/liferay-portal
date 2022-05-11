@@ -503,6 +503,36 @@ public interface ClientExtensionEntryModel
 	public void setSourceCodeURL(String sourceCodeURL);
 
 	/**
+	 * Returns the theme css main url of this client extension entry.
+	 *
+	 * @return the theme css main url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeCSSMainURL();
+
+	/**
+	 * Sets the theme css main url of this client extension entry.
+	 *
+	 * @param themeCSSMainURL the theme css main url of this client extension entry
+	 */
+	public void setThemeCSSMainURL(String themeCSSMainURL);
+
+	/**
+	 * Returns the theme css portal url of this client extension entry.
+	 *
+	 * @return the theme css portal url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeCSSPortalURL();
+
+	/**
+	 * Sets the theme css portal url of this client extension entry.
+	 *
+	 * @param themeCSSPortalURL the theme css portal url of this client extension entry
+	 */
+	public void setThemeCSSPortalURL(String themeCSSPortalURL);
+
+	/**
 	 * Returns the theme jsur ls of this client extension entry.
 	 *
 	 * @return the theme jsur ls of this client extension entry

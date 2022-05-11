@@ -101,6 +101,14 @@ public class ClientExtensionEntryTable
 	public final Column<ClientExtensionEntryTable, String> sourceCodeURL =
 		createColumn(
 			"sourceCodeURL", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeCSSMainURL =
+		createColumn(
+			"themeCSSMainURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeCSSPortalURL =
+		createColumn(
+			"themeCSSPortalURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, Clob> themeJSURLs =
 		createColumn(
 			"themeJSURLs", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);

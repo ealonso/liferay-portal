@@ -109,6 +109,18 @@ public class ClientExtensionEntryLocalServiceUtil {
 			nameMap, portletCategoryName, properties, sourceCodeURL);
 	}
 
+	public static ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		return getService().addThemeCSSClientExtensionEntry(
+			userId, description, nameMap, properties, sourceCodeURL,
+			themeCSSMainURL, themeCSSPortalURL);
+	}
+
 	public static ClientExtensionEntry addThemeJSClientExtensionEntry(
 			long userId, String description,
 			Map<java.util.Locale, String> nameMap, String properties,
@@ -515,6 +527,18 @@ public class ClientExtensionEntryLocalServiceUtil {
 
 		return getService().updateStatus(
 			userId, clientExtensionEntryId, status);
+	}
+
+	public static ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		return getService().updateThemeCSSClientExtensionEntry(
+			userId, clientExtensionEntryId, description, nameMap, properties,
+			sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
 	}
 
 	public static ClientExtensionEntry updateThemeJSClientExtensionEntry(

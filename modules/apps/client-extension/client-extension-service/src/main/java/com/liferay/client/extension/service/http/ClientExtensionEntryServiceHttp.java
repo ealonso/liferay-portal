@@ -155,6 +155,53 @@ public class ClientExtensionEntryServiceHttp {
 	}
 
 	public static com.liferay.client.extension.model.ClientExtensionEntry
+			addThemeCSSClientExtensionEntry(
+				HttpPrincipal httpPrincipal, String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeCSSMainURL,
+				String themeCSSPortalURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ClientExtensionEntryServiceUtil.class,
+				"addThemeCSSClientExtensionEntry",
+				_addThemeCSSClientExtensionEntryParameterTypes2);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, description, nameMap, properties, sourceCodeURL,
+				themeCSSMainURL, themeCSSPortalURL);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.client.extension.model.ClientExtensionEntry)
+				returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.client.extension.model.ClientExtensionEntry
 			addThemeJSClientExtensionEntry(
 				HttpPrincipal httpPrincipal, String description,
 				java.util.Map<java.util.Locale, String> nameMap,
@@ -165,7 +212,7 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"addThemeJSClientExtensionEntry",
-				_addThemeJSClientExtensionEntryParameterTypes2);
+				_addThemeJSClientExtensionEntryParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, description, nameMap, properties, sourceCodeURL,
@@ -209,7 +256,7 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"deleteClientExtensionEntry",
-				_deleteClientExtensionEntryParameterTypes3);
+				_deleteClientExtensionEntryParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, clientExtensionEntryId);
@@ -252,7 +299,7 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"getClientExtensionEntry",
-				_getClientExtensionEntryParameterTypes4);
+				_getClientExtensionEntryParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, clientExtensionEntryId);
@@ -302,7 +349,7 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"updateCustomElementClientExtensionEntry",
-				_updateCustomElementClientExtensionEntryParameterTypes5);
+				_updateCustomElementClientExtensionEntryParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, clientExtensionEntryId, customElementCSSURLs,
@@ -352,12 +399,60 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"updateIFrameClientExtensionEntry",
-				_updateIFrameClientExtensionEntryParameterTypes6);
+				_updateIFrameClientExtensionEntryParameterTypes7);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, clientExtensionEntryId, description,
 				friendlyURLMapping, iFrameURL, nameMap, portletCategoryName,
 				properties, sourceCodeURL);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception exception) {
+				if (exception instanceof
+						com.liferay.portal.kernel.exception.PortalException) {
+
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(
+					exception);
+			}
+
+			return (com.liferay.client.extension.model.ClientExtensionEntry)
+				returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException
+					systemException) {
+
+			_log.error(systemException, systemException);
+
+			throw systemException;
+		}
+	}
+
+	public static com.liferay.client.extension.model.ClientExtensionEntry
+			updateThemeCSSClientExtensionEntry(
+				HttpPrincipal httpPrincipal, long clientExtensionEntryId,
+				String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeCSSMainURL,
+				String themeCSSPortalURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		try {
+			MethodKey methodKey = new MethodKey(
+				ClientExtensionEntryServiceUtil.class,
+				"updateThemeCSSClientExtensionEntry",
+				_updateThemeCSSClientExtensionEntryParameterTypes8);
+
+			MethodHandler methodHandler = new MethodHandler(
+				methodKey, clientExtensionEntryId, description, nameMap,
+				properties, sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
 
 			Object returnObj = null;
 
@@ -400,7 +495,7 @@ public class ClientExtensionEntryServiceHttp {
 			MethodKey methodKey = new MethodKey(
 				ClientExtensionEntryServiceUtil.class,
 				"updateThemeJSClientExtensionEntry",
-				_updateThemeJSClientExtensionEntryParameterTypes7);
+				_updateThemeJSClientExtensionEntryParameterTypes9);
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, clientExtensionEntryId, description, nameMap,
@@ -450,27 +545,37 @@ public class ClientExtensionEntryServiceHttp {
 			java.util.Map.class, String.class, String.class, String.class
 		};
 	private static final Class<?>[]
-		_addThemeJSClientExtensionEntryParameterTypes2 = new Class[] {
+		_addThemeCSSClientExtensionEntryParameterTypes2 = new Class[] {
+			String.class, java.util.Map.class, String.class, String.class,
+			String.class, String.class
+		};
+	private static final Class<?>[]
+		_addThemeJSClientExtensionEntryParameterTypes3 = new Class[] {
 			String.class, java.util.Map.class, String.class, String.class,
 			String.class
 		};
-	private static final Class<?>[] _deleteClientExtensionEntryParameterTypes3 =
+	private static final Class<?>[] _deleteClientExtensionEntryParameterTypes4 =
 		new Class[] {long.class};
-	private static final Class<?>[] _getClientExtensionEntryParameterTypes4 =
+	private static final Class<?>[] _getClientExtensionEntryParameterTypes5 =
 		new Class[] {long.class};
 	private static final Class<?>[]
-		_updateCustomElementClientExtensionEntryParameterTypes5 = new Class[] {
+		_updateCustomElementClientExtensionEntryParameterTypes6 = new Class[] {
 			long.class, String.class, String.class, String.class, boolean.class,
 			String.class, String.class, java.util.Map.class, String.class,
 			String.class, String.class
 		};
 	private static final Class<?>[]
-		_updateIFrameClientExtensionEntryParameterTypes6 = new Class[] {
+		_updateIFrameClientExtensionEntryParameterTypes7 = new Class[] {
 			long.class, String.class, String.class, String.class,
 			java.util.Map.class, String.class, String.class, String.class
 		};
 	private static final Class<?>[]
-		_updateThemeJSClientExtensionEntryParameterTypes7 = new Class[] {
+		_updateThemeCSSClientExtensionEntryParameterTypes8 = new Class[] {
+			long.class, String.class, java.util.Map.class, String.class,
+			String.class, String.class, String.class
+		};
+	private static final Class<?>[]
+		_updateThemeJSClientExtensionEntryParameterTypes9 = new Class[] {
 			long.class, String.class, java.util.Map.class, String.class,
 			String.class, String.class
 		};

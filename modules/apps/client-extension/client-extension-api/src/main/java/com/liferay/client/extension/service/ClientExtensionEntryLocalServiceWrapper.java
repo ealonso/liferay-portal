@@ -118,6 +118,21 @@ public class ClientExtensionEntryLocalServiceWrapper
 
 	@Override
 	public com.liferay.client.extension.model.ClientExtensionEntry
+			addThemeCSSClientExtensionEntry(
+				long userId, String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeCSSMainURL,
+				String themeCSSPortalURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _clientExtensionEntryLocalService.
+			addThemeCSSClientExtensionEntry(
+				userId, description, nameMap, properties, sourceCodeURL,
+				themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	@Override
+	public com.liferay.client.extension.model.ClientExtensionEntry
 			addThemeJSClientExtensionEntry(
 				long userId, String description,
 				java.util.Map<java.util.Locale, String> nameMap,
@@ -610,6 +625,21 @@ public class ClientExtensionEntryLocalServiceWrapper
 
 		return _clientExtensionEntryLocalService.updateStatus(
 			userId, clientExtensionEntryId, status);
+	}
+
+	@Override
+	public com.liferay.client.extension.model.ClientExtensionEntry
+			updateThemeCSSClientExtensionEntry(
+				long userId, long clientExtensionEntryId, String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeCSSMainURL,
+				String themeCSSPortalURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _clientExtensionEntryLocalService.
+			updateThemeCSSClientExtensionEntry(
+				userId, clientExtensionEntryId, description, nameMap,
+				properties, sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
 	}
 
 	@Override

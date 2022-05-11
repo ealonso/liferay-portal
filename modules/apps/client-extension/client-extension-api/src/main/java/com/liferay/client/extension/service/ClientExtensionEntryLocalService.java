@@ -112,6 +112,13 @@ public interface ClientExtensionEntryLocalService
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
 	public ClientExtensionEntry addThemeJSClientExtensionEntry(
 			long userId, String description, Map<Locale, String> nameMap,
 			String properties, String sourceCodeURL, String themeJSURLs)
@@ -422,6 +429,14 @@ public interface ClientExtensionEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public ClientExtensionEntry updateStatus(
 			long userId, long clientExtensionEntryId, int status)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)

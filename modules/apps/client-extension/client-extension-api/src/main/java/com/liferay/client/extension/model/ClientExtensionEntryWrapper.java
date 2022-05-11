@@ -67,6 +67,8 @@ public class ClientExtensionEntryWrapper
 		attributes.put("portletCategoryName", getPortletCategoryName());
 		attributes.put("properties", getProperties());
 		attributes.put("sourceCodeURL", getSourceCodeURL());
+		attributes.put("themeCSSMainURL", getThemeCSSMainURL());
+		attributes.put("themeCSSPortalURL", getThemeCSSPortalURL());
 		attributes.put("themeJSURLs", getThemeJSURLs());
 		attributes.put("type", getType());
 		attributes.put("status", getStatus());
@@ -210,6 +212,18 @@ public class ClientExtensionEntryWrapper
 
 		if (sourceCodeURL != null) {
 			setSourceCodeURL(sourceCodeURL);
+		}
+
+		String themeCSSMainURL = (String)attributes.get("themeCSSMainURL");
+
+		if (themeCSSMainURL != null) {
+			setThemeCSSMainURL(themeCSSMainURL);
+		}
+
+		String themeCSSPortalURL = (String)attributes.get("themeCSSPortalURL");
+
+		if (themeCSSPortalURL != null) {
+			setThemeCSSPortalURL(themeCSSPortalURL);
 		}
 
 		String themeJSURLs = (String)attributes.get("themeJSURLs");
@@ -598,6 +612,26 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public Date getStatusDate() {
 		return model.getStatusDate();
+	}
+
+	/**
+	 * Returns the theme css main url of this client extension entry.
+	 *
+	 * @return the theme css main url of this client extension entry
+	 */
+	@Override
+	public String getThemeCSSMainURL() {
+		return model.getThemeCSSMainURL();
+	}
+
+	/**
+	 * Returns the theme css portal url of this client extension entry.
+	 *
+	 * @return the theme css portal url of this client extension entry
+	 */
+	@Override
+	public String getThemeCSSPortalURL() {
+		return model.getThemeCSSPortalURL();
 	}
 
 	/**
@@ -1093,6 +1127,26 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public void setStatusDate(Date statusDate) {
 		model.setStatusDate(statusDate);
+	}
+
+	/**
+	 * Sets the theme css main url of this client extension entry.
+	 *
+	 * @param themeCSSMainURL the theme css main url of this client extension entry
+	 */
+	@Override
+	public void setThemeCSSMainURL(String themeCSSMainURL) {
+		model.setThemeCSSMainURL(themeCSSMainURL);
+	}
+
+	/**
+	 * Sets the theme css portal url of this client extension entry.
+	 *
+	 * @param themeCSSPortalURL the theme css portal url of this client extension entry
+	 */
+	@Override
+	public void setThemeCSSPortalURL(String themeCSSPortalURL) {
+		model.setThemeCSSPortalURL(themeCSSPortalURL);
 	}
 
 	/**

@@ -174,6 +174,12 @@ public class ClientExtensionEntryPersistenceTest {
 
 		newClientExtensionEntry.setSourceCodeURL(RandomTestUtil.randomString());
 
+		newClientExtensionEntry.setThemeCSSMainURL(
+			RandomTestUtil.randomString());
+
+		newClientExtensionEntry.setThemeCSSPortalURL(
+			RandomTestUtil.randomString());
+
 		newClientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
 
 		newClientExtensionEntry.setType(RandomTestUtil.randomString());
@@ -259,6 +265,12 @@ public class ClientExtensionEntryPersistenceTest {
 		Assert.assertEquals(
 			existingClientExtensionEntry.getSourceCodeURL(),
 			newClientExtensionEntry.getSourceCodeURL());
+		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeCSSMainURL(),
+			newClientExtensionEntry.getThemeCSSMainURL());
+		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeCSSPortalURL(),
+			newClientExtensionEntry.getThemeCSSPortalURL());
 		Assert.assertEquals(
 			existingClientExtensionEntry.getThemeJSURLs(),
 			newClientExtensionEntry.getThemeJSURLs());
@@ -350,7 +362,8 @@ public class ClientExtensionEntryPersistenceTest {
 			true, "modifiedDate", true, "customElementHTMLElementName", true,
 			"customElementUseESM", true, "friendlyURLMapping", true,
 			"iFrameURL", true, "instanceable", true, "name", true,
-			"portletCategoryName", true, "sourceCodeURL", true, "type", true,
+			"portletCategoryName", true, "sourceCodeURL", true,
+			"themeCSSMainURL", true, "themeCSSPortalURL", true, "type", true,
 			"status", true, "statusByUserId", true, "statusByUserName", true,
 			"statusDate", true);
 	}
@@ -711,6 +724,11 @@ public class ClientExtensionEntryPersistenceTest {
 		clientExtensionEntry.setProperties(RandomTestUtil.randomString());
 
 		clientExtensionEntry.setSourceCodeURL(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeCSSMainURL(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeCSSPortalURL(
+			RandomTestUtil.randomString());
 
 		clientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
 

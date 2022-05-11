@@ -78,7 +78,7 @@ public class ClientExtensionEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(59);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -122,6 +122,10 @@ public class ClientExtensionEntryCacheModel
 		sb.append(properties);
 		sb.append(", sourceCodeURL=");
 		sb.append(sourceCodeURL);
+		sb.append(", themeCSSMainURL=");
+		sb.append(themeCSSMainURL);
+		sb.append(", themeCSSPortalURL=");
+		sb.append(themeCSSPortalURL);
 		sb.append(", themeJSURLs=");
 		sb.append(themeJSURLs);
 		sb.append(", type=");
@@ -264,6 +268,20 @@ public class ClientExtensionEntryCacheModel
 			clientExtensionEntryImpl.setSourceCodeURL(sourceCodeURL);
 		}
 
+		if (themeCSSMainURL == null) {
+			clientExtensionEntryImpl.setThemeCSSMainURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeCSSMainURL(themeCSSMainURL);
+		}
+
+		if (themeCSSPortalURL == null) {
+			clientExtensionEntryImpl.setThemeCSSPortalURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeCSSPortalURL(themeCSSPortalURL);
+		}
+
 		if (themeJSURLs == null) {
 			clientExtensionEntryImpl.setThemeJSURLs("");
 		}
@@ -330,6 +348,8 @@ public class ClientExtensionEntryCacheModel
 		portletCategoryName = objectInput.readUTF();
 		properties = (String)objectInput.readObject();
 		sourceCodeURL = objectInput.readUTF();
+		themeCSSMainURL = objectInput.readUTF();
+		themeCSSPortalURL = objectInput.readUTF();
 		themeJSURLs = (String)objectInput.readObject();
 		type = objectInput.readUTF();
 
@@ -448,6 +468,20 @@ public class ClientExtensionEntryCacheModel
 			objectOutput.writeUTF(sourceCodeURL);
 		}
 
+		if (themeCSSMainURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeCSSMainURL);
+		}
+
+		if (themeCSSPortalURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeCSSPortalURL);
+		}
+
 		if (themeJSURLs == null) {
 			objectOutput.writeObject("");
 		}
@@ -497,6 +531,8 @@ public class ClientExtensionEntryCacheModel
 	public String portletCategoryName;
 	public String properties;
 	public String sourceCodeURL;
+	public String themeCSSMainURL;
+	public String themeCSSPortalURL;
 	public String themeJSURLs;
 	public String type;
 	public int status;

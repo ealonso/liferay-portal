@@ -94,7 +94,8 @@ public class ClientExtensionEntryModelImpl
 		{"friendlyURLMapping", Types.VARCHAR}, {"iFrameURL", Types.VARCHAR},
 		{"instanceable", Types.BOOLEAN}, {"name", Types.VARCHAR},
 		{"portletCategoryName", Types.VARCHAR}, {"properties", Types.CLOB},
-		{"sourceCodeURL", Types.VARCHAR}, {"themeJSURLs", Types.CLOB},
+		{"sourceCodeURL", Types.VARCHAR}, {"themeCSSMainURL", Types.VARCHAR},
+		{"themeCSSPortalURL", Types.VARCHAR}, {"themeJSURLs", Types.CLOB},
 		{"type_", Types.VARCHAR}, {"status", Types.INTEGER},
 		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
 		{"statusDate", Types.TIMESTAMP}
@@ -125,6 +126,8 @@ public class ClientExtensionEntryModelImpl
 		TABLE_COLUMNS_MAP.put("portletCategoryName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("properties", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("sourceCodeURL", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("themeCSSMainURL", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("themeCSSPortalURL", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("themeJSURLs", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
@@ -134,7 +137,7 @@ public class ClientExtensionEntryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,customElementCSSURLs TEXT null,customElementHTMLElementName VARCHAR(255) null,customElementURLs TEXT null,customElementUseESM BOOLEAN,description TEXT null,friendlyURLMapping VARCHAR(75) null,iFrameURL STRING null,instanceable BOOLEAN,name STRING null,portletCategoryName VARCHAR(75) null,properties TEXT null,sourceCodeURL STRING null,themeJSURLs TEXT null,type_ VARCHAR(75) null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
+		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,customElementCSSURLs TEXT null,customElementHTMLElementName VARCHAR(255) null,customElementURLs TEXT null,customElementUseESM BOOLEAN,description TEXT null,friendlyURLMapping VARCHAR(75) null,iFrameURL STRING null,instanceable BOOLEAN,name STRING null,portletCategoryName VARCHAR(75) null,properties TEXT null,sourceCodeURL STRING null,themeCSSMainURL STRING null,themeCSSPortalURL STRING null,themeJSURLs TEXT null,type_ VARCHAR(75) null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table ClientExtensionEntry";
@@ -425,6 +428,18 @@ public class ClientExtensionEntryModelImpl
 			"sourceCodeURL",
 			(BiConsumer<ClientExtensionEntry, String>)
 				ClientExtensionEntry::setSourceCodeURL);
+		attributeGetterFunctions.put(
+			"themeCSSMainURL", ClientExtensionEntry::getThemeCSSMainURL);
+		attributeSetterBiConsumers.put(
+			"themeCSSMainURL",
+			(BiConsumer<ClientExtensionEntry, String>)
+				ClientExtensionEntry::setThemeCSSMainURL);
+		attributeGetterFunctions.put(
+			"themeCSSPortalURL", ClientExtensionEntry::getThemeCSSPortalURL);
+		attributeSetterBiConsumers.put(
+			"themeCSSPortalURL",
+			(BiConsumer<ClientExtensionEntry, String>)
+				ClientExtensionEntry::setThemeCSSPortalURL);
 		attributeGetterFunctions.put(
 			"themeJSURLs", ClientExtensionEntry::getThemeJSURLs);
 		attributeSetterBiConsumers.put(
@@ -999,6 +1014,46 @@ public class ClientExtensionEntryModelImpl
 
 	@JSON
 	@Override
+	public String getThemeCSSMainURL() {
+		if (_themeCSSMainURL == null) {
+			return "";
+		}
+		else {
+			return _themeCSSMainURL;
+		}
+	}
+
+	@Override
+	public void setThemeCSSMainURL(String themeCSSMainURL) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_themeCSSMainURL = themeCSSMainURL;
+	}
+
+	@JSON
+	@Override
+	public String getThemeCSSPortalURL() {
+		if (_themeCSSPortalURL == null) {
+			return "";
+		}
+		else {
+			return _themeCSSPortalURL;
+		}
+	}
+
+	@Override
+	public void setThemeCSSPortalURL(String themeCSSPortalURL) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_themeCSSPortalURL = themeCSSPortalURL;
+	}
+
+	@JSON
+	@Override
 	public String getThemeJSURLs() {
 		if (_themeJSURLs == null) {
 			return "";
@@ -1388,6 +1443,8 @@ public class ClientExtensionEntryModelImpl
 			getPortletCategoryName());
 		clientExtensionEntryImpl.setProperties(getProperties());
 		clientExtensionEntryImpl.setSourceCodeURL(getSourceCodeURL());
+		clientExtensionEntryImpl.setThemeCSSMainURL(getThemeCSSMainURL());
+		clientExtensionEntryImpl.setThemeCSSPortalURL(getThemeCSSPortalURL());
 		clientExtensionEntryImpl.setThemeJSURLs(getThemeJSURLs());
 		clientExtensionEntryImpl.setType(getType());
 		clientExtensionEntryImpl.setStatus(getStatus());
@@ -1448,6 +1505,10 @@ public class ClientExtensionEntryModelImpl
 			this.<String>getColumnOriginalValue("properties"));
 		clientExtensionEntryImpl.setSourceCodeURL(
 			this.<String>getColumnOriginalValue("sourceCodeURL"));
+		clientExtensionEntryImpl.setThemeCSSMainURL(
+			this.<String>getColumnOriginalValue("themeCSSMainURL"));
+		clientExtensionEntryImpl.setThemeCSSPortalURL(
+			this.<String>getColumnOriginalValue("themeCSSPortalURL"));
 		clientExtensionEntryImpl.setThemeJSURLs(
 			this.<String>getColumnOriginalValue("themeJSURLs"));
 		clientExtensionEntryImpl.setType(
@@ -1698,6 +1759,24 @@ public class ClientExtensionEntryModelImpl
 			clientExtensionEntryCacheModel.sourceCodeURL = null;
 		}
 
+		clientExtensionEntryCacheModel.themeCSSMainURL = getThemeCSSMainURL();
+
+		String themeCSSMainURL = clientExtensionEntryCacheModel.themeCSSMainURL;
+
+		if ((themeCSSMainURL != null) && (themeCSSMainURL.length() == 0)) {
+			clientExtensionEntryCacheModel.themeCSSMainURL = null;
+		}
+
+		clientExtensionEntryCacheModel.themeCSSPortalURL =
+			getThemeCSSPortalURL();
+
+		String themeCSSPortalURL =
+			clientExtensionEntryCacheModel.themeCSSPortalURL;
+
+		if ((themeCSSPortalURL != null) && (themeCSSPortalURL.length() == 0)) {
+			clientExtensionEntryCacheModel.themeCSSPortalURL = null;
+		}
+
 		clientExtensionEntryCacheModel.themeJSURLs = getThemeJSURLs();
 
 		String themeJSURLs = clientExtensionEntryCacheModel.themeJSURLs;
@@ -1853,6 +1932,8 @@ public class ClientExtensionEntryModelImpl
 	private String _portletCategoryName;
 	private String _properties;
 	private String _sourceCodeURL;
+	private String _themeCSSMainURL;
+	private String _themeCSSPortalURL;
 	private String _themeJSURLs;
 	private String _type;
 	private int _status;
@@ -1914,6 +1995,8 @@ public class ClientExtensionEntryModelImpl
 		_columnOriginalValues.put("portletCategoryName", _portletCategoryName);
 		_columnOriginalValues.put("properties", _properties);
 		_columnOriginalValues.put("sourceCodeURL", _sourceCodeURL);
+		_columnOriginalValues.put("themeCSSMainURL", _themeCSSMainURL);
+		_columnOriginalValues.put("themeCSSPortalURL", _themeCSSPortalURL);
 		_columnOriginalValues.put("themeJSURLs", _themeJSURLs);
 		_columnOriginalValues.put("type_", _type);
 		_columnOriginalValues.put("status", _status);
@@ -1986,17 +2069,21 @@ public class ClientExtensionEntryModelImpl
 
 		columnBitmasks.put("sourceCodeURL", 1048576L);
 
-		columnBitmasks.put("themeJSURLs", 2097152L);
+		columnBitmasks.put("themeCSSMainURL", 2097152L);
 
-		columnBitmasks.put("type_", 4194304L);
+		columnBitmasks.put("themeCSSPortalURL", 4194304L);
 
-		columnBitmasks.put("status", 8388608L);
+		columnBitmasks.put("themeJSURLs", 8388608L);
 
-		columnBitmasks.put("statusByUserId", 16777216L);
+		columnBitmasks.put("type_", 16777216L);
 
-		columnBitmasks.put("statusByUserName", 33554432L);
+		columnBitmasks.put("status", 33554432L);
 
-		columnBitmasks.put("statusDate", 67108864L);
+		columnBitmasks.put("statusByUserId", 67108864L);
+
+		columnBitmasks.put("statusByUserName", 134217728L);
+
+		columnBitmasks.put("statusDate", 268435456L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}
