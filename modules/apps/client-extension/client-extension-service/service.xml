@@ -31,6 +31,8 @@
 		<column name="portletCategoryName" type="String" />
 		<column name="properties" type="String" />
 		<column name="sourceCodeURL" type="String" />
+		<column name="themeCSSMainURL" type="String" />
+		<column name="themeCSSPortalURL" type="String" />
 		<column name="themeJSURLs" type="String" />
 		<column name="type" type="String" />
 		<column name="status" type="int" />
@@ -51,6 +53,7 @@
 		<exception>ClientExtensionEntryCustomElementURLs</exception>
 		<exception>ClientExtensionEntryFriendlyURLMapping</exception>
 		<exception>ClientExtensionEntryIFrameURL</exception>
+		<exception>ClientExtensionEntryThemeCSSURL</exception>
 		<exception>ClientExtensionEntryThemeJSURLs</exception>
 		<exception>DuplicateClientExtensionEntryExternalReferenceCode</exception>
 	</exceptions>

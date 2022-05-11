@@ -21,6 +21,7 @@ import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementH
 import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementURLsException;
 import com.liferay.client.extension.exception.ClientExtensionEntryFriendlyURLMappingException;
 import com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException;
+import com.liferay.client.extension.exception.ClientExtensionEntryThemeCSSURLException;
 import com.liferay.client.extension.exception.ClientExtensionEntryThemeJSURLsException;
 import com.liferay.client.extension.exception.DuplicateClientExtensionEntryExternalReferenceCodeException;
 import com.liferay.client.extension.model.ClientExtensionEntry;
@@ -233,6 +234,46 @@ public class ClientExtensionEntryLocalServiceImpl
 			customElementHTMLElementName, customElementURLs,
 			customElementUseESM, description, friendlyURLMapping, instanceable,
 			nameMap, portletCategoryName, properties, sourceCodeURL);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		long clientExtensionEntryId = counterLocalService.increment();
+
+		User user = _userLocalService.getUser(userId);
+
+		_validateThemeCSSURLs(themeCSSMainURL, themeCSSPortalURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(clientExtensionEntryId);
+
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeCSSMainURL(themeCSSMainURL);
+		clientExtensionEntry.setThemeCSSPortalURL(themeCSSPortalURL);
+		clientExtensionEntry.setType(ClientExtensionConstants.TYPE_THEME_CSS);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
@@ -524,6 +565,40 @@ public class ClientExtensionEntryLocalServiceImpl
 
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		_validateThemeCSSURLs(themeCSSMainURL, themeCSSPortalURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.findByPrimaryKey(
+				clientExtensionEntryId);
+
+		clientExtensionEntryLocalService.undeployClientExtensionEntry(
+			clientExtensionEntry);
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeCSSMainURL(themeCSSMainURL);
+		clientExtensionEntry.setThemeCSSPortalURL(themeCSSPortalURL);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public ClientExtensionEntry updateThemeJSClientExtensionEntry(
 			long userId, long clientExtensionEntryId, String description,
 			Map<Locale, String> nameMap, String properties,
@@ -776,6 +851,21 @@ public class ClientExtensionEntryLocalServiceImpl
 		if (!Validator.isUrl(iFrameURL)) {
 			throw new ClientExtensionEntryIFrameURLException(
 				"Invalid IFrame URL " + iFrameURL);
+		}
+	}
+
+	private void _validateThemeCSSURLs(
+			String themeCSSMainURL, String themeCSSPortalURL)
+		throws PortalException {
+
+		if (!Validator.isUrl(themeCSSMainURL)) {
+			throw new ClientExtensionEntryThemeCSSURLException(
+				"Invalid Theme CSS Main URL " + themeCSSMainURL);
+		}
+
+		if (!Validator.isUrl(themeCSSPortalURL)) {
+			throw new ClientExtensionEntryThemeCSSURLException(
+				"Invalid Theme CSS Portal URL " + themeCSSPortalURL);
 		}
 	}
 

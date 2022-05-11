@@ -81,6 +81,21 @@ public class ClientExtensionEntryServiceImpl
 	}
 
 	@Override
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), null, ActionKeys.ADD_ENTRY);
+
+		return clientExtensionEntryLocalService.addThemeCSSClientExtensionEntry(
+			getUserId(), description, nameMap, properties, sourceCodeURL,
+			themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	@Override
 	public ClientExtensionEntry addThemeJSClientExtensionEntry(
 			String description, Map<Locale, String> nameMap, String properties,
 			String sourceCodeURL, String themeJSURLs)
@@ -154,6 +169,23 @@ public class ClientExtensionEntryServiceImpl
 				getUserId(), clientExtensionEntryId, description,
 				friendlyURLMapping, iFrameURL, nameMap, portletCategoryName,
 				properties, sourceCodeURL);
+	}
+
+	@Override
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		_clientExtensionEntryModelResourcePermission.check(
+			getPermissionChecker(), clientExtensionEntryId, ActionKeys.UPDATE);
+
+		return clientExtensionEntryLocalService.
+			updateThemeCSSClientExtensionEntry(
+				getUserId(), clientExtensionEntryId, description, nameMap,
+				properties, sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
 	}
 
 	@Override

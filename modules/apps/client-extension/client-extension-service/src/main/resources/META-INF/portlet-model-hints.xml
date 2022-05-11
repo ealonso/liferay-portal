@@ -39,6 +39,12 @@
 		<field name="sourceCodeURL" type="String">
 			<hint-collection name="URL" />
 		</field>
+		<field name="themeCSSMainURL" type="String">
+			<hint-collection name="URL" />
+		</field>
+		<field name="themeCSSPortalURL" type="String">
+			<hint-collection name="URL" />
+		</field>
 		<field name="themeJSURLs" type="String">
 			<hint-collection name="CLOB" />
 		</field>
