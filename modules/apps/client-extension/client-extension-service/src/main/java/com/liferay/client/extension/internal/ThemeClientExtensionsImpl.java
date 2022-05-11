@@ -53,25 +53,33 @@ public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		return new ThemeCSSURLs() {
+		List<ClientExtensionEntry> clientExtensionEntries =
+			_clientExtensionEntryLocalService.getClientExtensionEntries(
+				themeDisplay.getCompanyId(),
+				ClientExtensionConstants.TYPE_THEME_CSS);
 
-			@Override
-			public String getMain() {
-				return HtmlUtil.escapeAttribute(
-					_portal.getStaticResourceURL(
-						httpServletRequest,
-						themeDisplay.getPathThemeCss() + "/main.css"));
+		for (ClientExtensionEntry clientExtensionEntry :
+				clientExtensionEntries) {
+
+			if (Objects.equals(
+					_getThemeId(clientExtensionEntry),
+					themeDisplay.getThemeId())) {
+
+				return new ThemeCSSURLsImpl(
+					clientExtensionEntry.getThemeCSSMainURL(),
+					clientExtensionEntry.getThemeCSSPortalURL());
 			}
+		}
 
-			@Override
-			public String getPortal() {
-				return HtmlUtil.escapeAttribute(
-					_portal.getStaticResourceURL(
-						httpServletRequest,
-						themeDisplay.getPathThemeCss() + "/clay.css"));
-			}
-
-		};
+		return new ThemeCSSURLsImpl(
+			HtmlUtil.escapeAttribute(
+				_portal.getStaticResourceURL(
+					httpServletRequest,
+					themeDisplay.getPathThemeCss() + "/main.css")),
+			HtmlUtil.escapeAttribute(
+				_portal.getStaticResourceURL(
+					httpServletRequest,
+					themeDisplay.getPathThemeCss() + "/clay.css")));
 	}
 
 	@Override
