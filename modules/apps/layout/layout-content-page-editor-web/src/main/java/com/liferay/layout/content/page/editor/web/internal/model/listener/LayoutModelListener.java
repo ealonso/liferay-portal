@@ -12,9 +12,12 @@
  * details.
  */
 
-package com.liferay.layout.page.template.internal.model.listener;
+package com.liferay.layout.content.page.editor.web.internal.model.listener;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.exportimport.kernel.staging.Staging;
+import com.liferay.fragment.processor.PortletRegistry;
+import com.liferay.layout.content.page.editor.web.internal.segments.SegmentsExperienceUtil;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -25,28 +28,40 @@ import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
 import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutBranch;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.ModelListener;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.service.LayoutBranchLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+import com.liferay.segments.helper.SegmentsExperienceStagingHelper;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -85,6 +100,8 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		if (!layout.isTypeContent()) {
 			return;
 		}
+
+		_addLayoutBranchSegmentsExperiences(layout);
 
 		_reindexLayout(layout);
 
@@ -167,6 +184,71 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 		return _segmentsExperienceLocalService.addDefaultSegmentsExperience(
 			layout.getUserId(), layout.getPlid(), serviceContext);
+	}
+
+	private void _addLayoutBranchSegmentsExperiences(Layout layout) {
+		if (!_segmentsExperienceStagingHelper.isPageVersioningEnabled(layout)) {
+			return;
+		}
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		try {
+			User user = _userLocalService.fetchUser(layout.getUserId());
+			LayoutSet layoutSet = layout.getLayoutSet();
+
+			long layoutSetBranchId = _staging.getRecentLayoutSetBranchId(
+				user, layoutSet.getLayoutSetId());
+
+			List<LayoutBranch> layoutBranches =
+				_layoutBranchLocalService.getLayoutBranches(
+					layoutSetBranchId, _getPublishedPlid(layout), 0, 1, null);
+
+			if (ListUtil.isNotEmpty(layoutBranches)) {
+				LayoutBranch layoutBranch = layoutBranches.get(0);
+
+				SegmentsExperience segmentsExperience =
+					_segmentsExperienceLocalService.fetchSegmentsExperience(
+						layout.getGroupId(),
+						SegmentsExperienceConstants.KEY_DEFAULT,
+						_portal.getClassNameId(LayoutBranch.class),
+						layoutBranch.getLayoutBranchId());
+
+				if (segmentsExperience == null) {
+					segmentsExperience =
+						_segmentsExperienceLocalService.addSegmentsExperience(
+							layout.getUserId(), layout.getGroupId(),
+							SegmentsEntryConstants.ID_DEFAULT,
+							SegmentsExperienceConstants.KEY_DEFAULT,
+							_portal.getClassNameId(LayoutBranch.class),
+							layoutBranch.getLayoutBranchId(),
+							Collections.singletonMap(
+								LocaleUtil.getSiteDefault(),
+								LanguageUtil.get(
+									LocaleUtil.getSiteDefault(),
+									"default-experience-name")),
+							0, true, new UnicodeProperties(true),
+							serviceContext);
+				}
+
+				SegmentsExperience defaultSegmentsExperience =
+					_segmentsExperienceLocalService.fetchSegmentsExperience(
+						layout.getGroupId(),
+						SegmentsExperienceConstants.KEY_DEFAULT,
+						_portal.getClassNameId(Layout.class), layout.getPlid());
+
+				SegmentsExperienceUtil.copySegmentsExperienceData(
+					layout.getPlid(), _commentManager, layout.getGroupId(),
+					_portletRegistry,
+					defaultSegmentsExperience.getSegmentsExperienceId(),
+					segmentsExperience.getSegmentsExperienceId(),
+					className -> serviceContext, layout.getUserId());
+			}
+		}
+		catch (PortalException portalException) {
+			throw new ModelListenerException(portalException);
+		}
 	}
 
 	private void _copySiteNavigationMenuId(
@@ -281,6 +363,14 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 			fetchLayoutPageTemplateEntry(layout.getClassPK());
 	}
 
+	private long _getPublishedPlid(Layout layout) {
+		if (layout.isDraftLayout()) {
+			return layout.getClassPK();
+		}
+
+		return layout.getPlid();
+	}
+
 	private void _reindexLayout(Layout layout) {
 		Indexer<Layout> indexer = IndexerRegistryUtil.getIndexer(Layout.class);
 
@@ -306,6 +396,12 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		LayoutModelListener.class);
 
 	@Reference
+	private CommentManager _commentManager;
+
+	@Reference
+	private LayoutBranchLocalService _layoutBranchLocalService;
+
+	@Reference
 	private LayoutClassedModelUsageLocalService
 		_layoutClassedModelUsageLocalService;
 
@@ -327,6 +423,18 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 	private Portal _portal;
 
 	@Reference
+	private PortletRegistry _portletRegistry;
+
+	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
+
+	@Reference
+	private SegmentsExperienceStagingHelper _segmentsExperienceStagingHelper;
+
+	@Reference
+	private Staging _staging;
+
+	@Reference
+	private UserLocalService _userLocalService;
 
 }
