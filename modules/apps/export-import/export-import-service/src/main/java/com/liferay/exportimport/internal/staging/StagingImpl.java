@@ -1803,16 +1803,21 @@ public class StagingImpl implements Staging {
 	}
 
 	@Override
-	public long getRecentLayoutSetBranchId(User user, long layoutSetId) {
+	public long getRecentLayoutSetBranchId(long userId, long layoutSetId) {
 		RecentLayoutSetBranch recentLayoutSetBranch =
 			_recentLayoutSetBranchLocalService.fetchRecentLayoutSetBranch(
-				user.getUserId(), layoutSetId);
+				userId, layoutSetId);
 
 		if (recentLayoutSetBranch != null) {
 			return recentLayoutSetBranch.getLayoutSetBranchId();
 		}
 
 		return 0;
+	}
+
+	@Override
+	public long getRecentLayoutSetBranchId(User user, long layoutSetId) {
+		return getRecentLayoutSetBranchId(user.getUserId(), layoutSetId);
 	}
 
 	@Override

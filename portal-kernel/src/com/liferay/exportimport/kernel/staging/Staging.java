@@ -117,6 +117,8 @@ public interface Staging {
 	public long getRecentLayoutSetBranchId(
 		HttpServletRequest httpServletRequest, long layoutSetId);
 
+	public long getRecentLayoutSetBranchId(long userId, long layoutSetId);
+
 	public long getRecentLayoutSetBranchId(User user, long layoutSetId);
 
 	public Layout getRemoteLayout(long userId, long stagingGroupId, long plid)
