@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface ThemeClientExtensions {
 
+	public String getFaviconURL(HttpServletRequest httpServletRequest);
+
 	public ThemeCSSURLs getThemeCSSURLs(HttpServletRequest httpServletRequest);
 
 	public List<String> getThemeJSURLs(HttpServletRequest httpServletRequest);

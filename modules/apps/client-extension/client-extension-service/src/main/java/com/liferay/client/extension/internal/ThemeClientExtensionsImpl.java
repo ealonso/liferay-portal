@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
 
@@ -46,6 +47,16 @@ import org.osgi.service.component.annotations.ReferencePolicy;
  */
 @Component(immediate = true, service = ThemeClientExtensions.class)
 public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
+
+	@Override
+	public String getFaviconURL(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		return themeDisplay.getPathThemeImages() + StringPool.SLASH +
+			PropsValues.THEME_SHORTCUT_ICON;
+	}
 
 	@Override
 	public ThemeCSSURLs getThemeCSSURLs(HttpServletRequest httpServletRequest) {

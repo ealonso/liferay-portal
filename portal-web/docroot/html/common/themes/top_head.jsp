@@ -26,6 +26,8 @@ ThemeClientExtensions themeClientExtensions = ThemeClientExtensionsUtil.getTheme
 ThemeCSSURLs themeCSSURLs = themeClientExtensions.getThemeCSSURLs(request);
 %>
 
+<link href="<%= themeClientExtensions.getFaviconURL(request) %>" rel="icon" />
+
 <link href="<%= themeDisplay.getFavicon() %>" rel="icon" />
 
 <%-- Portal CSS --%>
