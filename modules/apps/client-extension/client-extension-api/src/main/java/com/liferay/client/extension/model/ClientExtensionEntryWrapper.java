@@ -69,6 +69,7 @@ public class ClientExtensionEntryWrapper
 		attributes.put("sourceCodeURL", getSourceCodeURL());
 		attributes.put("themeCSSMainURL", getThemeCSSMainURL());
 		attributes.put("themeCSSPortalURL", getThemeCSSPortalURL());
+		attributes.put("themeFaviconURL", getThemeFaviconURL());
 		attributes.put("themeJSURLs", getThemeJSURLs());
 		attributes.put("type", getType());
 		attributes.put("status", getStatus());
@@ -224,6 +225,12 @@ public class ClientExtensionEntryWrapper
 
 		if (themeCSSPortalURL != null) {
 			setThemeCSSPortalURL(themeCSSPortalURL);
+		}
+
+		String themeFaviconURL = (String)attributes.get("themeFaviconURL");
+
+		if (themeFaviconURL != null) {
+			setThemeFaviconURL(themeFaviconURL);
 		}
 
 		String themeJSURLs = (String)attributes.get("themeJSURLs");
@@ -632,6 +639,16 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public String getThemeCSSPortalURL() {
 		return model.getThemeCSSPortalURL();
+	}
+
+	/**
+	 * Returns the theme favicon url of this client extension entry.
+	 *
+	 * @return the theme favicon url of this client extension entry
+	 */
+	@Override
+	public String getThemeFaviconURL() {
+		return model.getThemeFaviconURL();
 	}
 
 	/**
@@ -1147,6 +1164,16 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public void setThemeCSSPortalURL(String themeCSSPortalURL) {
 		model.setThemeCSSPortalURL(themeCSSPortalURL);
+	}
+
+	/**
+	 * Sets the theme favicon url of this client extension entry.
+	 *
+	 * @param themeFaviconURL the theme favicon url of this client extension entry
+	 */
+	@Override
+	public void setThemeFaviconURL(String themeFaviconURL) {
+		model.setThemeFaviconURL(themeFaviconURL);
 	}
 
 	/**

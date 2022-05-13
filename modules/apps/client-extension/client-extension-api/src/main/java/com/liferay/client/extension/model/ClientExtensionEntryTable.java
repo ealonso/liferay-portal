@@ -109,6 +109,10 @@ public class ClientExtensionEntryTable
 		createColumn(
 			"themeCSSPortalURL", String.class, Types.VARCHAR,
 			Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeFaviconURL =
+		createColumn(
+			"themeFaviconURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, Clob> themeJSURLs =
 		createColumn(
 			"themeJSURLs", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);

@@ -95,7 +95,8 @@ public class ClientExtensionEntryModelImpl
 		{"instanceable", Types.BOOLEAN}, {"name", Types.VARCHAR},
 		{"portletCategoryName", Types.VARCHAR}, {"properties", Types.CLOB},
 		{"sourceCodeURL", Types.VARCHAR}, {"themeCSSMainURL", Types.VARCHAR},
-		{"themeCSSPortalURL", Types.VARCHAR}, {"themeJSURLs", Types.CLOB},
+		{"themeCSSPortalURL", Types.VARCHAR},
+		{"themeFaviconURL", Types.VARCHAR}, {"themeJSURLs", Types.CLOB},
 		{"type_", Types.VARCHAR}, {"status", Types.INTEGER},
 		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
 		{"statusDate", Types.TIMESTAMP}
@@ -128,6 +129,7 @@ public class ClientExtensionEntryModelImpl
 		TABLE_COLUMNS_MAP.put("sourceCodeURL", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("themeCSSMainURL", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("themeCSSPortalURL", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("themeFaviconURL", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("themeJSURLs", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("status", Types.INTEGER);
@@ -137,7 +139,7 @@ public class ClientExtensionEntryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,customElementCSSURLs TEXT null,customElementHTMLElementName VARCHAR(255) null,customElementURLs TEXT null,customElementUseESM BOOLEAN,description TEXT null,friendlyURLMapping VARCHAR(75) null,iFrameURL STRING null,instanceable BOOLEAN,name STRING null,portletCategoryName VARCHAR(75) null,properties TEXT null,sourceCodeURL STRING null,themeCSSMainURL STRING null,themeCSSPortalURL STRING null,themeJSURLs TEXT null,type_ VARCHAR(75) null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
+		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,customElementCSSURLs TEXT null,customElementHTMLElementName VARCHAR(255) null,customElementURLs TEXT null,customElementUseESM BOOLEAN,description TEXT null,friendlyURLMapping VARCHAR(75) null,iFrameURL STRING null,instanceable BOOLEAN,name STRING null,portletCategoryName VARCHAR(75) null,properties TEXT null,sourceCodeURL STRING null,themeCSSMainURL STRING null,themeCSSPortalURL STRING null,themeFaviconURL STRING null,themeJSURLs TEXT null,type_ VARCHAR(75) null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null)";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table ClientExtensionEntry";
@@ -440,6 +442,12 @@ public class ClientExtensionEntryModelImpl
 			"themeCSSPortalURL",
 			(BiConsumer<ClientExtensionEntry, String>)
 				ClientExtensionEntry::setThemeCSSPortalURL);
+		attributeGetterFunctions.put(
+			"themeFaviconURL", ClientExtensionEntry::getThemeFaviconURL);
+		attributeSetterBiConsumers.put(
+			"themeFaviconURL",
+			(BiConsumer<ClientExtensionEntry, String>)
+				ClientExtensionEntry::setThemeFaviconURL);
 		attributeGetterFunctions.put(
 			"themeJSURLs", ClientExtensionEntry::getThemeJSURLs);
 		attributeSetterBiConsumers.put(
@@ -1054,6 +1062,26 @@ public class ClientExtensionEntryModelImpl
 
 	@JSON
 	@Override
+	public String getThemeFaviconURL() {
+		if (_themeFaviconURL == null) {
+			return "";
+		}
+		else {
+			return _themeFaviconURL;
+		}
+	}
+
+	@Override
+	public void setThemeFaviconURL(String themeFaviconURL) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_themeFaviconURL = themeFaviconURL;
+	}
+
+	@JSON
+	@Override
 	public String getThemeJSURLs() {
 		if (_themeJSURLs == null) {
 			return "";
@@ -1445,6 +1473,7 @@ public class ClientExtensionEntryModelImpl
 		clientExtensionEntryImpl.setSourceCodeURL(getSourceCodeURL());
 		clientExtensionEntryImpl.setThemeCSSMainURL(getThemeCSSMainURL());
 		clientExtensionEntryImpl.setThemeCSSPortalURL(getThemeCSSPortalURL());
+		clientExtensionEntryImpl.setThemeFaviconURL(getThemeFaviconURL());
 		clientExtensionEntryImpl.setThemeJSURLs(getThemeJSURLs());
 		clientExtensionEntryImpl.setType(getType());
 		clientExtensionEntryImpl.setStatus(getStatus());
@@ -1509,6 +1538,8 @@ public class ClientExtensionEntryModelImpl
 			this.<String>getColumnOriginalValue("themeCSSMainURL"));
 		clientExtensionEntryImpl.setThemeCSSPortalURL(
 			this.<String>getColumnOriginalValue("themeCSSPortalURL"));
+		clientExtensionEntryImpl.setThemeFaviconURL(
+			this.<String>getColumnOriginalValue("themeFaviconURL"));
 		clientExtensionEntryImpl.setThemeJSURLs(
 			this.<String>getColumnOriginalValue("themeJSURLs"));
 		clientExtensionEntryImpl.setType(
@@ -1777,6 +1808,14 @@ public class ClientExtensionEntryModelImpl
 			clientExtensionEntryCacheModel.themeCSSPortalURL = null;
 		}
 
+		clientExtensionEntryCacheModel.themeFaviconURL = getThemeFaviconURL();
+
+		String themeFaviconURL = clientExtensionEntryCacheModel.themeFaviconURL;
+
+		if ((themeFaviconURL != null) && (themeFaviconURL.length() == 0)) {
+			clientExtensionEntryCacheModel.themeFaviconURL = null;
+		}
+
 		clientExtensionEntryCacheModel.themeJSURLs = getThemeJSURLs();
 
 		String themeJSURLs = clientExtensionEntryCacheModel.themeJSURLs;
@@ -1934,6 +1973,7 @@ public class ClientExtensionEntryModelImpl
 	private String _sourceCodeURL;
 	private String _themeCSSMainURL;
 	private String _themeCSSPortalURL;
+	private String _themeFaviconURL;
 	private String _themeJSURLs;
 	private String _type;
 	private int _status;
@@ -1997,6 +2037,7 @@ public class ClientExtensionEntryModelImpl
 		_columnOriginalValues.put("sourceCodeURL", _sourceCodeURL);
 		_columnOriginalValues.put("themeCSSMainURL", _themeCSSMainURL);
 		_columnOriginalValues.put("themeCSSPortalURL", _themeCSSPortalURL);
+		_columnOriginalValues.put("themeFaviconURL", _themeFaviconURL);
 		_columnOriginalValues.put("themeJSURLs", _themeJSURLs);
 		_columnOriginalValues.put("type_", _type);
 		_columnOriginalValues.put("status", _status);
@@ -2073,17 +2114,19 @@ public class ClientExtensionEntryModelImpl
 
 		columnBitmasks.put("themeCSSPortalURL", 4194304L);
 
-		columnBitmasks.put("themeJSURLs", 8388608L);
+		columnBitmasks.put("themeFaviconURL", 8388608L);
 
-		columnBitmasks.put("type_", 16777216L);
+		columnBitmasks.put("themeJSURLs", 16777216L);
 
-		columnBitmasks.put("status", 33554432L);
+		columnBitmasks.put("type_", 33554432L);
 
-		columnBitmasks.put("statusByUserId", 67108864L);
+		columnBitmasks.put("status", 67108864L);
 
-		columnBitmasks.put("statusByUserName", 134217728L);
+		columnBitmasks.put("statusByUserId", 134217728L);
 
-		columnBitmasks.put("statusDate", 268435456L);
+		columnBitmasks.put("statusByUserName", 268435456L);
+
+		columnBitmasks.put("statusDate", 536870912L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

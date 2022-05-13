@@ -73,6 +73,11 @@ public interface ClientExtensionEntryService extends BaseService {
 			String themeCSSPortalURL)
 		throws PortalException;
 
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException;
+
 	public ClientExtensionEntry addThemeJSClientExtensionEntry(
 			String description, Map<Locale, String> nameMap, String properties,
 			String sourceCodeURL, String themeJSURLs)
@@ -114,6 +119,12 @@ public interface ClientExtensionEntryService extends BaseService {
 			Map<Locale, String> nameMap, String properties,
 			String sourceCodeURL, String themeCSSMainURL,
 			String themeCSSPortalURL)
+		throws PortalException;
+
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
 		throws PortalException;
 
 	public ClientExtensionEntry updateThemeJSClientExtensionEntry(

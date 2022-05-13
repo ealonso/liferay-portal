@@ -78,7 +78,7 @@ public class ClientExtensionEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(59);
+		StringBundler sb = new StringBundler(61);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -126,6 +126,8 @@ public class ClientExtensionEntryCacheModel
 		sb.append(themeCSSMainURL);
 		sb.append(", themeCSSPortalURL=");
 		sb.append(themeCSSPortalURL);
+		sb.append(", themeFaviconURL=");
+		sb.append(themeFaviconURL);
 		sb.append(", themeJSURLs=");
 		sb.append(themeJSURLs);
 		sb.append(", type=");
@@ -282,6 +284,13 @@ public class ClientExtensionEntryCacheModel
 			clientExtensionEntryImpl.setThemeCSSPortalURL(themeCSSPortalURL);
 		}
 
+		if (themeFaviconURL == null) {
+			clientExtensionEntryImpl.setThemeFaviconURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeFaviconURL(themeFaviconURL);
+		}
+
 		if (themeJSURLs == null) {
 			clientExtensionEntryImpl.setThemeJSURLs("");
 		}
@@ -350,6 +359,7 @@ public class ClientExtensionEntryCacheModel
 		sourceCodeURL = objectInput.readUTF();
 		themeCSSMainURL = objectInput.readUTF();
 		themeCSSPortalURL = objectInput.readUTF();
+		themeFaviconURL = objectInput.readUTF();
 		themeJSURLs = (String)objectInput.readObject();
 		type = objectInput.readUTF();
 
@@ -482,6 +492,13 @@ public class ClientExtensionEntryCacheModel
 			objectOutput.writeUTF(themeCSSPortalURL);
 		}
 
+		if (themeFaviconURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeFaviconURL);
+		}
+
 		if (themeJSURLs == null) {
 			objectOutput.writeObject("");
 		}
@@ -533,6 +550,7 @@ public class ClientExtensionEntryCacheModel
 	public String sourceCodeURL;
 	public String themeCSSMainURL;
 	public String themeCSSPortalURL;
+	public String themeFaviconURL;
 	public String themeJSURLs;
 	public String type;
 	public int status;

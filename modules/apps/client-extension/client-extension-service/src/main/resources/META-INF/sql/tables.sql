@@ -22,6 +22,7 @@ create table ClientExtensionEntry (
 	sourceCodeURL STRING null,
 	themeCSSMainURL STRING null,
 	themeCSSPortalURL STRING null,
+	themeFaviconURL STRING null,
 	themeJSURLs TEXT null,
 	type_ VARCHAR(75) null,
 	status INTEGER,

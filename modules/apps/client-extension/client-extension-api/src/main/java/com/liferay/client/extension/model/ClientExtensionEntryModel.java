@@ -533,6 +533,21 @@ public interface ClientExtensionEntryModel
 	public void setThemeCSSPortalURL(String themeCSSPortalURL);
 
 	/**
+	 * Returns the theme favicon url of this client extension entry.
+	 *
+	 * @return the theme favicon url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeFaviconURL();
+
+	/**
+	 * Sets the theme favicon url of this client extension entry.
+	 *
+	 * @param themeFaviconURL the theme favicon url of this client extension entry
+	 */
+	public void setThemeFaviconURL(String themeFaviconURL);
+
+	/**
 	 * Returns the theme jsur ls of this client extension entry.
 	 *
 	 * @return the theme jsur ls of this client extension entry

@@ -180,6 +180,9 @@ public class ClientExtensionEntryPersistenceTest {
 		newClientExtensionEntry.setThemeCSSPortalURL(
 			RandomTestUtil.randomString());
 
+		newClientExtensionEntry.setThemeFaviconURL(
+			RandomTestUtil.randomString());
+
 		newClientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
 
 		newClientExtensionEntry.setType(RandomTestUtil.randomString());
@@ -272,6 +275,9 @@ public class ClientExtensionEntryPersistenceTest {
 			existingClientExtensionEntry.getThemeCSSPortalURL(),
 			newClientExtensionEntry.getThemeCSSPortalURL());
 		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeFaviconURL(),
+			newClientExtensionEntry.getThemeFaviconURL());
+		Assert.assertEquals(
 			existingClientExtensionEntry.getThemeJSURLs(),
 			newClientExtensionEntry.getThemeJSURLs());
 		Assert.assertEquals(
@@ -363,9 +369,10 @@ public class ClientExtensionEntryPersistenceTest {
 			"customElementUseESM", true, "friendlyURLMapping", true,
 			"iFrameURL", true, "instanceable", true, "name", true,
 			"portletCategoryName", true, "sourceCodeURL", true,
-			"themeCSSMainURL", true, "themeCSSPortalURL", true, "type", true,
-			"status", true, "statusByUserId", true, "statusByUserName", true,
-			"statusDate", true);
+			"themeCSSMainURL", true, "themeCSSPortalURL", true,
+			"themeFaviconURL", true, "type", true, "status", true,
+			"statusByUserId", true, "statusByUserName", true, "statusDate",
+			true);
 	}
 
 	@Test
@@ -729,6 +736,8 @@ public class ClientExtensionEntryPersistenceTest {
 
 		clientExtensionEntry.setThemeCSSPortalURL(
 			RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeFaviconURL(RandomTestUtil.randomString());
 
 		clientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
 

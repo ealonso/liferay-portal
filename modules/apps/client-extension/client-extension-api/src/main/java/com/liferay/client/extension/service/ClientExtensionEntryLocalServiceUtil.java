@@ -121,6 +121,17 @@ public class ClientExtensionEntryLocalServiceUtil {
 			themeCSSMainURL, themeCSSPortalURL);
 	}
 
+	public static ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			long userId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		return getService().addThemeFaviconClientExtensionEntry(
+			userId, description, nameMap, properties, sourceCodeURL,
+			themeFaviconURL);
+	}
+
 	public static ClientExtensionEntry addThemeJSClientExtensionEntry(
 			long userId, String description,
 			Map<java.util.Locale, String> nameMap, String properties,
@@ -539,6 +550,17 @@ public class ClientExtensionEntryLocalServiceUtil {
 		return getService().updateThemeCSSClientExtensionEntry(
 			userId, clientExtensionEntryId, description, nameMap, properties,
 			sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	public static ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		return getService().updateThemeFaviconClientExtensionEntry(
+			userId, clientExtensionEntryId, description, nameMap, properties,
+			sourceCodeURL, themeFaviconURL);
 	}
 
 	public static ClientExtensionEntry updateThemeJSClientExtensionEntry(

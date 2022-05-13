@@ -89,6 +89,18 @@ public class ClientExtensionEntryServiceWrapper
 
 	@Override
 	public com.liferay.client.extension.model.ClientExtensionEntry
+			addThemeFaviconClientExtensionEntry(
+				String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeFaviconURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _clientExtensionEntryService.addThemeFaviconClientExtensionEntry(
+			description, nameMap, properties, sourceCodeURL, themeFaviconURL);
+	}
+
+	@Override
+	public com.liferay.client.extension.model.ClientExtensionEntry
 			addThemeJSClientExtensionEntry(
 				String description,
 				java.util.Map<java.util.Locale, String> nameMap,
@@ -174,6 +186,20 @@ public class ClientExtensionEntryServiceWrapper
 		return _clientExtensionEntryService.updateThemeCSSClientExtensionEntry(
 			clientExtensionEntryId, description, nameMap, properties,
 			sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	@Override
+	public com.liferay.client.extension.model.ClientExtensionEntry
+			updateThemeFaviconClientExtensionEntry(
+				long clientExtensionEntryId, String description,
+				java.util.Map<java.util.Locale, String> nameMap,
+				String properties, String sourceCodeURL, String themeFaviconURL)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _clientExtensionEntryService.
+			updateThemeFaviconClientExtensionEntry(
+				clientExtensionEntryId, description, nameMap, properties,
+				sourceCodeURL, themeFaviconURL);
 	}
 
 	@Override
