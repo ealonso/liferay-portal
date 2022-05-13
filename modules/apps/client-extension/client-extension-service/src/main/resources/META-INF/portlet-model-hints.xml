@@ -45,6 +45,9 @@
 		<field name="themeCSSPortalURL" type="String">
 			<hint-collection name="URL" />
 		</field>
+		<field name="themeFaviconURL" type="String">
+			<hint-collection name="URL" />
+		</field>
 		<field name="themeJSURLs" type="String">
 			<hint-collection name="CLOB" />
 		</field>

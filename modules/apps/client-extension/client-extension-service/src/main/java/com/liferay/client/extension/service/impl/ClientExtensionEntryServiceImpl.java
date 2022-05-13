@@ -96,6 +96,21 @@ public class ClientExtensionEntryServiceImpl
 	}
 
 	@Override
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), null, ActionKeys.ADD_ENTRY);
+
+		return clientExtensionEntryLocalService.
+			addThemeFaviconClientExtensionEntry(
+				getUserId(), description, nameMap, properties, sourceCodeURL,
+				themeFaviconURL);
+	}
+
+	@Override
 	public ClientExtensionEntry addThemeJSClientExtensionEntry(
 			String description, Map<Locale, String> nameMap, String properties,
 			String sourceCodeURL, String themeJSURLs)
@@ -186,6 +201,22 @@ public class ClientExtensionEntryServiceImpl
 			updateThemeCSSClientExtensionEntry(
 				getUserId(), clientExtensionEntryId, description, nameMap,
 				properties, sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	@Override
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		_clientExtensionEntryModelResourcePermission.check(
+			getPermissionChecker(), clientExtensionEntryId, ActionKeys.UPDATE);
+
+		return clientExtensionEntryLocalService.
+			updateThemeFaviconClientExtensionEntry(
+				getUserId(), clientExtensionEntryId, description, nameMap,
+				properties, sourceCodeURL, themeFaviconURL);
 	}
 
 	@Override

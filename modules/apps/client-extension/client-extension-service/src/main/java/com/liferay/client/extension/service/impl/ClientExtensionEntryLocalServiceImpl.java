@@ -22,6 +22,7 @@ import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementU
 import com.liferay.client.extension.exception.ClientExtensionEntryFriendlyURLMappingException;
 import com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException;
 import com.liferay.client.extension.exception.ClientExtensionEntryThemeCSSURLException;
+import com.liferay.client.extension.exception.ClientExtensionEntryThemeFaviconURLException;
 import com.liferay.client.extension.exception.ClientExtensionEntryThemeJSURLsException;
 import com.liferay.client.extension.exception.DuplicateClientExtensionEntryExternalReferenceCodeException;
 import com.liferay.client.extension.model.ClientExtensionEntry;
@@ -264,6 +265,45 @@ public class ClientExtensionEntryLocalServiceImpl
 		clientExtensionEntry.setThemeCSSMainURL(themeCSSMainURL);
 		clientExtensionEntry.setThemeCSSPortalURL(themeCSSPortalURL);
 		clientExtensionEntry.setType(ClientExtensionConstants.TYPE_THEME_CSS);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		long clientExtensionEntryId = counterLocalService.increment();
+
+		User user = _userLocalService.getUser(userId);
+
+		_validateThemeFaviconURL(themeFaviconURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(clientExtensionEntryId);
+
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeFaviconURL(themeFaviconURL);
+		clientExtensionEntry.setType(
+			ClientExtensionConstants.TYPE_THEME_FAVICON);
 		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
 		clientExtensionEntry.setStatusByUserId(userId);
 		clientExtensionEntry.setStatusDate(new Date());
@@ -599,6 +639,38 @@ public class ClientExtensionEntryLocalServiceImpl
 
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		_validateThemeFaviconURL(themeFaviconURL);
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.findByPrimaryKey(
+				clientExtensionEntryId);
+
+		clientExtensionEntryLocalService.undeployClientExtensionEntry(
+			clientExtensionEntry);
+
+		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		clientExtensionEntry.setProperties(properties);
+		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setThemeFaviconURL(themeFaviconURL);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
 	public ClientExtensionEntry updateThemeJSClientExtensionEntry(
 			long userId, long clientExtensionEntryId, String description,
 			Map<Locale, String> nameMap, String properties,
@@ -866,6 +938,15 @@ public class ClientExtensionEntryLocalServiceImpl
 		if (!Validator.isUrl(themeCSSPortalURL)) {
 			throw new ClientExtensionEntryThemeCSSURLException(
 				"Invalid Theme CSS Portal URL " + themeCSSPortalURL);
+		}
+	}
+
+	private void _validateThemeFaviconURL(String themeFaviconURL)
+		throws PortalException {
+
+		if (!Validator.isUrl(themeFaviconURL)) {
+			throw new ClientExtensionEntryThemeFaviconURLException(
+				"Invalid Theme Favicon URL " + themeFaviconURL);
 		}
 	}
 
