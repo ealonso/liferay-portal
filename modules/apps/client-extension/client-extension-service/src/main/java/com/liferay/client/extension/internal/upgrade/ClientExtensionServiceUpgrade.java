@@ -78,6 +78,11 @@ public class ClientExtensionServiceUpgrade implements UpgradeStepRegistrator {
 			"3.1.0", "3.2.0",
 			new com.liferay.client.extension.internal.upgrade.v3_2_0.
 				ClientExtensionEntryUpgradeProcess());
+
+		registry.register(
+			"3.2.0", "3.3.0",
+			new com.liferay.client.extension.internal.upgrade.v3_3_0.
+				ClientExtensionEntryUpgradeProcess());
 	}
 
 	@Reference(
