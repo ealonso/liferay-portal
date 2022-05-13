@@ -54,6 +54,22 @@ public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
+		List<ClientExtensionEntry> clientExtensionEntries =
+			_clientExtensionEntryLocalService.getClientExtensionEntries(
+				themeDisplay.getCompanyId(),
+				ClientExtensionConstants.TYPE_THEME_FAVICON);
+
+		for (ClientExtensionEntry clientExtensionEntry :
+				clientExtensionEntries) {
+
+			if (Objects.equals(
+					_getThemeId(clientExtensionEntry),
+					themeDisplay.getThemeId())) {
+
+				return clientExtensionEntry.getThemeFaviconURL();
+			}
+		}
+
 		return themeDisplay.getPathThemeImages() + StringPool.SLASH +
 			PropsValues.THEME_SHORTCUT_ICON;
 	}
