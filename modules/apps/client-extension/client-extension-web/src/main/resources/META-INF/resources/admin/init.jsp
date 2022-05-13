@@ -22,6 +22,7 @@ page import="com.liferay.client.extension.exception.ClientExtensionEntryCustomEl
 page import="com.liferay.client.extension.exception.ClientExtensionEntryFriendlyURLMappingException" %><%@
 page import="com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException" %><%@
 page import="com.liferay.client.extension.exception.ClientExtensionEntryThemeCSSURLException" %><%@
+page import="com.liferay.client.extension.exception.ClientExtensionEntryThemeFaviconURLException" %><%@
 page import="com.liferay.client.extension.exception.ClientExtensionEntryThemeJSURLsException" %><%@
 page import="com.liferay.client.extension.web.internal.constants.ClientExtensionAdminFDSNames" %><%@
 page import="com.liferay.client.extension.web.internal.constants.ClientExtensionAdminWebKeys" %><%@

@@ -134,6 +134,11 @@ public class EditClientExtensionEntryMVCActionCommand
 				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
 				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
 		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_FAVICON)) {
+			_clientExtensionEntryService.addThemeFaviconClientExtensionEntry(
+				description, nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeFaviconURL"));
+		}
 		else if (type.equals(ClientExtensionConstants.TYPE_THEME_JS)) {
 			_clientExtensionEntryService.addThemeJSClientExtensionEntry(
 				description, nameMap, properties, sourceCodeURL,
@@ -213,6 +218,15 @@ public class EditClientExtensionEntryMVCActionCommand
 				nameMap, properties, sourceCodeURL,
 				ParamUtil.getString(actionRequest, "themeCSSMainURL"),
 				ParamUtil.getString(actionRequest, "themeCSSPortalURL"));
+		}
+		else if (Objects.equals(
+					clientExtensionEntry.getType(),
+					ClientExtensionConstants.TYPE_THEME_FAVICON)) {
+
+			_clientExtensionEntryService.updateThemeFaviconClientExtensionEntry(
+				clientExtensionEntry.getClientExtensionEntryId(), description,
+				nameMap, properties, sourceCodeURL,
+				ParamUtil.getString(actionRequest, "themeFaviconURL"));
 		}
 		else if (Objects.equals(
 					clientExtensionEntry.getType(),

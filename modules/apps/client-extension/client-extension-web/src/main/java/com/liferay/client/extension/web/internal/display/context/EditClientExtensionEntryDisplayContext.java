@@ -241,6 +241,11 @@ public class EditClientExtensionEntryDisplayContext {
 				isEditingClientExtensionEntryType(
 					ClientExtensionConstants.TYPE_THEME_CSS)),
 			new SelectOption(
+				LanguageUtil.get(httpServletRequest, "theme-favicon"),
+				ClientExtensionConstants.TYPE_THEME_FAVICON,
+				isEditingClientExtensionEntryType(
+					ClientExtensionConstants.TYPE_THEME_FAVICON)),
+			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "theme-js"),
 				ClientExtensionConstants.TYPE_THEME_JS,
 				isEditingClientExtensionEntryType(

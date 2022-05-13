@@ -41,6 +41,7 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 	<liferay-ui:error exception="<%= ClientExtensionEntryFriendlyURLMappingException.class %>" message="please-enter-a-valid-friendly-url-mapping" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryIFrameURLException.class %>" message="please-enter-a-unique-remote-app-url" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryThemeCSSURLException.class %>" message="please-enter-a-valid-url" />
+	<liferay-ui:error exception="<%= ClientExtensionEntryThemeFaviconURLException.class %>" message="please-enter-a-valid-url" />
 	<liferay-ui:error exception="<%= ClientExtensionEntryThemeJSURLsException.class %>" message="please-enter-a-valid-url" />
 
 	<aui:model-context bean="<%= editClientExtensionEntryDisplayContext.getClientExtensionEntry() %>" model="<%= ClientExtensionEntry.class %>" />
@@ -140,6 +141,16 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 				</aui:input>
 
 				<aui:input label="portal-url" name="themeCSSPortalURL">
+					<aui:validator name="urlAllowRelative" />
+				</aui:input>
+			</liferay-frontend:fieldset>
+
+			<liferay-frontend:fieldset
+				cssClass='<%= editClientExtensionEntryDisplayContext.isEditingClientExtensionEntryType(ClientExtensionConstants.TYPE_THEME_FAVICON) ? StringPool.BLANK : "d-none" %>'
+				disabled="<%= !editClientExtensionEntryDisplayContext.isEditingClientExtensionEntryType(ClientExtensionConstants.TYPE_THEME_FAVICON) %>"
+				id='<%= liferayPortletResponse.getNamespace() + "_type_themeFavicon" %>'
+			>
+				<aui:input label="main-url" name="themeFaviconURL">
 					<aui:validator name="urlAllowRelative" />
 				</aui:input>
 			</liferay-frontend:fieldset>

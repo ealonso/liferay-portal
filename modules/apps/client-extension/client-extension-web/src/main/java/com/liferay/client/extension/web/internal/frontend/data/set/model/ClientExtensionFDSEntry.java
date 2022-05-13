@@ -60,6 +60,9 @@ public class ClientExtensionFDSEntry {
 		else if (type.equals(ClientExtensionConstants.TYPE_THEME_CSS)) {
 			return LanguageUtil.get(_locale, "theme-css");
 		}
+		else if (type.equals(ClientExtensionConstants.TYPE_THEME_FAVICON)) {
+			return LanguageUtil.get(_locale, "theme-favicon");
+		}
 		else if (type.equals(ClientExtensionConstants.TYPE_THEME_JS)) {
 			return LanguageUtil.get(_locale, "theme-js");
 		}
