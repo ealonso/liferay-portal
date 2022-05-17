@@ -38,6 +38,7 @@ public class InputTemplateNode extends LinkedHashMap<String, Object> {
 		put("label", label);
 		put("required", required);
 		put("showHelpText", true);
+		put("showLabel", true);
 		put("type", type);
 		put("value", value);
 
