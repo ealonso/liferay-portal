@@ -29,6 +29,10 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.FragmentCollectionService;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryService;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemServiceTracker;
+import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.test.util.JournalTestUtil;
@@ -74,6 +78,8 @@ import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.hamcrest.CoreMatchers;
 
@@ -335,6 +341,79 @@ public class FragmentEntryProcessorFreemarkerTest {
 					"expectedName", "name"
 				).put(
 					"expectedValue", "value"
+				).build()));
+
+		Assert.assertEquals(expectedProcessedHTML, actualProcessedHTML);
+	}
+
+	@Test
+	public void testProcessFragmentEntryLinkHTMLWithConfigurationInputFieldJournalArticle()
+		throws Exception {
+
+		Locale defaultLocale = LocaleUtil.getSiteDefault();
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(), 0,
+			PortalUtil.getClassNameId(JournalArticle.class),
+			HashMapBuilder.put(
+				defaultLocale, RandomTestUtil.randomString()
+			).build(),
+			null,
+			HashMapBuilder.put(
+				defaultLocale, RandomTestUtil.randomString()
+			).build(),
+			defaultLocale, false, true,
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId()));
+
+		InfoItemFormProvider<JournalArticle> infoItemFormProvider =
+			(InfoItemFormProvider<JournalArticle>)
+				_infoItemServiceTracker.getFirstInfoItemService(
+					InfoItemFormProvider.class, JournalArticle.class.getName());
+
+		InfoForm infoForm = infoItemFormProvider.getInfoForm(journalArticle);
+
+		HttpServletRequest mockHttpServletRequest =
+			_getMockHttpServletRequest();
+
+		mockHttpServletRequest.setAttribute(
+			InfoDisplayWebKeys.INFO_FORM, infoForm);
+
+		FragmentEntry fragmentEntry = _addFragmentEntry(
+			"fragment_entry_with_configuration_input_field.html",
+			"configuration_input_field.json", null,
+			FragmentConstants.TYPE_INPUT);
+
+		FragmentEntryLink fragmentEntryLink =
+			_fragmentEntryLinkLocalService.createFragmentEntryLink(0);
+
+		fragmentEntryLink.setFragmentEntryId(
+			fragmentEntry.getFragmentEntryId());
+		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+		fragmentEntryLink.setConfiguration(fragmentEntry.getConfiguration());
+		fragmentEntryLink.setEditableValues(
+			_readJSONFileToString(
+				"fragment_entry_link_editable_values_with_configuration_" +
+					"input_field.json"));
+
+		DefaultFragmentEntryProcessorContext
+			defaultFragmentEntryProcessorContext =
+				new DefaultFragmentEntryProcessorContext(
+					mockHttpServletRequest, new MockHttpServletResponse(), null,
+					null);
+
+		String actualProcessedHTML = _getProcessedHTML(
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink, defaultFragmentEntryProcessorContext));
+
+		String expectedProcessedHTML = _getProcessedHTML(
+			_readFileToString(
+				"expected_processed_fragment_entry_with_configuration_" +
+					"input_field.html",
+				HashMapBuilder.put(
+					"expectedName", "name"
+				).put(
+					"expectedValue", StringPool.BLANK
 				).build()));
 
 		Assert.assertEquals(expectedProcessedHTML, actualProcessedHTML);
@@ -760,6 +839,9 @@ public class FragmentEntryProcessorFreemarkerTest {
 
 	@DeleteAfterTestRun
 	private Group _group;
+
+	@Inject
+	private InfoItemServiceTracker _infoItemServiceTracker;
 
 	@DeleteAfterTestRun
 	private Layout _layout;
