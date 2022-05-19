@@ -19,6 +19,7 @@ import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryLocalService;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
@@ -296,6 +297,50 @@ public class FragmentEntryProcessorFreemarkerTest {
 	}
 
 	@Test
+	public void testProcessFragmentEntryLinkHTMLWithConfigurationInputField()
+		throws Exception {
+
+		FragmentEntry fragmentEntry = _addFragmentEntry(
+			"fragment_entry_with_configuration_input_field.html",
+			"configuration_input_field.json", null,
+			FragmentConstants.TYPE_INPUT);
+
+		FragmentEntryLink fragmentEntryLink =
+			_fragmentEntryLinkLocalService.createFragmentEntryLink(0);
+
+		fragmentEntryLink.setFragmentEntryId(
+			fragmentEntry.getFragmentEntryId());
+		fragmentEntryLink.setHtml(fragmentEntry.getHtml());
+		fragmentEntryLink.setConfiguration(fragmentEntry.getConfiguration());
+		fragmentEntryLink.setEditableValues(
+			_readJSONFileToString(
+				"fragment_entry_link_editable_values_with_configuration_" +
+					"input_field.json"));
+
+		DefaultFragmentEntryProcessorContext
+			defaultFragmentEntryProcessorContext =
+				new DefaultFragmentEntryProcessorContext(
+					_getMockHttpServletRequest(), new MockHttpServletResponse(),
+					null, null);
+
+		String actualProcessedHTML = _getProcessedHTML(
+			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+				fragmentEntryLink, defaultFragmentEntryProcessorContext));
+
+		String expectedProcessedHTML = _getProcessedHTML(
+			_readFileToString(
+				"expected_processed_fragment_entry_with_configuration_" +
+					"input_field.html",
+				HashMapBuilder.put(
+					"expectedName", "name"
+				).put(
+					"expectedValue", "value"
+				).build()));
+
+		Assert.assertEquals(expectedProcessedHTML, actualProcessedHTML);
+	}
+
+	@Test
 	public void testProcessFragmentEntryLinkHTMLWithConfigurationItemSelectorFileEntry()
 		throws Exception {
 
@@ -540,6 +585,14 @@ public class FragmentEntryProcessorFreemarkerTest {
 			Map<String, String> values)
 		throws Exception {
 
+		return _addFragmentEntry(htmlFile, configurationFile, values, 0);
+	}
+
+	private FragmentEntry _addFragmentEntry(
+			String htmlFile, String configurationFile,
+			Map<String, String> values, int type)
+		throws Exception {
+
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId());
@@ -561,8 +614,8 @@ public class FragmentEntryProcessorFreemarkerTest {
 		return _fragmentEntryService.addFragmentEntry(
 			_group.getGroupId(), fragmentCollection.getFragmentCollectionId(),
 			"fragment-entry", "Fragment Entry", null,
-			_readFileToString(htmlFile), null, false, configuration, null, 0, 0,
-			WorkflowConstants.STATUS_APPROVED, serviceContext);
+			_readFileToString(htmlFile), null, false, configuration, null, 0,
+			type, WorkflowConstants.STATUS_APPROVED, serviceContext);
 	}
 
 	private MockHttpServletRequest _getMockHttpServletRequest()
