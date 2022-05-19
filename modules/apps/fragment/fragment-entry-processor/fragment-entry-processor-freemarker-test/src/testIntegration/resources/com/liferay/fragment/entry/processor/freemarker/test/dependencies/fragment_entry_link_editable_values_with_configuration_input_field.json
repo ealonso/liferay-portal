@@ -1,4 +1,5 @@
 {
 	"com.liferay.fragment.entry.processor.freemarker.FreeMarkerFragmentEntryProcessor": {
+		"inputFieldId": "DDMStructure_name"
 	}
 }
