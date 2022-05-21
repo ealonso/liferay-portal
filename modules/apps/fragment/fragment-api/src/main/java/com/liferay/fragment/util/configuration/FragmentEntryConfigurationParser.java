@@ -31,6 +31,12 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface FragmentEntryConfigurationParser {
 
+	public default JSONObject getConfigurationDefaultValuesJSONObject(
+		List<FragmentConfigurationField> fragmentConfigurationFields) {
+
+		return null;
+	}
+
 	public JSONObject getConfigurationDefaultValuesJSONObject(
 		String configuration);
 
