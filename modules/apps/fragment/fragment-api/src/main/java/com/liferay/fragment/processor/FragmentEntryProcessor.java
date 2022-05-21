@@ -42,6 +42,13 @@ public interface FragmentEntryProcessor {
 		return null;
 	}
 
+	public default JSONObject getDefaultEditableValuesJSONObject(
+		String html, String configuration, long fragmentEntryId,
+		String fragmentEntryKey) {
+
+		return getDefaultEditableValuesJSONObject(html, configuration);
+	}
+
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String css,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)

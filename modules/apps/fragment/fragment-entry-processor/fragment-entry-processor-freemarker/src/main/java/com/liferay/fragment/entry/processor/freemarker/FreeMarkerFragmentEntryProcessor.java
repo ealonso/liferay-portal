@@ -72,6 +72,15 @@ public class FreeMarkerFragmentEntryProcessor
 	public JSONObject getDefaultEditableValuesJSONObject(
 		String html, String configuration) {
 
+		return getDefaultEditableValuesJSONObject(
+			html, configuration, 0, StringPool.BLANK);
+	}
+
+	@Override
+	public JSONObject getDefaultEditableValuesJSONObject(
+		String html, String configuration, long fragmentEntryId,
+		String fragmentEntryKey) {
+
 		return _fragmentEntryConfigurationParser.
 			getConfigurationDefaultValuesJSONObject(configuration);
 	}
