@@ -38,6 +38,11 @@ public interface FragmentEntryConfigurationParser {
 		String editableValues, String fieldName,
 		FragmentConfigurationFieldDataType fragmentConfigurationFieldDataType);
 
+	public JSONObject getConfigurationJSONObject(
+			List<FragmentConfigurationField> configurationFields,
+			String editableValues, Locale locale)
+		throws JSONException;
+
 	/**
 	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
 	 * #getConfigurationJSONObject(String, String, Locale)}

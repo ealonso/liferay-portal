@@ -73,8 +73,7 @@ public class FragmentEntryConfigurationParserImpl
 		String configuration) {
 
 		return _getConfigurationDefaultValuesJSONObject(
-			getFragmentConfigurationFields(configuration)
-		);
+			getFragmentConfigurationFields(configuration));
 	}
 
 	@Override
@@ -109,6 +108,52 @@ public class FragmentEntryConfigurationParserImpl
 		return null;
 	}
 
+	@Override
+	public JSONObject getConfigurationJSONObject(
+			List<FragmentConfigurationField> fragmentConfigurationFields,
+			String editableValues, Locale locale)
+		throws JSONException {
+
+		JSONObject configurationDefaultValuesJSONObject =
+			_getConfigurationDefaultValuesJSONObject(
+				fragmentConfigurationFields);
+
+		if (configurationDefaultValuesJSONObject == null) {
+			return JSONFactoryUtil.createJSONObject();
+		}
+
+		JSONObject editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
+			editableValues);
+
+		JSONObject configurationValuesJSONObject =
+			editableValuesJSONObject.getJSONObject(
+				_KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR);
+
+		if (configurationValuesJSONObject == null) {
+			return configurationDefaultValuesJSONObject;
+		}
+
+		for (FragmentConfigurationField configurationField :
+				fragmentConfigurationFields) {
+
+			String name = configurationField.getName();
+
+			Object object = configurationValuesJSONObject.get(name);
+
+			if (Validator.isNull(object)) {
+				continue;
+			}
+
+			configurationDefaultValuesJSONObject.put(
+				name,
+				getFieldValue(
+					configurationField, locale,
+					configurationValuesJSONObject.getString(name)));
+		}
+
+		return configurationDefaultValuesJSONObject;
+	}
+
 	/**
 	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
 	 * #getConfigurationJSONObject(String, String, Locale)}
@@ -128,46 +173,9 @@ public class FragmentEntryConfigurationParserImpl
 			String configuration, String editableValues, Locale locale)
 		throws JSONException {
 
-		JSONObject configurationDefaultValuesJSONObject =
-			getConfigurationDefaultValuesJSONObject(configuration);
-
-		if (configurationDefaultValuesJSONObject == null) {
-			return JSONFactoryUtil.createJSONObject();
-		}
-
-		JSONObject editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
-			editableValues);
-
-		JSONObject configurationValuesJSONObject =
-			editableValuesJSONObject.getJSONObject(
-				_KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR);
-
-		if (configurationValuesJSONObject == null) {
-			return configurationDefaultValuesJSONObject;
-		}
-
-		List<FragmentConfigurationField> configurationFields =
-			getFragmentConfigurationFields(configuration);
-
-		for (FragmentConfigurationField configurationField :
-				configurationFields) {
-
-			String name = configurationField.getName();
-
-			Object object = configurationValuesJSONObject.get(name);
-
-			if (Validator.isNull(object)) {
-				continue;
-			}
-
-			configurationDefaultValuesJSONObject.put(
-				name,
-				getFieldValue(
-					configurationField, locale,
-					configurationValuesJSONObject.getString(name)));
-		}
-
-		return configurationDefaultValuesJSONObject;
+		return getConfigurationJSONObject(
+			getFragmentConfigurationFields(configuration), editableValues,
+			locale);
 	}
 
 	@Override
