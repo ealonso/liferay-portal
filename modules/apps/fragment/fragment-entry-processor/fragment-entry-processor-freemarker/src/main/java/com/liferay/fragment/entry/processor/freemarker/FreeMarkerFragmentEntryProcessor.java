@@ -14,10 +14,12 @@
 
 package com.liferay.fragment.entry.processor.freemarker;
 
+import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.freemarker.internal.configuration.FreeMarkerFragmentEntryProcessorConfiguration;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.service.FragmentEntryLocalService;
@@ -253,6 +255,23 @@ public class FreeMarkerFragmentEntryProcessor
 							configurationDefaultValuesJSONObject, configuration,
 							new long[0])
 					).build());
+
+				FragmentEntryConfigurationProvider
+					fragmentEntryConfigurationProvider =
+						_fragmentEntryConfigurationProviderTracker.
+							getFragmentEntryConfigurationProvider(
+								fragmentEntryTypeLabel);
+
+				if (fragmentEntryConfigurationProvider != null) {
+					template.put(
+						fragmentEntryConfigurationProvider.getType(),
+						fragmentEntryConfigurationProvider.getTemplateNode(
+							"{}",
+							new DefaultFragmentEntryProcessorContext(
+								httpServletRequest, httpServletResponse,
+								FragmentEntryLinkConstants.EDIT,
+								serviceContext.getLocale())));
+				}
 
 				template.prepareTaglib(httpServletRequest, httpServletResponse);
 
