@@ -12,38 +12,50 @@
  * details.
  */
 
-package com.liferay.fragment.entry.processor.freemarker.internal.templateparser;
+package com.liferay.fragment.internal.type.input.templateparser;
+
+import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Eudaldo Alonso
  */
-public class InputTemplateNode extends LinkedHashMap<String, Object> {
+public class InputFragmentEntryTemplateNode
+	extends LinkedHashMap<String, Object> {
 
-	public InputTemplateNode(
-		String helpText, String label, String name, boolean required,
-		boolean showHelpText, boolean showLabel, String type, String value) {
+	public InputFragmentEntryTemplateNode(
+		JSONObject configurationJSONObject, String fragmentEntryType,
+		Object value) {
 
-		_helpText = helpText;
-		_label = label;
-		_name = name;
-		_required = required;
-		_showHelpText = showHelpText;
-		_showLabel = showLabel;
-		_type = type;
+		_fragmentEntryType = fragmentEntryType;
 		_value = value;
 
-		put("helpText", helpText);
-		put("label", label);
-		put("name", name);
-		put("required", required);
-		put("showHelpText", showHelpText);
-		put("showLabel", showLabel);
-		put("type", type);
-		put("value", value);
+		_helpText = configurationJSONObject.getString("helpText");
+		_label = configurationJSONObject.getString("label");
+		_name = configurationJSONObject.getString("name");
+		_required = configurationJSONObject.getBoolean("required");
+		_showHelpText = configurationJSONObject.getBoolean("showHelpText");
+		_showLabel = configurationJSONObject.getBoolean("showLabel");
+		_type = configurationJSONObject.getString("type");
+
+		JSONObject typeOptionsJSONObject =
+			configurationJSONObject.getJSONObject("typeOptions");
+
+		if ((typeOptionsJSONObject != null) &&
+			(typeOptionsJSONObject.length() > 0)) {
+
+			for (String key : typeOptionsJSONObject.keySet()) {
+				_typeOptions.put(key, typeOptionsJSONObject.getString(key));
+			}
+		}
+
+		for (String key : configurationJSONObject.keySet()) {
+			put(key, configurationJSONObject.get(key));
+		}
 
 		put("options", _options);
 	}
@@ -64,16 +76,20 @@ public class InputTemplateNode extends LinkedHashMap<String, Object> {
 		return _name;
 	}
 
-	public String getInputValue() {
-		return _value;
-	}
-
-	public List<InputTemplateNode.Option> getOptions() {
+	public List<InputFragmentEntryTemplateNode.Option> getOptions() {
 		return _options;
 	}
 
 	public String getType() {
 		return _type;
+	}
+
+	public Map<String, String> getTypeOptions() {
+		return _typeOptions;
+	}
+
+	public Object getValue() {
+		return _value;
 	}
 
 	public boolean isRequired() {
@@ -108,14 +124,17 @@ public class InputTemplateNode extends LinkedHashMap<String, Object> {
 
 	}
 
+	private final String _fragmentEntryType;
 	private final String _helpText;
 	private final String _label;
 	private final String _name;
-	private final List<InputTemplateNode.Option> _options = new ArrayList<>();
+	private final List<InputFragmentEntryTemplateNode.Option> _options =
+		new ArrayList<>();
 	private final boolean _required;
 	private final boolean _showHelpText;
 	private final boolean _showLabel;
 	private final String _type;
-	private final String _value;
+	private final Map<String, String> _typeOptions = new LinkedHashMap<>();
+	private final Object _value;
 
 }
