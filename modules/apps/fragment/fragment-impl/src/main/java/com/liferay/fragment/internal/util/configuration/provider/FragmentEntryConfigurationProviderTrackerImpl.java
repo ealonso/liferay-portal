@@ -14,11 +14,16 @@
 
 package com.liferay.fragment.internal.util.configuration.provider;
 
+import com.liferay.fragment.constants.FragmentConstants;
+import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
+import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProvider;
 import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProviderTracker;
 import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,7 @@ import java.util.List;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Lourdes Fernández Besada
@@ -33,6 +39,32 @@ import org.osgi.service.component.annotations.Component;
 @Component(service = FragmentEntryConfigurationProviderTracker.class)
 public class FragmentEntryConfigurationProviderTrackerImpl
 	implements FragmentEntryConfigurationProviderTracker {
+
+	@Override
+	public FragmentEntryConfigurationProvider
+		getFragmentEntryConfigurationProvider(
+			long fragmentEntryId, String fragmentEntryKey) {
+
+		FragmentEntry fragmentEntry = null;
+
+		if (Validator.isNotNull(fragmentEntryKey)) {
+			fragmentEntry =
+				_fragmentCollectionContributorTracker.getFragmentEntry(
+					fragmentEntryKey);
+		}
+
+		if (fragmentEntry == null) {
+			fragmentEntry = _fragmentEntryLocalService.fetchFragmentEntry(
+				fragmentEntryId);
+		}
+
+		if (fragmentEntry == null) {
+			return null;
+		}
+
+		return getFragmentEntryConfigurationProvider(
+			FragmentConstants.getTypeLabel(fragmentEntry.getType()));
+	}
 
 	@Override
 	public FragmentEntryConfigurationProvider
@@ -74,7 +106,14 @@ public class FragmentEntryConfigurationProviderTrackerImpl
 				new PropertyServiceReferenceComparator<>("service.ranking"));
 	}
 
+	@Reference
+	private FragmentCollectionContributorTracker
+		_fragmentCollectionContributorTracker;
+
 	private ServiceTrackerMap<String, FragmentEntryConfigurationProvider>
 		_fragmentEntryConfigurationProviderServiceTrackerMap;
+
+	@Reference
+	private FragmentEntryLocalService _fragmentEntryLocalService;
 
 }
