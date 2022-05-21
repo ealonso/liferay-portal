@@ -62,7 +62,7 @@ public class JournalArticleTermsOfUseContentProvider
 	}
 
 	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.journal.terms.of.use)",
+		target = "(osgi.web.symbolicname=com.liferay.layout.utility.page.web)",
 		unbind = "-"
 	)
 	protected void setServletContext(ServletContext servletContext) {
