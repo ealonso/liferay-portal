@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.journal.terms.of.use.internal.constants;
+package com.liferay.layout.utility.page.web.internal.constants;
 
 /**
  * @author Jürgen Kappler

@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.journal.terms.of.use.internal.display.context;
+package com.liferay.layout.utility.page.web.internal.display.context;
 
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.model.JournalArticle;

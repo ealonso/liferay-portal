@@ -16,13 +16,17 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+<%@ taglib uri="http://liferay.com/tld/asset" prefix="liferay-asset" %><%@
+taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %><%@
 taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
-<%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
+<%@ page import="com.liferay.asset.kernel.model.AssetRenderer" %><%@
+page import="com.liferay.journal.model.JournalArticle" %><%@
+page import="com.liferay.journal.service.JournalArticleLocalServiceUtil" %><%@
+page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.security.auth.AuthTokenUtil" %><%@
 page import="com.liferay.portal.kernel.terms.of.use.TermsOfUseContentProvider" %><%@
@@ -30,15 +34,21 @@ page import="com.liferay.portal.kernel.util.HttpComponentsUtil" %><%@
 page import="com.liferay.portal.kernel.util.LocaleUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.PortalUtil" %><%@
+page import="com.liferay.portal.kernel.util.PrefsPropsUtil" %><%@
+page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.taglib.servlet.PipingServletResponseFactory" %>
+<%@ page
+	import="com.liferay.layout.utility.page.web.internal.display.context.JournalArticleTermsOfUseDisplayContext" %>
+<%@ page
+	import="com.liferay.layout.utility.page.web.internal.constants.JournalArticleTermsOfUseWebConstants" %>
 
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
 
 <%
-portletDisplay.setShowExportImportIcon(false);
+JournalArticleTermsOfUseDisplayContext journalArticleTermsOfUseDisplayContext = (JournalArticleTermsOfUseDisplayContext)request.getAttribute(JournalArticleTermsOfUseWebConstants.JOURNAL_ARTICLE_TERMS_OF_USE_DISPLAY_CONTEXT);
 %>
 
 <%@ include file="/init-ext.jsp" %>
