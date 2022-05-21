@@ -72,22 +72,9 @@ public class FragmentEntryConfigurationParserImpl
 	public JSONObject getConfigurationDefaultValuesJSONObject(
 		String configuration) {
 
-		List<FragmentConfigurationField> fragmentConfigurationFields =
-			getFragmentConfigurationFields(configuration);
-
-		JSONObject defaultValuesJSONObject = JSONFactoryUtil.createJSONObject();
-
-		for (FragmentConfigurationField fragmentConfigurationField :
-				fragmentConfigurationFields) {
-
-			defaultValuesJSONObject.put(
-				fragmentConfigurationField.getName(),
-				getFieldValue(
-					fragmentConfigurationField,
-					LocaleUtil.getMostRelevantLocale(), null));
-		}
-
-		return defaultValuesJSONObject;
+		return _getConfigurationDefaultValuesJSONObject(
+			getFragmentConfigurationFields(configuration)
+		);
 	}
 
 	@Override
@@ -487,6 +474,24 @@ public class FragmentEntryConfigurationParserImpl
 		}
 
 		return fieldValue;
+	}
+
+	private JSONObject _getConfigurationDefaultValuesJSONObject(
+		List<FragmentConfigurationField> fragmentConfigurationFields) {
+
+		JSONObject defaultValuesJSONObject = JSONFactoryUtil.createJSONObject();
+
+		for (FragmentConfigurationField fragmentConfigurationField :
+				fragmentConfigurationFields) {
+
+			defaultValuesJSONObject.put(
+				fragmentConfigurationField.getName(),
+				getFieldValue(
+					fragmentConfigurationField,
+					LocaleUtil.getMostRelevantLocale(), null));
+		}
+
+		return defaultValuesJSONObject;
 	}
 
 	private JSONArray _getFieldSetsJSONArray(String configuration) {
