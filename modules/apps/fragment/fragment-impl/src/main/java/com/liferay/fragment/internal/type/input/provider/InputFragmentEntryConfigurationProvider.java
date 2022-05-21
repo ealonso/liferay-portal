@@ -86,6 +86,8 @@ public class InputFragmentEntryConfigurationProvider
 				fragmentEntryProcessorContext.getLocale());
 
 		if (infoField == null) {
+			configurationJSONObject.put("name", "name");
+
 			return new InputFragmentEntryTemplateNode(
 				configurationJSONObject, getType(), StringPool.BLANK);
 		}
