@@ -22,6 +22,10 @@ import java.util.List;
 public interface FragmentEntryConfigurationProviderTracker {
 
 	public FragmentEntryConfigurationProvider
+		getFragmentEntryConfigurationProvider(
+			long fragmentEntryId, String fragmentEntryKey);
+
+	public FragmentEntryConfigurationProvider
 		getFragmentEntryConfigurationProvider(String type);
 
 	public List<FragmentEntryConfigurationProvider>

@@ -15,12 +15,10 @@
 package com.liferay.fragment.entry.processor.freemarker;
 
 import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
-import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.freemarker.internal.configuration.FreeMarkerFragmentEntryProcessorConfiguration;
 import com.liferay.fragment.entry.processor.freemarker.internal.templateparser.InputTemplateNode;
 import com.liferay.fragment.exception.FragmentEntryContentException;
-import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
@@ -292,31 +290,6 @@ public class FreeMarkerFragmentEntryProcessor
 
 	private boolean _isFreemarkerTemplate(String html) {
 		if (html.contains("${") || html.contains("<#") || html.contains("<@")) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private boolean _isInputFragmentEntryType(
-		FragmentEntryLink fragmentEntryLink) {
-
-		FragmentEntry fragmentEntry = null;
-
-		if (Validator.isNotNull(fragmentEntryLink.getRendererKey())) {
-			fragmentEntry =
-				_fragmentCollectionContributorTracker.getFragmentEntry(
-					fragmentEntryLink.getRendererKey());
-		}
-
-		if (fragmentEntry == null) {
-			fragmentEntry = _fragmentEntryLocalService.fetchFragmentEntry(
-				fragmentEntryLink.getFragmentEntryId());
-		}
-
-		if ((fragmentEntry != null) &&
-			(fragmentEntry.getType() == FragmentConstants.TYPE_INPUT)) {
-
 			return true;
 		}
 
