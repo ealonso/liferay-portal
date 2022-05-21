@@ -184,6 +184,14 @@ public class FreeMarkerFragmentEntryProcessor
 	public void validateFragmentEntryHTML(String html, String configuration)
 		throws PortalException {
 
+		validateFragmentEntryHTML(html, configuration, StringPool.BLANK);
+	}
+
+	@Override
+	public void validateFragmentEntryHTML(
+			String html, String configuration, String fragmentEntryTypeLabel)
+		throws PortalException {
+
 		FreeMarkerFragmentEntryProcessorConfiguration
 			freeMarkerFragmentEntryProcessorConfiguration =
 				_configurationProvider.getCompanyConfiguration(

@@ -15,6 +15,7 @@
 package com.liferay.fragment.internal.processor;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
@@ -23,6 +24,7 @@ import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.osgi.service.tracker.collections.map.PropertyServiceReferenceComparator;
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -171,6 +173,14 @@ public class FragmentEntryProcessorRegistryImpl
 	public void validateFragmentEntryHTML(String html, String configuration)
 		throws PortalException {
 
+		validateFragmentEntryHTML(html, configuration, 0);
+	}
+
+	@Override
+	public void validateFragmentEntryHTML(
+			String html, String configuration, int fragmentEntryType)
+		throws PortalException {
+
 		if (CompanyThreadLocal.isInitializingPortalInstance()) {
 			return;
 		}
@@ -181,11 +191,18 @@ public class FragmentEntryProcessorRegistryImpl
 			return;
 		}
 
+		String fragmentEntryTypeLabel = StringPool.BLANK;
+
+		if (fragmentEntryType > 0) {
+			fragmentEntryTypeLabel = FragmentConstants.getTypeLabel(
+				fragmentEntryType);
+		}
+
 		for (FragmentEntryProcessor fragmentEntryProcessor :
 				_serviceTrackerList) {
 
 			fragmentEntryProcessor.validateFragmentEntryHTML(
-				html, configuration);
+				html, configuration, fragmentEntryTypeLabel);
 		}
 
 		validHTMLs.add(html);
