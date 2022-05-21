@@ -23,6 +23,7 @@ import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.service.FragmentEntryLocalService;
+import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProvider;
 import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProviderTracker;
@@ -53,6 +54,7 @@ import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,8 +86,24 @@ public class FreeMarkerFragmentEntryProcessor
 		String html, String configuration, long fragmentEntryId,
 		String fragmentEntryKey) {
 
+		List<FragmentConfigurationField> fragmentConfigurationFields =
+			_fragmentEntryConfigurationParser.getFragmentConfigurationFields(
+				configuration);
+
+		FragmentEntryConfigurationProvider fragmentEntryConfigurationProvider =
+			_fragmentEntryConfigurationProviderTracker.
+				getFragmentEntryConfigurationProvider(
+					fragmentEntryId, fragmentEntryKey);
+
+		if (fragmentEntryConfigurationProvider != null) {
+			fragmentConfigurationFields.addAll(
+				fragmentEntryConfigurationProvider.
+					getFragmentConfigurationFields());
+		}
+
 		return _fragmentEntryConfigurationParser.
-			getConfigurationDefaultValuesJSONObject(configuration);
+			getConfigurationDefaultValuesJSONObject(
+				fragmentConfigurationFields);
 	}
 
 	@Override
