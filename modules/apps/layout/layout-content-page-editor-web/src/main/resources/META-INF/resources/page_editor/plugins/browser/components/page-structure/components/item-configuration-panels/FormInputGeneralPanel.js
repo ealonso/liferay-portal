@@ -43,20 +43,20 @@ const DEFAULT_CONFIGURATION_VALUES = {};
 const DEFAULT_FORM_CONFIGURATION = {classNameId: null, classTypeId: null};
 
 const FIELD_ID_CONFIGURATION_KEY = 'inputFieldId';
-const HELP_TEXT_CONFIGURATION_KEY = 'inputHelpText';
-const SHOW_HELP_TEXT_CONFIGURATION_KEY = 'inputShowHelpText';
+const HELP_TEXT_CONFIGURATION_KEY = 'helpText';
+const SHOW_HELP_TEXT_CONFIGURATION_KEY = 'showHelpText';
 
 const INPUT_COMMON_CONFIGURATION = [
 	{
 		defaultValue: false,
 		label: Liferay.Language.get('mark-as-required'),
-		name: 'inputRequired',
+		name: 'required',
 		type: 'checkbox',
 	},
 	{
 		defaultValue: true,
 		label: Liferay.Language.get('show-label'),
-		name: 'inputShowLabel',
+		name: 'showLabel',
 		type: 'checkbox',
 		typeOptions: {displayType: 'toggle'},
 	},
@@ -64,7 +64,7 @@ const INPUT_COMMON_CONFIGURATION = [
 		defaultValue: '',
 		label: Liferay.Language.get('label'),
 		localizable: true,
-		name: 'inputLabel',
+		name: 'label',
 		type: 'text',
 	},
 	{
