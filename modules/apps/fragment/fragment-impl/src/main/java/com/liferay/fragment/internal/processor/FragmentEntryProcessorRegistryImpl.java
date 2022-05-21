@@ -113,6 +113,15 @@ public class FragmentEntryProcessorRegistryImpl
 	public JSONObject getDefaultEditableValuesJSONObject(
 		String html, String configuration) {
 
+		return getDefaultEditableValuesJSONObject(
+			html, configuration, 0, StringPool.BLANK);
+	}
+
+	@Override
+	public JSONObject getDefaultEditableValuesJSONObject(
+		String html, String configuration, long fragmentEntryId,
+		String fragmentEntryKey) {
+
 		JSONObject jsonObject = _jsonFactory.createJSONObject();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
@@ -120,7 +129,7 @@ public class FragmentEntryProcessorRegistryImpl
 
 			JSONObject defaultEditableValuesJSONObject =
 				fragmentEntryProcessor.getDefaultEditableValuesJSONObject(
-					html, configuration);
+					html, configuration, fragmentEntryId, fragmentEntryKey);
 
 			if (defaultEditableValuesJSONObject != null) {
 				Class<?> clazz = fragmentEntryProcessor.getClass();
