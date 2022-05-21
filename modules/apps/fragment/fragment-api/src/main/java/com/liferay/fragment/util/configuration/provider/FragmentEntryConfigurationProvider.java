@@ -14,9 +14,12 @@
 
 package com.liferay.fragment.util.configuration.provider;
 
+import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
+import com.liferay.portal.kernel.json.JSONException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lourdes Fernández Besada
@@ -24,6 +27,11 @@ import java.util.List;
 public interface FragmentEntryConfigurationProvider {
 
 	public List<FragmentConfigurationField> getFragmentConfigurationFields();
+
+	public Map<String, Object> getTemplateNode(
+			String editableValues,
+			FragmentEntryProcessorContext fragmentEntryProcessorContext)
+		throws JSONException;
 
 	public String getType();
 

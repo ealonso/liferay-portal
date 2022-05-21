@@ -14,20 +14,16 @@
 
 package com.liferay.fragment.entry.processor.freemarker;
 
-import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.freemarker.internal.configuration.FreeMarkerFragmentEntryProcessorConfiguration;
-import com.liferay.fragment.entry.processor.freemarker.internal.templateparser.InputTemplateNode;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
-import com.liferay.info.constants.InfoDisplayWebKeys;
-import com.liferay.info.field.InfoField;
-import com.liferay.info.field.type.SelectInfoFieldType;
-import com.liferay.info.form.InfoForm;
+import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProvider;
+import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProviderTracker;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
@@ -47,17 +43,11 @@ import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
@@ -159,28 +149,18 @@ public class FreeMarkerFragmentEntryProcessor
 					fragmentEntryProcessorContext.getSegmentsEntryIds())
 			).build());
 
-		if (_isInputFragmentEntryType(fragmentEntryLink)) {
-			InfoField infoField = null;
+		FragmentEntryConfigurationProvider fragmentEntryConfigurationProvider =
+			_fragmentEntryConfigurationProviderTracker.
+				getFragmentEntryConfigurationProvider(
+					fragmentEntryLink.getFragmentEntryId(),
+					fragmentEntryLink.getRendererKey());
 
-			InfoForm infoForm = (InfoForm)httpServletRequest.getAttribute(
-				InfoDisplayWebKeys.INFO_FORM);
-
-			if (infoForm != null) {
-				String fieldName = GetterUtil.getString(
-					_fragmentEntryConfigurationParser.
-						getConfigurationFieldValue(
-							fragmentEntryLink.getEditableValues(),
-							"inputFieldId",
-							FragmentConfigurationFieldDataType.STRING));
-
-				infoField = infoForm.getInfoField(fieldName);
-			}
-
+		if (fragmentEntryConfigurationProvider != null) {
 			template.put(
-				"input",
-				_toInputTemplateNode(
-					fragmentEntryLink.getEditableValues(), infoField,
-					fragmentEntryProcessorContext.getLocale()));
+				fragmentEntryConfigurationProvider.getType(),
+				fragmentEntryConfigurationProvider.getTemplateNode(
+					fragmentEntryLink.getEditableValues(),
+					fragmentEntryProcessorContext));
 		}
 
 		template.prepareTaglib(
@@ -296,73 +276,6 @@ public class FreeMarkerFragmentEntryProcessor
 		return false;
 	}
 
-	private InputTemplateNode _toInputTemplateNode(
-		String editableValues, InfoField infoField, Locale locale) {
-
-		String inputHelpText = GetterUtil.getString(
-			_fragmentEntryConfigurationParser.getFieldValue(
-				_CONFIGURATION, editableValues, locale, "inputHelpText"));
-
-		String inputLabel = GetterUtil.getString(
-			_fragmentEntryConfigurationParser.getFieldValue(
-				_CONFIGURATION, editableValues, locale, "inputLabel"));
-
-		boolean inputRequired = GetterUtil.getBoolean(
-			_fragmentEntryConfigurationParser.getFieldValue(
-				_CONFIGURATION, editableValues, locale, "inputRequired"));
-
-		boolean inputShowHelpText = GetterUtil.getBoolean(
-			_fragmentEntryConfigurationParser.getFieldValue(
-				_CONFIGURATION, editableValues, locale, "inputShowHelpText"));
-
-		boolean inputShowLabel = GetterUtil.getBoolean(
-			_fragmentEntryConfigurationParser.getFieldValue(
-				_CONFIGURATION, editableValues, locale, "inputShowLabel"));
-
-		if (infoField == null) {
-			return new InputTemplateNode(
-				inputHelpText, inputLabel, "name", inputRequired,
-				inputShowHelpText, inputShowLabel, "type", "value");
-		}
-
-		String label = inputLabel;
-
-		if (Validator.isNull(inputLabel)) {
-			label = infoField.getLabel(locale);
-		}
-
-		boolean required = false;
-
-		if (infoField.isRequired() || inputRequired) {
-			required = true;
-		}
-
-		InputTemplateNode inputTemplateNode = new InputTemplateNode(
-			inputHelpText, label, infoField.getName(), required,
-			inputShowHelpText, inputShowLabel, StringPool.BLANK,
-			StringPool.BLANK);
-
-		if (infoField.getInfoFieldType() == SelectInfoFieldType.INSTANCE) {
-			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
-				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
-
-			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
-				new ArrayList<>());
-
-			for (SelectInfoFieldType.Option option : options) {
-				inputTemplateNode.addOption(
-					option.getLabel(locale), option.getValue());
-			}
-		}
-
-		return inputTemplateNode;
-	}
-
-	private static final String _CONFIGURATION = StringUtil.read(
-		FreeMarkerFragmentEntryProcessor.class,
-		"/com/liferay/fragment/entry/processor/freemarker/dependencies" +
-			"/configuration.json");
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		FreeMarkerFragmentEntryProcessor.class);
 
@@ -375,6 +288,10 @@ public class FreeMarkerFragmentEntryProcessor
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
+
+	@Reference
+	private FragmentEntryConfigurationProviderTracker
+		_fragmentEntryConfigurationProviderTracker;
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
