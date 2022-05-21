@@ -26,6 +26,7 @@ import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -101,9 +102,24 @@ public class InputFragmentEntryConfigurationProvider
 			configurationJSONObject.put("required", true);
 		}
 
+		Object value = StringPool.BLANK;
+
+		Object infoItem = httpServletRequest.getAttribute(
+			InfoDisplayWebKeys.INFO_ITEM);
+
+		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
+			(InfoItemFieldValuesProvider)httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_ITEM_FIELD_VALUES_PROVIDER);
+
+		if ((infoItem != null) && (infoItemFieldValuesProvider != null)) {
+			value = _fragmentEntryProcessorHelper.getMappedInfoItemFieldValue(
+				infoField.getUniqueId(), infoItemFieldValuesProvider,
+				fragmentEntryProcessorContext.getLocale(), infoItem);
+		}
+
 		InputFragmentEntryTemplateNode inputFragmentEntryTemplateNode =
 			new InputFragmentEntryTemplateNode(
-				configurationJSONObject, getType(), StringPool.BLANK);
+				configurationJSONObject, getType(), value);
 
 		if (infoField.getInfoFieldType() == SelectInfoFieldType.INSTANCE) {
 			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
@@ -171,5 +187,8 @@ public class InputFragmentEntryConfigurationProvider
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
+
+	@Reference
+	private FragmentEntryProcessorHelper _fragmentEntryProcessorHelper;
 
 }
