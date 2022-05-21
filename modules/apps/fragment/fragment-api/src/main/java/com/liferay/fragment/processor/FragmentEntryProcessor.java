@@ -61,4 +61,11 @@ public interface FragmentEntryProcessor {
 	public void validateFragmentEntryHTML(String html, String configuration)
 		throws PortalException;
 
+	public default void validateFragmentEntryHTML(
+			String html, String configuration, String fragmentEntryTypeLabel)
+		throws PortalException {
+
+		validateFragmentEntryHTML(html, configuration);
+	}
+
 }
