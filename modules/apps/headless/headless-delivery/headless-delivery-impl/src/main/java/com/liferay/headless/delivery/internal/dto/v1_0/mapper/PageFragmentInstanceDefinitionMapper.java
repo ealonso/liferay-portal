@@ -21,7 +21,10 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
+import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProvider;
+import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProviderTracker;
 import com.liferay.headless.delivery.dto.v1_0.ClassPKReference;
 import com.liferay.headless.delivery.dto.v1_0.Fragment;
 import com.liferay.headless.delivery.dto.v1_0.FragmentField;
@@ -158,10 +161,29 @@ public class PageFragmentInstanceDefinitionMapper {
 		try {
 			return new HashMap<String, Object>() {
 				{
+					List<FragmentConfigurationField>
+						fragmentConfigurationFields =
+							_fragmentEntryConfigurationParser.
+								getFragmentConfigurationFields(
+									fragmentEntryLink.getConfiguration());
+
+					FragmentEntryConfigurationProvider
+						fragmentEntryConfigurationProvider =
+							_fragmentEntryConfigurationProviderTracker.
+								getFragmentEntryConfigurationProvider(
+									fragmentEntryLink.getFragmentEntryId(),
+									fragmentEntryLink.getRendererKey());
+
+					if (fragmentEntryConfigurationProvider != null) {
+						fragmentConfigurationFields.addAll(
+							fragmentEntryConfigurationProvider.
+								getFragmentConfigurationFields());
+					}
+
 					JSONObject jsonObject =
 						_fragmentEntryConfigurationParser.
 							getConfigurationJSONObject(
-								fragmentEntryLink.getConfiguration(),
+								fragmentConfigurationFields,
 								fragmentEntryLink.getEditableValues(),
 								LocaleUtil.getMostRelevantLocale());
 
@@ -927,6 +949,10 @@ public class PageFragmentInstanceDefinitionMapper {
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
+
+	@Reference
+	private FragmentEntryConfigurationProviderTracker
+		_fragmentEntryConfigurationProviderTracker;
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
