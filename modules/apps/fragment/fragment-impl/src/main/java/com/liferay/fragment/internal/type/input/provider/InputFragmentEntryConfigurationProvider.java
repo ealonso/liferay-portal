@@ -14,17 +14,35 @@
 
 package com.liferay.fragment.internal.type.input.provider;
 
+import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
 import com.liferay.fragment.constants.FragmentConstants;
+import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
+import com.liferay.fragment.internal.type.input.templateparser.InputFragmentEntryTemplateNode;
+import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
+import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.fragment.util.configuration.provider.FragmentEntryConfigurationProvider;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.field.InfoField;
+import com.liferay.info.field.type.SelectInfoFieldType;
+import com.liferay.info.form.InfoForm;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Validator;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Lourdes Fernández Besada
@@ -36,6 +54,72 @@ public class InputFragmentEntryConfigurationProvider
 	@Override
 	public List<FragmentConfigurationField> getFragmentConfigurationFields() {
 		return ListUtil.fromArray(_FRAGMENT_CONFIGURATION_FIELDS);
+	}
+
+	@Override
+	public Map<String, Object> getTemplateNode(
+			String editableValues,
+			FragmentEntryProcessorContext fragmentEntryProcessorContext)
+		throws JSONException {
+
+		HttpServletRequest httpServletRequest =
+			fragmentEntryProcessorContext.getHttpServletRequest();
+
+		InfoField infoField = null;
+
+		InfoForm infoForm = (InfoForm)httpServletRequest.getAttribute(
+			InfoDisplayWebKeys.INFO_FORM);
+
+		if (infoForm != null) {
+			String fieldName = GetterUtil.getString(
+				_fragmentEntryConfigurationParser.getConfigurationFieldValue(
+					editableValues, "inputFieldId",
+					FragmentConfigurationFieldDataType.STRING));
+
+			infoField = infoForm.getInfoField(fieldName);
+		}
+
+		JSONObject configurationJSONObject =
+			_fragmentEntryConfigurationParser.getConfigurationJSONObject(
+				getFragmentConfigurationFields(), editableValues,
+				fragmentEntryProcessorContext.getLocale());
+
+		if (infoField == null) {
+			return new InputFragmentEntryTemplateNode(
+				configurationJSONObject, getType(), StringPool.BLANK);
+		}
+
+		if (Validator.isNull(configurationJSONObject.get("label"))) {
+			configurationJSONObject.put(
+				"label",
+				infoField.getLabel(fragmentEntryProcessorContext.getLocale()));
+		}
+
+		configurationJSONObject.put("name", infoField.getName());
+
+		if (infoField.isRequired()) {
+			configurationJSONObject.put("required", true);
+		}
+
+		InputFragmentEntryTemplateNode inputFragmentEntryTemplateNode =
+			new InputFragmentEntryTemplateNode(
+				configurationJSONObject, getType(), StringPool.BLANK);
+
+		if (infoField.getInfoFieldType() == SelectInfoFieldType.INSTANCE) {
+			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
+				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
+
+			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
+				new ArrayList<>());
+
+			for (SelectInfoFieldType.Option option : options) {
+				inputFragmentEntryTemplateNode.addOption(
+					option.getLabel(fragmentEntryProcessorContext.getLocale()),
+					option.getValue());
+			}
+		}
+
+		return inputFragmentEntryTemplateNode;
 	}
 
 	@Override
@@ -84,5 +168,8 @@ public class InputFragmentEntryConfigurationProvider
 				"help-text", "helpText", "checkbox", true, StringPool.BLANK,
 				null)
 		};
+
+	@Reference
+	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 
 }
