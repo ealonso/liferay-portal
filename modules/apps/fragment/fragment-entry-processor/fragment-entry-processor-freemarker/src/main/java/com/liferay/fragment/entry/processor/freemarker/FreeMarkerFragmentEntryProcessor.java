@@ -349,6 +349,15 @@ public class FreeMarkerFragmentEntryProcessor
 					"inputHelpText", "string", "", true, "text"),
 				locale));
 
+		if (Validator.isNull(inputHelpText)) {
+			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+				"content.Language", getClass());
+
+			inputHelpText = LanguageUtil.get(
+				resourceBundle,
+				"guide-your-users-to-fill-in-the-field-by-adding-a-help-text-here");
+		}
+
 		String inputLabel = GetterUtil.getString(
 			_fragmentEntryConfigurationParser.getFieldValue(
 				editableValues,
