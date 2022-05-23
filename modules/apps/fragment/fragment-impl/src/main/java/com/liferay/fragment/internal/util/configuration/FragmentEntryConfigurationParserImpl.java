@@ -184,6 +184,34 @@ public class FragmentEntryConfigurationParserImpl
 	}
 
 	@Override
+	public Object getFieldValue(
+		String editableValues,
+		FragmentConfigurationField fragmentConfigurationField, Locale locale) {
+
+		try {
+			JSONObject editableValuesJSONObject =
+				JSONFactoryUtil.createJSONObject(
+					editableValues);
+
+			JSONObject configurationValuesJSONObject =
+				editableValuesJSONObject.getJSONObject(
+					_KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR);
+
+			if (configurationValuesJSONObject == null) {
+				return StringPool.BLANK;
+			}
+
+			return getFieldValue(
+				fragmentConfigurationField, locale,
+				configurationValuesJSONObject.getString(
+					fragmentConfigurationField.getName()));
+		}
+		catch (Exception exception) {
+			return StringPool.BLANK;
+		}
+	}
+
+	@Override
 	public Map<String, Object> getContextObjects(
 		JSONObject configurationValuesJSONObject, String configuration,
 		long[] segmentsEntryIds) {

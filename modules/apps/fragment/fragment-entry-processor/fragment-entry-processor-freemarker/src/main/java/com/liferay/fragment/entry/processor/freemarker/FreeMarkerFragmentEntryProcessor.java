@@ -36,6 +36,7 @@ import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -343,33 +344,38 @@ public class FreeMarkerFragmentEntryProcessor
 
 		String inputHelpText = GetterUtil.getString(
 			_fragmentEntryConfigurationParser.getFieldValue(
+				editableValues,
 				new FragmentConfigurationField(
 					"inputHelpText", "string", "", true, "text"),
-				locale, editableValues));
+				locale));
 
 		String inputLabel = GetterUtil.getString(
 			_fragmentEntryConfigurationParser.getFieldValue(
+				editableValues,
 				new FragmentConfigurationField(
 					"inputLabel", "string", "", true, "text"),
-				locale, editableValues));
+				locale));
 
 		boolean inputRequired = GetterUtil.getBoolean(
 			_fragmentEntryConfigurationParser.getFieldValue(
+				editableValues,
 				new FragmentConfigurationField(
 					"inputRequired", "boolean", "false", false, "checkbox"),
-				locale, editableValues));
+				locale));
 
 		boolean inputShowHelpText = GetterUtil.getBoolean(
 			_fragmentEntryConfigurationParser.getFieldValue(
+				editableValues,
 				new FragmentConfigurationField(
 					"inputShowHelpText", "boolean", "true", false, "checkbox"),
-				locale, editableValues));
+				locale));
 
 		boolean inputShowLabel = GetterUtil.getBoolean(
 			_fragmentEntryConfigurationParser.getFieldValue(
+				editableValues,
 				new FragmentConfigurationField(
 					"inputShowLabel", "boolean", "true", false, "checkbox"),
-				locale, editableValues));
+				locale));
 
 		if (infoField == null) {
 			return new InputTemplateNode(
