@@ -22,6 +22,7 @@ import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRenderer;
+import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
@@ -29,11 +30,20 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLinkServiceUtil;
 import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListener;
 import com.liferay.layout.content.page.editor.listener.ContentPageEditorListenerTracker;
+import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalServiceUtil;
+import com.liferay.layout.util.constants.LayoutDataItemTypeConstants;
+import com.liferay.layout.util.structure.FormStyledLayoutStructureItem;
+import com.liferay.layout.util.structure.FragmentStyledLayoutStructureItem;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructureItemCSSUtil;
+import com.liferay.layout.util.structure.LayoutStructureItemUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -51,6 +61,9 @@ import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Eudaldo Alonso
@@ -111,6 +124,58 @@ public class FragmentEntryLinkUtil {
 			fragmentCollectionContributorTracker.getFragmentEntries(locale);
 
 		return fragmentEntries.get(fragmentEntryKey);
+	}
+
+	public static String getFragmentEntryLinkContent(
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse,
+		InfoItemServiceTracker infoItemServiceTracker,
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem,
+		FragmentRendererContext fragmentRendererContext,
+		FragmentRendererController fragmentRendererController) {
+
+		try {
+			httpServletRequest.setAttribute(
+				InfoDisplayWebKeys.INFO_FORM,
+				InfoFormUtil.getInfoForm(
+					formStyledLayoutStructureItem, infoItemServiceTracker));
+
+			return fragmentRendererController.render(
+				fragmentRendererContext, httpServletRequest,
+				httpServletResponse);
+		}
+		finally {
+			httpServletRequest.removeAttribute(InfoDisplayWebKeys.INFO_FORM);
+		}
+	}
+
+	public static String getFragmentEntryLinkContent(
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
+			InfoItemServiceTracker infoItemServiceTracker,
+			FragmentEntryLink fragmentEntryLink,
+			FragmentRendererContext fragmentRendererContext,
+			FragmentRendererController fragmentRendererController,
+			long segmentsExperienceId)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		LayoutStructure layoutStructure =
+			LayoutStructureUtil.getLayoutStructure(
+				themeDisplay.getScopeGroupId(), themeDisplay.getPlid(),
+				segmentsExperienceId);
+
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem =
+			_getFormStyledLayoutStructureItem(
+				fragmentEntryLink, layoutStructure);
+
+		return getFragmentEntryLinkContent(
+			httpServletRequest, httpServletResponse, infoItemServiceTracker,
+			formStyledLayoutStructureItem, fragmentRendererContext,
+			fragmentRendererController);
 	}
 
 	public static JSONObject getFragmentEntryLinkJSONObject(
@@ -242,6 +307,28 @@ public class FragmentEntryLinkUtil {
 		finally {
 			themeDisplay.setIsolated(isolated);
 		}
+	}
+
+	private static FormStyledLayoutStructureItem
+		_getFormStyledLayoutStructureItem(
+			FragmentEntryLink fragmentEntryLink,
+			LayoutStructure layoutStructure) {
+
+		FragmentStyledLayoutStructureItem fragmentStyledLayoutStructureItem =
+			(FragmentStyledLayoutStructureItem)
+				layoutStructure.getLayoutStructureItemByFragmentEntryLinkId(
+					fragmentEntryLink.getFragmentEntryLinkId());
+
+		LayoutStructureItem layoutStructureItem =
+			LayoutStructureItemUtil.getAncestor(
+				fragmentStyledLayoutStructureItem.getItemId(),
+				LayoutDataItemTypeConstants.TYPE_FORM, layoutStructure);
+
+		if (!(layoutStructureItem instanceof FormStyledLayoutStructureItem)) {
+			return null;
+		}
+
+		return (FormStyledLayoutStructureItem)layoutStructureItem;
 	}
 
 	private static FragmentEntry _getFragmentEntry(
