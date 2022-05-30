@@ -20,11 +20,15 @@ import com.liferay.client.extension.service.ClientExtensionEntryLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.client.extension.ThemeCSSURLs;
 import com.liferay.portal.kernel.client.extension.ThemeClientExtensions;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PropertiesUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
@@ -67,6 +71,18 @@ public class ThemeClientExtensionsImpl implements ThemeClientExtensions {
 					themeDisplay.getThemeId())) {
 
 				return clientExtensionEntry.getThemeFaviconURL();
+			}
+		}
+
+		Layout layout = themeDisplay.getLayout();
+
+		if ((layout != null) &&
+			GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-153902"))) {
+
+			String favicon = layout.getFavicon();
+
+			if (Validator.isNotNull(favicon)) {
+				return favicon;
 			}
 		}
 
