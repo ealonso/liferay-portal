@@ -62,24 +62,25 @@ public class ClientExtensionEntryTable
 	public final Column<ClientExtensionEntryTable, Date> modifiedDate =
 		createColumn(
 			"modifiedDate", Date.class, Types.TIMESTAMP, Column.FLAG_DEFAULT);
-	public final Column<ClientExtensionEntryTable, Clob> customElementCSSURLs =
-		createColumn(
-			"customElementCSSURLs", Clob.class, Types.CLOB,
+	public final Column<ClientExtensionEntryTable, String>
+		customElementCSSURLs = createColumn(
+			"customElementCSSURLs", String.class, Types.VARCHAR,
 			Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, String>
 		customElementHTMLElementName = createColumn(
 			"customElementHTMLElementName", String.class, Types.VARCHAR,
 			Column.FLAG_DEFAULT);
-	public final Column<ClientExtensionEntryTable, Clob> customElementURLs =
+	public final Column<ClientExtensionEntryTable, String> customElementURLs =
 		createColumn(
-			"customElementURLs", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
+			"customElementURLs", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, Boolean>
 		customElementUseESM = createColumn(
 			"customElementUseESM", Boolean.class, Types.BOOLEAN,
 			Column.FLAG_DEFAULT);
-	public final Column<ClientExtensionEntryTable, Clob> description =
+	public final Column<ClientExtensionEntryTable, String> description =
 		createColumn(
-			"description", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
+			"description", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, String> friendlyURLMapping =
 		createColumn(
 			"friendlyURLMapping", String.class, Types.VARCHAR,
@@ -96,11 +97,27 @@ public class ClientExtensionEntryTable
 		createColumn(
 			"portletCategoryName", String.class, Types.VARCHAR,
 			Column.FLAG_DEFAULT);
-	public final Column<ClientExtensionEntryTable, Clob> properties =
-		createColumn("properties", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> properties =
+		createColumn(
+			"properties", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, String> sourceCodeURL =
 		createColumn(
 			"sourceCodeURL", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeCSSMainURL =
+		createColumn(
+			"themeCSSMainURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeCSSPortalURL =
+		createColumn(
+			"themeCSSPortalURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeFaviconURL =
+		createColumn(
+			"themeFaviconURL", String.class, Types.VARCHAR,
+			Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, String> themeJSURLs =
+		createColumn(
+			"themeJSURLs", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, String> type = createColumn(
 		"type_", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, Clob> typeSettings =

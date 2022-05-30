@@ -111,6 +111,25 @@ public interface ClientExtensionEntryLocalService
 			String properties, String sourceCodeURL)
 		throws PortalException;
 
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeFaviconURL)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry addThemeJSClientExtensionEntry(
+			long userId, String description, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String themeJSURLs)
+		throws PortalException;
+
 	/**
 	 * Creates a new client extension entry with the primary key. Does not add the client extension entry to the database.
 	 *
@@ -296,6 +315,10 @@ public interface ClientExtensionEntryLocalService
 	public List<ClientExtensionEntry> getClientExtensionEntries(
 		int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<ClientExtensionEntry> getClientExtensionEntries(
+		long companyId, String type);
+
 	/**
 	 * Returns the number of client extension entries.
 	 *
@@ -412,6 +435,28 @@ public interface ClientExtensionEntryLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public ClientExtensionEntry updateStatus(
 			long userId, long clientExtensionEntryId, int status)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry updateThemeJSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
 		throws PortalException;
 
 }

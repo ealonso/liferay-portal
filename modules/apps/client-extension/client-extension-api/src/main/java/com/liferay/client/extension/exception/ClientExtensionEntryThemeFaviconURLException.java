@@ -11,20 +11,28 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+package com.liferay.client.extension.exception;
 
-package com.liferay.client.extension.uad.constants;
+import com.liferay.portal.kernel.exception.PortalException;
 
 /**
  * @author Brian Wing Shun Chan
- * @generated
  */
-public class ClientExtensionUADConstants {
+public class ClientExtensionEntryThemeFaviconURLException extends PortalException {
 
-	public static final String[] USER_ID_FIELD_NAMES_CLIENT_EXTENSION_ENTRY = {
-		"userId", "statusByUserId"
-	};
+	public ClientExtensionEntryThemeFaviconURLException() {
+	}
 
-	public static final String[]
-		USER_ID_FIELD_NAMES_CLIENT_EXTENSION_ENTRY_REL = {"userId"};
+	public ClientExtensionEntryThemeFaviconURLException(String msg) {
+		super(msg);
+	}
+
+	public ClientExtensionEntryThemeFaviconURLException(String msg, Throwable throwable) {
+		super(msg, throwable);
+	}
+
+	public ClientExtensionEntryThemeFaviconURLException(Throwable throwable) {
+		super(throwable);
+	}
 
 }

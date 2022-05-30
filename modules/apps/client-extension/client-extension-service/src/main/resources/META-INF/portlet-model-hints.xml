@@ -11,46 +11,22 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="customElementCSSURLs" type="String">
-			<hint-collection name="CLOB" />
-		</field>
-		<field name="customElementHTMLElementName" type="String">
-			<hint name="max-length">255</hint>
-		</field>
-		<field name="customElementURLs" type="String">
-			<hint-collection name="CLOB" />
-		</field>
+		<field name="customElementCSSURLs" type="String" />
+		<field name="customElementHTMLElementName" type="String" />
+		<field name="customElementURLs" type="String" />
 		<field name="customElementUseESM" type="boolean" />
-		<field name="description" type="String">
-			<hint-collection name="CLOB" />
-			<sanitize content-type="text/html" modes="ALL" />
-		</field>
+		<field name="description" type="String" />
 		<field name="friendlyURLMapping" type="String" />
-		<field name="iFrameURL" type="String">
-			<hint-collection name="URL" />
-			<hint name="method-name">IFrameURL</hint>
-		</field>
+		<field name="iFrameURL" type="String" />
 		<field name="instanceable" type="boolean" />
 		<field localized="true" name="name" type="String" />
 		<field name="portletCategoryName" type="String" />
-		<field name="properties" type="String">
-			<hint-collection name="CLOB" />
-		</field>
-		<field name="sourceCodeURL" type="String">
-			<hint-collection name="URL" />
-		</field>
-		<field name="themeCSSMainURL" type="String">
-			<hint-collection name="URL" />
-		</field>
-		<field name="themeCSSPortalURL" type="String">
-			<hint-collection name="URL" />
-		</field>
-		<field name="themeFaviconURL" type="String">
-			<hint-collection name="URL" />
-		</field>
-		<field name="themeJSURLs" type="String">
-			<hint-collection name="CLOB" />
-		</field>
+		<field name="properties" type="String" />
+		<field name="sourceCodeURL" type="String" />
+		<field name="themeCSSMainURL" type="String" />
+		<field name="themeCSSPortalURL" type="String" />
+		<field name="themeFaviconURL" type="String" />
+		<field name="themeJSURLs" type="String" />
 		<field name="type" type="String" />
 		<field name="typeSettings" type="String">
 			<hint-collection name="CLOB" />
@@ -59,5 +35,20 @@
 		<field name="statusByUserId" type="long" />
 		<field name="statusByUserName" type="String" />
 		<field name="statusDate" type="Date" />
+	</model>
+	<model name="com.liferay.client.extension.model.ClientExtensionEntryRel">
+		<field name="mvccVersion" type="long" />
+		<field name="uuid" type="String" />
+		<field name="externalReferenceCode" type="String" />
+		<field name="clientExtensionEntryRelId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="classNameId" type="long" />
+		<field name="classPK" type="long" />
+		<field name="clientExtensionName" type="String" />
+		<field name="type" type="String" />
 	</model>
 </model-hints>

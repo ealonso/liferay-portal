@@ -109,6 +109,40 @@ public class ClientExtensionEntryLocalServiceUtil {
 			nameMap, portletCategoryName, properties, sourceCodeURL);
 	}
 
+	public static ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			long userId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		return getService().addThemeCSSClientExtensionEntry(
+			userId, description, nameMap, properties, sourceCodeURL,
+			themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	public static ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			long userId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		return getService().addThemeFaviconClientExtensionEntry(
+			userId, description, nameMap, properties, sourceCodeURL,
+			themeFaviconURL);
+	}
+
+	public static ClientExtensionEntry addThemeJSClientExtensionEntry(
+			long userId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
+		throws PortalException {
+
+		return getService().addThemeJSClientExtensionEntry(
+			userId, description, nameMap, properties, sourceCodeURL,
+			themeJSURLs);
+	}
+
 	/**
 	 * Creates a new client extension entry with the primary key. Does not add the client extension entry to the database.
 	 *
@@ -338,6 +372,12 @@ public class ClientExtensionEntryLocalServiceUtil {
 		return getService().getClientExtensionEntries(start, end);
 	}
 
+	public static List<ClientExtensionEntry> getClientExtensionEntries(
+		long companyId, String type) {
+
+		return getService().getClientExtensionEntries(companyId, type);
+	}
+
 	/**
 	 * Returns the number of client extension entries.
 	 *
@@ -498,6 +538,40 @@ public class ClientExtensionEntryLocalServiceUtil {
 
 		return getService().updateStatus(
 			userId, clientExtensionEntryId, status);
+	}
+
+	public static ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException {
+
+		return getService().updateThemeCSSClientExtensionEntry(
+			userId, clientExtensionEntryId, description, nameMap, properties,
+			sourceCodeURL, themeCSSMainURL, themeCSSPortalURL);
+	}
+
+	public static ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException {
+
+		return getService().updateThemeFaviconClientExtensionEntry(
+			userId, clientExtensionEntryId, description, nameMap, properties,
+			sourceCodeURL, themeFaviconURL);
+	}
+
+	public static ClientExtensionEntry updateThemeJSClientExtensionEntry(
+			long userId, long clientExtensionEntryId, String description,
+			Map<java.util.Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
+		throws PortalException {
+
+		return getService().updateThemeJSClientExtensionEntry(
+			userId, clientExtensionEntryId, description, nameMap, properties,
+			sourceCodeURL, themeJSURLs);
 	}
 
 	public static ClientExtensionEntryLocalService getService() {

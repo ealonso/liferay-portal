@@ -503,6 +503,66 @@ public interface ClientExtensionEntryModel
 	public void setSourceCodeURL(String sourceCodeURL);
 
 	/**
+	 * Returns the theme css main url of this client extension entry.
+	 *
+	 * @return the theme css main url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeCSSMainURL();
+
+	/**
+	 * Sets the theme css main url of this client extension entry.
+	 *
+	 * @param themeCSSMainURL the theme css main url of this client extension entry
+	 */
+	public void setThemeCSSMainURL(String themeCSSMainURL);
+
+	/**
+	 * Returns the theme css portal url of this client extension entry.
+	 *
+	 * @return the theme css portal url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeCSSPortalURL();
+
+	/**
+	 * Sets the theme css portal url of this client extension entry.
+	 *
+	 * @param themeCSSPortalURL the theme css portal url of this client extension entry
+	 */
+	public void setThemeCSSPortalURL(String themeCSSPortalURL);
+
+	/**
+	 * Returns the theme favicon url of this client extension entry.
+	 *
+	 * @return the theme favicon url of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeFaviconURL();
+
+	/**
+	 * Sets the theme favicon url of this client extension entry.
+	 *
+	 * @param themeFaviconURL the theme favicon url of this client extension entry
+	 */
+	public void setThemeFaviconURL(String themeFaviconURL);
+
+	/**
+	 * Returns the theme jsur ls of this client extension entry.
+	 *
+	 * @return the theme jsur ls of this client extension entry
+	 */
+	@AutoEscape
+	public String getThemeJSURLs();
+
+	/**
+	 * Sets the theme jsur ls of this client extension entry.
+	 *
+	 * @param themeJSURLs the theme jsur ls of this client extension entry
+	 */
+	public void setThemeJSURLs(String themeJSURLs);
+
+	/**
 	 * Returns the type of this client extension entry.
 	 *
 	 * @return the type of this client extension entry

@@ -67,6 +67,10 @@ public class ClientExtensionEntryWrapper
 		attributes.put("portletCategoryName", getPortletCategoryName());
 		attributes.put("properties", getProperties());
 		attributes.put("sourceCodeURL", getSourceCodeURL());
+		attributes.put("themeCSSMainURL", getThemeCSSMainURL());
+		attributes.put("themeCSSPortalURL", getThemeCSSPortalURL());
+		attributes.put("themeFaviconURL", getThemeFaviconURL());
+		attributes.put("themeJSURLs", getThemeJSURLs());
 		attributes.put("type", getType());
 		attributes.put("typeSettings", getTypeSettings());
 		attributes.put("status", getStatus());
@@ -210,6 +214,30 @@ public class ClientExtensionEntryWrapper
 
 		if (sourceCodeURL != null) {
 			setSourceCodeURL(sourceCodeURL);
+		}
+
+		String themeCSSMainURL = (String)attributes.get("themeCSSMainURL");
+
+		if (themeCSSMainURL != null) {
+			setThemeCSSMainURL(themeCSSMainURL);
+		}
+
+		String themeCSSPortalURL = (String)attributes.get("themeCSSPortalURL");
+
+		if (themeCSSPortalURL != null) {
+			setThemeCSSPortalURL(themeCSSPortalURL);
+		}
+
+		String themeFaviconURL = (String)attributes.get("themeFaviconURL");
+
+		if (themeFaviconURL != null) {
+			setThemeFaviconURL(themeFaviconURL);
+		}
+
+		String themeJSURLs = (String)attributes.get("themeJSURLs");
+
+		if (themeJSURLs != null) {
+			setThemeJSURLs(themeJSURLs);
 		}
 
 		String type = (String)attributes.get("type");
@@ -598,6 +626,46 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public Date getStatusDate() {
 		return model.getStatusDate();
+	}
+
+	/**
+	 * Returns the theme css main url of this client extension entry.
+	 *
+	 * @return the theme css main url of this client extension entry
+	 */
+	@Override
+	public String getThemeCSSMainURL() {
+		return model.getThemeCSSMainURL();
+	}
+
+	/**
+	 * Returns the theme css portal url of this client extension entry.
+	 *
+	 * @return the theme css portal url of this client extension entry
+	 */
+	@Override
+	public String getThemeCSSPortalURL() {
+		return model.getThemeCSSPortalURL();
+	}
+
+	/**
+	 * Returns the theme favicon url of this client extension entry.
+	 *
+	 * @return the theme favicon url of this client extension entry
+	 */
+	@Override
+	public String getThemeFaviconURL() {
+		return model.getThemeFaviconURL();
+	}
+
+	/**
+	 * Returns the theme jsur ls of this client extension entry.
+	 *
+	 * @return the theme jsur ls of this client extension entry
+	 */
+	@Override
+	public String getThemeJSURLs() {
+		return model.getThemeJSURLs();
 	}
 
 	/**
@@ -1093,6 +1161,46 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public void setStatusDate(Date statusDate) {
 		model.setStatusDate(statusDate);
+	}
+
+	/**
+	 * Sets the theme css main url of this client extension entry.
+	 *
+	 * @param themeCSSMainURL the theme css main url of this client extension entry
+	 */
+	@Override
+	public void setThemeCSSMainURL(String themeCSSMainURL) {
+		model.setThemeCSSMainURL(themeCSSMainURL);
+	}
+
+	/**
+	 * Sets the theme css portal url of this client extension entry.
+	 *
+	 * @param themeCSSPortalURL the theme css portal url of this client extension entry
+	 */
+	@Override
+	public void setThemeCSSPortalURL(String themeCSSPortalURL) {
+		model.setThemeCSSPortalURL(themeCSSPortalURL);
+	}
+
+	/**
+	 * Sets the theme favicon url of this client extension entry.
+	 *
+	 * @param themeFaviconURL the theme favicon url of this client extension entry
+	 */
+	@Override
+	public void setThemeFaviconURL(String themeFaviconURL) {
+		model.setThemeFaviconURL(themeFaviconURL);
+	}
+
+	/**
+	 * Sets the theme jsur ls of this client extension entry.
+	 *
+	 * @param themeJSURLs the theme jsur ls of this client extension entry
+	 */
+	@Override
+	public void setThemeJSURLs(String themeJSURLs) {
+		model.setThemeJSURLs(themeJSURLs);
 	}
 
 	/**

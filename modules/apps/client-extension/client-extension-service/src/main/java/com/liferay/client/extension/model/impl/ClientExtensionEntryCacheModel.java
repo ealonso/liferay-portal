@@ -78,7 +78,7 @@ public class ClientExtensionEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(55);
+		StringBundler sb = new StringBundler(63);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -122,6 +122,14 @@ public class ClientExtensionEntryCacheModel
 		sb.append(properties);
 		sb.append(", sourceCodeURL=");
 		sb.append(sourceCodeURL);
+		sb.append(", themeCSSMainURL=");
+		sb.append(themeCSSMainURL);
+		sb.append(", themeCSSPortalURL=");
+		sb.append(themeCSSPortalURL);
+		sb.append(", themeFaviconURL=");
+		sb.append(themeFaviconURL);
+		sb.append(", themeJSURLs=");
+		sb.append(themeJSURLs);
 		sb.append(", type=");
 		sb.append(type);
 		sb.append(", typeSettings=");
@@ -264,6 +272,34 @@ public class ClientExtensionEntryCacheModel
 			clientExtensionEntryImpl.setSourceCodeURL(sourceCodeURL);
 		}
 
+		if (themeCSSMainURL == null) {
+			clientExtensionEntryImpl.setThemeCSSMainURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeCSSMainURL(themeCSSMainURL);
+		}
+
+		if (themeCSSPortalURL == null) {
+			clientExtensionEntryImpl.setThemeCSSPortalURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeCSSPortalURL(themeCSSPortalURL);
+		}
+
+		if (themeFaviconURL == null) {
+			clientExtensionEntryImpl.setThemeFaviconURL("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeFaviconURL(themeFaviconURL);
+		}
+
+		if (themeJSURLs == null) {
+			clientExtensionEntryImpl.setThemeJSURLs("");
+		}
+		else {
+			clientExtensionEntryImpl.setThemeJSURLs(themeJSURLs);
+		}
+
 		if (type == null) {
 			clientExtensionEntryImpl.setType("");
 		}
@@ -316,20 +352,24 @@ public class ClientExtensionEntryCacheModel
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
-		customElementCSSURLs = (String)objectInput.readObject();
+		customElementCSSURLs = objectInput.readUTF();
 		customElementHTMLElementName = objectInput.readUTF();
-		customElementURLs = (String)objectInput.readObject();
+		customElementURLs = objectInput.readUTF();
 
 		customElementUseESM = objectInput.readBoolean();
-		description = (String)objectInput.readObject();
+		description = objectInput.readUTF();
 		friendlyURLMapping = objectInput.readUTF();
 		iFrameURL = objectInput.readUTF();
 
 		instanceable = objectInput.readBoolean();
 		name = objectInput.readUTF();
 		portletCategoryName = objectInput.readUTF();
-		properties = (String)objectInput.readObject();
+		properties = objectInput.readUTF();
 		sourceCodeURL = objectInput.readUTF();
+		themeCSSMainURL = objectInput.readUTF();
+		themeCSSPortalURL = objectInput.readUTF();
+		themeFaviconURL = objectInput.readUTF();
+		themeJSURLs = objectInput.readUTF();
 		type = objectInput.readUTF();
 		typeSettings = (String)objectInput.readObject();
 
@@ -375,10 +415,10 @@ public class ClientExtensionEntryCacheModel
 		objectOutput.writeLong(modifiedDate);
 
 		if (customElementCSSURLs == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(customElementCSSURLs);
+			objectOutput.writeUTF(customElementCSSURLs);
 		}
 
 		if (customElementHTMLElementName == null) {
@@ -389,19 +429,19 @@ public class ClientExtensionEntryCacheModel
 		}
 
 		if (customElementURLs == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(customElementURLs);
+			objectOutput.writeUTF(customElementURLs);
 		}
 
 		objectOutput.writeBoolean(customElementUseESM);
 
 		if (description == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(description);
+			objectOutput.writeUTF(description);
 		}
 
 		if (friendlyURLMapping == null) {
@@ -435,10 +475,10 @@ public class ClientExtensionEntryCacheModel
 		}
 
 		if (properties == null) {
-			objectOutput.writeObject("");
+			objectOutput.writeUTF("");
 		}
 		else {
-			objectOutput.writeObject(properties);
+			objectOutput.writeUTF(properties);
 		}
 
 		if (sourceCodeURL == null) {
@@ -446,6 +486,34 @@ public class ClientExtensionEntryCacheModel
 		}
 		else {
 			objectOutput.writeUTF(sourceCodeURL);
+		}
+
+		if (themeCSSMainURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeCSSMainURL);
+		}
+
+		if (themeCSSPortalURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeCSSPortalURL);
+		}
+
+		if (themeFaviconURL == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeFaviconURL);
+		}
+
+		if (themeJSURLs == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(themeJSURLs);
 		}
 
 		if (type == null) {
@@ -497,6 +565,10 @@ public class ClientExtensionEntryCacheModel
 	public String portletCategoryName;
 	public String properties;
 	public String sourceCodeURL;
+	public String themeCSSMainURL;
+	public String themeCSSPortalURL;
+	public String themeFaviconURL;
+	public String themeJSURLs;
 	public String type;
 	public String typeSettings;
 	public int status;

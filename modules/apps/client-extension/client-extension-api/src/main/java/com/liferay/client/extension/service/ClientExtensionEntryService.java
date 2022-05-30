@@ -67,6 +67,22 @@ public interface ClientExtensionEntryService extends BaseService {
 			String portletCategoryName, String properties, String sourceCodeURL)
 		throws PortalException;
 
+	public ClientExtensionEntry addThemeCSSClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException;
+
+	public ClientExtensionEntry addThemeFaviconClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException;
+
+	public ClientExtensionEntry addThemeJSClientExtensionEntry(
+			String description, Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
+		throws PortalException;
+
 	public ClientExtensionEntry deleteClientExtensionEntry(
 			long clientExtensionEntryId)
 		throws PortalException;
@@ -96,6 +112,25 @@ public interface ClientExtensionEntryService extends BaseService {
 			String friendlyURLMapping, String iFrameURL,
 			Map<Locale, String> nameMap, String portletCategoryName,
 			String properties, String sourceCodeURL)
+		throws PortalException;
+
+	public ClientExtensionEntry updateThemeCSSClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeCSSMainURL,
+			String themeCSSPortalURL)
+		throws PortalException;
+
+	public ClientExtensionEntry updateThemeFaviconClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeFaviconURL)
+		throws PortalException;
+
+	public ClientExtensionEntry updateThemeJSClientExtensionEntry(
+			long clientExtensionEntryId, String description,
+			Map<Locale, String> nameMap, String properties,
+			String sourceCodeURL, String themeJSURLs)
 		throws PortalException;
 
 }

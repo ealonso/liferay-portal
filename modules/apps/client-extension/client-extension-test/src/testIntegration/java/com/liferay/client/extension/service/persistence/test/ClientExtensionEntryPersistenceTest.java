@@ -174,6 +174,17 @@ public class ClientExtensionEntryPersistenceTest {
 
 		newClientExtensionEntry.setSourceCodeURL(RandomTestUtil.randomString());
 
+		newClientExtensionEntry.setThemeCSSMainURL(
+			RandomTestUtil.randomString());
+
+		newClientExtensionEntry.setThemeCSSPortalURL(
+			RandomTestUtil.randomString());
+
+		newClientExtensionEntry.setThemeFaviconURL(
+			RandomTestUtil.randomString());
+
+		newClientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
+
 		newClientExtensionEntry.setType(RandomTestUtil.randomString());
 
 		newClientExtensionEntry.setTypeSettings(RandomTestUtil.randomString());
@@ -260,6 +271,18 @@ public class ClientExtensionEntryPersistenceTest {
 			existingClientExtensionEntry.getSourceCodeURL(),
 			newClientExtensionEntry.getSourceCodeURL());
 		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeCSSMainURL(),
+			newClientExtensionEntry.getThemeCSSMainURL());
+		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeCSSPortalURL(),
+			newClientExtensionEntry.getThemeCSSPortalURL());
+		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeFaviconURL(),
+			newClientExtensionEntry.getThemeFaviconURL());
+		Assert.assertEquals(
+			existingClientExtensionEntry.getThemeJSURLs(),
+			newClientExtensionEntry.getThemeJSURLs());
+		Assert.assertEquals(
 			existingClientExtensionEntry.getType(),
 			newClientExtensionEntry.getType());
 		Assert.assertEquals(
@@ -296,6 +319,15 @@ public class ClientExtensionEntryPersistenceTest {
 		_persistence.countByUuid_C("null", 0L);
 
 		_persistence.countByUuid_C((String)null, 0L);
+	}
+
+	@Test
+	public void testCountByC_T() throws Exception {
+		_persistence.countByC_T(RandomTestUtil.nextLong(), "");
+
+		_persistence.countByC_T(0L, "null");
+
+		_persistence.countByC_T(0L, (String)null);
 	}
 
 	@Test
@@ -338,10 +370,13 @@ public class ClientExtensionEntryPersistenceTest {
 			"ClientExtensionEntry", "mvccVersion", true, "uuid", true,
 			"externalReferenceCode", true, "clientExtensionEntryId", true,
 			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "customElementHTMLElementName", true,
-			"customElementUseESM", true, "friendlyURLMapping", true,
-			"iFrameURL", true, "instanceable", true, "name", true,
-			"portletCategoryName", true, "sourceCodeURL", true, "type", true,
+			true, "modifiedDate", true, "customElementCSSURLs", true,
+			"customElementHTMLElementName", true, "customElementURLs", true,
+			"customElementUseESM", true, "description", true,
+			"friendlyURLMapping", true, "iFrameURL", true, "instanceable", true,
+			"name", true, "portletCategoryName", true, "properties", true,
+			"sourceCodeURL", true, "themeCSSMainURL", true, "themeCSSPortalURL",
+			true, "themeFaviconURL", true, "themeJSURLs", true, "type", true,
 			"status", true, "statusByUserId", true, "statusByUserName", true,
 			"statusDate", true);
 	}
@@ -702,6 +737,15 @@ public class ClientExtensionEntryPersistenceTest {
 		clientExtensionEntry.setProperties(RandomTestUtil.randomString());
 
 		clientExtensionEntry.setSourceCodeURL(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeCSSMainURL(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeCSSPortalURL(
+			RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeFaviconURL(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setThemeJSURLs(RandomTestUtil.randomString());
 
 		clientExtensionEntry.setType(RandomTestUtil.randomString());
 
