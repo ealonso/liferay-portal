@@ -23,6 +23,8 @@ import com.liferay.exportimport.kernel.service.ExportImportLocalServiceUtil;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.client.extension.ThemeClientExtensionsUtil;
+import com.liferay.portal.kernel.client.extension.ThemeClientExtensions;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.exception.LayoutPermissionException;
@@ -1456,7 +1458,17 @@ public class ServicePreAction extends Action {
 		if ((layout != null) &&
 			GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-153902"))) {
 
-			themeDisplay.setFavicon(layout.getFavicon());
+			ThemeClientExtensions themeClientExtensions =
+				ThemeClientExtensionsUtil.getThemeClientExtensions();
+
+			String faviconURL = themeClientExtensions.getFaviconURL(
+				httpServletRequest);
+
+			if (Validator.isNull(faviconURL)) {
+				faviconURL = layout.getFavicon();
+			}
+
+			themeDisplay.setFavicon(faviconURL);
 		}
 
 		themeDisplay.setHubAction(hub.equals("0"));
