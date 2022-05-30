@@ -71,6 +71,10 @@ public class LayoutPageTemplateStructureUpgradeProcess extends UpgradeProcess {
 
 		Layout layout = _layoutLocalService.fetchLayout(classPK);
 
+		if (layout == null){
+			return;
+		}
+
 		long draftClassPK = 0;
 		long publishedClassPK = 0;
 
