@@ -69,29 +69,10 @@ public class LayoutPageTemplateStructureUpgradeProcess extends UpgradeProcess {
 			long userId)
 		throws Exception {
 
-		long defaultSegmentsExperienceId =
-			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
-				classPK);
-
-		if (defaultSegmentsExperienceId <= 0) {
-			User user = _userLocalService.fetchUser(userId);
-
-			if (user == null) {
-				userId = _userLocalService.getDefaultUserId(companyId);
-			}
-
-			SegmentsExperience defaultSegmentsExperience =
-				_segmentsExperienceLocalService.addDefaultSegmentsExperience(
-					userId, classPK, new ServiceContext());
-
-			defaultSegmentsExperienceId =
-				defaultSegmentsExperience.getSegmentsExperienceId();
-		}
+		Layout layout = _layoutLocalService.fetchLayout(classPK);
 
 		long draftClassPK = 0;
 		long publishedClassPK = 0;
-
-		Layout layout = _layoutLocalService.fetchLayout(classPK);
 
 		if (layout.isDraftLayout()) {
 			draftClassPK = layout.getPlid();
@@ -106,6 +87,25 @@ public class LayoutPageTemplateStructureUpgradeProcess extends UpgradeProcess {
 			}
 
 			publishedClassPK = layout.getPlid();
+		}
+
+		long defaultSegmentsExperienceId =
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				publishedClassPK);
+
+		if (defaultSegmentsExperienceId <= 0) {
+			User user = _userLocalService.fetchUser(userId);
+
+			if (user == null) {
+				userId = _userLocalService.getDefaultUserId(companyId);
+			}
+
+			SegmentsExperience defaultSegmentsExperience =
+				_segmentsExperienceLocalService.addDefaultSegmentsExperience(
+					userId, publishedClassPK, new ServiceContext());
+
+			defaultSegmentsExperienceId =
+				defaultSegmentsExperience.getSegmentsExperienceId();
 		}
 
 		_updateFragmentEntryLinks(
