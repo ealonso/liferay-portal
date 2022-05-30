@@ -38,6 +38,7 @@ PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 <aui:model-context bean="<%= selLayout %>" model="<%= Layout.class %>" />
 
 <aui:input name="devices" type="hidden" value="regular" />
+<aui:input name="faviconClientExtensionEntryName" type="hidden" />
 <aui:input name="faviconFileEntryId" type="hidden" />
 <aui:input name="masterLayoutPlid" type="hidden" />
 <aui:input name="styleBookEntryId" type="hidden" />
