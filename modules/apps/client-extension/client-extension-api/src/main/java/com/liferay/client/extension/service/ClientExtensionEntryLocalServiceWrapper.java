@@ -391,6 +391,16 @@ public class ClientExtensionEntryLocalServiceWrapper
 			start, end);
 	}
 
+	@Override
+	public java.util.List
+		<com.liferay.client.extension.model.ClientExtensionEntry>
+			getClientExtensionEntriesByType(
+				long companyId, String type, int start, int end) {
+
+		return _clientExtensionEntryLocalService.
+			getClientExtensionEntriesByType(companyId, type, start, end);
+	}
+
 	/**
 	 * Returns the number of client extension entries.
 	 *

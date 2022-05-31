@@ -296,6 +296,10 @@ public interface ClientExtensionEntryLocalService
 	public List<ClientExtensionEntry> getClientExtensionEntries(
 		int start, int end);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<ClientExtensionEntry> getClientExtensionEntriesByType(
+		long companyId, String type, int start, int end);
+
 	/**
 	 * Returns the number of client extension entries.
 	 *
