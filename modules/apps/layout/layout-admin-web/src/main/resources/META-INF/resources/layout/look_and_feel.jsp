@@ -39,6 +39,8 @@ PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 
 <aui:input name="devices" type="hidden" value="regular" />
 <aui:input name="styleBookEntryId" type="hidden" />
+<aui:input name="faviconClientExtensionEntryId" type="hidden" />
+<aui:input name="faviconClientExtensionEntryType" type="hidden" />
 <aui:input name="faviconFileEntryId" type="hidden" />
 <aui:input name="masterLayoutPlid" type="hidden" />
 
@@ -192,6 +194,10 @@ else {
 		<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
 	</div>
 </clay:sheet-section>
+
+<c:if test='<%= GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-153457")) %>'>
+	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />
+</c:if>
 
 <aui:script>
 	Liferay.Util.toggleRadio(

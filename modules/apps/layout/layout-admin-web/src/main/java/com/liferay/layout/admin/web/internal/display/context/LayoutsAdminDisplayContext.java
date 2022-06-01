@@ -18,6 +18,9 @@ import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.list.model.AssetListEntry;
+import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
+import com.liferay.client.extension.item.selector.ClientExtensionItemSelectorReturnType;
+import com.liferay.client.extension.item.selector.criterion.ClientExtensionItemSelectorCriterion;
 import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
@@ -79,6 +82,7 @@ import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -89,6 +93,7 @@ import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portal.util.RobotsUtil;
 import com.liferay.portlet.layoutsadmin.display.context.GroupDisplayContextHelper;
@@ -103,6 +108,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
@@ -506,9 +512,28 @@ public class LayoutsAdminDisplayContext {
 		itemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new FileEntryItemSelectorReturnType());
 
+		if (!GetterUtil.getBoolean(PropsUtil.get("feature.flag.LPS-153457"))) {
+			PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
+				RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
+				getSelectFaviconEventName(), itemSelectorCriterion);
+
+			return itemSelectorURL.toString();
+		}
+
+		ClientExtensionItemSelectorCriterion
+			clientExtensionItemSelectorCriterion =
+				new ClientExtensionItemSelectorCriterion();
+
+		clientExtensionItemSelectorCriterion.setType(
+			ClientExtensionEntryConstants.TYPE_THEME_FAVICON);
+
+		clientExtensionItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			new ClientExtensionItemSelectorReturnType());
+
 		PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
 			RequestBackedPortletURLFactoryUtil.create(httpServletRequest),
-			getSelectFaviconEventName(), itemSelectorCriterion);
+			getSelectFaviconEventName(), itemSelectorCriterion,
+			clientExtensionItemSelectorCriterion);
 
 		return itemSelectorURL.toString();
 	}
@@ -974,6 +999,10 @@ public class LayoutsAdminDisplayContext {
 		).buildPortletURL();
 	}
 
+	public String getSe() {
+		return _liferayPortletResponse.getNamespace() + "selectImage";
+	}
+
 	public String getSelectFaviconEventName() {
 		return _liferayPortletResponse.getNamespace() + "selectImage";
 	}
@@ -1186,6 +1215,38 @@ public class LayoutsAdminDisplayContext {
 		_tabs1 = ParamUtil.getString(_liferayPortletRequest, "tabs1", "pages");
 
 		return _tabs1;
+	}
+
+	public Map<String, Object> getThemeCSSReplacementSelectorProps() {
+		String selectThemeCSSClientExtensionEventName =
+			"selectThemeCSSClientExtension";
+
+		return HashMapBuilder.<String, Object>put(
+			"selectThemeCSSClientExtensionEventName",
+			selectThemeCSSClientExtensionEventName
+		).put(
+			"selectThemeCSSClientExtensionURL",
+			() -> {
+				ClientExtensionItemSelectorCriterion
+					clientExtensionItemSelectorCriterion =
+						new ClientExtensionItemSelectorCriterion();
+
+				clientExtensionItemSelectorCriterion.setType(
+					ClientExtensionEntryConstants.TYPE_THEME_CSS);
+
+				clientExtensionItemSelectorCriterion.
+					setDesiredItemSelectorReturnTypes(
+						new ClientExtensionItemSelectorReturnType());
+
+				PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
+					RequestBackedPortletURLFactoryUtil.create(
+						httpServletRequest),
+					selectThemeCSSClientExtensionEventName,
+					clientExtensionItemSelectorCriterion);
+
+				return itemSelectorURL.toString();
+			}
+		).build();
 	}
 
 	public String getThemeFavicon(Theme theme) {
