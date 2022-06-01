@@ -19,7 +19,9 @@ import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.model.ClientExtensionEntryRel;
 import com.liferay.client.extension.service.ClientExtensionEntryLocalService;
 import com.liferay.client.extension.service.ClientExtensionEntryRelLocalService;
+import com.liferay.client.extension.type.CETThemeCSS;
 import com.liferay.client.extension.type.CETThemeFavicon;
+import com.liferay.client.extension.type.CETThemeJS;
 import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.portal.kernel.events.Action;
@@ -60,9 +62,45 @@ public class ClientExtensionsServicePreAction extends Action {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (layout != null) {
-			themeDisplay.setFavicon(_getFaviconURL(layout));
+		if (layout == null) {
+			return;
 		}
+
+		themeDisplay.setFavicon(_getFaviconURL(layout));
+
+		CETThemeCSS cetThemeCSS = _getCETThemeCSS(layout);
+
+		if (cetThemeCSS != null) {
+			themeDisplay.setClayCSSURL(cetThemeCSS.getClayURL());
+			themeDisplay.setMainCSSURL(cetThemeCSS.getMainURL());
+		}
+
+		CETThemeJS cetThemeJS = _getCETThemeJS(layout);
+
+		if (cetThemeJS != null) {
+			themeDisplay.setMainJSURL(cetThemeJS.getURL());
+		}
+	}
+
+	private CETThemeCSS _getCETThemeCSS(Layout layout) {
+		ClientExtensionEntry clientExtensionEntry = _getClientExtensionEntry(
+			_portal.getClassNameId(Layout.class), layout.getPlid(),
+			ClientExtensionEntryConstants.TYPE_THEME_CSS);
+
+		if (clientExtensionEntry == null) {
+			LayoutSet layoutSet = layout.getLayoutSet();
+
+			clientExtensionEntry = _getClientExtensionEntry(
+				_portal.getClassNameId(LayoutSet.class),
+				layoutSet.getLayoutSetId(),
+				ClientExtensionEntryConstants.TYPE_THEME_CSS);
+		}
+
+		if (clientExtensionEntry != null) {
+			return _cetFactory.cetThemeCSS(clientExtensionEntry);
+		}
+
+		return null;
 	}
 
 	private String _getCETThemeFaviconURL(long classNameId, long classPK) {
@@ -78,6 +116,27 @@ public class ClientExtensionsServicePreAction extends Action {
 			clientExtensionEntry);
 
 		return cetThemeFavicon.getURL();
+	}
+
+	private CETThemeJS _getCETThemeJS(Layout layout) {
+		ClientExtensionEntry clientExtensionEntry = _getClientExtensionEntry(
+			_portal.getClassNameId(Layout.class), layout.getPlid(),
+			ClientExtensionEntryConstants.TYPE_THEME_JS);
+
+		if (clientExtensionEntry == null) {
+			LayoutSet layoutSet = layout.getLayoutSet();
+
+			clientExtensionEntry = _getClientExtensionEntry(
+				_portal.getClassNameId(LayoutSet.class),
+				layoutSet.getLayoutSetId(),
+				ClientExtensionEntryConstants.TYPE_THEME_JS);
+		}
+
+		if (clientExtensionEntry != null) {
+			return _cetFactory.cetThemeJS(clientExtensionEntry);
+		}
+
+		return null;
 	}
 
 	private ClientExtensionEntry _getClientExtensionEntry(
