@@ -539,12 +539,6 @@ public class LayoutImpl extends LayoutBaseImpl {
 			return _favicon;
 		}
 
-		if (getFaviconFileEntryId() == 0) {
-			_favicon = _getInheritedFavicon();
-
-			return _favicon;
-		}
-
 		try {
 			FileEntry fileEntry = DLAppServiceUtil.getFileEntry(
 				getFaviconFileEntryId());
@@ -564,8 +558,6 @@ public class LayoutImpl extends LayoutBaseImpl {
 				_log.debug(portalException);
 			}
 		}
-
-		_favicon = _getInheritedFavicon();
 
 		return _favicon;
 	}
@@ -1465,18 +1457,6 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 			_friendlyURLKeywords[i] = StringUtil.toLowerCase(keyword);
 		}
-	}
-
-	private String _getInheritedFavicon() {
-		Layout masterLayout = _getMasterLayout();
-
-		if (masterLayout != null) {
-			return masterLayout.getFavicon();
-		}
-
-		LayoutSet layoutSet = getLayoutSet();
-
-		return layoutSet.getFavicon();
 	}
 
 	private Set<String> _getLayoutPortletIds() {
