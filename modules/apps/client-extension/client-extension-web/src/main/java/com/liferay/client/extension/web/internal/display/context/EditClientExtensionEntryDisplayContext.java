@@ -312,6 +312,16 @@ public class EditClientExtensionEntryDisplayContext {
 				Objects.equals(
 					ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT, type)),
 			new SelectOption(
+				LanguageUtil.get(httpServletRequest, "global-css"),
+				ClientExtensionEntryConstants.TYPE_GLOBAL_CSS,
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_GLOBAL_CSS, type)),
+			new SelectOption(
+				LanguageUtil.get(httpServletRequest, "global-js"),
+				ClientExtensionEntryConstants.TYPE_GLOBAL_JS,
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_GLOBAL_JS, type)),
+			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "iframe"),
 				ClientExtensionEntryConstants.TYPE_IFRAME,
 				Objects.equals(

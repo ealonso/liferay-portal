@@ -21,14 +21,18 @@ import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.CETCustomElement;
 import com.liferay.client.extension.type.CETIFrame;
 import com.liferay.client.extension.type.CETThemeCSS;
+import com.liferay.client.extension.type.CETGlobalCSS;
 import com.liferay.client.extension.type.CETThemeFavicon;
 import com.liferay.client.extension.type.CETThemeJS;
+import com.liferay.client.extension.type.CETGlobalJS;
 import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.client.extension.type.internal.CETCustomElementImpl;
 import com.liferay.client.extension.type.internal.CETIFrameImpl;
 import com.liferay.client.extension.type.internal.CETThemeCSSImpl;
+import com.liferay.client.extension.type.internal.CETGlobalCSSImpl;
 import com.liferay.client.extension.type.internal.CETThemeFaviconImpl;
 import com.liferay.client.extension.type.internal.CETThemeJSImpl;
+import com.liferay.client.extension.type.internal.CETGlobalJSImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import java.util.Objects;
@@ -53,6 +57,16 @@ public class CETFactoryImpl implements CETFactory {
 				type, ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT)) {
 
 			return cetCustomElement(clientExtensionEntry);
+		}
+		else if (Objects.equals(
+			type, ClientExtensionEntryConstants.TYPE_GLOBAL_CSS)) {
+
+			return cetGlobalCSS(clientExtensionEntry);
+		}
+		else if (Objects.equals(
+			type, ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
+
+			return cetGlobalJS(clientExtensionEntry);
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_IFRAME)) {
@@ -112,6 +126,18 @@ public class CETFactoryImpl implements CETFactory {
 	}
 
 	@Override
+	public CETGlobalCSS cetGlobalCSS(
+		ClientExtensionEntry clientExtensionEntry) {
+
+		return new CETGlobalCSSImpl(clientExtensionEntry);
+	}
+
+	@Override
+	public CETGlobalCSS cetGlobalCSS(PortletRequest portletRequest) {
+		return new CETGlobalCSSImpl(portletRequest);
+	}
+
+	@Override
 	public CETThemeFavicon cetThemeFavicon(
 		ClientExtensionEntry clientExtensionEntry) {
 
@@ -134,6 +160,16 @@ public class CETFactoryImpl implements CETFactory {
 	}
 
 	@Override
+	public CETGlobalJS cetGlobalJS(ClientExtensionEntry clientExtensionEntry) {
+		return new CETGlobalJSImpl(clientExtensionEntry);
+	}
+
+	@Override
+	public CETGlobalJS cetGlobalJS(PortletRequest portletRequest) {
+		return new CETGlobalJSImpl(portletRequest);
+	}
+
+	@Override
 	public String typeSettings(PortletRequest portletRequest, String type)
 		throws PortalException {
 
@@ -141,6 +177,16 @@ public class CETFactoryImpl implements CETFactory {
 				type, ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT)) {
 
 			return String.valueOf(cetCustomElement(portletRequest));
+		}
+		else if (Objects.equals(
+			type, ClientExtensionEntryConstants.TYPE_GLOBAL_CSS)) {
+
+			return String.valueOf(cetGlobalCSS(portletRequest));
+		}
+		else if (Objects.equals(
+			type, ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
+
+			return String.valueOf(cetGlobalJS(portletRequest));
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_IFRAME)) {

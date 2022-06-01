@@ -21,9 +21,11 @@ import com.liferay.client.extension.service.base.ClientExtensionEntryLocalServic
 import com.liferay.client.extension.type.CETCustomElement;
 import com.liferay.client.extension.type.CETIFrame;
 import com.liferay.client.extension.type.CETThemeCSS;
+import com.liferay.client.extension.type.CETGlobalCSS;
 import com.liferay.client.extension.type.CETThemeFavicon;
 import com.liferay.client.extension.type.CETThemeJS;
 import com.liferay.client.extension.type.deployer.CETDeployer;
+import com.liferay.client.extension.type.CETGlobalJS;
 import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.client.extension.type.validator.CETValidator;
 import com.liferay.petra.reflect.ReflectionUtil;
@@ -467,6 +469,26 @@ public class ClientExtensionEntryLocalServiceImpl
 
 			workflowContext = Collections.singletonMap(
 				WorkflowConstants.CONTEXT_URL, cetCustomElement.getURLs());
+		}
+		else if (Objects.equals(
+			clientExtensionEntry.getType(),
+			ClientExtensionEntryConstants.TYPE_GLOBAL_CSS)) {
+
+			CETGlobalCSS cetGlobalCSS = _cetFactory.cetGlobalCSS(
+				clientExtensionEntry);
+
+			workflowContext = Collections.singletonMap(
+				WorkflowConstants.CONTEXT_URL, cetGlobalCSS.getURLs());
+		}
+		else if (Objects.equals(
+			clientExtensionEntry.getType(),
+			ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
+
+			CETGlobalJS cetGlobalJS = _cetFactory.cetGlobalJS(
+				clientExtensionEntry);
+
+			workflowContext = Collections.singletonMap(
+				WorkflowConstants.CONTEXT_URL, cetGlobalJS.getURLs());
 		}
 		else if (Objects.equals(
 					clientExtensionEntry.getType(),

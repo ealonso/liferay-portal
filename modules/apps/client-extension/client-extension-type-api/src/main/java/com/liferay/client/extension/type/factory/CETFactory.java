@@ -19,8 +19,10 @@ import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.CETCustomElement;
 import com.liferay.client.extension.type.CETIFrame;
 import com.liferay.client.extension.type.CETThemeCSS;
+import com.liferay.client.extension.type.CETGlobalCSS;
 import com.liferay.client.extension.type.CETThemeFavicon;
 import com.liferay.client.extension.type.CETThemeJS;
+import com.liferay.client.extension.type.CETGlobalJS;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import javax.portlet.PortletRequest;
@@ -46,6 +48,10 @@ public interface CETFactory {
 
 	public CETThemeCSS cetThemeCSS(PortletRequest portletRequest);
 
+	public CETGlobalCSS cetGlobalCSS(ClientExtensionEntry clientExtensionEntry);
+
+	public CETGlobalCSS cetGlobalCSS(PortletRequest portletRequest);
+
 	public CETThemeFavicon cetThemeFavicon(
 		ClientExtensionEntry clientExtensionEntry);
 
@@ -54,6 +60,10 @@ public interface CETFactory {
 	public CETThemeJS cetThemeJS(ClientExtensionEntry clientExtensionEntry);
 
 	public CETThemeJS cetThemeJS(PortletRequest portletRequest);
+
+	public CETGlobalJS cetGlobalJS(ClientExtensionEntry clientExtensionEntry);
+
+	public CETGlobalJS cetGlobalJS(PortletRequest portletRequest);
 
 	public String typeSettings(PortletRequest portletRequest, String type)
 		throws PortalException;
