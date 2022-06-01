@@ -14,17 +14,30 @@
 
 package com.liferay.client.extension.internal.events;
 
+import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
+import com.liferay.client.extension.model.ClientExtensionEntry;
+import com.liferay.client.extension.model.ClientExtensionEntryRel;
+import com.liferay.client.extension.service.ClientExtensionEntryLocalService;
+import com.liferay.client.extension.service.ClientExtensionEntryRelLocalService;
+import com.liferay.client.extension.type.CETThemeFavicon;
+import com.liferay.client.extension.type.factory.CETFactory;
+import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Eudaldo Alonso
@@ -48,8 +61,100 @@ public class ClientExtensionsServicePreAction extends Action {
 		Layout layout = themeDisplay.getLayout();
 
 		if (layout != null) {
-			themeDisplay.setFavicon(layout.getFavicon());
+			themeDisplay.setFavicon(_getFaviconURL(layout));
 		}
 	}
+
+	private String _getCETThemeFaviconURL(long classNameId, long classPK) {
+		ClientExtensionEntryRel clientExtensionEntryRel =
+			_clientExtensionEntryRelLocalService.fetchClientExtensionEntryRel(
+				classNameId, classPK,
+				ClientExtensionEntryConstants.TYPE_THEME_FAVICON);
+
+		if (clientExtensionEntryRel == null) {
+			return null;
+		}
+
+		ClientExtensionEntry clientExtensionEntry =
+			_clientExtensionEntryLocalService.fetchClientExtensionEntry(
+				clientExtensionEntryRel.getClientExtensionEntryId());
+
+		if (clientExtensionEntry == null) {
+			return null;
+		}
+
+		CETThemeFavicon cetThemeFavicon = _cetFactory.cetThemeFavicon(
+			clientExtensionEntry);
+
+		return cetThemeFavicon.getURL();
+	}
+
+	private String _getFaviconURL(Layout layout) {
+		String faviconURL = _getCETThemeFaviconURL(
+			_portal.getClassNameId(Layout.class), layout.getPlid());
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		faviconURL = layout.getFavicon();
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		Layout masterLayout = _layoutLocalService.fetchLayout(
+			layout.getMasterLayoutPlid());
+
+		faviconURL = _getCETThemeFaviconURL(
+			_portal.getClassNameId(Layout.class), masterLayout.getPlid());
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		faviconURL = masterLayout.getFavicon();
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		LayoutSet layoutSet = layout.getLayoutSet();
+
+		faviconURL = _getCETThemeFaviconURL(
+			_portal.getClassNameId(LayoutSet.class),
+			layoutSet.getLayoutSetId());
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		faviconURL = layoutSet.getFavicon();
+
+		if (Validator.isNotNull(faviconURL)) {
+			return faviconURL;
+		}
+
+		return null;
+	}
+
+	@Reference
+	private CETFactory _cetFactory;
+
+	@Reference
+	private ClientExtensionEntryLocalService _clientExtensionEntryLocalService;
+
+	@Reference
+	private ClientExtensionEntryRelLocalService
+		_clientExtensionEntryRelLocalService;
+
+	@Reference
+	private DLAppService _dlAppService;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }
