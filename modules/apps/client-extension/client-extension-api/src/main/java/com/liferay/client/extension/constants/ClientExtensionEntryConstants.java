@@ -21,16 +21,16 @@ public class ClientExtensionEntryConstants {
 
 	public static final String TYPE_CUSTOM_ELEMENT = "customElement";
 
+	public static final String TYPE_GLOBAL_CSS = "globalCSS";
+
+	public static final String TYPE_GLOBAL_JS = "globalJS";
+
 	public static final String TYPE_IFRAME = "iframe";
 
 	public static final String TYPE_THEME_CSS = "themeCSS";
 
-	public static final String TYPE_GLOBAL_CSS = "globalCSS";
-
 	public static final String TYPE_THEME_FAVICON = "themeFavicon";
 
 	public static final String TYPE_THEME_JS = "themeJS";
-
-	public static final String TYPE_GLOBAL_JS = "globalJS";
 
 }

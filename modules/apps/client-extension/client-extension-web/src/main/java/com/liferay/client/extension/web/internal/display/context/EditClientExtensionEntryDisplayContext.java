@@ -21,6 +21,8 @@ import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementU
 import com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CETCustomElement;
+import com.liferay.client.extension.type.CETGlobalCSS;
+import com.liferay.client.extension.type.CETGlobalJS;
 import com.liferay.client.extension.type.CETIFrame;
 import com.liferay.client.extension.type.CETThemeCSS;
 import com.liferay.client.extension.type.CETThemeFavicon;
@@ -154,6 +156,18 @@ public class EditClientExtensionEntryDisplayContext {
 		}
 
 		return friendlyURLMapping;
+	}
+
+	public List<String> getGlobalCSSURLs() {
+		CETGlobalCSS cetGlobalCSS = _getCETGlobalCSS();
+
+		return cetGlobalCSS.getURLs();
+	}
+
+	public List<String> getGlobalJSURLs() {
+		CETGlobalJS cetGlobalJS = _getCETGlobalJS();
+
+		return cetGlobalJS.getURLs();
 	}
 
 	public String getIFrameURL() {
@@ -410,6 +424,22 @@ public class EditClientExtensionEntryDisplayContext {
 		return _cetCustomElement;
 	}
 
+	private CETGlobalCSS _getCETGlobalCSS() {
+		if (_cetGlobalCSS == null) {
+			_cetGlobalCSS = _cetFactory.cetGlobalCSS(_clientExtensionEntry);
+		}
+
+		return _cetGlobalCSS;
+	}
+
+	private CETGlobalJS _getCETGlobalJS() {
+		if (_cetGlobalJS == null) {
+			_cetGlobalJS = _cetFactory.cetGlobalJS(_clientExtensionEntry);
+		}
+
+		return _cetGlobalJS;
+	}
+
 	private CETIFrame _getCETIFrame() {
 		if (_cetIFrame == null) {
 			_cetIFrame = _cetFactory.cetIFrame(_clientExtensionEntry);
@@ -493,6 +523,8 @@ public class EditClientExtensionEntryDisplayContext {
 
 	private CETCustomElement _cetCustomElement;
 	private final CETFactory _cetFactory;
+	private CETGlobalCSS _cetGlobalCSS;
+	private CETGlobalJS _cetGlobalJS;
 	private CETIFrame _cetIFrame;
 	private CETThemeCSS _cetThemeCSS;
 	private CETThemeFavicon _cetThemeFavicon;

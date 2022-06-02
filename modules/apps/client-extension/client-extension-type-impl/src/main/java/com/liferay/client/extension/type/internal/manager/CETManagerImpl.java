@@ -21,12 +21,12 @@ import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.deployer.CETDeployer;
 import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.client.extension.type.internal.CETCustomElementImpl;
+import com.liferay.client.extension.type.internal.CETGlobalCSSImpl;
+import com.liferay.client.extension.type.internal.CETGlobalJSImpl;
 import com.liferay.client.extension.type.internal.CETIFrameImpl;
 import com.liferay.client.extension.type.internal.CETThemeCSSImpl;
-import com.liferay.client.extension.type.internal.CETGlobalCSSImpl;
 import com.liferay.client.extension.type.internal.CETThemeFaviconImpl;
 import com.liferay.client.extension.type.internal.CETThemeJSImpl;
-import com.liferay.client.extension.type.internal.CETGlobalJSImpl;
 import com.liferay.client.extension.type.manager.CETManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Sort;
@@ -69,17 +69,17 @@ public class CETManagerImpl implements CETManager {
 				sourceCodeURL, typeSettings);
 		}
 		else if (Objects.equals(
-			type, ClientExtensionEntryConstants.TYPE_GLOBAL_CSS)) {
+					type, ClientExtensionEntryConstants.TYPE_GLOBAL_CSS)) {
 
 			cet = new CETGlobalCSSImpl(
-				baseURL, companyId, description, name, primaryKey,
+				baseURL, companyId, description, name, primaryKey, properties,
 				sourceCodeURL, typeSettings);
 		}
 		else if (Objects.equals(
-			type, ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
+					type, ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
 
 			cet = new CETGlobalJSImpl(
-				baseURL, companyId, description, name, primaryKey,
+				baseURL, companyId, description, name, primaryKey, properties,
 				sourceCodeURL, typeSettings);
 		}
 		else if (Objects.equals(
