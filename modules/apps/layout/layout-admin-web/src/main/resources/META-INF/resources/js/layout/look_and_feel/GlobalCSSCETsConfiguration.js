@@ -18,29 +18,29 @@ import ClayTable from '@clayui/table';
 import {openSelectionModal} from 'frontend-js-web';
 import React, {useState} from 'react';
 
-export default function JSExtensionsConfiguration({
-	jsExtensionSelectorURL,
-	jsExtensions: initialJSExtensions,
+export default function GlobalCSSCETsConfiguration({
+	globalCSSCETSelectorURL,
+	globalCSSCETs: initialGlobalCSSCETs,
 	portletNamespace,
-	selectJSClientExtensionsEventName,
+	selectGlobalCSSCETsEventName,
 }) {
-	const [jsExtensions, setJSExtensions] = useState(initialJSExtensions);
+	const [globalCSSCETs, setGlobalCSSCETs] = useState(initialGlobalCSSCETs);
 
-	const deleteJSExtension = (deletedJSExtension) => {
-		setJSExtensions((previousJSExtensions) =>
-			previousJSExtensions.filter(
-				(jsExtension) =>
-					jsExtension.clientExtensionEntryId !==
-					deletedJSExtension.clientExtensionEntryId
+	const deleteGlobalCSSCET = (deletedGlobalCSSCET) => {
+		setGlobalCSSCETs((previousGlobalCSSCETs) =>
+			previousGlobalCSSCETs.filter(
+				(globalCSSCET) =>
+					globalCSSCET.globalCSSCETPrimaryKey !==
+					deletedGlobalCSSCET.globalCSSCETPrimaryKey
 			)
 		);
 	};
 
-	const getDropDownItems = (jsExtension) => {
+	const getDropDownItems = (globalCSSCET) => {
 		return [
 			{
 				label: Liferay.Language.get('delete'),
-				onClick: () => deleteJSExtension(jsExtension),
+				onClick: () => deleteGlobalCSSCET(globalCSSCET),
 				symbolLeft: 'trash',
 			},
 		];
@@ -58,40 +58,40 @@ export default function JSExtensionsConfiguration({
 					JSON.parse(selectedItem)
 				);
 
-				setJSExtensions((previousJSExtensions) => {
-					const nextJSExtensions = [
-						...previousJSExtensions,
+				setGlobalCSSCETs((previousGlobalCSSCETs) => {
+					const nextGlobalCSSCETs = [
+						...previousGlobalCSSCETs,
 						...items,
 					];
 
-					return nextJSExtensions.filter(
-						(jsExtension, index) =>
-							nextJSExtensions.findIndex(
-								({clientExtensionEntryId}) =>
-									jsExtension.clientExtensionEntryId ===
-									clientExtensionEntryId
+					return nextGlobalCSSCETs.filter(
+						(globalCSSCET, index) =>
+							nextGlobalCSSCETs.findIndex(
+								({globalCSSCETPrimaryKey}) =>
+									globalCSSCET.globalCSSCETPrimaryKey ===
+									globalCSSCETPrimaryKey
 							) === index
 					);
 				});
 			},
-			selectEventName: selectJSClientExtensionsEventName,
-			title: Liferay.Language.get('select-javascript-extensions'),
-			url: jsExtensionSelectorURL,
+			selectEventName: selectGlobalCSSCETsEventName,
+			title: Liferay.Language.get('select-css-extensions'),
+			url: globalCSSCETSelectorURL,
 		});
 	};
 
 	return (
 		<>
 			<input
-				name={`${portletNamespace}jsExtensions`}
+				name={`${portletNamespace}globalJSCETPrimaryKeys`}
 				type="hidden"
-				value={jsExtensions
-					.map((jsExtension) => jsExtension.clientExtensionEntryId)
+				value={globalCSSCETs
+					.map((globalCSSCET) => globalCSSCET.globalCSSCETPrimaryKey)
 					.join(',')}
 			/>
 
 			<h3 className="sheet-subtitle">
-				{Liferay.Language.get('javascript-extensions')}
+				{Liferay.Language.get('css-extensions')}
 			</h3>
 
 			<ClayButton
@@ -101,10 +101,10 @@ export default function JSExtensionsConfiguration({
 				small
 				type="button"
 			>
-				{Liferay.Language.get('add-javascript-extensions')}
+				{Liferay.Language.get('add-css-extensions')}
 			</ClayButton>
 
-			{jsExtensions.length ? (
+			{globalCSSCETs.length ? (
 				<ClayTable>
 					<ClayTable.Head>
 						<ClayTable.Row>
@@ -121,17 +121,17 @@ export default function JSExtensionsConfiguration({
 					</ClayTable.Head>
 
 					<ClayTable.Body>
-						{jsExtensions.map((jsExtension) => (
+						{globalCSSCETs.map((globalCSSCET) => (
 							<ClayTable.Row
-								key={jsExtension.clientExtensionEntryId}
+								key={globalCSSCET.globalCSSCETPrimaryKey}
 							>
 								<ClayTable.Cell expanded headingTitle>
-									{jsExtension.name}
+									{globalCSSCET.name}
 								</ClayTable.Cell>
 
 								<ClayTable.Cell>
 									<ClayDropDownWithItems
-										items={getDropDownItems(jsExtension)}
+										items={getDropDownItems(globalCSSCET)}
 										trigger={
 											<ClayButtonWithIcon
 												displayType="unstyled"
@@ -147,9 +147,7 @@ export default function JSExtensionsConfiguration({
 				</ClayTable>
 			) : (
 				<p className="text-secondary">
-					{Liferay.Language.get(
-						'no-javascript-extensions-were-loaded'
-					)}
+					{Liferay.Language.get('no-css-extensions-were-loaded')}
 				</p>
 			)}
 		</>
