@@ -3,5 +3,8 @@
 	"fragmentEntryKey": "picklist",
 	"icon": "select-from-list",
 	"name": "picklist",
-	"type": "input"
+	"type": "input",
+	"typeOptions": {
+		"fieldTypes": ["select"]
+	}
 }
