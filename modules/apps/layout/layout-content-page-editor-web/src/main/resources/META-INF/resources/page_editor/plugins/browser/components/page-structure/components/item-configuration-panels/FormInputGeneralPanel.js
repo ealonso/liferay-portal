@@ -16,7 +16,6 @@ import ClayLoadingIndicator from '@clayui/loading-indicator';
 import classNames from 'classnames';
 import React, {useMemo} from 'react';
 
-import {ALLOWED_INPUT_TYPES} from '../../../../../../app/config/constants/allowedInputTypes';
 import {FRAGMENT_ENTRY_TYPES} from '../../../../../../app/config/constants/fragmentEntryTypes';
 import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../app/config/constants/freemarkerFragmentEntryProcessor';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../../app/config/constants/layoutDataItemTypes';
@@ -238,6 +237,9 @@ export function FormInputGeneralPanel({item}) {
 							fields: formFields,
 							formId,
 						}}
+						fragmentEntryKey={
+							fragmentEntryLinkRef.current.fragmentEntryKey
+						}
 						item={item}
 						onValueSelect={handleValueSelect}
 					/>
@@ -261,32 +263,22 @@ export function FormInputGeneralPanel({item}) {
 function FormInputMappingOptions({
 	configurationValues,
 	form,
+	fragmentEntryKey,
 	item,
 	onValueSelect,
 }) {
 	const {classNameId, classTypeId, fields, formId} = form;
 
-	const inputType = useSelectorCallback(
-		(state) => {
-			const element = document.createElement('div');
-			element.innerHTML = selectFragmentEntryLink(state, item).content;
-
-			if (element.querySelector('select')) {
-				return 'select';
-			}
-			else if (element.querySelector('textarea')) {
-				return 'textarea';
-			}
-
-			return element.querySelector('input')?.type || 'text';
-		},
-		[item.itemId]
-	);
-
 	const itemTypes = useCache({
 		fetcher: () =>
 			InfoItemService.getAvailableEditPageInfoItemFormProviders(),
 		key: [CACHE_KEYS.itemTypes],
+	});
+
+	const allowedInputTypes = useCache({
+		fetcher: () =>
+			FormService.getFragmentEntryInputFieldTypes({fragmentEntryKey}),
+		key: [CACHE_KEYS.allowedInputTypes, fragmentEntryKey],
 	});
 
 	const {subtype, type} = useMemo(
@@ -296,7 +288,7 @@ function FormInputMappingOptions({
 
 	const filteredFields = useSelectorCallback(
 		(state) => {
-			if (!fields) {
+			if (!fields || !allowedInputTypes) {
 				return fields;
 			}
 
@@ -345,9 +337,8 @@ function FormInputMappingOptions({
 					fields: fieldset.fields
 						.filter(
 							(field) =>
-								ALLOWED_INPUT_TYPES[field.type]?.includes(
-									inputType
-								) && !selectedFields.includes(field.key)
+								allowedInputTypes.includes(field.type) &&
+								!selectedFields.includes(field.key)
 						)
 						.map((field) =>
 							field.required
@@ -359,7 +350,7 @@ function FormInputMappingOptions({
 
 			return nextFields;
 		},
-		[item.itemId, fields, inputType]
+		[allowedInputTypes, item.itemId, fields]
 	);
 
 	if (!classNameId || !classTypeId) {
@@ -369,7 +360,6 @@ function FormInputMappingOptions({
 	return filteredFields ? (
 		<>
 			<MappingFieldSelector
-				fieldType={inputType}
 				fields={filteredFields}
 				onValueSelect={(event) =>
 					onValueSelect(
