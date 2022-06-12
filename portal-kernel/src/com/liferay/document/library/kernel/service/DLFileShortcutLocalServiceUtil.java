@@ -428,6 +428,12 @@ public class DLFileShortcutLocalServiceUtil {
 	}
 
 	public static List<DLFileShortcut> getFileShortcuts(
+		long groupId, long folderId) {
+
+		return getService().getFileShortcuts(groupId, folderId);
+	}
+
+	public static List<DLFileShortcut> getFileShortcuts(
 		long groupId, long folderId, boolean active, int status, int start,
 		int end) {
 

@@ -517,6 +517,10 @@ public interface DLFileEntryLocalService
 	public List<DLFileEntry> getFileEntries(long folderId, String name);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, String treePath);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getFileEntriesCount();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

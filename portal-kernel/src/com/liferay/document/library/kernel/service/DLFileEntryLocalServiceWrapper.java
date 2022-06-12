@@ -757,6 +757,14 @@ public class DLFileEntryLocalServiceWrapper
 	}
 
 	@Override
+	public java.util.List<DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, String treePath) {
+
+		return _dlFileEntryLocalService.getFileEntriesByClassNameIdAndTreePath(
+			classNameId, treePath);
+	}
+
+	@Override
 	public int getFileEntriesCount() {
 		return _dlFileEntryLocalService.getFileEntriesCount();
 	}

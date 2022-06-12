@@ -672,6 +672,13 @@ public class DLFileEntryLocalServiceUtil {
 		return getService().getFileEntries(folderId, name);
 	}
 
+	public static List<DLFileEntry> getFileEntriesByClassNameIdAndTreePath(
+		long classNameId, String treePath) {
+
+		return getService().getFileEntriesByClassNameIdAndTreePath(
+			classNameId, treePath);
+	}
+
 	public static int getFileEntriesCount() {
 		return getService().getFileEntriesCount();
 	}

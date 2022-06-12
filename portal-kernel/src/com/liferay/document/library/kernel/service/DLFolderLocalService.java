@@ -454,6 +454,15 @@ public interface DLFolderLocalService
 	public long getFolderId(long companyId, long folderId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden,
+		int status);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DLFolder> getFolders(long groupId, long parentFolderId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -475,6 +484,9 @@ public interface DLFolderLocalService
 	public List<DLFolder> getFolders(
 		long groupId, long parentFolderId, int start, int end,
 		OrderByComparator<DLFolder> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFolder> getFolders(long classNameId, String treePath);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Object> getFoldersAndFileEntriesAndFileShortcuts(

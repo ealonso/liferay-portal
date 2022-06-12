@@ -477,6 +477,13 @@ public class DLFileShortcutLocalServiceWrapper
 
 	@Override
 	public java.util.List<DLFileShortcut> getFileShortcuts(
+		long groupId, long folderId) {
+
+		return _dlFileShortcutLocalService.getFileShortcuts(groupId, folderId);
+	}
+
+	@Override
+	public java.util.List<DLFileShortcut> getFileShortcuts(
 		long groupId, long folderId, boolean active, int status, int start,
 		int end) {
 

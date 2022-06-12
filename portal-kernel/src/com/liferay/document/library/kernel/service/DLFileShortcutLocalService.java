@@ -355,6 +355,9 @@ public interface DLFileShortcutLocalService
 	public List<DLFileShortcut> getFileShortcuts(long toFileEntryId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<DLFileShortcut> getFileShortcuts(long groupId, long folderId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DLFileShortcut> getFileShortcuts(
 		long groupId, long folderId, boolean active, int status, int start,
 		int end);
