@@ -37,7 +37,6 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.trash.TrashHelper;
-import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.test.util.BaseTrashHandlerTestCase;
 import com.liferay.trash.test.util.DefaultWhenIsAssetable;
@@ -162,23 +161,6 @@ public class DLFolderTrashHandlerTest
 			}
 
 			throw new TrashEntryException();
-		}
-	}
-
-	@Override
-	@Test(expected = RestoreEntryException.class)
-	public void testTrashParentAndRestoreParentAndBaseModel() throws Exception {
-		try {
-			super.testTrashParentAndRestoreParentAndBaseModel();
-		}
-		catch (com.liferay.trash.kernel.exception.RestoreEntryException
-					restoreEntryException) {
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(restoreEntryException);
-			}
-
-			throw new RestoreEntryException();
 		}
 	}
 

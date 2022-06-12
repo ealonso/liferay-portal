@@ -19,8 +19,6 @@ import com.liferay.message.boards.constants.MBCategoryConstants;
 import com.liferay.message.boards.model.MBCategory;
 import com.liferay.message.boards.service.MBCategoryLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Group;
@@ -30,8 +28,6 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.trash.exception.RestoreEntryException;
-import com.liferay.trash.exception.TrashEntryException;
 import com.liferay.trash.test.util.BaseTrashHandlerTestCase;
 import com.liferay.trash.test.util.WhenHasGrandParent;
 import com.liferay.trash.test.util.WhenIsMoveableFromTrashBaseModel;
@@ -41,7 +37,6 @@ import com.liferay.trash.test.util.WhenIsUpdatableBaseModel;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
@@ -91,40 +86,6 @@ public class MBCategoryTrashHandlerTest
 		super.setUp();
 
 		UserTestUtil.setUser(TestPropsValues.getUser());
-	}
-
-	@Override
-	@Test(expected = TrashEntryException.class)
-	public void testTrashParentAndBaseModel() throws Exception {
-		try {
-			super.testTrashParentAndBaseModel();
-		}
-		catch (com.liferay.trash.kernel.exception.TrashEntryException
-					trashEntryException) {
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(trashEntryException);
-			}
-
-			throw new TrashEntryException();
-		}
-	}
-
-	@Override
-	@Test(expected = RestoreEntryException.class)
-	public void testTrashParentAndRestoreParentAndBaseModel() throws Exception {
-		try {
-			super.testTrashParentAndRestoreParentAndBaseModel();
-		}
-		catch (com.liferay.trash.kernel.exception.RestoreEntryException
-					restoreEntryException) {
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(restoreEntryException);
-			}
-
-			throw new RestoreEntryException();
-		}
 	}
 
 	@Override
@@ -232,8 +193,5 @@ public class MBCategoryTrashHandlerTest
 	}
 
 	private static final String _TITLE = "Title";
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		MBCategoryTrashHandlerTest.class);
 
 }

@@ -370,6 +370,23 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 	}
 
 	@Override
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden) {
+
+		return dlFolderPersistence.findByG_M_LikeT_H(
+			groupId, mountPoint, treePath, hidden);
+	}
+
+	@Override
+	public List<DLFolder> getFolders(
+		long groupId, boolean mountPoint, String treePath, boolean hidden,
+		int status) {
+
+		return dlFolderPersistence.findByG_M_LikeT_H_NotS(
+			groupId, mountPoint, treePath, hidden, status);
+	}
+
+	@Override
 	public List<DLFolder> getFolders(long groupId, long parentFolderId) {
 		return getFolders(groupId, parentFolderId, true);
 	}
@@ -425,6 +442,11 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 
 		return getFolders(
 			groupId, parentFolderId, true, start, end, orderByComparator);
+	}
+
+	@Override
+	public List<DLFolder> getFolders(long classNameId, String treePath) {
+		return dlFolderFinder.findF_ByC_T(classNameId, treePath);
 	}
 
 	@Override
