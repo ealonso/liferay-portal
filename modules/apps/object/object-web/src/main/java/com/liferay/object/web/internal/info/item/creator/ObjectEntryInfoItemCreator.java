@@ -26,11 +26,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import java.io.Serializable;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Rubén Pulido
@@ -52,23 +52,20 @@ public class ObjectEntryInfoItemCreator
 		throws InfoFormException {
 
 		try {
-			Collection<InfoFieldValue<Object>> infoFieldValues =
-				infoItemFieldValues.getInfoFieldValues();
+			Map<String, Serializable> values = new HashMap<>();
 
-			HashMapBuilder.HashMapWrapper<String, Serializable> hashMapWrapper =
-				HashMapBuilder.create(infoFieldValues.size());
+			for (InfoFieldValue<Object> infoFieldValue :
+					infoItemFieldValues.getInfoFieldValues()) {
 
-			for (InfoFieldValue<Object> infoFieldValue : infoFieldValues) {
 				InfoField<?> infoField = infoFieldValue.getInfoField();
 
-				hashMapWrapper.put(
+				values.put(
 					infoField.getName(),
 					(Serializable)infoFieldValue.getValue());
 			}
 
 			return _objectEntryService.addObjectEntry(
-				groupId, _objectDefinition.getObjectDefinitionId(),
-				hashMapWrapper.build(),
+				groupId, _objectDefinition.getObjectDefinitionId(), values,
 				ServiceContextThreadLocal.getServiceContext());
 		}
 		catch (PortalException portalException) {
