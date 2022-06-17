@@ -65,8 +65,12 @@ function FormOptions({item, onValueSelect}) {
 		...config.formTypes,
 	];
 
-	const selectedFormType = formTypes.find(
-		({value}) => value === item.config.classNameId
+	const {classNameId, classTypeId} = item.config;
+
+	const selectedFormType = formTypes.find(({value}) => value === classNameId);
+
+	const selectedSubtype = selectedFormType?.subtypes.find(
+		({value}) => value === classTypeId
 	);
 
 	return (
@@ -94,7 +98,7 @@ function FormOptions({item, onValueSelect}) {
 									FORM_MAPPING_SOURCES.otherContentType,
 							});
 						}}
-						value={item.config.classNameId}
+						value={selectedFormType ? classNameId : ''}
 					/>
 				)}
 
@@ -105,7 +109,13 @@ function FormOptions({item, onValueSelect}) {
 							label: Liferay.Language.get('subtype'),
 							name: 'classTypeId',
 							typeOptions: {
-								validValues: selectedFormType.subtypes,
+								validValues: [
+									{
+										label: Liferay.Language.get('none'),
+										value: '',
+									},
+									...selectedFormType.subtypes,
+								],
 							},
 						}}
 						onValueSelect={(_name, classTypeId) =>
@@ -116,7 +126,7 @@ function FormOptions({item, onValueSelect}) {
 									FORM_MAPPING_SOURCES.otherContentType,
 							})
 						}
-						value={item.config.classTypeId}
+						value={selectedSubtype ? classTypeId : ''}
 					/>
 				)}
 			</Collapse>
