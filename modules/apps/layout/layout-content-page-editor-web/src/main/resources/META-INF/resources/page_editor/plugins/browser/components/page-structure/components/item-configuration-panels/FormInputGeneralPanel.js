@@ -31,7 +31,6 @@ import selectFragmentEntryLink from '../../../../../../app/selectors/selectFragm
 import selectLanguageId from '../../../../../../app/selectors/selectLanguageId';
 import selectSegmentsExperienceId from '../../../../../../app/selectors/selectSegmentsExperienceId';
 import FormService from '../../../../../../app/services/FormService';
-import InfoItemService from '../../../../../../app/services/InfoItemService';
 import updateEditableValues from '../../../../../../app/thunks/updateEditableValues';
 import {CACHE_KEYS} from '../../../../../../app/utils/cache';
 import {isFormRequiredField} from '../../../../../../app/utils/isFormRequiredField';
@@ -347,11 +346,7 @@ export function FormInputGeneralPanel({item}) {
 function FormInputMappingOptions({configurationValues, form, onValueSelect}) {
 	const {classNameId, classTypeId, fields} = form;
 
-	const itemTypes = useCache({
-		fetcher: () =>
-			InfoItemService.getAvailableEditPageInfoItemFormProviders(),
-		key: [CACHE_KEYS.itemTypes],
-	});
+	const itemTypes = item.config.formTypes;
 
 	const {subtype, type} = useMemo(
 		() => getTypeLabels(itemTypes, classNameId, classTypeId),
