@@ -20,6 +20,7 @@ import React, {useMemo} from 'react';
 import {FRAGMENT_ENTRY_TYPES} from '../../../../../../app/config/constants/fragmentEntryTypes';
 import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../app/config/constants/freemarkerFragmentEntryProcessor';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../../../app/config/constants/layoutDataItemTypes';
+import {config} from '../../../../../../app/config/index';
 import {
 	useDispatch,
 	useSelector,
@@ -31,7 +32,6 @@ import selectFragmentEntryLink from '../../../../../../app/selectors/selectFragm
 import selectLanguageId from '../../../../../../app/selectors/selectLanguageId';
 import selectSegmentsExperienceId from '../../../../../../app/selectors/selectSegmentsExperienceId';
 import FormService from '../../../../../../app/services/FormService';
-import InfoItemService from '../../../../../../app/services/InfoItemService';
 import updateEditableValues from '../../../../../../app/thunks/updateEditableValues';
 import {CACHE_KEYS} from '../../../../../../app/utils/cache';
 import {isFormRequiredField} from '../../../../../../app/utils/isFormRequiredField';
@@ -109,16 +109,21 @@ function getInputCommonConfiguration(configurationValues, formFields) {
 	return fields;
 }
 
-function getTypeLabels(itemTypes, classNameId, classTypeId) {
-	if (!itemTypes || !classNameId) {
+function getTypeLabels(classNameId, classTypeId) {
+	if (!classNameId) {
 		return {};
 	}
 
-	const selectedType = itemTypes.find(({value}) => value === classNameId);
+	const selectedType = config.formTypes.find(
+		({value}) => value === classNameId
+	);
 
-	const selectedSubtype = selectedType.subtypes.length
-		? selectedType.subtypes.find(({value}) => value === classTypeId)
-		: {};
+	if (!selectedType) {
+		return {};
+	}
+
+	const selectedSubtype =
+		selectedType.subtypes.find(({value}) => value === classTypeId) || {};
 
 	return {
 		subtype: selectedSubtype.label,
@@ -347,15 +352,9 @@ export function FormInputGeneralPanel({item}) {
 function FormInputMappingOptions({configurationValues, form, onValueSelect}) {
 	const {classNameId, classTypeId, fields} = form;
 
-	const itemTypes = useCache({
-		fetcher: () =>
-			InfoItemService.getAvailableEditPageInfoItemFormProviders(),
-		key: [CACHE_KEYS.itemTypes],
-	});
-
 	const {subtype, type} = useMemo(
-		() => getTypeLabels(itemTypes, classNameId, classTypeId),
-		[itemTypes, classNameId, classTypeId]
+		() => getTypeLabels(classNameId, classTypeId),
+		[classNameId, classTypeId]
 	);
 
 	if (!classNameId || !classTypeId) {

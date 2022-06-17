@@ -12,20 +12,18 @@
  * details.
  */
 
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback} from 'react';
 
 import {SelectField} from '../../../../../../app/components/fragment-configuration-fields/SelectField';
 import {COMMON_STYLES_ROLES} from '../../../../../../app/config/constants/commonStylesRoles';
 import {FORM_MAPPING_SOURCES} from '../../../../../../app/config/constants/formMappingSources';
+import {config} from '../../../../../../app/config/index';
 import {
 	useDispatch,
 	useSelector,
 } from '../../../../../../app/contexts/StoreContext';
 import selectSegmentsExperienceId from '../../../../../../app/selectors/selectSegmentsExperienceId';
-import InfoItemService from '../../../../../../app/services/InfoItemService';
 import updateItemConfig from '../../../../../../app/thunks/updateItemConfig';
-import {CACHE_KEYS} from '../../../../../../app/utils/cache';
-import useCache from '../../../../../../app/utils/useCache';
 import Collapse from '../../../../../../common/components/Collapse';
 import {CommonStyles} from './CommonStyles';
 
@@ -69,44 +67,32 @@ function FormOptions({item, onValueSelect}) {
 }
 
 function OtherTypeMapping({item, onValueSelect}) {
-	const itemTypes = useCache({
-		fetcher: () =>
-			InfoItemService.getAvailableEditPageInfoItemFormProviders(),
-		key: [CACHE_KEYS.itemTypes],
-	});
+	const formTypes = [
+		{
+			label: Liferay.Language.get('none'),
+			value: '',
+		},
+		...config.formTypes,
+	];
 
-	const availableItemTypes = useMemo(
-		() =>
-			itemTypes
-				? [
-						{
-							label: Liferay.Language.get('none'),
-							value: '',
-						},
-						...itemTypes,
-				  ]
-				: [],
-		[itemTypes]
-	);
-
-	const selectedItemType = availableItemTypes.find(
+	const selectedFormType = formTypes.find(
 		({value}) => value === item.config.classNameId
 	);
 
 	return (
 		<>
-			{availableItemTypes.length > 0 && (
+			{formTypes.length > 0 && (
 				<SelectField
-					disabled={availableItemTypes.length === 0}
+					disabled={formTypes.length === 0}
 					field={{
 						label: Liferay.Language.get('content-type'),
 						name: 'classNameId',
 						typeOptions: {
-							validValues: availableItemTypes,
+							validValues: formTypes,
 						},
 					}}
 					onValueSelect={(_name, classNameId) => {
-						const type = availableItemTypes.find(
+						const type = formTypes.find(
 							({value}) => value === classNameId
 						);
 
@@ -120,14 +106,14 @@ function OtherTypeMapping({item, onValueSelect}) {
 				/>
 			)}
 
-			{selectedItemType?.subtypes?.length > 0 && (
+			{selectedFormType?.subtypes?.length > 0 && (
 				<SelectField
-					disabled={availableItemTypes.length === 0}
+					disabled={formTypes.length === 0}
 					field={{
 						label: Liferay.Language.get('subtype'),
 						name: 'classTypeId',
 						typeOptions: {
-							validValues: selectedItemType.subtypes,
+							validValues: selectedFormType.subtypes,
 						},
 					}}
 					onValueSelect={(_name, classTypeId) =>
