@@ -12,6 +12,22 @@
  * details.
  */
 
+import {config} from '../../app/config/index';
+
 export function formIsMapped(item) {
-	return item.config.classNameId && item.config.classNameId !== '0';
+	const {classNameId, classTypeId} = item.config;
+
+	const type = config.formTypes.find(({value}) => value === classNameId);
+
+	if (!type) {
+		return false;
+	}
+
+	const subtype = type.subtypes.find(({value}) => value === classTypeId);
+
+	if (subtype || classTypeId === '0') {
+		return true;
+	}
+
+	return false;
 }
