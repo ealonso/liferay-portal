@@ -17,7 +17,6 @@ package com.liferay.object.web.internal.deployer;
 import com.liferay.application.list.PanelApp;
 import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvider;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.depot.service.DepotEntryLocalService;
 import com.liferay.frontend.data.set.view.FDSView;
 import com.liferay.frontend.data.set.view.table.FDSTableSchemaBuilderFactory;
 import com.liferay.info.item.creator.InfoItemCreator;
@@ -76,7 +75,6 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -139,9 +137,7 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 			_bundleContext.registerService(
 				InfoItemCreator.class,
 				new ObjectEntryInfoItemCreator(
-					_depotEntryLocalService, _groupLocalService,
-					objectDefinition, _objectEntryService,
-					_objectScopeProviderRegistry),
+					objectDefinition, _objectEntryService),
 				HashMapDictionaryBuilder.<String, Object>put(
 					"item.class.name", objectDefinition.getClassName()
 				).build()),
@@ -367,9 +363,6 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 	private BundleContext _bundleContext;
 
 	@Reference
-	private DepotEntryLocalService _depotEntryLocalService;
-
-	@Reference
 	private DisplayPageInfoItemCapability _displayPageInfoItemCapability;
 
 	@Reference
@@ -377,9 +370,6 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 
 	@Reference
 	private FDSTableSchemaBuilderFactory _fdsTableSchemaBuilderFactory;
-
-	@Reference
-	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private InfoItemFieldReaderFieldSetProvider
