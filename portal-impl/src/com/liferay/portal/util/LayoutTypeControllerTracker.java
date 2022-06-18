@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
-import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
-import com.liferay.portal.model.impl.LayoutTypeControllerImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,25 +65,11 @@ public class LayoutTypeControllerTracker {
 		return types.toArray(new String[0]);
 	}
 
-	private static final String[] _LAYOUT_TYPES = {
-		LayoutConstants.TYPE_PORTLET
-	};
-
 	private static final ServiceTrackerMap<String, LayoutTypeController>
 		_serviceTrackerMap;
 
 	static {
 		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
-
-		for (String type : _LAYOUT_TYPES) {
-			bundleContext.registerService(
-				LayoutTypeController.class, new LayoutTypeControllerImpl(type),
-				HashMapDictionaryBuilder.<String, Object>put(
-					"layout.type", type
-				).put(
-					"service.ranking", Integer.MIN_VALUE
-				).build());
-		}
 
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
 			bundleContext, LayoutTypeController.class, "layout.type");
