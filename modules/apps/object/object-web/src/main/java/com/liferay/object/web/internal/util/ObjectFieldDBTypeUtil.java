@@ -26,12 +26,29 @@ import com.liferay.info.localized.bundle.FunctionInfoLocalizedValue;
 import com.liferay.list.type.model.ListTypeEntry;
 import com.liferay.list.type.service.ListTypeEntryLocalServiceUtil;
 import com.liferay.object.constants.ObjectFieldConstants;
+import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.model.ObjectRelationship;
+import com.liferay.object.rest.context.path.RESTContextPathResolver;
+import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
+import com.liferay.object.scope.ObjectScopeProvider;
+import com.liferay.object.scope.ObjectScopeProviderRegistry;
+import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
+import com.liferay.object.service.ObjectRelationshipLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Eudaldo Alonso
@@ -39,7 +56,9 @@ import java.util.Objects;
 public class ObjectFieldDBTypeUtil {
 
 	public static InfoField<?> addAttributes(
-		InfoField.FinalStep finalStep, ObjectField objectField) {
+		InfoField.FinalStep finalStep, ObjectField objectField,
+		ObjectScopeProviderRegistry objectScopeProviderRegistry,
+		RESTContextPathResolverRegistry restContextPathResolverRegistry) {
 
 		if (Objects.equals(
 				objectField.getBusinessType(),
@@ -57,6 +76,17 @@ public class ObjectFieldDBTypeUtil {
 
 			finalStep.attribute(
 				SelectInfoFieldType.OPTIONS, _getOptions(objectField));
+		}
+
+		if (Objects.equals(
+				objectField.getBusinessType(),
+				ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
+
+			finalStep.attribute(
+				SelectInfoFieldType.AUTOCOMPLETE_URL,
+				_getAPIURL(
+					objectField, objectScopeProviderRegistry,
+					restContextPathResolverRegistry));
 		}
 
 		return finalStep.build();
@@ -104,12 +134,72 @@ public class ObjectFieldDBTypeUtil {
 					ObjectFieldConstants.BUSINESS_TYPE_PICKLIST) ||
 				 Objects.equals(
 					 objectField.getBusinessType(),
-					 ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP) ) {
+					 ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
 
 			return SelectInfoFieldType.INSTANCE;
 		}
 
 		return TextInfoFieldType.INSTANCE;
+	}
+
+	private static String _getAPIURL(
+		ObjectField objectField,
+		ObjectScopeProviderRegistry objectScopeProviderRegistry,
+		RESTContextPathResolverRegistry restContextPathResolverRegistry) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext == null) {
+			return StringPool.BLANK;
+		}
+
+		String apiURL = PortalUtil.getPortalURL(serviceContext.getRequest());
+
+		ObjectRelationship objectRelationship =
+			ObjectRelationshipLocalServiceUtil.
+				fetchObjectRelationshipByObjectFieldId2(
+					objectField.getObjectFieldId());
+
+		ObjectDefinition relatedObjectDefinition =
+			ObjectDefinitionLocalServiceUtil.fetchObjectDefinition(
+				objectRelationship.getObjectDefinitionId1());
+
+		if (relatedObjectDefinition == null) {
+			return apiURL;
+		}
+
+		RESTContextPathResolver restContextPathResolver =
+			restContextPathResolverRegistry.getRESTContextPathResolver(
+				relatedObjectDefinition.getClassName());
+
+		String restContextPath = restContextPathResolver.getRESTContextPath(
+			_getGroupId(
+				serviceContext.getRequest(), relatedObjectDefinition,
+				objectScopeProviderRegistry));
+
+		return apiURL + restContextPath;
+	}
+
+	private static long _getGroupId(
+		HttpServletRequest httpServletRequest,
+		ObjectDefinition objectDefinition,
+		ObjectScopeProviderRegistry objectScopeProviderRegistry) {
+
+		try {
+			ObjectScopeProvider objectScopeProvider =
+				objectScopeProviderRegistry.getObjectScopeProvider(
+					objectDefinition.getScope());
+
+			return objectScopeProvider.getGroupId(httpServletRequest);
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+
+			return 0L;
+		}
 	}
 
 	private static List<SelectInfoFieldType.Option> _getOptions(
@@ -130,5 +220,8 @@ public class ObjectFieldDBTypeUtil {
 
 		return options;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ObjectFieldDBTypeUtil.class);
 
 }
