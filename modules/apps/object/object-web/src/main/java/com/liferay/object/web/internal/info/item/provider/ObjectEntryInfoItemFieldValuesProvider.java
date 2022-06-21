@@ -29,6 +29,8 @@ import com.liferay.list.type.service.ListTypeEntryLocalService;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
+import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectEntryLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.web.internal.info.item.ObjectEntryInfoItemFields;
@@ -72,6 +74,8 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		ListTypeEntryLocalService listTypeEntryLocalService,
 		ObjectEntryLocalService objectEntryLocalService,
 		ObjectFieldLocalService objectFieldLocalService,
+		ObjectScopeProviderRegistry objectScopeProviderRegistry,
+		RESTContextPathResolverRegistry restContextPathResolverRegistry,
 		TemplateInfoItemFieldSetProvider templateInfoItemFieldSetProvider,
 		UserLocalService userLocalService) {
 
@@ -83,6 +87,8 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		_listTypeEntryLocalService = listTypeEntryLocalService;
 		_objectEntryLocalService = objectEntryLocalService;
 		_objectFieldLocalService = objectFieldLocalService;
+		_objectScopeProviderRegistry = objectScopeProviderRegistry;
+		_restContextPathResolverRegistry = restContextPathResolverRegistry;
 		_templateInfoItemFieldSetProvider = templateInfoItemFieldSetProvider;
 		_userLocalService = userLocalService;
 	}
@@ -172,7 +178,8 @@ public class ObjectEntryInfoItemFieldValuesProvider
 									objectField.getLabelMap()
 								).build()
 							),
-							objectField),
+							objectField, _objectScopeProviderRegistry,
+							_restContextPathResolverRegistry),
 						_getValue(objectField, values))));
 
 			return objectEntryFieldValues;
@@ -286,6 +293,9 @@ public class ObjectEntryInfoItemFieldValuesProvider
 	private final ListTypeEntryLocalService _listTypeEntryLocalService;
 	private final ObjectEntryLocalService _objectEntryLocalService;
 	private final ObjectFieldLocalService _objectFieldLocalService;
+	private final ObjectScopeProviderRegistry _objectScopeProviderRegistry;
+	private final RESTContextPathResolverRegistry
+		_restContextPathResolverRegistry;
 	private final TemplateInfoItemFieldSetProvider
 		_templateInfoItemFieldSetProvider;
 	private final UserLocalService _userLocalService;
