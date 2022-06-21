@@ -26,6 +26,8 @@ import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectRelationship;
+import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
+import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
@@ -50,6 +52,8 @@ public class ObjectEntryInfoItemFormProvider
 		ObjectDefinitionLocalService objectDefinitionLocalService,
 		ObjectFieldLocalService objectFieldLocalService,
 		ObjectRelationshipLocalService objectRelationshipLocalService,
+		ObjectScopeProviderRegistry objectScopeProviderRegistry,
+		RESTContextPathResolverRegistry restContextPathResolverRegistry,
 		TemplateInfoItemFieldSetProvider templateInfoItemFieldSetProvider) {
 
 		_objectDefinition = objectDefinition;
@@ -58,6 +62,8 @@ public class ObjectEntryInfoItemFormProvider
 		_objectDefinitionLocalService = objectDefinitionLocalService;
 		_objectFieldLocalService = objectFieldLocalService;
 		_objectRelationshipLocalService = objectRelationshipLocalService;
+		_objectScopeProviderRegistry = objectScopeProviderRegistry;
+		_restContextPathResolverRegistry = restContextPathResolverRegistry;
 		_templateInfoItemFieldSetProvider = templateInfoItemFieldSetProvider;
 	}
 
@@ -233,7 +239,8 @@ public class ObjectEntryInfoItemFormProvider
 							).required(
 								objectField.isRequired()
 							),
-							objectField));
+							objectField, _objectScopeProviderRegistry,
+							_restContextPathResolverRegistry));
 				}
 			}
 		).labelInfoLocalizedValue(
@@ -253,6 +260,9 @@ public class ObjectEntryInfoItemFormProvider
 	private final ObjectFieldLocalService _objectFieldLocalService;
 	private final ObjectRelationshipLocalService
 		_objectRelationshipLocalService;
+	private final ObjectScopeProviderRegistry _objectScopeProviderRegistry;
+	private final RESTContextPathResolverRegistry
+		_restContextPathResolverRegistry;
 	private final TemplateInfoItemFieldSetProvider
 		_templateInfoItemFieldSetProvider;
 
