@@ -39,6 +39,7 @@ import com.liferay.list.type.service.ListTypeEntryLocalService;
 import com.liferay.object.deployer.ObjectDefinitionDeployer;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.related.models.ObjectRelatedModelsProviderRegistry;
+import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
 import com.liferay.object.rest.manager.v1_0.ObjectEntryManagerServicesTracker;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
@@ -157,8 +158,9 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 					_assetDisplayPageFriendlyURLProvider,
 					_infoItemFieldReaderFieldSetProvider, _jsonFactory,
 					_listTypeEntryLocalService, _objectEntryLocalService,
-					_objectFieldLocalService, _templateInfoItemFieldSetProvider,
-					_userLocalService),
+					_objectFieldLocalService, _objectScopeProviderRegistry,
+					_restContextPathResolverRegistry,
+					_templateInfoItemFieldSetProvider, _userLocalService),
 				HashMapDictionaryBuilder.<String, Object>put(
 					"item.class.name", objectDefinition.getClassName()
 				).build()),
@@ -168,6 +170,8 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 					objectDefinition, _infoItemFieldReaderFieldSetProvider,
 					_objectDefinitionLocalService, _objectFieldLocalService,
 					_objectRelationshipLocalService,
+					_objectScopeProviderRegistry,
+					_restContextPathResolverRegistry,
 					_templateInfoItemFieldSetProvider),
 				HashMapDictionaryBuilder.<String, Object>put(
 					Constants.SERVICE_RANKING, 10
@@ -431,6 +435,9 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private RESTContextPathResolverRegistry _restContextPathResolverRegistry;
 
 	private ServiceTrackerMap<String, PortletResourcePermission>
 		_serviceTrackerMap;
