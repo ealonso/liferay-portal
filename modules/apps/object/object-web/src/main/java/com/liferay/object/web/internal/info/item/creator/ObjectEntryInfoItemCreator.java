@@ -42,10 +42,8 @@ import com.liferay.portal.vulcan.util.GroupUtil;
 import java.io.Serializable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * @author Rubén Pulido
@@ -181,18 +179,11 @@ public class ObjectEntryInfoItemCreator
 			return null;
 		}
 
-		List<InfoField> infoFields = infoForm.getAllInfoFields();
+		InfoField<?> infoField = infoForm.getInfoField(objectFieldName);
 
-		Optional<InfoField> infoFieldOptional = infoFields.stream(
-		).filter(
-			infoField -> Objects.equals(infoField.getName(), objectFieldName)
-		).findFirst();
-
-		if (!infoFieldOptional.isPresent()) {
+		if (infoField == null) {
 			return null;
 		}
-
-		InfoField<?> infoField = infoFieldOptional.get();
 
 		return infoField.getUniqueId();
 	}
