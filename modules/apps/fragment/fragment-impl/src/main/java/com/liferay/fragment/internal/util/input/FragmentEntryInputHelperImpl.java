@@ -166,6 +166,13 @@ public class FragmentEntryInputHelperImpl implements FragmentEntryInputHelper {
 		if ((infoField != null) &&
 			(infoField.getInfoFieldType() instanceof SelectInfoFieldType)) {
 
+			Optional<String> autocompleteURLOptional =
+				infoField.getAttributeOptional(
+					SelectInfoFieldType.AUTOCOMPLETE_URL);
+
+			inputTemplateNode.addAttribute(
+				"autocompleteURL", autocompleteURLOptional.orElse(null));
+
 			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
 				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
 
