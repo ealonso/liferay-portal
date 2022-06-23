@@ -79,10 +79,18 @@ public class AddInfoItemStrutsAction implements StrutsAction {
 		String formItemId = ParamUtil.getString(
 			httpServletRequest, "formItemId");
 
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
 		String redirect = null;
 
 		try {
-			CaptchaUtil.check(httpServletRequest);
+			if (_isCaptchaLayoutStructureItem(
+					formItemId, httpServletRequest, themeDisplay.getLocale())) {
+
+				CaptchaUtil.check(httpServletRequest);
+			}
 
 			InfoItemCreator<Object> infoItemCreator =
 				_infoItemServiceTracker.getFirstInfoItemService(
@@ -91,10 +99,6 @@ public class AddInfoItemStrutsAction implements StrutsAction {
 			if (infoItemCreator == null) {
 				throw new InfoFormException();
 			}
-
-			ThemeDisplay themeDisplay =
-				(ThemeDisplay)httpServletRequest.getAttribute(
-					WebKeys.THEME_DISPLAY);
 
 			infoItemCreator.createFromInfoItemFieldValues(
 				themeDisplay.getScopeGroupId(),
