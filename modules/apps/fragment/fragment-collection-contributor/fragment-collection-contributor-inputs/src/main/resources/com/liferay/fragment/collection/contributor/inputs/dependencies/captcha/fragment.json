@@ -3,5 +3,8 @@
 	"fragmentEntryKey": "captcha",
 	"icon": "reload",
 	"name": "captcha",
-	"type": "component"
+	"type": "component",
+	"typeOptions": {
+		"captcha": true
+	}
 }
