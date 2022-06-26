@@ -16,6 +16,7 @@ package com.liferay.fragment.internal.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
+import com.liferay.fragment.helper.FragmentEntryLinkHelper;
 import com.liferay.fragment.input.template.parser.InputTemplateNode;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
@@ -51,7 +52,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -114,24 +114,15 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 	}
 
-	private FragmentEntry _getContributedFragmentEntry(
-		FragmentEntryLink fragmentEntryLink) {
-
-		Map<String, FragmentEntry> fragmentCollectionContributorEntries =
-			_fragmentCollectionContributorTracker.getFragmentEntries();
-
-		return fragmentCollectionContributorEntries.get(
-			fragmentEntryLink.getRendererKey());
-	}
-
 	private FragmentEntryLink _getFragmentEntryLink(
 		FragmentRendererContext fragmentRendererContext) {
 
 		FragmentEntryLink fragmentEntryLink =
 			fragmentRendererContext.getFragmentEntryLink();
 
-		FragmentEntry fragmentEntry = _getContributedFragmentEntry(
-			fragmentEntryLink);
+		FragmentEntry fragmentEntry =
+			_fragmentEntryLinkHelper.getContributedFragmentEntry(
+				fragmentEntryLink);
 
 		if (fragmentEntry != null) {
 			fragmentEntryLink.setCss(fragmentEntry.getCss());
@@ -417,6 +408,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
+
+	@Reference
+	private FragmentEntryLinkHelper _fragmentEntryLinkHelper;
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
