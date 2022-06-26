@@ -14,15 +14,14 @@
 
 package com.liferay.fragment.entry.processor.freemarker;
 
-import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
 import com.liferay.fragment.entry.processor.freemarker.internal.configuration.FreeMarkerFragmentEntryProcessorConfiguration;
 import com.liferay.fragment.exception.FragmentEntryContentException;
+import com.liferay.fragment.helper.FragmentEntryLinkHelper;
 import com.liferay.fragment.input.template.parser.FragmentEntryInputTemplateNodeContextHelper;
 import com.liferay.fragment.input.template.parser.InputTemplateNode;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
-import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
@@ -156,9 +155,8 @@ public class FreeMarkerFragmentEntryProcessor
 			FragmentEntryInputTemplateNodeContextHelper
 				fragmentEntryInputTemplateNodeContextHelper =
 					new FragmentEntryInputTemplateNodeContextHelper(
-						_fragmentCollectionContributorTracker,
 						_fragmentEntryConfigurationParser,
-						_fragmentRendererTracker);
+						_fragmentEntryLinkHelper);
 
 			template.put(
 				"input",
@@ -303,14 +301,10 @@ public class FreeMarkerFragmentEntryProcessor
 	private ConfigurationProvider _configurationProvider;
 
 	@Reference
-	private FragmentCollectionContributorTracker
-		_fragmentCollectionContributorTracker;
-
-	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 
 	@Reference
-	private FragmentRendererTracker _fragmentRendererTracker;
+	private FragmentEntryLinkHelper _fragmentEntryLinkHelper;
 
 	@Reference
 	private Portal _portal;
