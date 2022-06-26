@@ -14,12 +14,8 @@
 
 package com.liferay.fragment.input.template.parser;
 
-import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
-import com.liferay.fragment.model.FragmentEntry;
+import com.liferay.fragment.helper.FragmentEntryLinkHelper;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.renderer.FragmentRenderer;
-import com.liferay.fragment.renderer.FragmentRendererTracker;
-import com.liferay.fragment.service.FragmentEntryLocalServiceUtil;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.info.exception.InfoFormValidationException;
@@ -32,12 +28,10 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,15 +42,11 @@ import javax.servlet.http.HttpServletRequest;
 public class FragmentEntryInputTemplateNodeContextHelper {
 
 	public FragmentEntryInputTemplateNodeContextHelper(
-		FragmentCollectionContributorTracker
-			fragmentCollectionContributorTracker,
 		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
-		FragmentRendererTracker fragmentRendererTracker) {
+		FragmentEntryLinkHelper fragmentEntryLinkHelper) {
 
-		_fragmentCollectionContributorTracker =
-			fragmentCollectionContributorTracker;
 		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
-		_fragmentRendererTracker = fragmentRendererTracker;
+		_fragmentEntryLinkHelper = fragmentEntryLinkHelper;
 	}
 
 	public InputTemplateNode toInputTemplateNode(
@@ -108,8 +98,9 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 				fragmentEntryLink.getEditableValues(),
 				new FragmentConfigurationField(
 					"inputLabel", "string",
-					_getFragmentEntryName(fragmentEntryLink, locale), true,
-					"text"),
+					_fragmentEntryLinkHelper.getFragmentEntryName(
+						fragmentEntryLink, locale),
+					true, "text"),
 				locale));
 
 		String name = "name";
@@ -186,48 +177,8 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 		return inputTemplateNode;
 	}
 
-	private String _getFragmentEntryName(
-		FragmentEntryLink fragmentEntryLink, Locale locale) {
-
-		FragmentEntry fragmentEntry =
-			FragmentEntryLocalServiceUtil.fetchFragmentEntry(
-				fragmentEntryLink.getFragmentEntryId());
-
-		if (fragmentEntry != null) {
-			return fragmentEntry.getName();
-		}
-
-		String rendererKey = fragmentEntryLink.getRendererKey();
-
-		if (Validator.isNull(rendererKey)) {
-			return StringPool.BLANK;
-		}
-
-		Map<String, FragmentEntry> fragmentEntries =
-			_fragmentCollectionContributorTracker.getFragmentEntries(locale);
-
-		FragmentEntry contributedFragmentEntry = fragmentEntries.get(
-			rendererKey);
-
-		if (contributedFragmentEntry != null) {
-			return contributedFragmentEntry.getName();
-		}
-
-		FragmentRenderer fragmentRenderer =
-			_fragmentRendererTracker.getFragmentRenderer(
-				fragmentEntryLink.getRendererKey());
-
-		if (fragmentRenderer != null) {
-			return fragmentRenderer.getLabel(locale);
-		}
-
-		return StringPool.BLANK;
-	}
-
-	private final FragmentCollectionContributorTracker
-		_fragmentCollectionContributorTracker;
 	private final FragmentEntryConfigurationParser
 		_fragmentEntryConfigurationParser;
-	private final FragmentRendererTracker _fragmentRendererTracker;
+	private final FragmentEntryLinkHelper _fragmentEntryLinkHelper;
 
 }
