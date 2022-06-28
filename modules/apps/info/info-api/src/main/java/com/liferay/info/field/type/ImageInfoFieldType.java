@@ -27,6 +27,9 @@ public class ImageInfoFieldType implements InfoFieldType {
 	public static final Attribute<TextInfoFieldType, Long> MAX_FILE_SIZE =
 		new Attribute<>();
 
+	public static final Attribute<TextInfoFieldType, Boolean>
+		SELECT_FROM_DOCUMENT_LIBRARY = new Attribute<>();
+
 	@Override
 	public String getName() {
 		return "image";
