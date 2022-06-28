@@ -27,6 +27,10 @@ import com.liferay.list.type.model.ListTypeEntry;
 import com.liferay.list.type.service.ListTypeEntryLocalServiceUtil;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.model.ObjectFieldSetting;
+import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -40,6 +44,23 @@ public class ObjectFieldDBTypeUtil {
 
 	public static InfoField<?> addAttributes(
 		InfoField.FinalStep finalStep, ObjectField objectField) {
+
+		if (Objects.equals(
+				objectField.getBusinessType(),
+				ObjectFieldConstants.BUSINESS_TYPE_ATTACHMENT)) {
+
+			finalStep.attribute(
+				ImageInfoFieldType.ACCEPTED_FILE_EXTENSIONS,
+				_getAcceptedFileExtensions(objectField));
+
+			finalStep.attribute(
+				ImageInfoFieldType.MAXIMUM_FILE_SIZE,
+				_getMaximumFileSize(objectField));
+
+			finalStep.attribute(
+				ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY,
+				_isSelectFromDocumentLibrary(objectField));
+		}
 
 		if (Objects.equals(
 				objectField.getBusinessType(),
@@ -112,6 +133,30 @@ public class ObjectFieldDBTypeUtil {
 		return TextInfoFieldType.INSTANCE;
 	}
 
+	private static String _getAcceptedFileExtensions(ObjectField objectField) {
+		ObjectFieldSetting acceptedFileExtensionsObjectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "acceptedFileExtensions");
+
+		if (acceptedFileExtensionsObjectFieldSetting == null) {
+			return StringPool.BLANK;
+		}
+
+		return acceptedFileExtensionsObjectFieldSetting.getValue();
+	}
+
+	private static long _getMaximumFileSize(ObjectField objectField) {
+		ObjectFieldSetting objectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "maximumFileSize");
+
+		if (objectFieldSetting == null) {
+			return 0L;
+		}
+
+		return GetterUtil.getLong(objectFieldSetting.getValue());
+	}
+
 	private static List<SelectInfoFieldType.Option> _getOptions(
 		ObjectField objectField) {
 
@@ -129,6 +174,21 @@ public class ObjectFieldDBTypeUtil {
 		}
 
 		return options;
+	}
+
+	private static boolean _isSelectFromDocumentLibrary(
+		ObjectField objectField) {
+
+		ObjectFieldSetting objectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "fileSource");
+
+		if (objectFieldSetting == null) {
+			return false;
+		}
+
+		return Objects.equals(
+			objectFieldSetting.getValue(), "documentsAndMedia");
 	}
 
 }
