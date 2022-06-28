@@ -173,6 +173,36 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 
 			inputTemplateNode.addAttribute(
 				"maxFileSize", maximumFileSizeOptional.orElse(0L));
+
+			Optional<Boolean> selectFromDocumentLibraryOptional =
+				infoField.getAttributeOptional(
+					ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY);
+
+			boolean selectFromDocumentLibrary =
+				selectFromDocumentLibraryOptional.orElse(false);
+
+			inputTemplateNode.addAttribute(
+				"selectFromDocumentLibrary", selectFromDocumentLibrary);
+
+			if (selectFromDocumentLibrary) {
+				FileItemSelectorCriterion fileItemSelectorCriterion =
+					new FileItemSelectorCriterion();
+
+				fileItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+					new FileEntryItemSelectorReturnType());
+
+				RequestBackedPortletURLFactory requestBackedPortletURLFactory =
+					RequestBackedPortletURLFactoryUtil.create(
+						httpServletRequest);
+
+				PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
+					requestBackedPortletURLFactory,
+					fragmentEntryLink.getNamespace() + "selectFileEntry",
+					fileItemSelectorCriterion);
+
+				inputTemplateNode.addAttribute(
+					"selectFromDocumentLibraryURL", itemSelectorURL.toString());
+			}
 		}
 		else if (infoField.getInfoFieldType() instanceof NumberInfoFieldType) {
 			String dataType = "integer";
@@ -228,53 +258,6 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 			}
 
 			inputTemplateNode.addAttribute("options", options);
-		}
-
-		if (infoFieldType instanceof ImageInfoFieldType) {
-			Optional<String> acceptedFileExtensionsOptional =
-				infoField.getAttributeOptional(
-					ImageInfoFieldType.ACCEPTED_FILE_EXTENSIONS);
-
-			inputTemplateNode.addAttribute(
-				"acceptedFileExtensions",
-				acceptedFileExtensionsOptional.orElse(StringPool.BLANK));
-
-			Optional<Long> maximumFileSizeOptional =
-				infoField.getAttributeOptional(
-					ImageInfoFieldType.MAXIMUM_FILE_SIZE);
-
-			inputTemplateNode.addAttribute(
-				"maximumFileSize", maximumFileSizeOptional.orElse(0L));
-
-			Optional<Boolean> selectFromDocumentLibraryOptional =
-				infoField.getAttributeOptional(
-					ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY);
-
-			boolean selectFromDocumentLibrary =
-				selectFromDocumentLibraryOptional.orElse(false);
-
-			inputTemplateNode.addAttribute(
-				"selectFromDocumentLibrary", selectFromDocumentLibrary);
-
-			if (selectFromDocumentLibrary) {
-				FileItemSelectorCriterion fileItemSelectorCriterion =
-					new FileItemSelectorCriterion();
-
-				fileItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-					new FileEntryItemSelectorReturnType());
-
-				RequestBackedPortletURLFactory requestBackedPortletURLFactory =
-					RequestBackedPortletURLFactoryUtil.create(
-						httpServletRequest);
-
-				PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
-					requestBackedPortletURLFactory,
-					fragmentEntryLink.getNamespace() + "selectFileEntry",
-					fileItemSelectorCriterion);
-
-				inputTemplateNode.addAttribute(
-					"selectFromDocumentLibraryURL", itemSelectorURL.toString());
-			}
 		}
 
 		return inputTemplateNode;
