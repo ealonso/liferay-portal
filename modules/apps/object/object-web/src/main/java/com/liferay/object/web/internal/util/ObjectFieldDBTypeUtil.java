@@ -42,6 +42,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.object.model.ObjectFieldSetting;
+import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -59,6 +62,23 @@ public class ObjectFieldDBTypeUtil {
 		InfoField.FinalStep finalStep, ObjectField objectField,
 		ObjectScopeProviderRegistry objectScopeProviderRegistry,
 		RESTContextPathResolverRegistry restContextPathResolverRegistry) {
+
+		if (Objects.equals(
+				objectField.getBusinessType(),
+				ObjectFieldConstants.BUSINESS_TYPE_ATTACHMENT)) {
+
+			finalStep.attribute(
+				ImageInfoFieldType.ALLOWED_FILE_EXTENSIONS,
+				_getAcceptedFileExtensions(objectField));
+
+			finalStep.attribute(
+				ImageInfoFieldType.MAX_FILE_SIZE,
+				_getMaximumFileSize(objectField));
+
+			finalStep.attribute(
+				ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY,
+				_isSelectFromDocumentLibrary(objectField));
+		}
 
 		if (Objects.equals(
 				objectField.getBusinessType(),
@@ -141,6 +161,18 @@ public class ObjectFieldDBTypeUtil {
 		return TextInfoFieldType.INSTANCE;
 	}
 
+	private static String _getAcceptedFileExtensions(ObjectField objectField) {
+		ObjectFieldSetting acceptedFileExtensionsObjectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "acceptedFileExtensions");
+
+		if (acceptedFileExtensionsObjectFieldSetting == null) {
+			return StringPool.BLANK;
+		}
+
+		return acceptedFileExtensionsObjectFieldSetting.getValue();
+	}
+
 	private static String _getAPIURL(
 		ObjectField objectField,
 		ObjectScopeProviderRegistry objectScopeProviderRegistry,
@@ -200,6 +232,18 @@ public class ObjectFieldDBTypeUtil {
 		}
 	}
 
+	private static long _getMaximumFileSize(ObjectField objectField) {
+		ObjectFieldSetting objectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "maximumFileSize");
+
+		if (objectFieldSetting == null) {
+			return 0L;
+		}
+
+		return GetterUtil.getLong(objectFieldSetting.getValue());
+	}
+
 	private static List<SelectInfoFieldType.Option> _getOptions(
 		ObjectField objectField) {
 
@@ -217,6 +261,21 @@ public class ObjectFieldDBTypeUtil {
 		}
 
 		return options;
+	}
+
+	private static boolean _isSelectFromDocumentLibrary(
+		ObjectField objectField) {
+
+		ObjectFieldSetting objectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "fileSource");
+
+		if (objectFieldSetting == null) {
+			return false;
+		}
+
+		return Objects.equals(
+			objectFieldSetting.getValue(), "documentsAndMedia");
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
