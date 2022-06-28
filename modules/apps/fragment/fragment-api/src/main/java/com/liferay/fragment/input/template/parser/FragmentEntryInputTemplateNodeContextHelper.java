@@ -29,6 +29,7 @@ import com.liferay.info.field.type.InfoFieldType;
 import com.liferay.info.field.type.NumberInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.form.InfoForm;
+import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -52,12 +53,14 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 		FragmentCollectionContributorTracker
 			fragmentCollectionContributorTracker,
 		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
-		FragmentRendererTracker fragmentRendererTracker) {
+		FragmentRendererTracker fragmentRendererTracker,
+		ItemSelector itemSelector) {
 
 		_fragmentCollectionContributorTracker =
 			fragmentCollectionContributorTracker;
 		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
 		_fragmentRendererTracker = fragmentRendererTracker;
+		_itemSelector = itemSelector;
 	}
 
 	public InputTemplateNode toInputTemplateNode(
@@ -253,5 +256,6 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 	private final FragmentEntryConfigurationParser
 		_fragmentEntryConfigurationParser;
 	private final FragmentRendererTracker _fragmentRendererTracker;
+	private final ItemSelector _itemSelector;
 
 }

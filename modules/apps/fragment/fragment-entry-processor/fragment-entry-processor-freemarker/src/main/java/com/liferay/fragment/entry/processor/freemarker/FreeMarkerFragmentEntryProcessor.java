@@ -24,6 +24,7 @@ import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringPool;
@@ -149,7 +150,7 @@ public class FreeMarkerFragmentEntryProcessor
 							new FragmentEntryInputTemplateNodeContextHelper(
 								_fragmentCollectionContributorTracker,
 								_fragmentEntryConfigurationParser,
-								_fragmentRendererTracker);
+								_fragmentRendererTracker, _itemSelector);
 
 					return fragmentEntryInputTemplateNodeContextHelper.
 						toInputTemplateNode(
@@ -312,6 +313,9 @@ public class FreeMarkerFragmentEntryProcessor
 
 	@Reference
 	private FragmentRendererTracker _fragmentRendererTracker;
+
+	@Reference
+	private ItemSelector _itemSelector;
 
 	@Reference
 	private Portal _portal;
