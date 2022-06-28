@@ -79,13 +79,12 @@ public class ObjectFieldDBTypeUtil {
 				ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY,
 				_isSelectFromDocumentLibrary(objectField));
 		}
-
-		if (Objects.equals(
-				objectField.getBusinessType(),
-				ObjectFieldConstants.BUSINESS_TYPE_DECIMAL) ||
-			Objects.equals(
-				objectField.getBusinessType(),
-				ObjectFieldConstants.BUSINESS_TYPE_PRECISION_DECIMAL)) {
+		else if (Objects.equals(
+					objectField.getBusinessType(),
+					ObjectFieldConstants.BUSINESS_TYPE_DECIMAL) ||
+				 Objects.equals(
+					 objectField.getBusinessType(),
+					 ObjectFieldConstants.BUSINESS_TYPE_PRECISION_DECIMAL)) {
 
 			finalStep.attribute(NumberInfoFieldType.DECIMAL, true);
 		}
