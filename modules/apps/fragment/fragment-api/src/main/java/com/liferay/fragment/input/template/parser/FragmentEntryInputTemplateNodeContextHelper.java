@@ -30,8 +30,12 @@ import com.liferay.info.field.type.NumberInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.form.InfoForm;
 import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
+import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -41,6 +45,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -205,9 +211,32 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 				infoField.getAttributeOptional(
 					ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY);
 
+			boolean selectFromDocumentLibrary =
+				selectFromDocumentLibraryOptional.orElse(false);
+
 			inputTemplateNode.addAttribute(
-				"selectFromDocumentLibrary",
-				selectFromDocumentLibraryOptional.orElse(false));
+				"selectFromDocumentLibrary", selectFromDocumentLibrary);
+
+			if (selectFromDocumentLibrary) {
+				FileItemSelectorCriterion fileItemSelectorCriterion =
+					new FileItemSelectorCriterion();
+
+				fileItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+					new FileEntryItemSelectorReturnType());
+
+				RequestBackedPortletURLFactory requestBackedPortletURLFactory =
+					RequestBackedPortletURLFactoryUtil.create(
+						httpServletRequest);
+
+				PortletURL itemSelectorURL = _itemSelector.getItemSelectorURL(
+					requestBackedPortletURLFactory,
+					fragmentEntryLink.getNamespace() +
+						"toFileEntrySelectedItem",
+					fileItemSelectorCriterion);
+
+				inputTemplateNode.addAttribute(
+					"selectFromDocumentLibraryURL", itemSelectorURL.toString());
+			}
 		}
 
 		return inputTemplateNode;
