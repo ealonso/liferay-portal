@@ -199,23 +199,22 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	}
 
 	private String _renderFragmentEntry(
-		String configuration, String css, String fragmentElementId,
-		long fragmentEntryId, String html,
-		HttpServletRequest httpServletRequest, String js, String mode,
-		String namespace) {
+		String configuration, String css, FragmentEntryLink fragmentEntryLink,
+		FragmentRendererContext fragmentRendererContext, String html,
+		HttpServletRequest httpServletRequest) {
 
 		StringBundler sb = new StringBundler(22);
 
 		sb.append("<div id=\"");
 
-		sb.append(fragmentElementId);
+		sb.append(fragmentRendererContext.getFragmentElementId());
 
 		sb.append("\" >");
 		sb.append(html);
 		sb.append("</div>");
 
 		if (Validator.isNotNull(css)) {
-			String outputKey = fragmentEntryId + "_CSS";
+			String outputKey = fragmentEntryLink.getFragmentEntryId() + "_CSS";
 
 			OutputData outputData = (OutputData)httpServletRequest.getAttribute(
 				WebKeys.OUTPUT_DATA);
@@ -239,7 +238,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			}
 
 			if (!cssLoaded ||
-				Objects.equals(mode, FragmentEntryLinkConstants.EDIT)) {
+				Objects.equals(
+					fragmentRendererContext.getMode(),
+					FragmentEntryLinkConstants.EDIT)) {
 
 				sb.append("<style>");
 				sb.append(css);
@@ -255,14 +256,14 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			}
 		}
 
-		if (Validator.isNotNull(js)) {
+		if (Validator.isNotNull(fragmentEntryLink.getJs())) {
 			sb.append("<script>(function() {");
 			sb.append("var configuration = ");
 			sb.append(configuration);
 			sb.append("; var fragmentElement = document.querySelector('#");
-			sb.append(fragmentElementId);
+			sb.append(fragmentRendererContext.getFragmentElementId());
 			sb.append("'); var fragmentNamespace = '");
-			sb.append(namespace);
+			sb.append(fragmentEntryLink.getNamespace());
 			sb.append("'; var input = ");
 			sb.append(JSONUtil.toString(_getInputJSONObject()));
 			sb.append("; var layoutMode = '");
@@ -271,7 +272,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					_portal.getOriginalServletRequest(httpServletRequest),
 					"p_l_mode", Constants.VIEW));
 			sb.append("';");
-			sb.append(js);
+			sb.append(fragmentEntryLink.getJs());
 			sb.append(";}());</script>");
 		}
 
@@ -381,11 +382,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		content = _renderFragmentEntry(
-			configurationJSONObject.toString(), css,
-			fragmentRendererContext.getFragmentElementId(),
-			fragmentEntryLink.getFragmentEntryId(), html, httpServletRequest,
-			fragmentEntryLink.getJs(), fragmentRendererContext.getMode(),
-			fragmentEntryLink.getNamespace());
+			configurationJSONObject.toString(), css, fragmentEntryLink,
+			fragmentRendererContext, html, httpServletRequest);
 
 		if (_isCacheable(fragmentEntryLink, fragmentRendererContext)) {
 			portalCache.put(cacheKeySB.toString(), content);
