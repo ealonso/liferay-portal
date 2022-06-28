@@ -16,6 +16,7 @@ package com.liferay.fragment.internal.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
+import com.liferay.fragment.input.template.parser.FragmentEntryInputTemplateNodeContextHelper;
 import com.liferay.fragment.input.template.parser.InputTemplateNode;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
@@ -24,10 +25,12 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
+import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.info.form.InfoForm;
+import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -143,10 +146,23 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
-	private JSONObject _getInputJSONObject() {
-		InputTemplateNode inputTemplateNode = new InputTemplateNode(
-			StringPool.BLANK, StringPool.BLANK, StringPool.BLANK, "name", false,
-			false, false, "type", "value");
+	private JSONObject _getInputJSONObject(
+		FragmentEntryLink fragmentEntryLink,
+		FragmentRendererContext fragmentRendererContext,
+		HttpServletRequest httpServletRequest) {
+
+		FragmentEntryInputTemplateNodeContextHelper
+			fragmentEntryInputTemplateNodeContextHelper =
+				new FragmentEntryInputTemplateNodeContextHelper(
+					_fragmentCollectionContributorTracker,
+					_fragmentEntryConfigurationParser, _fragmentRendererTracker,
+					_itemSelector);
+
+		InputTemplateNode inputTemplateNode =
+			fragmentEntryInputTemplateNodeContextHelper.toInputTemplateNode(
+				fragmentEntryLink, httpServletRequest,
+				fragmentRendererContext.getInfoFormOptional(),
+				fragmentRendererContext.getLocale());
 
 		return inputTemplateNode.toJSONObject();
 	}
@@ -265,7 +281,11 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			sb.append("'); var fragmentNamespace = '");
 			sb.append(fragmentEntryLink.getNamespace());
 			sb.append("'; var input = ");
-			sb.append(JSONUtil.toString(_getInputJSONObject()));
+			sb.append(
+				JSONUtil.toString(
+					_getInputJSONObject(
+						fragmentEntryLink, fragmentRendererContext,
+						httpServletRequest)));
 			sb.append("; var layoutMode = '");
 			sb.append(
 				ParamUtil.getString(
@@ -421,6 +441,12 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
+
+	@Reference
+	private FragmentRendererTracker _fragmentRendererTracker;
+
+	@Reference
+	private ItemSelector _itemSelector;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;

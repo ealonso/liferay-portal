@@ -191,7 +191,8 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 					option.getLabel(locale), option.getValue());
 			}
 		}
-		else if (infoFieldType instanceof ImageInfoFieldType) {
+
+		if (infoFieldType instanceof ImageInfoFieldType) {
 			Optional<String> acceptedFileExtensionsOptional =
 				infoField.getAttributeOptional(
 					ImageInfoFieldType.ACCEPTED_FILE_EXTENSIONS);
