@@ -143,43 +143,42 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 					"inputShowLabel", "boolean", "true", false, "checkbox"),
 				locale));
 
-		String type = "type";
-
-		if (infoField != null) {
-			InfoFieldType infoFieldType = infoField.getInfoFieldType();
-
-			type = infoFieldType.getName();
+		if (infoField == null) {
+			return new InputTemplateNode(
+				errorMessage, inputHelpText, inputLabel, name, required,
+				inputShowHelpText, inputShowLabel, "type", "value");
 		}
+
+		InfoFieldType infoFieldType = infoField.getInfoFieldType();
 
 		InputTemplateNode inputTemplateNode = new InputTemplateNode(
 			errorMessage, inputHelpText, inputLabel, name, required,
-			inputShowHelpText, inputShowLabel, type, "value");
+			inputShowHelpText, inputShowLabel, infoFieldType.getName(),
+			"value");
 
-		if (infoField != null) {
-			if (infoField.getInfoFieldType() instanceof NumberInfoFieldType) {
-				String dataType = "integer";
+		if (infoField.getInfoFieldType() instanceof NumberInfoFieldType) {
+			String dataType = "integer";
 
-				Optional<Boolean> decimalOptional =
-					infoField.getAttributeOptional(NumberInfoFieldType.DECIMAL);
+			Optional<Boolean> decimalOptional = infoField.getAttributeOptional(
+				NumberInfoFieldType.DECIMAL);
 
-				if (decimalOptional.orElse(false)) {
-					dataType = "decimal";
-				}
-
-				inputTemplateNode.addAttribute("dataType", dataType);
+			if (decimalOptional.orElse(false)) {
+				dataType = "decimal";
 			}
 
-			if (infoField.getInfoFieldType() instanceof SelectInfoFieldType) {
-				Optional<List<SelectInfoFieldType.Option>> optionsOptional =
-					infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
+			inputTemplateNode.addAttribute("dataType", dataType);
+		}
 
-				List<SelectInfoFieldType.Option> options =
-					optionsOptional.orElse(new ArrayList<>());
+		if (infoField.getInfoFieldType() instanceof SelectInfoFieldType) {
+			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
+				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
 
-				for (SelectInfoFieldType.Option option : options) {
-					inputTemplateNode.addOption(
-						option.getLabel(locale), option.getValue());
-				}
+			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
+				new ArrayList<>());
+
+			for (SelectInfoFieldType.Option option : options) {
+				inputTemplateNode.addOption(
+					option.getLabel(locale), option.getValue());
 			}
 		}
 
