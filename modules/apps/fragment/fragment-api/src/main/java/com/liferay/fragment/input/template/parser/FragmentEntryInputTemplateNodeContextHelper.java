@@ -166,32 +166,6 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 			inputShowHelpText, inputShowLabel, infoFieldType.getName(),
 			"value");
 
-		if (infoField.getInfoFieldType() instanceof NumberInfoFieldType) {
-			String dataType = "integer";
-
-			Optional<Boolean> decimalOptional = infoField.getAttributeOptional(
-				NumberInfoFieldType.DECIMAL);
-
-			if (decimalOptional.orElse(false)) {
-				dataType = "decimal";
-			}
-
-			inputTemplateNode.addAttribute("dataType", dataType);
-		}
-
-		if (infoField.getInfoFieldType() instanceof SelectInfoFieldType) {
-			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
-				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
-
-			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
-				new ArrayList<>());
-
-			for (SelectInfoFieldType.Option option : options) {
-				inputTemplateNode.addOption(
-					option.getLabel(locale), option.getValue());
-			}
-		}
-
 		if (infoFieldType instanceof ImageInfoFieldType) {
 			Optional<String> acceptedFileExtensionsOptional =
 				infoField.getAttributeOptional(
@@ -237,6 +211,32 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 
 				inputTemplateNode.addAttribute(
 					"selectFromDocumentLibraryURL", itemSelectorURL.toString());
+			}
+		}
+
+		if (infoField.getInfoFieldType() instanceof NumberInfoFieldType) {
+			String dataType = "integer";
+
+			Optional<Boolean> decimalOptional = infoField.getAttributeOptional(
+				NumberInfoFieldType.DECIMAL);
+
+			if (decimalOptional.orElse(false)) {
+				dataType = "decimal";
+			}
+
+			inputTemplateNode.addAttribute("dataType", dataType);
+		}
+
+		if (infoField.getInfoFieldType() instanceof SelectInfoFieldType) {
+			Optional<List<SelectInfoFieldType.Option>> optionsOptional =
+				infoField.getAttributeOptional(SelectInfoFieldType.OPTIONS);
+
+			List<SelectInfoFieldType.Option> options = optionsOptional.orElse(
+				new ArrayList<>());
+
+			for (SelectInfoFieldType.Option option : options) {
+				inputTemplateNode.addOption(
+					option.getLabel(locale), option.getValue());
 			}
 		}
 
