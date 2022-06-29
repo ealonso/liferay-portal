@@ -221,6 +221,31 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 			inputTemplateNode.addAttribute("options", options);
 		}
 
+		if (infoFieldType instanceof ImageInfoFieldType) {
+			Optional<String> acceptedFileExtensionsOptional =
+				infoField.getAttributeOptional(
+					ImageInfoFieldType.ACCEPTED_FILE_EXTENSIONS);
+
+			inputTemplateNode.addAttribute(
+				"acceptedFileExtensions",
+				acceptedFileExtensionsOptional.orElse(StringPool.BLANK));
+
+			Optional<Long> maximumFileSizeOptional =
+				infoField.getAttributeOptional(
+					ImageInfoFieldType.MAXIMUM_FILE_SIZE);
+
+			inputTemplateNode.addAttribute(
+				"maximumFileSize", maximumFileSizeOptional.orElse(0L));
+
+			Optional<Boolean> selectFromDocumentLibraryOptional =
+				infoField.getAttributeOptional(
+					ImageInfoFieldType.SELECT_FROM_DOCUMENT_LIBRARY);
+
+			inputTemplateNode.addAttribute(
+				"selectFromDocumentLibrary",
+				selectFromDocumentLibraryOptional.orElse(false));
+		}
+
 		return inputTemplateNode;
 	}
 
