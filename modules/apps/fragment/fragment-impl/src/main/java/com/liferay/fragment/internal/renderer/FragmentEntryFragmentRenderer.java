@@ -144,8 +144,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		FragmentEntryInputTemplateNodeContextHelper
 			fragmentEntryInputTemplateNodeContextHelper =
 				new FragmentEntryInputTemplateNodeContextHelper(
-					_fragmentEntryConfigurationParser,
-					_fragmentEntryLinkHelper);
+					_fragmentEntryLinkHelper.getFragmentEntryName(
+						fragmentEntryLink, locale),
+					_fragmentEntryConfigurationParser);
 
 		InputTemplateNode inputTemplateNode =
 			fragmentEntryInputTemplateNodeContextHelper.toInputTemplateNode(

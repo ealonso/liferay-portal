@@ -155,8 +155,10 @@ public class FreeMarkerFragmentEntryProcessor
 			FragmentEntryInputTemplateNodeContextHelper
 				fragmentEntryInputTemplateNodeContextHelper =
 					new FragmentEntryInputTemplateNodeContextHelper(
-						_fragmentEntryConfigurationParser,
-						_fragmentEntryLinkHelper);
+						_fragmentEntryLinkHelper.getFragmentEntryName(
+							fragmentEntryLink,
+							fragmentEntryProcessorContext.getLocale()),
+						_fragmentEntryConfigurationParser);
 
 			template.put(
 				"input",

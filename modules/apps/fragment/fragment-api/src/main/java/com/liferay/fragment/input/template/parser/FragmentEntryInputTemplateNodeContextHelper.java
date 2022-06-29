@@ -14,7 +14,6 @@
 
 package com.liferay.fragment.input.template.parser;
 
-import com.liferay.fragment.helper.FragmentEntryLinkHelper;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
@@ -47,11 +46,11 @@ import javax.servlet.http.HttpServletRequest;
 public class FragmentEntryInputTemplateNodeContextHelper {
 
 	public FragmentEntryInputTemplateNodeContextHelper(
-		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
-		FragmentEntryLinkHelper fragmentEntryLinkHelper) {
+		String defaultInputLabel,
+		FragmentEntryConfigurationParser fragmentEntryConfigurationParser) {
 
+		_defaultInputLabel = defaultInputLabel;
 		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
-		_fragmentEntryLinkHelper = fragmentEntryLinkHelper;
 	}
 
 	public InputTemplateNode toInputTemplateNode(
@@ -100,10 +99,7 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 			_fragmentEntryConfigurationParser.getFieldValue(
 				fragmentEntryLink.getEditableValues(),
 				new FragmentConfigurationField(
-					"inputLabel", "string",
-					_fragmentEntryLinkHelper.getFragmentEntryName(
-						fragmentEntryLink, locale),
-					true, "text"),
+					"inputLabel", "string", _defaultInputLabel, true, "text"),
 				locale));
 
 		String name = "name";
@@ -223,8 +219,8 @@ public class FragmentEntryInputTemplateNodeContextHelper {
 			"1");
 	}
 
+	private final String _defaultInputLabel;
 	private final FragmentEntryConfigurationParser
 		_fragmentEntryConfigurationParser;
-	private final FragmentEntryLinkHelper _fragmentEntryLinkHelper;
 
 }
