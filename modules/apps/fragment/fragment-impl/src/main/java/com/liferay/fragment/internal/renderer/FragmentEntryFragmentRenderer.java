@@ -16,7 +16,6 @@ package com.liferay.fragment.internal.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
-import com.liferay.fragment.helper.FragmentEntryLinkHelper;
 import com.liferay.fragment.input.template.parser.FragmentEntryInputTemplateNodeContextHelper;
 import com.liferay.fragment.input.template.parser.InputTemplateNode;
 import com.liferay.fragment.model.FragmentEntry;
@@ -54,6 +53,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -116,15 +116,24 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 	}
 
+	private FragmentEntry _getContributedFragmentEntry(
+		FragmentEntryLink fragmentEntryLink) {
+
+		Map<String, FragmentEntry> fragmentCollectionContributorEntries =
+			_fragmentCollectionContributorTracker.getFragmentEntries();
+
+		return fragmentCollectionContributorEntries.get(
+			fragmentEntryLink.getRendererKey());
+	}
+
 	private FragmentEntryLink _getFragmentEntryLink(
 		FragmentRendererContext fragmentRendererContext) {
 
 		FragmentEntryLink fragmentEntryLink =
 			fragmentRendererContext.getFragmentEntryLink();
 
-		FragmentEntry fragmentEntry =
-			_fragmentEntryLinkHelper.getContributedFragmentEntry(
-				fragmentEntryLink);
+		FragmentEntry fragmentEntry = _getContributedFragmentEntry(
+			fragmentEntryLink);
 
 		if (fragmentEntry != null) {
 			fragmentEntryLink.setCss(fragmentEntry.getCss());
@@ -136,6 +145,27 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
+	private String _getFragmentEntryName(FragmentEntryLink fragmentEntryLink) {
+		FragmentEntry fragmentEntry = null;
+
+		if (Validator.isNotNull(fragmentEntryLink.getRendererKey())) {
+			fragmentEntry =
+				_fragmentCollectionContributorTracker.getFragmentEntry(
+					fragmentEntryLink.getRendererKey());
+		}
+
+		if (fragmentEntry == null) {
+			fragmentEntry = _fragmentEntryLocalService.fetchFragmentEntry(
+				fragmentEntryLink.getFragmentEntryId());
+		}
+
+		if (fragmentEntry == null) {
+			return StringPool.BLANK;
+		}
+
+		return fragmentEntry.getName();
+	}
+
 	private JSONObject _getInputJSONObject(
 		FragmentEntryLink fragmentEntryLink,
 		HttpServletRequest httpServletRequest,
@@ -144,8 +174,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		FragmentEntryInputTemplateNodeContextHelper
 			fragmentEntryInputTemplateNodeContextHelper =
 				new FragmentEntryInputTemplateNodeContextHelper(
-					_fragmentEntryLinkHelper.getFragmentEntryName(
-						fragmentEntryLink, locale),
+					_getFragmentEntryName(fragmentEntryLink),
 					_fragmentEntryConfigurationParser);
 
 		InputTemplateNode inputTemplateNode =
@@ -434,9 +463,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
-
-	@Reference
-	private FragmentEntryLinkHelper _fragmentEntryLinkHelper;
 
 	@Reference
 	private FragmentEntryLocalService _fragmentEntryLocalService;
