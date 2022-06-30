@@ -29,24 +29,24 @@ import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectFieldSetting;
-import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.object.model.ObjectRelationship;
 import com.liferay.object.rest.context.path.RESTContextPathResolver;
 import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
 import com.liferay.object.scope.ObjectScopeProvider;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
+import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
 import com.liferay.object.service.ObjectRelationshipLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class ObjectFieldDBTypeUtil {
 				ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
 
 			finalStep.attribute(
-				SelectInfoFieldType.AUTOCOMPLETE_URL,
+				SelectInfoFieldType.OPTIONS_URL,
 				_getAPIURL(
 					objectField, objectScopeProviderRegistry,
 					restContextPathResolverRegistry));
@@ -173,31 +173,6 @@ public class ObjectFieldDBTypeUtil {
 		return acceptedFileExtensionsObjectFieldSetting.getValue();
 	}
 
-	private static FileInfoFieldType.FileSourceType _getFileSourceType(
-		ObjectField objectField) {
-
-		ObjectFieldSetting objectFieldSetting =
-			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
-				objectField.getObjectFieldId(), "fileSource");
-
-		if (objectFieldSetting == null) {
-			return null;
-		}
-
-		if (Objects.equals(
-				objectFieldSetting.getValue(), "documentsAndMedia")) {
-
-			return FileInfoFieldType.FileSourceType.DOCUMENTS_AND_MEDIA;
-		}
-		else if (Objects.equals(
-					objectFieldSetting.getValue(), "userComputer")) {
-
-			return FileInfoFieldType.FileSourceType.USER_COMPUTER;
-		}
-
-		return null;
-	}
-
 	private static String _getAPIURL(
 		ObjectField objectField,
 		ObjectScopeProviderRegistry objectScopeProviderRegistry,
@@ -233,7 +208,32 @@ public class ObjectFieldDBTypeUtil {
 				objectScopeProviderRegistry));
 
 		return PortalUtil.getPortalURL(serviceContext.getRequest()) +
-			   restContextPath;
+			restContextPath;
+	}
+
+	private static FileInfoFieldType.FileSourceType _getFileSourceType(
+		ObjectField objectField) {
+
+		ObjectFieldSetting objectFieldSetting =
+			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
+				objectField.getObjectFieldId(), "fileSource");
+
+		if (objectFieldSetting == null) {
+			return null;
+		}
+
+		if (Objects.equals(
+				objectFieldSetting.getValue(), "documentsAndMedia")) {
+
+			return FileInfoFieldType.FileSourceType.DOCUMENTS_AND_MEDIA;
+		}
+		else if (Objects.equals(
+					objectFieldSetting.getValue(), "userComputer")) {
+
+			return FileInfoFieldType.FileSourceType.USER_COMPUTER;
+		}
+
+		return null;
 	}
 
 	private static long _getGroupId(
@@ -262,11 +262,23 @@ public class ObjectFieldDBTypeUtil {
 			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
 				objectField.getObjectFieldId(), "maximumFileSize");
 
+		long maximumFileSizeForGuestUsers =
+			ObjectConfigurationUtil.maximumFileSizeForGuestUsers();
+
 		if (objectFieldSetting == null) {
-			return 0;
+			return maximumFileSizeForGuestUsers;
 		}
 
-		return GetterUtil.getLong(objectFieldSetting.getValue());
+		long maximumFileSize = GetterUtil.getLong(
+			objectFieldSetting.getValue());
+
+		if ((maximumFileSizeForGuestUsers < maximumFileSize) &&
+			_isDefaultUser()) {
+
+			maximumFileSize = maximumFileSizeForGuestUsers;
+		}
+
+		return maximumFileSize;
 	}
 
 	private static List<SelectInfoFieldType.Option> _getOptions(
