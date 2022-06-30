@@ -44,6 +44,8 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.object.model.ObjectFieldSetting;
 import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -260,6 +262,23 @@ public class ObjectFieldDBTypeUtil {
 		}
 
 		return options;
+	}
+
+	private static boolean _isDefaultUser() {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext != null) {
+			return false;
+		}
+
+		User user = UserLocalServiceUtil.fetchUser(serviceContext.getUserId());
+
+		if ((user == null) && !user.isDefaultUser()) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private static boolean _isSelectFromDocumentLibrary(
