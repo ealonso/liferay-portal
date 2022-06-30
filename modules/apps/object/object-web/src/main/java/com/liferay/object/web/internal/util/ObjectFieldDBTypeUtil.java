@@ -238,11 +238,23 @@ public class ObjectFieldDBTypeUtil {
 			ObjectFieldSettingLocalServiceUtil.fetchObjectFieldSetting(
 				objectField.getObjectFieldId(), "maximumFileSize");
 
+		long maximumFileSizeForGuestUsers =
+			ObjectConfigurationUtil.maximumFileSizeForGuestUsers();
+
 		if (objectFieldSetting == null) {
-			return 0L;
+			return maximumFileSizeForGuestUsers;
 		}
 
-		return GetterUtil.getLong(objectFieldSetting.getValue());
+		long maximumFileSize = GetterUtil.getLong(
+			objectFieldSetting.getValue());
+
+		if ((maximumFileSizeForGuestUsers < maximumFileSize) &&
+			_isDefaultUser()) {
+
+			maximumFileSize = maximumFileSizeForGuestUsers;
+		}
+
+		return maximumFileSize;
 	}
 
 	private static List<SelectInfoFieldType.Option> _getOptions(
