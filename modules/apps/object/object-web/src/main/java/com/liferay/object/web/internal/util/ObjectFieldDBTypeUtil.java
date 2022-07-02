@@ -23,7 +23,6 @@ import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.model.ObjectField;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Objects;
 
@@ -33,12 +32,9 @@ import java.util.Objects;
 public class ObjectFieldDBTypeUtil {
 
 	public static InfoFieldType getInfoFieldType(ObjectField objectField) {
-		if (Validator.isNotNull(objectField.getRelationshipType())) {
-			return TextInfoFieldType.INSTANCE;
-		}
-		else if (Objects.equals(
-					objectField.getBusinessType(),
-					ObjectFieldConstants.BUSINESS_TYPE_BOOLEAN)) {
+		if (Objects.equals(
+				objectField.getBusinessType(),
+				ObjectFieldConstants.BUSINESS_TYPE_BOOLEAN)) {
 
 			return BooleanInfoFieldType.INSTANCE;
 		}
