@@ -14,8 +14,8 @@
 
 package com.liferay.fragment.internal.processor;
 
-import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
@@ -33,6 +33,10 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
@@ -52,10 +56,25 @@ public class FragmentEntryProcessorRegistryImpl
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			JSONArray availableTagsJSONArray =
 				fragmentEntryProcessor.getAvailableTagsJSONArray();
+
+			if (availableTagsJSONArray == null) {
+				continue;
+			}
+
+			for (int i = 0; i < availableTagsJSONArray.length(); i++) {
+				jsonArray.put(availableTagsJSONArray.getJSONObject(i));
+			}
+		}
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			JSONArray availableTagsJSONArray =
+				documentFragmentEntryProcessor.getAvailableTagsJSONArray();
 
 			if (availableTagsJSONArray == null) {
 				continue;
@@ -74,10 +93,25 @@ public class FragmentEntryProcessorRegistryImpl
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			JSONArray dataAttributesJSONArray =
 				fragmentEntryProcessor.getDataAttributesJSONArray();
+
+			if (dataAttributesJSONArray == null) {
+				continue;
+			}
+
+			for (int i = 0; i < dataAttributesJSONArray.length(); i++) {
+				jsonArray.put(dataAttributesJSONArray.getString(i));
+			}
+		}
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			JSONArray dataAttributesJSONArray =
+				documentFragmentEntryProcessor.getDataAttributesJSONArray();
 
 			if (dataAttributesJSONArray == null) {
 				continue;
@@ -98,7 +132,7 @@ public class FragmentEntryProcessorRegistryImpl
 		JSONObject jsonObject = _jsonFactory.createJSONObject();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			JSONObject defaultEditableValuesJSONObject =
 				fragmentEntryProcessor.getDefaultEditableValuesJSONObject(
@@ -108,6 +142,25 @@ public class FragmentEntryProcessorRegistryImpl
 				(defaultEditableValuesJSONObject.length() > 0)) {
 
 				Class<?> clazz = fragmentEntryProcessor.getClass();
+
+				jsonObject.put(
+					clazz.getName(), defaultEditableValuesJSONObject);
+			}
+		}
+
+		Document document = _getDocument(html);
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			JSONObject defaultEditableValuesJSONObject =
+				documentFragmentEntryProcessor.
+					getDefaultEditableValuesJSONObject(document, configuration);
+
+			if ((defaultEditableValuesJSONObject != null) &&
+				(defaultEditableValuesJSONObject.length() > 0)) {
+
+				Class<?> clazz = documentFragmentEntryProcessor.getClass();
 
 				jsonObject.put(
 					clazz.getName(), defaultEditableValuesJSONObject);
@@ -126,9 +179,16 @@ public class FragmentEntryProcessorRegistryImpl
 		String css = fragmentEntryLink.getCss();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			css = fragmentEntryProcessor.processFragmentEntryLinkCSS(
+				fragmentEntryLink, css, fragmentEntryProcessorContext);
+		}
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			css = documentFragmentEntryProcessor.processFragmentEntryLinkCSS(
 				fragmentEntryLink, css, fragmentEntryProcessorContext);
 		}
 
@@ -144,13 +204,24 @@ public class FragmentEntryProcessorRegistryImpl
 		String html = fragmentEntryLink.getHtml();
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			html = fragmentEntryProcessor.processFragmentEntryLinkHTML(
 				fragmentEntryLink, html, fragmentEntryProcessorContext);
 		}
 
-		return html;
+		Document document = _getDocument(html);
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			documentFragmentEntryProcessor.processFragmentEntryLinkHTML(
+				fragmentEntryLink, document, fragmentEntryProcessorContext);
+		}
+
+		Element bodyElement = document.body();
+
+		return bodyElement.html();
 	}
 
 	@Override
@@ -168,10 +239,19 @@ public class FragmentEntryProcessorRegistryImpl
 		}
 
 		for (FragmentEntryProcessor fragmentEntryProcessor :
-				_serviceTrackerList) {
+				_fragmentEntryProcessors) {
 
 			fragmentEntryProcessor.validateFragmentEntryHTML(
 				html, configuration);
+		}
+
+		Document document = _getDocument(html);
+
+		for (DocumentFragmentEntryProcessor documentFragmentEntryProcessor :
+				_documentFragmentEntryProcessors) {
+
+			documentFragmentEntryProcessor.validateFragmentEntryHTML(
+				document, configuration);
 		}
 
 		validHTMLs.add(html);
@@ -179,8 +259,13 @@ public class FragmentEntryProcessorRegistryImpl
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
-		_serviceTrackerList = ServiceTrackerListFactory.open(
+		_fragmentEntryProcessors = ServiceTrackerListFactory.open(
 			bundleContext, FragmentEntryProcessor.class,
+			Collections.reverseOrder(
+				new PropertyServiceReferenceComparator<>(
+					"fragment.entry.processor.priority")));
+		_documentFragmentEntryProcessors = ServiceTrackerListFactory.open(
+			bundleContext, DocumentFragmentEntryProcessor.class,
 			Collections.reverseOrder(
 				new PropertyServiceReferenceComparator<>(
 					"fragment.entry.processor.priority")));
@@ -188,7 +273,20 @@ public class FragmentEntryProcessorRegistryImpl
 
 	@Deactivate
 	protected void deactivate() {
-		_serviceTrackerList.close();
+		_fragmentEntryProcessors.close();
+		_documentFragmentEntryProcessors.close();
+	}
+
+	private Document _getDocument(String html) {
+		Document document = Jsoup.parseBodyFragment(html);
+
+		Document.OutputSettings outputSettings = new Document.OutputSettings();
+
+		outputSettings.prettyPrint(false);
+
+		document.outputSettings(outputSettings);
+
+		return document;
 	}
 
 	private static final ThreadLocal<Set<String>> _validHTMLsThreadLocal =
@@ -197,9 +295,11 @@ public class FragmentEntryProcessorRegistryImpl
 				"._validHTMLsThreadLocal",
 			HashSet::new);
 
+	private ServiceTrackerList<DocumentFragmentEntryProcessor>
+		_documentFragmentEntryProcessors;
+	private ServiceTrackerList<FragmentEntryProcessor> _fragmentEntryProcessors;
+
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	private ServiceTrackerList<FragmentEntryProcessor> _serviceTrackerList;
 
 }
