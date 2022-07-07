@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
@@ -104,6 +105,10 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 
 	public String getContentDisplay() {
 		return StringPool.BLANK;
+	}
+
+	public String getCssClass() {
+		return _LAYOUT_STRUCTURE_ITEM_CSS_CLASS_PREFIX + getItemType();
 	}
 
 	public Set<String> getCssClasses() {
@@ -243,6 +248,10 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return GetterUtil.getString(_getStyleProperty("shadow"));
 	}
 
+	public String getStyledCssClasses() {
+		return StringUtil.merge(getCssClasses(), StringPool.SPACE);
+	}
+
 	public String getTextAlignCssClass() {
 		return GetterUtil.getString(_getStyleProperty("textAlign"));
 	}
@@ -253,6 +262,10 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 
 	public String getTextColorCssClass() {
 		return _getColorCssClass("textColor");
+	}
+
+	public String getUniqueCssClass() {
+		return _LAYOUT_STRUCTURE_ITEM_CSS_CLASS_PREFIX + getItemId();
 	}
 
 	public String getWidth() {
@@ -505,6 +518,9 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		viewportStyleJSONObjects.put(
 			viewportSize.getViewportSizeId(), currentViewportStyleJSONObject);
 	}
+
+	private static final String _LAYOUT_STRUCTURE_ITEM_CSS_CLASS_PREFIX =
+		"lfr-layout-structure-item-";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		StyledLayoutStructureItem.class);
