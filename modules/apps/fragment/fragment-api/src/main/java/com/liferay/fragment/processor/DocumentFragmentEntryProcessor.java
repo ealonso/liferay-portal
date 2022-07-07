@@ -53,7 +53,8 @@ public interface DocumentFragmentEntryProcessor {
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException;
 
-	public void validateFragmentEntryHTML(Document document, String configuration)
+	public void validateFragmentEntryHTML(
+			Document document, String configuration)
 		throws PortalException;
 
 }
