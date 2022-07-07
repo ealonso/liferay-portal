@@ -16,7 +16,7 @@ package com.liferay.fragment.entry.processor.drop.zone;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.processor.FragmentEntryProcessor;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.renderer.FragmentDropZoneRenderer;
 import com.liferay.layout.constants.LayoutWebKeys;
@@ -33,7 +33,6 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -46,9 +45,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "fragment.entry.processor.priority:Integer=6",
-	service = FragmentEntryProcessor.class
+	service = DocumentFragmentEntryProcessor.class
 )
-public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
+public class DropZoneDocumentFragmentEntryProcessor
+	implements DocumentFragmentEntryProcessor {
 
 	@Override
 	public JSONArray getAvailableTagsJSONArray() {
@@ -66,17 +66,15 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	@Override
-	public String processFragmentEntryLinkHTML(
-			FragmentEntryLink fragmentEntryLink, String html,
+	public void processFragmentEntryLinkHTML(
+			FragmentEntryLink fragmentEntryLink, Document document,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
-
-		Document document = _getDocument(html);
 
 		Elements elements = document.select("lfr-drop-zone");
 
 		if (elements.size() <= 0) {
-			return html;
+			return;
 		}
 
 		HttpServletRequest httpServletRequest =
@@ -94,7 +92,7 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 						fragmentEntryLink.getPlid());
 
 			if (layoutPageTemplateStructure == null) {
-				return html;
+				return;
 			}
 
 			layoutStructure = LayoutStructure.of(
@@ -107,7 +105,7 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 				fragmentEntryLink.getFragmentEntryLinkId());
 
 		if (layoutStructureItem == null) {
-			return html;
+			return;
 		}
 
 		List<String> dropZoneItemIds = layoutStructureItem.getChildrenItemIds();
@@ -124,9 +122,7 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 				element.attr("uuid", dropZoneItemIds.get(i));
 			}
 
-			Element bodyElement = document.body();
-
-			return bodyElement.html();
+			return;
 		}
 
 		for (int i = 0; i < elements.size(); i++) {
@@ -144,26 +140,11 @@ public class DropZoneFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			element.replaceWith(dropZoneElement);
 		}
-
-		Element bodyElement = document.body();
-
-		return bodyElement.html();
 	}
 
 	@Override
-	public void validateFragmentEntryHTML(String html, String configuration) {
-	}
-
-	private Document _getDocument(String html) {
-		Document document = Jsoup.parseBodyFragment(html);
-
-		Document.OutputSettings outputSettings = new Document.OutputSettings();
-
-		outputSettings.prettyPrint(false);
-
-		document.outputSettings(outputSettings);
-
-		return document;
+	public void validateFragmentEntryHTML(
+		Document document, String configuration) {
 	}
 
 	@Reference

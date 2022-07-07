@@ -18,7 +18,7 @@ import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.processor.FragmentEntryProcessor;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.item.InfoItemFieldValues;
@@ -44,7 +44,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -57,19 +56,17 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "fragment.entry.processor.priority:Integer=5",
-	service = FragmentEntryProcessor.class
+	service = DocumentFragmentEntryProcessor.class
 )
-public class BackgroundImageFragmentEntryProcessor
-	implements FragmentEntryProcessor {
+public class BackgroundImageDocumentFragmentEntryProcessor
+	implements DocumentFragmentEntryProcessor {
 
 	@Override
 	public JSONObject getDefaultEditableValuesJSONObject(
-		String html, String configuration) {
+		Document document, String configuration) {
 
 		JSONObject defaultEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject();
-
-		Document document = _getDocument(html);
 
 		for (Element element :
 				document.select("[data-lfr-background-image-id]")) {
@@ -84,15 +81,13 @@ public class BackgroundImageFragmentEntryProcessor
 	}
 
 	@Override
-	public String processFragmentEntryLinkHTML(
-			FragmentEntryLink fragmentEntryLink, String html,
+	public void processFragmentEntryLinkHTML(
+			FragmentEntryLink fragmentEntryLink, Document document,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
 			fragmentEntryLink.getEditableValues());
-
-		Document document = _getDocument(html);
 
 		Map<Long, InfoItemFieldValues> infoDisplaysFieldValues =
 			new HashMap<>();
@@ -205,17 +200,12 @@ public class BackgroundImageFragmentEntryProcessor
 				element.removeAttr("data-lfr-background-image-id");
 			}
 		}
-
-		Element bodyElement = document.body();
-
-		return bodyElement.html();
 	}
 
 	@Override
-	public void validateFragmentEntryHTML(String html, String configuration)
+	public void validateFragmentEntryHTML(
+			Document document, String configuration)
 		throws PortalException {
-
-		Document document = _getDocument(html);
 
 		Elements elements = document.select("[data-lfr-background-image-id]");
 
@@ -235,18 +225,6 @@ public class BackgroundImageFragmentEntryProcessor
 					"you-must-define-a-unique-id-for-each-background-image-" +
 						"element"));
 		}
-	}
-
-	private Document _getDocument(String html) {
-		Document document = Jsoup.parseBodyFragment(html);
-
-		Document.OutputSettings outputSettings = new Document.OutputSettings();
-
-		outputSettings.prettyPrint(false);
-
-		document.outputSettings(outputSettings);
-
-		return document;
 	}
 
 	private Object _getFieldValue(

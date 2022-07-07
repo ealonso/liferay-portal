@@ -16,7 +16,7 @@ package com.liferay.fragment.entry.processor.styles;
 
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.processor.FragmentEntryProcessor;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.layout.constants.LayoutWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
@@ -34,7 +34,6 @@ import com.liferay.portal.kernel.util.Portal;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -47,9 +46,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "fragment.entry.processor.priority:Integer=7",
-	service = FragmentEntryProcessor.class
+	service = DocumentFragmentEntryProcessor.class
 )
-public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
+public class StylesDocumentFragmentEntryProcessor
+	implements DocumentFragmentEntryProcessor {
 
 	@Override
 	public JSONArray getDataAttributesJSONArray() {
@@ -58,9 +58,7 @@ public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Override
 	public JSONObject getDefaultEditableValuesJSONObject(
-		String html, String configuration) {
-
-		Document document = _getDocument(html);
+		Document document, String configuration) {
 
 		Elements elements = document.select("[data-lfr-styles]");
 
@@ -72,16 +70,14 @@ public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	@Override
-	public String processFragmentEntryLinkHTML(
-		FragmentEntryLink fragmentEntryLink, String html,
+	public void processFragmentEntryLinkHTML(
+		FragmentEntryLink fragmentEntryLink, Document document,
 		FragmentEntryProcessorContext fragmentEntryProcessorContext) {
-
-		Document document = _getDocument(html);
 
 		Elements elements = document.select("[data-lfr-styles]");
 
 		if (elements.isEmpty()) {
-			return html;
+			return;
 		}
 
 		FragmentStyledLayoutStructureItem fragmentStyledLayoutStructureItem =
@@ -90,7 +86,7 @@ public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
 				fragmentEntryProcessorContext.getHttpServletRequest());
 
 		if (fragmentStyledLayoutStructureItem == null) {
-			return html;
+			return;
 		}
 
 		String fragmentEntryLinkCssClass =
@@ -106,17 +102,12 @@ public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
 			element.addClass(layoutStructureItemUniqueCssClass);
 			element.addClass(styledLayoutStructureItemCssClasses);
 		}
-
-		Element bodyElement = document.body();
-
-		return bodyElement.html();
 	}
 
 	@Override
-	public void validateFragmentEntryHTML(String html, String configuration)
+	public void validateFragmentEntryHTML(
+			Document document, String configuration)
 		throws PortalException {
-
-		Document document = _getDocument(html);
 
 		Elements elements = document.select("[data-lfr-styles]");
 
@@ -127,18 +118,6 @@ public class StylesFragmentEntryProcessor implements FragmentEntryProcessor {
 					"the-data-lfr-styles-attribute-can-be-used-only-once-on-" +
 						"the-same-fragment"));
 		}
-	}
-
-	private Document _getDocument(String html) {
-		Document document = Jsoup.parseBodyFragment(html);
-
-		Document.OutputSettings outputSettings = new Document.OutputSettings();
-
-		outputSettings.prettyPrint(false);
-
-		document.outputSettings(outputSettings);
-
-		return document;
 	}
 
 	private FragmentStyledLayoutStructureItem _getLayoutStructureItem(
