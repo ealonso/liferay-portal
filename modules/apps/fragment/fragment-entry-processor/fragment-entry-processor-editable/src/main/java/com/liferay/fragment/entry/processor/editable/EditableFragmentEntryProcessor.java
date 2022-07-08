@@ -21,6 +21,7 @@ import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.entry.processor.util.EditableFragmentEntryProcessorUtil;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.processor.PortletRegistry;
@@ -50,7 +51,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -65,9 +65,9 @@ import org.osgi.service.component.annotations.ReferencePolicy;
  */
 @Component(
 	immediate = true, property = "fragment.entry.processor.priority:Integer=2",
-	service = FragmentEntryProcessor.class
+	service = DocumentFragmentEntryProcessor.class
 )
-public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
+public class EditableFragmentEntryProcessor implements DocumentFragmentEntryProcessor {
 
 	@Override
 	public JSONArray getAvailableTagsJSONArray() {
@@ -125,14 +125,14 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 
 	@Override
 	public JSONObject getDefaultEditableValuesJSONObject(
-		String html, String configuration) {
+		Document document, String configuration) {
 
-		return _getDefaultEditableValuesJSONObject(html);
+		return _getDefaultEditableValuesJSONObject(document);
 	}
 
 	@Override
-	public String processFragmentEntryLinkHTML(
-			FragmentEntryLink fragmentEntryLink, String html,
+	public void processFragmentEntryLinkHTML(
+			FragmentEntryLink fragmentEntryLink, Document document,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
@@ -145,10 +145,8 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 			jsonObject.put(
 				clazz.getName(),
 				getDefaultEditableValuesJSONObject(
-					html, fragmentEntryLink.getConfiguration()));
+					document, fragmentEntryLink.getConfiguration()));
 		}
-
-		Document document = _getDocument(html);
 
 		Map<Long, InfoItemFieldValues> infoDisplaysFieldValues =
 			new HashMap<>();
@@ -348,13 +346,13 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 			}
 		}
 
-		Element bodyElement = document.body();
-
 		if (!infoDisplaysFieldValues.containsKey(
 				fragmentEntryProcessorContext.getPreviewClassPK())) {
 
-			return bodyElement.html();
+			return;
 		}
+
+		Element bodyElement = document.body();
 
 		Element previewElement = new Element("div");
 
@@ -410,10 +408,8 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	@Override
-	public void validateFragmentEntryHTML(String html, String configuration)
+	public void validateFragmentEntryHTML(Document document, String configuration)
 		throws PortalException {
-
-		Document document = _getDocument(html);
 
 		_validateAttributes(document);
 
@@ -425,11 +421,9 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 		_validateEditableElements(elements);
 	}
 
-	private JSONObject _getDefaultEditableValuesJSONObject(String html) {
+	private JSONObject _getDefaultEditableValuesJSONObject(Document document) {
 		JSONObject defaultEditableValuesJSONObject =
 			JSONFactoryUtil.createJSONObject();
-
-		Document document = _getDocument(html);
 
 		for (Element element :
 				document.select("lfr-editable,*[data-lfr-editable-id]")) {
@@ -453,18 +447,6 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 		}
 
 		return defaultEditableValuesJSONObject;
-	}
-
-	private Document _getDocument(String html) {
-		Document document = Jsoup.parseBodyFragment(html);
-
-		Document.OutputSettings outputSettings = new Document.OutputSettings();
-
-		outputSettings.prettyPrint(false);
-
-		document.outputSettings(outputSettings);
-
-		return document;
 	}
 
 	private EditableElementParser _getEditableElementParser(Element element) {

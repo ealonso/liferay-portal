@@ -17,7 +17,7 @@ package com.liferay.fragment.entry.processor.portlet;
 import com.liferay.fragment.constants.FragmentWebKeys;
 import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.processor.FragmentEntryProcessor;
+import com.liferay.fragment.processor.DocumentFragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.renderer.FragmentPortletRenderer;
@@ -82,9 +82,10 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true, property = "fragment.entry.processor.priority:Integer=3",
-	service = FragmentEntryProcessor.class
+	service = DocumentFragmentEntryProcessor.class
 )
-public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
+public class PortletFragmentEntryProcessor
+	implements DocumentFragmentEntryProcessor {
 
 	@Override
 	public JSONArray getAvailableTagsJSONArray() {
@@ -105,8 +106,8 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	@Override
-	public String processFragmentEntryLinkHTML(
-			FragmentEntryLink fragmentEntryLink, String html,
+	public void processFragmentEntryLinkHTML(
+			FragmentEntryLink fragmentEntryLink, Document document,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
@@ -123,8 +124,6 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 				fragmentEntryLink.getEditableValues(),
 				fragmentEntryProcessorContext);
 		}
-
-		Document document = _getDocument(html);
 
 		_validateFragmentEntryHTMLDocument(document);
 
@@ -201,17 +200,14 @@ public class PortletFragmentEntryProcessor implements FragmentEntryProcessor {
 
 			processedPortletIds.add(portletName);
 		}
-
-		Element bodyElement = document.body();
-
-		return bodyElement.html();
 	}
 
 	@Override
-	public void validateFragmentEntryHTML(String html, String configuration)
+	public void validateFragmentEntryHTML(
+			Document document, String configuration)
 		throws PortalException {
 
-		_validateFragmentEntryHTMLDocument(_getDocument(html));
+		_validateFragmentEntryHTMLDocument(document);
 	}
 
 	private boolean _checkNoninstanceablePortletUsed(
