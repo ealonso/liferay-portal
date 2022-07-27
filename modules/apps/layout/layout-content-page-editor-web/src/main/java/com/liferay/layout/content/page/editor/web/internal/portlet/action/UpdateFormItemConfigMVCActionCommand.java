@@ -22,7 +22,6 @@ import com.liferay.fragment.listener.FragmentEntryLinkListener;
 import com.liferay.fragment.listener.FragmentEntryLinkListenerTracker;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
-import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkService;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.BooleanInfoFieldType;
@@ -455,9 +454,6 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private FragmentEntryLinkService _fragmentEntryLinkService;
-
-	@Reference
-	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
 
 	@Reference
 	private InfoItemServiceTracker _infoItemServiceTracker;
