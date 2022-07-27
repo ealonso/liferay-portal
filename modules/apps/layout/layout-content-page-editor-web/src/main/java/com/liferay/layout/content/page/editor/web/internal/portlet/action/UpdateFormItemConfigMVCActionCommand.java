@@ -187,9 +187,13 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 			httpServletRequest);
 
 		for (InfoField<?> infoField :
-				_getEditableInfoFields(
+				_getInfoFields(
 					formStyledLayoutStructureItem,
 					themeDisplay.getScopeGroupId())) {
+
+			if (!infoField.isEditable()) {
+				continue;
+			}
 
 			InfoFieldType infoFieldType = infoField.getInfoFieldType();
 
@@ -240,7 +244,7 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 		return addedFragmentEntryLinks;
 	}
 
-	private List<InfoField<?>> _getEditableInfoFields(
+	private List<InfoField<?>> _getInfoFields(
 			FormStyledLayoutStructureItem formStyledLayoutStructureItem,
 			long groupId)
 		throws Exception {
@@ -270,21 +274,11 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 			return Collections.emptyList();
 		}
 
-		List<InfoField<?>> infoFields = new ArrayList<>();
-
 		InfoForm infoForm = infoItemFormProvider.getInfoForm(
 			String.valueOf(formStyledLayoutStructureItem.getClassTypeId()),
 			groupId);
 
-		for (InfoField<?> infoField : infoForm.getAllInfoFields()) {
-			if (!infoField.isEditable()) {
-				continue;
-			}
-
-			infoFields.add(infoField);
-		}
-
-		return infoFields;
+		return infoForm.getAllInfoFields();
 	}
 
 	private String _getFragmentEntryKey(InfoFieldType infoFieldType) {
