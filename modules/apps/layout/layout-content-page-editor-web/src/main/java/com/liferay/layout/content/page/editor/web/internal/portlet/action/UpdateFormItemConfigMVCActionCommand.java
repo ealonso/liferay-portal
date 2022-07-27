@@ -365,11 +365,8 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 			List<FragmentEntryLink> addedFragmentEntryLinks = new ArrayList<>();
 
 			if (!Objects.equals(
-					previousFormStyledLayoutStructureItem.getClassNameId(),
-					formStyledLayoutStructureItem.getClassNameId()) ||
-				!Objects.equals(
-					previousFormStyledLayoutStructureItem.getClassNameId(),
-					formStyledLayoutStructureItem.getClassTypeId())) {
+					previousFormStyledLayoutStructureItem,
+					formStyledLayoutStructureItem)) {
 
 				removedLayoutStructureItemsJSONArray =
 					_removeLayoutStructureItemsJSONArray(
