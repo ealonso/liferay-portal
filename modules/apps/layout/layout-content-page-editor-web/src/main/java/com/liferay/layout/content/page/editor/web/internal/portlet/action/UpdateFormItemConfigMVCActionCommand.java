@@ -319,9 +319,7 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 						removedLayoutStructureItem;
 
 			fragmentEntryLinkIdsJSONArray.put(
-				String.valueOf(
-					fragmentStyledLayoutStructureItem.
-						getFragmentEntryLinkId()));
+				fragmentStyledLayoutStructureItem.getFragmentEntryLinkId());
 		}
 
 		return fragmentEntryLinkIdsJSONArray;
