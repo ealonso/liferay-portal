@@ -49,6 +49,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -63,7 +64,6 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
@@ -113,45 +113,26 @@ public class UpdateFormItemConfigMVCActionCommand extends BaseMVCActionCommand {
 			ThemeDisplay themeDisplay)
 		throws Exception {
 
+		JSONObject editableValuesJSONObject =
+			JSONFactoryUtil.createJSONObject();
+
+		if (infoField != null) {
+			editableValuesJSONObject.put(
+				FragmentEntryProcessorConstants.
+					KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
+				JSONUtil.put("inputFieldId", infoField.getUniqueId()));
+		}
+
 		FragmentEntryLink fragmentEntryLink =
 			_fragmentEntryLinkService.addFragmentEntryLink(
 				themeDisplay.getScopeGroupId(), 0,
 				fragmentEntry.getFragmentEntryId(), segmentsExperienceId,
 				themeDisplay.getPlid(), fragmentEntry.getCss(),
 				fragmentEntry.getHtml(), fragmentEntry.getJs(),
-				fragmentEntry.getConfiguration(), null, StringPool.BLANK, 0,
+				fragmentEntry.getConfiguration(),
+				editableValuesJSONObject.toString(), StringPool.BLANK, 0,
 				fragmentEntry.getFragmentEntryKey(), fragmentEntry.getType(),
 				serviceContext);
-
-		if (infoField != null) {
-			JSONObject editableValuesJSONObject =
-				JSONFactoryUtil.createJSONObject();
-
-			if (Validator.isNotNull(fragmentEntryLink.getEditableValues())) {
-				editableValuesJSONObject = JSONFactoryUtil.createJSONObject(
-					fragmentEntryLink.getEditableValues());
-			}
-
-			JSONObject jsonObject = editableValuesJSONObject.getJSONObject(
-				FragmentEntryProcessorConstants.
-					KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR);
-
-			if (jsonObject == null) {
-				jsonObject = JSONFactoryUtil.createJSONObject();
-
-				editableValuesJSONObject.put(
-					FragmentEntryProcessorConstants.
-						KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
-					jsonObject);
-			}
-
-			jsonObject.put("inputFieldId", infoField.getUniqueId());
-
-			fragmentEntryLink =
-				_fragmentEntryLinkService.updateFragmentEntryLink(
-					fragmentEntryLink.getFragmentEntryLinkId(),
-					editableValuesJSONObject.toString());
-		}
 
 		layoutStructure.addFragmentStyledLayoutStructureItem(
 			fragmentEntryLink.getFragmentEntryLinkId(), formItemId, -1);
