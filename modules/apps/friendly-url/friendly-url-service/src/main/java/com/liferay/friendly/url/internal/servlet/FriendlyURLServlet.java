@@ -16,6 +16,9 @@ package com.liferay.friendly.url.internal.servlet;
 
 import com.liferay.friendly.url.internal.configuration.FriendlyURLRedirectionConfiguration;
 import com.liferay.friendly.url.internal.configuration.admin.service.FriendlyURLRedirectionManagedServiceFactory;
+import com.liferay.layout.utility.page.constants.LayoutUtilityPageConstants;
+import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
+import com.liferay.layout.utility.page.service.LayoutUtilityPageEntryService;
 import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
@@ -372,6 +375,25 @@ public class FriendlyURLServlet extends HttpServlet {
 					throw exception;
 				}
 
+				LayoutUtilityPageEntry defaultLayoutUtilityPageEntry =
+					layoutUtilityPageEntryService.
+						getDefaultLayoutUtilityPageEntry(
+							group.getGroupId(),
+							LayoutUtilityPageConstants.TYPE_404);
+
+				if (defaultLayoutUtilityPageEntry != null) {
+					Layout layout = layoutLocalService.fetchLayout(
+						defaultLayoutUtilityPageEntry.getPlid());
+
+					if (layout != null) {
+						String actualURL = portal.getActualURL(
+							group.getGroupId(), _private, Portal.PATH_MAIN,
+							layout.getFriendlyURL(), params, requestContext);
+
+						return new Redirect(actualURL, false, false);
+					}
+				}
+
 				httpServletResponse.setStatus(HttpServletResponse.SC_NOT_FOUND);
 
 				httpServletRequest.setAttribute(
@@ -671,6 +693,9 @@ public class FriendlyURLServlet extends HttpServlet {
 
 	@Reference
 	protected LayoutLocalService layoutLocalService;
+
+	@Reference
+	protected LayoutUtilityPageEntryService layoutUtilityPageEntryService;
 
 	@Reference
 	protected Portal portal;

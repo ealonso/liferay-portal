@@ -104,17 +104,15 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 
 	@Override
 	public List<LayoutUtilityPageEntry> getLayoutUtilityPageEntries(
-			long groupId)
-		throws PortalException {
+		long groupId) {
 
 		return layoutUtilityPageEntryPersistence.findByGroupId(groupId);
 	}
 
 	@Override
 	public List<LayoutUtilityPageEntry> getLayoutUtilityPageEntries(
-			long groupId, int type, int start, int end,
-			OrderByComparator<LayoutUtilityPageEntry> orderByComparator)
-		throws PortalException {
+		long groupId, int type, int start, int end,
+		OrderByComparator<LayoutUtilityPageEntry> orderByComparator) {
 
 		return layoutUtilityPageEntryPersistence.findByG_T(
 			groupId, type, start, end, orderByComparator);
@@ -122,12 +120,16 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 
 	@Override
 	public List<LayoutUtilityPageEntry> getLayoutUtilityPageEntries(
-			long groupId, int start, int end,
-			OrderByComparator<LayoutUtilityPageEntry> orderByComparator)
-		throws PortalException {
+		long groupId, int start, int end,
+		OrderByComparator<LayoutUtilityPageEntry> orderByComparator) {
 
 		return layoutUtilityPageEntryPersistence.findByGroupId(
 			groupId, start, end, orderByComparator);
+	}
+
+	@Override
+	public int getLayoutUtilityPageEntriesCount(long groupId) {
+		return layoutUtilityPageEntryPersistence.filterCountByGroupId(groupId);
 	}
 
 	@Override
@@ -140,13 +142,17 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 				layoutUtilityPageEntryId);
 
 		LayoutUtilityPageEntry defaultLayoutUtilityPageEntry =
-			layoutUtilityPageEntryPersistence.findByG_T_D_First(
+			layoutUtilityPageEntryPersistence.fetchByG_T_D_First(
 				layoutUtilityPageEntry.getGroupId(),
 				layoutUtilityPageEntry.getType(), true, null);
 
-		defaultLayoutUtilityPageEntry.setDefaultLayoutUtilityPageEntry(false);
+		if (defaultLayoutUtilityPageEntry != null) {
+			defaultLayoutUtilityPageEntry.setDefaultLayoutUtilityPageEntry(
+				false);
 
-		layoutUtilityPageEntryPersistence.update(defaultLayoutUtilityPageEntry);
+			layoutUtilityPageEntryPersistence.update(
+				defaultLayoutUtilityPageEntry);
+		}
 
 		layoutUtilityPageEntry.setDefaultLayoutUtilityPageEntry(true);
 
@@ -155,7 +161,7 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 
 	@Override
 	public LayoutUtilityPageEntry updateLayoutUtilityPageEntry(
-			long layoutUtilityPageEntryId, String name, long plid,
+			long layoutUtilityPageEntryId, String name, long plid, int type,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -169,6 +175,7 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 
 		layoutUtilityPageEntry.setName(name);
 		layoutUtilityPageEntry.setPlid(plid);
+		layoutUtilityPageEntry.setType(type);
 
 		layoutUtilityPageEntry.setModifiedDate(
 			serviceContext.getModifiedDate(new Date()));
@@ -211,7 +218,7 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 
 		Layout layout = _layoutLocalService.fetchLayout(plid);
 
-		if (!_isValidLayout(groupId, layout)) {
+		if ((plid > 0) && !_isValidLayout(groupId, layout)) {
 			throw new NoSuchLayoutException("Layout is invalid");
 		}
 	}
