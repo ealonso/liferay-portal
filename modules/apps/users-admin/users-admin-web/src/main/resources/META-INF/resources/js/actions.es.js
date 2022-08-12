@@ -15,11 +15,16 @@
 import {
 	createActionURL,
 	createRenderURL,
+	openConfirmModal,
 	openModal,
 	openSelectionModal,
 } from 'frontend-js-web';
 
 export const ACTIONS = {
+	activateUser(itemData) {
+		submitForm(document.hrefFm, itemData.activateUserURL);
+	},
+
 	assignOrganizationRoles(itemData) {
 		openModal({
 			title: itemData.label,
@@ -32,6 +37,53 @@ export const ACTIONS = {
 			basePortletURL: itemData.basePortletURL,
 			organizationId: itemData.organizationId,
 			portletNamespace,
+		});
+	},
+
+	deactivateUser(itemData) {
+		openConfirmModal({
+			message: Liferay.Language.get(
+				'are-you-sure-you-want-to-deactivate-this'
+			),
+			onConfirm: (isConfirmed) => {
+				if (isConfirmed) {
+					submitForm(document.hrefFm, itemData.deactivateUserURL);
+				}
+			},
+		});
+	},
+
+	deleteUser(itemData) {
+		openConfirmModal({
+			message: Liferay.Language.get(
+				'are-you-sure-you-want-to-delete-this'
+			),
+			onConfirm: (isConfirmed) => {
+				if (isConfirmed) {
+					submitForm(document.hrefFm, itemData.deleteUserURL);
+				}
+			},
+		});
+	},
+
+	deleteUserActionContributor(itemData) {
+		openConfirmModal({
+			message: itemData.confirmation,
+			onConfirm: (isConfirmed) => {
+				if (isConfirmed) {
+					submitForm(
+						document.hrefFm,
+						itemData.deleteUserActionContributorURL
+					);
+				}
+			},
+		});
+	},
+
+	permissions(itemData) {
+		openModal({
+			title: Liferay.Language.get('permissions'),
+			url: itemData.permissionsURL,
 		});
 	},
 
