@@ -15,11 +15,13 @@
 package com.liferay.layout.page.template.admin.web.internal.display.context;
 
 import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.exception.InfoPermissionException;
 import com.liferay.info.item.InfoItemClassDetails;
 import com.liferay.info.item.InfoItemFormVariation;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
+import com.liferay.info.permission.provider.InfoPermissionProvider;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.info.item.capability.DisplayPageInfoItemCapability;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -30,6 +32,9 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -64,6 +69,10 @@ public class SelectDisplayPageMasterLayoutDisplayContext {
 		for (InfoItemClassDetails infoItemClassDetails :
 				_infoItemServiceTracker.getInfoItemClassDetails(
 					DisplayPageInfoItemCapability.KEY)) {
+
+			if (!_hasViewPermission(infoItemClassDetails.getClassName())) {
+				continue;
+			}
 
 			mappingTypesJSONArray.put(
 				JSONUtil.put(
@@ -145,6 +154,35 @@ public class SelectDisplayPageMasterLayoutDisplayContext {
 
 		return jsonArray;
 	}
+
+	private boolean _hasViewPermission(String className) {
+		InfoPermissionProvider infoPermissionProvider =
+			_infoItemServiceTracker.getFirstInfoItemService(
+				InfoPermissionProvider.class, className);
+
+		if (infoPermissionProvider == null) {
+			return true;
+		}
+
+		try {
+			if (infoPermissionProvider.hasPermission(
+					ActionKeys.VIEW, _themeDisplay.getScopeGroupId(),
+					_themeDisplay.getPermissionChecker())) {
+
+				return true;
+			}
+		}
+		catch (InfoPermissionException infoPermissionException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(infoPermissionException);
+			}
+		}
+
+		return false;
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SelectDisplayPageMasterLayoutDisplayContext.class);
 
 	private final HttpServletRequest _httpServletRequest;
 	private final InfoItemServiceTracker _infoItemServiceTracker;
