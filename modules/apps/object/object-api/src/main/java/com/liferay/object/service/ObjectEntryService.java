@@ -101,6 +101,11 @@ public interface ObjectEntryService extends BaseService {
 			ObjectEntry objectEntry, String actionId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean hasPortletResourcePermission(
+			String actionId, long groupId, long objectDefinitionId)
+		throws PortalException;
+
 	public ObjectEntry updateObjectEntry(
 			long objectEntryId, Map<String, Serializable> values,
 			ServiceContext serviceContext)
