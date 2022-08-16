@@ -204,6 +204,22 @@ public class ObjectEntryServiceImpl extends ObjectEntryServiceBaseImpl {
 	}
 
 	@Override
+	public boolean hasPortletResourcePermission(
+			String actionId, long groupId, long objectDefinitionId)
+		throws PortalException {
+
+		ObjectDefinition objectDefinition =
+			_objectDefinitionLocalService.getObjectDefinition(
+				objectDefinitionId);
+
+		PortletResourcePermission portletResourcePermission =
+			_portletResourcePermissions.get(objectDefinition.getResourceName());
+
+		return portletResourcePermission.contains(
+			getPermissionChecker(), groupId, actionId);
+	}
+
+	@Override
 	public ObjectEntry updateObjectEntry(
 			long objectEntryId, Map<String, Serializable> values,
 			ServiceContext serviceContext)
