@@ -47,4 +47,17 @@ public class ObjectDefinitionPermissionUtil {
 			actionId);
 	}
 
+	public static boolean hasPortletResourcePermission(
+			String actionId, long groupId, ObjectDefinition objectDefinition,
+			ObjectEntryService objectEntryService)
+		throws PortalException {
+
+		if (!objectDefinition.isDefaultStorageType()) {
+			return true;
+		}
+
+		return objectEntryService.hasPortletResourcePermission(
+			actionId, groupId, objectDefinition.getObjectDefinitionId());
+	}
+
 }
