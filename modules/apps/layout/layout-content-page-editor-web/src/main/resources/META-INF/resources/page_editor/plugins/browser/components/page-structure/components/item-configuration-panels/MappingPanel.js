@@ -25,6 +25,7 @@ import {
 import selectEditableValue from '../../../../../../app/selectors/selectEditableValue';
 import updateEditableValues from '../../../../../../app/thunks/updateEditableValues';
 import isMapped from '../../../../../../app/utils/editable-value/isMapped';
+import DateEditableFormatInput from '../../../../../../common/components/DateEditableFormatInput';
 import MappingSelector from '../../../../../../common/components/MappingSelector';
 import {getEditableItemPropTypes} from '../../../../../../prop-types/index';
 
@@ -86,6 +87,16 @@ export function MappingPanel({item}) {
 				mappedItem={editableValue}
 				onMappingSelect={updateEditableValue}
 			/>
+
+			{type === EDITABLE_TYPES['date-time'] &&
+				isMapped(editableValue) && (
+					<DateEditableFormatInput
+						editableId={editableId}
+						editableValueNamespace={item.editableValueNamespace}
+						editableValues={fragmentEntryLink.editableValues}
+						fragmentEntryLinkId={item.fragmentEntryLinkId}
+					/>
+				)}
 		</>
 	);
 }
