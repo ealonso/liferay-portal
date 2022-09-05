@@ -62,6 +62,13 @@ public class FragmentEntryProcessorHelperImpl
 
 	@Override
 	public String formatMappedValue(Object fieldValue, Locale locale) {
+		return formatMappedValue(fieldValue, null, locale);
+	}
+
+	@Override
+	public String formatMappedValue(
+		Object fieldValue, Map<String, Object> config, Locale locale) {
+
 		if (fieldValue == null) {
 			return null;
 		}
@@ -112,8 +119,14 @@ public class FragmentEntryProcessorHelperImpl
 					formattedFieldValue = fieldValue.toString();
 				}
 				else {
-					formattedFieldValue = infoTextFormatter.format(
-						fieldValue, locale);
+					if (config == null) {
+						formattedFieldValue = infoTextFormatter.format(
+							fieldValue, locale);
+					}
+					else {
+						formattedFieldValue = infoTextFormatter.format(
+							fieldValue, config, locale);
+					}
 				}
 			}
 		}
