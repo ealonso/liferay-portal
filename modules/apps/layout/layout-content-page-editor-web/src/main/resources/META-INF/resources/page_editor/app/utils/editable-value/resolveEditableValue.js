@@ -22,7 +22,14 @@ export default function resolveEditableValue(
 	getFieldValue = InfoItemService.getInfoItemFieldValue
 ) {
 	return isMapped(editableValue) && getFieldValue
-		? getFieldValue({...editableValue, languageId}).catch(() =>
+		? getFieldValue({
+				...editableValue,
+				dateFormat:
+					editableValue.config.dateFormat === undefined
+						? null
+						: editableValue.config.dateFormat,
+				languageId,
+		  }).catch(() =>
 				Promise.resolve(
 					getEditableLocalizedValue(
 						editableValue,

@@ -113,6 +113,7 @@ export default {
 	getInfoItemFieldValue({
 		classNameId,
 		classPK,
+		dateFormat,
 		fieldId,
 		languageId,
 		onNetworkStatus,
@@ -123,6 +124,7 @@ export default {
 				body: {
 					classNameId,
 					classPK,
+					dateFormat,
 					fieldId,
 					languageId,
 				},
