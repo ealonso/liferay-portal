@@ -25,6 +25,7 @@ import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.info.type.WebImage;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
@@ -38,8 +39,11 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.ResourceRequest;
@@ -153,8 +157,15 @@ public class GetInfoItemFieldValueMVCResourceCommand
 			}
 		}
 		else {
-			value = _fragmentEntryProcessorHelper.formatMappedValue(
-				value, LocaleUtil.fromLanguageId(languageId));
+			if (Validator.isNull(_getItemConfig(resourceRequest))) {
+				value = _fragmentEntryProcessorHelper.formatMappedValue(
+					value, null, LocaleUtil.fromLanguageId(languageId));
+			}
+			else {
+				value = _fragmentEntryProcessorHelper.formatMappedValue(
+					value, _getItemConfig(resourceRequest),
+					LocaleUtil.fromLanguageId(languageId));
+			}
 		}
 
 		jsonObject.put("fieldValue", value);
@@ -186,6 +197,44 @@ public class GetInfoItemFieldValueMVCResourceCommand
 			(ClassPKInfoItemIdentifier)fileEntryInfoItemIdentifier;
 
 		return classPKInfoItemIdentifier.getClassPK();
+	}
+
+	private Map<String, Object> _getItemConfig(
+		ResourceRequest resourceRequest) {
+
+		String editableTypeOptions = ParamUtil.getString(
+			resourceRequest, "editableTypeOptions");
+
+		JSONObject editableTypeOptionsJSONObject;
+
+		try {
+			editableTypeOptionsJSONObject = JSONFactoryUtil.createJSONObject(
+				editableTypeOptions);
+		}
+		catch (JSONException jsonException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(jsonException);
+			}
+
+			throw new IllegalArgumentException(
+				"Unable to parse JSON value", jsonException);
+		}
+
+		if (editableTypeOptionsJSONObject.keySet(
+			).size() == 0) {
+
+			return null;
+		}
+
+		Map<String, Object> itemConfig = new HashMap<>();
+
+		editableTypeOptionsJSONObject.keySet(
+		).forEach(
+			name -> itemConfig.put(
+				name, editableTypeOptionsJSONObject.get(name))
+		);
+
+		return itemConfig;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
