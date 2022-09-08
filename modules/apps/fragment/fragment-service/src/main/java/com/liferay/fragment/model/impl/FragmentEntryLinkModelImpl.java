@@ -87,7 +87,7 @@ public class FragmentEntryLinkModelImpl
 		{"editableValues", Types.CLOB}, {"namespace", Types.VARCHAR},
 		{"position", Types.INTEGER}, {"rendererKey", Types.VARCHAR},
 		{"type_", Types.INTEGER}, {"lastPropagationDate", Types.TIMESTAMP},
-		{"lastPublishDate", Types.TIMESTAMP}
+		{"lastPublishDate", Types.TIMESTAMP}, {"deleted", Types.BOOLEAN}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -121,10 +121,11 @@ public class FragmentEntryLinkModelImpl
 		TABLE_COLUMNS_MAP.put("type_", Types.INTEGER);
 		TABLE_COLUMNS_MAP.put("lastPropagationDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("lastPublishDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("deleted", Types.BOOLEAN);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table FragmentEntryLink (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,fragmentEntryLinkId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,originalFragmentEntryLinkId LONG,fragmentEntryId LONG,segmentsExperienceId LONG,classNameId LONG,classPK LONG,plid LONG,css TEXT null,html TEXT null,js TEXT null,configuration TEXT null,editableValues TEXT null,namespace VARCHAR(75) null,position INTEGER,rendererKey VARCHAR(200) null,type_ INTEGER,lastPropagationDate DATE null,lastPublishDate DATE null,primary key (fragmentEntryLinkId, ctCollectionId))";
+		"create table FragmentEntryLink (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,fragmentEntryLinkId LONG not null,groupId LONG,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,originalFragmentEntryLinkId LONG,fragmentEntryId LONG,segmentsExperienceId LONG,classNameId LONG,classPK LONG,plid LONG,css TEXT null,html TEXT null,js TEXT null,configuration TEXT null,editableValues TEXT null,namespace VARCHAR(75) null,position INTEGER,rendererKey VARCHAR(200) null,type_ INTEGER,lastPropagationDate DATE null,lastPublishDate DATE null,deleted BOOLEAN,primary key (fragmentEntryLinkId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP = "drop table FragmentEntryLink";
 
@@ -465,6 +466,11 @@ public class FragmentEntryLinkModelImpl
 			"lastPublishDate",
 			(BiConsumer<FragmentEntryLink, Date>)
 				FragmentEntryLink::setLastPublishDate);
+		attributeGetterFunctions.put("deleted", FragmentEntryLink::getDeleted);
+		attributeSetterBiConsumers.put(
+			"deleted",
+			(BiConsumer<FragmentEntryLink, Boolean>)
+				FragmentEntryLink::setDeleted);
 
 		_attributeGetterFunctions = Collections.unmodifiableMap(
 			attributeGetterFunctions);
@@ -1061,6 +1067,21 @@ public class FragmentEntryLinkModelImpl
 		_lastPublishDate = lastPublishDate;
 	}
 
+	@JSON
+	@Override
+	public Boolean getDeleted() {
+		return _deleted;
+	}
+
+	@Override
+	public void setDeleted(Boolean deleted) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_deleted = deleted;
+	}
+
 	@Override
 	public StagedModelType getStagedModelType() {
 		return new StagedModelType(
@@ -1154,6 +1175,7 @@ public class FragmentEntryLinkModelImpl
 		fragmentEntryLinkImpl.setType(getType());
 		fragmentEntryLinkImpl.setLastPropagationDate(getLastPropagationDate());
 		fragmentEntryLinkImpl.setLastPublishDate(getLastPublishDate());
+		fragmentEntryLinkImpl.setDeleted(getDeleted());
 
 		fragmentEntryLinkImpl.resetOriginalValues();
 
@@ -1218,6 +1240,8 @@ public class FragmentEntryLinkModelImpl
 			this.<Date>getColumnOriginalValue("lastPropagationDate"));
 		fragmentEntryLinkImpl.setLastPublishDate(
 			this.<Date>getColumnOriginalValue("lastPublishDate"));
+		fragmentEntryLinkImpl.setDeleted(
+			this.<Boolean>getColumnOriginalValue("deleted"));
 
 		return fragmentEntryLinkImpl;
 	}
@@ -1471,6 +1495,12 @@ public class FragmentEntryLinkModelImpl
 			fragmentEntryLinkCacheModel.lastPublishDate = Long.MIN_VALUE;
 		}
 
+		Boolean deleted = getDeleted();
+
+		if (deleted != null) {
+			fragmentEntryLinkCacheModel.deleted = deleted;
+		}
+
 		return fragmentEntryLinkCacheModel;
 	}
 
@@ -1592,6 +1622,7 @@ public class FragmentEntryLinkModelImpl
 	private int _type;
 	private Date _lastPropagationDate;
 	private Date _lastPublishDate;
+	private Boolean _deleted;
 
 	public <T> T getColumnValue(String columnName) {
 		columnName = _attributeNames.getOrDefault(columnName, columnName);
@@ -1651,6 +1682,7 @@ public class FragmentEntryLinkModelImpl
 		_columnOriginalValues.put("type_", _type);
 		_columnOriginalValues.put("lastPropagationDate", _lastPropagationDate);
 		_columnOriginalValues.put("lastPublishDate", _lastPublishDate);
+		_columnOriginalValues.put("deleted", _deleted);
 	}
 
 	private static final Map<String, String> _attributeNames;
@@ -1728,6 +1760,8 @@ public class FragmentEntryLinkModelImpl
 		columnBitmasks.put("lastPropagationDate", 33554432L);
 
 		columnBitmasks.put("lastPublishDate", 67108864L);
+
+		columnBitmasks.put("deleted", 134217728L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

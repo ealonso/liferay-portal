@@ -10373,6 +10373,7 @@ public class FragmentEntryLinkPersistenceImpl
 		ctStrictColumnNames.add("type_");
 		ctStrictColumnNames.add("lastPropagationDate");
 		ctStrictColumnNames.add("lastPublishDate");
+		ctStrictColumnNames.add("deleted");
 
 		_ctColumnNamesMap.put(
 			CTColumnResolutionType.CONTROL, ctControlColumnNames);

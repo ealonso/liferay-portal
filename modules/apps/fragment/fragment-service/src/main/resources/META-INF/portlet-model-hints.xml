@@ -131,6 +131,7 @@
 		<field name="type" type="int" />
 		<field name="lastPropagationDate" type="Date" />
 		<field name="lastPublishDate" type="Date" />
+		<field name="deleted" type="Boolean" />
 	</model>
 	<model name="com.liferay.fragment.model.FragmentEntryVersion">
 		<field name="mvccVersion" type="long" />

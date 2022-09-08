@@ -103,6 +103,7 @@ create table FragmentEntryLink (
 	type_ INTEGER,
 	lastPropagationDate DATE null,
 	lastPublishDate DATE null,
+	deleted BOOLEAN,
 	primary key (fragmentEntryLinkId, ctCollectionId)
 );
 

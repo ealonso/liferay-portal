@@ -503,6 +503,20 @@ public interface FragmentEntryLinkModel
 	@Override
 	public void setLastPublishDate(Date lastPublishDate);
 
+	/**
+	 * Returns the deleted of this fragment entry link.
+	 *
+	 * @return the deleted of this fragment entry link
+	 */
+	public Boolean getDeleted();
+
+	/**
+	 * Sets the deleted of this fragment entry link.
+	 *
+	 * @param deleted the deleted of this fragment entry link
+	 */
+	public void setDeleted(Boolean deleted);
+
 	@Override
 	public FragmentEntryLink cloneWithOriginalValues();
 

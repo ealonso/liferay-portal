@@ -108,6 +108,8 @@ public class FragmentEntryLinkTable extends BaseTable<FragmentEntryLinkTable> {
 		createColumn(
 			"lastPublishDate", Date.class, Types.TIMESTAMP,
 			Column.FLAG_DEFAULT);
+	public final Column<FragmentEntryLinkTable, Boolean> deleted = createColumn(
+		"deleted", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 
 	private FragmentEntryLinkTable() {
 		super("FragmentEntryLink", FragmentEntryLinkTable::new);
