@@ -47,8 +47,8 @@
 
 		<div class="d-inline-flex order-by-type-container">
 			<liferay-ui:icon
-				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType1, "DESC") ? "icon order-arrow-up-active" : "hide icon order-arrow-up-active" %>'
-				icon="order-list-up"
+				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType1, "DESC") ? "icon" : "hide icon" %>'
+				icon="order-list-down"
 				linkCssClass="btn btn-outline-borderless btn-outline-secondary"
 				markupView="lexicon"
 				message="descending"
@@ -56,8 +56,8 @@
 			/>
 
 			<liferay-ui:icon
-				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType1, "ASC") ? "icon order-arrow-down-active" : "hide icon order-arrow-down-active" %>'
-				icon="order-list-down"
+				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType1, "ASC") ? "icon" : "hide icon" %>'
+				icon="order-list-up"
 				linkCssClass="btn btn-outline-borderless btn-outline-secondary"
 				markupView="lexicon"
 				message="ascending"
@@ -98,8 +98,8 @@
 
 		<div class="d-inline-flex order-by-type-container">
 			<liferay-ui:icon
-				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType2, "DESC") ? "icon order-arrow-up-active" : "hide icon order-arrow-up-active" %>'
-				icon="order-list-up"
+				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType2, "DESC") ? "icon" : "hide icon" %>'
+				icon="order-list-down"
 				linkCssClass="btn btn-outline-borderless btn-outline-secondary"
 				markupView="lexicon"
 				message="descending"
@@ -107,8 +107,8 @@
 			/>
 
 			<liferay-ui:icon
-				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType2, "ASC") ? "icon order-arrow-down-active" : "hide icon order-arrow-down-active" %>'
-				icon="order-list-down"
+				cssClass='<%= StringUtil.equalsIgnoreCase(orderByType2, "ASC") ? "icon" : "hide icon" %>'
+				icon="order-list-up"
 				linkCssClass="btn btn-outline-borderless btn-outline-secondary"
 				markupView="lexicon"
 				message="ascending"
