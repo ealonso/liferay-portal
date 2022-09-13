@@ -28,6 +28,7 @@ create table ClientExtensionEntryRel (
 	uuid_ VARCHAR(75) null,
 	externalReferenceCode VARCHAR(75) null,
 	clientExtensionEntryRelId LONG not null,
+	groupId LONG,
 	companyId LONG,
 	userId LONG,
 	userName VARCHAR(75) null,

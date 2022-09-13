@@ -38,6 +38,7 @@
 		<field name="uuid" type="String" />
 		<field name="externalReferenceCode" type="String" />
 		<field name="clientExtensionEntryRelId" type="long" />
+		<field name="groupId" type="long" />
 		<field name="companyId" type="long" />
 		<field name="userId" type="long" />
 		<field name="userName" type="String" />

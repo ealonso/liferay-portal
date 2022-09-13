@@ -78,7 +78,7 @@ public class ClientExtensionEntryRelCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -90,6 +90,8 @@ public class ClientExtensionEntryRelCacheModel
 		sb.append(externalReferenceCode);
 		sb.append(", clientExtensionEntryRelId=");
 		sb.append(clientExtensionEntryRelId);
+		sb.append(", groupId=");
+		sb.append(groupId);
 		sb.append(", companyId=");
 		sb.append(companyId);
 		sb.append(", userId=");
@@ -140,6 +142,7 @@ public class ClientExtensionEntryRelCacheModel
 
 		clientExtensionEntryRelImpl.setClientExtensionEntryRelId(
 			clientExtensionEntryRelId);
+		clientExtensionEntryRelImpl.setGroupId(groupId);
 		clientExtensionEntryRelImpl.setCompanyId(companyId);
 		clientExtensionEntryRelImpl.setUserId(userId);
 
@@ -206,6 +209,8 @@ public class ClientExtensionEntryRelCacheModel
 
 		clientExtensionEntryRelId = objectInput.readLong();
 
+		groupId = objectInput.readLong();
+
 		companyId = objectInput.readLong();
 
 		userId = objectInput.readLong();
@@ -242,6 +247,8 @@ public class ClientExtensionEntryRelCacheModel
 		}
 
 		objectOutput.writeLong(clientExtensionEntryRelId);
+
+		objectOutput.writeLong(groupId);
 
 		objectOutput.writeLong(companyId);
 
@@ -288,6 +295,7 @@ public class ClientExtensionEntryRelCacheModel
 	public String uuid;
 	public String externalReferenceCode;
 	public long clientExtensionEntryRelId;
+	public long groupId;
 	public long companyId;
 	public long userId;
 	public String userName;

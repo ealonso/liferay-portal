@@ -51,6 +51,8 @@ public class ClientExtensionEntryRelTable
 		clientExtensionEntryRelId = createColumn(
 			"clientExtensionEntryRelId", Long.class, Types.BIGINT,
 			Column.FLAG_PRIMARY);
+	public final Column<ClientExtensionEntryRelTable, Long> groupId =
+		createColumn("groupId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryRelTable, Long> companyId =
 		createColumn(
 			"companyId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);

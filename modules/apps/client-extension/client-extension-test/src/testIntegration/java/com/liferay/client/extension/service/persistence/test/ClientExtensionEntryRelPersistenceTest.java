@@ -138,6 +138,8 @@ public class ClientExtensionEntryRelPersistenceTest {
 		newClientExtensionEntryRel.setExternalReferenceCode(
 			RandomTestUtil.randomString());
 
+		newClientExtensionEntryRel.setGroupId(RandomTestUtil.nextLong());
+
 		newClientExtensionEntryRel.setCompanyId(RandomTestUtil.nextLong());
 
 		newClientExtensionEntryRel.setUserId(RandomTestUtil.nextLong());
@@ -183,6 +185,9 @@ public class ClientExtensionEntryRelPersistenceTest {
 			existingClientExtensionEntryRel.getClientExtensionEntryRelId(),
 			newClientExtensionEntryRel.getClientExtensionEntryRelId());
 		Assert.assertEquals(
+			existingClientExtensionEntryRel.getGroupId(),
+			newClientExtensionEntryRel.getGroupId());
+		Assert.assertEquals(
 			existingClientExtensionEntryRel.getCompanyId(),
 			newClientExtensionEntryRel.getCompanyId());
 		Assert.assertEquals(
@@ -224,6 +229,15 @@ public class ClientExtensionEntryRelPersistenceTest {
 		_persistence.countByUuid("null");
 
 		_persistence.countByUuid((String)null);
+	}
+
+	@Test
+	public void testCountByUUID_G() throws Exception {
+		_persistence.countByUUID_G("", RandomTestUtil.nextLong());
+
+		_persistence.countByUUID_G("null", 0L);
+
+		_persistence.countByUUID_G((String)null, 0L);
 	}
 
 	@Test
@@ -303,10 +317,10 @@ public class ClientExtensionEntryRelPersistenceTest {
 		return OrderByComparatorFactoryUtil.create(
 			"ClientExtensionEntryRel", "mvccVersion", true, "ctCollectionId",
 			true, "uuid", true, "externalReferenceCode", true,
-			"clientExtensionEntryRelId", true, "companyId", true, "userId",
-			true, "userName", true, "createDate", true, "modifiedDate", true,
-			"classNameId", true, "classPK", true, "cetExternalReferenceCode",
-			true, "type", true);
+			"clientExtensionEntryRelId", true, "groupId", true, "companyId",
+			true, "userId", true, "userName", true, "createDate", true,
+			"modifiedDate", true, "classNameId", true, "classPK", true,
+			"cetExternalReferenceCode", true, "type", true);
 	}
 
 	@Test
@@ -603,6 +617,17 @@ public class ClientExtensionEntryRelPersistenceTest {
 		ClientExtensionEntryRel clientExtensionEntryRel) {
 
 		Assert.assertEquals(
+			clientExtensionEntryRel.getUuid(),
+			ReflectionTestUtil.invoke(
+				clientExtensionEntryRel, "getColumnOriginalValue",
+				new Class<?>[] {String.class}, "uuid_"));
+		Assert.assertEquals(
+			Long.valueOf(clientExtensionEntryRel.getGroupId()),
+			ReflectionTestUtil.<Long>invoke(
+				clientExtensionEntryRel, "getColumnOriginalValue",
+				new Class<?>[] {String.class}, "groupId"));
+
+		Assert.assertEquals(
 			Long.valueOf(clientExtensionEntryRel.getCompanyId()),
 			ReflectionTestUtil.<Long>invoke(
 				clientExtensionEntryRel, "getColumnOriginalValue",
@@ -630,6 +655,8 @@ public class ClientExtensionEntryRelPersistenceTest {
 
 		clientExtensionEntryRel.setExternalReferenceCode(
 			RandomTestUtil.randomString());
+
+		clientExtensionEntryRel.setGroupId(RandomTestUtil.nextLong());
 
 		clientExtensionEntryRel.setCompanyId(RandomTestUtil.nextLong());
 

@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.model.AttachedModel;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ContainerModel;
+import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.ShardedModel;
 import com.liferay.portal.kernel.model.StagedAuditedModel;
@@ -41,8 +42,8 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface ClientExtensionEntryRelModel
 	extends AttachedModel, BaseModel<ClientExtensionEntryRel>, ContainerModel,
-			CTModel<ClientExtensionEntryRel>, MVCCModel, ShardedModel,
-			StagedAuditedModel {
+			CTModel<ClientExtensionEntryRel>, GroupedModel, MVCCModel,
+			ShardedModel, StagedAuditedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -143,6 +144,22 @@ public interface ClientExtensionEntryRelModel
 	 * @param clientExtensionEntryRelId the client extension entry rel ID of this client extension entry rel
 	 */
 	public void setClientExtensionEntryRelId(long clientExtensionEntryRelId);
+
+	/**
+	 * Returns the group ID of this client extension entry rel.
+	 *
+	 * @return the group ID of this client extension entry rel
+	 */
+	@Override
+	public long getGroupId();
+
+	/**
+	 * Sets the group ID of this client extension entry rel.
+	 *
+	 * @param groupId the group ID of this client extension entry rel
+	 */
+	@Override
+	public void setGroupId(long groupId);
 
 	/**
 	 * Returns the company ID of this client extension entry rel.
