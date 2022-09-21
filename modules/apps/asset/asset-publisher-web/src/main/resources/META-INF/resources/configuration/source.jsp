@@ -176,7 +176,7 @@ List<Map<String, Object>> classTypesList = new ArrayList<>();
 
 							<span class="asset-subtypefields hide" id="<portlet:namespace /><%= classType.getClassTypeId() %>_<%= className %>Options">
 								<liferay-portlet:renderURL portletName="<%= assetPublisherDisplayContext.getPortletResource() %>" var="selectStructureFieldURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-									<portlet:param name="mvcPath" value="/select_structure_field.jsp" />
+									<portlet:param name="mvcRenderCommandName" value="/asset_publisher/select_structure_field" />
 									<portlet:param name="portletResource" value="<%= HtmlUtil.escapeJS(assetPublisherDisplayContext.getPortletResource()) %>" />
 									<portlet:param name="className" value="<%= assetRendererFactory.getClassName() %>" />
 									<portlet:param name="classTypeId" value="<%= String.valueOf(classType.getClassTypeId()) %>" />
