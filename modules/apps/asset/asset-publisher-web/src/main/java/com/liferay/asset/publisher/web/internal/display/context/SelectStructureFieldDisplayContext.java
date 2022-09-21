@@ -25,6 +25,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -36,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.portlet.RenderResponse;
 import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +47,11 @@ import javax.servlet.http.HttpServletRequest;
 public class SelectStructureFieldDisplayContext {
 
 	public SelectStructureFieldDisplayContext(
-		HttpServletRequest httpServletRequest, RenderResponse renderResponse) {
+		HttpServletRequest httpServletRequest,
+		LiferayPortletResponse liferayPortletResponse) {
 
 		_httpServletRequest = httpServletRequest;
-		_renderResponse = renderResponse;
+		_liferayPortletResponse = liferayPortletResponse;
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
@@ -77,7 +78,7 @@ public class SelectStructureFieldDisplayContext {
 			"getFieldItemURL",
 			() -> {
 				ResourceURL getFieldItemURL =
-					_renderResponse.createResourceURL();
+					_liferayPortletResponse.createResourceURL();
 
 				getFieldItemURL.setParameter("className", _getClassName());
 				getFieldItemURL.setParameter(
@@ -95,7 +96,8 @@ public class SelectStructureFieldDisplayContext {
 	}
 
 	public String getFieldValueURL() {
-		ResourceURL getFieldValueURL = _renderResponse.createResourceURL();
+		ResourceURL getFieldValueURL =
+			_liferayPortletResponse.createResourceURL();
 
 		getFieldValueURL.setParameter("portletResource", _getPortletResource());
 		getFieldValueURL.setParameter("className", _getClassName());
@@ -185,7 +187,7 @@ public class SelectStructureFieldDisplayContext {
 
 		_eventName = ParamUtil.getString(
 			_httpServletRequest, "eventName",
-			_renderResponse.getNamespace() + "selectDDMStructureField");
+			_liferayPortletResponse.getNamespace() + "selectDDMStructureField");
 
 		return _eventName;
 	}
@@ -207,8 +209,8 @@ public class SelectStructureFieldDisplayContext {
 	private String _ddmStructureFieldValue;
 	private String _eventName;
 	private final HttpServletRequest _httpServletRequest;
+	private final LiferayPortletResponse _liferayPortletResponse;
 	private String _portletResource;
-	private final RenderResponse _renderResponse;
 	private final ThemeDisplay _themeDisplay;
 
 }

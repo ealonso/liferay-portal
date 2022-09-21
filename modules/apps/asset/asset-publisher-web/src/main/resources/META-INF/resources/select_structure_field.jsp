@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-SelectStructureFieldDisplayContext selectStructureFieldDisplayContext = new SelectStructureFieldDisplayContext(request, renderResponse);
+SelectStructureFieldDisplayContext selectStructureFieldDisplayContext = new SelectStructureFieldDisplayContext(request, liferayPortletResponse);
 %>
 
 <div class="alert alert-danger hide" id="<portlet:namespace />message">
