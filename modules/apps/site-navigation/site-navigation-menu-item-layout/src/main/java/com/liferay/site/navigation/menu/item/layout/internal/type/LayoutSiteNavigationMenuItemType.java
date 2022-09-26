@@ -16,6 +16,7 @@ package com.liferay.site.navigation.menu.item.layout.internal.type;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.item.selector.ItemSelector;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
 import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutType;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.search.Field;
@@ -56,6 +58,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletToken;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.site.navigation.configuration.SiteNavigationMenuExportImportConfiguration;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys;
@@ -68,6 +71,7 @@ import java.io.IOException;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.portlet.PortletURL;
@@ -78,6 +82,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -85,6 +90,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pavel Savinov
  */
 @Component(
+	configurationPid = "com.liferay.site.navigation.configuration.SiteNavigationMenuExportImportConfiguration",
 	immediate = true,
 	property = {
 		"service.ranking:Integer=400",
@@ -126,7 +132,23 @@ public class LayoutSiteNavigationMenuItemType
 			return false;
 		}
 
-		if (!ArrayUtil.contains(
+		boolean exportLayouts = false;
+
+		SiteNavigationMenuExportImportConfiguration siteNavigationMenuExportImportConfiguration =
+			_configurationProvider.getGroupConfiguration(
+				SiteNavigationMenuExportImportConfiguration.class, layout.getGroupId());
+
+		Group group = layout.getGroup();
+
+		if (siteNavigationMenuExportImportConfiguration.
+				exportReferencedLayouts() &&
+			!(ExportImportThreadLocal.isStagingInProcess() || group.isStaged())) {
+
+			exportLayouts = true;
+		}
+
+		if (!exportLayouts &&
+			!ArrayUtil.contains(
 				portletDataContext.getLayoutIds(), layout.getLayoutId())) {
 
 			return false;
@@ -148,6 +170,10 @@ public class LayoutSiteNavigationMenuItemType
 		portletDataContext.addReferenceElement(
 			siteNavigationMenuItem, siteNavigationMenuItemElement, layout,
 			PortletDataContext.REFERENCE_TYPE_DEPENDENCY, true);
+
+		StagedModelDataHandlerUtil.exportReferenceStagedModel(
+			portletDataContext, siteNavigationMenuItem, layout,
+			PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
 
 		return true;
 	}
@@ -656,6 +682,9 @@ public class LayoutSiteNavigationMenuItemType
 		unbind = "-"
 	)
 	private ServletContext _servletContext;
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference
 	private SiteNavigationMenuItemLocalService
