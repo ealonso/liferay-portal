@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 
+import java.text.ParseException;
+
 /**
  * @author Pavel Savinov
  */
@@ -49,7 +51,7 @@ public interface FragmentEntryProcessor {
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink, String html,
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
-		throws PortalException;
+		throws PortalException, ParseException;
 
 	public void validateFragmentEntryHTML(String html, String configuration)
 		throws PortalException;
