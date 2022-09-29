@@ -37,10 +37,14 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+
+import java.text.ParseException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -302,7 +306,17 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 				configJSONObject = localizedJSONObject;
 			}
 
-			editableElementParser.replace(element, value, configJSONObject);
+			try {
+				editableElementParser.replace(element, value, configJSONObject);
+			}
+			catch (ParseException parseException) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(parseException);
+				}
+
+				throw new IllegalArgumentException(
+					"Unable to parse date from " + value, parseException);
+			}
 
 			if (!Objects.equals(
 					fragmentEntryProcessorContext.getMode(),
