@@ -53,6 +53,9 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -108,7 +111,8 @@ public class PublishLayoutMVCActionCommand
 			actionRequest);
 
 		_publishLayout(
-			draftLayout, layout, serviceContext, themeDisplay.getUserId());
+			actionRequest, actionResponse, draftLayout, layout, serviceContext,
+			themeDisplay.getUserId());
 
 		String portletId = _portal.getPortletId(actionRequest);
 
@@ -126,6 +130,7 @@ public class PublishLayoutMVCActionCommand
 	}
 
 	private void _publishLayout(
+			ActionRequest actionRequest, ActionResponse actionResponse,
 			Layout draftLayout, Layout layout, ServiceContext serviceContext,
 			long userId)
 		throws Exception {
@@ -200,17 +205,26 @@ public class PublishLayoutMVCActionCommand
 
 			_layoutLocalService.updateLayout(layout);
 
-			_updateLayoutContent(layout);
+			_updateLayoutContent(actionRequest, actionResponse, layout);
 			_updateLayoutRevision(layout, serviceContext);
 		}
 	}
 
-	private void _updateLayoutContent(Layout layout) {
+	private void _updateLayoutContent(
+		ActionRequest actionRequest, ActionResponse actionResponse,
+		Layout layout) {
+
+		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
+			actionRequest);
+		HttpServletResponse httpServletResponse =
+			_portal.getHttpServletResponse(actionResponse);
+
 		for (Locale locale :
 				_language.getAvailableLocales(layout.getGroupId())) {
 
 			_layoutLocalizationLocalService.updateLayoutLocalization(
-				_layoutContentHelper.getLayoutContent(layout, locale),
+				_layoutContentHelper.getLayoutContent(
+					httpServletRequest, httpServletResponse, layout, locale),
 				LocaleUtil.toLanguageId(locale), layout.getPlid());
 		}
 	}
