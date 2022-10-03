@@ -2529,8 +2529,10 @@ public class LayoutStagedModelDataHandler
 		Layout layout, Element layoutElement,
 		PortletDataContext portletDataContext) {
 
+		Element rootElement = portletDataContext.getImportDataRootElement();
+
 		String privateLayout = GetterUtil.getString(
-			layoutElement.attributeValue("layout-private-layout"));
+			rootElement.attributeValue("layout-private-layout"));
 
 		if (Validator.isNotNull(privateLayout)) {
 			return GetterUtil.getBoolean(privateLayout);

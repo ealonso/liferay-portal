@@ -161,10 +161,13 @@ public class LayoutSiteNavigationMenuItemType
 			return false;
 		}
 
+		Element rootElement = portletDataContext.getExportDataRootElement();
+
+		rootElement.addAttribute(
+			"layout-private-layout", String.valueOf(layout.isPrivateLayout()));
+
 		siteNavigationMenuItemElement.addAttribute(
 			"layout-friendly-url", layout.getFriendlyURL());
-		siteNavigationMenuItemElement.addAttribute(
-			"layout-private-layout", Boolean.FALSE.toString());
 
 		portletDataContext.addReferenceElement(
 			siteNavigationMenuItem, siteNavigationMenuItemElement, layout,
