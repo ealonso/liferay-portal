@@ -2529,6 +2529,10 @@ public class LayoutStagedModelDataHandler
 		Layout layout, Element layoutElement,
 		PortletDataContext portletDataContext) {
 
+		if (ExportImportThreadLocal.isPortletImportInProcess()) {
+			return layout.isPrivateLayout();
+		}
+
 		if ((portletDataContext.isPrivateLayout() &&
 			 !layout.isTypeAssetDisplay()) ||
 			GetterUtil.getBoolean(
