@@ -16,6 +16,7 @@ package com.liferay.site.navigation.menu.item.layout.internal.type;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
+import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.item.selector.ItemSelector;
@@ -33,6 +34,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
 import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutType;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.search.Field;
@@ -56,6 +58,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletToken;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.site.navigation.configuration.SiteNavigationMenuExportImportConfiguration;
 import com.liferay.site.navigation.constants.SiteNavigationWebKeys;
 import com.liferay.site.navigation.menu.item.layout.constants.SiteNavigationMenuItemTypeConstants;
 import com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys;
@@ -85,6 +88,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Pavel Savinov
  */
 @Component(
+	configurationPid = "com.liferay.site.navigation.configuration.SiteNavigationMenuExportImportConfiguration",
 	immediate = true,
 	property = {
 		"service.ranking:Integer=400",
@@ -128,8 +132,22 @@ public class LayoutSiteNavigationMenuItemType
 			return false;
 		}
 
-		if (!ArrayUtil.contains(
-				portletDataContext.getLayoutIds(), layout.getLayoutId())) {
+		if (ExportImportThreadLocal.isPortletExportInProcess()) {
+			SiteNavigationMenuExportImportConfiguration
+				siteNavigationMenuExportImportConfiguration =
+					_configurationProvider.getGroupConfiguration(
+						SiteNavigationMenuExportImportConfiguration.class,
+						layout.getGroupId());
+
+			if (!siteNavigationMenuExportImportConfiguration.
+					exportReferencedLayouts()) {
+
+				return false;
+			}
+		}
+		else {
+			if (!ArrayUtil.contains(
+					portletDataContext.getLayoutIds(), layout.getLayoutId())) {
 
 				return false;
 			}
@@ -151,6 +169,10 @@ public class LayoutSiteNavigationMenuItemType
 		portletDataContext.addReferenceElement(
 			siteNavigationMenuItem, siteNavigationMenuItemElement, layout,
 			PortletDataContext.REFERENCE_TYPE_DEPENDENCY, true);
+
+		StagedModelDataHandlerUtil.exportReferenceStagedModel(
+			portletDataContext, siteNavigationMenuItem, layout,
+			PortletDataContext.REFERENCE_TYPE_DEPENDENCY);
 
 		return true;
 	}
@@ -632,6 +654,9 @@ public class LayoutSiteNavigationMenuItemType
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutSiteNavigationMenuItemType.class);
+
+	@Reference
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference
 	private ItemSelector _itemSelector;
