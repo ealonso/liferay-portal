@@ -533,15 +533,8 @@ public class LayoutStagedModelDataHandler
 
 		long oldLayoutId = layoutId;
 
-		boolean privateLayout = false;
-
-		if ((portletDataContext.isPrivateLayout() &&
-			 !layout.isTypeAssetDisplay()) ||
-			GetterUtil.getBoolean(
-				layoutElement.attributeValue("content-page-template"))) {
-
-			privateLayout = true;
-		}
+		boolean privateLayout = _isPrivateLayout(
+			layout, layoutElement, portletDataContext);
 
 		Map<Long, Layout> layouts =
 			(Map<Long, Layout>)portletDataContext.getNewPrimaryKeysMap(
@@ -2525,6 +2518,21 @@ public class LayoutStagedModelDataHandler
 		if ((existingLayoutModifiedDate == null) ||
 			(layoutModifiedDate == null) ||
 			(layoutModifiedDate.getTime() > lastMergeLayoutModifiedTime)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _isPrivateLayout(
+		Layout layout, Element layoutElement,
+		PortletDataContext portletDataContext) {
+
+		if ((portletDataContext.isPrivateLayout() &&
+			 !layout.isTypeAssetDisplay()) ||
+			GetterUtil.getBoolean(
+				layoutElement.attributeValue("content-page-template"))) {
 
 			return true;
 		}
