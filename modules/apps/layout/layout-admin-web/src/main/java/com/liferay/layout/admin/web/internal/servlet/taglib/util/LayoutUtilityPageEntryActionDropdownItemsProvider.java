@@ -53,10 +53,15 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 
 	public List<DropdownItem> getActionDropdownItems() {
 		return DropdownItemListBuilder.addGroup(
-			dropdownGroupItem -> dropdownGroupItem.setDropdownItems(
-				DropdownItemListBuilder.add(
-					_getMarkAsDefaultLayoutUtilityPageEntryActionUnsafeConsumer()
-				).build())
+			dropdownGroupItem -> {
+				dropdownGroupItem.setDropdownItems(
+					DropdownItemListBuilder.add(
+						_getMarkAsDefaultLayoutUtilityPageEntryActionUnsafeConsumer()
+					).add(
+						_getRenameDisplayPageActionUnsafeConsumer()
+					).build());
+				dropdownGroupItem.setSeparator(true);
+			}
 		).build();
 	}
 
@@ -127,6 +132,51 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 
 			dropdownItem.setLabel(LanguageUtil.get(_httpServletRequest, label));
 		};
+	}
+
+	private UnsafeConsumer<DropdownItem, Exception>
+		_getRenameDisplayPageActionUnsafeConsumer() {
+
+		return dropdownItem -> {
+			dropdownItem.putData("action", "renameUtilityPageEntry");
+			dropdownItem.putData(
+				"layoutUtilityPageEntryId",
+				String.valueOf(
+					_layoutUtilityPageEntry.getLayoutUtilityPageEntryId()));
+			dropdownItem.putData(
+				"layoutUtilityPageEntryName",
+				_layoutUtilityPageEntry.getName());
+			dropdownItem.putData(
+				"updateLayoutPageTemplateEntryURL",
+				_getUpdateLayoutUtilityPageEntryURL());
+			dropdownItem.putData(
+				"updateLayoutUtilityPageEntryURL",
+				PortletURLBuilder.createActionURL(
+					_renderResponse
+				).setActionName(
+					"/layout_admin/update_layout_utility_page_entry"
+				).setRedirect(
+					_themeDisplay.getURLCurrent()
+				).setParameter(
+					"layoutUtilityPageEntryId",
+					_layoutUtilityPageEntry.getLayoutUtilityPageEntryId()
+				).buildString());
+			dropdownItem.setLabel(
+				LanguageUtil.get(_httpServletRequest, "rename"));
+		};
+	}
+
+	private String _getUpdateLayoutUtilityPageEntryURL() {
+		return PortletURLBuilder.createActionURL(
+			_renderResponse
+		).setActionName(
+			"/layout_admin/update_layout_utility_page_entry"
+		).setRedirect(
+			_themeDisplay.getURLCurrent()
+		).setParameter(
+			"layoutUtilityPageEntryId",
+			_layoutUtilityPageEntry.getLayoutUtilityPageEntryId()
+		).buildString();
 	}
 
 	private final HttpServletRequest _httpServletRequest;

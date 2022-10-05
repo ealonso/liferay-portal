@@ -12,9 +12,35 @@
  * details.
  */
 
-import {openConfirmModal} from 'frontend-js-web';
+import {openConfirmModal,
+		openSimpleInputModal} from 'frontend-js-web';
+
 
 const ACTIONS = {
+
+	renameUtilityPageEntry(
+		{
+			layoutUtilityPageEntryId,
+			layoutUtilityPageEntryName,
+			updateLayoutUtilityPageEntryURL,
+		},
+		namespace
+	) {
+		openSimpleInputModal({
+			dialogTitle: Liferay.Language.get('rename-utility-page'),
+			formSubmitURL: updateLayoutUtilityPageEntryURL,
+			idFieldName: 'layoutUtilityPageEntryId',
+			idFieldValue: layoutUtilityPageEntryId,
+			mainFieldLabel: Liferay.Language.get('name'),
+			mainFieldName: 'name',
+			mainFieldPlaceholder: Liferay.Language.get('name'),
+			mainFieldValue: layoutUtilityPageEntryName,
+			namespace,
+		});
+	},
+
+
+
 	markAsDefaultLayoutUtilityPageEntry({
 		markAsDefaultLayoutUtilityPageEntryURL,
 		message,
@@ -32,6 +58,27 @@ const ACTIONS = {
 		else {
 			send(markAsDefaultLayoutUtilityPageEntryURL);
 		}
+	},
+
+	renameUtilityPageEntry(
+		{
+			layoutUtilityPageEntryId,
+			layoutUtilityPageEntryName,
+			updateLayoutUtilityPageEntryURL,
+		},
+		namespace
+	) {
+		openSimpleInputModal({
+			dialogTitle: Liferay.Language.get('rename-utility-page'),
+			formSubmitURL: updateLayoutUtilityPageEntryURL,
+			idFieldName: 'layoutUtilityPageEntryId',
+			idFieldValue: layoutUtilityPageEntryId,
+			mainFieldLabel: Liferay.Language.get('name'),
+			mainFieldName: 'name',
+			mainFieldPlaceholder: Liferay.Language.get('name'),
+			mainFieldValue: layoutUtilityPageEntryName,
+			namespace,
+		});
 	},
 };
 
