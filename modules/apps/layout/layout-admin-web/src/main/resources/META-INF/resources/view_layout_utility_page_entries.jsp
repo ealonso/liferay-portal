@@ -24,7 +24,13 @@ LayoutUtilityPageEntryDisplayContext layoutUtilityPageEntryDisplayContext = new 
 	managementToolbarDisplayContext="<%= new LayoutUtilityPageEntryManagementToolbarDisplayContext(request, layoutUtilityPageEntryDisplayContext, liferayPortletRequest, liferayPortletResponse) %>"
 />
 
-<aui:form cssClass="container-fluid container-fluid-max-xl container-view" name="fm">
+<portlet:actionURL name="/layout_admin/delete_layout_utility_page_entry" var="deleteLayoutUtilityPageEntryURL">
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:actionURL>
+
+<aui:form action="<%= deleteLayoutUtilityPageEntryURL %>" cssClass="container-fluid container-fluid-max-xl" name="fm">
+	<liferay-ui:success key="utilityPageDeleted" message='<%= GetterUtil.getString(MultiSessionMessages.get(renderRequest, "utilityPageDeleted")) %>' />
+
 	<liferay-ui:search-container
 		id="entries"
 		searchContainer="<%= layoutUtilityPageEntryDisplayContext.getLayoutUtilityPageEntrySearchContainer() %>"

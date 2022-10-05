@@ -62,7 +62,49 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 					).build());
 				dropdownGroupItem.setSeparator(true);
 			}
+		).addGroup(
+			dropdownGroupItem -> {
+				dropdownGroupItem.setDropdownItems(
+					DropdownItemListBuilder.add(
+						_getDeleteLayoutUtilityPageEntry()
+					).build());
+				dropdownGroupItem.setSeparator(true);
+			}
 		).build();
+	}
+
+	private UnsafeConsumer<DropdownItem, Exception>
+		_getDeleteLayoutUtilityPageEntry() {
+
+		return dropdownItem -> {
+			dropdownItem.putData("action", "deleteLayoutUtilityPageEntry");
+
+			String key = "are-you-sure-you-want-to-delete-this";
+
+			if (_layoutUtilityPageEntry.isDefaultLayoutUtilityPageEntry()) {
+				key =
+					"are-you-sure-you-want-to-delete-the-default-utility-page";
+			}
+
+			dropdownItem.putData(
+				"deleteLayoutUtilityPageEntryURL",
+				PortletURLBuilder.createActionURL(
+					_renderResponse
+				).setActionName(
+					"/layout_admin/delete_layout_utility_page_entry"
+				).setRedirect(
+					_themeDisplay.getURLCurrent()
+				).setParameter(
+					"LayoutUtilityPageEntryId",
+					_layoutUtilityPageEntry.getLayoutUtilityPageEntryId()
+				).buildString());
+			dropdownItem.putData(
+				"deleteLayoutUtilityPageMessage",
+				LanguageUtil.get(_httpServletRequest, key));
+			dropdownItem.setIcon("trash");
+			dropdownItem.setLabel(
+				LanguageUtil.get(_httpServletRequest, "delete"));
+		};
 	}
 
 	private UnsafeConsumer<DropdownItem, Exception>
