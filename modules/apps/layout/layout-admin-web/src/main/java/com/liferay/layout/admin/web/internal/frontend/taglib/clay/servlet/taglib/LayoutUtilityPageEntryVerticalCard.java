@@ -22,14 +22,18 @@ import com.liferay.layout.admin.web.internal.constants.LayoutUtilityPageEntryCon
 import com.liferay.layout.admin.web.internal.servlet.taglib.util.LayoutUtilityPageEntryActionDropdownItemsProvider;
 import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -44,9 +48,13 @@ public class LayoutUtilityPageEntryVerticalCard extends BaseVerticalCard {
 		super(null, renderRequest, null);
 
 		_layoutUtilityPageEntry = layoutUtilityPageEntry;
-		_httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+
+		_httpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
+
+		_draftLayout = LayoutLocalServiceUtil.fetchDraftLayout(
+			_layoutUtilityPageEntry.getPlid());
 	}
 
 	@Override
@@ -54,8 +62,7 @@ public class LayoutUtilityPageEntryVerticalCard extends BaseVerticalCard {
 		LayoutUtilityPageEntryActionDropdownItemsProvider
 			layoutUtilityPageEntryActionDropdownItemsProvider =
 				new LayoutUtilityPageEntryActionDropdownItemsProvider(
-					_layoutUtilityPageEntry,
-					_renderRequest, _renderResponse);
+					_layoutUtilityPageEntry, _renderRequest, _renderResponse);
 
 		return layoutUtilityPageEntryActionDropdownItemsProvider.
 			getActionDropdownItems();
@@ -64,6 +71,17 @@ public class LayoutUtilityPageEntryVerticalCard extends BaseVerticalCard {
 	@Override
 	public String getIcon() {
 		return "list";
+	}
+
+	@Override
+	public List<LabelItem> getLabels() {
+		if (_draftLayout == null) {
+			return Collections.emptyList();
+		}
+
+		return LabelItemListBuilder.add(
+			labelItem -> labelItem.setStatus(_draftLayout.getStatus())
+		).build();
 	}
 
 	@Override
@@ -80,16 +98,10 @@ public class LayoutUtilityPageEntryVerticalCard extends BaseVerticalCard {
 		return "primary";
 	}
 
-	@Override
-	public String getTitle() {
-		return HtmlUtil.escape(_layoutUtilityPageEntry.getName());
-	}
-
 	public String getSubtitle() {
-
 		if (Objects.equals(
-			_layoutUtilityPageEntry.getType(),
-			LayoutUtilityPageEntryConstants.Type.TERMS_OF_USE)) {
+				_layoutUtilityPageEntry.getType(),
+				LayoutUtilityPageEntryConstants.Type.TERMS_OF_USE)) {
 
 			return LanguageUtil.get(_httpServletRequest, "terms-of-use");
 		}
@@ -98,13 +110,19 @@ public class LayoutUtilityPageEntryVerticalCard extends BaseVerticalCard {
 	}
 
 	@Override
+	public String getTitle() {
+		return HtmlUtil.escape(_layoutUtilityPageEntry.getName());
+	}
+
+	@Override
 	public boolean isSelectable() {
 		return true;
 	}
 
+	private final Layout _draftLayout;
 	private final HttpServletRequest _httpServletRequest;
 	private final LayoutUtilityPageEntry _layoutUtilityPageEntry;
-	private final RenderResponse _renderResponse;
 	private final RenderRequest _renderRequest;
+	private final RenderResponse _renderResponse;
 
 }
