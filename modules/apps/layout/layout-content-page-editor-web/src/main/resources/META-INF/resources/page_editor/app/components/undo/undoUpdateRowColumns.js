@@ -12,26 +12,66 @@
  * details.
  */
 
-import updateRowColumns from '../../thunks/updateRowColumns';
+import LayoutService from '../../services/LayoutService';
+import {setIn} from '../../utils/setIn';
+import updateRowColumns from '../../actions/updateRowColumns';
 
 function undoAction({action}) {
-	const {itemId, numberOfColumns} = action;
+	const {deletedColumnIds, layoutDataItem, previousNumberOfColumns} = action;
 
-	return updateRowColumns({
-		itemId,
-		numberOfColumns,
-	});
+	return async (dispatch, getState) => {
+		const {segmentsExperienceId} = getState();
+
+		for (const columnId of deletedColumnIds) {
+			await LayoutService.unmarkItemForDeletion({
+				itemId: columnId,
+				onNetworkStatus: dispatch,
+				segmentsExperienceId,
+			});
+		}
+
+		const {layoutData, pageContents} = await LayoutService.updateItemConfig(
+			{
+				itemId: layoutDataItem.itemId,
+				onNetworkStatus: dispatch,
+				segmentsExperienceId,
+				itemConfig: setIn(
+					layoutDataItem.config,
+					'numberOfColumns',
+					previousNumberOfColumns
+				),
+			}
+		);
+
+		dispatch(
+			updateRowColumns({
+				itemId: layoutDataItem.itemId,
+				layoutData,
+				numberOfColumns: previousNumberOfColumns,
+				pageContents,
+			})
+		);
+	};
 }
 
 function getDerivedStateForUndo({action, state}) {
 	const {itemId} = action;
 	const {layoutData} = state;
 
-	const config = layoutData.items[itemId]?.config ?? {};
+	const layoutDataItem = layoutData.items[itemId];
+
+	const nextNumberOfColumns = action.numberOfColumns;
+	const previousNumberOfColumns = layoutDataItem.config.numberOfColumns;
+
+	const deletedColumnIds = layoutDataItem.children.slice(
+		nextNumberOfColumns,
+		previousNumberOfColumns
+	);
 
 	return {
-		itemId,
-		numberOfColumns: config.numberOfColumns,
+		deletedColumnIds,
+		layoutDataItem,
+		previousNumberOfColumns,
 	};
 }
 
