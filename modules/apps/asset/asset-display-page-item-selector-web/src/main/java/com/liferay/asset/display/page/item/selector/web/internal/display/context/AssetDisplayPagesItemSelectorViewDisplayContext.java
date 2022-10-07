@@ -150,14 +150,17 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 		return _orderByType;
 	}
 
-	private long _getGroupId() {
-		long groupId = _assetDisplayPageSelectorCriterion.getGroupId();
+	private Long _groupId;
 
-		if (groupId <= 0) {
-			groupId = _themeDisplay.getScopeGroupId();
+	private long _getGroupId() {
+		if (Validator.isNotNull(_groupId)) {
+			return _groupId;
 		}
 
-		return groupId;
+		_groupId = ParamUtil.getLong(
+			_httpServletRequest, "groupId", _themeDisplay.getScopeGroupId());
+
+		return _groupId;
 	}
 
 	private String _getKeywords() {

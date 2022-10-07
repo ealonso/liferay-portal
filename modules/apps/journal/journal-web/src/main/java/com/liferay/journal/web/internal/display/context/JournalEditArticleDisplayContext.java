@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.internal.display.context;
 
+import com.liferay.asset.display.page.item.selector.criterion.AssetDisplayPageSelectorCriterion;
 import com.liferay.dynamic.data.mapping.form.renderer.constants.DDMFormRendererConstants;
 import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory;
 import com.liferay.dynamic.data.mapping.item.selector.DDMTemplateItemSelectorReturnType;
@@ -27,6 +28,7 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesToMapConverter;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.criteria.URLItemSelectorReturnType;
+import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.journal.constants.JournalArticleConstants;
 import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
@@ -470,15 +472,27 @@ public class JournalEditArticleDisplayContext {
 			"selectDisplayPageEventName", selectDisplayPageEventName
 		).put(
 			"selectDisplayPageURL",
-			() -> PortletURLBuilder.createRenderURL(
-				_liferayPortletResponse
-			).setMVCRenderCommandName(
-				"/journal/select_display_page"
-			).setParameter(
-				"classTypeId", getDDMStructureId()
-			).setParameter(
-				"eventName", selectDisplayPageEventName
-			).buildString()
+			() -> {
+				AssetDisplayPageSelectorCriterion
+					assetDisplayPageSelectorCriterion =
+					new AssetDisplayPageSelectorCriterion();
+
+				assetDisplayPageSelectorCriterion.setClassNameId(
+					PortalUtil.getClassNameId(JournalArticle.class));
+				assetDisplayPageSelectorCriterion.setClassTypeId(
+					getDDMStructureId());
+				assetDisplayPageSelectorCriterion.
+					setDesiredItemSelectorReturnTypes(
+						new UUIDItemSelectorReturnType());
+
+				return PortletURLBuilder.create(
+					_itemSelector.getItemSelectorURL(
+						RequestBackedPortletURLFactoryUtil.create(
+							_httpServletRequest),
+						selectDisplayPageEventName,
+						assetDisplayPageSelectorCriterion)
+				).buildString();
+			}
 		).put(
 			"selectSiteEventName", selectSiteEventName
 		).put(
