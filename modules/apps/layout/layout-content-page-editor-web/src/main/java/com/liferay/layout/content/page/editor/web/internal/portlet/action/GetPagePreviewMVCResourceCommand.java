@@ -45,7 +45,6 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsWebKeys;
-import com.liferay.segments.service.SegmentsExperienceLocalService;
 
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
@@ -117,9 +116,7 @@ public class GetPagePreviewMVCResourceCommand extends BaseMVCResourceCommand {
 
 		try {
 			long segmentsExperienceId = ParamUtil.getLong(
-				resourceRequest, "segmentsExperienceId",
-				_segmentsExperienceLocalService.
-					fetchDefaultSegmentsExperienceId(selPlid));
+				resourceRequest, "segmentsExperienceId");
 
 			resourceRequest.setAttribute(
 				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS,
@@ -209,17 +206,8 @@ public class GetPagePreviewMVCResourceCommand extends BaseMVCResourceCommand {
 			_infoItemServiceTracker.getFirstInfoItemService(
 				InfoItemObjectProvider.class, className);
 
-		ClassPKInfoItemIdentifier infoItemIdentifier =
-			new ClassPKInfoItemIdentifier(classPK);
-
-		String version = ParamUtil.getString(httpServletRequest, "version");
-
-		if (Validator.isNull(version)) {
-			infoItemIdentifier.setVersion(version);
-		}
-
 		Object infoItem = infoItemObjectProvider.getInfoItem(
-			infoItemIdentifier);
+			new ClassPKInfoItemIdentifier(classPK));
 
 		httpServletRequest.setAttribute(InfoDisplayWebKeys.INFO_ITEM, infoItem);
 
@@ -248,9 +236,6 @@ public class GetPagePreviewMVCResourceCommand extends BaseMVCResourceCommand {
 
 	@Reference
 	private Portal _portal;
-
-	@Reference
-	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;

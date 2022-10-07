@@ -18,6 +18,7 @@ import ClayForm, {ClayInput} from '@clayui/form';
 import ClayIcon from '@clayui/icon';
 import {
 	createPortletURL,
+	getPortletNamespace,
 	openModal,
 	openSelectionModal,
 	openToast,
@@ -28,7 +29,7 @@ import React, {useMemo, useState} from 'react';
 export default function DisplayPagePreview({
 	newArticle,
 	portletNamespace: namespace,
-	previewURL,
+	saveAsDraftURL,
 	selectDisplayPageEventName,
 	selectDisplayPageURL,
 	selectSiteEventName,
@@ -130,7 +131,7 @@ export default function DisplayPagePreview({
 				displayPageSelected={displayPageSelected}
 				namespace={namespace}
 				newArticle={newArticle}
-				previewURL={previewURL}
+				saveAsDraftURL={saveAsDraftURL}
 				selectDisplayPageEventName={selectDisplayPageEventName}
 				selectDisplayPageURL={selectDisplayPageURL}
 				selectedSite={selectedSite}
@@ -144,7 +145,7 @@ function DisplayPageSelector({
 	displayPageSelected,
 	namespace,
 	newArticle,
-	previewURL,
+	saveAsDraftURL,
 	selectDisplayPageEventName,
 	selectDisplayPageURL,
 	selectedSite,
@@ -153,6 +154,13 @@ function DisplayPageSelector({
 	const displayPageId = `${namespace}displayPageId`;
 
 	const openDisplayPageSelector = () => {
+		const url = new URL(selectDisplayPageURL);
+
+		url.searchParams.set(
+			`${getPortletNamespace(Liferay.PortletKeys.ITEM_SELECTOR)}groupId`,
+			selectedSite.groupId
+		);
+
 		openSelectionModal({
 			containerProps: {
 				className: 'cadmin',
@@ -168,9 +176,7 @@ function DisplayPageSelector({
 				Liferay.Language.get('select-x'),
 				Liferay.Language.get('display-page')
 			),
-			url: createPortletURL(selectDisplayPageURL, {
-				groupId: selectedSite.groupId,
-			}),
+			url,
 		});
 	};
 
@@ -239,7 +245,7 @@ function DisplayPageSelector({
 
 					const form = document.getElementById(`${namespace}fm1`);
 
-					return Liferay.Util.fetch(form.action, {
+					return Liferay.Util.fetch(saveAsDraftURL, {
 						body: new FormData(form),
 						headers: {
 							Accept: 'application/json',
@@ -247,7 +253,7 @@ function DisplayPageSelector({
 						method: form.method,
 					})
 						.then((response) => response.json())
-						.then(({classPK, error, version}) => {
+						.then(({classPK, error, previewURL, version}) => {
 							if (error) {
 								openToast({
 									message: Liferay.Language.get(
