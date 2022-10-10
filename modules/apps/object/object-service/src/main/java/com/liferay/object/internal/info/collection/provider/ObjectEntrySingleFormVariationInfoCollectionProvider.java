@@ -48,6 +48,8 @@ import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectLayout;
 import com.liferay.object.model.ObjectLayoutTab;
+import com.liferay.object.rest.manager.v1_0.ObjectEntryManager;
+import com.liferay.object.rest.manager.v1_0.ObjectEntryManagerTracker;
 import com.liferay.object.scope.ObjectScopeProvider;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectEntryLocalService;
@@ -78,6 +80,7 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -85,6 +88,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.portlet.asset.util.comparator.AssetTagNameComparator;
 
@@ -114,6 +118,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		ListTypeEntryLocalService listTypeEntryLocalService,
 		ObjectDefinition objectDefinition,
 		ObjectEntryLocalService objectEntryLocalService,
+		ObjectEntryManagerTracker objectEntryManagerTracker,
 		ObjectFieldLocalService objectFieldLocalService,
 		ObjectLayoutLocalService objectLayoutLocalService,
 		ObjectScopeProviderRegistry objectScopeProviderRegistry) {
@@ -125,6 +130,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		_listTypeEntryLocalService = listTypeEntryLocalService;
 		_objectDefinition = objectDefinition;
 		_objectEntryLocalService = objectEntryLocalService;
+		_objectEntryManagerTracker = objectEntryManagerTracker;
 		_objectFieldLocalService = objectFieldLocalService;
 		_objectLayoutLocalService = objectLayoutLocalService;
 		_objectScopeProviderRegistry = objectScopeProviderRegistry;
@@ -135,6 +141,15 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		CollectionQuery collectionQuery) {
 
 		try {
+			ObjectEntryManager objectEntryManager =
+				_objectEntryManagerTracker.getObjectEntryManager(
+					_objectDefinition.getStorageType());
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
+
 			Indexer<ObjectEntry> indexer = IndexerRegistryUtil.getIndexer(
 				_objectDefinition.getClassName());
 
@@ -147,8 +162,14 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 						long classPK = GetterUtil.getLong(
 							document.get(Field.ENTRY_CLASS_PK));
 
-						return _objectEntryLocalService.fetchObjectEntry(
-							classPK);
+						return _toObjectEntry(
+							_objectDefinition.getObjectDefinitionId(),
+							objectEntryManager.fetchObjectEntry(
+								new DefaultDTOConverterContext(
+									true, Collections.emptyMap(), null, null,
+									classPK, serviceContext.getLocale(), null,
+									themeDisplay.getUser()),
+								_objectDefinition, classPK));
 					}),
 				collectionQuery.getPagination(), hits.getLength());
 		}
@@ -622,7 +643,9 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 				_objectDefinition.getObjectDefinitionId());
 		}
 		catch (PortalException portalException) {
-			_log.error(portalException);
+			if (_log.isWarnEnabled()) {
+				_log.warn(portalException);
+			}
 
 			return false;
 		}
@@ -643,6 +666,18 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		return false;
 	}
 
+	private ObjectEntry _toObjectEntry(
+		long objectDefinitionId,
+		com.liferay.object.rest.dto.v1_0.ObjectEntry objectEntry) {
+
+		ObjectEntry serviceBuilderObjectEntry =
+			_objectEntryLocalService.createObjectEntry(objectEntry.getId());
+
+		serviceBuilderObjectEntry.setObjectDefinitionId(objectDefinitionId);
+
+		return serviceBuilderObjectEntry;
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ObjectEntrySingleFormVariationInfoCollectionProvider.class);
 
@@ -653,6 +688,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	private final ListTypeEntryLocalService _listTypeEntryLocalService;
 	private final ObjectDefinition _objectDefinition;
 	private final ObjectEntryLocalService _objectEntryLocalService;
+	private final ObjectEntryManagerTracker _objectEntryManagerTracker;
 	private final ObjectFieldLocalService _objectFieldLocalService;
 	private final ObjectLayoutLocalService _objectLayoutLocalService;
 	private final ObjectScopeProviderRegistry _objectScopeProviderRegistry;
