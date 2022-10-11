@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.processor;
 
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.form.InfoForm;
 
 import java.util.Locale;
@@ -30,13 +31,13 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface FragmentEntryProcessorContext {
 
-	public Optional<Object> getDisplayObjectOptional();
-
 	public String getFragmentElementId();
 
 	public HttpServletRequest getHttpServletRequest();
 
 	public HttpServletResponse getHttpServletResponse();
+
+	public Optional<InfoCollectionItem<?>> getInfoCollectionItemOptional();
 
 	public Optional<InfoForm> getInfoFormOptional();
 

@@ -15,6 +15,7 @@
 package com.liferay.fragment.processor;
 
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.item.InfoItemIdentifier;
 
@@ -41,11 +42,6 @@ public class DefaultFragmentEntryProcessorContext
 	}
 
 	@Override
-	public Optional<Object> getDisplayObjectOptional() {
-		return Optional.ofNullable(_displayObject);
-	}
-
-	@Override
 	public String getFragmentElementId() {
 		return _fragmentElementId;
 	}
@@ -58,6 +54,11 @@ public class DefaultFragmentEntryProcessorContext
 	@Override
 	public HttpServletResponse getHttpServletResponse() {
 		return _httpServletResponse;
+	}
+
+	@Override
+	public Optional<InfoCollectionItem<?>> getInfoCollectionItemOptional() {
+		return Optional.ofNullable(_infoCollectionItem);
 	}
 
 	@Override
@@ -100,12 +101,14 @@ public class DefaultFragmentEntryProcessorContext
 		return _segmentsEntryIds;
 	}
 
-	public void setDisplayObject(Object object) {
-		_displayObject = object;
-	}
-
 	public void setFragmentElementId(String fragmentElementId) {
 		_fragmentElementId = fragmentElementId;
+	}
+
+	public void setInfoCollectionItem(
+		InfoCollectionItem<?> infoCollectionItem) {
+
+		_infoCollectionItem = infoCollectionItem;
 	}
 
 	public void setInfoForm(InfoForm infoForm) {
@@ -132,10 +135,10 @@ public class DefaultFragmentEntryProcessorContext
 		_segmentsEntryIds = segmentsEntryIds;
 	}
 
-	private Object _displayObject;
 	private String _fragmentElementId;
 	private final HttpServletRequest _httpServletRequest;
 	private final HttpServletResponse _httpServletResponse;
+	private InfoCollectionItem<?> _infoCollectionItem;
 	private InfoForm _infoForm;
 	private final Locale _locale;
 	private final String _mode;
