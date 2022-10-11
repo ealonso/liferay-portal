@@ -16,7 +16,7 @@ package com.liferay.object.web.internal.info.permission.provider;
 
 import com.liferay.info.permission.provider.InfoPermissionProvider;
 import com.liferay.object.model.ObjectDefinition;
-import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Portlet;

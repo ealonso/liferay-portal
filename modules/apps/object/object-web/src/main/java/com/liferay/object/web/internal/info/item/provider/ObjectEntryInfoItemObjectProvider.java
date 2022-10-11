@@ -18,8 +18,15 @@ import com.liferay.info.exception.NoSuchInfoItemException;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemIdentifier;
 import com.liferay.info.item.provider.InfoItemObjectProvider;
-import com.liferay.object.model.ObjectEntry;
-import com.liferay.object.service.ObjectEntryLocalService;
+import com.liferay.object.model.ObjectDefinition;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
+import com.liferay.object.rest.manager.v1_0.ObjectEntryManager;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
+
+import java.util.Collections;
+import java.util.Locale;
 
 /**
  * @author Guilherme Camacho
@@ -28,9 +35,11 @@ public class ObjectEntryInfoItemObjectProvider
 	implements InfoItemObjectProvider<ObjectEntry> {
 
 	public ObjectEntryInfoItemObjectProvider(
-		ObjectEntryLocalService objectEntryLocalService) {
+		ObjectDefinition objectDefinition,
+		ObjectEntryManager objectEntryManager) {
 
-		_objectEntryLocalService = objectEntryLocalService;
+		_objectDefinition = objectDefinition;
+		_objectEntryManager = objectEntryManager;
 	}
 
 	@Override
@@ -45,8 +54,17 @@ public class ObjectEntryInfoItemObjectProvider
 		ClassPKInfoItemIdentifier classPKInfoItemIdentifier =
 			(ClassPKInfoItemIdentifier)infoItemIdentifier;
 
-		ObjectEntry objectEntry = _objectEntryLocalService.fetchObjectEntry(
-			classPKInfoItemIdentifier.getClassPK());
+		ObjectEntry objectEntry = null;
+
+		try {
+			objectEntry = _objectEntryManager.fetchObjectEntry(
+				_getDTOConverterContext(
+					null, null, LocaleUtil.getSiteDefault()),
+				_objectDefinition, classPKInfoItemIdentifier.getClassPK());
+		}
+		catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
 
 		if (objectEntry == null) {
 			throw new NoSuchInfoItemException(
@@ -56,6 +74,18 @@ public class ObjectEntryInfoItemObjectProvider
 
 		return objectEntry;
 	}
+
+	//	private DTOConverterContext _getDTOConverterContext() throws Exception {
+	//		return new DefaultDTOConverterContext(
+	//			false, Collections.emptyMap(), _dtoConverterRegistry, null,
+	//			LocaleUtil.getDefault(), null, _user);
+	//	}
+	//
+	//	private DTOConverterContext _getDTOConverterContext() {
+	//		return new DefaultDTOConverterContext(
+	//			false, null, null, _objectRequestHelper.getRequest(), null,
+	//			_themeDisplay.getLocale(), null, _themeDisplay.getUser());
+	//	}
 
 	@Override
 	public ObjectEntry getInfoItem(long classPK)
@@ -67,6 +97,15 @@ public class ObjectEntryInfoItemObjectProvider
 		return getInfoItem(classPKInfoItemIdentifier);
 	}
 
-	private final ObjectEntryLocalService _objectEntryLocalService;
+	private DefaultDTOConverterContext _getDTOConverterContext(
+		Long objectEntryId, User user, Locale locale) {
+
+		return new DefaultDTOConverterContext(
+			false, Collections.emptyMap(), null, null, objectEntryId, locale,
+			null, user);
+	}
+
+	private final ObjectDefinition _objectDefinition;
+	private final ObjectEntryManager _objectEntryManager;
 
 }

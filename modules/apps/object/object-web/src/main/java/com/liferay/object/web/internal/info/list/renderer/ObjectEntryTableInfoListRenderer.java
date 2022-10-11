@@ -20,8 +20,9 @@ import com.liferay.info.list.renderer.DefaultInfoListRendererContext;
 import com.liferay.info.list.renderer.InfoListRenderer;
 import com.liferay.info.list.renderer.InfoListRendererContext;
 import com.liferay.info.taglib.servlet.taglib.InfoListBasicTableTag;
-import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.web.internal.info.item.renderer.ObjectEntryRowInfoItemRenderer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -46,9 +47,11 @@ public class ObjectEntryTableInfoListRenderer
 
 	public ObjectEntryTableInfoListRenderer(
 		InfoItemRendererTracker infoItemRendererTracker,
+		ObjectDefinition objectDefinition,
 		ObjectFieldLocalService objectFieldLocalService) {
 
 		_infoItemRendererTracker = infoItemRendererTracker;
+		_objectDefinition = objectDefinition;
 		_objectFieldLocalService = objectFieldLocalService;
 	}
 
@@ -83,11 +86,9 @@ public class ObjectEntryTableInfoListRenderer
 			new InfoListBasicTableTag();
 
 		if ((objectEntries != null) && !objectEntries.isEmpty()) {
-			ObjectEntry objectEntry = objectEntries.get(0);
-
 			List<ObjectField> objectFields =
 				_objectFieldLocalService.getObjectFields(
-					objectEntry.getObjectDefinitionId(), false);
+					_objectDefinition.getObjectDefinitionId(), false);
 
 			try {
 				objectFields = _objectFieldLocalService.getActiveObjectFields(
@@ -131,6 +132,7 @@ public class ObjectEntryTableInfoListRenderer
 		ObjectEntryTableInfoListRenderer.class);
 
 	private final InfoItemRendererTracker _infoItemRendererTracker;
+	private final ObjectDefinition _objectDefinition;
 	private final ObjectFieldLocalService _objectFieldLocalService;
 
 }

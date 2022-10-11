@@ -20,7 +20,7 @@ import com.liferay.info.item.InfoItemReference;
 import com.liferay.info.item.provider.InfoItemDetailsProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.object.model.ObjectDefinition;
-import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 
 /**
  * @author Guilherme Camacho
@@ -49,8 +49,7 @@ public class ObjectEntryInfoItemDetailsProvider
 		return new InfoItemDetails(
 			getInfoItemClassDetails(),
 			new InfoItemReference(
-				_objectDefinition.getClassName(),
-				objectEntry.getObjectEntryId()));
+				_objectDefinition.getClassName(), objectEntry.getId()));
 	}
 
 	private final ObjectDefinition _objectDefinition;

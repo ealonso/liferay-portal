@@ -19,7 +19,7 @@ import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemReference;
 import com.liferay.info.item.provider.InfoItemPermissionProvider;
 import com.liferay.object.model.ObjectDefinition;
-import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.object.service.ObjectEntryService;
 import com.liferay.object.web.internal.util.ObjectDefinitionPermissionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -60,7 +60,7 @@ public class ObjectEntryInfoItemPermissionProvider
 			String actionId)
 		throws InfoItemPermissionException {
 
-		return _hasPermission(actionId, objectEntry.getObjectEntryId());
+		return _hasPermission(actionId, objectEntry.getId());
 	}
 
 	private boolean _hasPermission(String actionId, long objectEntryId) {

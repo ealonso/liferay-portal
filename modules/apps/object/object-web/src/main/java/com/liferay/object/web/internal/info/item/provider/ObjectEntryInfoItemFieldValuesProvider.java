@@ -27,8 +27,9 @@ import com.liferay.info.type.WebImage;
 import com.liferay.list.type.model.ListTypeEntry;
 import com.liferay.list.type.service.ListTypeEntryLocalService;
 import com.liferay.object.constants.ObjectFieldConstants;
-import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectField;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.object.service.ObjectEntryLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.web.internal.info.item.ObjectEntryInfoItemFields;
@@ -44,12 +45,9 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.vulcan.util.TransformUtil;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
-
-import java.io.Serializable;
 
 import java.text.Format;
 
@@ -70,6 +68,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		InfoItemFieldReaderFieldSetProvider infoItemFieldReaderFieldSetProvider,
 		JSONFactory jsonFactory,
 		ListTypeEntryLocalService listTypeEntryLocalService,
+		ObjectDefinition objectDefinition,
 		ObjectEntryLocalService objectEntryLocalService,
 		ObjectFieldLocalService objectFieldLocalService,
 		TemplateInfoItemFieldSetProvider templateInfoItemFieldSetProvider,
@@ -81,6 +80,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 			infoItemFieldReaderFieldSetProvider;
 		_jsonFactory = jsonFactory;
 		_listTypeEntryLocalService = listTypeEntryLocalService;
+		_objectDefinition = objectDefinition;
 		_objectEntryLocalService = objectEntryLocalService;
 		_objectFieldLocalService = objectFieldLocalService;
 		_templateInfoItemFieldSetProvider = templateInfoItemFieldSetProvider;
@@ -97,10 +97,10 @@ public class ObjectEntryInfoItemFieldValuesProvider
 				ObjectEntry.class.getName(), objectEntry)
 		).infoFieldValues(
 			_templateInfoItemFieldSetProvider.getInfoFieldValues(
-				objectEntry.getModelClassName(), objectEntry)
+				_objectDefinition.getModelClassName(), objectEntry)
 		).infoItemReference(
 			new InfoItemReference(
-				ObjectEntry.class.getName(), objectEntry.getObjectEntryId())
+				ObjectEntry.class.getName(), objectEntry.getId())
 		).build();
 	}
 
@@ -109,7 +109,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		throws PortalException {
 
 		return _assetDisplayPageFriendlyURLProvider.getFriendlyURL(
-			objectEntry.getModelClassName(), objectEntry.getObjectEntryId(),
+			_objectDefinition.getModelClassName(), objectEntry.getId(),
 			themeDisplay);
 	}
 
@@ -123,23 +123,26 @@ public class ObjectEntryInfoItemFieldValuesProvider
 			objectEntryFieldValues.add(
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.createDateInfoField,
-					objectEntry.getCreateDate()));
+					objectEntry.getDateCreated()));
 			objectEntryFieldValues.add(
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.modifiedDateInfoField,
-					objectEntry.getModifiedDate()));
-			objectEntryFieldValues.add(
-				new InfoFieldValue<>(
-					ObjectEntryInfoItemFields.publishDateInfoField,
-					objectEntry.getLastPublishDate()));
+					objectEntry.getDateModified()));
+			//			objectEntryFieldValues.add(
+			//				new InfoFieldValue<>(
+			//					ObjectEntryInfoItemFields.publishDateInfoField,
+			//					objectEntry.getLastPublishDate()));
 			objectEntryFieldValues.add(
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.userNameInfoField,
-					objectEntry.getUserName()));
+					objectEntry.getCreator(
+					).getName()));
 			objectEntryFieldValues.add(
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.userProfileImageInfoField,
-					_getWebImage(objectEntry.getUserId())));
+					_getWebImage(
+						objectEntry.getCreator(
+						).getId())));
 
 			ThemeDisplay themeDisplay = _getThemeDisplay();
 
@@ -150,12 +153,12 @@ public class ObjectEntryInfoItemFieldValuesProvider
 						_getDisplayPageURL(objectEntry, themeDisplay)));
 			}
 
-			Map<String, Serializable> values = objectEntry.getValues();
+			Map<String, Object> values = objectEntry.getProperties();
 
 			objectEntryFieldValues.addAll(
 				TransformUtil.transform(
 					_objectFieldLocalService.getObjectFields(
-						objectEntry.getObjectDefinitionId()),
+						_objectDefinition.getObjectDefinitionId()),
 					objectField -> new InfoFieldValue<>(
 						InfoField.builder(
 						).infoFieldType(
@@ -191,7 +194,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 	}
 
 	private Object _getValue(
-			ObjectField objectField, Map<String, Serializable> values)
+			ObjectField objectField, Map<String, Object> values)
 		throws Exception {
 
 		Object value = values.get(objectField.getName());
@@ -227,16 +230,16 @@ public class ObjectEntryInfoItemFieldValuesProvider
 
 			return listTypeEntry.getName(serviceContext.getLocale());
 		}
-		else if (Validator.isNotNull(objectField.getRelationshipType()) &&
-				 (GetterUtil.getLong(value) > 0)) {
-
-			ObjectEntry objectEntry = _objectEntryLocalService.fetchObjectEntry(
-				(Long)values.get(objectField.getName()));
-
-			if (objectEntry != null) {
-				return objectEntry.getTitleValue();
-			}
-		}
+		//		else if (Validator.isNotNull(objectField.getRelationshipType()) &&
+		//				 (GetterUtil.getLong(value) > 0)) {
+		//
+		//			ObjectEntry objectEntry = _objectEntryLocalService.fetchObjectEntry(
+		//				(Long)values.get(objectField.getName()));
+		//
+		//			if (objectEntry != null) {
+		//				return objectEntry.getTitleValue();
+		//			}
+		//		}
 		else if (Objects.equals(
 					objectField.getDBType(),
 					ObjectFieldConstants.DB_TYPE_DATE)) {
@@ -244,7 +247,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 			Format dateFormat = FastDateFormatFactoryUtil.getDate(
 				serviceContext.getLocale());
 
-			Serializable dateValue = values.get(objectField.getName());
+			Object dateValue = values.get(objectField.getName());
 
 			Date date = DateUtil.parseDate(
 				"yyyy-MM-dd", dateValue.toString(), serviceContext.getLocale());
@@ -281,6 +284,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		_infoItemFieldReaderFieldSetProvider;
 	private final JSONFactory _jsonFactory;
 	private final ListTypeEntryLocalService _listTypeEntryLocalService;
+	private final ObjectDefinition _objectDefinition;
 	private final ObjectEntryLocalService _objectEntryLocalService;
 	private final ObjectFieldLocalService _objectFieldLocalService;
 	private final TemplateInfoItemFieldSetProvider

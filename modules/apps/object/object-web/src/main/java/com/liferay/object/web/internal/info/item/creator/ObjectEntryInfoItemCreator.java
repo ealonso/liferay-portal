@@ -15,7 +15,6 @@
 package com.liferay.object.web.internal.info.item.creator;
 
 import com.liferay.info.exception.InfoFormException;
-import com.liferay.info.exception.InfoFormValidationException;
 import com.liferay.info.exception.NoSuchFormVariationException;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldValue;
@@ -24,18 +23,16 @@ import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.creator.InfoItemCreator;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.object.constants.ObjectDefinitionConstants;
-import com.liferay.object.exception.ObjectEntryValuesException;
 import com.liferay.object.model.ObjectDefinition;
-import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectFieldSetting;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.object.scope.ObjectScopeProvider;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectEntryService;
 import com.liferay.object.service.ObjectFieldLocalServiceUtil;
 import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -75,153 +72,170 @@ public class ObjectEntryInfoItemCreator
 			long groupId, InfoItemFieldValues infoItemFieldValues)
 		throws InfoFormException {
 
-		try {
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
+		//		try {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
 
-			Map<String, Serializable> values = new HashMap<>();
+		Map<String, Serializable> values = new HashMap<>();
 
-			for (InfoFieldValue<Object> infoFieldValue :
-					infoItemFieldValues.getInfoFieldValues()) {
+		for (InfoFieldValue<Object> infoFieldValue :
+				infoItemFieldValues.getInfoFieldValues()) {
 
-				InfoField<?> infoField = infoFieldValue.getInfoField();
+			InfoField<?> infoField = infoFieldValue.getInfoField();
 
-				values.put(
-					infoField.getName(),
-					(Serializable)infoFieldValue.getValue());
-			}
-
-			return _objectEntryService.addObjectEntry(
-				_getGroupId(_objectDefinition, String.valueOf(groupId)),
-				_objectDefinition.getObjectDefinitionId(), values,
-				serviceContext);
+			values.put(
+				infoField.getName(), (Serializable)infoFieldValue.getValue());
 		}
-		catch (ObjectEntryValuesException.ExceedsIntegerSize
-					objectEntryValuesException) {
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		//			return _objectEntryService.addObjectEntry(
+		//				_getGroupId(_objectDefinition, String.valueOf(groupId)),
+		//				_objectDefinition.getObjectDefinitionId(), values,
+		//				serviceContext);
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		return null;
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsIntegerSize
 
-			throw new InfoFormValidationException.ExceedsMaxLength(
-				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
-		}
-		catch (ObjectEntryValuesException.ExceedsLongMaxSize
-					objectEntryValuesException) {
+		// 					objectEntryValuesException) {
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.ExceedsMaxLength(
+		//				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsLongMaxSize
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		// 					objectEntryValuesException) {
 
-			throw new InfoFormValidationException.ExceedsMaxValue(
-				infoFieldUniqueId, objectEntryValuesException.getMaxValue());
-		}
-		catch (ObjectEntryValuesException.ExceedsLongMinSize
-					objectEntryValuesException) {
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.ExceedsMaxValue(
+		//				infoFieldUniqueId, objectEntryValuesException.getMaxValue());
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsLongMinSize
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		// 					objectEntryValuesException) {
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.ExceedsMinValue(
+		//				infoFieldUniqueId, objectEntryValuesException.getMinValue());
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsLongSize
 
-			throw new InfoFormValidationException.ExceedsMinValue(
-				infoFieldUniqueId, objectEntryValuesException.getMinValue());
-		}
-		catch (ObjectEntryValuesException.ExceedsLongSize
-					objectEntryValuesException) {
+		// 					objectEntryValuesException) {
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.ExceedsMaxLength(
+		//				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsMaxFileSize
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		// 					objectEntryValuesException) {
 
-			throw new InfoFormValidationException.ExceedsMaxLength(
-				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
-		}
-		catch (ObjectEntryValuesException.ExceedsMaxFileSize
-					objectEntryValuesException) {
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.FileSize(
+		//				infoFieldUniqueId,
+		//				objectEntryValuesException.getMaxFileSize() + " MB");
+		//		}
+		//		catch (ObjectEntryValuesException.ExceedsTextMaxLength
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		// 					objectEntryValuesException) {
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.ExceedsMaxLength(
+		//				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
+		//		}
+		//		catch (ObjectEntryValuesException.InvalidFileExtension
 
-			throw new InfoFormValidationException.FileSize(
-				infoFieldUniqueId,
-				objectEntryValuesException.getMaxFileSize() + " MB");
-		}
-		catch (ObjectEntryValuesException.ExceedsTextMaxLength
-					objectEntryValuesException) {
+		// 					objectEntryValuesException) {
 
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.InvalidFileExtension(
+		//				infoFieldUniqueId,
+		//				_getAcceptedFileExtensions(
+		//					_objectDefinition.getObjectDefinitionId(),
+		//					objectEntryValuesException.getObjectFieldName()));
+		//		}
+		//		catch (ObjectEntryValuesException.ListTypeEntry
 
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
+		// 					objectEntryValuesException) {
 
-			throw new InfoFormValidationException.ExceedsMaxLength(
-				infoFieldUniqueId, objectEntryValuesException.getMaxLength());
-		}
-		catch (ObjectEntryValuesException.InvalidFileExtension
-					objectEntryValuesException) {
-
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
-
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
-
-			throw new InfoFormValidationException.InvalidFileExtension(
-				infoFieldUniqueId,
-				_getAcceptedFileExtensions(
-					_objectDefinition.getObjectDefinitionId(),
-					objectEntryValuesException.getObjectFieldName()));
-		}
-		catch (ObjectEntryValuesException.ListTypeEntry
-					objectEntryValuesException) {
-
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
-
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
-
-			throw new InfoFormValidationException.InvalidInfoFieldValue(
-				infoFieldUniqueId);
-		}
-		catch (ObjectEntryValuesException.Required objectEntryValuesException) {
-			String infoFieldUniqueId = _getInfoFieldUniqueId(
-				groupId, objectEntryValuesException.getObjectFieldName());
-
-			if (infoFieldUniqueId == null) {
-				throw new InfoFormException();
-			}
-
-			throw new InfoFormValidationException.RequiredInfoField(
-				infoFieldUniqueId);
-		}
-		catch (PortalException portalException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(portalException);
-			}
-
-			throw new InfoFormException();
-		}
+		//
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.InvalidInfoFieldValue(
+		//				infoFieldUniqueId);
+		//		}
+		//		catch (ObjectEntryValuesException.Required objectEntryValuesException) {
+		//			String infoFieldUniqueId = _getInfoFieldUniqueId(
+		//				groupId, objectEntryValuesException.getObjectFieldName());
+		//
+		//			if (infoFieldUniqueId == null) {
+		//				throw new InfoFormException();
+		//			}
+		//
+		//			throw new InfoFormValidationException.RequiredInfoField(
+		//				infoFieldUniqueId);
+		//		}
+		//		catch (PortalException portalException) {
+		//			if (_log.isDebugEnabled()) {
+		//				_log.debug(portalException);
+		//			}
+		//
+		//			throw new InfoFormException();
+		//		}
 	}
 
 	private String _getAcceptedFileExtensions(

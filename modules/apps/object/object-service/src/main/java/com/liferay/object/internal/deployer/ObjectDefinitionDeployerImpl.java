@@ -299,22 +299,24 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 						objectEntryModelSummaryContributor);
 				}));
 
-		if (objectDefinition.isDefaultStorageType()) {
-			_bundleContext.registerService(
-				InfoCollectionProvider.class,
-				new ObjectEntrySingleFormVariationInfoCollectionProvider(
-					_assetCategoryLocalService, _assetTagLocalService,
-					_assetVocabularyLocalService, _groupLocalService,
-					_listTypeEntryLocalService, objectDefinition,
-					_objectEntryLocalService, _objectEntryManagerTracker,
-					_objectFieldLocalService, _objectLayoutLocalService,
-					_objectScopeProviderRegistry),
-				HashMapDictionaryBuilder.<String, Object>put(
-					"company.id", objectDefinition.getCompanyId()
-				).put(
-					"item.class.name", objectDefinition.getClassName()
-				).build());
-		}
+		//		if (objectDefinition.isDefaultStorageType()) {
+		_bundleContext.registerService(
+			InfoCollectionProvider.class,
+			new ObjectEntrySingleFormVariationInfoCollectionProvider(
+				_assetCategoryLocalService, _assetTagLocalService,
+				_assetVocabularyLocalService, _groupLocalService,
+				_listTypeEntryLocalService, objectDefinition,
+				_objectEntryLocalService,
+				_objectEntryManagerTracker.getObjectEntryManager(
+					objectDefinition.getStorageType()),
+				_objectFieldLocalService, _objectLayoutLocalService,
+				_objectScopeProviderRegistry),
+			HashMapDictionaryBuilder.<String, Object>put(
+				"company.id", objectDefinition.getCompanyId()
+			).put(
+				"item.class.name", objectDefinition.getClassName()
+			).build());
+		//		}
 
 		for (Locale locale : LanguageUtil.getAvailableLocales()) {
 			serviceRegistrations.add(

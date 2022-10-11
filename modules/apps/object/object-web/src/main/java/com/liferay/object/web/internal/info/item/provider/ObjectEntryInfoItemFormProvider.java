@@ -32,12 +32,12 @@ import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.constants.ObjectFieldValidationConstants;
 import com.liferay.object.exception.NoSuchObjectDefinitionException;
 import com.liferay.object.model.ObjectDefinition;
-import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectFieldSetting;
 import com.liferay.object.model.ObjectRelationship;
 import com.liferay.object.rest.context.path.RESTContextPathResolver;
 import com.liferay.object.rest.context.path.RESTContextPathResolverRegistry;
+import com.liferay.object.rest.dto.v1_0.ObjectEntry;
 import com.liferay.object.scope.ObjectScopeProvider;
 import com.liferay.object.scope.ObjectScopeProviderRegistry;
 import com.liferay.object.service.ObjectDefinitionLocalService;
@@ -115,7 +115,7 @@ public class ObjectEntryInfoItemFormProvider
 
 	@Override
 	public InfoForm getInfoForm(ObjectEntry objectEntry) {
-		long objectDefinitionId = objectEntry.getObjectDefinitionId();
+		long objectDefinitionId = _objectDefinition.getObjectDefinitionId();
 
 		try {
 			return _getInfoForm(objectDefinitionId);
@@ -124,7 +124,7 @@ public class ObjectEntryInfoItemFormProvider
 			throw new RuntimeException(
 				StringBundler.concat(
 					"Unable to get object definition ", objectDefinitionId,
-					" for object entry ", objectEntry.getObjectEntryId()),
+					" for object entry ", objectEntry.getId()),
 				portalException);
 		}
 	}
