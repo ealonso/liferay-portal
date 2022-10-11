@@ -18,6 +18,7 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryService;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemIdentifier;
@@ -117,7 +118,8 @@ public class GetFragmentEntryLinkMVCResourceCommand
 				Object infoItemObject = infoItemObjectProvider.getInfoItem(
 					infoItemIdentifier);
 
-				defaultFragmentRendererContext.setDisplayObject(infoItemObject);
+				defaultFragmentRendererContext.setInfoCollectionItem(
+					new InfoCollectionItem<>(itemClassName, infoItemObject));
 
 				httpServletRequest.setAttribute(
 					InfoDisplayWebKeys.INFO_ITEM, infoItemObject);
@@ -134,8 +136,8 @@ public class GetFragmentEntryLinkMVCResourceCommand
 				}
 
 				httpServletRequest.setAttribute(
-					InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT,
-					infoItemObject);
+					InfoDisplayWebKeys.INFO_COLLECTION_ITEM,
+					new InfoCollectionItem<>(itemClassName, infoItemObject));
 			}
 
 			LayoutDisplayPageProvider<?> layoutDisplayPageProvider =
@@ -164,7 +166,7 @@ public class GetFragmentEntryLinkMVCResourceCommand
 		}
 		finally {
 			httpServletRequest.removeAttribute(
-				InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT);
+				InfoDisplayWebKeys.INFO_COLLECTION_ITEM);
 
 			httpServletRequest.setAttribute(
 				LayoutDisplayPageWebKeys.LAYOUT_DISPLAY_PAGE_PROVIDER,

@@ -29,6 +29,7 @@ import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.form.InfoForm;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
@@ -374,11 +375,11 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					fragmentRendererContext.getMode(),
 					fragmentRendererContext.getLocale());
 
-		Optional<Object> displayObjectOptional =
-			fragmentRendererContext.getDisplayObjectOptional();
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional =
+			fragmentRendererContext.getInfoCollectionItemOptional();
 
-		defaultFragmentEntryProcessorContext.setDisplayObject(
-			displayObjectOptional.orElse(null));
+		defaultFragmentEntryProcessorContext.setInfoCollectionItem(
+			infoCollectionItemOptional.orElse(null));
 
 		defaultFragmentEntryProcessorContext.setFragmentElementId(
 			fragmentRendererContext.getFragmentElementId());
@@ -431,7 +432,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			configurationJSONObject =
 				_fragmentEntryConfigurationParser.getConfigurationJSONObject(
 					fragmentEntryLink.getConfiguration(),
-					displayObjectOptional.orElse(null),
 					fragmentEntryLink.getEditableValues(),
 					fragmentRendererContext.getLocale());
 		}

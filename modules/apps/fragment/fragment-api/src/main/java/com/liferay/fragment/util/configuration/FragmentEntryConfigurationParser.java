@@ -15,6 +15,7 @@
 package com.liferay.fragment.util.configuration;
 
 import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -39,8 +40,7 @@ public interface FragmentEntryConfigurationParser {
 		FragmentConfigurationFieldDataType fragmentConfigurationFieldDataType);
 
 	public JSONObject getConfigurationJSONObject(
-			String configuration, Object displayObject, String editableValues,
-			Locale locale)
+			String configuration, String editableValues, Locale locale)
 		throws JSONException;
 
 	public Map<String, Object> getContextObjects(

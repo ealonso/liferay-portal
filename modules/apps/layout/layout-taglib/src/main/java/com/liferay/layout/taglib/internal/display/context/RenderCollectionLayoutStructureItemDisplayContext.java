@@ -19,6 +19,7 @@ import com.liferay.fragment.constants.FragmentConfigurationFieldDataType;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.InfoFilterProvider;
@@ -348,6 +349,18 @@ public class RenderCollectionLayoutStructureItemDisplayContext {
 		return configuration;
 	}
 
+	private Object _getContextObject() {
+		InfoCollectionItem<?> infoCollectionItem =
+			(InfoCollectionItem<?>)_httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_COLLECTION_ITEM);
+
+		if (infoCollectionItem != null) {
+			return infoCollectionItem.getCollectionItem();
+		}
+
+		return null;
+	}
+
 	private DefaultLayoutListRetrieverContext
 		_getDefaultLayoutListRetrieverContext(
 			LayoutListRetriever<?, ListObjectReference> layoutListRetriever,
@@ -359,8 +372,7 @@ public class RenderCollectionLayoutStructureItemDisplayContext {
 		defaultLayoutListRetrieverContext.setConfiguration(_getConfiguration());
 		defaultLayoutListRetrieverContext.setContextObject(
 			Optional.ofNullable(
-				_httpServletRequest.getAttribute(
-					InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT)
+				_getContextObject()
 			).orElse(
 				_httpServletRequest.getAttribute(InfoDisplayWebKeys.INFO_ITEM)
 			));

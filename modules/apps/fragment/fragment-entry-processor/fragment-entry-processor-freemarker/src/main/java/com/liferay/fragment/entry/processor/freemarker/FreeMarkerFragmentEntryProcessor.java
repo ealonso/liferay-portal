@@ -24,6 +24,7 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessor;
 import com.liferay.fragment.processor.FragmentEntryProcessorContext;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.io.DummyWriter;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
@@ -129,14 +130,16 @@ public class FreeMarkerFragmentEntryProcessor
 
 		template.put(TemplateConstants.WRITER, unsyncStringWriter);
 
-		Optional<Object> displayObjectOptional =
-			fragmentEntryProcessorContext.getDisplayObjectOptional();
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional =
+			fragmentEntryProcessorContext.getInfoCollectionItemOptional();
 
-		Object displayObject = displayObjectOptional.orElse(null);
+		InfoCollectionItem<?> infoCollectionItem =
+			infoCollectionItemOptional.orElse(
+				new InfoCollectionItem<>(null, null));
 
 		JSONObject configurationValuesJSONObject =
 			_fragmentEntryConfigurationParser.getConfigurationJSONObject(
-				fragmentEntryLink.getConfiguration(), displayObject,
+				fragmentEntryLink.getConfiguration(),
 				fragmentEntryLink.getEditableValues(),
 				fragmentEntryProcessorContext.getLocale());
 
@@ -155,7 +158,8 @@ public class FreeMarkerFragmentEntryProcessor
 			).putAll(
 				_fragmentEntryConfigurationParser.getContextObjects(
 					configurationValuesJSONObject,
-					fragmentEntryLink.getConfiguration(), displayObject,
+					fragmentEntryLink.getConfiguration(),
+					infoCollectionItem.getCollectionItem(),
 					fragmentEntryProcessorContext.getSegmentsEntryIds())
 			).build());
 

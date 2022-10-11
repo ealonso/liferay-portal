@@ -25,6 +25,7 @@ import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -106,14 +107,10 @@ public class FragmentEntryFragmentRendererReact implements FragmentRenderer {
 				JSONFactoryUtil.createJSONObject();
 
 			if (Validator.isNotNull(fragmentEntryLink.getConfiguration())) {
-				Optional<Object> displayObjectOptional =
-					fragmentRendererContext.getDisplayObjectOptional();
-
 				configurationJSONObject =
 					_fragmentEntryConfigurationParser.
 						getConfigurationJSONObject(
 							fragmentEntryLink.getConfiguration(),
-							displayObjectOptional.orElse(null),
 							fragmentEntryLink.getEditableValues(),
 							LocaleUtil.getMostRelevantLocale());
 			}

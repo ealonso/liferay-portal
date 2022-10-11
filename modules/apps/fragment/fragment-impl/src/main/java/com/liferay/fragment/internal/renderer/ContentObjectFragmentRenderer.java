@@ -18,6 +18,7 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemDetails;
@@ -109,10 +110,10 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 		JSONObject jsonObject = _getFieldValueJSONObject(
 			fragmentRendererContext);
 
-		Optional<Object> displayObjectOptional =
-			fragmentRendererContext.getDisplayObjectOptional();
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional =
+			fragmentRendererContext.getInfoCollectionItemOptional();
 
-		if (!displayObjectOptional.isPresent() &&
+		if (!infoCollectionItemOptional.isPresent() &&
 			((jsonObject == null) || (jsonObject.length() == 0))) {
 
 			if (FragmentRendererUtil.isEditMode(httpServletRequest)) {
@@ -132,10 +133,14 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 
 			displayObject = _getDisplayObject(
 				className, jsonObject.getLong("classPK"),
-				displayObjectOptional);
+				infoCollectionItemOptional);
 		}
 		else {
-			displayObject = displayObjectOptional.orElse(null);
+			InfoCollectionItem<?> infoCollectionItem =
+				infoCollectionItemOptional.orElse(
+					new InfoCollectionItem<>(null, null));
+
+			displayObject = infoCollectionItem.getCollectionItem();
 		}
 
 		if (displayObject == null) {
@@ -196,14 +201,18 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 
 	private Object _getDisplayObject(
 		String className, long classPK,
-		Optional<Object> displayObjectOptional) {
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional) {
 
 		InfoItemObjectProvider<?> infoItemObjectProvider =
 			_infoItemServiceTracker.getFirstInfoItemService(
 				InfoItemObjectProvider.class, className);
 
+		InfoCollectionItem<?> infoCollectionItem =
+			infoCollectionItemOptional.orElse(
+				new InfoCollectionItem<>(null, null));
+
 		if (infoItemObjectProvider == null) {
-			return displayObjectOptional.orElse(null);
+			return infoCollectionItem.getCollectionItem();
 		}
 
 		try {
@@ -211,7 +220,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 				new ClassPKInfoItemIdentifier(classPK));
 
 			if (infoItem == null) {
-				return displayObjectOptional.orElse(null);
+				return infoCollectionItem.getCollectionItem();
 			}
 
 			return infoItem;
@@ -222,7 +231,7 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 			}
 		}
 
-		return displayObjectOptional.orElse(null);
+		return infoCollectionItem.getCollectionItem();
 	}
 
 	private JSONObject _getFieldValueJSONObject(
@@ -289,11 +298,14 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		String itemType = (String)httpServletRequest.getAttribute(
-			InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT_ITEM_TYPE);
+		InfoCollectionItem<?> infoCollectionItem =
+			(InfoCollectionItem<?>)httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_COLLECTION_ITEM);
 
-		if (Validator.isNull(className) && Validator.isNotNull(itemType)) {
-			className = itemType;
+		if (Validator.isNull(className) &&
+			Validator.isNotNull(infoCollectionItem.getItemClassName())) {
+
+			className = infoCollectionItem.getItemClassName();
 		}
 
 		LayoutDisplayPageProvider<?> layoutDisplayPageProvider =

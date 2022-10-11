@@ -26,6 +26,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.ContainerTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.PaginationBarTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.RowTag;
 import com.liferay.frontend.taglib.servlet.taglib.ComponentTag;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.form.InfoForm;
 import com.liferay.info.list.renderer.DefaultInfoListRendererContext;
@@ -369,13 +370,11 @@ public class RenderLayoutStructureTag extends IncludeTag {
 						}
 
 						httpServletRequest.setAttribute(
-							InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT,
-							collection.get(index));
-						httpServletRequest.setAttribute(
-							InfoDisplayWebKeys.
-								INFO_LIST_DISPLAY_OBJECT_ITEM_TYPE,
-							renderCollectionLayoutStructureItemDisplayContext.
-								getCollectionItemType());
+							InfoDisplayWebKeys.INFO_COLLECTION_ITEM,
+							new InfoCollectionItem<>(
+								renderCollectionLayoutStructureItemDisplayContext.
+									getCollectionItemType(),
+								collection.get(index)));
 
 						ColTag colTag = new ColTag();
 
@@ -403,9 +402,7 @@ public class RenderLayoutStructureTag extends IncludeTag {
 			}
 			finally {
 				httpServletRequest.removeAttribute(
-					InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT);
-				httpServletRequest.removeAttribute(
-					InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT_ITEM_TYPE);
+					InfoDisplayWebKeys.INFO_COLLECTION_ITEM);
 
 				httpServletRequest.setAttribute(
 					LayoutDisplayPageWebKeys.LAYOUT_DISPLAY_PAGE_PROVIDER,

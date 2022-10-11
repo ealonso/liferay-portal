@@ -262,7 +262,7 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 				Object fieldValue =
 					_fragmentEntryProcessorHelper.getMappedCollectionValue(
 						fragmentEntryProcessorContext.
-							getDisplayObjectOptional(),
+							getInfoCollectionItemOptional(),
 						editableValueJSONObject,
 						fragmentEntryProcessorContext.getLocale());
 

@@ -20,6 +20,7 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.util.Portal;
@@ -61,22 +62,27 @@ public abstract class BaseContentFragmentRenderer implements FragmentRenderer {
 				jsonObject.getLong("classPK"));
 		}
 
-		Optional<Object> displayObjectOptional =
-			fragmentRendererContext.getDisplayObjectOptional();
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional =
+			fragmentRendererContext.getInfoCollectionItemOptional();
 
-		if (displayObjectOptional.isPresent()) {
-			Object displayObject = displayObjectOptional.get();
+		if (infoCollectionItemOptional.isPresent()) {
+			InfoCollectionItem<?> infoCollectionItem =
+				infoCollectionItemOptional.orElse(
+					new InfoCollectionItem<>(null, null));
 
-			if (displayObject instanceof ClassedModel) {
-				ClassedModel classedModel = (ClassedModel)displayObject;
+			Object collectionItem = infoCollectionItem.getCollectionItem();
 
-				String modelClassName = classedModel.getModelClassName();
+			if (collectionItem instanceof ClassedModel) {
+				ClassedModel classedModel = (ClassedModel)collectionItem;
+
 				Serializable primaryKeyObj = classedModel.getPrimaryKeyObj();
 
 				if (!Objects.equals(
-						modelClassName, AssetEntry.class.getName())) {
+						infoCollectionItem.getItemClassName(),
+						AssetEntry.class.getName())) {
 
-					return new Tuple(modelClassName, primaryKeyObj);
+					return new Tuple(
+						infoCollectionItem.getItemClassName(), primaryKeyObj);
 				}
 
 				AssetEntry assetEntry = assetEntryLocalService.fetchAssetEntry(

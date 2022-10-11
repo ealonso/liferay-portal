@@ -24,15 +24,15 @@ public class InfoCollectionItem<T> {
 		_collectionItem = collectionItem;
 	}
 
-	private final String _itemClassName;
-	private final T _collectionItem;
+	public T getCollectionItem() {
+		return _collectionItem;
+	}
 
 	public String getItemClassName() {
 		return _itemClassName;
 	}
 
-	public T getCollectionItem() {
-		return _collectionItem;
-	}
+	private final T _collectionItem;
+	private final String _itemClassName;
 
 }

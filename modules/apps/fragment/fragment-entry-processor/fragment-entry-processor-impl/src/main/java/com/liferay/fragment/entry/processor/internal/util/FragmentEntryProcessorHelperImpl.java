@@ -14,8 +14,10 @@
 
 package com.liferay.fragment.entry.processor.internal.util;
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.formatter.InfoCollectionTextFormatter;
 import com.liferay.info.formatter.InfoTextFormatter;
@@ -35,7 +37,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.trash.TrashHandlerRegistryUtil;
@@ -128,6 +129,16 @@ public class FragmentEntryProcessorHelperImpl
 
 	@Override
 	public long getFileEntryId(
+		InfoCollectionItem<?> infoCollectionItem, String fieldName,
+		Locale locale) {
+
+		return _getFileEntryId(
+			infoCollectionItem.getItemClassName(),
+			infoCollectionItem.getCollectionItem(), fieldName, locale);
+	}
+
+	@Override
+	public long getFileEntryId(
 			long classNameId, long classPK, String fieldName, Locale locale)
 		throws PortalException {
 
@@ -155,22 +166,6 @@ public class FragmentEntryProcessorHelperImpl
 
 		return _getFileEntryId(
 			_portal.getClassName(classNameId), object, fieldName, locale);
-	}
-
-	@Override
-	public long getFileEntryId(
-		Object displayObject, String fieldName, Locale locale) {
-
-		if (Validator.isNull(fieldName) ||
-			!(displayObject instanceof ClassedModel)) {
-
-			return 0;
-		}
-
-		ClassedModel classedModel = (ClassedModel)displayObject;
-
-		return _getFileEntryId(
-			classedModel.getModelClassName(), displayObject, fieldName, locale);
 	}
 
 	@Override
@@ -210,42 +205,37 @@ public class FragmentEntryProcessorHelperImpl
 
 	@Override
 	public Object getMappedCollectionValue(
-		Optional<Object> displayObjectOptional, JSONObject jsonObject,
-		Locale locale) {
+		Optional<InfoCollectionItem<?>> infoCollectionItemOptional,
+		JSONObject jsonObject, Locale locale) {
 
 		if (!isMappedCollection(jsonObject)) {
 			return JSONFactoryUtil.createJSONObject();
 		}
 
-		if (!displayObjectOptional.isPresent()) {
+		if (!infoCollectionItemOptional.isPresent()) {
 			return null;
 		}
 
-		Object displayObject = displayObjectOptional.get();
-
-		if (!(displayObject instanceof ClassedModel)) {
-			return null;
-		}
-
-		ClassedModel classedModel = (ClassedModel)displayObject;
+		InfoCollectionItem<?> infoCollectionItem =
+			infoCollectionItemOptional.get();
 
 		// LPS-111037
 
-		String className = classedModel.getModelClassName();
+		String itemClassName = infoCollectionItem.getItemClassName();
 
-		if (classedModel instanceof FileEntry) {
-			className = FileEntry.class.getName();
+		if (Objects.equals(itemClassName, DLFileEntry.class.getName())) {
+			itemClassName = FileEntry.class.getName();
 		}
 
 		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
 			_infoItemServiceTracker.getFirstInfoItemService(
-				InfoItemFieldValuesProvider.class, className);
+				InfoItemFieldValuesProvider.class, itemClassName);
 
 		if (infoItemFieldValuesProvider == null) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
 					"Unable to get info item form provider for class " +
-						className);
+						itemClassName);
 			}
 
 			return null;
@@ -253,7 +243,8 @@ public class FragmentEntryProcessorHelperImpl
 
 		return getMappedInfoItemFieldValue(
 			jsonObject.getString("collectionFieldId"),
-			infoItemFieldValuesProvider, locale, displayObjectOptional.get());
+			infoItemFieldValuesProvider, locale,
+			infoCollectionItem.getCollectionItem());
 	}
 
 	@Override

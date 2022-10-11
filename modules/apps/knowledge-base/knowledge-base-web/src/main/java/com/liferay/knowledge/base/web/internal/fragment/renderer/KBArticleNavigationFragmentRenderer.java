@@ -22,6 +22,7 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.friendly.url.info.item.provider.InfoItemFriendlyURLProvider;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.knowledge.base.model.KBArticle;
 import com.liferay.knowledge.base.service.KBArticleService;
 import com.liferay.knowledge.base.web.internal.display.context.KBArticleNavigationFragmentDisplayContext;
@@ -203,16 +204,19 @@ public class KBArticleNavigationFragmentRenderer implements FragmentRenderer {
 					WorkflowConstants.STATUS_ANY);
 			}
 
-			Optional<Object> displayObjectOptional =
-				fragmentRendererContext.getDisplayObjectOptional();
+			Optional<InfoCollectionItem<?>> infoCollectionItemOptional =
+				fragmentRendererContext.getInfoCollectionItemOptional();
 
-			Object displayObject = displayObjectOptional.orElseGet(
-				() -> _getKBArticle(
-					(AssetEntry)httpServletRequest.getAttribute(
-						WebKeys.LAYOUT_ASSET_ENTRY)));
+			InfoCollectionItem<?> infoCollectionItem =
+				infoCollectionItemOptional.orElseGet(
+					() -> new InfoCollectionItem<>(
+						KBArticle.class.getName(),
+						_getKBArticle(
+							(AssetEntry)httpServletRequest.getAttribute(
+								WebKeys.LAYOUT_ASSET_ENTRY))));
 
-			if (displayObject instanceof KBArticle) {
-				return (KBArticle)displayObject;
+			if (infoCollectionItem.getCollectionItem() instanceof KBArticle) {
+				return (KBArticle)infoCollectionItem.getCollectionItem();
 			}
 
 			return null;

@@ -14,6 +14,7 @@
 
 package com.liferay.layout.taglib.internal.display.context;
 
+import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.fragment.entry.processor.constants.FragmentEntryProcessorConstants;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.model.FragmentEntryLink;
@@ -21,6 +22,7 @@ import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.info.collection.InfoCollectionItem;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.exception.InfoFormException;
 import com.liferay.info.exception.InfoFormValidationException;
@@ -57,7 +59,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Theme;
@@ -289,11 +290,10 @@ public class RenderLayoutStructureDisplayContext {
 			"collectionFieldId");
 
 		if (Validator.isNotNull(collectionFieldId)) {
-			Object displayObject = _httpServletRequest.getAttribute(
-				InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT);
-
 			String mappedCollectionValue = _getMappedCollectionValue(
-				collectionFieldId, displayObject);
+				collectionFieldId,
+				(InfoCollectionItem<?>)_httpServletRequest.getAttribute(
+					InfoDisplayWebKeys.INFO_COLLECTION_ITEM));
 
 			if (Validator.isNotNull(mappedCollectionValue)) {
 				return mappedCollectionValue;
@@ -356,9 +356,9 @@ public class RenderLayoutStructureDisplayContext {
 		DefaultFragmentRendererContext defaultFragmentRendererContext =
 			new DefaultFragmentRendererContext(fragmentEntryLink);
 
-		defaultFragmentRendererContext.setDisplayObject(
-			_httpServletRequest.getAttribute(
-				InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT));
+		defaultFragmentRendererContext.setInfoCollectionItem(
+			(InfoCollectionItem<?>)_httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.INFO_COLLECTION_ITEM));
 		defaultFragmentRendererContext.setLocale(_themeDisplay.getLocale());
 
 		Layout layout = _themeDisplay.getLayout();
@@ -538,8 +538,8 @@ public class RenderLayoutStructureDisplayContext {
 				ServletContextUtil.getFragmentEntryProcessorHelper();
 
 			fileEntryId = fragmentEntryProcessorHelper.getFileEntryId(
-				_httpServletRequest.getAttribute(
-					InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT),
+				(InfoCollectionItem<?>)_httpServletRequest.getAttribute(
+					InfoDisplayWebKeys.INFO_COLLECTION_ITEM),
 				backgroundImageJSONObject.getString("collectionFieldId"),
 				LocaleUtil.fromLanguageId(_themeDisplay.getLanguageId()));
 		}
@@ -682,11 +682,10 @@ public class RenderLayoutStructureDisplayContext {
 		String collectionFieldId = jsonObject.getString("collectionFieldId");
 
 		if (Validator.isNotNull(collectionFieldId)) {
-			Object displayObject = _httpServletRequest.getAttribute(
-				InfoDisplayWebKeys.INFO_LIST_DISPLAY_OBJECT);
-
 			mappedCollectionValue = _getMappedCollectionValue(
-				collectionFieldId, displayObject);
+				collectionFieldId,
+				(InfoCollectionItem<?>)_httpServletRequest.getAttribute(
+					InfoDisplayWebKeys.INFO_COLLECTION_ITEM));
 		}
 
 		if (Validator.isNotNull(mappedCollectionValue)) {
@@ -965,20 +964,14 @@ public class RenderLayoutStructureDisplayContext {
 	}
 
 	private String _getMappedCollectionValue(
-		String collectionFieldId, Object displayObject) {
-
-		if (!(displayObject instanceof ClassedModel)) {
-			return StringPool.BLANK;
-		}
-
-		ClassedModel classedModel = (ClassedModel)displayObject;
+		String collectionFieldId, InfoCollectionItem<?> infoCollectionItem) {
 
 		// LPS-111037
 
-		String className = classedModel.getModelClassName();
+		String itemClassName = infoCollectionItem.getItemClassName();
 
-		if (classedModel instanceof FileEntry) {
-			className = FileEntry.class.getName();
+		if (Objects.equals(itemClassName, DLFileEntry.class.getName())) {
+			itemClassName = FileEntry.class.getName();
 		}
 
 		InfoItemServiceTracker infoItemServiceTracker =
@@ -986,13 +979,13 @@ public class RenderLayoutStructureDisplayContext {
 
 		InfoItemFieldValuesProvider<Object> infoItemFieldValuesProvider =
 			infoItemServiceTracker.getFirstInfoItemService(
-				InfoItemFieldValuesProvider.class, className);
+				InfoItemFieldValuesProvider.class, itemClassName);
 
 		if (infoItemFieldValuesProvider == null) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(
 					"Unable to get info item field values provider for class " +
-						className);
+						itemClassName);
 			}
 
 			return StringPool.BLANK;
@@ -1000,7 +993,7 @@ public class RenderLayoutStructureDisplayContext {
 
 		InfoFieldValue<Object> infoFieldValue =
 			infoItemFieldValuesProvider.getInfoFieldValue(
-				displayObject, collectionFieldId);
+				infoCollectionItem.getCollectionItem(), collectionFieldId);
 
 		if (infoFieldValue == null) {
 			return StringPool.BLANK;
