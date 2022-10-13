@@ -16,17 +16,21 @@ package com.liferay.layout.admin.web.internal.servlet.taglib.util;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
+import com.liferay.layout.admin.web.internal.display.context.LayoutUtilityPageEntryDisplayContext;
 import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
 import com.liferay.layout.utility.page.service.LayoutUtilityPageEntryLocalServiceUtil;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -84,7 +88,6 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 					DropdownItemListBuilder.add(
 						_getDeleteLayoutUtilityPageEntryActionUnsafeConsumer()
 					).build());
-
 				dropdownGroupItem.setSeparator(true);
 			}
 		).addGroup(
@@ -92,6 +95,8 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 				dropdownGroupItem.setDropdownItems(
 					DropdownItemListBuilder.add(
 						_getPermissionsLayoutUtilityPageEntryActionUnsafeConsumer()
+					).add(
+						_getViewLayoutUtilityPageEntryActionUnsafeConsumer()
 					).build());
 				dropdownGroupItem.setSeparator(true);
 			}
@@ -243,6 +248,47 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 		};
 	}
 
+	public UnsafeConsumer<DropdownItem, Exception> _getViewLayoutUtilityPageEntryActionUnsafeConsumer() throws Exception {
+
+		Layout layout = LayoutLocalServiceUtil.fetchLayout(
+			_layoutUtilityPageEntry.getPlid());
+
+		String layoutFullURL = null;
+
+		layoutFullURL = PortalUtil.getLayoutFullURL(layout.fetchDraftLayout(), _themeDisplay);
+
+		try {
+			layoutFullURL = HttpComponentsUtil.setParameter(
+				layoutFullURL, "p_l_back_url", _themeDisplay.getURLCurrent());
+		}
+		catch (Exception exception) {
+			_log.error(
+				"Unable to generate view layout URL for " + layoutFullURL,
+				exception);
+		}
+
+		String finalLayoutFullURL = layoutFullURL;
+
+		return dropdownItem -> {
+			dropdownItem.setHref(
+				finalLayoutFullURL);
+			dropdownItem.setIcon("view");
+
+			String label = LanguageUtil.get(
+				_httpServletRequest, "view");
+
+			if (layout.isDenied() || layout.isPending()) {
+				label = LanguageUtil.get(
+					_httpServletRequest, "preview");
+			}
+
+			dropdownItem.setLabel(label);
+			dropdownItem.setTarget(
+				HtmlUtil.escape(
+					layout.getTypeSettingsProperty("target")));
+		};
+	}
+
 	private UnsafeConsumer<DropdownItem, Exception>
 		_getRenameLayoutUtilityPageEntryActionUnsafeConsumer() {
 
@@ -271,6 +317,9 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 				LanguageUtil.get(_httpServletRequest, "rename"));
 		};
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		LayoutUtilityPageEntryDisplayContext.class);
 
 	private final Layout _draftLayout;
 	private final HttpServletRequest _httpServletRequest;
