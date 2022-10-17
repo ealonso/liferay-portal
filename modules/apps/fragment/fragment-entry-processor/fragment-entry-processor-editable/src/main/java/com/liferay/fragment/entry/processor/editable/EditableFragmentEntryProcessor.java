@@ -235,13 +235,36 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 			else if (_fragmentEntryProcessorHelper.isMapped(
 						editableValueJSONObject)) {
 
-				Object fieldValue =
-					_fragmentEntryProcessorHelper.getMappedInfoItemFieldValue(
-						editableValueJSONObject, infoDisplaysFieldValues,
-						fragmentEntryProcessorContext.getLocale(),
-						fragmentEntryProcessorContext.getMode(),
-						fragmentEntryProcessorContext.getPreviewClassPK(),
-						fragmentEntryProcessorContext.getPreviewVersion());
+				JSONObject editableValueConfigJSONObject =
+					editableValueJSONObject.getJSONObject("config");
+
+				Object fieldValue;
+
+				if (editableValueConfigJSONObject.has("dateFormat")) {
+					fieldValue =
+						_fragmentEntryProcessorHelper.
+							getMappedInfoItemFieldValue(
+								editableValueJSONObject,
+								infoDisplaysFieldValues, LocaleUtil.US,
+								fragmentEntryProcessorContext.getMode(),
+								fragmentEntryProcessorContext.
+									getPreviewClassPK(),
+								fragmentEntryProcessorContext.
+									getPreviewVersion());
+				}
+				else {
+					fieldValue =
+						_fragmentEntryProcessorHelper.
+							getMappedInfoItemFieldValue(
+								editableValueJSONObject,
+								infoDisplaysFieldValues,
+								fragmentEntryProcessorContext.getLocale(),
+								fragmentEntryProcessorContext.getMode(),
+								fragmentEntryProcessorContext.
+									getPreviewClassPK(),
+								fragmentEntryProcessorContext.
+									getPreviewVersion());
+				}
 
 				if (fieldValue != null) {
 					String fieldId = editableValueJSONObject.getString(
@@ -598,6 +621,9 @@ public class EditableFragmentEntryProcessor implements FragmentEntryProcessor {
 	}
 
 	private static final String[] _REQUIRED_ATTRIBUTE_NAMES = {"id", "type"};
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		EditableFragmentEntryProcessor.class);
 
 	private ServiceTrackerMap<String, EditableElementMapper>
 		_editableElementMapperServiceTrackerMap;

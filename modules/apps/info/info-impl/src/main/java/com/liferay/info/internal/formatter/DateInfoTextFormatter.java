@@ -15,7 +15,11 @@
 package com.liferay.info.internal.formatter;
 
 import com.liferay.info.formatter.InfoTextFormatter;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.text.DateFormat;
 import java.text.Format;
@@ -45,12 +49,32 @@ public class DateInfoTextFormatter implements InfoTextFormatter<Date> {
 	public String format(
 		Date date, Map<String, Object> options, Locale locale) {
 
-		Object dateFormat = options.get("dateFormat");
+		JSONObject dateFormatJSONObject = (JSONObject)options.get("dateFormat");
 
-		DateFormat dateFormatPattern = new SimpleDateFormat(
-			dateFormat.toString());
+		String dateFormatLocalized = dateFormatJSONObject.getString(
+			locale.toString());
+
+		DateFormat dateFormatPattern;
+
+		if (Validator.isNull(dateFormatLocalized)) {
+			return format(date, locale);
+		}
+
+		try {
+			dateFormatPattern = new SimpleDateFormat(dateFormatLocalized);
+		}
+		catch (Exception exception) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(exception);
+			}
+
+			return format(date, locale);
+		}
 
 		return dateFormatPattern.format(date);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DateInfoTextFormatter.class);
 
 }

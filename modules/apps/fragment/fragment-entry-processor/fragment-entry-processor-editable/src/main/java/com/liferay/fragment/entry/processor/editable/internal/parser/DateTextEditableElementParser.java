@@ -19,15 +19,19 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import org.jsoup.nodes.Element;
@@ -62,29 +66,67 @@ public class DateTextEditableElementParser extends TextEditableElementParser {
 	public void replace(
 		Element element, String value, JSONObject configJSONObject) {
 
-		String dateFormat = configJSONObject.getString("dateFormat");
+		JSONObject dateFormatJSONObject = configJSONObject.getJSONObject(
+			"dateFormat");
 
-		if (Validator.isNull(dateFormat)) {
-			return;
-		}
+		if (dateFormatJSONObject != null) {
+			Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
 
-		try {
+			String dateFormatLocalized = dateFormatJSONObject.getString(
+				locale.toString());
+
 			DateFormat initialPattern = new SimpleDateFormat(
 				"MM/dd/yy hh:mm a", LocaleUtil.US);
 
-			Date dateFormatted = initialPattern.parse(value);
+			DateFormat dateFormatPattern = null;
 
-			DateFormat dateFormatPattern = new SimpleDateFormat(dateFormat);
+			if (Validator.isNull(dateFormatLocalized)) {
+				try {
+					Date dateFormatted = initialPattern.parse(value);
 
-			element.html(dateFormatPattern.format(dateFormatted));
-		}
-		catch (ParseException parseException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(parseException);
+					Format dateDefaultFormat =
+						FastDateFormatFactoryUtil.getDateTime(locale);
+
+					element.html(dateDefaultFormat.format(dateFormatted));
+				}
+				catch (ParseException parseException) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(parseException);
+					}
+
+					throw new IllegalArgumentException(
+						"Unable to parse date from " + value, parseException);
+				}
+			}
+			else {
+				try {
+					dateFormatPattern = new SimpleDateFormat(
+						dateFormatLocalized);
+				}
+				catch (Exception exception) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(exception);
+					}
+
+					element.html(value);
+				}
 			}
 
-			throw new IllegalArgumentException(
-				"Unable to parse date from " + value, parseException);
+			if (dateFormatPattern != null) {
+				try {
+					Date dateFormatted = initialPattern.parse(value);
+
+					element.html(dateFormatPattern.format(dateFormatted));
+				}
+				catch (ParseException parseException) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(parseException);
+					}
+
+					throw new IllegalArgumentException(
+						"Unable to parse date from " + value, parseException);
+				}
+			}
 		}
 	}
 
