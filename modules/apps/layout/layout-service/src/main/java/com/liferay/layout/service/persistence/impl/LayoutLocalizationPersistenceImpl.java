@@ -3402,6 +3402,7 @@ public class LayoutLocalizationPersistenceImpl
 	static {
 		Set<String> ctControlColumnNames = new HashSet<String>();
 		Set<String> ctIgnoreColumnNames = new HashSet<String>();
+		Set<String> ctMergeColumnNames = new HashSet<String>();
 		Set<String> ctStrictColumnNames = new HashSet<String>();
 
 		ctControlColumnNames.add("mvccVersion");
@@ -3411,7 +3412,7 @@ public class LayoutLocalizationPersistenceImpl
 		ctStrictColumnNames.add("companyId");
 		ctStrictColumnNames.add("createDate");
 		ctIgnoreColumnNames.add("modifiedDate");
-		ctStrictColumnNames.add("content");
+		ctMergeColumnNames.add("content");
 		ctStrictColumnNames.add("languageId");
 		ctStrictColumnNames.add("plid");
 		ctStrictColumnNames.add("lastPublishDate");
@@ -3420,6 +3421,7 @@ public class LayoutLocalizationPersistenceImpl
 			CTColumnResolutionType.CONTROL, ctControlColumnNames);
 		_ctColumnNamesMap.put(
 			CTColumnResolutionType.IGNORE, ctIgnoreColumnNames);
+		_ctColumnNamesMap.put(CTColumnResolutionType.MERGE, ctMergeColumnNames);
 		_ctColumnNamesMap.put(
 			CTColumnResolutionType.PK,
 			Collections.singleton("layoutLocalizationId"));
