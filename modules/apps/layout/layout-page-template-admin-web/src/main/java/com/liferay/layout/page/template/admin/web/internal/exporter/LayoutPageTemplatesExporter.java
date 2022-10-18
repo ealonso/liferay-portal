@@ -27,10 +27,12 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 import com.liferay.headless.delivery.dto.v1_0.PageDefinition;
+import com.liferay.headless.delivery.dto.v1_0.UtilityPageTemplate;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.converter.DisplayPageTemplateDTOConverter;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.converter.MasterPageDTOConverter;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.converter.PageTemplateCollectionDTOConverter;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.converter.PageTemplateDTOConverter;
+import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.converter.UtilityPageTemplateDTOConverter;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateExportImportConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
@@ -222,6 +224,35 @@ public class LayoutPageTemplatesExporter {
 				_populatePageTemplatesZipWriter(
 					layoutPageTemplateEntry, layoutPageTemplateCollectionKeyMap,
 					pageDefinitionDTOConverter, zipWriter);
+			}
+
+			return zipWriter.getFile();
+		}
+		catch (Exception exception) {
+			throw new PortletException(exception);
+		}
+	}
+
+	public File exportUtilityPages(
+		List<UtilityPageTemplate> utilityPageTemplates)
+		throws PortletException {
+
+		DTOConverter<LayoutStructure, PageDefinition>
+			pageDefinitionDTOConverter = _getPageDefinitionDTOConverter();
+		ZipWriter zipWriter = _zipWriterFactory.getZipWriter();
+
+		try {
+			for (UtilityPageTemplate utilityPageTemplate :
+				utilityPageTemplates) {
+
+				if (utilityPageTemplate.isDraft()) {
+
+					continue;
+				}
+
+				_populateLayoutUtilityPagesZipWriter(
+					utilityPageTemplate, pageDefinitionDTOConverter,
+					zipWriter);
 			}
 
 			return zipWriter.getFile();
@@ -470,6 +501,58 @@ public class LayoutPageTemplatesExporter {
 			zipWriter.addEntry(
 				layoutPageTemplateEntryPath + "/thumbnail." +
 					previewFileEntry.getExtension(),
+				previewFileEntry.getContentStream());
+		}
+	}
+
+	private void _populateLayoutUtilityPagesZipWriter(
+		UtilityPageTemplate utilityPageTemplate,
+		DTOConverter<LayoutStructure, PageDefinition>
+			pageDefinitionDTOConverter,
+		ZipWriter zipWriter)
+		throws Exception {
+
+		String layoutUtilityPagePath =
+			"layout-utility-page-template/" +
+			utilityPageTemplate.getKey();
+
+		SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
+
+		FilterProvider filterProvider = simpleFilterProvider.addFilter(
+			"Liferay.Vulcan", SimpleBeanPropertyFilter.serializeAll());
+
+		ObjectWriter objectWriter = _objectMapper.writer(filterProvider);
+
+		zipWriter.addEntry(
+			layoutUtilityPagePath + StringPool.SLASH +
+			LayoutPageTemplateExportImportConstants.
+				FILE_NAME_LAYOUT_UTILITY_PAGE_ENTRY,
+			objectWriter.writeValueAsString(
+				UtilityPageTemplateDTOConverter.toDTO(utilityPageTemplate)));
+
+		Layout layout = _layoutLocalService.fetchLayout(
+			utilityPageTemplate.getplid());
+
+		if (layout != null) {
+			LayoutStructure layoutStructure = _getLayoutStructure(layout);
+
+			PageDefinition pageDefinition = pageDefinitionDTOConverter.toDTO(
+				_getDTOConverterContext(layout, layoutStructure),
+				layoutStructure);
+
+			zipWriter.addEntry(
+				layoutUtilityPagePath + "/page-definition.json",
+				objectWriter.writeValueAsString(pageDefinition));
+		}
+
+		FileEntry previewFileEntry = _getPreviewFileEntry(
+			utilityPageTemplate.getPreviewFileEntryId());
+
+
+		if (previewFileEntry != null) {
+			zipWriter.addEntry(
+				layoutUtilityPagePath + "/thumbnail." +
+				previewFileEntry.getExtension(),
 				previewFileEntry.getContentStream());
 		}
 	}
