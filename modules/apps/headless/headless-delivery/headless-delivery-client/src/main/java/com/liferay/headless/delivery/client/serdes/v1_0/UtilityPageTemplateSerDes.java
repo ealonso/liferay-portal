@@ -14,7 +14,7 @@
 
 package com.liferay.headless.delivery.client.serdes.v1_0;
 
-import com.liferay.headless.delivery.client.dto.v1_0.PageElement;
+import com.liferay.headless.delivery.client.dto.v1_0.UtilityPageTemplate;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.stream.Stream;
 
 import javax.annotation.Generated;
 
@@ -31,24 +30,24 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class PageElementSerDes {
+public class UtilityPageTemplateSerDes {
 
-	public static PageElement toDTO(String json) {
-		PageElementJSONParser pageElementJSONParser =
-			new PageElementJSONParser();
+	public static UtilityPageTemplate toDTO(String json) {
+		UtilityPageTemplateJSONParser utilityPageTemplateJSONParser =
+			new UtilityPageTemplateJSONParser();
 
-		return pageElementJSONParser.parseToDTO(json);
+		return utilityPageTemplateJSONParser.parseToDTO(json);
 	}
 
-	public static PageElement[] toDTOs(String json) {
-		PageElementJSONParser pageElementJSONParser =
-			new PageElementJSONParser();
+	public static UtilityPageTemplate[] toDTOs(String json) {
+		UtilityPageTemplateJSONParser utilityPageTemplateJSONParser =
+			new UtilityPageTemplateJSONParser();
 
-		return pageElementJSONParser.parseToDTOs(json);
+		return utilityPageTemplateJSONParser.parseToDTOs(json);
 	}
 
-	public static String toJSON(PageElement pageElement) {
-		if (pageElement == null) {
+	public static String toJSON(UtilityPageTemplate utilityPageTemplate) {
+		if (utilityPageTemplate == null) {
 			return "null";
 		}
 
@@ -56,51 +55,52 @@ public class PageElementSerDes {
 
 		sb.append("{");
 
-		if (pageElement.getDefinition() != null) {
+		if (utilityPageTemplate.getDefaultTemplate() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"definition\": ");
+			sb.append("\"defaultTemplate\": ");
 
-			if (pageElement.getDefinition() instanceof String) {
-				sb.append("\"");
-				sb.append((String)pageElement.getDefinition());
-				sb.append("\"");
-			}
-			else {
-				sb.append(pageElement.getDefinition());
-			}
+			sb.append(utilityPageTemplate.getDefaultTemplate());
 		}
 
-		if (pageElement.getPageElements() != null) {
+		if (utilityPageTemplate.getKey() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"pageElements\": ");
+			sb.append("\"key\": ");
 
-			sb.append("[");
+			sb.append("\"");
 
-			for (int i = 0; i < pageElement.getPageElements().length; i++) {
-				sb.append(String.valueOf(pageElement.getPageElements()[i]));
+			sb.append(_escape(utilityPageTemplate.getKey()));
 
-				if ((i + 1) < pageElement.getPageElements().length) {
-					sb.append(", ");
-				}
-			}
-
-			sb.append("]");
+			sb.append("\"");
 		}
 
-		if (pageElement.getType() != null) {
+		if (utilityPageTemplate.getName() != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"name\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(utilityPageTemplate.getName()));
+
+			sb.append("\"");
+		}
+
+		if (utilityPageTemplate.getType() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"type\": ");
 
-			sb.append(String.valueOf(pageElement.getType()));
+			sb.append(String.valueOf(utilityPageTemplate.getType()));
 		}
 
 		sb.append("}");
@@ -109,82 +109,91 @@ public class PageElementSerDes {
 	}
 
 	public static Map<String, Object> toMap(String json) {
-		PageElementJSONParser pageElementJSONParser =
-			new PageElementJSONParser();
+		UtilityPageTemplateJSONParser utilityPageTemplateJSONParser =
+			new UtilityPageTemplateJSONParser();
 
-		return pageElementJSONParser.parseToMap(json);
+		return utilityPageTemplateJSONParser.parseToMap(json);
 	}
 
-	public static Map<String, String> toMap(PageElement pageElement) {
-		if (pageElement == null) {
+	public static Map<String, String> toMap(
+		UtilityPageTemplate utilityPageTemplate) {
+
+		if (utilityPageTemplate == null) {
 			return null;
 		}
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (pageElement.getDefinition() == null) {
-			map.put("definition", null);
-		}
-		else {
-			map.put("definition", String.valueOf(pageElement.getDefinition()));
-		}
-
-		if (pageElement.getPageElements() == null) {
-			map.put("pageElements", null);
+		if (utilityPageTemplate.getDefaultTemplate() == null) {
+			map.put("defaultTemplate", null);
 		}
 		else {
 			map.put(
-				"pageElements", String.valueOf(pageElement.getPageElements()));
+				"defaultTemplate",
+				String.valueOf(utilityPageTemplate.getDefaultTemplate()));
 		}
 
-		if (pageElement.getType() == null) {
+		if (utilityPageTemplate.getKey() == null) {
+			map.put("key", null);
+		}
+		else {
+			map.put("key", String.valueOf(utilityPageTemplate.getKey()));
+		}
+
+		if (utilityPageTemplate.getName() == null) {
+			map.put("name", null);
+		}
+		else {
+			map.put("name", String.valueOf(utilityPageTemplate.getName()));
+		}
+
+		if (utilityPageTemplate.getType() == null) {
 			map.put("type", null);
 		}
 		else {
-			map.put("type", String.valueOf(pageElement.getType()));
+			map.put("type", String.valueOf(utilityPageTemplate.getType()));
 		}
 
 		return map;
 	}
 
-	public static class PageElementJSONParser
-		extends BaseJSONParser<PageElement> {
+	public static class UtilityPageTemplateJSONParser
+		extends BaseJSONParser<UtilityPageTemplate> {
 
 		@Override
-		protected PageElement createDTO() {
-			return new PageElement();
+		protected UtilityPageTemplate createDTO() {
+			return new UtilityPageTemplate();
 		}
 
 		@Override
-		protected PageElement[] createDTOArray(int size) {
-			return new PageElement[size];
+		protected UtilityPageTemplate[] createDTOArray(int size) {
+			return new UtilityPageTemplate[size];
 		}
 
 		@Override
 		protected void setField(
-			PageElement pageElement, String jsonParserFieldName,
+			UtilityPageTemplate utilityPageTemplate, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "definition")) {
+			if (Objects.equals(jsonParserFieldName, "defaultTemplate")) {
 				if (jsonParserFieldValue != null) {
-					pageElement.setDefinition((Object)jsonParserFieldValue);
+					utilityPageTemplate.setDefaultTemplate(
+						(Boolean)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "pageElements")) {
+			else if (Objects.equals(jsonParserFieldName, "key")) {
 				if (jsonParserFieldValue != null) {
-					pageElement.setPageElements(
-						Stream.of(
-							toStrings((Object[])jsonParserFieldValue)
-						).map(
-							object -> PageElementSerDes.toDTO((String)object)
-						).toArray(
-							size -> new PageElement[size]
-						));
+					utilityPageTemplate.setKey((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "name")) {
+				if (jsonParserFieldValue != null) {
+					utilityPageTemplate.setName((String)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "type")) {
 				if (jsonParserFieldValue != null) {
-					pageElement.setType(
+					utilityPageTemplate.setType(
 						TypeSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}

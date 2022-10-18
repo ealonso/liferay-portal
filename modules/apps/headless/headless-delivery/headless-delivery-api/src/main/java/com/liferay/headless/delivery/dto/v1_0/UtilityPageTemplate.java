@@ -14,15 +14,12 @@
 
 package com.liferay.headless.delivery.dto.v1_0;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
@@ -48,64 +45,40 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @generated
  */
 @Generated("")
-@GraphQLName(description = "Represents a Page element.", value = "PageElement")
+@GraphQLName(
+	description = "Represents a Utility Page Template.",
+	value = "UtilityPageTemplate"
+)
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "PageElement")
-public class PageElement implements Serializable {
+@XmlRootElement(name = "UtilityPageTemplate")
+public class UtilityPageTemplate implements Serializable {
 
-	public static PageElement toDTO(String json) {
-		return ObjectMapperUtil.readValue(PageElement.class, json);
+	public static UtilityPageTemplate toDTO(String json) {
+		return ObjectMapperUtil.readValue(UtilityPageTemplate.class, json);
 	}
 
-	public static PageElement unsafeToDTO(String json) {
-		return ObjectMapperUtil.unsafeReadValue(PageElement.class, json);
+	public static UtilityPageTemplate unsafeToDTO(String json) {
+		return ObjectMapperUtil.unsafeReadValue(
+			UtilityPageTemplate.class, json);
 	}
 
-	@Schema(description = "The page element's definition.")
-	@Valid
-	public Object getDefinition() {
-		return definition;
+	@Schema(
+		description = "Specifies if the utility page template should be the default for the given type."
+	)
+	public Boolean getDefaultTemplate() {
+		return defaultTemplate;
 	}
 
-	public void setDefinition(Object definition) {
-		this.definition = definition;
-	}
-
-	@JsonIgnore
-	public void setDefinition(
-		UnsafeSupplier<Object, Exception> definitionUnsafeSupplier) {
-
-		try {
-			definition = definitionUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField(description = "The page element's definition.")
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Object definition;
-
-	@Schema(description = "A list of the page elements this page element has.")
-	@Valid
-	public PageElement[] getPageElements() {
-		return pageElements;
-	}
-
-	public void setPageElements(PageElement[] pageElements) {
-		this.pageElements = pageElements;
+	public void setDefaultTemplate(Boolean defaultTemplate) {
+		this.defaultTemplate = defaultTemplate;
 	}
 
 	@JsonIgnore
-	public void setPageElements(
-		UnsafeSupplier<PageElement[], Exception> pageElementsUnsafeSupplier) {
+	public void setDefaultTemplate(
+		UnsafeSupplier<Boolean, Exception> defaultTemplateUnsafeSupplier) {
 
 		try {
-			pageElements = pageElementsUnsafeSupplier.get();
+			defaultTemplate = defaultTemplateUnsafeSupplier.get();
 		}
 		catch (RuntimeException re) {
 			throw re;
@@ -116,26 +89,67 @@ public class PageElement implements Serializable {
 	}
 
 	@GraphQLField(
-		description = "A list of the page elements this page element has."
+		description = "Specifies if the utility page template should be the default for the given type."
 	)
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected PageElement[] pageElements;
+	protected Boolean defaultTemplate;
 
-	@Schema(
-		description = "The page element's type (collection, collection item, column, drop zone, form, fragment, fragment drop zone, root, row, section or widget)."
-	)
-	@Valid
-	public Type getType() {
-		return type;
+	@Schema(description = "The utility page template key.")
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	@JsonIgnore
-	public String getTypeAsString() {
-		if (type == null) {
-			return null;
+	public void setKey(UnsafeSupplier<String, Exception> keyUnsafeSupplier) {
+		try {
+			key = keyUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-		return type.toString();
+	@GraphQLField(description = "The utility page template key.")
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String key;
+
+	@Schema(description = "The utility page template name.")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@JsonIgnore
+	public void setName(UnsafeSupplier<String, Exception> nameUnsafeSupplier) {
+		try {
+			name = nameUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField(description = "The utility page template name.")
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String name;
+
+	@Schema(description = "The type of content.")
+	@Valid
+	public Type getType() {
+		return type;
 	}
 
 	public void setType(Type type) {
@@ -155,9 +169,7 @@ public class PageElement implements Serializable {
 		}
 	}
 
-	@GraphQLField(
-		description = "The page element's type (collection, collection item, column, drop zone, form, fragment, fragment drop zone, root, row, section or widget)."
-	)
+	@GraphQLField(description = "The type of content.")
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Type type;
 
@@ -167,13 +179,13 @@ public class PageElement implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof PageElement)) {
+		if (!(object instanceof UtilityPageTemplate)) {
 			return false;
 		}
 
-		PageElement pageElement = (PageElement)object;
+		UtilityPageTemplate utilityPageTemplate = (UtilityPageTemplate)object;
 
-		return Objects.equals(toString(), pageElement.toString());
+		return Objects.equals(toString(), utilityPageTemplate.toString());
 	}
 
 	@Override
@@ -188,45 +200,42 @@ public class PageElement implements Serializable {
 
 		sb.append("{");
 
-		if (definition != null) {
+		if (defaultTemplate != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"definition\": ");
+			sb.append("\"defaultTemplate\": ");
 
-			if (definition instanceof Map) {
-				sb.append(
-					JSONFactoryUtil.createJSONObject((Map<?, ?>)definition));
-			}
-			else if (definition instanceof String) {
-				sb.append("\"");
-				sb.append(_escape((String)definition));
-				sb.append("\"");
-			}
-			else {
-				sb.append(definition);
-			}
+			sb.append(defaultTemplate);
 		}
 
-		if (pageElements != null) {
+		if (key != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"pageElements\": ");
+			sb.append("\"key\": ");
 
-			sb.append("[");
+			sb.append("\"");
 
-			for (int i = 0; i < pageElements.length; i++) {
-				sb.append(String.valueOf(pageElements[i]));
+			sb.append(_escape(key));
 
-				if ((i + 1) < pageElements.length) {
-					sb.append(", ");
-				}
+			sb.append("\"");
+		}
+
+		if (name != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
 			}
 
-			sb.append("]");
+			sb.append("\"name\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(name));
+
+			sb.append("\"");
 		}
 
 		if (type != null) {
@@ -246,51 +255,10 @@ public class PageElement implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageElement",
+		defaultValue = "com.liferay.headless.delivery.dto.v1_0.UtilityPageTemplate",
 		name = "x-class-name"
 	)
 	public String xClassName;
-
-	@GraphQLName("Type")
-	public static enum Type {
-
-		COLLECTION("Collection"), COLLECTION_ITEM("CollectionItem"),
-		COLUMN("Column"), DROP_ZONE("DropZone"), FORM("Form"),
-		FRAGMENT("Fragment"), FRAGMENT_DROP_ZONE("FragmentDropZone"),
-		ROOT("Root"), ROW("Row"), SECTION("Section"), WIDGET("Widget");
-
-		@JsonCreator
-		public static Type create(String value) {
-			if ((value == null) || value.equals("")) {
-				return null;
-			}
-
-			for (Type type : values()) {
-				if (Objects.equals(type.getValue(), value)) {
-					return type;
-				}
-			}
-
-			throw new IllegalArgumentException("Invalid enum value: " + value);
-		}
-
-		@JsonValue
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private Type(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
-	}
 
 	private static String _escape(Object object) {
 		return StringUtil.replace(
