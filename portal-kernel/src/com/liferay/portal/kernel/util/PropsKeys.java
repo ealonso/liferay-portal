@@ -1271,8 +1271,6 @@ public interface PropsKeys {
 	public static final String LAYOUT_AJAX_RENDER_ENABLE =
 		"layout.ajax.render.enable";
 
-	public static final String LAYOUT_BROWSABLE = "layout.browsable";
-
 	public static final String LAYOUT_CLONE_IMPL = "layout.clone.impl";
 
 	public static final String LAYOUT_CONFIGURATION_ACTION_DELETE =
@@ -1286,10 +1284,6 @@ public interface PropsKeys {
 
 	public static final String LAYOUT_DEFAULT_TEMPLATE_ID =
 		"layout.default.template.id";
-
-	public static final String LAYOUT_EDIT_PAGE = "layout.edit.page";
-
-	public static final String LAYOUT_FIRST_PAGEABLE = "layout.first.pageable";
 
 	public static final String LAYOUT_FORM_ADD = "layout.form.add";
 
@@ -1320,8 +1314,6 @@ public interface PropsKeys {
 
 	public static final String LAYOUT_MANAGE_PAGES_INITIAL_CHILDREN =
 		"layout.manage.pages.initial.children";
-
-	public static final String LAYOUT_PARENTABLE = "layout.parentable";
 
 	public static final String LAYOUT_PROTOTYPE_LINK_ENABLED_DEFAULT =
 		"layout.prototype.link.enabled.default";
@@ -1362,8 +1354,6 @@ public interface PropsKeys {
 	public static final String LAYOUT_SHOW_PORTLET_INACTIVE =
 		"layout.show.portlet.inactive";
 
-	public static final String LAYOUT_SITEMAPABLE = "layout.sitemapable";
-
 	public static final String LAYOUT_STATIC_PORTLETS_ALL =
 		"layout.static.portlets.all";
 
@@ -1375,11 +1365,6 @@ public interface PropsKeys {
 
 	public static final String LAYOUT_TEMPLATE_CACHE_ENABLED =
 		"layout.template.cache.enabled";
-
-	public static final String LAYOUT_URL = "layout.url";
-
-	public static final String LAYOUT_URL_FRIENDLIABLE =
-		"layout.url.friendliable";
 
 	public static final String LAYOUT_USER_ACCESS_VIA_PLID_ENABLED =
 		"layout.user.access.via.plid.enabled";
@@ -1401,8 +1386,6 @@ public interface PropsKeys {
 
 	public static final String LAYOUT_USER_PUBLIC_LAYOUTS_POWER_USER_REQUIRED =
 		"layout.user.public.layouts.power.user.required";
-
-	public static final String LAYOUT_VIEW_PAGE = "layout.view.page";
 
 	public static final String LDAP_ATTRS_TRANSFORMER_IMPL =
 		"ldap.attrs.transformer.impl";
