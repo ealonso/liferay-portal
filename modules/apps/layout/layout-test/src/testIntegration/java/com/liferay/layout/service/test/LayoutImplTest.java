@@ -20,13 +20,10 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
-import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
-import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
-import com.liferay.portal.model.impl.LayoutTypeControllerImpl;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import org.junit.Assert;
@@ -35,11 +32,6 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceRegistration;
 
 /**
  * @author Manuel de la Peña
@@ -117,40 +109,6 @@ public class LayoutImplTest {
 	}
 
 	@Test
-	public void testIsTypeEmbeddedWithLayoutTypeController() throws Exception {
-		Bundle bundle = FrameworkUtil.getBundle(LayoutImplTest.class);
-
-		BundleContext bundleContext = bundle.getBundleContext();
-
-		LayoutTypeController layoutTypeController =
-			new LayoutTypeControllerImpl(LayoutConstants.TYPE_EMBEDDED);
-
-		for (String type : _TYPES) {
-			if (type.equals(LayoutConstants.TYPE_EMBEDDED)) {
-				continue;
-			}
-
-			_layout.setType(type);
-
-			ServiceRegistration<LayoutTypeController> serviceRegistration =
-				bundleContext.registerService(
-					LayoutTypeController.class, layoutTypeController,
-					HashMapDictionaryBuilder.<String, Object>put(
-						"layout.type", type
-					).put(
-						"service.ranking", Integer.MAX_VALUE
-					).build());
-
-			try {
-				Assert.assertTrue(_layout.isTypeEmbedded());
-			}
-			finally {
-				serviceRegistration.unregister();
-			}
-		}
-	}
-
-	@Test
 	public void testIsTypePanelReturnsFalse() {
 		for (String type : _TYPES) {
 			if (type.equals(LayoutConstants.TYPE_PANEL)) {
@@ -171,110 +129,10 @@ public class LayoutImplTest {
 	}
 
 	@Test
-	public void testIsTypePanelWithLayoutTypeController() throws Exception {
-		Bundle bundle = FrameworkUtil.getBundle(LayoutImplTest.class);
-
-		BundleContext bundleContext = bundle.getBundleContext();
-
-		LayoutTypeController layoutTypeController =
-			new LayoutTypeControllerImpl(LayoutConstants.TYPE_PANEL);
-
-		for (String layoutTypeValue : _TYPES) {
-			if (layoutTypeValue.equals(LayoutConstants.TYPE_PANEL)) {
-				continue;
-			}
-
-			_layout.setType(layoutTypeValue);
-
-			ServiceRegistration<LayoutTypeController> serviceRegistration =
-				bundleContext.registerService(
-					LayoutTypeController.class, layoutTypeController,
-					HashMapDictionaryBuilder.<String, Object>put(
-						"layout.type", layoutTypeValue
-					).put(
-						"service.ranking", Integer.MAX_VALUE
-					).build());
-
-			try {
-				Assert.assertTrue(_layout.isTypePanel());
-			}
-			finally {
-				serviceRegistration.unregister();
-			}
-		}
-	}
-
-	@Test
-	public void testIsTypePortletReturnsFalse() throws Exception {
-		Bundle bundle = FrameworkUtil.getBundle(LayoutImplTest.class);
-
-		BundleContext bundleContext = bundle.getBundleContext();
-
-		for (String type : _TYPES) {
-			if (type.equals(LayoutConstants.TYPE_PORTLET)) {
-				continue;
-			}
-
-			LayoutTypeController layoutTypeController =
-				new LayoutTypeControllerImpl(type);
-
-			ServiceRegistration<LayoutTypeController> serviceRegistration =
-				bundleContext.registerService(
-					LayoutTypeController.class, layoutTypeController,
-					HashMapDictionaryBuilder.<String, Object>put(
-						"layout.type", type
-					).build());
-
-			try {
-				_layout.setType(type);
-
-				Assert.assertFalse(_layout.isTypePortlet());
-			}
-			finally {
-				serviceRegistration.unregister();
-			}
-		}
-	}
-
-	@Test
 	public void testIsTypePortletReturnsTrue() {
 		_layout.setType(LayoutConstants.TYPE_PORTLET);
 
 		Assert.assertTrue(_layout.isTypePortlet());
-	}
-
-	@Test
-	public void testIsTypePortletWithLayoutTypeController() throws Exception {
-		Bundle bundle = FrameworkUtil.getBundle(LayoutImplTest.class);
-
-		BundleContext bundleContext = bundle.getBundleContext();
-
-		LayoutTypeController layoutTypeController =
-			new LayoutTypeControllerImpl(LayoutConstants.TYPE_PORTLET);
-
-		for (String type : _TYPES) {
-			if (type.equals(LayoutConstants.TYPE_PORTLET)) {
-				continue;
-			}
-
-			_layout.setType(type);
-
-			ServiceRegistration<LayoutTypeController> serviceRegistration =
-				bundleContext.registerService(
-					LayoutTypeController.class, layoutTypeController,
-					HashMapDictionaryBuilder.<String, Object>put(
-						"layout.type", type
-					).put(
-						"service.ranking", Integer.MAX_VALUE
-					).build());
-
-			try {
-				Assert.assertTrue(_layout.isTypePortlet());
-			}
-			finally {
-				serviceRegistration.unregister();
-			}
-		}
 	}
 
 	@SuppressWarnings("deprecation")
