@@ -123,9 +123,25 @@ public class LayoutsExporterImpl implements LayoutsExporter {
 			long[] layoutPageTemplateEntryIds, int type)
 		throws Exception {
 
-		return _exportLayoutPageTemplateEntries(
-			layoutPageTemplateEntryIds, type,
-			this::_populateDisplayPagesZipWriter);
+		if (LayoutPageTemplateEntryTypeConstants.TYPE_BASIC == type) {
+			return _exportLayoutPageTemplateEntries(
+				layoutPageTemplateEntryIds, type,
+				this::_populatePageTemplatesZipWriter);
+		}
+
+		if (LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE == type) {
+			return _exportLayoutPageTemplateEntries(
+				layoutPageTemplateEntryIds, type,
+				this::_populateDisplayPagesZipWriter);
+		}
+
+		if (LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT == type) {
+			return _exportLayoutPageTemplateEntries(
+				layoutPageTemplateEntryIds, type,
+				this::_populateMasterLayoutsZipWriter);
+		}
+
+		return null;
 	}
 
 	@Override
