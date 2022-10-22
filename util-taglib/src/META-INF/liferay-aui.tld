@@ -310,32 +310,6 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Creates a container <code>&lt;div&gt;</code> tag to wrap <code>&lt;aui:row&gt;</code> components and offer additional styling. Deprecated as of Athanasius (7.3.x), replaced by <code>clay:container</code>.]]></description>
-		<name>container</name>
-		<tag-class>com.liferay.taglib.aui.ContainerTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[A CSS class for styling the component.]]></description>
-			<name>cssClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Whether to enable the container to span the entire width of the viewport. The default value is <code>true</code>.]]></description>
-			<name>fluid</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>boolean</type>
-		</attribute>
-		<attribute>
-			<description><![CDATA[An ID for the component instance.]]></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
-	</tag>
-	<tag>
 		<description><![CDATA[Creates a <code>&lt;div&gt;</code> tag to wrap form fields and offer additional styling.]]></description>
 		<name>field-wrapper</name>
 		<tag-class>com.liferay.taglib.aui.FieldWrapperTag</tag-class>
