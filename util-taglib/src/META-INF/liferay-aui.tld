@@ -257,59 +257,6 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Creates a column to display content in an <code>&lt;aui:row&gt;</code> component. Deprecated as of Athanasius (7.3.x), replaced by <code>clay:col</code>.]]></description>
-		<name>col</name>
-		<tag-class>com.liferay.taglib.aui.ColTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[A CSS class for styling the component.]]></description>
-			<name>cssClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[An ID for the component instance.]]></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>lg</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>md</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>sm</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The width of the column in the containing row as a fraction of <code>12</code>. For example, a span of <code>4</code> would result in a column width <code>4/12</code> (or <code>1/3</code>) of the total width of the containing row.]]></description>
-			<name>span</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>int</type>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The width of the column in the containing row as a percentage, overriding the <code>span</code> attribute. The width is then converted to a span expressed as <code>((width/100) x 12)</code>, rounded to the nearest whole number. For example, a width of <code>33</code> would be converted to <code>3.96</code>, which would be rounded up to a span value of <code>4</code>.]]></description>
-			<name>width</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>int</type>
-		</attribute>
-		<attribute>
-			<name>xs</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
-	</tag>
-	<tag>
 		<description><![CDATA[Creates a <code>&lt;div&gt;</code> tag to wrap form fields and offer additional styling.]]></description>
 		<name>field-wrapper</name>
 		<tag-class>com.liferay.taglib.aui.FieldWrapperTag</tag-class>

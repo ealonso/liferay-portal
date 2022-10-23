@@ -238,56 +238,6 @@
 			</attribute>
 		</attributes>
 	</component>
-	<component bodyContent="true" name="Col">
-		<description>Creates a column to display content in an <![CDATA[<code>&lt;aui:row&gt;</code>]]> component. Deprecated as of Athanasius (7.3.x), replaced by <code>clay:col</code>.</description>
-		<attributes>
-			<attribute>
-				<description>A CSS class for styling the component.</description>
-				<name>cssClass</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-			<attribute>
-				<description>An ID for the component instance.</description>
-				<name>id</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-			<attribute>
-				<name>lg</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-			<attribute>
-				<name>md</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-			<attribute>
-				<name>sm</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-			<attribute>
-				<description>The width of the column in the containing row as a fraction of <![CDATA[<code>12</code>]]>. For example, a span of <![CDATA[<code>4</code>]]> would result in a column width <![CDATA[<code>4/12</code>]]> (or <![CDATA[<code>1/3</code>]]>) of the total width of the containing row.</description>
-				<name>span</name>
-				<inputType>int</inputType>
-				<outputType>int</outputType>
-				<defaultValue>12</defaultValue>
-			</attribute>
-			<attribute>
-				<description>The width of the column in the containing row as a percentage, overriding the <![CDATA[<code>span</code>]]> attribute. The width is then converted to a span expressed as <![CDATA[<code>((width/100) x 12)</code>]]>, rounded to the nearest whole number. For example, a width of <![CDATA[<code>33</code>]]> would be converted to <![CDATA[<code>3.96</code>]]>, which would be rounded up to a span value of <![CDATA[<code>4</code>]]>.</description>
-				<name>width</name>
-				<inputType>int</inputType>
-				<outputType>int</outputType>
-			</attribute>
-			<attribute>
-				<name>xs</name>
-				<inputType>java.lang.String</inputType>
-				<outputType>java.lang.String</outputType>
-			</attribute>
-		</attributes>
-	</component>
 	<component name="Component">
 		<description>Deprecated as of 7.0.0, with no direct replacement.</description>
 		<attributes>
