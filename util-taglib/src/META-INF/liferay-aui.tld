@@ -1028,37 +1028,6 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Creates a search component for an <code>&lt;aui:nav-bar&gt;</code> component.]]></description>
-		<name>nav-bar-search</name>
-		<tag-class>com.liferay.taglib.aui.NavBarSearchTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[A CSS class for styling the component.]]></description>
-			<name>cssClass</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>file</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[An ID for the component instance.]]></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[A search container for the navigation bar to use.]]></description>
-			<name>searchContainer</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-			<type>com.liferay.portal.kernel.dao.search.SearchContainer</type>
-		</attribute>
-		<dynamic-attributes>true</dynamic-attributes>
-	</tag>
-	<tag>
 		<description><![CDATA[Creates a navigation item for using in an <code>&lt;aui:nav&gt;</code> component.]]></description>
 		<name>nav-item</name>
 		<tag-class>com.liferay.taglib.aui.NavItemTag</tag-class>
