@@ -28,10 +28,12 @@ import com.liferay.headless.delivery.dto.v1_0.PageTemplate;
 import com.liferay.headless.delivery.dto.v1_0.PageTemplateCollection;
 import com.liferay.headless.delivery.dto.v1_0.Settings;
 import com.liferay.headless.delivery.dto.v1_0.StyleBook;
+import com.liferay.headless.delivery.dto.v1_0.UtilityPageTemplate;
 import com.liferay.info.item.InfoItemFormVariation;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormVariationsProvider;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.importer.LayoutUtilityPageImporterResultEntry;
 import com.liferay.layout.page.template.admin.web.internal.exception.DropzoneLayoutStructureItemException;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.structure.importer.LayoutStructureItemImporter;
 import com.liferay.layout.page.template.admin.web.internal.headless.delivery.dto.v1_0.structure.importer.LayoutStructureItemImporterContext;
@@ -60,6 +62,7 @@ import com.liferay.layout.util.constants.LayoutStructureConstants;
 import com.liferay.layout.util.structure.FragmentStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -133,6 +136,28 @@ public class LayoutPageTemplatesImporterImpl
 	}
 
 	@Override
+	public List<LayoutUtilityPageImporterResultEntry> importLayoutUtilityPageEntries(
+		long userId, long groupId, File file, boolean overwrite)
+		throws Exception {
+
+		_layoutUtilityPageImporterResultEntries = new ArrayList<>();
+
+		try (ZipFile zipFile = new ZipFile(file)) {
+			_processLayoutUtilityPageEntries(groupId, overwrite, zipFile);
+		}
+		catch (PortalException portalException) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(portalException);
+
+				throw portalException;
+			}
+		}
+
+		return _layoutUtilityPageImporterResultEntries;
+
+	}
+
+	@Override
 	public List<LayoutPageTemplatesImporterResultEntry> importFile(
 			long userId, long groupId, long layoutPageTemplateCollectionId,
 			File file, boolean overwrite)
@@ -188,6 +213,8 @@ public class LayoutPageTemplatesImporterImpl
 			position, segmentsExperienceId);
 	}
 
+	private static final String _UTILITY_PAGE_TEMPLATE_ENTRY_KEY_DEFAULT =
+		"imported-utility-page";
 	@Override
 	public List<FragmentEntryLink> importPageElement(
 			Layout layout, LayoutStructure layoutStructure, String parentItemId,
@@ -879,6 +906,44 @@ public class LayoutPageTemplatesImporterImpl
 		}
 	}
 
+	private void _processLayoutUtilityPageEntries(
+		long groupId, boolean overwrite, ZipFile zipFile) throws Exception {
+
+		List<UtilityPageTemplateEntry> utilityPageTemplateEntries =  _getLayoutUtilityPageEntries(groupId, zipFile);
+
+		for (UtilityPageTemplateEntry utilityPageTemplateEntry :
+			utilityPageTemplateEntries) {
+
+			Callable<Void> callable = new UtilityPageImporterCallable(
+				groupId, utilityPageTemplateEntry, overwrite, zipFile);
+
+			try {
+				TransactionInvokerUtil.invoke(_transactionConfig, callable);
+			}
+			catch (Throwable throwable) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(throwable, throwable);
+				}
+				UtilityPageTemplate utilityPageTemplate =
+					utilityPageTemplateEntry.getUtilityPageTemplate();
+
+				_layoutUtilityPageImporterResultEntries.add(
+					new LayoutUtilityPageImporterResultEntry(
+						utilityPageTemplateEntry.getName(),
+						LayoutPageTemplateEntryTypeConstants.TYPE_UTILITY_PAGE,
+						LayoutUtilityPageImporterResultEntry.Status.INVALID,
+						_getErrorMessage(
+							groupId,
+							"x-could-not-be-imported-because-of-invalid-" +
+							"values-in-its-page-definition",
+							new String[] {utilityPageTemplate.getName()})));
+
+			}
+		}
+	}
+
+
+
 	private void _processDisplayPageTemplatePageTemplateEntries(
 			long groupId, boolean overwrite, ZipFile zipFile)
 		throws Exception {
@@ -1436,6 +1501,9 @@ public class LayoutPageTemplatesImporterImpl
 	private List<LayoutPageTemplatesImporterResultEntry>
 		_layoutPageTemplatesImporterResultEntries;
 
+	private List<LayoutUtilityPageImporterResultEntry>
+		_layoutUtilityPageImporterResultEntries;
+
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
@@ -1585,6 +1653,7 @@ public class LayoutPageTemplatesImporterImpl
 
 	}
 
+
 	private class DisplayPagesImporterCallable implements Callable<Void> {
 
 		@Override
@@ -1684,6 +1753,75 @@ public class LayoutPageTemplatesImporterImpl
 		private final ZipFile _zipFile;
 
 	}
+
+
+
+	private class UtilityPageImporterCallable implements Callable<Void> {
+
+		private final long _groupId;
+		private final UtilityPageTemplateEntry
+			_utilityPageTemplateEntry;
+		private final boolean _overwrite;
+		private final ZipFile _zipFile;
+
+		@Override
+		public Void call() throws Exception {
+			return null;
+		}
+
+		private UtilityPageImporterCallable(
+			long groupId, UtilityPageTemplateEntry utilityPageTemplateEntry, boolean overwrite,
+			ZipFile zipFile) {
+
+			_groupId = groupId;
+			_utilityPageTemplateEntry = utilityPageTemplateEntry;
+			_overwrite = overwrite;
+			_zipFile = zipFile;
+		}
+
+	}
+	private static class UtilityPageTemplateEntry {
+
+		public UtilityPageTemplateEntry(
+			UtilityPageTemplate utilityPageTemplate, String key,
+			PageDefinition pageDefinition, ZipEntry thumbnailZipEntry,
+			String zipPath) {
+
+			_utilityPageTemplate = utilityPageTemplate;
+			_key = key;
+			_pageDefinition = pageDefinition;
+			_thumbnailZipEntry = thumbnailZipEntry;
+			_zipPath = zipPath;
+		}
+
+		public UtilityPageTemplate getUtilityPageTemplate() {
+			return _utilityPageTemplate;
+		}
+
+		public String getKey() {
+			return _key;
+		}
+
+		public PageDefinition getPageDefinition() {
+			return _pageDefinition;
+		}
+
+		public ZipEntry getThumbnailZipEntry() {
+			return _thumbnailZipEntry;
+		}
+
+		public String getZipPath() {
+			return _zipPath;
+		}
+
+		private final UtilityPageTemplate _utilityPageTemplate;
+		private final String _key;
+		private final PageDefinition _pageDefinition;
+		private final ZipEntry _thumbnailZipEntry;
+		private final String _zipPath;
+
+	}
+
 
 	private class MasterLayoutTemplatesImporterCallable
 		implements Callable<Void> {
