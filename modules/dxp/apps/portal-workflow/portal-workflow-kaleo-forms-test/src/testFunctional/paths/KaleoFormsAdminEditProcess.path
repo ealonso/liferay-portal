@@ -116,11 +116,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>WORKFLOW_NAVIGATION_UNPUBLISHED_TAB</td>
-	<td>//a[@title='Unpublished']/span</td>
-	<td></td>
-</tr>
-<tr>
 	<td></td>
 	<td></td>
 	<td></td>
