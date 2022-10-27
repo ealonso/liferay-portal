@@ -798,7 +798,6 @@ html#{$cadmin-selector} {
 			bottom: 0;
 			box-shadow: $cadmin-modal-footer-box-shadow;
 			display: flex;
-			flex-direction: row-reverse;
 			left: 0;
 			margin: 0;
 			padding: 10px 24px;
@@ -812,6 +811,14 @@ html#{$cadmin-selector} {
 			.btn {
 				margin-left: 16px;
 				margin-right: 0;
+			}
+
+			&:not(.dialog-footer-not-reverse) {
+				flex-direction: row-reverse;
+			}
+
+			&.dialog-footer-not-reverse {
+				justify-content: flex-end;
 			}
 		}
 
