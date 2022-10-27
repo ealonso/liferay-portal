@@ -131,7 +131,8 @@ public class IconOptionsTag extends IncludeTag {
 							}
 							else {
 								dropdownItem.setData(
-									portletConfigurationIcon.getData());
+									portletConfigurationIcon.getContenxt(
+										_getPortletRequest()));
 							}
 
 							dropdownItem.setIcon(
