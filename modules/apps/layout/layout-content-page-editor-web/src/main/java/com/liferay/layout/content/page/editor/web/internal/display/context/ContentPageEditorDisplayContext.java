@@ -62,7 +62,7 @@ import com.liferay.layout.page.template.info.item.capability.EditPageInfoItemCap
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
-import com.liferay.layout.page.template.util.PaddingConverter;
+import com.liferay.layout.util.converter.PaddingConverter;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateEntryNameComparator;
 import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.layout.util.structure.CommonStylesUtil;
