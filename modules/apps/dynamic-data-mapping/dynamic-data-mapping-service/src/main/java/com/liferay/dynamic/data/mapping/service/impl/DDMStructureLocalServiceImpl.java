@@ -41,6 +41,9 @@ import com.liferay.dynamic.data.mapping.model.DDMDataProviderInstanceLink;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayoutColumn;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayoutPage;
+import com.liferay.dynamic.data.mapping.model.DDMFormLayoutRow;
 import com.liferay.dynamic.data.mapping.model.DDMFormRule;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
@@ -106,6 +109,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -422,8 +426,8 @@ public class DDMStructureLocalServiceImpl
 		DDMStructure newStructure = _addStructure(
 			user, structure.getGroupId(), structure.getParentStructureId(),
 			structure.getClassNameId(), structureKey, nameMap, descriptionMap,
-			structure.getDDMForm(), structure.getStorageType(),
-			structure.getType(), serviceContext);
+			_uniquifyDDMFormFields(structure.getDDMForm()),
+			structure.getStorageType(), structure.getType(), serviceContext);
 
 		// Resources
 
@@ -446,7 +450,8 @@ public class DDMStructureLocalServiceImpl
 				userId, structure.getGroupId(), newStructure.getClassNameId(),
 				newStructure.getStructureKey(),
 				structureVersion.getStructureVersionId(),
-				structure.getDDMFormLayout(), serviceContext);
+				_uniquifyDDMFormLayoutFields(structure.getDDMFormLayout()),
+				serviceContext);
 		}
 
 		// Data provider instance links
@@ -1908,6 +1913,54 @@ public class DDMStructureLocalServiceImpl
 
 				return null;
 			});
+	}
+
+	private void _uniquifyDDMFormField(DDMFormField ddmFormField) {
+		ddmFormField.setFieldReference(
+			"CopyOf" + ddmFormField.getFieldReference());
+
+		ddmFormField.setName("CopyOf" + ddmFormField.getName());
+
+		Collection<DDMFormField> nestedDDMFormFields =
+			ddmFormField.getNestedDDMFormFields();
+
+		nestedDDMFormFields.forEach(
+			nestedDDMFormField -> _uniquifyDDMFormField(nestedDDMFormField));
+	}
+
+	private DDMForm _uniquifyDDMFormFields(DDMForm ddmForm) {
+		Collection<DDMFormField> ddmFormFields = ddmForm.getDDMFormFields();
+
+		ddmFormFields.forEach(
+			ddmFormField -> _uniquifyDDMFormField(ddmFormField));
+
+		return ddmForm;
+	}
+
+	private DDMFormLayout _uniquifyDDMFormLayoutFields(
+		DDMFormLayout ddmFormLayout) {
+
+		for (DDMFormLayoutPage ddmFormLayoutPage :
+				ddmFormLayout.getDDMFormLayoutPages()) {
+
+			for (DDMFormLayoutRow ddmFormLayoutRow :
+					ddmFormLayoutPage.getDDMFormLayoutRows()) {
+
+				for (DDMFormLayoutColumn ddmFormLayoutColumn :
+						ddmFormLayoutRow.getDDMFormLayoutColumns()) {
+
+					List<String> ddmFormFieldNames =
+						ddmFormLayoutColumn.getDDMFormFieldNames();
+
+					for (int i = 0; i < ddmFormFieldNames.size(); i++) {
+						ddmFormFieldNames.set(
+							i, "CopyOf" + ddmFormFieldNames.get(i));
+					}
+				}
+			}
+		}
+
+		return ddmFormLayout;
 	}
 
 	private void _updateDataProviderInstanceLinks(
