@@ -14,24 +14,19 @@
 
 package com.liferay.document.library.web.internal.portlet.action;
 
-import com.liferay.data.engine.field.type.util.LocalizedValueUtil;
-import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
-import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
 import com.liferay.document.library.constants.DLPortletKeys;
 import com.liferay.document.library.kernel.model.DLFileEntryMetadata;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateService;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Locale;
 import java.util.Map;
@@ -64,9 +59,6 @@ public class CopyDataDefinitionMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		long ddmStructureId = ParamUtil.getLong(
 			actionRequest, "ddmStructureId");
 
@@ -75,44 +67,26 @@ public class CopyDataDefinitionMVCActionCommand
 		Map<Locale, String> nameMap = _localization.getLocalizationMap(
 			actionRequest, "name");
 
-		DataDefinitionResource.Builder dataDefinitionResourceBuilder =
-			_dataDefinitionResourceFactory.create();
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+			DDMStructure.class.getName(), actionRequest);
 
-		DataDefinitionResource dataDefinitionResource =
-			dataDefinitionResourceBuilder.user(
-				themeDisplay.getUser()
-			).build();
-
-		DataDefinition dataDefinition =
-			dataDefinitionResource.getDataDefinition(ddmStructureId);
-
-		dataDefinition.setDataDefinitionKey(StringPool.BLANK);
-		dataDefinition.setDescription(
-			LocalizedValueUtil.toStringObjectMap(descriptionMap));
-		dataDefinition.setName(LocalizedValueUtil.toStringObjectMap(nameMap));
-
-		dataDefinition =
-			dataDefinitionResource.postSiteDataDefinitionByContentType(
-				themeDisplay.getScopeGroupId(), "document-library",
-				dataDefinition);
+		DDMStructure ddmStructure = _ddmStructureService.copyStructure(
+			ddmStructureId, nameMap, descriptionMap, serviceContext);
 
 		boolean copyTemplates = ParamUtil.getBoolean(
 			actionRequest, "copyTemplates");
 
 		if (copyTemplates) {
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(
-				DDMStructure.class.getName(), actionRequest);
-
 			_ddmTemplateService.copyTemplates(
 				_portal.getClassNameId(DDMStructure.class), ddmStructureId,
 				_portal.getClassNameId(DLFileEntryMetadata.class.getName()),
-				dataDefinition.getId(),
+				ddmStructure.getStructureId(),
 				DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, serviceContext);
 		}
 	}
 
 	@Reference
-	private DataDefinitionResource.Factory _dataDefinitionResourceFactory;
+	private DDMStructureService _ddmStructureService;
 
 	@Reference
 	private DDMTemplateService _ddmTemplateService;
