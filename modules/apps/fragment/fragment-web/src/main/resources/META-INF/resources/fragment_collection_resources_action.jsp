@@ -22,8 +22,9 @@ ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_
 FileEntry fileEntry = (FileEntry)row.getObject();
 %>
 
-<liferay-ui:icon-menu
+<clay:dropdown-menu
 	direction="left-side"
+	dropdownItems="<%= fragmentDisplayContext.getCollectionsDropdownItems() %>"
 	icon="<%= StringPool.BLANK %>"
 	markupView="lexicon"
 	message="<%= StringPool.BLANK %>"
@@ -39,4 +40,4 @@ FileEntry fileEntry = (FileEntry)row.getObject();
 			url="<%= deleteFragmentCollectionResourcesURL %>"
 		/>
 	</c:if>
-</liferay-ui:icon-menu>
+</clay:dropdown-menu>
