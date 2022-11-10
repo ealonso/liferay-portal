@@ -14,15 +14,7 @@
 
 package com.liferay.journal.web.internal.portlet.action;
 
-import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
-import com.liferay.data.engine.rest.dto.v2_0.DataDefinitionField;
-import com.liferay.data.engine.rest.dto.v2_0.DataLayout;
-import com.liferay.data.engine.rest.dto.v2_0.DataLayoutColumn;
-import com.liferay.data.engine.rest.dto.v2_0.DataLayoutPage;
-import com.liferay.data.engine.rest.dto.v2_0.DataLayoutRow;
-import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
 import com.liferay.dynamic.data.mapping.constants.DDMTemplateConstants;
-import com.liferay.dynamic.data.mapping.form.field.type.constants.DDMFormFieldTypeConstants;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateService;
@@ -40,7 +32,6 @@ import com.liferay.portal.kernel.util.Portal;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -102,68 +93,6 @@ public class CopyDataDefinitionMVCActionCommand
 				DDMTemplateConstants.TEMPLATE_TYPE_DISPLAY, serviceContext);
 		}
 	}
-
-	private void _uniquifyDataDefinitionFields(DataDefinition dataDefinition) {
-		for (DataDefinitionField dataDefinitionField :
-				dataDefinition.getDataDefinitionFields()) {
-
-			_uniquifyDataDefinitionFields(dataDefinitionField);
-		}
-
-		_updateDataLayout(dataDefinition.getDefaultDataLayout());
-	}
-
-	private void _uniquifyDataDefinitionFields(
-		DataDefinitionField dataDefinitionField) {
-
-		dataDefinitionField.setName("CopyOf" + dataDefinitionField.getName());
-
-		Map<String, Object> customProperties =
-			dataDefinitionField.getCustomProperties();
-
-		if (customProperties.containsKey("fieldReference")) {
-			customProperties.put(
-				"fieldReference",
-				"CopyOf" + customProperties.get("fieldReference"));
-		}
-
-		if (!customProperties.containsKey("structureId") &&
-			!Objects.equals(
-				dataDefinitionField.getFieldType(),
-				DDMFormFieldTypeConstants.FIELDSET)) {
-
-			for (DataDefinitionField nestedDataDefinitionField :
-					dataDefinitionField.getNestedDataDefinitionFields()) {
-
-				_uniquifyDataDefinitionFields(nestedDataDefinitionField);
-			}
-		}
-	}
-
-	private void _updateDataLayout(DataLayout dataLayout) {
-		for (DataLayoutPage dataLayoutPage : dataLayout.getDataLayoutPages()) {
-			_updateDataLayoutRows(dataLayoutPage.getDataLayoutRows());
-		}
-	}
-
-	private void _updateDataLayoutRows(DataLayoutRow[] dataLayoutRows) {
-		for (DataLayoutRow dataLayoutRow : dataLayoutRows) {
-			for (DataLayoutColumn dataLayoutColumn :
-					dataLayoutRow.getDataLayoutColumns()) {
-
-				String[] dataLayoutColumnFieldNames =
-					dataLayoutColumn.getFieldNames();
-
-				for (int i = 0; i < dataLayoutColumnFieldNames.length; i++) {
-					dataLayoutColumnFieldNames[i] =
-						"CopyOf" + dataLayoutColumnFieldNames[i];
-				}
-			}
-		}
-	}
-
-	@Reference
-	private DataDefinitionResource.Factory _dataDefinitionResourceFactory;
 
 	@Reference
 	private DDMStructureService _ddmStructureService;
