@@ -415,10 +415,6 @@ public class FragmentEntryProcessorHelperImpl
 		InfoItemFieldValuesProvider infoItemFieldValuesProvider, Locale locale,
 		Object object) {
 
-		if (infoItemFieldValuesProvider == null) {
-			return null;
-		}
-
 		InfoFieldValue<Object> infoFieldValue =
 			infoItemFieldValuesProvider.getInfoFieldValue(object, fieldName);
 
