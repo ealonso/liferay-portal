@@ -91,9 +91,9 @@ public class FragmentEntryProcessorHelperImpl
 			FragmentEntryProcessorContext fragmentEntryProcessorContext)
 		throws PortalException {
 
-		if (!isMappedDisplayPage(editableValueJSONObject) &&
-			!isMapped(editableValueJSONObject) &&
-			!isMappedCollection(editableValueJSONObject)) {
+		if (!isMapped(editableValueJSONObject) &&
+			!isMappedCollection(editableValueJSONObject) &&
+			!isMappedDisplayPage(editableValueJSONObject)) {
 
 			return null;
 		}
@@ -103,32 +103,7 @@ public class FragmentEntryProcessorHelperImpl
 		String fieldName = StringPool.BLANK;
 		Object object = null;
 
-		if (isMappedDisplayPage(editableValueJSONObject)) {
-			HttpServletRequest httpServletRequest =
-				fragmentEntryProcessorContext.getHttpServletRequest();
-
-			if (httpServletRequest == null) {
-				return null;
-			}
-
-			LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider =
-				(LayoutDisplayPageObjectProvider<?>)
-					httpServletRequest.getAttribute(
-						LayoutDisplayPageWebKeys.
-							LAYOUT_DISPLAY_PAGE_OBJECT_PROVIDER);
-
-			if (layoutDisplayPageObjectProvider == null) {
-				return null;
-			}
-
-			className = layoutDisplayPageObjectProvider.getClassName();
-			classPK = layoutDisplayPageObjectProvider.getClassPK();
-
-			fieldName = editableValueJSONObject.getString("mappedField");
-
-			object = layoutDisplayPageObjectProvider.getDisplayObject();
-		}
-		else if (isMapped(editableValueJSONObject)) {
+		if (isMapped(editableValueJSONObject)) {
 			className = _portal.getClassName(
 				editableValueJSONObject.getLong("classNameId"));
 			classPK = editableValueJSONObject.getLong("classPK");
@@ -152,7 +127,7 @@ public class FragmentEntryProcessorHelperImpl
 
 			object = _getInfoItem(className, infoItemIdentifier);
 		}
-		else {
+		else if (isMappedCollection(editableValueJSONObject)) {
 			Optional<InfoItemReference> infoItemReferenceOptional =
 				fragmentEntryProcessorContext.
 					getContextInfoItemReferenceOptional();
@@ -170,6 +145,31 @@ public class FragmentEntryProcessorHelperImpl
 			fieldName = editableValueJSONObject.getString("collectionFieldId");
 
 			object = _getInfoItem(infoItemReference);
+		}
+		else if (isMappedDisplayPage(editableValueJSONObject)) {
+			HttpServletRequest httpServletRequest =
+				fragmentEntryProcessorContext.getHttpServletRequest();
+
+			if (httpServletRequest == null) {
+				return null;
+			}
+
+			LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider =
+				(LayoutDisplayPageObjectProvider<?>)
+					httpServletRequest.getAttribute(
+						LayoutDisplayPageWebKeys.
+							LAYOUT_DISPLAY_PAGE_OBJECT_PROVIDER);
+
+			if (layoutDisplayPageObjectProvider == null) {
+				return null;
+			}
+
+			className = layoutDisplayPageObjectProvider.getClassName();
+			classPK = layoutDisplayPageObjectProvider.getClassPK();
+
+			fieldName = editableValueJSONObject.getString("mappedField");
+
+			object = layoutDisplayPageObjectProvider.getDisplayObject();
 		}
 
 		TrashHandler trashHandler = TrashHandlerRegistryUtil.getTrashHandler(
