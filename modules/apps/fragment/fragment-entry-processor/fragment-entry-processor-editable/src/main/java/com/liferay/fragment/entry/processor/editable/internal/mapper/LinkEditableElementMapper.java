@@ -59,29 +59,24 @@ public class LinkEditableElementMapper implements EditableElementMapper {
 
 		String href = configJSONObject.getString("href");
 
-		JSONObject hrefJSONObject = configJSONObject.getJSONObject("href");
-
-		boolean collectionMapped =
-			_fragmentEntryProcessorHelper.isMappedCollection(configJSONObject);
-		boolean displayPageMapped =
-			_fragmentEntryProcessorHelper.isMappedDisplayPage(configJSONObject);
-		boolean layoutMapped = _isMappedLayout(configJSONObject);
-		boolean mapped = _fragmentEntryProcessorHelper.isMapped(
-			configJSONObject);
-
-		if (Validator.isNull(href) && (hrefJSONObject == null) &&
-			!collectionMapped && !layoutMapped && !mapped) {
-
+		if (Validator.isNull(href)) {
 			return;
 		}
 
-		if (collectionMapped || displayPageMapped || mapped) {
+		JSONObject hrefJSONObject = configJSONObject.getJSONObject("href");
+
+		if (_fragmentEntryProcessorHelper.isMapped(configJSONObject) ||
+			_fragmentEntryProcessorHelper.isMappedCollection(
+				configJSONObject) ||
+			_fragmentEntryProcessorHelper.isMappedDisplayPage(
+				configJSONObject)) {
+
 			href = GetterUtil.getString(
 				_fragmentEntryProcessorHelper.getFieldValue(
 					configJSONObject, new HashMap<>(),
 					fragmentEntryProcessorContext));
 		}
-		else if (layoutMapped) {
+		else if (_isMappedLayout(configJSONObject)) {
 			href = GetterUtil.getString(
 				_getMappedLayoutValue(
 					configJSONObject, fragmentEntryProcessorContext));
@@ -96,6 +91,9 @@ public class LinkEditableElementMapper implements EditableElementMapper {
 			}
 
 			href = hrefJSONObject.getString(languageId);
+		}
+		else {
+			return;
 		}
 
 		Element linkElement = new Element("a");
