@@ -20,19 +20,21 @@
 	<table class="table table-autofit">
 		<thead>
 			<tr>
+				<c:if test="<%= ListUtil.isNotEmpty(infoListObjectColumnNames) %>">
 
-				<%
-				for (String infoListObjectColumnName : infoListObjectColumnNames) {
-				%>
+					<%
+					for (String infoListObjectColumnName : infoListObjectColumnNames) {
+					%>
 
-					<th class="table-cell-expand-smallest">
-						<liferay-ui:message key="<%= infoListObjectColumnName %>" />
-					</th>
+						<th class="table-cell-expand-smallest">
+							<liferay-ui:message key="<%= infoListObjectColumnName %>" />
+						</th>
 
-				<%
-				}
-				%>
+					<%
+					}
+					%>
 
+				</c:if>
 			</tr>
 		</thead>
 
