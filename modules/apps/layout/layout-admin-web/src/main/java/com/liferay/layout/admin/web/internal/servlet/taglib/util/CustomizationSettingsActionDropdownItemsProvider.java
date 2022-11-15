@@ -20,12 +20,9 @@ import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 
@@ -40,16 +37,12 @@ public class CustomizationSettingsActionDropdownItemsProvider {
 
 	public CustomizationSettingsActionDropdownItemsProvider(
 		LayoutTypePortlet layoutTypePortlet,
-		LiferayPortletRequest liferayPortletRequest,
-		LiferayPortletResponse liferayPortletResponse) {
+		LiferayPortletRequest liferayPortletRequest) {
 
 		_layoutTypePortlet = layoutTypePortlet;
-		_liferayPortletResponse = liferayPortletResponse;
 
 		_httpServletRequest = PortalUtil.getHttpServletRequest(
 			liferayPortletRequest);
-		_themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 	}
 
 	public List<DropdownItem> getActionDropdownItems() throws Exception {
@@ -75,25 +68,23 @@ public class CustomizationSettingsActionDropdownItemsProvider {
 	}
 
 	private String _getCustomizedViewMessage() {
-		String toggleCustomizedViewMessage =
-			"view-page-without-my-customizations";
-
 		if (!_layoutTypePortlet.isCustomizedView()) {
-			toggleCustomizedViewMessage = "view-my-customized-page";
+			return LanguageUtil.get(
+				_httpServletRequest, "view-my-customized-page");
 		}
-		else if (_layoutTypePortlet.isDefaultUpdated()) {
-			toggleCustomizedViewMessage =
+
+		if (_layoutTypePortlet.isDefaultUpdated()) {
+			return LanguageUtil.get(
+				_httpServletRequest,
 				"the-defaults-for-the-current-page-have-been-updated-click-" +
-					"here-to-see-them";
+					"here-to-see-them");
 		}
 
 		return LanguageUtil.get(
-			_httpServletRequest, toggleCustomizedViewMessage);
+			_httpServletRequest, "view-page-without-my-customizations");
 	}
 
 	private final HttpServletRequest _httpServletRequest;
 	private final LayoutTypePortlet _layoutTypePortlet;
-	private final LiferayPortletResponse _liferayPortletResponse;
-	private final ThemeDisplay _themeDisplay;
 
 }

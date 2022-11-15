@@ -89,18 +89,16 @@ boolean hasUpdateLayoutPermission = GetterUtil.getBoolean(request.getAttribute(C
 				</c:if>
 
 				<li class="control-menu-nav-item d-md-block d-none flex-shrink-0 ml-2">
-					<liferay-ui:search-container-column-text>
 
-						<%
-						CustomizationSettingsActionDropdownItemsProvider customizationSettingsActionDropdownItemsProvider = (CustomizationSettingsActionDropdownItemsProvider)request.getAttribute(LayoutAdminWebKeys.CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER);
-						%>
+					<%
+					CustomizationSettingsActionDropdownItemsProvider customizationSettingsActionDropdownItemsProvider = (CustomizationSettingsActionDropdownItemsProvider)request.getAttribute(CustomizationSettingsActionDropdownItemsProvider.class.getName());
+					%>
 
-						<clay:dropdown-actions
-							aria-label='<%= LanguageUtil.get(request, "show-actions") %>'
-							dropdownItems="<%= customizationSettingsActionDropdownItemsProvider.getActionDropdownItems(layout, true) %>"
-							propsTransformer="js/LayoutActionDropdownPropsTransformer"
-						/>
-					</liferay-ui:search-container-column-text>
+					<clay:dropdown-actions
+						aria-label='<%= LanguageUtil.get(request, "show-actions") %>'
+						dropdownItems="<%= customizationSettingsActionDropdownItemsProvider.getActionDropdownItems(layout, true) %>"
+						propsTransformer="js/LayoutActionDropdownPropsTransformer"
+					/>
 				</li>
 				<li class="control-menu-nav-item d-block d-md-none flex-shrink-0 mb-0 ml-2 mt-3">
 					<div class="btn-group dropdown flex-nowrap">
