@@ -19,6 +19,10 @@ package com.liferay.layout.admin.web.internal.constants;
  */
 public class LayoutAdminWebKeys {
 
+	public static final String
+		CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER =
+			"CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER";
+
 	public static final String LAYOUT_ACTION_DROPDOWN_ITEMS_PROVIDER =
 		"LAYOUT_ACTION_DROPDOWN_ITEMS_PROVIDER";
 
