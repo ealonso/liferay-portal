@@ -88,55 +88,19 @@ boolean hasUpdateLayoutPermission = GetterUtil.getBoolean(request.getAttribute(C
 					/>
 				</c:if>
 
-				<%
-				String toggleCustomizedViewMessage = "view-page-without-my-customizations";
-
-				if (!layoutTypePortlet.isCustomizedView()) {
-					toggleCustomizedViewMessage = "view-my-customized-page";
-				}
-				else if (layoutTypePortlet.isDefaultUpdated()) {
-					toggleCustomizedViewMessage = "the-defaults-for-the-current-page-have-been-updated-click-here-to-see-them";
-				}
-
-				toggleCustomizedViewMessage = LanguageUtil.get(resourceBundle, toggleCustomizedViewMessage);
-
-				String resetCustomizationViewURL = PortletURLBuilder.create(
-					PortletURLFactoryUtil.create(request, LayoutAdminPortletKeys.GROUP_PAGES, PortletRequest.ACTION_PHASE)
-				).setActionName(
-					"/layout_admin/reset_customization_view"
-				).buildString();
-
-				String resetCustomizationsViewURLString = "javascript:Liferay.Util.openConfirmModal({message: '" + UnicodeLanguageUtil.get(resourceBundle, "are-you-sure-you-want-to-reset-your-customizations-to-default") + "', onConfirm: function (isConfirmed) {if (isConfirmed) {submitForm(document.hrefFm, '" + HtmlUtil.escapeJS(resetCustomizationViewURL) + "');}}})";
-
-				String toggleCustomizationViewURL = HttpComponentsUtil.addParameter(
-					PortletURLBuilder.create(
-						PortletURLFactoryUtil.create(request, LayoutAdminPortletKeys.GROUP_PAGES, PortletRequest.ACTION_PHASE)
-					).setActionName(
-						"/layout_admin/toggle_customized_view"
-					).buildString(),
-					"customized_view", !layoutTypePortlet.isCustomizedView());
-				%>
-
 				<li class="control-menu-nav-item d-md-block d-none flex-shrink-0 ml-2">
-					<liferay-ui:icon-menu
-						direction="left-side"
-						icon="<%= StringPool.BLANK %>"
-						markupView="lexicon"
-						message="<%= StringPool.BLANK %>"
-						showWhenSingleIcon="<%= true %>"
-					>
-						<liferay-ui:icon
-							message="<%= toggleCustomizedViewMessage %>"
-							url="<%= toggleCustomizationViewURL %>"
-						/>
+					<liferay-ui:search-container-column-text>
 
-						<c:if test="<%= layoutTypePortlet.isCustomizedView() %>">
-							<liferay-ui:icon
-								message="reset-my-customizations"
-								url="<%= resetCustomizationsViewURLString %>"
-							/>
-						</c:if>
-					</liferay-ui:icon-menu>
+						<%
+						CustomizationSettingsActionDropdownItemsProvider customizationSettingsActionDropdownItemsProvider = (CustomizationSettingsActionDropdownItemsProvider)request.getAttribute(LayoutAdminWebKeys.CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER);
+						%>
+
+						<clay:dropdown-actions
+							aria-label='<%= LanguageUtil.get(request, "show-actions") %>'
+							dropdownItems="<%= customizationSettingsActionDropdownItemsProvider.getActionDropdownItems(layout, true) %>"
+							propsTransformer="js/LayoutActionDropdownPropsTransformer"
+						/>
+					</liferay-ui:search-container-column-text>
 				</li>
 				<li class="control-menu-nav-item d-block d-md-none flex-shrink-0 mb-0 ml-2 mt-3">
 					<div class="btn-group dropdown flex-nowrap">
