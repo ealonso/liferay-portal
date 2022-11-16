@@ -195,17 +195,16 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 			renderRequest.setAttribute(CETManager.class.getName(), _cetManager);
 			renderRequest.setAttribute(
+				CustomizationSettingsActionDropdownItemsProvider.class.
+					getName(),
+				new CustomizationSettingsActionDropdownItemsProvider(
+					_layoutTypePortlet,
+					_portal.getLiferayPortletRequest(renderRequest)));
+			renderRequest.setAttribute(
 				ItemSelector.class.getName(), _itemSelector);
 			renderRequest.setAttribute(
 				LayoutUtilityPageThumbnailConfiguration.class.getName(),
 				_layoutUtilityPageThumbnailConfiguration);
-
-			CustomizationSettingsActionDropdownItemsProvider
-				customizationSettingsActionDropdownItemsProvider =
-					new CustomizationSettingsActionDropdownItemsProvider(
-						_layoutTypePortlet,
-						_portal.getLiferayPortletRequest(renderRequest),
-						_portal.getLiferayPortletResponse(renderResponse));
 
 			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
@@ -220,11 +219,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 						_portal.getHttpServletRequest(renderRequest),
 						layoutsAdminDisplayContext, _translationPermission,
 						_translationURLProvider);
-
-			renderRequest.setAttribute(
-				LayoutAdminWebKeys.
-					CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER,
-				customizationSettingsActionDropdownItemsProvider);
 
 			renderRequest.setAttribute(
 				LayoutAdminWebKeys.LAYOUT_ACTION_DROPDOWN_ITEMS_PROVIDER,
