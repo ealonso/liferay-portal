@@ -27,7 +27,6 @@ import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.SelectLayoutCollectionDisplayContext;
-import com.liferay.layout.admin.web.internal.servlet.taglib.util.CustomizationSettingsActionDropdownItemsProvider;
 import com.liferay.layout.admin.web.internal.servlet.taglib.util.LayoutActionDropdownItemsProvider;
 import com.liferay.layout.page.template.exception.DuplicateLayoutPageTemplateCollectionException;
 import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNameException;
@@ -56,7 +55,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutPrototype;
-import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.LayoutPrototypeLocalService;
@@ -200,13 +198,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 				LayoutUtilityPageThumbnailConfiguration.class.getName(),
 				_layoutUtilityPageThumbnailConfiguration);
 
-			CustomizationSettingsActionDropdownItemsProvider
-				customizationSettingsActionDropdownItemsProvider =
-					new CustomizationSettingsActionDropdownItemsProvider(
-						_layoutTypePortlet,
-						_portal.getLiferayPortletRequest(renderRequest),
-						_portal.getLiferayPortletResponse(renderResponse));
-
 			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
 					_itemSelector, _layoutConverterRegistry, _layoutCopyHelper,
@@ -220,11 +211,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 						_portal.getHttpServletRequest(renderRequest),
 						layoutsAdminDisplayContext, _translationPermission,
 						_translationURLProvider);
-
-			renderRequest.setAttribute(
-				LayoutAdminWebKeys.
-					CUSTOMIZATION_SETTINGS_ACTION_DROPDOWN_ITEMS_PROVIDER,
-				customizationSettingsActionDropdownItemsProvider);
 
 			renderRequest.setAttribute(
 				LayoutAdminWebKeys.LAYOUT_ACTION_DROPDOWN_ITEMS_PROVIDER,
@@ -317,9 +303,6 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 	@Reference
 	private LayoutPrototypeLocalService _layoutPrototypeLocalService;
-
-	@Reference
-	private LayoutTypePortlet _layoutTypePortlet;
 
 	private volatile LayoutUtilityPageThumbnailConfiguration
 		_layoutUtilityPageThumbnailConfiguration;
