@@ -45,20 +45,18 @@ List<DropdownItem> dropdownItems = assetEntryActionDropdownItemsProvider.getActi
 
 			<%
 			DropdownItem dropdownItem = dropdownItems.get(0);
-
-			Map<String, Object> data = (HashMap<String, Object>)dropdownItem.get("data");
 			%>
 
-			<liferay-ui:icon
-				cssClass="visible-interaction"
-				data='<%= (HashMap)dropdownItem.get("data") %>'
+			<clay:link
+				aria-label='<%= String.valueOf(dropdownItem.get("label")) %>'
+				borderless="<%= true %>"
+				cssClass="lfr-portal-tooltip text-primary"
+				displayType="unstyled"
+				href='<%= String.valueOf(dropdownItem.get("href")) %>'
 				icon='<%= String.valueOf(dropdownItem.get("icon")) %>'
-				linkCssClass="text-primary"
-				markupView="lexicon"
-				message='<%= String.valueOf(dropdownItem.get("label")) %>'
-				method="get"
-				url='<%= String.valueOf(dropdownItem.get("href")) %>'
-				useDialog='<%= GetterUtil.getBoolean(data.get("useDialog")) %>'
+				monospaced="<%= true %>"
+				small="<%= true %>"
+				title='<%= String.valueOf(dropdownItem.get("label")) %>'
 			/>
 		</c:otherwise>
 	</c:choose>
