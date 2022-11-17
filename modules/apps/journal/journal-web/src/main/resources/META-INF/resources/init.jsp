@@ -151,6 +151,7 @@ page import="com.liferay.journal.web.internal.servlet.taglib.util.DDMStructureAc
 page import="com.liferay.journal.web.internal.servlet.taglib.util.JournalFeedActionDropdownItemsProvider" %><%@
 page import="com.liferay.journal.web.internal.util.JournalHelperUtil" %><%@
 page import="com.liferay.journal.web.internal.util.JournalPortletUtil" %><%@
+page import="com.liferay.journal.web.internal.util.JournalSearcher" %><%@
 page import="com.liferay.journal.web.internal.util.JournalUtil" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
@@ -232,9 +233,11 @@ page import="javax.portlet.WindowState" %>
 <%
 AssetDisplayPageFriendlyURLProvider assetDisplayPageFriendlyURLProvider = (AssetDisplayPageFriendlyURLProvider)request.getAttribute(AssetDisplayPageFriendlyURLProvider.class.getName());
 
+JournalSearcher journalSearcher = (JournalSearcher)request.getAttribute(JournalSearcher.class.getName());
+
 JournalWebConfiguration journalWebConfiguration = (JournalWebConfiguration)request.getAttribute(JournalWebConfiguration.class.getName());
 
-JournalDisplayContext journalDisplayContext = JournalDisplayContext.create(request, liferayPortletRequest, liferayPortletResponse, assetDisplayPageFriendlyURLProvider, trashHelper);
+JournalDisplayContext journalDisplayContext = JournalDisplayContext.create(request, liferayPortletRequest, liferayPortletResponse, assetDisplayPageFriendlyURLProvider, journalSearcher, trashHelper);
 
 JournalWebRequestHelper journalWebRequestHelper = new JournalWebRequestHelper(request);
 

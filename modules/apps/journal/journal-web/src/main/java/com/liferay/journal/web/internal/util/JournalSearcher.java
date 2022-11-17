@@ -39,9 +39,9 @@ import org.osgi.service.component.annotations.Reference;
  * @author Lourdes Fernández Besada
  */
 @Component(immediate = true, service = {})
-public class JournalSearcherUtil {
+public class JournalSearcher {
 
-	public static List<Object> searchJournalArticleAndFolders(
+	public List<Object> searchJournalArticleAndFolders(
 		Consumer<SearchContext> searchContextConsumer) {
 
 		SearchResponse searchResponse = _searcher.search(
@@ -73,7 +73,7 @@ public class JournalSearcherUtil {
 			});
 	}
 
-	public static List<JournalArticle> searchJournalArticles(
+	public List<JournalArticle> searchJournalArticles(
 		boolean showVersions, Consumer<SearchContext> searchContextConsumer) {
 
 		SearchResponse searchResponse = _searcher.search(
@@ -105,41 +105,22 @@ public class JournalSearcherUtil {
 			});
 	}
 
-	public static List<JournalArticle> searchJournalArticles(
+	public List<JournalArticle> searchJournalArticles(
 		Consumer<SearchContext> searchContextConsumer) {
 
 		return searchJournalArticles(false, searchContextConsumer);
 	}
 
-	@Reference(unbind = "-")
-	protected void setJournalArticleLocalService(
-		JournalArticleLocalService journalArticleLocalService) {
+	@Reference
+	private JournalArticleLocalService _journalArticleLocalService;
 
-		_journalArticleLocalService = journalArticleLocalService;
-	}
+	@Reference
+	private JournalFolderLocalService _journalFolderLocalService;
 
-	@Reference(unbind = "-")
-	protected void setJournalFolderLocalService(
-		JournalFolderLocalService journalFolderLocalService) {
+	@Reference
+	private Searcher _searcher;
 
-		_journalFolderLocalService = journalFolderLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSearcher(Searcher searcher) {
-		_searcher = searcher;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSearchRequestBuilderFactory(
-		SearchRequestBuilderFactory searchRequestBuilderFactory) {
-
-		_searchRequestBuilderFactory = searchRequestBuilderFactory;
-	}
-
-	private static JournalArticleLocalService _journalArticleLocalService;
-	private static JournalFolderLocalService _journalFolderLocalService;
-	private static Searcher _searcher;
-	private static SearchRequestBuilderFactory _searchRequestBuilderFactory;
+	@Reference
+	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 
 }

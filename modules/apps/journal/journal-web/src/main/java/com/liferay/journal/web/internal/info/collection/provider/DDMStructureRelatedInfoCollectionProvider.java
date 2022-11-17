@@ -24,8 +24,7 @@ import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.service.JournalArticleLocalService;
-import com.liferay.journal.web.internal.util.JournalSearcherUtil;
+import com.liferay.journal.web.internal.util.JournalSearcher;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -56,9 +55,10 @@ public class DDMStructureRelatedInfoCollectionProvider
 			   SingleFormVariationInfoCollectionProvider<JournalArticle> {
 
 	public DDMStructureRelatedInfoCollectionProvider(
-		DDMStructure ddmStructure) {
+		DDMStructure ddmStructure, JournalSearcher journalSearcher) {
 
 		_ddmStructure = ddmStructure;
+		_journalSearcher = journalSearcher;
 	}
 
 	@Override
@@ -75,11 +75,9 @@ public class DDMStructureRelatedInfoCollectionProvider
 				Collections.emptyList(), collectionQuery.getPagination(), 0);
 		}
 
-		List<JournalArticle> articles =
-			JournalSearcherUtil.searchJournalArticles(
-				searchContext -> _populateSearchContext(
-					(AssetCategory)relatedItem, collectionQuery,
-					searchContext));
+		List<JournalArticle> articles = _journalSearcher.searchJournalArticles(
+			searchContext -> _populateSearchContext(
+				(AssetCategory)relatedItem, collectionQuery, searchContext));
 
 		return InfoPage.of(
 			articles, collectionQuery.getPagination(), articles.size());
@@ -202,5 +200,6 @@ public class DDMStructureRelatedInfoCollectionProvider
 		DDMStructureRelatedInfoCollectionProvider.class);
 
 	private final DDMStructure _ddmStructure;
+	private final JournalSearcher _journalSearcher;
 
 }

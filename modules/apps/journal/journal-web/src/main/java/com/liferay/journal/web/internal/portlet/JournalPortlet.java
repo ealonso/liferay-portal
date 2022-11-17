@@ -62,6 +62,7 @@ import com.liferay.journal.web.internal.configuration.FFJournalAutoSaveDraftConf
 import com.liferay.journal.web.internal.configuration.JournalWebConfiguration;
 import com.liferay.journal.web.internal.helper.JournalDDMTemplateHelper;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
+import com.liferay.journal.web.internal.util.JournalSearcher;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.LocaleException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -144,7 +145,8 @@ public class JournalPortlet extends MVCPortlet {
 		renderRequest.setAttribute(
 			AssetDisplayPageFriendlyURLProvider.class.getName(),
 			_assetDisplayPageFriendlyURLProvider);
-
+		renderRequest.setAttribute(
+			JournalSearcher.class.getName(), _journalSearcher);
 		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 
 		if (Objects.equals(
@@ -204,6 +206,8 @@ public class JournalPortlet extends MVCPortlet {
 			_ffJournalAutoSaveDraftConfiguration);
 		resourceRequest.setAttribute(
 			ItemSelector.class.getName(), _itemSelector);
+		resourceRequest.setAttribute(
+			JournalSearcher.class.getName(), _journalSearcher);
 		resourceRequest.setAttribute(
 			JournalWebConfiguration.class.getName(), _journalWebConfiguration);
 		resourceRequest.setAttribute(
@@ -358,6 +362,10 @@ public class JournalPortlet extends MVCPortlet {
 
 	private volatile JournalFileUploadsConfiguration
 		_journalFileUploadsConfiguration;
+
+	@Reference
+	private JournalSearcher _journalSearcher;
+
 	private volatile JournalWebConfiguration _journalWebConfiguration;
 
 	@Reference(

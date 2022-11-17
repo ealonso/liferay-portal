@@ -35,7 +35,7 @@ import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.web.internal.util.JournalSearcherUtil;
+import com.liferay.journal.web.internal.util.JournalSearcher;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.search.Field;
@@ -78,10 +78,9 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 	public InfoPage<JournalArticle> getCollectionInfoPage(
 		CollectionQuery collectionQuery) {
 
-		List<JournalArticle> articles =
-			JournalSearcherUtil.searchJournalArticles(
-				searchContext -> _populateSearchContext(
-					collectionQuery, searchContext));
+		List<JournalArticle> articles = _journalSearcher.searchJournalArticles(
+			searchContext -> _populateSearchContext(
+				collectionQuery, searchContext));
 
 		return InfoPage.of(
 			articles, collectionQuery.getPagination(), articles.size());
@@ -262,6 +261,9 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
+
+	@Reference
+	private JournalSearcher _journalSearcher;
 
 	@Reference
 	private Language _language;

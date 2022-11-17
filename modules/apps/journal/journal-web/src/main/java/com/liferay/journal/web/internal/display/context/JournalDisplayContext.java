@@ -54,7 +54,7 @@ import com.liferay.journal.web.internal.servlet.taglib.util.JournalFolderActionD
 import com.liferay.journal.web.internal.util.JournalArticleTranslation;
 import com.liferay.journal.web.internal.util.JournalArticleTranslationRowChecker;
 import com.liferay.journal.web.internal.util.JournalPortletUtil;
-import com.liferay.journal.web.internal.util.JournalSearcherUtil;
+import com.liferay.journal.web.internal.util.JournalSearcher;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.service.MBMessageLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
@@ -128,7 +128,7 @@ public class JournalDisplayContext {
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
 		AssetDisplayPageFriendlyURLProvider assetDisplayPageFriendlyURLProvider,
-		TrashHelper trashHelper) {
+		JournalSearcher journalSearcher, TrashHelper trashHelper) {
 
 		JournalDisplayContext journalDisplayContext =
 			(JournalDisplayContext)liferayPortletRequest.getAttribute(
@@ -138,7 +138,7 @@ public class JournalDisplayContext {
 			journalDisplayContext = new JournalDisplayContext(
 				httpServletRequest, liferayPortletRequest,
 				liferayPortletResponse, assetDisplayPageFriendlyURLProvider,
-				trashHelper);
+				journalSearcher, trashHelper);
 
 			liferayPortletRequest.setAttribute(
 				JournalWebConstants.JOURNAL_DISPLAY_CONTEXT,
@@ -1078,13 +1078,14 @@ public class JournalDisplayContext {
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
 		AssetDisplayPageFriendlyURLProvider assetDisplayPageFriendlyURLProvider,
-		TrashHelper trashHelper) {
+		JournalSearcher journalSearcher, TrashHelper trashHelper) {
 
 		_httpServletRequest = httpServletRequest;
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 		_assetDisplayPageFriendlyURLProvider =
 			assetDisplayPageFriendlyURLProvider;
+		_journalSearcher = journalSearcher;
 		_trashHelper = trashHelper;
 
 		_itemSelector = (ItemSelector)httpServletRequest.getAttribute(
@@ -1189,7 +1190,7 @@ public class JournalDisplayContext {
 
 		if (isSearch()) {
 			List<Object> results =
-				JournalSearcherUtil.searchJournalArticleAndFolders(
+				_journalSearcher.searchJournalArticleAndFolders(
 					searchContext -> _populateSearchContext(
 						articleAndFolderSearchContainer.getStart(),
 						articleAndFolderSearchContainer.getEnd(), searchContext,
@@ -1416,13 +1417,11 @@ public class JournalDisplayContext {
 				getOrderByCol(), getOrderByType()));
 		articleVersionsSearchContainer.setOrderByType(getOrderByType());
 
-		List<JournalArticle> results =
-			JournalSearcherUtil.searchJournalArticles(
-				true,
-				searchContext -> _populateSearchContext(
-					articleVersionsSearchContainer.getStart(),
-					articleVersionsSearchContainer.getEnd(), searchContext,
-					true));
+		List<JournalArticle> results = _journalSearcher.searchJournalArticles(
+			true,
+			searchContext -> _populateSearchContext(
+				articleVersionsSearchContainer.getStart(),
+				articleVersionsSearchContainer.getEnd(), searchContext, true));
 
 		articleVersionsSearchContainer.setResultsAndTotal(
 			() -> results, results.size());
@@ -1500,6 +1499,7 @@ public class JournalDisplayContext {
 	private Long _folderId;
 	private final HttpServletRequest _httpServletRequest;
 	private final ItemSelector _itemSelector;
+	private final JournalSearcher _journalSearcher;
 	private final JournalWebConfiguration _journalWebConfiguration;
 	private String _keywords;
 	private final LiferayPortletRequest _liferayPortletRequest;

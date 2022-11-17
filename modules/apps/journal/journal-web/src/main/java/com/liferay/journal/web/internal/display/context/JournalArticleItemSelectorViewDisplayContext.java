@@ -38,7 +38,7 @@ import com.liferay.journal.util.comparator.FolderArticleTitleComparator;
 import com.liferay.journal.web.internal.configuration.JournalWebConfiguration;
 import com.liferay.journal.web.internal.item.selector.JournalArticleItemSelectorView;
 import com.liferay.journal.web.internal.util.JournalPortletUtil;
-import com.liferay.journal.web.internal.util.JournalSearcherUtil;
+import com.liferay.journal.web.internal.util.JournalSearcher;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -94,6 +94,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		InfoItemItemSelectorCriterion infoItemItemSelectorCriterion,
 		String itemSelectedEventName,
 		JournalArticleItemSelectorView journalArticleItemSelectorView,
+		JournalSearcher journalSearcher,
 		JournalWebConfiguration journalWebConfiguration, PortletURL portletURL,
 		boolean search) {
 
@@ -101,6 +102,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		_infoItemItemSelectorCriterion = infoItemItemSelectorCriterion;
 		_itemSelectedEventName = itemSelectedEventName;
 		_journalArticleItemSelectorView = journalArticleItemSelectorView;
+		_journalSearcher = journalSearcher;
 		_journalWebConfiguration = journalWebConfiguration;
 		_portletURL = portletURL;
 		_search = search;
@@ -346,7 +348,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 			}
 
 			List<Object> results =
-				JournalSearcherUtil.searchJournalArticleAndFolders(
+				_journalSearcher.searchJournalArticleAndFolders(
 					searchContext -> _populateSearchContext(
 						folderIds, articleAndFolderSearchContainer.getStart(),
 						articleAndFolderSearchContainer.getEnd(),
@@ -666,6 +668,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	private final String _itemSelectedEventName;
 	private final JournalArticleItemSelectorView
 		_journalArticleItemSelectorView;
+	private final JournalSearcher _journalSearcher;
 	private final JournalWebConfiguration _journalWebConfiguration;
 	private String _keywords;
 	private String _orderByCol;
