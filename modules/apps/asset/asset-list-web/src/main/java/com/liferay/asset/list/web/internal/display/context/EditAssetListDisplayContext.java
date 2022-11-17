@@ -1303,9 +1303,7 @@ public class EditAssetListDisplayContext {
 			assetRendererFactories, AssetRendererFactory::getClassNameId);
 	}
 
-	private long[] _getDefaultClassTypeIds(ClassTypeReader classTypeReader)
-		throws Exception {
-
+	private long[] _getDefaultClassTypeIds(ClassTypeReader classTypeReader) {
 		List<ClassType> assetAvailableClassTypes =
 			classTypeReader.getAvailableClassTypes(
 				PortalUtil.getCurrentAndAncestorSiteGroupIds(

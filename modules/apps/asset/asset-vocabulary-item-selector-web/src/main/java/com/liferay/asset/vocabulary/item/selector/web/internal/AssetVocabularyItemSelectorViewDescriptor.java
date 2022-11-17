@@ -26,8 +26,6 @@ import com.liferay.item.selector.ItemSelectorViewDescriptor;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -154,16 +152,9 @@ public class AssetVocabularyItemSelectorViewDescriptor
 		if (_assetVocabularyItemSelectorCriterion.
 				isIncludeAncestorSiteAndDepotGroupIds()) {
 
-			try {
-				groupIds =
-					SiteConnectedGroupGroupProviderUtil.
-						getCurrentAndAncestorSiteAndDepotGroupIds(groupId);
-			}
-			catch (Exception exception) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(exception);
-				}
-			}
+			groupIds =
+				SiteConnectedGroupGroupProviderUtil.
+					getCurrentAndAncestorSiteAndDepotGroupIds(groupId);
 		}
 
 		return groupIds;
@@ -182,9 +173,6 @@ public class AssetVocabularyItemSelectorViewDescriptor
 
 		return visibilityTypes;
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		AssetVocabularyItemSelectorViewDescriptor.class);
 
 	private final AssetVocabularyItemSelectorCriterion
 		_assetVocabularyItemSelectorCriterion;

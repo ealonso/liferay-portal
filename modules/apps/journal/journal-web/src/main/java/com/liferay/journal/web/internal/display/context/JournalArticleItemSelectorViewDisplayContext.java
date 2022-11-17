@@ -347,18 +347,10 @@ public class JournalArticleItemSelectorViewDisplayContext {
 
 			List<Object> results =
 				JournalSearcherUtil.searchJournalArticleAndFolders(
-					searchContext -> {
-						try {
-							_populateSearchContext(
-								folderIds,
-								articleAndFolderSearchContainer.getStart(),
-								articleAndFolderSearchContainer.getEnd(),
-								searchContext);
-						}
-						catch (PortalException portalException) {
-							throw new RuntimeException(portalException);
-						}
-					});
+					searchContext -> _populateSearchContext(
+						folderIds, articleAndFolderSearchContainer.getStart(),
+						articleAndFolderSearchContainer.getEnd(),
+						searchContext));
 
 			articleAndFolderSearchContainer.setResultsAndTotal(
 				() -> results, results.size());
@@ -479,7 +471,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 			_portletRequest, "groupId", _themeDisplay.getScopeGroupId());
 	}
 
-	private long[] _getGroupIds() throws PortalException {
+	private long[] _getGroupIds() {
 		if (_isEverywhereScopeFilter()) {
 			return SiteConnectedGroupGroupProviderUtil.
 				getCurrentAndAncestorSiteAndDepotGroupIds(
@@ -595,9 +587,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	}
 
 	private SearchContext _populateSearchContext(
-			List<Long> folderIds, int start, int end,
-			SearchContext searchContext)
-		throws PortalException {
+		List<Long> folderIds, int start, int end, SearchContext searchContext) {
 
 		searchContext.setAndSearch(false);
 		searchContext.setAttribute(Field.ARTICLE_ID, getKeywords());

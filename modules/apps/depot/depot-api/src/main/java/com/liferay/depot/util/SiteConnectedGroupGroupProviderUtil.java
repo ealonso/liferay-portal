@@ -74,8 +74,7 @@ public class SiteConnectedGroupGroupProviderUtil {
 	}
 
 	public static long[] getCurrentAndAncestorSiteAndDepotGroupIds(
-			long[] groupIds)
-		throws PortalException {
+		long[] groupIds) {
 
 		SiteConnectedGroupGroupProvider siteConnectedGroupGroupProvider =
 			_siteConnectedGroupGroupProviderUtil.

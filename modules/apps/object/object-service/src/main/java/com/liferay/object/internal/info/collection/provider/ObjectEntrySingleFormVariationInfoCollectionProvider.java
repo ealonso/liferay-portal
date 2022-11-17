@@ -332,25 +332,15 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	private List<AssetVocabulary> _getAssetVocabularies(
 		ServiceContext serviceContext) {
 
-		try {
-			return ListUtil.filter(
-				_assetVocabularyLocalService.getGroupVocabularies(
-					SiteConnectedGroupGroupProviderUtil.
-						getCurrentAndAncestorSiteAndDepotGroupIds(
-							serviceContext.getScopeGroupId())),
-				assetVocabulary ->
-					assetVocabulary.isAssociatedToClassNameIdAndClassTypePK(
-						PortalUtil.getClassNameId(
-							_objectDefinition.getClassName()),
-						AssetCategoryConstants.ALL_CLASS_TYPE_PK));
-		}
-		catch (PortalException portalException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(portalException);
-			}
-
-			return Collections.emptyList();
-		}
+		return ListUtil.filter(
+			_assetVocabularyLocalService.getGroupVocabularies(
+				SiteConnectedGroupGroupProviderUtil.
+					getCurrentAndAncestorSiteAndDepotGroupIds(
+						serviceContext.getScopeGroupId())),
+			assetVocabulary ->
+				assetVocabulary.isAssociatedToClassNameIdAndClassTypePK(
+					PortalUtil.getClassNameId(_objectDefinition.getClassName()),
+					AssetCategoryConstants.ALL_CLASS_TYPE_PK));
 	}
 
 	private BooleanClause[] _getBooleanClauses(CollectionQuery collectionQuery)

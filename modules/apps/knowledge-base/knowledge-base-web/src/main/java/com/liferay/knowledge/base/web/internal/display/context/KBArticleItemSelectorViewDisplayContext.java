@@ -31,7 +31,6 @@ import com.liferay.knowledge.base.util.comparator.KBObjectsViewCountComparator;
 import com.liferay.knowledge.base.web.internal.search.KBSearcher;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -376,8 +375,7 @@ public class KBArticleItemSelectorViewDisplayContext {
 	}
 
 	protected SearchContext buildSearchContext(
-			List<Long> kbFolderIds, int start, int end, Sort sort)
-		throws PortalException {
+		List<Long> kbFolderIds, int start, int end, Sort sort) {
 
 		SearchContext searchContext = new SearchContext();
 
@@ -464,7 +462,7 @@ public class KBArticleItemSelectorViewDisplayContext {
 			_portletRequest, "groupId", _themeDisplay.getScopeGroupId());
 	}
 
-	private long[] _getGroupIds() throws PortalException {
+	private long[] _getGroupIds() {
 		return PortalUtil.getCurrentAndAncestorSiteGroupIds(
 			_themeDisplay.getScopeGroupId());
 	}

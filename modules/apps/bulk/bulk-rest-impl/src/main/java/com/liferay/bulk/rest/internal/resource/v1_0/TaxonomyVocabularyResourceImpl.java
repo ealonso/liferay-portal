@@ -140,9 +140,7 @@ public class TaxonomyVocabularyResourceImpl
 		return assetCategories.stream();
 	}
 
-	private Stream<AssetVocabulary> _getAssetVocabulariesStream(Long siteId)
-		throws Exception {
-
+	private Stream<AssetVocabulary> _getAssetVocabulariesStream(Long siteId) {
 		List<AssetVocabulary> assetVocabularies =
 			_assetVocabularyLocalService.getGroupVocabularies(
 				_portal.getCurrentAndAncestorSiteGroupIds(siteId));

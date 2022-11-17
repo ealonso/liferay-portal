@@ -262,29 +262,20 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 	}
 
 	protected long[] getGroupIds() {
-		HttpServletRequest httpServletRequest = getRequest();
+		if (ArrayUtil.isEmpty(_groupIds)) {
+			HttpServletRequest httpServletRequest = getRequest();
 
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		try {
-			if (ArrayUtil.isEmpty(_groupIds)) {
-				return SiteConnectedGroupGroupProviderUtil.
-					getCurrentAndAncestorSiteAndDepotGroupIds(
-						themeDisplay.getScopeGroupId());
-			}
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)httpServletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
 
 			return SiteConnectedGroupGroupProviderUtil.
-				getCurrentAndAncestorSiteAndDepotGroupIds(_groupIds);
-		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
+				getCurrentAndAncestorSiteAndDepotGroupIds(
+					themeDisplay.getScopeGroupId());
 		}
 
-		return new long[0];
+		return SiteConnectedGroupGroupProviderUtil.
+			getCurrentAndAncestorSiteAndDepotGroupIds(_groupIds);
 	}
 
 	@Override

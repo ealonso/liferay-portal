@@ -82,19 +82,10 @@ public class AssetCategoriesNavigationDisplayContext {
 			(ThemeDisplay)_httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		long[] groupIds = new long[0];
-
-		try {
-			groupIds =
-				SiteConnectedGroupGroupProviderUtil.
-					getCurrentAndAncestorSiteAndDepotGroupIds(
-						themeDisplay.getScopeGroupId());
-		}
-		catch (PortalException portalException) {
-			groupIds = new long[] {themeDisplay.getScopeGroupId()};
-
-			_log.error(portalException);
-		}
+		long[] groupIds =
+			SiteConnectedGroupGroupProviderUtil.
+				getCurrentAndAncestorSiteAndDepotGroupIds(
+					themeDisplay.getScopeGroupId());
 
 		_assetVocabularies = AssetVocabularyServiceUtil.getGroupVocabularies(
 			groupIds,

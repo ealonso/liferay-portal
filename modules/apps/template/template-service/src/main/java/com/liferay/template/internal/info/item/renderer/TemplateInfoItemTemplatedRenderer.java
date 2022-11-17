@@ -25,8 +25,6 @@ import com.liferay.info.item.renderer.template.InfoItemRendererTemplate;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -171,35 +169,23 @@ public class TemplateInfoItemTemplatedRenderer<T>
 			return Collections.emptyList();
 		}
 
-		try {
-			long groupId = serviceContext.getScopeGroupId();
+		long groupId = serviceContext.getScopeGroupId();
 
-			if (!_stagingGroupHelper.isStagedPortlet(
-					groupId, TemplatePortletKeys.TEMPLATE)) {
+		if (!_stagingGroupHelper.isStagedPortlet(
+				groupId, TemplatePortletKeys.TEMPLATE)) {
 
-				Group liveGroup = _stagingGroupHelper.fetchLiveGroup(groupId);
+			Group liveGroup = _stagingGroupHelper.fetchLiveGroup(groupId);
 
-				if (liveGroup != null) {
-					groupId = liveGroup.getGroupId();
-				}
+			if (liveGroup != null) {
+				groupId = liveGroup.getGroupId();
 			}
-
-			return _templateEntryLocalService.getTemplateEntries(
-				PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
-				infoItemClassName, infoItemFormVariationKey, QueryUtil.ALL_POS,
-				QueryUtil.ALL_POS, null);
 		}
-		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
-			}
 
-			return Collections.emptyList();
-		}
+		return _templateEntryLocalService.getTemplateEntries(
+			PortalUtil.getCurrentAndAncestorSiteGroupIds(groupId),
+			infoItemClassName, infoItemFormVariationKey, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		TemplateInfoItemTemplatedRenderer.class);
 
 	private final String _className;
 	private final DDMTemplateLocalService _ddmTemplateLocalService;
