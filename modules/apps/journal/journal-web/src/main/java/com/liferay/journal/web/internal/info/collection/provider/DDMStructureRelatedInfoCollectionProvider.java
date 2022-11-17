@@ -56,11 +56,9 @@ public class DDMStructureRelatedInfoCollectionProvider
 			   SingleFormVariationInfoCollectionProvider<JournalArticle> {
 
 	public DDMStructureRelatedInfoCollectionProvider(
-		DDMStructure ddmStructure,
-		JournalArticleLocalService journalArticleLocalService) {
+		DDMStructure ddmStructure) {
 
 		_ddmStructure = ddmStructure;
-		_journalArticleLocalService = journalArticleLocalService;
 	}
 
 	@Override
@@ -204,6 +202,5 @@ public class DDMStructureRelatedInfoCollectionProvider
 		DDMStructureRelatedInfoCollectionProvider.class);
 
 	private final DDMStructure _ddmStructure;
-	private final JournalArticleLocalService _journalArticleLocalService;
 
 }

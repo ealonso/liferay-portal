@@ -18,7 +18,6 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.journal.model.JournalArticle;
-import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.web.internal.info.collection.provider.DDMStructureRelatedInfoCollectionProvider;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
 import com.liferay.portal.kernel.exception.ModelListenerException;
@@ -71,8 +70,7 @@ public class DDMStructureModelListener
 			ddmStructure.getStructureId(),
 			_bundleContext.registerService(
 				RelatedInfoItemCollectionProvider.class,
-				new DDMStructureRelatedInfoCollectionProvider(
-					ddmStructure, _journalArticleLocalService),
+				new DDMStructureRelatedInfoCollectionProvider(ddmStructure),
 				null));
 	}
 
@@ -114,8 +112,7 @@ public class DDMStructureModelListener
 				ddmStructure.getStructureId(),
 				_bundleContext.registerService(
 					RelatedInfoItemCollectionProvider.class,
-					new DDMStructureRelatedInfoCollectionProvider(
-						ddmStructure, _journalArticleLocalService),
+					new DDMStructureRelatedInfoCollectionProvider(ddmStructure),
 					null));
 		}
 
@@ -167,9 +164,6 @@ public class DDMStructureModelListener
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Reference
-	private JournalArticleLocalService _journalArticleLocalService;
 
 	@Reference
 	private Portal _portal;
