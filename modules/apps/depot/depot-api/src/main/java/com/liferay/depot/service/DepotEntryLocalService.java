@@ -323,8 +323,7 @@ public interface DepotEntryLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DepotEntry> getGroupConnectedDepotEntries(
-			long groupId, int start, int end)
-		throws PortalException;
+		long groupId, int start, int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getGroupConnectedDepotEntriesCount(long groupId);

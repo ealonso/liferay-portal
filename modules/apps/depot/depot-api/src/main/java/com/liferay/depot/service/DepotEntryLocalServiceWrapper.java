@@ -414,8 +414,7 @@ public class DepotEntryLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.depot.model.DepotEntry>
-			getGroupConnectedDepotEntries(long groupId, int start, int end)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		getGroupConnectedDepotEntries(long groupId, int start, int end) {
 
 		return _depotEntryLocalService.getGroupConnectedDepotEntries(
 			groupId, start, end);

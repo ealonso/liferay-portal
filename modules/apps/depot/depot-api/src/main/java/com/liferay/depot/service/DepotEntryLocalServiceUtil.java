@@ -365,8 +365,7 @@ public class DepotEntryLocalServiceUtil {
 	}
 
 	public static List<DepotEntry> getGroupConnectedDepotEntries(
-			long groupId, int start, int end)
-		throws PortalException {
+		long groupId, int start, int end) {
 
 		return getService().getGroupConnectedDepotEntries(groupId, start, end);
 	}
