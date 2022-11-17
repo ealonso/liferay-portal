@@ -216,8 +216,7 @@ public class DepotEntryLocalServiceImpl extends DepotEntryLocalServiceBaseImpl {
 
 	@Override
 	public List<DepotEntry> getGroupConnectedDepotEntries(
-			long groupId, int start, int end)
-		throws PortalException {
+		long groupId, int start, int end) {
 
 		return TransformUtil.transform(
 			_depotEntryGroupRelPersistence.findByToGroupId(groupId, start, end),

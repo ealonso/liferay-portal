@@ -1886,16 +1886,13 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public long[] getCurrentAndAncestorSiteGroupIds(long groupId)
-		throws PortalException {
-
+	public long[] getCurrentAndAncestorSiteGroupIds(long groupId) {
 		return getCurrentAndAncestorSiteGroupIds(groupId, false);
 	}
 
 	@Override
 	public long[] getCurrentAndAncestorSiteGroupIds(
-			long groupId, boolean checkContentSharingWithChildrenEnabled)
-		throws PortalException {
+		long groupId, boolean checkContentSharingWithChildrenEnabled) {
 
 		List<Group> groups = getCurrentAndAncestorSiteGroups(
 			groupId, checkContentSharingWithChildrenEnabled);
@@ -1912,16 +1909,13 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public long[] getCurrentAndAncestorSiteGroupIds(long[] groupIds)
-		throws PortalException {
-
+	public long[] getCurrentAndAncestorSiteGroupIds(long[] groupIds) {
 		return getCurrentAndAncestorSiteGroupIds(groupIds, false);
 	}
 
 	@Override
 	public long[] getCurrentAndAncestorSiteGroupIds(
-			long[] groupIds, boolean checkContentSharingWithChildrenEnabled)
-		throws PortalException {
+		long[] groupIds, boolean checkContentSharingWithChildrenEnabled) {
 
 		List<Group> groups = getCurrentAndAncestorSiteGroups(
 			groupIds, checkContentSharingWithChildrenEnabled);
@@ -1938,16 +1932,13 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public List<Group> getCurrentAndAncestorSiteGroups(long groupId)
-		throws PortalException {
-
+	public List<Group> getCurrentAndAncestorSiteGroups(long groupId) {
 		return getCurrentAndAncestorSiteGroups(groupId, false);
 	}
 
 	@Override
 	public List<Group> getCurrentAndAncestorSiteGroups(
-			long groupId, boolean checkContentSharingWithChildrenEnabled)
-		throws PortalException {
+		long groupId, boolean checkContentSharingWithChildrenEnabled) {
 
 		Set<Group> groups = new LinkedHashSet<>();
 
@@ -1965,16 +1956,13 @@ public class PortalImpl implements Portal {
 	}
 
 	@Override
-	public List<Group> getCurrentAndAncestorSiteGroups(long[] groupIds)
-		throws PortalException {
-
+	public List<Group> getCurrentAndAncestorSiteGroups(long[] groupIds) {
 		return getCurrentAndAncestorSiteGroups(groupIds, false);
 	}
 
 	@Override
 	public List<Group> getCurrentAndAncestorSiteGroups(
-			long[] groupIds, boolean checkContentSharingWithChildrenEnabled)
-		throws PortalException {
+		long[] groupIds, boolean checkContentSharingWithChildrenEnabled) {
 
 		Set<Group> groups = new LinkedHashSet<>();
 
@@ -7475,7 +7463,7 @@ public class PortalImpl implements Portal {
 			portletId);
 	}
 
-	protected Group getCurrentSiteGroup(long groupId) throws PortalException {
+	protected Group getCurrentSiteGroup(long groupId) {
 		Group siteGroup = _getSiteGroup(groupId);
 
 		if ((siteGroup != null) && !siteGroup.isLayoutPrototype()) {

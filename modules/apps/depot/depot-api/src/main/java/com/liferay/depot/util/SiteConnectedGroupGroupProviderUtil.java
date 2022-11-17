@@ -49,8 +49,8 @@ public class SiteConnectedGroupGroupProviderUtil {
 			groupId, ddmStructuresAvailable);
 	}
 
-	public static long[] getCurrentAndAncestorSiteAndDepotGroupIds(long groupId)
-		throws PortalException {
+	public static long[] getCurrentAndAncestorSiteAndDepotGroupIds(
+		long groupId) {
 
 		SiteConnectedGroupGroupProvider siteConnectedGroupGroupProvider =
 			_siteConnectedGroupGroupProviderUtil.

@@ -63,9 +63,7 @@ public class SiteConnectedGroupGroupProviderImpl
 	}
 
 	@Override
-	public long[] getCurrentAndAncestorSiteAndDepotGroupIds(long groupId)
-		throws PortalException {
-
+	public long[] getCurrentAndAncestorSiteAndDepotGroupIds(long groupId) {
 		return ArrayUtil.append(
 			_portal.getCurrentAndAncestorSiteGroupIds(groupId),
 			ListUtil.toLongArray(
@@ -89,9 +87,7 @@ public class SiteConnectedGroupGroupProviderImpl
 	}
 
 	@Override
-	public long[] getCurrentAndAncestorSiteAndDepotGroupIds(long[] groupIds)
-		throws PortalException {
-
+	public long[] getCurrentAndAncestorSiteAndDepotGroupIds(long[] groupIds) {
 		List<DepotEntry> depotEntries = new ArrayList<>();
 
 		for (long groupId : groupIds) {
