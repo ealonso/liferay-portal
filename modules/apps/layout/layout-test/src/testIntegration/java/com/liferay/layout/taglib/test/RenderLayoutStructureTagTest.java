@@ -441,6 +441,47 @@ public class RenderLayoutStructureTagTest {
 		Assert.assertTrue(content.contains("Paquetes de Internet"));
 	}
 
+	@Test
+	public void testRenderLayoutTypePortletWithSimpleData() throws Exception {
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		LayoutTestUtil.addPortletToLayout(
+			TestPropsValues.getUserId(), _layout,
+			JournalContentPortletKeys.JOURNAL_CONTENT, "column-1",
+			HashMapBuilder.put(
+				"articleId", new String[] {journalArticle.getArticleId()}
+			).put(
+				"groupId",
+				new String[] {String.valueOf(journalArticle.getGroupId())}
+			).put(
+				"showAvailableLocales", new String[] {Boolean.TRUE.toString()}
+			).build());
+
+		MockHttpServletRequest mockHttpServletRequest =
+			_getMockHttpServletRequest();
+
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		RenderLayoutStructureTag renderLayoutStructureTag =
+			new RenderLayoutStructureTag();
+
+		renderLayoutStructureTag.setLayoutStructure(
+			_getDefaultMasterLayoutStructure());
+		renderLayoutStructureTag.setPageContext(
+			new MockPageContext(
+				null, mockHttpServletRequest, mockHttpServletResponse));
+
+		renderLayoutStructureTag.doTag(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		Assert.assertFalse(content.contains("Paquetes de Internet"));
+	}
+
 	private void _assertErrorMessage(
 		String content, String expectedErrorMessage) {
 
