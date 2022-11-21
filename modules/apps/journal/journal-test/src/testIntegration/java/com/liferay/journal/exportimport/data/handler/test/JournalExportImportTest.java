@@ -17,10 +17,13 @@ package com.liferay.journal.exportimport.data.handler.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
+import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
+import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
 import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
@@ -64,6 +67,7 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
@@ -167,6 +171,48 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 	@Test
 	public void testExportImportStructuredJournalArticle() throws Exception {
 		exportImportJournalArticle(false);
+	}
+
+	@Test
+	public void testExportImportWithComplexStructuredJournalArticle()
+		throws Exception {
+
+		DataDefinition dataDefinition = DataDefinition.toDTO(
+			_readFileToString("dependencies/complex_data_definition.json"));
+
+		dataDefinition.setName(
+			HashMapBuilder.<String, Object>put(
+				String.valueOf(LocaleUtil.SPAIN), "TMX_Main_Menu"
+			).build());
+
+		DataDefinitionResource.Builder dataDefinitionResourcedBuilder =
+			_dataDefinitionResourceFactory.create();
+
+		DataDefinitionResource dataDefinitionResource =
+			dataDefinitionResourcedBuilder.user(
+				TestPropsValues.getUser()
+			).build();
+
+		dataDefinition =
+			dataDefinitionResource.postSiteDataDefinitionByContentType(
+				group.getGroupId(), "journal", dataDefinition);
+
+		JournalArticle article = JournalTestUtil.addArticleWithXMLContent(
+			group.getGroupId(), JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			JournalArticleConstants.CLASS_NAME_ID_DEFAULT,
+			_readFileToString("dependencies/complex_journal_content.xml"),
+			dataDefinition.getDataDefinitionKey(), null, LocaleUtil.SPAIN);
+
+		exportImportPortlet(JournalPortletKeys.JOURNAL);
+
+		Assert.assertEquals(
+			1,
+			JournalArticleLocalServiceUtil.getArticlesCount(
+				importedGroup.getGroupId()));
+
+		Assert.assertNotNull(
+			JournalArticleLocalServiceUtil.fetchJournalArticleByUuidAndGroupId(
+				article.getUuid(), importedGroup.getGroupId()));
 	}
 
 	public class LarFileSetterExportImportLifecycleListener
@@ -599,6 +645,16 @@ public class JournalExportImportTest extends BasePortletExportImportTestCase {
 			validateImportedStagedModel(article, importedArticle);
 		}
 	}
+
+	private String _readFileToString(String s) throws Exception {
+		return new String(FileUtil.getBytes(getClass(), s));
+	}
+
+	@Inject
+	private DataDefinitionResource.Factory _dataDefinitionResourceFactory;
+
+	@Inject
+	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Inject
 	private JournalContent _journalContent;
