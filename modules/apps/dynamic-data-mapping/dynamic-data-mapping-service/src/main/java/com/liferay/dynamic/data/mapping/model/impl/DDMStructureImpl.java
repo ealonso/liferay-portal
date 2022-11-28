@@ -631,7 +631,7 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 			_ddmForm = ddmFormDeserializerDeserializeResponse.getDDMForm();
 
 			for (DDMFormField ddmFormField : _ddmForm.getDDMFormFields()) {
-				if (_isFieldSet(ddmFormField) &&
+				if (Objects.equals(ddmFormField.getType(), "fieldset") &&
 					ListUtil.isEmpty(ddmFormField.getNestedDDMFormFields())) {
 
 					_setNestedDDMFormFields(ddmFormField);
@@ -695,32 +695,22 @@ public class DDMStructureImpl extends DDMStructureBaseImpl {
 			"Unable to find field " + fieldReference);
 	}
 
-	private boolean _isFieldSet(DDMFormField ddmFormField) {
-		if (Objects.equals(ddmFormField.getType(), "fieldset")) {
-			return true;
-		}
-
-		return false;
-	}
-
 	private void _setNestedDDMFormFields(DDMFormField ddmFormField) {
-		if (Validator.isNotNull(ddmFormField.getProperty("ddmStructureId"))) {
-			try {
-				DDMStructure ddmStructure =
-					DDMStructureLocalServiceUtil.getStructure(
-						GetterUtil.getLong(
-							ddmFormField.getProperty("ddmStructureId")));
-
-				DDMForm ddmForm = ddmStructure.getDDMForm();
-
-				ddmFormField.setNestedDDMFormFields(ddmForm.getDDMFormFields());
-			}
-			catch (PortalException portalException) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(portalException);
-				}
-			}
+		if (Validator.isNull(ddmFormField.getProperty("ddmStructureId"))) {
+			return;
 		}
+
+		DDMStructure ddmStructure =
+			DDMStructureLocalServiceUtil.fetchDDMStructure(
+				GetterUtil.getLong(ddmFormField.getProperty("ddmStructureId")));
+
+		if (ddmStructure == null) {
+			return;
+		}
+
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
+		ddmFormField.setNestedDDMFormFields(ddmForm.getDDMFormFields());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
