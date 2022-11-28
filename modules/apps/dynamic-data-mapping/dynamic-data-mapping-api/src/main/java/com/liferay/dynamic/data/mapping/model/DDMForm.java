@@ -132,25 +132,6 @@ public class DDMForm implements Serializable {
 		return ddmFormFieldsMap;
 	}
 
-	public Map<String, DDMFormField> getDDMFormFieldsReferencesMap(
-		boolean includeNestedDDMFormFields) {
-
-		Map<String, DDMFormField> ddmFormFieldsReferencesMap =
-			new LinkedHashMap<>();
-
-		for (DDMFormField ddmFormField : _ddmFormFields) {
-			ddmFormFieldsReferencesMap.put(
-				ddmFormField.getFieldReference(), ddmFormField);
-
-			if (includeNestedDDMFormFields) {
-				ddmFormFieldsReferencesMap.putAll(
-					ddmFormField.getNestedDDMFormFieldsReferencesMap());
-			}
-		}
-
-		return ddmFormFieldsReferencesMap;
-	}
-
 	public List<DDMFormRule> getDDMFormRules() {
 		return _ddmFormRules;
 	}
