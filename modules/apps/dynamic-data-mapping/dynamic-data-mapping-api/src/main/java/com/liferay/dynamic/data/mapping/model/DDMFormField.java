@@ -265,21 +265,6 @@ public class DDMFormField implements Serializable {
 		return nestedDDMFormFieldsMap;
 	}
 
-	public Map<String, DDMFormField> getNestedDDMFormFieldsReferencesMap() {
-		Map<String, DDMFormField> nestedDDMFormFieldsReferencesMap =
-			new LinkedHashMap<>();
-
-		for (DDMFormField nestedDDMFormField : _nestedDDMFormFields) {
-			nestedDDMFormFieldsReferencesMap.put(
-				nestedDDMFormField.getFieldReference(), nestedDDMFormField);
-
-			nestedDDMFormFieldsReferencesMap.putAll(
-				nestedDDMFormField.getNestedDDMFormFieldsReferencesMap());
-		}
-
-		return nestedDDMFormFieldsReferencesMap;
-	}
-
 	public Map<String, DDMFormField> getNontransientNestedDDMFormFieldsMap() {
 		Map<String, DDMFormField> nestedDDMFormFieldsMap =
 			new LinkedHashMap<>();
