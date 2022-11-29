@@ -35,6 +35,7 @@ import com.liferay.dynamic.data.mapping.storage.StorageAdapterRegistry;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormTestUtil;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
+import com.liferay.dynamic.data.mapping.util.DDMFormValuesConverterUtil;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesToFieldsConverter;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException;
@@ -653,6 +654,13 @@ public class StorageAdapterTest extends BaseDDMServiceTestCase {
 
 		DDMFormValues actualDDMFormValues =
 			_defaultStorageAdapter.getDDMFormValues(classPK);
+
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
+		actualDDMFormValues.setDDMFormFieldValues(
+			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
+				ddmForm.getDDMFormFields(),
+				actualDDMFormValues.getDDMFormFieldValuesMap(true)));
 
 		Fields actualFields = _ddmFormValuesToFieldsConverter.convert(
 			ddmStructure, actualDDMFormValues);
