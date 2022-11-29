@@ -222,12 +222,9 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 		exportLayoutUtilityPageEntryURL.setResourceID(
 			"/layout_admin/export_layout_utility_page_entries");
 
-		Layout draftLayout = LayoutLocalServiceUtil.fetchDraftLayout(
-			_layoutUtilityPageEntry.getPlid());
-
 		return dropdownItem -> {
 			dropdownItem.setDisabled(
-				draftLayout.getStatus() == WorkflowConstants.STATUS_DRAFT);
+				_draftLayout.getStatus() == WorkflowConstants.STATUS_DRAFT);
 			dropdownItem.setHref(exportLayoutUtilityPageEntryURL);
 			dropdownItem.setIcon("upload");
 			dropdownItem.setLabel(
@@ -287,6 +284,7 @@ public class LayoutUtilityPageEntryActionDropdownItemsProvider {
 					"layoutUtilityPageEntryId",
 					_layoutUtilityPageEntry.getLayoutUtilityPageEntryId()
 				).buildString());
+			dropdownItem.setDisabled(!_draftLayout.isPublished());
 
 			String message = StringPool.BLANK;
 
