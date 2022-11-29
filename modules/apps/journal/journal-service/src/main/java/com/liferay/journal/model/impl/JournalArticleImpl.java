@@ -234,8 +234,7 @@ public class JournalArticleImpl extends JournalArticleBaseImpl {
 			return content;
 		}
 
-		DDMFormValues ddmFormValues = DDMFieldLocalServiceUtil.getDDMFormValues(
-			ddmStructure.getDDMForm(), getId());
+		DDMFormValues ddmFormValues = getDDMFormValues();
 
 		if (ddmFormValues != null) {
 			try {

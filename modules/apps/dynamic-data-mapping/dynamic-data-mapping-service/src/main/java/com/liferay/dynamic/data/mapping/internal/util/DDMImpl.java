@@ -48,6 +48,7 @@ import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
 import com.liferay.dynamic.data.mapping.util.DDM;
+import com.liferay.dynamic.data.mapping.util.DDMFormValuesConverterUtil;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesToFieldsConverter;
 import com.liferay.dynamic.data.mapping.util.FieldsToDDMFormValuesConverter;
 import com.liferay.dynamic.data.mapping.util.comparator.StructureIdComparator;
@@ -368,6 +369,13 @@ public class DDMImpl implements DDM {
 
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			ddmStructureId);
+
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
+		ddmFormValues.setDDMFormFieldValues(
+			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
+				ddmForm.getDDMFormFields(),
+				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		return _ddmFormValuesToFieldsConverter.convert(
 			ddmStructure, ddmFormValues);
@@ -753,8 +761,15 @@ public class DDMImpl implements DDM {
 		DDMStructure ddmStructure = DDMStructureLocalServiceUtil.getStructure(
 			ddmStructureId);
 
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
 		DDMFormValues ddmFormValues = getDDMFormValues(
 			ddmStructure.getFullHierarchyDDMForm(), serializedDDMFormValues);
+
+		ddmFormValues.setDDMFormFieldValues(
+			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
+				ddmForm.getDDMFormFields(),
+				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		return _ddmFormValuesToFieldsConverter.convert(
 			ddmStructure, ddmFormValues);
