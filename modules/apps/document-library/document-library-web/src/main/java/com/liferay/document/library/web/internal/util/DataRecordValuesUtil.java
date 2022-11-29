@@ -15,8 +15,10 @@
 package com.liferay.document.library.web.internal.util;
 
 import com.liferay.dynamic.data.mapping.kernel.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
+import com.liferay.dynamic.data.mapping.util.DDMFormValuesConverterUtil;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesToMapConverter;
 import com.liferay.portal.kernel.exception.PortalException;
 
@@ -35,10 +37,19 @@ public class DataRecordValuesUtil {
 			DDMFormValues ddmFormValues, DDMStructure ddmStructure)
 		throws PortalException {
 
-		return _ddmFormValuesToMapConverter.convert(
-			ddmFormValues,
+		com.liferay.dynamic.data.mapping.model.DDMStructure ddmStructure1 =
 			_ddmStructureLocalService.getStructure(
-				ddmStructure.getStructureId()));
+				ddmStructure.getStructureId());
+
+		DDMForm ddmForm = ddmStructure1.getDDMForm();
+
+		ddmFormValues.setDDMFormFieldValues(
+			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
+				ddmForm.getDDMFormFields(),
+				ddmFormValues.getDDMFormFieldValuesMap(true)));
+
+		return _ddmFormValuesToMapConverter.convert(
+			ddmFormValues, ddmStructure1);
 	}
 
 	@Reference(unbind = "-")

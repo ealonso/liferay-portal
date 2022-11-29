@@ -292,7 +292,7 @@ JournalEditArticleDisplayContext journalEditArticleDisplayContext = new JournalE
 				<liferay-data-engine:data-layout-renderer
 					containerId='<%= liferayPortletResponse.getNamespace() + "dataEngineLayoutRenderer" %>'
 					dataDefinitionId="<%= ddmStructure.getStructureId() %>"
-					dataRecordValues="<%= journalEditArticleDisplayContext.getValues(ddmStructure) %>"
+					dataRecordValues="<%= journalEditArticleDisplayContext.getValues() %>"
 					defaultLanguageId="<%= journalEditArticleDisplayContext.getDefaultArticleLanguageId() %>"
 					languageId="<%= journalEditArticleDisplayContext.getSelectedLanguageId() %>"
 					namespace="<%= liferayPortletResponse.getNamespace() %>"

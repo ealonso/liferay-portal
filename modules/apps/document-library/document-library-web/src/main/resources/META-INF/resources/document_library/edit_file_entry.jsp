@@ -463,6 +463,12 @@ renderResponse.setTitle(headerTitle);
 
 										for (DDMStructure ddmStructure : dlFileEntryType.getDDMStructures()) {
 											com.liferay.dynamic.data.mapping.storage.DDMFormValues ddmFormValues = dlEditFileEntryDisplayContext.getDDMFormValues(ddmStructure, fileVersionId);
+
+											com.liferay.dynamic.data.mapping.model.DDMStructure ddmStructure1 = DDMStructureLocalServiceUtil.getStructure(ddmStructure.getStructureId());
+
+											DDMForm ddmForm = ddmStructure1.getDDMForm();
+
+											ddmFormValues.setDDMFormFieldValues(DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(ddmForm.getDDMFormFields(), ddmFormValues.getDDMFormFieldValuesMap(true)));
 									%>
 
 											<div class="<%= !dlEditFileEntryDisplayContext.isDDMStructureVisible(ddmStructure) ? "hide" : "" %> file-entry-type-fields">
@@ -474,7 +480,7 @@ renderResponse.setTitle(headerTitle);
 												<liferay-data-engine:data-layout-renderer
 													containerId='<%= liferayPortletResponse.getNamespace() + "dataEngineLayoutRenderer" + ddmStructure.getStructureId() %>'
 													dataDefinitionId="<%= ddmStructure.getStructureId() %>"
-													dataRecordValues="<%= ddmFormValuesToMapConverter.convert(ddmFormValues, DDMStructureLocalServiceUtil.getStructure(ddmStructure.getStructureId())) %>"
+													dataRecordValues="<%= ddmFormValuesToMapConverter.convert(ddmFormValues, ddmStructure1) %>"
 													languageId="<%= dlEditFileEntryDisplayContext.getDLFileEntryTypeLanguageId(ddmStructure, PortalUtil.getLocale(request)) %>"
 													namespace="<%= liferayPortletResponse.getNamespace() + ddmStructure.getStructureId() + StringPool.UNDERLINE %>"
 													persistDefaultValues="<%= true %>"
