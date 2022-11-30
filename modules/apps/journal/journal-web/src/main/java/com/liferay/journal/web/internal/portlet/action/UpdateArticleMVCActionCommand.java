@@ -165,7 +165,7 @@ public class UpdateArticleMVCActionCommand extends BaseMVCActionCommand {
 
 		ddmFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		Fields fields = _ddmFormValuesToFieldsConverter.convert(

@@ -254,7 +254,7 @@ public class GoogleDocsMetadataHelper {
 
 			ddmFormValues.setDDMFormFieldValues(
 				DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-					ddmForm.getDDMFormFields(),
+					ddmForm.getDDMFormFieldsMap(true),
 					ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 			_fields = _ddmFormValuesToFieldsConverter.convert(

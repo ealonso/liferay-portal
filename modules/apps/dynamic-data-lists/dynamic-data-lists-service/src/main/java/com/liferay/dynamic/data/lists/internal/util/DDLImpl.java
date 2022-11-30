@@ -101,7 +101,7 @@ public class DDLImpl implements DDL {
 
 		ddmFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		Fields fields = _ddmFormValuesToFieldsConverter.convert(
@@ -265,7 +265,7 @@ public class DDLImpl implements DDL {
 
 				existingDDMFormValues.setDDMFormFieldValues(
 					DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-						ddmForm.getDDMFormFields(),
+						ddmForm.getDDMFormFieldsMap(true),
 						existingDDMFormValues.getDDMFormFieldValuesMap(true)));
 
 				Fields existingFields = _ddmFormValuesToFieldsConverter.convert(

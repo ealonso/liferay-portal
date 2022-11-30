@@ -870,7 +870,7 @@ public class JournalTestUtil {
 
 		ddmFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		Fields fields = ddmFormValuesToFieldsConverter.convert(

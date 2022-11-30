@@ -45,7 +45,7 @@ public class DataRecordValuesUtil {
 
 		ddmFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		return _ddmFormValuesToMapConverter.convert(

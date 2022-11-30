@@ -659,7 +659,7 @@ public class StorageAdapterTest extends BaseDDMServiceTestCase {
 
 		actualDDMFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				actualDDMFormValues.getDDMFormFieldValuesMap(true)));
 
 		Fields actualFields = _ddmFormValuesToFieldsConverter.convert(

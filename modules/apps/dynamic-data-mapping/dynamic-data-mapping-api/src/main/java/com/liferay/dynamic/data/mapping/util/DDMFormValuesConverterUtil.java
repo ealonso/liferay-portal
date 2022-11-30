@@ -22,7 +22,6 @@ import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -35,12 +34,12 @@ import java.util.Set;
 public class DDMFormValuesConverterUtil {
 
 	public static List<DDMFormFieldValue> addMissingDDMFormFieldValues(
-		Collection<DDMFormField> ddmFormFields,
+		Map<String, DDMFormField> ddmFormFields,
 		Map<String, List<DDMFormFieldValue>> ddmFormFieldValues) {
 
 		List<DDMFormFieldValue> newDDMFormFieldValues = new ArrayList<>();
 
-		for (DDMFormField ddmFormField : ddmFormFields) {
+		for (DDMFormField ddmFormField : ddmFormFields.values()) {
 			List<DDMFormFieldValue> ddmFormFieldValueList =
 				ddmFormFieldValues.get(ddmFormField.getName());
 
@@ -127,10 +126,6 @@ public class DDMFormValuesConverterUtil {
 
 						ddmFormFieldValue.addNestedDDMFormFieldValue(
 							nestedDDMFormFieldValue);
-
-						_populateNestedValues(
-							nestedDDMFormField, nestedDDMFormFieldValue,
-							ddmFormFieldValues);
 					}
 				}
 			}

@@ -53,7 +53,9 @@ public class DDMFormValuesConverterUtilTest extends BaseDDMTestCase {
 
 		List<DDMFormFieldValue> ddmFormFieldValues =
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ListUtil.fromArray(ddmFormField),
+				HashMapBuilder.put(
+					ddmFormField.getName(), ddmFormField
+				).build(),
 				HashMapBuilder.<String, List<DDMFormFieldValue>>put(
 					"Text1", ListUtil.fromArray(textDDMFormFieldValue)
 				).build());
@@ -110,7 +112,9 @@ public class DDMFormValuesConverterUtilTest extends BaseDDMTestCase {
 
 		List<DDMFormFieldValue> ddmFormFieldValues =
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ListUtil.fromArray(ddmFormField),
+				HashMapBuilder.put(
+					ddmFormField.getName(), ddmFormField
+				).build(),
 				HashMapBuilder.<String, List<DDMFormFieldValue>>put(
 					"Date", ListUtil.fromArray(dateDDMFormFieldValue)
 				).put(

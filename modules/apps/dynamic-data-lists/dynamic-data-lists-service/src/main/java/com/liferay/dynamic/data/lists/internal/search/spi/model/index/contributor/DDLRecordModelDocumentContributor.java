@@ -123,7 +123,7 @@ public class DDLRecordModelDocumentContributor
 
 		ddmFormValues.setDDMFormFieldValues(
 			DDMFormValuesConverterUtil.addMissingDDMFormFieldValues(
-				ddmForm.getDDMFormFields(),
+				ddmForm.getDDMFormFieldsMap(true),
 				ddmFormValues.getDDMFormFieldValuesMap(true)));
 
 		return ddmFormValues;
