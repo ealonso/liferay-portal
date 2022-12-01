@@ -1190,7 +1190,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 	}
 
 	private void _processLayoutUtilityPageTemplateEntry(
-			String externalReferenceCode, long groupId,
+			Boolean defaultTemplate, String externalReferenceCode, long groupId,
 			LayoutUtilityPageEntry layoutUtilityPageEntry, String name,
 			PageDefinition pageDefinition, String type, boolean overwrite,
 			String zipPath)
@@ -1204,6 +1204,9 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 					_layoutUtilityPageEntryService.addLayoutUtilityPageEntry(
 						externalReferenceCode, groupId, name, type, 0);
 
+				layoutUtilityPageEntry.setDefaultLayoutUtilityPageEntry(
+					defaultTemplate);
+
 				added = true;
 			}
 			else if (overwrite) {
@@ -1214,6 +1217,9 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 					_layoutUtilityPageEntryService.updateLayoutUtilityPageEntry(
 						layoutUtilityPageEntry.getLayoutUtilityPageEntryId(),
 						name);
+
+				layoutUtilityPageEntry.setDefaultLayoutUtilityPageEntry(
+					defaultTemplate);
 
 				added = true;
 			}
@@ -2081,6 +2087,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 						_groupId);
 
 			_processLayoutUtilityPageTemplateEntry(
+				utilityPageTemplate.getDefaultTemplate(),
 				utilityPageTemplate.getExternalReferenceCode(), _groupId,
 				layoutUtilityPageEntry, utilityPageTemplate.getName(),
 				_utilityPageTemplateEntry.getPageDefinition(),
