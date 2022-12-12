@@ -15,12 +15,18 @@
 package com.liferay.journal.web.internal.asset.model;
 
 import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvider;
+import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.model.BaseAssetRendererFactory;
 import com.liferay.asset.kernel.model.ClassTypeReader;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
+import com.liferay.info.item.InfoItemReference;
+import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.criteria.JournalArticleItemSelectorReturnType;
+import com.liferay.item.selector.criteria.info.item.criterion.InfoItemItemSelectorCriterion;
 import com.liferay.journal.constants.JournalConstants;
 import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.journal.exception.NoSuchArticleException;
@@ -37,6 +43,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -167,6 +174,55 @@ public class JournalArticleAssetRendererFactory
 	}
 
 	@Override
+	public PortletURL getItemSelectorURL(
+		LiferayPortletRequest liferayPortletRequest,
+		LiferayPortletResponse liferayPortletResponse, long classTypeId,
+		String eventName, boolean multiSelection, long refererAssetEntryId) {
+
+		InfoItemItemSelectorCriterion itemSelectorCriterion =
+			new InfoItemItemSelectorCriterion();
+
+		itemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+			new JournalArticleItemSelectorReturnType());
+		itemSelectorCriterion.setItemType(JournalArticle.class.getName());
+
+		if (classTypeId > 0) {
+			DDMStructure ddmStructure =
+				_ddmStructureLocalService.fetchDDMStructure(classTypeId);
+
+			if (ddmStructure != null) {
+				itemSelectorCriterion.setItemSubtype(
+					ddmStructure.getStructureKey());
+			}
+		}
+
+		if (refererAssetEntryId > 0) {
+			AssetEntry assetEntry = _assetEntryLocalService.fetchAssetEntry(
+				refererAssetEntryId);
+
+			AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
+
+			Object assetObject = assetRenderer.getAssetObject();
+
+			if (assetObject instanceof JournalArticle) {
+				JournalArticle article = (JournalArticle)assetObject;
+
+				itemSelectorCriterion.setInfoItemReference(
+					new InfoItemReference(
+						JournalArticle.class.getName(),
+						article.getResourcePrimKey()));
+			}
+		}
+
+		itemSelectorCriterion.setMultiSelection(multiSelection);
+		itemSelectorCriterion.setStatus(WorkflowConstants.STATUS_APPROVED);
+
+		return _itemSelector.getItemSelectorURL(
+			RequestBackedPortletURLFactoryUtil.create(liferayPortletRequest),
+			eventName, itemSelectorCriterion);
+	}
+
+	@Override
 	public String getSubtypeTitle(Locale locale) {
 		return _language.get(locale, "structures");
 	}
@@ -287,6 +343,9 @@ public class JournalArticleAssetRendererFactory
 		_assetDisplayPageFriendlyURLProvider;
 
 	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Reference(
@@ -297,6 +356,9 @@ public class JournalArticleAssetRendererFactory
 
 	@Reference
 	private HtmlParser _htmlParser;
+
+	@Reference
+	private ItemSelector _itemSelector;
 
 	@Reference
 	private JournalArticleLocalService _journalArticleLocalService;
