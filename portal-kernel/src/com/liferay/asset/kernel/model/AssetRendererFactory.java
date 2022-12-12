@@ -64,6 +64,14 @@ public interface AssetRendererFactory<T> {
 
 	public String getIconCssClass();
 
+	public default PortletURL getItemSelectorURL(
+		LiferayPortletRequest liferayPortletRequest,
+		LiferayPortletResponse liferayPortletResponse, long classTypeId,
+		String eventName, boolean multiSelection, long refererAssetEntryId) {
+
+		return null;
+	}
+
 	public String getPortletId();
 
 	public String getSubtypeTitle(Locale locale);
