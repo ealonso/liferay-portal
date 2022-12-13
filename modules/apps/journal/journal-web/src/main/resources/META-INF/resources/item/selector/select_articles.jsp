@@ -125,7 +125,7 @@ JournalArticleItemSelectorViewDisplayContext journalArticleItemSelectorViewDispl
 							<liferay-ui:search-container-column-text>
 								<clay:vertical-card
 									disabled="<%= journalArticleItemSelectorViewDisplayContext.isRefererArticle(curArticle) %>"
-									verticalCard="<%= new JournalArticleItemSelectorVerticalCard(curArticle, renderRequest) %>"
+									verticalCard="<%= new JournalArticleItemSelectorVerticalCard(curArticle, renderRequest, journalArticleItemSelectorViewDisplayContext.isMultiSelection()) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:when>
