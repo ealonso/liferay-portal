@@ -15,6 +15,7 @@
 package com.liferay.journal.web.internal.dao.search;
 
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -32,9 +33,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class JournalRowChecker extends EmptyOnClickRowChecker {
 
-	public JournalRowChecker(PortletResponse portletResponse) {
+	public JournalRowChecker(
+		JournalArticle article, PortletResponse portletResponse) {
+
 		super(portletResponse);
 
+		_article = article;
 		_portletResponse = portletResponse;
 	}
 
@@ -76,6 +80,22 @@ public class JournalRowChecker extends EmptyOnClickRowChecker {
 			"'#" + getAllRowIds() + "'", StringPool.BLANK);
 	}
 
+	@Override
+	public boolean isDisabled(Object object) {
+		if ((object instanceof JournalFolder) || (_article == null)) {
+			return false;
+		}
+
+		JournalArticle article = (JournalArticle)object;
+
+		if (article.getResourcePrimKey() == _article.getResourcePrimKey()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private final JournalArticle _article;
 	private final PortletResponse _portletResponse;
 
 }

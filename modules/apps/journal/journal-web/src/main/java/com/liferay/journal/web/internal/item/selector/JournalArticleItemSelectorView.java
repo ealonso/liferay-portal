@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.internal.item.selector;
 
+import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.item.selector.InfoItemSelectorView;
 import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
@@ -105,8 +106,9 @@ public class JournalArticleItemSelectorView
 			journalItemSelectorViewDisplayContext =
 				new JournalArticleItemSelectorViewDisplayContext(
 					(HttpServletRequest)servletRequest,
-					infoItemItemSelectorCriterion, itemSelectedEventName, this,
-					_journalWebConfiguration, portletURL, search);
+					infoItemItemSelectorCriterion, _infoItemServiceRegistry,
+					itemSelectedEventName, this, _journalWebConfiguration,
+					portletURL, search);
 
 		servletRequest.setAttribute(
 			JournalWebConstants.
@@ -135,6 +137,9 @@ public class JournalArticleItemSelectorView
 		_supportedItemSelectorReturnTypes = Arrays.asList(
 			new InfoItemItemSelectorReturnType(),
 			new JournalArticleItemSelectorReturnType());
+
+	@Reference
+	private InfoItemServiceRegistry _infoItemServiceRegistry;
 
 	private volatile JournalWebConfiguration _journalWebConfiguration;
 

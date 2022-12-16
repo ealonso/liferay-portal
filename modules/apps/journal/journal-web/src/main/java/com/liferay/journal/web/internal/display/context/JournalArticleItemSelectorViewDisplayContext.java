@@ -23,6 +23,11 @@ import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
+import com.liferay.info.exception.NoSuchInfoItemException;
+import com.liferay.info.item.InfoItemIdentifier;
+import com.liferay.info.item.InfoItemReference;
+import com.liferay.info.item.InfoItemServiceRegistry;
+import com.liferay.info.item.provider.InfoItemObjectProvider;
 import com.liferay.item.selector.criteria.InfoItemItemSelectorReturnType;
 import com.liferay.item.selector.criteria.info.item.criterion.InfoItemItemSelectorCriterion;
 import com.liferay.journal.constants.JournalArticleConstants;
@@ -48,6 +53,8 @@ import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.SearchDisplayStyleUtil;
@@ -93,6 +100,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	public JournalArticleItemSelectorViewDisplayContext(
 		HttpServletRequest httpServletRequest,
 		InfoItemItemSelectorCriterion infoItemItemSelectorCriterion,
+		InfoItemServiceRegistry infoItemServiceRegistry,
 		String itemSelectedEventName,
 		JournalArticleItemSelectorView journalArticleItemSelectorView,
 		JournalWebConfiguration journalWebConfiguration, PortletURL portletURL,
@@ -100,6 +108,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 
 		_httpServletRequest = httpServletRequest;
 		_infoItemItemSelectorCriterion = infoItemItemSelectorCriterion;
+		_infoItemServiceRegistry = infoItemServiceRegistry;
 		_itemSelectedEventName = itemSelectedEventName;
 		_journalArticleItemSelectorView = journalArticleItemSelectorView;
 		_journalWebConfiguration = journalWebConfiguration;
@@ -339,6 +348,8 @@ public class JournalArticleItemSelectorViewDisplayContext {
 
 		if (_infoItemItemSelectorCriterion.isMultiSelection()) {
 			JournalRowChecker journalRowChecker = new JournalRowChecker(
+				_getJournalArticle(
+					_infoItemItemSelectorCriterion.getInfoItemReference()),
 				_portletResponse);
 
 			journalRowChecker.setRememberCheckBoxStateURLRegex(
@@ -536,6 +547,37 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		return breadcrumbEntry;
 	}
 
+	private JournalArticle _getJournalArticle(
+		InfoItemReference infoItemReference) {
+
+		if ((infoItemReference == null) ||
+			Objects.equals(
+				infoItemReference.getClassName(),
+				JournalArticle.class.getName())) {
+
+			return null;
+		}
+
+		InfoItemIdentifier infoItemIdentifier =
+			infoItemReference.getInfoItemIdentifier();
+
+		InfoItemObjectProvider<JournalArticle> infoItemObjectProvider =
+			_infoItemServiceRegistry.getFirstInfoItemService(
+				InfoItemObjectProvider.class, infoItemReference.getClassName(),
+				infoItemIdentifier.getInfoItemServiceFilter());
+
+		try {
+			return infoItemObjectProvider.getInfoItem(infoItemIdentifier);
+		}
+		catch (NoSuchInfoItemException noSuchInfoItemException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(noSuchInfoItemException);
+			}
+		}
+
+		return null;
+	}
+
 	private String _getOrderByCol() {
 		if (Validator.isNotNull(_orderByCol)) {
 			return _orderByCol;
@@ -703,6 +745,9 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		searchContext.setStart(start);
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		JournalArticleItemSelectorViewDisplayContext.class);
+
 	private SearchContainer<?> _articleSearchContainer;
 	private String _ddmStructureKey;
 	private String _displayStyle;
@@ -710,6 +755,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	private Long _folderId;
 	private final HttpServletRequest _httpServletRequest;
 	private final InfoItemItemSelectorCriterion _infoItemItemSelectorCriterion;
+	private final InfoItemServiceRegistry _infoItemServiceRegistry;
 	private final String _itemSelectedEventName;
 	private final JournalArticleItemSelectorView
 		_journalArticleItemSelectorView;
