@@ -14,6 +14,7 @@
 
 package com.liferay.item.selector.criteria.info.item.criterion;
 
+import com.liferay.info.item.InfoItemReference;
 import com.liferay.item.selector.BaseItemSelectorCriterion;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -21,6 +22,10 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
  * @author Eudaldo Alonso
  */
 public class InfoItemItemSelectorCriterion extends BaseItemSelectorCriterion {
+
+	public InfoItemReference getInfoItemReference() {
+		return _infoItemReference;
+	}
 
 	public String getItemSubtype() {
 		return _itemSubtype;
@@ -40,6 +45,10 @@ public class InfoItemItemSelectorCriterion extends BaseItemSelectorCriterion {
 
 	public boolean isMultiSelection() {
 		return _multiSelection;
+	}
+
+	public void setInfoItemReference(InfoItemReference infoItemReference) {
+		_infoItemReference = infoItemReference;
 	}
 
 	public void setItemSubtype(String itemSubtype) {
@@ -62,6 +71,7 @@ public class InfoItemItemSelectorCriterion extends BaseItemSelectorCriterion {
 		_status = status;
 	}
 
+	private InfoItemReference _infoItemReference;
 	private String _itemSubtype;
 	private String _itemType;
 	private String[] _mimeTypes;
