@@ -48,6 +48,7 @@ export default function PagesTree({
 
 			return fetch(loadMoreItemsURL, {
 				body: Liferay.Util.objectToURLSearchParams({
+					[`groupId`]: groupId,
 					[`parentLayoutId`]: item.layoutId,
 					[`privateLayout`]: privateLayout,
 					[`selPlid`]: item.plid,
@@ -62,7 +63,7 @@ export default function PagesTree({
 				}))
 				.catch(() => openErrorToast());
 		},
-		[loadMoreItemsURL, maxPageSize, privateLayout]
+		[groupId, loadMoreItemsURL, maxPageSize, privateLayout]
 	);
 
 	const onSelectedChange = useCallback(
