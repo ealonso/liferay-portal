@@ -18,7 +18,6 @@ import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
 import com.liferay.petra.string.StringPool;
@@ -36,6 +35,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -50,7 +50,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.portlet.PortletRequest;
-import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,8 +89,19 @@ public class LayoutActionsDisplayContext {
 						}
 					).add(
 						dropdownItem -> {
-							String previewLayoutURL = _getPreviewLayoutURL(
-								layout);
+							Layout draftLayout = layout;
+
+							if (!layout.isDraftLayout()) {
+								draftLayout = layout.fetchDraftLayout();
+							}
+
+							String previewLayoutURL =
+								PortalUtil.getLayoutFriendlyURL(
+									draftLayout, _themeDisplay);
+
+							previewLayoutURL = HttpComponentsUtil.addParameter(
+								previewLayoutURL, "segmentsExperienceId",
+								_getSegmentsExperienceId(draftLayout));
 
 							dropdownItem.setData(
 								HashMapBuilder.<String, Object>put(
@@ -248,32 +258,6 @@ public class LayoutActionsDisplayContext {
 			String.valueOf(layout.getPlid()),
 			LiferayWindowState.POP_UP.toString(), null,
 			_themeDisplay.getRequest());
-	}
-
-	private String _getPreviewLayoutURL(Layout layout) {
-		ResourceURL getPreviewLayoutURL =
-			(ResourceURL)PortalUtil.getControlPanelPortletURL(
-				_httpServletRequest, _themeDisplay.getScopeGroup(),
-				ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET, 0, 0,
-				PortletRequest.RESOURCE_PHASE);
-
-		getPreviewLayoutURL.setResourceID(
-			"/layout_content_page_editor/get_page_preview");
-
-		Layout draftLayout = layout;
-
-		if (!layout.isDraftLayout()) {
-			draftLayout = layout.fetchDraftLayout();
-		}
-
-		getPreviewLayoutURL.setParameter(
-			"selPlid", String.valueOf(draftLayout.getPlid()));
-
-		getPreviewLayoutURL.setParameter(
-			"segmentsExperienceId",
-			String.valueOf(_getSegmentsExperienceId(draftLayout)));
-
-		return getPreviewLayoutURL.toString();
 	}
 
 	private long _getSegmentsExperienceId(Layout layout) {
