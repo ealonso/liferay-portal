@@ -19,7 +19,11 @@ import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
 import com.liferay.layout.utility.page.service.LayoutUtilityPageEntryLocalServiceUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.service.SegmentsExperienceLocalServiceUtil;
 import com.liferay.taglib.util.IncludeTag;
@@ -81,6 +85,20 @@ public class RenderLayoutUtilityPageEntryTag extends IncludeTag {
 			_getLayoutStructure());
 	}
 
+	private long _getGroupId(String path, long companyId) {
+		int[] friendlyURLIndices = PortalUtil.getGroupFriendlyURLIndex(path);
+
+		Group group = GroupLocalServiceUtil.fetchFriendlyURLGroup(
+			companyId,
+			path.substring(friendlyURLIndices[0], friendlyURLIndices[1]));
+
+		if ((group == null) || !group.isActive()) {
+			return 0;
+		}
+
+		return group.getGroupId();
+	}
+
 	private LayoutStructure _getLayoutStructure() {
 		LayoutUtilityPageEntry layoutUtilityPageEntry =
 			_getLayoutUtilityPageEntry();
@@ -107,9 +125,13 @@ public class RenderLayoutUtilityPageEntryTag extends IncludeTag {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
+		long groupId = GetterUtil.getLong(
+			_getGroupId(
+				themeDisplay.getURLCurrent(), themeDisplay.getCompanyId()),
+			themeDisplay.getScopeGroupId());
+
 		return LayoutUtilityPageEntryLocalServiceUtil.
-			fetchDefaultLayoutUtilityPageEntry(
-				themeDisplay.getScopeGroupId(), getType());
+			fetchDefaultLayoutUtilityPageEntry(groupId, getType());
 	}
 
 	private static final String _PAGE =
