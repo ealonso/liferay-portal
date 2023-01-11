@@ -181,6 +181,212 @@ public class LayoutsTreeImpl implements LayoutsTree {
 		return null;
 	}
 
+	private JSONObject _getLayoutJSONObject(
+			LayoutTreeNodes childLayoutTreeNodes,
+			boolean hasManageLayoutsPermission,
+			HttpServletRequest httpServletRequest, long groupId,
+			boolean includeActions, Layout layout,
+			LayoutSetBranch layoutSetBranch, boolean mobile,
+			ThemeDisplay themeDisplay)
+		throws Exception {
+
+		Layout draftLayout = _getDraftLayout(layout);
+
+		boolean hasUpdatePermission =
+			_layoutPermission.containsLayoutUpdatePermission(
+				themeDisplay.getPermissionChecker(), layout);
+
+		JSONObject jsonObject = JSONUtil.put(
+			"actions",
+			() -> {
+				if (includeActions) {
+					LayoutActionProvider layoutActionProvider =
+						new LayoutActionProvider(
+							httpServletRequest, _language,
+							_siteNavigationMenuLocalService);
+
+					return layoutActionProvider.getActionsJSONArray(layout);
+				}
+
+				return null;
+			}
+		).put(
+			"children",
+			_toJSONArray(
+				hasManageLayoutsPermission, httpServletRequest, groupId,
+				includeActions, childLayoutTreeNodes, layoutSetBranch, mobile,
+				themeDisplay)
+		).put(
+			"collectionPK",
+			() -> {
+				if (layout.isTypeCollection()) {
+					return layout.getTypeSettingsProperty("collectionPK");
+				}
+
+				return null;
+			}
+		).put(
+			"collectionType",
+			() -> {
+				if (layout.isTypeCollection()) {
+					return layout.getTypeSettingsProperty("collectionType");
+				}
+
+				return null;
+			}
+		).put(
+			"contentDisplayPage", layout.isContentDisplayPage()
+		).put(
+			"deleteable", _isDeleteable(layout, themeDisplay, layoutSetBranch)
+		).put(
+			"draftStatus",
+			() -> {
+				if ((draftLayout != null) && hasUpdatePermission) {
+					return "draft";
+				}
+
+				return null;
+			}
+		).put(
+			"draftURL",
+			() -> {
+				if ((draftLayout != null) && hasUpdatePermission) {
+					return _portal.getLayoutFriendlyURL(
+						draftLayout, themeDisplay);
+				}
+
+				return null;
+			}
+		).put(
+			"friendlyURL", layout.getFriendlyURL()
+		).put(
+			"groupId",
+			() -> {
+				if (layout instanceof VirtualLayout) {
+					VirtualLayout virtualLayout = (VirtualLayout)layout;
+
+					return virtualLayout.getSourceGroupId();
+				}
+
+				return layout.getGroupId();
+			}
+		).put(
+			"hasChildren", layout.hasChildren()
+		).put(
+			"icon", layout.getIcon()
+		).put(
+			"id", layout.getPlid()
+		).put(
+			"layoutId", layout.getLayoutId()
+		).put(
+			"name",
+			() -> {
+				String layoutName = layout.getName(themeDisplay.getLocale());
+
+				if ((draftLayout != null) &&
+					(hasUpdatePermission || !layout.isPublished() ||
+					 _layoutContentModelResourcePermission.contains(
+						 themeDisplay.getPermissionChecker(), layout.getPlid(),
+						 ActionKeys.UPDATE))) {
+
+					layoutName = layoutName + StringPool.STAR;
+				}
+
+				return layoutName;
+			}
+		).put(
+			"paginated",
+			() -> {
+				List<LayoutTreeNode> layoutTreeNodesList =
+					childLayoutTreeNodes.getLayoutTreeNodesList();
+
+				if (childLayoutTreeNodes.getTotal() !=
+						layoutTreeNodesList.size()) {
+
+					return true;
+				}
+
+				return null;
+			}
+		).put(
+			"parentable",
+			_layoutPermission.contains(
+				themeDisplay.getPermissionChecker(), layout,
+				ActionKeys.ADD_LAYOUT)
+		).put(
+			"parentLayoutId", layout.getParentLayoutId()
+		).put(
+			"plid", layout.getPlid()
+		).put(
+			"priority", layout.getPriority()
+		).put(
+			"privateLayout", layout.isPrivateLayout()
+		).put(
+			"regularURL",
+			() -> {
+				if (hasUpdatePermission || layout.isPublished()) {
+					return layout.getRegularURL(httpServletRequest);
+				}
+
+				return StringPool.BLANK;
+			}
+		).put(
+			"sortable",
+			hasManageLayoutsPermission && !mobile &&
+			_sites.isLayoutSortable(layout)
+		).put(
+			"target",
+			GetterUtil.getString(
+				HtmlUtil.escape(layout.getTypeSettingsProperty("target")),
+				"_self")
+		).put(
+			"type", layout.getType()
+		).put(
+			"updateable", hasUpdatePermission
+		).put(
+			"uuid", layout.getUuid()
+		);
+
+		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
+			layout);
+
+		if (layoutRevision != null) {
+			long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
+
+			if (_staging.isIncomplete(layout, layoutSetBranchId)) {
+				jsonObject.put("incomplete", true);
+			}
+
+			LayoutSetBranch boundLayoutSetBranch =
+				_layoutSetBranchLocalService.getLayoutSetBranch(
+					layoutSetBranchId);
+
+			LayoutBranch layoutBranch = layoutRevision.getLayoutBranch();
+
+			if (!layoutBranch.isMaster()) {
+				jsonObject.put(
+					"layoutBranchId", layoutBranch.getLayoutBranchId()
+				).put(
+					"layoutBranchName", layoutBranch.getName()
+				);
+			}
+
+			if (layoutRevision.isHead()) {
+				jsonObject.put("layoutRevisionHead", true);
+			}
+
+			jsonObject.put(
+				"layoutRevisionId", layoutRevision.getLayoutRevisionId()
+			).put(
+				"layoutSetBranchId", layoutSetBranchId
+			).put(
+				"layoutSetBranchName", boundLayoutSetBranch.getName()
+			);
+		}
+
+		return jsonObject;
+	}
+
 	private LayoutTreeNodes _getLayoutTreeNodes(
 			HttpServletRequest httpServletRequest, long groupId,
 			boolean privateLayout, long parentLayoutId, boolean incomplete,
@@ -465,226 +671,12 @@ public class LayoutsTreeImpl implements LayoutsTree {
 		}
 
 		for (LayoutTreeNode layoutTreeNode : layoutTreeNodes) {
-			LayoutTreeNodes childLayoutTreeNodes =
-				layoutTreeNode.getChildLayoutTreeNodes();
-
-			Layout layout = layoutTreeNode.getLayout();
-
-			Layout draftLayout = _getDraftLayout(layout);
-
-			boolean hasUpdatePermission =
-				_layoutPermission.containsLayoutUpdatePermission(
-					themeDisplay.getPermissionChecker(), layout);
-
-			JSONObject jsonObject = JSONUtil.put(
-				"actions",
-				() -> {
-					if (includeActions) {
-						LayoutActionProvider layoutActionProvider =
-							new LayoutActionProvider(
-								httpServletRequest, _language,
-								_siteNavigationMenuLocalService);
-
-						if ((afterDeleteSelectedLayout == null) &&
-							(layout.getParentLayoutId() !=
-								LayoutConstants.DEFAULT_PARENT_LAYOUT_ID)) {
-
-							afterDeleteSelectedLayout = _layoutLocalService.fetchLayout(
-								layout.getParentPlid());
-						}
-
-						if (afterDeleteSelectedLayout == null) {
-							afterDeleteSelectedLayout = secondLayout;
-						}
-
-						JSONArray actionsJSONArray =
-							layoutActionProvider.getActionsJSONArray(
-								layout, afterDeleteSelectedLayout));
-
-						afterDeleteSelectedLayout = layout;
-
-						return actionsJSONArray;
-					}
-
-					return null;
-				}
-			).put(
-				"children",
-				_toJSONArray(
+			jsonArray.put(
+				_getLayoutJSONObject(
+					layoutTreeNode.getChildLayoutTreeNodes(),
 					hasManageLayoutsPermission, httpServletRequest, groupId,
-					includeActions, childLayoutTreeNodes, layoutSetBranch,
-					mobile, themeDisplay)
-			).put(
-				"collectionPK",
-				() -> {
-					if (layout.isTypeCollection()) {
-						return layout.getTypeSettingsProperty("collectionPK");
-					}
-
-					return null;
-				}
-			).put(
-				"collectionType",
-				() -> {
-					if (layout.isTypeCollection()) {
-						return layout.getTypeSettingsProperty("collectionType");
-					}
-
-					return null;
-				}
-			).put(
-				"contentDisplayPage", layout.isContentDisplayPage()
-			).put(
-				"deleteable",
-				_isDeleteable(layout, themeDisplay, layoutSetBranch)
-			).put(
-				"draftStatus",
-				() -> {
-					if ((draftLayout != null) && hasUpdatePermission) {
-						return "draft";
-					}
-
-					return null;
-				}
-			).put(
-				"draftURL",
-				() -> {
-					if ((draftLayout != null) && hasUpdatePermission) {
-						return _portal.getLayoutFriendlyURL(
-							draftLayout, themeDisplay);
-					}
-
-					return null;
-				}
-			).put(
-				"friendlyURL", layout.getFriendlyURL()
-			).put(
-				"groupId",
-				() -> {
-					if (layout instanceof VirtualLayout) {
-						VirtualLayout virtualLayout = (VirtualLayout)layout;
-
-						return virtualLayout.getSourceGroupId();
-					}
-
-					return layout.getGroupId();
-				}
-			).put(
-				"hasChildren", layout.hasChildren()
-			).put(
-				"icon", layout.getIcon()
-			).put(
-				"id", layout.getPlid()
-			).put(
-				"layoutId", layout.getLayoutId()
-			).put(
-				"name",
-				() -> {
-					String layoutName = layout.getName(
-						themeDisplay.getLocale());
-
-					if ((draftLayout != null) &&
-						(hasUpdatePermission || !layout.isPublished() ||
-						 _layoutContentModelResourcePermission.contains(
-							 themeDisplay.getPermissionChecker(),
-							 layout.getPlid(), ActionKeys.UPDATE))) {
-
-						layoutName = layoutName + StringPool.STAR;
-					}
-
-					return layoutName;
-				}
-			).put(
-				"paginated",
-				() -> {
-					List<LayoutTreeNode> layoutTreeNodesList =
-						childLayoutTreeNodes.getLayoutTreeNodesList();
-
-					if (childLayoutTreeNodes.getTotal() !=
-							layoutTreeNodesList.size()) {
-
-						return true;
-					}
-
-					return null;
-				}
-			).put(
-				"parentable",
-				_layoutPermission.contains(
-					themeDisplay.getPermissionChecker(), layout,
-					ActionKeys.ADD_LAYOUT)
-			).put(
-				"parentLayoutId", layout.getParentLayoutId()
-			).put(
-				"plid", layout.getPlid()
-			).put(
-				"priority", layout.getPriority()
-			).put(
-				"privateLayout", layout.isPrivateLayout()
-			).put(
-				"regularURL",
-				() -> {
-					if (hasUpdatePermission || layout.isPublished()) {
-						return layout.getRegularURL(httpServletRequest);
-					}
-
-					return StringPool.BLANK;
-				}
-			).put(
-				"sortable",
-				hasManageLayoutsPermission && !mobile &&
-				_sites.isLayoutSortable(layout)
-			).put(
-				"target",
-				GetterUtil.getString(
-					HtmlUtil.escape(layout.getTypeSettingsProperty("target")),
-					"_self")
-			).put(
-				"type", layout.getType()
-			).put(
-				"updateable", hasUpdatePermission
-			).put(
-				"uuid", layout.getUuid()
-			);
-
-			LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-				layout);
-
-			if (layoutRevision != null) {
-				long layoutSetBranchId = layoutRevision.getLayoutSetBranchId();
-
-				if (_staging.isIncomplete(layout, layoutSetBranchId)) {
-					jsonObject.put("incomplete", true);
-				}
-
-				LayoutSetBranch boundLayoutSetBranch =
-					_layoutSetBranchLocalService.getLayoutSetBranch(
-						layoutSetBranchId);
-
-				LayoutBranch layoutBranch = layoutRevision.getLayoutBranch();
-
-				if (!layoutBranch.isMaster()) {
-					jsonObject.put(
-						"layoutBranchId", layoutBranch.getLayoutBranchId()
-					).put(
-						"layoutBranchName", layoutBranch.getName()
-					);
-				}
-
-				if (layoutRevision.isHead()) {
-					jsonObject.put("layoutRevisionHead", true);
-				}
-
-				jsonObject.put(
-					"layoutRevisionId", layoutRevision.getLayoutRevisionId()
-				).put(
-					"layoutSetBranchId", layoutSetBranchId
-				).put(
-					"layoutSetBranchName", boundLayoutSetBranch.getName()
-				);
-			}
-
-			jsonArray.put(jsonObject);
+					includeActions, layoutTreeNode.getLayout(), layoutSetBranch,
+					mobile, themeDisplay));
 		}
 
 		return jsonArray;
