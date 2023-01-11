@@ -21,7 +21,6 @@ import com.liferay.layout.type.controller.collection.internal.constants.Collecti
 import com.liferay.layout.type.controller.collection.internal.display.context.CollectionItemsDetailDisplayContext;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.InvokerPortlet;
 import com.liferay.portal.kernel.portlet.LiferayRenderRequest;
@@ -43,8 +42,6 @@ import com.liferay.product.navigation.control.menu.constants.ProductNavigationCo
 import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuPortletKeys;
 
 import java.io.IOException;
-
-import java.util.Objects;
 
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
@@ -128,9 +125,7 @@ public class CollectionItemsDetailProductNavigationControlMenuEntry
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (!Objects.equals(
-				layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
-
+		if (!layout.isTypeCollection()) {
 			return false;
 		}
 

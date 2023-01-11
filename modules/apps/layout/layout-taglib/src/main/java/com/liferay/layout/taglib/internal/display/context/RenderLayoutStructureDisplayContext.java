@@ -60,7 +60,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -362,7 +361,7 @@ public class RenderLayoutStructureDisplayContext {
 
 		Layout layout = _themeDisplay.getLayout();
 
-		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (!layout.isTypePortlet()) {
 			defaultFragmentRendererContext.setInfoForm(infoForm);
 			defaultFragmentRendererContext.setMode(_mode);
 			defaultFragmentRendererContext.setPreviewClassNameId(
@@ -642,7 +641,7 @@ public class RenderLayoutStructureDisplayContext {
 
 		Layout layout = _themeDisplay.getLayout();
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			return true;
 		}
 

@@ -487,9 +487,7 @@ public class LayoutsAdminDisplayContext {
 			return _getDraftLayoutURL(layout);
 		}
 
-		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET) ||
-			(layout.fetchDraftLayout() == null)) {
-
+		if (!layout.isTypePortlet() || (layout.fetchDraftLayout() == null)) {
 			return StringPool.BLANK;
 		}
 
@@ -1352,9 +1350,7 @@ public class LayoutsAdminDisplayContext {
 	public String getViewCollectionItemsURL(Layout layout)
 		throws PortalException, WindowStateException {
 
-		if (!Objects.equals(
-				layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
-
+		if (!layout.isTypeCollection()) {
 			return null;
 		}
 
@@ -1508,9 +1504,7 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public boolean isConversionDraft(Layout layout) {
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET) &&
-			(layout.fetchDraftLayout() != null)) {
-
+		if (layout.isTypePortlet() && (layout.fetchDraftLayout() != null)) {
 			return true;
 		}
 
@@ -1674,9 +1668,7 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public boolean isShowConvertLayoutAction(Layout layout) {
-		if (_isLiveGroup() ||
-			!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
-
+		if (_isLiveGroup() || !layout.isTypePortlet()) {
 			return false;
 		}
 
@@ -1886,9 +1878,7 @@ public class LayoutsAdminDisplayContext {
 	}
 
 	public boolean isShowViewCollectionItemsAction(Layout layout) {
-		if (!Objects.equals(
-				layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
-
+		if (!layout.isTypeCollection()) {
 			return false;
 		}
 

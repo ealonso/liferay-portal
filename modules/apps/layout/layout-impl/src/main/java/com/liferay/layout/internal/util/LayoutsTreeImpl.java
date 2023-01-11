@@ -61,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -648,9 +647,7 @@ public class LayoutsTreeImpl implements LayoutsTree {
 				);
 			}
 
-			if (Objects.equals(
-					layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
-
+			if (layout.isTypeCollection()) {
 				jsonObject.put(
 					"collectionPK",
 					layout.getTypeSettingsProperty("collectionPK")

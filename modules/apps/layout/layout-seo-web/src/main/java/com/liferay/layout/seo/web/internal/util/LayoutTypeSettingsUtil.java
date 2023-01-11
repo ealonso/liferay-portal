@@ -34,9 +34,7 @@ public class LayoutTypeSettingsUtil {
 		UnicodeProperties layoutTypeSettingsUnicodeProperties =
 			layout.getTypeSettingsProperties();
 
-		String type = layout.getType();
-
-		if (type.equals(LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			layoutTypeSettingsUnicodeProperties.putAll(
 				typeSettingsUnicodeProperties);
 

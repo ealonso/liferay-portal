@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
@@ -128,10 +127,7 @@ public class LayoutEditorToolbarControlMenuJSPDynamicInclude
 		Layout publishedLayout = _layoutLocalService.getLayout(
 			layout.getClassPK());
 
-		if (layout.isTypeContent() &&
-			Objects.equals(
-				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
-
+		if (layout.isTypeContent() && publishedLayout.isTypePortlet()) {
 			return true;
 		}
 

@@ -52,7 +52,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
@@ -165,7 +164,7 @@ public class ContentPageLayoutEditorDisplayContext
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
+		if (layout.isTypeCollection()) {
 			configContext.put(
 				"selectedMappingTypes", _getSelectedMappingTypes());
 		}
@@ -491,9 +490,7 @@ public class ContentPageLayoutEditorDisplayContext
 	private Map<String, Object> _getSelectedMappingTypes() throws Exception {
 		Layout layout = themeDisplay.getLayout();
 
-		if (!Objects.equals(
-				layout.getType(), LayoutConstants.TYPE_COLLECTION)) {
-
+		if (!layout.isTypeCollection()) {
 			return Collections.emptyMap();
 		}
 

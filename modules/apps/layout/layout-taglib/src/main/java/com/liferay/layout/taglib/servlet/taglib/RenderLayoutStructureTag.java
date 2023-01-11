@@ -64,7 +64,6 @@ import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.layoutconfiguration.util.RuntimePageUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTemplate;
 import com.liferay.portal.kernel.model.LayoutTemplateConstants;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
@@ -774,7 +773,7 @@ public class RenderLayoutStructureTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			LayoutTypePortlet layoutTypePortlet = _getLayoutTypePortlet(
 				layout, themeDisplay.getLayoutTypePortlet(),
 				themeDisplay.getThemeId());
@@ -1087,7 +1086,7 @@ public class RenderLayoutStructureTag extends IncludeTag {
 
 		Layout layout = themeDisplay.getLayout();
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			jspWriter.write("<div class=\"master-layout-fragment\">");
 		}
 
@@ -1135,7 +1134,7 @@ public class RenderLayoutStructureTag extends IncludeTag {
 			}
 		}
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			jspWriter.write("</div>");
 		}
 	}

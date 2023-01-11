@@ -848,7 +848,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 			type = LayoutConstants.TYPE_PORTLET;
 		}
 
-		if (Objects.equals(type, LayoutConstants.TYPE_COLLECTION) ||
+		if (layout.isTypeCollection() ||
 			Objects.equals(type, LayoutConstants.TYPE_CONTENT)) {
 
 			JSONObject pageElementJSONObject =
@@ -891,7 +891,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 			}
 		}
 
-		if (Objects.equals(type, LayoutConstants.TYPE_COLLECTION)) {
+		if (layout.isTypeCollection()) {
 			UnicodeProperties unicodeProperties =
 				draftLayout.getTypeSettingsProperties();
 
@@ -914,7 +914,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 				draftLayout.getLayoutId(), unicodeProperties.toString());
 		}
 
-		if (Objects.equals(type, LayoutConstants.TYPE_COLLECTION) ||
+		if (layout.isTypeCollection() ||
 			Objects.equals(type, LayoutConstants.TYPE_CONTENT)) {
 
 			JSONObject settingsJSONObject =

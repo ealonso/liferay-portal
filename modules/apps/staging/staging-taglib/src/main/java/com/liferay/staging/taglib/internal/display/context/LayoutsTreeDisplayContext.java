@@ -15,9 +15,7 @@
 package com.liferay.staging.taglib.internal.display.context;
 
 import com.liferay.layout.util.LayoutsTree;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;

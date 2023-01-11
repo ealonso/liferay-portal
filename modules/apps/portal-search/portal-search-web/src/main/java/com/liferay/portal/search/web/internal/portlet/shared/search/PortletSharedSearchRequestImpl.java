@@ -19,7 +19,6 @@ import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory
 import com.liferay.portal.kernel.dao.search.DisplayTerms;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.search.Document;
@@ -49,7 +48,6 @@ import com.liferay.portal.search.web.search.request.SearchSettingsContributor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.portlet.PortletPreferences;
@@ -218,7 +216,7 @@ public class PortletSharedSearchRequestImpl
 
 		List<Portlet> portlets = layoutTypePortlet.getAllPortlets(false);
 
-		if (Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (layout.isTypePortlet()) {
 			return portlets;
 		}
 

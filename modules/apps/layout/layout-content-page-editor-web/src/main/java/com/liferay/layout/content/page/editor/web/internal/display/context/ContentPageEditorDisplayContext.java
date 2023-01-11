@@ -80,7 +80,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.Theme;
@@ -1108,9 +1107,7 @@ public class ContentPageEditorDisplayContext {
 	private String _getDiscardDraftURL() {
 		Layout publishedLayout = _getPublishedLayout();
 
-		if (!Objects.equals(
-				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
-
+		if (!publishedLayout.isTypePortlet()) {
 			return PortletURLBuilder.create(
 				PortletURLFactoryUtil.create(
 					httpServletRequest, LayoutAdminPortletKeys.GROUP_PAGES,
@@ -1752,10 +1749,7 @@ public class ContentPageEditorDisplayContext {
 	private boolean _isConversionDraft() {
 		Layout publishedLayout = _getPublishedLayout();
 
-		if ((publishedLayout != null) &&
-			Objects.equals(
-				publishedLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
-
+		if ((publishedLayout != null) && publishedLayout.isTypePortlet()) {
 			return true;
 		}
 

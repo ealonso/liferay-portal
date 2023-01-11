@@ -63,7 +63,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 import javax.portlet.ReadOnlyException;
@@ -120,7 +119,7 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 
 		Layout layout = _layoutLocalService.getLayout(plid);
 
-		if (!Objects.equals(layout.getType(), LayoutConstants.TYPE_PORTLET)) {
+		if (!layout.isTypePortlet()) {
 			throw new LayoutConvertException(
 				"Layout with PLID " + layout.getPlid() + " is not convertible");
 		}

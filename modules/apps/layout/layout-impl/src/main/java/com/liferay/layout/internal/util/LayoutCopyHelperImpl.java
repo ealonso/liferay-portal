@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Image;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.model.PortletPreferencesIds;
@@ -913,9 +912,7 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 					new ServiceContext());
 			}
 
-			if (Objects.equals(
-					_sourceLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
-
+			if (_sourceLayout.isTypePortlet()) {
 				_sites.copyPortletPermissions(_targetLayout, _sourceLayout);
 			}
 			else {
