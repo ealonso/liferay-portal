@@ -91,25 +91,15 @@ public class LayoutsTreeDisplayContext {
 	}
 
 	private JSONArray _getLayoutsJSONArray() throws Exception {
-		JSONArray layoutsJSONArray = null;
-
 		LayoutsTree layoutsTree = ServletContextUtil.getLayoutsTree();
-
-		String layoutsJSON = layoutsTree.getLayoutsJSON(
-			_httpServletRequest, _groupId, false, _privateLayout,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, _selectedLayoutIds, true,
-			_treeId, null);
-
-		if (layoutsJSON.startsWith(StringPool.OPEN_BRACKET)) {
-			layoutsJSONArray = JSONFactoryUtil.createJSONArray(layoutsJSON);
-		}
-		else {
-			layoutsJSONArray = JSONFactoryUtil.createJSONArray();
-		}
 
 		return JSONUtil.putAll(
 			JSONUtil.put(
-				"children", layoutsJSONArray
+				"children",
+				layoutsTree.getLayoutsJSONArray(
+					_httpServletRequest, _groupId, false, _privateLayout,
+					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
+					_selectedLayoutIds, true, _treeId, null)
 			).put(
 				"hasChildren", true
 			).put(
