@@ -74,28 +74,31 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 
 		long portletClassNameId = _portal.getClassNameId(Portlet.class);
 
-		_recordJournalContentSearches(article, classNameId, portletClassNameId);
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		_recordJournalContentSearches(
+			article, classNameId, portletClassNameId, serviceContext);
 
 		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			classNameId, article.getResourcePrimKey());
 
 		if (assetEntry != null) {
 			_recordPortletPreferences(
-				article, assetEntry, classNameId, portletClassNameId, true);
+				article, assetEntry, classNameId, portletClassNameId, true,
+				serviceContext);
 			_recordPortletPreferences(
-				article, assetEntry, classNameId, portletClassNameId, false);
+				article, assetEntry, classNameId, portletClassNameId, false,
+				serviceContext);
 		}
 
 		_layoutClassedModelUsageLocalService.addDefaultLayoutClassedModelUsage(
-			article.getGroupId(), classNameId, classPK,
-			ServiceContextThreadLocal.getServiceContext());
+			article.getGroupId(), classNameId, classPK, serviceContext);
 	}
 
 	private void _recordJournalContentSearches(
-		JournalArticle article, long classNameId, long portletClassNameId) {
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		JournalArticle article, long classNameId, long portletClassNameId,
+		ServiceContext serviceContext) {
 
 		List<JournalContentSearch> contentSearches =
 			_journalContentSearchLocalService.getArticleContentSearches(
@@ -126,10 +129,8 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 
 	private void _recordPortletPreferences(
 		JournalArticle article, AssetEntry assetEntry, long classNameId,
-		long portletClassNameId, boolean privateLayout) {
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		long portletClassNameId, boolean privateLayout,
+		ServiceContext serviceContext) {
 
 		List<PortletPreferences> portletPreferencesList =
 			_portletPreferencesLocalService.getPortletPreferences(
