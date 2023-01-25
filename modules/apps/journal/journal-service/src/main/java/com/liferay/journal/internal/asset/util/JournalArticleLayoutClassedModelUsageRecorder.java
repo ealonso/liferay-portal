@@ -133,7 +133,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			_portletPreferencesLocalService.getPortletPreferences(
 				article.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-				AssetPublisherPortletKeys.ASSET_PUBLISHER);
+				AssetPublisherPortletKeys.ASSET_PUBLISHER + "_INSTANCE_%");
 
 		for (PortletPreferences portletPreferences : portletPreferencesList) {
 			Layout layout = _layoutLocalService.fetchLayout(
