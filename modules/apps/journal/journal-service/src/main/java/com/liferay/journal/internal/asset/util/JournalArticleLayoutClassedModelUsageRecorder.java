@@ -153,7 +153,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			String selectionStyle =
 				selectionStylePortletPreferenceValue.getValue();
 
-			if (Validator.isNotNull(selectionStyle) ||
+			if (Validator.isNull(selectionStyle) ||
 				!StringUtil.equals(selectionStyle, "manual")) {
 
 				continue;
