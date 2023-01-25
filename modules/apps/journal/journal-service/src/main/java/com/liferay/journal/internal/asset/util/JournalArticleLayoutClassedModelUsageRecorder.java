@@ -27,10 +27,10 @@ import com.liferay.journal.service.JournalContentSearchLocalService;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
 import com.liferay.layout.util.LayoutClassedModelUsageRecorder;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.model.PortletPreferenceValue;
 import com.liferay.portal.kernel.model.PortletPreferences;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalService;
@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
 
@@ -145,19 +146,27 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 				AssetPublisherPortletKeys.ASSET_PUBLISHER, privateLayout);
 
 		for (PortletPreferences portletPreferences : portletPreferencesList) {
-			javax.portlet.PortletPreferences jxPortletPreferences =
-				_portletPreferenceValueLocalService.getPreferences(
-					portletPreferences);
+			PortletPreferenceValue selectionStylePortletPreferenceValue =
+				_portletPreferenceValueLocalService.getPortletPreferenceValue(
+					portletPreferences.getPortletPreferencesId(),
+					"selectionStyle");
 
-			String selectionStyle = jxPortletPreferences.getValue(
-				"selectionStyle", "dynamic");
+			String selectionStyle =
+				selectionStylePortletPreferenceValue.getValue();
 
-			if (!StringUtil.equals(selectionStyle, "manual")) {
+			if (Validator.isNotNull(selectionStyle) ||
+				!StringUtil.equals(selectionStyle, "manual")) {
+
 				continue;
 			}
 
-			String assetEntryXml = jxPortletPreferences.getValue(
-				"assetEntryXml", StringPool.BLANK);
+			PortletPreferenceValue assetEntryXmlPortletPreferenceValue =
+				_portletPreferenceValueLocalService.getPortletPreferenceValue(
+					portletPreferences.getPortletPreferencesId(),
+					"assetEntryXml");
+
+			String assetEntryXml =
+				assetEntryXmlPortletPreferenceValue.getValue();
 
 			if ((assetEntry == null) ||
 				!assetEntryXml.contains(assetEntry.getClassUuid())) {
