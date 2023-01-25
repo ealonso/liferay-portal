@@ -75,9 +75,9 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 
 		AssetEntry assetEntry = _getAssetEntry(article);
 
-		_recordJournalContentSearches(article, assetEntry);
-		_recordPortletPreferences(article, assetEntry, true);
-		_recordPortletPreferences(article, assetEntry, false);
+		_recordJournalContentSearches(article, classNameId);
+		_recordPortletPreferences(article, assetEntry, classNameId, true);
+		_recordPortletPreferences(article, assetEntry, classNameId, false);
 
 		_layoutClassedModelUsageLocalService.addDefaultLayoutClassedModelUsage(
 			article.getGroupId(), classNameId, classPK,
@@ -97,7 +97,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 	}
 
 	private void _recordJournalContentSearches(
-		JournalArticle article, AssetEntry assetEntry) {
+		JournalArticle article, long classNameId) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -114,8 +114,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			LayoutClassedModelUsage layoutClassedModelUsage =
 				_layoutClassedModelUsageLocalService.
 					fetchLayoutClassedModelUsage(
-						assetEntry.getClassNameId(),
-						article.getResourcePrimKey(),
+						classNameId, article.getResourcePrimKey(),
 						contentSearch.getPortletId(),
 						_portal.getClassNameId(Portlet.class),
 						layout.getPlid());
@@ -125,7 +124,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			}
 
 			_layoutClassedModelUsageLocalService.addLayoutClassedModelUsage(
-				contentSearch.getGroupId(), assetEntry.getClassNameId(),
+				contentSearch.getGroupId(), classNameId,
 				article.getResourcePrimKey(), contentSearch.getPortletId(),
 				_portal.getClassNameId(Portlet.class), layout.getPlid(),
 				serviceContext);
@@ -133,7 +132,8 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 	}
 
 	private void _recordPortletPreferences(
-		JournalArticle article, AssetEntry assetEntry, boolean privateLayout) {
+		JournalArticle article, AssetEntry assetEntry, long classNameId,
+		boolean privateLayout) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -177,8 +177,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			LayoutClassedModelUsage layoutClassedModelUsage =
 				_layoutClassedModelUsageLocalService.
 					fetchLayoutClassedModelUsage(
-						assetEntry.getClassNameId(),
-						article.getResourcePrimKey(),
+						classNameId, article.getResourcePrimKey(),
 						portletPreferences.getPortletId(),
 						_portal.getClassNameId(Portlet.class),
 						portletPreferences.getPlid());
@@ -188,8 +187,8 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			}
 
 			_layoutClassedModelUsageLocalService.addLayoutClassedModelUsage(
-				article.getGroupId(), assetEntry.getClassNameId(),
-				article.getResourcePrimKey(), portletPreferences.getPortletId(),
+				article.getGroupId(), classNameId, article.getResourcePrimKey(),
+				portletPreferences.getPortletId(),
 				_portal.getClassNameId(Portlet.class),
 				portletPreferences.getPlid(), serviceContext);
 		}
