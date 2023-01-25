@@ -14,9 +14,8 @@
 
 package com.liferay.journal.internal.asset.util;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
-import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemServiceRegistry;
@@ -73,7 +72,8 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 		JournalArticle article = infoItemObjectProvider.getInfoItem(
 			new ClassPKInfoItemIdentifier(classPK));
 
-		AssetEntry assetEntry = _getAssetEntry(article);
+		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
+			classNameId, article.getResourcePrimKey());
 
 		_recordJournalContentSearches(article, classNameId);
 		_recordPortletPreferences(article, assetEntry, classNameId, true);
@@ -82,18 +82,6 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 		_layoutClassedModelUsageLocalService.addDefaultLayoutClassedModelUsage(
 			article.getGroupId(), classNameId, classPK,
 			ServiceContextThreadLocal.getServiceContext());
-	}
-
-	private AssetEntry _getAssetEntry(JournalArticle journalArticle)
-		throws PortalException {
-
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				JournalArticle.class.getName());
-
-		return assetRendererFactory.getAssetEntry(
-			JournalArticle.class.getName(),
-			journalArticle.getResourcePrimKey());
 	}
 
 	private void _recordJournalContentSearches(
@@ -193,6 +181,9 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 				portletPreferences.getPlid(), serviceContext);
 		}
 	}
+
+	@Reference
+	private AssetEntryLocalService _assetEntryLocalService;
 
 	@Reference
 	private InfoItemServiceRegistry _infoItemServiceRegistry;
