@@ -72,12 +72,15 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 		JournalArticle article = infoItemObjectProvider.getInfoItem(
 			new ClassPKInfoItemIdentifier(classPK));
 
+		_recordJournalContentSearches(article, classNameId);
+
 		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			classNameId, article.getResourcePrimKey());
 
-		_recordJournalContentSearches(article, classNameId);
-		_recordPortletPreferences(article, assetEntry, classNameId, true);
-		_recordPortletPreferences(article, assetEntry, classNameId, false);
+		if (assetEntry != null) {
+			_recordPortletPreferences(article, assetEntry, classNameId, true);
+			_recordPortletPreferences(article, assetEntry, classNameId, false);
+		}
 
 		_layoutClassedModelUsageLocalService.addDefaultLayoutClassedModelUsage(
 			article.getGroupId(), classNameId, classPK,
@@ -156,9 +159,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			String assetEntryXml =
 				assetEntryXmlPortletPreferenceValue.getValue();
 
-			if ((assetEntry == null) ||
-				!assetEntryXml.contains(assetEntry.getClassUuid())) {
-
+			if (!assetEntryXml.contains(assetEntry.getClassUuid())) {
 				continue;
 			}
 
