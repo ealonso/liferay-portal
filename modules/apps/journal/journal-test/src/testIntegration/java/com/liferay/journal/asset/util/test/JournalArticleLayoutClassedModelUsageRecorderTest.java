@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -92,8 +93,10 @@ public class JournalArticleLayoutClassedModelUsageRecorderTest {
 		long classNameId = _portal.getClassNameId(
 			JournalArticle.class.getName());
 
-		_journalArticleLayoutClassedModelUsageRecorder.record(
-			classNameId, _article.getResourcePrimKey());
+		try (LoggingTimer loggingTimer = new LoggingTimer()) {
+			_journalArticleLayoutClassedModelUsageRecorder.record(
+				classNameId, _article.getResourcePrimKey());
+		}
 
 		Assert.assertEquals(
 			_LAYOUTS_AND_ASSET_PUBLISHERS_COUNT,
