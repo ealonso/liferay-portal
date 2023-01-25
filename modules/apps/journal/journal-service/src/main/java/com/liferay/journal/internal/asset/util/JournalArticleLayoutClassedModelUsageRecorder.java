@@ -85,10 +85,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 
 		if (assetEntry != null) {
 			_recordPortletPreferences(
-				article, assetEntry, classNameId, portletClassNameId, true,
-				serviceContext);
-			_recordPortletPreferences(
-				article, assetEntry, classNameId, portletClassNameId, false,
+				article, assetEntry, classNameId, portletClassNameId,
 				serviceContext);
 		}
 
@@ -128,18 +125,26 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 	}
 
 	private void _recordPortletPreferences(
-		JournalArticle article, AssetEntry assetEntry, long classNameId,
-		long portletClassNameId, boolean privateLayout,
-		ServiceContext serviceContext) {
+			JournalArticle article, AssetEntry assetEntry, long classNameId,
+			long portletClassNameId, ServiceContext serviceContext)
+		throws PortalException {
 
 		List<PortletPreferences> portletPreferencesList =
 			_portletPreferencesLocalService.getPortletPreferences(
-				article.getCompanyId(), article.getGroupId(),
-				PortletKeys.PREFS_OWNER_ID_DEFAULT,
+				article.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
 				PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-				AssetPublisherPortletKeys.ASSET_PUBLISHER, privateLayout);
+				AssetPublisherPortletKeys.ASSET_PUBLISHER);
 
 		for (PortletPreferences portletPreferences : portletPreferencesList) {
+			Layout layout = _layoutLocalService.fetchLayout(
+				portletPreferences.getPlid());
+
+			if ((layout == null) ||
+				(layout.getGroupId() != article.getGroupId())) {
+
+				continue;
+			}
+
 			PortletPreferenceValue selectionStylePortletPreferenceValue =
 				_portletPreferenceValueLocalService.getPortletPreferenceValue(
 					portletPreferences.getPortletPreferencesId(),
