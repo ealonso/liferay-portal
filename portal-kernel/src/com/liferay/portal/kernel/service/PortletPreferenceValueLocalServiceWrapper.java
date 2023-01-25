@@ -299,6 +299,14 @@ public class PortletPreferenceValueLocalServiceWrapper
 			portletPreferenceValueId);
 	}
 
+	@Override
+	public PortletPreferenceValue getPortletPreferenceValue(
+		long portletPreferenceId, String name) {
+
+		return _portletPreferenceValueLocalService.getPortletPreferenceValue(
+			portletPreferenceId, name);
+	}
+
 	/**
 	 * Returns a range of all the portlet preference values.
 	 *

@@ -243,6 +243,10 @@ public interface PortletPreferenceValueLocalService
 			long portletPreferenceValueId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public PortletPreferenceValue getPortletPreferenceValue(
+		long portletPreferenceId, String name);
+
 	/**
 	 * Returns a range of all the portlet preference values.
 	 *

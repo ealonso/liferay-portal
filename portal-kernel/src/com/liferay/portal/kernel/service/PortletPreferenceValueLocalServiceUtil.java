@@ -267,6 +267,13 @@ public class PortletPreferenceValueLocalServiceUtil {
 		return getService().getPortletPreferenceValue(portletPreferenceValueId);
 	}
 
+	public static PortletPreferenceValue getPortletPreferenceValue(
+		long portletPreferenceId, String name) {
+
+		return getService().getPortletPreferenceValue(
+			portletPreferenceId, name);
+	}
+
 	/**
 	 * Returns a range of all the portlet preference values.
 	 *
