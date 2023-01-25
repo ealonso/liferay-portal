@@ -72,14 +72,18 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 		JournalArticle article = infoItemObjectProvider.getInfoItem(
 			new ClassPKInfoItemIdentifier(classPK));
 
-		_recordJournalContentSearches(article, classNameId);
+		long portletClassNameId = _portal.getClassNameId(Portlet.class);
+
+		_recordJournalContentSearches(article, classNameId, portletClassNameId);
 
 		AssetEntry assetEntry = _assetEntryLocalService.fetchEntry(
 			classNameId, article.getResourcePrimKey());
 
 		if (assetEntry != null) {
-			_recordPortletPreferences(article, assetEntry, classNameId, true);
-			_recordPortletPreferences(article, assetEntry, classNameId, false);
+			_recordPortletPreferences(
+				article, assetEntry, classNameId, portletClassNameId, true);
+			_recordPortletPreferences(
+				article, assetEntry, classNameId, portletClassNameId, false);
 		}
 
 		_layoutClassedModelUsageLocalService.addDefaultLayoutClassedModelUsage(
@@ -88,7 +92,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 	}
 
 	private void _recordJournalContentSearches(
-		JournalArticle article, long classNameId) {
+		JournalArticle article, long classNameId, long portletClassNameId) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -106,8 +110,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 				_layoutClassedModelUsageLocalService.
 					fetchLayoutClassedModelUsage(
 						classNameId, article.getResourcePrimKey(),
-						contentSearch.getPortletId(),
-						_portal.getClassNameId(Portlet.class),
+						contentSearch.getPortletId(), portletClassNameId,
 						layout.getPlid());
 
 			if (layoutClassedModelUsage != null) {
@@ -117,14 +120,13 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 			_layoutClassedModelUsageLocalService.addLayoutClassedModelUsage(
 				contentSearch.getGroupId(), classNameId,
 				article.getResourcePrimKey(), contentSearch.getPortletId(),
-				_portal.getClassNameId(Portlet.class), layout.getPlid(),
-				serviceContext);
+				portletClassNameId, layout.getPlid(), serviceContext);
 		}
 	}
 
 	private void _recordPortletPreferences(
 		JournalArticle article, AssetEntry assetEntry, long classNameId,
-		boolean privateLayout) {
+		long portletClassNameId, boolean privateLayout) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
@@ -167,8 +169,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 				_layoutClassedModelUsageLocalService.
 					fetchLayoutClassedModelUsage(
 						classNameId, article.getResourcePrimKey(),
-						portletPreferences.getPortletId(),
-						_portal.getClassNameId(Portlet.class),
+						portletPreferences.getPortletId(), portletClassNameId,
 						portletPreferences.getPlid());
 
 			if (layoutClassedModelUsage != null) {
@@ -177,8 +178,7 @@ public class JournalArticleLayoutClassedModelUsageRecorder
 
 			_layoutClassedModelUsageLocalService.addLayoutClassedModelUsage(
 				article.getGroupId(), classNameId, article.getResourcePrimKey(),
-				portletPreferences.getPortletId(),
-				_portal.getClassNameId(Portlet.class),
+				portletPreferences.getPortletId(), portletClassNameId,
 				portletPreferences.getPlid(), serviceContext);
 		}
 	}
