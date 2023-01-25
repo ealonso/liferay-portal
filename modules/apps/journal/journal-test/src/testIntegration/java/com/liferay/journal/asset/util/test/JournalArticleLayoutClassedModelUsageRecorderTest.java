@@ -27,21 +27,17 @@ import com.liferay.layout.util.LayoutClassedModelUsageRecorder;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutTypePortlet;
-import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
-import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-
-import javax.portlet.PortletPreferences;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -60,7 +56,9 @@ public class JournalArticleLayoutClassedModelUsageRecorderTest {
 	@ClassRule
 	@Rule
 	public static final AggregateTestRule aggregateTestRule =
-		new LiferayIntegrationTestRule();
+		new AggregateTestRule(
+			new LiferayIntegrationTestRule(),
+			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@Before
 	public void setUp() throws Exception {
@@ -74,7 +72,23 @@ public class JournalArticleLayoutClassedModelUsageRecorderTest {
 			JournalArticle.class.getName(), _article.getResourcePrimKey());
 
 		for (int i = 1; i <= _LAYOUTS_AND_ASSET_PUBLISHERS_COUNT; i++) {
-			_addAssetPublisherWithPreferences(assetEntry);
+			Layout layout = LayoutTestUtil.addTypePortletLayout(
+				_group.getGroupId());
+
+			LayoutTestUtil.addPortletToLayout(
+				layout, AssetPublisherPortletKeys.ASSET_PUBLISHER,
+				HashMapBuilder.put(
+					"assetEntryXml",
+					new String[] {_getAssetEntryXml(assetEntry)}
+				).put(
+					"assetLinkBehavior", new String[] {"showFullContent"}
+				).put(
+					"displayStyle", new String[] {"full-content"}
+				).put(
+					"selectionStyle", new String[] {"manual"}
+				).put(
+					"showAvailableLocales", new String[] {"true"}
+				).build());
 		}
 
 		ServiceContextThreadLocal.pushServiceContext(
@@ -103,38 +117,6 @@ public class JournalArticleLayoutClassedModelUsageRecorderTest {
 			_layoutClassedModelUsageLocalService.
 				getLayoutClassedModelUsagesCount(
 					classNameId, _article.getResourcePrimKey()));
-	}
-
-	private void _addAssetPublisherWithPreferences(AssetEntry assetEntry)
-		throws Exception {
-
-		Layout layout = LayoutTestUtil.addTypePortletLayout(
-			_group.getGroupId());
-
-		LayoutTypePortlet layoutTypePortlet =
-			(LayoutTypePortlet)layout.getLayoutType();
-
-		String portletId = layoutTypePortlet.addPortletId(
-			TestPropsValues.getUserId(),
-			AssetPublisherPortletKeys.ASSET_PUBLISHER, "column-1", -1);
-
-		_layoutLocalService.updateLayout(
-			layout.getGroupId(), layout.isPrivateLayout(), layout.getLayoutId(),
-			layout.getTypeSettings());
-
-		PortletPreferences layoutPortletPreferences =
-			PortletPreferencesFactoryUtil.getPortletSetup(
-				layout, portletId, null);
-
-		layoutPortletPreferences.setValue("selectionStyle", "manual");
-		layoutPortletPreferences.setValue(
-			"assetLinkBehavior", "showFullContent");
-		layoutPortletPreferences.setValue("displayStyle", "full-content");
-		layoutPortletPreferences.setValue("showAvailableLocales", "true");
-		layoutPortletPreferences.setValues(
-			"assetEntryXml", _getAssetEntryXml(assetEntry));
-
-		layoutPortletPreferences.store();
 	}
 
 	private String _getAssetEntryXml(AssetEntry assetEntry) {
@@ -169,9 +151,6 @@ public class JournalArticleLayoutClassedModelUsageRecorderTest {
 	@Inject
 	private LayoutClassedModelUsageLocalService
 		_layoutClassedModelUsageLocalService;
-
-	@Inject
-	private LayoutLocalService _layoutLocalService;
 
 	@Inject
 	private Portal _portal;
