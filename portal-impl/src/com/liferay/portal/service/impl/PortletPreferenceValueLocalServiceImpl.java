@@ -33,6 +33,14 @@ public class PortletPreferenceValueLocalServiceImpl
 	extends PortletPreferenceValueLocalServiceBaseImpl {
 
 	@Override
+	public PortletPreferenceValue getPortletPreferenceValue(
+		long portletPreferenceId, String name) {
+
+		return portletPreferenceValuePersistence.fetchByP_N_First(
+			portletPreferenceId, name, null);
+	}
+
+	@Override
 	public javax.portlet.PortletPreferences getPreferences(
 		PortletPreferences portletPreferences) {
 
