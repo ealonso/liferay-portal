@@ -13,7 +13,6 @@
 		<Logger level="INFO" name="com.liferay.journal.internal.upgrade.v3_0_0.UpgradeJournalArticleImage" />
 		<Logger level="ERROR" name="com.liferay.journal.internal.util.JournalUtil" />
 		<Logger level="WARN" name="com.liferay.journal.lar" />
-		<Logger level="INFO" name="com.liferay.journal.service.impl.JournalContentSearchLocalServiceImpl" />
 		<Logger level="ERROR" name="com.liferay.journal.util.JournalContent" />
 	</Loggers>
 </Configuration>
