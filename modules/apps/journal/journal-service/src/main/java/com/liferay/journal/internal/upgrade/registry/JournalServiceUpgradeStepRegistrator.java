@@ -341,6 +341,9 @@ public class JournalServiceUpgradeStepRegistrator
 			"4.4.0", "4.4.1",
 			UpgradeProcessFactory.alterColumnType(
 				"JournalArticleLocalization", "title", "VARCHAR(800) null"));
+
+		registry.register(
+			"4.4.1", "5.0.0", new JournalContentSearchUpgradeProcess());
 	}
 
 	private void _deleteTempImages() throws Exception {
