@@ -12,18 +12,10 @@
  * details.
  */
 
-package com.liferay.journal.internal.upgrade.v5_0_0;
-
-import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+package com.liferay.journal.model.impl;
 
 /**
- * @author Eudaldo Alonso
+ * @author Brian Wing Shun Chan
  */
-public class JournalContentSearchUpgradeProcess extends UpgradeProcess {
-
-	@Override
-	protected void doUpgrade() throws Exception {
-		dropTable("JournalContentSearch");
-	}
-
+public class JournalContentSearchImpl extends JournalContentSearchBaseImpl {
 }

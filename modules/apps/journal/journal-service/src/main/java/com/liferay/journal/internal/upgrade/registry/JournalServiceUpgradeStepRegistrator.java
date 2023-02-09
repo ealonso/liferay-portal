@@ -353,9 +353,6 @@ public class JournalServiceUpgradeStepRegistrator
 				_layoutLocalService, _layoutClassedModelUsageLocalService,
 				_portletPreferencesLocalService,
 				_portletPreferenceValueLocalService));
-
-		registry.register(
-			"4.4.3", "5.0.0", new JournalContentSearchUpgradeProcess());
 	}
 
 	private void _deleteTempImages() throws Exception {
