@@ -162,8 +162,7 @@ public class DDMFormFieldInfoFieldConverterImpl
 			return MultiselectInfoFieldType.INSTANCE;
 		}
 		else if (Objects.equals(
-					ddmFormFieldType, DDMFormFieldTypeConstants.DATE) ||
-				 Objects.equals(ddmFormFieldType, "date")) {
+					ddmFormFieldType, DDMFormFieldTypeConstants.DATE)) {
 
 			return DateInfoFieldType.INSTANCE;
 		}
