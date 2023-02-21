@@ -25,8 +25,10 @@ import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.BooleanInfoFieldType;
 import com.liferay.info.field.type.DateInfoFieldType;
 import com.liferay.info.field.type.GridInfoFieldType;
+import com.liferay.info.field.type.HTMLInfoFieldType;
 import com.liferay.info.field.type.ImageInfoFieldType;
 import com.liferay.info.field.type.InfoFieldType;
+import com.liferay.info.field.type.MultiselectInfoFieldType;
 import com.liferay.info.field.type.NumberInfoFieldType;
 import com.liferay.info.field.type.SelectInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
@@ -85,7 +87,6 @@ public class DDMFormFieldInfoFieldConverterImpl
 				ddmFormField.getType(),
 				DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE)) {
 
-			finalStep.attribute(SelectInfoFieldType.MULTIPLE, true);
 			finalStep.attribute(
 				SelectInfoFieldType.OPTIONS,
 				_getInfoFieldOptions(ddmFormField));
@@ -107,18 +108,8 @@ public class DDMFormFieldInfoFieldConverterImpl
 		}
 
 		if (Objects.equals(
-				ddmFormField.getType(), DDMFormFieldTypeConstants.RICH_TEXT)) {
-
-			finalStep.attribute(TextInfoFieldType.HTML, true);
-			finalStep.attribute(TextInfoFieldType.MULTILINE, true);
-		}
-
-		if (Objects.equals(
 				ddmFormField.getType(), DDMFormFieldTypeConstants.SELECT)) {
 
-			finalStep.attribute(
-				SelectInfoFieldType.MULTIPLE,
-				GetterUtil.getBoolean(ddmFormField.getProperty("multiple")));
 			finalStep.attribute(
 				SelectInfoFieldType.OPTIONS,
 				_getInfoFieldOptions(ddmFormField));
@@ -166,13 +157,9 @@ public class DDMFormFieldInfoFieldConverterImpl
 		}
 		else if (Objects.equals(
 					ddmFormFieldType,
-					DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE) ||
-				 Objects.equals(
-					 ddmFormFieldType, DDMFormFieldTypeConstants.RADIO) ||
-				 Objects.equals(
-					 ddmFormFieldType, DDMFormFieldTypeConstants.SELECT)) {
+					DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE)) {
 
-			return SelectInfoFieldType.INSTANCE;
+			return MultiselectInfoFieldType.INSTANCE;
 		}
 		else if (Objects.equals(
 					ddmFormFieldType, DDMFormFieldTypeConstants.DATE) ||
@@ -194,6 +181,26 @@ public class DDMFormFieldInfoFieldConverterImpl
 					ddmFormFieldType, DDMFormFieldTypeConstants.NUMERIC)) {
 
 			return NumberInfoFieldType.INSTANCE;
+		}
+		else if (Objects.equals(
+					ddmFormFieldType, DDMFormFieldTypeConstants.RADIO)) {
+
+			return SelectInfoFieldType.INSTANCE;
+		}
+		else if (Objects.equals(
+					ddmFormField.getType(),
+					DDMFormFieldTypeConstants.RICH_TEXT)) {
+
+			return HTMLInfoFieldType.INSTANCE;
+		}
+		else if (Objects.equals(
+					ddmFormFieldType, DDMFormFieldTypeConstants.SELECT)) {
+
+			if (GetterUtil.getBoolean(ddmFormField.getProperty("multiple"))) {
+				return MultiselectInfoFieldType.INSTANCE;
+			}
+
+			return SelectInfoFieldType.INSTANCE;
 		}
 
 		return TextInfoFieldType.INSTANCE;
