@@ -19,6 +19,11 @@ package com.liferay.info.field.type;
  */
 public class TextInfoFieldType implements InfoFieldType {
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             HTMLInfoFieldType}
+	 */
+	@Deprecated
 	public static final Attribute<TextInfoFieldType, Boolean> HTML =
 		new Attribute<>();
 

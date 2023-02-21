@@ -30,6 +30,11 @@ public class SelectInfoFieldType implements InfoFieldType {
 	public static final SelectInfoFieldType INSTANCE =
 		new SelectInfoFieldType();
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             MultiselectInfoFieldType}
+	 */
+	@Deprecated
 	public static final Attribute<SelectInfoFieldType, Boolean> MULTIPLE =
 		new Attribute<>();
 
