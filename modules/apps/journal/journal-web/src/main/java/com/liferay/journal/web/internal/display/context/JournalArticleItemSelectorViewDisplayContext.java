@@ -71,6 +71,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.constants.SearchContextAttributes;
+import com.liferay.staging.StagingGroupHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,7 +98,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		String itemSelectedEventName,
 		JournalArticleItemSelectorView journalArticleItemSelectorView,
 		JournalWebConfiguration journalWebConfiguration, PortletURL portletURL,
-		boolean search) {
+		boolean search, StagingGroupHelper stagingGroupHelper) {
 
 		_httpServletRequest = httpServletRequest;
 		_infoItemItemSelectorCriterion = infoItemItemSelectorCriterion;
@@ -106,6 +107,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 		_journalWebConfiguration = journalWebConfiguration;
 		_portletURL = portletURL;
 		_search = search;
+		_stagingGroupHelper = stagingGroupHelper;
 
 		_portletRequest = (PortletRequest)httpServletRequest.getAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST);
@@ -510,17 +512,17 @@ public class JournalArticleItemSelectorViewDisplayContext {
 
 	private long _getGroupId() {
 		return ParamUtil.getLong(
-			_portletRequest, "groupId", _themeDisplay.getScopeGroupId());
+			_portletRequest, "groupId", _getStagingAwareGroupId());
 	}
 
 	private long[] _getGroupIds() throws PortalException {
 		if (_isEverywhereScopeFilter()) {
 			return SiteConnectedGroupGroupProviderUtil.
 				getCurrentAndAncestorSiteAndDepotGroupIds(
-					_themeDisplay.getScopeGroupId());
+					_getStagingAwareGroupId());
 		}
 
-		return new long[] {_themeDisplay.getScopeGroupId()};
+		return new long[] {_getStagingAwareGroupId()};
 	}
 
 	private BreadcrumbEntry _getHomeBreadcrumb() throws Exception {
@@ -590,6 +592,17 @@ public class JournalArticleItemSelectorViewDisplayContext {
 			).buildString());
 
 		return breadcrumbEntry;
+	}
+
+	private long _getStagingAwareGroupId() {
+		if (_groupId != null) {
+			return _groupId;
+		}
+
+		_groupId = _stagingGroupHelper.getStagedPortletGroupId(
+			_themeDisplay.getScopeGroupId(), JournalPortletKeys.JOURNAL);
+
+		return _groupId;
 	}
 
 	private String _getSubtype(DDMStructure ddmStructure)
@@ -712,6 +725,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	private String _displayStyle;
 	private JournalFolder _folder;
 	private Long _folderId;
+	private Long _groupId;
 	private final HttpServletRequest _httpServletRequest;
 	private final InfoItemItemSelectorCriterion _infoItemItemSelectorCriterion;
 	private final String _itemSelectedEventName;
@@ -726,6 +740,7 @@ public class JournalArticleItemSelectorViewDisplayContext {
 	private final PortletURL _portletURL;
 	private final boolean _search;
 	private Boolean _searchEverywhere;
+	private final StagingGroupHelper _stagingGroupHelper;
 	private final ThemeDisplay _themeDisplay;
 
 }
