@@ -45,6 +45,59 @@ LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLook
 <aui:input name="faviconFileEntryId" type="hidden" value="<%= selLayout.getFaviconFileEntryId() %>" />
 <aui:input name="themeFaviconCETExternalReferenceCode" type="hidden" value="<%= layoutLookAndFeelDisplayContext.getThemeFaviconCETExternalReferenceCode() %>" />
 
+<liferay-util:buffer
+	var="rootNodeNameLink"
+>
+	<c:choose>
+		<c:when test="<%= themeDisplay.isStateExclusive() %>">
+			<%= HtmlUtil.escape(rootNodeName) %>
+		</c:when>
+		<c:otherwise>
+			<aui:a href="<%= redirectURL.toString() %>"><%= HtmlUtil.escape(rootNodeName) %></aui:a>
+		</c:otherwise>
+	</c:choose>
+</liferay-util:buffer>
+
+<%
+String taglibLabel = null;
+
+if (group.isLayoutPrototype()) {
+	taglibLabel = LanguageUtil.get(request, "use-the-same-look-and-feel-of-the-pages-in-which-this-template-is-used");
+}
+else {
+	taglibLabel = LanguageUtil.format(request, "use-the-same-look-and-feel-of-the-x", rootNodeNameLink, false);
+}
+%>
+
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="theme" /></h3>
+	</clay:sheet-header>
+
+	<clay:sheet-section
+		cssClass='<%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>'
+		id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
+	>
+		<aui:input checked="<%= selLayout.isInheritLookAndFeel() %>" id="regularInheritLookAndFeel" label="<%= taglibLabel %>" name="regularInheritLookAndFeel" type="radio" value="<%= true %>" />
+
+		<aui:input checked="<%= !selLayout.isInheritLookAndFeel() %>" id="regularUniqueLookAndFeel" label="define-a-specific-look-and-feel-for-this-page" name="regularInheritLookAndFeel" type="radio" value="<%= false %>" />
+
+		<c:if test="<%= !group.isLayoutPrototype() %>">
+			<div class="lfr-inherit-theme-options" id="<portlet:namespace />inheritThemeOptions">
+				<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>">
+					<liferay-util:param name="companyId" value="<%= String.valueOf(group.getCompanyId()) %>" />
+					<liferay-util:param name="editable" value="<%= Boolean.FALSE.toString() %>" />
+					<liferay-util:param name="themeId" value="<%= rootTheme.getThemeId() %>" />
+				</liferay-util:include>
+			</div>
+		</c:if>
+
+		<div class="lfr-theme-options" id="<portlet:namespace />themeOptions">
+			<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
+		</div>
+	</clay:sheet-section>
+</clay:sheet>
+
 <clay:sheet-section>
 	<h3 class="sheet-subtitle"><liferay-ui:message key="favicon" /></h3>
 
@@ -96,55 +149,6 @@ LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLook
 		module="js/layout/look_and_feel/StyleBookConfiguration"
 		props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
 	/>
-</clay:sheet-section>
-
-<liferay-util:buffer
-	var="rootNodeNameLink"
->
-	<c:choose>
-		<c:when test="<%= themeDisplay.isStateExclusive() %>">
-			<%= HtmlUtil.escape(rootNodeName) %>
-		</c:when>
-		<c:otherwise>
-			<aui:a href="<%= redirectURL.toString() %>"><%= HtmlUtil.escape(rootNodeName) %></aui:a>
-		</c:otherwise>
-	</c:choose>
-</liferay-util:buffer>
-
-<%
-String taglibLabel = null;
-
-if (group.isLayoutPrototype()) {
-	taglibLabel = LanguageUtil.get(request, "use-the-same-look-and-feel-of-the-pages-in-which-this-template-is-used");
-}
-else {
-	taglibLabel = LanguageUtil.format(request, "use-the-same-look-and-feel-of-the-x", rootNodeNameLink, false);
-}
-%>
-
-<clay:sheet-section
-	cssClass='<%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>'
-	id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
->
-	<h3 class="sheet-subtitle"><liferay-ui:message key="theme" /></h3>
-
-	<aui:input checked="<%= selLayout.isInheritLookAndFeel() %>" id="regularInheritLookAndFeel" label="<%= taglibLabel %>" name="regularInheritLookAndFeel" type="radio" value="<%= true %>" />
-
-	<aui:input checked="<%= !selLayout.isInheritLookAndFeel() %>" id="regularUniqueLookAndFeel" label="define-a-specific-look-and-feel-for-this-page" name="regularInheritLookAndFeel" type="radio" value="<%= false %>" />
-
-	<c:if test="<%= !group.isLayoutPrototype() %>">
-		<div class="lfr-inherit-theme-options" id="<portlet:namespace />inheritThemeOptions">
-			<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>">
-				<liferay-util:param name="companyId" value="<%= String.valueOf(group.getCompanyId()) %>" />
-				<liferay-util:param name="editable" value="<%= Boolean.FALSE.toString() %>" />
-				<liferay-util:param name="themeId" value="<%= rootTheme.getThemeId() %>" />
-			</liferay-util:include>
-		</div>
-	</c:if>
-
-	<div class="lfr-theme-options" id="<portlet:namespace />themeOptions">
-		<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
-	</div>
 </clay:sheet-section>
 
 <div class="mt-5">
