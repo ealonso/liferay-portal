@@ -98,58 +98,62 @@ else {
 	</clay:sheet-section>
 </clay:sheet>
 
-<clay:sheet-section>
-	<h3 class="sheet-subtitle"><liferay-ui:message key="favicon" /></h3>
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="basic-settings" /></h3>
+	</clay:sheet-header>
 
-	<img alt="<%= HtmlUtil.escape(layoutLookAndFeelDisplayContext.getFaviconTitle()) %>" class="mb-2" height="16" id="<portlet:namespace />faviconImage" src="<%= layoutLookAndFeelDisplayContext.getFaviconURL() %>" width="16" />
+	<clay:sheet-section>
+		<img alt="<%= HtmlUtil.escape(layoutLookAndFeelDisplayContext.getFaviconTitle()) %>" class="mb-2" height="16" id="<portlet:namespace />faviconImage" src="<%= layoutLookAndFeelDisplayContext.getFaviconURL() %>" width="16" />
 
-	<p>
-		<b><liferay-ui:message key="favicon-name" />:</b> <span id="<portlet:namespace />faviconTitle"><%= layoutLookAndFeelDisplayContext.getFaviconTitle() %></span>
-	</p>
+		<p>
+			<b><liferay-ui:message key="favicon-name" />:</b> <span id="<portlet:namespace />faviconTitle"><%= layoutLookAndFeelDisplayContext.getFaviconTitle() %></span>
+		</p>
 
-	<clay:content-row>
-		<clay:content-col
-			cssClass="mr-4"
-		>
-			<clay:button
-				additionalProps="<%= layoutLookAndFeelDisplayContext.getChangeFaviconButtonAdditionalProps() %>"
-				displayType="secondary"
-				id='<%= liferayPortletResponse.getNamespace() + "changeFaviconButton" %>'
-				label="change-favicon"
-				propsTransformer="js/layout/ChangeFaviconButtonPropsTransformer"
-				small="<%= true %>"
+		<clay:content-row>
+			<clay:content-col
+				cssClass="mr-4"
+			>
+				<clay:button
+					additionalProps="<%= layoutLookAndFeelDisplayContext.getChangeFaviconButtonAdditionalProps() %>"
+					displayType="secondary"
+					id='<%= liferayPortletResponse.getNamespace() + "changeFaviconButton" %>'
+					label="change-favicon"
+					propsTransformer="js/layout/ChangeFaviconButtonPropsTransformer"
+					small="<%= true %>"
+				/>
+			</clay:content-col>
+
+			<clay:content-col>
+				<clay:button
+					additionalProps="<%= layoutLookAndFeelDisplayContext.getClearFaviconButtonAdditionalProps() %>"
+					disabled="<%= !layoutLookAndFeelDisplayContext.isClearFaviconButtonEnabled() %>"
+					displayType="secondary"
+					id='<%= liferayPortletResponse.getNamespace() + "clearFaviconButton" %>'
+					label="clear"
+					propsTransformer="js/layout/ClearFaviconButtonPropsTransformer"
+					small="<%= true %>"
+				/>
+			</clay:content-col>
+		</clay:content-row>
+	</clay:sheet-section>
+
+	<c:if test="<%= layoutLookAndFeelDisplayContext.hasEditableMasterLayout() %>">
+		<clay:sheet-section>
+			<react:component
+				module="js/layout/look_and_feel/MasterLayoutConfiguration"
+				props="<%= layoutLookAndFeelDisplayContext.getMasterLayoutConfigurationProps() %>"
 			/>
-		</clay:content-col>
+		</clay:sheet-section>
+	</c:if>
 
-		<clay:content-col>
-			<clay:button
-				additionalProps="<%= layoutLookAndFeelDisplayContext.getClearFaviconButtonAdditionalProps() %>"
-				disabled="<%= !layoutLookAndFeelDisplayContext.isClearFaviconButtonEnabled() %>"
-				displayType="secondary"
-				id='<%= liferayPortletResponse.getNamespace() + "clearFaviconButton" %>'
-				label="clear"
-				propsTransformer="js/layout/ClearFaviconButtonPropsTransformer"
-				small="<%= true %>"
-			/>
-		</clay:content-col>
-	</clay:content-row>
-</clay:sheet-section>
-
-<c:if test="<%= layoutLookAndFeelDisplayContext.hasEditableMasterLayout() %>">
 	<clay:sheet-section>
 		<react:component
-			module="js/layout/look_and_feel/MasterLayoutConfiguration"
-			props="<%= layoutLookAndFeelDisplayContext.getMasterLayoutConfigurationProps() %>"
+			module="js/layout/look_and_feel/StyleBookConfiguration"
+			props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
 		/>
 	</clay:sheet-section>
-</c:if>
-
-<clay:sheet-section>
-	<react:component
-		module="js/layout/look_and_feel/StyleBookConfiguration"
-		props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
-	/>
-</clay:sheet-section>
+</clay:sheet>
 
 <div class="mt-5">
 	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />

@@ -54,10 +54,6 @@ export default function StyleBookConfiguration({
 				value={styleBookEntry.styleBookEntryId}
 			/>
 
-			<h3 className="sheet-subtitle">
-				{Liferay.Language.get('style-book')}
-			</h3>
-
 			<p>
 				<strong>{`${Liferay.Language.get(
 					'style-book-name'
