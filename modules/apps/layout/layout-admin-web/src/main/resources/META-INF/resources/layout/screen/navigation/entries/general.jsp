@@ -142,12 +142,9 @@ renderResponse.setTitle(layoutsAdminDisplayContext.getConfigurationTitle(selLayo
 
 			</c:if>
 
-			<clay:sheet>
-				<clay:sheet-header>
-					<h2 class="sheet-title"><liferay-ui:message key="general" /></h2>
-				</clay:sheet-header>
+				<div class="sheet-lg">
+					<h2 class="mb-0"><liferay-ui:message key="general" /></h2>
 
-				<clay:sheet-section>
 					<liferay-ui:success key="layoutAdded" message="the-page-was-created-successfully" />
 
 					<liferay-ui:error exception="<%= LayoutTypeException.class %>">
@@ -236,18 +233,17 @@ renderResponse.setTitle(layoutsAdminDisplayContext.getConfigurationTitle(selLayo
 						id="<%= FormNavigatorConstants.FORM_NAVIGATOR_ID_LAYOUT %>"
 						showButtons="<%= false %>"
 					/>
-				</clay:sheet-section>
-
-				<clay:sheet-footer>
+				
 					<c:if test="<%= (selLayout.getGroupId() == layoutsAdminDisplayContext.getGroupId()) && SitesUtil.isLayoutUpdateable(selLayout) && LayoutPermissionUtil.contains(permissionChecker, selLayout, ActionKeys.UPDATE) %>">
-						<aui:button type="submit" />
+						<div class="mt-4">
+							<aui:button cssClass="mr-3" type="submit" />
 
-						<c:if test="<%= Validator.isNotNull(backURL) %>">
-							<aui:button href="<%= backURL %>" name="cancelButton" type="cancel" />
-						</c:if>
-					</c:if>
-				</clay:sheet-footer>
-			</clay:sheet>
+							<c:if test="<%= Validator.isNotNull(backURL) %>">
+								<aui:button href="<%= backURL %>" name="cancelButton" type="cancel" />
+							</c:if>
+						</div>
+					</c:if>	
+				</div>
 		</aui:form>
 	</c:otherwise>
 </c:choose>
