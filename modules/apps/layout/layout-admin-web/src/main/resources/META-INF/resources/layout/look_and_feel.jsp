@@ -155,42 +155,46 @@ else {
 	</clay:sheet-section>
 </clay:sheet>
 
-<div class="mt-5">
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="customization" /></h3>
+	</clay:sheet-header>
+
 	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />
-</div>
 
-<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPS-166479") %>'>
-	<clay:sheet-section>
-		<h3 class="sheet-subtitle"><liferay-ui:message key="theme-spritemap-client-extension" /></h3>
+	<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPS-166479") %>'>
+		<clay:sheet-section>
+			<h3 class="sheet-subtitle"><liferay-ui:message key="theme-spritemap-client-extension" /></h3>
 
-		<clay:alert
-			displayType="info"
-			message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
-		/>
+			<clay:alert
+				displayType="info"
+				message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
+			/>
 
-		<p>
-			<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
-		</p>
+			<p>
+				<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
+			</p>
 
+			<div>
+				<react:component
+					module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
+					props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+				/>
+			</div>
+		</clay:sheet-section>
+	</c:if>
+
+	<clay:sheet-section
+		cssClass="mt-5"
+	>
 		<div>
 			<react:component
-				module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
-				props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+				module="js/layout/look_and_feel/GlobalCSSCETsConfiguration"
+				props="<%= layoutLookAndFeelDisplayContext.getGlobalCSSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
 			/>
 		</div>
 	</clay:sheet-section>
-</c:if>
-
-<clay:sheet-section
-	cssClass="mt-5"
->
-	<div>
-		<react:component
-			module="js/layout/look_and_feel/GlobalCSSCETsConfiguration"
-			props="<%= layoutLookAndFeelDisplayContext.getGlobalCSSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
-		/>
-	</div>
-</clay:sheet-section>
+</clay:sheet>
 
 <aui:script>
 	Liferay.Util.toggleRadio(
