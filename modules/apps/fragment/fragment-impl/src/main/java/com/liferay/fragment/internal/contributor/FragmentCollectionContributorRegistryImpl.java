@@ -14,6 +14,7 @@
 
 package com.liferay.fragment.internal.contributor;
 
+import com.liferay.fragment.configuration.FragmentServiceConfiguration;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorRegistry;
@@ -26,6 +27,7 @@ import com.liferay.fragment.validator.FragmentEntryValidator;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.string.CharPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,13 +46,17 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Jürgen Kappler
  */
-@Component(service = FragmentCollectionContributorRegistry.class)
+@Component(
+	configurationPid = "com.liferay.fragment.configuration.FragmentServiceConfiguration",
+	service = FragmentCollectionContributorRegistry.class
+)
 public class FragmentCollectionContributorRegistryImpl
 	implements FragmentCollectionContributorRegistry {
 
@@ -207,6 +213,13 @@ public class FragmentCollectionContributorRegistryImpl
 				bundleContext));
 	}
 
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_fragmentServiceConfiguration = ConfigurableUtil.createConfigurable(
+			FragmentServiceConfiguration.class, properties);
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		_serviceTrackerMap.close();
@@ -264,6 +277,7 @@ public class FragmentCollectionContributorRegistryImpl
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
+	private volatile FragmentServiceConfiguration _fragmentServiceConfiguration;
 	private ServiceTrackerMap<String, FragmentCollectionBag> _serviceTrackerMap;
 
 	private static class FragmentCollectionBag {
@@ -320,7 +334,11 @@ public class FragmentCollectionContributorRegistryImpl
 					fragmentEntries.put(
 						fragmentEntry.getFragmentEntryKey(), fragmentEntry);
 
-					_updateFragmentEntryLinks(fragmentEntry);
+					if (_fragmentServiceConfiguration.
+							propagateContributedFragmentChanges()) {
+
+						_updateFragmentEntryLinks(fragmentEntry);
+					}
 				}
 			}
 
