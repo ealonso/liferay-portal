@@ -35,22 +35,22 @@ FragmentServiceConfigurationDisplayContext fragmentServiceConfigurationDisplayCo
 		</clay:sheet-header>
 
 		<clay:sheet-section>
-			<c:if test="<%= !fragmentServiceConfigurationDisplayContext.isFragmentServiceConfigurationDefined() %>">
-				<clay:alert
-					message="this-configuration-is-not-saved-yet.-the-values-shown-are-the-default"
-				/>
-			</c:if>
-
-			<clay:checkbox
-				checked="<%= fragmentServiceConfigurationDisplayContext.isPropagateChanges() %>"
-				id='<%= liferayPortletResponse.getNamespace() + "propagateChanges" %>'
-				label='<%= LanguageUtil.get(request, "propagate-fragment-changes-automatically") %>'
-				name='<%= liferayPortletResponse.getNamespace() + "propagateChanges" %>'
+			<react:component
+				module="js/FragmentServiceConfiguration"
+				props='<%=
+					HashMapBuilder.<String, Object>put(
+						"isFragmentServiceConfigurationDefined", fragmentServiceConfigurationDisplayContext.isFragmentServiceConfigurationDefined()
+					).put(
+						"isPropagateChanges", fragmentServiceConfigurationDisplayContext.isPropagateChanges()
+					).put(
+						"isPropagateContributedFragmentChanges", fragmentServiceConfigurationDisplayContext.isPropagateContributedFragmentChanges()
+					).put(
+						"namespace", liferayPortletResponse.getNamespace()
+					).put(
+						"propagateContributedFragmentEntryChangesURL", fragmentServiceConfigurationDisplayContext.getPropagateContributedFragmentEntryChangesURL()
+					).build()
+				%>'
 			/>
-
-			<div aria-hidden="true" class="form-feedback-group">
-				<div class="form-text text-weight-normal"><liferay-ui:message key="propagate-fragment-changes-automatically-description" /></div>
-			</div>
 		</clay:sheet-section>
 
 		<clay:sheet-footer>
