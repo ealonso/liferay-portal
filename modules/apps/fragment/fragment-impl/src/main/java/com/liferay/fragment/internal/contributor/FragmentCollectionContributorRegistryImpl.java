@@ -33,13 +33,18 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.resource.bundle.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
+import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.portlet.PortletPreferences;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -247,6 +252,33 @@ public class FragmentCollectionContributorRegistryImpl
 		}
 	}
 
+	private void _updatePropagateContributedFragmentChanges() {
+		if (_fragmentServiceConfiguration.
+				propagateContributedFragmentChanges()) {
+
+			return;
+		}
+
+		_companyLocalService.forEachCompany(
+			company -> {
+				try {
+					PortletPreferences portletPreferences =
+						_portalPreferencesLocalService.getPreferences(
+							company.getCompanyId(),
+							PortletKeys.PREFS_OWNER_TYPE_COMPANY);
+
+					portletPreferences.setValue(
+						"propagateContributedFragmentChanges",
+						Boolean.FALSE.toString());
+
+					portletPreferences.store();
+				}
+				catch (Exception exception) {
+					_log.error(exception);
+				}
+			});
+	}
+
 	private boolean _validateFragmentEntry(FragmentEntry fragmentEntry) {
 		try {
 			fragmentEntryValidator.validateConfiguration(
@@ -275,9 +307,16 @@ public class FragmentCollectionContributorRegistryImpl
 		FragmentCollectionContributorRegistryImpl.class);
 
 	@Reference
+	private CompanyLocalService _companyLocalService;
+
+	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
 	private volatile FragmentServiceConfiguration _fragmentServiceConfiguration;
+
+	@Reference
+	private PortalPreferencesLocalService _portalPreferencesLocalService;
+
 	private ServiceTrackerMap<String, FragmentCollectionBag> _serviceTrackerMap;
 
 	private static class FragmentCollectionBag {
@@ -306,6 +345,8 @@ public class FragmentCollectionContributorRegistryImpl
 		@Override
 		public FragmentCollectionBag addingService(
 			ServiceReference<FragmentCollectionContributor> serviceReference) {
+
+			_updatePropagateContributedFragmentChanges();
 
 			FragmentCollectionContributor fragmentCollectionContributor =
 				_bundleContext.getService(serviceReference);

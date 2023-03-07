@@ -14,11 +14,13 @@
 
 import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
+import ClayIcon from '@clayui/icon';
 import {ClayCheckbox} from '@clayui/form';
 import ClayModal, {useModal} from '@clayui/modal';
 import React, {useState} from 'react';
 
 export default function FragmentServiceConfiguration({
+	alreadyPropagateContributedFragmentChanges,
 	isFragmentServiceConfigurationDefined,
 	isPropagateChanges,
 	isPropagateContributedFragmentChanges,
@@ -92,11 +94,23 @@ export default function FragmentServiceConfiguration({
 				id={`${namespace}propagateContributedFragmentChangesContainer`}
 			>
 				<ClayButton
+					disabled={alreadyPropagateContributedFragmentChanges}
 					displayType="secondary"
 					onClick={() => setWarningModalVisible(true)}
 				>
 					{Liferay.Language.get('propagate-changes')}
 				</ClayButton>
+
+				({alreadyPropagateContributedFragmentChanges} &&
+					<div className="text-success">
+						<ClayIcon
+							className="text-success"
+							symbol="check-circle-full"
+						/>
+
+						{Liferay.Language.get('all-changes-are-propagated')}
+					</div>
+				)
 			</div>
 
 			<div className="mt-3 sheet-subtitle">

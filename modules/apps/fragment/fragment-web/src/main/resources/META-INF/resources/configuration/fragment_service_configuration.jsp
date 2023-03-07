@@ -39,6 +39,8 @@ FragmentServiceConfigurationDisplayContext fragmentServiceConfigurationDisplayCo
 				module="js/FragmentServiceConfiguration"
 				props='<%=
 					HashMapBuilder.<String, Object>put(
+						"alreadyPropagateContributedFragmentChanges", fragmentServiceConfigurationDisplayContext.isAlreadyPropagateContributedFragmentChanges()
+					).put(
 						"isFragmentServiceConfigurationDefined", fragmentServiceConfigurationDisplayContext.isFragmentServiceConfigurationDefined()
 					).put(
 						"isPropagateChanges", fragmentServiceConfigurationDisplayContext.isPropagateChanges()

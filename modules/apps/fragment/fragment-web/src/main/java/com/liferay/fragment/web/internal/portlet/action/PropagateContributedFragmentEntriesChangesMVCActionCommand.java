@@ -25,9 +25,11 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Map;
@@ -35,6 +37,7 @@ import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.PortletPreferences;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -98,6 +101,16 @@ public class PropagateContributedFragmentEntriesChangesMVCActionCommand
 			actionableDynamicQuery.performActions();
 		}
 
+		PortletPreferences portletPreferences =
+			_portalPreferencesLocalService.getPreferences(
+				themeDisplay.getCompanyId(),
+				PortletKeys.PREFS_OWNER_TYPE_COMPANY);
+
+		portletPreferences.setValue(
+			"propagateContributedFragmentChanges", Boolean.TRUE.toString());
+
+		portletPreferences.store();
+
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
@@ -109,5 +122,8 @@ public class PropagateContributedFragmentEntriesChangesMVCActionCommand
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private PortalPreferencesLocalService _portalPreferencesLocalService;
 
 }

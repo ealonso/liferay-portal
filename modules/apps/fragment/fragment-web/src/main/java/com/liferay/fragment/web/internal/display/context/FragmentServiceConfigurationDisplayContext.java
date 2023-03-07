@@ -18,9 +18,14 @@ import com.liferay.fragment.configuration.FragmentServiceConfigurationProvider;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import javax.portlet.PortletPreferences;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,6 +67,18 @@ public class FragmentServiceConfigurationDisplayContext {
 		).setRedirect(
 			PortalUtil.getCurrentURL(_httpServletRequest)
 		).buildString();
+	}
+
+	public boolean isAlreadyPropagateContributedFragmentChanges() {
+		PortletPreferences portletPreferences =
+			PortalPreferencesLocalServiceUtil.getPreferences(
+				_themeDisplay.getCompanyId(),
+				PortletKeys.PREFS_OWNER_TYPE_COMPANY);
+
+		return GetterUtil.getBoolean(
+			portletPreferences.getValue(
+				"propagateContributedFragmentChanges",
+				Boolean.FALSE.toString()));
 	}
 
 	public boolean isFragmentServiceConfigurationDefined()
