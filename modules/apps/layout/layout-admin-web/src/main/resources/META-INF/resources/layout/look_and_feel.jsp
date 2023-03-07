@@ -163,36 +163,40 @@ else {
 	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />
 
 	<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPS-166479") %>'>
-		<clay:sheet-section>
-			<h3 class="sheet-subtitle"><liferay-ui:message key="theme-spritemap-client-extension" /></h3>
-
-			<clay:alert
-				displayType="info"
-				message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
-			/>
-
-			<p>
-				<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
-			</p>
-
-			<div>
-				<react:component
-					module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
-					props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+		<clay:sheet-section cssClass="mb-3">
+			<liferay-frontend:fieldset
+				collapsible="<%= true %>"
+				label="theme-spritemap-client-extension"
+			>
+				<clay:alert
+					displayType="info"
+					message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
 				/>
-			</div>
+
+				<p>
+					<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
+				</p>
+
+				<div>
+					<react:component
+						module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
+						props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+					/>
+				</div>
+			</liferay-frontend:fieldset>
 		</clay:sheet-section>
 	</c:if>
 
-	<clay:sheet-section
-		cssClass="mt-5"
-	>
-		<div>
+	<clay:sheet-section cssClass="mb-3">
+		<liferay-frontend:fieldset
+			collapsible="<%= true %>"
+			label="css-client-extensions"
+		>
 			<react:component
 				module="js/layout/look_and_feel/GlobalCSSCETsConfiguration"
 				props="<%= layoutLookAndFeelDisplayContext.getGlobalCSSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
 			/>
-		</div>
+		</liferay-frontend:fieldset>
 	</clay:sheet-section>
 
 	<liferay-util:include page="/layout/javascript.jsp" servletContext="<%= application %>" />

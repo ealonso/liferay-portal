@@ -211,10 +211,6 @@ export default function GlobalJSCETsConfiguration({
 				)
 			)}
 
-			<h3 className="sheet-subtitle">
-				{Liferay.Language.get('javascript-client-extensions')}
-			</h3>
-
 			<AddExtensionButton
 				addGlobalJSCET={addGlobalJSCET}
 				portletNamespace={portletNamespace}
