@@ -194,6 +194,9 @@ else {
 			/>
 		</div>
 	</clay:sheet-section>
+
+	<liferay-util:include page="/layout/javascript.jsp" servletContext="<%= application %>" />
+	
 </clay:sheet>
 
 <aui:script>
