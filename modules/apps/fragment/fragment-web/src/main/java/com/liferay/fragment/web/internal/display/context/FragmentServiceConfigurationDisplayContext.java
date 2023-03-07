@@ -15,15 +15,18 @@
 package com.liferay.fragment.web.internal.display.context;
 
 import com.liferay.fragment.configuration.FragmentServiceConfigurationProvider;
-import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 
@@ -49,27 +52,60 @@ public class FragmentServiceConfigurationDisplayContext {
 			WebKeys.THEME_DISPLAY);
 	}
 
-	public String getEditFragmentServiceConfigurationConfigurationURL() {
+	public Map<String, Object> getProps() throws Exception {
+		return HashMapBuilder.<String, Object>put(
+			"alreadyPropagateContributedFragmentChanges",
+			_isAlreadyPropagateContributedFragmentChanges()
+		).put(
+			"editFragmentServiceConfigurationConfigurationURL",
+			_getEditFragmentServiceConfigurationConfigurationURL()
+		).put(
+			"isFragmentServiceConfigurationDefined",
+			_isFragmentServiceConfigurationDefined()
+		).put(
+			"isPropagateChanges", _isPropagateChanges()
+		).put(
+			"isPropagateContributedFragmentChanges",
+			_isPropagateContributedFragmentChanges()
+		).put(
+			"namespace", _liferayPortletResponse.getNamespace()
+		).put(
+			"propagateContributedFragmentEntryChangesURL",
+			_getPropagateContributedFragmentEntryChangesURL()
+		).put(
+			"redirectURL", ParamUtil.getString(_httpServletRequest, "redirect")
+		).build();
+	}
+
+	private String _getEditFragmentServiceConfigurationConfigurationURL() {
 		return PortletURLBuilder.createActionURL(
 			_liferayPortletResponse
 		).setActionName(
 			"/instance_settings/edit_fragment_service_configuration"
+		).setMVCRenderCommandName(
+			"/configuration_admin/view_configuration_screen"
 		).setRedirect(
 			PortalUtil.getCurrentURL(_httpServletRequest)
+		).setParameter(
+			"configurationScreenKey", "fragments-service"
 		).buildString();
 	}
 
-	public String getPropagateContributedFragmentEntryChangesURL() {
+	private String _getPropagateContributedFragmentEntryChangesURL() {
 		return PortletURLBuilder.createActionURL(
 			_liferayPortletResponse
 		).setActionName(
-			"/fragment/propagate_contributed_fragment_entries_changes"
+			"/instance_settings/propagate_contributed_fragment_entries_changes"
+		).setMVCRenderCommandName(
+			"/configuration_admin/view_configuration_screen"
 		).setRedirect(
 			PortalUtil.getCurrentURL(_httpServletRequest)
+		).setParameter(
+			"configurationScreenKey", "fragments-service"
 		).buildString();
 	}
 
-	public boolean isAlreadyPropagateContributedFragmentChanges() {
+	private boolean _isAlreadyPropagateContributedFragmentChanges() {
 		PortletPreferences portletPreferences =
 			PortalPreferencesLocalServiceUtil.getPreferences(
 				_themeDisplay.getCompanyId(),
@@ -81,19 +117,17 @@ public class FragmentServiceConfigurationDisplayContext {
 				Boolean.FALSE.toString()));
 	}
 
-	public boolean isFragmentServiceConfigurationDefined()
-		throws ConfigurationException {
-
+	private boolean _isFragmentServiceConfigurationDefined() throws Exception {
 		return _fragmentServiceConfigurationProvider.
 			isFragmentServiceConfigurationDefined(_themeDisplay.getCompanyId());
 	}
 
-	public boolean isPropagateChanges() {
+	private boolean _isPropagateChanges() {
 		return _fragmentServiceConfigurationProvider.isPropagateChanges(
 			_themeDisplay.getCompanyId());
 	}
 
-	public boolean isPropagateContributedFragmentChanges() {
+	private boolean _isPropagateContributedFragmentChanges() {
 		return _fragmentServiceConfigurationProvider.
 			isPropagateContributedFragmentChanges(_themeDisplay.getCompanyId());
 	}

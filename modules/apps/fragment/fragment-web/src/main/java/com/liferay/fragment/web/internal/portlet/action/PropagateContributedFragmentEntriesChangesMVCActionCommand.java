@@ -14,21 +14,21 @@
 
 package com.liferay.fragment.web.internal.portlet.action;
 
-import com.liferay.fragment.constants.FragmentPortletKeys;
+import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
+import com.liferay.fragment.configuration.FragmentServiceConfigurationProvider;
 import com.liferay.fragment.contributor.FragmentCollectionContributorRegistry;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
-import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -36,7 +36,6 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 
 import org.osgi.service.component.annotations.Component;
@@ -47,30 +46,27 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	property = {
-		"javax.portlet.name=" + FragmentPortletKeys.FRAGMENT,
-		"mvc.command.name=/fragment/propagate_contributed_fragment_entries_changes"
+		"javax.portlet.name=" + ConfigurationAdminPortletKeys.INSTANCE_SETTINGS,
+		"mvc.command.name=/instance_settings/propagate_contributed_fragment_entries_changes"
 	},
-	service = AopService.class
+	service = MVCActionCommand.class
 )
 public class PropagateContributedFragmentEntriesChangesMVCActionCommand
-	extends BaseMVCActionCommand implements AopService, MVCActionCommand {
+	extends BaseTransactionalMVCActionCommand {
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public boolean processAction(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws PortletException {
-
-		return super.processAction(actionRequest, actionResponse);
-	}
-
-	@Override
-	protected void doProcessAction(
+	protected void doTransactionalCommand(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		_fragmentServiceConfigurationProvider.updateConfiguration(
+			_portal.getCompanyId(actionRequest),
+			ParamUtil.getBoolean(actionRequest, "propagateChanges"),
+			ParamUtil.getBoolean(
+				actionRequest, "propagateContributedFragmentChanges"));
 
 		Map<String, FragmentEntry> fragmentCollectionContributorEntries =
 			_fragmentCollectionContributorRegistry.getFragmentEntries();
@@ -85,11 +81,11 @@ public class PropagateContributedFragmentEntriesChangesMVCActionCommand
 
 			actionableDynamicQuery.setAddCriteriaMethod(
 				dynamicQuery -> {
-					Property fragmentEntryKeyProperty =
-						PropertyFactoryUtil.forName("fragmentEntryKey");
+					Property rendererKeyProperty = PropertyFactoryUtil.forName(
+						"rendererKey");
 
 					dynamicQuery.add(
-						fragmentEntryKeyProperty.eq(
+						rendererKeyProperty.eq(
 							fragmentEntry.getFragmentEntryKey()));
 				});
 			actionableDynamicQuery.setCompanyId(themeDisplay.getCompanyId());
@@ -110,10 +106,6 @@ public class PropagateContributedFragmentEntriesChangesMVCActionCommand
 			"propagateContributedFragmentChanges", Boolean.TRUE.toString());
 
 		portletPreferences.store();
-
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
-
-		sendRedirect(actionRequest, actionResponse, redirect);
 	}
 
 	@Reference
@@ -122,6 +114,13 @@ public class PropagateContributedFragmentEntriesChangesMVCActionCommand
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private FragmentServiceConfigurationProvider
+		_fragmentServiceConfigurationProvider;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortalPreferencesLocalService _portalPreferencesLocalService;

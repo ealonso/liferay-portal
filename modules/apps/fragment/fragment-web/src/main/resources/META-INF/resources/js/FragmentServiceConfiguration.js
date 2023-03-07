@@ -14,25 +14,31 @@
 
 import ClayAlert from '@clayui/alert';
 import ClayButton from '@clayui/button';
-import ClayIcon from '@clayui/icon';
 import {ClayCheckbox} from '@clayui/form';
+import ClayIcon from '@clayui/icon';
+import ClayLayout from '@clayui/layout';
 import ClayModal, {useModal} from '@clayui/modal';
-import React, {useState} from 'react';
+import {navigate} from 'frontend-js-web';
+import React, {useCallback, useRef, useState} from 'react';
 
 export default function FragmentServiceConfiguration({
 	alreadyPropagateContributedFragmentChanges,
+	editFragmentServiceConfigurationConfigurationURL,
 	isFragmentServiceConfigurationDefined,
 	isPropagateChanges,
 	isPropagateContributedFragmentChanges,
 	namespace,
+	propagateContributedFragmentEntryChangesURL,
+	redirectURL,
 }) {
-	const [propagateChanges, setPropagateChanges] = useState(
-		isPropagateChanges
-	);
-	const [
-		propagateContributedFragmentChanges,
-		setPropagateContributedFragmentChanges,
-	] = useState(isPropagateContributedFragmentChanges);
+	const formRef = useRef();
+	const propagateContributedFragmentEntryChangesFormRef = useRef();
+
+	const handleSubmit = () => {
+		if (formRef.current) {
+			formRef.current.submit();
+		}
+	};
 
 	const [warningModalVisible, setWarningModalVisible] = useState(false);
 
@@ -40,106 +46,165 @@ export default function FragmentServiceConfiguration({
 		onClose: () => setWarningModalVisible(false),
 	});
 
+	const onCancel = useCallback(() => {
+		if (redirectURL) {
+			navigate(redirectURL);
+		}
+	}, [redirectURL]);
+
 	return (
 		<>
-			{!isFragmentServiceConfigurationDefined && (
-				<ClayAlert
-					title={Liferay.Language.get(
-						'this-configuration-is-not-saved-yet.-the-values-shown-are-the-default'
-					)}
-				/>
-			)}
-
-			<div className="sheet-subtitle">
-				{Liferay.Language.get('default-fragments')}
-			</div>
-
-			<p className="text-secondary">
-				{Liferay.Language.get(
-					'default-fragments-are-provided-by-liferay-and-they-are-part-of-the-product-code.-here-you-can-define-their-behavior'
-				)}
-			</p>
-
-			<ClayCheckbox
-				checked={propagateContributedFragmentChanges}
-				label={Liferay.Language.get(
-					'propagate-contributed-fragment-changes-automatically'
-				)}
-				name={`${namespace}propagateContributedFragmentChanges`}
-				onChange={({target: {checked}}) => {
-					const propagateContributedFragmentChangesContainer = document.getElementById(
-						`${namespace}propagateContributedFragmentChangesContainer`
-					);
-
-					propagateContributedFragmentChangesContainer.classList.toggle(
-						'hide'
-					);
-
-					setPropagateContributedFragmentChanges(checked);
-				}}
-			/>
-
-			<div aria-hidden="true" className="form-feedback-group mb-3">
-				<div className="form-text text-weight-normal">
-					{Liferay.Language.get(
-						'propagate-contributed-fragment-changes-automatically-description'
-					)}
-				</div>
-			</div>
-
-			<div
-				className={`${
-					isPropagateContributedFragmentChanges ? 'hide' : ''
-				}`}
-				id={`${namespace}propagateContributedFragmentChangesContainer`}
+			<form
+				action={editFragmentServiceConfigurationConfigurationURL}
+				method="POST"
+				useRef={formRef}
 			>
-				<ClayButton
-					disabled={alreadyPropagateContributedFragmentChanges}
-					displayType="secondary"
-					onClick={() => setWarningModalVisible(true)}
-				>
-					{Liferay.Language.get('propagate-changes')}
-				</ClayButton>
+				<ClayLayout.Sheet size="xl">
+					<ClayLayout.SheetHeader>
+						<h2>
+							{Liferay.Language.get(
+								'fragment-configuration-name'
+							)}
+						</h2>
+					</ClayLayout.SheetHeader>
 
-				({alreadyPropagateContributedFragmentChanges} &&
-					<div className="text-success">
-						<ClayIcon
-							className="text-success"
-							symbol="check-circle-full"
+					<ClayLayout.SheetSection>
+						{!isFragmentServiceConfigurationDefined && (
+							<ClayAlert
+								title={Liferay.Language.get(
+									'this-configuration-is-not-saved-yet.-the-values-shown-are-the-default'
+								)}
+							/>
+						)}
+
+						<div className="sheet-subtitle">
+							{Liferay.Language.get('default-fragments')}
+						</div>
+
+						<p className="text-secondary">
+							{Liferay.Language.get(
+								'default-fragments-are-provided-by-liferay-and-they-are-part-of-the-product-code.-here-you-can-define-their-behavior'
+							)}
+						</p>
+
+						<ClayCheckbox
+							defaultChecked={
+								isPropagateContributedFragmentChanges
+							}
+							label={Liferay.Language.get(
+								'propagate-contributed-fragment-changes-automatically'
+							)}
+							name={`${namespace}propagateContributedFragmentChanges`}
+							onChange={() => {
+								const propagateContributedFragmentChangesContainer = document.getElementById(
+									`${namespace}propagateContributedFragmentChangesContainer`
+								);
+
+								propagateContributedFragmentChangesContainer.classList.toggle(
+									'hide'
+								);
+							}}
 						/>
 
-						{Liferay.Language.get('all-changes-are-propagated')}
-					</div>
-				)
-			</div>
+						<div
+							aria-hidden="true"
+							className="form-feedback-group mb-3"
+						>
+							<div className="form-text text-weight-normal">
+								{Liferay.Language.get(
+									'propagate-contributed-fragment-changes-automatically-description'
+								)}
+							</div>
+						</div>
 
-			<div className="mt-3 sheet-subtitle">
-				{Liferay.Language.get('custom-fragments')}
-			</div>
+						<div
+							className={`${
+								isPropagateContributedFragmentChanges
+									? 'hide'
+									: ''
+							}`}
+							id={`${namespace}propagateContributedFragmentChangesContainer`}
+						>
+							<ClayButton
+								disabled={
+									alreadyPropagateContributedFragmentChanges
+								}
+								displayType="secondary"
+								onClick={() => setWarningModalVisible(true)}
+							>
+								{Liferay.Language.get('propagate-changes')}
+							</ClayButton>
 
-			<p className="text-secondary">
-				{Liferay.Language.get(
-					'custom-fragments-are-those-that-are-created-by-the-user.-here-you-can-define-their-behavior'
-				)}
-			</p>
+							{alreadyPropagateContributedFragmentChanges && (
+								<div className="text-success">
+									<ClayIcon
+										className="text-success"
+										symbol="check-circle-full"
+									/>
 
-			<ClayCheckbox
-				checked={propagateChanges}
-				id={`${namespace}propagateChanges`}
-				label={Liferay.Language.get(
-					'propagate-fragment-changes-automatically'
-				)}
-				name={`${namespace}propagateChanges`}
-				onChange={({target: {checked}}) => setPropagateChanges(checked)}
-			/>
+									{Liferay.Language.get(
+										'all-changes-are-propagated'
+									)}
+								</div>
+							)}
+						</div>
 
-			<div aria-hidden="true" className="form-feedback-group">
-				<div className="form-text text-weight-normal">
-					{Liferay.Language.get(
-						'propagate-fragment-changes-automatically-description'
-					)}
-				</div>
-			</div>
+						<div className="mt-3 sheet-subtitle">
+							{Liferay.Language.get('custom-fragments')}
+						</div>
+
+						<p className="text-secondary">
+							{Liferay.Language.get(
+								'custom-fragments-are-those-that-are-created-by-the-user.-here-you-can-define-their-behavior'
+							)}
+						</p>
+
+						<ClayCheckbox
+							defaultChecked={isPropagateChanges}
+							label={Liferay.Language.get(
+								'propagate-fragment-changes-automatically'
+							)}
+							name={`${namespace}propagateChanges`}
+						/>
+
+						<div aria-hidden="true" className="form-feedback-group">
+							<div className="form-text text-weight-normal">
+								{Liferay.Language.get(
+									'propagate-fragment-changes-automatically-description'
+								)}
+							</div>
+						</div>
+					</ClayLayout.SheetSection>
+
+					<ClayLayout.SheetFooter>
+						<div>
+							{isFragmentServiceConfigurationDefined ? (
+								<ClayButton displayType="primary" type="submit">
+									{Liferay.Language.get('update')}
+								</ClayButton>
+							) : (
+								<ClayButton displayType="primary" type="submit">
+									{Liferay.Language.get('save')}
+								</ClayButton>
+							)}
+
+							<ClayButton
+								displayType="secondary"
+								onClick={onCancel}
+								type="cancel"
+							>
+								{Liferay.Language.get('cancel')}
+							</ClayButton>
+						</div>
+					</ClayLayout.SheetFooter>
+				</ClayLayout.Sheet>
+			</form>
+
+			<form
+				action={propagateContributedFragmentEntryChangesURL}
+				method="POST"
+				ref={propagateContributedFragmentEntryChangesFormRef}
+			></form>
 
 			{warningModalVisible && (
 				<ClayModal
@@ -176,8 +241,12 @@ export default function FragmentServiceConfiguration({
 									{Liferay.Language.get('cancel')}
 								</ClayButton>
 
-								<ClayButton displayType="primary" type="submit">
-									{Liferay.Language.get('ok')}
+								<ClayButton
+									displayType="warning"
+									onClick={handleSubmit}
+									type="submit"
+								>
+									{Liferay.Language.get('continue')}
 								</ClayButton>
 							</ClayButton.Group>
 						}
