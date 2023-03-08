@@ -26,6 +26,8 @@ LayoutType selLayoutType = selLayout.getLayoutType();
 Locale defaultLocale = LocaleUtil.getDefault();
 
 String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+String friendlyURLBase = StringPool.BLANK;
 %>
 
 <liferay-ui:error-marker
@@ -35,11 +37,66 @@ String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
 
 <aui:model-context bean="<%= selLayout %>" model="<%= Layout.class %>" />
 
-<%
-String friendlyURLBase = StringPool.BLANK;
-%>
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="basic-info" /></h3>
+	</clay:sheet-header>
+
+	<c:if test="<%= !layoutsAdminDisplayContext.isDraft() && !selLayout.isSystem() %>">
+		<aui:input ignoreRequestValue="<%= SessionErrors.isEmpty(liferayPortletRequest) %>" name="name" />
+
+		<div class="form-group">
+			<aui:input helpMessage="hidden-from-navigation-menu-widget-help-message" inlineLabel="right" label="hidden-from-navigation-menu-widget" labelCssClass="simple-toggle-switch" name="hidden" type="toggle-switch" value="<%= selLayout.isHidden() %>" />
+		</div>
+	</c:if>
+</clay:sheet>
+
+<c:if test="<%= Objects.equals(selLayout.getType(), LayoutConstants.TYPE_PORTLET) %>">
+	<clay:sheet cssClass="mt-4">
+		<clay:sheet-header cssClass="mb-0">
+			<h3 class="sheet-title"><liferay-ui:message key="layout" /></h3>
+		</clay:sheet-header>
+
+		<c:if test="<%= Validator.isNotNull(selLayout.getLayoutPrototypeUuid()) %>">
+			<%
+			LayoutPrototype layoutPrototype = LayoutPrototypeLocalServiceUtil.getLayoutPrototypeByUuidAndCompanyId(selLayout.getLayoutPrototypeUuid(), company.getCompanyId());
+			%>
+
+			<aui:input name="applyLayoutPrototype" type="hidden" value="<%= false %>" />
+			<aui:input name="layoutPrototypeUuid" type="hidden" value="<%= selLayout.getLayoutPrototypeUuid() %>" />
+
+			<aui:input helpMessage='<%= LanguageUtil.format(request, "if-enabled-this-page-will-inherit-changes-made-to-the-x-page-template", HtmlUtil.escape(layoutPrototype.getName(user.getLocale())), false) %>' inlineLabel="right" label="inherit-changes" labelCssClass="simple-toggle-switch" name="layoutPrototypeLinkEnabled" type="toggle-switch" value="<%= selLayout.isLayoutPrototypeLinkEnabled() %>" />
+
+			<div class="alert alert-warning layout-prototype-info-message <%= selLayout.isLayoutPrototypeLinkActive() ? StringPool.BLANK : "hide" %>">
+				<liferay-ui:message arguments='<%= new String[] {"inherit-changes", "general"} %>' key="some-page-settings-are-unavailable-because-x-is-enabled" translateArguments="<%= true %>" />
+			</div>
+
+			<div class="<%= selLayout.isLayoutPrototypeLinkEnabled() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />layoutPrototypeMergeAlert">
+
+				<%
+				request.setAttribute("edit_layout_prototype.jsp-layoutPrototype", layoutPrototype);
+				request.setAttribute("edit_layout_prototype.jsp-redirect", currentURL);
+				request.setAttribute("edit_layout_prototype.jsp-selPlid", String.valueOf(selLayout.getPlid()));
+				%>
+
+				<liferay-util:include page="/layout_merge_alert.jsp" servletContext="<%= application %>" />
+			</div>
+		</c:if>
+
+		<div class="<%= selLayout.isLayoutPrototypeLinkActive() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />typeOptions">
+			<liferay-util:include page="/layout_type_resources.jsp" servletContext="<%= application %>">
+				<liferay-util:param name="id" value="<%= selLayout.getType() %>" />
+				<liferay-util:param name="type" value="<%= selLayout.getType() %>" />
+			</liferay-util:include>
+		</div>
+	</clay:sheet>
+</c:if>
 
 <clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="url" /></h3>
+	</clay:sheet-header>
+
 	<c:if test="<%= !group.isLayoutPrototype() && selLayoutType.isURLFriendliable() && !layoutsAdminDisplayContext.isDraft() && !selLayout.isSystem() %>">
 		<liferay-ui:error exception="<%= DuplicateFriendlyURLEntryException.class %>" message="the-friendly-url-is-already-in-use.-please-enter-a-unique-friendly-url" />
 
@@ -82,14 +139,6 @@ String friendlyURLBase = StringPool.BLANK;
 
 	<c:choose>
 		<c:when test="<%= !group.isLayoutPrototype() %>">
-			<c:if test="<%= !layoutsAdminDisplayContext.isDraft() && !selLayout.isSystem() %>">
-				<aui:input ignoreRequestValue="<%= SessionErrors.isEmpty(liferayPortletRequest) %>" name="name" />
-
-				<div class="form-group">
-					<aui:input helpMessage="hidden-from-navigation-menu-widget-help-message" inlineLabel="right" label="hidden-from-navigation-menu-widget" labelCssClass="simple-toggle-switch" name="hidden" type="toggle-switch" value="<%= selLayout.isHidden() %>" />
-				</div>
-			</c:if>
-
 			<c:choose>
 				<c:when test="<%= selLayoutType.isURLFriendliable() && !layoutsAdminDisplayContext.isDraft() && !selLayout.isSystem() %>">
 					<liferay-friendly-url:input
@@ -120,45 +169,15 @@ String friendlyURLBase = StringPool.BLANK;
 			<aui:input name="friendlyURL" type="hidden" value="<%= (selLayout != null) ? HttpComponentsUtil.decodeURL(selLayout.getFriendlyURL()) : StringPool.BLANK %>" />
 		</c:otherwise>
 	</c:choose>
+</clay:sheet>
 
-	<c:if test="<%= Validator.isNotNull(selLayout.getLayoutPrototypeUuid()) %>">
-
-		<%
-		LayoutPrototype layoutPrototype = LayoutPrototypeLocalServiceUtil.getLayoutPrototypeByUuidAndCompanyId(selLayout.getLayoutPrototypeUuid(), company.getCompanyId());
-		%>
-
-		<aui:input name="applyLayoutPrototype" type="hidden" value="<%= false %>" />
-		<aui:input name="layoutPrototypeUuid" type="hidden" value="<%= selLayout.getLayoutPrototypeUuid() %>" />
-
-		<aui:input helpMessage='<%= LanguageUtil.format(request, "if-enabled-this-page-will-inherit-changes-made-to-the-x-page-template", HtmlUtil.escape(layoutPrototype.getName(user.getLocale())), false) %>' inlineLabel="right" label="inherit-changes" labelCssClass="simple-toggle-switch" name="layoutPrototypeLinkEnabled" type="toggle-switch" value="<%= selLayout.isLayoutPrototypeLinkEnabled() %>" />
-
-		<div class="alert alert-warning layout-prototype-info-message <%= selLayout.isLayoutPrototypeLinkActive() ? StringPool.BLANK : "hide" %>">
-			<liferay-ui:message arguments='<%= new String[] {"inherit-changes", "general"} %>' key="some-page-settings-are-unavailable-because-x-is-enabled" translateArguments="<%= true %>" />
-		</div>
-
-		<div class="<%= selLayout.isLayoutPrototypeLinkEnabled() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />layoutPrototypeMergeAlert">
-
-			<%
-			request.setAttribute("edit_layout_prototype.jsp-layoutPrototype", layoutPrototype);
-			request.setAttribute("edit_layout_prototype.jsp-redirect", currentURL);
-			request.setAttribute("edit_layout_prototype.jsp-selPlid", String.valueOf(selLayout.getPlid()));
-			%>
-
-			<liferay-util:include page="/layout_merge_alert.jsp" servletContext="<%= application %>" />
-		</div>
-	</c:if>
-
-	<div class="<%= selLayout.isLayoutPrototypeLinkActive() ? "hide" : StringPool.BLANK %>" id="<portlet:namespace />typeOptions">
-		<liferay-util:include page="/layout_type_resources.jsp" servletContext="<%= application %>">
-			<liferay-util:param name="id" value="<%= selLayout.getType() %>" />
-			<liferay-util:param name="type" value="<%= selLayout.getType() %>" />
-		</liferay-util:include>
-	</div>
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="categorization" /></h3>
+	</clay:sheet-header>
 
 	<c:if test="<%= !selLayout.isTypeAssetDisplay() %>">
 		<clay:sheet-section>
-			<h3 class="sheet-subtitle"><liferay-ui:message key="categorization" /></h3>
-
 			<liferay-util:include page="/layout/categorization.jsp" servletContext="<%= application %>" />
 		</clay:sheet-section>
 	</c:if>
