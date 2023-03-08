@@ -169,6 +169,8 @@ String friendlyURLBase = StringPool.BLANK;
 			<aui:input name="friendlyURL" type="hidden" value="<%= (selLayout != null) ? HttpComponentsUtil.decodeURL(selLayout.getFriendlyURL()) : StringPool.BLANK %>" />
 		</c:otherwise>
 	</c:choose>
+
+	<liferay-util:include page="/layout/advanced.jsp" servletContext="<%= application %>" />
 </clay:sheet>
 
 <clay:sheet cssClass="mt-4">
