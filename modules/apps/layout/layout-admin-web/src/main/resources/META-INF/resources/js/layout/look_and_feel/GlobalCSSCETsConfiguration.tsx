@@ -145,10 +145,6 @@ export default function GlobalCSSCETsConfiguration({
 				/>
 			))}
 
-			<h3 className="sheet-subtitle">
-				{Liferay.Language.get('css-client-extensions')}
-			</h3>
-
 			<ClayButton
 				className="mb-3"
 				displayType="secondary"

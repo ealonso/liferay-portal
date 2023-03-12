@@ -45,59 +45,6 @@ LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLook
 <aui:input name="faviconFileEntryId" type="hidden" value="<%= selLayout.getFaviconFileEntryId() %>" />
 <aui:input name="themeFaviconCETExternalReferenceCode" type="hidden" value="<%= layoutLookAndFeelDisplayContext.getThemeFaviconCETExternalReferenceCode() %>" />
 
-<clay:sheet-section>
-	<h3 class="sheet-subtitle"><liferay-ui:message key="favicon" /></h3>
-
-	<img alt="<%= HtmlUtil.escape(layoutLookAndFeelDisplayContext.getFaviconTitle()) %>" class="mb-2" height="16" id="<portlet:namespace />faviconImage" src="<%= layoutLookAndFeelDisplayContext.getFaviconURL() %>" width="16" />
-
-	<p>
-		<b><liferay-ui:message key="favicon-name" />:</b> <span id="<portlet:namespace />faviconTitle"><%= layoutLookAndFeelDisplayContext.getFaviconTitle() %></span>
-	</p>
-
-	<clay:content-row>
-		<clay:content-col
-			cssClass="mr-4"
-		>
-			<clay:button
-				additionalProps="<%= layoutLookAndFeelDisplayContext.getChangeFaviconButtonAdditionalProps() %>"
-				displayType="secondary"
-				id='<%= liferayPortletResponse.getNamespace() + "changeFaviconButton" %>'
-				label="change-favicon"
-				propsTransformer="js/layout/ChangeFaviconButtonPropsTransformer"
-				small="<%= true %>"
-			/>
-		</clay:content-col>
-
-		<clay:content-col>
-			<clay:button
-				additionalProps="<%= layoutLookAndFeelDisplayContext.getClearFaviconButtonAdditionalProps() %>"
-				disabled="<%= !layoutLookAndFeelDisplayContext.isClearFaviconButtonEnabled() %>"
-				displayType="secondary"
-				id='<%= liferayPortletResponse.getNamespace() + "clearFaviconButton" %>'
-				label="clear"
-				propsTransformer="js/layout/ClearFaviconButtonPropsTransformer"
-				small="<%= true %>"
-			/>
-		</clay:content-col>
-	</clay:content-row>
-</clay:sheet-section>
-
-<c:if test="<%= layoutLookAndFeelDisplayContext.hasEditableMasterLayout() %>">
-	<clay:sheet-section>
-		<react:component
-			module="js/layout/look_and_feel/MasterLayoutConfiguration"
-			props="<%= layoutLookAndFeelDisplayContext.getMasterLayoutConfigurationProps() %>"
-		/>
-	</clay:sheet-section>
-</c:if>
-
-<clay:sheet-section>
-	<react:component
-		module="js/layout/look_and_feel/StyleBookConfiguration"
-		props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
-	/>
-</clay:sheet-section>
-
 <liferay-util:buffer
 	var="rootNodeNameLink"
 >
@@ -122,67 +69,139 @@ else {
 }
 %>
 
-<clay:sheet-section
-	cssClass='<%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>'
-	id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
->
-	<h3 class="sheet-subtitle"><liferay-ui:message key="theme" /></h3>
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="theme" /></h3>
+	</clay:sheet-header>
 
-	<aui:input checked="<%= selLayout.isInheritLookAndFeel() %>" id="regularInheritLookAndFeel" label="<%= taglibLabel %>" name="regularInheritLookAndFeel" type="radio" value="<%= true %>" />
+	<clay:sheet-section
+		cssClass='<%= (selLayout.getMasterLayoutPlid() <= 0) ? StringPool.BLANK : "hide" %>'
+		id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
+	>
+		<aui:input checked="<%= selLayout.isInheritLookAndFeel() %>" id="regularInheritLookAndFeel" label="<%= taglibLabel %>" name="regularInheritLookAndFeel" type="radio" value="<%= true %>" />
 
-	<aui:input checked="<%= !selLayout.isInheritLookAndFeel() %>" id="regularUniqueLookAndFeel" label="define-a-specific-look-and-feel-for-this-page" name="regularInheritLookAndFeel" type="radio" value="<%= false %>" />
+		<aui:input checked="<%= !selLayout.isInheritLookAndFeel() %>" id="regularUniqueLookAndFeel" label="define-a-specific-look-and-feel-for-this-page" name="regularInheritLookAndFeel" type="radio" value="<%= false %>" />
 
-	<c:if test="<%= !group.isLayoutPrototype() %>">
-		<div class="lfr-inherit-theme-options" id="<portlet:namespace />inheritThemeOptions">
-			<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>">
-				<liferay-util:param name="companyId" value="<%= String.valueOf(group.getCompanyId()) %>" />
-				<liferay-util:param name="editable" value="<%= Boolean.FALSE.toString() %>" />
-				<liferay-util:param name="themeId" value="<%= rootTheme.getThemeId() %>" />
-			</liferay-util:include>
-		</div>
-	</c:if>
+		<c:if test="<%= !group.isLayoutPrototype() %>">
+			<div class="lfr-inherit-theme-options" id="<portlet:namespace />inheritThemeOptions">
+				<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>">
+					<liferay-util:param name="companyId" value="<%= String.valueOf(group.getCompanyId()) %>" />
+					<liferay-util:param name="editable" value="<%= Boolean.FALSE.toString() %>" />
+					<liferay-util:param name="themeId" value="<%= rootTheme.getThemeId() %>" />
+				</liferay-util:include>
+			</div>
+		</c:if>
 
-	<div class="lfr-theme-options" id="<portlet:namespace />themeOptions">
-		<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
-	</div>
-</clay:sheet-section>
-
-<div class="mt-5">
-	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />
-</div>
-
-<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPS-166479") %>'>
-	<clay:sheet-section>
-		<h3 class="sheet-subtitle"><liferay-ui:message key="theme-spritemap-client-extension" /></h3>
-
-		<clay:alert
-			displayType="info"
-			message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
-		/>
-
-		<p>
-			<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
-		</p>
-
-		<div>
-			<react:component
-				module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
-				props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
-			/>
+		<div class="lfr-theme-options" id="<portlet:namespace />themeOptions">
+			<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
 		</div>
 	</clay:sheet-section>
-</c:if>
+</clay:sheet>
 
-<clay:sheet-section
-	cssClass="mt-5"
->
-	<div>
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="basic-settings" /></h3>
+	</clay:sheet-header>
+
+	<clay:sheet-section>
+		<img alt="<%= HtmlUtil.escape(layoutLookAndFeelDisplayContext.getFaviconTitle()) %>" class="mb-2" height="16" id="<portlet:namespace />faviconImage" src="<%= layoutLookAndFeelDisplayContext.getFaviconURL() %>" width="16" />
+
+		<p>
+			<b><liferay-ui:message key="favicon-name" />:</b> <span id="<portlet:namespace />faviconTitle"><%= layoutLookAndFeelDisplayContext.getFaviconTitle() %></span>
+		</p>
+
+		<clay:content-row>
+			<clay:content-col
+				cssClass="mr-4"
+			>
+				<clay:button
+					additionalProps="<%= layoutLookAndFeelDisplayContext.getChangeFaviconButtonAdditionalProps() %>"
+					displayType="secondary"
+					id='<%= liferayPortletResponse.getNamespace() + "changeFaviconButton" %>'
+					label="change-favicon"
+					propsTransformer="js/layout/ChangeFaviconButtonPropsTransformer"
+					small="<%= true %>"
+				/>
+			</clay:content-col>
+
+			<clay:content-col>
+				<clay:button
+					additionalProps="<%= layoutLookAndFeelDisplayContext.getClearFaviconButtonAdditionalProps() %>"
+					disabled="<%= !layoutLookAndFeelDisplayContext.isClearFaviconButtonEnabled() %>"
+					displayType="secondary"
+					id='<%= liferayPortletResponse.getNamespace() + "clearFaviconButton" %>'
+					label="clear"
+					propsTransformer="js/layout/ClearFaviconButtonPropsTransformer"
+					small="<%= true %>"
+				/>
+			</clay:content-col>
+		</clay:content-row>
+	</clay:sheet-section>
+
+	<c:if test="<%= layoutLookAndFeelDisplayContext.hasEditableMasterLayout() %>">
+		<clay:sheet-section>
+			<react:component
+				module="js/layout/look_and_feel/MasterLayoutConfiguration"
+				props="<%= layoutLookAndFeelDisplayContext.getMasterLayoutConfigurationProps() %>"
+			/>
+		</clay:sheet-section>
+	</c:if>
+
+	<clay:sheet-section>
 		<react:component
-			module="js/layout/look_and_feel/GlobalCSSCETsConfiguration"
-			props="<%= layoutLookAndFeelDisplayContext.getGlobalCSSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+			module="js/layout/look_and_feel/StyleBookConfiguration"
+			props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
 		/>
-	</div>
-</clay:sheet-section>
+	</clay:sheet-section>
+</clay:sheet>
+
+<clay:sheet cssClass="mt-4">
+	<clay:sheet-header cssClass="mb-0">
+		<h3 class="sheet-title"><liferay-ui:message key="customization" /></h3>
+	</clay:sheet-header>
+
+	<liferay-util:include page="/look_and_feel_theme_css.jsp" servletContext="<%= application %>" />
+
+	<c:if test='<%= FeatureFlagManagerUtil.isEnabled("LPS-166479") %>'>
+		<clay:sheet-section cssClass="mb-3">
+			<liferay-frontend:fieldset
+				collapsible="<%= true %>"
+				label="theme-spritemap-client-extension"
+			>
+				<clay:alert
+					displayType="info"
+					message='<%= LanguageUtil.get(request, "to-add-or-edit-the-existing-spritemap-simply-copy-paste-and-make-changes-as-needed-to-your-registered-extension") %>'
+				/>
+
+				<p>
+					<liferay-ui:message key="use-this-client-extension-to-fully-replace-the-default-spritemap-contained-in-the-theme" />
+				</p>
+
+				<div>
+					<react:component
+						module="js/layout/look_and_feel/ThemeSpritemapCETsConfiguration"
+						props="<%= layoutLookAndFeelDisplayContext.getThemeSpritemapCETConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+					/>
+				</div>
+			</liferay-frontend:fieldset>
+		</clay:sheet-section>
+	</c:if>
+
+	<clay:sheet-section cssClass="mb-3">
+		<liferay-frontend:fieldset
+			collapsible="<%= true %>"
+			label="css-client-extensions"
+		>
+			<react:component
+				module="js/layout/look_and_feel/GlobalCSSCETsConfiguration"
+				props="<%= layoutLookAndFeelDisplayContext.getGlobalCSSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+			/>
+		</liferay-frontend:fieldset>
+	</clay:sheet-section>
+
+	<liferay-util:include page="/layout/javascript.jsp" servletContext="<%= application %>" />
+	
+</clay:sheet>
 
 <aui:script>
 	Liferay.Util.toggleRadio(

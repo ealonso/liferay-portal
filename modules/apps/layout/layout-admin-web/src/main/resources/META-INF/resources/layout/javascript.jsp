@@ -33,15 +33,27 @@ if (selLayout != null) {
 
 <aui:model-context bean="<%= selLayout %>" model="<%= Layout.class %>" />
 
-<aui:input cssClass="propagatable-field" disabled="<%= selLayout.isLayoutPrototypeLinkActive() %>" label="paste-javascript-code-that-is-executed-at-the-bottom-of-the-page" name="TypeSettingsProperties--javascript--" placeholder="javascript" type="textarea" value='<%= layoutTypeSettingsUnicodeProperties.getProperty("javascript") %>' wrap="soft" />
+<clay:sheet-section cssClass="mb-3">
+	<liferay-frontend:fieldset
+		collapsible="<%= true %>"
+		label="custom-javascript"
+	>
+		<aui:input cssClass="propagatable-field" disabled="<%= selLayout.isLayoutPrototypeLinkActive() %>" label="paste-javascript-code-that-is-executed-at-the-bottom-of-the-page" name="TypeSettingsProperties--javascript--" placeholder="javascript" type="textarea" value='<%= layoutTypeSettingsUnicodeProperties.getProperty("javascript") %>' wrap="soft" />
+	</liferay-frontend:fieldset>
+</clay:sheet-section>
 
 <%
 LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
 %>
 
-<clay:sheet-section>
-	<react:component
-		module="js/layout/look_and_feel/GlobalJSCETsConfiguration"
-		props="<%= layoutLookAndFeelDisplayContext.getGlobalJSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
-	/>
+<clay:sheet-section cssClass="mb-3">
+	<liferay-frontend:fieldset
+		collapsible="<%= true %>"
+		label="javascript-client-extensions"
+	>
+		<react:component
+			module="js/layout/look_and_feel/GlobalJSCETsConfiguration"
+			props="<%= layoutLookAndFeelDisplayContext.getGlobalJSCETsConfigurationProps(Layout.class.getName(), selLayout.getPlid()) %>"
+		/>
+	</liferay-frontend:fieldset>
 </clay:sheet-section>

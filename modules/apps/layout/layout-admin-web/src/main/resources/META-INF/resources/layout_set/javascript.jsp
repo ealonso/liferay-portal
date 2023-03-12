@@ -27,15 +27,27 @@ UnicodeProperties layoutSetTypeSettingsUnicodeProperties = selLayoutSet.getSetti
 	value="javascript"
 />
 
-<aui:input label="paste-javascript-code-that-is-executed-at-the-bottom-of-every-page" name="TypeSettingsProperties--javascript--" placeholder="javascript" type="textarea" value='<%= layoutSetTypeSettingsUnicodeProperties.getProperty("javascript") %>' wrap="soft" />
+<clay:sheet-section cssClass="mb-3">
+	<liferay-frontend:fieldset
+		collapsible="<%= true %>"
+		label="custom-javascript"
+	>
+		<aui:input label="paste-javascript-code-that-is-executed-at-the-bottom-of-every-page" name="TypeSettingsProperties--javascript--" placeholder="javascript" type="textarea" value='<%= layoutSetTypeSettingsUnicodeProperties.getProperty("javascript") %>' wrap="soft" />
+	</liferay-frontend:fieldset>
+</clay:sheet-section>
 
 <%
 LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
 %>
 
-<clay:sheet-section>
+<clay:sheet-section cssClass="mb-3">
+	<liferay-frontend:fieldset
+		collapsible="<%= true %>"
+		label="javascript-client-extensions"
+	>
 	<react:component
 		module="js/layout/look_and_feel/GlobalJSCETsConfiguration"
 		props="<%= layoutLookAndFeelDisplayContext.getGlobalJSCETsConfigurationProps(LayoutSet.class.getName(), selLayoutSet.getLayoutSetId()) %>"
 	/>
+	</liferay-frontend:fieldset>
 </clay:sheet-section>
