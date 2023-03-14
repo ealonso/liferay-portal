@@ -409,6 +409,12 @@ public class FragmentEntryLinkLocalServiceUtil {
 	}
 
 	public static List<FragmentEntryLink> getFragmentEntryLinks(
+		long companyId, String rendererKey) {
+
+		return getService().getFragmentEntryLinks(companyId, rendererKey);
+	}
+
+	public static List<FragmentEntryLink> getFragmentEntryLinks(
 		String rendererKey) {
 
 		return getService().getFragmentEntryLinks(rendererKey);
