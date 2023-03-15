@@ -41,128 +41,18 @@ class CriteriaRowReadable extends Component {
 		criterion: {},
 	};
 
-	_renderEventDateString = (criterion) => {
-		const dateOperators = getSupportedOperatorsFromEvent(
-			SUPPORTED_EVENT_DATE_OPERATORS,
-			SUPPORTED_PROPERTY_TYPES,
-			'DATE'
-		);
+	render() {
+		const {criterion, selectedOperator, selectedProperty} = this.props;
+		const value = criterion ? criterion.value : '';
+		const operatorLabel = selectedOperator ? selectedOperator.label : '';
+		const propertyLabel = selectedProperty ? selectedProperty.label : '';
 
-		const isEverOperator = !criterion.day;
-
-		if (isEverOperator) {
-			return dateOperators.find(
-				(operator) => operator.name === DATE_OPERATORS.EVER
-			)?.label;
-		}
-
-		const isBetweenOperator =
-			criterion?.day?.operatorName === DATE_OPERATORS.BETWEEN;
-		const isSinceOperator = SINCE_VALUES[criterion?.day?.value]
-			? true
-			: false;
-
-		const dateOperatorLabel = dateOperators.find(
-			(operator) => operator.name === criterion?.day?.operatorName
-		)?.label;
-
-		if (isBetweenOperator) {
-			const startParsedValue = dateToInternationalHuman(
-				criterion?.day?.value?.start
-			);
-			const endParsedValue = dateToInternationalHuman(
-				criterion?.day?.value?.end
-			);
-
-			return (
-				<span>
-					<span className="mr-1 operator">{dateOperatorLabel}</span>
-
-					<b className="text-lowercase">{`${unescapeSingleQuotes(
-						startParsedValue
-					)} ${Liferay.Language.get('to')} ${unescapeSingleQuotes(
-						endParsedValue
-					)}`}</b>
-				</span>
-			);
-		}
-
-		const operatorLabel = isSinceOperator
-			? Liferay.Language.get('since')
-			: dateOperatorLabel;
-		const value = isSinceOperator
-			? SINCE_VALUES[criterion?.day?.value].toLowerCase()
-			: criterion?.day?.value;
-
-		return this._renderCriteriaString({
-			operatorLabel,
-			type: isSinceOperator ? PROPERTY_TYPES.STRING : PROPERTY_TYPES.DATE,
-			value,
-		});
-	};
-
-	_renderEventCriteriaString = ({criterion, propertyLabel}) => {
-		const notOperators = getSupportedOperatorsFromEvent(
-			SUPPORTED_EVENT_OPERATORS,
-			SUPPORTED_PROPERTY_TYPES,
-			'NOT'
-		);
-
-		const notOperatorKey = criterion.operatorNot
-			? HAS_OPERATORS.NOT_HAS
-			: HAS_OPERATORS.HAS;
-
-		const notOperatorLabel = notOperators.find(
-			(operator) => operator.name === notOperatorKey
-		)?.label;
-
-		const integerOperators = getSupportedOperatorsFromEvent(
-			SUPPORTED_EVENT_OPERATORS,
-			SUPPORTED_PROPERTY_TYPES,
-			'INTEGER'
-		);
-
-		const integerOperatorLabel = integerOperators.find(
-			(operator) => operator.name === criterion.operatorName
-		)?.label;
-
-		const eventCriteriaPart = this._renderCriteriaString({
-			propertyLabel,
-			value: criterion.assetId,
-		});
-
-		const dateCriteriaPart = this._renderEventDateString(criterion);
-
-		return (
-			<span>
-				<b className="mr-1 text-dark">{Liferay.Language.get('user')}</b>
-
-				<span className="mr-1 operator">{notOperatorLabel}</span>
-
-				{eventCriteriaPart}
-
-				<span className="ml-1 mr-1 operator">
-					{integerOperatorLabel}
-				</span>
-
-				<b className="mr-1 text-lowercase">{criterion.value}</b>
-
-				<span className="mr-1 operator">
-					{Liferay.Language.get('times')}
-				</span>
-
-				{dateCriteriaPart}
-			</span>
-		);
-	};
-
-	_renderCriteriaString = ({operatorLabel, propertyLabel, type, value}) => {
 		let parsedValue = null;
 
-		if (type === PROPERTY_TYPES.DATE) {
+		if (selectedProperty.type === PROPERTY_TYPES.DATE) {
 			parsedValue = dateToInternationalHuman(value.replaceAll('-', '/'));
 		}
-		else if (type === PROPERTY_TYPES.DATE_TIME) {
+		else if (selectedProperty.type === PROPERTY_TYPES.DATE_TIME) {
 			parsedValue = dateToInternationalHuman(value);
 		}
 		else {
@@ -170,39 +60,18 @@ class CriteriaRowReadable extends Component {
 		}
 
 		return (
-			<span>
+			<span className="criterion-string">
+					<span>
 				{propertyLabel && (
 					<b className="mr-1 text-dark">{propertyLabel}</b>
 				)}
 
-				{operatorLabel && (
-					<span className="mr-1 operator">{operatorLabel}</span>
-				)}
+						{operatorLabel && (
+							<span className="mr-1 operator">{operatorLabel}</span>
+						)}
 
-				<b>{unescapeSingleQuotes(parsedValue)}</b>
+						<b>{unescapeSingleQuotes(parsedValue)}</b>
 			</span>
-		);
-	};
-
-	render() {
-		const {criterion, selectedOperator, selectedProperty} = this.props;
-		const value = criterion ? criterion.value : '';
-		const operatorLabel = selectedOperator ? selectedOperator.label : '';
-		const propertyLabel = selectedProperty ? selectedProperty.label : '';
-
-		return (
-			<span className="criterion-string">
-				{selectedProperty.type === PROPERTY_TYPES.EVENT
-					? this._renderEventCriteriaString({
-							criterion,
-							propertyLabel,
-					  })
-					: this._renderCriteriaString({
-							operatorLabel,
-							propertyLabel,
-							type: selectedProperty.type,
-							value: criterion.displayValue || value,
-					  })}
 			</span>
 		);
 	}
