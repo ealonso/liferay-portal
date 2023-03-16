@@ -15,20 +15,9 @@
 import {PropTypes} from 'prop-types';
 import React, {Component} from 'react';
 
-import {
-	DATE_OPERATORS,
-	HAS_OPERATORS,
-	PROPERTY_TYPES,
-	SINCE_VALUES,
-	SUPPORTED_EVENT_DATE_OPERATORS,
-	SUPPORTED_EVENT_OPERATORS,
-	SUPPORTED_PROPERTY_TYPES,
-} from '../../utils/constants';
+import {PROPERTY_TYPES} from '../../utils/constants';
 import {unescapeSingleQuotes} from '../../utils/odata.es';
-import {
-	dateToInternationalHuman,
-	getSupportedOperatorsFromEvent,
-} from '../../utils/utils.es';
+import {dateToInternationalHuman} from '../../utils/utils.es';
 
 class CriteriaRowReadable extends Component {
 	static propTypes = {
@@ -44,34 +33,37 @@ class CriteriaRowReadable extends Component {
 	render() {
 		const {criterion, selectedOperator, selectedProperty} = this.props;
 		const value = criterion ? criterion.value : '';
+		const displayValue = criterion.displayValue
+			? criterion.displayValue
+			: value;
 		const operatorLabel = selectedOperator ? selectedOperator.label : '';
 		const propertyLabel = selectedProperty ? selectedProperty.label : '';
 
 		let parsedValue = null;
 
 		if (selectedProperty.type === PROPERTY_TYPES.DATE) {
-			parsedValue = dateToInternationalHuman(value.replaceAll('-', '/'));
+			parsedValue = dateToInternationalHuman(
+				displayValue.replaceAll('-', '/')
+			);
 		}
 		else if (selectedProperty.type === PROPERTY_TYPES.DATE_TIME) {
-			parsedValue = dateToInternationalHuman(value);
+			parsedValue = dateToInternationalHuman(displayValue);
 		}
 		else {
-			parsedValue = value;
+			parsedValue = displayValue;
 		}
 
 		return (
 			<span className="criterion-string">
-					<span>
 				{propertyLabel && (
 					<b className="mr-1 text-dark">{propertyLabel}</b>
 				)}
 
-						{operatorLabel && (
-							<span className="mr-1 operator">{operatorLabel}</span>
-						)}
+				{operatorLabel && (
+					<span className="mr-1 operator">{operatorLabel}</span>
+				)}
 
-						<b>{unescapeSingleQuotes(parsedValue)}</b>
-			</span>
+				<b>{unescapeSingleQuotes(parsedValue)}</b>
 			</span>
 		);
 	}
