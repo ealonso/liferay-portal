@@ -17,7 +17,6 @@ package com.liferay.segments.asah.connector.internal.messaging.test;
 import com.liferay.analytics.settings.configuration.AnalyticsConfiguration;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.function.UnsafeSupplier;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.test.util.CompanyConfigurationTemporarySwapper;
 import com.liferay.portal.configuration.test.util.ConfigurationTemporarySwapper;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -145,6 +144,11 @@ public class IndividualSegmentsCheckerTest {
 									"individual-segments",
 									JSONUtil.putAll(
 										JSONUtil.put(
+											"filter",
+											"(activities.filterByCount(filter='(activityKey eq " +
+												"''Blog#commentPosted#606267140307242696'' and day gt " +
+													"''last24Hours'')',operator='ge',value=1))"
+										).put(
 											"id", "1234567"
 										).put(
 											"name", "Test segment"
@@ -210,7 +214,7 @@ public class IndividualSegmentsCheckerTest {
 
 			SegmentsEntry segmentsEntry = segmentsEntries.get(0);
 
-			Assert.assertEquals(StringPool.BLANK, segmentsEntry.getCriteria());
+			Assert.assertNotNull(segmentsEntry.getCriteria());
 			Assert.assertEquals(
 				"Test segment",
 				segmentsEntry.getName(LocaleUtil.getSiteDefault()));
