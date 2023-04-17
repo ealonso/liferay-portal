@@ -88,6 +88,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ImageLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
 import com.liferay.portal.kernel.service.PortletPreferenceValueLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -380,6 +381,13 @@ public class JournalServiceUpgradeStepRegistrator
 			"5.1.0", "5.1.1",
 			new JournalArticleAssetEntryClassTypeIdUpgradeProcess(
 				_classNameLocalService));
+
+		registry.register(
+			"5.1.1", "5.1.2",
+			new com.liferay.journal.internal.upgrade.v5_1_2.
+				JournalArticleLayoutClassedModelUsageUpgradeProcess(
+					_layoutClassedModelUsageLocalService,
+					_layoutRevisionLocalService));
 	}
 
 	private void _deleteTempImages() throws Exception {
@@ -474,6 +482,9 @@ public class JournalServiceUpgradeStepRegistrator
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private LayoutRevisionLocalService _layoutRevisionLocalService;
 
 	@Reference
 	private Localization _localization;
