@@ -41,7 +41,7 @@ public class LayoutAdvancedFormNavigatorEntry
 
 	@Override
 	public String getCategoryKey() {
-		return FormNavigatorConstants.CATEGORY_KEY_LAYOUT_ADVANCED;
+		return FormNavigatorConstants.CATEGORY_KEY_LAYOUT_GENERAL;
 	}
 
 	@Override
