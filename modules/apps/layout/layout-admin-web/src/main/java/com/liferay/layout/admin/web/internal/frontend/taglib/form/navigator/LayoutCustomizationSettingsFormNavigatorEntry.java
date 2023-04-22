@@ -43,7 +43,7 @@ public class LayoutCustomizationSettingsFormNavigatorEntry
 
 	@Override
 	public String getFormNavigatorId() {
-		return FormNavigatorConstants.FORM_NAVIGATOR_ID_LAYOUT_DESIGN;
+		return FormNavigatorConstants.FORM_NAVIGATOR_ID_LAYOUT;
 	}
 
 	@Override
