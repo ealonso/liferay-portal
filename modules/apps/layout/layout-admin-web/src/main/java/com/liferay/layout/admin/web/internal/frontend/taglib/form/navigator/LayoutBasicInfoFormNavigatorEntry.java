@@ -51,13 +51,11 @@ public class LayoutBasicInfoFormNavigatorEntry
 
 	@Override
 	public boolean isVisible(User user, Layout layout) {
-		if (layout.isTypeAssetDisplay() ||
-			(layout.isTypeContent() && (layout.fetchDraftLayout() == null))) {
-
+		if (layout.isTypeAssetDisplay()) {
 			return false;
 		}
 
-		return true;
+		return super.isVisible(user, layout);
 	}
 
 	@Override
