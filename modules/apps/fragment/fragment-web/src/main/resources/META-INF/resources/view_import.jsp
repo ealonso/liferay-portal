@@ -34,7 +34,6 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	name="fm"
 >
 	<liferay-frontend:edit-form-body>
-
 		<%
 		List<String> draftFragmentsImporterResultEntries = importDisplayContext.getFragmentsImporterResultEntries(FragmentsImporterResultEntry.Status.IMPORTED_DRAFT);
 		%>
@@ -78,6 +77,7 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 
 		<liferay-ui:error exception="<%= InvalidFileException.class %>" message="the-selected-file-is-not-a-valid-zip-file" />
 
+		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>
 		<liferay-frontend:fieldset>
 			<aui:input label="select-file" name="file" type="file">
 				<aui:validator name="required" />
