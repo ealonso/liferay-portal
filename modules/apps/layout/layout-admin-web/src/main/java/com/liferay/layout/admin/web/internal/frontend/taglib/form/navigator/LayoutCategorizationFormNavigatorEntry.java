@@ -16,13 +16,8 @@ package com.liferay.layout.admin.web.internal.frontend.taglib.form.navigator;
 
 import com.liferay.frontend.taglib.form.navigator.FormNavigatorEntry;
 import com.liferay.frontend.taglib.form.navigator.constants.FormNavigatorConstants;
-import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
-import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.User;
-
-import java.util.Objects;
 
 import javax.servlet.ServletContext;
 
@@ -30,13 +25,13 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pei-Jung Lan
+ * @author Eudaldo Alonso
  */
 @Component(
 	property = "form.navigator.entry.order:Integer=100",
 	service = FormNavigatorEntry.class
 )
-public class LayoutAdvancedFormNavigatorEntry
+public class LayoutCategorizationFormNavigatorEntry
 	extends BaseLayoutFormNavigatorEntry {
 
 	@Override
@@ -45,13 +40,8 @@ public class LayoutAdvancedFormNavigatorEntry
 	}
 
 	@Override
-	public String getFormNavigatorId() {
-		return FormNavigatorConstants.FORM_NAVIGATOR_ID_LAYOUT;
-	}
-
-	@Override
 	public String getKey() {
-		return "advanced";
+		return "categorization";
 	}
 
 	@Override
@@ -65,35 +55,13 @@ public class LayoutAdvancedFormNavigatorEntry
 			return false;
 		}
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			_layoutPageTemplateEntryLocalService.
-				fetchLayoutPageTemplateEntryByPlid(layout.getPlid());
-
-		if (layoutPageTemplateEntry == null) {
-			layoutPageTemplateEntry =
-				_layoutPageTemplateEntryLocalService.
-					fetchLayoutPageTemplateEntryByPlid(layout.getClassPK());
-		}
-
-		if ((layoutPageTemplateEntry != null) &&
-			Objects.equals(
-				layoutPageTemplateEntry.getType(),
-				LayoutPageTemplateEntryTypeConstants.TYPE_MASTER_LAYOUT)) {
-
-			return false;
-		}
-
-		return super.isVisible(user, layout);
+		return true;
 	}
 
 	@Override
 	protected String getJspPath() {
-		return "/layout/advanced.jsp";
+		return "/layout/categorization.jsp";
 	}
-
-	@Reference
-	private LayoutPageTemplateEntryLocalService
-		_layoutPageTemplateEntryLocalService;
 
 	@Reference(target = "(osgi.web.symbolicname=com.liferay.layout.admin.web)")
 	private ServletContext _servletContext;

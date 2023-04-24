@@ -16,8 +16,6 @@ package com.liferay.layout.admin.web.internal.frontend.taglib.form.navigator;
 
 import com.liferay.frontend.taglib.form.navigator.FormNavigatorEntry;
 import com.liferay.frontend.taglib.form.navigator.constants.FormNavigatorConstants;
-import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.User;
 
 import javax.servlet.ServletContext;
 
@@ -25,23 +23,23 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Pei-Jung Lan
+ * @author Eudaldo Alonso
  */
 @Component(
-	property = "form.navigator.entry.order:Integer=100",
+	property = "form.navigator.entry.order:Integer=300",
 	service = FormNavigatorEntry.class
 )
-public class LayoutDetailsFormNavigatorEntry
-	extends BaseLayoutFormNavigatorEntry {
+public class LayoutSetThemeFormNavigatorEntry
+	extends BaseLayoutSetFormNavigatorEntry {
 
 	@Override
 	public String getCategoryKey() {
-		return FormNavigatorConstants.CATEGORY_KEY_LAYOUT_GENERAL;
+		return FormNavigatorConstants.CATEGORY_KEY_LAYOUT_SET_LOOK_AND_FEEL;
 	}
 
 	@Override
 	public String getKey() {
-		return "details";
+		return "theme";
 	}
 
 	@Override
@@ -50,19 +48,8 @@ public class LayoutDetailsFormNavigatorEntry
 	}
 
 	@Override
-	public boolean isVisible(User user, Layout layout) {
-		if (layout.isTypeAssetDisplay() ||
-			(layout.isTypeContent() && (layout.fetchDraftLayout() == null))) {
-
-			return false;
-		}
-
-		return true;
-	}
-
-	@Override
 	protected String getJspPath() {
-		return "/layout/details.jsp";
+		return "/layout_set/theme.jsp";
 	}
 
 	@Reference(target = "(osgi.web.symbolicname=com.liferay.layout.admin.web)")

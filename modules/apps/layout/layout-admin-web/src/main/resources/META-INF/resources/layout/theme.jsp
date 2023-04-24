@@ -35,10 +35,6 @@ PortletURL redirectURL = layoutsAdminDisplayContext.getRedirectURL();
 
 <aui:model-context bean="<%= selLayout %>" model="<%= Layout.class %>" />
 
-<%
-LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
-%>
-
 <liferay-util:buffer
 	var="rootNodeNameLink"
 >
@@ -66,12 +62,7 @@ else {
 }
 %>
 
-<clay:sheet-section
-	cssClass='<%= (selLayout.getMasterLayoutPlid() <= 0) ? "mb-5" : "hide mb-5" %>'
-	id='<%= liferayPortletResponse.getNamespace() + "themeContainer" %>'
->
-	<h3 class="mb-4 text-uppercase"><liferay-ui:message key="theme" /></h3>
-
+<div class="<%= (selLayout.getMasterLayoutPlid() <= 0) ? "" : "hide" %>" id="<portlet:namespace />themeContainer">
 	<clay:radio
 		checked="<%= selLayout.isInheritLookAndFeel() %>"
 		id='<%= liferayPortletResponse.getNamespace() + "regularInheritLookAndFeel" %>'
@@ -101,70 +92,7 @@ else {
 	<div class="lfr-inherit-theme-options <%= !selLayout.isInheritLookAndFeel() ? StringPool.BLANK : "hide" %>" id="<portlet:namespace />themeOptions">
 		<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
 	</div>
-</clay:sheet-section>
-
-<hr class="mb-5 separator" />
-
-<clay:sheet-section
-	cssClass="mb-5"
->
-	<h3 class="mb-4 text-uppercase"><liferay-ui:message key="basic-settings" /></h3>
-
-	<div>
-		<react:component
-			module="js/layout/look_and_feel/Favicon"
-			props="<%= layoutsAdminDisplayContext.getFaviconButtonProps() %>"
-		/>
-	</div>
-
-	<div class="d-flex">
-		<c:if test="<%= layoutLookAndFeelDisplayContext.hasEditableMasterLayout() %>">
-			<div class="flex-grow-1 mr-4">
-				<react:component
-					module="js/layout/look_and_feel/MasterLayoutConfiguration"
-					props="<%= layoutLookAndFeelDisplayContext.getMasterLayoutConfigurationProps() %>"
-				/>
-			</div>
-		</c:if>
-
-		<div class="flex-grow-1">
-			<react:component
-				module="js/layout/look_and_feel/StyleBookConfiguration"
-				props="<%= layoutLookAndFeelDisplayContext.getStyleBookConfigurationProps() %>"
-			/>
-		</div>
-	</div>
-</clay:sheet-section>
-
-<hr class="mb-5 separator" />
-
-<clay:sheet-section
-	cssClass="mb-5"
->
-	<h3 class="mb-4 text-uppercase"><liferay-ui:message key="customization" /></h3>
-
-	<%
-	List<TabsItem> tabsItems = layoutLookAndFeelDisplayContext.getTabsItems();
-	%>
-
-	<clay:tabs
-		tabsItems="<%= tabsItems %>"
-	>
-
-		<%
-		for (TabsItem tabsItem : tabsItems) {
-		%>
-
-			<div>
-				<liferay-util:include page='<%= "/layout/" + tabsItem.get("panelId") + ".jsp" %>' servletContext="<%= application %>" />
-			</div>
-
-		<%
-		}
-		%>
-
-	</clay:tabs>
-</clay:sheet-section>
+</div>
 
 <aui:script sandbox="<%= true %>">
 	const regularCss = document.getElementById('<portlet:namespace />regularCss');
@@ -218,31 +146,3 @@ else {
 		});
 	}
 </aui:script>
-
-<c:if test="<%= layoutLookAndFeelDisplayContext.hasStyleBooks() %>">
-	<aui:script sandbox="<%= true %>">
-		const regularInheritLookAndFeel = document.getElementById(
-			'<portlet:namespace />regularInheritLookAndFeel'
-		);
-
-		const regularUniqueLookAndFeelCheckbox = document.getElementById(
-			'<portlet:namespace />regularUniqueLookAndFeel'
-		);
-
-		const styleBookWarning = document.getElementById(
-			'<portlet:namespace />styleBookWarning'
-		);
-
-		regularInheritLookAndFeel.addEventListener('change', (event) => {
-			if (event.target.checked) {
-				styleBookWarning.classList.add('hide');
-			}
-		});
-
-		regularUniqueLookAndFeelCheckbox.addEventListener('change', (event) => {
-			if (event.target.checked) {
-				styleBookWarning.classList.remove('hide');
-			}
-		});
-	</aui:script>
-</c:if>

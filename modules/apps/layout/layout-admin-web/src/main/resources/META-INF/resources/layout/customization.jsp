@@ -16,22 +16,20 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
-%>
-
 <liferay-ui:error-marker
 	key="<%= WebKeys.ERROR_SECTION %>"
-	value="look-and-feel"
+	value="customization"
 />
 
-<liferay-util:include page="/look_and_feel_themes.jsp" servletContext="<%= application %>" />
+<aui:model-context bean="<%= layoutsAdminDisplayContext.getSelLayout() %>" model="<%= Layout.class %>" />
 
 <%
+LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
+
 List<TabsItem> tabsItems = layoutLookAndFeelDisplayContext.getTabsItems();
 %>
 
-<div class="mt-5">
+<div class="sheet-row">
 	<clay:tabs
 		tabsItems="<%= tabsItems %>"
 	>
@@ -41,7 +39,7 @@ List<TabsItem> tabsItems = layoutLookAndFeelDisplayContext.getTabsItems();
 		%>
 
 			<div>
-				<liferay-util:include page='<%= "/layout_set/" + tabsItem.get("panelId") + ".jsp" %>' servletContext="<%= application %>" />
+				<liferay-util:include page='<%= "/layout/" + tabsItem.get("panelId") + ".jsp" %>' servletContext="<%= application %>" />
 			</div>
 
 		<%
