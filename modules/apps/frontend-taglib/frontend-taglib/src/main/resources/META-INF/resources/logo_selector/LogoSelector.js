@@ -19,6 +19,7 @@ import React, {useEffect, useState} from 'react';
 
 export default function LogoSelector({
 	defaultLogoURL,
+	description,
 	label,
 	logoName: initialLogoName,
 	logoURL: initialLogoURL,
@@ -97,6 +98,15 @@ export default function LogoSelector({
 				value={fileEntryId}
 			/>
 
+			{description && (
+				<p
+					className="text-secondary"
+					id={`${portletNamespace}description`}
+				>
+					{description}
+				</p>
+			)}
+
 			{logoURL ? (
 				<img
 					alt={sub(Liferay.Language.get('current-x'), label)}
@@ -112,6 +122,11 @@ export default function LogoSelector({
 
 				<div className="d-flex">
 					<ClayInput
+						aria-describedby={
+							description
+								? `${portletNamespace}description`
+								: null
+						}
 						className="mr-2"
 						id={`${portletNamespace}logoName`}
 						readOnly
