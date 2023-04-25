@@ -33,7 +33,7 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	<liferay-frontend:edit-form-body>
 		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>
 
-		<a href="https://portal.liferay.dev/docs" target="_blank">
+		<a href=" https://learn.liferay.com/dxp/latest/en/site-building/creating-pages/adding-pages/exporting-and-importing-page-templates.html" target="_blank">
 			<liferay-ui:message key="read-more" />
 		</a>
 
