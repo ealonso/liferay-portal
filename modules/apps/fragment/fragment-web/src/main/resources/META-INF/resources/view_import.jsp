@@ -79,7 +79,7 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 
 		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>
 		<liferay-frontend:fieldset>
-			<aui:input label="select-file" name="file" type="file">
+			<aui:input label="file" name="file" type="file">
 				<aui:validator name="required" />
 
 				<aui:validator name="acceptFiles">
