@@ -151,10 +151,4 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 			</div>
 		</c:if>
 	</liferay-frontend:edit-form-body>
-
-	<liferay-frontend:edit-form-footer>
-		<liferay-frontend:edit-form-buttons
-			submitLabel="import"
-		/>
-	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
