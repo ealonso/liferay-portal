@@ -24,6 +24,7 @@ import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.BooleanInfoFieldType;
 import com.liferay.info.field.type.DateInfoFieldType;
+import com.liferay.info.field.type.DateTimeInfoFieldType;
 import com.liferay.info.field.type.GridInfoFieldType;
 import com.liferay.info.field.type.ImageInfoFieldType;
 import com.liferay.info.field.type.InfoFieldType;
@@ -181,6 +182,12 @@ public class DDMFormFieldInfoFieldConverterImpl
 			return DateInfoFieldType.INSTANCE;
 		}
 		else if (Objects.equals(
+					ddmFormFieldType, DDMFormFieldTypeConstants.DATE_TIME) ||
+				 Objects.equals(ddmFormFieldType, "date_time")) {
+
+			return DateInfoFieldType.INSTANCE;
+		}
+		else if (Objects.equals(
 					ddmFormFieldType, DDMFormFieldTypeConstants.IMAGE)) {
 
 			return ImageInfoFieldType.INSTANCE;
@@ -203,6 +210,7 @@ public class DDMFormFieldInfoFieldConverterImpl
 		if (Objects.equals(infoFieldType, BooleanInfoFieldType.INSTANCE) ||
 			Objects.equals(infoFieldType, SelectInfoFieldType.INSTANCE) ||
 			Objects.equals(infoFieldType, DateInfoFieldType.INSTANCE) ||
+			Objects.equals(infoFieldType, DateTimeInfoFieldType.INSTANCE) ||
 			Objects.equals(infoFieldType, ImageInfoFieldType.INSTANCE) ||
 			Objects.equals(infoFieldType, NumberInfoFieldType.INSTANCE) ||
 			Objects.equals(infoFieldType, TextInfoFieldType.INSTANCE)) {
