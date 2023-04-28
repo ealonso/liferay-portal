@@ -28,6 +28,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, tabs1), 
 %>
 
 <clay:navigation-bar
+	cssClass="cadmin"
 	navigationItems='<%=
 		new JSPNavigationItemList(pageContext) {
 			{
