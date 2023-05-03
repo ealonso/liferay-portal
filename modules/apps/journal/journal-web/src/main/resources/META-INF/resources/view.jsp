@@ -87,54 +87,26 @@ else {
 				<c:otherwise>
 
 					<%
-					String[] tabsNames = new String[0];
-					String[] tabsValues = new String[0];
-
-					if (journalDisplayContext.hasResults()) {
-						String tabName = StringUtil.appendParentheticalSuffix(LanguageUtil.get(request, "web-content"), journalDisplayContext.getTotalItems());
-
-						tabsNames = ArrayUtil.append(tabsNames, tabName);
-
-						tabsValues = ArrayUtil.append(tabsValues, "web-content");
-					}
-
-					if (journalDisplayContext.hasVersionsResults()) {
-						String tabName = StringUtil.appendParentheticalSuffix(LanguageUtil.get(request, "versions"), journalDisplayContext.getVersionsTotal());
-
-						tabsNames = ArrayUtil.append(tabsNames, tabName);
-
-						tabsValues = ArrayUtil.append(tabsValues, "versions");
-					}
-
-					if (journalDisplayContext.hasCommentsResults()) {
-						String tabName = StringUtil.appendParentheticalSuffix(LanguageUtil.get(request, "comments"), journalDisplayContext.getCommentsTotal());
-
-						tabsNames = ArrayUtil.append(tabsNames, tabName);
-
-						tabsValues = ArrayUtil.append(tabsValues, "comments");
-					}
+					List<TabsItem> tabsItems = journalDisplayContext.getTabsItems();
 					%>
 
-					<liferay-ui:tabs
-						names="<%= StringUtil.merge(tabsNames) %>"
-						portletURL="<%= journalDisplayContext.getPortletURL() %>"
-						tabsValues="<%= StringUtil.merge(tabsValues) %>"
-					/>
+					<clay:tabs
+						tabsItems="<%= tabsItems %>"
+					>
 
-					<c:choose>
-						<c:when test="<%= journalDisplayContext.isWebContentTabSelected() %>">
-							<liferay-util:include page="/view_entries.jsp" servletContext="<%= application %>" />
-						</c:when>
-						<c:when test="<%= journalDisplayContext.isVersionsTabSelected() %>">
-							<liferay-util:include page="/view_versions.jsp" servletContext="<%= application %>" />
-						</c:when>
-						<c:when test="<%= journalDisplayContext.isCommentsTabSelected() %>">
-							<liferay-util:include page="/view_comments.jsp" servletContext="<%= application %>" />
-						</c:when>
-						<c:otherwise>
-							<liferay-util:include page="/view_entries.jsp" servletContext="<%= application %>" />
-						</c:otherwise>
-					</c:choose>
+						<%
+						for (TabsItem tabsItem : tabsItems) {
+						%>
+
+							<div>
+								<liferay-util:include page='<%= "/" + tabsItem.get("panelId") + ".jsp" %>' servletContext="<%= application %>" />
+							</div>
+
+						<%
+						}
+						%>
+
+					</clay:tabs>
 				</c:otherwise>
 			</c:choose>
 		</aui:form>

@@ -25,6 +25,8 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLocalServiceUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItemListBuilder;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.journal.configuration.JournalServiceConfiguration;
 import com.liferay.journal.constants.JournalArticleConstants;
@@ -962,6 +964,46 @@ public class JournalDisplayContext {
 		_tabs1 = ParamUtil.getString(_httpServletRequest, "tabs1");
 
 		return _tabs1;
+	}
+
+	public List<TabsItem> getTabsItems() {
+		return TabsItemListBuilder.add(
+			tabsItem -> {
+				if (hasResults()) {
+					String tabName = StringUtil.appendParentheticalSuffix(
+						LanguageUtil.get(_httpServletRequest, "web-content"),
+						getTotalItems());
+
+					tabsItem.setActive(true);
+					tabsItem.setLabel(tabName);
+					tabsItem.setPanelId("view_entries");
+				}
+			}
+		).add(
+			tabsItem -> {
+				if (hasVersionsResults()) {
+					String tabName = StringUtil.appendParentheticalSuffix(
+						LanguageUtil.get(_httpServletRequest, "versions"),
+						getVersionsTotal());
+
+					tabsItem.setLabel(tabName);
+
+					tabsItem.setPanelId("view_versions");
+				}
+			}
+		).add(
+			tabsItem -> {
+				if (hasCommentsResults()) {
+					String tabName = StringUtil.appendParentheticalSuffix(
+						LanguageUtil.get(_httpServletRequest, "comments"),
+						getCommentsTotal());
+
+					tabsItem.setLabel(tabName);
+
+					tabsItem.setPanelId("view_comments");
+				}
+			}
+		).build();
 	}
 
 	public int getTotalItems() throws PortalException {
