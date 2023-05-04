@@ -25,10 +25,15 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
 </portlet:actionURL>
 
+<%
+String closeModal = "Liferay.Util.getOpener().Liferay.fire('closeModal');";
+%>
+
 <liferay-frontend:edit-form
 	action="<%= importURL %>"
 	enctype="multipart/form-data"
 	name="fm"
+	onSubmit="<%= closeModal %>"
 >
 	<liferay-frontend:edit-form-body>
 		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>

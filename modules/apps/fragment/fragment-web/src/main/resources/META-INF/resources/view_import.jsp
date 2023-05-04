@@ -28,10 +28,15 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentCollectionId) %>" />
 </portlet:actionURL>
 
+<%
+String closeModal = "Liferay.Util.getOpener().Liferay.fire('closeModal');";
+%>
+
 <liferay-frontend:edit-form
 	action="<%= importURL %>"
 	enctype="multipart/form-data"
 	name="fm"
+	onSubmit="<%= closeModal %>"
 >
 	<liferay-frontend:edit-form-body>
 		<%
