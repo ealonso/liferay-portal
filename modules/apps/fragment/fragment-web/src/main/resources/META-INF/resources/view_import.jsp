@@ -92,7 +92,7 @@ String closeModal = "Liferay.Util.getOpener().Liferay.fire('closeModal');";
 				</aui:validator>
 			</aui:input>
 
-			<aui:input checked="<%= true %>" label="overwrite-existing-entries" name="overwrite" type="checkbox" />
+			<aui:input checked="<%= true %>" label="overwrite-existing-entries"  labelCssClass="text-weight-normal" name="overwrite" type="checkbox" />
 		</liferay-frontend:fieldset>
 	</liferay-frontend:edit-form-body>
 </liferay-frontend:edit-form>
