@@ -108,8 +108,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			originalFragmentEntryLinkId);
 		fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
 		fragmentEntryLink.setSegmentsExperienceId(segmentsExperienceId);
-		fragmentEntryLink.setClassNameId(_portal.getClassNameId(Layout.class));
-		fragmentEntryLink.setClassPK(plid);
 		fragmentEntryLink.setPlid(plid);
 		fragmentEntryLink.setCss(css);
 
@@ -160,7 +158,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		}
 
 		fragmentEntryLink.setEditableValues(editableValues);
-		fragmentEntryLink.setPosition(position);
 		fragmentEntryLink.setLastPropagationDate(
 			serviceContext.getCreateDate(new Date()));
 
@@ -274,20 +271,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		return deletedFragmentEntryLinks;
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #deleteLayoutPageTemplateEntryFragmentEntryLinks(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public List<FragmentEntryLink>
-		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			long groupId, long classNameId, long classPK) {
-
-		return deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			groupId, classPK);
-	}
-
 	@Override
 	public List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
@@ -329,19 +312,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		return fragmentEntryLinkFinder.countByG_F(groupId, fragmentEntryId);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getFragmentEntryLinksCountByPlid(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public int getClassedModelFragmentEntryLinksCount(
-		long groupId, long classNameId, long classPK) {
-
-		return fragmentEntryLinkPersistence.countByG_C_C(
-			groupId, classNameId, classPK);
-	}
-
 	@Override
 	public FragmentEntryLink getFragmentEntryLink(
 		long groupId, long originalFragmentEntryLinkId, long plid) {
@@ -366,19 +336,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			ListUtil.toLongArray(
 				fragmentEntries, FragmentEntry.FRAGMENT_ENTRY_ID_ACCESSOR),
 			start, end, orderByComparator);
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #getFragmentEntryLinksByPlid(long, long)}
-	 */
-	@Deprecated
-	@Override
-	public List<FragmentEntryLink> getFragmentEntryLinks(
-		long groupId, long classNameId, long classPK) {
-
-		return fragmentEntryLinkPersistence.findByG_C_C(
-			groupId, classNameId, classPK);
 	}
 
 	@Override
@@ -535,19 +492,6 @@ public class FragmentEntryLinkLocalServiceImpl
 
 	@Override
 	public FragmentEntryLink updateFragmentEntryLink(
-			long fragmentEntryLinkId, int position)
-		throws PortalException {
-
-		FragmentEntryLink fragmentEntryLink = fetchFragmentEntryLink(
-			fragmentEntryLinkId);
-
-		fragmentEntryLink.setPosition(position);
-
-		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
-	}
-
-	@Override
-	public FragmentEntryLink updateFragmentEntryLink(
 			long userId, long fragmentEntryLinkId,
 			long originalFragmentEntryLinkId, long fragmentEntryId, long plid,
 			String css, String html, String js, String configuration,
@@ -567,8 +511,6 @@ public class FragmentEntryLinkLocalServiceImpl
 		fragmentEntryLink.setOriginalFragmentEntryLinkId(
 			originalFragmentEntryLinkId);
 		fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
-		fragmentEntryLink.setClassNameId(_portal.getClassNameId(Layout.class));
-		fragmentEntryLink.setClassPK(plid);
 		fragmentEntryLink.setPlid(plid);
 		fragmentEntryLink.setCss(css);
 		fragmentEntryLink.setHtml(html);
@@ -580,7 +522,6 @@ public class FragmentEntryLinkLocalServiceImpl
 			fragmentEntryLink.setNamespace(namespace);
 		}
 
-		fragmentEntryLink.setPosition(position);
 		fragmentEntryLink.setType(type);
 
 		return fragmentEntryLinkPersistence.update(fragmentEntryLink);
