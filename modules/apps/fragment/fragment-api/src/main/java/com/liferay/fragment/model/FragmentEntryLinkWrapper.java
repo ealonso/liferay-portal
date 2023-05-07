@@ -59,8 +59,6 @@ public class FragmentEntryLinkWrapper
 			"originalFragmentEntryLinkId", getOriginalFragmentEntryLinkId());
 		attributes.put("fragmentEntryId", getFragmentEntryId());
 		attributes.put("segmentsExperienceId", getSegmentsExperienceId());
-		attributes.put("classNameId", getClassNameId());
-		attributes.put("classPK", getClassPK());
 		attributes.put("plid", getPlid());
 		attributes.put("css", getCss());
 		attributes.put("html", getHtml());
@@ -69,7 +67,6 @@ public class FragmentEntryLinkWrapper
 		attributes.put("deleted", isDeleted());
 		attributes.put("editableValues", getEditableValues());
 		attributes.put("namespace", getNamespace());
-		attributes.put("position", getPosition());
 		attributes.put("rendererKey", getRendererKey());
 		attributes.put("type", getType());
 		attributes.put("lastPropagationDate", getLastPropagationDate());
@@ -160,18 +157,6 @@ public class FragmentEntryLinkWrapper
 			setSegmentsExperienceId(segmentsExperienceId);
 		}
 
-		Long classNameId = (Long)attributes.get("classNameId");
-
-		if (classNameId != null) {
-			setClassNameId(classNameId);
-		}
-
-		Long classPK = (Long)attributes.get("classPK");
-
-		if (classPK != null) {
-			setClassPK(classPK);
-		}
-
 		Long plid = (Long)attributes.get("plid");
 
 		if (plid != null) {
@@ -220,12 +205,6 @@ public class FragmentEntryLinkWrapper
 			setNamespace(namespace);
 		}
 
-		Integer position = (Integer)attributes.get("position");
-
-		if (position != null) {
-			setPosition(position);
-		}
-
 		String rendererKey = (String)attributes.get("rendererKey");
 
 		if (rendererKey != null) {
@@ -254,36 +233,6 @@ public class FragmentEntryLinkWrapper
 	@Override
 	public FragmentEntryLink cloneWithOriginalValues() {
 		return wrap(model.cloneWithOriginalValues());
-	}
-
-	/**
-	 * Returns the fully qualified class name of this fragment entry link.
-	 *
-	 * @return the fully qualified class name of this fragment entry link
-	 */
-	@Override
-	public String getClassName() {
-		return model.getClassName();
-	}
-
-	/**
-	 * Returns the class name ID of this fragment entry link.
-	 *
-	 * @return the class name ID of this fragment entry link
-	 */
-	@Override
-	public long getClassNameId() {
-		return model.getClassNameId();
-	}
-
-	/**
-	 * Returns the class pk of this fragment entry link.
-	 *
-	 * @return the class pk of this fragment entry link
-	 */
-	@Override
-	public long getClassPK() {
-		return model.getClassPK();
 	}
 
 	/**
@@ -477,16 +426,6 @@ public class FragmentEntryLinkWrapper
 	}
 
 	/**
-	 * Returns the position of this fragment entry link.
-	 *
-	 * @return the position of this fragment entry link
-	 */
-	@Override
-	public int getPosition() {
-		return model.getPosition();
-	}
-
-	/**
 	 * Returns the primary key of this fragment entry link.
 	 *
 	 * @return the primary key of this fragment entry link
@@ -623,31 +562,6 @@ public class FragmentEntryLinkWrapper
 	@Override
 	public void persist() {
 		model.persist();
-	}
-
-	@Override
-	public void setClassName(String className) {
-		model.setClassName(className);
-	}
-
-	/**
-	 * Sets the class name ID of this fragment entry link.
-	 *
-	 * @param classNameId the class name ID of this fragment entry link
-	 */
-	@Override
-	public void setClassNameId(long classNameId) {
-		model.setClassNameId(classNameId);
-	}
-
-	/**
-	 * Sets the class pk of this fragment entry link.
-	 *
-	 * @param classPK the class pk of this fragment entry link
-	 */
-	@Override
-	public void setClassPK(long classPK) {
-		model.setClassPK(classPK);
 	}
 
 	/**
@@ -840,16 +754,6 @@ public class FragmentEntryLinkWrapper
 	@Override
 	public void setPlid(long plid) {
 		model.setPlid(plid);
-	}
-
-	/**
-	 * Sets the position of this fragment entry link.
-	 *
-	 * @param position the position of this fragment entry link
-	 */
-	@Override
-	public void setPosition(int position) {
-		model.setPosition(position);
 	}
 
 	/**

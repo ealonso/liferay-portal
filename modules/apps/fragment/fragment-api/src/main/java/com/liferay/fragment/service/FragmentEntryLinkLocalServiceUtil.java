@@ -170,19 +170,6 @@ public class FragmentEntryLinkLocalServiceUtil {
 			groupId, plid);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #deleteLayoutPageTemplateEntryFragmentEntryLinks(long, long)}
-	 */
-	@Deprecated
-	public static List<FragmentEntryLink>
-		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			long groupId, long classNameId, long classPK) {
-
-		return getService().deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			groupId, classNameId, classPK);
-	}
-
 	public static List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
 			long groupId, long[] segmentsExperienceIds, long plid) {
@@ -328,18 +315,6 @@ public class FragmentEntryLinkLocalServiceUtil {
 			groupId, fragmentEntryId);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #getFragmentEntryLinksCountByPlid(long, long)}
-	 */
-	@Deprecated
-	public static int getClassedModelFragmentEntryLinksCount(
-		long groupId, long classNameId, long classPK) {
-
-		return getService().getClassedModelFragmentEntryLinksCount(
-			groupId, classNameId, classPK);
-	}
-
 	public static com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(
 			com.liferay.exportimport.kernel.lar.PortletDataContext
@@ -407,18 +382,6 @@ public class FragmentEntryLinkLocalServiceUtil {
 
 		return getService().getFragmentEntryLinks(
 			type, start, end, orderByComparator);
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #getFragmentEntryLinksByPlid(long, long)}
-	 */
-	@Deprecated
-	public static List<FragmentEntryLink> getFragmentEntryLinks(
-		long groupId, long classNameId, long classPK) {
-
-		return getService().getFragmentEntryLinks(
-			groupId, classNameId, classPK);
 	}
 
 	public static List<FragmentEntryLink> getFragmentEntryLinks(
@@ -634,14 +597,6 @@ public class FragmentEntryLinkLocalServiceUtil {
 		FragmentEntryLink fragmentEntryLink) {
 
 		return getService().updateFragmentEntryLink(fragmentEntryLink);
-	}
-
-	public static FragmentEntryLink updateFragmentEntryLink(
-			long fragmentEntryLinkId, int position)
-		throws PortalException {
-
-		return getService().updateFragmentEntryLink(
-			fragmentEntryLinkId, position);
 	}
 
 	public static FragmentEntryLink updateFragmentEntryLink(

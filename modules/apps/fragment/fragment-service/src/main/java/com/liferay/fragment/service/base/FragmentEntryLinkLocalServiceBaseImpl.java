@@ -38,8 +38,6 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -377,30 +375,6 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 				public void addCriteria(DynamicQuery dynamicQuery) {
 					portletDataContext.addDateRangeCriteria(
 						dynamicQuery, "modifiedDate");
-
-					StagedModelType stagedModelType =
-						exportActionableDynamicQuery.getStagedModelType();
-
-					long referrerClassNameId =
-						stagedModelType.getReferrerClassNameId();
-
-					Property classNameIdProperty = PropertyFactoryUtil.forName(
-						"classNameId");
-
-					if ((referrerClassNameId !=
-							StagedModelType.REFERRER_CLASS_NAME_ID_ALL) &&
-						(referrerClassNameId !=
-							StagedModelType.REFERRER_CLASS_NAME_ID_ANY)) {
-
-						dynamicQuery.add(
-							classNameIdProperty.eq(
-								stagedModelType.getReferrerClassNameId()));
-					}
-					else if (referrerClassNameId ==
-								StagedModelType.REFERRER_CLASS_NAME_ID_ANY) {
-
-						dynamicQuery.add(classNameIdProperty.isNotNull());
-					}
 				}
 
 			});
@@ -426,8 +400,7 @@ public abstract class FragmentEntryLinkLocalServiceBaseImpl
 			});
 		exportActionableDynamicQuery.setStagedModelType(
 			new StagedModelType(
-				PortalUtil.getClassNameId(FragmentEntryLink.class.getName()),
-				StagedModelType.REFERRER_CLASS_NAME_ID_ALL));
+				PortalUtil.getClassNameId(FragmentEntryLink.class.getName())));
 
 		return exportActionableDynamicQuery;
 	}

@@ -70,11 +70,6 @@ public class FragmentEntryLinkTable extends BaseTable<FragmentEntryLinkTable> {
 		createColumn(
 			"segmentsExperienceId", Long.class, Types.BIGINT,
 			Column.FLAG_DEFAULT);
-	public final Column<FragmentEntryLinkTable, Long> classNameId =
-		createColumn(
-			"classNameId", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
-	public final Column<FragmentEntryLinkTable, Long> classPK = createColumn(
-		"classPK", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<FragmentEntryLinkTable, Long> plid = createColumn(
 		"plid", Long.class, Types.BIGINT, Column.FLAG_DEFAULT);
 	public final Column<FragmentEntryLinkTable, Clob> css = createColumn(
@@ -94,9 +89,6 @@ public class FragmentEntryLinkTable extends BaseTable<FragmentEntryLinkTable> {
 	public final Column<FragmentEntryLinkTable, String> namespace =
 		createColumn(
 			"namespace", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
-	public final Column<FragmentEntryLinkTable, Integer> position =
-		createColumn(
-			"position", Integer.class, Types.INTEGER, Column.FLAG_DEFAULT);
 	public final Column<FragmentEntryLinkTable, String> rendererKey =
 		createColumn(
 			"rendererKey", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);

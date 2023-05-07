@@ -158,15 +158,6 @@ public interface FragmentEntryLinkLocalService
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
 			long groupId, long plid);
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #deleteLayoutPageTemplateEntryFragmentEntryLinks(long, long)}
-	 */
-	@Deprecated
-	public List<FragmentEntryLink>
-		deleteLayoutPageTemplateEntryFragmentEntryLinks(
-			long groupId, long classNameId, long classPK);
-
 	public List<FragmentEntryLink>
 		deleteLayoutPageTemplateEntryFragmentEntryLinks(
 			long groupId, long[] segmentsExperienceIds, long plid);
@@ -276,15 +267,6 @@ public interface FragmentEntryLinkLocalService
 	public int getAllFragmentEntryLinksCountByFragmentEntryId(
 		long groupId, long fragmentEntryId);
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #getFragmentEntryLinksCountByPlid(long, long)}
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getClassedModelFragmentEntryLinksCount(
-		long groupId, long classNameId, long classPK);
-
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ExportActionableDynamicQuery getExportActionableDynamicQuery(
 		PortletDataContext portletDataContext);
@@ -335,15 +317,6 @@ public interface FragmentEntryLinkLocalService
 	public List<FragmentEntryLink> getFragmentEntryLinks(
 		int type, int start, int end,
 		OrderByComparator<FragmentEntryLink> orderByComparator);
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #getFragmentEntryLinksByPlid(long, long)}
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<FragmentEntryLink> getFragmentEntryLinks(
-		long groupId, long classNameId, long classPK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<FragmentEntryLink> getFragmentEntryLinks(
@@ -482,10 +455,6 @@ public interface FragmentEntryLinkLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public FragmentEntryLink updateFragmentEntryLink(
 		FragmentEntryLink fragmentEntryLink);
-
-	public FragmentEntryLink updateFragmentEntryLink(
-			long fragmentEntryLinkId, int position)
-		throws PortalException;
 
 	public FragmentEntryLink updateFragmentEntryLink(
 			long userId, long fragmentEntryLinkId,

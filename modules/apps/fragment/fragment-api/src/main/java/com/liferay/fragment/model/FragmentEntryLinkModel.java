@@ -15,7 +15,6 @@
 package com.liferay.fragment.model;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
-import com.liferay.portal.kernel.model.AttachedModel;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.MVCCModel;
 import com.liferay.portal.kernel.model.ShardedModel;
@@ -39,9 +38,8 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface FragmentEntryLinkModel
-	extends AttachedModel, BaseModel<FragmentEntryLink>,
-			CTModel<FragmentEntryLink>, MVCCModel, ShardedModel,
-			StagedGroupedModel {
+	extends BaseModel<FragmentEntryLink>, CTModel<FragmentEntryLink>, MVCCModel,
+			ShardedModel, StagedGroupedModel {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -285,48 +283,6 @@ public interface FragmentEntryLinkModel
 	public void setSegmentsExperienceId(long segmentsExperienceId);
 
 	/**
-	 * Returns the fully qualified class name of this fragment entry link.
-	 *
-	 * @return the fully qualified class name of this fragment entry link
-	 */
-	@Override
-	public String getClassName();
-
-	public void setClassName(String className);
-
-	/**
-	 * Returns the class name ID of this fragment entry link.
-	 *
-	 * @return the class name ID of this fragment entry link
-	 */
-	@Override
-	public long getClassNameId();
-
-	/**
-	 * Sets the class name ID of this fragment entry link.
-	 *
-	 * @param classNameId the class name ID of this fragment entry link
-	 */
-	@Override
-	public void setClassNameId(long classNameId);
-
-	/**
-	 * Returns the class pk of this fragment entry link.
-	 *
-	 * @return the class pk of this fragment entry link
-	 */
-	@Override
-	public long getClassPK();
-
-	/**
-	 * Sets the class pk of this fragment entry link.
-	 *
-	 * @param classPK the class pk of this fragment entry link
-	 */
-	@Override
-	public void setClassPK(long classPK);
-
-	/**
 	 * Returns the plid of this fragment entry link.
 	 *
 	 * @return the plid of this fragment entry link
@@ -450,20 +406,6 @@ public interface FragmentEntryLinkModel
 	 * @param namespace the namespace of this fragment entry link
 	 */
 	public void setNamespace(String namespace);
-
-	/**
-	 * Returns the position of this fragment entry link.
-	 *
-	 * @return the position of this fragment entry link
-	 */
-	public int getPosition();
-
-	/**
-	 * Sets the position of this fragment entry link.
-	 *
-	 * @param position the position of this fragment entry link
-	 */
-	public void setPosition(int position);
 
 	/**
 	 * Returns the renderer key of this fragment entry link.

@@ -78,7 +78,7 @@ public class FragmentEntryLinkCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(57);
+		StringBundler sb = new StringBundler(51);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -106,10 +106,6 @@ public class FragmentEntryLinkCacheModel
 		sb.append(fragmentEntryId);
 		sb.append(", segmentsExperienceId=");
 		sb.append(segmentsExperienceId);
-		sb.append(", classNameId=");
-		sb.append(classNameId);
-		sb.append(", classPK=");
-		sb.append(classPK);
 		sb.append(", plid=");
 		sb.append(plid);
 		sb.append(", css=");
@@ -126,8 +122,6 @@ public class FragmentEntryLinkCacheModel
 		sb.append(editableValues);
 		sb.append(", namespace=");
 		sb.append(namespace);
-		sb.append(", position=");
-		sb.append(position);
 		sb.append(", rendererKey=");
 		sb.append(rendererKey);
 		sb.append(", type=");
@@ -186,8 +180,6 @@ public class FragmentEntryLinkCacheModel
 			originalFragmentEntryLinkId);
 		fragmentEntryLinkImpl.setFragmentEntryId(fragmentEntryId);
 		fragmentEntryLinkImpl.setSegmentsExperienceId(segmentsExperienceId);
-		fragmentEntryLinkImpl.setClassNameId(classNameId);
-		fragmentEntryLinkImpl.setClassPK(classPK);
 		fragmentEntryLinkImpl.setPlid(plid);
 
 		if (css == null) {
@@ -233,8 +225,6 @@ public class FragmentEntryLinkCacheModel
 		else {
 			fragmentEntryLinkImpl.setNamespace(namespace);
 		}
-
-		fragmentEntryLinkImpl.setPosition(position);
 
 		if (rendererKey == null) {
 			fragmentEntryLinkImpl.setRendererKey("");
@@ -291,10 +281,6 @@ public class FragmentEntryLinkCacheModel
 
 		segmentsExperienceId = objectInput.readLong();
 
-		classNameId = objectInput.readLong();
-
-		classPK = objectInput.readLong();
-
 		plid = objectInput.readLong();
 		css = (String)objectInput.readObject();
 		html = (String)objectInput.readObject();
@@ -304,8 +290,6 @@ public class FragmentEntryLinkCacheModel
 		deleted = objectInput.readBoolean();
 		editableValues = (String)objectInput.readObject();
 		namespace = objectInput.readUTF();
-
-		position = objectInput.readInt();
 		rendererKey = objectInput.readUTF();
 
 		type = objectInput.readInt();
@@ -349,10 +333,6 @@ public class FragmentEntryLinkCacheModel
 		objectOutput.writeLong(fragmentEntryId);
 
 		objectOutput.writeLong(segmentsExperienceId);
-
-		objectOutput.writeLong(classNameId);
-
-		objectOutput.writeLong(classPK);
 
 		objectOutput.writeLong(plid);
 
@@ -400,8 +380,6 @@ public class FragmentEntryLinkCacheModel
 			objectOutput.writeUTF(namespace);
 		}
 
-		objectOutput.writeInt(position);
-
 		if (rendererKey == null) {
 			objectOutput.writeUTF("");
 		}
@@ -427,8 +405,6 @@ public class FragmentEntryLinkCacheModel
 	public long originalFragmentEntryLinkId;
 	public long fragmentEntryId;
 	public long segmentsExperienceId;
-	public long classNameId;
-	public long classPK;
 	public long plid;
 	public String css;
 	public String html;
@@ -437,7 +413,6 @@ public class FragmentEntryLinkCacheModel
 	public boolean deleted;
 	public String editableValues;
 	public String namespace;
-	public int position;
 	public String rendererKey;
 	public int type;
 	public long lastPropagationDate;

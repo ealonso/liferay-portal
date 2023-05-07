@@ -105,8 +105,6 @@
 		<field name="originalFragmentEntryLinkId" type="long" />
 		<field name="fragmentEntryId" type="long" />
 		<field name="segmentsExperienceId" type="long" />
-		<field name="classNameId" type="long" />
-		<field name="classPK" type="long" />
 		<field name="plid" type="long" />
 		<field name="css" type="String">
 			<hint-collection name="CLOB" />
@@ -125,7 +123,6 @@
 			<hint-collection name="CLOB" />
 		</field>
 		<field name="namespace" type="String" />
-		<field name="position" type="int" />
 		<field name="rendererKey" type="String">
 			<hint name="max-length">200</hint>
 		</field>
