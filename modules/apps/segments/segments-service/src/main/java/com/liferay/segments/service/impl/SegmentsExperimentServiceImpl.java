@@ -51,16 +51,16 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public SegmentsExperiment addSegmentsExperiment(
-			long segmentsExperienceId, long classNameId, long classPK,
+			long segmentsExperienceId, long plid,
 			String name, String description, String goal, String goalTarget,
 			ServiceContext serviceContext)
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), classPK, ActionKeys.UPDATE);
+			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return segmentsExperimentLocalService.addSegmentsExperiment(
-			segmentsExperienceId, classNameId, classPK, name, description, goal,
+			segmentsExperienceId, plid, name, description, goal,
 			goalTarget, serviceContext);
 	}
 
@@ -128,16 +128,16 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public List<SegmentsExperiment> getSegmentsExperienceSegmentsExperiments(
-			long[] segmentsExperienceIds, long classNameId, long classPK,
+			long[] segmentsExperienceIds, long plid,
 			int[] statuses, int start, int end)
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), classPK, ActionKeys.UPDATE);
+			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return segmentsExperimentLocalService.
 			getSegmentsExperienceSegmentsExperiments(
-				segmentsExperienceIds, classNameId, classPK, statuses, start,
+				segmentsExperienceIds, plid, statuses, start,
 				end);
 	}
 
@@ -172,10 +172,10 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public List<SegmentsExperiment> getSegmentsExperiments(
-		long groupId, long classNameId, long classPK) {
+		long groupId, long plid) {
 
-		return segmentsExperimentPersistence.filterFindByG_C_C(
-			groupId, classNameId, classPK);
+		return segmentsExperimentPersistence.filterFindByG_P(
+			groupId, plid);
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class SegmentsExperimentServiceImpl
 			segmentsExperienceIdSplitMap.put(
 				_getSegmentsExperienceId(
 					segmentsExperiment.getGroupId(), entry.getKey(),
-					segmentsExperiment.getClassPK()),
+					segmentsExperiment.getPlid()),
 				entry.getValue());
 		}
 
@@ -314,7 +314,7 @@ public class SegmentsExperimentServiceImpl
 			segmentsExperiment.getSegmentsExperimentId(),
 			_getSegmentsExperienceId(
 				segmentsExperiment.getGroupId(), winnerSegmentsExperienceKey,
-				segmentsExperiment.getClassPK()),
+				segmentsExperiment.getPlid()),
 			status);
 	}
 
@@ -334,12 +334,12 @@ public class SegmentsExperimentServiceImpl
 	}
 
 	private long _getSegmentsExperienceId(
-		long groupId, String segmentsExperienceKey, long classPK) {
+		long groupId, String segmentsExperienceKey, long plid) {
 
 		if (Validator.isNotNull(segmentsExperienceKey)) {
 			SegmentsExperience segmentsExperience =
 				_segmentsExperienceLocalService.fetchSegmentsExperience(
-					groupId, segmentsExperienceKey, classPK);
+					groupId, segmentsExperienceKey, plid);
 
 			if (segmentsExperience != null) {
 				return segmentsExperience.getSegmentsExperienceId();
