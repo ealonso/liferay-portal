@@ -51,8 +51,8 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public SegmentsExperiment addSegmentsExperiment(
-			long segmentsExperienceId, long plid,
-			String name, String description, String goal, String goalTarget,
+			long segmentsExperienceId, long plid, String name,
+			String description, String goal, String goalTarget,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -60,8 +60,8 @@ public class SegmentsExperimentServiceImpl
 			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return segmentsExperimentLocalService.addSegmentsExperiment(
-			segmentsExperienceId, plid, name, description, goal,
-			goalTarget, serviceContext);
+			segmentsExperienceId, plid, name, description, goal, goalTarget,
+			serviceContext);
 	}
 
 	@Override
@@ -128,8 +128,8 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public List<SegmentsExperiment> getSegmentsExperienceSegmentsExperiments(
-			long[] segmentsExperienceIds, long plid,
-			int[] statuses, int start, int end)
+			long[] segmentsExperienceIds, long plid, int[] statuses, int start,
+			int end)
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
@@ -137,8 +137,7 @@ public class SegmentsExperimentServiceImpl
 
 		return segmentsExperimentLocalService.
 			getSegmentsExperienceSegmentsExperiments(
-				segmentsExperienceIds, plid, statuses, start,
-				end);
+				segmentsExperienceIds, plid, statuses, start, end);
 	}
 
 	@Override
@@ -174,8 +173,7 @@ public class SegmentsExperimentServiceImpl
 	public List<SegmentsExperiment> getSegmentsExperiments(
 		long groupId, long plid) {
 
-		return segmentsExperimentPersistence.filterFindByG_P(
-			groupId, plid);
+		return segmentsExperimentPersistence.filterFindByG_P(groupId, plid);
 	}
 
 	@Override
