@@ -151,10 +151,12 @@ export const ACTIONS = {
 					type: 'submit',
 				},
 			],
+			height: '70vh',
 			id: `${portletNamespace}openImportView`,
 			onClose: () => {
 				window.location.reload();
 			},
+			size: 'md',
 			title: Liferay.Language.get('import'),
 			url: viewImportURL,
 		});

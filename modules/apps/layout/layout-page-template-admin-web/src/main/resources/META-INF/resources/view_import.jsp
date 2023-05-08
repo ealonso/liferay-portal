@@ -25,15 +25,20 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	<portlet:param name="portletResource" value="<%= portletDisplay.getId() %>" />
 </portlet:actionURL>
 
+<%
+String closeModal = "Liferay.Util.getOpener().Liferay.fire('closeModal');";
+%>
+
 <liferay-frontend:edit-form
 	action="<%= importURL %>"
 	enctype="multipart/form-data"
 	name="fm"
+	onSubmit="<%= closeModal %>"
 >
 	<liferay-frontend:edit-form-body>
-		<liferay-ui:message key="import-help" />
+		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>
 
-		<a href="https://portal.liferay.dev/docs" target="_blank">
+		<a href=" https://learn.liferay.com/dxp/latest/en/site-building/creating-pages/adding-pages/exporting-and-importing-page-templates.html" target="_blank">
 			<liferay-ui:message key="read-more" />
 		</a>
 
@@ -48,7 +53,7 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 				</aui:validator>
 			</aui:input>
 
-			<aui:input checked="<%= true %>" label="overwrite-existing-page-templates" name="overwrite" type="checkbox" />
+			<aui:input checked="<%= true %>" label="overwrite-existing-page-templates" labelCssClass="text-weight-normal" name="overwrite" type="checkbox" />
 		</liferay-frontend:fieldset>
 
 		<%
@@ -151,10 +156,4 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 			</div>
 		</c:if>
 	</liferay-frontend:edit-form-body>
-
-	<liferay-frontend:edit-form-footer>
-		<liferay-frontend:edit-form-buttons
-			submitLabel="import"
-		/>
-	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>

@@ -28,13 +28,17 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 	<portlet:param name="fragmentCollectionId" value="<%= String.valueOf(fragmentCollectionId) %>" />
 </portlet:actionURL>
 
+<%
+String closeModal = "Liferay.Util.getOpener().Liferay.fire('closeModal');";
+%>
+
 <liferay-frontend:edit-form
 	action="<%= importURL %>"
 	enctype="multipart/form-data"
 	name="fm"
+	onSubmit="<%= closeModal %>"
 >
 	<liferay-frontend:edit-form-body>
-
 		<%
 		List<String> draftFragmentsImporterResultEntries = importDisplayContext.getFragmentsImporterResultEntries(FragmentsImporterResultEntry.Status.IMPORTED_DRAFT);
 		%>
@@ -78,8 +82,9 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 
 		<liferay-ui:error exception="<%= InvalidFileException.class %>" message="the-selected-file-is-not-a-valid-zip-file" />
 
+		<p><liferay-ui:message key="select-a-zip-file-containing-one-or-multiple-entries" /></p>
 		<liferay-frontend:fieldset>
-			<aui:input label="select-file" name="file" type="file">
+			<aui:input label="file" name="file" type="file">
 				<aui:validator name="required" />
 
 				<aui:validator name="acceptFiles">
@@ -87,7 +92,7 @@ ImportDisplayContext importDisplayContext = new ImportDisplayContext(request, re
 				</aui:validator>
 			</aui:input>
 
-			<aui:input checked="<%= true %>" label="overwrite-existing-entries" name="overwrite" type="checkbox" />
+			<aui:input checked="<%= true %>" label="overwrite-existing-entries"  labelCssClass="text-weight-normal" name="overwrite" type="checkbox" />
 		</liferay-frontend:fieldset>
 	</liferay-frontend:edit-form-body>
 </liferay-frontend:edit-form>

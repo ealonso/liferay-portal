@@ -21,9 +21,22 @@
 		'<portlet:namespace />import',
 		() => {
 			Liferay.Util.openModal({
+				buttons: [
+					{
+						displayType: 'secondary',
+						label: '<liferay-ui:message key="cancel" />',
+						type: 'cancel',
+					},
+					{
+						label: '<liferay-ui:message key="import" />',
+						type: 'submit',
+					},
+				],
+				height: '70vh',
 				onClose: function (event) {
 					window.location.reload();
 				},
+				size: 'md',
 				title: '<liferay-ui:message key="import" />',
 				url:
 					'<%=
@@ -34,7 +47,7 @@
 						).setWindowState(
 							LiferayWindowState.POP_UP
 						).buildString()
-			%>',
+					%>',
 			});
 		}
 	);
