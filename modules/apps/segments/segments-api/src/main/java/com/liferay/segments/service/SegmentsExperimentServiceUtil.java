@@ -122,12 +122,12 @@ public class SegmentsExperimentServiceUtil {
 	}
 
 	public static List<SegmentsExperiment> getSegmentsExperiments(
-		long segmentsExperienceId, long classNameId, long classPK,
+		long segmentsExperienceId, long plid,
 		int[] statuses,
 		OrderByComparator<SegmentsExperiment> orderByComparator) {
 
 		return getService().getSegmentsExperiments(
-			segmentsExperienceId, classNameId, classPK, statuses,
+			segmentsExperienceId, plid, statuses,
 			orderByComparator);
 	}
 
