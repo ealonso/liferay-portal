@@ -27,31 +27,26 @@ portletDisplay.setURLBack(layoutsAdminDisplayContext.getBackURL());
 renderResponse.setTitle(LanguageUtil.get(request, "select-collection"));
 %>
 
-<clay:navigation-bar
-	cssClass="border-bottom"
-	inverted="<%= false %>"
-	navigationItems="<%= selectLayoutCollectionDisplayContext.getNavigationItems() %>"
-/>
+<div class="sheet-row">
+	<clay:tabs
+		tabsItems="<%= selectLayoutCollectionDisplayContext.getTabsItems() %>"
+	>
+		<c:if test="<%= selectLayoutCollectionDisplayContext.isCollections() %>">
+			<div>
+				<clay:management-toolbar
+					managementToolbarDisplayContext="<%= selectCollectionManagementToolbarDisplayContext %>"
+					propsTransformer="js/SelectLayoutCollectionManagementToolbarPropsTransformer"
+				/>
 
-<c:if test="<%= selectLayoutCollectionDisplayContext.isCollections() %>">
-	<clay:management-toolbar
-		managementToolbarDisplayContext="<%= selectCollectionManagementToolbarDisplayContext %>"
-		propsTransformer="js/SelectLayoutCollectionManagementToolbarPropsTransformer"
-	/>
-</c:if>
+				<liferay-util:include page="/select_collections.jsp" servletContext="<%= application %>" />
+			</div>
+		</c:if>
 
-<clay:container-fluid
-	id='<%= liferayPortletResponse.getNamespace() + "collections" %>'
->
-	<c:choose>
-		<c:when test="<%= selectLayoutCollectionDisplayContext.isCollections() %>">
-			<liferay-util:include page="/select_collections.jsp" servletContext="<%= application %>" />
-		</c:when>
-		<c:otherwise>
+		<div>
 			<liferay-util:include page="/select_collection_providers.jsp" servletContext="<%= application %>" />
-		</c:otherwise>
-	</c:choose>
-</clay:container-fluid>
+		</div>
+	</clay:tabs>
+</div>
 
 <aui:script require="frontend-js-web/index as frontendJsWeb">
 	var {delegate} = frontendJsWeb;

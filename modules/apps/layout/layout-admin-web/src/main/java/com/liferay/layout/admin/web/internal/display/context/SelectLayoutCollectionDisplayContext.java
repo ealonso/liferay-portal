@@ -18,6 +18,8 @@ import com.liferay.asset.list.model.AssetListEntry;
 import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItemListBuilder;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.item.provider.InfoItemFormProvider;
@@ -179,6 +181,20 @@ public class SelectLayoutCollectionDisplayContext {
 		}
 
 		return 0;
+	}
+
+	public List<TabsItem> getTabsItems() {
+		return TabsItemListBuilder.add(
+			tabsItem -> {
+				tabsItem.setActive(true);
+				tabsItem.setLabel(
+					LanguageUtil.get(_httpServletRequest, "collections"));
+			}
+		).add(
+			tabsItem -> tabsItem.setLabel(
+				LanguageUtil.get(
+					_httpServletRequest, "collection-providers"))
+		).build();
 	}
 
 	public boolean isCollectionProviders() {
