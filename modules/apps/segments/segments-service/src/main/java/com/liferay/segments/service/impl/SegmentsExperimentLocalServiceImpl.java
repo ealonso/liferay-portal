@@ -209,12 +209,12 @@ public class SegmentsExperimentLocalServiceImpl
 
 	@Override
 	public SegmentsExperiment fetchSegmentsExperiment(
-		long segmentsExperienceId, long classNameId, long classPK,
+		long segmentsExperienceId, long plid,
 		int[] statuses) {
 
 		List<SegmentsExperiment> segmentsExperiments =
-			segmentsExperimentFinder.findByS_C_C_S(
-				segmentsExperienceId, classNameId, classPK, statuses, 0, 1,
+			segmentsExperimentFinder.findByS_P_S(
+				segmentsExperienceId, plid, statuses, 0, 1,
 				null);
 
 		if (segmentsExperiments.isEmpty()) {
@@ -286,22 +286,22 @@ public class SegmentsExperimentLocalServiceImpl
 
 	@Override
 	public List<SegmentsExperiment> getSegmentsExperiments(
-		long segmentsExperienceId, long classNameId, long classPK,
+		long segmentsExperienceId, long plid,
 		int[] statuses,
 		OrderByComparator<SegmentsExperiment> orderByComparator) {
 
-		return segmentsExperimentFinder.findByS_C_C_S(
-			segmentsExperienceId, classNameId, classPK, statuses,
+		return segmentsExperimentFinder.findByS_P_S(
+			segmentsExperienceId, plid, statuses,
 			QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
 	}
 
 	@Override
 	public boolean hasSegmentsExperiment(
-		long segmentsExperienceId, long classNameId, long classPK,
+		long segmentsExperienceId, long plid,
 		int[] statuses) {
 
-		int count = segmentsExperimentFinder.countByS_C_C_S(
-			segmentsExperienceId, classNameId, classPK, statuses);
+		int count = segmentsExperimentFinder.countByS_P_S(
+			segmentsExperienceId, plid, statuses);
 
 		if (count > 0) {
 			return true;

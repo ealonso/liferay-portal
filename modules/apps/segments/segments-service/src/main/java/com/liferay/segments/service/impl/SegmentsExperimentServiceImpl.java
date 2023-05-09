@@ -96,15 +96,15 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public SegmentsExperiment fetchSegmentsExperiment(
-			long segmentsExperienceId, long classNameId, long classPK,
+			long segmentsExperienceId, long plid,
 			int[] statuses)
 		throws PortalException {
 
 		LayoutPermissionUtil.check(
-			getPermissionChecker(), classPK, ActionKeys.UPDATE);
+			getPermissionChecker(), plid, ActionKeys.UPDATE);
 
 		return segmentsExperimentLocalService.fetchSegmentsExperiment(
-			segmentsExperienceId, classNameId, classPK, statuses);
+			segmentsExperienceId, plid, statuses);
 	}
 
 	@Override
@@ -178,12 +178,12 @@ public class SegmentsExperimentServiceImpl
 
 	@Override
 	public List<SegmentsExperiment> getSegmentsExperiments(
-		long segmentsExperienceId, long classNameId, long classPK,
+		long segmentsExperienceId, long plid,
 		int[] statuses,
 		OrderByComparator<SegmentsExperiment> orderByComparator) {
 
 		return segmentsExperimentLocalService.getSegmentsExperiments(
-			segmentsExperienceId, classNameId, classPK, statuses,
+			segmentsExperienceId, plid, statuses,
 			orderByComparator);
 	}
 

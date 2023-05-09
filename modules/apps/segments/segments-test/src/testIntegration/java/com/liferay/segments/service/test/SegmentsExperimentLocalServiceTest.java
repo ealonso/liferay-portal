@@ -395,12 +395,12 @@ public class SegmentsExperimentLocalServiceTest {
 
 		Assert.assertNull(
 			_segmentsExperimentLocalService.fetchSegmentsExperiment(
-				segmentsExperience.getSegmentsExperienceId(), _classNameId,
+				segmentsExperience.getSegmentsExperienceId(),
 				segmentsExperience.getPlid(),
 				new int[] {SegmentsExperimentConstants.STATUS_RUNNING}));
 		Assert.assertNotNull(
 			_segmentsExperimentLocalService.fetchSegmentsExperiment(
-				segmentsExperience.getSegmentsExperienceId(), _classNameId,
+				segmentsExperience.getSegmentsExperienceId(),
 				segmentsExperience.getPlid(),
 				new int[] {SegmentsExperimentConstants.STATUS_DRAFT}));
 	}
@@ -512,12 +512,12 @@ public class SegmentsExperimentLocalServiceTest {
 
 		Assert.assertFalse(
 			_segmentsExperimentLocalService.hasSegmentsExperiment(
-				segmentsExperience.getSegmentsExperienceId(), _classNameId,
+				segmentsExperience.getSegmentsExperienceId(),
 				segmentsExperience.getPlid(),
 				new int[] {SegmentsExperimentConstants.STATUS_RUNNING}));
 		Assert.assertTrue(
 			_segmentsExperimentLocalService.hasSegmentsExperiment(
-				segmentsExperience.getSegmentsExperienceId(), _classNameId,
+				segmentsExperience.getSegmentsExperienceId(),
 				segmentsExperience.getPlid(),
 				new int[] {SegmentsExperimentConstants.STATUS_DRAFT}));
 	}
