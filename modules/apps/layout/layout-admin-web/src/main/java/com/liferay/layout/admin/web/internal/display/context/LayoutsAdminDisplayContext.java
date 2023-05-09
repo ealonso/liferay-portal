@@ -31,6 +31,8 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemListBuilder;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItem;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.TabsItemListBuilder;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
@@ -1318,6 +1320,25 @@ public class LayoutsAdminDisplayContext {
 		_tabs1 = ParamUtil.getString(_liferayPortletRequest, "tabs1", "pages");
 
 		return _tabs1;
+	}
+
+	public List<TabsItem> getTabsItems() {
+		return TabsItemListBuilder.add(
+			tabsItem -> {
+				tabsItem.setActive(
+					!Objects.equals(getTabs1(), "utility-pages"));
+				tabsItem.setHref(getPortletURL(), "tabs1", "");
+				tabsItem.setLabel(
+					LanguageUtil.get(httpServletRequest, "static-pages"));
+			}
+		).add(
+			tabsItem -> {
+				tabsItem.setActive(Objects.equals(getTabs1(), "utility-pages"));
+				tabsItem.setHref(getPortletURL(), "tabs1", "utility-pages");
+				tabsItem.setLabel(
+					LanguageUtil.get(httpServletRequest, "utility-pages"));
+			}
+		).build();
 	}
 
 	public String getTarget(Layout layout) {
