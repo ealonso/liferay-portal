@@ -28,6 +28,7 @@ const ImportModal = ({portletNamespace}: Props) => {
 	const [visible, setVisible] = useState(true);
 	const [error, setError] = useState("");
 	const [isValidForm, setIsValidForm] = useState(false);
+	const [overwrite, setOverwrite] = useState(true);
 
 	const {observer, onClose} = useModal({
 		onClose: () => setVisible(false),
@@ -114,13 +115,14 @@ const ImportModal = ({portletNamespace}: Props) => {
 						</ClayForm.Group>
 
 						<ClayCheckbox
-							checked={true}
+							checked={overwrite}
 							data-testid={`${portletNamespace}overwrite`}
 							id={`${portletNamespace}overwrite`}
 							label={Liferay.Language.get(
 								'overwrite-existing-entries'
 							)}
 							name={`${portletNamespace}overwrite`}
+							onChange={() => setOverwrite(val => !val)}
 						/>
 					</ClayModal.Body>
 
