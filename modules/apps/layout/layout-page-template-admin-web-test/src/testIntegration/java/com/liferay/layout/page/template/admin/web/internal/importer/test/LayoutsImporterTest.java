@@ -516,10 +516,6 @@ public class LayoutsImporterTest {
 				expectedFreeMarkerFragmentEntryProcessorJSONObject.toString(),
 				actualFreeMarkerFragmentEntryProcessorJSONObject.toString());
 		}
-
-		Assert.assertEquals(
-			expectedFragmentEntryLink.getPosition(),
-			actualFragmentEntryLink.getPosition());
 	}
 
 	private void _validateRowLayoutStructureItem(

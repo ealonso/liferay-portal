@@ -204,9 +204,6 @@ public class SaveVariantSegmentsExperienceMVCActionCommandTest {
 		Assert.assertEquals(
 			draftLayoutFragmentEntryLink.getEditableValues(),
 			publishLayoutFragmentEntryLink.getEditableValues());
-		Assert.assertEquals(
-			draftLayoutFragmentEntryLink.getPosition(),
-			publishLayoutFragmentEntryLink.getPosition());
 	}
 
 	private FragmentEntryLink _addFragmentEntryLink(

@@ -567,12 +567,6 @@ public class FragmentEntryLinkLocalServiceTest {
 		Assert.assertEquals(fragmentEntryLink1, fragmentEntryLinks.get(0));
 		Assert.assertEquals(fragmentEntryLink2, fragmentEntryLinks.get(1));
 
-		fragmentEntryLink1 =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				fragmentEntryLink1.getFragmentEntryLinkId(), 3);
-
-		Assert.assertEquals(3, fragmentEntryLink1.getPosition());
-
 		fragmentEntryLinks =
 			_fragmentEntryLinkLocalService.getFragmentEntryLinksByPlid(
 				_group.getGroupId(), _layout.getPlid());

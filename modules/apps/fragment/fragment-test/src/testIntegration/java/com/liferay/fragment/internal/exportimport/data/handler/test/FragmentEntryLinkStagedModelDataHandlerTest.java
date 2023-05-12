@@ -95,8 +95,7 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 			fragmentEntryLink.getFragmentEntryId(), fragmentEntryLink.getPlid(),
 			"css", "html", "js", fragmentEntryLink.getConfiguration(),
 			fragmentEntryLink.getEditableValues(),
-			fragmentEntryLink.getNamespace(),
-			fragmentEntryLink.getPosition() + 1, fragmentEntryLink.getType(),
+			fragmentEntryLink.getNamespace(), 0, fragmentEntryLink.getType(),
 			serviceContext);
 
 		try {
@@ -250,9 +249,6 @@ public class FragmentEntryLinkStagedModelDataHandlerTest
 		Assert.assertEquals(
 			importedFragmentEntryLink.getConfiguration(),
 			fragmentEntryLink.getConfiguration());
-		Assert.assertEquals(
-			importedFragmentEntryLink.getPosition(),
-			fragmentEntryLink.getPosition());
 	}
 
 	private String _read(String fileName) throws Exception {

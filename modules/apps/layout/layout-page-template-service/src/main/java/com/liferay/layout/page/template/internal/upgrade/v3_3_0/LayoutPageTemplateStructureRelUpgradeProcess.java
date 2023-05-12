@@ -200,7 +200,7 @@ public class LayoutPageTemplateStructureRelUpgradeProcess
 					EditableValuesTransformerUtil.getEditableValues(
 						editableValuesJSONObject.toString(),
 						segmentsExperienceId),
-					newNamespace, fragmentEntryLink.getPosition(),
+					newNamespace, 0,
 					fragmentEntryLink.getRendererKey(),
 					fragmentEntryLink.getType(), new ServiceContext());
 
