@@ -48,7 +48,7 @@ import java.util.Map;
  */
 public class LayoutUpgradeProcess extends UpgradeProcess {
 
-	public LayoutUpgradeProcess(
+	 public LayoutUpgradeProcess(
 		FragmentEntryLinkLocalService fragmentEntryLinkLocalService,
 		LayoutLocalService layoutLocalService,
 		LayoutPrototypeLocalService layoutPrototypeLocalService) {

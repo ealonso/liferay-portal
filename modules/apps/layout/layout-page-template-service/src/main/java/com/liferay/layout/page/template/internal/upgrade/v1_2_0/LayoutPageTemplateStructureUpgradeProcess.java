@@ -45,7 +45,7 @@ import java.util.List;
  */
 public class LayoutPageTemplateStructureUpgradeProcess extends UpgradeProcess {
 
-	public LayoutPageTemplateStructureUpgradeProcess(
+	 public LayoutPageTemplateStructureUpgradeProcess(
 		FragmentEntryLinkLocalService fragmentEntryLinkLocalService,
 		LayoutLocalService layoutLocalService) {
 
