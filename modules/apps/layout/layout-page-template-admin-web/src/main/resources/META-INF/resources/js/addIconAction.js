@@ -23,7 +23,7 @@ export default function ({importURL, namespace, url}) {
 				ImportModal,
 				{
 					importURL,
-					namespace,
+					portletNamespace: namespace,
 				},
 				document.createElement('div')
 			);
