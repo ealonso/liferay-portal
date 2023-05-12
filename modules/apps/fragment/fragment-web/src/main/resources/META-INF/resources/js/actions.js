@@ -140,11 +140,12 @@ export const ACTIONS = {
 		});
 	},
 
-	openImportView({portletNamespace, viewImportURL}) {
+	openImportView({importURL, portletNamespace, viewImportURL}) {
 		if (Liferay.FeatureFlags['LPS-174939']) {
 			render(
 				ImportModal,
 				{
+					importURL,
 					portletNamespace,
 				},
 				document.createElement('div')

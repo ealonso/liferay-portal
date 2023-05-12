@@ -12,10 +12,12 @@
  * details.
  */
 
-/// <reference types="react" />
-
 interface Props {
+	importURL: string;
 	portletNamespace: string;
 }
-declare const ImportModal: ({portletNamespace}: Props) => false | JSX.Element;
+declare const ImportModal: ({
+	importURL,
+	portletNamespace,
+}: Props) => false | JSX.Element;
 export default ImportModal;

@@ -16,12 +16,13 @@ import {render} from '@liferay/frontend-js-react-web';
 
 import ImportModal from './modal/ImportModal';
 
-export default function ({namespace, url}) {
+export default function ({importURL, namespace, url}) {
 	Liferay.Util.setPortletConfigurationIconAction(`${namespace}import`, () => {
 		if (Liferay.FeatureFlags['LPS-174939']) {
 			render(
 				ImportModal,
 				{
+					importURL,
 					namespace,
 				},
 				document.createElement('div')
