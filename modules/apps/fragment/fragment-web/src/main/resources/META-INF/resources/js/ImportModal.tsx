@@ -26,7 +26,7 @@ interface Props {
 
 const ImportModal = ({portletNamespace}: Props) => {
 	const [visible, setVisible] = useState(true);
-	const [error, setError] = useState("");
+	const [error, setError] = useState('');
 	const [isValidForm, setIsValidForm] = useState(false);
 	const [overwrite, setOverwrite] = useState(true);
 
@@ -42,10 +42,12 @@ const ImportModal = ({portletNamespace}: Props) => {
 		}
 
 		const fileName = event.target.files[0].name;
-		const fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+		const fileExtension = fileName
+			.substring(fileName.lastIndexOf('.') + 1)
+			.toLowerCase();
 
 		if (fileExtension === 'zip') {
-			setError("");
+			setError('');
 			setIsValidForm(true);
 		}
 		else {
@@ -61,7 +63,8 @@ const ImportModal = ({portletNamespace}: Props) => {
 		}
 	};
 
-	return visible && (
+	return (
+		visible && (
 			<ClayModal observer={observer}>
 				<ClayModal.Header>
 					{Liferay.Language.get('import')}
@@ -122,7 +125,7 @@ const ImportModal = ({portletNamespace}: Props) => {
 								'overwrite-existing-entries'
 							)}
 							name={`${portletNamespace}overwrite`}
-							onChange={() => setOverwrite(val => !val)}
+							onChange={() => setOverwrite((val) => !val)}
 						/>
 					</ClayModal.Body>
 
@@ -149,7 +152,7 @@ const ImportModal = ({portletNamespace}: Props) => {
 				</form>
 			</ClayModal>
 		)
-	;
+	);
 };
 
 export default ImportModal;

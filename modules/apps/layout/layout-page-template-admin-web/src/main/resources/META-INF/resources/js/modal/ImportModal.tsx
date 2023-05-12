@@ -136,7 +136,7 @@ const ImportModal = ({portletNamespace}: Props) => {
 								'overwrite-existing-entries'
 							)}
 							name={`${portletNamespace}overwrite`}
-							onChange={() => setOverwrite(val => !val)}
+							onChange={() => setOverwrite((val) => !val)}
 						/>
 					</ClayModal.Body>
 
