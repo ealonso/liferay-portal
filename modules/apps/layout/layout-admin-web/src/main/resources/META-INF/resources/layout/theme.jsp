@@ -96,6 +96,7 @@ else {
 
 <aui:script sandbox="<%= true %>">
 	const regularCss = document.getElementById('<portlet:namespace />regularCss');
+	const regularCssAlert = document.getElementById('<portlet:namespace />regularCssAlert');
 	const regularCssLabel = document.querySelector(
 		'[for="<portlet:namespace />regularCss"]'
 	);
@@ -136,6 +137,7 @@ else {
 				themeOptions.classList.toggle('hide');
 			}
 
+			regularCssAlert.classList.toggle('d-none', false);
 			Liferay.Util.toggleDisabled([regularCss, regularCssLabel], true);
 		});
 	}
@@ -153,6 +155,7 @@ else {
 				themeOptions.classList.toggle('hide');
 			}
 
+			regularCssAlert.classList.toggle('d-none', true);
 			Liferay.Util.toggleDisabled([regularCss, regularCssLabel], false);
 		});
 	}
