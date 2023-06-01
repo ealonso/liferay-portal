@@ -24,6 +24,8 @@
 <aui:model-context bean="<%= layoutsAdminDisplayContext.getSelLayout() %>" model="<%= Layout.class %>" />
 
 <%
+boolean readOnly = layoutsAdminDisplayContext.isReadOnly();
+
 LayoutLookAndFeelDisplayContext layoutLookAndFeelDisplayContext = new LayoutLookAndFeelDisplayContext(request, layoutsAdminDisplayContext, liferayPortletResponse);
 %>
 

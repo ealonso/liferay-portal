@@ -24,6 +24,7 @@ const DEFAULT_MASTER_LAYOUT_PLID = '0';
 export default function MasterLayoutConfiguration({
 	changeMasterLayoutURL,
 	editMasterLayoutURL,
+	isReadOnly,
 	masterLayoutName: initialMasterLayoutName,
 	masterLayoutPlid: initialMasterLayoutPlid,
 	portletNamespace,
@@ -34,6 +35,10 @@ export default function MasterLayoutConfiguration({
 	});
 
 	const handleChangeMasterButtonClick = () => {
+		if (isReadOnly) {
+			return;
+		}
+
 		openSelectionModal({
 			iframeBodyCssClass: '',
 			onSelect(selectedItem) {
@@ -67,8 +72,7 @@ export default function MasterLayoutConfiguration({
 			sheet.classList.remove('hide');
 
 			sheet.removeAttribute('aria-hidden');
-		}
-		else {
+		} else {
 			sheet.classList.add('hide');
 
 			sheet.setAttribute('aria-hidden', 'true');
@@ -104,6 +108,7 @@ export default function MasterLayoutConfiguration({
 						aria-label={Liferay.Language.get('edit-master')}
 						button={{monospaced: true}}
 						className="c-ml-2"
+						disabled={isReadOnly}
 						displayType="secondary"
 						href={editMasterLayoutURL}
 					>
@@ -113,6 +118,7 @@ export default function MasterLayoutConfiguration({
 					<ClayButtonWithIcon
 						aria-label={Liferay.Language.get('change-master')}
 						className="c-ml-2"
+						disabled={isReadOnly}
 						displayType="secondary"
 						onClick={handleChangeMasterButtonClick}
 						symbol="change"
@@ -132,6 +138,7 @@ export default function MasterLayoutConfiguration({
 					<ClayButtonWithIcon
 						aria-label={Liferay.Language.get('change-master')}
 						className="c-ml-2"
+						disabled={isReadOnly}
 						displayType="secondary"
 						onClick={handleChangeMasterButtonClick}
 						symbol="plus"
