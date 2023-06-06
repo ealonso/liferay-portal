@@ -65,35 +65,71 @@ export default function SizeSelector({
 	const customSizeSelectorId = `${namespace}customSizeSelector`;
 
 	return (
-		<ClayLayout.Container>
-			<ClayLayout.Row className="size-selector">
-				{sizesList.map((size, index) => (
-					<SizeButton
-						activeSize={activeSize}
-						customSizeSelectorId={customSizeSelectorId}
-						key={index}
-						onRotate={onRotate}
-						setActiveSize={setActiveSize}
-						size={size}
-					/>
-				))}
-			</ClayLayout.Row>
+		<>
+			{Liferay.FeatureFlags['LPS-186155'] ? (
+				<>
+					<ClayLayout.Container>
+						<ClayLayout.Row className="size-selector">
+							{sizesList.map((size, index) => (
+								<SizeButton
+									activeSize={activeSize}
+									customSizeSelectorId={customSizeSelectorId}
+									key={index}
+									onRotate={onRotate}
+									setActiveSize={setActiveSize}
+									size={size}
+								/>
+							))}
+						</ClayLayout.Row>
+					</ClayLayout.Container>
 
-			{activeSize.id === SIZES.custom.id && (
-				<CustomSizeSelector
-					id={customSizeSelectorId}
-					namespace={namespace}
-					previewRef={previewRef}
-				/>
+					{activeSize.id === SIZES.custom.id && (
+						<CustomSizeSelector
+							id={customSizeSelectorId}
+							namespace={namespace}
+							previewRef={previewRef}
+						/>
+					)}
+
+					<span aria-live="polite" className="sr-only">
+						{sub(
+							Liferay.Language.get('x-screen-size-is-selected'),
+							activeSize.label
+						)}
+					</span>
+				</>
+			) : (
+				<ClayLayout.Container>
+					<ClayLayout.Row className="size-selector">
+						{sizesList.map((size, index) => (
+							<SizeButton
+								activeSize={activeSize}
+								customSizeSelectorId={customSizeSelectorId}
+								key={index}
+								onRotate={onRotate}
+								setActiveSize={setActiveSize}
+								size={size}
+							/>
+						))}
+					</ClayLayout.Row>
+
+					{activeSize.id === SIZES.custom.id && (
+						<CustomSizeSelector
+							id={customSizeSelectorId}
+							namespace={namespace}
+							previewRef={previewRef}
+						/>
+					)}
+
+					<span aria-live="polite" className="sr-only">
+						{sub(
+							Liferay.Language.get('x-screen-size-is-selected'),
+							activeSize.label
+						)}
+					</span>
+				</ClayLayout.Container>
 			)}
-
-			<span aria-live="polite" className="sr-only">
-				{sub(
-					Liferay.Language.get('x-screen-size-is-selected'),
-					activeSize.label
-				)}
-			</span>
-		</ClayLayout.Container>
+		</>
 	);
 }
 
@@ -187,6 +223,26 @@ function CustomSizeSelector({
 
 	const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
+	const updatePreview = () => {
+		if (previewRef.current) {
+			previewRef.current.style.height = `${height}px`;
+			previewRef.current.style.width = `${width}px`;
+
+			setAlertMessage(
+				sub(
+					Liferay.Language.get('custom-size-x-applied'),
+					`${height}x${width}`
+				)
+			);
+		}
+	};
+
+	const handleKeyUp: React.KeyboardEventHandler = (event) => {
+		if (event.key === 'Enter') {
+			updatePreview();
+		}
+	};
+
 	useEffect(() => {
 		const resizeObserver = new ResizeObserver(([firstEntry]) => {
 			const preview = firstEntry.target as HTMLElement;
@@ -208,76 +264,173 @@ function CustomSizeSelector({
 		<div id={id}>
 			<div className="d-flex flex-nowrap mt-4">
 				<ClayForm.Group className="mr-3">
-					<label htmlFor={`${namespace}height`}>
-						{Liferay.Language.get('height') + ' (px):'}
-					</label>
+					{Liferay.FeatureFlags['LPS-186155'] ? (
+						<>
+							<label htmlFor={`${namespace}width`}>
+								{Liferay.Language.get('width')}
+							</label>
+							<ClayInput.Group>
+								<ClayInput.GroupItem prepend>
+									<ClayInput
+										id={`${namespace}width`}
+										max={MAX_CUSTOM_SIZE}
+										min={MIN_CUSTOM_SIZE}
+										onBlur={() => {
+											updatePreview();
+										}}
+										onChange={(event) => {
+											const value = Number(
+												event.target.value
+											);
 
-					<ClayInput
-						id={`${namespace}height`}
-						max={MAX_CUSTOM_SIZE}
-						min={MIN_CUSTOM_SIZE}
-						onChange={(event) => {
-							const value = Number(event.target.value);
+											if (
+												value >= MIN_CUSTOM_SIZE &&
+												value <= MAX_CUSTOM_SIZE
+											) {
+												setWidth(value);
+											}
+										}}
+										onKeyUp={handleKeyUp}
+										sizing="sm"
+										type="number"
+										value={width}
+									/>
+								</ClayInput.GroupItem>
 
-							if (
-								value >= MIN_CUSTOM_SIZE &&
-								value <= MAX_CUSTOM_SIZE
-							) {
-								setHeight(value);
-							}
-						}}
-						type="number"
-						value={height}
-					/>
+								<ClayInput.GroupItem append shrink>
+									<button
+										className="btn btn-secondary"
+										type="submit"
+									>
+										PX
+									</button>
+								</ClayInput.GroupItem>
+							</ClayInput.Group>
+						</>
+					) : (
+						<>
+							<label htmlFor={`${namespace}width`}>
+								{Liferay.Language.get('width') + ' (px):'}
+							</label>
+							<ClayInput
+								id={`${namespace}width`}
+								max={MAX_CUSTOM_SIZE}
+								min={MIN_CUSTOM_SIZE}
+								onChange={(event) => {
+									const value = Number(event.target.value);
+
+									if (
+										value >= MIN_CUSTOM_SIZE &&
+										value <= MAX_CUSTOM_SIZE
+									) {
+										setWidth(value);
+									}
+								}}
+								type="number"
+								value={width}
+							/>
+						</>
+					)}
 				</ClayForm.Group>
 
 				<ClayForm.Group>
-					<label htmlFor={`${namespace}width`}>
-						{Liferay.Language.get('width') + ' (px):'}
-					</label>
+					{Liferay.FeatureFlags['LPS-186155'] ? (
+						<>
+							<label htmlFor={`${namespace}height`}>
+								{Liferay.Language.get('height')}
+							</label>
+							<ClayInput.Group>
+								<ClayInput.GroupItem prepend>
+									<ClayInput
+										id={`${namespace}height`}
+										max={MAX_CUSTOM_SIZE}
+										min={MIN_CUSTOM_SIZE}
+										onBlur={() => {
+											updatePreview();
+										}}
+										onChange={(event) => {
+											const value = Number(
+												event.target.value
+											);
 
-					<ClayInput
-						id={`${namespace}width`}
-						max={MAX_CUSTOM_SIZE}
-						min={MIN_CUSTOM_SIZE}
-						onChange={(event) => {
-							const value = Number(event.target.value);
+											if (
+												value >= MIN_CUSTOM_SIZE &&
+												value <= MAX_CUSTOM_SIZE
+											) {
+												setHeight(value);
+											}
+										}}
+										onKeyUp={handleKeyUp}
+										sizing="sm"
+										type="number"
+										value={height}
+									/>
+								</ClayInput.GroupItem>
 
-							if (
-								value >= MIN_CUSTOM_SIZE &&
-								value <= MAX_CUSTOM_SIZE
-							) {
-								setWidth(value);
-							}
-						}}
-						type="number"
-						value={width}
-					/>
+								<ClayInput.GroupItem append shrink>
+									<button
+										className="btn btn-secondary"
+										type="submit"
+									>
+										PX
+									</button>
+								</ClayInput.GroupItem>
+							</ClayInput.Group>
+						</>
+					) : (
+						<>
+							<label htmlFor={`${namespace}height`}>
+								{Liferay.Language.get('height') + ' (px):'}
+							</label>
+
+							<ClayInput
+								id={`${namespace}height`}
+								max={MAX_CUSTOM_SIZE}
+								min={MIN_CUSTOM_SIZE}
+								onChange={(event) => {
+									const value = Number(event.target.value);
+
+									if (
+										value >= MIN_CUSTOM_SIZE &&
+										value <= MAX_CUSTOM_SIZE
+									) {
+										setHeight(value);
+									}
+								}}
+								type="number"
+								value={height}
+							/>
+						</>
+					)}
 				</ClayForm.Group>
 			</div>
 
-			<ClayButton
-				aria-label={Liferay.Language.get('apply-custom-size')}
-				className="w-100"
-				displayType="secondary"
-				onClick={() => {
-					if (previewRef.current) {
-						previewRef.current.style.height = `${height}px`;
-						previewRef.current.style.width = `${width}px`;
+			{!Liferay.FeatureFlags['LPS-186155'] && (
+				<ClayButton
+					aria-label={Liferay.Language.get('apply-custom-size')}
+					className="w-100"
+					displayType="secondary"
+					onClick={() => {
+						if (previewRef.current) {
+							previewRef.current.style.height = `${height}px`;
+							previewRef.current.style.width = `${width}px`;
 
-						setAlertMessage(
-							sub(
-								Liferay.Language.get('custom-size-x-applied'),
-								`${height}x${width}`
-							)
-						);
-					}
-				}}
-			>
-				{Liferay.Language.get('apply-custom-size')}
-			</ClayButton>
+							setAlertMessage(
+								sub(
+									Liferay.Language.get(
+										'custom-size-x-applied'
+									),
+									`${height}x${width}`
+								)
+							);
+						}
+					}}
+				>
+					{Liferay.Language.get('apply-custom-size')}
+				</ClayButton>
+			)}
 
-			{alertMessage && (
+			{alertMessage && !Liferay.FeatureFlags['LPS-186155'] && (
 				<ClayAlert className="mt-3" displayType="info" role="status">
 					{alertMessage}
 				</ClayAlert>
