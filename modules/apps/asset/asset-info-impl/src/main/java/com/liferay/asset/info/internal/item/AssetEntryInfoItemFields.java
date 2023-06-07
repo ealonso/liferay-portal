@@ -26,6 +26,32 @@ import com.liferay.info.localized.InfoLocalizedValue;
  */
 public class AssetEntryInfoItemFields {
 
+	public static final InfoField<TextInfoFieldType>
+		assetRendererDownloadURLInfoField =
+			BuilderHolder._builder.infoFieldType(
+				TextInfoFieldType.INSTANCE
+			).name(
+				"assetRendererDownloadURL"
+			).labelInfoLocalizedValue(
+				InfoLocalizedValue.localize(
+					AssetEntryInfoItemFields.class,
+					"asset-renderer-download-url")
+			).attribute(
+				TextInfoFieldType.HTML, Boolean.TRUE
+			).build();
+	public static final InfoField<TextInfoFieldType>
+		assetRendererViewInContextURLInfoField =
+			BuilderHolder._builder.infoFieldType(
+				TextInfoFieldType.INSTANCE
+			).name(
+				"assetRendererViewInContextURL"
+			).labelInfoLocalizedValue(
+				InfoLocalizedValue.localize(
+					AssetEntryInfoItemFields.class,
+					"asset-renderer-view-in-context-url")
+			).attribute(
+				TextInfoFieldType.HTML, Boolean.TRUE
+			).build();
 	public static final InfoField<DateInfoFieldType> createDateInfoField =
 		BuilderHolder._builder.infoFieldType(
 			DateInfoFieldType.INSTANCE

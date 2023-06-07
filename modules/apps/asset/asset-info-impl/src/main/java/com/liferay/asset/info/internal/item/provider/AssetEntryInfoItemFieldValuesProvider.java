@@ -18,6 +18,7 @@ import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvide
 import com.liferay.asset.info.internal.item.AssetEntryInfoItemFields;
 import com.liferay.asset.info.item.provider.AssetEntryInfoItemFieldSetProvider;
 import com.liferay.asset.kernel.model.AssetEntry;
+import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.InfoItemReference;
@@ -75,6 +76,23 @@ public class AssetEntryInfoItemFieldValuesProvider
 
 		Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
 
+		AssetRenderer<?> assetRenderer = assetEntry.getAssetRenderer();
+
+		ThemeDisplay themeDisplay = _getThemeDisplay();
+
+		String urlDownload = assetRenderer.getURLDownload(themeDisplay);
+
+		String urlViewInContext = urlDownload;
+
+		try {
+			urlViewInContext = assetRenderer.getURLViewInContext(
+				themeDisplay,
+				_portal.getCurrentCompleteURL(themeDisplay.getRequest()));
+		}
+		catch (Exception exception) {
+			_log.error(exception);
+		}
+
 		return Arrays.asList(
 			new InfoFieldValue<>(
 				AssetEntryInfoItemFields.titleInfoField,
@@ -100,6 +118,12 @@ public class AssetEntryInfoItemFieldValuesProvider
 			new InfoFieldValue<>(
 				AssetEntryInfoItemFields.viewCountInfoField,
 				assetEntry::getViewCount),
+			new InfoFieldValue<>(
+				AssetEntryInfoItemFields.assetRendererDownloadURLInfoField,
+				urlDownload),
+			new InfoFieldValue<>(
+				AssetEntryInfoItemFields.assetRendererViewInContextURLInfoField,
+				urlViewInContext),
 			new InfoFieldValue<>(
 				AssetEntryInfoItemFields.displayPageURLInfoField,
 				_getDisplayPageURL(assetEntry)),

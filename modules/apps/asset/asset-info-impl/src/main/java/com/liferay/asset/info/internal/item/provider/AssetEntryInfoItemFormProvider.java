@@ -72,6 +72,10 @@ public class AssetEntryInfoItemFormProvider
 			).infoFieldSetEntry(
 				AssetEntryInfoItemFields.viewCountInfoField
 			).infoFieldSetEntry(
+				AssetEntryInfoItemFields.assetRendererDownloadURLInfoField
+			).infoFieldSetEntry(
+				AssetEntryInfoItemFields.assetRendererViewInContextURLInfoField
+			).infoFieldSetEntry(
 				AssetEntryInfoItemFields.displayPageURLInfoField
 			).infoFieldSetEntry(
 				AssetEntryInfoItemFields.urlInfoField
