@@ -16,12 +16,15 @@ package com.liferay.segments.simulation.web.internal.display.context;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -32,7 +35,9 @@ import com.liferay.segments.service.SegmentsEntryServiceUtil;
 import com.liferay.staging.StagingGroupHelper;
 import com.liferay.staging.StagingGroupHelperUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.RenderResponse;
 
@@ -59,6 +64,25 @@ public class SegmentsSimulationDisplayContext {
 
 		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+	}
+
+	public Map<String, Object> getData() throws PortalException {
+		return HashMapBuilder.<String, Object>put(
+			"deactivateSimulationURL", getDeactivateSimulationURL()
+		).put(
+			"namespace", getPortletNamespace()
+		).put(
+			"segmentationEnabled", isSegmentationEnabled()
+		).put(
+			"segmentsCompanyConfigurationURL",
+			getSegmentsCompanyConfigurationURL()
+		).put(
+			"segmentsEntries", getSegmentsEntriesInfo()
+		).put(
+			"showEmptyMessage", isShowEmptyMessage()
+		).put(
+			"simulateSegmentsEntriesURL", getSimulateSegmentsEntriesURL()
+		).build();
 	}
 
 	public String getDeactivateSimulationURL() {
@@ -95,6 +119,31 @@ public class SegmentsSimulationDisplayContext {
 			_getStagingAwareGroupId(), true);
 
 		return _segmentsEntries;
+	}
+
+	public List<JSONObject> getSegmentsEntriesInfo() {
+		if (_segmentsEntriesInfo != null) {
+			return _segmentsEntriesInfo;
+		}
+
+		List<SegmentsEntry> segmentsEntries =
+			SegmentsEntryServiceUtil.getSegmentsEntries(
+				_getStagingAwareGroupId(), true);
+
+		List<JSONObject> segmentsEntriesInfo = new ArrayList<>();
+
+		for (SegmentsEntry segment : segmentsEntries) {
+			segmentsEntriesInfo.add(
+				JSONUtil.put(
+					"id", segment.getSegmentsEntryId()
+				).put(
+					"name", segment.getName(_themeDisplay.getLocale())
+				));
+		}
+
+		_segmentsEntriesInfo = segmentsEntriesInfo;
+
+		return _segmentsEntriesInfo;
 	}
 
 	public String getSimulateSegmentsEntriesURL() {
@@ -151,6 +200,7 @@ public class SegmentsSimulationDisplayContext {
 	private final LiferayPortletResponse _liferayPortletResponse;
 	private final SegmentsConfigurationProvider _segmentsConfigurationProvider;
 	private List<SegmentsEntry> _segmentsEntries;
+	private List<JSONObject> _segmentsEntriesInfo;
 	private Boolean _showEmptyMessage;
 	private final ThemeDisplay _themeDisplay;
 
