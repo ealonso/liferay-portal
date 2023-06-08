@@ -15,6 +15,7 @@
 package com.liferay.segments.simulation.web.internal.display.context;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -92,7 +93,9 @@ public class SegmentsSimulationDisplayContext {
 		}
 
 		_segmentsEntries = SegmentsEntryServiceUtil.getSegmentsEntries(
-			_getStagingAwareGroupId(), true);
+			_getStagingAwareGroupId(), true, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS,
+			new SegmentNameOrderByComparator(_themeDisplay.getLocale()));
 
 		return _segmentsEntries;
 	}
