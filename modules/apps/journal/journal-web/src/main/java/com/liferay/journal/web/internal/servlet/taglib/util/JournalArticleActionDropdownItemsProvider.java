@@ -26,15 +26,20 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
+import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.web.internal.asset.model.JournalArticleAssetRenderer;
 import com.liferay.journal.web.internal.configuration.FFJournalAutoSaveDraftConfiguration;
 import com.liferay.journal.web.internal.configuration.JournalWebConfiguration;
+import com.liferay.journal.web.internal.item.selector.JournalArticleTranslationsItemSelectorCriterion;
 import com.liferay.journal.web.internal.portlet.JournalPortlet;
 import com.liferay.journal.web.internal.security.permission.resource.JournalArticlePermission;
 import com.liferay.journal.web.internal.security.permission.resource.JournalFolderPermission;
+import com.liferay.journal.web.internal.util.JournalArticleTranslation;
 import com.liferay.journal.web.internal.util.JournalUtil;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.string.StringPool;
@@ -77,6 +82,7 @@ import java.util.Set;
 
 import javax.portlet.PortletRequest;
 
+import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -114,6 +120,8 @@ public class JournalArticleActionDropdownItemsProvider {
 		_translationURLProvider =
 			(TranslationURLProvider)liferayPortletRequest.getAttribute(
 				TranslationURLProvider.class.getName());
+		_itemSelector = (ItemSelector)_httpServletRequest.getAttribute(
+			ItemSelector.class.getName());
 	}
 
 	public List<DropdownItem> getActionDropdownItems() throws Exception {
@@ -475,21 +483,24 @@ public class JournalArticleActionDropdownItemsProvider {
 				).setParameter(
 					"id", _article.getId()
 				).buildString());
+
+			JournalArticleTranslationsItemSelectorCriterion
+				journalArticleTranslationsItemSelectorCriterion =
+				new JournalArticleTranslationsItemSelectorCriterion();
+
+			journalArticleTranslationsItemSelectorCriterion.setArticleId(_article.getArticleId());
+
+			journalArticleTranslationsItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+				new UUIDItemSelectorReturnType());
+
 			dropdownItem.putData(
 				"selectArticleTranslationsURL",
-				PortletURLBuilder.createRenderURL(
-					_liferayPortletResponse
-				).setMVCPath(
-					"/select_article_translations.jsp"
-				).setRedirect(
-					_getRedirect()
-				).setBackURL(
-					_getRedirect()
-				).setParameter(
-					"articleId", _article.getArticleId()
-				).setWindowState(
-					LiferayWindowState.POP_UP
-				).buildString());
+				 String.valueOf(
+						_itemSelector.getItemSelectorURL(
+							RequestBackedPortletURLFactoryUtil.create(_httpServletRequest),
+							_liferayPortletResponse.getNamespace() + "changePreview",
+							journalArticleTranslationsItemSelectorCriterion))
+				);
 			dropdownItem.putData(
 				"title",
 				LanguageUtil.get(_httpServletRequest, "delete-translations"));
@@ -1068,6 +1079,7 @@ public class JournalArticleActionDropdownItemsProvider {
 	private final FFJournalAutoSaveDraftConfiguration
 		_ffJournalAutoSaveDraftConfiguration;
 	private final HttpServletRequest _httpServletRequest;
+	private final ItemSelector _itemSelector;
 	private final JournalWebConfiguration _journalWebConfiguration;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;
