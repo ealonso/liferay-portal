@@ -70,6 +70,8 @@ public class SegmentsSimulationDisplayContext {
 		return HashMapBuilder.<String, Object>put(
 			"deactivateSimulationURL", getDeactivateSimulationURL()
 		).put(
+			"experiencesEntries", _getExperiencesEntriesInfo()
+		).put(
 			"namespace", getPortletNamespace()
 		).put(
 			"segmentationEnabled", isSegmentationEnabled()
@@ -176,6 +178,10 @@ public class SegmentsSimulationDisplayContext {
 		_showEmptyMessage = segmentsEntries.isEmpty();
 
 		return _showEmptyMessage;
+	}
+
+	private List<JSONObject> _getExperiencesEntriesInfo() {
+		return new ArrayList<>();
 	}
 
 	private long _getStagingAwareGroupId() {
