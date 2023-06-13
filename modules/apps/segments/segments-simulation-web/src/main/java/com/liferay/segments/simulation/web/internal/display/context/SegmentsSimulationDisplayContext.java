@@ -66,9 +66,11 @@ public class SegmentsSimulationDisplayContext {
 			WebKeys.THEME_DISPLAY);
 	}
 
-	public Map<String, Object> getData() throws PortalException {
+	public Map<String, Object> getData() {
 		return HashMapBuilder.<String, Object>put(
 			"deactivateSimulationURL", getDeactivateSimulationURL()
+		).put(
+			"experiencesEntries", _getExperiencesEntriesInfo()
 		).put(
 			"namespace", getPortletNamespace()
 		).put(
@@ -176,6 +178,10 @@ public class SegmentsSimulationDisplayContext {
 		_showEmptyMessage = segmentsEntries.isEmpty();
 
 		return _showEmptyMessage;
+	}
+
+	private List<JSONObject> _getExperiencesEntriesInfo() {
+		return new ArrayList<>();
 	}
 
 	private long _getStagingAwareGroupId() {

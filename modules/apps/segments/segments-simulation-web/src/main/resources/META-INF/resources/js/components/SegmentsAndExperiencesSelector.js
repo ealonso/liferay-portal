@@ -13,12 +13,14 @@
  */
 
 import ClayAlert from '@clayui/alert';
+import {ClaySelectWithOption} from '@clayui/form';
 import ClayLink from '@clayui/link';
 import {fetch} from 'frontend-js-web';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 function SegmentsAndExperiencesSelector({
 	deactivateSimulationURL,
+	experiencesEntries,
 	namespace,
 	segmentationEnabled,
 	segmentsCompanyConfigurationURL,
@@ -27,8 +29,23 @@ function SegmentsAndExperiencesSelector({
 	simulateSegmentsEntriesURL,
 }) {
 	const [alertVisible, setAlertVisible] = useState(!segmentationEnabled);
+	const [selectedPreviewOption, setSelectedPreviewOption] = useState(
+		'segments'
+	);
+	const [selectedSegment, setSelectedSegment] = useState(null);
 
 	const formRef = useRef(null);
+
+	const options = [
+		{
+			label: 'Segments',
+			value: 'segments',
+		},
+		{
+			label: 'Experiences',
+			value: 'experiences',
+		},
+	];
 
 	const fetchDeactivateSimulation = useCallback(() => {
 		fetch(deactivateSimulationURL, {
@@ -86,64 +103,82 @@ function SegmentsAndExperiencesSelector({
 				</p>
 			) : (
 				<form method="post" name="segmentsSimulationFm" ref={formRef}>
-					<ul className="list-unstyled">
-						{alertVisible && (
-							<ClayAlert
-								dismissible={true}
-								displayType="warning"
-								onClose={() => {
-									setAlertVisible(false);
-								}}
-							>
-								<strong>
-									{Liferay.Language.get(
-										'experiences-cannot-be-displayed-because-segmentation-is-disabled'
-									)}
-								</strong>
-
-								{segmentsCompanyConfigurationURL ? (
-									<ClayLink
-										href={segmentsCompanyConfigurationURL}
-									>
-										{Liferay.Language.get(
-											'to-enable,-go-to-instance-settings'
-										)}
-									</ClayLink>
-								) : (
-									<span>
-										{Liferay.Language.get(
-											'contact-your-system-administrator-to-enable-it'
-										)}
-									</span>
+					{alertVisible && (
+						<ClayAlert
+							dismissible={true}
+							displayType="warning"
+							onClose={() => {
+								setAlertVisible(false);
+							}}
+						>
+							<strong>
+								{Liferay.Language.get(
+									'experiences-cannot-be-displayed-because-segmentation-is-disabled'
 								)}
-							</ClayAlert>
-						)}
+							</strong>
 
-						{segmentsEntries.map((segment) => (
-							<li
-								className="bg-transparent border-0 list-group-item list-group-item-flex pb-3 pt-0 px-0"
-								key={segment}
-							>
+							{segmentsCompanyConfigurationURL ? (
+								<ClayLink
+									href={segmentsCompanyConfigurationURL}
+								>
+									{Liferay.Language.get(
+										'to-enable,-go-to-instance-settings'
+									)}
+								</ClayLink>
+							) : (
 								<span>
-									<div className="custom-checkbox">
-										<label className="position-relative">
-											<input
-												className="custom-control-input simulated-segment"
-												name={`${namespace}segmentsEntryId`}
-												type="checkbox"
-												value={segment.id}
-											/>
-
-											<span className="custom-control-label">
-												<span className="custom-control-label-text">
-													{segment.name}
-												</span>
-											</span>
-										</label>
-									</div>
+									{Liferay.Language.get(
+										'contact-your-system-administrator-to-enable-it'
+									)}
 								</span>
-							</li>
-						))}
+							)}
+						</ClayAlert>
+					)}
+
+					{!!segmentsEntries.length && experiencesEntries.length < 1 && (
+						<div className="form-group">
+							<label htmlFor="segmentsOrExperiences">
+								{Liferay.Language.get('preview-by')}
+							</label>
+
+							<ClaySelectWithOption
+								aria-label={Liferay.Language.get('preview-by')}
+								id="segmentsOrExperiences"
+								onChange={({target}) => {
+									setSelectedPreviewOption(target.value);
+								}}
+								options={options}
+								value={selectedPreviewOption}
+							/>
+						</div>
+					)}
+
+					<ul className="list-unstyled">
+						{selectedPreviewOption === 'segments' && (
+							<div className="form-group">
+								<label htmlFor={`${namespace}segmentsEntryId`}>
+									{Liferay.Language.get('segments')}
+								</label>
+
+								<ClaySelectWithOption
+									aria-label={Liferay.Language.get(
+										'segments'
+									)}
+									id={`${namespace}segmentsEntryId`}
+									name={`${namespace}segmentsEntryId`}
+									onChange={({target}) => {
+										setSelectedSegment(target.value);
+									}}
+									options={segmentsEntries.map((segment) => {
+										return {
+											label: segment.name,
+											value: segment.id,
+										};
+									})}
+									value={selectedSegment}
+								/>
+							</div>
+						)}
 					</ul>
 				</form>
 			)}
