@@ -20,11 +20,11 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 
 function SegmentsAndExperiencesSelector({
 	deactivateSimulationURL,
-	experiencesEntries,
 	namespace,
 	segmentationEnabled,
 	segmentsCompanyConfigurationURL,
 	segmentsEntries,
+	segmentsExperiences,
 	showEmptyMessage,
 	simulateSegmentsEntriesURL,
 }) {
@@ -135,23 +135,26 @@ function SegmentsAndExperiencesSelector({
 						</ClayAlert>
 					)}
 
-					{!!segmentsEntries.length && experiencesEntries.length < 1 && (
-						<div className="form-group">
-							<label htmlFor="segmentsOrExperiences">
-								{Liferay.Language.get('preview-by')}
-							</label>
+					{!!segmentsEntries.length &&
+						segmentsExperiences.length < 1 && (
+							<div className="form-group">
+								<label htmlFor="segmentsOrExperiences">
+									{Liferay.Language.get('preview-by')}
+								</label>
 
-							<ClaySelectWithOption
-								aria-label={Liferay.Language.get('preview-by')}
-								id="segmentsOrExperiences"
-								onChange={({target}) => {
-									setSelectedPreviewOption(target.value);
-								}}
-								options={options}
-								value={selectedPreviewOption}
-							/>
-						</div>
-					)}
+								<ClaySelectWithOption
+									aria-label={Liferay.Language.get(
+										'preview-by'
+									)}
+									id="segmentsOrExperiences"
+									onChange={({target}) => {
+										setSelectedPreviewOption(target.value);
+									}}
+									options={options}
+									value={selectedPreviewOption}
+								/>
+							</div>
+						)}
 
 					<ul className="list-unstyled">
 						{selectedPreviewOption === 'segments' && (
