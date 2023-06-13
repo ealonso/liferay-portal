@@ -19,6 +19,7 @@ import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.security.permission.resource.LayoutContentModelResourcePermission;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
@@ -127,6 +128,10 @@ public class SegmentsExperienceSelectorProductNavigationControlMenuEntry
 
 	@Override
 	public boolean isShow(HttpServletRequest httpServletRequest) {
+		if (FeatureFlagManagerUtil.isEnabled("LPS-186155")) {
+			return false;
+		}
+
 		String mode = ParamUtil.getString(
 			httpServletRequest, "p_l_mode", Constants.VIEW);
 
