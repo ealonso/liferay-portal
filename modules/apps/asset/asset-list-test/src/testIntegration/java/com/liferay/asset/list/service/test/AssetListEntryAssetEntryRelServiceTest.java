@@ -280,6 +280,35 @@ public class AssetListEntryAssetEntryRelServiceTest {
 	}
 
 	@Test
+	public void testGetAssetListEntryAssetEntryRelsCount() throws Exception {
+		AssetEntry assetEntry1 = AssetTestUtil.addAssetEntry(
+			_group.getGroupId(), null,
+			TestAssetRendererFactory.class.getName());
+
+		AssetEntry assetEntry2 = AssetTestUtil.addAssetEntry(
+			_group.getGroupId(), null,
+			TestAssetRendererFactory.class.getName());
+
+		AssetListEntry assetListEntry = AssetListTestUtil.addAssetListEntry(
+			_group.getGroupId());
+
+		long segmentsEntryId = RandomTestUtil.nextLong();
+
+		AssetListTestUtil.addAssetListEntryAssetEntryRel(
+			_group.getGroupId(), assetEntry1, assetListEntry, segmentsEntryId);
+
+		AssetListTestUtil.addAssetListEntryAssetEntryRel(
+			_group.getGroupId(), assetEntry2, assetListEntry, segmentsEntryId);
+
+		Assert.assertEquals(
+			2,
+			_assetListEntryAssetEntryRelLocalService.
+				getAssetListEntryAssetEntryRelsCount(
+					assetListEntry.getAssetListEntryId(),
+					new long[] {segmentsEntryId}));
+	}
+
+	@Test
 	public void testMoveAssetListEntryAssetEntryRelToInvalidPosition()
 		throws Exception {
 
