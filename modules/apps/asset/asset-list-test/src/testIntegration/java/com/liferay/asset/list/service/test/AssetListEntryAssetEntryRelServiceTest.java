@@ -294,18 +294,36 @@ public class AssetListEntryAssetEntryRelServiceTest {
 
 		long segmentsEntryId = RandomTestUtil.nextLong();
 
+
+		//A partir de aqui pruebo todas las maneras que hay de añadirlos, pero ninguna crea
+		//nada en bbdd
+
+
 		AssetListTestUtil.addAssetListEntryAssetEntryRel(
 			_group.getGroupId(), assetEntry1, assetListEntry, segmentsEntryId);
 
 		AssetListTestUtil.addAssetListEntryAssetEntryRel(
 			_group.getGroupId(), assetEntry2, assetListEntry, segmentsEntryId);
 
+		AssetListEntryAssetEntryRel assetListEntryAssetEntryRel = _assetListEntryAssetEntryRelLocalService.
+			addAssetListEntryAssetEntryRel(
+			assetListEntry.getAssetListEntryId(),
+			assetEntry1.getEntryId(),
+			segmentsEntryId, ServiceContextTestUtil.getServiceContext());
+
+		_assetListEntryAssetEntryRelLocalService.createAssetListEntryAssetEntryRel(
+			assetListEntryAssetEntryRel.getAssetListEntryAssetEntryRelId());
+
+		_assetListEntryAssetEntryRelLocalService.updateAssetListEntryAssetEntryRel(
+			assetListEntryAssetEntryRel
+		);
+
 		Assert.assertEquals(
 			2,
 			_assetListEntryAssetEntryRelLocalService.
 				getAssetListEntryAssetEntryRelsCount(
 					assetListEntry.getAssetListEntryId(),
-					new long[] {segmentsEntryId}));
+					segmentsEntryId, false));
 	}
 
 	@Test
