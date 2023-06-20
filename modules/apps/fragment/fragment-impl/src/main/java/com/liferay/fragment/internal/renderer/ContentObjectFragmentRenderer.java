@@ -262,9 +262,13 @@ public class ContentObjectFragmentRenderer implements FragmentRenderer {
 	private Object _getDisplayObject(
 		String className, long classPK, InfoItemReference infoItemReference) {
 
+		InfoItemIdentifier infoItemIdentifier =
+			infoItemReference.getInfoItemIdentifier();
+
 		InfoItemObjectProvider<?> infoItemObjectProvider =
 			_infoItemServiceRegistry.getFirstInfoItemService(
-				InfoItemObjectProvider.class, className);
+				InfoItemObjectProvider.class, className,
+				infoItemIdentifier.getInfoItemServiceFilter());
 
 		if (infoItemObjectProvider == null) {
 			return _getInfoItem(infoItemReference);
