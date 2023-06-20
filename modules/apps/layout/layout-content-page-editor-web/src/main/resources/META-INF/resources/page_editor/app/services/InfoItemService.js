@@ -115,6 +115,7 @@ export default {
 		classPK,
 		editableTypeOptions,
 		fieldId,
+		infoItemIdentifier,
 		languageId,
 		onNetworkStatus,
 	}) {
@@ -126,6 +127,7 @@ export default {
 					classPK,
 					editableTypeOptions: JSON.stringify(editableTypeOptions),
 					fieldId,
+					infoItemIdentifier,
 					languageId,
 				},
 			},
