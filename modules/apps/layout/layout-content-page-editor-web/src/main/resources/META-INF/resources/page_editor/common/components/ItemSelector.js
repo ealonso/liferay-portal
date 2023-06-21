@@ -89,7 +89,9 @@ export default function ItemSelector({
 			}
 
 			const transformMappedItem = (item) => ({
-				'data-item-id': `${item.classNameId}-${item.classPK}`,
+				'data-item-id': `${item.classNameId}-${
+					item.classPK || item.externalReferenceCode
+				}`,
 				'label': item.title,
 				'onClick': () => onItemSelect(item),
 			});
@@ -143,9 +145,10 @@ export default function ItemSelector({
 		(state) => {
 			const menuItems = [];
 
-			if (selectedItem?.classPK) {
+			if (selectedItem?.classPK || selectedItem?.externalReferenceCode) {
 				const contentMenuItems = selectPageContentDropdownItems(
 					selectedItem.classPK,
+					selectedItem.externalReferenceCode,
 					label
 				)(state)?.filter(
 					(item) => item.label !== Liferay.Language.get('edit-image')
@@ -187,7 +190,9 @@ export default function ItemSelector({
 				].find(
 					(item) =>
 						item.classNameId === selectedItem.classNameId &&
-						item.classPK === selectedItem.classPK
+						(item.classPK === selectedItem.classPK ||
+							item.externalReferenceCode ===
+								selectedItem.externalReferenceCode)
 				)?.title ||
 				selectedItem.title ||
 				''

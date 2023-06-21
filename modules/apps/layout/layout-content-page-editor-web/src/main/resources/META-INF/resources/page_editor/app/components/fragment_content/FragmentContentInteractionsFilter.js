@@ -170,8 +170,14 @@ function FragmentContentInteractionsFilter({
 				const editableId =
 					hoveredItemType === ITEM_TYPES.mappedContent
 						? editableValue.classNameId
-							? `${editableValue.classNameId}-${editableValue.classPK}`
-							: `${localizedEditableValue.classNameId}-${localizedEditableValue.classPK}`
+							? `${editableValue.classNameId}-${
+									editableValue.classPK ||
+									editableValue.externalReferenceCode
+							  }`
+							: `${localizedEditableValue.classNameId}-${
+									localizedEditableValue.classPK ||
+									localizedEditableValue.externalReferenceCode
+							  }`
 						: editable.itemId;
 
 				const hovered =

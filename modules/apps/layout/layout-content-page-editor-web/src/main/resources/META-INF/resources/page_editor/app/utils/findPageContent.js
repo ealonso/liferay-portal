@@ -12,11 +12,11 @@
  * details.
  */
 
-export default function isMappedToInfoItem(editable) {
-	return (
-		editable &&
-		editable.classNameId &&
-		(editable.classPK || editable.externalReferenceCode) &&
-		editable.fieldId
+export default function findPageContent(pageContents, item) {
+	return pageContents.find(
+		({classNameId, classPK, externalReferenceCode}) =>
+			classNameId === item.classNameId &&
+			(classPK === item.classPK ||
+				externalReferenceCode === item.externalReferenceCode)
 	);
 }

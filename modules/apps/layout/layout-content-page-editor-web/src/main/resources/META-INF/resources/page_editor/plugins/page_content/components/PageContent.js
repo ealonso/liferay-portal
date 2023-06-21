@@ -48,6 +48,7 @@ export default function PageContent({
 	classNameId,
 	classPK,
 	editableId,
+	externalReferenceCode,
 	icon,
 	isRestricted = false,
 	subtype,
@@ -77,7 +78,8 @@ export default function PageContent({
 	const dropdownItems = useSelectorCallback(
 		(state) => {
 			const pageContentDropdownItems = selectPageContentDropdownItems(
-				classPK
+				classPK,
+				externalReferenceCode
 			)(state);
 
 			return pageContentDropdownItems?.map((item) => {
@@ -104,7 +106,7 @@ export default function PageContent({
 				return item;
 			});
 		},
-		[classPK]
+		[classPK, externalReferenceCode]
 	);
 
 	useEffect(() => {
@@ -143,7 +145,11 @@ export default function PageContent({
 					const editable = editableValue[editableId.join('-')];
 
 					if (editable) {
-						setIsHovered(editable.classPK === classPK);
+						setIsHovered(
+							editable.classPK === classPK ||
+								editable.externalReferenceCode ===
+									externalReferenceCode
+						);
 					}
 				}
 			}
@@ -151,7 +157,13 @@ export default function PageContent({
 		else {
 			setIsHovered(false);
 		}
-	}, [fragmentEntryLinks, hoveredItemId, classPK, editableId]);
+	}, [
+		fragmentEntryLinks,
+		hoveredItemId,
+		classPK,
+		editableId,
+		externalReferenceCode,
+	]);
 
 	const handleMouseOver = () => {
 		setIsHovered(true);
@@ -163,8 +175,8 @@ export default function PageContent({
 			});
 		}
 
-		if (classNameId && classPK) {
-			hoverItem(`${classNameId}-${classPK}`, {
+		if (classNameId && (classPK || externalReferenceCode)) {
+			hoverItem(`${classNameId}-${classPK || externalReferenceCode}`, {
 				itemType: ITEM_TYPES.mappedContent,
 				origin: ITEM_ACTIVATION_ORIGINS.contents,
 			});

@@ -16,10 +16,16 @@ import {openModal, sub} from 'frontend-js-web';
 
 import {selectPageContents} from './selectPageContents';
 
-export function selectPageContentDropdownItems(classPK, label = '') {
+export function selectPageContentDropdownItems(
+	classPK,
+	externalReferenceCode,
+	label = ''
+) {
 	return (state) => {
 		const pageContent = selectPageContents(state)?.find(
-			(pageContent) => pageContent.classPK === classPK
+			(pageContent) =>
+				pageContent.classPK === classPK ||
+				pageContent.externalReferenceCode === externalReferenceCode
 		);
 
 		if (!pageContent) {
