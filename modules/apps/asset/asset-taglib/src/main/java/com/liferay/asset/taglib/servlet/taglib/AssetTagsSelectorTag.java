@@ -16,7 +16,12 @@ package com.liferay.asset.taglib.servlet.taglib;
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagServiceUtil;
+import com.liferay.asset.taglib.internal.item.selector.ItemSelectorUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
+import com.liferay.asset.tags.item.selector.AssetTagsItemSelectorReturnType;
+import com.liferay.asset.tags.item.selector.criterion.AssetTagsItemSelectorCriterion;
+import com.liferay.item.selector.ItemSelector;
+import com.liferay.item.selector.ItemSelectorCriterion;
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -24,6 +29,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
+import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -213,21 +220,22 @@ public class AssetTagsSelectorTag extends IncludeTag {
 
 	protected PortletURL getPortletURL() {
 		try {
-			PortletURL portletURL = PortletProviderUtil.getPortletURL(
-				getRequest(), AssetTag.class.getName(),
-				PortletProvider.Action.BROWSE);
+			PortletRequest portletRequest =
+				(PortletRequest)getRequest().getAttribute(
+					JavaConstants.JAVAX_PORTLET_REQUEST);
 
-			if (portletURL == null) {
-				return null;
-			}
+			AssetTagsItemSelectorCriterion assetTagsItemSelectorCriterion =
+				new AssetTagsItemSelectorCriterion();
 
-			portletURL.setParameter(
-				"groupIds", StringUtil.merge(getGroupIds(), StringPool.COMMA));
-			portletURL.setParameter("eventName", getEventName());
-			portletURL.setParameter("selectedTagNames", "{selectedTagNames}");
-			portletURL.setWindowState(LiferayWindowState.POP_UP);
+			assetTagsItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
+					new AssetTagsItemSelectorReturnType());
 
-			return portletURL;
+			return PortletURLBuilder.create(ItemSelectorUtil.getItemSelector().getItemSelectorURL(
+				RequestBackedPortletURLFactoryUtil.create(getRequest()),
+				getEventName(), assetTagsItemSelectorCriterion)
+			).setParameter("groupIds", StringUtil.merge(getGroupIds(), StringPool.COMMA)
+			).setParameter("selectedTagNames", "{selectedTagNames}"
+			).buildPortletURL();
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
