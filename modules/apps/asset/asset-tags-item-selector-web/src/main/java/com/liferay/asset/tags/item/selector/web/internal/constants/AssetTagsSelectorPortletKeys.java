@@ -12,14 +12,14 @@
  * details.
  */
 
-package com.liferay.asset.tags.item.selector;
-
-import com.liferay.item.selector.ItemSelectorReturnType;
+package com.liferay.asset.tags.item.selector.web.internal.constants;
 
 /**
- * @author Stefan Tanasie
+ * @author Eudaldo Alonso
  */
-public class AssetTagsItemSelectorReturnType
-	implements ItemSelectorReturnType {
+public class AssetTagsSelectorPortletKeys {
+
+	public static final String ASSET_TAGS_SELECTOR =
+		"com_liferay_asset_tags_selector_web_portlet_AssetTagsSelectorPortlet";
 
 }
