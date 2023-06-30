@@ -873,7 +873,9 @@ public class ContentManager {
 				_layoutClassedModelUsageLocalService.
 					getUniqueLayoutClassedModelUsagesCount(
 						layoutClassedModelUsage.getClassNameId(),
-						layoutClassedModelUsage.getClassPK())
+						layoutClassedModelUsage.getClassPK(),
+						layoutClassedModelUsage.
+							getClassedModelExternalReferenceCode())
 			);
 		}
 
@@ -922,7 +924,9 @@ public class ContentManager {
 			_layoutClassedModelUsageLocalService.
 				getUniqueLayoutClassedModelUsagesCount(
 					layoutClassedModelUsage.getClassNameId(),
-					layoutClassedModelUsage.getClassPK())
+					layoutClassedModelUsage.getClassPK(),
+					layoutClassedModelUsage.
+						getClassedModelExternalReferenceCode())
 		);
 	}
 
