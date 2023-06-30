@@ -35,6 +35,7 @@ import com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
 import com.liferay.item.selector.criteria.file.criterion.FileItemSelectorCriterion;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.constants.LayoutScreenNavigationEntryConstants;
 import com.liferay.layout.admin.web.internal.helper.LayoutActionsHelper;
 import com.liferay.layout.admin.web.internal.util.FaviconUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
@@ -700,7 +701,7 @@ public class LayoutsAdminDisplayContext {
 		return _layoutId;
 	}
 
-	public PortletURL getLayoutScreenNavigationPortletURL() {
+	public PortletURL getLayoutScreenNavigationPortletURL(long plid) {
 		return PortletURLBuilder.create(
 			getPortletURL()
 		).setMVCRenderCommandName(
@@ -710,7 +711,7 @@ public class LayoutsAdminDisplayContext {
 		).setPortletResource(
 			ParamUtil.getString(httpServletRequest, "portletResource")
 		).setParameter(
-			"selPlid", getSelPlid()
+			"selPlid", plid
 		).buildPortletURL();
 	}
 
@@ -1253,6 +1254,21 @@ public class LayoutsAdminDisplayContext {
 
 		_selPlid = ParamUtil.getLong(
 			_liferayPortletRequest, "selPlid", LayoutConstants.DEFAULT_PLID);
+
+		if (FeatureFlagManagerUtil.isEnabled("LPS-153951") &&
+			Objects.equals(
+				ParamUtil.getString(
+					httpServletRequest, "screenNavigationEntryKey"),
+				LayoutScreenNavigationEntryConstants.ENTRY_KEY_DESIGN)) {
+
+			Layout layout = LayoutLocalServiceUtil.fetchLayout(_selPlid);
+
+			Layout draftLayout = layout.fetchDraftLayout();
+
+			if (draftLayout != null) {
+				_selPlid = draftLayout.getPlid();
+			}
+		}
 
 		return _selPlid;
 	}
