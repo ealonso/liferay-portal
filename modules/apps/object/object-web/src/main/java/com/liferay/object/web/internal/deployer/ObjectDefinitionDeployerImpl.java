@@ -311,7 +311,7 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 				new ObjectEntryRowInfoItemRenderer(
 					_assetDisplayPageFriendlyURLProvider, _dlAppService,
 					_dlFileEntryLocalService, _dlURLHelper,
-					_listTypeEntryLocalService, _objectDefinitionLocalService,
+					_listTypeEntryLocalService, objectDefinition,
 					_objectEntryLocalService, _objectFieldLocalService,
 					_objectRelationshipLocalService, _portal, _servletContext),
 				HashMapDictionaryBuilder.<String, Object>put(
