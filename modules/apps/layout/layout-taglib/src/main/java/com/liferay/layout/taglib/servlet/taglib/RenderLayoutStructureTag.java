@@ -46,6 +46,7 @@ import com.liferay.layout.taglib.internal.display.context.RenderCollectionLayout
 import com.liferay.layout.taglib.internal.display.context.RenderLayoutStructureDisplayContext;
 import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.layout.taglib.internal.util.SegmentsExperienceUtil;
+import com.liferay.layout.taglib.servlet.taglib.renderer.LayoutStructureRenderer;
 import com.liferay.layout.util.CollectionPaginationUtil;
 import com.liferay.layout.util.structure.CollectionStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.ColumnLayoutStructureItem;
@@ -169,22 +170,33 @@ public class RenderLayoutStructureTag extends IncludeTag {
 		}
 
 		if (_layoutStructure != null) {
-			RenderLayoutStructureDisplayContext
-				renderLayoutStructureDisplayContext =
-					new RenderLayoutStructureDisplayContext(
-						getRequest(), getLayoutStructure(), getMainItemId(),
-						getMode(), isShowPreview());
+			if (FeatureFlagManagerUtil.isEnabled("LPS-187284")) {
+				LayoutStructureRenderer layoutStructureRenderer =
+					ServletContextUtil.getLayoutStructureRenderer();
 
-			_renderLayoutStructure(
-				renderLayoutStructureDisplayContext.getMainChildrenItemIds(),
-				renderLayoutStructureDisplayContext);
+				layoutStructureRenderer.render(
+					getRequest(), _layoutStructure, getMainItemId(), getMode(),
+					pageContext, _renderActionHandler, isShowPreview());
+			}
+			else {
+				RenderLayoutStructureDisplayContext
+					renderLayoutStructureDisplayContext =
+						new RenderLayoutStructureDisplayContext(
+							getRequest(), getLayoutStructure(), getMainItemId(),
+							getMode(), isShowPreview());
 
-			if (_renderActionHandler) {
-				_renderComponent(
-					"infoItemActionComponent",
+				_renderLayoutStructure(
 					renderLayoutStructureDisplayContext.
-						getInfoItemActionComponentContext(),
-					"render_layout_structure/js/InfoItemActionHandler");
+						getMainChildrenItemIds(),
+					renderLayoutStructureDisplayContext);
+
+				if (_renderActionHandler) {
+					_renderComponent(
+						"infoItemActionComponent",
+						renderLayoutStructureDisplayContext.
+							getInfoItemActionComponentContext(),
+						"render_layout_structure/js/InfoItemActionHandler");
+				}
 			}
 		}
 
