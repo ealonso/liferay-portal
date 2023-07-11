@@ -18,7 +18,7 @@ import com.liferay.fragment.constants.FragmentWebKeys;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
-import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.frontend.taglib.clay.servlet.taglib.ButtonTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.ColTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.ContainerTag;
@@ -59,14 +59,14 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
-import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.layoutconfiguration.util.RuntimePageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTemplate;
 import com.liferay.portal.kernel.model.LayoutTemplateConstants;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
-import com.liferay.portal.kernel.service.LayoutTemplateLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutTemplateLocalService;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -77,7 +77,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
@@ -93,6 +93,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Mikel Lorza
@@ -140,7 +141,7 @@ public class LayoutStructureRenderer {
 		}
 
 		LayoutTemplate layoutTemplate =
-			LayoutTemplateLocalServiceUtil.getLayoutTemplate(
+			_layoutTemplateLocalService.getLayoutTemplate(
 				layoutTemplateId, false, themeId);
 
 		if (layoutTemplate != null) {
@@ -468,7 +469,7 @@ public class LayoutStructureRenderer {
 				"paginationPreviousButton_" +
 					collectionStyledLayoutStructureItem.getItemId());
 			previousButtonTag.setLabel(
-				LanguageUtil.get(_httpServletRequest, "previous"));
+				_language.get(_httpServletRequest, "previous"));
 
 			previousButtonTag.doTag(_pageContext);
 
@@ -487,8 +488,7 @@ public class LayoutStructureRenderer {
 			nextButtonTag.setId(
 				"paginationNextButton_" +
 					collectionStyledLayoutStructureItem.getItemId());
-			nextButtonTag.setLabel(
-				LanguageUtil.get(_httpServletRequest, "next"));
+			nextButtonTag.setLabel(_language.get(_httpServletRequest, "next"));
 
 			nextButtonTag.doTag(_pageContext);
 
@@ -700,7 +700,7 @@ public class LayoutStructureRenderer {
 		String ppid = ParamUtil.getString(_httpServletRequest, "p_p_id");
 
 		if (layoutTypePortlet.hasStateMax() && Validator.isNotNull(ppid)) {
-			String templateContent = LayoutTemplateLocalServiceUtil.getContent(
+			String templateContent = _layoutTemplateLocalService.getContent(
 				"max", true, themeDisplay.getThemeId());
 
 			if (Validator.isNotNull(templateContent)) {
@@ -722,7 +722,7 @@ public class LayoutStructureRenderer {
 					originalHttpServletRequest,
 					(HttpServletResponse)_pageContext.getResponse(),
 					ppids.get(0), templateId, templateContent,
-					LayoutTemplateLocalServiceUtil.getLangType(
+					_layoutTemplateLocalService.getLangType(
 						"max", true, themeDisplay.getThemeId()));
 			}
 		}
@@ -740,7 +740,7 @@ public class LayoutStructureRenderer {
 			}
 
 			LayoutTemplate layoutTemplate =
-				LayoutTemplateLocalServiceUtil.getLayoutTemplate(
+				_layoutTemplateLocalService.getLayoutTemplate(
 					layoutTemplateId, false, themeDisplay.getThemeId());
 
 			String themeId = themeDisplay.getThemeId();
@@ -749,7 +749,7 @@ public class LayoutStructureRenderer {
 				themeId = layoutTemplate.getThemeId();
 			}
 
-			String templateContent = LayoutTemplateLocalServiceUtil.getContent(
+			String templateContent = _layoutTemplateLocalService.getContent(
 				layoutTypePortlet.getLayoutTemplateId(), false,
 				themeDisplay.getThemeId());
 
@@ -766,7 +766,7 @@ public class LayoutStructureRenderer {
 					originalHttpServletRequest,
 					(HttpServletResponse)_pageContext.getResponse(), null,
 					templateId, templateContent,
-					LayoutTemplateLocalServiceUtil.getLangType(
+					_layoutTemplateLocalService.getLangType(
 						layoutTypePortlet.getLayoutTemplateId(), false,
 						themeDisplay.getThemeId()));
 			}
@@ -792,8 +792,7 @@ public class LayoutStructureRenderer {
 		jspWriter.write("<div class=\"c-empty-state\">");
 		jspWriter.write("<div class=\"c-empty-state-text\">");
 
-		String message = LanguageUtil.get(
-			_httpServletRequest, "no-results-found");
+		String message = _language.get(_httpServletRequest, "no-results-found");
 
 		if ((emptyCollectionOptions != null) &&
 			(emptyCollectionOptions.getMessage() != null)) {
@@ -828,7 +827,7 @@ public class LayoutStructureRenderer {
 		if ((infoForm == null) ||
 			(FeatureFlagManagerUtil.isEnabled("LPS-169923") &&
 			 !_hasAddPermission(
-				 PortalUtil.getClassName(
+				 _portal.getClassName(
 					 formStyledLayoutStructureItem.getClassNameId())))) {
 
 			return;
@@ -936,7 +935,7 @@ public class LayoutStructureRenderer {
 		jspWriter.write("\"><input name=\"p_l_mode\" type=\"hidden\" value=\"");
 		jspWriter.write(
 			ParamUtil.getString(
-				PortalUtil.getOriginalServletRequest(_httpServletRequest),
+				_portal.getOriginalServletRequest(_httpServletRequest),
 				"p_l_mode", Constants.VIEW));
 		jspWriter.write("\"><input name=\"plid\" type=\"hidden\" value=\"");
 		jspWriter.write(String.valueOf(themeDisplay.getPlid()));
@@ -1024,7 +1023,7 @@ public class LayoutStructureRenderer {
 
 		if (fragmentStyledLayoutStructureItem.getFragmentEntryLinkId() > 0) {
 			FragmentEntryLink fragmentEntryLink =
-				FragmentEntryLinkLocalServiceUtil.fetchFragmentEntryLink(
+				_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
 					fragmentStyledLayoutStructureItem.getFragmentEntryLinkId());
 
 			if (fragmentEntryLink != null) {
@@ -1317,8 +1316,22 @@ public class LayoutStructureRenderer {
 		jspWriter.write("\">");
 	}
 
+	@Reference
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
 	private HttpServletRequest _httpServletRequest;
+
+	@Reference
+	private Language _language;
+
 	private LayoutStructure _layoutStructure;
+
+	@Reference
+	private LayoutTemplateLocalService _layoutTemplateLocalService;
+
 	private PageContext _pageContext;
+
+	@Reference
+	private Portal _portal;
 
 }
