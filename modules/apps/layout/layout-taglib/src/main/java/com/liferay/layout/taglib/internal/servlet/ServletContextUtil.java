@@ -28,6 +28,7 @@ import com.liferay.layout.list.retriever.LayoutListRetrieverRegistry;
 import com.liferay.layout.list.retriever.ListObjectReferenceFactoryRegistry;
 import com.liferay.layout.provider.LayoutStructureProvider;
 import com.liferay.layout.taglib.internal.helper.LayoutClassedModelUsagesHelper;
+import com.liferay.layout.taglib.servlet.taglib.renderer.LayoutStructureRenderer;
 import com.liferay.layout.util.LayoutsTree;
 import com.liferay.osgi.util.service.Snapshot;
 import com.liferay.segments.SegmentsEntryRetriever;
@@ -111,6 +112,10 @@ public class ServletContextUtil {
 		return _layoutStructureProviderSnapshot.get();
 	}
 
+	public static LayoutStructureRenderer getLayoutStructureRenderer() {
+		return _layoutStructureRenderer.get();
+	}
+
 	public static ListObjectReferenceFactoryRegistry
 		getListObjectReferenceFactoryRegistry() {
 
@@ -177,6 +182,9 @@ public class ServletContextUtil {
 	private static final Snapshot<LayoutStructureProvider>
 		_layoutStructureProviderSnapshot = new Snapshot<>(
 			ServletContextUtil.class, LayoutStructureProvider.class);
+	private static final Snapshot<LayoutStructureRenderer>
+		_layoutStructureRenderer = new Snapshot<>(
+			ServletContextUtil.class, LayoutStructureRenderer.class);
 	private static final Snapshot<ListObjectReferenceFactoryRegistry>
 		_listObjectReferenceFactoryRegistrySnapshot = new Snapshot<>(
 			ServletContextUtil.class, ListObjectReferenceFactoryRegistry.class);
