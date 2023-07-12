@@ -14,6 +14,7 @@
 
 package com.liferay.layout.taglib.servlet.taglib.renderer;
 
+import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.constants.FragmentWebKeys;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
@@ -61,6 +62,8 @@ import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.layoutconfiguration.util.RuntimePageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTemplate;
@@ -83,6 +86,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -101,6 +105,26 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = LayoutStructureRenderer.class)
 public class LayoutStructureRenderer {
 
+	public Map<LayoutStructureItem, Long> getLayoutStructureItemRenderTimes(
+		HttpServletRequest httpServletRequest, LayoutStructure layoutStructure,
+		PageContext pageContext) {
+
+		try {
+			_render(
+				true, httpServletRequest, layoutStructure,
+				layoutStructure.getMainItemId(),
+				FragmentEntryLinkConstants.VIEW, pageContext, false, false);
+		}
+		catch (Exception exception) {
+			_log.error(
+				"Unable to get layout structure item render times", exception);
+
+			return Collections.emptyMap();
+		}
+
+		return _layoutStructureItemRenderTimes;
+	}
+
 	public void render(
 			HttpServletRequest httpServletRequest,
 			LayoutStructure layoutStructure, String mainItemId, String mode,
@@ -108,27 +132,9 @@ public class LayoutStructureRenderer {
 			boolean showPreview)
 		throws Exception {
 
-		_httpServletRequest = httpServletRequest;
-		_layoutStructure = layoutStructure;
-		_pageContext = pageContext;
-
-		RenderLayoutStructureDisplayContext
-			renderLayoutStructureDisplayContext =
-				new RenderLayoutStructureDisplayContext(
-					_httpServletRequest, layoutStructure, mainItemId, mode,
-					showPreview);
-
-		_renderLayoutStructure(
-			renderLayoutStructureDisplayContext.getMainChildrenItemIds(),
-			renderLayoutStructureDisplayContext);
-
-		if (renderActionHandler) {
-			_renderComponent(
-				"infoItemActionComponent",
-				renderLayoutStructureDisplayContext.
-					getInfoItemActionComponentContext(),
-				"render_layout_structure/js/InfoItemActionHandler");
-		}
+		_render(
+			false, httpServletRequest, layoutStructure, mainItemId, mode,
+			pageContext, renderActionHandler, showPreview);
 	}
 
 	private LayoutTypePortlet _getLayoutTypePortlet(
@@ -179,6 +185,43 @@ public class LayoutStructureRenderer {
 		}
 
 		return false;
+	}
+
+	private void _render(
+			boolean calculateLayoutStructureItemRenderTimes,
+			HttpServletRequest httpServletRequest,
+			LayoutStructure layoutStructure, String mainItemId, String mode,
+			PageContext pageContext, boolean renderActionHandler,
+			boolean showPreview)
+		throws Exception {
+
+		_calculateLayoutStructureItemRenderTimes =
+			calculateLayoutStructureItemRenderTimes;
+		_httpServletRequest = httpServletRequest;
+		_layoutStructure = layoutStructure;
+		_pageContext = pageContext;
+
+		if (calculateLayoutStructureItemRenderTimes) {
+			_layoutStructureItemRenderTimes = new HashMap<>();
+		}
+
+		RenderLayoutStructureDisplayContext
+			renderLayoutStructureDisplayContext =
+				new RenderLayoutStructureDisplayContext(
+					_httpServletRequest, layoutStructure, mainItemId, mode,
+					showPreview);
+
+		_renderLayoutStructure(
+			renderLayoutStructureDisplayContext.getMainChildrenItemIds(),
+			renderLayoutStructureDisplayContext);
+
+		if (renderActionHandler) {
+			_renderComponent(
+				"infoItemActionComponent",
+				renderLayoutStructureDisplayContext.
+					getInfoItemActionComponentContext(),
+				"render_layout_structure/js/InfoItemActionHandler");
+		}
 	}
 
 	private void _renderCollectionStyledLayoutStructureItem(
@@ -1080,6 +1123,11 @@ public class LayoutStructureRenderer {
 			LayoutStructureItem layoutStructureItem =
 				_layoutStructure.getLayoutStructureItem(childrenItemId);
 
+			if (_calculateLayoutStructureItemRenderTimes) {
+				_layoutStructureItemRenderTimes.put(
+					layoutStructureItem, System.currentTimeMillis());
+			}
+
 			if (layoutStructureItem instanceof
 					CollectionStyledLayoutStructureItem) {
 
@@ -1190,6 +1238,12 @@ public class LayoutStructureRenderer {
 				_renderLayoutStructure(
 					layoutStructureItem.getChildrenItemIds(), infoForm,
 					renderLayoutStructureDisplayContext);
+			}
+
+			if (_calculateLayoutStructureItemRenderTimes) {
+				_layoutStructureItemRenderTimes.computeIfPresent(
+					layoutStructureItem,
+					(key, value) -> System.currentTimeMillis() - value);
 			}
 		}
 	}
@@ -1316,6 +1370,11 @@ public class LayoutStructureRenderer {
 		jspWriter.write("\">");
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		LayoutStructureRenderer.class);
+
+	private boolean _calculateLayoutStructureItemRenderTimes;
+
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
 
@@ -1325,6 +1384,7 @@ public class LayoutStructureRenderer {
 	private Language _language;
 
 	private LayoutStructure _layoutStructure;
+	private Map<LayoutStructureItem, Long> _layoutStructureItemRenderTimes;
 
 	@Reference
 	private LayoutTemplateLocalService _layoutTemplateLocalService;
