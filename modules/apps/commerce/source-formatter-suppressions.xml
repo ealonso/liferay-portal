@@ -24,7 +24,6 @@
 		<suppress checks="JavaVariableTypeCheck" files="commerce-product-api/src/main/java/com/liferay/commerce/product/option/CommerceOptionValue\.java" />
 		<suppress checks="JSONPackageJSONCheck" files="commerce-cart-taglib/package\.json" />
 		<suppress checks="JSONPackageJSONCheck" files="commerce-frontend-js/package\.json" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-frontend-taglib/package\.json" />
 		<suppress checks="JSONPackageJSONCheck" files="commerce-product-content-web/package\.json" />
 		<suppress checks="JSONPackageJSONCheck" files="commerce-product-options-web/package\.json" />
 		<suppress checks="JSONPackageJSONCheck" files="commerce-theme-minium/commerce-theme-minium-impl/package\.json" />
