@@ -424,7 +424,6 @@ module.exports = {
 		},
 		dependencies: [
 			'asset-taglib',
-			'commerce-frontend-taglib',
 			'commerce-product-options-web',
 			'data-engine-taglib',
 			'dynamic-data-mapping-form-builder',
@@ -685,7 +684,6 @@ module.exports = {
 			'commerce-dashboard-web',
 			'commerce-frontend-impl',
 			'commerce-frontend-js',
-			'commerce-frontend-taglib',
 			'commerce-organization-web',
 			'commerce-product-content-web',
 			'commerce-product-options-web',
