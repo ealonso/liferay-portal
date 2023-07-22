@@ -89,8 +89,7 @@ public class SegmentsExperienceLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		int lowestPriority = _getLowestPriority(
-			groupId, _getPublishedLayoutPlid(plid));
+		int lowestPriority = _getLowestPriority(groupId, plid);
 
 		return addSegmentsExperience(
 			userId, groupId, segmentsEntryId, plid, nameMap, lowestPriority - 1,
@@ -124,10 +123,8 @@ public class SegmentsExperienceLocalServiceImpl
 
 		User user = _userLocalService.getUser(userId);
 
-		long publishedPlid = _getPublishedLayoutPlid(plid);
-
 		_validateName(nameMap);
-		_validatePriority(groupId, publishedPlid, priority);
+		_validatePriority(groupId, plid, priority);
 
 		long segmentsExperienceId = counterLocalService.increment();
 
@@ -145,7 +142,7 @@ public class SegmentsExperienceLocalServiceImpl
 			serviceContext.getModifiedDate(new Date()));
 		segmentsExperience.setSegmentsEntryId(segmentsEntryId);
 		segmentsExperience.setSegmentsExperienceKey(segmentsExperienceKey);
-		segmentsExperience.setPlid(publishedPlid);
+		segmentsExperience.setPlid(plid);
 		segmentsExperience.setNameMap(nameMap);
 		segmentsExperience.setPriority(priority);
 		segmentsExperience.setActive(active);
@@ -183,8 +180,7 @@ public class SegmentsExperienceLocalServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		int highestPriority = _getHighestPriority(
-			groupId, _getPublishedLayoutPlid(plid));
+		int highestPriority = _getHighestPriority(groupId, plid);
 
 		return addSegmentsExperience(
 			userId, groupId, segmentsEntryId, plid, nameMap,
@@ -250,7 +246,7 @@ public class SegmentsExperienceLocalServiceImpl
 		for (SegmentsExperiment segmentsExperiment :
 				_segmentsExperimentPersistence.findByS_P(
 					segmentsExperience.getSegmentsExperienceId(),
-					_getPublishedLayoutPlid(segmentsExperience.getPlid()))) {
+					segmentsExperience.getPlid())) {
 
 			_deleteSegmentsExperiment(segmentsExperiment);
 		}
@@ -276,7 +272,7 @@ public class SegmentsExperienceLocalServiceImpl
 			for (SegmentsExperiment segmentsExperiment :
 					_segmentsExperimentPersistence.findByS_P(
 						defaultSegmentsExperience.getSegmentsExperienceId(),
-						_getPublishedLayoutPlid(plid))) {
+						plid)) {
 
 				_deleteSegmentsExperiment(segmentsExperiment);
 			}
@@ -285,8 +281,7 @@ public class SegmentsExperienceLocalServiceImpl
 		// Segments experiences
 
 		List<SegmentsExperience> segmentsExperiences =
-			segmentsExperiencePersistence.findByG_P(
-				groupId, _getPublishedLayoutPlid(plid));
+			segmentsExperiencePersistence.findByG_P(groupId, plid);
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			segmentsExperienceLocalService.deleteSegmentsExperience(
@@ -325,7 +320,7 @@ public class SegmentsExperienceLocalServiceImpl
 		long groupId, long plid, int priority) {
 
 		return segmentsExperiencePersistence.fetchByG_P_P(
-			groupId, _getPublishedLayoutPlid(plid), priority);
+			groupId, plid, priority);
 	}
 
 	@Override
@@ -333,7 +328,7 @@ public class SegmentsExperienceLocalServiceImpl
 		long groupId, String segmentsExperienceKey, long plid) {
 
 		return segmentsExperiencePersistence.fetchByG_SEK_P(
-			groupId, segmentsExperienceKey, _getPublishedLayoutPlid(plid));
+			groupId, segmentsExperienceKey, plid);
 	}
 
 	@Override
@@ -350,15 +345,14 @@ public class SegmentsExperienceLocalServiceImpl
 		throws PortalException {
 
 		return segmentsExperiencePersistence.findByG_SEK_P(
-			groupId, segmentsExperienceKey, _getPublishedLayoutPlid(plid));
+			groupId, segmentsExperienceKey, plid);
 	}
 
 	@Override
 	public List<SegmentsExperience> getSegmentsExperiences(
 		long groupId, long plid) {
 
-		return segmentsExperiencePersistence.findByG_P(
-			groupId, _getPublishedLayoutPlid(plid));
+		return segmentsExperiencePersistence.findByG_P(groupId, plid);
 	}
 
 	@Override
@@ -366,8 +360,7 @@ public class SegmentsExperienceLocalServiceImpl
 			long groupId, long plid, boolean active)
 		throws PortalException {
 
-		return segmentsExperiencePersistence.findByG_P_A(
-			groupId, _getPublishedLayoutPlid(plid), active);
+		return segmentsExperiencePersistence.findByG_P_A(groupId, plid, active);
 	}
 
 	@Override
@@ -376,8 +369,7 @@ public class SegmentsExperienceLocalServiceImpl
 		OrderByComparator<SegmentsExperience> orderByComparator) {
 
 		return segmentsExperiencePersistence.findByG_P_A(
-			groupId, _getPublishedLayoutPlid(plid), active, start, end,
-			orderByComparator);
+			groupId, plid, active, start, end, orderByComparator);
 	}
 
 	@Override
@@ -385,7 +377,7 @@ public class SegmentsExperienceLocalServiceImpl
 		long groupId, long[] segmentsEntryIds, long plid, boolean active) {
 
 		return segmentsExperiencePersistence.findByG_S_P_A(
-			groupId, segmentsEntryIds, _getPublishedLayoutPlid(plid), active);
+			groupId, segmentsEntryIds, plid, active);
 	}
 
 	@Override
@@ -395,14 +387,13 @@ public class SegmentsExperienceLocalServiceImpl
 		OrderByComparator<SegmentsExperience> orderByComparator) {
 
 		return segmentsExperiencePersistence.findByG_S_P_A(
-			groupId, segmentsEntryIds, _getPublishedLayoutPlid(plid), active,
-			start, end, orderByComparator);
+			groupId, segmentsEntryIds, plid, active, start, end,
+			orderByComparator);
 	}
 
 	@Override
 	public int getSegmentsExperiencesCount(long groupId, long plid) {
-		return segmentsExperiencePersistence.countByG_P(
-			groupId, _getPublishedLayoutPlid(plid));
+		return segmentsExperiencePersistence.countByG_P(groupId, plid);
 	}
 
 	@Override
@@ -410,7 +401,7 @@ public class SegmentsExperienceLocalServiceImpl
 		long groupId, long plid, boolean active) {
 
 		return segmentsExperiencePersistence.countByG_P_A(
-			groupId, _getPublishedLayoutPlid(plid), active);
+			groupId, plid, active);
 	}
 
 	@Override
@@ -609,16 +600,6 @@ public class SegmentsExperienceLocalServiceImpl
 		}
 
 		return segmentsExperience.getPriority();
-	}
-
-	private long _getPublishedLayoutPlid(long plid) {
-		Layout layout = _layoutLocalService.fetchLayout(plid);
-
-		if ((layout != null) && layout.isDraftLayout()) {
-			return layout.getClassPK();
-		}
-
-		return plid;
 	}
 
 	private void _releaseSegmentExperiencesPriority(
