@@ -46,7 +46,6 @@ import com.liferay.exportimport.lar.PermissionImporter;
 import com.liferay.friendly.url.model.FriendlyURLEntry;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.item.selector.criteria.InfoListItemSelectorReturnType;
-import com.liferay.layout.admin.web.internal.exportimport.data.handler.helper.LayoutPageTemplateStructureDataHandlerHelper;
 import com.liferay.layout.configuration.LayoutExportImportConfiguration;
 import com.liferay.layout.friendly.url.LayoutFriendlyURLEntryHelper;
 import com.liferay.layout.model.LayoutClassedModelUsage;
@@ -142,7 +141,6 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.adapter.impl.StagedThemeImpl;
 import com.liferay.portal.service.impl.LayoutLocalServiceHelper;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.segments.service.SegmentsExperienceLocalService;
 import com.liferay.sites.kernel.util.Sites;
 import com.liferay.staging.configuration.StagingConfiguration;
 
@@ -958,8 +956,7 @@ public class LayoutStagedModelDataHandler
 
 		_importAssets(importedLayout, layout, portletDataContext);
 
-		_importLayoutPageTemplateStructures(
-			importedLayout, layout, portletDataContext);
+		_importLayoutPageTemplateStructures(importedLayout, portletDataContext);
 
 		_importLayoutSEOEntries(layout, portletDataContext);
 
@@ -2164,16 +2161,12 @@ public class LayoutStagedModelDataHandler
 	}
 
 	private void _importLayoutPageTemplateStructures(
-			Layout importedLayout, Layout layout,
-			PortletDataContext portletDataContext)
+			Layout layout, PortletDataContext portletDataContext)
 		throws Exception {
 
 		if (!layout.isTypeAssetDisplay() && !layout.isTypeContent()) {
 			return;
 		}
-
-		_segmentsExperienceLocalService.deleteSegmentsExperiences(
-			portletDataContext.getScopeGroupId(), importedLayout.getPlid());
 
 		List<Element> layoutPageTemplateStructureElements =
 			portletDataContext.getReferenceDataElements(
@@ -2182,12 +2175,8 @@ public class LayoutStagedModelDataHandler
 		for (Element layoutPageTemplateStructureElement :
 				layoutPageTemplateStructureElements) {
 
-			_layoutPageTemplateStructureDataHandlerHelper.
-				importLayoutPageTemplateStructure(
-					portletDataContext,
-					_portal.getClassNameId(Layout.class.getName()),
-					importedLayout.getPlid(),
-					layoutPageTemplateStructureElement);
+			StagedModelDataHandlerUtil.importStagedModel(
+				portletDataContext, layoutPageTemplateStructureElement);
 		}
 	}
 
@@ -3047,10 +3036,6 @@ public class LayoutStagedModelDataHandler
 		_layoutPageTemplateEntryLocalService;
 
 	@Reference
-	private LayoutPageTemplateStructureDataHandlerHelper
-		_layoutPageTemplateStructureDataHandlerHelper;
-
-	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
 
@@ -3109,9 +3094,6 @@ public class LayoutStagedModelDataHandler
 
 	@Reference
 	private ResourceLocalService _resourceLocalService;
-
-	@Reference
-	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
 
 	@Reference
 	private Sites _sites;
