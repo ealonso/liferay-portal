@@ -608,8 +608,16 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				serviceContext.getCreateDate(new Date()));
 			newSegmentsExperience.setModifiedDate(
 				serviceContext.getModifiedDate(new Date()));
-			newSegmentsExperience.setSegmentsExperienceKey(
-				String.valueOf(_counterLocalService.increment()));
+
+			if (sourceLayout.isDraftLayout() || targetLayout.isDraftLayout()) {
+				newSegmentsExperience.setSegmentsExperienceKey(
+					segmentsExperience.getSegmentsExperienceKey());
+			}
+			else {
+				newSegmentsExperience.setSegmentsExperienceKey(
+					String.valueOf(_counterLocalService.increment()));
+			}
+
 			newSegmentsExperience.setPlid(targetLayout.getPlid());
 
 			_segmentsExperienceLocalService.addSegmentsExperience(
