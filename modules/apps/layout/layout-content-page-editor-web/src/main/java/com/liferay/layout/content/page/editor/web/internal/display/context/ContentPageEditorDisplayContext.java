@@ -942,6 +942,23 @@ public class ContentPageEditorDisplayContext {
 		}
 
 		if (_segmentsExperienceId == -1) {
+			String segmentsExperienceKey = ParamUtil.getString(
+				httpServletRequest, "segmentsExperienceKey");
+
+			if (Validator.isNotNull(segmentsExperienceKey)) {
+				SegmentsExperience segmentsExperience =
+					segmentsExperienceLocalService.fetchSegmentsExperience(
+						themeDisplay.getScopeGroupId(), segmentsExperienceKey,
+						themeDisplay.getPlid());
+
+				if (segmentsExperience != null) {
+					_segmentsExperienceId =
+						segmentsExperience.getSegmentsExperienceId();
+				}
+			}
+		}
+
+		if (_segmentsExperienceId == -1) {
 			_segmentsExperienceId =
 				_segmentsExperienceManager.getSegmentsExperienceId(
 					httpServletRequest);

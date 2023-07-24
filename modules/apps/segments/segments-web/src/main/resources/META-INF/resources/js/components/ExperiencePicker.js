@@ -65,12 +65,12 @@ const ExperiencePicker = ({
 }) => {
 	const [disabled, setDisabled] = useState(false);
 	const [selectedKey] = React.useState(
-		selectedSegmentsExperience.segmentsExperienceId
+		selectedSegmentsExperience.segmentsExperienceKey
 	);
 
 	const handleExperienceChange = (key) => {
 		const newSelectedExperience = segmentsExperiences.find(
-			(experience) => experience.segmentsExperienceId === key
+			(experience) => experience.segmentsExperienceKey === key
 		);
 
 		if (newSelectedExperience && newSelectedExperience.url) {
@@ -105,7 +105,7 @@ const ExperiencePicker = ({
 						<Option
 							aria-describedby={`${item.segmentsExperienceId}-description`}
 							aria-labelledby={`${item.segmentsExperienceId}-title`}
-							key={item.segmentsExperienceId}
+							key={item.segmentsExperienceKey}
 							textValue={item.segmentsExperienceName}
 						>
 							<Layout.ContentRow>

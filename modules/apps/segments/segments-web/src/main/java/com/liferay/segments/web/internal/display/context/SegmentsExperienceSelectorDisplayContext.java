@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.manager.SegmentsExperienceManager;
@@ -83,17 +84,18 @@ public class SegmentsExperienceSelectorDisplayContext {
 	}
 
 	private SegmentsExperience _fetchSegmentsExperienceFromRequest() {
-		long segmentsExperienceId = ParamUtil.getLong(
-			_httpServletRequest, "segmentsExperienceId", -1);
+		String segmentsExperienceKey = ParamUtil.getString(
+			_httpServletRequest, "segmentsExperienceKey");
 
-		if (segmentsExperienceId == -1) {
-			segmentsExperienceId =
+		if (Validator.isNull(segmentsExperienceKey)) {
+			return _segmentsExperienceLocalService.fetchSegmentsExperience(
 				_segmentsExperienceManager.getSegmentsExperienceId(
-					_httpServletRequest);
+					_httpServletRequest));
 		}
 
 		return _segmentsExperienceLocalService.fetchSegmentsExperience(
-			segmentsExperienceId);
+			_themeDisplay.getScopeGroupId(), segmentsExperienceKey,
+			_themeDisplay.getPlid());
 	}
 
 	private SegmentsExperience _getParentSegmentsExperience(
@@ -175,6 +177,9 @@ public class SegmentsExperienceSelectorDisplayContext {
 		).put(
 			"segmentsExperienceId", segmentsExperience.getSegmentsExperienceId()
 		).put(
+			"segmentsExperienceKey",
+			segmentsExperience.getSegmentsExperienceKey()
+		).put(
 			"segmentsExperienceName",
 			segmentsExperience.getName(_themeDisplay.getLocale())
 		).put(
@@ -192,8 +197,8 @@ public class SegmentsExperienceSelectorDisplayContext {
 			"url",
 			HttpComponentsUtil.setParameter(
 				_portal.getCurrentURL(_httpServletRequest),
-				"segmentsExperienceId",
-				segmentsExperience.getSegmentsExperienceId())
+				"segmentsExperienceKey",
+				segmentsExperience.getSegmentsExperienceKey())
 		);
 	}
 
