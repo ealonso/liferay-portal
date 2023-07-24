@@ -97,6 +97,7 @@ export interface Config {
 	defaultLanguageId: string;
 	defaultSegmentsEntryId: string;
 	defaultSegmentsExperienceId: string;
+	defaultSegmentsExperienceKey: string;
 	defaultStyleBookEntryImagePreviewURL: string;
 	defaultStyleBookEntryName: string;
 	deleteFragmentEntryLinkCommentURL: string;

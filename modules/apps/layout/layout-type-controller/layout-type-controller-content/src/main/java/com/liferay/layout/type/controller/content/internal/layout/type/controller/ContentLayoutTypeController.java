@@ -213,13 +213,13 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 				layoutFullURL = HttpComponentsUtil.addParameter(
 					layoutFullURL, "p_l_mode", Constants.EDIT);
 
-				long segmentsExperienceId = ParamUtil.getLong(
-					httpServletRequest, "segmentsExperienceId", -1);
+				String segmentsExperienceKey = ParamUtil.getString(
+					httpServletRequest, "segmentsExperienceKey");
 
-				if (segmentsExperienceId != -1) {
+				if (Validator.isNotNull(segmentsExperienceKey)) {
 					layoutFullURL = HttpComponentsUtil.setParameter(
-						layoutFullURL, "segmentsExperienceId",
-						segmentsExperienceId);
+						layoutFullURL, "segmentsExperienceKey",
+						segmentsExperienceKey);
 				}
 
 				httpServletResponse.sendRedirect(layoutFullURL);

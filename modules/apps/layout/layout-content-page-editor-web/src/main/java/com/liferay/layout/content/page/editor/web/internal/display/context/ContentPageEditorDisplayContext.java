@@ -305,6 +305,9 @@ public class ContentPageEditorDisplayContext {
 				segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
 					themeDisplay.getPlid())
 			).put(
+				"defaultSegmentsExperienceKey",
+				SegmentsExperienceConstants.KEY_DEFAULT
+			).put(
 				"defaultStyleBookEntryImagePreviewURL",
 				() -> {
 					StyleBookEntry defaultStyleBookEntry =
@@ -943,7 +946,8 @@ public class ContentPageEditorDisplayContext {
 
 		if (_segmentsExperienceId == -1) {
 			String segmentsExperienceKey = ParamUtil.getString(
-				httpServletRequest, "segmentsExperienceKey");
+				portal.getOriginalServletRequest(httpServletRequest),
+				"segmentsExperienceKey");
 
 			if (Validator.isNotNull(segmentsExperienceKey)) {
 				SegmentsExperience segmentsExperience =

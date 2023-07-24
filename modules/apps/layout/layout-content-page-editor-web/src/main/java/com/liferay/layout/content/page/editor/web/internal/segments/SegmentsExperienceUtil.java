@@ -131,6 +131,9 @@ public class SegmentsExperienceUtil {
 					"segmentsExperienceId",
 					String.valueOf(segmentsExperience.getSegmentsExperienceId())
 				).put(
+					"segmentsExperienceKey",
+					segmentsExperience.getSegmentsExperienceKey()
+				).put(
 					"segmentsExperimentStatus",
 					getSegmentsExperimentStatus(
 						themeDisplay,
@@ -139,7 +142,7 @@ public class SegmentsExperienceUtil {
 					"segmentsExperimentURL",
 					_getSegmentsExperimentURL(
 						themeDisplay, layoutFullURL,
-						segmentsExperience.getSegmentsExperienceId())
+						segmentsExperience.getSegmentsExperienceKey())
 				).build());
 		}
 
@@ -321,13 +324,13 @@ public class SegmentsExperienceUtil {
 
 	private static String _getSegmentsExperimentURL(
 		ThemeDisplay themeDisplay, String layoutFullURL,
-		long segmentsExperienceId) {
+		String segmentsExperienceKey) {
 
 		HttpComponentsUtil.addParameter(
 			layoutFullURL, "p_l_back_url", themeDisplay.getURLCurrent());
 
 		return HttpComponentsUtil.addParameter(
-			layoutFullURL, "segmentsExperienceId", segmentsExperienceId);
+			layoutFullURL, "segmentsExperienceKey", segmentsExperienceKey);
 	}
 
 	private static JSONObject _updateLayoutDataJSONObject(

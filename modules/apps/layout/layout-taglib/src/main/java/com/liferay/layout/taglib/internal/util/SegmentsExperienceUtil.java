@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.segments.manager.SegmentsExperienceManager;
 import com.liferay.segments.model.SegmentsExperience;
@@ -34,13 +35,14 @@ public class SegmentsExperienceUtil {
 	public static long getSegmentsExperienceId(
 		HttpServletRequest httpServletRequest) {
 
-		long selectedSegmentsExperienceId = ParamUtil.getLong(
-			httpServletRequest, "segmentsExperienceId", -1);
+		String selectedSegmentsExperienceKey = ParamUtil.getString(
+			httpServletRequest, "segmentsExperienceKey");
 
-		if (_isValidSegmentsExperienceId(
-				_getLayout(httpServletRequest), selectedSegmentsExperienceId)) {
+		long validSegmentsExperienceId = _getValidSegmentsExperienceId(
+			_getLayout(httpServletRequest), selectedSegmentsExperienceKey);
 
-			return selectedSegmentsExperienceId;
+		if (validSegmentsExperienceId > 0) {
+			return validSegmentsExperienceId;
 		}
 
 		SegmentsExperienceManager segmentsExperienceManager =
@@ -69,25 +71,28 @@ public class SegmentsExperienceUtil {
 		return null;
 	}
 
-	private static boolean _isValidSegmentsExperienceId(
-		Layout layout, long segmentsExperienceId) {
+	private static long _getValidSegmentsExperienceId(
+		Layout layout, String selectedSegmentsExperienceKey) {
 
-		if ((segmentsExperienceId == -1) || (layout == null)) {
-			return false;
+		if (Validator.isNull(selectedSegmentsExperienceKey) ||
+			(layout == null)) {
+
+			return -1;
 		}
 
 		SegmentsExperience segmentsExperience =
 			SegmentsExperienceLocalServiceUtil.fetchSegmentsExperience(
-				segmentsExperienceId);
+				layout.getGroupId(), selectedSegmentsExperienceKey,
+				layout.getPlid());
 
 		if ((segmentsExperience != null) &&
 			((layout.getPlid() == segmentsExperience.getPlid()) ||
 			 (layout.getClassPK() == segmentsExperience.getPlid()))) {
 
-			return true;
+			return segmentsExperience.getSegmentsExperienceId();
 		}
 
-		return false;
+		return -1;
 	}
 
 }

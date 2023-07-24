@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.product.navigation.control.menu.BaseProductNavigationControlMenuEntry;
@@ -227,20 +228,21 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 		redirect = HttpComponentsUtil.setParameter(
 			redirect, "p_l_mode", Constants.EDIT);
 
-		long segmentsExperienceId = ParamUtil.getLong(
-			httpServletRequest, "segmentsExperienceId", -1);
+		String segmentsExperienceKey = ParamUtil.getString(
+			httpServletRequest, "segmentsExperienceKey");
 
-		if (segmentsExperienceId != -1) {
+		if (Validator.isNotNull(segmentsExperienceKey)) {
 			SegmentsExperience segmentsExperience =
 				_segmentsExperienceLocalService.fetchSegmentsExperience(
-					segmentsExperienceId);
+					themeDisplay.getScopeGroupId(), segmentsExperienceKey,
+					themeDisplay.getPlid());
 
 			if ((segmentsExperience != null) &&
 				((layout.getPlid() == segmentsExperience.getPlid()) ||
 				 (layout.getClassPK() == segmentsExperience.getPlid()))) {
 
 				redirect = HttpComponentsUtil.setParameter(
-					redirect, "segmentsExperienceId", segmentsExperienceId);
+					redirect, "segmentsExperienceKey", segmentsExperienceKey);
 			}
 		}
 

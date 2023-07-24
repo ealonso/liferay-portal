@@ -15,7 +15,7 @@
 import {useEffect, useMemo} from 'react';
 
 import {useSelector} from '../../contexts/StoreContext';
-import selectSegmentsExperienceId from '../../selectors/selectSegmentsExperienceId';
+import selectSegmentsExperienceKey from '../../selectors/selectSegmentsExperienceKey';
 
 export default function useBackURL() {
 	const [backLinkElement, backLinkURL] = useMemo(() => {
@@ -29,13 +29,13 @@ export default function useBackURL() {
 		}
 	}, []);
 
-	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
+	const segmentsExperienceKey = useSelector(selectSegmentsExperienceKey);
 
 	useEffect(() => {
-		if (backLinkElement && backLinkURL && segmentsExperienceId) {
+		if (backLinkElement && backLinkURL && segmentsExperienceKey) {
 			backLinkURL.searchParams.set(
-				'segmentsExperienceId',
-				segmentsExperienceId
+				'segmentsExperienceKey',
+				segmentsExperienceKey
 			);
 			backLinkElement.href = backLinkURL.toString();
 
@@ -54,5 +54,5 @@ export default function useBackURL() {
 				);
 			}
 		}
-	}, [backLinkElement, backLinkURL, segmentsExperienceId]);
+	}, [backLinkElement, backLinkURL, segmentsExperienceKey]);
 }
