@@ -268,18 +268,11 @@ public class SegmentsExperienceSelectorDisplayContext {
 		SegmentsExperience parentSegmentsExperience =
 			_getParentSegmentsExperience(segmentsExperience);
 
-		if ((segmentsExperience != null) &&
-			(parentSegmentsExperience != null)) {
-
+		if (parentSegmentsExperience != null) {
 			segmentsExperience = parentSegmentsExperience;
 		}
 
-		if (segmentsExperience != null) {
-			return segmentsExperience.getName(_themeDisplay.getLocale());
-		}
-
-		return SegmentsEntryConstants.getDefaultSegmentsEntryName(
-			_themeDisplay.getLocale());
+		return segmentsExperience.getName(_themeDisplay.getLocale());
 	}
 
 	private boolean _isActive(
