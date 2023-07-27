@@ -329,6 +329,12 @@ public class RenderLayoutStructureDisplayContext {
 			formInputLabel, _themeDisplay.getLocale());
 	}
 
+	public String getFormBooleanFieldNames(
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem) {
+
+		return "pepe,papa";
+	}
+
 	public String getFormStyledLayoutStructureItemRedirect(
 			FormStyledLayoutStructureItem formStyledLayoutStructureItem)
 		throws Exception {
