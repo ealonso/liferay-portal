@@ -17,18 +17,10 @@
 <%@ include file="/init.jsp" %>
 
 <%
-ExportImportToolbarDisplayContext exportImportToolbarDisplayContext = new ExportImportToolbarDisplayContext(request, liferayPortletResponse);
+ExportImportProcessDisplayContext exportImportProcessDisplayContext = new ExportImportProcessDisplayContext(request);
 %>
 
 <clay:management-toolbar
-	actionDropdownItems="<%= exportImportToolbarDisplayContext.getActionDropdownItems() %>"
-	creationMenu="<%= exportImportToolbarDisplayContext.getCreationMenu() %>"
-	filterDropdownItems="<%= exportImportToolbarDisplayContext.getFilterDropdownItems() %>"
+	managementToolbarDisplayContext="<%= new ExportImportToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, exportImportProcessDisplayContext) %>"
 	propsTransformer="js/ExportImportManagementToolbarPropsTransformer"
-	searchContainerId="<%= exportImportToolbarDisplayContext.getSearchContainerId() %>"
-	showCreationMenu="<%= true %>"
-	showSearch="<%= false %>"
-	sortingOrder="<%= exportImportToolbarDisplayContext.getSortingOrder() %>"
-	sortingURL="<%= exportImportToolbarDisplayContext.getSortingURL() %>"
-	viewTypeItems="<%= exportImportToolbarDisplayContext.getViewTypeItems() %>"
 />
