@@ -183,7 +183,7 @@ public class ContentDashboardAdminManagementToolbarDisplayContext
 					_language.get(httpServletRequest, "filter-by-review-date"));
 			}
 		).addGroup(
-			() -> FeatureFlagManagerUtil.isEnabled("LPS-144527"),
+			() -> !FeatureFlagManagerUtil.isEnabled("LPS-144527"),
 			dropdownGroupItem -> {
 				dropdownGroupItem.setDropdownItems(getOrderByDropdownItems());
 				dropdownGroupItem.setLabel(getOrderByDropdownItemsLabel());

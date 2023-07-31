@@ -287,7 +287,7 @@ public class JournalManagementToolbarDisplayContext
 		).addGroup(
 			() ->
 				!_journalDisplayContext.isNavigationRecent() &&
-				FeatureFlagManagerUtil.isEnabled("LPS-144527"),
+				!FeatureFlagManagerUtil.isEnabled("LPS-144527"),
 			dropdownGroupItem -> {
 				dropdownGroupItem.setDropdownItems(getOrderByDropdownItems());
 				dropdownGroupItem.setLabel(getOrderByDropdownItemsLabel());
