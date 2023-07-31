@@ -47,7 +47,7 @@ public class JournalArticleVersionsManagementToolbarDisplayContext
 					LanguageUtil.get(httpServletRequest, "filter-by-status"));
 			}
 		).addGroup(
-			() -> FeatureFlagManagerUtil.isEnabled("feature.flag.LPS-144527"),
+			() -> FeatureFlagManagerUtil.isEnabled("LPS-144527"),
 			dropdownGroupItem -> {
 				dropdownGroupItem.setDropdownItems(getOrderByDropdownItems());
 				dropdownGroupItem.setLabel(getOrderByDropdownItemsLabel());
