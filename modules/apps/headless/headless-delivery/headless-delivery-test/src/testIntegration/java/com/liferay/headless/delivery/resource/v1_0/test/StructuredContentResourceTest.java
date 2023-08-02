@@ -830,8 +830,8 @@ public class StructuredContentResourceTest
 	@Override
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[] {
-			"contentStructureId", "description", "priority", "title",
-			"contentFields"
+			"contentFields", "contentStructureId", "description", "priority",
+			"title"
 		};
 	}
 
@@ -867,7 +867,12 @@ public class StructuredContentResourceTest
 								data = RandomTestUtil.randomString(10);
 							}
 						};
+						dataType = "string";
+						inputControl = "text";
+						label = "TextFieldNameLabel";
 						name = "Foo";
+						nestedContentFields = new ContentField[0];
+						repeatable = false;
 					}
 				}
 			});
@@ -1149,16 +1154,6 @@ public class StructuredContentResourceTest
 		return ddmFormDeserializerDeserializeResponse.getDDMForm();
 	}
 
-	private String _grid() {
-		return StringBundler.concat(
-			"{", _COMPLETE_STRUCTURED_CONTENT_OPTIONS[0], ":",
-			_COMPLETE_STRUCTURED_CONTENT_OPTIONS[2], ",",
-			_COMPLETE_STRUCTURED_CONTENT_OPTIONS[1], ":",
-			_COMPLETE_STRUCTURED_CONTENT_OPTIONS[1], ",",
-			_COMPLETE_STRUCTURED_CONTENT_OPTIONS[2], ":",
-			_COMPLETE_STRUCTURED_CONTENT_OPTIONS[0], "}");
-	}
-
 	private String _randomColor() {
 		return String.format(
 			"#%02d%02d%02d", RandomTestUtil.randomInt(0, 100),
@@ -1208,9 +1203,11 @@ public class StructuredContentResourceTest
 				{
 					contentFieldValue = new ContentFieldValue() {
 						{
-							data = _COMPLETE_STRUCTURED_CONTENT_OPTIONS
+							String option = _COMPLETE_STRUCTURED_CONTENT_OPTIONS
 								[RandomTestUtil.randomInt(0, 2)];
-							value = _COMPLETE_STRUCTURED_CONTENT_OPTIONS[0];
+
+							data = option;
+							value = option;
 						}
 					};
 					name = "SelectFromList";
@@ -1220,9 +1217,11 @@ public class StructuredContentResourceTest
 				{
 					contentFieldValue = new ContentFieldValue() {
 						{
-							data = _COMPLETE_STRUCTURED_CONTENT_OPTIONS
+							String option = _COMPLETE_STRUCTURED_CONTENT_OPTIONS
 								[RandomTestUtil.randomInt(0, 2)];
-							value = _COMPLETE_STRUCTURED_CONTENT_OPTIONS[0];
+
+							data = option;
+							value = option;
 						}
 					};
 					name = "SingleSelection";
@@ -1245,8 +1244,10 @@ public class StructuredContentResourceTest
 				{
 					contentFieldValue = new ContentFieldValue() {
 						{
-							data = _grid();
-							value = _grid();
+							String randomGrid = _randomGrid();
+
+							data = randomGrid;
+							value = randomGrid;
 						}
 					};
 					name = "Grid";
@@ -1369,6 +1370,20 @@ public class StructuredContentResourceTest
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
 		return simpleDateFormat.format(new Date());
+	}
+
+	private String _randomGrid() {
+		return StringBundler.concat(
+			"{", _COMPLETE_STRUCTURED_CONTENT_OPTIONS[0], ":",
+			_COMPLETE_STRUCTURED_CONTENT_OPTIONS
+				[RandomTestUtil.randomInt(0, 2)],
+			",", _COMPLETE_STRUCTURED_CONTENT_OPTIONS[1], ":",
+			_COMPLETE_STRUCTURED_CONTENT_OPTIONS
+				[RandomTestUtil.randomInt(0, 2)],
+			",", _COMPLETE_STRUCTURED_CONTENT_OPTIONS[2], ":",
+			_COMPLETE_STRUCTURED_CONTENT_OPTIONS
+				[RandomTestUtil.randomInt(0, 2)],
+			"}");
 	}
 
 	private StructuredContent _randomStructuredContent(Locale locale)
