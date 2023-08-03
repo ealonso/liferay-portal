@@ -7,6 +7,7 @@ package com.liferay.layout.page.template.admin.web.internal.portlet.action;
 
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
@@ -36,6 +37,10 @@ public class AddDisplayPageCollectionMVCActionCommand
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
+
+		if (!FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+			throw new UnsupportedOperationException();
+		}
 
 		_layoutPageTemplateCollectionService.addLayoutPageTemplateCollection(
 			_portal.getUserId(actionRequest),
