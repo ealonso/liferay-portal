@@ -25,11 +25,12 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	property = {
 		"javax.portlet.name=" + LayoutPageTemplateAdminPortletKeys.LAYOUT_PAGE_TEMPLATES,
-		"mvc.command.name=/layout_page_template_admin/add_display_page_folder"
+		"mvc.command.name=/layout_page_template_admin/add_display_page_collection"
 	},
 	service = MVCActionCommand.class
 )
-public class AddDisplayPageFolderMVCActionCommand extends BaseMVCActionCommand {
+public class AddDisplayPageCollectionMVCActionCommand
+	extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
