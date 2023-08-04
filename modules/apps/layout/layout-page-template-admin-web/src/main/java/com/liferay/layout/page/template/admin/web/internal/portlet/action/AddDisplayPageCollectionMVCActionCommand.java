@@ -11,12 +11,14 @@ import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -42,10 +44,13 @@ public class AddDisplayPageCollectionMVCActionCommand
 			throw new UnsupportedOperationException();
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		_layoutPageTemplateCollectionService.addLayoutPageTemplateCollection(
-			_portal.getUserId(actionRequest),
-			ParamUtil.getString(actionRequest, "groupId"),
+			themeDisplay.getScopeGroupId(),
 			ParamUtil.getString(actionRequest, "name"),
+			ParamUtil.getString(actionRequest, "description"),
 			ServiceContextFactory.getInstance(actionRequest));
 
 		sendRedirect(actionRequest, actionResponse);
