@@ -130,6 +130,23 @@ public class DisplayPageManagementToolbarDisplayContext
 	public CreationMenu getCreationMenu() {
 		return CreationMenuBuilder.addDropdownItem(
 			dropdownItem -> {
+				dropdownItem.putData("action", "addDisplayPageCollection");
+				dropdownItem.putData(
+					"addDisplayPageCollectionURL",
+					PortletURLBuilder.createActionURL(
+						liferayPortletResponse
+					).setActionName(
+						"/layout_page_template_admin" +
+							"/add_display_page_collection"
+					).setRedirect(
+						_themeDisplay.getURLCurrent()
+					).buildString());
+				dropdownItem.setIcon("folder");
+				dropdownItem.setLabel(
+					LanguageUtil.get(httpServletRequest, "folder"));
+			}
+		).addDropdownItem(
+			dropdownItem -> {
 				dropdownItem.setHref(
 					PortletURLBuilder.createRenderURL(
 						liferayPortletResponse
@@ -139,7 +156,8 @@ public class DisplayPageManagementToolbarDisplayContext
 						_themeDisplay.getURLCurrent()
 					).buildString());
 				dropdownItem.setLabel(
-					LanguageUtil.get(httpServletRequest, "add"));
+					LanguageUtil.get(
+						httpServletRequest, "display-page-template"));
 			}
 		).build();
 	}
