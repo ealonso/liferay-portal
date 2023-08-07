@@ -424,7 +424,13 @@ public class JournalArticleStagedModelDataHandler
 		}
 
 		if (article.isSmallImage()) {
-			if (Validator.isNotNull(article.getSmallImageURL())) {
+			if (article.getSmallImageSource() ==
+					JournalArticleConstants.
+						SMALL_IMAGE_TYPE_DOCUMENTS_AND_MEDIA) {
+			}
+			else if (article.getSmallImageSource() ==
+						JournalArticleConstants.SMALL_IMAGE_TYPE_URL) {
+
 				String smallImageURL =
 					_dlReferencesExportImportContentProcessor.
 						replaceExportContentReferences(
@@ -433,7 +439,10 @@ public class JournalArticleStagedModelDataHandler
 
 				article.setSmallImageURL(smallImageURL);
 			}
-			else {
+			else if (article.getSmallImageSource() ==
+						JournalArticleConstants.
+							SMALL_IMAGE_TYPE_USER_COMPUTER) {
+
 				Image smallImage = _imageLocalService.fetchImage(
 					article.getSmallImageId());
 
@@ -756,10 +765,13 @@ public class JournalArticleStagedModelDataHandler
 				portletDataContext.getImportDataStagedModelElement(article);
 
 			if (article.isSmallImage()) {
-				String smallImagePath = articleElement.attributeValue(
-					"small-image-path");
+				if (article.getSmallImageSource() ==
+						JournalArticleConstants.
+							SMALL_IMAGE_TYPE_DOCUMENTS_AND_MEDIA) {
+				}
+				else if (article.getSmallImageSource() ==
+							JournalArticleConstants.SMALL_IMAGE_TYPE_URL) {
 
-				if (Validator.isNotNull(article.getSmallImageURL())) {
 					String smallImageURL =
 						_dlReferencesExportImportContentProcessor.
 							replaceImportContentReferences(
@@ -768,15 +780,24 @@ public class JournalArticleStagedModelDataHandler
 
 					article.setSmallImageURL(smallImageURL);
 				}
-				else if (Validator.isNotNull(smallImagePath)) {
-					byte[] bytes = portletDataContext.getZipEntryAsByteArray(
-						smallImagePath);
+				else if (article.getSmallImageSource() ==
+							JournalArticleConstants.
+								SMALL_IMAGE_TYPE_USER_COMPUTER) {
 
-					if (bytes != null) {
-						smallFile = FileUtil.createTempFile(
-							article.getSmallImageType());
+					String smallImagePath = articleElement.attributeValue(
+						"small-image-path");
 
-						FileUtil.write(smallFile, bytes);
+					if (Validator.isNotNull(smallImagePath)) {
+						byte[] bytes =
+							portletDataContext.getZipEntryAsByteArray(
+								smallImagePath);
+
+						if (bytes != null) {
+							smallFile = FileUtil.createTempFile(
+								article.getSmallImageType());
+
+							FileUtil.write(smallFile, bytes);
+						}
 					}
 				}
 			}
