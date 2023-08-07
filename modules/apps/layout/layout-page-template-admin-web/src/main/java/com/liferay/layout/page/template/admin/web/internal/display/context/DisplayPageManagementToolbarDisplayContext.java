@@ -16,6 +16,7 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateActionKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -54,6 +55,26 @@ public class DisplayPageManagementToolbarDisplayContext
 
 	@Override
 	public List<DropdownItem> getActionDropdownItems() {
+
+		if (!FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+			return DropdownItemListBuilder.addGroup(
+				dropdownGroupItem -> {
+					dropdownGroupItem.setDropdownItems(
+						DropdownItemListBuilder.add(
+							dropdownItem -> {
+								dropdownItem.putData(
+									"action", "deleteSelectedDisplayPages");
+								dropdownItem.setIcon("trash");
+								dropdownItem.setLabel(
+									LanguageUtil.get(httpServletRequest, "delete"));
+								dropdownItem.setQuickAction(true);
+							}
+						).build());
+					dropdownGroupItem.setSeparator(true);
+				}
+			).build();
+		}
+
 		return DropdownItemListBuilder.addGroup(
 			dropdownGroupItem -> {
 				dropdownGroupItem.setDropdownItems(
