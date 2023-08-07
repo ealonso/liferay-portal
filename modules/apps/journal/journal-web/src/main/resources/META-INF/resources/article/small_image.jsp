@@ -38,6 +38,7 @@ JournalFileUploadsConfiguration journalFileUploadsConfiguration = (JournalFileUp
 	<aui:option label="no-image" value="none" />
 	<aui:option label="from-url" value="url" />
 	<aui:option label="from-your-computer" value="file" />
+	<aui:option label="from-documents-and-media" value="documents-and-media" />
 </aui:select>
 
 <div class="<%= Objects.equals(smallImageSource, "url") ? "" : "hide" %>" id="<portlet:namespace />smallImageURLContainer">
@@ -84,6 +85,35 @@ JournalFileUploadsConfiguration journalFileUploadsConfiguration = (JournalFileUp
 	</div>
 </div>
 
+<div class="<%= Objects.equals(smallImageSource, "documents-and-media") ? "" : "hide" %>" id="<portlet:namespace />smallImageDocumentsAndMediaContainer">
+	<div>
+		<react:component
+			module="js/DocumentLibraryInput.es"
+			props='<%=
+				HashMapBuilder.<String, Object>put(
+					"name",
+					() -> {
+						if (!journalEditArticleDisplayContext.isChangeStructure()) {
+							return "smallFile";
+						}
+
+						return StringPool.BLANK;
+					}
+				).put(
+					"previewURL",
+					() -> {
+						if ((article != null) && Validator.isNotNull(article.getArticleImageURL(finalThemeDisplay))) {
+							return article.getArticleImageURL(finalThemeDisplay);
+						}
+
+						return StringPool.BLANK;
+					}
+				).build()
+			%>'
+		/>
+	</div>
+</div>
+
 <aui:script>
 	Liferay.Util.toggleSelectBox(
 		'<portlet:namespace />smallImageSource',
@@ -94,5 +124,10 @@ JournalFileUploadsConfiguration journalFileUploadsConfiguration = (JournalFileUp
 		'<portlet:namespace />smallImageSource',
 		'file',
 		'<portlet:namespace />smallFileContainer'
+	);
+	Liferay.Util.toggleSelectBox(
+		'<portlet:namespace />smallImageSource',
+		'documents-and-media',
+		'<portlet:namespace />smallImageDocumentsAndMediaContainer'
 	);
 </aui:script>

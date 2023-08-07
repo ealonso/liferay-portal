@@ -932,12 +932,12 @@ public class JournalEditArticleDisplayContext {
 		if (!_article.isSmallImage()) {
 			_smallImageSource = "none";
 		}
-		else if (Validator.isNotNull(_article.getSmallImageURL())) {
+		else if (_article.getSmallImageSource() == JournalArticleConstants.SMALL_IMAGE_TYPE_DOCUMENTS_AND_MEDIA) {
+			_smallImageSource = "documents-and-media";
+		}else if (_article.getSmallImageSource() == JournalArticleConstants.SMALL_IMAGE_TYPE_URL) {
 			_smallImageSource = "url";
 		}
-		else if ((_article.getSmallImageId() > 0) &&
-				 Validator.isNull(_article.getSmallImageURL())) {
-
+		else if (_article.getSmallImageSource() == JournalArticleConstants.SMALL_IMAGE_TYPE_USER_COMPUTER) {
 			_smallImageSource = "file";
 		}
 
