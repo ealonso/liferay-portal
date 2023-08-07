@@ -8,17 +8,21 @@ package com.liferay.layout.page.template.admin.web.internal.portlet.action;
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
-import com.liferay.portal.kernel.util.WebKeys;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -53,7 +57,33 @@ public class AddDisplayPageCollectionMVCActionCommand
 			ParamUtil.getString(actionRequest, "description"),
 			ServiceContextFactory.getInstance(actionRequest));
 
-		sendRedirect(actionRequest, actionResponse);
+		JSONObject jsonObject = JSONUtil.put(
+			"redirectURL", getRedirectURL(actionRequest, actionResponse));
+
+		JSONPortletResponseUtil.writeJSON(
+			actionRequest, actionResponse, jsonObject);
+	}
+
+	protected String getRedirectURL(
+		ActionRequest actionRequest, ActionResponse actionResponse) {
+
+		return PortletURLBuilder.createRenderURL(
+			_portal.getLiferayPortletResponse(actionResponse)
+		).setMVCPath(
+			"/view_display_pages.jsp"
+		).setRedirect(
+			() -> {
+				String backURL = ParamUtil.getString(actionRequest, "backURL");
+
+				if (backURL != null) {
+					return backURL;
+				}
+
+				return null;
+			}
+		).setTabs1(
+			"display-page-templates"
+		).buildString();
 	}
 
 	@Reference
