@@ -225,6 +225,13 @@ public class LayoutPageTemplateEntryServiceImpl
 	}
 
 	@Override
+	public int getDisplayPageCollectionsAndLayoutPageTemplateEntriesCount(
+		long groupId, String name, int[] types) {
+
+		return 0;
+	}
+
+	@Override
 	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 		long groupId, int type, int status, int start, int end,
 		OrderByComparator<LayoutPageTemplateEntry> orderByComparator) {
