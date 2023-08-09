@@ -5,6 +5,7 @@
 
 package com.liferay.fragment.entry.processor.editable.internal.parser;
 
+import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.fragment.entry.processor.editable.parser.EditableElementParser;
 import com.liferay.fragment.entry.processor.helper.FragmentEntryProcessorHelper;
 import com.liferay.fragment.exception.FragmentEntryContentException;
@@ -13,6 +14,7 @@ import com.liferay.info.type.WebImage;
 import com.liferay.layout.responsive.ViewportSize;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -20,6 +22,7 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -52,7 +55,7 @@ public class ImageEditableElementParser implements EditableElementParser {
 		String fieldName, Locale locale, Object fieldValue) {
 
 		String alt = StringPool.BLANK;
-		Object fileEntryId = 0;
+		long fileEntryId = 0;
 
 		if (fieldValue instanceof JSONObject) {
 			JSONObject fieldValueJSONObject = (JSONObject)fieldValue;
@@ -91,10 +94,33 @@ public class ImageEditableElementParser implements EditableElementParser {
 				webImage);
 		}
 
+		long finalFileEntryId = fileEntryId;
+
 		return JSONUtil.put(
 			"alt", alt
 		).put(
 			"fileEntryId", fileEntryId
+		).put(
+			"size",
+			() -> {
+				if (finalFileEntryId <= 0) {
+					return null;
+				}
+
+				try {
+					FileEntry fileEntry = _dlAppLocalService.getFileEntry(
+						finalFileEntryId);
+
+					return fileEntry.getSize();
+				}
+				catch (PortalException portalException) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(portalException);
+					}
+				}
+
+				return null;
+			}
 		);
 	}
 
@@ -291,6 +317,9 @@ public class ImageEditableElementParser implements EditableElementParser {
 	private static final Pattern _pattern = Pattern.compile(
 		"\\[resources:(.+?)\\]");
 	private static final ViewportSize[] _viewportSizes = ViewportSize.values();
+
+	@Reference
+	private DLAppLocalService _dlAppLocalService;
 
 	@Reference
 	private FragmentEntryProcessorHelper _fragmentEntryProcessorHelper;
