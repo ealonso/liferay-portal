@@ -8,6 +8,7 @@ package com.liferay.layout.content.page.editor.web.internal.display.context;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.content.page.editor.web.internal.util.InfoFormUtil;
@@ -240,7 +241,8 @@ public class EditCollectionConfigurationDisplayContext {
 				(ConfigurableInfoCollectionProvider<?>)infoCollectionProvider;
 
 		return InfoFormUtil.getConfigurationJSONObject(
-			configurableInfoCollectionProvider.getConfigurationInfoForm(),
+			configurableInfoCollectionProvider.getConfigurationInfoForm(
+				new ThemeDisplayCollectionContext(_themeDisplay)),
 			_themeDisplay.getLocale());
 	}
 

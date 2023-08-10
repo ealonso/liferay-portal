@@ -12,6 +12,7 @@ import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.item.ClassPKInfoItemIdentifier;
 import com.liferay.info.item.InfoItemFieldValues;
@@ -27,6 +28,8 @@ import com.liferay.layout.list.retriever.LayoutListRetriever;
 import com.liferay.layout.list.retriever.LayoutListRetrieverContext;
 import com.liferay.portal.kernel.model.ClassedModel;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 
 import java.util.Collections;
 import java.util.List;
@@ -104,7 +107,11 @@ public class InfoCollectionProviderLayoutListRetriever
 				layoutListRetrieverContext.getInfoFilters());
 		}
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		InfoPage<?> infoPage = infoCollectionProvider.getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
 			collectionQuery);
 
 		return (List<Object>)infoPage.getPageItems();
@@ -168,7 +175,11 @@ public class InfoCollectionProviderLayoutListRetriever
 				layoutListRetrieverContext.getInfoFilters());
 		}
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		InfoPage<?> infoPage = infoCollectionProvider.getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
 			collectionQuery);
 
 		return infoPage.getTotalCount();

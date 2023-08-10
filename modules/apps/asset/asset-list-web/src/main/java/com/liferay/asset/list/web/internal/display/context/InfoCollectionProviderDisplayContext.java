@@ -6,6 +6,7 @@
 package com.liferay.asset.list.web.internal.display.context;
 
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -85,7 +86,10 @@ public class InfoCollectionProviderDisplayContext {
 					InfoCollectionProvider.class);
 
 		return ListUtil.filter(
-			infoCollectionProviders, InfoCollectionProvider::isAvailable);
+			infoCollectionProviders,
+			infoItemCollectionProvider ->
+				infoItemCollectionProvider.isAvailable(
+					new ThemeDisplayCollectionContext(_themeDisplay)));
 	}
 
 	private PortletURL _getPortletURL() {

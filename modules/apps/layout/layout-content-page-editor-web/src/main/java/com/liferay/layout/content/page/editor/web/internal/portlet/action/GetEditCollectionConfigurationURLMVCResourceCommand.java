@@ -8,6 +8,7 @@ package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.web.internal.util.InfoFormUtil;
@@ -89,7 +90,8 @@ public class GetEditCollectionConfigurationURLMVCResourceCommand
 				(ConfigurableInfoCollectionProvider<?>)infoCollectionProvider;
 
 		JSONObject jsonObject = InfoFormUtil.getConfigurationJSONObject(
-			configurableInfoCollectionProvider.getConfigurationInfoForm(),
+			configurableInfoCollectionProvider.getConfigurationInfoForm(
+				new ThemeDisplayCollectionContext(themeDisplay)),
 			themeDisplay.getLocale());
 
 		if (JSONUtil.isEmpty(jsonObject.getJSONArray("fieldSets"))) {

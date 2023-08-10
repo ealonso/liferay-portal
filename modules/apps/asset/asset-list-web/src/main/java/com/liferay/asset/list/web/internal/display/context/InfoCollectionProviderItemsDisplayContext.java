@@ -8,6 +8,7 @@ package com.liferay.asset.list.web.internal.display.context;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.field.InfoFieldValue;
 import com.liferay.info.item.InfoItemFieldValues;
 import com.liferay.info.item.InfoItemServiceRegistry;
@@ -123,7 +124,7 @@ public class InfoCollectionProviderItemsDisplayContext {
 				searchContainer.getEnd(), searchContainer.getStart()));
 
 		InfoPage infoPage = infoCollectionProvider.getCollectionInfoPage(
-			collectionQuery);
+			new ThemeDisplayCollectionContext(_themeDisplay), collectionQuery);
 
 		searchContainer.setResultsAndTotal(
 			infoPage::getPageItems, infoPage.getTotalCount());

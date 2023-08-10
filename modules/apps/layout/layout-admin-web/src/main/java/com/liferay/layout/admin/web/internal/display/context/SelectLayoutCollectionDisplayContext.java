@@ -10,6 +10,7 @@ import com.liferay.asset.list.service.AssetListEntryServiceUtil;
 import com.liferay.asset.list.util.AssetListPortletUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.search.InfoSearchClassMapperRegistryUtil;
@@ -201,7 +202,8 @@ public class SelectLayoutCollectionDisplayContext {
 					if (Validator.isNotNull(
 							infoCollectionProvider.getLabel(
 								_themeDisplay.getLocale())) &&
-						infoCollectionProvider.isAvailable()) {
+						infoCollectionProvider.isAvailable(
+							new ThemeDisplayCollectionContext(_themeDisplay))) {
 
 						return true;
 					}

@@ -48,6 +48,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.collection.provider.item.selector.criterion.InfoCollectionProviderItemSelectorCriterion;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
@@ -376,6 +377,7 @@ public class AssetPublisherDisplayContext {
 
 				InfoPage<AssetEntry> infoPage =
 					infoCollectionProvider.getCollectionInfoPage(
+						new ThemeDisplayCollectionContext(_themeDisplay),
 						new CollectionQuery());
 
 				assetEntries = (List<AssetEntry>)infoPage.getPageItems();

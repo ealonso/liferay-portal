@@ -7,6 +7,7 @@ package com.liferay.info.collection.provider.item.selector.web.internal.item.sel
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.collection.provider.item.selector.criterion.InfoCollectionProviderItemSelectorCriterion;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
@@ -14,7 +15,9 @@ import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
 import com.liferay.item.selector.ItemSelectorViewDescriptorRenderer;
 import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
@@ -75,13 +78,19 @@ public class InfoCollectionProviderItemSelectorView
 			new InfoCollectionProviderItemSelectorViewDescriptor(
 				(HttpServletRequest)servletRequest, portletURL,
 				_getInfoCollectionProviders(
+					(HttpServletRequest)servletRequest,
 					infoCollectionProviderItemSelectorCriterion),
 				_infoItemServiceRegistry));
 	}
 
 	private List<InfoCollectionProvider<?>> _getInfoCollectionProviders(
+		HttpServletRequest httpServletRequest,
 		InfoCollectionProviderItemSelectorCriterion
 			infoCollectionProviderItemSelectorCriterion) {
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		if (infoCollectionProviderItemSelectorCriterion.getType() ==
 				InfoCollectionProviderItemSelectorCriterion.Type.
@@ -92,7 +101,9 @@ public class InfoCollectionProviderItemSelectorView
 					_infoItemServiceRegistry.getAllInfoItemServices(
 						(Class<InfoCollectionProvider<?>>)
 							(Class<?>)InfoCollectionProvider.class),
-					InfoCollectionProvider::isAvailable));
+					infoCollectionProvider ->
+						infoCollectionProvider.isAvailable(
+							new ThemeDisplayCollectionContext(themeDisplay))));
 		}
 
 		String itemType =
@@ -111,7 +122,8 @@ public class InfoCollectionProviderItemSelectorView
 					(Class<InfoCollectionProvider<?>>)
 						(Class<?>)InfoCollectionProvider.class,
 					itemType),
-				InfoCollectionProvider::isAvailable));
+				infoCollectionProvider -> infoCollectionProvider.isAvailable(
+					new ThemeDisplayCollectionContext(themeDisplay))));
 	}
 
 	private static final List<ItemSelectorReturnType>

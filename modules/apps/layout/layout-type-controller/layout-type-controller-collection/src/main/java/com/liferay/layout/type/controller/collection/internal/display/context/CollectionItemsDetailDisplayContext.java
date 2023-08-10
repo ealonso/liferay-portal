@@ -13,6 +13,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorReturnType;
 import com.liferay.info.pagination.InfoPage;
@@ -171,6 +172,7 @@ public class CollectionItemsDetailDisplayContext {
 			}
 
 			InfoPage<?> infoPage = infoCollectionProvider.getCollectionInfoPage(
+				new ThemeDisplayCollectionContext(_themeDisplay),
 				new CollectionQuery());
 
 			return infoPage.getTotalCount();
