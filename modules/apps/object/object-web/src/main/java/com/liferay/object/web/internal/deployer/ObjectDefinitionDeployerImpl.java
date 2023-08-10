@@ -190,7 +190,7 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 					_listTypeEntryLocalService, objectDefinition,
 					_objectEntryLocalService, _objectEntryManagerRegistry,
 					_objectFieldLocalService, _objectLayoutLocalService,
-					_objectScopeProviderRegistry),
+					_objectScopeProviderRegistry, _userLocalService),
 				HashMapDictionaryBuilder.<String, Object>put(
 					"company.id", objectDefinition.getCompanyId()
 				).put(

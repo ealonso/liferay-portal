@@ -8,8 +8,10 @@ package com.liferay.asset.internal.info.collection.provider;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryService;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.sort.Sort;
 import com.liferay.portal.kernel.language.Language;
@@ -34,13 +36,10 @@ public class MostViewedAssetsInfoCollectionProvider
 
 	@Override
 	public InfoPage<AssetEntry> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
+			collectionContext.getCompanyId(), collectionContext.getGroupId(),
 			collectionQuery.getPagination(), new Sort("viewCount", true),
 			new Sort("title", true));
 
@@ -56,6 +55,18 @@ public class MostViewedAssetsInfoCollectionProvider
 
 		return InfoPage.of(
 			Collections.emptyList(), collectionQuery.getPagination(), 0);
+	}
+
+	@Override
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
 	}
 
 	@Override

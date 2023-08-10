@@ -8,9 +8,11 @@ package com.liferay.journal.web.internal.info.collection.provider;
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -55,7 +57,7 @@ public class DDMStructureRelatedInfoCollectionProvider
 
 	@Override
 	public InfoPage<JournalArticle> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		Object relatedItem = collectionQuery.getRelatedItem();
 
@@ -67,13 +69,25 @@ public class DDMStructureRelatedInfoCollectionProvider
 		SearchResponse searchResponse =
 			JournalSearcherUtil.searchJournalArticles(
 				searchContext -> _populateSearchContext(
-					(AssetCategory)relatedItem, collectionQuery,
-					searchContext));
+					(AssetCategory)relatedItem, collectionContext,
+					collectionQuery, searchContext));
 
 		return InfoPage.of(
 			JournalSearcherUtil.transformJournalArticles(
 				searchResponse.getDocuments71(), false),
 			collectionQuery.getPagination(), searchResponse.getTotalHits());
+	}
+
+	@Override
+	public InfoPage<JournalArticle> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
 	}
 
 	@Override
@@ -110,15 +124,12 @@ public class DDMStructureRelatedInfoCollectionProvider
 	}
 
 	@Override
-	public boolean isAvailable() {
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
+	public boolean isAvailable(CollectionContext collectionContext) {
 		try {
 			if (ArrayUtil.contains(
 					SiteConnectedGroupGroupProviderUtil.
 						getCurrentAndAncestorSiteAndDepotGroupIds(
-							serviceContext.getScopeGroupId(), true),
+							collectionContext.getGroupId(), true),
 					_ddmStructure.getGroupId())) {
 
 				return true;
@@ -134,8 +145,8 @@ public class DDMStructureRelatedInfoCollectionProvider
 	}
 
 	private SearchContext _populateSearchContext(
-		AssetCategory assetCategory, CollectionQuery collectionQuery,
-		SearchContext searchContext) {
+		AssetCategory assetCategory, CollectionContext collectionContext,
+		CollectionQuery collectionQuery, SearchContext searchContext) {
 
 		searchContext.setAndSearch(true);
 		searchContext.setAssetCategoryIds(
@@ -151,10 +162,7 @@ public class DDMStructureRelatedInfoCollectionProvider
 		searchContext.setClassTypeIds(
 			new long[] {_ddmStructure.getStructureId()});
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		searchContext.setCompanyId(serviceContext.getCompanyId());
+		searchContext.setCompanyId(collectionContext.getCompanyId());
 
 		Pagination pagination = collectionQuery.getPagination();
 
@@ -162,8 +170,7 @@ public class DDMStructureRelatedInfoCollectionProvider
 
 		searchContext.setEntryClassNames(
 			new String[] {JournalArticle.class.getName()});
-		searchContext.setGroupIds(
-			new long[] {serviceContext.getScopeGroupId()});
+		searchContext.setGroupIds(new long[] {collectionContext.getGroupId()});
 
 		Sort sort = collectionQuery.getSort();
 

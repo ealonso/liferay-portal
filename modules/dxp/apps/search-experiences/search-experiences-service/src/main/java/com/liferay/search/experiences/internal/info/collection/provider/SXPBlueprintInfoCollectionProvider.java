@@ -7,9 +7,11 @@ package com.liferay.search.experiences.internal.info.collection.provider;
 
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.util.AssetHelper;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.filter.CategoriesInfoFilter;
 import com.liferay.info.filter.InfoFilter;
 import com.liferay.info.filter.KeywordsInfoFilter;
@@ -22,7 +24,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
@@ -56,13 +57,14 @@ public class SXPBlueprintInfoCollectionProvider
 
 	@Override
 	public InfoPage<AssetEntry> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		try {
 			Pagination pagination = collectionQuery.getPagination();
 
 			SearchRequestBuilder searchRequestBuilder =
-				_getSearchRequestBuilder(collectionQuery, pagination);
+				_getSearchRequestBuilder(
+					collectionContext, collectionQuery, pagination);
 
 			SearchResponse searchResponse = _searcher.search(
 				searchRequestBuilder.build());
@@ -76,6 +78,18 @@ public class SXPBlueprintInfoCollectionProvider
 
 		return InfoPage.of(
 			Collections.emptyList(), collectionQuery.getPagination(), 0);
+	}
+
+	@Override
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
 	}
 
 	@Override
@@ -109,14 +123,15 @@ public class SXPBlueprintInfoCollectionProvider
 	}
 
 	private SearchRequestBuilder _getSearchRequestBuilder(
-		CollectionQuery collectionQuery, Pagination pagination) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery,
+		Pagination pagination) {
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
 		return _searchRequestBuilderFactory.builder(
 		).companyId(
-			serviceContext.getCompanyId()
+			collectionContext.getCompanyId()
 		).from(
 			pagination.getStart()
 		).emptySearchEnabled(
@@ -159,12 +174,9 @@ public class SXPBlueprintInfoCollectionProvider
 				searchContext.setAttribute(
 					"search.experiences.ip.address",
 					serviceContext.getRemoteAddr());
-
-				ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
 				searchContext.setAttribute(
 					"search.experiences.scope.group.id",
-					themeDisplay.getScopeGroupId());
+					collectionContext.getGroupId());
 
 				KeywordsInfoFilter keywordsInfoFilter =
 					collectionQuery.getInfoFilter(KeywordsInfoFilter.class);
@@ -173,9 +185,9 @@ public class SXPBlueprintInfoCollectionProvider
 					searchContext.setKeywords(keywordsInfoFilter.getKeywords());
 				}
 
-				searchContext.setLocale(serviceContext.getLocale());
+				searchContext.setLocale(collectionContext.getLocale());
 				searchContext.setTimeZone(serviceContext.getTimeZone());
-				searchContext.setUserId(serviceContext.getUserId());
+				searchContext.setUserId(collectionContext.getUserId());
 			}
 		);
 	}

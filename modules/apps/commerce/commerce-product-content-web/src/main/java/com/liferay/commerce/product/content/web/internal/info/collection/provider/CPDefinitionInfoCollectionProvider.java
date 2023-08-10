@@ -8,8 +8,10 @@ package com.liferay.commerce.product.content.web.internal.info.collection.provid
 import com.liferay.commerce.product.model.CPDefinition;
 import com.liferay.commerce.product.service.CPDefinitionService;
 import com.liferay.commerce.product.service.CommerceChannelLocalService;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.filter.KeywordsInfoFilter;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
@@ -41,19 +43,16 @@ public class CPDefinitionInfoCollectionProvider
 
 	@Override
 	public InfoPage<CPDefinition> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		try {
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
 			BaseModelSearchResult<CPDefinition>
 				cpDefinitionBaseModelSearchResult;
 
 			long commerceChannelGroupId =
 				_commerceChannelLocalService.
 					getCommerceChannelGroupIdBySiteGroupId(
-						serviceContext.getScopeGroupId());
+						collectionContext.getGroupId());
 
 			String keywords = null;
 
@@ -79,14 +78,15 @@ public class CPDefinitionInfoCollectionProvider
 			if (commerceChannelGroupId != 0) {
 				cpDefinitionBaseModelSearchResult =
 					_cpDefinitionService.searchCPDefinitionsByChannelGroupId(
-						serviceContext.getCompanyId(), commerceChannelGroupId,
-						keywords, WorkflowConstants.STATUS_APPROVED, false,
+						collectionContext.getCompanyId(),
+						commerceChannelGroupId, keywords,
+						WorkflowConstants.STATUS_APPROVED, false,
 						pagination.getStart(), pagination.getEnd(), sort);
 			}
 			else {
 				cpDefinitionBaseModelSearchResult =
 					_cpDefinitionService.searchCPDefinitions(
-						serviceContext.getCompanyId(), keywords,
+						collectionContext.getCompanyId(), keywords,
 						WorkflowConstants.STATUS_APPROVED, false,
 						pagination.getStart(), pagination.getEnd(), sort);
 			}
@@ -105,12 +105,24 @@ public class CPDefinitionInfoCollectionProvider
 	}
 
 	@Override
+	public InfoPage<CPDefinition> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		return _language.get(locale, "products");
 	}
 
 	@Override
-	public boolean isAvailable() {
+	public boolean isAvailable(CollectionContext collectionContext) {
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 

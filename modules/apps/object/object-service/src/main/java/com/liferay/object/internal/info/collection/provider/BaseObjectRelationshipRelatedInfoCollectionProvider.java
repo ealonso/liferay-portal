@@ -5,6 +5,7 @@
 
 package com.liferay.object.internal.info.collection.provider;
 
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.pagination.InfoPage;
@@ -20,7 +21,6 @@ import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
 import java.util.Collections;
 import java.util.Locale;
@@ -100,10 +100,10 @@ public abstract class BaseObjectRelationshipRelatedInfoCollectionProvider
 	}
 
 	@Override
-	public boolean isAvailable() {
+	public boolean isAvailable(CollectionContext collectionContext) {
 		if (!FeatureFlagManagerUtil.isEnabled("LPS-176083") ||
 			(_objectDefinition1.getCompanyId() !=
-				CompanyThreadLocal.getCompanyId())) {
+				collectionContext.getCompanyId())) {
 
 			return false;
 		}

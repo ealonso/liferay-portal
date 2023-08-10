@@ -8,11 +8,13 @@ package com.liferay.journal.web.internal.info.collection.provider;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.MultiselectInfoFieldType;
 import com.liferay.info.field.type.OptionInfoFieldType;
@@ -66,12 +68,12 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 
 	@Override
 	public InfoPage<JournalArticle> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		SearchResponse searchResponse =
 			JournalSearcherUtil.searchJournalArticles(
 				searchContext -> _populateSearchContext(
-					collectionQuery, searchContext));
+					collectionContext, collectionQuery, searchContext));
 
 		return InfoPage.of(
 			JournalSearcherUtil.transformJournalArticles(
@@ -80,10 +82,34 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 	}
 
 	@Override
+	public InfoPage<JournalArticle> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
+	}
+
+	@Override
 	public InfoForm getConfigurationInfoForm() {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getConfigurationInfoForm(
+			new ThemeDisplayCollectionContext(
+				serviceContext.getThemeDisplay()));
+	}
+
+	@Override
+	public InfoForm getConfigurationInfoForm(
+		CollectionContext collectionContext) {
+
 		return InfoForm.builder(
 		).infoFieldSetEntry(
-			_getAssetTagsInfoField()
+			_getAssetTagsInfoField(collectionContext)
 		).infoFieldSetEntry(
 			InfoField.builder(
 			).infoFieldType(
@@ -102,7 +128,13 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 
 	@Override
 	public String getFormVariationKey() {
-		return String.valueOf(_getDDDMStructureId());
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return String.valueOf(
+			_getDDDMStructureId(
+				new ThemeDisplayCollectionContext(
+					serviceContext.getThemeDisplay())));
 	}
 
 	@Override
@@ -115,9 +147,8 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 		return Arrays.asList(new KeywordsInfoFilter());
 	}
 
-	private InfoField<?> _getAssetTagsInfoField() {
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+	private InfoField<?> _getAssetTagsInfoField(
+		CollectionContext collectionContext) {
 
 		return InfoField.builder(
 		).infoFieldType(
@@ -130,7 +161,7 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 			MultiselectInfoFieldType.OPTIONS,
 			TransformUtil.transform(
 				_assetTagLocalService.getGroupTags(
-					serviceContext.getScopeGroupId(), QueryUtil.ALL_POS,
+					collectionContext.getGroupId(), QueryUtil.ALL_POS,
 					QueryUtil.ALL_POS, new AssetTagNameComparator(true)),
 				assetTag -> new OptionInfoFieldType(
 					new SingleValueInfoLocalizedValue<>(assetTag.getName()),
@@ -142,12 +173,9 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 		).build();
 	}
 
-	private long _getDDDMStructureId() {
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
+	private long _getDDDMStructureId(CollectionContext collectionContext) {
 		DDMStructure ddmStructure = _ddmStructureLocalService.fetchStructure(
-			serviceContext.getScopeGroupId(),
+			collectionContext.getGroupId(),
 			_portal.getClassNameId(JournalArticle.class.getName()),
 			"BASIC-WEB-CONTENT", true);
 
@@ -155,7 +183,8 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 	}
 
 	private SearchContext _populateSearchContext(
-		CollectionQuery collectionQuery, SearchContext searchContext) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery,
+		SearchContext searchContext) {
 
 		Map<String, Serializable> attributes = searchContext.getAttributes();
 
@@ -185,19 +214,16 @@ public class BasicWebContentSingleFormVariationInfoCollectionProvider
 			searchContext.setAttribute(Field.TITLE, title[0]);
 		}
 
-		searchContext.setClassTypeIds(new long[] {_getDDDMStructureId()});
+		searchContext.setClassTypeIds(
+			new long[] {_getDDDMStructureId(collectionContext)});
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		searchContext.setCompanyId(serviceContext.getCompanyId());
+		searchContext.setCompanyId(collectionContext.getCompanyId());
 
 		Pagination pagination = collectionQuery.getPagination();
 
 		searchContext.setEnd(pagination.getEnd());
 
-		searchContext.setGroupIds(
-			new long[] {serviceContext.getScopeGroupId()});
+		searchContext.setGroupIds(new long[] {collectionContext.getGroupId()});
 
 		KeywordsInfoFilter keywordsInfoFilter = collectionQuery.getInfoFilter(
 			KeywordsInfoFilter.class);

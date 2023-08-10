@@ -11,10 +11,12 @@ import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.InfoFieldSetEntry;
@@ -68,11 +70,10 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.NestedQuery;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
-import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -113,7 +114,8 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		ObjectEntryManagerRegistry objectEntryManagerRegistry,
 		ObjectFieldLocalService objectFieldLocalService,
 		ObjectLayoutLocalService objectLayoutLocalService,
-		ObjectScopeProviderRegistry objectScopeProviderRegistry) {
+		ObjectScopeProviderRegistry objectScopeProviderRegistry,
+		UserLocalService userLocalService) {
 
 		_assetCategoryLocalService = assetCategoryLocalService;
 		_assetTagLocalService = assetTagLocalService;
@@ -126,20 +128,23 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		_objectFieldLocalService = objectFieldLocalService;
 		_objectLayoutLocalService = objectLayoutLocalService;
 		_objectScopeProviderRegistry = objectScopeProviderRegistry;
+		_userLocalService = userLocalService;
 	}
 
 	@Override
 	public InfoPage<ObjectEntry> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		try {
 			if (!_objectDefinition.isAccountEntryRestricted() &&
 				_objectDefinition.isDefaultStorageType()) {
 
-				return _getCollectionInfoPageByIndexer(collectionQuery);
+				return _getCollectionInfoPageByIndexer(
+					collectionContext, collectionQuery);
 			}
 
-			return _getCollectionInfoPageByObjectEntryManager(collectionQuery);
+			return _getCollectionInfoPageByObjectEntryManager(
+				collectionContext, collectionQuery);
 		}
 		catch (Exception exception) {
 			throw new RuntimeException(
@@ -150,20 +155,44 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	}
 
 	@Override
+	public InfoPage<ObjectEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
+	}
+
+	@Override
 	public String getCollectionItemClassName() {
 		return _objectDefinition.getClassName();
 	}
 
 	@Override
 	public InfoForm getConfigurationInfoForm() {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getConfigurationInfoForm(
+			new ThemeDisplayCollectionContext(
+				serviceContext.getThemeDisplay()));
+	}
+
+	@Override
+	public InfoForm getConfigurationInfoForm(
+		CollectionContext collectionContext) {
+
 		return InfoForm.builder(
 		).infoFieldSetEntries(
-			_getInfoFieldSetEntries()
+			_getInfoFieldSetEntries(collectionContext)
 		).infoFieldSetEntry(
 			InfoFieldSet.builder(
 			).infoFieldSetEntry(
 				unsafeConsumer -> {
-					InfoField<?> infoField = _getInfoField();
+					InfoField<?> infoField = _getInfoField(collectionContext);
 
 					if (infoField != null) {
 						unsafeConsumer.accept(infoField);
@@ -241,9 +270,9 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	}
 
 	@Override
-	public boolean isAvailable() {
+	public boolean isAvailable(CollectionContext collectionContext) {
 		if (_objectDefinition.getCompanyId() !=
-				CompanyThreadLocal.getCompanyId()) {
+				collectionContext.getCompanyId()) {
 
 			return false;
 		}
@@ -251,7 +280,9 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		return true;
 	}
 
-	private SearchContext _buildSearchContext(CollectionQuery collectionQuery)
+	private SearchContext _buildSearchContext(
+			CollectionContext collectionContext,
+			CollectionQuery collectionQuery)
 		throws Exception {
 
 		SearchContext searchContext = new SearchContext();
@@ -265,11 +296,8 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 			configuration = Collections.emptyMap();
 		}
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
 		for (AssetVocabulary assetVocabulary :
-				_getAssetVocabularies(serviceContext)) {
+				_getAssetVocabularies(collectionContext)) {
 
 			String[] assetCategoryIdsArray = configuration.get(
 				String.valueOf(assetVocabulary.getVocabularyId()));
@@ -297,7 +325,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		searchContext.setAttribute(
 			"objectDefinitionId", _objectDefinition.getObjectDefinitionId());
 		searchContext.setBooleanClauses(_getBooleanClauses(collectionQuery));
-		searchContext.setCompanyId(serviceContext.getCompanyId());
+		searchContext.setCompanyId(collectionContext.getCompanyId());
 
 		Pagination pagination = collectionQuery.getPagination();
 
@@ -323,14 +351,14 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	}
 
 	private List<AssetVocabulary> _getAssetVocabularies(
-		ServiceContext serviceContext) {
+		CollectionContext collectionContext) {
 
 		try {
 			return ListUtil.filter(
 				_assetVocabularyLocalService.getGroupVocabularies(
 					SiteConnectedGroupGroupProviderUtil.
 						getCurrentAndAncestorSiteAndDepotGroupIds(
-							serviceContext.getScopeGroupId())),
+							collectionContext.getGroupId())),
 				assetVocabulary ->
 					assetVocabulary.isAssociatedToClassNameIdAndClassTypePK(
 						PortalUtil.getClassNameId(
@@ -400,13 +428,15 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	}
 
 	private InfoPage<ObjectEntry> _getCollectionInfoPageByIndexer(
+			CollectionContext collectionContext,
 			CollectionQuery collectionQuery)
 		throws Exception {
 
 		Indexer<ObjectEntry> indexer = IndexerRegistryUtil.getIndexer(
 			_objectDefinition.getClassName());
 
-		Hits hits = indexer.search(_buildSearchContext(collectionQuery));
+		Hits hits = indexer.search(
+			_buildSearchContext(collectionContext, collectionQuery));
 
 		return InfoPage.of(
 			TransformUtil.transformToList(
@@ -421,6 +451,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	}
 
 	private InfoPage<ObjectEntry> _getCollectionInfoPageByObjectEntryManager(
+			CollectionContext collectionContext,
 			CollectionQuery collectionQuery)
 		throws Exception {
 
@@ -428,20 +459,17 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 			_objectEntryManagerRegistry.getObjectEntryManager(
 				_objectDefinition.getStorageType());
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
-		Group scopeGroup = themeDisplay.getScopeGroup();
+		Group group = _groupLocalService.fetchGroup(
+			collectionContext.getGroupId());
 
 		Page<com.liferay.object.rest.dto.v1_0.ObjectEntry> objectEntriesPage =
 			objectEntryManager.getObjectEntries(
-				themeDisplay.getCompanyId(), _objectDefinition,
-				scopeGroup.getGroupKey(), null,
+				collectionContext.getCompanyId(), _objectDefinition,
+				group.getGroupKey(), null,
 				new DefaultDTOConverterContext(
-					false, null, null, null, null, themeDisplay.getLocale(),
-					null, themeDisplay.getUser()),
+					false, null, null, null, null,
+					collectionContext.getLocale(), null,
+					_userLocalService.fetchUser(collectionContext.getUserId())),
 				_getFilterString(collectionQuery),
 				_getPagination(collectionQuery.getPagination()),
 				_getSearch(collectionQuery), null);
@@ -536,7 +564,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		return objectScopeProvider.getGroupId(serviceContext.getRequest());
 	}
 
-	private InfoField<?> _getInfoField() {
+	private InfoField<?> _getInfoField(CollectionContext collectionContext) {
 		if (!StringUtil.equals(
 				_objectDefinition.getStorageType(),
 				ObjectDefinitionConstants.STORAGE_TYPE_DEFAULT) ||
@@ -562,10 +590,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 			}
 		}
 		else {
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
-			groupId = serviceContext.getScopeGroupId();
+			groupId = collectionContext.getGroupId();
 		}
 
 		return InfoField.builder(
@@ -591,7 +616,9 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 		).build();
 	}
 
-	private List<InfoFieldSetEntry> _getInfoFieldSetEntries() {
+	private List<InfoFieldSetEntry> _getInfoFieldSetEntries(
+		CollectionContext collectionContext) {
+
 		if (!StringUtil.equals(
 				_objectDefinition.getStorageType(),
 				ObjectDefinitionConstants.STORAGE_TYPE_DEFAULT) ||
@@ -602,11 +629,8 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 
 		List<InfoFieldSetEntry> fieldSetEntries = new ArrayList<>();
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
 		for (AssetVocabulary assetVocabulary :
-				_getAssetVocabularies(serviceContext)) {
+				_getAssetVocabularies(collectionContext)) {
 
 			List<OptionInfoFieldType> optionInfoFieldTypes =
 				TransformUtil.transform(
@@ -632,7 +656,7 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 					).labelInfoLocalizedValue(
 						InfoLocalizedValue.singleValue(
 							assetVocabulary.getTitle(
-								serviceContext.getLocale()))
+								collectionContext.getLocale()))
 					).localizable(
 						true
 					).build());
@@ -762,5 +786,6 @@ public class ObjectEntrySingleFormVariationInfoCollectionProvider
 	private final ObjectFieldLocalService _objectFieldLocalService;
 	private final ObjectLayoutLocalService _objectLayoutLocalService;
 	private final ObjectScopeProviderRegistry _objectScopeProviderRegistry;
+	private final UserLocalService _userLocalService;
 
 }

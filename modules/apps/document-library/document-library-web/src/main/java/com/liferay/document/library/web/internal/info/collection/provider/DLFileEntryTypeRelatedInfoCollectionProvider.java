@@ -10,9 +10,11 @@ import com.liferay.depot.util.SiteConnectedGroupGroupProviderUtil;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.model.DLFileEntryType;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.RelatedInfoItemCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.info.pagination.Pagination;
 import com.liferay.info.sort.Sort;
@@ -60,9 +62,21 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 
 	@Override
 	public InfoPage<FileEntry> getCollectionInfoPage(
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
+
+		return getFileEntryInfoPage(collectionContext, collectionQuery);
+	}
+
+	@Override
+	public InfoPage<FileEntry> getCollectionInfoPage(
 		CollectionQuery collectionQuery) {
 
-		return getFileEntryInfoPage(collectionQuery);
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
 	}
 
 	@Override
@@ -71,7 +85,7 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 	}
 
 	public InfoPage<FileEntry> getFileEntryInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		try {
 			Object relatedItem = collectionQuery.getRelatedItem();
@@ -86,7 +100,7 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 				DLFileEntryConstants.getClassName());
 
 			SearchContext searchContext = _buildSearchContext(
-				(AssetCategory)relatedItem, collectionQuery);
+				(AssetCategory)relatedItem, collectionContext, collectionQuery);
 
 			Hits hits = indexer.search(searchContext);
 
@@ -135,16 +149,13 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 	}
 
 	@Override
-	public boolean isAvailable() {
+	public boolean isAvailable(CollectionContext collectionContext) {
 		try {
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
 			if ((_dlFileEntryType.getGroupId() == 0) ||
 				ArrayUtil.contains(
 					SiteConnectedGroupGroupProviderUtil.
 						getCurrentAndAncestorSiteAndDepotGroupIds(
-							serviceContext.getScopeGroupId(), true),
+							collectionContext.getGroupId(), true),
 					_dlFileEntryType.getGroupId())) {
 
 				return true;
@@ -160,7 +171,8 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 	}
 
 	private SearchContext _buildSearchContext(
-		AssetCategory assetCategory, CollectionQuery collectionQuery) {
+		AssetCategory assetCategory, CollectionContext collectionContext,
+		CollectionQuery collectionQuery) {
 
 		SearchContext searchContext = new SearchContext();
 
@@ -181,10 +193,7 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 		searchContext.setClassTypeIds(
 			new long[] {_dlFileEntryType.getFileEntryTypeId()});
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		searchContext.setCompanyId(serviceContext.getCompanyId());
+		searchContext.setCompanyId(collectionContext.getCompanyId());
 
 		Pagination pagination = collectionQuery.getPagination();
 
@@ -192,8 +201,7 @@ public class DLFileEntryTypeRelatedInfoCollectionProvider
 
 		searchContext.setEntryClassNames(
 			new String[] {DLFileEntryConstants.getClassName()});
-		searchContext.setGroupIds(
-			new long[] {serviceContext.getScopeGroupId()});
+		searchContext.setGroupIds(new long[] {collectionContext.getGroupId()});
 
 		Sort sort = collectionQuery.getSort();
 

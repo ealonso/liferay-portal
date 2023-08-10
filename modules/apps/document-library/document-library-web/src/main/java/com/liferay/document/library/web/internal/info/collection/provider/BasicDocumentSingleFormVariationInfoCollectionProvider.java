@@ -8,11 +8,13 @@ package com.liferay.document.library.web.internal.info.collection.provider;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.ConfigurableInfoCollectionProvider;
 import com.liferay.info.collection.provider.FilteredInfoCollectionProvider;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
 import com.liferay.info.collection.provider.SingleFormVariationInfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.type.MultiselectInfoFieldType;
 import com.liferay.info.field.type.OptionInfoFieldType;
@@ -71,16 +73,40 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 
 	@Override
 	public InfoPage<FileEntry> getCollectionInfoPage(
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
+
+		return _getFileEntryInfoPage(collectionContext, collectionQuery);
+	}
+
+	@Override
+	public InfoPage<FileEntry> getCollectionInfoPage(
 		CollectionQuery collectionQuery) {
 
-		return _getFileEntryInfoPage(collectionQuery);
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
 	}
 
 	@Override
 	public InfoForm getConfigurationInfoForm() {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getConfigurationInfoForm(
+			new ThemeDisplayCollectionContext(
+				serviceContext.getThemeDisplay()));
+	}
+
+	@Override
+	public InfoForm getConfigurationInfoForm(
+		CollectionContext collectionContext) {
+
 		return InfoForm.builder(
 		).infoFieldSetEntry(
-			_getAssetTagsInfoField()
+			_getAssetTagsInfoField(collectionContext)
 		).build();
 	}
 
@@ -99,7 +125,9 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 		return Arrays.asList(new CategoriesInfoFilter());
 	}
 
-	private SearchContext _buildSearchContext(CollectionQuery collectionQuery) {
+	private SearchContext _buildSearchContext(
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
+
 		SearchContext searchContext = new SearchContext();
 
 		searchContext.setAndSearch(true);
@@ -144,10 +172,7 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 		searchContext.setClassTypeIds(
 			new long[] {GetterUtil.getLong(getFormVariationKey())});
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		searchContext.setCompanyId(serviceContext.getCompanyId());
+		searchContext.setCompanyId(collectionContext.getCompanyId());
 
 		Pagination pagination = collectionQuery.getPagination();
 
@@ -155,8 +180,7 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 
 		searchContext.setEntryClassNames(
 			new String[] {DLFileEntryConstants.getClassName()});
-		searchContext.setGroupIds(
-			new long[] {serviceContext.getScopeGroupId()});
+		searchContext.setGroupIds(new long[] {collectionContext.getGroupId()});
 
 		Sort sort = collectionQuery.getSort();
 
@@ -184,9 +208,8 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 		return searchContext;
 	}
 
-	private InfoField<?> _getAssetTagsInfoField() {
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+	private InfoField<?> _getAssetTagsInfoField(
+		CollectionContext collectionContext) {
 
 		return InfoField.builder(
 		).infoFieldType(
@@ -199,7 +222,7 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 			MultiselectInfoFieldType.OPTIONS,
 			TransformUtil.transform(
 				_assetTagLocalService.getGroupTags(
-					serviceContext.getScopeGroupId(), QueryUtil.ALL_POS,
+					collectionContext.getGroupId(), QueryUtil.ALL_POS,
 					QueryUtil.ALL_POS, new AssetTagNameComparator(true)),
 				assetTag -> new OptionInfoFieldType(
 					new SingleValueInfoLocalizedValue<>(assetTag.getName()),
@@ -212,13 +235,14 @@ public class BasicDocumentSingleFormVariationInfoCollectionProvider
 	}
 
 	private InfoPage<FileEntry> _getFileEntryInfoPage(
-		CollectionQuery collectionQuery) {
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		try {
 			Indexer<?> indexer = IndexerRegistryUtil.getIndexer(
 				DLFileEntryConstants.getClassName());
 
-			SearchContext searchContext = _buildSearchContext(collectionQuery);
+			SearchContext searchContext = _buildSearchContext(
+				collectionContext, collectionQuery);
 
 			Hits hits = indexer.search(searchContext);
 

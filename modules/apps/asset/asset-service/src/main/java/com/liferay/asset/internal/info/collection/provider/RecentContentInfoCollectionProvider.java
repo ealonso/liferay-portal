@@ -8,8 +8,10 @@ package com.liferay.asset.internal.info.collection.provider;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.persistence.AssetEntryQuery;
 import com.liferay.asset.util.AssetHelper;
+import com.liferay.info.collection.provider.CollectionContext;
 import com.liferay.info.collection.provider.CollectionQuery;
 import com.liferay.info.collection.provider.InfoCollectionProvider;
+import com.liferay.info.collection.provider.ThemeDisplayCollectionContext;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
@@ -41,18 +43,15 @@ public class RecentContentInfoCollectionProvider
 
 	@Override
 	public InfoPage<AssetEntry> getCollectionInfoPage(
-		CollectionQuery collectionQuery) {
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
 
 		AssetEntryQuery assetEntryQuery = getAssetEntryQuery(
-			serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
+			collectionContext.getCompanyId(), collectionContext.getGroupId(),
 			collectionQuery.getPagination(),
 			new com.liferay.info.sort.Sort(Field.MODIFIED_DATE, true), null);
 
 		try {
-			SearchContext searchContext = _getSearchContext();
+			SearchContext searchContext = _getSearchContext(collectionContext);
 
 			Hits hits = _assetHelper.search(
 				searchContext, assetEntryQuery, assetEntryQuery.getStart(),
@@ -74,11 +73,25 @@ public class RecentContentInfoCollectionProvider
 	}
 
 	@Override
+	public InfoPage<AssetEntry> getCollectionInfoPage(
+		CollectionQuery collectionQuery) {
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		return getCollectionInfoPage(
+			new ThemeDisplayCollectionContext(serviceContext.getThemeDisplay()),
+			collectionQuery);
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		return _language.get(locale, "recent-content");
 	}
 
-	private SearchContext _getSearchContext() {
+	private SearchContext _getSearchContext(
+		CollectionContext collectionContext) {
+
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
@@ -86,8 +99,9 @@ public class RecentContentInfoCollectionProvider
 
 		SearchContext searchContext = SearchContextFactory.getInstance(
 			new long[0], new String[0], new HashMap<>(),
-			serviceContext.getCompanyId(), null, themeDisplay.getLayout(), null,
-			serviceContext.getScopeGroupId(), null, serviceContext.getUserId());
+			collectionContext.getCompanyId(), null, themeDisplay.getLayout(),
+			null, collectionContext.getGroupId(), null,
+			collectionContext.getUserId());
 
 		searchContext.setSorts(
 			SortFactoryUtil.create(Field.MODIFIED_DATE, Sort.LONG_TYPE, true),
