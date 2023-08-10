@@ -13,6 +13,11 @@ import com.liferay.info.form.InfoForm;
 public interface ConfigurableInfoCollectionProvider<T>
 	extends InfoCollectionProvider<T> {
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             #getConfigurationInfoForm(CollectionContext)}
+	 */
+	@Deprecated
 	public InfoForm getConfigurationInfoForm();
 
 	public default InfoForm getConfigurationInfoForm(

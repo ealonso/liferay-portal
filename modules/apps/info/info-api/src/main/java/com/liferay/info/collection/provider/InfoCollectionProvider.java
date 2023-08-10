@@ -21,6 +21,11 @@ public interface InfoCollectionProvider<T> extends Keyed, Labeled {
 		return getCollectionInfoPage(collectionQuery);
 	}
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             #getCollectionInfoPage(CollectionContext, CollectionQuery)}
+	 */
+	@Deprecated
 	public InfoPage<T> getCollectionInfoPage(CollectionQuery collectionQuery);
 
 	public default Class<?> getCollectionItemClass() {
@@ -33,6 +38,11 @@ public interface InfoCollectionProvider<T> extends Keyed, Labeled {
 		return clazz.getName();
 	}
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link
+	 *             #isAvailable(CollectionContext)}
+	 */
+	@Deprecated
 	public default boolean isAvailable() {
 		return true;
 	}
