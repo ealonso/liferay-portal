@@ -122,6 +122,25 @@ public class LayoutPageTemplateEntryServiceUtil {
 			uuid, groupId);
 	}
 
+	public static List<Object>
+		getDisplayPageCollectionsAndLayoutPageTemplateEntries(
+			long groupId, String name, int type, int start, int end,
+			OrderByComparator<Object> orderByComparator) {
+
+		return getService().
+			getDisplayPageCollectionsAndLayoutPageTemplateEntries(
+				groupId, name, type, start, end, orderByComparator);
+	}
+
+	public static int
+		getDisplayPageCollectionsAndLayoutPageTemplateEntriesCount(
+			long groupId, String name, int[] types) {
+
+		return getService().
+			getDisplayPageCollectionsAndLayoutPageTemplateEntriesCount(
+				groupId, name, types);
+	}
+
 	public static List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 		long groupId, int type, int status, int start, int end,
 		OrderByComparator<LayoutPageTemplateEntry> orderByComparator) {

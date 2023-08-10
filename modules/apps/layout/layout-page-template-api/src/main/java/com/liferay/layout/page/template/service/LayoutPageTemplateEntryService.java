@@ -96,6 +96,15 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 		String uuid, long groupId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Object> getDisplayPageCollectionsAndLayoutPageTemplateEntries(
+		long groupId, String name, int type, int start, int end,
+		OrderByComparator<Object> orderByComparator);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getDisplayPageCollectionsAndLayoutPageTemplateEntriesCount(
+		long groupId, String name, int[] types);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<LayoutPageTemplateEntry> getLayoutPageTemplateEntries(
 		long groupId, int type, int status, int start, int end,
 		OrderByComparator<LayoutPageTemplateEntry> orderByComparator);
