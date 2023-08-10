@@ -208,8 +208,7 @@ function DirectImagePanel({item}) {
 				config: setIn(editableValue.config, ['alt'], {}),
 				...nextImage,
 			};
-		}
-		else {
+		} else {
 			nextEditableValue = setIn(
 				editableValue,
 				['config', 'alt', languageId],
@@ -218,8 +217,7 @@ function DirectImagePanel({item}) {
 
 			if (nextImage) {
 				nextEditableValue[languageId] = nextImage;
-			}
-			else {
+			} else {
 				delete nextEditableValue[languageId];
 			}
 		}
@@ -251,7 +249,6 @@ function DirectImagePanel({item}) {
 					editableValues,
 					[processorKey, editableId, 'config', 'alt'],
 					(alt) => {
-
 						// If alt is a string (old style), we need to
 						// migrate it to an object to allow translations.
 
@@ -393,6 +390,8 @@ function ImagePanelSizeSelector({item}) {
 			})
 		);
 	};
+
+	console.log({editableContent});
 
 	return editableContent?.fileEntryId ||
 		isMappedToInfoItem(editableContent) ||
