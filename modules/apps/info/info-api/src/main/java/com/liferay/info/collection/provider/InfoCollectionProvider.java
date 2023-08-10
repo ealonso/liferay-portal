@@ -15,6 +15,12 @@ import com.liferay.petra.reflect.GenericUtil;
  */
 public interface InfoCollectionProvider<T> extends Keyed, Labeled {
 
+	public default InfoPage<T> getCollectionInfoPage(
+		CollectionContext collectionContext, CollectionQuery collectionQuery) {
+
+		return getCollectionInfoPage(collectionQuery);
+	}
+
 	public InfoPage<T> getCollectionInfoPage(CollectionQuery collectionQuery);
 
 	public default Class<?> getCollectionItemClass() {
@@ -28,6 +34,10 @@ public interface InfoCollectionProvider<T> extends Keyed, Labeled {
 	}
 
 	public default boolean isAvailable() {
+		return true;
+	}
+
+	public default boolean isAvailable(CollectionContext collectionContext) {
 		return true;
 	}
 

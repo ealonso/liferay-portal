@@ -15,4 +15,10 @@ public interface ConfigurableInfoCollectionProvider<T>
 
 	public InfoForm getConfigurationInfoForm();
 
+	public default InfoForm getConfigurationInfoForm(
+		CollectionContext collectionContext) {
+
+		return getConfigurationInfoForm();
+	}
+
 }
