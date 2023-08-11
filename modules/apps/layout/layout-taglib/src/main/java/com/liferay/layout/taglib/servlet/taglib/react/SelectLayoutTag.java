@@ -250,6 +250,8 @@ public class SelectLayoutTag extends IncludeTag {
 		List<Layout> layouts = LayoutServiceUtil.getLayouts(
 			groupId, privateLayout, parentLayoutId);
 
+		// Creo que aquí es donde habría que paginar
+
 		for (Layout layout : layouts) {
 			if ((layout.isHidden() && !_showHiddenLayouts) ||
 				_isExcludedLayout(layout) || StagingUtil.isIncomplete(layout)) {
@@ -276,6 +278,8 @@ public class SelectLayoutTag extends IncludeTag {
 			jsonObject.put(
 				"groupId", layout.getGroupId()
 			).put(
+				"hasChildren", "HAS_CHILDREN_BOOLEAN"
+			).put(
 				"icon", layout.getIcon()
 			).put(
 				"id", layout.getUuid()
@@ -283,6 +287,8 @@ public class SelectLayoutTag extends IncludeTag {
 				"layoutId", layout.getLayoutId()
 			).put(
 				"name", layout.getName(themeDisplay.getLocale())
+			).put(
+				"paginated", "PAGINATED_BOOLEAN"
 			).put(
 				"payload", _getPayload(layout, themeDisplay)
 			).put(
