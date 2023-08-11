@@ -22,9 +22,11 @@ import {SelectLayoutTree} from './SelectLayoutTree.es';
  */
 
 const SelectLayout = ({
+	config,
 	followURLOnTitleClick,
 	itemSelectorSaveEvent,
 	multiSelection,
+	namespace,
 	nodes,
 	selectedLayoutIds,
 }) => {
@@ -81,6 +83,7 @@ const SelectLayout = ({
 					)}
 
 					<SelectLayoutTree
+						config={{...config, namespace}}
 						filter={filter}
 						followURLOnTitleClick={followURLOnTitleClick}
 						itemSelectorSaveEvent={itemSelectorSaveEvent}
