@@ -205,11 +205,21 @@ public class SelectLayoutTag extends IncludeTag {
 		}
 	}
 
+	private Map<String, Object> _getConfigData() {
+		return HashMapBuilder.<String, Object>put(
+			"loadMoreItemsURL", "LOAD_MORE_URL"
+		).put(
+			"maxPageSize", "EXAMPLE_PAGE_SIZE"
+		).build();
+	}
+
 	private Map<String, Object> _getData() throws Exception {
 		String[] selectedLayoutIds = ParamUtil.getStringValues(
 			getRequest(), "layoutUuid");
 
 		return HashMapBuilder.<String, Object>put(
+			"config", this::_getConfigData
+		).put(
 			"followURLOnTitleClick", _followURLOnTitleClick
 		).put(
 			"itemSelectorSaveEvent", _itemSelectorSaveEvent
