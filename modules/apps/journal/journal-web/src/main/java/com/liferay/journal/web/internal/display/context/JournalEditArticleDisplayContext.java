@@ -1409,7 +1409,6 @@ public class JournalEditArticleDisplayContext {
 			layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 				new UUIDItemSelectorReturnType());
 			layoutItemSelectorCriterion.setShowBreadcrumb(false);
-			layoutItemSelectorCriterion.setShowHiddenPages(true);
 
 			itemSelectorCriteria.add(layoutItemSelectorCriterion);
 		}
