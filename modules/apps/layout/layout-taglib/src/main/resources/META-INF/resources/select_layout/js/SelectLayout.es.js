@@ -23,7 +23,6 @@ import {SelectLayoutTree} from './SelectLayoutTree.es';
 
 const SelectLayout = ({
 	config,
-	followURLOnTitleClick,
 	itemSelectorSaveEvent,
 	multiSelection,
 	namespace,
@@ -85,7 +84,6 @@ const SelectLayout = ({
 					<SelectLayoutTree
 						config={{...config, namespace}}
 						filter={filter}
-						followURLOnTitleClick={followURLOnTitleClick}
 						itemSelectorSaveEvent={itemSelectorSaveEvent}
 						items={nodes}
 						multiSelection={multiSelection}
@@ -112,7 +110,6 @@ const EmptyState = () => {
 };
 
 SelectLayout.propTypes = {
-	followURLOnTitleClick: PropTypes.bool,
 	itemSelectorSaveEvent: PropTypes.string,
 	multiSelection: PropTypes.bool,
 	namespace: PropTypes.string,
