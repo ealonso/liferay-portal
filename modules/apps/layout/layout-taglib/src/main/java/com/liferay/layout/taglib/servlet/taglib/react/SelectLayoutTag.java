@@ -45,10 +45,6 @@ import javax.servlet.jsp.PageContext;
  */
 public class SelectLayoutTag extends IncludeTag {
 
-	public String getComponentId() {
-		return _componentId;
-	}
-
 	public boolean getFollowURLOnTitleClick() {
 		return _followURLOnTitleClick;
 	}
@@ -63,22 +59,6 @@ public class SelectLayoutTag extends IncludeTag {
 
 	public String getNamespace() {
 		return _namespace;
-	}
-
-	/**
-	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
-	 */
-	@Deprecated
-	public String getPathThemeImages() {
-		return _pathThemeImages;
-	}
-
-	/**
-	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
-	 */
-	@Deprecated
-	public String getViewType() {
-		return _viewType;
 	}
 
 	public boolean isCheckDisplayPage() {
@@ -97,20 +77,8 @@ public class SelectLayoutTag extends IncludeTag {
 		return _privateLayout;
 	}
 
-	public boolean isShowDraftLayouts() {
-		return _showDraftLayouts;
-	}
-
-	public boolean isShowHiddenLayouts() {
-		return _showHiddenLayouts;
-	}
-
 	public void setCheckDisplayPage(boolean checkDisplayPage) {
 		_checkDisplayPage = checkDisplayPage;
-	}
-
-	public void setComponentId(String componentId) {
-		_componentId = componentId;
 	}
 
 	public void setEnableCurrentPage(boolean enableCurrentPage) {
@@ -144,32 +112,8 @@ public class SelectLayoutTag extends IncludeTag {
 		setServletContext(ServletContextUtil.getServletContext());
 	}
 
-	/**
-	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
-	 */
-	@Deprecated
-	public void setPathThemeImages(String pathThemeImages) {
-		_pathThemeImages = pathThemeImages;
-	}
-
 	public void setPrivateLayout(boolean privateLayout) {
 		_privateLayout = privateLayout;
-	}
-
-	public void setShowDraftLayouts(boolean showDraftLayouts) {
-		_showDraftLayouts = showDraftLayouts;
-	}
-
-	public void setShowHiddenLayouts(boolean showHiddenLayouts) {
-		_showHiddenLayouts = showHiddenLayouts;
-	}
-
-	/**
-	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
-	 */
-	@Deprecated
-	public void setViewType(String viewType) {
-		_viewType = viewType;
 	}
 
 	@Override
@@ -177,18 +121,13 @@ public class SelectLayoutTag extends IncludeTag {
 		super.cleanUp();
 
 		_checkDisplayPage = false;
-		_componentId = null;
 		_enableCurrentPage = false;
 		_followURLOnTitleClick = false;
 		_itemSelectorReturnType = null;
 		_itemSelectorSaveEvent = null;
 		_multiSelection = false;
 		_namespace = null;
-		_pathThemeImages = null;
 		_privateLayout = false;
-		_showDraftLayouts = false;
-		_showHiddenLayouts = false;
-		_viewType = null;
 	}
 
 	@Override
@@ -264,9 +203,7 @@ public class SelectLayoutTag extends IncludeTag {
 			groupId, privateLayout, parentLayoutId);
 
 		for (Layout layout : layouts) {
-			if ((layout.isHidden() && !_showHiddenLayouts) ||
-				_isExcludedLayout(layout) || StagingUtil.isIncomplete(layout)) {
-
+			if (_isExcludedLayout(layout) || StagingUtil.isIncomplete(layout)) {
 				continue;
 			}
 
@@ -426,10 +363,6 @@ public class SelectLayoutTag extends IncludeTag {
 		}
 
 		if (layout.fetchDraftLayout() != null) {
-			if (_showDraftLayouts) {
-				return false;
-			}
-
 			return !layout.isPublished();
 		}
 
@@ -446,17 +379,12 @@ public class SelectLayoutTag extends IncludeTag {
 		SelectLayoutTag.class);
 
 	private boolean _checkDisplayPage;
-	private String _componentId;
 	private boolean _enableCurrentPage;
 	private boolean _followURLOnTitleClick;
 	private String _itemSelectorReturnType;
 	private String _itemSelectorSaveEvent;
 	private boolean _multiSelection;
 	private String _namespace;
-	private String _pathThemeImages;
 	private boolean _privateLayout;
-	private boolean _showDraftLayouts;
-	private boolean _showHiddenLayouts;
-	private String _viewType;
 
 }
