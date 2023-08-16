@@ -45,10 +45,6 @@ import javax.servlet.jsp.PageContext;
  */
 public class SelectLayoutTag extends IncludeTag {
 
-	public boolean getFollowURLOnTitleClick() {
-		return _followURLOnTitleClick;
-	}
-
 	public String getItemSelectorReturnType() {
 		return _itemSelectorReturnType;
 	}
@@ -85,10 +81,6 @@ public class SelectLayoutTag extends IncludeTag {
 		_enableCurrentPage = enableCurrentPage;
 	}
 
-	public void setFollowURLOnTitleClick(boolean followURLOnTitleClick) {
-		_followURLOnTitleClick = followURLOnTitleClick;
-	}
-
 	public void setItemSelectorReturnType(String itemSelectorReturnType) {
 		_itemSelectorReturnType = itemSelectorReturnType;
 	}
@@ -122,7 +114,6 @@ public class SelectLayoutTag extends IncludeTag {
 
 		_checkDisplayPage = false;
 		_enableCurrentPage = false;
-		_followURLOnTitleClick = false;
 		_itemSelectorReturnType = null;
 		_itemSelectorSaveEvent = null;
 		_multiSelection = false;
@@ -171,8 +162,6 @@ public class SelectLayoutTag extends IncludeTag {
 
 		return HashMapBuilder.<String, Object>put(
 			"config", this::_getConfigData
-		).put(
-			"followURLOnTitleClick", _followURLOnTitleClick
 		).put(
 			"itemSelectorSaveEvent", _itemSelectorSaveEvent
 		).put(
@@ -383,7 +372,6 @@ public class SelectLayoutTag extends IncludeTag {
 
 	private boolean _checkDisplayPage;
 	private boolean _enableCurrentPage;
-	private boolean _followURLOnTitleClick;
 	private String _itemSelectorReturnType;
 	private String _itemSelectorSaveEvent;
 	private boolean _multiSelection;
