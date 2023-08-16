@@ -11,7 +11,6 @@ import com.liferay.layout.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -197,68 +196,84 @@ public class SelectLayoutTag extends IncludeTag {
 				continue;
 			}
 
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+			jsonArray.put(
+				JSONUtil.put(
+					"children",
+					() -> {
+						JSONArray childrenJSONArray = _getLayoutsJSONArray(
+							groupId, privateLayout, layout.getLayoutId(),
+							selectedLayoutUuid);
 
-			JSONArray childrenJSONArray = _getLayoutsJSONArray(
-				groupId, privateLayout, layout.getLayoutId(),
-				selectedLayoutUuid);
+						if (childrenJSONArray.length() > 0) {
+							return childrenJSONArray;
+						}
 
-			if (childrenJSONArray.length() > 0) {
-				jsonObject.put("children", childrenJSONArray);
-			}
-
-			if ((_checkDisplayPage && !layout.isContentDisplayPage()) ||
-				(_enableCurrentPage && (layout.getPlid() == _getSelPlid()))) {
-
-				jsonObject.put("disabled", true);
-			}
-
-			jsonObject.put(
-				"groupId", layout.getGroupId()
-			).put(
-				"hasChildren", layout.hasChildren()
-			).put(
-				"icon", layout.getIcon()
-			).put(
-				"id", layout.getUuid()
-			).put(
-				"layoutId", layout.getLayoutId()
-			).put(
-				"name", layout.getName(themeDisplay.getLocale())
-			).put(
-				"paginated",
-				() -> {
-					int layoutsCount = LayoutServiceUtil.getLayoutsCount(
-						groupId, layout.isPrivateLayout(),
-						LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
-
-					if (layoutsCount >
-							PropsValues.LAYOUT_MANAGE_PAGES_INITIAL_CHILDREN) {
-
-						return true;
+						return null;
 					}
+				).put(
+					"disabled",
+					() -> {
+						if ((_checkDisplayPage &&
+							 !layout.isContentDisplayPage()) ||
+							(_enableCurrentPage &&
+							 (layout.getPlid() == _getSelPlid()))) {
 
-					return false;
-				}
-			).put(
-				"payload", _getPayload(layout, themeDisplay)
-			).put(
-				"privateLayout", layout.isPrivateLayout()
-			).put(
-				"returnType", getItemSelectorReturnType()
-			).put(
-				"url",
-				PortalUtil.getLayoutRelativeURL(layout, themeDisplay, false)
-			);
+							return true;
+						}
 
-			if (ArrayUtil.contains(selectedLayoutUuid, layout.getUuid())) {
-				jsonObject.put("selected", true);
-			}
+						return null;
+					}
+				).put(
+					"groupId", layout.getGroupId()
+				).put(
+					"hasChildren", layout.hasChildren()
+				).put(
+					"icon", layout.getIcon()
+				).put(
+					"id", layout.getUuid()
+				).put(
+					"layoutId", layout.getLayoutId()
+				).put(
+					"name", layout.getName(themeDisplay.getLocale())
+				).put(
+					"paginated",
+					() -> {
+						int layoutsCount = LayoutServiceUtil.getLayoutsCount(
+							groupId, layout.isPrivateLayout(),
+							LayoutConstants.DEFAULT_PARENT_LAYOUT_ID);
 
-			jsonObject.put(
-				"value", layout.getBreadcrumb(themeDisplay.getLocale()));
+						if (layoutsCount >
+								PropsValues.
+									LAYOUT_MANAGE_PAGES_INITIAL_CHILDREN) {
 
-			jsonArray.put(jsonObject);
+							return true;
+						}
+
+						return false;
+					}
+				).put(
+					"payload", _getPayload(layout, themeDisplay)
+				).put(
+					"privateLayout", layout.isPrivateLayout()
+				).put(
+					"returnType", getItemSelectorReturnType()
+				).put(
+					"selected",
+					() -> {
+						if (ArrayUtil.contains(
+								selectedLayoutUuid, layout.getUuid())) {
+
+							return true;
+						}
+
+						return false;
+					}
+				).put(
+					"url",
+					PortalUtil.getLayoutRelativeURL(layout, themeDisplay, false)
+				).put(
+					"value", layout.getBreadcrumb(themeDisplay.getLocale())
+				));
 		}
 
 		return jsonArray;
