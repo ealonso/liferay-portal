@@ -15,10 +15,12 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.util.PortalUtil;
 
+import java.util.List;
+
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author Yurena Cabrera
@@ -28,28 +30,29 @@ public class DisplayPageTemplateCollectionHorizontalCard
 
 	public DisplayPageTemplateCollectionHorizontalCard(
 		BaseModel<?> baseModel, RenderRequest renderRequest,
-		RenderResponse renderResponse,
-		RowChecker rowChecker) {
+		RenderResponse renderResponse, RowChecker rowChecker) {
 
 		super(baseModel, renderRequest, rowChecker);
 
-		_layoutPageTemplateCollection = (LayoutPageTemplateCollection)baseModel;
 		_renderResponse = renderResponse;
+
+		_layoutPageTemplateCollection = (LayoutPageTemplateCollection)baseModel;
 	}
 
 	@Override
 	public List<DropdownItem> getActionDropdownItems() {
 		HttpServletRequest httpServletRequest =
-			PortalUtil.getHttpServletRequest(
-				renderRequest);
+			PortalUtil.getHttpServletRequest(renderRequest);
 
 		LayoutPageTemplateCollectionActionDropdownItem
 			layoutPageTemplateCollectionActionDropdownItem =
-			new LayoutPageTemplateCollectionActionDropdownItem(httpServletRequest,
-				_renderResponse);
+				new LayoutPageTemplateCollectionActionDropdownItem(
+					httpServletRequest, _renderResponse);
 
 		try {
-			return layoutPageTemplateCollectionActionDropdownItem.getActionDropdownItems(_layoutPageTemplateCollection, "display-page-templates");
+			return layoutPageTemplateCollectionActionDropdownItem.
+				getActionDropdownItems(
+					_layoutPageTemplateCollection, "display-page-templates");
 		}
 		catch (Exception exception) {
 			if (_log.isDebugEnabled()) {
@@ -70,12 +73,10 @@ public class DisplayPageTemplateCollectionHorizontalCard
 		return _layoutPageTemplateCollection.getName();
 	}
 
-	private final LayoutPageTemplateCollection _layoutPageTemplateCollection;
-
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		DisplayPageTemplateCollectionHorizontalCard.class);
 
+	private final LayoutPageTemplateCollection _layoutPageTemplateCollection;
 	private final RenderResponse _renderResponse;
 
 }
