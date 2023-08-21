@@ -33,12 +33,32 @@ const ACTIONS = {
 };
 
 export default function LayoutPageTemplateEntryPropsTransformer({
-	items,
-	portletNamespace,
-	...otherProps
-}) {
+																	actions,
+																	items,
+																	portletNamespace,
+																	...otherProps
+																}) {
 	return {
 		...otherProps,
+		actions: actions?.map((item) => {
+			return {
+				...item,
+				items: item.items?.map((child) => {
+					return {
+						...child,
+						onClick(event) {
+							const action = child.data?.action;
+
+							if (action) {
+								event.preventDefault();
+
+								ACTIONS[action](child.data, portletNamespace);
+							}
+						},
+					};
+				}),
+			};
+		}),
 		items: items?.map((item) => {
 			return {
 				...item,
