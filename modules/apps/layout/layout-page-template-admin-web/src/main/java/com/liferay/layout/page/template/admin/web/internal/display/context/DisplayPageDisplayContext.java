@@ -9,6 +9,7 @@ import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminP
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator;
+import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -211,6 +212,10 @@ public class DisplayPageDisplayContext {
 
 		if (Objects.equals(getOrderByCol(), "create-date")) {
 			return new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator(
+				orderByAsc);
+		}
+		else if (Objects.equals(getOrderByCol(), "modified-date")) {
+			return new LayoutPageTemplateCollectionLayoutPageTemplateEntryModifiedDateComparator(
 				orderByAsc);
 		}
 		else if (Objects.equals(getOrderByCol(), "name")) {
