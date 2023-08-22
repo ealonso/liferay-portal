@@ -429,6 +429,11 @@ public class ContentPageEditorDisplayContext {
 				_getResourceURL(
 					"/layout_content_page_editor/get_collection_variations")
 			).put(
+				"getCollectionWarningMessageCheck",
+				_getResourceURL(
+					"/layout_content_page_editor" +
+						"/get_collection_warning_message_check")
+			).put(
 				"getEditCollectionConfigurationURL",
 				ResourceURLBuilder.createResourceURL(
 					renderResponse
@@ -454,6 +459,11 @@ public class ContentPageEditorDisplayContext {
 				_getResourceURL(
 					"/layout_content_page_editor" +
 						"/get_fragment_entry_input_field_types")
+			).put(
+				"getFragmentEntryLinkWarningMessageCheck",
+				_getResourceURL(
+					"/layout_content_page_editor" +
+						"/get_fragment_entry_link_warning_message_check")
 			).put(
 				"getIframeContentCssURL",
 				portal.getStaticResourceURL(
