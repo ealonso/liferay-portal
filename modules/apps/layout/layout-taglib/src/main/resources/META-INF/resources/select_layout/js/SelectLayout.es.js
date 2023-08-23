@@ -22,7 +22,9 @@ import {SelectLayoutTree} from './SelectLayoutTree.es';
  */
 
 const SelectLayout = ({
+	checkDisplayPage,
 	config,
+	groupId,
 	itemSelectorSaveEvent,
 	multiSelection,
 	namespace,
@@ -82,8 +84,10 @@ const SelectLayout = ({
 					)}
 
 					<SelectLayoutTree
+						checkDisplayPage={checkDisplayPage}
 						config={{...config, namespace}}
 						filter={filter}
+						groupId={groupId}
 						itemSelectorSaveEvent={itemSelectorSaveEvent}
 						items={nodes}
 						multiSelection={multiSelection}
