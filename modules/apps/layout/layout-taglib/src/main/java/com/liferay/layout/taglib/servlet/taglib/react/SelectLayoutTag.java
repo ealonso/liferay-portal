@@ -160,7 +160,11 @@ public class SelectLayoutTag extends IncludeTag {
 			getRequest(), "layoutUuid");
 
 		return HashMapBuilder.<String, Object>put(
+			"checkDisplayPage", "CHECKDISPLAYPAGE"
+		).put(
 			"config", this::_getConfigData
+		).put(
+			"groupId", "GROUPID"
 		).put(
 			"itemSelectorSaveEvent", _itemSelectorSaveEvent
 		).put(
