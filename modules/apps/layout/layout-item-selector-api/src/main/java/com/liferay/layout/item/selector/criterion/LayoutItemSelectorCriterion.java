@@ -22,10 +22,6 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 		return _checkDisplayPage;
 	}
 
-	public boolean isEnableCurrentPage() {
-		return _enableCurrentPage;
-	}
-
 	public boolean isMultiSelection() {
 		return _multiSelection;
 	}
@@ -46,10 +42,6 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 		_checkDisplayPage = checkDisplayPage;
 	}
 
-	public void setEnableCurrentPage(boolean enableCurrentPage) {
-		_enableCurrentPage = enableCurrentPage;
-	}
-
 	public void setMultiSelection(boolean multiSelection) {
 		_multiSelection = multiSelection;
 	}
@@ -67,10 +59,18 @@ public class LayoutItemSelectorCriterion extends BaseItemSelectorCriterion {
 	}
 
 	private boolean _checkDisplayPage;
-	private boolean _enableCurrentPage;
+	private long[] _disabledPages;
 	private boolean _multiSelection;
 	private boolean _showBreadcrumb;
 	private boolean _showPrivatePages;
 	private boolean _showPublicPages;
+
+	public long[] getDisabledPages() {
+		return _disabledPages;
+	}
+
+	public void setDisabledPages(long[] disabledPages) {
+		_disabledPages = disabledPages;
+	}
 
 }

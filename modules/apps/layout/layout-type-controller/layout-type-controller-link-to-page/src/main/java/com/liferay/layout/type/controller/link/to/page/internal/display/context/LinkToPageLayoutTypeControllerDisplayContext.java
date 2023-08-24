@@ -11,6 +11,7 @@ import com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion;
 import com.liferay.layout.type.controller.link.to.page.internal.constants.LinkToPageLayoutTypeControllerWebKeys;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
@@ -22,6 +23,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletURL;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Pavel Savinov
@@ -53,7 +55,7 @@ public class LinkToPageLayoutTypeControllerDisplayContext {
 		layoutItemSelectorCriterion.setCheckDisplayPage(false);
 		layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new UUIDItemSelectorReturnType());
-		layoutItemSelectorCriterion.setEnableCurrentPage(false);
+		layoutItemSelectorCriterion.setDisabledPages(new long[] {_getSelPlid()});
 		layoutItemSelectorCriterion.setShowBreadcrumb(false);
 
 		boolean privateLayout = ParamUtil.getBoolean(
@@ -96,6 +98,11 @@ public class LinkToPageLayoutTypeControllerDisplayContext {
 		}
 
 		return ParamUtil.getString(_liferayPortletRequest, "layoutUuid");
+	}
+
+	private long _getSelPlid() {
+		return ParamUtil.getLong(
+			_liferayPortletRequest, "selPlid", LayoutConstants.DEFAULT_PLID);
 	}
 
 	private void _setSelectedLayout() {

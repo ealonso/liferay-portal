@@ -27,6 +27,7 @@ const nodeByName = (items, name) => {
 export function SelectLayoutTree({
 	checkDisplayPage,
 	config,
+	disabledPages,
 	filter,
 	groupId,
 	itemSelectorReturnType,
@@ -177,6 +178,7 @@ export function SelectLayoutTree({
 			return fetch(loadMoreItemsURL, {
 				body: Liferay.Util.objectToURLSearchParams({
 					[`${namespace}checkDisplayPage`]: checkDisplayPage,
+					[`${namespace}disabledPages`]: disabledPages,
 					[`${namespace}groupId`]: groupId,
 					[`${namespace}itemSelectorReturnType`]: itemSelectorReturnType,
 					[`${namespace}layoutUuid`]: item.id,
@@ -203,6 +205,7 @@ export function SelectLayoutTree({
 		},
 		[
 			checkDisplayPage,
+			disabledPages,
 			groupId,
 			itemSelectorReturnType,
 			loadMoreItemsURL,

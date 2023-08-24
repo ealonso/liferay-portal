@@ -93,8 +93,8 @@ public class LayoutItemSelectorViewDisplayContext {
 		return _layoutItemSelectorCriterion.isCheckDisplayPage();
 	}
 
-	public boolean isEnableCurrentPage() {
-		return _layoutItemSelectorCriterion.isEnableCurrentPage();
+	public long[] getDisabledPages() {
+		return _layoutItemSelectorCriterion.getDisabledPages();
 	}
 
 	public boolean isMultiSelection() {

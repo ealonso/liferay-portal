@@ -131,10 +131,9 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>enableCurrentPage</name>
+			<name>disabledPages</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>boolean</type>
 		</attribute>
 		<attribute>
 			<description></description>

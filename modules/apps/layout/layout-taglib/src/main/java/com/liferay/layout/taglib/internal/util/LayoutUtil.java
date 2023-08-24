@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LayoutUtil {
 
 	public static JSONArray getLayoutsJSONArray(
-			boolean checkDisplayPage, long groupId,
+			boolean checkDisplayPage, long[] disabledPages, long groupId,
 			HttpServletRequest httpServletRequest,
 			String itemSelectorReturnType, long parentLayoutId,
 			boolean privateLayout, String[] selectedLayoutUuids)
@@ -59,7 +59,7 @@ public class LayoutUtil {
 				groupId, privateLayout, parentLayoutId);
 
 			JSONArray childLayoutsJSONArray = getLayoutsJSONArray(
-				checkDisplayPage, groupId, httpServletRequest,
+				checkDisplayPage, disabledPages, groupId, httpServletRequest,
 				itemSelectorReturnType, layout.getLayoutId(), privateLayout,
 				selectedLayoutUuids);
 
@@ -71,9 +71,8 @@ public class LayoutUtil {
 					() -> {
 						if ((checkDisplayPage &&
 							 !layout.isContentDisplayPage()) ||
-							(checkDisplayPage &&
-							 (layout.getPlid() == _getSelPlid(
-								 httpServletRequest)))) {
+							(ArrayUtil.contains(
+								 disabledPages, layout.getPlid()))) {
 
 							return true;
 						}
@@ -177,11 +176,6 @@ public class LayoutUtil {
 		}
 
 		return PortalUtil.getLayoutRelativeURL(layout, themeDisplay, false);
-	}
-
-	private static long _getSelPlid(HttpServletRequest httpServletRequest) {
-		return ParamUtil.getLong(
-			httpServletRequest, "selPlid", LayoutConstants.DEFAULT_PLID);
 	}
 
 	private static boolean _isExcludedLayout(Layout layout) {

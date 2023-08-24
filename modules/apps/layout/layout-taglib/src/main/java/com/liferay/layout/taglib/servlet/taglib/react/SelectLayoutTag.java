@@ -50,10 +50,6 @@ public class SelectLayoutTag extends IncludeTag {
 		return _checkDisplayPage;
 	}
 
-	public boolean isEnableCurrentPage() {
-		return _enableCurrentPage;
-	}
-
 	public boolean isMultiSelection() {
 		return _multiSelection;
 	}
@@ -64,10 +60,6 @@ public class SelectLayoutTag extends IncludeTag {
 
 	public void setCheckDisplayPage(boolean checkDisplayPage) {
 		_checkDisplayPage = checkDisplayPage;
-	}
-
-	public void setEnableCurrentPage(boolean enableCurrentPage) {
-		_enableCurrentPage = enableCurrentPage;
 	}
 
 	public void setItemSelectorReturnType(String itemSelectorReturnType) {
@@ -102,7 +94,7 @@ public class SelectLayoutTag extends IncludeTag {
 		super.cleanUp();
 
 		_checkDisplayPage = false;
-		_enableCurrentPage = false;
+		_disabledPages = null;
 		_itemSelectorReturnType = null;
 		_itemSelectorSaveEvent = null;
 		_multiSelection = false;
@@ -154,6 +146,8 @@ public class SelectLayoutTag extends IncludeTag {
 		).put(
 			"config", this::_getConfigData
 		).put(
+			"disabledPages", _disabledPages
+		).put(
 			"groupId",
 			() -> {
 				HttpServletRequest httpServletRequest = getRequest();
@@ -202,7 +196,7 @@ public class SelectLayoutTag extends IncludeTag {
 			JSONUtil.put(
 				"children",
 				LayoutUtil.getLayoutsJSONArray(
-					_checkDisplayPage, themeDisplay.getScopeGroupId(),
+					_checkDisplayPage, _disabledPages, themeDisplay.getScopeGroupId(),
 					httpServletRequest, _itemSelectorReturnType,
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, _privateLayout,
 					selectedLayoutIds)
@@ -242,7 +236,16 @@ public class SelectLayoutTag extends IncludeTag {
 		SelectLayoutTag.class);
 
 	private boolean _checkDisplayPage;
-	private boolean _enableCurrentPage;
+
+	public long[] getDisabledPages() {
+		return _disabledPages;
+	}
+
+	public void setDisabledPages(long[] disabledPages) {
+		_disabledPages = disabledPages;
+	}
+
+	private long[] _disabledPages;
 	private String _itemSelectorReturnType;
 	private String _itemSelectorSaveEvent;
 	private boolean _multiSelection;

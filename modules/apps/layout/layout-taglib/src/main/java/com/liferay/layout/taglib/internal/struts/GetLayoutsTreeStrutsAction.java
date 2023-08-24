@@ -44,6 +44,8 @@ public class GetLayoutsTreeStrutsAction implements StrutsAction {
 
 		boolean checkDisplayPage = ParamUtil.getBoolean(
 			httpServletRequest, "checkDisplayPage");
+		long[] disabledPages = ParamUtil.getLongValues(
+			httpServletRequest, "disabledPages");
 		boolean privateLayout = ParamUtil.getBoolean(
 			httpServletRequest, "privateLayout");
 		long parentLayoutId = ParamUtil.getLong(
@@ -83,7 +85,7 @@ public class GetLayoutsTreeStrutsAction implements StrutsAction {
 			).put(
 				"items",
 				LayoutUtil.getLayoutsJSONArray(
-					checkDisplayPage, groupId, httpServletRequest,
+					checkDisplayPage, disabledPages, groupId, httpServletRequest,
 					itemSelectorReturnType, parentLayoutId, privateLayout,
 					selectedLayoutUuids)
 			).toString());
