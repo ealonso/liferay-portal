@@ -112,6 +112,15 @@ public abstract class LayoutPageTemplateCollectionLocalServiceBaseImpl
 			layoutPageTemplateCollectionId);
 	}
 
+	@Override
+	@Transactional(enabled = false)
+	public LayoutPageTemplateCollection createLayoutPageTemplateCollection(
+		long parentLayoutPageTemplateCollectionId, long layoutPageTemplateCollectionId) {
+
+		return layoutPageTemplateCollectionPersistence.create(
+			layoutPageTemplateCollectionId);
+	}
+
 	/**
 	 * Deletes the layout page template collection with the primary key from the database. Also notifies the appropriate model listeners.
 	 *
