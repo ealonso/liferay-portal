@@ -134,6 +134,29 @@ public class LayoutPageTemplateEntryServiceUtil {
 
 	public static List<Object>
 		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
+			long groupId, long layoutPageTemplateCollectionId, int type,
+			int start, int end, OrderByComparator<Object> orderByComparator) {
+
+		return getService().
+			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
+				groupId, layoutPageTemplateCollectionId, type, start, end,
+				orderByComparator);
+	}
+
+	public static List<Object>
+		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
+			long groupId, long layoutPageTemplateCollectionId, String name,
+			int type, int start, int end,
+			OrderByComparator<Object> orderByComparator) {
+
+		return getService().
+			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
+				groupId, layoutPageTemplateCollectionId, name, type, start, end,
+				orderByComparator);
+	}
+
+	public static List<Object>
+		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 			long groupId, String name, int type, int start, int end,
 			OrderByComparator<Object> orderByComparator) {
 
@@ -148,6 +171,23 @@ public class LayoutPageTemplateEntryServiceUtil {
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
 				groupId, type);
+	}
+
+	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
+		long groupId, long layoutPageTemplateCollectionId, int type) {
+
+		return getService().
+			getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
+				groupId, layoutPageTemplateCollectionId, type);
+	}
+
+	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
+		long groupId, long layoutPageTemplateCollectionId, String name,
+		int type) {
+
+		return getService().
+			getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
+				groupId, layoutPageTemplateCollectionId, name, type);
 	}
 
 	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
