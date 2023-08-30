@@ -49,7 +49,8 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 	 */
 	public LayoutPageTemplateEntry addLayoutPageTemplateEntry(
 			long groupId, long layoutPageTemplateCollectionId, long classNameId,
-			long classTypeId, String name, long masterLayoutPlid, int status,
+			long classTypeId, String name, long masterLayoutPlid,
+			long parentLayoutPageTemplateCollectionId, int status,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -98,22 +99,25 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Object> getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 		long groupId, int type, int start, int end,
+		long parentLayoutPageTemplateCollectionId,
 		OrderByComparator<Object> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Object> getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-		long groupId, long layoutPageTemplateCollectionId, int type, int start,
-		int end, OrderByComparator<Object> orderByComparator);
+		long groupId, long layoutPageTemplateCollectionId,
+		long parentLayoutPageTemplateCollectionId, int type, int start, int end,
+		OrderByComparator<Object> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Object> getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 		long groupId, long layoutPageTemplateCollectionId, String name,
-		int type, int start, int end,
+		long parentLayoutPageTemplateCollectionId, int type, int start, int end,
 		OrderByComparator<Object> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Object> getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-		long groupId, String name, int type, int start, int end,
+		long groupId, String name, long parentLayoutPageTemplateCollectionId,
+		int type, int start, int end,
 		OrderByComparator<Object> orderByComparator);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -127,7 +131,7 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
 		long groupId, long layoutPageTemplateCollectionId, String name,
-		int type);
+		long parentLayoutPageTemplateCollectionId, int type);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(

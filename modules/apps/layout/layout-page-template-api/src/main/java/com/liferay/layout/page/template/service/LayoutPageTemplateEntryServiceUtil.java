@@ -32,13 +32,15 @@ public class LayoutPageTemplateEntryServiceUtil {
 	 */
 	public static LayoutPageTemplateEntry addLayoutPageTemplateEntry(
 			long groupId, long layoutPageTemplateCollectionId, long classNameId,
-			long classTypeId, String name, long masterLayoutPlid, int status,
+			long classTypeId, String name, long masterLayoutPlid,
+			long parentLayoutPageTemplateCollectionId, int status,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addLayoutPageTemplateEntry(
 			groupId, layoutPageTemplateCollectionId, classNameId, classTypeId,
-			name, masterLayoutPlid, status, serviceContext);
+			name, masterLayoutPlid, parentLayoutPageTemplateCollectionId,
+			status, serviceContext);
 	}
 
 	public static LayoutPageTemplateEntry addLayoutPageTemplateEntry(
@@ -125,44 +127,51 @@ public class LayoutPageTemplateEntryServiceUtil {
 	public static List<Object>
 		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 			long groupId, int type, int start, int end,
+			long parentLayoutPageTemplateCollectionId,
 			OrderByComparator<Object> orderByComparator) {
 
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-				groupId, type, start, end, orderByComparator);
+				groupId, type, start, end, parentLayoutPageTemplateCollectionId,
+				orderByComparator);
 	}
 
 	public static List<Object>
 		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-			long groupId, long layoutPageTemplateCollectionId, int type,
-			int start, int end, OrderByComparator<Object> orderByComparator) {
+			long groupId, long layoutPageTemplateCollectionId,
+			long parentLayoutPageTemplateCollectionId, int type, int start,
+			int end, OrderByComparator<Object> orderByComparator) {
 
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-				groupId, layoutPageTemplateCollectionId, type, start, end,
+				groupId, layoutPageTemplateCollectionId,
+				parentLayoutPageTemplateCollectionId, type, start, end,
 				orderByComparator);
 	}
 
 	public static List<Object>
 		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 			long groupId, long layoutPageTemplateCollectionId, String name,
-			int type, int start, int end,
-			OrderByComparator<Object> orderByComparator) {
+			long parentLayoutPageTemplateCollectionId, int type, int start,
+			int end, OrderByComparator<Object> orderByComparator) {
 
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-				groupId, layoutPageTemplateCollectionId, name, type, start, end,
+				groupId, layoutPageTemplateCollectionId, name,
+				parentLayoutPageTemplateCollectionId, type, start, end,
 				orderByComparator);
 	}
 
 	public static List<Object>
 		getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-			long groupId, String name, int type, int start, int end,
-			OrderByComparator<Object> orderByComparator) {
+			long groupId, String name,
+			long parentLayoutPageTemplateCollectionId, int type, int start,
+			int end, OrderByComparator<Object> orderByComparator) {
 
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntries(
-				groupId, name, type, start, end, orderByComparator);
+				groupId, name, parentLayoutPageTemplateCollectionId, type,
+				start, end, orderByComparator);
 	}
 
 	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
@@ -183,11 +192,12 @@ public class LayoutPageTemplateEntryServiceUtil {
 
 	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
 		long groupId, long layoutPageTemplateCollectionId, String name,
-		int type) {
+		long parentLayoutPageTemplateCollectionId, int type) {
 
 		return getService().
 			getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
-				groupId, layoutPageTemplateCollectionId, name, type);
+				groupId, layoutPageTemplateCollectionId, name,
+				parentLayoutPageTemplateCollectionId, type);
 	}
 
 	public static int getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
