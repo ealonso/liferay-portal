@@ -37,34 +37,40 @@ public class Field implements Serializable {
 	}
 
 	public Field(
-		long ddmStructureId, String name, List<Serializable> values,
-		Locale locale) {
+		long ddmStructureId, String fieldReference, String name,
+		List<Serializable> values, Locale locale) {
 
 		_ddmStructureId = ddmStructureId;
+		_fieldReference = fieldReference;
 		_name = name;
 
 		_valuesMap.put(locale, values);
 	}
 
 	public Field(
-		long ddmStructureId, String name,
+		long ddmStructureId, String fieldReference, String name,
 		Map<Locale, List<Serializable>> valuesMap, Locale defaultLocale) {
 
 		_ddmStructureId = ddmStructureId;
+		_fieldReference = fieldReference;
 		_name = name;
 		_valuesMap = valuesMap;
 		_defaultLocale = defaultLocale;
 	}
 
-	public Field(long ddmStructureId, String name, Serializable value) {
+	public Field(
+		long ddmStructureId, String fieldReference, String name,
+		Serializable value) {
+
 		_ddmStructureId = ddmStructureId;
+		_fieldReference = fieldReference;
 		_name = name;
 
 		setValue(value);
 	}
 
-	public Field(String name, Serializable value) {
-		this(0, name, value);
+	public Field(String fieldReference, String name, Serializable value) {
+		this(0, fieldReference, name, value);
 	}
 
 	public void addValue(Locale locale, Serializable value) {
@@ -98,6 +104,7 @@ public class Field implements Serializable {
 		Field field = (Field)object;
 
 		if ((_ddmStructureId == field._ddmStructureId) &&
+			Objects.equals(_fieldReference, field._fieldReference) &&
 			Objects.equals(_name, field._name) &&
 			Objects.equals(_valuesMap, field._valuesMap)) {
 
@@ -127,6 +134,10 @@ public class Field implements Serializable {
 
 	public Locale getDefaultLocale() {
 		return _defaultLocale;
+	}
+
+	public String getFieldReference() {
+		return _fieldReference;
 	}
 
 	public String getName() {
@@ -206,6 +217,8 @@ public class Field implements Serializable {
 	public int hashCode() {
 		int hash = HashUtil.hash(0, _ddmStructureId);
 
+		hash = HashUtil.hash(hash, _fieldReference);
+
 		hash = HashUtil.hash(hash, _name);
 
 		return HashUtil.hash(hash, _valuesMap);
@@ -244,6 +257,10 @@ public class Field implements Serializable {
 
 	public void setDefaultLocale(Locale defaultLocale) {
 		_defaultLocale = defaultLocale;
+	}
+
+	public void setFieldReference(String fieldReference) {
+		_fieldReference = fieldReference;
 	}
 
 	public void setName(String name) {
@@ -318,6 +335,7 @@ public class Field implements Serializable {
 
 	private long _ddmStructureId;
 	private Locale _defaultLocale;
+	private String _fieldReference;
 	private String _name;
 	private Map<Locale, List<Serializable>> _valuesMap = new HashMap<>();
 
