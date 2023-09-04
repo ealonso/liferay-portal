@@ -669,7 +669,7 @@ public class JournalConverterUtilTest {
 			).build());
 
 		Field fieldsDisplayField = new Field(
-			ddmStructureId, DDM.FIELDS_DISPLAY_NAME,
+			ddmStructureId, DDM.FIELDS_DISPLAY_NAME, DDM.FIELDS_DISPLAY_NAME,
 			StringBundler.concat(
 				"boolean_INSTANCE_YELSrniM,document_library_INSTANCE_HzKJrSts,",
 				"link_to_layout_INSTANCE_eHQALxHa,text_area_INSTANCE_ucizquBv,",
@@ -806,7 +806,7 @@ public class JournalConverterUtilTest {
 			).build());
 
 		Field fieldsDisplayField = new Field(
-			ddmStructureId, DDM.FIELDS_DISPLAY_NAME,
+			ddmStructureId, DDM.FIELDS_DISPLAY_NAME, DDM.FIELDS_DISPLAY_NAME,
 			"backgroundcolor_INSTANCE_koamvduz,titulo_INSTANCE_ieaastyz," +
 				"subtitulo_INSTANCE_lsamnmcz");
 

@@ -89,7 +89,7 @@ public class JournalConverterImpl implements JournalConverter {
 			ddmFields.put(
 				new Field(
 					ddmStructure.getStructureId(), DDM.FIELDS_DISPLAY_NAME,
-					StringPool.BLANK));
+					DDM.FIELDS_DISPLAY_NAME, StringPool.BLANK));
 
 			DDMForm ddmForm = ddmStructure.getDDMForm();
 
@@ -390,15 +390,17 @@ public class JournalConverterImpl implements JournalConverter {
 
 		String name = dynamicElementElement.attributeValue("name");
 
+		DDMFormField ddmFormField = ddmStructure.getDDMFormField(name);
+
+		ddmField.setFieldReference(ddmFormField.getFieldReference());
+
+		ddmField.setName(name);
+
 		if (!GetterUtil.getBoolean(
 				ddmStructure.getFieldProperty(name, "localizable"))) {
 
 			availableLanguageIds = StringPool.EMPTY_ARRAY;
 		}
-
-		ddmField.setName(name);
-
-		DDMFormField ddmFormField = ddmStructure.getDDMFormField(name);
 
 		Set<String> missingLanguageIds = SetUtil.fromArray(
 			availableLanguageIds);

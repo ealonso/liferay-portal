@@ -600,8 +600,9 @@ public class DDMImpl implements DDM {
 	}
 
 	protected Field createField(
-		DDMStructure ddmStructure, String fieldName,
-		List<Serializable> fieldValues, ServiceContext serviceContext) {
+			DDMStructure ddmStructure, String fieldName,
+			List<Serializable> fieldValues, ServiceContext serviceContext)
+		throws PortalException {
 
 		Field field = new Field();
 
@@ -626,6 +627,11 @@ public class DDMImpl implements DDM {
 
 		field.setDefaultLocale(defaultLocale);
 		field.setName(fieldName);
+
+		DDMFormField ddmFormField = ddmStructure.getDDMFormField(fieldName);
+
+		field.setFieldReference(ddmFormField.getFieldReference());
+
 		field.setValues(locale, fieldValues);
 
 		return field;

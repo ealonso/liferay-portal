@@ -154,26 +154,29 @@ public class GoogleDocsMetadataHelper {
 			fields.put(
 				new Field(
 					ddmStructureId,
+					GoogleDocsConstants.DDM_FIELD_NAME_DESCRIPTION,
 					GoogleDocsConstants.DDM_FIELD_NAME_DESCRIPTION, ""));
 			fields.put(
 				new Field(
 					ddmStructureId,
+					GoogleDocsConstants.DDM_FIELD_NAME_EMBEDDABLE_URL,
 					GoogleDocsConstants.DDM_FIELD_NAME_EMBEDDABLE_URL, ""));
 			fields.put(
 				new Field(
 					ddmStructureId, GoogleDocsConstants.DDM_FIELD_NAME_ICON_URL,
-					""));
+					GoogleDocsConstants.DDM_FIELD_NAME_ICON_URL, ""));
 			fields.put(
 				new Field(
-					ddmStructureId, GoogleDocsConstants.DDM_FIELD_NAME_ID, ""));
+					ddmStructureId, GoogleDocsConstants.DDM_FIELD_NAME_ID,
+					GoogleDocsConstants.DDM_FIELD_NAME_ID, ""));
 			fields.put(
 				new Field(
 					ddmStructureId, GoogleDocsConstants.DDM_FIELD_NAME_NAME,
-					""));
+					GoogleDocsConstants.DDM_FIELD_NAME_NAME, ""));
 			fields.put(
 				new Field(
 					ddmStructureId, GoogleDocsConstants.DDM_FIELD_NAME_URL,
-					""));
+					GoogleDocsConstants.DDM_FIELD_NAME_URL, ""));
 
 			ServiceContext serviceContext = new ServiceContext();
 

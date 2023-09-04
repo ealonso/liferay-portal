@@ -95,7 +95,8 @@ public class GeolocationFieldRendererTest {
 	}
 
 	private Field _createField() {
-		return new Field("field", "{latitude: 9.8765, longitude: 1.2345}");
+		return new Field(
+			"field", "field", "{latitude: 9.8765, longitude: 1.2345}");
 	}
 
 	private static final Language _language = Mockito.mock(Language.class);

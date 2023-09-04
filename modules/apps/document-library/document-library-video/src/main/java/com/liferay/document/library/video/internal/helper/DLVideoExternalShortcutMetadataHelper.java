@@ -160,16 +160,19 @@ public class DLVideoExternalShortcutMetadataHelper {
 			fields.put(
 				new Field(
 					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_DESCRIPTION,
-					""));
+					DLVideoConstants.DDM_FIELD_NAME_DESCRIPTION, ""));
 			fields.put(
 				new Field(
-					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_HTML, ""));
+					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_HTML,
+					DLVideoConstants.DDM_FIELD_NAME_HTML, ""));
 			fields.put(
 				new Field(
-					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_TITLE, ""));
+					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_TITLE,
+					DLVideoConstants.DDM_FIELD_NAME_TITLE, ""));
 			fields.put(
 				new Field(
-					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_URL, ""));
+					ddmStructureId, DLVideoConstants.DDM_FIELD_NAME_URL,
+					DLVideoConstants.DDM_FIELD_NAME_URL, ""));
 
 			ServiceContext serviceContext = new ServiceContext();
 

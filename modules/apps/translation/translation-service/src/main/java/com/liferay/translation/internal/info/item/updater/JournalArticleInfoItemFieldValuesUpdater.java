@@ -9,6 +9,7 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.link.model.AssetLink;
 import com.liferay.asset.link.service.AssetLinkLocalService;
+import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
@@ -195,9 +196,12 @@ public class JournalArticleInfoItemFieldValuesUpdater
 			Fields ddmFields, List<String> ddmFieldValues)
 		throws Exception {
 
+		DDMFormField ddmFormField = ddmStructure.getDDMFormField(ddmFieldName);
+
 		Field ddmField = new Field(
-			ddmStructure.getStructureId(), ddmFieldName,
-			Collections.emptyList(), ddmFields.getDefaultLocale());
+			ddmStructure.getStructureId(), ddmFormField.getFieldReference(),
+			ddmFieldName, Collections.emptyList(),
+			ddmFields.getDefaultLocale());
 
 		ddmField.setValues(
 			targetLocale,

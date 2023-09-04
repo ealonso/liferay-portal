@@ -22,6 +22,7 @@ import com.liferay.dynamic.data.lists.service.persistence.DDLRecordVersionPersis
 import com.liferay.dynamic.data.lists.util.DDL;
 import com.liferay.dynamic.data.lists.util.comparator.DDLRecordIdComparator;
 import com.liferay.dynamic.data.mapping.exception.StorageException;
+import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
@@ -194,8 +195,8 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 		DDMStructure ddmStructure = recordSet.getDDMStructure();
 
 		Fields fields = toFields(
-			ddmStructure.getStructureId(), fieldsMap,
-			serviceContext.getLocale(), LocaleUtil.getSiteDefault());
+			ddmStructure, fieldsMap, serviceContext.getLocale(),
+			LocaleUtil.getSiteDefault());
 
 		DDMFormValues ddmFormValues = fieldsToDDMFormValuesConverter.convert(
 			ddmStructure, fields);
@@ -852,11 +853,9 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 		DDLRecordSet recordSet = record.getRecordSet();
 
-		DDMStructure ddmStructure = recordSet.getDDMStructure();
-
 		Fields fields = toFields(
-			ddmStructure.getStructureId(), fieldsMap,
-			serviceContext.getLocale(), oldDDMFormValues.getDefaultLocale());
+			recordSet.getDDMStructure(), fieldsMap, serviceContext.getLocale(),
+			oldDDMFormValues.getDefaultLocale());
 
 		if (mergeFields) {
 			DDLRecordVersion recordVersion = record.getLatestRecordVersion();
@@ -1168,15 +1167,22 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 	}
 
 	protected Fields toFields(
-		long ddmStructureId, Map<String, Serializable> fieldsMap, Locale locale,
-		Locale defaultLocale) {
+			DDMStructure ddmStructure, Map<String, Serializable> fieldsMap,
+			Locale locale, Locale defaultLocale)
+		throws PortalException {
 
 		Fields fields = new Fields();
 
 		for (Map.Entry<String, Serializable> entry : fieldsMap.entrySet()) {
 			Field field = new Field();
 
-			field.setDDMStructureId(ddmStructureId);
+			field.setDDMStructureId(ddmStructure.getStructureId());
+
+			DDMFormField ddmFormField = ddmStructure.getDDMFormField(
+				entry.getKey());
+
+			field.setFieldReference(ddmFormField.getFieldReference());
+
 			field.setName(entry.getKey());
 
 			Serializable value = entry.getValue();
@@ -1222,8 +1228,8 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 			}
 
 			fieldsDisplayField = new Field(
-				ddmStructureId, _FIELDS_DISPLAY_NAME,
-				fieldsDisplayFieldSB.toString());
+				ddmStructure.getStructureId(), _FIELDS_DISPLAY_NAME,
+				_FIELDS_DISPLAY_NAME, fieldsDisplayFieldSB.toString());
 
 			fields.put(fieldsDisplayField);
 		}

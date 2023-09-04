@@ -8,6 +8,7 @@ package com.liferay.dynamic.data.mapping.internal.util;
 import com.liferay.dynamic.data.mapping.constants.DDMStructureConstants;
 import com.liferay.dynamic.data.mapping.exception.StructureDefinitionException;
 import com.liferay.dynamic.data.mapping.exception.StructureDuplicateElementException;
+import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
@@ -130,6 +131,12 @@ public class DDMXMLImpl implements DDMXML {
 					field.setDefaultLocale(
 						LocaleUtil.fromLanguageId(defaultLanguageId));
 					field.setDDMStructureId(structure.getStructureId());
+
+					DDMFormField ddmFormField = structure.getDDMFormField(
+						fieldName);
+
+					field.setFieldReference(ddmFormField.getFieldReference());
+
 					field.setName(fieldName);
 					field.setValue(locale, fieldValueSerializable);
 

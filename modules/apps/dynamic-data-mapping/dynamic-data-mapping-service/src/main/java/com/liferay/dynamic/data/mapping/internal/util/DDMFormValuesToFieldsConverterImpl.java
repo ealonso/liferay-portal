@@ -64,7 +64,7 @@ public class DDMFormValuesToFieldsConverterImpl
 		fields.put(
 			new Field(
 				ddmStructure.getStructureId(), DDMImpl.FIELDS_DISPLAY_NAME,
-				StringPool.BLANK));
+				DDMImpl.FIELDS_DISPLAY_NAME, StringPool.BLANK));
 
 		for (DDMFormFieldValue ddmFormFieldValue :
 				ddmFormValues.getDDMFormFieldValues()) {
@@ -160,6 +160,7 @@ public class DDMFormValuesToFieldsConverterImpl
 
 		field.setDDMStructureId(ddmStructureId);
 		field.setDefaultLocale(defaultLocale);
+		field.setFieldReference(ddmFormField.getFieldReference());
 		field.setName(ddmFormFieldValue.getName());
 
 		Value value = ddmFormFieldValue.getValue();
