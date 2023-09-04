@@ -1210,7 +1210,7 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 			fields.put(field);
 		}
 
-		Field fieldsDisplayField = fields.get(_FIELDS_DISPLAY_NAME);
+		Field fieldsDisplayField = fields.get(DDM.FIELDS_DISPLAY_NAME);
 
 		if (fieldsDisplayField == null) {
 			StringBundler fieldsDisplayFieldSB = new StringBundler(
@@ -1228,8 +1228,8 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 			}
 
 			fieldsDisplayField = new Field(
-				ddmStructure.getStructureId(), _FIELDS_DISPLAY_NAME,
-				_FIELDS_DISPLAY_NAME, fieldsDisplayFieldSB.toString());
+				ddmStructure.getStructureId(), DDM.FIELDS_DISPLAY_NAME,
+				DDM.FIELDS_DISPLAY_NAME, fieldsDisplayFieldSB.toString());
 
 			fields.put(fieldsDisplayField);
 		}
@@ -1352,8 +1352,6 @@ public class DDLRecordLocalServiceImpl extends DDLRecordLocalServiceBaseImpl {
 
 		return serializableValues;
 	}
-
-	private static final String _FIELDS_DISPLAY_NAME = "_fieldsDisplay";
 
 	private static final String _INSTANCE_SEPARATOR = "_INSTANCE_";
 
