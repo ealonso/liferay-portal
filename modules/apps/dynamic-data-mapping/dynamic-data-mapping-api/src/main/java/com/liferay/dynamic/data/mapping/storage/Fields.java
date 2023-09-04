@@ -28,7 +28,13 @@ import java.util.Set;
 public class Fields implements Iterable<Field>, Serializable {
 
 	public boolean contains(String name) {
-		return _fieldsMap.containsKey(name);
+		if (_fieldsMap.containsKey(name) ||
+			_fieldsReferencesMap.containsKey(name)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -66,7 +72,13 @@ public class Fields implements Iterable<Field>, Serializable {
 	}
 
 	public Field get(String name) {
-		return _fieldsMap.get(name);
+		Field field = _fieldsMap.get(name);
+
+		if (field == null) {
+			field = _fieldsReferencesMap.get(name);
+		}
+
+		return field;
 	}
 
 	public Set<Locale> getAvailableLocales() {
@@ -147,10 +159,16 @@ public class Fields implements Iterable<Field>, Serializable {
 
 	public void put(Field field) {
 		_fieldsMap.put(field.getName(), field);
+
+		_fieldsReferencesMap.put(field.getFieldReference(), field);
 	}
 
 	public Field remove(String name) {
-		return _fieldsMap.remove(name);
+		Field field = _fieldsMap.remove(name);
+
+		_fieldsReferencesMap.remove(field.getFieldReference());
+
+		return field;
 	}
 
 	protected List<Field> getFieldsList(boolean includePrivateFields) {
@@ -168,5 +186,6 @@ public class Fields implements Iterable<Field>, Serializable {
 	}
 
 	private final Map<String, Field> _fieldsMap = new HashMap<>();
+	private final Map<String, Field> _fieldsReferencesMap = new HashMap<>();
 
 }
