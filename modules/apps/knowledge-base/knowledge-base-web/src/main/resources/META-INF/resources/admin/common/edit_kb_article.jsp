@@ -10,9 +10,12 @@
 <%
 EditKBArticleDisplayContext editKBArticleDisplayContext = new EditKBArticleDisplayContext(kbGroupServiceConfiguration, liferayPortletRequest, liferayPortletResponse, portletConfig);
 
+KBArticle kbArticle = editKBArticleDisplayContext.getKBArticle();
+
 if (editKBArticleDisplayContext.isPortletTitleBasedNavigation()) {
 	portletDisplay.setShowBackIcon(true);
 	portletDisplay.setURLBack(editKBArticleDisplayContext.getRedirect());
+	portletDisplay.setURLBackTitle(portletDisplay.getTitle());
 
 	renderResponse.setTitle(editKBArticleDisplayContext.getHeaderTitle());
 }
