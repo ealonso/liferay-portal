@@ -39,17 +39,11 @@ CPPriceRangeFacetsDisplayContext cpPriceRangeFacetsDisplayContext = (CPPriceRang
 		}
 		%>
 
-		<liferay-ui:panel-container
-			extended="<%= true %>"
-			markupView="lexicon"
-			persistState="<%= true %>"
-		>
-			<liferay-ui:panel
-				collapsible="<%= true %>"
-				cssClass="search-facet"
-				markupView="lexicon"
-				persistState="<%= true %>"
-				title="price-range"
+		<clay:panel-group>
+			<clay:panel
+				collapseClassNames="search-facet"
+				displayTitle='<%= LanguageUtil.get(request, "price-range") %>'
+				expanded="<%= true %>"
 			>
 				<c:choose>
 					<c:when test="<%= facet != null %>">
@@ -131,8 +125,8 @@ CPPriceRangeFacetsDisplayContext cpPriceRangeFacetsDisplayContext = (CPPriceRang
 						</div>
 					</div>
 				</c:if>
-			</liferay-ui:panel>
-		</liferay-ui:panel-container>
+			</clay:panel>
+		</clay:panel-group>
 	</c:otherwise>
 </c:choose>
 
