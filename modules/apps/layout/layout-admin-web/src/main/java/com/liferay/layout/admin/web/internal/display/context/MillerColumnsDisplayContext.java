@@ -136,6 +136,8 @@ public class MillerColumnsDisplayContext {
 			HashMapBuilder.<String, Object>put(
 				"breadcrumbEntries", _getBreadcrumbEntriesJSONArray()
 			).put(
+				"getItemActionsURL", getLayoutChildrenURL()
+			).put(
 				"getItemChildrenURL", getLayoutChildrenURL()
 			).put(
 				"isLayoutSetPrototype",
