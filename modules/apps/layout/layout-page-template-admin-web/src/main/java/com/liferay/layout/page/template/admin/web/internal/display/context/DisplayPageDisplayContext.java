@@ -12,12 +12,14 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeCon
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionLocalServiceUtil;
+import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionServiceUtil;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.SearchOrderByUtil;
@@ -171,7 +173,7 @@ public class DisplayPageDisplayContext {
 				LayoutPageTemplateEntryServiceUtil.
 					getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 						_themeDisplay.getScopeGroupId(),
-						_getLayoutPageTemplateCollectionId(),
+						getLayoutPageTemplateCollectionId(),
 						LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE,
 						displayPagesSearchContainer.getStart(),
 						displayPagesSearchContainer.getEnd(),
@@ -179,7 +181,7 @@ public class DisplayPageDisplayContext {
 			LayoutPageTemplateEntryServiceUtil.
 				getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
 					_themeDisplay.getScopeGroupId(),
-					_getLayoutPageTemplateCollectionId(),
+					getLayoutPageTemplateCollectionId(),
 					LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE));
 
 		displayPagesSearchContainer.setRowChecker(
@@ -230,6 +232,35 @@ public class DisplayPageDisplayContext {
 		Collections.reverse(breadcrumbEntries);
 
 		return breadcrumbEntries;
+	}
+
+	public LayoutPageTemplateCollection getLayoutPageTemplateCollection()
+		throws PortalException {
+
+		return getLayoutPageTemplateCollection(
+			getLayoutPageTemplateCollectionId());
+	}
+
+	public LayoutPageTemplateCollection getLayoutPageTemplateCollection(
+			long getLayoutPageTemplateCollectionId)
+		throws PortalException {
+
+		return LayoutPageTemplateCollectionServiceUtil.
+			fetchLayoutPageTemplateCollection(
+				getLayoutPageTemplateCollectionId);
+	}
+
+	public long getLayoutPageTemplateCollectionId() {
+		if (_layoutPageTemplateCollectionId != null) {
+			return _layoutPageTemplateCollectionId;
+		}
+
+		_layoutPageTemplateCollectionId = ParamUtil.getLong(
+			_httpServletRequest, "layoutPageTemplateCollectionId",
+			LayoutPageTemplateConstants.
+				PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT);
+
+		return _layoutPageTemplateCollectionId;
 	}
 
 	public long getLayoutPageTemplateEntryId() {
