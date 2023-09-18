@@ -165,10 +165,15 @@ public class DLURLHelperImpl implements DLURLHelper {
 			previewQueryString = StringPool.BLANK;
 		}
 
-		if (ImageProcessorUtil.isSupported(fileVersion.getMimeType()) ||
-			ArrayUtil.contains(
-				PropsValues.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES,
-				fileEntry.getMimeType())) {
+		if (!absoluteURL) {
+			return _getImageSrc(
+				fileEntry, fileVersion, themeDisplay, previewQueryString,
+				appendVersion, false);
+		}
+		else if (ImageProcessorUtil.isSupported(fileVersion.getMimeType()) ||
+				 ArrayUtil.contains(
+					 PropsValues.DL_FILE_ENTRY_PREVIEW_IMAGE_MIME_TYPES,
+					 fileEntry.getMimeType())) {
 
 			previewQueryString = previewQueryString.concat("&imagePreview=1");
 		}
@@ -472,7 +477,7 @@ public class DLURLHelperImpl implements DLURLHelper {
 
 		String thumbnailSrc = StringPool.BLANK;
 
-		if (Validator.isNotNull(queryString)) {
+		if (Validator.isNotNull(queryString) || !absoluteURL) {
 			thumbnailSrc = getPreviewURL(
 				fileEntry, fileVersion, themeDisplay, queryString,
 				appendVersion, absoluteURL);
