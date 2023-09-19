@@ -5,15 +5,14 @@
 
 package com.liferay.layout.page.template.admin.web.internal.portlet.action;
 
-import com.liferay.layout.constants.LayoutWebKeys;
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
+import com.liferay.layout.page.template.admin.web.internal.constants.LayoutPageTemplateAdminWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.util.ArrayList;
@@ -43,29 +42,62 @@ public class InfoPanelMVCResourceCommand extends BaseMVCResourceCommand {
 		throws Exception {
 
 		resourceRequest.setAttribute(
-			LayoutWebKeys.SELECTED_LPT_AND_LPTCOLLECTION_IDS,
-			ParamUtil.getStringValues(resourceRequest, "rowIds"));
+			LayoutPageTemplateAdminWebKeys.LAYOUT_PAGE_TEMPLATE_COLLECTIONS,
+			_getLayoutPageTemplateCollections(resourceRequest));
+		resourceRequest.setAttribute(
+			LayoutPageTemplateAdminWebKeys.LAYOUT_PAGE_TEMPLATE_ENTRIES,
+			_getLayoutPageTemplateEntries(resourceRequest));
 
 		include(resourceRequest, resourceResponse, "/info_panel.jsp");
 	}
 
-	private Object _getSelectedDisplayPageTemplatesCollection(
-			ResourceRequest resourceRequest)
-		throws PortalException {
+	private List<LayoutPageTemplateCollection>
+			_getLayoutPageTemplateCollections(ResourceRequest resourceRequest)
+		throws Exception {
 
-		String[] selectedDPTCollectionIds = ParamUtil.getStringValues(
-			resourceRequest, "rowIds");
+		long[] layoutPageTemplateCollectionIds = ParamUtil.getLongValues(
+			resourceRequest, "rowIdsLayoutPageTemplateCollection");
 
-		List<LayoutPageTemplateCollection> displayPageTemplateCollectionList =
+		List<LayoutPageTemplateCollection> layoutPageTemplateCollections =
 			new ArrayList<>();
 
-		for (String id : selectedDPTCollectionIds) {
-			displayPageTemplateCollectionList.add(
+		for (long layoutPageTemplateCollectionId :
+				layoutPageTemplateCollectionIds) {
+
+			LayoutPageTemplateCollection layoutPageTemplateCollection =
 				_layoutPageTemplateCollectionService.
-					fetchLayoutPageTemplateCollection(GetterUtil.getLong(id)));
+					fetchLayoutPageTemplateCollection(
+						layoutPageTemplateCollectionId);
+
+			if (layoutPageTemplateCollection != null) {
+				layoutPageTemplateCollections.add(layoutPageTemplateCollection);
+			}
 		}
 
-		return displayPageTemplateCollectionList;
+		return layoutPageTemplateCollections;
+	}
+
+	private List<LayoutPageTemplateEntry> _getLayoutPageTemplateEntries(
+			ResourceRequest resourceRequest)
+		throws Exception {
+
+		long[] layoutPageTemplateEntryIds = ParamUtil.getLongValues(
+			resourceRequest, "rowIdsLayoutPageTemplateEntry");
+
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
+			new ArrayList<>();
+
+		for (long layoutPageTemplateEntryId : layoutPageTemplateEntryIds) {
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_layoutPageTemplateEntryService.fetchLayoutPageTemplateEntry(
+					layoutPageTemplateEntryId);
+
+			if (layoutPageTemplateEntry != null) {
+				layoutPageTemplateEntries.add(layoutPageTemplateEntry);
+			}
+		}
+
+		return layoutPageTemplateEntries;
 	}
 
 	@Reference

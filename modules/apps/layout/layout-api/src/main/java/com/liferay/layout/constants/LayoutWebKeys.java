@@ -12,7 +12,4 @@ public class LayoutWebKeys {
 
 	public static final String LAYOUT_STRUCTURE = "LAYOUT_STRUCTURE";
 
-	public static final String SELECTED_LPT_AND_LPTCOLLECTION_IDS =
-		"SELECTED_LPT_AND_LPTCOLLECTION_IDS";
-
 }

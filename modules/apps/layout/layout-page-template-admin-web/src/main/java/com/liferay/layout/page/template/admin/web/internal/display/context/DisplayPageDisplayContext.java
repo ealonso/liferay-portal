@@ -173,7 +173,7 @@ public class DisplayPageDisplayContext {
 				LayoutPageTemplateEntryServiceUtil.
 					getLayoutPageCollectionsAndLayoutPageTemplateEntries(
 						_themeDisplay.getScopeGroupId(),
-						getLayoutPageTemplateCollectionId(),
+						_getLayoutPageTemplateCollectionId(),
 						LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE,
 						displayPagesSearchContainer.getStart(),
 						displayPagesSearchContainer.getEnd(),
@@ -181,7 +181,7 @@ public class DisplayPageDisplayContext {
 			LayoutPageTemplateEntryServiceUtil.
 				getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
 					_themeDisplay.getScopeGroupId(),
-					getLayoutPageTemplateCollectionId(),
+					_getLayoutPageTemplateCollectionId(),
 					LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE));
 
 		displayPagesSearchContainer.setRowChecker(
@@ -237,30 +237,9 @@ public class DisplayPageDisplayContext {
 	public LayoutPageTemplateCollection getLayoutPageTemplateCollection()
 		throws PortalException {
 
-		return getLayoutPageTemplateCollection(
-			getLayoutPageTemplateCollectionId());
-	}
-
-	public LayoutPageTemplateCollection getLayoutPageTemplateCollection(
-			long getLayoutPageTemplateCollectionId)
-		throws PortalException {
-
 		return LayoutPageTemplateCollectionServiceUtil.
 			fetchLayoutPageTemplateCollection(
-				getLayoutPageTemplateCollectionId);
-	}
-
-	public long getLayoutPageTemplateCollectionId() {
-		if (_layoutPageTemplateCollectionId != null) {
-			return _layoutPageTemplateCollectionId;
-		}
-
-		_layoutPageTemplateCollectionId = ParamUtil.getLong(
-			_httpServletRequest, "layoutPageTemplateCollectionId",
-			LayoutPageTemplateConstants.
-				PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT);
-
-		return _layoutPageTemplateCollectionId;
+				_getLayoutPageTemplateCollectionId());
 	}
 
 	public long getLayoutPageTemplateEntryId() {
