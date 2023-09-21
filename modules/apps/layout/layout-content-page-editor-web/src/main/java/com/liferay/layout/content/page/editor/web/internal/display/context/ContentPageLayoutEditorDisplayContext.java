@@ -418,7 +418,9 @@ public class ContentPageLayoutEditorDisplayContext
 					portletURL.setParameter(
 						"redirect", themeDisplay.getURLCurrent());
 
-					return portletURL.toString();
+					return HttpComponentsUtil.addParameter(
+						portletURL.toString(), "p_l_back_url_title",
+						"aqui-va-el-back-url-title-que-toca");
 				});
 		}
 
