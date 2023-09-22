@@ -8,9 +8,9 @@
 <%@ include file="/search_results/init.jsp" %>
 
 <%
-long commerceAccountId = (long)request.getAttribute("liferay-commerce-ui:search-results:commerceAccountId");
-long groupId = (long)request.getAttribute("liferay-commerce-ui:search-results:groupId");
-long plid = (long)request.getAttribute("liferay-commerce-ui:search-results:plid");
+long commerceAccountId = GetterUtil.getLong(request.getAttribute("liferay-commerce-ui:search-results:commerceAccountId"));
+long groupId = GetterUtil.getLong(request.getAttribute("liferay-commerce-ui:search-results:groupId"));
+long plid = GetterUtil.getLong(request.getAttribute("liferay-commerce-ui:search-results:plid"));
 String searchURL = (String)request.getAttribute("liferay-commerce-ui:search-results:searchURL");
 %>
 
