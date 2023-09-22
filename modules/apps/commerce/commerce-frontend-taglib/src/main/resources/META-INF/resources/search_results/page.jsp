@@ -14,17 +14,19 @@ long plid = GetterUtil.getLong(request.getAttribute("liferay-commerce-ui:search-
 String searchURL = (String)request.getAttribute("liferay-commerce-ui:search-results:searchURL");
 %>
 
-<react:component
-	module="search_results/js/SearchResults"
-	props='<%=
-		HashMapBuilder.<String, Object>put(
-			"commerceAccountId", commerceAccountId
-		).put(
-			"groupId", groupId
-		).put(
-			"plid", plid
-		).put(
-			"searchURL", searchURL
-		).build()
-	%>'
-/>
+<div>
+	<react:component
+		module="search_results/js/SearchResults"
+		props='<%=
+			HashMapBuilder.<String, Object>put(
+				"commerceAccountId", commerceAccountId
+			).put(
+				"groupId", groupId
+			).put(
+				"plid", plid
+			).put(
+				"searchURL", searchURL
+			).build()
+		%>'
+	/>
+</div>
