@@ -14,7 +14,14 @@ List<LayoutPageTemplateEntry> layoutPageTemplateEntries = (List<LayoutPageTempla
 if (ListUtil.isEmpty(layoutPageTemplateCollections) && ListUtil.isEmpty(layoutPageTemplateEntries)) {
 	layoutPageTemplateCollections = new ArrayList<>();
 
-	layoutPageTemplateCollections.add(null);
+	long layoutPageTemplateCollectionId = ParamUtil.getLong(request, "layoutPageTemplateCollectionId");
+
+	if (layoutPageTemplateCollectionId != LayoutPageTemplateConstants.PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT) {
+		layoutPageTemplateCollections.add(LayoutPageTemplateCollectionLocalServiceUtil.fetchLayoutPageTemplateCollection(layoutPageTemplateCollectionId));
+	}
+	else {
+		layoutPageTemplateCollections.add(null); //Solo si es home
+	}
 }
 
 Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZone);
