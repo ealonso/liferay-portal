@@ -8,7 +8,10 @@ package com.liferay.layout.page.template.service.impl;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateActionKeys;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
+import com.liferay.layout.page.template.model.LayoutPageTemplateCollectionTable;
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateCollectionServiceBaseImpl;
+import com.liferay.petra.sql.dsl.DSLQueryFactoryUtil;
+import com.liferay.petra.sql.dsl.query.DSLQuery;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQL;
 import com.liferay.portal.kernel.dao.orm.WildcardMode;
@@ -17,6 +20,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 
 import java.util.List;
@@ -77,6 +81,10 @@ public class LayoutPageTemplateCollectionServiceImpl
 			_layoutPageTemplateCollectionModelResourcePermission.check(
 				getPermissionChecker(), layoutPageTemplateCollectionId,
 				ActionKeys.DELETE);
+
+			deleteLayoutPageTemplateCollections(
+				_getDescendantLayoutPageTemplateCollectionIds(
+					layoutPageTemplateCollectionId));
 
 			layoutPageTemplateCollectionLocalService.
 				deleteLayoutPageTemplateCollection(
@@ -166,6 +174,26 @@ public class LayoutPageTemplateCollectionServiceImpl
 		return layoutPageTemplateCollectionLocalService.
 			updateLayoutPageTemplateCollection(
 				layoutPageTemplateCollectionId, name, description);
+	}
+
+	private long[] _getDescendantLayoutPageTemplateCollectionIds(
+		long layoutPageTemplateCollectionId) {
+
+		DSLQuery dslQuery = DSLQueryFactoryUtil.selectDistinct(
+			LayoutPageTemplateCollectionTable.INSTANCE.
+				layoutPageTemplateCollectionId
+		).from(
+			LayoutPageTemplateCollectionTable.INSTANCE
+		).where(
+			LayoutPageTemplateCollectionTable.INSTANCE.
+				parentLayoutPageTemplateCollectionId.eq(
+					layoutPageTemplateCollectionId)
+		);
+
+		List<Long> result = layoutPageTemplateCollectionPersistence.dslQuery(
+			dslQuery);
+
+		return ArrayUtil.toArray(result.toArray(new Long[0]));
 	}
 
 	@Reference
