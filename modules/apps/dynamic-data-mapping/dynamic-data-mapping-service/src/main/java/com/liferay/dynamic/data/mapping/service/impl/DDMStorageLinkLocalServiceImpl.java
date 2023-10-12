@@ -14,8 +14,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ListUtil;
 
-import java.util.List;
-
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -59,38 +57,8 @@ public class DDMStorageLinkLocalServiceImpl
 			classPK);
 
 		if (storageLink != null) {
-			deleteStorageLink(storageLink);
+			ddmStorageLinkPersistence.remove(storageLink);
 		}
-	}
-
-	@Override
-	public void deleteStorageLink(DDMStorageLink storageLink) {
-		ddmStorageLinkPersistence.remove(storageLink);
-	}
-
-	@Override
-	public void deleteStorageLink(long storageLinkId) {
-		DDMStorageLink storageLink =
-			ddmStorageLinkPersistence.fetchByPrimaryKey(storageLinkId);
-
-		if (storageLink != null) {
-			deleteStorageLink(storageLink);
-		}
-	}
-
-	@Override
-	public void deleteStructureStorageLinks(long structureId) {
-		List<DDMStorageLink> storageLinks =
-			ddmStorageLinkPersistence.findByStructureId(structureId);
-
-		for (DDMStorageLink storageLink : storageLinks) {
-			deleteStorageLink(storageLink);
-		}
-	}
-
-	@Override
-	public DDMStorageLink fetchClassStorageLink(long classPK) {
-		return ddmStorageLinkPersistence.fetchByClassPK(classPK);
 	}
 
 	@Override
@@ -101,56 +69,12 @@ public class DDMStorageLinkLocalServiceImpl
 	}
 
 	@Override
-	public DDMStorageLink getStorageLink(long storageLinkId)
-		throws PortalException {
-
-		return ddmStorageLinkPersistence.findByPrimaryKey(storageLinkId);
-	}
-
-	@Override
-	public List<DDMStorageLink> getStructureStorageLinks(long structureId) {
-		return ddmStorageLinkPersistence.findByStructureVersionId(
-			ListUtil.toLongArray(
-				_ddmStructureVersionLocalService.getStructureVersions(
-					structureId),
-				DDMStructureVersion::getStructureVersionId));
-	}
-
-	@Override
 	public int getStructureStorageLinksCount(long structureId) {
 		return ddmStorageLinkPersistence.countByStructureVersionId(
 			ListUtil.toLongArray(
 				_ddmStructureVersionLocalService.getStructureVersions(
 					structureId),
 				DDMStructureVersion::getStructureVersionId));
-	}
-
-	@Override
-	public List<DDMStorageLink> getStructureVersionStorageLinks(
-		long structureVersionId) {
-
-		return ddmStorageLinkPersistence.findByStructureVersionId(
-			structureVersionId);
-	}
-
-	@Override
-	public int getStructureVersionStorageLinksCount(long structureVersionId) {
-		return ddmStorageLinkPersistence.countByStructureVersionId(
-			structureVersionId);
-	}
-
-	@Override
-	public DDMStorageLink updateStorageLink(
-			long storageLinkId, long classNameId, long classPK)
-		throws PortalException {
-
-		DDMStorageLink storageLink = ddmStorageLinkPersistence.findByPrimaryKey(
-			storageLinkId);
-
-		storageLink.setClassNameId(classNameId);
-		storageLink.setClassPK(classPK);
-
-		return ddmStorageLinkPersistence.update(storageLink);
 	}
 
 	@Reference
