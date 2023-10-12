@@ -8,9 +8,6 @@ package com.liferay.dynamic.data.mapping.service.impl;
 import com.liferay.dynamic.data.mapping.model.DDMTemplateLink;
 import com.liferay.dynamic.data.mapping.service.base.DDMTemplateLinkLocalServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import java.util.List;
@@ -87,22 +84,6 @@ public class DDMTemplateLinkLocalServiceImpl
 		throws PortalException {
 
 		return ddmTemplateLinkPersistence.findByC_C(classNameId, classPK);
-	}
-
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public List<DDMTemplateLink> getTemplateLinks(long classNameId) {
-		DynamicQuery dynamicQuery = dynamicQuery();
-
-		Property classNameIdProperty = PropertyFactoryUtil.forName(
-			"classNameId");
-
-		dynamicQuery.add(classNameIdProperty.eq(classNameId));
-
-		return dynamicQuery(dynamicQuery);
 	}
 
 	@Override

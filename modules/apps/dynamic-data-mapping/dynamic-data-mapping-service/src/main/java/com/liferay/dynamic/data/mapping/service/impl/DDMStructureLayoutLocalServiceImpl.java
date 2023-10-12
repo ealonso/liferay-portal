@@ -51,23 +51,6 @@ import org.osgi.service.component.annotations.Reference;
 public class DDMStructureLayoutLocalServiceImpl
 	extends DDMStructureLayoutLocalServiceBaseImpl {
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 *             #addStructureLayout(long, long, long, String, long,
-	 *             DDMFormLayout, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public DDMStructureLayout addStructureLayout(
-			long userId, long groupId, long structureVersionId,
-			DDMFormLayout ddmFormLayout, ServiceContext serviceContext)
-		throws PortalException {
-
-		return addStructureLayout(
-			userId, groupId, 0, null, structureVersionId, ddmFormLayout,
-			serviceContext);
-	}
-
 	@Override
 	public DDMStructureLayout addStructureLayout(
 			long userId, long groupId, long classNameId,
