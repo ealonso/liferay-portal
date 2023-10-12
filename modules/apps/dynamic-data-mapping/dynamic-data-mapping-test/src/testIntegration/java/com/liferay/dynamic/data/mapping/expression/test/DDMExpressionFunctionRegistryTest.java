@@ -15,10 +15,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -64,33 +62,6 @@ public class DDMExpressionFunctionRegistryTest {
 		Assert.assertNotNull(
 			customDDMExpressionFunctions.get("binaryFunction"));
 		Assert.assertNull(customDDMExpressionFunctions.get("setRequired"));
-	}
-
-	@Test
-	public void testGetDDMExpressionFunctionsShouldReturnNewInstances() {
-		Set<String> functionNames = new HashSet<>();
-
-		functionNames.add("setRequired");
-		functionNames.add("setValue");
-
-		Map<String, DDMExpressionFunction> ddmExpressionFunctions1 =
-			_ddmExpressionFunctionRegistry.getDDMExpressionFunctions(
-				functionNames);
-		Map<String, DDMExpressionFunction> ddmExpressionFunctions2 =
-			_ddmExpressionFunctionRegistry.getDDMExpressionFunctions(
-				functionNames);
-
-		for (Map.Entry<String, DDMExpressionFunction> entry :
-				ddmExpressionFunctions1.entrySet()) {
-
-			Assert.assertNotEquals(
-				entry.getValue(), ddmExpressionFunctions2.get(entry.getKey()));
-		}
-
-		_ddmExpressionFunctionRegistry.ungetDDMExpressionFunctions(
-			ddmExpressionFunctions1);
-		_ddmExpressionFunctionRegistry.ungetDDMExpressionFunctions(
-			ddmExpressionFunctions2);
 	}
 
 	protected static void setUpDDMExpressionFunctionFactory() {

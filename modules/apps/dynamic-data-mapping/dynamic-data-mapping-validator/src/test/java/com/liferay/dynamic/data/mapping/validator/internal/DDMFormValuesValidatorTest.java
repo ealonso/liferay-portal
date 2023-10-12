@@ -921,19 +921,6 @@ public class DDMFormValuesValidatorTest {
 						).build();
 				}
 
-				@Override
-				public Map<String, DDMExpressionFunction>
-					getDDMExpressionFunctions(Set<String> functionNames) {
-
-					return Collections.emptyMap();
-				}
-
-				@Override
-				public void ungetDDMExpressionFunctions(
-					Map<String, DDMExpressionFunction>
-						ddmExpressionFunctionsMap) {
-				}
-
 			});
 
 		ReflectionTestUtil.setFieldValue(
