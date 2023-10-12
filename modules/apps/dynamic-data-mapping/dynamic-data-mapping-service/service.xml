@@ -3,43 +3,6 @@
 
 <service-builder auto-import-default-references="false" auto-namespace-tables="false" change-tracking-enabled="true" dependency-injector="ds" mvcc-enabled="true" package-path="com.liferay.dynamic.data.mapping">
 	<namespace>DDM</namespace>
-	<entity deprecated="true" local-service="true" name="DDMContent" remote-service="false" uuid="true">
-
-		<!-- PK fields -->
-
-		<column name="contentId" primary="true" type="long" />
-
-		<!-- Group instance -->
-
-		<column name="groupId" type="long" />
-
-		<!-- Audit fields -->
-
-		<column name="companyId" type="long" />
-		<column name="userId" type="long" />
-		<column name="userName" type="String" />
-		<column name="createDate" type="Date" />
-		<column name="modifiedDate" type="Date" />
-
-		<!-- Other fields -->
-
-		<column localized="true" name="name" type="String" />
-		<column name="description" type="String" />
-		<column name="data" type="String" />
-
-		<!-- Finder methods -->
-
-		<finder name="GroupId" return-type="Collection">
-			<finder-column name="groupId" />
-		</finder>
-		<finder name="CompanyId" return-type="Collection">
-			<finder-column name="companyId" />
-		</finder>
-
-		<!-- References -->
-
-		<reference entity="User" package-path="com.liferay.portal" />
-	</entity>
 	<entity local-service="true" name="DDMDataProviderInstance" remote-service="true" uuid="true">
 
 		<!-- PK fields -->

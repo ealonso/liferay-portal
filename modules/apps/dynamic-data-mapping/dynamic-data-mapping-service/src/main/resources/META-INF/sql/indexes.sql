@@ -1,9 +1,3 @@
-create index IX_B0929E94 on DDMContent (companyId, ctCollectionId);
-create index IX_CB327696 on DDMContent (groupId, ctCollectionId);
-create index IX_C71D084 on DDMContent (uuid_[$COLUMN_LENGTH:75$], companyId, ctCollectionId);
-create index IX_83D06320 on DDMContent (uuid_[$COLUMN_LENGTH:75$], ctCollectionId);
-create unique index IX_D4156486 on DDMContent (uuid_[$COLUMN_LENGTH:75$], groupId, ctCollectionId);
-
 create index IX_96A71343 on DDMDataProviderInstance (companyId, ctCollectionId);
 create index IX_FFEA4B05 on DDMDataProviderInstance (groupId, ctCollectionId);
 create index IX_F32088F5 on DDMDataProviderInstance (uuid_[$COLUMN_LENGTH:75$], companyId, ctCollectionId);
