@@ -5,11 +5,6 @@
 
 package com.liferay.dynamic.data.mapping.internal.verify;
 
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesDeserializer;
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesDeserializerDeserializeRequest;
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesDeserializerDeserializeResponse;
-import com.liferay.dynamic.data.mapping.model.DDMContent;
-import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLink;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
@@ -18,7 +13,6 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLinkLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLinkLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMTemplateLocalService;
-import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.LoggingTimer;
@@ -38,27 +32,6 @@ public class DDMServiceVerifyProcess extends VerifyProcess {
 	protected void doVerify() throws Exception {
 		verifyStructureLinks();
 		verifyTemplateLinks();
-	}
-
-	protected DDMFormValues getDDMFormValues(
-		DDMForm ddmForm, DDMContent ddmContent) {
-
-		DDMFormValuesDeserializerDeserializeRequest.Builder builder =
-			DDMFormValuesDeserializerDeserializeRequest.Builder.newBuilder(
-				ddmContent.getData(), ddmForm);
-
-		DDMFormValuesDeserializerDeserializeResponse
-			ddmFormValuesDeserializerDeserializeResponse =
-				_jsonDDMFormValuesDeserializer.deserialize(builder.build());
-
-		return ddmFormValuesDeserializerDeserializeResponse.getDDMFormValues();
-	}
-
-	protected DDMFormValues getDDMFormValues(
-			DDMStructure ddmStructure, DDMContent ddmContent)
-		throws PortalException {
-
-		return getDDMFormValues(ddmStructure.getDDMForm(), ddmContent);
 	}
 
 	protected void verifyStructureLink(DDMStructureLink ddmStructureLink)
@@ -125,8 +98,5 @@ public class DDMServiceVerifyProcess extends VerifyProcess {
 
 	@Reference
 	private DDMTemplateLocalService _ddmTemplateLocalService;
-
-	@Reference(target = "(ddm.form.values.deserializer.type=json)")
-	private DDMFormValuesDeserializer _jsonDDMFormValuesDeserializer;
 
 }
