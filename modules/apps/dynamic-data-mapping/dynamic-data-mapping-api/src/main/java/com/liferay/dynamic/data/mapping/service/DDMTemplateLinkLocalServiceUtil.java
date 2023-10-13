@@ -315,14 +315,6 @@ public class DDMTemplateLinkLocalServiceUtil {
 		return getService().getTemplateLink(classNameId, classPK);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	public static List<DDMTemplateLink> getTemplateLinks(long classNameId) {
-		return getService().getTemplateLinks(classNameId);
-	}
-
 	public static List<DDMTemplateLink> getTemplateLinksByTemplateId(
 		long templateId) {
 

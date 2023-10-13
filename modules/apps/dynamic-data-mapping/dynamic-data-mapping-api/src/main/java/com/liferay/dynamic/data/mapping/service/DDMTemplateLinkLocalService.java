@@ -272,13 +272,6 @@ public interface DDMTemplateLinkLocalService
 	public DDMTemplateLink getTemplateLink(long classNameId, long classPK)
 		throws PortalException;
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<DDMTemplateLink> getTemplateLinks(long classNameId);
-
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<DDMTemplateLink> getTemplateLinksByTemplateId(long templateId);
 

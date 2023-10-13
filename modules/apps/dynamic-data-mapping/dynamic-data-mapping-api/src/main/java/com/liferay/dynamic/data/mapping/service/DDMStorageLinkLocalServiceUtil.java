@@ -128,18 +128,6 @@ public class DDMStorageLinkLocalServiceUtil {
 		return getService().deletePersistedModel(persistedModel);
 	}
 
-	public static void deleteStorageLink(DDMStorageLink storageLink) {
-		getService().deleteStorageLink(storageLink);
-	}
-
-	public static void deleteStorageLink(long storageLinkId) {
-		getService().deleteStorageLink(storageLinkId);
-	}
-
-	public static void deleteStructureStorageLinks(long structureId) {
-		getService().deleteStructureStorageLinks(structureId);
-	}
-
 	public static <T> T dslQuery(DSLQuery dslQuery) {
 		return getService().dslQuery(dslQuery);
 	}
@@ -223,10 +211,6 @@ public class DDMStorageLinkLocalServiceUtil {
 		com.liferay.portal.kernel.dao.orm.Projection projection) {
 
 		return getService().dynamicQueryCount(dynamicQuery, projection);
-	}
-
-	public static DDMStorageLink fetchClassStorageLink(long classPK) {
-		return getService().fetchClassStorageLink(classPK);
 	}
 
 	public static DDMStorageLink fetchDDMStorageLink(long storageLinkId) {
@@ -337,33 +321,8 @@ public class DDMStorageLinkLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
-	public static DDMStorageLink getStorageLink(long storageLinkId)
-		throws PortalException {
-
-		return getService().getStorageLink(storageLinkId);
-	}
-
-	public static List<DDMStorageLink> getStructureStorageLinks(
-		long structureId) {
-
-		return getService().getStructureStorageLinks(structureId);
-	}
-
 	public static int getStructureStorageLinksCount(long structureId) {
 		return getService().getStructureStorageLinksCount(structureId);
-	}
-
-	public static List<DDMStorageLink> getStructureVersionStorageLinks(
-		long structureVersionId) {
-
-		return getService().getStructureVersionStorageLinks(structureVersionId);
-	}
-
-	public static int getStructureVersionStorageLinksCount(
-		long structureVersionId) {
-
-		return getService().getStructureVersionStorageLinksCount(
-			structureVersionId);
 	}
 
 	/**
@@ -380,14 +339,6 @@ public class DDMStorageLinkLocalServiceUtil {
 		DDMStorageLink ddmStorageLink) {
 
 		return getService().updateDDMStorageLink(ddmStorageLink);
-	}
-
-	public static DDMStorageLink updateStorageLink(
-			long storageLinkId, long classNameId, long classPK)
-		throws PortalException {
-
-		return getService().updateStorageLink(
-			storageLinkId, classNameId, classPK);
 	}
 
 	public static DDMStorageLinkLocalService getService() {

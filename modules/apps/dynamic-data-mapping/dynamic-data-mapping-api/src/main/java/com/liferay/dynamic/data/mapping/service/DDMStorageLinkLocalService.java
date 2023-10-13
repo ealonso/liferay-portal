@@ -130,12 +130,6 @@ public interface DDMStorageLinkLocalService
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException;
 
-	public void deleteStorageLink(DDMStorageLink storageLink);
-
-	public void deleteStorageLink(long storageLinkId);
-
-	public void deleteStructureStorageLinks(long structureId);
-
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);
 
@@ -207,9 +201,6 @@ public interface DDMStorageLinkLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public long dynamicQueryCount(
 		DynamicQuery dynamicQuery, Projection projection);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DDMStorageLink fetchClassStorageLink(long classPK);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public DDMStorageLink fetchDDMStorageLink(long storageLinkId);
@@ -297,21 +288,7 @@ public interface DDMStorageLinkLocalService
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public DDMStorageLink getStorageLink(long storageLinkId)
-		throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<DDMStorageLink> getStructureStorageLinks(long structureId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getStructureStorageLinksCount(long structureId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<DDMStorageLink> getStructureVersionStorageLinks(
-		long structureVersionId);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public int getStructureVersionStorageLinksCount(long structureVersionId);
 
 	/**
 	 * Updates the ddm storage link in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -325,10 +302,6 @@ public interface DDMStorageLinkLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public DDMStorageLink updateDDMStorageLink(DDMStorageLink ddmStorageLink);
-
-	public DDMStorageLink updateStorageLink(
-			long storageLinkId, long classNameId, long classPK)
-		throws PortalException;
 
 	@Override
 	@Transactional(enabled = false)

@@ -418,22 +418,6 @@ public class DDMFormInstanceRecordLocalServiceWrapper
 			ddmForm, storageId, storageType);
 	}
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
-	 #getDDMFormValues(DDMForm, long, String)}
-	 */
-	@Deprecated
-	@Override
-	public com.liferay.dynamic.data.mapping.storage.DDMFormValues
-			getDDMFormValues(
-				long storageId,
-				com.liferay.dynamic.data.mapping.model.DDMForm ddmForm)
-		throws com.liferay.dynamic.data.mapping.exception.StorageException {
-
-		return _ddmFormInstanceRecordLocalService.getDDMFormValues(
-			storageId, ddmForm);
-	}
-
 	@Override
 	public com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery
 		getExportActionableDynamicQuery(

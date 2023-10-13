@@ -220,13 +220,6 @@ public interface DDMStructureLinkLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
-	 */
-	@Deprecated
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<DDMStructureLink> getClassNameStructureLinks(long classNameId);
-
-	/**
 	 * Returns the ddm structure link with the primary key.
 	 *
 	 * @param structureLinkId the primary key of the ddm structure link
