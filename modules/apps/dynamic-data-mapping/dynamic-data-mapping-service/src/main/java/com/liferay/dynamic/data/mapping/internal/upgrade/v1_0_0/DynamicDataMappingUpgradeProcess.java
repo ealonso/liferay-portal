@@ -29,7 +29,6 @@ import com.liferay.dynamic.data.mapping.io.DDMFormValuesDeserializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializerSerializeRequest;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializerSerializeResponse;
-import com.liferay.dynamic.data.mapping.model.DDMContent;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldType;
@@ -728,7 +727,7 @@ public class DynamicDataMappingUpgradeProcess extends UpgradeProcess {
 	private void _setUpClassNameIds() {
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			_ddmContentClassNameId = PortalUtil.getClassNameId(
-				DDMContent.class);
+				"com.liferay.dynamic.data.mapping.model.DDMContent");
 
 			_expandoStorageAdapterClassNameId = PortalUtil.getClassNameId(
 				"com.liferay.portlet.dynamicdatamapping.storage." +

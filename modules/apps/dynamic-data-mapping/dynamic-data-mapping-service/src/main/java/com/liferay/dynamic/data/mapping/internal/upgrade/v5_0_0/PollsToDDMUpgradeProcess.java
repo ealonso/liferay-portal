@@ -13,7 +13,6 @@ import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeReque
 import com.liferay.dynamic.data.mapping.io.DDMFormLayoutSerializerSerializeResponse;
 import com.liferay.dynamic.data.mapping.io.DDMFormSerializer;
 import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializer;
-import com.liferay.dynamic.data.mapping.model.DDMContent;
 import com.liferay.dynamic.data.mapping.model.DDMField;
 import com.liferay.dynamic.data.mapping.model.DDMFieldAttribute;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
@@ -545,7 +544,9 @@ public class PollsToDDMUpgradeProcess extends UpgradeProcess {
 			preparedStatement.setLong(2, increment());
 			preparedStatement.setLong(3, companyId);
 			preparedStatement.setLong(
-				4, PortalUtil.getClassNameId(DDMContent.class));
+				4,
+				PortalUtil.getClassNameId(
+					"com.liferay.dynamic.data.mapping.model.DDMContent"));
 
 			long storageId = increment();
 
