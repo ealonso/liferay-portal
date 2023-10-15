@@ -8,7 +8,6 @@ package com.liferay.dynamic.data.mapping.internal;
 import com.liferay.dynamic.data.mapping.exception.StorageException;
 import com.liferay.dynamic.data.mapping.kernel.DDMFormValues;
 import com.liferay.dynamic.data.mapping.kernel.StorageEngineManager;
-import com.liferay.dynamic.data.mapping.model.DDMContent;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMStorageLink;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -73,7 +72,7 @@ public class StorageEngineManagerImpl implements StorageEngineManager {
 				ddmStructureId);
 
 		_ddmStorageLinkLocalService.addStorageLink(
-			_portal.getClassNameId(DDMContent.class.getName()), primaryKey,
+			_portal.getClassNameId(DDMStorageLink.class), primaryKey,
 			ddmStructureVersion.getStructureVersionId(), serviceContext);
 
 		return primaryKey;
