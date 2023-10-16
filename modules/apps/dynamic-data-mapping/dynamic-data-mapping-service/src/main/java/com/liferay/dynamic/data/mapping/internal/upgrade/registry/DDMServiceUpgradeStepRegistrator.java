@@ -545,6 +545,11 @@ public class DDMServiceUpgradeStepRegistrator
 			"5.4.1", "5.4.2",
 			new com.liferay.dynamic.data.mapping.internal.upgrade.v5_4_2.
 				PollsPortletIdToDDMPortletIdUpgradeProcess());
+
+		registry.register(
+			"5.4.2", "6.0.0",
+			new com.liferay.dynamic.data.mapping.internal.upgrade.v6_0_0.
+				DDMStorageLinkUpgradeProcess());
 	}
 
 	@Activate
