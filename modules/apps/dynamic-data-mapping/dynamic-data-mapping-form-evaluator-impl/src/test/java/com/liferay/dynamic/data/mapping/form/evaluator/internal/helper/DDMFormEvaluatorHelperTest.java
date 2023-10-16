@@ -32,8 +32,6 @@ import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldValueAccesso
 import com.liferay.dynamic.data.mapping.form.field.type.DefaultDDMFormFieldValueAccessor;
 import com.liferay.dynamic.data.mapping.form.field.type.internal.checkbox.CheckboxDDMFormFieldValueAccessor;
 import com.liferay.dynamic.data.mapping.form.field.type.internal.numeric.NumericDDMFormFieldValueAccessor;
-import com.liferay.dynamic.data.mapping.form.page.change.DDMFormPageChange;
-import com.liferay.dynamic.data.mapping.form.page.change.DDMFormPageChangeRegistry;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
 import com.liferay.dynamic.data.mapping.model.DDMFormFieldValidation;
@@ -1784,8 +1782,7 @@ public class DDMFormEvaluatorHelperTest {
 		DDMFormEvaluatorHelper ddmFormEvaluatorHelper =
 			new DDMFormEvaluatorHelper(
 				_ddmExpressionFactory, builder.build(),
-				_mockDDMFormFieldTypeServicesRegistry(),
-				_mockDDMFormPageChangeRegistry());
+				_mockDDMFormFieldTypeServicesRegistry());
 
 		_mockDDMExpressionFunctionRegistry();
 
@@ -2100,20 +2097,6 @@ public class DDMFormEvaluatorHelperTest {
 		return ddmFormFieldTypeServicesRegistry;
 	}
 
-	private DDMFormPageChangeRegistry _mockDDMFormPageChangeRegistry() {
-		DDMFormPageChangeRegistry ddmFormPageChangeRegistry = Mockito.mock(
-			DDMFormPageChangeRegistry.class);
-
-		Mockito.when(
-			ddmFormPageChangeRegistry.getDDMFormPageChangeByDDMFormInstanceId(
-				Mockito.anyString())
-		).then(
-			(Answer<DDMFormPageChange>)invocation -> new DDMTestFormPageChange()
-		);
-
-		return ddmFormPageChangeRegistry;
-	}
-
 	private static final Company _company = Mockito.mock(Company.class);
 	private static DDMExpressionFactory _ddmExpressionFactory;
 	private static final HttpServletRequest _httpServletRequest = Mockito.mock(
@@ -2128,42 +2111,5 @@ public class DDMFormEvaluatorHelperTest {
 		Mockito.mock(UserGroupRoleLocalService.class);
 	private final UserLocalService _userLocalService = Mockito.mock(
 		UserLocalService.class);
-
-	private static class DDMTestFormPageChange implements DDMFormPageChange {
-
-		@Override
-		public DDMFormEvaluatorEvaluateResponse evaluate(
-			DDMFormEvaluatorEvaluateRequest ddmFormEvaluatorEvaluateRequest) {
-
-			DDMFormEvaluatorEvaluateResponse.Builder
-				ddmFormEvaluatorEvaluateResponse =
-					DDMFormEvaluatorEvaluateResponse.Builder.newBuilder(
-						_getDDMFormFieldsPropertyChanges());
-
-			return ddmFormEvaluatorEvaluateResponse.build();
-		}
-
-		private Map<DDMFormEvaluatorFieldContextKey, Map<String, Object>>
-			_getDDMFormFieldsPropertyChanges() {
-
-			return HashMapBuilder.
-				<DDMFormEvaluatorFieldContextKey, Map<String, Object>>put(
-					new DDMFormEvaluatorFieldContextKey(
-						"field0", "field0_instanceId"),
-					HashMapBuilder.<String, Object>put(
-						"showLabel", false
-					).build()
-				).put(
-					new DDMFormEvaluatorFieldContextKey(
-						"field1", "field1_instanceId"),
-					HashMapBuilder.<String, Object>put(
-						"repeatable", true
-					).put(
-						"value", "New Value"
-					).build()
-				).build();
-		}
-
-	}
 
 }
