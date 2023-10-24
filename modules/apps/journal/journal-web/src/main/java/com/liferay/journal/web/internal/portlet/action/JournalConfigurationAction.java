@@ -62,6 +62,11 @@ public class JournalConfigurationAction
 	}
 
 	@Override
+	public boolean isConfigurationPopUp() {
+		return false;
+	}
+
+	@Override
 	public void postProcess(
 			long companyId, PortletRequest portletRequest, Settings settings)
 		throws PortalException {
