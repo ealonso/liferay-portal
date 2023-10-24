@@ -22,6 +22,10 @@ public interface ConfigurationAction {
 			HttpServletResponse httpServletResponse)
 		throws Exception;
 
+	public default boolean isConfigurationPopUp() {
+		return true;
+	}
+
 	public void processAction(
 			PortletConfig portletConfig, ActionRequest actionRequest,
 			ActionResponse actionResponse)
