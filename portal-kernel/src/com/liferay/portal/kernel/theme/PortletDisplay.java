@@ -63,6 +63,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_columnCount = master.getColumnCount();
 		_columnId = master.getColumnId();
 		_columnPos = master.getColumnPos();
+		_configurationPopUp = master.isConfigurationPopUp();
 		_contentSB = master.getContent();
 		_customCSSClassName = master.getCustomCSSClassName();
 		_description = master.getDescription();
@@ -115,6 +116,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_urlClose = master.getURLClose();
 		_urlConfiguration = master.getURLConfiguration();
 		_urlConfigurationJS = master.getURLConfigurationJS();
+		_urlConfigurationBrowse = master.getUrlConfigurationBrowse();
 		_urlEdit = master.getURLEdit();
 		_urlEditDefaults = master.getURLEditDefaults();
 		_urlEditGuest = master.getURLEditGuest();
@@ -135,6 +137,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		slave.setColumnCount(_columnCount);
 		slave.setColumnId(_columnId);
 		slave.setColumnPos(_columnPos);
+		slave.setConfigurationPopUp(_configurationPopUp);
 		slave.setContent(_contentSB);
 		slave.setCustomCSSClassName(_customCSSClassName);
 		slave.setDescription(_description);
@@ -185,6 +188,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		slave.setURLClose(_urlClose);
 		slave.setURLConfiguration(_urlConfiguration);
 		slave.setURLConfigurationJS(_urlConfigurationJS);
+		slave.setURLConfigurationBrowse(_urlConfigurationBrowse);
 		slave.setURLEdit(_urlEdit);
 		slave.setURLEditDefaults(_urlEditDefaults);
 		slave.setURLEditGuest(_urlEditGuest);
@@ -302,6 +306,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 		return _urlConfiguration;
 	}
 
+	public String getUrlConfigurationBrowse() {
+		return _urlConfigurationBrowse;
+	}
+
 	public String getURLConfigurationJS() {
 		return _urlConfigurationJS;
 	}
@@ -360,6 +368,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 
 	public boolean isBeta() {
 		return _beta;
+	}
+
+	public boolean isConfigurationPopUp() {
+		return _configurationPopUp;
 	}
 
 	public boolean isFocused() {
@@ -555,6 +567,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_columnCount = 0;
 		_columnId = StringPool.BLANK;
 		_columnPos = 0;
+		_configurationPopUp = true;
 		_contentSB.setIndex(0);
 		_customCSSClassName = StringPool.BLANK;
 		_description = StringPool.BLANK;
@@ -599,6 +612,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_urlBack = StringPool.BLANK;
 		_urlClose = StringPool.BLANK;
 		_urlConfiguration = StringPool.BLANK;
+		_urlConfigurationBrowse = StringPool.BLANK;
 		_urlEdit = StringPool.BLANK;
 		_urlEditDefaults = StringPool.BLANK;
 		_urlEditGuest = StringPool.BLANK;
@@ -631,6 +645,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 
 	public void setColumnPos(int columnPos) {
 		_columnPos = columnPos;
+	}
+
+	public void setConfigurationPopUp(boolean configurationPopUp) {
+		_configurationPopUp = configurationPopUp;
 	}
 
 	public void setContent(StringBundler contentSB) {
@@ -861,6 +879,10 @@ public class PortletDisplay implements Cloneable, Serializable {
 		_urlConfiguration = urlConfiguration;
 	}
 
+	public void setURLConfigurationBrowse(String urlConfigurationBrowse) {
+		_urlConfigurationBrowse = urlConfigurationBrowse;
+	}
+
 	public void setURLConfigurationJS(String urlConfigurationJS) {
 		_urlConfigurationJS = urlConfigurationJS;
 	}
@@ -931,6 +953,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 	private int _columnCount;
 	private String _columnId = StringPool.BLANK;
 	private int _columnPos;
+	private boolean _configurationPopUp = true;
 	private StringBundler _contentSB = _blankSB;
 	private String _customCSSClassName = StringPool.BLANK;
 	private String _description = StringPool.BLANK;
@@ -982,6 +1005,7 @@ public class PortletDisplay implements Cloneable, Serializable {
 	private String _urlBackTitle = StringPool.BLANK;
 	private String _urlClose = StringPool.BLANK;
 	private String _urlConfiguration = StringPool.BLANK;
+	private String _urlConfigurationBrowse = StringPool.BLANK;
 	private String _urlConfigurationJS = StringPool.BLANK;
 	private String _urlEdit = StringPool.BLANK;
 	private String _urlEditDefaults = StringPool.BLANK;
