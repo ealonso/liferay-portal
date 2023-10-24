@@ -445,9 +445,9 @@ portletDisplay.setURLClose(urlClose);
 PortletURL urlConfiguration = PortletProviderUtil.getPortletURL(request, PortletConfigurationApplicationType.PortletConfiguration.CLASS_NAME, PortletProvider.Action.VIEW);
 
 if (urlConfiguration != null) {
-	urlConfiguration.setWindowState(LiferayWindowState.POP_UP);
-
 	if (configurationAction != null) {
+		portletDisplay.setConfigurationPopUp(configurationAction.isConfigurationPopUp());
+
 		urlConfiguration.setParameter("mvcPath", "/edit_configuration.jsp");
 
 		String settingsScope = (String)request.getAttribute(WebKeys.SETTINGS_SCOPE);
@@ -467,6 +467,10 @@ if (urlConfiguration != null) {
 	urlConfiguration.setParameter("portletConfiguration", Boolean.TRUE.toString());
 	urlConfiguration.setParameter("portletResource", portletDisplay.getId());
 	urlConfiguration.setParameter("resourcePrimKey", portletPrimaryKey);
+
+	portletDisplay.setURLConfigurationBrowse(urlConfiguration.toString());
+
+	urlConfiguration.setWindowState(LiferayWindowState.POP_UP);
 
 	portletDisplay.setURLConfiguration(urlConfiguration.toString());
 
