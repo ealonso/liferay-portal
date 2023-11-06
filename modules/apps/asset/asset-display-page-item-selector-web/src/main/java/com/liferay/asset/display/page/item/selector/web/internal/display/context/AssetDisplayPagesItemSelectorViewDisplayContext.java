@@ -6,12 +6,14 @@
 package com.liferay.asset.display.page.item.selector.web.internal.display.context;
 
 import com.liferay.asset.display.page.item.selector.criterion.AssetDisplayPageSelectorCriterion;
+import com.liferay.layout.page.template.constants.LayoutPageTemplateConstants;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateEntryCreateDateComparator;
 import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateEntryNameComparator;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -27,6 +29,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
+import javax.portlet.RenderResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -191,6 +194,19 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 	}
 
 	private PortletURL _getPortletURL() throws PortletException {
+		if (FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+			return PortletURLBuilder.createRenderURL(
+				(RenderResponse)_httpServletRequest.getAttribute(
+					JavaConstants.JAVAX_PORTLET_RESPONSE)
+			).setMVCPath(
+				"/navigation_folders.jsp"
+			).setParameter(
+				"layoutPageTemplateCollectionId",
+				LayoutPageTemplateConstants.
+					PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT
+			).buildPortletURL();
+		}
+
 		return PortletURLBuilder.create(
 			PortletURLUtil.clone(
 				_portletURL,
