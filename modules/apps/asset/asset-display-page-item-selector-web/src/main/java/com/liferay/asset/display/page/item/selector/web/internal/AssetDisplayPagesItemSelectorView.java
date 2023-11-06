@@ -12,6 +12,7 @@ import com.liferay.item.selector.ItemSelectorReturnType;
 import com.liferay.item.selector.ItemSelectorView;
 import com.liferay.item.selector.ItemSelectorViewDescriptorRenderer;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.language.Language;
 
 import java.io.IOException;
@@ -22,6 +23,8 @@ import java.util.Locale;
 
 import javax.portlet.PortletURL;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -44,6 +47,10 @@ public class AssetDisplayPagesItemSelectorView
 		return AssetDisplayPageSelectorCriterion.class;
 	}
 
+	public ServletContext getServletContext() {
+		return _servletContext;
+	}
+
 	@Override
 	public List<ItemSelectorReturnType> getSupportedItemSelectorReturnTypes() {
 		return _supportedItemSelectorReturnTypes;
@@ -61,13 +68,34 @@ public class AssetDisplayPagesItemSelectorView
 			PortletURL portletURL, String itemSelectedEventName, boolean search)
 		throws IOException, ServletException {
 
-		_itemSelectorViewDescriptorRenderer.renderHTML(
-			servletRequest, servletResponse, assetDisplayPageSelectorCriterion,
-			portletURL, itemSelectedEventName, search,
-			new AssetDisplayPageItemSelectorViewDescriptor(
-				new AssetDisplayPagesItemSelectorViewDisplayContext(
-					(HttpServletRequest)servletRequest,
-					assetDisplayPageSelectorCriterion, portletURL)));
+		if (FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+			ServletContext servletContext = getServletContext();
+
+			RequestDispatcher requestDispatcher =
+				servletContext.getRequestDispatcher("/navigation_folders.jsp");
+
+			AssetDisplayPagesItemSelectorViewDisplayContext
+				assetDisplayPagesItemSelectorDisplayContext =
+					new AssetDisplayPagesItemSelectorViewDisplayContext(
+						(HttpServletRequest)servletRequest,
+						assetDisplayPageSelectorCriterion, portletURL);
+
+			servletRequest.setAttribute(
+				"ASSET_DISPLAY_PAGES_ITEM_SELECTOR_DISPLAY_CONTEXT",
+				assetDisplayPagesItemSelectorDisplayContext);
+
+			requestDispatcher.include(servletRequest, servletResponse);
+		}
+		else {
+			_itemSelectorViewDescriptorRenderer.renderHTML(
+				servletRequest, servletResponse,
+				assetDisplayPageSelectorCriterion, portletURL,
+				itemSelectedEventName, search,
+				new AssetDisplayPageItemSelectorViewDescriptor(
+					new AssetDisplayPagesItemSelectorViewDisplayContext(
+						(HttpServletRequest)servletRequest,
+						assetDisplayPageSelectorCriterion, portletURL)));
+		}
 	}
 
 	private static final List<ItemSelectorReturnType>
@@ -80,5 +108,10 @@ public class AssetDisplayPagesItemSelectorView
 
 	@Reference
 	private Language _language;
+
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.asset.display.page.item.selector.web)"
+	)
+	private ServletContext _servletContext;
 
 }
