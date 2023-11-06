@@ -61,8 +61,9 @@ public class AssetDisplayPageItemSelectorViewDescriptor
 		throws PortalException {
 
 		try {
-			return _assetDisplayPagesItemSelectorViewDisplayContext.
-				getAssetDisplayPageSearchContainer();
+			return (SearchContainer<LayoutPageTemplateEntry>)
+				_assetDisplayPagesItemSelectorViewDisplayContext.
+					getAssetDisplayPageSearchContainer();
 		}
 		catch (PortletException portletException) {
 			throw new PortalException(portletException);

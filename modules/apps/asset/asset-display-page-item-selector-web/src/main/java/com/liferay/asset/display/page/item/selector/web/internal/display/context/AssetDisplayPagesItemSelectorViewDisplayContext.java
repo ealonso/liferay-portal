@@ -10,8 +10,8 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateConstants;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryServiceUtil;
-import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateEntryCreateDateComparator;
-import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateEntryNameComparator;
+import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator;
+import com.liferay.layout.page.template.util.comparator.LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
@@ -55,73 +55,153 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 			WebKeys.THEME_DISPLAY);
 	}
 
-	public SearchContainer<LayoutPageTemplateEntry>
-			getAssetDisplayPageSearchContainer()
+	public SearchContainer<?> getAssetDisplayPageSearchContainer()
 		throws PortletException {
 
 		if (_assetDisplayPageSearchContainer != null) {
 			return _assetDisplayPageSearchContainer;
 		}
 
-		SearchContainer<LayoutPageTemplateEntry>
-			assetDisplayPageSearchContainer = new SearchContainer<>(
-				_portletRequest, _getPortletURL(), null,
-				"there-are-no-display-page-templates");
-
-		assetDisplayPageSearchContainer.setOrderByCol(_getOrderByCol());
-		assetDisplayPageSearchContainer.setOrderByComparator(
-			_getLayoutPageTemplateEntryOrderByComparator(
-				_getOrderByCol(), getOrderByType()));
-		assetDisplayPageSearchContainer.setOrderByType(getOrderByType());
-
 		if (Validator.isNotNull(_getKeywords())) {
-			assetDisplayPageSearchContainer.setResultsAndTotal(
-				() ->
+			if (FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+				SearchContainer<Object> assetDisplayPageSearchContainer =
+					new SearchContainer<>(
+						_portletRequest, _getPortletURL(), null,
+						"there-are-no-display-page-templates");
+
+				assetDisplayPageSearchContainer.setOrderByCol(_getOrderByCol());
+				assetDisplayPageSearchContainer.setOrderByComparator(
+					_getLayoutPageTemplateEntryOrderByComparator(
+						_getOrderByCol(), getOrderByType()));
+				assetDisplayPageSearchContainer.setOrderByType(
+					getOrderByType());
+
+				// TBD
+
+			}
+			else {
+				SearchContainer<LayoutPageTemplateEntry>
+					assetDisplayPageSearchContainer = new SearchContainer<>(
+						_portletRequest, _getPortletURL(), null,
+						"there-are-no-display-page-templates");
+
+				assetDisplayPageSearchContainer.setOrderByCol(_getOrderByCol());
+				assetDisplayPageSearchContainer.setOrderByComparator(
+					assetDisplayPageSearchContainer.getOrderByComparator());
+				assetDisplayPageSearchContainer.setOrderByType(
+					getOrderByType());
+
+				assetDisplayPageSearchContainer.setResultsAndTotal(
+					() ->
+						LayoutPageTemplateEntryServiceUtil.
+							getLayoutPageTemplateEntries(
+								_getGroupId(),
+								_assetDisplayPageSelectorCriterion.
+									getClassNameId(),
+								_assetDisplayPageSelectorCriterion.
+									getClassTypeId(),
+								_getKeywords(),
+								LayoutPageTemplateEntryTypeConstants.
+									DISPLAY_PAGE,
+								WorkflowConstants.STATUS_APPROVED,
+								assetDisplayPageSearchContainer.getStart(),
+								assetDisplayPageSearchContainer.getEnd(),
+								assetDisplayPageSearchContainer.
+									getOrderByComparator()),
 					LayoutPageTemplateEntryServiceUtil.
-						getLayoutPageTemplateEntries(
+						getLayoutPageTemplateEntriesCount(
 							_getGroupId(),
 							_assetDisplayPageSelectorCriterion.getClassNameId(),
 							_assetDisplayPageSelectorCriterion.getClassTypeId(),
 							_getKeywords(),
 							LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE,
-							WorkflowConstants.STATUS_APPROVED,
-							assetDisplayPageSearchContainer.getStart(),
-							assetDisplayPageSearchContainer.getEnd(),
-							assetDisplayPageSearchContainer.
-								getOrderByComparator()),
-				LayoutPageTemplateEntryServiceUtil.
-					getLayoutPageTemplateEntriesCount(
-						_getGroupId(),
-						_assetDisplayPageSelectorCriterion.getClassNameId(),
-						_assetDisplayPageSelectorCriterion.getClassTypeId(),
-						_getKeywords(),
-						LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE,
-						WorkflowConstants.STATUS_APPROVED));
+							WorkflowConstants.STATUS_APPROVED));
+
+				_assetDisplayPageSearchContainer =
+					assetDisplayPageSearchContainer;
+			}
 		}
 		else {
-			assetDisplayPageSearchContainer.setResultsAndTotal(
-				() ->
+			if (FeatureFlagManagerUtil.isEnabled("LPS-189856")) {
+				SearchContainer<Object> assetDisplayPageSearchContainer =
+					new SearchContainer<>(
+						_portletRequest, _getPortletURL(), null,
+						"there-are-no-display-page-templates");
+
+				assetDisplayPageSearchContainer.setOrderByCol(_getOrderByCol());
+				assetDisplayPageSearchContainer.setOrderByComparator(
+					_getLayoutPageTemplateEntryOrderByComparator(
+						_getOrderByCol(), getOrderByType()));
+				assetDisplayPageSearchContainer.setOrderByType(
+					getOrderByType());
+				assetDisplayPageSearchContainer.setResultsAndTotal(
+					() ->
+						LayoutPageTemplateEntryServiceUtil.
+							getLayoutPageCollectionsAndLayoutPageTemplateEntries(
+								_themeDisplay.getScopeGroupId(),
+								ParamUtil.getLong(
+									_httpServletRequest,
+									"layoutPageTemplateCollectionId",
+									LayoutPageTemplateConstants.
+										PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT),
+								LayoutPageTemplateEntryTypeConstants.
+									DISPLAY_PAGE,
+								assetDisplayPageSearchContainer.getStart(),
+								assetDisplayPageSearchContainer.getEnd(),
+								assetDisplayPageSearchContainer.
+									getOrderByComparator()),
 					LayoutPageTemplateEntryServiceUtil.
-						getLayoutPageTemplateEntries(
+						getLayoutPageCollectionsAndLayoutPageTemplateEntriesCount(
+							_getGroupId(),
+							ParamUtil.getLong(
+								_httpServletRequest,
+								"layoutPageTemplateCollectionId",
+								LayoutPageTemplateConstants.
+									PARENT_LAYOUT_PAGE_TEMPLATE_COLLECTION_ID_DEFAULT),
+							LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE));
+
+				_assetDisplayPageSearchContainer =
+					assetDisplayPageSearchContainer;
+			}
+			else {
+				SearchContainer<LayoutPageTemplateEntry>
+					assetDisplayPageSearchContainer = new SearchContainer<>(
+						_portletRequest, _getPortletURL(), null,
+						"there-are-no-display-page-templates");
+
+				assetDisplayPageSearchContainer.setOrderByCol(_getOrderByCol());
+				assetDisplayPageSearchContainer.setOrderByComparator(
+					assetDisplayPageSearchContainer.getOrderByComparator());
+				assetDisplayPageSearchContainer.setOrderByType(
+					getOrderByType());
+				assetDisplayPageSearchContainer.setResultsAndTotal(
+					() ->
+						LayoutPageTemplateEntryServiceUtil.
+							getLayoutPageTemplateEntries(
+								_getGroupId(),
+								_assetDisplayPageSelectorCriterion.
+									getClassNameId(),
+								_assetDisplayPageSelectorCriterion.
+									getClassTypeId(),
+								LayoutPageTemplateEntryTypeConstants.
+									DISPLAY_PAGE,
+								WorkflowConstants.STATUS_APPROVED,
+								assetDisplayPageSearchContainer.getStart(),
+								assetDisplayPageSearchContainer.getEnd(),
+								assetDisplayPageSearchContainer.
+									getOrderByComparator()),
+					LayoutPageTemplateEntryServiceUtil.
+						getLayoutPageTemplateEntriesCount(
 							_getGroupId(),
 							_assetDisplayPageSelectorCriterion.getClassNameId(),
 							_assetDisplayPageSelectorCriterion.getClassTypeId(),
 							LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE,
-							WorkflowConstants.STATUS_APPROVED,
-							assetDisplayPageSearchContainer.getStart(),
-							assetDisplayPageSearchContainer.getEnd(),
-							assetDisplayPageSearchContainer.
-								getOrderByComparator()),
-				LayoutPageTemplateEntryServiceUtil.
-					getLayoutPageTemplateEntriesCount(
-						_getGroupId(),
-						_assetDisplayPageSelectorCriterion.getClassNameId(),
-						_assetDisplayPageSelectorCriterion.getClassTypeId(),
-						LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE,
-						WorkflowConstants.STATUS_APPROVED));
-		}
+							WorkflowConstants.STATUS_APPROVED));
 
-		_assetDisplayPageSearchContainer = assetDisplayPageSearchContainer;
+				_assetDisplayPageSearchContainer =
+					assetDisplayPageSearchContainer;
+			}
+		}
 
 		return _assetDisplayPageSearchContainer;
 	}
@@ -158,7 +238,7 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 		return _keywords;
 	}
 
-	private OrderByComparator<LayoutPageTemplateEntry>
+	private OrderByComparator<Object>
 		_getLayoutPageTemplateEntryOrderByComparator(
 			String orderByCol, String orderByType) {
 
@@ -168,15 +248,17 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 			orderByAsc = true;
 		}
 
-		OrderByComparator<LayoutPageTemplateEntry> orderByComparator = null;
+		OrderByComparator<Object> orderByComparator = null;
 
 		if (orderByCol.equals("create-date")) {
-			orderByComparator = new LayoutPageTemplateEntryCreateDateComparator(
-				orderByAsc);
+			orderByComparator =
+				new LayoutPageTemplateCollectionLayoutPageTemplateEntryCreateDateComparator(
+					orderByAsc);
 		}
 		else if (orderByCol.equals("name")) {
-			orderByComparator = new LayoutPageTemplateEntryNameComparator(
-				orderByAsc);
+			orderByComparator =
+				new LayoutPageTemplateCollectionLayoutPageTemplateEntryNameComparator(
+					orderByAsc);
 		}
 
 		return orderByComparator;
@@ -218,8 +300,7 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 		).buildPortletURL();
 	}
 
-	private SearchContainer<LayoutPageTemplateEntry>
-		_assetDisplayPageSearchContainer;
+	private SearchContainer<?> _assetDisplayPageSearchContainer;
 	private final AssetDisplayPageSelectorCriterion
 		_assetDisplayPageSelectorCriterion;
 	private Long _groupId;
