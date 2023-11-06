@@ -45,6 +45,11 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 
 		_httpServletRequest = httpServletRequest;
 		_assetDisplayPageSelectorCriterion = assetDisplayPageSelectorCriterion;
+
+		_httpServletRequest.setAttribute(
+			"assetDisplayPageSelectorCriterion",
+			_assetDisplayPageSelectorCriterion);
+
 		_portletURL = portletURL;
 
 		_portletRequest = (PortletRequest)httpServletRequest.getAttribute(
@@ -215,6 +220,14 @@ public class AssetDisplayPagesItemSelectorViewDisplayContext {
 			_httpServletRequest, "orderByType", "asc");
 
 		return _orderByType;
+	}
+
+	public boolean isSearch() {
+		if (Validator.isNotNull(_getKeywords())) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private long _getGroupId() {
