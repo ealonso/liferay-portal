@@ -117,8 +117,8 @@ public class PublishLayoutMVCActionCommand
 				Layout.class.getName())) {
 
 			WorkflowHandlerRegistryUtil.startWorkflowInstance(
-				layout.getCompanyId(), layout.getGroupId(), userId,
-				Layout.class.getName(), layout.getPlid(), layout,
+				draftLayout.getCompanyId(), draftLayout.getGroupId(), userId,
+				Layout.class.getName(), draftLayout.getPlid(), draftLayout,
 				serviceContext, Collections.emptyMap());
 
 			layoutLockManager.unlock(draftLayout, userId);
