@@ -85,8 +85,15 @@ public class LayoutWorkflowHandler extends BaseWorkflowHandler<Layout> {
 
 			Layout layout = assetRenderer.getAssetObject();
 
-			String previewURL = _portal.getLayoutFriendlyURL(
-				layout.fetchDraftLayout(), themeDisplay);
+			String previewURL = null;
+
+			if (layout.isDraftLayout()) {
+				previewURL = _portal.getLayoutFriendlyURL(layout, themeDisplay);
+			}
+			else {
+				previewURL = _portal.getLayoutFriendlyURL(
+					layout.fetchDraftLayout(), themeDisplay);
+			}
 
 			return HttpComponentsUtil.addParameter(
 				previewURL, "p_l_back_url", themeDisplay.getURLCurrent());
