@@ -592,11 +592,9 @@ public class ContentPageEditorDisplayContext {
 			).put(
 				"pending",
 				() -> {
-					Layout publishedLayout = _getPublishedLayout();
+					Layout layout = themeDisplay.getLayout();
 
-					if (publishedLayout.isDenied() ||
-						publishedLayout.isPending()) {
-
+					if (layout.isDenied() || layout.isPending()) {
 						return true;
 					}
 
