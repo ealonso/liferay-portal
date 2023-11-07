@@ -5,18 +5,22 @@
 
 package com.liferay.asset.kernel.model;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.portlet.WindowState;
 
@@ -168,7 +172,23 @@ public interface AssetRenderer<T> extends Renderer {
 			HttpServletRequest httpServletRequest)
 		throws Exception {
 
-		return StringPool.BLANK;
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		return PortletURLBuilder.createRenderURL(
+			PortalUtil.getLiferayPortletResponse(
+				(PortletResponse)httpServletRequest.getAttribute(
+					JavaConstants.JAVAX_PORTLET_RESPONSE))
+		).setMVCPath(
+			"/view_layout_classed_model_usages.jsp"
+		).setRedirect(
+			themeDisplay.getURLCurrent()
+		).setParameter(
+			"className", getClassName()
+		).setParameter(
+			"classPK", getClassPK()
+		).buildString();
 	}
 
 	public long getUserId();

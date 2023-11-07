@@ -202,24 +202,23 @@ renderResponse.setTitle(workflowTaskDisplayContext.getHeaderTitle(workflowTask))
 										/>
 									</c:if>
 
-									<c:if test="<%= assetEntry != null %>">
-										<portlet:renderURL var="viewLayoutClassedModelUsagesURL">
-											<portlet:param name="mvcPath" value="/view_layout_classed_model_usages.jsp" />
-											<portlet:param name="redirect" value="<%= currentURL %>" />
-											<portlet:param name="className" value="<%= assetEntry.getClassName() %>" />
-											<portlet:param name="classPK" value="<%= String.valueOf(assetEntry.getClassPK()) %>" />
-											<portlet:param name="workflowTaskId" value="<%= String.valueOf(workflowTask.getWorkflowTaskId()) %>" />
-										</portlet:renderURL>
+									<c:if test="<%= assetRenderer != null %>">
 
-										<liferay-ui:icon
-											icon="list"
-											label="<%= false %>"
-											linkCssClass="btn btn-monospaced btn-outline-secondary"
-											markupView="lexicon"
-											message="view-usages"
-											toolTip="<%= true %>"
-											url="<%= viewLayoutClassedModelUsagesURL %>"
-										/>
+										<%
+										String viewUsagesURL = assetRenderer.getURLViewUsages(request);
+										%>
+
+										<c:if test="<%= Validator.isNotNull(viewUsagesURL) %>">
+											<liferay-ui:icon
+												icon="list"
+												label="<%= false %>"
+												linkCssClass="btn btn-monospaced btn-outline-secondary"
+												markupView="lexicon"
+												message="view-usages"
+												toolTip="<%= true %>"
+												url="<%= viewUsagesURL %>"
+											/>
+										</c:if>
 									</c:if>
 								</c:if>
 
