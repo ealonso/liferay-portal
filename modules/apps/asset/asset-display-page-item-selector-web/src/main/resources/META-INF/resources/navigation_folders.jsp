@@ -15,8 +15,8 @@ AssetDisplayPagesItemSelectorViewDisplayContext assetDisplayPagesItemSelectorVie
 	<clay:container-fluid
 		cssClass="container-view sidenav-content"
 	>
-		<%-- <liferay-site-navigation:breadcrumb--%>
-		<%-- breadcrumbEntries="<%= assetDisplayPagesItemSelectorViewDisplayContext.getLayoutPageTemplateBreadcrumbEntries() %>"--%>
+<%--		<liferay-site-navigation:breadcrumb--%>
+<%--		breadcrumbEntries="<%= assetDisplayPagesItemSelectorViewDisplayContext.getLayoutPageTemplateBreadcrumbEntries() %>"--%>
 
 		<liferay-ui:search-container
 			id="displayPages"
@@ -63,5 +63,6 @@ AssetDisplayPagesItemSelectorViewDisplayContext assetDisplayPagesItemSelectorVie
 				</c:choose>
 			</liferay-ui:search-container-row>
 		</liferay-ui:search-container>
+
 	</clay:container-fluid>
 </c:if>
