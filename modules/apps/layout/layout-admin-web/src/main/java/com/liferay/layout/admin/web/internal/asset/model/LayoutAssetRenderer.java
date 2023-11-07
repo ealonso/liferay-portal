@@ -111,6 +111,13 @@ public class LayoutAssetRenderer extends BaseJSPAssetRenderer<Layout> {
 	}
 
 	@Override
+	public String getURLViewUsages(HttpServletRequest httpServletRequest)
+		throws Exception {
+
+		return null;
+	}
+
+	@Override
 	public long getUserId() {
 		return _layout.getUserId();
 	}
