@@ -49,8 +49,6 @@ page import="com.liferay.portal.workflow.task.web.internal.dao.search.WorkflowTa
 page import="com.liferay.portal.workflow.task.web.internal.display.context.WorkflowTaskDisplayContext" %><%@
 page import="com.liferay.taglib.search.DateSearchEntry" %>
 
-<%@ page import="java.util.Collections" %>
-
 <%@ page import="javax.portlet.PortletURL" %>
 
 <liferay-theme:defineObjects />

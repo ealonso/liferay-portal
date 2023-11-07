@@ -178,27 +178,30 @@ renderResponse.setTitle(workflowTaskDisplayContext.getHeaderTitle(workflowTask))
 										<portlet:param name="workflowTaskId" value="<%= String.valueOf(workflowTask.getWorkflowTaskId()) %>" />
 									</portlet:renderURL>
 
-									<liferay-ui:icon
-										data='<%= Collections.singletonMap("title", "View") %>'
+									<clay:link
+										aria-label='<%= LanguageUtil.get(request, "view[action]") %>'
+										cssClass="lfr-portal-tooltip"
+										displayType="secondary"
+										href="<%= assetRenderer.isPreviewInContext() ? workflowHandler.getURLViewInContext(assetRenderer.getClassPK(), liferayPortletRequest, liferayPortletResponse, null) : viewFullContentURL.toString() %>"
 										icon="view"
-										label="<%= false %>"
-										linkCssClass="btn btn-monospaced btn-outline-secondary"
-										markupView="lexicon"
-										message="view[action]"
+										monospaced="<%= true %>"
+										outline="<%= true %>"
 										target="_blank"
-										toolTip="<%= true %>"
-										url="<%= assetRenderer.isPreviewInContext() ? workflowHandler.getURLViewInContext(assetRenderer.getClassPK(), liferayPortletRequest, liferayPortletResponse, null) : viewFullContentURL.toString() %>"
+										title='<%= LanguageUtil.get(request, "view[action]") %>'
+										type="button"
 									/>
 
 									<c:if test="<%= workflowTaskDisplayContext.hasViewDiffsPortletURL(workflowTask) %>">
-										<liferay-ui:icon
+										<clay:link
+											aria-label='<%= LanguageUtil.get(request, "diffs") %>'
+											cssClass="lfr-portal-tooltip"
+											displayType="secondary"
+											href="<%= workflowTaskDisplayContext.getTaglibViewDiffsURL(workflowTask) %>"
 											icon="paste"
-											label="<%= false %>"
-											linkCssClass="btn btn-monospaced btn-outline-secondary"
-											markupView="lexicon"
-											message="diffs"
-											toolTip="<%= true %>"
-											url="<%= workflowTaskDisplayContext.getTaglibViewDiffsURL(workflowTask) %>"
+											monospaced="<%= true %>"
+											outline="<%= true %>"
+											title='<%= LanguageUtil.get(request, "diffs") %>'
+											type="button"
 										/>
 									</c:if>
 
@@ -209,14 +212,16 @@ renderResponse.setTitle(workflowTaskDisplayContext.getHeaderTitle(workflowTask))
 										%>
 
 										<c:if test="<%= Validator.isNotNull(viewUsagesURL) %>">
-											<liferay-ui:icon
+											<clay:link
+												aria-label='<%= LanguageUtil.get(request, "view-usages") %>'
+												cssClass="lfr-portal-tooltip"
+												displayType="secondary"
+												href="<%= viewUsagesURL %>"
 												icon="list"
-												label="<%= false %>"
-												linkCssClass="btn btn-monospaced btn-outline-secondary"
-												markupView="lexicon"
-												message="view-usages"
-												toolTip="<%= true %>"
-												url="<%= viewUsagesURL %>"
+												monospaced="<%= true %>"
+												outline="<%= true %>"
+												title='<%= LanguageUtil.get(request, "view-usages") %>'
+												type="button"
 											/>
 										</c:if>
 									</c:if>
@@ -225,14 +230,16 @@ renderResponse.setTitle(workflowTaskDisplayContext.getHeaderTitle(workflowTask))
 								<c:if test="<%= workflowTaskDisplayContext.hasEditPortletURL(workflowTask) %>">
 									<c:choose>
 										<c:when test="<%= assetRenderer.hasEditPermission(permissionChecker) && workflowTaskDisplayContext.isShowEditURL(workflowTask) %>">
-											<liferay-ui:icon
+											<clay:link
+												aria-label='<%= LanguageUtil.get(request, "edit") %>'
+												cssClass="lfr-portal-tooltip"
+												displayType="secondary"
+												href="<%= workflowTaskDisplayContext.getTaglibEditURL(workflowTask) %>"
 												icon="pencil"
-												label="<%= false %>"
-												linkCssClass="btn btn-monospaced btn-outline-secondary"
-												markupView="lexicon"
-												message="edit"
-												toolTip="<%= true %>"
-												url="<%= workflowTaskDisplayContext.getTaglibEditURL(workflowTask) %>"
+												monospaced="<%= true %>"
+												outline="<%= true %>"
+												title='<%= LanguageUtil.get(request, "edit") %>'
+												type="button"
 											/>
 										</c:when>
 										<c:when test="<%= assetRenderer.hasEditPermission(permissionChecker) && !workflowTaskDisplayContext.isShowEditURL(workflowTask) && !workflowTask.isCompleted() %>">
