@@ -16,7 +16,9 @@ long classPK = ParamUtil.getLong(request, "classPK");
 portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(redirect);
 
-renderResponse.setTitle(LanguageUtil.get(request, "usages") + ": " + workflowTaskDisplayContext.getAssetTitle(workflowTaskDisplayContext.getWorkflowTask()));
+WorkflowHandler<?> workflowHandler = WorkflowHandlerRegistryUtil.getWorkflowHandler(className);
+
+renderResponse.setTitle(LanguageUtil.get(request, "usages") + ": " + workflowHandler.getTitle(classPK, locale));
 %>
 
 <liferay-layout:layout-classed-model-usages-admin
