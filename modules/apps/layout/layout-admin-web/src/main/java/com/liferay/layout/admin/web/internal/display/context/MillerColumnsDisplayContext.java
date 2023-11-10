@@ -613,7 +613,10 @@ public class MillerColumnsDisplayContext {
 			}
 		}
 
-		if (layout.isDenied() || layout.isPending()) {
+		if (layout.isDenied() || layout.isPending() ||
+			((draftLayout != null) &&
+			 (draftLayout.isDenied() || draftLayout.isPending()))) {
+
 			jsonArray.put(
 				JSONUtil.put(
 					"id", "pending"
