@@ -5,14 +5,8 @@
 
 package com.liferay.dynamic.data.mapping.test.util;
 
-import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayoutColumn;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayoutRow;
-import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
-import com.liferay.dynamic.data.mapping.service.DDMStructureLayoutLocalServiceUtil;
-import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +15,6 @@ import java.util.List;
  * @author Marcellus Tavares
  */
 public class DDMStructureLayoutTestHelper {
-
-	public DDMStructureLayoutTestHelper(Group group) throws Exception {
-		_group = group;
-	}
-
-	public DDMStructureLayout addStructureLayout(
-			long structureId, DDMFormLayout ddmFormLayout)
-		throws Exception {
-
-		return DDMStructureLayoutLocalServiceUtil.addStructureLayout(
-			TestPropsValues.getUserId(), _group.getGroupId(), structureId,
-			ddmFormLayout,
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
-	}
 
 	public List<DDMFormLayoutColumn> createDDMFormLayoutColumns(
 		String... ddmFormFieldNames) {
@@ -60,7 +40,5 @@ public class DDMStructureLayoutTestHelper {
 
 		return ddmFormLayoutRow;
 	}
-
-	private final Group _group;
 
 }

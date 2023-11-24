@@ -58,7 +58,8 @@ public abstract class BaseDDMServiceTestCase {
 
 		ddmStructureTestHelper = new DDMStructureTestHelper(
 			PortalUtil.getClassNameId(DDL_RECORD_SET_CLASS_NAME), group);
-		ddmStructureLayoutTestHelper = new DDMStructureLayoutTestHelper(group);
+
+		ddmStructureLayoutTestHelper = new DDMStructureLayoutTestHelper();
 	}
 
 	protected DDMTemplate addDisplayTemplate(
