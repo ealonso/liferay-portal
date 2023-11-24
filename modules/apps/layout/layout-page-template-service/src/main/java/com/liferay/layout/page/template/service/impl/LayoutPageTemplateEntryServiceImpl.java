@@ -354,9 +354,7 @@ public class LayoutPageTemplateEntryServiceImpl
 				classTypeId, name, type, status);
 
 		return layoutPageTemplateEntryPersistence.dslQueryCount(
-			DSLQueryFactoryUtil.countDistinct(
-				layoutPageTemplateCollectionAndLayoutPageTemplateEntryTable.
-					getColumn("layoutPageTemplateEntryId")
+			DSLQueryFactoryUtil.count(
 			).from(
 				layoutPageTemplateCollectionAndLayoutPageTemplateEntryTable
 			));
@@ -1024,7 +1022,7 @@ public class LayoutPageTemplateEntryServiceImpl
 				() -> {
 					if (Validator.isNotNull(name)) {
 						return LayoutPageTemplateEntryTable.INSTANCE.name.like(
-							name);
+							StringPool.PERCENT + name + StringPool.PERCENT);
 					}
 
 					return null;
@@ -1072,7 +1070,9 @@ public class LayoutPageTemplateEntryServiceImpl
 					() -> {
 						if (Validator.isNotNull(name)) {
 							return LayoutPageTemplateCollectionTable.INSTANCE.
-								name.like(name);
+								name.like(
+									StringPool.PERCENT + name +
+										StringPool.PERCENT);
 						}
 
 						return null;
