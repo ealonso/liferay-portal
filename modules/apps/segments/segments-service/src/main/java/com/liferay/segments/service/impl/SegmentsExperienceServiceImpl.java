@@ -119,7 +119,7 @@ public class SegmentsExperienceServiceImpl
 			segmentsExperience.getPlid(), permissionChecker.getUserId());
 
 		return segmentsExperienceLocalService.deleteSegmentsExperience(
-			segmentsExperienceId);
+			segmentsExperience);
 	}
 
 	@Override
