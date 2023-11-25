@@ -9,8 +9,8 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.LockedLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -52,13 +52,15 @@ public class SegmentsExperienceServiceImpl
 			ServiceContext serviceContext)
 		throws PortalException {
 
+		PermissionChecker permissionChecker = getPermissionChecker();
+
 		if (!_hasUpdateLayoutPermission(_getPublishedLayoutPlid(plid))) {
 			_portletResourcePermission.check(
-				getPermissionChecker(), serviceContext.getScopeGroupId(),
+				permissionChecker, serviceContext.getScopeGroupId(),
 				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES);
 		}
 
-		_checkUnlockedLayout(plid, GuestOrUserUtil.getUserId());
+		_checkUnlockedLayout(plid, permissionChecker.getUserId());
 
 		return segmentsExperienceLocalService.addSegmentsExperience(
 			getUserId(), groupId, segmentsEntryId, plid, nameMap, active,
@@ -101,18 +103,20 @@ public class SegmentsExperienceServiceImpl
 			long segmentsExperienceId)
 		throws PortalException {
 
+		PermissionChecker permissionChecker = getPermissionChecker();
+
 		SegmentsExperience segmentsExperience =
 			segmentsExperienceLocalService.getSegmentsExperience(
 				segmentsExperienceId);
 
 		_segmentsExperienceResourcePermission.check(
-			getPermissionChecker(),
+			permissionChecker,
 			segmentsExperienceLocalService.getSegmentsExperience(
 				segmentsExperienceId),
 			ActionKeys.DELETE);
 
 		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+			segmentsExperience.getPlid(), permissionChecker.getUserId());
 
 		return segmentsExperienceLocalService.deleteSegmentsExperience(
 			segmentsExperienceId);
@@ -234,15 +238,17 @@ public class SegmentsExperienceServiceImpl
 			UnicodeProperties typeSettingsUnicodeProperties)
 		throws PortalException {
 
+		PermissionChecker permissionChecker = getPermissionChecker();
+
 		SegmentsExperience segmentsExperience =
 			segmentsExperienceLocalService.getSegmentsExperience(
 				segmentsExperienceId);
 
 		_segmentsExperienceResourcePermission.check(
-			getPermissionChecker(), segmentsExperience, ActionKeys.UPDATE);
+			permissionChecker, segmentsExperience, ActionKeys.UPDATE);
 
 		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+			segmentsExperience.getPlid(), permissionChecker.getUserId());
 
 		return segmentsExperienceLocalService.updateSegmentsExperience(
 			segmentsExperienceId, segmentsEntryId, nameMap, active,
@@ -254,12 +260,14 @@ public class SegmentsExperienceServiceImpl
 			long segmentsExperienceId, int newPriority)
 		throws PortalException {
 
+		PermissionChecker permissionChecker = getPermissionChecker();
+
 		SegmentsExperience segmentsExperience =
 			segmentsExperiencePersistence.findByPrimaryKey(
 				segmentsExperienceId);
 
 		_segmentsExperienceResourcePermission.check(
-			getPermissionChecker(), segmentsExperience, ActionKeys.UPDATE);
+			permissionChecker, segmentsExperience, ActionKeys.UPDATE);
 
 		SegmentsExperience swapSegmentsExperience =
 			segmentsExperiencePersistence.fetchByG_P_P(
@@ -268,12 +276,11 @@ public class SegmentsExperienceServiceImpl
 
 		if (swapSegmentsExperience != null) {
 			_segmentsExperienceResourcePermission.check(
-				getPermissionChecker(), swapSegmentsExperience,
-				ActionKeys.UPDATE);
+				permissionChecker, swapSegmentsExperience, ActionKeys.UPDATE);
 		}
 
 		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+			segmentsExperience.getPlid(), permissionChecker.getUserId());
 
 		segmentsExperienceLocalService.updateSegmentsExperiencePriority(
 			segmentsExperienceId, newPriority);
