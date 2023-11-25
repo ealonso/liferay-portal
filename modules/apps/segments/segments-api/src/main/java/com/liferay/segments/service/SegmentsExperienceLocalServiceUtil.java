@@ -550,14 +550,6 @@ public class SegmentsExperienceLocalServiceUtil {
 		return getService().updateSegmentsExperience(segmentsExperience);
 	}
 
-	public static SegmentsExperience updateSegmentsExperienceActive(
-			long segmentsExperienceId, boolean active)
-		throws PortalException {
-
-		return getService().updateSegmentsExperienceActive(
-			segmentsExperienceId, active);
-	}
-
 	public static SegmentsExperience updateSegmentsExperiencePriority(
 			long segmentsExperienceId, int newPriority)
 		throws PortalException {

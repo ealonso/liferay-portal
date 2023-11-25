@@ -437,10 +437,6 @@ public interface SegmentsExperienceLocalService
 	public SegmentsExperience updateSegmentsExperience(
 		SegmentsExperience segmentsExperience);
 
-	public SegmentsExperience updateSegmentsExperienceActive(
-			long segmentsExperienceId, boolean active)
-		throws PortalException;
-
 	public SegmentsExperience updateSegmentsExperiencePriority(
 			long segmentsExperienceId, int newPriority)
 		throws PortalException;
