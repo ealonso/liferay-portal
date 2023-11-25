@@ -6,14 +6,17 @@
 package com.liferay.segments.service.impl;
 
 import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.LockedLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.permission.LayoutPermission;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.segments.constants.SegmentsActionKeys;
@@ -54,6 +57,8 @@ public class SegmentsExperienceServiceImpl
 				getPermissionChecker(), serviceContext.getScopeGroupId(),
 				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES);
 		}
+
+		_checkUnlockedLayout(plid, GuestOrUserUtil.getUserId());
 
 		return segmentsExperienceLocalService.addSegmentsExperience(
 			getUserId(), groupId, segmentsEntryId, plid, nameMap, active,
@@ -96,11 +101,18 @@ public class SegmentsExperienceServiceImpl
 			long segmentsExperienceId)
 		throws PortalException {
 
+		SegmentsExperience segmentsExperience =
+			segmentsExperienceLocalService.getSegmentsExperience(
+				segmentsExperienceId);
+
 		_segmentsExperienceResourcePermission.check(
 			getPermissionChecker(),
 			segmentsExperienceLocalService.getSegmentsExperience(
 				segmentsExperienceId),
 			ActionKeys.DELETE);
+
+		_checkUnlockedLayout(
+			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
 
 		return segmentsExperienceLocalService.deleteSegmentsExperience(
 			segmentsExperienceId);
@@ -222,11 +234,15 @@ public class SegmentsExperienceServiceImpl
 			UnicodeProperties typeSettingsUnicodeProperties)
 		throws PortalException {
 
-		_segmentsExperienceResourcePermission.check(
-			getPermissionChecker(),
+		SegmentsExperience segmentsExperience =
 			segmentsExperienceLocalService.getSegmentsExperience(
-				segmentsExperienceId),
-			ActionKeys.UPDATE);
+				segmentsExperienceId);
+
+		_segmentsExperienceResourcePermission.check(
+			getPermissionChecker(), segmentsExperience, ActionKeys.UPDATE);
+
+		_checkUnlockedLayout(
+			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
 
 		return segmentsExperienceLocalService.updateSegmentsExperience(
 			segmentsExperienceId, segmentsEntryId, nameMap, active,
@@ -256,8 +272,21 @@ public class SegmentsExperienceServiceImpl
 				ActionKeys.UPDATE);
 		}
 
+		_checkUnlockedLayout(
+			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+
 		segmentsExperienceLocalService.updateSegmentsExperiencePriority(
 			segmentsExperienceId, newPriority);
+	}
+
+	private void _checkUnlockedLayout(long plid, long userId)
+		throws PortalException {
+
+		Layout layout = _layoutLocalService.fetchLayout(plid);
+
+		if ((layout != null) && !layout.isUnlocked(Constants.EDIT, userId)) {
+			throw new LockedLayoutException();
+		}
 	}
 
 	private long _getPublishedLayoutPlid(long plid) {
