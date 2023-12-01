@@ -17,8 +17,7 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page import="com.liferay.exportimport.kernel.staging.LayoutStagingUtil" %><%@
-page import="com.liferay.exportimport.kernel.staging.StagingUtil" %><%@
+<%@ page import="com.liferay.exportimport.kernel.staging.StagingUtil" %><%@
 page import="com.liferay.layout.seo.kernel.LayoutSEOLink" %><%@
 page import="com.liferay.layout.seo.kernel.LayoutSEOLinkManager" %><%@
 page import="com.liferay.layout.seo.kernel.LayoutSEOLinkManagerUtil" %><%@
