@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
+import com.liferay.portal.kernel.model.LayoutSetStagingHandler;
 import com.liferay.portal.kernel.model.StagedModel;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.model.ThemeSetting;
@@ -805,14 +806,42 @@ public class StagedLayoutSetStagedModelDataHandler
 		}
 	}
 
+	private LayoutSet _mergeLayoutSetRevisionIntoLayoutSet(
+		LayoutSet layoutSet) {
+
+		LayoutSetStagingHandler layoutSetStagingHandler =
+			layoutSet.getLayoutSetStagingHandler();
+
+		if (layoutSetStagingHandler == null) {
+			return (LayoutSet)layoutSet.clone();
+		}
+
+		layoutSet = layoutSetStagingHandler.getLayoutSet();
+		layoutSet = (LayoutSet)layoutSet.clone();
+
+		LayoutSetBranch layoutSetBranch =
+			layoutSetStagingHandler.getLayoutSetBranch();
+
+		layoutSet.setLogoId(layoutSetBranch.getLogoId());
+		layoutSet.setThemeId(layoutSetBranch.getThemeId());
+		layoutSet.setColorSchemeId(layoutSetBranch.getColorSchemeId());
+		layoutSet.setCss(layoutSetBranch.getCss());
+		layoutSet.setSettings(layoutSetBranch.getSettings());
+		layoutSet.setLayoutSetPrototypeUuid(
+			layoutSetBranch.getLayoutSetPrototypeUuid());
+		layoutSet.setLayoutSetPrototypeLinkEnabled(
+			layoutSetBranch.isLayoutSetPrototypeLinkEnabled());
+
+		return layoutSet;
+	}
+
 	private StagedLayoutSet _unwrapLayoutSetStagingHandler(
 		StagedLayoutSet stagedLayoutSet) {
 
 		LayoutSet layoutSet = ModelAdapterUtil.adapt(
 			stagedLayoutSet, StagedLayoutSet.class, LayoutSet.class);
 
-		layoutSet = _layoutStaging.mergeLayoutSetRevisionIntoLayoutSet(
-			layoutSet);
+		layoutSet = _mergeLayoutSetRevisionIntoLayoutSet(layoutSet);
 
 		return ModelAdapterUtil.adapt(
 			layoutSet, LayoutSet.class, StagedLayoutSet.class);

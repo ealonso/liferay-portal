@@ -7,7 +7,6 @@ package com.liferay.exportimport.kernel.staging;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutSet;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -16,10 +15,6 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface LayoutStaging {
-
-	public Layout mergeLayoutRevisionIntoLayout(Layout layout);
-
-	public LayoutSet mergeLayoutSetRevisionIntoLayoutSet(LayoutSet layoutSet);
 
 	public boolean prepareLayoutStagingHandler(
 		PortletDataContext portletDataContext, Layout layout);

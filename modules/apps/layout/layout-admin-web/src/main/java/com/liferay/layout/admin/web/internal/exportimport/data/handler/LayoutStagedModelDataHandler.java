@@ -390,7 +390,7 @@ public class LayoutStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			layoutElement, ExportImportPathUtil.getModelPath(layout),
-			_layoutStaging.mergeLayoutRevisionIntoLayout(layout));
+			_mergeLayoutRevisionIntoLayout(layout));
 	}
 
 	@Override
@@ -2660,6 +2660,34 @@ public class LayoutStagedModelDataHandler
 		}
 
 		return false;
+	}
+
+	private Layout _mergeLayoutRevisionIntoLayout(Layout layout) {
+		LayoutStagingHandler layoutStagingHandler =
+			layout.getLayoutStagingHandler();
+
+		if (layoutStagingHandler == null) {
+			return (Layout)layout.clone();
+		}
+
+		layout = layoutStagingHandler.getLayout();
+		layout = (Layout)layout.clone();
+
+		LayoutRevision layoutRevision =
+			layoutStagingHandler.getLayoutRevision();
+
+		layout.setName(layoutRevision.getName());
+		layout.setTitle(layoutRevision.getTitle());
+		layout.setDescription(layoutRevision.getDescription());
+		layout.setKeywords(layoutRevision.getKeywords());
+		layout.setRobots(layoutRevision.getRobots());
+		layout.setTypeSettings(layoutRevision.getTypeSettings());
+		layout.setIconImageId(layoutRevision.getIconImageId());
+		layout.setThemeId(layoutRevision.getThemeId());
+		layout.setColorSchemeId(layoutRevision.getColorSchemeId());
+		layout.setCss(layoutRevision.getCss());
+
+		return layout;
 	}
 
 	private void _mergePortlets(

@@ -9,9 +9,6 @@ import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutRevision;
-import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.LayoutSetBranch;
-import com.liferay.portal.kernel.model.LayoutSetStagingHandler;
 import com.liferay.portal.kernel.model.LayoutStagingHandler;
 import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -27,63 +24,6 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(service = LayoutStaging.class)
 public class LayoutStagingImpl implements LayoutStaging {
-
-	@Override
-	public Layout mergeLayoutRevisionIntoLayout(Layout layout) {
-		LayoutStagingHandler layoutStagingHandler =
-			layout.getLayoutStagingHandler();
-
-		if (layoutStagingHandler == null) {
-			return (Layout)layout.clone();
-		}
-
-		layout = layoutStagingHandler.getLayout();
-		layout = (Layout)layout.clone();
-
-		LayoutRevision layoutRevision =
-			layoutStagingHandler.getLayoutRevision();
-
-		layout.setName(layoutRevision.getName());
-		layout.setTitle(layoutRevision.getTitle());
-		layout.setDescription(layoutRevision.getDescription());
-		layout.setKeywords(layoutRevision.getKeywords());
-		layout.setRobots(layoutRevision.getRobots());
-		layout.setTypeSettings(layoutRevision.getTypeSettings());
-		layout.setIconImageId(layoutRevision.getIconImageId());
-		layout.setThemeId(layoutRevision.getThemeId());
-		layout.setColorSchemeId(layoutRevision.getColorSchemeId());
-		layout.setCss(layoutRevision.getCss());
-
-		return layout;
-	}
-
-	@Override
-	public LayoutSet mergeLayoutSetRevisionIntoLayoutSet(LayoutSet layoutSet) {
-		LayoutSetStagingHandler layoutSetStagingHandler =
-			layoutSet.getLayoutSetStagingHandler();
-
-		if (layoutSetStagingHandler == null) {
-			return (LayoutSet)layoutSet.clone();
-		}
-
-		layoutSet = layoutSetStagingHandler.getLayoutSet();
-		layoutSet = (LayoutSet)layoutSet.clone();
-
-		LayoutSetBranch layoutSetBranch =
-			layoutSetStagingHandler.getLayoutSetBranch();
-
-		layoutSet.setLogoId(layoutSetBranch.getLogoId());
-		layoutSet.setThemeId(layoutSetBranch.getThemeId());
-		layoutSet.setColorSchemeId(layoutSetBranch.getColorSchemeId());
-		layoutSet.setCss(layoutSetBranch.getCss());
-		layoutSet.setSettings(layoutSetBranch.getSettings());
-		layoutSet.setLayoutSetPrototypeUuid(
-			layoutSetBranch.getLayoutSetPrototypeUuid());
-		layoutSet.setLayoutSetPrototypeLinkEnabled(
-			layoutSetBranch.isLayoutSetPrototypeLinkEnabled());
-
-		return layoutSet;
-	}
 
 	@Override
 	public boolean prepareLayoutStagingHandler(
