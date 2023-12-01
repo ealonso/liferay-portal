@@ -6,6 +6,7 @@
 package com.liferay.portal.model.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
+import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
@@ -27,8 +28,10 @@ import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
+import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
+import com.liferay.portal.kernel.model.LayoutStagingHandler;
 import com.liferay.portal.kernel.model.LayoutType;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
@@ -67,6 +70,7 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -80,6 +84,8 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.sites.kernel.util.Sites;
 
 import java.io.IOException;
+
+import java.lang.reflect.InvocationHandler;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -736,6 +742,17 @@ public class LayoutImpl extends LayoutBaseImpl {
 		return false;
 	}
 
+	@Override
+	public LayoutRevision getLayoutRevision() {
+		LayoutStagingHandler layoutStagingHandler = _getLayoutStagingHandler();
+
+		if (layoutStagingHandler == null) {
+			return null;
+		}
+
+		return layoutStagingHandler.getLayoutRevision();
+	}
+
 	/**
 	 * Returns the current layout's {@link LayoutSet}.
 	 *
@@ -781,6 +798,22 @@ public class LayoutImpl extends LayoutBaseImpl {
 		}
 
 		return null;
+	}
+
+	@Override
+	public LayoutStagingHandler getLayoutStagingHandler() {
+		if (!ProxyUtil.isProxyClass(getClass())) {
+			return null;
+		}
+
+		InvocationHandler invocationHandler = ProxyUtil.getInvocationHandler(
+			this);
+
+		if (!(invocationHandler instanceof LayoutStagingHandler)) {
+			return null;
+		}
+
+		return (LayoutStagingHandler)invocationHandler;
 	}
 
 	/**
@@ -1020,6 +1053,16 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 		return layoutTypeController.includeLayoutContent(
 			httpServletRequest, httpServletResponse, this);
+	}
+
+	@Override
+	public boolean isBranchingLayout() {
+		if (isSystem()) {
+			return false;
+		}
+
+		return LayoutStagingUtil.isBranchingLayoutSet(
+			getGroup(), isPrivateLayout());
 	}
 
 	@Override
@@ -1661,6 +1704,21 @@ public class LayoutImpl extends LayoutBaseImpl {
 		}
 
 		return layoutPortletIds;
+	}
+
+	private LayoutStagingHandler _getLayoutStagingHandler() {
+		if (!ProxyUtil.isProxyClass(getClass())) {
+			return null;
+		}
+
+		InvocationHandler invocationHandler = ProxyUtil.getInvocationHandler(
+			this);
+
+		if (!(invocationHandler instanceof LayoutStagingHandler)) {
+			return null;
+		}
+
+		return (LayoutStagingHandler)invocationHandler;
 	}
 
 	private String _getLayoutTypeControllerType() {

@@ -8,11 +8,7 @@ package com.liferay.exportimport.kernel.staging;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.LayoutSetBranch;
-import com.liferay.portal.kernel.model.LayoutSetStagingHandler;
-import com.liferay.portal.kernel.model.LayoutStagingHandler;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -21,17 +17,6 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 @ProviderType
 public interface LayoutStaging {
-
-	public LayoutRevision getLayoutRevision(Layout layout);
-
-	public LayoutSetBranch getLayoutSetBranch(LayoutSet layoutSet);
-
-	public LayoutSetStagingHandler getLayoutSetStagingHandler(
-		LayoutSet layoutSet);
-
-	public LayoutStagingHandler getLayoutStagingHandler(Layout layout);
-
-	public boolean isBranchingLayout(Layout layout);
 
 	public boolean isBranchingLayoutSet(Group group, boolean privateLayout);
 

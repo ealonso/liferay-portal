@@ -22,10 +22,7 @@ import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
 import com.liferay.portal.kernel.service.LayoutSetBranchLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
-
-import java.lang.reflect.InvocationHandler;
 
 import java.util.List;
 
@@ -37,74 +34,6 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(service = LayoutStaging.class)
 public class LayoutStagingImpl implements LayoutStaging {
-
-	@Override
-	public LayoutRevision getLayoutRevision(Layout layout) {
-		LayoutStagingHandler layoutStagingHandler = getLayoutStagingHandler(
-			layout);
-
-		if (layoutStagingHandler == null) {
-			return null;
-		}
-
-		return layoutStagingHandler.getLayoutRevision();
-	}
-
-	@Override
-	public LayoutSetBranch getLayoutSetBranch(LayoutSet layoutSet) {
-		LayoutSetStagingHandler layoutSetStagingHandler =
-			getLayoutSetStagingHandler(layoutSet);
-
-		if (layoutSetStagingHandler == null) {
-			return null;
-		}
-
-		return layoutSetStagingHandler.getLayoutSetBranch();
-	}
-
-	@Override
-	public LayoutSetStagingHandler getLayoutSetStagingHandler(
-		LayoutSet layoutSet) {
-
-		if (!ProxyUtil.isProxyClass(layoutSet.getClass())) {
-			return null;
-		}
-
-		InvocationHandler invocationHandler = ProxyUtil.getInvocationHandler(
-			layoutSet);
-
-		if (!(invocationHandler instanceof LayoutSetStagingHandler)) {
-			return null;
-		}
-
-		return (LayoutSetStagingHandler)invocationHandler;
-	}
-
-	@Override
-	public LayoutStagingHandler getLayoutStagingHandler(Layout layout) {
-		if ((layout == null) || !ProxyUtil.isProxyClass(layout.getClass())) {
-			return null;
-		}
-
-		InvocationHandler invocationHandler = ProxyUtil.getInvocationHandler(
-			layout);
-
-		if (!(invocationHandler instanceof LayoutStagingHandler)) {
-			return null;
-		}
-
-		return (LayoutStagingHandler)invocationHandler;
-	}
-
-	@Override
-	public boolean isBranchingLayout(Layout layout) {
-		if ((layout == null) || layout.isSystem()) {
-			return false;
-		}
-
-		return isBranchingLayoutSet(
-			layout.getGroup(), layout.isPrivateLayout());
-	}
 
 	@Override
 	public boolean isBranchingLayoutSet(Group group, boolean privateLayout) {
@@ -166,8 +95,8 @@ public class LayoutStagingImpl implements LayoutStaging {
 
 	@Override
 	public Layout mergeLayoutRevisionIntoLayout(Layout layout) {
-		LayoutStagingHandler layoutStagingHandler = getLayoutStagingHandler(
-			layout);
+		LayoutStagingHandler layoutStagingHandler =
+			layout.getLayoutStagingHandler();
 
 		if (layoutStagingHandler == null) {
 			return (Layout)layout.clone();
@@ -196,7 +125,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 	@Override
 	public LayoutSet mergeLayoutSetRevisionIntoLayoutSet(LayoutSet layoutSet) {
 		LayoutSetStagingHandler layoutSetStagingHandler =
-			getLayoutSetStagingHandler(layoutSet);
+			layoutSet.getLayoutSetStagingHandler();
 
 		if (layoutSetStagingHandler == null) {
 			return (LayoutSet)layoutSet.clone();
@@ -228,7 +157,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 		boolean exportLAR = MapUtil.getBoolean(
 			portletDataContext.getParameterMap(), "exportLAR");
 
-		if (exportLAR || !LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (exportLAR || !layout.isBranchingLayout()) {
 			return true;
 		}
 
@@ -247,7 +176,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 
 		if (!layoutRevisions.isEmpty()) {
 			if (layoutRevisions.size() > 1) {
-				layoutRevision = getLayoutRevision(layout);
+				layoutRevision = layout.getLayoutRevision();
 
 				long layoutBranchId = GetterUtil.DEFAULT_LONG;
 
@@ -271,7 +200,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 		}
 
 		LayoutStagingHandler layoutStagingHandler =
-			LayoutStagingUtil.getLayoutStagingHandler(layout);
+			layout.getLayoutStagingHandler();
 
 		layoutStagingHandler.setLayoutRevision(layoutRevision);
 

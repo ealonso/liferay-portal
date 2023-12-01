@@ -16,7 +16,9 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
+import com.liferay.portal.kernel.model.LayoutSetStagingHandler;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.model.VirtualHost;
 import com.liferay.portal.kernel.model.cache.CacheField;
@@ -34,6 +36,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -42,6 +45,8 @@ import com.liferay.portal.util.PropsValues;
 import com.liferay.sites.kernel.util.Sites;
 
 import java.io.IOException;
+
+import java.lang.reflect.InvocationHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -154,6 +159,18 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 		return GroupLocalServiceUtil.getGroup(getGroupId());
 	}
 
+	@Override
+	public LayoutSetBranch getLayoutSetBranch() {
+		LayoutSetStagingHandler layoutSetStagingHandler =
+			getLayoutSetStagingHandler();
+
+		if (layoutSetStagingHandler == null) {
+			return null;
+		}
+
+		return layoutSetStagingHandler.getLayoutSetBranch();
+	}
+
 	/**
 	 * Returns the layout set prototype's ID, or <code>0</code> if it has no
 	 * layout set prototype.
@@ -179,6 +196,22 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 					layoutSetPrototypeUuid, getCompanyId());
 
 		return layoutSetPrototype.getLayoutSetPrototypeId();
+	}
+
+	@Override
+	public LayoutSetStagingHandler getLayoutSetStagingHandler() {
+		if (!ProxyUtil.isProxyClass(getClass())) {
+			return null;
+		}
+
+		InvocationHandler invocationHandler = ProxyUtil.getInvocationHandler(
+			this);
+
+		if (!(invocationHandler instanceof LayoutSetStagingHandler)) {
+			return null;
+		}
+
+		return (LayoutSetStagingHandler)invocationHandler;
 	}
 
 	@Override
