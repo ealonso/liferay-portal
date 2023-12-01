@@ -6,7 +6,6 @@
 package com.liferay.layout.admin.web.internal.util;
 
 import com.liferay.application.list.GroupProvider;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.layout.admin.web.internal.action.provider.LayoutActionProvider;
 import com.liferay.layout.admin.web.internal.helper.LayoutActionsHelper;
@@ -490,8 +489,7 @@ public class LayoutsTreeImpl implements LayoutsTree {
 			"type", layout.getType()
 		);
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision != null) {
 			if (_staging.isIncomplete(

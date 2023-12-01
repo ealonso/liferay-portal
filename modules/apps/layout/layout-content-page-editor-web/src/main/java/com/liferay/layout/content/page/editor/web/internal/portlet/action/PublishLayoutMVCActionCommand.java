@@ -5,7 +5,6 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.layout.constants.LayoutTypeSettingsConstants;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
@@ -183,8 +182,7 @@ public class PublishLayoutMVCActionCommand
 			Layout layout, ServiceContext serviceContext)
 		throws Exception {
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision == null) {
 			return;

@@ -7,7 +7,6 @@ package com.liferay.exportimport.web.internal.display.context;
 
 import com.liferay.exportimport.constants.ExportImportBackgroundTaskContextMapConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportHelperUtil;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
@@ -20,6 +19,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutRevision;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
@@ -169,7 +169,7 @@ public class ProcessSummaryDisplayContext {
 			groupId, privateLayout, selectedLayoutId);
 
 		if ((layout == null) ||
-			(LayoutStagingUtil.isBranchingLayout(layout) &&
+			(layout.isBranchingLayout() &&
 			 !_hasApprovedLayoutRevision(layout))) {
 
 			return;
@@ -230,9 +230,10 @@ public class ProcessSummaryDisplayContext {
 	}
 
 	private boolean _hasApprovedLayoutRevision(Layout layout) {
-		LayoutSetBranch layoutSetBranch = LayoutStagingUtil.getLayoutSetBranch(
-			LayoutSetLocalServiceUtil.fetchLayoutSet(
-				layout.getGroupId(), layout.isPrivateLayout()));
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
+			layout.getGroupId(), layout.isPrivateLayout());
+
+		LayoutSetBranch layoutSetBranch = layoutSet.getLayoutSetBranch();
 
 		List<LayoutRevision> approvedLayoutRevisions =
 			LayoutRevisionLocalServiceUtil.getLayoutRevisions(

@@ -5,7 +5,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.petra.lang.SafeCloseable;
@@ -804,7 +803,7 @@ public class PortletPreferencesLocalServiceImpl
 			return null;
 		}
 
-		if (LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (layout.isBranchingLayout()) {
 			LayoutStagingHandler layoutStagingHandler =
 				new LayoutStagingHandler(layout);
 
@@ -1074,9 +1073,7 @@ public class PortletPreferencesLocalServiceImpl
 		if (CopyLayoutThreadLocal.isCopyLayout()) {
 			Layout layout = _layoutPersistence.fetchByPrimaryKey(plid);
 
-			if ((layout != null) &&
-				LayoutStagingUtil.isBranchingLayout(layout)) {
-
+			if ((layout != null) && layout.isBranchingLayout()) {
 				LayoutStagingHandler layoutStagingHandler =
 					new LayoutStagingHandler(layout);
 

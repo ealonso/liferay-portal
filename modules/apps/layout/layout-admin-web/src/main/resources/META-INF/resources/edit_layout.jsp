@@ -22,7 +22,7 @@ if (Validator.isNull(backURL)) {
 
 String portletResource = ParamUtil.getString(request, "portletResource");
 
-LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(selLayout);
+LayoutRevision layoutRevision = selLayout.getLayoutRevision();
 
 String layoutSetBranchName = StringPool.BLANK;
 

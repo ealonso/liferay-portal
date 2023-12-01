@@ -5,7 +5,6 @@
 
 package com.liferay.portal.model.impl;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -53,7 +52,7 @@ public class LayoutSetBranchImpl extends LayoutSetBranchBaseImpl {
 				getGroupId(), getPrivateLayout());
 
 			LayoutSetStagingHandler layoutSetStagingHandler =
-				LayoutStagingUtil.getLayoutSetStagingHandler(_layoutSet);
+				_layoutSet.getLayoutSetStagingHandler();
 
 			if (layoutSetStagingHandler == null) {
 				return _layoutSet;

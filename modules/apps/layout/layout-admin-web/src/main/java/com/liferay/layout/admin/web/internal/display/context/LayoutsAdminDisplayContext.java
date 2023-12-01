@@ -15,7 +15,6 @@ import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.item.selector.CETItemSelectorReturnType;
 import com.liferay.client.extension.type.item.selector.criterion.CETItemSelectorCriterion;
 import com.liferay.client.extension.type.manager.CETManager;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.LinkTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
@@ -170,8 +169,7 @@ public class LayoutsAdminDisplayContext {
 		Layout layout = getSelLayout();
 
 		if (layout != null) {
-			LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-				layout);
+			LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 			if (layoutRevision != null) {
 				_activeLayoutSetBranchId =

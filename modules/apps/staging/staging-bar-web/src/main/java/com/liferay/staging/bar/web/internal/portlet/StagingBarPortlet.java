@@ -9,7 +9,6 @@ import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.asset.util.LinkedAssetEntryIdsUtil;
 import com.liferay.exportimport.kernel.exception.RemoteExportException;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.kernel.staging.StagingURLHelper;
 import com.liferay.petra.string.StringPool;
@@ -170,8 +169,7 @@ public class StagingBarPortlet extends MVCPortlet {
 					layout.getClassPK());
 			}
 
-			layoutRevision = LayoutStagingUtil.getLayoutRevision(
-				layoutRevisionLayout);
+			layoutRevision = layoutRevisionLayout.getLayoutRevision();
 
 			if (layoutRevision != null) {
 				branchingEnabled = true;

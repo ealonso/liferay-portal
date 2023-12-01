@@ -30,7 +30,7 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelModifiedDateComparator;
 import com.liferay.exportimport.kernel.lifecycle.ExportImportLifecycleManager;
 import com.liferay.exportimport.kernel.lifecycle.constants.ExportImportLifecycleConstants;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
+import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.lar.PermissionImporter;
@@ -390,7 +390,7 @@ public class LayoutStagedModelDataHandler
 
 		portletDataContext.addClassedModel(
 			layoutElement, ExportImportPathUtil.getModelPath(layout),
-			LayoutStagingUtil.mergeLayoutRevisionIntoLayout(layout));
+			_layoutStaging.mergeLayoutRevisionIntoLayout(layout));
 	}
 
 	@Override
@@ -1071,7 +1071,7 @@ public class LayoutStagedModelDataHandler
 
 	private void _addMasterLayoutRevision(Layout layout) throws Exception {
 		if (ExportImportThreadLocal.isStagingInProcess() ||
-			!LayoutStagingUtil.isBranchingLayout(layout)) {
+			!layout.isBranchingLayout()) {
 
 			return;
 		}
@@ -1866,7 +1866,7 @@ public class LayoutStagedModelDataHandler
 			Layout layout, PortletDataContext portletDataContext)
 		throws Exception {
 
-		if (!LayoutStagingUtil.prepareLayoutStagingHandler(
+		if (!_layoutStaging.prepareLayoutStagingHandler(
 				portletDataContext, layout) ||
 			!layout.isSupportsEmbeddedPortlets()) {
 
@@ -2804,7 +2804,7 @@ public class LayoutStagedModelDataHandler
 		}
 
 		LayoutStagingHandler layoutStagingHandler =
-			LayoutStagingUtil.getLayoutStagingHandler(layout);
+			layout.getLayoutStagingHandler();
 
 		if (layoutStagingHandler != null) {
 			LayoutRevision layoutRevision =
@@ -3161,6 +3161,9 @@ public class LayoutStagedModelDataHandler
 
 	@Reference
 	private LayoutSetLocalService _layoutSetLocalService;
+
+	@Reference
+	private LayoutStaging _layoutStaging;
 
 	@Reference
 	private LayoutTemplateLocalService _layoutTemplateLocalService;

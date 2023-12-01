@@ -21,7 +21,7 @@ import com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
+import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.lar.ThemeExporter;
 import com.liferay.exportimport.lar.ThemeImporter;
@@ -493,7 +493,7 @@ public class StagedLayoutSetStagedModelDataHandler
 			}
 
 			try {
-				if (!LayoutStagingUtil.prepareLayoutStagingHandler(
+				if (!_layoutStaging.prepareLayoutStagingHandler(
 						portletDataContext, layout)) {
 
 					continue;
@@ -811,7 +811,7 @@ public class StagedLayoutSetStagedModelDataHandler
 		LayoutSet layoutSet = ModelAdapterUtil.adapt(
 			stagedLayoutSet, StagedLayoutSet.class, LayoutSet.class);
 
-		layoutSet = LayoutStagingUtil.mergeLayoutSetRevisionIntoLayoutSet(
+		layoutSet = _layoutStaging.mergeLayoutSetRevisionIntoLayoutSet(
 			layoutSet);
 
 		return ModelAdapterUtil.adapt(
@@ -1132,6 +1132,9 @@ public class StagedLayoutSetStagedModelDataHandler
 
 	@Reference
 	private LayoutSetPrototypeLocalService _layoutSetPrototypeLocalService;
+
+	@Reference
+	private LayoutStaging _layoutStaging;
 
 	@Reference
 	private Portal _portal;

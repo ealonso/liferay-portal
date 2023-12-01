@@ -45,7 +45,6 @@ import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerRegistryUtil;
 import com.liferay.exportimport.kernel.lar.StagedModelType;
 import com.liferay.exportimport.kernel.model.ExportImportConfiguration;
 import com.liferay.exportimport.kernel.service.ExportImportConfigurationLocalService;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.exportimport.kernel.staging.StagingURLHelper;
 import com.liferay.exportimport.kernel.staging.constants.StagingConstants;
@@ -2160,8 +2159,7 @@ public class StagingImpl implements Staging {
 
 	@Override
 	public boolean isIncomplete(Layout layout) {
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if ((layoutRevision != null) &&
 			_isLayoutRevisionIncomplete(
@@ -2177,8 +2175,7 @@ public class StagingImpl implements Staging {
 	@Override
 	public boolean isIncomplete(Layout layout, long layoutSetBranchId) {
 		return _isLayoutRevisionIncomplete(
-			layout.getPlid(), LayoutStagingUtil.getLayoutRevision(layout),
-			layoutSetBranchId);
+			layout.getPlid(), layout.getLayoutRevision(), layoutSetBranchId);
 	}
 
 	@Override

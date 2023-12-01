@@ -7,7 +7,6 @@ package com.liferay.portal.service.impl;
 
 import com.liferay.admin.kernel.util.PortalMyAccountApplicationType;
 import com.liferay.expando.kernel.model.CustomAttributesDisplay;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -26,6 +25,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.EventDefinition;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -256,9 +256,9 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 					portletPreferences.getPortletId(), plid);
 			}
 
-			if (LayoutStagingUtil.isBranchingLayout(
-					_layoutLocalService.getLayout(plid))) {
+			Layout layout = _layoutLocalService.getLayout(plid);
 
+			if (layout.isBranchingLayout()) {
 				ServiceContext serviceContext =
 					ServiceContextThreadLocal.getServiceContext();
 

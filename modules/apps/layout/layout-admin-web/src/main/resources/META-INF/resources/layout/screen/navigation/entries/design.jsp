@@ -24,7 +24,7 @@ Group group = layoutsAdminDisplayContext.getGroup();
 
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
-LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(selLayout);
+LayoutRevision layoutRevision = selLayout.getLayoutRevision();
 %>
 
 <portlet:actionURL name="/layout_admin/edit_layout_design" var="editLayoutURL">

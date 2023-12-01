@@ -5,7 +5,6 @@
 
 package com.liferay.layout.type.controller.content.internal.product.navigation.control.menu;
 
-import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.helper.LayoutCopyHelper;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -163,8 +162,7 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 
 		Layout layout = themeDisplay.getLayout();
 
-		LayoutRevision layoutRevision = _layoutStaging.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if ((layoutRevision != null) && layoutRevision.isIncomplete()) {
 			return false;
@@ -260,9 +258,6 @@ public class EditLayoutModeProductNavigationControlMenuEntry
 
 	@Reference
 	private LayoutPermission _layoutPermission;
-
-	@Reference
-	private LayoutStaging _layoutStaging;
 
 	@Reference
 	private LayoutContentModelResourcePermission _modelResourcePermission;

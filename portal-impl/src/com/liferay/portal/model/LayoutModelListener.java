@@ -5,7 +5,6 @@
 
 package com.liferay.portal.model;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -40,9 +39,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 	@Override
 	public void onBeforeRemove(Layout layout) throws ModelListenerException {
 		try {
-			if ((layout == null) ||
-				!LayoutStagingUtil.isBranchingLayout(layout)) {
-
+			if ((layout == null) || !layout.isBranchingLayout()) {
 				return;
 			}
 

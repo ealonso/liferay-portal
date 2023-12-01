@@ -25,7 +25,6 @@ import com.liferay.asset.publisher.web.internal.helper.AssetPublisherWebHelper;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherCustomizerRegistry;
 import com.liferay.asset.util.AssetHelper;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.item.selector.ItemSelector;
@@ -36,6 +35,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutRevision;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutTypePortletConstants;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
@@ -743,12 +743,13 @@ public class AssetPublisherConfigurationAction
 			return;
 		}
 
-		if (LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (layout.isBranchingLayout()) {
 			HttpServletRequest httpServletRequest =
 				portal.getHttpServletRequest(actionRequest);
 
-			LayoutSetBranch layoutSetBranch =
-				LayoutStagingUtil.getLayoutSetBranch(layout.getLayoutSet());
+			LayoutSet layoutSet = layout.getLayoutSet();
+
+			LayoutSetBranch layoutSetBranch = layoutSet.getLayoutSetBranch();
 
 			long layoutRevisionId = staging.getRecentLayoutRevisionId(
 				httpServletRequest, layoutSetBranch.getLayoutSetBranchId(),

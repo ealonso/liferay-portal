@@ -18,7 +18,7 @@ if (currentLayoutRevisionId > 0) {
 	recentLayoutRevision = LayoutRevisionLocalServiceUtil.getLayoutRevision(currentLayoutRevisionId);
 }
 else {
-	recentLayoutRevision = LayoutStagingUtil.getLayoutRevision(layout);
+	recentLayoutRevision = layout.getLayoutRevision();
 
 	currentLayoutRevisionId = recentLayoutRevision.getLayoutRevisionId();
 }

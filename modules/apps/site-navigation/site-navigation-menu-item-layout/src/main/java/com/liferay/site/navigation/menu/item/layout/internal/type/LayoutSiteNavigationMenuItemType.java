@@ -7,7 +7,6 @@ package com.liferay.site.navigation.menu.item.layout.internal.type;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
-import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.frontend.taglib.servlet.taglib.util.JSPRenderer;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.item.selector.criteria.UUIDItemSelectorReturnType;
@@ -120,8 +119,7 @@ public class LayoutSiteNavigationMenuItemType
 			return false;
 		}
 
-		LayoutRevision layoutRevision = _layoutStaging.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if ((layoutRevision != null) &&
 			((layoutRevision.getStatus() == WorkflowConstants.STATUS_DRAFT) ||
@@ -361,8 +359,7 @@ public class LayoutSiteNavigationMenuItemType
 			return false;
 		}
 
-		LayoutRevision layoutRevision = _layoutStaging.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if ((layoutRevision != null) &&
 			(layoutRevision.getStatus() == WorkflowConstants.STATUS_DRAFT)) {
@@ -621,9 +618,6 @@ public class LayoutSiteNavigationMenuItemType
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private LayoutStaging _layoutStaging;
 
 	@Reference(
 		target = "(osgi.web.symbolicname=com.liferay.site.navigation.menu.item.layout)",

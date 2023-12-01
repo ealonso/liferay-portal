@@ -5,7 +5,7 @@
 
 package com.liferay.staging.internal.service;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
+import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.exportimport.kernel.staging.Staging;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -154,12 +154,11 @@ public class LayoutLocalServiceStagingAdvice {
 		_layoutLocalServiceHelper.validateParentLayoutId(
 			groupId, privateLayout, layoutId, parentLayoutId);
 
-		if (LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (layout.isBranchingLayout()) {
 			layout = getProxiedLayout(layout);
 		}
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision == null) {
 			return layoutLocalService.updateLayout(
@@ -258,12 +257,11 @@ public class LayoutLocalServiceStagingAdvice {
 		Layout layout = _layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
 
-		if (LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (layout.isBranchingLayout()) {
 			layout = getProxiedLayout(layout);
 		}
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision == null) {
 			return layoutLocalService.updateLayout(
@@ -312,12 +310,11 @@ public class LayoutLocalServiceStagingAdvice {
 		Layout layout = _layoutPersistence.findByG_P_L(
 			groupId, privateLayout, layoutId);
 
-		if (LayoutStagingUtil.isBranchingLayout(layout)) {
+		if (layout.isBranchingLayout()) {
 			layout = getProxiedLayout(layout);
 		}
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision == null) {
 			return layoutLocalService.updateLookAndFeel(
@@ -365,8 +362,7 @@ public class LayoutLocalServiceStagingAdvice {
 
 		layout = wrapLayout(layout);
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (layoutRevision == null) {
 			return layoutLocalService.updateName(layout, name, languageId);
@@ -519,7 +515,7 @@ public class LayoutLocalServiceStagingAdvice {
 
 	protected Layout unwrapLayout(Layout layout) {
 		LayoutStagingHandler layoutStagingHandler =
-			LayoutStagingUtil.getLayoutStagingHandler(layout);
+			layout.getLayoutStagingHandler();
 
 		if (layoutStagingHandler == null) {
 			return layout;
@@ -530,11 +526,9 @@ public class LayoutLocalServiceStagingAdvice {
 
 	protected Layout wrapLayout(Layout layout) {
 		LayoutStagingHandler layoutStagingHandler =
-			LayoutStagingUtil.getLayoutStagingHandler(layout);
+			layout.getLayoutStagingHandler();
 
-		if ((layoutStagingHandler != null) ||
-			!LayoutStagingUtil.isBranchingLayout(layout)) {
-
+		if ((layoutStagingHandler != null) || !layout.isBranchingLayout()) {
 			return layout;
 		}
 
@@ -669,6 +663,9 @@ public class LayoutLocalServiceStagingAdvice {
 
 	@Reference
 	private LayoutRevisionPersistence _layoutRevisionPersistence;
+
+	@Reference
+	private LayoutStaging _layoutStaging;
 
 	@Reference
 	private Portal _portal;

@@ -6,7 +6,6 @@
 package com.liferay.portal.kernel.theme;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -386,14 +385,11 @@ public class NavItem implements Serializable {
 	}
 
 	private static boolean _isLayoutRevisionDisplayable(Layout layout) {
-		if (layout.isTypeContent() ||
-			!LayoutStagingUtil.isBranchingLayout(layout)) {
-
+		if (layout.isTypeContent() || !layout.isBranchingLayout()) {
 			return true;
 		}
 
-		LayoutRevision layoutRevision = LayoutStagingUtil.getLayoutRevision(
-			layout);
+		LayoutRevision layoutRevision = layout.getLayoutRevision();
 
 		if (!layoutRevision.isIncomplete()) {
 			return true;

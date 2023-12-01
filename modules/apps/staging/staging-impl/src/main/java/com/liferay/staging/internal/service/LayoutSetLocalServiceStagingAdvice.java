@@ -5,7 +5,7 @@
 
 package com.liferay.staging.internal.service;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
+import com.liferay.exportimport.kernel.staging.LayoutStaging;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -72,7 +72,7 @@ public class LayoutSetLocalServiceStagingAdvice {
 
 	protected LayoutSet wrapLayoutSet(LayoutSet layoutSet) {
 		try {
-			if (!LayoutStagingUtil.isBranchingLayoutSet(
+			if (!_layoutStaging.isBranchingLayoutSet(
 					layoutSet.getGroup(), layoutSet.isPrivateLayout())) {
 
 				return layoutSet;
@@ -114,6 +114,9 @@ public class LayoutSetLocalServiceStagingAdvice {
 
 	@Reference
 	private LayoutSetLocalService _layoutSetLocalService;
+
+	@Reference
+	private LayoutStaging _layoutStaging;
 
 	private class LayoutSetLocalServiceStagingInvocationHandler
 		implements InvocationHandler {

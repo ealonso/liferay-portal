@@ -11,7 +11,7 @@
 LayoutRevision layoutRevision = (LayoutRevision)request.getAttribute(WebKeys.LAYOUT_REVISION);
 
 if ((layoutRevision == null) && (layout != null)) {
-	layoutRevision = LayoutStagingUtil.getLayoutRevision(layout);
+	layoutRevision = layout.getLayoutRevision();
 }
 
 Long liveLayoutRevisionId = null;

@@ -624,7 +624,7 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 		throws PortalException {
 
 		LayoutSetStagingHandler layoutSetStagingHandler =
-			LayoutStagingUtil.getLayoutSetStagingHandler(layoutSet);
+			layoutSet.getLayoutSetStagingHandler();
 
 		if (layoutSetStagingHandler != null) {
 			return layoutSetStagingHandler.getLayoutSetBranch();
