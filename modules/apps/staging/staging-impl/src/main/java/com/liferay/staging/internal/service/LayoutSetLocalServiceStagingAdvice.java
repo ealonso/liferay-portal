@@ -72,9 +72,7 @@ public class LayoutSetLocalServiceStagingAdvice {
 
 	protected LayoutSet wrapLayoutSet(LayoutSet layoutSet) {
 		try {
-			if (!_layoutStaging.isBranchingLayoutSet(
-					layoutSet.getGroup(), layoutSet.isPrivateLayout())) {
-
+			if (!layoutSet.isBranchingLayoutSet()) {
 				return layoutSet;
 			}
 		}

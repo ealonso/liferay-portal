@@ -7,10 +7,6 @@ package com.liferay.exportimport.internal.staging;
 
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.staging.LayoutStaging;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutRevision;
 import com.liferay.portal.kernel.model.LayoutSet;
@@ -18,10 +14,8 @@ import com.liferay.portal.kernel.model.LayoutSetBranch;
 import com.liferay.portal.kernel.model.LayoutSetStagingHandler;
 import com.liferay.portal.kernel.model.LayoutStagingHandler;
 import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
-import com.liferay.portal.kernel.service.LayoutSetBranchLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.UnicodeProperties;
 
 import java.util.List;
 
@@ -33,64 +27,6 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(service = LayoutStaging.class)
 public class LayoutStagingImpl implements LayoutStaging {
-
-	@Override
-	public boolean isBranchingLayoutSet(Group group, boolean privateLayout) {
-		boolean isStagingGroup = false;
-
-		if (group.isStagingGroup() && !group.isStagedRemotely()) {
-			isStagingGroup = true;
-
-			group = group.getLiveGroup();
-		}
-
-		UnicodeProperties typeSettingsUnicodeProperties =
-			group.getTypeSettingsProperties();
-
-		if (typeSettingsUnicodeProperties.isEmpty()) {
-			return false;
-		}
-
-		boolean branchingEnabled = false;
-
-		if (privateLayout) {
-			branchingEnabled = GetterUtil.getBoolean(
-				typeSettingsUnicodeProperties.getProperty("branchingPrivate"));
-		}
-		else {
-			branchingEnabled = GetterUtil.getBoolean(
-				typeSettingsUnicodeProperties.getProperty("branchingPublic"));
-		}
-
-		if (!branchingEnabled || !group.isStaged() ||
-			(!group.isStagedRemotely() && !isStagingGroup)) {
-
-			return false;
-		}
-
-		Group stagingGroup = group;
-
-		if (isStagingGroup) {
-			stagingGroup = group.getStagingGroup();
-		}
-
-		try {
-			_layoutSetBranchLocalService.getMasterLayoutSetBranch(
-				stagingGroup.getGroupId(), privateLayout);
-
-			return true;
-		}
-		catch (PortalException portalException) {
-
-			// LPS-52675
-
-			if (_log.isDebugEnabled()) {
-				_log.debug(portalException);
-			}
-
-			return false;
-		}
-	}
 
 	@Override
 	public Layout mergeLayoutRevisionIntoLayout(Layout layout) {
@@ -206,13 +142,7 @@ public class LayoutStagingImpl implements LayoutStaging {
 		return true;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		LayoutStagingImpl.class);
-
 	@Reference
 	private LayoutRevisionLocalService _layoutRevisionLocalService;
-
-	@Reference
-	private LayoutSetBranchLocalService _layoutSetBranchLocalService;
 
 }

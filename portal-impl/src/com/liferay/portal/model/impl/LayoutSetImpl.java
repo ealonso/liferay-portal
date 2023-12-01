@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetBranchLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.kernel.service.ThemeLocalServiceUtil;
@@ -390,6 +391,66 @@ public class LayoutSetImpl extends LayoutSetBaseImpl {
 	@Override
 	public boolean hasSetModifiedDate() {
 		return true;
+	}
+
+	@Override
+	public boolean isBranchingLayoutSet() throws PortalException {
+		Group group = getGroup();
+
+		boolean isStagingGroup = false;
+
+		if (group.isStagingGroup() && !group.isStagedRemotely()) {
+			isStagingGroup = true;
+
+			group = group.getLiveGroup();
+		}
+
+		UnicodeProperties typeSettingsUnicodeProperties =
+			group.getTypeSettingsProperties();
+
+		if (typeSettingsUnicodeProperties.isEmpty()) {
+			return false;
+		}
+
+		boolean branchingEnabled = false;
+
+		if (isStagingGroup) {
+			branchingEnabled = GetterUtil.getBoolean(
+				typeSettingsUnicodeProperties.getProperty("branchingPrivate"));
+		}
+		else {
+			branchingEnabled = GetterUtil.getBoolean(
+				typeSettingsUnicodeProperties.getProperty("branchingPublic"));
+		}
+
+		if (!branchingEnabled || !group.isStaged() ||
+			(!group.isStagedRemotely() && !isStagingGroup)) {
+
+			return false;
+		}
+
+		Group stagingGroup = group;
+
+		if (isStagingGroup) {
+			stagingGroup = group.getStagingGroup();
+		}
+
+		try {
+			LayoutSetBranchLocalServiceUtil.getMasterLayoutSetBranch(
+				stagingGroup.getGroupId(), isStagingGroup);
+
+			return true;
+		}
+		catch (PortalException portalException) {
+
+			// LPS-52675
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+
+			return false;
+		}
 	}
 
 	@Override

@@ -6,7 +6,6 @@
 package com.liferay.portal.model.impl;
 
 import com.liferay.document.library.kernel.service.DLAppServiceUtil;
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
@@ -1061,8 +1060,18 @@ public class LayoutImpl extends LayoutBaseImpl {
 			return false;
 		}
 
-		return LayoutStagingUtil.isBranchingLayoutSet(
-			getGroup(), isPrivateLayout());
+		LayoutSet layoutSet = getLayoutSet();
+
+		try {
+			return layoutSet.isBranchingLayoutSet();
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+
+			return false;
+		}
 	}
 
 	@Override

@@ -5,7 +5,6 @@
 
 package com.liferay.portal.service.impl;
 
-import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.MergeLayoutPrototypesThreadLocal;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -630,9 +629,7 @@ public class LayoutSetLocalServiceImpl extends LayoutSetLocalServiceBaseImpl {
 			return layoutSetStagingHandler.getLayoutSetBranch();
 		}
 
-		if (LayoutStagingUtil.isBranchingLayoutSet(
-				layoutSet.getGroup(), layoutSet.isPrivateLayout())) {
-
+		if (layoutSet.isBranchingLayoutSet()) {
 			layoutSetStagingHandler = new LayoutSetStagingHandler(layoutSet);
 
 			return layoutSetStagingHandler.getLayoutSetBranch();
