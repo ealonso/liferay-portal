@@ -290,6 +290,16 @@ public class LayoutsTreeDisplayContext {
 		return _disableInputs;
 	}
 
+	public boolean isIncomplete() {
+		if (LayoutStagingUtil.isBranchingLayoutSet(
+				getSelectPagesGroup(), isSelectPagesPrivateLayout())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isPrivateLayoutsEnabled() {
 		Group selectPagesGroup = getSelectPagesGroup();
 
@@ -341,7 +351,7 @@ public class LayoutsTreeDisplayContext {
 				"children",
 				layoutsTree.getLayoutsJSONArray(
 					_getSelectedLayoutIdsArray(), _getSelectPagesGroupId(),
-					_httpServletRequest, false, _isIncomplete(), false,
+					_httpServletRequest, false, isIncomplete(), false,
 					LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
 					isSelectPagesPrivateLayout(), _getTreeId())
 			).put(
@@ -443,16 +453,6 @@ public class LayoutsTreeDisplayContext {
 				"liferay-staging:select-pages:treeId"));
 
 		return _treeId;
-	}
-
-	private boolean _isIncomplete() {
-		if (LayoutStagingUtil.isBranchingLayoutSet(
-				getSelectPagesGroup(), isSelectPagesPrivateLayout())) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 	private String _action;

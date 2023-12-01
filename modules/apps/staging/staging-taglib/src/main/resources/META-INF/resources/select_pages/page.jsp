@@ -16,7 +16,7 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 		<h3 class="sheet-subtitle"><liferay-ui:message key="pages" /></h3>
 
 		<div class="d-flex flex-wrap layout-selector" id="<portlet:namespace />pages">
-			<c:if test="<%= (!layoutsTreeDisplayContext.isDisableInputs() && layoutsTreeDisplayContext.isPrivateLayoutsEnabled()) || LayoutStagingUtil.isBranchingLayoutSet(layoutsTreeDisplayContext.getSelectPagesGroup(), layoutsTreeDisplayContext.isSelectPagesPrivateLayout()) %>">
+			<c:if test="<%= (!layoutsTreeDisplayContext.isDisableInputs() && layoutsTreeDisplayContext.isPrivateLayoutsEnabled()) || layoutsTreeDisplayContext.isIncomplete()) %>">
 				<div class="layout-selector-options">
 					<aui:fieldset label="pages-options">
 						<c:if test="<%= !layoutsTreeDisplayContext.isDisableInputs() && layoutsTreeDisplayContext.isPrivateLayoutsEnabled() %>">
@@ -30,7 +30,7 @@ LayoutsTreeDisplayContext layoutsTreeDisplayContext = new LayoutsTreeDisplayCont
 							</c:choose>
 						</c:if>
 
-						<c:if test="<%= LayoutStagingUtil.isBranchingLayoutSet(layoutsTreeDisplayContext.getSelectPagesGroup(), layoutsTreeDisplayContext.isSelectPagesPrivateLayout()) %>">
+						<c:if test="<%= layoutsTreeDisplayContext.isIncomplete() %>">
 							<aui:select disabled="<%= layoutsTreeDisplayContext.isDisableInputs() %>" label="site-pages-variation" name="layoutSetBranchId">
 
 								<%
