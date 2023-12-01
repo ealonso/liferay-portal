@@ -269,6 +269,11 @@ public class LayoutSetWrapper
 		return model.getGroupId();
 	}
 
+	@Override
+	public LayoutSetBranch getLayoutSetBranch() {
+		return model.getLayoutSetBranch();
+	}
+
 	/**
 	 * Returns the layout set ID of this layout set.
 	 *
@@ -315,6 +320,11 @@ public class LayoutSetWrapper
 	@Override
 	public String getLayoutSetPrototypeUuid() {
 		return model.getLayoutSetPrototypeUuid();
+	}
+
+	@Override
+	public LayoutSetStagingHandler getLayoutSetStagingHandler() {
+		return model.getLayoutSetStagingHandler();
 	}
 
 	@Override
@@ -451,6 +461,13 @@ public class LayoutSetWrapper
 	@Override
 	public boolean hasSetModifiedDate() {
 		return model.hasSetModifiedDate();
+	}
+
+	@Override
+	public boolean isBranchingLayoutSet()
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return model.isBranchingLayoutSet();
 	}
 
 	@Override

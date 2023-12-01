@@ -225,6 +225,8 @@ public interface Layout extends LayoutModel, PersistedModel {
 	 */
 	public boolean getIconImage();
 
+	public LayoutRevision getLayoutRevision();
+
 	/**
 	 * Returns the current layout's {@link LayoutSet}.
 	 *
@@ -233,6 +235,8 @@ public interface Layout extends LayoutModel, PersistedModel {
 	public LayoutSet getLayoutSet();
 
 	public Layout getLayoutSetPrototypeLayout();
+
+	public LayoutStagingHandler getLayoutStagingHandler();
 
 	/**
 	 * Returns the current layout's {@link LayoutType}.
@@ -318,6 +322,8 @@ public interface Layout extends LayoutModel, PersistedModel {
 			javax.servlet.http.HttpServletRequest httpServletRequest,
 			javax.servlet.http.HttpServletResponse httpServletResponse)
 		throws Exception;
+
+	public boolean isBranchingLayout();
 
 	public boolean isChildSelected(boolean selectable, Layout layout)
 		throws com.liferay.portal.kernel.exception.PortalException;

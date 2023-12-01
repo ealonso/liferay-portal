@@ -71,6 +71,8 @@ public interface LayoutSet extends LayoutSetModel, PersistedModel {
 	public Group getGroup()
 		throws com.liferay.portal.kernel.exception.PortalException;
 
+	public LayoutSetBranch getLayoutSetBranch();
+
 	/**
 	 * Returns the layout set prototype's ID, or <code>0</code> if it has no
 	 * layout set prototype.
@@ -84,6 +86,8 @@ public interface LayoutSet extends LayoutSetModel, PersistedModel {
 	 */
 	public long getLayoutSetPrototypeId()
 		throws com.liferay.portal.kernel.exception.PortalException;
+
+	public LayoutSetStagingHandler getLayoutSetStagingHandler();
 
 	public long getLiveLogoId();
 
@@ -119,6 +123,9 @@ public interface LayoutSet extends LayoutSetModel, PersistedModel {
 	public java.util.TreeMap<String, String> getVirtualHostnames();
 
 	public boolean hasSetModifiedDate();
+
+	public boolean isBranchingLayoutSet()
+		throws com.liferay.portal.kernel.exception.PortalException;
 
 	public boolean isLayoutSetPrototypeLinkActive();
 

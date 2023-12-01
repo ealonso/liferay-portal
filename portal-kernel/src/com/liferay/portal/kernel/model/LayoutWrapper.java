@@ -918,6 +918,11 @@ public class LayoutWrapper
 		return model.getLayoutPrototypeUuid();
 	}
 
+	@Override
+	public LayoutRevision getLayoutRevision() {
+		return model.getLayoutRevision();
+	}
+
 	/**
 	 * Returns the current layout's {@link LayoutSet}.
 	 *
@@ -931,6 +936,11 @@ public class LayoutWrapper
 	@Override
 	public Layout getLayoutSetPrototypeLayout() {
 		return model.getLayoutSetPrototypeLayout();
+	}
+
+	@Override
+	public LayoutStagingHandler getLayoutStagingHandler() {
+		return model.getLayoutStagingHandler();
 	}
 
 	/**
@@ -1569,6 +1579,11 @@ public class LayoutWrapper
 	@Override
 	public boolean isApproved() {
 		return model.isApproved();
+	}
+
+	@Override
+	public boolean isBranchingLayout() {
+		return model.isBranchingLayout();
 	}
 
 	@Override
