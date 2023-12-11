@@ -5,6 +5,7 @@
 
 package com.liferay.announcements.web.internal.display.context;
 
+import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchContainerManagementToolbarDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
@@ -15,24 +16,22 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.LabelItemListBuilder
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Alejandro Tardín
  */
-public class AnnouncementsAdminViewManagementToolbarDisplayContext {
+public class AnnouncementsAdminViewManagementToolbarDisplayContext
+	extends SearchContainerManagementToolbarDisplayContext {
 
 	public AnnouncementsAdminViewManagementToolbarDisplayContext(
 		AnnouncementsAdminViewDisplayContext
@@ -41,37 +40,53 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse) {
 
+		super(
+			httpServletRequest, liferayPortletRequest, liferayPortletResponse,
+			announcementsAdminViewDisplayContext.getSearchContainer());
+
 		_announcementsAdminViewDisplayContext =
 			announcementsAdminViewDisplayContext;
-		_httpServletRequest = httpServletRequest;
-		_liferayPortletResponse = liferayPortletResponse;
-
-		_currentURLObj = PortletURLUtil.getCurrent(
-			liferayPortletRequest, liferayPortletResponse);
-		_themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 	}
 
+	@Override
 	public List<DropdownItem> getActionDropdownItems() {
 		return DropdownItemListBuilder.add(
 			dropdownItem -> {
 				dropdownItem.putData("action", "deleteEntries");
 				dropdownItem.setIcon("trash");
 				dropdownItem.setLabel(
-					LanguageUtil.get(_httpServletRequest, "delete"));
+					LanguageUtil.get(httpServletRequest, "delete"));
 				dropdownItem.setQuickAction(true);
 			}
 		).build();
 	}
 
+	@Override
+	public Map<String, Object> getAdditionalProps() {
+		return HashMapBuilder.<String, Object>put(
+			"deleteEntriesURL",
+			PortletURLBuilder.createActionURL(
+				liferayPortletResponse
+			).setActionName(
+				"/announcements/edit_entry"
+			).buildString()
+		).put(
+			"inputId", Constants.CMD
+		).put(
+			"inputValue", Constants.DELETE
+		).build();
+	}
+
+	@Override
 	public String getClearResultsURL() {
 		return PortletURLBuilder.createRenderURL(
-			_liferayPortletResponse
+			liferayPortletResponse
 		).setNavigation(
 			_announcementsAdminViewDisplayContext.getNavigation()
 		).buildString();
 	}
 
+	@Override
 	public CreationMenu getCreationMenu() {
 		return CreationMenuBuilder.addDropdownItem(
 			dropdownItem -> {
@@ -80,11 +95,11 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 
 				dropdownItem.setHref(
 					PortletURLBuilder.createRenderURL(
-						_liferayPortletResponse
+						liferayPortletResponse
 					).setMVCRenderCommandName(
 						"/announcements/edit_entry"
 					).setRedirect(
-						PortalUtil.getCurrentURL(_httpServletRequest)
+						PortalUtil.getCurrentURL(httpServletRequest)
 					).setParameter(
 						"alert", navigation.equals("alerts")
 					).setParameter(
@@ -103,11 +118,12 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 				}
 
 				dropdownItem.setLabel(
-					LanguageUtil.get(_httpServletRequest, label));
+					LanguageUtil.get(httpServletRequest, label));
 			}
 		).build();
 	}
 
+	@Override
 	public List<DropdownItem> getFilterDropdownItems() {
 		return DropdownItemListBuilder.addGroup(
 			dropdownGroupItem -> {
@@ -115,11 +131,12 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 					_getFilterNavigationDropdownItems());
 				dropdownGroupItem.setLabel(
 					LanguageUtil.get(
-						_httpServletRequest, "filter-by-navigation"));
+						httpServletRequest, "filter-by-navigation"));
 			}
 		).build();
 	}
 
+	@Override
 	public List<LabelItem> getFilterLabelItems() {
 		return LabelItemListBuilder.add(
 			() -> Validator.isNotNull(
@@ -128,8 +145,7 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 				labelItem.putData(
 					"removeLabelURL",
 					PortletURLBuilder.create(
-						PortletURLUtil.clone(
-							_currentURLObj, _liferayPortletResponse)
+						getPortletURL()
 					).setParameter(
 						"distributionScope", (String)null
 					).buildString());
@@ -142,7 +158,13 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 		).build();
 	}
 
-	public boolean isDisabled() {
+	@Override
+	public String getSearchContainerId() {
+		return _announcementsAdminViewDisplayContext.getSearchContainerId();
+	}
+
+	@Override
+	public Boolean isShowSearch() {
 		return false;
 	}
 
@@ -151,9 +173,6 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 
 		return new DropdownItemList() {
 			{
-				PortletURL navigationURL = PortletURLUtil.clone(
-					_currentURLObj, _liferayPortletResponse);
-
 				String currentDistributionScopeLabel =
 					_announcementsAdminViewDisplayContext.
 						getCurrentDistributionScopeLabel();
@@ -171,11 +190,11 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 								currentDistributionScopeLabel.equals(
 									distributionScopeEntry.getKey()));
 							dropdownItem.setHref(
-								navigationURL, "distributionScope",
+								getPortletURL(), "distributionScope",
 								distributionScopeEntry.getValue());
 							dropdownItem.setLabel(
 								LanguageUtil.get(
-									_httpServletRequest,
+									httpServletRequest,
 									distributionScopeEntry.getKey()));
 						});
 				}
@@ -185,9 +204,5 @@ public class AnnouncementsAdminViewManagementToolbarDisplayContext {
 
 	private final AnnouncementsAdminViewDisplayContext
 		_announcementsAdminViewDisplayContext;
-	private final PortletURL _currentURLObj;
-	private final HttpServletRequest _httpServletRequest;
-	private final LiferayPortletResponse _liferayPortletResponse;
-	private final ThemeDisplay _themeDisplay;
 
 }
