@@ -60,6 +60,8 @@ public class DDMForm implements Serializable {
 		ddmFormField.setDDMForm(this);
 
 		_ddmFormFields.add(ddmFormField);
+
+		_ddmFormFieldsMap.put(ddmFormField.getName(), ddmFormField);
 	}
 
 	public void addDDMFormRule(DDMFormRule ddmFormRule) {
@@ -109,18 +111,11 @@ public class DDMForm implements Serializable {
 	public Map<String, DDMFormField> getDDMFormFieldsMap(
 		boolean includeNestedDDMFormFields) {
 
-		Map<String, DDMFormField> ddmFormFieldsMap = new LinkedHashMap<>();
-
-		for (DDMFormField ddmFormField : _ddmFormFields) {
-			ddmFormFieldsMap.put(ddmFormField.getName(), ddmFormField);
-
-			if (includeNestedDDMFormFields) {
-				ddmFormFieldsMap.putAll(
-					ddmFormField.getNestedDDMFormFieldsMap());
-			}
+		if (includeNestedDDMFormFields) {
+			return _getFullHierarchyDDMFormFieldsMap();
 		}
 
-		return ddmFormFieldsMap;
+		return _ddmFormFieldsMap;
 	}
 
 	public List<DDMFormRule> getDDMFormRules() {
@@ -191,6 +186,8 @@ public class DDMForm implements Serializable {
 	public void setDDMFormFields(List<DDMFormField> ddmFormFields) {
 		for (DDMFormField ddmFormField : ddmFormFields) {
 			ddmFormField.setDDMForm(this);
+
+			_ddmFormFieldsMap.put(ddmFormField.getName(), ddmFormField);
 		}
 
 		_ddmFormFields = ddmFormFields;
@@ -219,13 +216,33 @@ public class DDMForm implements Serializable {
 		_objectFieldsJSONArray = objectFieldsJSONArray;
 	}
 
+	private Map<String, DDMFormField> _getFullHierarchyDDMFormFieldsMap() {
+		if (_fullHierarchyDDMFormFieldsMap != null) {
+			return _fullHierarchyDDMFormFieldsMap;
+		}
+
+		_fullHierarchyDDMFormFieldsMap = new LinkedHashMap<>();
+
+		for (DDMFormField ddmFormField : _ddmFormFields) {
+			_fullHierarchyDDMFormFieldsMap.put(
+				ddmFormField.getName(), ddmFormField);
+			_fullHierarchyDDMFormFieldsMap.putAll(
+				ddmFormField.getNestedDDMFormFieldsMap());
+		}
+
+		return _fullHierarchyDDMFormFieldsMap;
+	}
+
 	private boolean _allowInvalidAvailableLocalesForProperty;
 	private Set<Locale> _availableLocales;
 	private List<DDMFormField> _ddmFormFields;
+	private final Map<String, DDMFormField> _ddmFormFieldsMap =
+		new LinkedHashMap<>();
 	private List<DDMFormRule> _ddmFormRules;
 	private DDMFormSuccessPageSettings _ddmFormSuccessPageSettings;
 	private Locale _defaultLocale;
 	private String _definitionSchemaVersion;
+	private Map<String, DDMFormField> _fullHierarchyDDMFormFieldsMap;
 	private JSONArray _objectFieldsJSONArray;
 
 }
