@@ -64,12 +64,18 @@ public class DDMFormFieldValue implements Serializable {
 	}
 
 	public DDMFormField getDDMFormField() {
+		if (_ddmFormField != null) {
+			return _ddmFormField;
+		}
+
 		DDMForm ddmForm = _ddmFormValues.getDDMForm();
 
 		Map<String, DDMFormField> ddmFormFieldsMap =
 			ddmForm.getDDMFormFieldsMap(true);
 
-		return ddmFormFieldsMap.get(_name);
+		_ddmFormField = ddmFormFieldsMap.get(_name);
+
+		return _ddmFormField;
 	}
 
 	public DDMFormValues getDDMFormValues() {
@@ -222,6 +228,7 @@ public class DDMFormFieldValue implements Serializable {
 	}
 
 	private Object _confirmationValue;
+	private DDMFormField _ddmFormField;
 	private DDMFormValues _ddmFormValues;
 	private String _fieldReference;
 	private String _instanceId = StringUtil.randomString();
