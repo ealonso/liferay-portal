@@ -27,40 +27,6 @@ public class DDMFormTest {
 		LiferayUnitTestRule.INSTANCE;
 
 	@Test
-	public void testGetNontransientDDMFormFields() {
-		DDMForm ddmForm = createDDMForm();
-
-		Map<String, DDMFormField> ddmFormFieldsMap =
-			ddmForm.getNontransientDDMFormFieldsMap(false);
-
-		Assert.assertEquals(
-			ddmFormFieldsMap.toString(), 1, ddmFormFieldsMap.size());
-
-		DDMFormField ddmFormField = ddmFormFieldsMap.get("Paragraph");
-
-		Assert.assertNull(ddmFormField);
-
-		Assert.assertNotNull(ddmFormFieldsMap.get("Text1"));
-	}
-
-	@Test
-	public void testGetNontransientDDMFormFieldsIncludingNestedFields() {
-		DDMForm ddmForm = createDDMForm();
-
-		Map<String, DDMFormField> ddmFormFieldsMap =
-			ddmForm.getNontransientDDMFormFieldsMap(true);
-
-		Assert.assertEquals(
-			ddmFormFieldsMap.toString(), 2, ddmFormFieldsMap.size());
-
-		DDMFormField ddmFormField = ddmFormFieldsMap.get("Paragraph");
-
-		Assert.assertNull(ddmFormField);
-
-		Assert.assertNotNull(ddmFormFieldsMap.get("Text2"));
-	}
-
-	@Test
 	public void testGetNontransientDDMFormFieldsReferences() {
 		DDMForm ddmForm = createDDMForm();
 
