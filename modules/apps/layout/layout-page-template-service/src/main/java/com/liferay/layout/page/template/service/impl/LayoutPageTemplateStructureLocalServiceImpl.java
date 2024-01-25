@@ -6,6 +6,7 @@
 package com.liferay.layout.page.template.service.impl;
 
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructureRel;
@@ -13,9 +14,13 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateStructureRelLo
 import com.liferay.layout.page.template.service.base.LayoutPageTemplateStructureLocalServiceBaseImpl;
 import com.liferay.layout.page.template.util.CheckUnlockedLayoutThreadLocal;
 import com.liferay.layout.util.UpdateLayoutStatusThreadLocal;
+import com.liferay.layout.util.structure.LayoutStructure;
+import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.LockedLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
@@ -144,7 +149,33 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 	public LayoutPageTemplateStructure fetchLayoutPageTemplateStructure(
 		long groupId, long plid) {
 
-		return layoutPageTemplateStructurePersistence.fetchByG_P(groupId, plid);
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			layoutPageTemplateStructurePersistence.fetchByG_P(groupId, plid);
+
+		if (layoutPageTemplateStructure != null) {
+			return layoutPageTemplateStructure;
+		}
+
+		try {
+			long defaultSegmentsExperienceId =
+				_segmentsExperienceLocalService.
+					fetchDefaultSegmentsExperienceId(plid);
+
+			return layoutPageTemplateStructureLocalService.
+				addLayoutPageTemplateStructure(
+					PrincipalThreadLocal.getUserId(), groupId, plid,
+					defaultSegmentsExperienceId,
+					_generateContentLayoutStructureData(
+						groupId, defaultSegmentsExperienceId, plid),
+					ServiceContextThreadLocal.getServiceContext());
+		}
+		catch (PortalException portalException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(portalException);
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -224,6 +255,36 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 		}
 	}
 
+	private String _generateContentLayoutStructureData(
+		long defaultSegmentsExperienceId, long groupId, long plid) {
+
+		LayoutStructure layoutStructure = new LayoutStructure();
+
+		LayoutStructureItem rootLayoutStructureItem =
+			layoutStructure.addRootLayoutStructureItem();
+
+		List<FragmentEntryLink> fragmentEntryLinks =
+			_fragmentEntryLinkLocalService.
+				getFragmentEntryLinksBySegmentsExperienceId(
+					groupId, defaultSegmentsExperienceId, plid);
+
+		if (!fragmentEntryLinks.isEmpty()) {
+			LayoutStructureItem containerStyledLayoutStructureItem =
+				layoutStructure.addContainerStyledLayoutStructureItem(
+					rootLayoutStructureItem.getItemId(), 0);
+
+			for (int i = 0; i < fragmentEntryLinks.size(); i++) {
+				FragmentEntryLink fragmentEntryLink = fragmentEntryLinks.get(i);
+
+				layoutStructure.addFragmentStyledLayoutStructureItem(
+					fragmentEntryLink.getFragmentEntryLinkId(),
+					containerStyledLayoutStructureItem.getItemId(), i);
+			}
+		}
+
+		return layoutStructure.toString();
+	}
+
 	private void _updateLayoutStatus(long userId, long plid)
 		throws PortalException {
 
@@ -233,6 +294,9 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 				ServiceContextThreadLocal.getServiceContext());
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		LayoutPageTemplateStructureLocalServiceImpl.class);
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
