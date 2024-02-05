@@ -98,6 +98,7 @@ export default function ExperienceSelector({
 
 			<Picker
 				UNSAFE_menuClassName="cadmin"
+				active={true}
 				aria-label={
 					label || Liferay.Language.get('experience-selector')
 				}
@@ -106,7 +107,6 @@ export default function ExperienceSelector({
 				displayType={displayType}
 				id={selectorId}
 				items={segmentsExperiences}
-				onSelectionChange={onChangeExperience || handleExperienceChange}
 				selectedItem={selectedSegmentsExperience}
 				selectedKey={selectedSegmentsExperience.segmentsExperienceId}
 			>
