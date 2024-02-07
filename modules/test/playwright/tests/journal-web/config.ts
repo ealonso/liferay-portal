@@ -7,7 +7,7 @@ import {devices} from '@playwright/test';
 
 export const config = {
 	name: 'journal-web',
-	testDir: 'journal-web',
+	testDir: 'tests/journal-web',
 	use: {
 		...devices['Desktop Chrome'],
 	},

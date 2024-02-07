@@ -7,8 +7,8 @@ import {expect, mergeTests} from '@playwright/test';
 
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
+import {journalPages} from '../../fixtures/journalPages';
 import {loginTest} from '../../fixtures/loginTest';
-import {journalPages} from '../../fixtures/JournalPages';
 
 export const test = mergeTests(
 	apiHelpersTest,
@@ -18,11 +18,10 @@ export const test = mergeTests(
 );
 
 test('This is a test for LPS-177690. The tooltip of the back button should be Go to Web Content in the editor of Templates.', async ({
-	journalEditTemplatePage, page
+	journalEditTemplatePage,
+	page,
 }) => {
 	await journalEditTemplatePage.goto();
 
-	await expect(
-		page.getByTitle('Go to Web Content')
-	).toBeVisible();
+	await expect(page.getByTitle('Go to Web Content')).toBeVisible();
 });
