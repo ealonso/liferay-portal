@@ -13,9 +13,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.GroupService;
@@ -121,7 +121,7 @@ public class GroupItemSelectorProviderImpl
 	private boolean _hasViewPermission(Group group) {
 		try {
 			PermissionChecker permissionChecker =
-				GuestOrUserUtil.getPermissionChecker();
+				PermissionThreadLocal.getPermissionChecker();
 
 			if (group.isCompany() ||
 				permissionChecker.isGroupAdmin(group.getGroupId()) ||
