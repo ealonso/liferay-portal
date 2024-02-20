@@ -194,8 +194,9 @@ public class AddFragmentEntryLinksMVCActionCommandTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), layout.getPlid(),
-				defaultSegmentsExperienceId, layoutStructure.toString());
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				layout.getPlid(), defaultSegmentsExperienceId,
+				layoutStructure.toString());
 
 		String layoutStructureItemJSON =
 			_layoutStructureItemJSONSerializer.toJSONString(

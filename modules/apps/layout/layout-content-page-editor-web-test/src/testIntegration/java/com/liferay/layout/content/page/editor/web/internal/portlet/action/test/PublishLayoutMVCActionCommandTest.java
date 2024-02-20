@@ -142,7 +142,8 @@ public class PublishLayoutMVCActionCommandTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), draftLayout.getPlid(),
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				draftLayout.getPlid(),
 				_segmentsExperienceLocalService.
 					fetchDefaultSegmentsExperienceId(layout.getPlid()),
 				layoutStructure.toString());
@@ -184,7 +185,8 @@ public class PublishLayoutMVCActionCommandTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), draftLayout.getPlid(),
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				draftLayout.getPlid(),
 				_segmentsExperienceLocalService.
 					fetchDefaultSegmentsExperienceId(layout.getPlid()),
 				layoutStructure.toString());

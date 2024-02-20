@@ -211,7 +211,7 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 
 		return layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				groupId, plid, defaultSegmentsExperienceId, data);
+				userId, groupId, plid, defaultSegmentsExperienceId, data);
 	}
 
 	private void _checkUnlockedLayout(long plid, long userId)

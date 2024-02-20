@@ -141,8 +141,8 @@ public class LayoutsImporterTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group1.getGroupId(), layoutPageTemplateEntry1.getPlid(),
-				defaultSegmentsExperienceId,
+				TestPropsValues.getUserId(), _group1.getGroupId(),
+				layoutPageTemplateEntry1.getPlid(), defaultSegmentsExperienceId,
 				StringUtil.replace(
 					_read("export_import_layout_data.json"), "${", "}",
 					HashMapBuilder.put(
