@@ -12,6 +12,7 @@ import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureService;
 import com.liferay.layout.page.template.util.CheckUnlockedLayoutThreadLocal;
 import com.liferay.layout.util.structure.DeletedLayoutStructureItem;
 import com.liferay.layout.util.structure.FragmentDropZoneLayoutStructureItem;
@@ -203,7 +204,7 @@ public class DropZoneFragmentEntryLinkListener
 					CheckUnlockedLayoutThreadLocal.setWithSafeCloseable(
 						false)) {
 
-				_layoutPageTemplateStructureLocalService.
+				_layoutPageTemplateStructureService.
 					updateLayoutPageTemplateStructureData(
 						fragmentEntryLink.getGroupId(),
 						fragmentEntryLink.getPlid(),
@@ -401,7 +402,7 @@ public class DropZoneFragmentEntryLinkListener
 					CheckUnlockedLayoutThreadLocal.setWithSafeCloseable(
 						false)) {
 
-				_layoutPageTemplateStructureLocalService.
+				_layoutPageTemplateStructureService.
 					updateLayoutPageTemplateStructureData(
 						fragmentEntryLink.getGroupId(),
 						fragmentEntryLink.getPlid(),
@@ -568,5 +569,9 @@ public class DropZoneFragmentEntryLinkListener
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureService
+		_layoutPageTemplateStructureService;
 
 }

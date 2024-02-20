@@ -25,6 +25,7 @@ import com.liferay.layout.page.template.info.item.capability.EditPageInfoItemCap
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureService;
 import com.liferay.layout.util.UpdateLayoutStatusThreadLocal;
 import com.liferay.layout.util.structure.FormStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
@@ -387,7 +388,7 @@ public class LayoutPageTemplateEntryModelListener
 		try (SafeCloseable safeCloseable =
 				UpdateLayoutStatusThreadLocal.setWithSafeCloseable(false)) {
 
-			_layoutPageTemplateStructureLocalService.
+			_layoutPageTemplateStructureService.
 				updateLayoutPageTemplateStructureData(
 					layout.getGroupId(), layout.getPlid(), segmentsExperienceId,
 					layoutStructure.toString());
@@ -446,6 +447,10 @@ public class LayoutPageTemplateEntryModelListener
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureService
+		_layoutPageTemplateStructureService;
 
 	@Reference
 	private Portal _portal;
