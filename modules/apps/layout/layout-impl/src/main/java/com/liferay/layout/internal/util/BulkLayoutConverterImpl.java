@@ -10,6 +10,7 @@ import com.liferay.layout.exception.LayoutConvertException;
 import com.liferay.layout.helper.LayoutCopyHelper;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureService;
 import com.liferay.layout.util.BulkLayoutConverter;
 import com.liferay.layout.util.template.LayoutConversionResult;
 import com.liferay.layout.util.template.LayoutConverter;
@@ -239,7 +240,7 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 					layoutDataJSONObject.toString(), serviceContext);
 		}
 
-		_layoutPageTemplateStructureLocalService.
+		_layoutPageTemplateStructureService.
 			updateLayoutPageTemplateStructureData(
 				layout.getGroupId(), layout.getPlid(),
 				defaultSegmentsExperienceId, layoutDataJSONObject.toString());
@@ -423,6 +424,10 @@ public class BulkLayoutConverterImpl implements BulkLayoutConverter {
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureService
+		_layoutPageTemplateStructureService;
 
 	@Reference
 	private PortletPreferencesLocalService _portletPreferencesLocalService;

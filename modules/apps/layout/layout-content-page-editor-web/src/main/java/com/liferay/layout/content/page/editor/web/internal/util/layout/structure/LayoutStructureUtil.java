@@ -57,7 +57,7 @@ public class LayoutStructureUtil {
 					deletedLayoutStructureItem.getItemId());
 			}
 
-			LayoutPageTemplateStructureLocalServiceUtil.
+			LayoutPageTemplateStructureServiceUtil.
 				updateLayoutPageTemplateStructureData(
 					groupId, plid,
 					layoutPageTemplateStructureRel.getSegmentsExperienceId(),

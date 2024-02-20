@@ -18,6 +18,7 @@ import com.liferay.layout.helper.LayoutCopyHelper;
 import com.liferay.layout.model.LayoutClassedModelUsage;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureService;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
 import com.liferay.layout.seo.service.LayoutSEOEntryLocalService;
 import com.liferay.layout.service.LayoutClassedModelUsageLocalService;
@@ -308,7 +309,7 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				LayoutStructure.of(data), targetLayout, fragmentEntryLinksMap,
 				entry.getValue(), user);
 
-			_layoutPageTemplateStructureLocalService.
+			_layoutPageTemplateStructureService.
 				updateLayoutPageTemplateStructureData(
 					targetLayout.getGroupId(), targetLayout.getPlid(),
 					entry.getValue(), dataJSONObject.toString());
@@ -357,7 +358,7 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 			layoutStructure, targetLayout, fragmentEntryLinksMap,
 			targetSegmentsExperienceId, user);
 
-		_layoutPageTemplateStructureLocalService.
+		_layoutPageTemplateStructureService.
 			updateLayoutPageTemplateStructureData(
 				targetLayout.getGroupId(), targetLayout.getPlid(),
 				targetSegmentsExperienceId, dataJSONObject.toString());
@@ -870,6 +871,10 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureService
+		_layoutPageTemplateStructureService;
 
 	@Reference
 	private LayoutSEOEntryLocalService _layoutSEOEntryLocalService;

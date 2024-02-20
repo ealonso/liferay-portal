@@ -80,6 +80,7 @@ import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionServ
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureService;
 import com.liferay.layout.page.template.util.CheckUnlockedLayoutThreadLocal;
 import com.liferay.layout.util.constants.LayoutStructureConstants;
 import com.liferay.layout.util.structure.FragmentStyledLayoutStructureItem;
@@ -259,7 +260,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 
 		Consumer<LayoutStructure> consumer = processedLayoutStructure -> {
 			try {
-				_layoutPageTemplateStructureLocalService.
+				_layoutPageTemplateStructureService.
 					updateLayoutPageTemplateStructureData(
 						layout.getGroupId(), layout.getPlid(),
 						segmentsExperienceId,
@@ -2213,6 +2214,10 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 	@Reference
 	private LayoutPageTemplateStructureLocalService
 		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private LayoutPageTemplateStructureService
+		_layoutPageTemplateStructureService;
 
 	private final EnumMap<PageElement.Type, LayoutStructureItemImporter>
 		_layoutStructureItemImporters = new EnumMap<>(PageElement.Type.class);

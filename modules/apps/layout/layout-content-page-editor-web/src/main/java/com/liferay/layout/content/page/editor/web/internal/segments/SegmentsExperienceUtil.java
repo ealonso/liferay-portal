@@ -10,7 +10,7 @@ import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
-import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalServiceUtil;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureServiceUtil;
 import com.liferay.layout.util.structure.FragmentStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.portal.kernel.comment.CommentManager;
@@ -193,7 +193,7 @@ public class SegmentsExperienceUtil {
 			sourceSegmentsExperienceId, serviceContextFunction,
 			targetSegmentsExperienceId, userId);
 
-		LayoutPageTemplateStructureLocalServiceUtil.
+		LayoutPageTemplateStructureServiceUtil.
 			updateLayoutPageTemplateStructureData(
 				groupId, layout.getPlid(), targetSegmentsExperienceId,
 				dataJSONObject.toString());
