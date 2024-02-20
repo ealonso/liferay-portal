@@ -297,7 +297,8 @@ public class ExportLayoutPageTemplateEntriesMVCResourceCommandTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), layoutPageTemplateEntry.getPlid(),
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				layoutPageTemplateEntry.getPlid(),
 				_segmentsExperienceLocalService.
 					fetchDefaultSegmentsExperienceId(
 						layoutPageTemplateEntry.getPlid()),

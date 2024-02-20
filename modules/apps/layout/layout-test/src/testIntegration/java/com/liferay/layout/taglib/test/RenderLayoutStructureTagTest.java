@@ -779,7 +779,8 @@ public class RenderLayoutStructureTagTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), layout.getPlid(), segmentsExperienceId,
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				layout.getPlid(), segmentsExperienceId,
 				layoutStructure.toString());
 	}
 

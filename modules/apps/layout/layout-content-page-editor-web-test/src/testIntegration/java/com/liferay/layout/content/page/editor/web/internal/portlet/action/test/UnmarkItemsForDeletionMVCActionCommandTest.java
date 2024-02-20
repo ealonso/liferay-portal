@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.test.portlet.MockLiferayPortletActionRequest;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
@@ -98,8 +99,9 @@ public class UnmarkItemsForDeletionMVCActionCommandTest {
 		layoutPageTemplateStructure =
 			_layoutPageTemplateStructureLocalService.
 				updateLayoutPageTemplateStructureData(
-					_group.getGroupId(), _layout.getPlid(),
-					_segmentsExperienceId, layoutStructure.toString());
+					TestPropsValues.getUserId(), _group.getGroupId(),
+					_layout.getPlid(), _segmentsExperienceId,
+					layoutStructure.toString());
 
 		layoutStructure = LayoutStructure.of(
 			layoutPageTemplateStructure.getDefaultSegmentsExperienceData());

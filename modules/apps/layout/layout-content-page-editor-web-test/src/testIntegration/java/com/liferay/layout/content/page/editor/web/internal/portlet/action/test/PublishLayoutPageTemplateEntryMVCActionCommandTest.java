@@ -140,7 +140,8 @@ public class PublishLayoutPageTemplateEntryMVCActionCommandTest {
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
-				_group.getGroupId(), _draftLayout.getPlid(),
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				_draftLayout.getPlid(),
 				_segmentsExperienceLocalService.
 					fetchDefaultSegmentsExperienceId(_layout.getPlid()),
 				layoutStructure.toString());
