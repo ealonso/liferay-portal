@@ -5,7 +5,11 @@
 
 package com.liferay.login.web.internal.servlet.taglib.include;
 
+import com.liferay.layout.utility.page.kernel.constants.LayoutUtilityPageEntryConstants;
+import com.liferay.layout.utility.page.kernel.provider.LayoutUtilityPageEntryLayoutProvider;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.Portal;
@@ -74,8 +78,23 @@ public class CreateAccountNavigationPostPageInclude implements PageInclude {
 		iconTag.setMessage("create-account");
 
 		try {
-			iconTag.setUrl(
-				_portal.getCreateAccountURL(httpServletRequest, themeDisplay));
+			String url = StringPool.BLANK;
+
+			Layout layout =
+				_layoutUtilityPageEntryLayoutProvider.
+					getDefaultLayoutUtilityPageEntryLayout(
+						themeDisplay.getScopeGroupId(),
+						LayoutUtilityPageEntryConstants.TYPE_CREATE_ACCOUNT);
+
+			if (layout != null) {
+				url = _portal.getLayoutURL(layout, themeDisplay);
+			}
+			else {
+				url = _portal.getCreateAccountURL(
+					httpServletRequest, themeDisplay);
+			}
+
+			iconTag.setUrl(url);
 		}
 		catch (Exception exception) {
 			throw new JspException(exception);
@@ -83,6 +102,10 @@ public class CreateAccountNavigationPostPageInclude implements PageInclude {
 
 		iconTag.doTag(pageContext);
 	}
+
+	@Reference
+	private LayoutUtilityPageEntryLayoutProvider
+		_layoutUtilityPageEntryLayoutProvider;
 
 	@Reference
 	private Portal _portal;
