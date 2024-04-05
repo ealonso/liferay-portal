@@ -7,7 +7,6 @@ package com.liferay.layout.page.template.admin.web.internal.portlet.action;
 
 import com.liferay.layout.helper.LayoutCopyHelper;
 import com.liferay.layout.page.template.admin.constants.LayoutPageTemplateAdminPortletKeys;
-import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
@@ -65,60 +64,35 @@ public class
 		for (long layoutPageTemplateCollectionId :
 				layoutPageTemplateCollectionsId) {
 
-			_copyLayoutPageTemplateCollection(
-				layoutPageTemplateCollectionId,
-				layoutParentPageTemplateCollectionId, serviceContext);
+			_layoutPageTemplateCollectionService.
+				copyLayoutPageTemplateCollection(
+					themeDisplay.getScopeGroupId(),
+					layoutPageTemplateCollectionId,
+					layoutParentPageTemplateCollectionId, serviceContext);
 		}
 
 		for (long layoutPageTemplateEntryId : layoutPageTemplateEntriesId) {
-			_copyLayoutPageTemplateEntry(
-				copyPermissions, layoutPageTemplateEntryId,
-				layoutParentPageTemplateCollectionId, serviceContext,
-				themeDisplay);
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_layoutPageTemplateEntryService.copyLayoutPageTemplateEntry(
+					themeDisplay.getScopeGroupId(),
+					layoutParentPageTemplateCollectionId,
+					layoutPageTemplateEntryId, copyPermissions, serviceContext);
+
+			LayoutPageTemplateEntry sourceLayoutPageTemplateEntry =
+				_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntry(
+					layoutPageTemplateEntryId);
+
+			Layout sourceLayout = _layoutLocalService.getLayout(
+				sourceLayoutPageTemplateEntry.getPlid());
+
+			Layout targetLayout = _layoutLocalService.getLayout(
+				layoutPageTemplateEntry.getPlid());
+
+			_layoutCopyHelper.copyLayoutContent(
+				sourceLayout, targetLayout.fetchDraftLayout());
+
+			_layoutCopyHelper.copyLayoutContent(sourceLayout, targetLayout);
 		}
-	}
-
-	private LayoutPageTemplateCollection _copyLayoutPageTemplateCollection(
-			long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		return _layoutPageTemplateCollectionService.
-			copyLayoutPageTemplateCollection(
-				serviceContext.getScopeGroupId(),
-				layoutPageTemplateCollectionId,
-				layoutParentPageTemplateCollectionId, serviceContext);
-	}
-
-	private LayoutPageTemplateEntry _copyLayoutPageTemplateEntry(
-			boolean copyPermissions, long layoutPageTemplateEntryId,
-			long layoutParentPageTemplateCollectionId,
-			ServiceContext serviceContext, ThemeDisplay themeDisplay)
-		throws Exception {
-
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			_layoutPageTemplateEntryService.copyLayoutPageTemplateEntry(
-				themeDisplay.getScopeGroupId(),
-				layoutParentPageTemplateCollectionId, layoutPageTemplateEntryId,
-				copyPermissions, serviceContext);
-
-		LayoutPageTemplateEntry sourceLayoutPageTemplateEntry =
-			_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntry(
-				layoutPageTemplateEntryId);
-
-		Layout sourceLayout = _layoutLocalService.getLayout(
-			sourceLayoutPageTemplateEntry.getPlid());
-
-		Layout targetLayout = _layoutLocalService.getLayout(
-			layoutPageTemplateEntry.getPlid());
-
-		_layoutCopyHelper.copyLayoutContent(
-			sourceLayout, targetLayout.fetchDraftLayout());
-
-		_layoutCopyHelper.copyLayoutContent(sourceLayout, targetLayout);
-
-		return layoutPageTemplateEntry;
 	}
 
 	@Reference
