@@ -290,7 +290,8 @@ public class SegmentsExperimentLocalServiceTest {
 			SegmentsExperimentConstants.STATUS_RUNNING);
 
 		_segmentsExperimentLocalService.deleteSegmentsExperiment(
-			_group.getGroupId(), segmentsExperience.getSegmentsExperienceId(),
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			segmentsExperience.getSegmentsExperienceId(),
 			segmentsExperience.getPlid());
 	}
 
@@ -301,7 +302,8 @@ public class SegmentsExperimentLocalServiceTest {
 		_addSegmentsExperiment(segmentsExperience);
 
 		_segmentsExperimentLocalService.deleteSegmentsExperiment(
-			_group.getGroupId(), segmentsExperience.getSegmentsExperienceId(),
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			segmentsExperience.getSegmentsExperienceId(),
 			segmentsExperience.getPlid());
 
 		Assert.assertNull(
@@ -352,7 +354,8 @@ public class SegmentsExperimentLocalServiceTest {
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		_segmentsExperimentLocalService.deleteSegmentsExperiment(
-			_group.getGroupId(), segmentsExperience.getSegmentsExperienceId(),
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			segmentsExperience.getSegmentsExperienceId(),
 			segmentsExperience.getPlid());
 
 		Assert.assertNull(

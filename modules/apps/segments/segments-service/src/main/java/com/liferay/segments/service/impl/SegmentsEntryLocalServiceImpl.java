@@ -194,7 +194,8 @@ public class SegmentsEntryLocalServiceImpl
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
-	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry)
+	public SegmentsEntry deleteSegmentsEntry(
+			long userId, SegmentsEntry segmentsEntry)
 		throws PortalException {
 
 		// Segments entry
@@ -220,7 +221,7 @@ public class SegmentsEntryLocalServiceImpl
 		// Segments experiences
 
 		_segmentsExperienceLocalService.deleteSegmentsEntrySegmentsExperiences(
-			segmentsEntry.getSegmentsEntryId());
+			userId, segmentsEntry.getSegmentsEntryId());
 
 		// Segments rels
 

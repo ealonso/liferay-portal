@@ -103,7 +103,7 @@ public class SegmentsExperienceServiceImpl
 			ActionKeys.DELETE);
 
 		return segmentsExperienceLocalService.deleteSegmentsExperience(
-			segmentsExperienceId);
+			getUserId(), segmentsExperienceId);
 	}
 
 	@Override
@@ -229,7 +229,7 @@ public class SegmentsExperienceServiceImpl
 			ActionKeys.UPDATE);
 
 		return segmentsExperienceLocalService.updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active,
+			getUserId(), segmentsExperienceId, segmentsEntryId, nameMap, active,
 			typeSettingsUnicodeProperties);
 	}
 
@@ -257,7 +257,7 @@ public class SegmentsExperienceServiceImpl
 		}
 
 		segmentsExperienceLocalService.updateSegmentsExperiencePriority(
-			segmentsExperienceId, newPriority);
+			getUserId(), segmentsExperienceId, newPriority);
 	}
 
 	private long _getPublishedLayoutPlid(long plid) {

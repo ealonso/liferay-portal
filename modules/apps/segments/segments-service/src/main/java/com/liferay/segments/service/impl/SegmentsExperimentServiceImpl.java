@@ -65,7 +65,7 @@ public class SegmentsExperimentServiceImpl
 			ActionKeys.DELETE);
 
 		return segmentsExperimentLocalService.deleteSegmentsExperiment(
-			segmentsExperimentId);
+			getUserId(), segmentsExperimentId);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class SegmentsExperimentServiceImpl
 			getPermissionChecker(), segmentsExperiment, ActionKeys.DELETE);
 
 		return segmentsExperimentLocalService.deleteSegmentsExperiment(
-			segmentsExperiment, force);
+			getUserId(), segmentsExperiment, force);
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class SegmentsExperimentServiceImpl
 		_checkPermissions(segmentsExperiment, ActionKeys.DELETE);
 
 		return segmentsExperimentLocalService.deleteSegmentsExperiment(
-			segmentsExperiment);
+			getUserId(), segmentsExperiment);
 	}
 
 	@Override

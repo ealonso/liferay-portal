@@ -74,7 +74,7 @@ public class SegmentsExperimentRelServiceImpl
 			segmentsExperimentRel.getSegmentsExperimentId(), ActionKeys.UPDATE);
 
 		return segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-			segmentsExperimentRelId);
+			getUserId(), segmentsExperimentRelId);
 	}
 
 	@Override

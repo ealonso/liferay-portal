@@ -89,7 +89,7 @@ public class SegmentsExperienceModelListenerTest {
 			layoutPageTemplateStructureRels.size());
 
 		_segmentsExperienceLocalService.deleteSegmentsExperience(
-			segmentsExperience);
+			TestPropsValues.getUserId(), segmentsExperience);
 
 		layoutPageTemplateStructureRels =
 			_layoutPageTemplateStructureRelLocalService.

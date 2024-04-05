@@ -12,6 +12,7 @@ import com.liferay.exportimport.staged.model.repository.StagedModelRepositoryHel
 import com.liferay.portal.kernel.dao.orm.ExportActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
@@ -59,7 +60,7 @@ public class SegmentsExperienceStagedModelRepository
 		throws PortalException {
 
 		_segmentsExperienceLocalService.deleteSegmentsExperience(
-			segmentsExperience);
+			GuestOrUserUtil.getUserId(), segmentsExperience);
 	}
 
 	@Override

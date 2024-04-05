@@ -13,7 +13,6 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -189,7 +188,8 @@ public class SegmentsExperienceLocalServiceImpl
 	}
 
 	@Override
-	public void deleteSegmentsEntrySegmentsExperiences(long segmentsEntryId)
+	public void deleteSegmentsEntrySegmentsExperiences(
+			long userId, long segmentsEntryId)
 		throws PortalException {
 
 		List<SegmentsExperience> segmentsExperiences =
@@ -198,13 +198,13 @@ public class SegmentsExperienceLocalServiceImpl
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			segmentsExperienceLocalService.deleteSegmentsExperience(
-				segmentsExperience);
+				userId, segmentsExperience);
 		}
 	}
 
 	@Override
 	public SegmentsExperience deleteSegmentsExperience(
-			long segmentsExperienceId)
+			long userId, long segmentsExperienceId)
 		throws PortalException {
 
 		SegmentsExperience segmentsExperience =
@@ -212,13 +212,13 @@ public class SegmentsExperienceLocalServiceImpl
 				segmentsExperienceId);
 
 		return segmentsExperienceLocalService.deleteSegmentsExperience(
-			segmentsExperience);
+			userId, segmentsExperience);
 	}
 
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public SegmentsExperience deleteSegmentsExperience(
-			SegmentsExperience segmentsExperience)
+			long userId, SegmentsExperience segmentsExperience)
 		throws PortalException {
 
 		// Segments experience
@@ -231,8 +231,7 @@ public class SegmentsExperienceLocalServiceImpl
 					segmentsExperience.getSegmentsExperienceId());
 		}
 
-		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+		_checkUnlockedLayout(segmentsExperience.getPlid(), userId);
 
 		segmentsExperiencePersistence.remove(segmentsExperience);
 
@@ -260,7 +259,7 @@ public class SegmentsExperienceLocalServiceImpl
 	}
 
 	@Override
-	public void deleteSegmentsExperiences(long groupId, long plid)
+	public void deleteSegmentsExperiences(long userId, long groupId, long plid)
 		throws PortalException {
 
 		// Segments experiments
@@ -282,7 +281,7 @@ public class SegmentsExperienceLocalServiceImpl
 
 		for (SegmentsExperience segmentsExperience : segmentsExperiences) {
 			segmentsExperienceLocalService.deleteSegmentsExperience(
-				segmentsExperience);
+				userId, segmentsExperience);
 		}
 	}
 
@@ -407,7 +406,7 @@ public class SegmentsExperienceLocalServiceImpl
 
 	@Override
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<Locale, String> nameMap, boolean active)
 		throws PortalException {
 
@@ -416,13 +415,13 @@ public class SegmentsExperienceLocalServiceImpl
 				segmentsExperienceId);
 
 		return updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active,
+			userId, segmentsExperienceId, segmentsEntryId, nameMap, active,
 			segmentsExperience.getTypeSettingsUnicodeProperties());
 	}
 
 	@Override
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<Locale, String> nameMap, boolean active,
 			UnicodeProperties typeSettingsUnicodeProperties)
 		throws PortalException {
@@ -439,8 +438,7 @@ public class SegmentsExperienceLocalServiceImpl
 					" has a locked segments experiment");
 		}
 
-		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+		_checkUnlockedLayout(segmentsExperience.getPlid(), userId);
 
 		segmentsExperience.setSegmentsEntryId(segmentsEntryId);
 		segmentsExperience.setNameMap(nameMap);
@@ -453,7 +451,7 @@ public class SegmentsExperienceLocalServiceImpl
 
 	@Override
 	public SegmentsExperience updateSegmentsExperiencePriority(
-			long segmentsExperienceId, int newPriority)
+			long userId, long segmentsExperienceId, int newPriority)
 		throws PortalException {
 
 		SegmentsExperience segmentsExperience =
@@ -466,8 +464,7 @@ public class SegmentsExperienceLocalServiceImpl
 					" has a locked segments experiment");
 		}
 
-		_checkUnlockedLayout(
-			segmentsExperience.getPlid(), GuestOrUserUtil.getUserId());
+		_checkUnlockedLayout(segmentsExperience.getPlid(), userId);
 
 		boolean swap = true;
 

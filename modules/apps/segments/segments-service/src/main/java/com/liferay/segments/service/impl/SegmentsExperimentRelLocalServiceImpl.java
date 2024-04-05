@@ -82,27 +82,29 @@ public class SegmentsExperimentRelLocalServiceImpl
 
 	@Override
 	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			long segmentsExperimentRelId)
+			long userId, long segmentsExperimentRelId)
 		throws PortalException {
 
 		return segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
+			userId,
 			segmentsExperimentRelPersistence.findByPrimaryKey(
 				segmentsExperimentRelId));
 	}
 
 	@Override
 	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel)
+			long userId, SegmentsExperimentRel segmentsExperimentRel)
 		throws PortalException {
 
 		return segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-			segmentsExperimentRel, false);
+			userId, segmentsExperimentRel, false);
 	}
 
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel, boolean force)
+			long userId, SegmentsExperimentRel segmentsExperimentRel,
+			boolean force)
 		throws PortalException {
 
 		if (!force) {
@@ -118,14 +120,15 @@ public class SegmentsExperimentRelLocalServiceImpl
 
 		if (!segmentsExperimentRel.isActive()) {
 			_segmentsExperienceLocalService.deleteSegmentsExperience(
-				segmentsExperimentRel.getSegmentsExperienceId());
+				userId, segmentsExperimentRel.getSegmentsExperienceId());
 		}
 
 		return segmentsExperimentRel;
 	}
 
 	@Override
-	public void deleteSegmentsExperimentRels(long segmentsExperimentId)
+	public void deleteSegmentsExperimentRels(
+			long userId, long segmentsExperimentId)
 		throws PortalException {
 
 		List<SegmentsExperimentRel> segmentsExperimentRels =
@@ -136,7 +139,7 @@ public class SegmentsExperimentRelLocalServiceImpl
 				segmentsExperimentRels) {
 
 			segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-				segmentsExperimentRel, true);
+				userId, segmentsExperimentRel, true);
 		}
 	}
 

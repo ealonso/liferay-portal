@@ -292,7 +292,7 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 
 			if (Validator.isNull(data)) {
 				_segmentsExperienceLocalService.deleteSegmentsExperience(
-					entry.getKey());
+					user.getUserId(), entry.getKey());
 
 				continue;
 			}

@@ -128,7 +128,7 @@ public class SegmentsExperimentRelLocalServiceTest {
 				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		_segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-			segmentsExperimentRel);
+			TestPropsValues.getUserId(), segmentsExperimentRel);
 
 		Assert.assertNull(
 			_segmentsExperienceLocalService.fetchSegmentsExperience(
@@ -154,6 +154,7 @@ public class SegmentsExperimentRelLocalServiceTest {
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		_segmentsExperimentRelLocalService.deleteSegmentsExperimentRels(
+			TestPropsValues.getUserId(),
 			segmentsExperiment.getSegmentsExperimentId());
 
 		List<SegmentsExperimentRel> segmentsExperimentRels =
@@ -182,7 +183,7 @@ public class SegmentsExperimentRelLocalServiceTest {
 				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		_segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-			segmentsExperimentRel);
+			TestPropsValues.getUserId(), segmentsExperimentRel);
 
 		Assert.assertNull(
 			_segmentsExperienceLocalService.fetchSegmentsExperience(

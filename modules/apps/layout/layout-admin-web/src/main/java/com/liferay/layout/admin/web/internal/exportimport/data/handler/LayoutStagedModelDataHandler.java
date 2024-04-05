@@ -2262,8 +2262,12 @@ public class LayoutStagedModelDataHandler
 			return;
 		}
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		_segmentsExperienceLocalService.deleteSegmentsExperiences(
-			portletDataContext.getScopeGroupId(), importedLayout.getPlid());
+			serviceContext.getUserId(), portletDataContext.getScopeGroupId(),
+			importedLayout.getPlid());
 
 		List<Element> layoutPageTemplateStructureElements =
 			portletDataContext.getReferenceDataElements(

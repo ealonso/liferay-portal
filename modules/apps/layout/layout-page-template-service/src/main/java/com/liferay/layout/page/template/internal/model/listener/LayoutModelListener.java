@@ -119,8 +119,12 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 		}
 
 		try {
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
 			_segmentsExperienceLocalService.deleteSegmentsExperiences(
-				layout.getGroupId(), layout.getPlid());
+				serviceContext.getUserId(), layout.getGroupId(),
+				layout.getPlid());
 
 			if (!layout.isTypeContent()) {
 				return;
