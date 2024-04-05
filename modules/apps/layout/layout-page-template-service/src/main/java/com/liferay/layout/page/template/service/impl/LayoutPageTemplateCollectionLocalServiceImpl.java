@@ -118,6 +118,23 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 				sourceLayoutPageTemplateCollection.getDescription(),
 				sourceLayoutPageTemplateCollection.getType(), serviceContext);
 
+		if (copyPermissions) {
+			_resourceLocalService.deleteResource(
+				targetLayoutPageTemplateCollection.getCompanyId(),
+				LayoutPageTemplateCollection.class.getName(),
+				ResourceConstants.SCOPE_INDIVIDUAL,
+				targetLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId());
+
+			_resourceLocalService.copyModelResources(
+				sourceLayoutPageTemplateCollection.getCompanyId(),
+				LayoutPageTemplateCollection.class.getName(),
+				sourceLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId(),
+				targetLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId());
+		}
+
 		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
 			_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntries(
 				sourceLayoutPageTemplateCollection.getGroupId(),
