@@ -150,6 +150,15 @@ public class SegmentsEntryLocalServiceWrapper
 		return _segmentsEntryLocalService.deleteSegmentsEntry(segmentsEntryId);
 	}
 
+	@Override
+	public SegmentsEntry deleteSegmentsEntry(
+			long userId, SegmentsEntry segmentsEntry)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsEntryLocalService.deleteSegmentsEntry(
+			userId, segmentsEntry);
+	}
+
 	/**
 	 * Deletes the segments entry from the database. Also notifies the appropriate model listeners.
 	 *
@@ -159,12 +168,9 @@ public class SegmentsEntryLocalServiceWrapper
 	 *
 	 * @param segmentsEntry the segments entry
 	 * @return the segments entry that was removed
-	 * @throws PortalException
 	 */
 	@Override
-	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
+	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry) {
 		return _segmentsEntryLocalService.deleteSegmentsEntry(segmentsEntry);
 	}
 

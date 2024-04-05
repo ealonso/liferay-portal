@@ -142,7 +142,8 @@ public interface SegmentsExperienceLocalService
 	public PersistedModel deletePersistedModel(PersistedModel persistedModel)
 		throws PortalException;
 
-	public void deleteSegmentsEntrySegmentsExperiences(long segmentsEntryId)
+	public void deleteSegmentsEntrySegmentsExperiences(
+			long userId, long segmentsEntryId)
 		throws PortalException;
 
 	/**
@@ -161,6 +162,15 @@ public interface SegmentsExperienceLocalService
 			long segmentsExperienceId)
 		throws PortalException;
 
+	public SegmentsExperience deleteSegmentsExperience(
+			long userId, long segmentsExperienceId)
+		throws PortalException;
+
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public SegmentsExperience deleteSegmentsExperience(
+			long userId, SegmentsExperience segmentsExperience)
+		throws PortalException;
+
 	/**
 	 * Deletes the segments experience from the database. Also notifies the appropriate model listeners.
 	 *
@@ -170,15 +180,12 @@ public interface SegmentsExperienceLocalService
 	 *
 	 * @param segmentsExperience the segments experience
 	 * @return the segments experience that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public SegmentsExperience deleteSegmentsExperience(
-			SegmentsExperience segmentsExperience)
-		throws PortalException;
+		SegmentsExperience segmentsExperience);
 
-	public void deleteSegmentsExperiences(long groupId, long plid)
+	public void deleteSegmentsExperiences(long userId, long groupId, long plid)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -413,12 +420,12 @@ public interface SegmentsExperienceLocalService
 		long groupId, long plid, boolean active);
 
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<Locale, String> nameMap, boolean active)
 		throws PortalException;
 
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<Locale, String> nameMap, boolean active,
 			UnicodeProperties typeSettingsUnicodeProperties)
 		throws PortalException;
@@ -437,12 +444,8 @@ public interface SegmentsExperienceLocalService
 	public SegmentsExperience updateSegmentsExperience(
 		SegmentsExperience segmentsExperience);
 
-	public SegmentsExperience updateSegmentsExperienceActive(
-			long segmentsExperienceId, boolean active)
-		throws PortalException;
-
 	public SegmentsExperience updateSegmentsExperiencePriority(
-			long segmentsExperienceId, int newPriority)
+			long userId, long segmentsExperienceId, int newPriority)
 		throws PortalException;
 
 	@Override

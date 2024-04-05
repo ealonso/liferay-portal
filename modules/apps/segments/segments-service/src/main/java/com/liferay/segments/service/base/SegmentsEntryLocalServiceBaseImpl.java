@@ -133,13 +133,10 @@ public abstract class SegmentsEntryLocalServiceBaseImpl
 	 *
 	 * @param segmentsEntry the segments entry
 	 * @return the segments entry that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
-	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry)
-		throws PortalException {
-
+	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry) {
 		return segmentsEntryPersistence.remove(segmentsEntry);
 	}
 

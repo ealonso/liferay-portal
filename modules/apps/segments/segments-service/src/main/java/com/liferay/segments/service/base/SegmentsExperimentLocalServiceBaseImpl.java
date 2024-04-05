@@ -139,13 +139,11 @@ public abstract class SegmentsExperimentLocalServiceBaseImpl
 	 *
 	 * @param segmentsExperiment the segments experiment
 	 * @return the segments experiment that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment)
-		throws PortalException {
+		SegmentsExperiment segmentsExperiment) {
 
 		return segmentsExperimentPersistence.remove(segmentsExperiment);
 	}

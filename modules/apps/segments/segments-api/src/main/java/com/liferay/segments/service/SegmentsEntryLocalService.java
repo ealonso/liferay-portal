@@ -142,6 +142,12 @@ public interface SegmentsEntryLocalService
 	public SegmentsEntry deleteSegmentsEntry(long segmentsEntryId)
 		throws PortalException;
 
+	@Indexable(type = IndexableType.DELETE)
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public SegmentsEntry deleteSegmentsEntry(
+			long userId, SegmentsEntry segmentsEntry)
+		throws PortalException;
+
 	/**
 	 * Deletes the segments entry from the database. Also notifies the appropriate model listeners.
 	 *
@@ -151,12 +157,9 @@ public interface SegmentsEntryLocalService
 	 *
 	 * @param segmentsEntry the segments entry
 	 * @return the segments entry that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
-	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry)
-		throws PortalException;
+	public SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry);
 
 	public void deleteSegmentsEntryClassPKs(
 			long segmentsEntryId, long[] classPKs)

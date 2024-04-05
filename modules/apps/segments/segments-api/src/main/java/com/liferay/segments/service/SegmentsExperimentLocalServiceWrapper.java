@@ -122,11 +122,38 @@ public class SegmentsExperimentLocalServiceWrapper
 
 	@Override
 	public SegmentsExperiment deleteSegmentsExperiment(
-			long groupId, long segmentsExperienceId, long plid)
+			long userId, long segmentsExperimentId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
-			groupId, segmentsExperienceId, plid);
+			userId, segmentsExperimentId);
+	}
+
+	@Override
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, long groupId, long segmentsExperienceId, long plid)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
+			userId, groupId, segmentsExperienceId, plid);
+	}
+
+	@Override
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
+			userId, segmentsExperiment);
+	}
+
+	@Override
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment, boolean force)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
+			userId, segmentsExperiment, force);
 	}
 
 	/**
@@ -138,24 +165,13 @@ public class SegmentsExperimentLocalServiceWrapper
 	 *
 	 * @param segmentsExperiment the segments experiment
 	 * @return the segments experiment that was removed
-	 * @throws PortalException
 	 */
 	@Override
 	public SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		SegmentsExperiment segmentsExperiment) {
 
 		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
 			segmentsExperiment);
-	}
-
-	@Override
-	public SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment, boolean force)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _segmentsExperimentLocalService.deleteSegmentsExperiment(
-			segmentsExperiment, force);
 	}
 
 	@Override

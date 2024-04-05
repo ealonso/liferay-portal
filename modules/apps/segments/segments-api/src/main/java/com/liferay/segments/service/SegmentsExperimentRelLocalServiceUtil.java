@@ -112,6 +112,31 @@ public class SegmentsExperimentRelLocalServiceUtil {
 			segmentsExperimentRelId);
 	}
 
+	public static SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, long segmentsExperimentRelId)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRelId);
+	}
+
+	public static SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRel);
+	}
+
+	public static SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel,
+			boolean force)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRel, force);
+	}
+
 	/**
 	 * Deletes the segments experiment rel from the database. Also notifies the appropriate model listeners.
 	 *
@@ -121,27 +146,18 @@ public class SegmentsExperimentRelLocalServiceUtil {
 	 *
 	 * @param segmentsExperimentRel the segments experiment rel
 	 * @return the segments experiment rel that was removed
-	 * @throws PortalException
 	 */
 	public static SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel)
-		throws PortalException {
+		SegmentsExperimentRel segmentsExperimentRel) {
 
 		return getService().deleteSegmentsExperimentRel(segmentsExperimentRel);
 	}
 
-	public static SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel, boolean force)
+	public static void deleteSegmentsExperimentRels(
+			long userId, long segmentsExperimentId)
 		throws PortalException {
 
-		return getService().deleteSegmentsExperimentRel(
-			segmentsExperimentRel, force);
-	}
-
-	public static void deleteSegmentsExperimentRels(long segmentsExperimentId)
-		throws PortalException {
-
-		getService().deleteSegmentsExperimentRels(segmentsExperimentId);
+		getService().deleteSegmentsExperimentRels(userId, segmentsExperimentId);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {

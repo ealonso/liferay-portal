@@ -125,7 +125,21 @@ public interface SegmentsExperimentLocalService
 		throws PortalException;
 
 	public SegmentsExperiment deleteSegmentsExperiment(
-			long groupId, long segmentsExperienceId, long plid)
+			long userId, long segmentsExperimentId)
+		throws PortalException;
+
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, long groupId, long segmentsExperienceId, long plid)
+		throws PortalException;
+
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment)
+		throws PortalException;
+
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment, boolean force)
 		throws PortalException;
 
 	/**
@@ -137,18 +151,10 @@ public interface SegmentsExperimentLocalService
 	 *
 	 * @param segmentsExperiment the segments experiment
 	 * @return the segments experiment that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment)
-		throws PortalException;
-
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
-	public SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment, boolean force)
-		throws PortalException;
+		SegmentsExperiment segmentsExperiment);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public <T> T dslQuery(DSLQuery dslQuery);

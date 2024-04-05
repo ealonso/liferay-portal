@@ -143,6 +143,13 @@ public class SegmentsEntryLocalServiceUtil {
 		return getService().deleteSegmentsEntry(segmentsEntryId);
 	}
 
+	public static SegmentsEntry deleteSegmentsEntry(
+			long userId, SegmentsEntry segmentsEntry)
+		throws PortalException {
+
+		return getService().deleteSegmentsEntry(userId, segmentsEntry);
+	}
+
 	/**
 	 * Deletes the segments entry from the database. Also notifies the appropriate model listeners.
 	 *
@@ -152,10 +159,9 @@ public class SegmentsEntryLocalServiceUtil {
 	 *
 	 * @param segmentsEntry the segments entry
 	 * @return the segments entry that was removed
-	 * @throws PortalException
 	 */
-	public static SegmentsEntry deleteSegmentsEntry(SegmentsEntry segmentsEntry)
-		throws PortalException {
+	public static SegmentsEntry deleteSegmentsEntry(
+		SegmentsEntry segmentsEntry) {
 
 		return getService().deleteSegmentsEntry(segmentsEntry);
 	}

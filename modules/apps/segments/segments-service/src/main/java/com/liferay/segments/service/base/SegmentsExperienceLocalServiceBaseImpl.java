@@ -139,13 +139,11 @@ public abstract class SegmentsExperienceLocalServiceBaseImpl
 	 *
 	 * @param segmentsExperience the segments experience
 	 * @return the segments experience that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	public SegmentsExperience deleteSegmentsExperience(
-			SegmentsExperience segmentsExperience)
-		throws PortalException {
+		SegmentsExperience segmentsExperience) {
 
 		return segmentsExperiencePersistence.remove(segmentsExperience);
 	}

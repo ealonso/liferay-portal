@@ -118,6 +118,34 @@ public class SegmentsExperimentRelLocalServiceWrapper
 			segmentsExperimentRelId);
 	}
 
+	@Override
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, long segmentsExperimentRelId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRelId);
+	}
+
+	@Override
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRel);
+	}
+
+	@Override
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel,
+			boolean force)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
+			userId, segmentsExperimentRel, force);
+	}
+
 	/**
 	 * Deletes the segments experiment rel from the database. Also notifies the appropriate model listeners.
 	 *
@@ -127,32 +155,22 @@ public class SegmentsExperimentRelLocalServiceWrapper
 	 *
 	 * @param segmentsExperimentRel the segments experiment rel
 	 * @return the segments experiment rel that was removed
-	 * @throws PortalException
 	 */
 	@Override
 	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		SegmentsExperimentRel segmentsExperimentRel) {
 
 		return _segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
 			segmentsExperimentRel);
 	}
 
 	@Override
-	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel, boolean force)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _segmentsExperimentRelLocalService.deleteSegmentsExperimentRel(
-			segmentsExperimentRel, force);
-	}
-
-	@Override
-	public void deleteSegmentsExperimentRels(long segmentsExperimentId)
+	public void deleteSegmentsExperimentRels(
+			long userId, long segmentsExperimentId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_segmentsExperimentRelLocalService.deleteSegmentsExperimentRels(
-			segmentsExperimentId);
+			userId, segmentsExperimentId);
 	}
 
 	@Override

@@ -119,6 +119,20 @@ public interface SegmentsExperimentRelLocalService
 			long segmentsExperimentRelId)
 		throws PortalException;
 
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, long segmentsExperimentRelId)
+		throws PortalException;
+
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel)
+		throws PortalException;
+
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public SegmentsExperimentRel deleteSegmentsExperimentRel(
+			long userId, SegmentsExperimentRel segmentsExperimentRel,
+			boolean force)
+		throws PortalException;
+
 	/**
 	 * Deletes the segments experiment rel from the database. Also notifies the appropriate model listeners.
 	 *
@@ -128,19 +142,13 @@ public interface SegmentsExperimentRelLocalService
 	 *
 	 * @param segmentsExperimentRel the segments experiment rel
 	 * @return the segments experiment rel that was removed
-	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel)
-		throws PortalException;
+		SegmentsExperimentRel segmentsExperimentRel);
 
-	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
-	public SegmentsExperimentRel deleteSegmentsExperimentRel(
-			SegmentsExperimentRel segmentsExperimentRel, boolean force)
-		throws PortalException;
-
-	public void deleteSegmentsExperimentRels(long segmentsExperimentId)
+	public void deleteSegmentsExperimentRels(
+			long userId, long segmentsExperimentId)
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

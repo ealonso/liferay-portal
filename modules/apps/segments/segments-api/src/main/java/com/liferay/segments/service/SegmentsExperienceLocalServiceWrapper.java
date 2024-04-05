@@ -171,11 +171,12 @@ public class SegmentsExperienceLocalServiceWrapper
 	}
 
 	@Override
-	public void deleteSegmentsEntrySegmentsExperiences(long segmentsEntryId)
+	public void deleteSegmentsEntrySegmentsExperiences(
+			long userId, long segmentsEntryId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_segmentsExperienceLocalService.deleteSegmentsEntrySegmentsExperiences(
-			segmentsEntryId);
+			userId, segmentsEntryId);
 	}
 
 	/**
@@ -198,6 +199,24 @@ public class SegmentsExperienceLocalServiceWrapper
 			segmentsExperienceId);
 	}
 
+	@Override
+	public SegmentsExperience deleteSegmentsExperience(
+			long userId, long segmentsExperienceId)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.deleteSegmentsExperience(
+			userId, segmentsExperienceId);
+	}
+
+	@Override
+	public SegmentsExperience deleteSegmentsExperience(
+			long userId, SegmentsExperience segmentsExperience)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _segmentsExperienceLocalService.deleteSegmentsExperience(
+			userId, segmentsExperience);
+	}
+
 	/**
 	 * Deletes the segments experience from the database. Also notifies the appropriate model listeners.
 	 *
@@ -207,23 +226,21 @@ public class SegmentsExperienceLocalServiceWrapper
 	 *
 	 * @param segmentsExperience the segments experience
 	 * @return the segments experience that was removed
-	 * @throws PortalException
 	 */
 	@Override
 	public SegmentsExperience deleteSegmentsExperience(
-			SegmentsExperience segmentsExperience)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		SegmentsExperience segmentsExperience) {
 
 		return _segmentsExperienceLocalService.deleteSegmentsExperience(
 			segmentsExperience);
 	}
 
 	@Override
-	public void deleteSegmentsExperiences(long groupId, long plid)
+	public void deleteSegmentsExperiences(long userId, long groupId, long plid)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		_segmentsExperienceLocalService.deleteSegmentsExperiences(
-			groupId, plid);
+			userId, groupId, plid);
 	}
 
 	@Override
@@ -590,24 +607,24 @@ public class SegmentsExperienceLocalServiceWrapper
 
 	@Override
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			java.util.Map<java.util.Locale, String> nameMap, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperienceLocalService.updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active);
+			userId, segmentsExperienceId, segmentsEntryId, nameMap, active);
 	}
 
 	@Override
 	public SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			java.util.Map<java.util.Locale, String> nameMap, boolean active,
 			com.liferay.portal.kernel.util.UnicodeProperties
 				typeSettingsUnicodeProperties)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperienceLocalService.updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active,
+			userId, segmentsExperienceId, segmentsEntryId, nameMap, active,
 			typeSettingsUnicodeProperties);
 	}
 
@@ -630,21 +647,12 @@ public class SegmentsExperienceLocalServiceWrapper
 	}
 
 	@Override
-	public SegmentsExperience updateSegmentsExperienceActive(
-			long segmentsExperienceId, boolean active)
-		throws com.liferay.portal.kernel.exception.PortalException {
-
-		return _segmentsExperienceLocalService.updateSegmentsExperienceActive(
-			segmentsExperienceId, active);
-	}
-
-	@Override
 	public SegmentsExperience updateSegmentsExperiencePriority(
-			long segmentsExperienceId, int newPriority)
+			long userId, long segmentsExperienceId, int newPriority)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperienceLocalService.updateSegmentsExperiencePriority(
-			segmentsExperienceId, newPriority);
+			userId, segmentsExperienceId, newPriority);
 	}
 
 	@Override

@@ -114,11 +114,35 @@ public class SegmentsExperimentLocalServiceUtil {
 	}
 
 	public static SegmentsExperiment deleteSegmentsExperiment(
-			long groupId, long segmentsExperienceId, long plid)
+			long userId, long segmentsExperimentId)
 		throws PortalException {
 
 		return getService().deleteSegmentsExperiment(
-			groupId, segmentsExperienceId, plid);
+			userId, segmentsExperimentId);
+	}
+
+	public static SegmentsExperiment deleteSegmentsExperiment(
+			long userId, long groupId, long segmentsExperienceId, long plid)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperiment(
+			userId, groupId, segmentsExperienceId, plid);
+	}
+
+	public static SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperiment(
+			userId, segmentsExperiment);
+	}
+
+	public static SegmentsExperiment deleteSegmentsExperiment(
+			long userId, SegmentsExperiment segmentsExperiment, boolean force)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperiment(
+			userId, segmentsExperiment, force);
 	}
 
 	/**
@@ -130,20 +154,11 @@ public class SegmentsExperimentLocalServiceUtil {
 	 *
 	 * @param segmentsExperiment the segments experiment
 	 * @return the segments experiment that was removed
-	 * @throws PortalException
 	 */
 	public static SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment)
-		throws PortalException {
+		SegmentsExperiment segmentsExperiment) {
 
 		return getService().deleteSegmentsExperiment(segmentsExperiment);
-	}
-
-	public static SegmentsExperiment deleteSegmentsExperiment(
-			SegmentsExperiment segmentsExperiment, boolean force)
-		throws PortalException {
-
-		return getService().deleteSegmentsExperiment(segmentsExperiment, force);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {

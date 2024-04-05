@@ -159,10 +159,11 @@ public class SegmentsExperienceLocalServiceUtil {
 	}
 
 	public static void deleteSegmentsEntrySegmentsExperiences(
-			long segmentsEntryId)
+			long userId, long segmentsEntryId)
 		throws PortalException {
 
-		getService().deleteSegmentsEntrySegmentsExperiences(segmentsEntryId);
+		getService().deleteSegmentsEntrySegmentsExperiences(
+			userId, segmentsEntryId);
 	}
 
 	/**
@@ -183,6 +184,22 @@ public class SegmentsExperienceLocalServiceUtil {
 		return getService().deleteSegmentsExperience(segmentsExperienceId);
 	}
 
+	public static SegmentsExperience deleteSegmentsExperience(
+			long userId, long segmentsExperienceId)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperience(
+			userId, segmentsExperienceId);
+	}
+
+	public static SegmentsExperience deleteSegmentsExperience(
+			long userId, SegmentsExperience segmentsExperience)
+		throws PortalException {
+
+		return getService().deleteSegmentsExperience(
+			userId, segmentsExperience);
+	}
+
 	/**
 	 * Deletes the segments experience from the database. Also notifies the appropriate model listeners.
 	 *
@@ -192,19 +209,18 @@ public class SegmentsExperienceLocalServiceUtil {
 	 *
 	 * @param segmentsExperience the segments experience
 	 * @return the segments experience that was removed
-	 * @throws PortalException
 	 */
 	public static SegmentsExperience deleteSegmentsExperience(
-			SegmentsExperience segmentsExperience)
-		throws PortalException {
+		SegmentsExperience segmentsExperience) {
 
 		return getService().deleteSegmentsExperience(segmentsExperience);
 	}
 
-	public static void deleteSegmentsExperiences(long groupId, long plid)
+	public static void deleteSegmentsExperiences(
+			long userId, long groupId, long plid)
 		throws PortalException {
 
-		getService().deleteSegmentsExperiences(groupId, plid);
+		getService().deleteSegmentsExperiences(userId, groupId, plid);
 	}
 
 	public static <T> T dslQuery(DSLQuery dslQuery) {
@@ -514,23 +530,23 @@ public class SegmentsExperienceLocalServiceUtil {
 	}
 
 	public static SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<java.util.Locale, String> nameMap, boolean active)
 		throws PortalException {
 
 		return getService().updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active);
+			userId, segmentsExperienceId, segmentsEntryId, nameMap, active);
 	}
 
 	public static SegmentsExperience updateSegmentsExperience(
-			long segmentsExperienceId, long segmentsEntryId,
+			long userId, long segmentsExperienceId, long segmentsEntryId,
 			Map<java.util.Locale, String> nameMap, boolean active,
 			com.liferay.portal.kernel.util.UnicodeProperties
 				typeSettingsUnicodeProperties)
 		throws PortalException {
 
 		return getService().updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, active,
+			userId, segmentsExperienceId, segmentsEntryId, nameMap, active,
 			typeSettingsUnicodeProperties);
 	}
 
@@ -550,20 +566,12 @@ public class SegmentsExperienceLocalServiceUtil {
 		return getService().updateSegmentsExperience(segmentsExperience);
 	}
 
-	public static SegmentsExperience updateSegmentsExperienceActive(
-			long segmentsExperienceId, boolean active)
-		throws PortalException {
-
-		return getService().updateSegmentsExperienceActive(
-			segmentsExperienceId, active);
-	}
-
 	public static SegmentsExperience updateSegmentsExperiencePriority(
-			long segmentsExperienceId, int newPriority)
+			long userId, long segmentsExperienceId, int newPriority)
 		throws PortalException {
 
 		return getService().updateSegmentsExperiencePriority(
-			segmentsExperienceId, newPriority);
+			userId, segmentsExperienceId, newPriority);
 	}
 
 	public static SegmentsExperienceLocalService getService() {
