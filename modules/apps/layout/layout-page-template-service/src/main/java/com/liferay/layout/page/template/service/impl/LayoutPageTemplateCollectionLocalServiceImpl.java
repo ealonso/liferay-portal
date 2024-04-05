@@ -108,14 +108,13 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			layoutPageTemplateCollectionPersistence.findByPrimaryKey(
 				layoutPageTemplateCollectionId);
 
-		String name = getUniqueLayoutPageTemplateCollectionName(
-			groupId, sourceLayoutPageTemplateCollection.getName(),
-			sourceLayoutPageTemplateCollection.getType());
-
 		LayoutPageTemplateCollection targetLayoutPageTemplateCollection =
 			addLayoutPageTemplateCollection(
 				userId, sourceLayoutPageTemplateCollection.getGroupId(),
-				layoutParentPageTemplateCollectionId, name,
+				layoutParentPageTemplateCollectionId,
+				getUniqueLayoutPageTemplateCollectionName(
+					groupId, sourceLayoutPageTemplateCollection.getName(),
+					sourceLayoutPageTemplateCollection.getType()),
 				sourceLayoutPageTemplateCollection.getDescription(),
 				sourceLayoutPageTemplateCollection.getType(), serviceContext);
 
