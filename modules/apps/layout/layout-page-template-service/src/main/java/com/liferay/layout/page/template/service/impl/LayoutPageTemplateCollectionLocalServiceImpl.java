@@ -104,11 +104,57 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 			ServiceContext serviceContext)
 		throws Exception {
 
-		return _copyContent(
-			userId, groupId, layoutParentPageTemplateCollectionId,
+		LayoutPageTemplateCollection sourceLayoutPageTemplateCollection =
 			layoutPageTemplateCollectionPersistence.findByPrimaryKey(
-				layoutPageTemplateCollectionId),
-			serviceContext);
+				layoutPageTemplateCollectionId);
+
+		String name = getUniqueLayoutPageTemplateCollectionName(
+			groupId, sourceLayoutPageTemplateCollection.getName(),
+			sourceLayoutPageTemplateCollection.getType());
+
+		LayoutPageTemplateCollection targetLayoutPageTemplateCollection =
+			addLayoutPageTemplateCollection(
+				userId, sourceLayoutPageTemplateCollection.getGroupId(),
+				layoutParentPageTemplateCollectionId, name,
+				sourceLayoutPageTemplateCollection.getDescription(),
+				sourceLayoutPageTemplateCollection.getType(), serviceContext);
+
+		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
+			_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntries(
+				sourceLayoutPageTemplateCollection.getGroupId(),
+				sourceLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId());
+
+		for (LayoutPageTemplateEntry layoutPageTemplateEntry :
+				layoutPageTemplateEntries) {
+
+			_layoutPageTemplateEntryLocalService.copyLayoutPageTemplateEntry(
+				userId, groupId,
+				targetLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId(),
+				layoutPageTemplateEntry.getLayoutPageTemplateEntryId(), true,
+				serviceContext);
+		}
+
+		List<LayoutPageTemplateCollection> layoutPageTemplateCollections =
+			getLayoutPageTemplateCollections(
+				sourceLayoutPageTemplateCollection.getGroupId(),
+				sourceLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId());
+
+		for (LayoutPageTemplateCollection layoutPageTemplateCollection :
+				layoutPageTemplateCollections) {
+
+			copyLayoutPageTemplateCollection(
+				userId, groupId,
+				layoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId(),
+				targetLayoutPageTemplateCollection.
+					getLayoutPageTemplateCollectionId(),
+				serviceContext);
+		}
+
+		return targetLayoutPageTemplateCollection;
 	}
 
 	@Override
@@ -373,62 +419,6 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 
 		return layoutPageTemplateCollectionPersistence.update(
 			layoutPageTemplateCollection);
-	}
-
-	private LayoutPageTemplateCollection _copyContent(
-			long userId, long groupId,
-			long layoutParentPageTemplateCollectionId,
-			LayoutPageTemplateCollection sourceLayoutPageTemplateCollection,
-			ServiceContext serviceContext)
-		throws Exception {
-
-		String name = getUniqueLayoutPageTemplateCollectionName(
-			groupId, sourceLayoutPageTemplateCollection.getName(),
-			sourceLayoutPageTemplateCollection.getType());
-
-		LayoutPageTemplateCollection targetLayoutPageTemplateCollection =
-			addLayoutPageTemplateCollection(
-				userId, sourceLayoutPageTemplateCollection.getGroupId(),
-				layoutParentPageTemplateCollectionId, name,
-				sourceLayoutPageTemplateCollection.getDescription(),
-				sourceLayoutPageTemplateCollection.getType(), serviceContext);
-
-		List<LayoutPageTemplateEntry> layoutPageTemplateEntries =
-			_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntries(
-				sourceLayoutPageTemplateCollection.getGroupId(),
-				sourceLayoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId());
-
-		for (LayoutPageTemplateEntry layoutPageTemplateEntry :
-				layoutPageTemplateEntries) {
-
-			_layoutPageTemplateEntryLocalService.copyLayoutPageTemplateEntry(
-				userId, groupId,
-				targetLayoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId(),
-				layoutPageTemplateEntry.getLayoutPageTemplateEntryId(), true,
-				serviceContext);
-		}
-
-		List<LayoutPageTemplateCollection> layoutPageTemplateCollections =
-			getLayoutPageTemplateCollections(
-				sourceLayoutPageTemplateCollection.getGroupId(),
-				sourceLayoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId());
-
-		for (LayoutPageTemplateCollection layoutPageTemplateCollection :
-				layoutPageTemplateCollections) {
-
-			copyLayoutPageTemplateCollection(
-				userId, groupId,
-				layoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId(),
-				targetLayoutPageTemplateCollection.
-					getLayoutPageTemplateCollectionId(),
-				serviceContext);
-		}
-
-		return targetLayoutPageTemplateCollection;
 	}
 
 	private String _generateLayoutPageTemplateCollectionKey(
