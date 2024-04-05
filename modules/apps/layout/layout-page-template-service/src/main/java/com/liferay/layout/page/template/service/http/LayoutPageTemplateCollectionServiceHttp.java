@@ -96,6 +96,7 @@ public class LayoutPageTemplateCollectionServiceHttp {
 					HttpPrincipal httpPrincipal, long groupId,
 					long layoutPageTemplateCollectionId,
 					long layoutParentPageTemplateCollectionId,
+					boolean copyPermissions,
 					com.liferay.portal.kernel.service.ServiceContext
 						serviceContext)
 			throws Exception {
@@ -108,7 +109,8 @@ public class LayoutPageTemplateCollectionServiceHttp {
 
 			MethodHandler methodHandler = new MethodHandler(
 				methodKey, groupId, layoutPageTemplateCollectionId,
-				layoutParentPageTemplateCollectionId, serviceContext);
+				layoutParentPageTemplateCollectionId, copyPermissions,
+				serviceContext);
 
 			Object returnObj = null;
 
@@ -672,7 +674,7 @@ public class LayoutPageTemplateCollectionServiceHttp {
 		};
 	private static final Class<?>[]
 		_copyLayoutPageTemplateCollectionParameterTypes1 = new Class[] {
-			long.class, long.class, long.class,
+			long.class, long.class, long.class, boolean.class,
 			com.liferay.portal.kernel.service.ServiceContext.class
 		};
 	private static final Class<?>[]

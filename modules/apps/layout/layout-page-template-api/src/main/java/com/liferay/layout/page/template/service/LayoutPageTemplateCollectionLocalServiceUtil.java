@@ -66,13 +66,14 @@ public class LayoutPageTemplateCollectionLocalServiceUtil {
 
 	public static LayoutPageTemplateCollection copyLayoutPageTemplateCollection(
 			long userId, long groupId, long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
+			long layoutParentPageTemplateCollectionId, boolean copyPermissions,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws Exception {
 
 		return getService().copyLayoutPageTemplateCollection(
 			userId, groupId, layoutPageTemplateCollectionId,
-			layoutParentPageTemplateCollectionId, serviceContext);
+			layoutParentPageTemplateCollectionId, copyPermissions,
+			serviceContext);
 	}
 
 	/**

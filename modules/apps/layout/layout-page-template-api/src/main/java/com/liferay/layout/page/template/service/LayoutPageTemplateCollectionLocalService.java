@@ -86,7 +86,7 @@ public interface LayoutPageTemplateCollectionLocalService
 
 	public LayoutPageTemplateCollection copyLayoutPageTemplateCollection(
 			long userId, long groupId, long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
+			long layoutParentPageTemplateCollectionId, boolean copyPermissions,
 			ServiceContext serviceContext)
 		throws Exception;
 

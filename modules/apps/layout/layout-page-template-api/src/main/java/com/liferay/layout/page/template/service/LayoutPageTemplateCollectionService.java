@@ -53,7 +53,7 @@ public interface LayoutPageTemplateCollectionService extends BaseService {
 
 	public LayoutPageTemplateCollection copyLayoutPageTemplateCollection(
 			long groupId, long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
+			long layoutParentPageTemplateCollectionId, boolean copyPermissions,
 			ServiceContext serviceContext)
 		throws Exception;
 
