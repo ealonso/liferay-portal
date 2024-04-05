@@ -68,7 +68,8 @@ public class
 				copyLayoutPageTemplateCollection(
 					themeDisplay.getScopeGroupId(),
 					layoutPageTemplateCollectionId,
-					layoutParentPageTemplateCollectionId, serviceContext);
+					layoutParentPageTemplateCollectionId, copyPermissions,
+					serviceContext);
 		}
 
 		for (long layoutPageTemplateEntryId : layoutPageTemplateEntriesId) {

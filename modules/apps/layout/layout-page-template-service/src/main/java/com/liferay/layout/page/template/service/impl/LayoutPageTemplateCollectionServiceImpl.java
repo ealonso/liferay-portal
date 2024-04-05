@@ -56,7 +56,7 @@ public class LayoutPageTemplateCollectionServiceImpl
 	@Override
 	public LayoutPageTemplateCollection copyLayoutPageTemplateCollection(
 			long groupId, long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
+			long layoutParentPageTemplateCollectionId, boolean copyPermissions,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -67,7 +67,8 @@ public class LayoutPageTemplateCollectionServiceImpl
 		return layoutPageTemplateCollectionLocalService.
 			copyLayoutPageTemplateCollection(
 				getUserId(), groupId, layoutPageTemplateCollectionId,
-				layoutParentPageTemplateCollectionId, serviceContext);
+				layoutParentPageTemplateCollectionId, copyPermissions,
+				serviceContext);
 	}
 
 	@Override

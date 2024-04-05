@@ -100,7 +100,7 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 	@Override
 	public LayoutPageTemplateCollection copyLayoutPageTemplateCollection(
 			long userId, long groupId, long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
+			long layoutParentPageTemplateCollectionId, boolean copyPermissions,
 			ServiceContext serviceContext)
 		throws Exception {
 
@@ -150,7 +150,7 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 					getLayoutPageTemplateCollectionId(),
 				targetLayoutPageTemplateCollection.
 					getLayoutPageTemplateCollectionId(),
-				serviceContext);
+				copyPermissions, serviceContext);
 		}
 
 		return targetLayoutPageTemplateCollection;
