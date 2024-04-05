@@ -46,14 +46,14 @@ public class
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		boolean copyPermissions = ParamUtil.getBoolean(
-			actionRequest, "copyPermissions");
 		long[] layoutPageTemplateCollectionsId = ParamUtil.getLongValues(
 			actionRequest, "layoutPageTemplateCollectionsIds");
 		long[] layoutPageTemplateEntriesId = ParamUtil.getLongValues(
 			actionRequest, "layoutPageTemplateEntriesIds");
 		long layoutParentPageTemplateCollectionId = ParamUtil.getLong(
 			actionRequest, "layoutParentPageTemplateCollectionId");
+		boolean copyPermissions = ParamUtil.getBoolean(
+			actionRequest, "copyPermissions");
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
