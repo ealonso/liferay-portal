@@ -12,24 +12,15 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseTransactionalMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.transaction.Propagation;
-import com.liferay.portal.kernel.transaction.TransactionConfig;
-import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.concurrent.Callable;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -49,10 +40,10 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class
 	CopyLayoutPageTemplateEntriesAndLayoutPageTemplateCollectionsMVCActionCommand
-		extends BaseMVCActionCommand {
+		extends BaseTransactionalMVCActionCommand {
 
 	@Override
-	protected void doProcessAction(
+	protected void doTransactionalCommand(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -74,58 +65,16 @@ public class
 		for (long layoutPageTemplateCollectionId :
 				layoutPageTemplateCollectionsId) {
 
-			Callable<LayoutPageTemplateCollection>
-				copyLayoutPageTemplateCollectionCallable =
-					new CopyLayoutPageTemplateEntriesAndLayoutPageTemplateCollectionsMVCActionCommand.CopyLayoutPageTemplateCollectionCallable(
-						layoutPageTemplateCollectionId,
-						layoutParentPageTemplateCollectionId, serviceContext);
-
-			try {
-				TransactionInvokerUtil.invoke(
-					_transactionConfig,
-					copyLayoutPageTemplateCollectionCallable);
-			}
-			catch (Throwable throwable) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(throwable, throwable);
-				}
-
-				SessionErrors.add(actionRequest, PortalException.class);
-			}
-
-			if (!SessionErrors.isEmpty(actionRequest)) {
-				hideDefaultErrorMessage(actionRequest);
-
-				sendRedirect(actionRequest, actionResponse);
-			}
+			_copyLayoutPageTemplateCollection(
+				layoutPageTemplateCollectionId,
+				layoutParentPageTemplateCollectionId, serviceContext);
 		}
 
 		for (long layoutPageTemplateEntryId : layoutPageTemplateEntriesId) {
-			Callable<LayoutPageTemplateEntry>
-				copyLayoutPageTemplateEntryCallable =
-					new CopyLayoutPageTemplateEntriesAndLayoutPageTemplateCollectionsMVCActionCommand.CopyLayoutPageTemplateEntryCallable(
-						actionRequest, copyPermissions,
-						layoutPageTemplateEntryId,
-						layoutParentPageTemplateCollectionId, serviceContext,
-						themeDisplay);
-
-			try {
-				TransactionInvokerUtil.invoke(
-					_transactionConfig, copyLayoutPageTemplateEntryCallable);
-			}
-			catch (Throwable throwable) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(throwable, throwable);
-				}
-
-				SessionErrors.add(actionRequest, PortalException.class);
-			}
-
-			if (!SessionErrors.isEmpty(actionRequest)) {
-				hideDefaultErrorMessage(actionRequest);
-
-				sendRedirect(actionRequest, actionResponse);
-			}
+			_copyLayoutPageTemplateEntry(
+				copyPermissions, layoutPageTemplateEntryId,
+				layoutParentPageTemplateCollectionId, serviceContext,
+				themeDisplay);
 		}
 	}
 
@@ -172,13 +121,6 @@ public class
 		return layoutPageTemplateEntry;
 	}
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		CopyLayoutPageTemplateEntriesAndLayoutPageTemplateCollectionsMVCActionCommand.class);
-
-	private static final TransactionConfig _transactionConfig =
-		TransactionConfig.Factory.create(
-			Propagation.REQUIRED, new Class<?>[] {Exception.class});
-
 	@Reference
 	private LayoutCopyHelper _layoutCopyHelper;
 
@@ -195,67 +137,5 @@ public class
 
 	@Reference
 	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
-
-	private class CopyLayoutPageTemplateCollectionCallable
-		implements Callable<LayoutPageTemplateCollection> {
-
-		@Override
-		public LayoutPageTemplateCollection call() throws Exception {
-			return _copyLayoutPageTemplateCollection(
-				_layoutPageTemplateCollectionId,
-				_layoutParentPageTemplateCollectionId, _serviceContext);
-		}
-
-		private CopyLayoutPageTemplateCollectionCallable(
-			long layoutPageTemplateCollectionId,
-			long layoutParentPageTemplateCollectionId,
-			ServiceContext serviceContext) {
-
-			_layoutPageTemplateCollectionId = layoutPageTemplateCollectionId;
-			_layoutParentPageTemplateCollectionId =
-				layoutParentPageTemplateCollectionId;
-			_serviceContext = serviceContext;
-		}
-
-		private final long _layoutPageTemplateCollectionId;
-		private final long _layoutParentPageTemplateCollectionId;
-		private final ServiceContext _serviceContext;
-
-	}
-
-	private class CopyLayoutPageTemplateEntryCallable
-		implements Callable<LayoutPageTemplateEntry> {
-
-		@Override
-		public LayoutPageTemplateEntry call() throws Exception {
-			return _copyLayoutPageTemplateEntry(
-				_copyPermissions, _layoutPageTemplateEntryId,
-				_layoutParentPageTemplateCollectionId, _serviceContext,
-				_themeDisplay);
-		}
-
-		private CopyLayoutPageTemplateEntryCallable(
-			ActionRequest actionRequest, boolean copyPermissions,
-			long layoutPageTemplateEntryId,
-			long layoutParentPageTemplateCollectionId,
-			ServiceContext serviceContext, ThemeDisplay themeDisplay) {
-
-			_actionRequest = actionRequest;
-			_copyPermissions = copyPermissions;
-			_layoutPageTemplateEntryId = layoutPageTemplateEntryId;
-			_layoutParentPageTemplateCollectionId =
-				layoutParentPageTemplateCollectionId;
-			_serviceContext = serviceContext;
-			_themeDisplay = themeDisplay;
-		}
-
-		private final ActionRequest _actionRequest;
-		private final boolean _copyPermissions;
-		private final long _layoutPageTemplateEntryId;
-		private final long _layoutParentPageTemplateCollectionId;
-		private final ServiceContext _serviceContext;
-		private final ThemeDisplay _themeDisplay;
-
-	}
 
 }
