@@ -4,12 +4,13 @@
  */
 
 import {sub} from 'frontend-js-web';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {SelectField} from '../../../../../../app/components/fragment_configuration_fields/SelectField';
 import {FORM_MAPPING_SOURCES} from '../../../../../../app/config/constants/formMappingSources';
 import {LAYOUT_TYPES} from '../../../../../../app/config/constants/layoutTypes';
 import {config} from '../../../../../../app/config/index';
+import {openInfoItemFieldsSelector} from '../../../../../../common/openInfoItemFieldsSelector';
 
 export default function FormMappingOptions({
 	hideLabel = false,
@@ -57,6 +58,33 @@ export default function FormMappingOptions({
 		setClassTypeId(item.config.classTypeId);
 	}, [item.config.classNameId, item.config.classTypeId]);
 
+	const onSelect = useCallback(
+		(classNameId, classTypeId) => {
+			const resetMapping = () => {
+				setClassNameId(item.config.classNameId);
+				setClassTypeId(item.config.classTypeId);
+			};
+
+			const saveMapping = () =>
+				onValueSelect({
+					classNameId,
+					classTypeId,
+					formConfig: FORM_MAPPING_SOURCES.otherContentType,
+				});
+
+			if (Liferay.FeatureFlags['LPD-20213'] && classNameId !== '0') {
+				openInfoItemFieldsSelector({
+					onCancel: resetMapping,
+					onSave: saveMapping,
+				});
+			}
+			else {
+				saveMapping();
+			}
+		},
+		[item, onValueSelect]
+	);
+
 	return (
 		<>
 			<SelectField
@@ -82,11 +110,7 @@ export default function FormMappingOptions({
 						return;
 					}
 
-					onValueSelect({
-						classNameId,
-						classTypeId,
-						formConfig: FORM_MAPPING_SOURCES.otherContentType,
-					});
+					onSelect(classNameId, classTypeId);
 				}}
 				value={classNameId}
 			/>
@@ -110,11 +134,7 @@ export default function FormMappingOptions({
 					onValueSelect={(_name, classTypeId) => {
 						setClassTypeId(classTypeId);
 
-						onValueSelect({
-							classNameId,
-							classTypeId,
-							formConfig: FORM_MAPPING_SOURCES.otherContentType,
-						});
+						onSelect(classNameId, classTypeId);
 					}}
 					value={classTypeId}
 				/>
