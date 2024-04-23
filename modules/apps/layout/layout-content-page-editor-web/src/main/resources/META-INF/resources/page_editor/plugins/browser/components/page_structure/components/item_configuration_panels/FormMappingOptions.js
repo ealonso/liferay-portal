@@ -4,7 +4,7 @@
  */
 
 import {sub} from 'frontend-js-web';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {SelectField} from '../../../../../../app/components/fragment_configuration_fields/SelectField';
 import {FORM_MAPPING_SOURCES} from '../../../../../../app/config/constants/formMappingSources';
@@ -51,6 +51,11 @@ export default function FormMappingOptions({
 	const [classTypeId, setClassTypeId] = useState(item.config.classTypeId);
 
 	const selectedType = formTypes.find(({value}) => value === classNameId);
+
+	useEffect(() => {
+		setClassNameId(item.config.classNameId);
+		setClassTypeId(item.config.classTypeId);
+	}, [item.config.classNameId, item.config.classTypeId]);
 
 	return (
 		<>
