@@ -77,7 +77,7 @@ public class ObjectEntryInfoItemFormProvider
 	public InfoForm getInfoForm() {
 		try {
 			return _getInfoForm(
-				0,
+				_objectDefinition.getObjectDefinitionId(),
 				_displayPageInfoItemFieldSetProvider.getInfoFieldSet(
 					_getModelClassName(0), StringPool.BLANK,
 					ObjectEntry.class.getSimpleName(), 0));
