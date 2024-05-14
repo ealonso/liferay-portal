@@ -13,6 +13,7 @@ import com.liferay.info.field.type.ImageInfoFieldType;
 import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.field.type.URLInfoFieldType;
 import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemRelationship;
 import com.liferay.info.item.field.reader.InfoItemFieldReaderFieldSetProvider;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.object.constants.ObjectActionTriggerConstants;
@@ -29,6 +30,7 @@ import com.liferay.object.service.ObjectActionLocalService;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
@@ -301,6 +303,37 @@ public class ObjectEntryInfoItemFormProviderUtil {
 			).build()
 		).name(
 			modelClassName
+		).relationships(
+			TransformUtil.transform(
+				objectRelationshipLocalService.getObjectRelationships(
+					objectDefinitionId,
+					ObjectRelationshipConstants.TYPE_ONE_TO_MANY),
+				objectRelationship -> {
+					if (!objectRelationship.isSelf() &&
+						Objects.equals(
+							objectDefinitionId,
+							objectRelationship.getObjectDefinitionId1())) {
+
+						return null;
+					}
+
+					ObjectDefinition parentObjectDefinition =
+						objectDefinitionLocalService.fetchObjectDefinition(
+							objectRelationship.getObjectDefinitionId1());
+
+					return InfoItemRelationship.builder(
+					).className(
+						parentObjectDefinition.getClassName()
+					).labelInfoLocalizedValue(
+						InfoLocalizedValue.<String>builder(
+						).defaultLocale(
+							LocaleUtil.fromLanguageId(
+								parentObjectDefinition.getDefaultLanguageId())
+						).values(
+							parentObjectDefinition.getLabelMap()
+						).build()
+					).build();
+				})
 		).build();
 	}
 
