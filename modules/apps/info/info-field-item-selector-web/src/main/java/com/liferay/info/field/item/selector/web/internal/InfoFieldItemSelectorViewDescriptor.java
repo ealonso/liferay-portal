@@ -7,6 +7,7 @@ package com.liferay.info.field.item.selector.web.internal;
 
 import com.liferay.info.field.InfoField;
 import com.liferay.info.form.InfoForm;
+import com.liferay.info.item.InfoItemRelationship;
 import com.liferay.info.item.InfoItemServiceRegistry;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.item.selector.ItemSelectorReturnType;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
@@ -68,6 +70,7 @@ public class InfoFieldItemSelectorViewDescriptor
 		return new UUIDItemSelectorReturnType();
 	}
 
+	@Override
 	public SearchContainer<InfoField<?>> getSearchContainer()
 		throws PortalException {
 
@@ -78,29 +81,15 @@ public class InfoFieldItemSelectorViewDescriptor
 		SearchContainer<InfoField<?>> searchContainer = new SearchContainer<>(
 			portletRequest, _portletURL, null, "there-are-no-info-fields");
 
-		String itemType = ParamUtil.getString(_httpServletRequest, "itemType");
-
-		InfoItemFormProvider<?> infoItemFormProvider =
-			_infoItemServiceRegistry.getFirstInfoItemService(
-				InfoItemFormProvider.class, itemType);
-
-		if (infoItemFormProvider == null) {
-			return searchContainer;
-		}
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)_httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		InfoForm infoForm = infoItemFormProvider.getInfoForm(
-			itemType, themeDisplay.getScopeGroupId());
-
-		List<InfoField<?>> infoFields = ListUtil.filter(
-			infoForm.getAllInfoFields(), InfoField::isEditable);
+		List<InfoField<?>> infoFields = _getAllInfoFields();
 
 		String keywords = ParamUtil.getString(_httpServletRequest, "keywords");
 
 		if (Validator.isNotNull(keywords)) {
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)_httpServletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
 			infoFields = ListUtil.filter(
 				infoFields,
 				infoField -> {
@@ -134,6 +123,42 @@ public class InfoFieldItemSelectorViewDescriptor
 	@Override
 	public boolean isShowSearch() {
 		return true;
+	}
+
+	private List<InfoField<?>> _getAllInfoFields() {
+		String itemType = ParamUtil.getString(_httpServletRequest, "itemType");
+
+		InfoItemFormProvider<?> infoItemFormProvider =
+			_infoItemServiceRegistry.getFirstInfoItemService(
+				InfoItemFormProvider.class, itemType);
+
+		if (infoItemFormProvider == null) {
+			return Collections.emptyList();
+		}
+
+		InfoForm infoForm = infoItemFormProvider.getInfoForm();
+
+		List<InfoField<?>> infoFields = ListUtil.filter(
+			infoForm.getAllInfoFields(), InfoField::isEditable);
+
+		for (InfoItemRelationship infoItemRelationship :
+				infoForm.getInfoFieldRelationships()) {
+
+			InfoItemFormProvider<?> infoItemRelationshipInfoItemFormProvider =
+				_infoItemServiceRegistry.getFirstInfoItemService(
+					InfoItemFormProvider.class,
+					infoItemRelationship.getClassName());
+
+			InfoForm infoFieldRelationshipInfoForm =
+				infoItemRelationshipInfoItemFormProvider.getInfoForm();
+
+			infoFields.addAll(
+				ListUtil.filter(
+					infoFieldRelationshipInfoForm.getAllInfoFields(),
+					InfoField::isEditable));
+		}
+
+		return infoFields;
 	}
 
 	private final HttpServletRequest _httpServletRequest;
