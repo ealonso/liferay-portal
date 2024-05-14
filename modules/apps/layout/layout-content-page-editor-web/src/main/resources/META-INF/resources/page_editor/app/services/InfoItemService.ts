@@ -149,7 +149,7 @@ function getPageContents({
 	});
 }
 
-function getStructureRelationships({
+function getInfoItemRelationships({
 	classNameId,
 	classTypeId,
 }: {
@@ -182,6 +182,6 @@ export default {
 	getAvailableTemplates,
 	getInfoItemActionErrorMessage,
 	getInfoItemFieldValue,
+	getInfoItemRelationships,
 	getPageContents,
-	getStructureRelationships,
 };
