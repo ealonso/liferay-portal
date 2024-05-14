@@ -8,6 +8,7 @@ package com.liferay.info.form;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.InfoFieldSetEntry;
+import com.liferay.info.item.InfoItemRelationship;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.lang.HashUtil;
@@ -73,6 +74,10 @@ public class InfoForm {
 		}
 
 		return _builder._infoFieldsByName.get(name);
+	}
+
+	public List<InfoItemRelationship> getInfoFieldRelationships() {
+		return new ArrayList<>(_builder._infoFieldRelationships.values());
 	}
 
 	public List<InfoFieldSetEntry> getInfoFieldSetEntries() {
@@ -204,6 +209,20 @@ public class InfoForm {
 			return this;
 		}
 
+		public Builder relationships(
+			List<InfoItemRelationship> infoFieldRelationships) {
+
+			for (InfoItemRelationship infoFieldRelationship :
+					infoFieldRelationships) {
+
+				_infoFieldRelationships.put(
+					infoFieldRelationship.getClassName(),
+					infoFieldRelationship);
+			}
+
+			return this;
+		}
+
 		private void _populateInfoFieldsMaps(
 			InfoFieldSetEntry infoFieldSetEntry) {
 
@@ -231,6 +250,8 @@ public class InfoForm {
 		}
 
 		private InfoLocalizedValue<String> _descriptionInfoLocalizedValue;
+		private final Map<String, InfoItemRelationship>
+			_infoFieldRelationships = new LinkedHashMap<>();
 		private final Map<String, InfoField<?>> _infoFieldsByName =
 			new LinkedHashMap<>();
 		private final Map<String, InfoField<?>> _infoFieldsByUniqueId =
