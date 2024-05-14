@@ -7,6 +7,7 @@ package com.liferay.object.info.item.provider.util;
 
 import com.liferay.info.exception.NoSuchFormVariationException;
 import com.liferay.info.field.InfoField;
+import com.liferay.info.item.InfoItemRelationship;
 import com.liferay.info.field.InfoFieldSet;
 import com.liferay.info.field.type.ActionInfoFieldType;
 import com.liferay.info.field.type.ImageInfoFieldType;
@@ -29,6 +30,7 @@ import com.liferay.object.service.ObjectActionLocalService;
 import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.object.service.ObjectFieldLocalService;
 import com.liferay.object.service.ObjectRelationshipLocalService;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
@@ -301,6 +303,37 @@ public class ObjectEntryInfoItemFormProviderUtil {
 			).build()
 		).name(
 			modelClassName
+		).relationships(
+			TransformUtil.transform(
+				objectRelationshipLocalService.getObjectRelationships(
+					objectDefinitionId,
+					ObjectRelationshipConstants.TYPE_ONE_TO_MANY),
+				objectRelationship -> {
+					if (!objectRelationship.isSelf() &&
+							Objects.equals(
+								objectDefinitionId,
+								objectRelationship.getObjectDefinitionId1())) {
+
+						return null;
+					}
+
+					ObjectDefinition parentObjectDefinition =
+						objectDefinitionLocalService.fetchObjectDefinition(
+							objectRelationship.getObjectDefinitionId1());
+
+					return InfoItemRelationship.builder(
+					).className(
+						parentObjectDefinition.getClassName()
+					).labelInfoLocalizedValue(
+						InfoLocalizedValue.<String>builder(
+						).defaultLocale(
+							LocaleUtil.fromLanguageId(
+								parentObjectDefinition.getDefaultLanguageId())
+						).values(
+							parentObjectDefinition.getLabelMap()
+						).build()
+					).build();
+				})
 		).build();
 	}
 
