@@ -5,6 +5,8 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.util;
 
+import java.util.List;
+
 /**
  * @author Carlos Lancha
  */
@@ -12,6 +14,10 @@ public class DropdownItem extends NavigationItem {
 
 	public DropdownItem() {
 		put("type", "item");
+	}
+
+	public void setDropdownItems(List<DropdownItem> dropdownItems) {
+		put("items", dropdownItems);
 	}
 
 	public void setIcon(String icon) {
