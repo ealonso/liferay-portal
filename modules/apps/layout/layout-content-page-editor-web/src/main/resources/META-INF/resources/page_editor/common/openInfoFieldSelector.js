@@ -7,12 +7,32 @@ import {getPortletNamespace, openSelectionModal} from 'frontend-js-web';
 
 import {config} from '../app/config/index';
 
-export function openInfoFieldSelector({itemType, onCancel, onSave}) {
+export function openInfoFieldSelector({
+	formItemId,
+	itemType,
+	onCancel,
+	onSave,
+	segmentsExperienceId,
+}) {
 	const url = new URL(config.infoFieldItemSelectorURL);
 
+	console.log(segmentsExperienceId);
+
+	console.log(url.toString());
+
+	url.searchParams.set(
+		`${getPortletNamespace(Liferay.PortletKeys.ITEM_SELECTOR)}formItemId`,
+		formItemId
+	);
 	url.searchParams.set(
 		`${getPortletNamespace(Liferay.PortletKeys.ITEM_SELECTOR)}itemType`,
 		itemType
+	);
+	url.searchParams.set(
+		`${getPortletNamespace(
+			Liferay.PortletKeys.ITEM_SELECTOR
+		)}segmentsExperienceId`,
+		segmentsExperienceId
 	);
 
 	openSelectionModal({
