@@ -53,7 +53,9 @@ export default function FormMappingOptions({
 
 			if (Liferay.FeatureFlags['LPD-20213'] && classNameId !== '0') {
 				openInfoFieldSelector({
+					formItemId: item.itemId,
 					itemType: type.className,
+					segmentsExperienceId: state.segmentsExperienceId,
 					onCancel: resetMapping,
 					onSave: saveMapping,
 				});
