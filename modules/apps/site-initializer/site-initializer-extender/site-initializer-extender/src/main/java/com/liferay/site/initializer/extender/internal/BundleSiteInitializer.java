@@ -1769,7 +1769,7 @@ public class BundleSiteInitializer implements SiteInitializer {
 
 			if (ddmTemplate == null) {
 				ddmTemplate = _ddmTemplateLocalService.addTemplate(
-					serviceContext.getUserId(),
+					null, serviceContext.getUserId(),
 					serviceContext.getScopeGroupId(),
 					_portal.getClassNameId(
 						jsonObject.getString(
