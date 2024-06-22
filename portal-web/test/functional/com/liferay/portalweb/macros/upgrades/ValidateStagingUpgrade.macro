@@ -54,28 +54,4 @@ definition {
 			configurationScope = "Virtual Instance Scope");
 	}
 
-	@summary = "Default summary"
-	macro viewStagingNestedPortlets() {
-		Navigator.gotoStagedSitePage(
-			pageName = "Staging Test Page",
-			siteName = "Staging Site");
-
-		AssertTextEquals(
-			key_portletName = "Nested Applications",
-			locator1 = "Portlet#TITLE",
-			value1 = "Nested Applications");
-
-		AssertTextNotEquals(
-			locator1 = "Message#INFO",
-			value1 = "Drag applications below to nest them.");
-
-		NestedPortlets.viewPG(
-			nestedColumnNumber = 1,
-			portletName = "Web Content Display");
-
-		NestedPortlets.viewPG(
-			nestedColumnNumber = 1,
-			portletName = "Blogs");
-	}
-
 }

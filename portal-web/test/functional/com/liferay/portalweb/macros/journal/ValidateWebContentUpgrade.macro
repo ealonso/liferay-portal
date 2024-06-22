@@ -179,24 +179,6 @@ definition {
 	}
 
 	@summary = "Default summary"
-	macro viewNestedPortlets() {
-		Navigator.gotoPage(pageName = "Nested Portlets");
-
-		AssertTextEquals(
-			key_portletName = "Nested Applications",
-			locator1 = "Portlet#TITLE",
-			value1 = "Nested Applications");
-
-		AssertTextNotEquals(
-			locator1 = "Message#INFO",
-			value1 = "Drag applications below to nest them.");
-
-		NestedPortlets.viewPG(
-			nestedColumnNumber = 1,
-			portletName = "Web Content Display");
-	}
-
-	@summary = "Default summary"
 	macro viewSpecificDisplayPageTemplateViaAssetPublisher() {
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name/Document Display Page");
 
