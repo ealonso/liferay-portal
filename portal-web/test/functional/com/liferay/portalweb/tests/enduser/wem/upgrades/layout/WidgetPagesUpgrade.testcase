@@ -1,4 +1,4 @@
-@component-name = "portal-wcm"
+@component-name = "portal-upgrades"
 definition {
 
 	property ci.retries.disabled = "true";
@@ -6,8 +6,7 @@ definition {
 	property portal.upstream = "true";
 	property test.liferay.virtual.instance = "false";
 	property test.run.type = "single";
-	property testray.component.names = "Upgrades WEM";
-	property testray.main.component.name = "Page Administration";
+	property testray.main.component.name = "Database Upgrade Framework";
 
 	setUp {
 		SignIn.signIn();
