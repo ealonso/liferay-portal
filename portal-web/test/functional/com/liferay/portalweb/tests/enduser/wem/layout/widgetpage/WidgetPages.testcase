@@ -114,7 +114,7 @@ definition {
 				defaultLanguageLocalizationMessage = "Display the page in English (United States).",
 				pageName = "Casa",
 				preferredLanguageLocalizationMessage = "Establecer español (España) como su idioma preferido.",
-				sitePageURL = "${portalURL}/es/web/test-site-name/home",
+				sitePageURL = "${portalURL}/es/web/${randomSiteName}/home",
 				translationLanguageLocalizationMessage = "This page is displayed in Spanish (Spain).");
 		}
 
