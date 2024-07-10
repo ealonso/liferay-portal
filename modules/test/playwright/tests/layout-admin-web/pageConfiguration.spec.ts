@@ -5,11 +5,11 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {loginTest} from '../../fixtures/loginTest';
-import {checkAccessibility} from '../../utils/checkAccessibility';
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
+import {loginTest} from '../../fixtures/loginTest';
 import {pagesAdminPagesTest} from '../../fixtures/pagesAdminPagesTest';
+import {checkAccessibility} from '../../utils/checkAccessibility';
 import {pagesPagesTest} from './fixtures/pagesPagesTest';
 
 const test = mergeTests(
