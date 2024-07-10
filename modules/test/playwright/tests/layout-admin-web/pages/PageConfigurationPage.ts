@@ -44,12 +44,16 @@ export class PageConfigurationPage {
 		await this.canonicalURLCheckbox.check();
 		await this.customCanonicalURLSettings.fill(canonicalURL);
 
-		await this.saveButton.click();
+		await this.save();
 
 		await waitForSuccessAlert(
 			this.page,
 			'The page was updated successfully.'
 		);
+	}
+
+	async save() {
+		await this.saveButton.click();
 	}
 
 	async setFriendlyURL(friendlyURL: string, language: 'spanish' | 'english') {
@@ -75,7 +79,7 @@ export class PageConfigurationPage {
 				.locator('..'),
 		});
 
-		await this.saveButton.click();
+		await this.save();
 
 		await waitForSuccessAlert(
 			this.page,
@@ -86,7 +90,7 @@ export class PageConfigurationPage {
 	async setHTMLTitle(title: string) {
 		await this.page.getByLabel('HTML Title').fill(title);
 
-		await this.saveButton.click();
+		await this.save();
 
 		await waitForSuccessAlert(
 			this.page,

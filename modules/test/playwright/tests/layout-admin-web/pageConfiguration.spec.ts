@@ -7,8 +7,18 @@ import {expect, mergeTests} from '@playwright/test';
 
 import {loginTest} from '../../fixtures/loginTest';
 import {checkAccessibility} from '../../utils/checkAccessibility';
+import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
+import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
+import {pagesAdminPagesTest} from '../../fixtures/pagesAdminPagesTest';
+import {pagesPagesTest} from './fixtures/pagesPagesTest';
 
-const test = mergeTests(loginTest());
+const test = mergeTests(
+	apiHelpersTest,
+	isolatedSiteTest,
+	loginTest(),
+	pagesAdminPagesTest,
+	pagesPagesTest
+);
 
 test('checks the accessibility of the General page configuration', async ({
 	page,
@@ -23,4 +33,33 @@ test('checks the accessibility of the General page configuration', async ({
 		page,
 		selectors: ['.input-container[aria-label="General"]'],
 	});
+});
+
+test('Can configure a full page application.', async ({
+	apiHelpers,
+	page,
+	pageConfigurationPage,
+	pagesAdminPage,
+	site,
+}) => {
+	const layout = await apiHelpers.jsonWebServicesLayout.addLayout({
+		groupId: site.id,
+		options: {
+			type: 'full_page_application',
+		},
+		title: 'Full Page Application',
+	});
+
+	await pagesAdminPage.goto(site.friendlyUrlPath);
+	await pageConfigurationPage.goToSection('Full Page Application', 'General');
+
+	await page
+		.getByLabel('Full Page Application')
+		.selectOption({label: 'Wiki'});
+
+	await pageConfigurationPage.save();
+
+	await page.goto('/web' + site.friendlyUrlPath + layout.friendlyURL);
+
+	await expect(page.getByText('Wiki')).toBeVisible();
 });
