@@ -10,6 +10,7 @@ import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../fixtures/loginTest';
 import {pagesAdminPagesTest} from '../../fixtures/pagesAdminPagesTest';
 import {checkAccessibility} from '../../utils/checkAccessibility';
+import {selectAndExpectToHaveValue} from '../../utils/selectAndExpectToHaveValue';
 import {pagesPagesTest} from './fixtures/pagesPagesTest';
 
 const test = mergeTests(
@@ -51,15 +52,19 @@ test('Can configure a full page application.', async ({
 	});
 
 	await pagesAdminPage.goto(site.friendlyUrlPath);
+
 	await pageConfigurationPage.goToSection('Full Page Application', 'General');
 
-	await page
-		.getByLabel('Full Page Application')
-		.selectOption({label: 'Wiki'});
+	await selectAndExpectToHaveValue({
+		optionLabel: 'Wiki',
+		select: page.getByLabel('Full Page Application'),
+	});
 
 	await pageConfigurationPage.save();
 
-	await page.goto('/web' + site.friendlyUrlPath + layout.friendlyURL);
+	// Go to view mode of page
 
-	await expect(page.getByText('Wiki')).toBeVisible();
+	await page.goto(`/web${site.friendlyUrlPath}${layout.friendlyURL}`);
+
+	await expect(page.getByRole('heading', {name: 'Wiki'})).toBeVisible();
 });
