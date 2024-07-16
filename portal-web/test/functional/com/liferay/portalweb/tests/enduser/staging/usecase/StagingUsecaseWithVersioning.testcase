@@ -40,18 +40,12 @@ definition {
 	@priority = 4
 	test ApplyWidgetTemplateToNavigationMenuOnContentPage {
 		task ("Add a content page") {
-			JSONLayout.addPublicLayout(
-				groupName = "Site Name (Staging)",
-				layoutName = "Test Page Name",
-				site = "false",
-				type = "content");
+			PagesAdmin.openPagesAdmin(siteURLKey = "site-name-staging");
+
+			ContentPages.addPage(pageName = "Test Content Page Name");
 		}
 
 		task ("Add a Navigation Menu widget to content page") {
-			ContentPagesNavigator.openEditContentPage(
-				pageName = "Test Page Name",
-				siteName = "Site Name Staging");
-
 			PageEditor.addWidget(
 				indexItem = 2,
 				portletName = "Menu Display");
@@ -68,30 +62,24 @@ definition {
 		}
 
 		task ("View the List Menu is applied to Navigation Menu at view mode in staging site") {
-			ContentPagesNavigator.openViewContentPage(
-				pageName = "Test Page Name",
-				siteName = "Site Name Staging");
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/site-name-staging/test-content-page-name");
 
 			AssertVisible(
-				key_itemName = "Test Page Name",
+				key_itemName = "Test Content Page Name",
 				locator1 = "NavigationMenusWidget#LIST_MENU_ANY_ITEM");
 		}
 
 		task ("Publish to Live") {
-			Staging.markAsReadyForPublication();
-
 			Staging.gotoPublishToLive();
 
 			Staging.publishToLive();
 		}
 
 		task ("View the List Menu is applied to Navigation Menu at view mode in live site") {
-			ContentPagesNavigator.openViewContentPage(
-				pageName = "Test Page Name",
-				siteName = "Site Name");
+			Navigator.openWithAppendToBaseURL(urlAppend = "web/site-name/test-content-page-name");
 
 			AssertVisible(
-				key_itemName = "Test Page Name",
+				key_itemName = "Test Content Page Name",
 				locator1 = "NavigationMenusWidget#LIST_MENU_ANY_ITEM");
 		}
 	}
