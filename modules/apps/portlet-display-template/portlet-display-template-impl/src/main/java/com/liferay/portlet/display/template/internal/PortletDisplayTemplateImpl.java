@@ -429,6 +429,9 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 		}
 
 		contextObjects.put(
+			PortletDisplayTemplateConstants.TEMPLATE_GROUP_ID,
+			ddmTemplate.getGroupId());
+		contextObjects.put(
 			PortletDisplayTemplateConstants.TEMPLATE_ID,
 			ddmTemplate.getTemplateId());
 

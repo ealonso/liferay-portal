@@ -103,7 +103,9 @@ public class Transformer {
 		String templateId = String.valueOf(contextObjects.get("template_id"));
 
 		Template template = getTemplate(
-			getTemplateId(templateId, companyId, companyGroupId, scopeGroupId),
+			getTemplateId(
+				templateId, companyId, companyGroupId, scopeGroupId,
+				GetterUtil.getLong(contextObjects.get("templateGroupId"))),
 			script, langType);
 
 		try {
@@ -188,14 +190,18 @@ public class Transformer {
 	}
 
 	protected String getTemplateId(
-		String templateId, long companyId, long companyGroupId, long groupId) {
+		String templateId, long companyId, long companyGroupId, long groupId,
+		long templateGroupId) {
 
 		StringBundler sb = new StringBundler(5);
 
 		sb.append(companyId);
 		sb.append(StringPool.POUND);
 
-		if (companyGroupId > 0) {
+		if (templateGroupId > 0) {
+			sb.append(templateGroupId);
+		}
+		else if (companyGroupId > 0) {
 			sb.append(companyGroupId);
 		}
 		else {
