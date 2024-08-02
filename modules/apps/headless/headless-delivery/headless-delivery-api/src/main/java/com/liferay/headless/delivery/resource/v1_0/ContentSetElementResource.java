@@ -59,6 +59,11 @@ public interface ContentSetElementResource {
 				Long assetLibraryId, String uuid, Pagination pagination)
 		throws Exception;
 
+	public Page<ContentSetElement>
+			getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+				String contentSetCollectionProviderKey, Pagination pagination)
+		throws Exception;
+
 	public Page<ContentSetElement> getContentSetContentSetElementsPage(
 			Long contentSetId, Pagination pagination)
 		throws Exception;

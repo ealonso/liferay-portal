@@ -656,6 +656,215 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	@Test
+	public void testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage()
+		throws Exception {
+
+		String contentSetCollectionProviderKey =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getContentSetCollectionProviderKey();
+		String irrelevantContentSetCollectionProviderKey =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getIrrelevantContentSetCollectionProviderKey();
+
+		Page<ContentSetElement> page =
+			contentSetElementResource.
+				getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+					contentSetCollectionProviderKey, Pagination.of(1, 10));
+
+		long totalCount = page.getTotalCount();
+
+		if (irrelevantContentSetCollectionProviderKey != null) {
+			ContentSetElement irrelevantContentSetElement =
+				testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+					irrelevantContentSetCollectionProviderKey,
+					randomIrrelevantContentSetElement());
+
+			page =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						irrelevantContentSetCollectionProviderKey,
+						Pagination.of(1, (int)totalCount + 1));
+
+			Assert.assertEquals(totalCount + 1, page.getTotalCount());
+
+			assertContains(
+				irrelevantContentSetElement,
+				(List<ContentSetElement>)page.getItems());
+			assertValid(
+				page,
+				testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getExpectedActions(
+					irrelevantContentSetCollectionProviderKey));
+		}
+
+		ContentSetElement contentSetElement1 =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				contentSetCollectionProviderKey, randomContentSetElement());
+
+		ContentSetElement contentSetElement2 =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				contentSetCollectionProviderKey, randomContentSetElement());
+
+		page =
+			contentSetElementResource.
+				getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+					contentSetCollectionProviderKey, Pagination.of(1, 10));
+
+		Assert.assertEquals(totalCount + 2, page.getTotalCount());
+
+		assertContains(
+			contentSetElement1, (List<ContentSetElement>)page.getItems());
+		assertContains(
+			contentSetElement2, (List<ContentSetElement>)page.getItems());
+		assertValid(
+			page,
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getExpectedActions(
+				contentSetCollectionProviderKey));
+	}
+
+	protected Map<String, Map<String, String>>
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getExpectedActions(
+				String contentSetCollectionProviderKey)
+		throws Exception {
+
+		Map<String, Map<String, String>> expectedActions = new HashMap<>();
+
+		return expectedActions;
+	}
+
+	@Test
+	public void testGetContentSetContentSetCollectionProviderKeyContentSetElementsPageWithPagination()
+		throws Exception {
+
+		String contentSetCollectionProviderKey =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getContentSetCollectionProviderKey();
+
+		Page<ContentSetElement> contentSetElementPage =
+			contentSetElementResource.
+				getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+					contentSetCollectionProviderKey, null);
+
+		int totalCount = GetterUtil.getInteger(
+			contentSetElementPage.getTotalCount());
+
+		ContentSetElement contentSetElement1 =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				contentSetCollectionProviderKey, randomContentSetElement());
+
+		ContentSetElement contentSetElement2 =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				contentSetCollectionProviderKey, randomContentSetElement());
+
+		ContentSetElement contentSetElement3 =
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				contentSetCollectionProviderKey, randomContentSetElement());
+
+		// See com.liferay.portal.vulcan.internal.configuration.HeadlessAPICompanyConfiguration#pageSizeLimit
+
+		int pageSizeLimit = 500;
+
+		if (totalCount >= (pageSizeLimit - 2)) {
+			Page<ContentSetElement> page1 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(
+							(int)Math.ceil((totalCount + 1.0) / pageSizeLimit),
+							pageSizeLimit));
+
+			Assert.assertEquals(totalCount + 3, page1.getTotalCount());
+
+			assertContains(
+				contentSetElement1, (List<ContentSetElement>)page1.getItems());
+
+			Page<ContentSetElement> page2 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(
+							(int)Math.ceil((totalCount + 2.0) / pageSizeLimit),
+							pageSizeLimit));
+
+			assertContains(
+				contentSetElement2, (List<ContentSetElement>)page2.getItems());
+
+			Page<ContentSetElement> page3 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(
+							(int)Math.ceil((totalCount + 3.0) / pageSizeLimit),
+							pageSizeLimit));
+
+			assertContains(
+				contentSetElement3, (List<ContentSetElement>)page3.getItems());
+		}
+		else {
+			Page<ContentSetElement> page1 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(1, totalCount + 2));
+
+			List<ContentSetElement> contentSetElements1 =
+				(List<ContentSetElement>)page1.getItems();
+
+			Assert.assertEquals(
+				contentSetElements1.toString(), totalCount + 2,
+				contentSetElements1.size());
+
+			Page<ContentSetElement> page2 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(2, totalCount + 2));
+
+			Assert.assertEquals(totalCount + 3, page2.getTotalCount());
+
+			List<ContentSetElement> contentSetElements2 =
+				(List<ContentSetElement>)page2.getItems();
+
+			Assert.assertEquals(
+				contentSetElements2.toString(), 1, contentSetElements2.size());
+
+			Page<ContentSetElement> page3 =
+				contentSetElementResource.
+					getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
+						contentSetCollectionProviderKey,
+						Pagination.of(1, (int)totalCount + 3));
+
+			assertContains(
+				contentSetElement1, (List<ContentSetElement>)page3.getItems());
+			assertContains(
+				contentSetElement2, (List<ContentSetElement>)page3.getItems());
+			assertContains(
+				contentSetElement3, (List<ContentSetElement>)page3.getItems());
+		}
+	}
+
+	protected ContentSetElement
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_addContentSetElement(
+				String contentSetCollectionProviderKey,
+				ContentSetElement contentSetElement)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getContentSetCollectionProviderKey()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected String
+			testGetContentSetContentSetCollectionProviderKeyContentSetElementsPage_getIrrelevantContentSetCollectionProviderKey()
+		throws Exception {
+
+		return null;
+	}
+
+	@Test
 	public void testGetContentSetContentSetElementsPage() throws Exception {
 		Long contentSetId =
 			testGetContentSetContentSetElementsPage_getContentSetId();

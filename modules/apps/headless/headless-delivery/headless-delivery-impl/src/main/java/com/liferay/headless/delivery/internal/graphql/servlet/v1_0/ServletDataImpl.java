@@ -1837,6 +1837,11 @@ public class ServletDataImpl implements ServletData {
 							ContentSetElementResourceImpl.class,
 							"getAssetLibraryContentSetByUuidContentSetElementsPage"));
 					put(
+						"query#contentSetContentSetCollectionProviderKeyContentSetElements",
+						new ObjectValuePair<>(
+							ContentSetElementResourceImpl.class,
+							"getContentSetContentSetCollectionProviderKeyContentSetElementsPage"));
+					put(
 						"query#contentSetContentSetElements",
 						new ObjectValuePair<>(
 							ContentSetElementResourceImpl.class,
