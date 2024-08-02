@@ -7934,6 +7934,45 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/Comment"
             tags: ["Comment"]
+    "/content-sets/{contentSetCollectionProviderKey}/content-set-elements":
+        get:
+            operationId: getContentSetContentSetCollectionProviderKeyContentSetElementsPage
+            parameters:
+                - in: path
+                  name: contentSetCollectionProviderKey
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: fields
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: restrictFields
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ContentSetElement"
+                                type: array
+                        application/xml:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ContentSetElement"
+                                type: array
+            tags: ["ContentSetElement"]
     "/content-sets/{contentSetId}/content-set-elements":
         get:
             # @review
