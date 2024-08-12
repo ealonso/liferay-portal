@@ -8,6 +8,7 @@ import {Page} from '@playwright/test';
 import fillAndClickOutside from '../../utils/fillAndClickOutside';
 import {PORTLET_URLS} from '../../utils/portletUrls';
 import {waitForSuccessAlert} from '../../utils/waitForSuccessAlert';
+import {clickAndExpectToBeVisible} from "../../utils/clickAndExpectToBeVisible";
 
 export class FragmentsPage {
 	readonly page: Page;
@@ -78,11 +79,15 @@ export class FragmentsPage {
 	async createFragment(setName: string, name: string) {
 		await this.gotoFragmentSet(setName);
 
-		await this.page.getByRole('button', {name: 'Add'}).click();
+		await clickAndExpectToBeVisible({
+			target: this.page.getByRole('heading', {name: 'Add Fragment'}),
+			trigger: this.page.getByRole('button', {name: 'Add'}),
+		});
 
-		await this.page.getByRole('heading', {name: 'Add Fragment'}).waitFor();
-
-		await this.page.getByRole('button', {name: 'Next'}).click();
+		await clickAndExpectToBeVisible({
+			target: this.page.getByLabel('Name'),
+			trigger: this.page.getByRole('button', {name: 'Next'}),
+		});
 
 		await this.page.getByLabel('Name').fill(name);
 
