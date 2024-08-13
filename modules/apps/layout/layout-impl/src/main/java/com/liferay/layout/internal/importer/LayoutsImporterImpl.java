@@ -184,13 +184,13 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 
 		ZipReader zipReader = _zipReaderFactory.getZipReader(file);
 
-		_processMasterLayoutPageTemplateEntries(
+		_processMasterLayoutLayoutPageTemplateEntries(
 			groupId, layoutsImporterResultEntries, layoutsImportStrategy,
 			preserveItemIds, userId, zipReader);
 		_processLayoutUtilityPageEntries(
 			groupId, layoutsImporterResultEntries, layoutsImportStrategy,
 			preserveItemIds, userId, zipReader);
-		_processDisplayPageTemplatePageTemplateEntries(
+		_processDisplayPageLayoutPageTemplateEntries(
 			groupId, layoutPageTemplateCollectionId,
 			layoutsImporterResultEntries, layoutsImportStrategy,
 			preserveItemIds, userId, zipReader);
@@ -1137,7 +1137,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 		}
 	}
 
-	private void _processDisplayPageTemplatePageTemplateEntries(
+	private void _processDisplayPageLayoutPageTemplateEntries(
 		long groupId, long layoutPageTemplateCollectionId,
 		List<LayoutsImporterResultEntry> layoutsImporterResultEntries,
 		LayoutsImportStrategy layoutsImportStrategy, boolean preserveItemIds,
@@ -1570,7 +1570,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 		}
 	}
 
-	private void _processMasterLayoutPageTemplateEntries(
+	private void _processMasterLayoutLayoutPageTemplateEntries(
 		long groupId,
 		List<LayoutsImporterResultEntry> layoutsImporterResultEntries,
 		LayoutsImportStrategy layoutsImportStrategy, boolean preserveItemIds,
