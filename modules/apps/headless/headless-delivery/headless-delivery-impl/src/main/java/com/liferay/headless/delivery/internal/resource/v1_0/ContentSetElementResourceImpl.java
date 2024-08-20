@@ -66,12 +66,12 @@ public class ContentSetElementResourceImpl
 	@Override
 	public Page<ContentSetElement>
 			getContentSetContentSetCollectionProviderKeyContentSetElementsPage(
-				String collectionProviderKey, Pagination pagination)
+				String providerKey, Pagination pagination)
 		throws Exception {
 
 		InfoCollectionProvider<?> infoCollectionProvider =
 			_infoItemServiceRegistry.getInfoItemService(
-				InfoCollectionProvider.class, collectionProviderKey);
+				InfoCollectionProvider.class, providerKey);
 
 		if (infoCollectionProvider.isAvailable() ||
 			!Objects.equals(

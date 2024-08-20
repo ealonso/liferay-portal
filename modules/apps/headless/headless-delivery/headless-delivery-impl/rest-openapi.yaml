@@ -7934,12 +7934,12 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/Comment"
             tags: ["Comment"]
-    "/content-sets/{contentSetCollectionProviderKey}/content-set-elements":
+    "/content-sets-providers/{contentSetProviderKey}/content-set-elements":
         get:
-            operationId: getContentSetContentSetCollectionProviderKeyContentSetElementsPage
+            operationId: getContentSetContentSetProviderKeyContentSetElementsPage
             parameters:
                 - in: path
-                  name: contentSetCollectionProviderKey
+                  name: contentSetProviderKey
                   required: true
                   schema:
                       type: string
