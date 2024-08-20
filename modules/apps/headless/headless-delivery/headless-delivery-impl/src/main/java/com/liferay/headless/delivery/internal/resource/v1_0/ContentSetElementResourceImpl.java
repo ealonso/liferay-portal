@@ -73,26 +73,20 @@ public class ContentSetElementResourceImpl
 			_infoItemServiceRegistry.getInfoItemService(
 				InfoCollectionProvider.class, providerKey);
 
-		if (infoCollectionProvider.isAvailable() ||
-			!Objects.equals(
-				AssetEntry.class.getName(),
-				infoCollectionProvider.getCollectionItemClassName())) {
-
-			return Page.of(Collections.emptyList());
-		}
-
 		CollectionQuery collectionQuery = new CollectionQuery();
 
 		collectionQuery.setPagination(
 			com.liferay.info.pagination.Pagination.of(
 				pagination.getEndPosition(), pagination.getStartPosition()));
 
-		InfoPage<AssetEntry> infoPage =
-			(InfoPage<AssetEntry>)infoCollectionProvider.getCollectionInfoPage(
-				collectionQuery);
+		InfoPage<?> infoPage = infoCollectionProvider.getCollectionInfoPage(
+			collectionQuery);
 
 		return Page.of(
-			transform(infoPage.getPageItems(), this::_toContentSetElement),
+			transform(infoPage.getPageItems(),
+				object -> _toContentSetElement(
+					object,
+					infoCollectionProvider.getCollectionItemClassName())),
 			pagination, infoPage.getTotalCount());
 	}
 
@@ -147,6 +141,47 @@ public class ContentSetElementResourceImpl
 		return Page.of(
 			transform(infoPage.getPageItems(), this::_toContentSetElement),
 			pagination, infoPage.getTotalCount());
+	}
+
+	private ContentSetElement _toContentSetElement(Object object, String className) {
+		DTOConverter<?, ?> dtoConverter = _dtoConverterRegistry.getDTOConverter(
+			className);
+
+		return new ContentSetElement() {
+			{
+				setContent(
+					() -> {
+						if (dtoConverter == null) {
+							return null;
+						}
+
+						return dtoConverter.toDTO(
+							new DefaultDTOConverterContext(
+								contextAcceptLanguage.isAcceptAllLanguages(),
+								new HashMap<>(), _dtoConverterRegistry,
+								contextHttpServletRequest,
+								assetEntry.getClassPK(),
+								contextAcceptLanguage.getPreferredLocale(),
+								contextUriInfo, contextUser));
+					});
+				setContentType(
+					() -> {
+						if (dtoConverter == null) {
+							return assetEntry.getClassName();
+						}
+
+						return dtoConverter.getContentType();
+					});
+				setId(assetEntry::getClassPK);
+				setTitle(
+					() -> assetEntry.getTitle(
+						contextAcceptLanguage.getPreferredLocale()));
+				setTitle_i18n(
+					() -> LocalizedMapUtil.getI18nMap(
+						contextAcceptLanguage.isAcceptAllLanguages(),
+						assetEntry.getTitleMap()));
+			}
+		};
 	}
 
 	private ContentSetElement _toContentSetElement(AssetEntry assetEntry) {
