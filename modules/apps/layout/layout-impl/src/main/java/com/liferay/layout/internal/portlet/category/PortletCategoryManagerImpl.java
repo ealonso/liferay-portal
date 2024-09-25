@@ -33,11 +33,13 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactory;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.PortletItemLocalService;
 import com.liferay.portal.kernel.service.PortletLocalService;
+import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -395,6 +397,23 @@ public class PortletCategoryManagerImpl implements PortletCategoryManager {
 		for (Portlet portlet : portlets) {
 			jsonArray.put(
 				JSONUtil.put(
+					"embedded",
+					() -> {
+						Layout layout = themeDisplay.getLayout();
+
+						long count1 =
+							PortletPreferencesLocalServiceUtil.
+								getPortletPreferencesCount(
+									PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+									layout.getPlid(), portlet.getPortletId());
+
+						if (count1 > 0) {
+							return true;
+						}
+
+						return false;
+					}
+				).put(
 					"highlighted",
 					highlightedPortletIds.contains(portlet.getPortletId())
 				).put(
