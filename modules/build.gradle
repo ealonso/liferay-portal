@@ -432,6 +432,8 @@ gradle.beforeProject {
 				Properties bndProperties = GUtil.loadProperties(project.file("bnd.bnd"))
 
 				if (bndProperties[Constants.EXPORT_PACKAGE] == null) {
+					println "No Export-Package (SKIP): " + baseline
+
 					baseline {
 						enabled = false
 					}
