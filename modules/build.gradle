@@ -1,3 +1,5 @@
+import aQute.bnd.osgi.Constants
+
 import com.liferay.gradle.plugins.node.task.ExecutePackageManagerTask
 import com.liferay.gradle.plugins.node.task.PackageRunTask
 import com.liferay.gradle.util.FileUtil
@@ -421,6 +423,18 @@ gradle.beforeProject {
 			if (project.path.startsWith(":third-party:")) {
 				baseline {
 					enabled = false
+				}
+			}
+
+			String checkExportPackage = GradleUtil.getTaskPrefixedProperty(baseline, "checkExportPackage")
+
+			if (Boolean.parseBoolean(checkExportPackage) && FileUtil.exists(project, "bnd.bnd")) {
+				Properties bndProperties = GUtil.loadProperties(project.file("bnd.bnd"))
+
+				if (bndProperties[Constants.EXPORT_PACKAGE] == null) {
+					baseline {
+						enabled = false
+					}
 				}
 			}
 		}

@@ -5974,6 +5974,7 @@ information. Make sure to commit in all format-javadoc results.
 						<gradle-execute dir="modules" forcedcacheenabled="false" task="@{modules.baseline.task.group}">
 							<arg value="--continue" />
 							<arg value="--parallel" />
+							<arg value="-Dbaseline.checkExportPackage=true" />
 							<arg value="-Dbaseline.ignoreFailures=true" />
 						</gradle-execute>
 					</sequential>
