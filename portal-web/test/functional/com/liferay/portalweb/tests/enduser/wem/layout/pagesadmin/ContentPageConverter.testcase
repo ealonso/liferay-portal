@@ -286,8 +286,6 @@ definition {
 	@priority = 5
 	test ConvertWidgetPageWithNonStandardLayout {
 		property portal.acceptance = "true";
-		property test.liferay.virtual.instance = "false";
-		property test.run.type = "single";
 
 		task ("Upload the custom layout") {
 			AppManager.openAppManagerAdmin();
@@ -395,9 +393,6 @@ definition {
 	@description = "This is a test for LPS-105943. When convert a widget page with one Customizable column and a non-standard layout, there will be two warning messages shown in conversion preview"
 	@priority = 3
 	test ConvertWidgetPageWithNonStandardLayoutAndCustomizableColumns {
-		property test.liferay.virtual.instance = "false";
-		property test.run.type = "single";
-
 		task ("Upload the custom layout") {
 			AppManager.openAppManagerAdmin();
 
@@ -512,9 +507,6 @@ definition {
 	@description = "This is a test for LPS-105943. When convert a widget page with one Nested Applications widget containing widgets and a non-standard layout, there will be two warning messages shown in conversion preview"
 	@priority = 3
 	test ConvertWidgetPageWithNonStandardLayoutAndNestedApplicationsContainingWidgets {
-		property test.liferay.virtual.instance = "false";
-		property test.run.type = "single";
-
 		task ("Upload the custom layout") {
 			AppManager.openAppManagerAdmin();
 

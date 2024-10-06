@@ -164,9 +164,6 @@ definition {
 	@description = "This is a use case for LPS-196035. A User can access the WebDAV link from Documents and Media, but a prompt has to be displayed about the password that can be created at My Account."
 	@priority = 4
 	test BluePromptInDocumentsAndMediasAccessFromDesktop {
-		property test.liferay.virtual.instance = "false";
-		property test.run.type = "single";
-
 		task ("Given: A User navigates to Documents and Media in Site Menu") {
 			DMNavigator.openDocumentsAndMediaAdmin(siteURLKey = "test-site-name");
 		}
