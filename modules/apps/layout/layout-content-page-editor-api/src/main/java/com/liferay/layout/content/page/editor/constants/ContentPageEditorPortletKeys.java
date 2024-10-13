@@ -14,6 +14,10 @@ public class ContentPageEditorPortletKeys {
 		"com_liferay_layout_content_page_editor_web_internal_portlet_" +
 			"ContentPageEditorPortlet";
 
+	public static final String CONTENT_PAGE_RENDERER_PORTLET =
+		"com_liferay_layout_content_page_editor_web_internal_portlet_" +
+			"ContentPageRendererPortlet";
+
 	public static final String CONTENT_PAGE_TOOLBAR_PORTLET =
 		"com_liferay_layout_content_page_editor_web_internal_portlet_" +
 			"ContentPageToolbarPortlet";
