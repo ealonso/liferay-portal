@@ -1097,7 +1097,7 @@ public class LayoutImpl extends LayoutBaseImpl {
 
 	@Override
 	public boolean isDraftLayout() {
-		if (!isTypeAssetDisplay() && !isTypeContent()) {
+		if (!isTypeAssetDisplay() && !isTypeContent() && !isTypePortlet()) {
 			return false;
 		}
 

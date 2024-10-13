@@ -445,9 +445,14 @@ public class LayoutLocalServiceImpl extends LayoutLocalServiceBaseImpl {
 		// Draft layout
 
 		if (!layout.isDraftLayout() &&
-			(layout.isTypeAssetDisplay() || layout.isTypeContent())) {
+			(layout.isTypeAssetDisplay() || layout.isTypeContent() ||
+			 layout.isTypePortlet())) {
 
 			serviceContext.setModifiedDate(date);
+
+			if (layout.isTypePortlet()) {
+				type = LayoutConstants.TYPE_CONTENT;
+			}
 
 			addLayout(
 				null, userId, groupId, privateLayout, parentLayoutId,

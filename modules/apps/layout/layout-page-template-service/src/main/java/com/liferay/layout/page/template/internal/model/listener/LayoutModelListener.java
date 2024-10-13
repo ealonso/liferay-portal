@@ -49,7 +49,9 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
 	public void onAfterCreate(Layout layout) throws ModelListenerException {
-		if (!layout.isTypeContent() && !layout.isTypeAssetDisplay()) {
+		if (!layout.isTypeAssetDisplay() && !layout.isTypeContent() &&
+			!layout.isTypePortlet()) {
+
 			return;
 		}
 
