@@ -173,7 +173,9 @@ public class PublishLayoutMVCActionCommand
 				LayoutTypeSettingsConstants.KEY_PUBLISHED,
 				Boolean.TRUE.toString());
 
-			_cleanWidgetLayoutTypeSettings(typeSettingsUnicodeProperties);
+			if (!layout.isTypePortlet()) {
+				_cleanWidgetLayoutTypeSettings(typeSettingsUnicodeProperties);
+			}
 
 			draftLayout.setStatus(WorkflowConstants.STATUS_APPROVED);
 
@@ -231,16 +233,19 @@ public class PublishLayoutMVCActionCommand
 				}
 			}
 
-			_cleanWidgetLayoutTypeSettings(
-				updatedTypeSettingsUnicodeProperties);
+			if (!layout.isTypePortlet()) {
+				_cleanWidgetLayoutTypeSettings(
+					updatedTypeSettingsUnicodeProperties);
 
-			layout.setType(draftLayout.getType());
-			layout.setLayoutPrototypeUuid(null);
-			layout.setStatus(WorkflowConstants.STATUS_APPROVED);
+				layout.setType(draftLayout.getType());
+				layout.setLayoutPrototypeUuid(null);
 
-			layout = _layoutLocalService.updateLayout(layout);
+				layout.setStatus(WorkflowConstants.STATUS_APPROVED);
 
-			_updateLayoutRevision(layout, serviceContext);
+				layout = _layoutLocalService.updateLayout(layout);
+
+				_updateLayoutRevision(layout, serviceContext);
+			}
 		}
 	}
 

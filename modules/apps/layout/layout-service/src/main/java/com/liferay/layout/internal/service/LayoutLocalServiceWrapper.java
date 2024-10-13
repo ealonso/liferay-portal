@@ -803,6 +803,10 @@ public class LayoutLocalServiceWrapper
 			return sourceLayout.getTypeSettings();
 		}
 
+		if (targetLayout.isTypePortlet()) {
+			return targetLayout.getTypeSettings();
+		}
+
 		if (targetLayout.isDraftLayout()) {
 			UnicodeProperties typeSettingsUnicodeProperties =
 				UnicodePropertiesBuilder.create(
