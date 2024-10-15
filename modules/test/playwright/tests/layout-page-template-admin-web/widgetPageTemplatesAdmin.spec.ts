@@ -84,7 +84,7 @@ test('Add an active page template in global site and deactivate it', async ({
 
 	await pagesAdminPage.goto(site.friendlyUrlPath);
 
-	await pagesAdminPage.gotoSelectGlobalTemplates();
+	await pagesAdminPage.gotoSelectTemplates('Global Templates');
 
 	await expect(
 		page.getByText(widgetPageTemplateName, {exact: true})
@@ -102,7 +102,7 @@ test('Add an active page template in global site and deactivate it', async ({
 
 	await pagesAdminPage.goto(site.friendlyUrlPath);
 
-	await pagesAdminPage.gotoSelectGlobalTemplates();
+	await pagesAdminPage.gotoSelectTemplates('Global Templates');
 
 	await expect(
 		page.getByText(widgetPageTemplateName, {exact: true})

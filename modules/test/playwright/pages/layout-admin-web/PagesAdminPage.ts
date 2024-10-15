@@ -450,7 +450,7 @@ export class PagesAdminPage {
 		await this.page.getByRole('menuitem', {name: 'Configuration'}).click();
 	}
 
-	async gotoSelectGlobalTemplates() {
+	async gotoSelectTemplates(templateSetName: string) {
 		await this.newButton.click();
 
 		await this.page
@@ -460,7 +460,7 @@ export class PagesAdminPage {
 
 		await this.page
 			.getByRole('menuitem')
-			.getByText('Global Templates', {exact: true})
+			.getByText(templateSetName, {exact: true})
 			.click();
 	}
 
