@@ -19,6 +19,7 @@ import com.liferay.asset.test.util.AssetTestUtil;
 import com.liferay.info.pagination.InfoPage;
 import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -33,11 +34,13 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutPrototype;
+import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.LayoutPrototypeLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletActionRequest;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -766,6 +769,44 @@ public class AssetPublisherHelperTest {
 		Assert.assertTrue(assetEntryResults.isEmpty());
 	}
 
+	@Test
+	@TestInfo("LPS-144240")
+	public void testSearchAssetEntriesWithSearchWithIndexDisabled()
+		throws Exception {
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group1.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		_journalArticleLocalService.updateArticle(
+			journalArticle.getUserId(), _group1.getGroupId(),
+			journalArticle.getFolderId(), journalArticle.getArticleId(),
+			journalArticle.getVersion(), journalArticle.getTitleMap(),
+			journalArticle.getDescriptionMap(),
+			journalArticle.getFriendlyURLMap(), journalArticle.getContent(),
+			journalArticle.getDDMTemplateKey(), journalArticle.getLayoutUuid(),
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, true, 0, 0, 0, 0, 0, true, false,
+			journalArticle.isSmallImage(), 0,
+			journalArticle.getSmallImageSource(),
+			journalArticle.getSmallImageURL(), null, null, null,
+			ServiceContextTestUtil.getServiceContext(_group1.getGroupId()));
+
+		AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
+
+		assetEntryQuery.setGroupIds(new long[] {_group1.getGroupId()});
+
+		BaseModelSearchResult<AssetEntry> baseModelSearchResult =
+			_assetPublisherHelper.getAssetEntries(
+				assetEntryQuery, null, null, null, null, null,
+				TestPropsValues.getCompanyId(), _group1.getGroupId(),
+				TestPropsValues.getUserId(), null, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS);
+
+		Assert.assertEquals(
+			baseModelSearchResult.toString(), 1,
+			baseModelSearchResult.getLength());
+	}
+
 	protected PortletPreferences getAssetPublisherPortletPreferences(
 			List<AssetQueryRule> assetQueryRules)
 		throws Exception {
@@ -828,6 +869,9 @@ public class AssetPublisherHelperTest {
 
 	@DeleteAfterTestRun
 	private Group _group2;
+
+	@Inject
+	private JournalArticleLocalService _journalArticleLocalService;
 
 	@Inject
 	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
